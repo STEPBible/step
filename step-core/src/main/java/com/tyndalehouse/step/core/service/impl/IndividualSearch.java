@@ -118,7 +118,7 @@ public class IndividualSearch {
         if (query.startsWith(TEXT)) {
             this.query = transformToTextQuery(query.substring(TEXT.length()));
             this.type = SearchType.TEXT;
-        } else if (query.startsWith(SUBJECT)) {
+        } else if (query.startsWith(SUBJECT) && (query.length() > 1 && query.charAt(1) == '=' || query.length() > 2 && query.charAt(2) == '=' )) {
             parseSubjectSearch(query.substring(SUBJECT.length()));
         } else if (query.startsWith(ORIGINAL)) {
             parseOriginalSearch(query.substring(ORIGINAL.length()));

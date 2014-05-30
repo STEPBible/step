@@ -123,7 +123,9 @@ var QuickLexicon = Backbone.View.extend({
      */
     showRelatedNumbers: function (rawRelatedNumbers) {
         if (rawRelatedNumbers) {
-            step.passage.highlightStrong(null, rawRelatedNumbers.replace(/,/ig, ""), "relatedWordEmphasisHover");
+            //space is not required as rawRelatedNumbers contains spaces, but in case this changes in the future,
+            //we replace by ' '
+            step.passage.highlightStrong(null, rawRelatedNumbers.replace(/,/ig, " "), "relatedWordEmphasisHover");
         }
     }
 });

@@ -49,10 +49,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 /**
- * Looks up the app.bibleRanges property, and returns internationalised versions
- * of the range name and range key, in the form of a BookName
+ * Looks up the app.bibleRanges property, and returns internationalised versions of the range name and range key, in the
+ * form of a BookName
  *
  * @author CJBurrell
  */
@@ -70,26 +71,41 @@ public class InternationalRangeServiceImpl implements InternationalRangeService 
      */
     @Inject
     public InternationalRangeServiceImpl(@Named("app.bibleRanges") String rangeLanguages,
-                                     Provider<ClientSession> clientSessionProvider) {
+                                         Provider<ClientSession> clientSessionProvider) {
         this.clientSessionProvider = clientSessionProvider;
         this.ranges = StringUtils.split(rangeLanguages, ",");
     }
 
     @Override
-    public List<BookName> getRanges(String filter) {
-        if (StringUtils.isBlank(filter)) {
-            return new ArrayList<BookName>(0);
-        }
-        
-        final String properFilter = filter.toLowerCase();
-        final List<BookName> books = getBooks();
-        final List<BookName> filteredBooks = new ArrayList<BookName>(books.size());
-        for (BookName b : books) {
-            if (b.getFullName().toLowerCase().indexOf(properFilter) != -1) {
-                filteredBooks.add(b);
+    public List<BookName> getRanges(String filter, boolean exact) {
+        final List<BookName> filteredBooks = new ArrayList<BookName>(1);
+        try {
+            if (StringUtils.isBlank(filter)) {
+                return new ArrayList<BookName>(0);
             }
+
+            final List<BookName> books = getBooks();
+            if (exact) {
+                for (BookName bookName : books) {
+                    if (filter.equalsIgnoreCase(bookName.getFullName()))
+                        filteredBooks.add(bookName);
+                }
+            } else {
+                Pattern p = Pattern.compile("\\b" + filter, Pattern.CASE_INSENSITIVE);
+                for (BookName bookName : books) {
+                    if (p.matcher(bookName.getFullName()).find()) {
+                        filteredBooks.add(addRangeAsBookName(bookName.getFullName()));
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Ranges unavailable in locale: {}", this.clientSessionProvider.get().getLocale());
         }
         return filteredBooks;
+    }
+
+    private BookName addRangeAsBookName(final String s) {
+        return new BookName(s, s, BookName.Section.BIBLE_SECTION, false, null, true);
     }
 
     public List<BookName> getBooks() {

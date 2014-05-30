@@ -798,7 +798,11 @@ var MainSearchView = Backbone.View.extend({
                     //then we are listing all chapters, and should display 'Whole book' instead
                     internationalisedSectionName = __s.bible_whole_book_section;
                 } else {
-                    internationalisedSectionName = __s[v.item.sectionType.toLowerCase() + "_section"];
+                    var internationalName = __s[v.item.sectionType.toLowerCase() + "_section"];
+                    if(internationalName == null) {
+                        internationalName = __s[v.item.sectionType.toLowerCase()];
+                    }
+                    internationalisedSectionName = internationalName;
                 }
 
                 row = ['<span class="source">[' + internationalisedSectionName + ']</span>',

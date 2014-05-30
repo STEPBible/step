@@ -294,10 +294,14 @@
                         
                         <fmt:message key="simple_intro" />
                         <br /><br />
+
+                        <fmt:bundle basename="InteractiveBundle">
+                            <fmt:message key="the_pentateuch" var="pentateuch" />
+                        </fmt:bundle>
                         <search:sample_search explanation="simple_passage_explanation" option1="Gen 1" option1type="reference" option2="ESV" option2type="version" />
                         <search:sample_search explanation="multiple_versions_explanation" option1="Gen 1" option1type="reference" option2="ESV" option2type="version" option3="NIV" option3type="version" option4="KJV" option4type="version" />
                         <search:sample_search explanation="simple_search_explanation" option1="NIV" option1type="version" option2="brother" option2type="greekMeanings" />
-                        <search:sample_search explanation="simple_search_restricted_explanation" option1="The Pentateuch" option1type="reference" option2="ESV" option2type="version" option3="he.sed" option3type="hebrew" />
+                        <search:sample_search explanation="simple_search_restricted_explanation" option1="${ pentateuch }" option1type="reference" option2="ESV" option2type="version" option3="he.sed" option3type="hebrew" />
                         <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="brother" option3type="text" option4="he.sed" option4type="hebrew" />
                         <search:sample_search explanation="chained_searches_explanation_subject" option1="ESV" option1type="version" option2="throne" option2type="text" option3="David" option3type="subject" />
 

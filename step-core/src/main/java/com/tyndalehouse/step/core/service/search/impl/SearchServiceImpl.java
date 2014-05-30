@@ -83,9 +83,12 @@ import org.apache.lucene.queryParser.QueryParser.Operator;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.passage.DefaultKeyList;
 import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyFactory;
 import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.RangedPassage;
 import org.crosswire.jsword.passage.VerseKey;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
@@ -1710,8 +1713,14 @@ public class SearchServiceImpl implements SearchService {
      * @return the intersection of both Keys, or searchKeys if results is null
      */
     private Key intersect(final Key results, final Key searchKeys) {
+        //haven't started interesecting yet? just use the other side
         if (results == null) {
             return searchKeys;
+        }
+
+        //if the other side is empty, then we have no results
+        if(searchKeys == null) {
+            return results instanceof VerseKey ? new RangedPassage(((VerseKey) results).getVersification()) : new DefaultKeyList();
         }
 
         Key versifiedSearchKeys = searchKeys;

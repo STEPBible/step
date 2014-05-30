@@ -30,9 +30,10 @@ import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.conve
  */
 public abstract class AbstractAncientSuggestionServiceImpl implements SingleTypeSuggestionService<EntityDoc, TopFieldCollector> {
     private final EntityIndexReader reader;
-    private Sort popularSort;
-    private Sort sort;
-    private Filter filter;
+    private final Sort popularSort;
+    private final Sort sort;
+    private final Filter filter;
+
 
     protected AbstractAncientSuggestionServiceImpl(EntityIndexReader reader, final Filter filter, final Sort sort, final Sort popularSort) {
         this.reader = reader;

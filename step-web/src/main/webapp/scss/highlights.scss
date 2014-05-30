@@ -24,6 +24,11 @@ span[strong]:hover {
   background-color: $lexiconFocusColour;
 }
 
+.lexiconRelatedFocus {
+  background-color: $lexiconFocusRelatedColour;
+  text-decoration: underline;
+}
+
 .primaryLightBg {
   background-color: $quickLexiconColour !important;
   color: $quickLexiconFontColour;

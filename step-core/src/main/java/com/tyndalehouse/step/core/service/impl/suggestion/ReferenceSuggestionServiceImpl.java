@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.service.impl.suggestion;
 
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.models.BookName;
+import com.tyndalehouse.step.core.service.InternationalRangeService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -38,10 +39,13 @@ import java.util.Set;
 public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSuggestionServiceImpl<BookName> {
     private static final String BOOK_CHAPTER_FORMAT = "%s %d";
     private final JSwordVersificationService versificationService;
+    private final InternationalRangeService internationalRangeService;
 
     @Inject
-    public ReferenceSuggestionServiceImpl(JSwordVersificationService versificationService) {
+    public ReferenceSuggestionServiceImpl(final JSwordVersificationService versificationService,
+                                          final InternationalRangeService internationalRangeService) {
         this.versificationService = versificationService;
+        this.internationalRangeService = internationalRangeService;
     }
 
     @Override
@@ -50,12 +54,13 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         final Book master = this.versificationService.getBookFromVersion(masterBook);
         final Versification masterV11n = this.versificationService.getVersificationForVersion(masterBook);
 
+        final String input = context.getInput();
         try {
-            Key k = master.getKey(context.getInput());
+            Key k = master.getKey(input);
             if (k != null) {
                 // check this book actually contains this key, based on the scope...
                 if (!JSwordUtils.containsAny(master, k)) {
-                    return new BookName[0];
+                    return getExactRange(input);
                 }
 
                 BookName bk;
@@ -76,9 +81,17 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         } catch (NoSuchKeyException ex) {
             //silently fail
         }
-        return new BookName[0];
+        return getExactRange(input);
     }
 
+    /**
+     * @param input the input
+     * @return the list of matching ranges
+     */
+    private BookName[] getExactRange(final String input) {
+        final List<BookName> ranges = internationalRangeService.getRanges(input, true);
+        return ranges.toArray(new BookName[ranges.size()]);
+    }
 
     @Override
     public BookName[] collectNonExactMatches(final TermsAndMaxCount<BookName> collector,
@@ -127,10 +140,12 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                             int lastChapter = masterV11n.getLastChapter(bn.getBibleBook());
                             for (int ii = chapter * 10; ii < lastChapter && ii < chapter * 10 + 10; ii++) {
                                 extras.add(addChapter(masterV11n, bn.getBibleBook(), ii));
+                                spaceLeft--;
                             }
 
                             for (int ii = chapter * 100; ii < lastChapter && chapter < chapter * 100 + 100; ii++) {
                                 extras.add(addChapter(masterV11n, bn.getBibleBook(), ii));
+                                spaceLeft--;
                             }
                         } catch (NumberFormatException ex) {
                             //ignore
@@ -139,6 +154,10 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                 }
             }
             bookNames.addAll(extras);
+        }
+
+        if(spaceLeft > 0) {
+            bookNames.addAll(this.internationalRangeService.getRanges(input, false));
         }
         return bookNames.toArray(new BookName[bookNames.size()]);
     }

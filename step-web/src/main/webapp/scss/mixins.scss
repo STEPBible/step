@@ -76,3 +76,10 @@
   -ms-transform: rotate($degrees);
   -o-transform: rotate($degrees);
 }
+
+@mixin flipAndRotate($degrees) {
+  -moz-transform: scaleX(-1) rotate($degrees);
+  -o-transform: scaleX(-1) rotate($degrees);
+  -webkit-transform: scaleX(-1) rotate($degrees);
+  transform: scaleX(-1) rotate($degrees);
+}

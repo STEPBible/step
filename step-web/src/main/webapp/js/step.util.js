@@ -921,7 +921,7 @@ step.util = {
 
             allStrongElements.click(function () {
                 if (!that.touchTriggered) {
-                    $(".lexiconFocus").removeClass("lexiconFocus");
+                    $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
                     step.passage.higlightStrongs({
@@ -958,7 +958,14 @@ step.util = {
                     if (diff < 1000) {
                         //do nothing - event has already triggered.
                     } else {
+                        $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
                         step.util.ui.showDef(this);
+                        step.passage.higlightStrongs({
+                            passageId: undefined,
+                            strong: $(this).attr('strong'),
+                            morph: $(this).attr('morph'),
+                            classes: "lexiconFocus"
+                        });
                     }
                 }
             }).hover(function (ev) {

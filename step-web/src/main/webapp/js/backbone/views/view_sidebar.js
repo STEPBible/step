@@ -7,6 +7,8 @@ var SidebarView = Backbone.View.extend({
 
         //create tab container
         var container = this.$el.find(">div");
+        this.sidebarButton = $(".navbar-brand .showStats");
+        this.sidebarButtonIcon = this.sidebarButton.find(".glyphicon");
         this.tabContainer = this._createBaseTabs();
         this.tabHeaders = this._createTabHeadersContainer();
         this.$el.append(this.tabHeaders);
@@ -50,7 +52,7 @@ var SidebarView = Backbone.View.extend({
     activate: function () {
         var self = this;
         //make sidebar visible
-        this.$el.closest('.row-offcanvas').addClass('active');
+        this.openSidebar();
 
         //show the correct tab
         this.$el.find("[data-target='#" + this.model.get("mode") + "']").tab("show");
@@ -192,6 +194,7 @@ var SidebarView = Backbone.View.extend({
         if (mainWord.relatedNos) {
             panel.append($("<h2>").append(__s.lexicon_related_words));
             var ul = $('<ul>');
+            var matchingExpression = "";
             for (var i = 0; i < mainWord.relatedNos.length; i++) {
                 var li = $("<li></li>").append($('<a href="javascript:void(0)">')
                     .append(mainWord.relatedNos[i].gloss)
@@ -202,7 +205,9 @@ var SidebarView = Backbone.View.extend({
                     .append(")")
                     .data("strongNumber", mainWord.relatedNos[i].strongNumber));
                 ul.append(li);
+                matchingExpression += mainWord.relatedNos[i].strongNumber + " ";
             }
+                step.passage.highlightStrong(null, matchingExpression, "lexiconRelatedFocus");
             panel.append(ul);
             panel.find("a").click(function () {
                 step.util.ui.showDef($(this).data("strongNumber"));
@@ -271,9 +276,11 @@ var SidebarView = Backbone.View.extend({
         }
     },
     openSidebar: function () {
+        this.sidebarButtonIcon.addClass("active");
         this.$el.closest('.row-offcanvas').addClass("active");
     },
     closeSidebar: function () {
+        this.sidebarButtonIcon.removeClass("active");
         this.$el.closest('.row-offcanvas').removeClass('active');
     }
 });

@@ -73,6 +73,11 @@
     }
     .glyphicon.glyphicon-save{
       @include rotate(90deg);
+      transition: 0.3s;
+      &.active {
+        @include rotate(270deg);
+        transition: 0.3s;
+      }
     }
   }
 

@@ -9,10 +9,10 @@ import java.util.List;
  */
 public interface InternationalRangeService {
     /**
-     * For a partiaular user locale, provided by the client session, returns all 
+     * For a particular user locale, provided by the client session, returns all
      * matching ranges
      * @param filter the filter input by the user
      * @return the list of book names/references that match
      */
-    List<BookName> getRanges(String filter);
+    List<BookName> getRanges(String filter, boolean exact);
 }

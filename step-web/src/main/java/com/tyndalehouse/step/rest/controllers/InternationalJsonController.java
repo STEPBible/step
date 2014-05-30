@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tyndalehouse.step.core.models.ClientSession;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
@@ -62,9 +63,11 @@ public class InternationalJsonController extends HttpServlet {
     private static final long serialVersionUID = 1721159652548642069L;
     private static final Map<Locale, String> BUNDLES = new HashMap<Locale, String>();
     private final ObjectMapper objectMapper;
-    
+    private final Provider<ClientSession> clientSessionProvider;
+
     @Inject
-    public InternationalJsonController(final Provider<ObjectMapper> objectMapperProvider) {
+    public InternationalJsonController(final Provider<ObjectMapper> objectMapperProvider, final Provider<ClientSession> clientSessionProvider) {
+        this.clientSessionProvider = clientSessionProvider;
         this.objectMapper = objectMapperProvider.get();
     }
     
@@ -79,7 +82,7 @@ public class InternationalJsonController extends HttpServlet {
         if (isNotBlank(langParameter)) {
             locale = new Locale(langParameter);
         } else {
-            locale = req.getLocale();
+            locale = clientSessionProvider.get().getLocale();
         }
         String qualifiedResponse = BUNDLES.get(locale);
         if (qualifiedResponse == null) {

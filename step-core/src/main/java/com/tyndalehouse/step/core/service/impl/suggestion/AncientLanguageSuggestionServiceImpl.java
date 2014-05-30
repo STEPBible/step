@@ -78,10 +78,11 @@ public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncie
             return false;
         }
 
+        String caseInsensitiveForm = form.toLowerCase();
         //check we're running the right kind of lookup, and then match the pattern
-        return (greek && form.charAt(0) == 'g' ||
-                !greek && form.charAt(0) == 'h') &&
-                PART_STRONG.matcher(form).matches();
+        return (greek && caseInsensitiveForm.charAt(0) == 'g' ||
+                !greek && caseInsensitiveForm.charAt(0) == 'h') &&
+                PART_STRONG.matcher(caseInsensitiveForm).matches();
     }
 
     protected Sort getSort(boolean popular) {

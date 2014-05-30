@@ -40,6 +40,7 @@ $quickLexiconColour: #eea236;
 $quickLexiconFontColour: black;
 $hoverColor: $quickLexiconColour;
 $lexiconFocusColour: lightgrey;
+$lexiconFocusRelatedColour: lighten($lexiconFocusColour, 10%);
 $hoverColorText: white;
 $verseNumberBackground: #eee;
 $inactiveTabColor: black;

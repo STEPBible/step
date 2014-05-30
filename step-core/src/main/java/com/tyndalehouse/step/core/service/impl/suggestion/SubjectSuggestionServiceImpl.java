@@ -38,7 +38,7 @@ public class SubjectSuggestionServiceImpl extends AbstractIgnoreMergedListSugges
 
         //add the full term
         final String input = context.getInput();
-        addSubjectTerms(suggestions, stemmer, LuceneUtils.getAllTermsPrefixedWith(false, false, this.jSwordSearchService.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK),
+        addSubjectTerms(suggestions, stemmer, LuceneUtils.getAllTermsPrefixedWith(true, false, this.jSwordSearchService.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK),
                 LuceneIndex.FIELD_HEADING, input, max).getTerms(), SearchType.SUBJECT_SIMPLE);
         addSubjectTerms(suggestions, stemmer, this.naves.findSetOfTerms(true, input, max, "root"), SearchType.SUBJECT_EXTENDED);
         addSubjectTerms(suggestions, stemmer, this.naves.findSetOfTerms(true, input, max, "fullTerm"), SearchType.SUBJECT_FULL);
@@ -60,13 +60,22 @@ public class SubjectSuggestionServiceImpl extends AbstractIgnoreMergedListSugges
         final TermsAndMaxCount termsFromSimpleNave = this.naves.findSetOfTermsWithCounts(false, true, input, leftToCollect, "root");
         final TermsAndMaxCount termsFromFullNave = this.naves.findSetOfTermsWithCounts(false, true, input, leftToCollect, "fullTerm");
 
-        termsFromHeadings.setTotalCount(termsFromHeadings.getTotalCount() - addSubjectTerms(suggestions, stemmer, termsFromHeadings.getTerms(), SearchType.SUBJECT_SIMPLE));
-        termsFromSimpleNave.setTotalCount(termsFromSimpleNave.getTotalCount() - addSubjectTerms(suggestions, stemmer, termsFromSimpleNave.getTerms(), SearchType.SUBJECT_EXTENDED));
-        termsFromFullNave.setTotalCount(termsFromFullNave.getTotalCount() - addSubjectTerms(suggestions, stemmer, termsFromFullNave.getTerms(), SearchType.SUBJECT_FULL));
+
+
+        addSubjectTerms(suggestions, stemmer, termsFromHeadings.getTerms(), SearchType.SUBJECT_SIMPLE);
+        addSubjectTerms(suggestions, stemmer, termsFromSimpleNave.getTerms(), SearchType.SUBJECT_EXTENDED);
+        addSubjectTerms(suggestions, stemmer, termsFromFullNave.getTerms(), SearchType.SUBJECT_FULL);
+
+
+
+
+//        termsFromHeadings.setTotalCount(termsFromHeadings.getTotalCount() - addSubjectTerms(suggestions, stemmer, termsFromHeadings.getTerms(), SearchType.SUBJECT_SIMPLE));
+//        termsFromSimpleNave.setTotalCount(termsFromSimpleNave.getTotalCount() - addSubjectTerms(suggestions, stemmer, termsFromSimpleNave.getTerms(), SearchType.SUBJECT_EXTENDED));
+//        termsFromFullNave.setTotalCount(termsFromFullNave.getTotalCount() - addSubjectTerms(suggestions, stemmer, termsFromFullNave.getTerms(), SearchType.SUBJECT_FULL));
 
         TermsAndMaxCount countsAndResults = new TermsAndMaxCount();
         countsAndResults.setTerms(new HashSet<SubjectSuggestion>(suggestions.values()));
-        collector.setTotalCount(termsFromHeadings.getTotalCount() + termsFromSimpleNave.getTotalCount() + termsFromFullNave.getTotalCount());
+        collector.setTotalCount(suggestions.size());
         return suggestions.values().toArray(new SubjectSuggestion[countsAndResults.getTerms().size()]);
     }
 

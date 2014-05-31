@@ -36,8 +36,9 @@ $scrollTrackThumbShadow: lighten($scrollColor, 0.07);
 // colours in dropdown
 $activeTabColour: #cd4848;
 $headingColour: #111;
-$quickLexiconColour: #eea236;
-$quickLexiconFontColour: black;
+$quickLexiconColour: #c12e2a;
+$quickLexiconFontColour: white;
+$quickLexiconRelatedFontColour: black;
 $hoverColor: $quickLexiconColour;
 $lexiconFocusColour: lightgrey;
 $lexiconFocusRelatedColour: lighten($lexiconFocusColour, 10%);

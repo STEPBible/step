@@ -128,7 +128,10 @@ var StepRouter = Backbone.Router.extend({
         }
 
         var fragment = passageModel.get("urlFragment");
-        return shareableUrl + fragment;
+        var url = shareableUrl + fragment;
+
+        $("link[rel='canonical']").attr("href", url);
+        return url;
     },
     handleSearchResults: function (passageModel, partRendered) {
         require(["search", "defaults"], function (module) {

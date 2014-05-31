@@ -12,7 +12,7 @@
 .relatedWordEmphasisHover {
   text-decoration: underline;
   background-color: rgba($quickLexiconColour, 0.2);
-  color: $quickLexiconFontColour;
+  color: $quickLexiconRelatedFontColour;
 }
 span[strong]:hover {
   cursor: pointer;

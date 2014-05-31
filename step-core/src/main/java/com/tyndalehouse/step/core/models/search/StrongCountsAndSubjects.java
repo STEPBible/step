@@ -32,17 +32,17 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models.search;
 
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
-
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
 
 /**
  * A holder for counts of strongs in the bibles and the actual Strongs data
  */
 public class StrongCountsAndSubjects {
-    private Map<String, SortedSet<LexiconSuggestion>> strongData;
+    private Map<String, List<LexiconSuggestion>> strongData;
     private Map<String, BookAndBibleCount> counts;
     private boolean ot;
     private String verse;
@@ -62,14 +62,14 @@ public class StrongCountsAndSubjects {
      * 
      * @param strongData the strong data
      */
-    public void setStrongData(final Map<String, SortedSet<LexiconSuggestion>> strongData) {
+    public void setStrongData(final Map<String, List<LexiconSuggestion>> strongData) {
         this.strongData = strongData;
     }
 
     /**
      * @return the strongData
      */
-    public Map<String, SortedSet<LexiconSuggestion>> getStrongData() {
+    public Map<String, List<LexiconSuggestion>> getStrongData() {
         return this.strongData;
     }
 

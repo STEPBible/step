@@ -30,9 +30,10 @@ import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.conve
  */
 public abstract class AbstractAncientSuggestionServiceImpl implements SingleTypeSuggestionService<EntityDoc, TopFieldCollector> {
     private final EntityIndexReader reader;
-    private Sort popularSort;
-    private Sort sort;
-    private Filter filter;
+    private final Sort popularSort;
+    private final Sort sort;
+    private final Filter filter;
+
 
     protected AbstractAncientSuggestionServiceImpl(EntityIndexReader reader, final Filter filter, final Sort sort, final Sort popularSort) {
         this.reader = reader;
@@ -43,12 +44,17 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
 
     @Override
     public EntityDoc[] getExactTerms(SuggestionContext context, final int max, final boolean popularSort) {
-        return getTerms(context.getInput(), max, true, popularSort);
+        return context.getInput().indexOf(' ') != -1 ? new EntityDoc[0] : getTerms(context.getInput(), max, true, popularSort);
     }
 
     @Override
     public EntityDoc[] collectNonExactMatches(final TopFieldCollector collector, final SuggestionContext context, final EntityDoc[] alreadyRetrieved,
                                               final int leftToCollect) {
+        if(context.getInput().indexOf(' ') != -1) {
+            return new EntityDoc[0];
+        }
+
+
         final BooleanQuery query = this.getQuery(context.getInput(), false);
 
         if (alreadyRetrieved != null) {

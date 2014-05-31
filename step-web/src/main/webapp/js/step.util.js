@@ -166,6 +166,14 @@ step.util = {
     escapeRegExp: function (str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     },
+    S4: function() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    },
+
+    // Generate a pseudo-GUID by concatenating random hexadecimal.
+    guid: function () {
+        return (this.S4()+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+this.S4()+this.S4());
+    },
     squashErrors: function (model) {
         $("#errorContainer").remove();
         if (model) {
@@ -439,6 +447,12 @@ step.util = {
                 step.util.activePassageId(activePassageModel.get("linked"));
                 return;
             }
+        } else {
+            //if the panel is not required to be linked, then unlink any panel that is currently linked
+            var linkedModelId = activePassageModel.get("linked")
+            if(linkedModelId) {
+                step.util.unlink(linkedModelId);
+            }
         }
 
         var columnHolder = $("#columnHolder");
@@ -447,6 +461,7 @@ step.util = {
         var newColumn = activeColumn.clone();
 
         var passageId;
+        var newPassageId;
         if (!model) {
             //create new
             newPassageId = parseInt(step.passages.max(function (p) {
@@ -462,6 +477,8 @@ step.util = {
             .find(".passageContent").remove();
         newColumn.find(".argSummary").remove();
         newColumn.find(".resultsLabel").html("");
+        newColumn.find(".infoIcon").attr("title", "").data("content", "").hide();
+        newColumn.find(".popover").remove();
 
         var allColumns = columns.add(newColumn);
         this.refreshColumnSize(allColumns);
@@ -504,7 +521,7 @@ step.util = {
         var linkedPassageIds = [];
         for (var i = 0; i < models.length; i++) {
             linkedPassageIds.push(models[i].get("passageId"));
-            models[i].save({ linked: null });
+            models[i].save({ linked: null }, {silent: true });
         }
         step.util.getPassageContainer(newPassageId).find(".linkPanel").remove();
         return linkedPassageIds;
@@ -810,6 +827,8 @@ step.util = {
                 return "chineseFont";
             } else if (language == "khm" || language == "km") {
                 return "khmerFont";
+            } else if (language == "far" || language == "fa" || language == "per")  {
+                return "farsiFont";
             }
         },
         /**
@@ -902,7 +921,15 @@ step.util = {
 
             allStrongElements.click(function () {
                 if (!that.touchTriggered) {
+                    $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
+                    $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
+                    step.passage.higlightStrongs({
+                        passageId: undefined,
+                        strong: $(this).attr('strong'),
+                        morph: $(this).attr('morph'),
+                        classes: "lexiconFocus"
+                    });
                 }
             }).on("touchstart", function (ev) {
                 that.touchstart = new Date().getTime();
@@ -920,7 +947,8 @@ step.util = {
                     var morph = $(hoverContext).attr('morph');
                     new QuickLexicon({
                         strong: strong, morph: morph, target: hoverContext,
-                        position: ev.pageY / $(window).height(), touchEvent: true
+                        position: ev.pageY / $(window).height(), touchEvent: true,
+                        passageId: passageId
                     });
                 });
             }).on("touchend", function () {
@@ -930,7 +958,14 @@ step.util = {
                     if (diff < 1000) {
                         //do nothing - event has already triggered.
                     } else {
+                        $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
                         step.util.ui.showDef(this);
+                        step.passage.higlightStrongs({
+                            passageId: undefined,
+                            strong: $(this).attr('strong'),
+                            morph: $(this).attr('morph'),
+                            classes: "lexiconFocus"
+                        });
                     }
                 }
             }).hover(function (ev) {
@@ -949,7 +984,8 @@ step.util = {
                         //do the quick lexicon
                         new QuickLexicon({
                             strong: strong, morph: morph,
-                            target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: false
+                            target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: false,
+                            passageId: passageId
                         });
                     }, MOUSE_PAUSE, 'show-quick-lexicon');
                 });
@@ -975,6 +1011,28 @@ step.util = {
             passageContent.empty();
             passageContent.append(passageHtml);
             parent.append(passageContent);
+            passageContent.append(this.getCopyrightInfo());
+        },
+        getCopyrightInfo: function() {
+            var model = step.util.activePassage();
+            var message = __s.copyright_information_list;
+            if(model.get("masterVersion") != null) {
+                message += " " + this._getCopyrightLink(model.get("masterVersion"));
+            }
+
+            if(!step.util.isBlank(model.get("extraVersions"))) {
+                var v = (model.get("extraVersions").split(",")) || [];
+                for(var version in v) {
+                    if(!step.util.isBlank(v[version])) {
+                        message += ",";
+                        message += this._getCopyrightLink(v[version]);
+                    }
+                }
+            }
+            return "<div class='copyrightInfo'>" + message + "<div>";
+        },
+        _getCopyrightLink: function(v) {
+            return "<a href='/version.jsp?version=" + v + "' target='_new'>" + v + "</a>";
         },
         /**
          * Takes in the selector for identifying each group element. Then selects children(), and iterates
@@ -1033,13 +1091,13 @@ step.util = {
             }
             return features;
         },
-        enhanceVerseNumbers: function (passageId, passageContent, version) {
+        enhanceVerseNumbers: function (passageId, passageContent, version, isSearch) {
             $(".verseNumber", passageContent).closest("a").mouseenter(function () {
-                step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version);
+                step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version, isSearch);
             });
         },
 
-        _addSubjectAndRelatedWordsPopup: function (passageId, element, version) {
+        _addSubjectAndRelatedWordsPopup: function (passageId, element, version, isSearch) {
             var reference = element.attr("name");
             var self = this;
 
@@ -1056,24 +1114,28 @@ step.util = {
                             text: function (event, api) {
                                 //otherwise, exciting new strong numbers to apply:
                                 $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
-                                    var template = '<div>' +
-                                        '<h1 class="vocabHeader"><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1>' +
-                                        '<div class="col-xs-10 col-sm-4 heading"></div>' +
-                                        '<div class="col-xs-1 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
-                                        '<div class="col-xs-1 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
-                                        '<div class="hidden-xs col-sm-4 heading"></div>' +
+                                    var template = '<div class="vocabTable">' +
+
+                                        '<div class="col-xs-8 col-sm-4 heading"><h1><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1></div>' +
+                                        '<div class="col-xs-2 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
+                                        '<div class="col-xs-2 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+                                        '<div class="hidden-xs col-sm-4 heading even"><h1><%= __s.vocab_for_verse_continued %></h1></div>' +
                                         '<div class="hidden-xs col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
                                         '<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
-                                        '<% _.each(rows, function(row) { %>' +
+                                        '<% _.each(rows, function(row, i) { %>' +
                                         '<span data-strong="<%= row.strongData.strongNumber %>">' +
-                                        '<a href="javascript:void(0)" class="definition col-xs-10 col-sm-4"><%= row.strongData.gloss %> ' +
+                                        '<a href="javascript:void(0)" class="definition col-xs-8 col-sm-4 <%= i % 2 == 1 ? "even" : "" %>"><%= row.strongData.gloss %> ' +
                                         '(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)</a>' +
-                                        '<a href="javascript:void(0)" class="bookCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.book) %></a>' +
-                                        '<a href="javascript:void(0)" class="bibleCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.bible) %></a>' +
-                                        '</span><% }); %></div>' +
+                                        '<a href="javascript:void(0)" class="bookCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.book) %></a>' +
+                                        '<a href="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
+                                        '</span><% }); %>' +
+                                        '<% if(rows.length % 2 == 1) { %>' +
+                                        '<span class="even">&nbsp;</span>' +
+                                        '<% } %>' +
+                                        '</div>' +
                                         '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
                                         '<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
-                                        '<a href="javascript:void(0)" class="wordCloud"><%= __s.word_cloud %></a></div>';
+                                        '<% if(isSearch) { %><a href="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
 
                                     var rows = [];
                                     for (var key in data.strongData) {
@@ -1091,14 +1153,17 @@ step.util = {
                                     var templatedTable = $(_.template(template)({
                                         rows: rows,
                                         ot: data.ot,
-                                        data: data
+                                        data: data,
+                                        isSearch: isSearch
                                     }));
 
                                     templatedTable.find(".definition").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'definition');
                                         self.showDef($(this).parent().data("strong"));
                                     });
 
                                     templatedTable.find(".bookCount").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'bookCount');
                                         var bookKey = key.substring(0, key.indexOf('.'));
                                         var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent($(this).parent().data("strong"));
                                         //make this the active passage
@@ -1106,6 +1171,7 @@ step.util = {
                                         step.router.navigatePreserveVersions(args);
                                     });
                                     templatedTable.find(".bibleCount").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'bibleCount');
                                         var args = "strong=" + encodeURIComponent($(this).parent().data("strong"));
                                         //make this the active passage
                                         step.util.createNewLinkedColumn(passageId);
@@ -1113,25 +1179,20 @@ step.util = {
                                     });
 
                                     templatedTable.find(".relatedVerses").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'relatedVerses');
                                         step.util.createNewLinkedColumn(passageId);
                                         step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
                                     });
 
                                     templatedTable.find(".relatedSubjects").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'relatedSubjects');
                                         step.util.createNewLinkedColumn(passageId);
                                         step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
                                     });
 
-                                    templatedTable.find(".wordCloud").click(function () {
-                                        //get chapter key...
-                                        step.util.createNewLinkedColumn(passageId);
-                                        var lastDot = key.lastIndexOf(".");
-                                        if (lastDot != -1) {
-                                            step.util.ui.openStats(key.substring(0, lastDot));
-                                        } else {
-                                            step.util.ui.openStats(key);
-                                        }
-
+                                    templatedTable.find(".verseInContext").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'verseInContext');
+                                        element.trigger("click");
                                     });
 
                                     api.set('content.text', templatedTable);
@@ -1168,7 +1229,12 @@ step.util = {
                 .append(text));
 
             return panel;
+        },
+        highlightPhrase: function (nonJqElement, cssClasses, phrase) {
+            var regexPattern = phrase.replace(/ /g, ' +').replace(/"/g, '["\u201d]');
+            var regex = new RegExp(regexPattern, "ig");
+            doHighlight(nonJqElement, cssClasses, regex);
         }
-    }
+    },
 }
 ;

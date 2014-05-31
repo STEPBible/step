@@ -7,15 +7,21 @@
     margin-bottom: 0px;
   }
   h2 {
-    font-size: 12px;
+    font-size: 14px;
     margin-bottom: 0px;
   }
-  
+  h3 {
+    font-size: 12px;
+    display: inline;
+    &:after {
+      content: ": ";
+    }
+  }
   ul {
     padding-left: 20px;
   }
   
-  .strongNumberTagLine {
+  .strongNumberTagLine, .grammarExplained {
     color: darkgrey;
   }
 

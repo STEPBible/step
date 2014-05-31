@@ -1,10 +1,12 @@
 @import 'template_variables';
+@import 'mixins';
 
 .passageContainer.waiting, .searchResults .waiting {
   background-position: 50% 5;
 }
 
 .passageContentHolder {
+
   table {
     width: 95%;
     display: inline;
@@ -21,7 +23,7 @@
   }
 
   td {
-//    font-size: $defaultFontSize;
+    //    font-size: $defaultFontSize;
     &.x-end-row {
       vertical-align: bottom;
       text-align: right;
@@ -34,6 +36,9 @@
     &.xgen {
       margin-top: 0px;
       text-align: left;
+      font-family: arial;
+      font-weight: bold;
+      font-size: 30px;
     }
     &.sub {
       font-size: 90%;
@@ -84,6 +89,9 @@
   .notesPane {
     text-align: left;
     min-height: 100%;
+    &:empty {
+      display: none;
+    }
   }
   .verse.containsTable {
     text-align: left;
@@ -108,7 +116,7 @@
     }
   }
   .x-p-inscription {
-    font-size: 110%;
+    font-size: 100%;
     text-align: center;
     display: block;
     font-variant: small-caps;
@@ -151,24 +159,35 @@
 .verseNumber {
   min-width: 10px;
   vertical-align: top;
-  font-size: 6pt;
+  font-size: 8pt;
   cursor: hand;
   background-color: $verseNumberBackground;
   color: $headingColour;
-  font-weight: bold;
   text-align: center;
   display: inline-block;
   margin-right: 2px;
+  font-weight: bold;
+  font-family: tahoma;
+  border-radius: 20px;
+  padding: 0 3px 0 5px;
 
-}
-
-h3.psalmHeading {
-  font-size: $defaultFontSize+2;
-  margin: 0px;
+  &:hover {
+    background: #26539e;
+    color: #fff;
+  }
 }
 
 h3.canonicalHeading {
-  font-size: $defaultFontSize;
+  @include canonicalHeading;
+}
+
+h3.psalmHeading {
+  @include canonicalHeading;
+  margin: 0 0 0 5;
+}
+
+h3.canonicalHeading {
+  @include canonicalHeading;
 }
 
 h2.heading {
@@ -176,14 +195,32 @@ h2.heading {
     padding-top: 0px;
   }
   &.x-proverbs {
-    font-size: 120%;
+    font-size: 100%;
+    font-weight: bold;
     text-align: center;
   }
   &.x-speaker {
+    @include canonicalHeading;
     margin-bottom: 0;
   }
   &.x-acrostic {
-    margin-left: 10px;
+    @include canonicalHeading;
+    margin-bottom: 0;
+    margin-left: 20px;
+  }
+}
+
+h3 {
+  &.canonicalHeading.acrostic {
+    @include canonicalHeading;
+    margin-bottom: 0;
+    margin-left: 20px;
+  }
+}
+
+.comparingTable, .interlinear, .verseGrouping {
+  .verseNumber {
+    padding: 3 7 3 7;
   }
 }
 
@@ -198,6 +235,7 @@ h2.heading {
 
   * .smallResultKey {
     margin-right: 10px;
+    margin-left: 3px;
     font-size: 12px;
     font-family: $defaultFontFamily;
   }

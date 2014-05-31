@@ -114,6 +114,7 @@ public class VersionStepRequest {
         bookList.append("</th></tr>");
 
         // output the preface
+        int ii;
         if (this.getMiniPreface().length() != 0) {
             bookList.append("<tr class=\"even\"><td class=\"bookName\">");
             final String copyrightHolderIntro = this.bundle.getString("intro_from_copyright_holder");
@@ -123,11 +124,13 @@ public class VersionStepRequest {
             bookList.append("\">");
             bookList.append(copyrightHolderIntro);
             bookList.append("</a></td></tr>");
-
+            ii = 1;
+        } else {
+            ii = 0;
         }
 
         final Iterator<BibleBook> books = this.versificationForVersion.getBookIterator();
-        int ii = 0;
+
         while (books.hasNext()) {
             outputBook(bookList, this.versificationForVersion, books.next(), ii);
             ii++;

@@ -19,6 +19,8 @@
 
   // divider between passage options and passage
   hr {
+    width: 100%;
+    clear: both;
     border: 0; 
     border-bottom: 1px solid #ddd;
     padding-bottom: $topSectionPadding;
@@ -27,22 +29,23 @@
   .column {
     height: 100%;
     padding: 0px 2px;
-    
+
     .passageContent {
       clear: left;
       height: 100%;
       padding-bottom: $topSectionHeight;
       &> span {
-        height: 100%;
+        @include scrollableContainerHeight;
         padding-bottom: $topSectionHeight;
         display: block;
         overflow-y: auto;
       }
     }
-    
+
     .passageContentHolder {
       overflow-y: auto;
-      height: 100%;
+      overflow-x: hidden;
+      @include scrollableContainerHeight;
     }
 
     .passageText .popover {
@@ -66,7 +69,7 @@
         position: absolute;
         top: $activeBorderWidth;
         left: 50%;
-        border: 4px solid $activeColor;
+        border: 4px solid #D14A4A;
         border-right-color: transparent;
         border-bottom: 0 dotted;
         border-left-color: transparent;
@@ -81,6 +84,15 @@
           &:hover {
             color: gray;
           }
+      }
+      .copyrightInfo {
+        position: absolute;
+        bottom: 5;
+        font-size: 11px;
+        color: darkgrey;
+        @media screen and (max-height: 300px) {
+          display: none;
+        }
       }
     }
   }

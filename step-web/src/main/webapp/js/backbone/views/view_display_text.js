@@ -7,12 +7,20 @@ var TextDisplayView = SearchDisplayView.extend({
         var searchResults = this.model.get("results");
         var sortOrder = this.model.get("order");
 
+        var originalResults = null;
         var table;
         if(append) {
+            originalResults = $(".searchResultRow");
             table = this.$el.find(".searchResults");
         } else {
             table = $("<div>").addClass("searchResults");
             results.append(table);
+        }
+
+        //perhaps we're restoring the first page of results?
+        if(searchResults == null && this.model.get("firstPageResults") != null) {
+            this.model.save({ results: this.model.get("firstPageResults") }, { silent: true });
+            searchResults = this.model.get("results");
         }
 
         //multiple vs singular version
@@ -31,6 +39,10 @@ var TextDisplayView = SearchDisplayView.extend({
                 }
                 return surrounding;
             });
+        }
+
+        if(append) {
+            return table.find(".searchResultRow").not(originalResults);
         }
         return results;
     },

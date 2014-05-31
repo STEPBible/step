@@ -1,13 +1,43 @@
 @import 'template_variables';
 
+@mixin canonicalHeading {
+  font-style: italic;
+  font-weight: normal;
+  color: rgb(51, 51, 51);
+  font-size: $defaultFontSize;
+}
+
 @mixin divider-left {
   border-left: 1px solid $dividerColor;
-  padding-left: 5px;
+  padding:0 15px 0;
   height: 100%;
 }
 
 @mixin padding-from-header {
   padding: $paddingFromHeader;
+}
+
+@mixin scrollableContainerHeight {
+  @media screen and (min-height: 000px) {
+    height: 100%;
+  }
+  @media screen and (min-height: 300px) {
+    height: 94%;
+  }
+  @media screen and (min-height: 400px) {
+    height: 95%;
+  }
+  @media screen and (min-height: 500px) {
+    height: 96%;
+  }
+  @media screen and (min-height: 600px) {
+    height: 97%;
+  }
+  @media screen and (min-height: 700px) {
+    height: 98%;
+  }
+
+
 }
 
 // Vertical height creates a class called .className where maxHeight is set to 400, 600, 900 depending on screen size
@@ -33,11 +63,11 @@
 }
 
 @mixin gradient($color, $start, $end) {
-  background: lighten($color, $optionStartGradient); /* for non-css3 browsers */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient)); /* for IE */
+//  background-color: inherit !important;
+  background: lighten($color, $optionStartGradient) !important; /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient)) !important; /* for IE */
   background-image: -webkit-linear-gradient(left, lighten($color, $optionStartGradient), lighten($color, $optionEndGradient)) !important;
-//  background: -webkit-linear-gradient(linear, left, lighten($color, $optionStartGradient), to(lighten($color, $optionEndGradient))); /* for webkit browsers */
-  background: -moz-linear-gradient(left,  lighten($color, $optionStartGradient),  lighten($color, $optionEndGradient)); /* for firefox 3.6+ */
+  background: -moz-linear-gradient(left,  lighten($color, $optionStartGradient),  lighten($color, $optionEndGradient)) !important; /* for firefox 3.6+ */
 }
 
 @mixin rotate($degrees) {
@@ -45,4 +75,11 @@
   -moz-transform: rotate($degrees);
   -ms-transform: rotate($degrees);
   -o-transform: rotate($degrees);
+}
+
+@mixin flipAndRotate($degrees) {
+  -moz-transform: scaleX(-1) rotate($degrees);
+  -o-transform: scaleX(-1) rotate($degrees);
+  -webkit-transform: scaleX(-1) rotate($degrees);
+  transform: scaleX(-1) rotate($degrees);
 }

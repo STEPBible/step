@@ -4,6 +4,10 @@ body,h1 {
 	font-family: Verdana;
 }
 
+.container {
+    padding: 10px;
+}
+
 h1 {
 	font-size: 16px;
 	padding: 10px;
@@ -17,12 +21,12 @@ h1 a,h1 a:visited {
 
 h2 {
 	font-size: 16px;
-	color: #33339F;
+	color: #991C32;
 }
 
 h3 {
 	font-size: 14px;
-	color: #33339F;
+	color: #991C32;
 	padding: 0px;
 	margin: 0px;
 }
@@ -56,12 +60,11 @@ h3 {
 }
 
 .listingTable {
-	width: 90%;
 	border: solid 1px lightgrey;
 }
 
 .listingTable th {
-	background-color: #991C32;
+	background-color: black;
 	color: white;
 	font-size: 12px;
 }
@@ -86,7 +89,7 @@ h3 {
 }
 
 .bookName {
-	color: #33339F;
+	color: black;
 	font-weight: bold;
 	padding-left: 5px;
 }

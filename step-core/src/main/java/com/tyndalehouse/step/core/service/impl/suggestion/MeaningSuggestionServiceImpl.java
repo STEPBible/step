@@ -10,6 +10,8 @@ import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -48,6 +50,12 @@ public class MeaningSuggestionServiceImpl implements SingleTypeSuggestionService
         List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
         convertTermsToSuggestions(meaningTerms, suggestions);
         convertTermsToSuggestions(extraDocs, suggestions);
+        Collections.sort(suggestions, new Comparator<LexiconSuggestion>() {
+            @Override
+            public int compare(final LexiconSuggestion o1, final LexiconSuggestion o2) {
+                return o1.getGloss().compareTo(o2.getGloss());
+            }
+        });
         return suggestions;
     }
 

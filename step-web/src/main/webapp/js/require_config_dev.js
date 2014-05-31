@@ -20,6 +20,6 @@ requirejs.config({
         "sidebar" : ["js/backbone/models/model_sidebar", "js/backbone/views/view_wordle_stat",
                      "js/backbone/views/view_history", "libs/jquery.tagcloud"],
         "search" : ["_search_display_view", "_other_search"],
-        _other_search: ["_search_display_view", "js/backbone/views/view_display_text", "libs/dohighlight-min"]
+        _other_search: ["_search_display_view", "js/backbone/views/view_display_text", "libs/dohighlight-min", "js/passage/step.alternatives"]
     }
 });

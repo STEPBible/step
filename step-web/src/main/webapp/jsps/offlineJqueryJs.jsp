@@ -8,5 +8,3 @@
         <script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script>
     </c:otherwise>
 </c:choose>
-            
-<%--<script src="libs/jquery-ui-1.10.2.custom.js" type="text/javascript"></script>--%>

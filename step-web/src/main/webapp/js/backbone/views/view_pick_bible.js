@@ -5,7 +5,7 @@ var PickBibleView = Backbone.View.extend({
         '<ul class="list-group">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
-        '<a class="glyphicon glyphicon-info-sign" target="_blank" href="http://www.stepbible.org/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
+        '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://www.stepbible.org/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
         '<a class="resource" href="javascript:void(0)">' +
         '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a></li>' +
         '<% }) %>' +
@@ -46,9 +46,9 @@ var PickBibleView = Backbone.View.extend({
     ancientBlackList: ["HebModern"],
     ancientOrder: [
         [__s.widely_used, ['OSMHB', 'LXX', 'Byz', 'TR', 'WHNU']],
-        [__s.hebrew_ot, ["Aleppo", "OSMHB", "SP", "WLC"]],
+        [__s.hebrew_ot, ["Aleppo", "OSMHB", "SP", "WLC", "MapM"]],
         [__s.greek_ot, ["LXX", "ABPGRK", "ABP"]],
-        [__s.greek_nt, ["Antoniades", "Byz", "Elzevir", "SBLGNT", "Tisch", "TNT", "TR", "WHNU"]],
+        [__s.greek_nt, ["Antoniades", "Byz", "Elzevir", "SBLGNT", "Nestle", "Tisch", "TNT", "TR", "WHNU"]],
         [__s.latin_texts, ["DRC", "Vulgate", "VulgSistine", "VulgHetzenauer", "VulgConte", "VulgClementine"]],
         [__s.syriac_texts, ["Peshitta", "Etheridge", "Murdock"]],
         [__s.alternative_samaritan, ["SP", "SPMT", "SPVar", "SPDSS", "SPE"]],

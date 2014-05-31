@@ -389,10 +389,6 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             return InterlinearMode.INTERLINEAR;
         }
 
-        if (sameLanguageAndBible) {
-            return InterlinearMode.INTERLEAVED_COMPARE;
-        }
-
         return InterlinearMode.INTERLEAVED;
     }
 

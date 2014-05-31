@@ -42,7 +42,7 @@
     <fmt:message key="installation_instructions" />
 
     <div class="configOptions">
-         <input type="button" value="<fmt:message key="installation_use_step_application" />" id="useStep" onclick='window.location.href="index.jsp";' />
+         <input type="button" value="<fmt:message key="installation_use_step_application" />" id="useStep" onclick='window.location.href="start.jsp";' />
     </div>
 
     <p />

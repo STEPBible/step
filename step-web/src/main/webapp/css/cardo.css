@@ -3,8 +3,16 @@
   font-family: 'Cardo';
   font-style: normal;
   font-size: 18px;
-  src: url('../fonts/cardo-regular.woff') format('woff');
+  src: local("Times New Roman");
 }
+@font-face {
+    font-family: 'Cardo';
+    font-style: normal;
+    font-size: 18px;
+    src: url('../fonts/SBL_grk.woff') format('woff');
+    unicode-range: U+2E00-2E17;
+}
+
 
 @font-face {
 	font-family : "SIL_EZRA";
@@ -44,4 +52,10 @@
     src: url('../fonts/DroidKufi-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal; 
+}
+
+@font-face {
+    font-family: 'Nazli';
+    src: url('../fonts/nazli.woff') format('woff');
+    font-style: normal;
 }

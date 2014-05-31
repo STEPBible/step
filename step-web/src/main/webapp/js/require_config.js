@@ -11,6 +11,6 @@ requirejs.config({
         drag: ["js/step.draggabilly-STEP_SERVER_VERSION_TOKEN.min"],
         menu_extras: ["js/step.menu_extras-STEP_SERVER_VERSION_TOKEN.min"],
         html2canvas: ["js/step.html2canvas-STEP_SERVER_VERSION_TOKEN.min"],
-        search: ["js/step.search-STEP_SERVER_VERSION_TOKEN.min"]
+        search: ["js/step.search-STEP_SERVER_VERSION_TOKEN.min"],
     }
 });

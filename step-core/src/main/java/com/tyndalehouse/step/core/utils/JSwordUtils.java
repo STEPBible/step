@@ -53,13 +53,17 @@ import org.crosswire.jsword.book.basic.AbstractPassageBook;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.PassageKeyFactory;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.BibleBook;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import org.crosswire.jsword.versification.Versification;
 import org.jdom2.Element;
 import org.jdom2.filter.ElementFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * a set of utility methods to manipulate the JSword objects coming out
@@ -68,6 +72,7 @@ import org.jdom2.filter.ElementFilter;
  * 
  */
 public final class JSwordUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JSwordUtils.class);
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "he";
 
@@ -210,6 +215,23 @@ public final class JSwordUtils {
     }
 
     /**
+     * Helper method that wraps around getValidKey which catches all exceptions
+     * @param v11n the versification
+     * @param reference the reference
+     * @return the key, or an empty key
+     */
+    public static Key getSafeKey(final Versification v11n, final String reference) {
+        final PassageKeyFactory factory = PassageKeyFactory.instance();
+        try {
+            return factory.getValidKey(v11n, reference);
+        } catch(Exception ex) {
+            //catching and logging exception here as intended to be called from XSLT
+            LOGGER.error(ex.getMessage(), ex);
+            return factory.createEmptyKeyList(v11n);
+        }
+    }
+
+    /**
      * Checks for the presence of the book first. If the book is present, then continues to check that at least 1 verse
      * in the scope is present. If it is, then returns true immediately.
      * <p/>
@@ -221,26 +243,33 @@ public final class JSwordUtils {
      * @return true if the key is present in the master book
      */
     public static boolean containsAny(Book master, Key k) {
+        if(k.isEmpty()) {
+            return false;
+        }
+
         if(!(master instanceof AbstractPassageBook)) {
             return master.contains(k);
         }
 
         final Set<BibleBook> books = ((AbstractPassageBook) master).getBibleBooks();
-        final Verse firstVerse = KeyUtil.getVerse(k);
-        if(!books.contains(firstVerse.getBook())) {
-            //the books of the module do not contain the book referred to by the verse
+        try {
+            final Verse firstVerse = KeyUtil.getVerse(k);
+            if (!books.contains(firstVerse.getBook())) {
+                //the books of the module do not contain the book referred to by the verse
+                return false;
+            }
+
+            //we're still here, so the books do exist
+            //so let's now examine the keys one by one
+            Iterator<Key> keys = k.iterator();
+            while (keys.hasNext()) {
+                if (master.contains(keys.next())) {
+                    return true;
+                }
+            }
+        } catch(ArrayIndexOutOfBoundsException a) {
             return false;
         }
-
-        //we're still here, so the books do exist
-        //so let's now examine the keys one by one
-        Iterator<Key> keys = k.iterator();
-        while(keys.hasNext()) {
-            if(master.contains(keys.next())) {
-                return true;
-            }
-        }
-
         return false;
     }
 }

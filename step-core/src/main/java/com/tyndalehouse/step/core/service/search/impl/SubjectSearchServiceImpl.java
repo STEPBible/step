@@ -210,7 +210,7 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
             case SUBJECT_EXTENDED:
                 return naveDocsToReference(sq, this.getNaveDocs(sq));
             case SUBJECT_FULL:
-                return naveDocsToReference(sq, this.getNaveDocs(sq));
+                return naveDocsToReference(sq, this.getExtendedNaveDocs(sq));
             case SUBJECT_RELATED:
                 return naveDocsToReference(sq, getDocsByExpandedReferences(this.getInputReferenceForNaveSearch(
                         sq.getCurrentSearch().getVersions(),

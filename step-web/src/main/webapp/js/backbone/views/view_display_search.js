@@ -77,7 +77,7 @@ var SearchDisplayView = DisplayView.extend({
         }
 
         var passageId = this.model.get("passageId");
-        step.util.restoreFontSize(this.model, results);
+        step.util.restoreFontSize(this.model, results.find(".passageContentHolder"));
 
         if (append) {
             this.getScrollableArea().append(results);
@@ -97,18 +97,13 @@ var SearchDisplayView = DisplayView.extend({
 
         this.doTitle();
         this.doSwapInterlinearLink(this.$el);
-        step.util.ui.addStrongHandlers(passageId, this.$el.find(".searchResults"));
-        step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"));
+        step.util.ui.addStrongHandlers(passageId, this.$el);
+        step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"), true);
         this.doInterlinearVerseNumbers(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
         this._doChromeHack(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
     },
     _getErrorMessage: function () {
         var errorMessage = $("<span>");
-
-        var reference = this.model.get("searchRestriction");
-        if (step.util.isBlank(reference)) {
-            reference = __s.whole_bible_range;
-        }
 
         //get list of versions
         var versions = [this.model.get("masterVersion")];
@@ -117,9 +112,19 @@ var SearchDisplayView = DisplayView.extend({
             versions = versions.concat(extraVersions.split(","));
         }
 
-        var message = sprintf(__s.search_no_search_results_found_in_version_reference,
-                "<em>" + reference + "</em>",
-                "<em>" + versions.join(", ") + "</em>");
+
+        var reference = this.model.get("searchRestriction");
+        var message;
+        if (step.util.isBlank(reference)) {
+            reference = __s.whole_bible_range;
+            message = sprintf(__s.search_no_search_results_found_in_version_reference_master_restriction,
+                    "<em>" + versions.join(", ") + "</em>", "<em>" + versions[0] + "</em>");
+        } else {
+            message = sprintf(__s.search_no_search_results_found_in_version_reference,
+                    "<em>" + reference + "</em>",
+                    "<em>" + versions.join(", ") + "</em>");
+        }
+
         errorMessage.append(message).addClass("notApplicable");
         return errorMessage;
     },
@@ -129,6 +134,9 @@ var SearchDisplayView = DisplayView.extend({
         results.find(".verseNumber").parent().click(function (ev) {
             //now go to a new place. Let's be crazy about it as well, and simply chop off the last part
             var verseRef = $(this).attr("name");
+            if(verseRef == null) {
+                verseRef = $(this).closest("[name]").attr("name");
+            }
 
             var callback = null;
             if(masterVersion) {
@@ -161,9 +169,20 @@ var SearchDisplayView = DisplayView.extend({
 
         var scrollableArea = this.getScrollableArea();
 
+
+        //visible height
+        var clientHeight = scrollableArea.prop("clientHeight");
+
+        //how far down we are
+        var scrollTop = scrollableArea.prop("scrollTop");
+
+        //total scrollable height
+        var scrollHeight = scrollableArea.prop("scrollHeight");
+
+        var leftToScroll = scrollHeight - scrollTop - clientHeight;
+
         var scrollDownProportion = scrollableArea.scrollTop() / scrollableArea.prop("scrollHeight");
-        var scrollDownLeftOver = scrollableArea.prop("scrollHeight") - scrollableArea.scrollTop();
-        if (scrollDownProportion > 0.7 || scrollDownProportion == scrollableArea.height() || scrollDownLeftOver < 800) {
+        if (scrollDownProportion > 0.7 || scrollDownProportion == scrollableArea.height() || leftToScroll < 800) {
             var currentPageNumber = this.pageNumber;
             var newPageNumber = parseInt(currentPageNumber) + 1;
             var pageSize = this.model.get("pageSize");

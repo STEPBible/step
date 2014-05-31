@@ -64,7 +64,8 @@ public class CheckLanguageFiles {
             final Integer numOccurrences = ENTRIES.get(key);
             if(numOccurrences == null) {
                 LOGGER.warn("{}:{} Extra key in file.", fileName, key);
-                return;
+                continue;
+//                return;
             }
 
             if(value == null) {

@@ -4,9 +4,12 @@
 @media screen {
   .navbar {
     height: $header_height;
+    min-height: $header_height;
     margin-bottom: 0px;
     min-height: initial;
-    
+    background-image: none;
+
+
     .navbar-header {
       font-size: x-small;
       background: $headerBackgroundColor;
@@ -33,15 +36,20 @@
   }
 
   .navbar-brand {
+
     @media screen and (min-width: $stepXSBootstrap) {
-      padding-left: 50px;
+      padding-left: 40px;
     }
     padding-bottom: 0px;
     padding-top: 5px;
     height: $header_height;
-    
+
+    //find button to be aligned to top
+    span.findButton {
+      vertical-align: top;
+    }
     .title {
-      margin-right: 10px;
+      margin-right: 20px;
       float: left;
       & > a {
         color: white !important;
@@ -65,6 +73,11 @@
     }
     .glyphicon.glyphicon-save{
       @include rotate(90deg);
+      transition: 0.3s;
+      &.active {
+        @include rotate(270deg);
+        transition: 0.3s;
+      }
     }
   }
 
@@ -75,8 +88,11 @@
       color: $topHeaderLinkColour;
     }
 
-    button {
-      text-shadow: none;
+    button.find.btn {
+      font-size: 16px;
+      line-height: 18px;
+      font-weight: bold;
+      text-shadow: -1px -1px 0 rgba(0,0,0,.2);
     }
   }
   .searchLinks {

@@ -94,6 +94,12 @@
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>
+        <dependency>
+            <groupId>com.memetix</groupId>
+            <artifactId>microsoft-translator-java-api</artifactId>
+            <version>0.6.2</version>
+            <type>jar</type>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.poi</groupId>

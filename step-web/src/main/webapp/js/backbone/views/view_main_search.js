@@ -33,7 +33,7 @@ var MainSearchView = Backbone.View.extend({
                 var id = entry.itemType + "-";
                 switch (entry.itemType) {
                     case REFERENCE:
-                        id += entry.item.fullName;
+                        id += entry.item.fullName + step.util.guid();
                         break;
                     case VERSION:
                         id += entry.item.shortInitials;
@@ -71,7 +71,7 @@ var MainSearchView = Backbone.View.extend({
             formatInputTooShort: function (input, min) {
 
                 var n = min - input.length;
-                var message = sprintf(__s.x_more_characters, n, (n == 1 ? "" : __s.characters_plural));
+                var message = sprintf(__s.x_more_characters, n);
                 var labels = $("<span>").addClass("searchLabel")
                     .append($("<a>").attr("data-toggle", "modal").attr("data-target", "#bibleVersions").append(__s.all_versions).attr("title", __s.all_versions)
                         .on("click", function () {
@@ -99,7 +99,10 @@ var MainSearchView = Backbone.View.extend({
                         self._removeSpecificContext(EXAMPLE_DATA);
                     }
 
-                    return url + "/" + encodeURIComponent(contextArgs);
+                    var lang = step.state.language();
+                    var langParam = step.util.isBlank(lang) ? "" : "?lang=" + lang;
+
+                    return url + "/" + encodeURIComponent(contextArgs) + langParam;
                 },
                 dataType: "json",
                 quietMillis: KEY_PAUSE,
@@ -201,6 +204,7 @@ var MainSearchView = Backbone.View.extend({
             }
             self._reEvaluateMasterVersion();
             container.find("input").val("");
+            self._removeSpecificContext([REFERENCE, VERSION, LIMIT]);
         }).on("select2-opening", function (event) {
             //remove any context that has references
             if (!self.ignoreOpeningEvent) {
@@ -221,12 +225,26 @@ var MainSearchView = Backbone.View.extend({
             self._reEvaluateMasterVersion();
         });
 
-        this.masterSearch.select2("container")
-            .find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
+        var container = this.masterSearch.select2("container");
+        container.find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
+        container.find("ul.select2-choices")
+            .sortable({})
+            .on('dragstart.h5s', function() {
+                self.masterSearch.select2("onSortStart");
+            }).bind('sortupdate', function() {
+            //Triggered when the user stopped sorting and the DOM position has changed.
+                self.masterSearch.select2("onSortEnd");
+                self._reEvaluateMasterVersion();
+        });
+        this.masterSearch.on('change', function() {
+            self.masterSearch.html(self.masterSearch.val());
+        });
+
     },
     _setData: function (values) {
         this.masterSearch.select2("data", values, true);
         this._addTokenHandlers();
+        this.masterSearch.select2("container").find("ul.select2-choices").sortable({});
     },
     _resetReplaceItems: function () {
         this.masterSearch.select2("container").find(".replaceItem").removeClass("replaceItem");
@@ -250,7 +268,6 @@ var MainSearchView = Backbone.View.extend({
     _addVersionHandlers: function (tokens) {
         var self = this;
         $(tokens).filter(".versionItem").click(function (ev) {
-            self._markItemForReplacing(ev, $(this));
             self.pickBible();
         });
     },
@@ -468,9 +485,18 @@ var MainSearchView = Backbone.View.extend({
         }
         this._setData(versions);
     },
+    _trackSearch: function(options) {
+          if(!options) {
+              return;
+          }
+
+
+
+    },
     search: function () {
         console.log("Searching...");
         var options = this.masterSearch.select2("data");
+        this._trackSearch(options);
         var args = "";
         for (var ii = 0; ii < options.length; ii++) {
             if (args.length != 0) {
@@ -772,7 +798,11 @@ var MainSearchView = Backbone.View.extend({
                     //then we are listing all chapters, and should display 'Whole book' instead
                     internationalisedSectionName = __s.bible_whole_book_section;
                 } else {
-                    internationalisedSectionName = __s[v.item.sectionType.toLowerCase() + "_section"];
+                    var internationalName = __s[v.item.sectionType.toLowerCase() + "_section"];
+                    if(internationalName == null) {
+                        internationalName = __s[v.item.sectionType.toLowerCase()];
+                    }
+                    internationalisedSectionName = internationalName;
                 }
 
                 row = ['<span class="source">[' + internationalisedSectionName + ']</span>',

@@ -229,7 +229,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
             self._addVerseClickHandlers(resultsEl, resultsEl.find("[data-version]:first").data("version"));
             self._highlightResults(resultsEl, self.model.get("query"));
             step.util.ui.addStrongHandlers(passageId, verses);
-            step.util.ui.enhanceVerseNumbers(passageId, self.$el, self.model.get("masterVersion"));
+            step.util.ui.enhanceVerseNumbers(passageId, self.$el, self.model.get("masterVersion"), true);
             if(results && results.length > 0) {
                 self.doFonts(resultsEl, [], results[0].interlinearMode, results[0].languageCode);
             }

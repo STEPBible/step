@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 01, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,20 +32,20 @@
  ******************************************************************************/
 package com.tyndalehouse.step.models.info;
 
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
-
 /**
  * Captures information related to morphology
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class VocabInfo implements Serializable {
+    private static final int MAX_QUICK_DEF_LENGTH = 255;
     private static final long serialVersionUID = 3478149117983010944L;
     private String alternativeTranslit1;
     private String alternativeTranslit1Unaccented;
@@ -74,27 +74,27 @@ public class VocabInfo implements Serializable {
 
     /**
      * constructs a vocab info from a {@link EntityDoc}.
-     * 
-     * @param d see a document representing a lexicon definition
-     * @param relatedVocabs the related vocabs, but also could contain tags non related to this document.
+     *
+     * @param d              see a document representing a lexicon definition
+     * @param relatedVocabs  the related vocabs, but also could contain tags non related to this document.
      * @param includeAllInfo true to include all information
      */
     public VocabInfo(final EntityDoc d, final Map<String, List<LexiconSuggestion>> relatedVocabs,
                      int count,
-            final boolean includeAllInfo) {
+                     final boolean includeAllInfo) {
         this.accentedUnicode = d.get("accentedUnicode");
         this.shortDef = d.get("shortDefinition");
         this.stepGloss = d.get("stepGloss");
         this.stepTransliteration = d.get("stepTransliteration");
+        this.mediumDef = d.get("mediumDefinition");
 
-        if(count >= 0) {
+        if (count >= 0) {
             this.count = count;
         }
 
         if (includeAllInfo) {
             this.lsjDefs = d.get("lsjDefinition");
             this.strongNumber = d.get("strongNumber");
-            this.mediumDef = d.get("mediumDefinition");
             this.twoLetterLookup = d.get("twoLetter");
 
             if (this.strongNumber != null) {

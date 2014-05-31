@@ -38,6 +38,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +47,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.utils.StringUtils;
@@ -109,6 +111,13 @@ public class BibleController {
                 .getDisplayLanguage(userLocale)));
         versions.setVersions(this.bibleInformation.getAvailableModules(Boolean.valueOf(allVersions),
                 language, userLocale));
+
+        final Iterator<BibleVersion> iterator = versions.getVersions().iterator();
+        while(iterator.hasNext()) {
+            if(!iterator.next().getInitials().startsWith("Chi")) {
+                iterator.remove();
+            }
+        }
         return versions;
     }
 

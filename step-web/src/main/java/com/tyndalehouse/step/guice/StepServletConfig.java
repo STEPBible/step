@@ -43,6 +43,7 @@ import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.guice.StepCoreModule;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.rest.controllers.ImageController;
+import com.tyndalehouse.step.rest.controllers.IndexRedirect;
 import com.tyndalehouse.step.rest.controllers.InternationalJsonController;
 import com.tyndalehouse.step.rest.controllers.SearchPageController;
 import com.tyndalehouse.step.rest.controllers.SiteMapController;
@@ -87,7 +88,7 @@ public class StepServletConfig extends GuiceServletContextListener {
                         serve("/rest/*").with(FrontController.class);
                         serve("/commentary_images/*").with(ImageController.class);
                         serve("/search*").with(SearchPageController.class);
-//                        serve("/index.jsp").with(SearchPageController.class);
+                        serve("/index.jsp").with(IndexRedirect.class);
                         serve("/").with(SearchPageController.class);
                         serve("/international/interactive.js").with(InternationalJsonController.class);
 

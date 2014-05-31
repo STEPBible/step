@@ -1,5 +1,9 @@
 var PassageMenuView = Backbone.View.extend({
-    infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-html="true" data-toggle="popover" data-placement="bottom"><span class="glyphicon glyphicon-info-sign" href="javascript:void(0)"></span></span>',
+    infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-html="true" data-toggle="popover" data-placement="bottom">' +
+        '<span class="argOverflowExtended"></span>' +
+        '<span class="argOverflow"></span>' +
+        '<span class="glyphicon glyphicon-info-sign"></span>' +
+        '</a>',
     events: {
         "click a[name]": "updateModel",
         "click .previousChapter": "goToPreviousChapter",
@@ -55,6 +59,7 @@ var PassageMenuView = Backbone.View.extend({
             this.$el.parent().append(this.warnings);
         }
 
+
         this.listenTo(this.model, "raiseMessage", this.raiseMessage);
         this.listenTo(this.model, "squashErrors", this.squashError);
         this.listenTo(Backbone.Events, "columnsChanged", this.updateVisibleCloseButton);
@@ -64,15 +69,15 @@ var PassageMenuView = Backbone.View.extend({
         var warningMessages = (this.warnings.attr('data-content') || "").indexOf("glyphicon-warning-sign") != -1;
         if (errorMessages) {
             this.warnings
-                .removeClass("text-info text-warning text-warning").addClass("text-danger")
+                .removeClass("text-muted text-info text-warning text-warning").addClass("text-danger")
                 .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-exclamation-sign");
         } else if (warningMessages) {
             this.warnings
-                .removeClass("text-info text-danger text-warning").addClass("text-warning")
+                .removeClass("text-muted text-info text-danger text-warning").addClass("text-warning")
                 .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-warning-sign");
         } else {
             this.warnings
-                .removeClass("text-info text-danger text-warning").addClass("text-info")
+                .removeClass("text-muted text-info text-danger text-warning").addClass("text-info")
                 .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-info-sign");
         }
     }, raiseMessage: function (opts) {
@@ -90,16 +95,31 @@ var PassageMenuView = Backbone.View.extend({
             titleSoFar += '<span class="text-info glyphicon glyphicon-info-sign"></span> ';
         }
         titleSoFar += opts.message;
-        this.warnings.popover({ html : true });
+        this.warnings.popover({ html : true }).on("hide.bs.popover", function() {
+            self.handleInfoHide();
+        });
         this.warnings.attr("data-content", titleSoFar);
         this._updateIcon();
         this.warnings.show();
         if(opts.silent != true) {
             this.warnings.popover('show');
+            this.warnings.next(".popover").on('click', function() {
+                self.warnings.popover("hide");
+                self.handleInfoHide();
+            })
+        } else {
+            this.warnings.on("shown.bs.popover", function() {
+                self.warnings.next(".popover").on('click', function() {
+                    self.warnings.popover("hide");
+                    self.handleInfoHide();
+                })
+            });
         }
-        this.warnings.next(".popover").on('click', function() {
-            self.warnings.popover("hide");
-        })
+
+    },
+    handleInfoHide: function() {
+        this.warnings.removeClass("text-info text-warning text-danger");
+        this.warnings.addClass("text-muted");
     },
     squashError: function () {
         this.warnings.attr("data-content", "");
@@ -157,7 +177,6 @@ var PassageMenuView = Backbone.View.extend({
         this._updateDisplayModeOptions(masterVersion);
         this._updateDisplayOptions();
         this._updateSearchOptions();
-        this._updateSortOptions();
     },
     /**
      * Obtains the options available in the masterVersion.
@@ -202,19 +221,6 @@ var PassageMenuView = Backbone.View.extend({
     },
     _updateSearchOptions: function () {
 
-    },
-    _updateSortOptions: function() {
-        var sortOptions = this.$el.find(".sortOptions");
-        //we will only ever show the sort options, if multiple strong numbers are searched for,
-        //as well as being a word search
-        var searchType = this.model.get("searchType");
-        if((searchType == "ORIGINAL_MEANING" ||
-            searchType == "ORIGINAL_GREEK_RELATED" ||
-            searchType == "ORIGINAL_HEBREW_RELATED") && (this.model.get("strongHighlights") || []).length > 1) {
-            sortOptions.toggle(true);   
-        } else {
-            sortOptions.toggle(false);
-        }
     },
     _updateDisplayModeOptions: function (masterVersion) {
         //set the current display mode.
@@ -269,12 +275,10 @@ var PassageMenuView = Backbone.View.extend({
 
         this.displayOptions = this._createDisplayOptions();
         this.otherOptions = this._createSearchOptions();
-        this.wordSearchOptions = this._createWordSortOptions();
         dropdownContainer
             .append(this.displayOptions)
             .append(_.template("<h1><%= __s.general_options %></h1>")())
-            .append(this.otherOptions)
-            .append(this.wordSearchOptions);
+            .append(this.otherOptions);
 
         var shareDropdownMenu = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
 
@@ -316,24 +320,6 @@ var PassageMenuView = Backbone.View.extend({
     getContextLabel: function (context) {
         return sprintf(__s.search_context, context);
     },
-    _createWordSortOptions: function () {
-        var container = $('<span class="sortOptions"></span>').append($("<h1>").append(__s.word_search_sort_options));
-        var dropdown = $("<ul></ul>");
-        dropdown.append($("<li>").append(this._createLink('false', __s.scripture, __s.scripture_help)));
-        dropdown.append($("<li>").append(this._createLink(VOCAB_SORT, __s.vocabulary, __s.vocabulary_help)));
-
-        var currentOrder = this.model.get("order") || "false";
-        this._setVisible(dropdown.find("[data-value='" + currentOrder + "']"), true);
-        
-        var self = this;
-        this._addTickHandlers(dropdown.find("a"), true, function (el) {
-            //need to trigger new search after setting value of model 
-            var orderCode = el.attr("data-value");
-            self.model.save({ order: orderCode, pageNumber: 1 });
-        });
-        container.append(dropdown);
-        return container;
-    },
     _createSearchOptions: function () {
         var dropdown = $("<ul></ul>")
         var self = this;
@@ -341,8 +327,8 @@ var PassageMenuView = Backbone.View.extend({
 
         var li = $('<li class="noHighlight contextContainer">').append($('<span class="contextLabel"></span>').append(this.getContextLabel(context)));
         li.append($('<span class="btn-group pull-right"></span>')
-            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus"></span></button>')
-            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"></span></button>'));
+            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" title="' + __s.search_less_context + '"></span></button>')
+            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" title="' + __s.search_more_context + '"></span></button>'));
 
         li.find("button").click(function (ev) {
             ev.stopPropagation();
@@ -607,13 +593,13 @@ var PassageMenuView = Backbone.View.extend({
     },
     updateVisibleCloseButton: function () {
         var shouldShow = $(".column").not(".examplesColumn").length > 1;
-        this.$el.find(".closeColumn").toggle(shouldShow);
-        if (!shouldShow) {
-            //make sure it's not the last button
-            this.$el.find(".closeColumn").insertBefore(this.$el.find(".openNewPanel"));
-        } else {
-            //ensure last element
-            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
-        }
+        this.$el.find(".closeColumn").toggleClass("disabled", !shouldShow);
+//        if (!shouldShow) {
+//            make sure it's not the last button
+//            this.$el.find(".closeColumn").insertBefore(this.$el.find(".openNewPanel"));
+//        } else {
+//            ensure last element
+//            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
+//        }
     }
 });

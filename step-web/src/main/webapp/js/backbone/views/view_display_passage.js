@@ -12,6 +12,7 @@ var PassageDisplayView = DisplayView.extend({
             this.listenTo(this.model, "destroyViews", this.remove);
             this.listenTo(this.model, "destroy-column", this.remove);
             this.listenTo(this.model, "font:change", this.handleFontSizeChange, this);
+            this.listenTo(this.model, "afterRender", this.scrollToTargetLocation, this);
             this.partRendered = options.partRendered;
             this.render();
         },
@@ -55,7 +56,7 @@ var PassageDisplayView = DisplayView.extend({
                 this._doDuplicateNotice(passageId, passageHtml);
                 this._updatePageTitle(passageId, passageHtml, version, reference);
                 this._doInterlinearDividers(passageHtml);
-//TODO:                this._doVersions(passageId, passageHtml, version, reference);
+                this._doAlternatives(passageId, passageHtml, version, reference);
 
                 if (!this.partRendered) {
                     step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
@@ -65,19 +66,27 @@ var PassageDisplayView = DisplayView.extend({
                 this._doChromeHack(passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 this.scrollToTargetLocation(passageContainer);
+
+
             }
         },
         scrollToTargetLocation: function (passageContainer) {
+            if(!passageContainer) {
+                passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
+            }
+
+
             //get current column target data
             var column = passageContainer.closest(".column");
-//            var passageContent = passageContainer.find(".passageContent");
+            passageContainer.find(".secondaryBackground").removeClass("secondaryBackground");
+
             var currentTarget = this.model.get("targetLocation");
             if (currentTarget) {
                 var link = passageContainer.find("[name='" + currentTarget + "']");
                 var linkOffset = link.offset();
                 var scroll = linkOffset == undefined ? 0 : linkOffset.top + passageContainer.scrollTop();
 
-                var originalScrollTop = -100;
+                var originalScrollTop = -200;
                 passageContainer.find(".passageContentHolder").animate({
                     scrollTop: originalScrollTop + scroll
                 }, 500);
@@ -173,8 +182,15 @@ var PassageDisplayView = DisplayView.extend({
             $(".w:not([strong]):not(.verseStart)", passageContent).next().css("border-left", "none");
         },
 
-        _doVersions: function (passageId, passageContent, version, reference) {
-            step.alternatives.enrichPassage(passageId, passageContent, version, reference);
+        _doAlternatives: function (passageId, passageContent, version, reference) {
+            // only do this if we've got a particular parameter set in the URL
+            if($.getUrlVar("altMeanings") != "true") {
+                return;
+            }
+
+            require(['search', 'qtip'], function () {
+                step.alternatives.enrichPassage(passageId, passageContent, version, reference);
+            });
         },
 
         /**
@@ -201,7 +217,7 @@ var PassageDisplayView = DisplayView.extend({
          */
         _doInlineNotes: function (passageContent) {
             var self = this;
-            var notes = $(".verse .note", passageContent).has(".inlineNote");
+            var notes = $(".verse .note, h2 .note, h3 .note", passageContent).has(".inlineNote");
             for (var i = 0; i < notes.length; i++) {
                 var item = notes.get(i);
                 var link = $("a", item);
@@ -302,7 +318,7 @@ var PassageDisplayView = DisplayView.extend({
                 require(["qtip", "drag"], function () {
                     item.qtip({
                         position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
-                        style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
+                        style: { tip: false, classes: 'draggable-tooltip xrefPopup', width: { min: 800, max: 800} },
                         show: { event: 'click' }, hide: { event: 'click' },
                         content: {
                             text: function (event, api) {
@@ -333,7 +349,7 @@ var PassageDisplayView = DisplayView.extend({
                                 $(api.elements.titlebar)
                                     .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
                                         .click(function () {
-                                            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true);
+                                            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
                                         })).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
                                         api.hide();
                                     }));
@@ -348,6 +364,8 @@ var PassageDisplayView = DisplayView.extend({
                                     containment: 'body',
                                     handle: selector
                                 });
+
+                                step.util.ui.addStrongHandlers(self.model.get("passageId"), tooltip);
                             }
                         }
                     });
@@ -364,7 +382,7 @@ var PassageDisplayView = DisplayView.extend({
          * @private
          */
         _doNonInlineNotes: function (passageContent) {
-            var verseNotes = $(".verse .note", passageContent);
+            var verseNotes = $(".verse .note, h3 .note, h2 .note", passageContent);
             var nonInlineNotes = verseNotes.not(verseNotes.has(".inlineNote"));
 
             for (var i = 0; i < nonInlineNotes.length; i++) {

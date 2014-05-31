@@ -57,9 +57,8 @@ step.alternatives = {
                                         $("a.alt-" + o).click(function(event) {
                                             if(step.passage.versions == undefined) {
                                                 step.passage.versions = { warningRaised : true};
-                                                step.util.raiseInfo(__s.alternatives_esv_warning, 'error', passageId, true);
+                                                step.util.raiseInfo(__s.alternatives_esv_warning, 'warning', passageId, true);
                                             }
-                                            
                                             
                                             var all = $(".av-" + o, scope);
                                             var first = all.first();

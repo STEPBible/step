@@ -106,7 +106,15 @@ var StepRouter = Backbone.Router.extend({
         if (args != null) {
             activePassageModel.save({ args: decodeURIComponent(args) }, { silent: true });
         }
-        this.navigate(urlStub, historyOptions);
+
+        //code copied from bootstraps navigate - bringing up to work out if anything will be triggered.
+        var currentFragment = Backbone.history.fragment;
+        var targetFragment = Backbone.history.getFragment(urlStub);
+        if(currentFragment === targetFragment) {
+            activePassageModel.trigger("afterRender");
+        } else {
+            this.navigate(urlStub, historyOptions);
+        }
     },
     getShareableColumnUrl: function (passageId) {
         var shareableUrl = "http://www.stepbible.org/";
@@ -120,7 +128,10 @@ var StepRouter = Backbone.Router.extend({
         }
 
         var fragment = passageModel.get("urlFragment");
-        return shareableUrl + fragment;
+        var url = shareableUrl + fragment;
+
+        $("link[rel='canonical']").attr("href", url);
+        return url;
     },
     handleSearchResults: function (passageModel, partRendered) {
         require(["search", "defaults"], function (module) {
@@ -204,10 +215,17 @@ var StepRouter = Backbone.Router.extend({
             }
 
             if (searchType == 'PASSAGE') {
-                step.util.trackAnalytics("search", "reference", passageModel.get("osisId"));
+                step.util.trackAnalytics("search", "passage", passageModel.get("osisId"));
             } else {
                 if (passageModel.get("query") != null) {
                     step.util.trackAnalytics("search", "query", passageModel.get("query"));
+                }
+            }
+
+            var searchTokens = passageModel.get("searchTokens") || [];
+            for(var i = 0; i < searchTokens.length; i++) {
+                if(searchTokens[i].tokenType && searchTokens[i].token) {
+                    step.util.trackAnalytics("search", searchTokens[i].tokenType, searchTokens[i].token);
                 }
             }
         }
@@ -217,6 +235,7 @@ var StepRouter = Backbone.Router.extend({
         var searchTokens = passageModel.get("searchTokens");
         var container = $("<span></span>").addClass("argSummary");
         step.util.ui.renderArgs(searchTokens, container);
+
         var passageOptions = step.util.getPassageContainer(passageModel.get("passageId")).find(".passageOptionsGroup");
         passageOptions.find(".argSummary").remove();
         passageOptions.append(container);
@@ -335,7 +354,8 @@ var StepRouter = Backbone.Router.extend({
         var historyModel = new HistoryModel({
             args: normalizedArgs,
             lastAccessed: new Date().getTime(),
-            searchTokens: query.searchTokens
+            searchTokens: query.searchTokens,
+            id: step.util.guid()
         });
         step.bookmarks.add(historyModel);
         historyModel.save();

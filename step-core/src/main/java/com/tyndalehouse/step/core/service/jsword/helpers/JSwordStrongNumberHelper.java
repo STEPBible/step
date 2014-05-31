@@ -43,7 +43,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
-import com.tyndalehouse.step.core.utils.SortingUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.document.Document;
@@ -61,20 +60,18 @@ import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.DivisionName;
-import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
 import org.jdom2.Element;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * Provides each strong number given a verse.
@@ -87,15 +84,15 @@ public class JSwordStrongNumberHelper {
     private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(JSwordStrongNumberHelper.class);
     private static final Book STRONG_NT_VERSION_BOOK = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
     private static final Book STRONG_OT_VERSION_BOOK = Books.installed().getBook(JSwordPassageService.OT_BOOK);
-    private final JSwordVersificationService versification;
-    private final JSwordSearchService jSwordSearchService;
     private static volatile Versification ntV11n;
     private static volatile Versification otV11n;
-    private Map<String, SortedSet<LexiconSuggestion>> verseStrongs;
-    private Map<String, BookAndBibleCount> allStrongs;
-    private boolean isOT;
+    private final JSwordVersificationService versification;
+    private final JSwordSearchService jSwordSearchService;
     private final EntityIndexReader definitions;
     private final Verse reference;
+    private Map<String, List<LexiconSuggestion>> verseStrongs;
+    private Map<String, BookAndBibleCount> allStrongs;
+    private boolean isOT;
 
     /**
      * Instantiates a new strong number provider impl.
@@ -111,6 +108,14 @@ public class JSwordStrongNumberHelper {
         this.definitions = manager.getReader("definition");
         this.reference = reference;
         initReferenceVersification();
+    }
+
+    /**
+     * @param isOT true to indicate OT
+     * @return the book that shoudd be read for obtaining strong number counts
+     */
+    public static Book getPreferredCountBook(boolean isOT) {
+        return isOT ? STRONG_OT_VERSION_BOOK : STRONG_NT_VERSION_BOOK;
     }
 
     /**
@@ -138,7 +143,7 @@ public class JSwordStrongNumberHelper {
 
             final Versification targetVersification = isOT ? otV11n : ntV11n;
             final Key key = VersificationsMapper.instance().mapVerse(this.reference, targetVersification);
-            this.verseStrongs = new TreeMap<String, SortedSet<LexiconSuggestion>>();
+            this.verseStrongs = new TreeMap<String, List<LexiconSuggestion>>();
             this.allStrongs = new HashMap<String, BookAndBibleCount>(256);
 
             final List<Element> elements = JSwordUtils.getOsisElements(new BookData(getPreferredCountBook(this.isOT), key));
@@ -157,16 +162,8 @@ public class JSwordStrongNumberHelper {
     }
 
     /**
-     * @param isOT true to indicate OT
-     * @return the book that shoudd be read for obtaining strong number counts
-     */
-    public static Book getPreferredCountBook(boolean isOT) {
-        return isOT ? STRONG_OT_VERSION_BOOK : STRONG_NT_VERSION_BOOK;
-    }
-
-    /**
-     * The book of the OSIS ID reference, or the passed in parameter in every other case where the OSIS ID
-     * does not contain multiple part.
+     * The book of the OSIS ID reference, or the passed in parameter in every other case where the OSIS ID does not
+     * contain multiple part.
      *
      * @param key the key, used to lookup the OSIS ID
      * @return the book from osis
@@ -236,22 +233,26 @@ public class JSwordStrongNumberHelper {
         final String strongQuery = StringConversionUtils.getStrongPaddedKey(strongNumbers);
 
         final EntityDoc[] docs = reader.search("strongNumber", strongQuery);
-        final SortedSet<LexiconSuggestion> verseSuggestions = new TreeSet<LexiconSuggestion>(SortingUtils.LEXICON_SUGGESTION_COMPARATOR);
+        final List<LexiconSuggestion> verseSuggestions = new ArrayList<LexiconSuggestion>();
 
+        Map<String, LexiconSuggestion> suggestionsFromSearch = new HashMap<String, LexiconSuggestion>(docs.length * 2);
         for (final EntityDoc d : docs) {
             final LexiconSuggestion ls = new LexiconSuggestion();
             ls.setStrongNumber(d.get("strongNumber"));
             ls.setGloss(d.get("stepGloss"));
             ls.setMatchingForm(d.get("accentedUnicode"));
             ls.setStepTransliteration(d.get("stepTransliteration"));
-            verseSuggestions.add(ls);
+            suggestionsFromSearch.put(ls.getStrongNumber(), ls);
 
             this.allStrongs.put(ls.getStrongNumber(), new BookAndBibleCount());
         }
 
+        String[] strongs = StringUtils.split(strongQuery);
+        for(String s : strongs) {
+            verseSuggestions.add(suggestionsFromSearch.get(s));
+        }
         this.verseStrongs.put(verseRef, verseSuggestions);
     }
-
 
 
     /**

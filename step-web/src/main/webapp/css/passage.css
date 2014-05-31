@@ -1,10 +1,3 @@
-.passageText {
-	/*margin-top: 1px;*/
-/*	overflow: auto;*/
-	/*padding: 0px 5px;*/
-	/*position: relative;*/
-	/*text-align: left;*/
-}
 
 /** Some interlinear rules */
 /* Define the nature of a "word" */
@@ -116,7 +109,7 @@ td.primary {
 .headingVerseNumber {
 	color: #33339F;
 	vertical-align: top;
-    width: 30px;
+    width: 75px;
 }
 
 .comparingVersionName {
@@ -132,13 +125,6 @@ td.primary {
 	display: none;
 }
 
-span[strong]:hover {
-/* 	color: #33339F; */
-	cursor: pointer;
-	background-color: rgb(235, 235, 241);
-/* 	border-bottom: 2px #696 dashed; */
-/* 	margin-bottom: 5px; */
-}
 
 .singleVerse {
 	display: block;	
@@ -204,7 +190,8 @@ a.smallHeaders {
 }
 
 .notesPane a {
-	color: #991C32;
+	color: #333;
+    font-family:tahoma;
 	font-weight: bold;
 	font-size: x-small;
 }
@@ -230,6 +217,10 @@ span.verseStart {
 	clear: left;
 }
 
+span.verseStart > a {
+    display: inline-block;
+}
+
 .rtl span.verseStart {
 	clear: right;
 }
@@ -238,7 +229,9 @@ span.strongs, span.morphs, span.interVerseNumbers {
 	text-decoration: none;
 	font-size: 90% !important;
 	text-align: center;
-	font-style: italic;
+	font-style: normal;
+    color: #26539e;
+    border: none;
 }
 
 .ancientVocab a {
@@ -267,14 +260,14 @@ sup.variant.note {
 
 SUP.note a {
 	font-size: 100%;
-	font-weight: bold;
-	color: #33339F;
+    font-weight:normal;
+	color: #26539e;
 }
 
 SUP.note a:visited {
 	font-size: 100%;
-	font-weight: bold;
-	color: #33339F;
+    font-weight:normal;
+	color: #26539e;
 }
 
 FONT.lex {
@@ -282,7 +275,7 @@ FONT.lex {
 }
 
 span.jesus {
-	color: red;
+    color:#cc4848;
 }
 
 span.speech {
@@ -355,15 +348,7 @@ H3.heading  {
 	font-weight: bold;
 }
 
-/* Deal with canonical titles as well */
-h3.canonicalHeading {
-    color: black;
-}
 
-h3.psalmHeading {
-    color: black;
-    font-variant: small-caps;
-}
 
 H4.heading  {
 	font-size: 100%;
@@ -397,8 +382,6 @@ H4.heading  {
 H2.xgen {
 	font-family: Verdana;
 	color: #991C32;
-	font-variant:small-caps;
-	font-style: italic;
 }
 
 H2.xgen ul {
@@ -406,16 +389,19 @@ H2.xgen ul {
 }
 
 H2.heading, input.heading {
-	color: #991C32;
+	color: #111;
 	font-weight: bold;
+    margin: 15px 0 10px 0;
+    line-height: 23px;
 }
 
 input.heading {
 	font-size: 130%;
+    text-align: left;
 }
 
 H2.heading {
-	font-size: 110%;
+    font-size: 100%;
 }
 
 div.margin {
@@ -460,7 +446,7 @@ h3.psalmHeading .note {
 
 
 a.linkRef {
-	color: #33339F;
+	color: #26539e;
 	font-weight: normal;
 	front-size: smaller;
 }
@@ -559,6 +545,7 @@ FONT.usg {
 .neut { color: black; }   
 
 .draggable-tooltip {
+    z-index: 10001 !important;
 	border-color: darkgrey;
     border-top: solid 2 darkgrey;
 }
@@ -566,16 +553,14 @@ FONT.usg {
 .draggable-tooltip .ui-tooltip-titlebar {
     cursor: move;
     color: #33339F;
-/*     width: 100%; */
     padding: 5px 0px;
 }
 
 .draggable-tooltip .qtip-titlebar {
-	padding: 4px 26px 5px 10px;
+	padding: 4px 26px 4px 10px;
 
-
-	background: #F3E5B4 url(images/ui-bg_highlight-soft_75_F3E5B4_1x100.png) 50% 50% repeat-x;
-	color: #991C32;
+	background-color: black;
+	color: white;
 	font-weight: bold;
     cursor: pointer;
 }
@@ -585,8 +570,8 @@ FONT.usg {
 	overflow: auto;
 }
 
-.draggable-tooltip .qtip-content {
-	background-color: white;
+.qtip-content {
+    padding:15px;
 }
 
 .draggable-tooltip * .xgen {
@@ -737,10 +722,6 @@ FONT.usg {
 	padding-right: 25px;
 }
 
-.verseStrongSearch {
-	float: left;
-	background-image: url('images/ui-icons_991C32_256x240.png');
-}
 
 .strongCount {
 	width: 5ex;
@@ -790,7 +771,8 @@ Analysis tabs
 }
 
 .versePopup {
-    border-width: 2px;
-    border-color: lightgrey;
+    border:1px solid #666;
+    border-radius:5px;
+    box-shadow:2px 2px 4px rgba(0,0,0,0.2);
     background-color: white;
 }

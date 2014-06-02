@@ -66,6 +66,11 @@ public class AppManagerImpl implements AppManagerService {
     }
 
     @Override
+    public String getAppDomain() {
+        return Boolean.TRUE.equals(Boolean.getBoolean("step.development")) ? "dev.stepbible.org" : "www.stepbible.org";
+    }
+
+    @Override
     public boolean isLocal() {
         //there is an argument to say that perhaps this should be taken from the install file as well.
         return Boolean.getBoolean("step.jetty");

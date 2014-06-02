@@ -117,7 +117,7 @@ var StepRouter = Backbone.Router.extend({
         }
     },
     getShareableColumnUrl: function (passageId) {
-        var shareableUrl = "http://www.stepbible.org/";
+        var shareableUrl = "http://" + step.state.getDomain() + "/";
         if (passageId == null) {
             return shareableUrl;
         }

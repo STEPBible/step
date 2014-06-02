@@ -38,6 +38,7 @@
     <META http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta step-local content="<%= appManager.isLocal() %>" />
+    <meta step-domain content="<%= appManager.getAppDomain() %>" />
     <meta name="step.version" content="${project.version}" />
     <meta name="description" content="${ description }" />
     <link rel="shortcut icon"  href="images/step-favicon.ico" />
@@ -46,10 +47,10 @@
 
     <c:choose>
         <c:when test="${ empty canonicalUrl }">
-            <link rel="canonical" href="http://www.stepbible.org/" />
+            <link rel="canonical" href="http://${stepDomain}/" />
         </c:when>
         <c:otherwise>
-            <link rel="canonical" href="http://www.stepbible.org/?q=${canonicalUrl}" />
+            <link rel="canonical" href="http://${stepDomain}/?q=${canonicalUrl}" />
         </c:otherwise>
     </c:choose>
 

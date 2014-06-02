@@ -22,6 +22,12 @@ public interface AppManagerService {
     void setAndSaveAppVersion(String newVersion);
 
     /**
+     * The domain on which the app is currently running
+     * @return the domain, such as www.stepbible.org
+     */
+    String getAppDomain();
+
+    /**
      * @return true to indicate this is hosted by the Step-Server app
      */
     boolean isLocal();

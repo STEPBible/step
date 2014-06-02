@@ -81,6 +81,7 @@
         step.bookmarks = new HistoryModelList();
         step.bookmarks.fetch();
 
+
         //need to clean up passages... Ideally, by changing the values of passageIds to be 1,2,3,4,...
         //we reserve 0 for the first column
         for (var ii = 0; ii < step.passages.length; ii++) {

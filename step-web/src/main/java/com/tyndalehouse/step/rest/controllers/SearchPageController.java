@@ -7,6 +7,7 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.service.AppManagerService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.yammer.metrics.annotation.Timed;
@@ -41,6 +42,7 @@ public class SearchPageController extends HttpServlet {
     private final SearchController search;
     private final ModuleController modules;
     private final BibleController bible;
+    private final AppManagerService appManagerService;
     private final Provider<ObjectMapper> objectMapper;
     private final Provider<ClientSession> clientSessionProvider;
 
@@ -48,11 +50,13 @@ public class SearchPageController extends HttpServlet {
     public SearchPageController(final SearchController search,
                                 final ModuleController modules,
                                 final BibleController bible,
+                                final AppManagerService appManagerService,
                                 Provider<ObjectMapper> objectMapper,
                                 Provider<ClientSession> clientSessionProvider) {
         this.search = search;
         this.modules = modules;
         this.bible = bible;
+        this.appManagerService = appManagerService;
         this.objectMapper = objectMapper;
         this.clientSessionProvider = clientSessionProvider;
     }
@@ -83,7 +87,7 @@ public class SearchPageController extends HttpServlet {
     private void doRedirect(final HttpServletResponse response, final String oldReference, final String oldVersion) {
         try {
             response.setStatus(301);
-            response.setHeader("Location", "http://www.stepbible.org/?q=" + getUrlFragmentForPassage(oldVersion, oldReference));
+            response.setHeader("Location", String.format("http://%s/?q=%s", appManagerService.getAppDomain(), getUrlFragmentForPassage(oldVersion, oldReference)));
             response.setHeader("Connection", "close");
         } catch (Exception ex) {
             LOGGER.error("Failed to operate redirect", ex);
@@ -140,6 +144,7 @@ public class SearchPageController extends HttpServlet {
         }
 
         //set the analytics token
+        req.setAttribute("stepDomain", appManagerService.getAppDomain());
         req.setAttribute("analyticsToken", Boolean.TRUE.equals(Boolean.getBoolean("step.development")) ? DEV_TOKEN : LIVE_TOKEN);
     }
 

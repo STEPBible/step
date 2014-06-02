@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tyndalehouse.step.core.service.AppManagerService;
 import com.yammer.metrics.annotation.Timed;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.crosswire.jsword.book.Book;
@@ -70,6 +71,7 @@ public class SiteMapController extends HttpServlet {
     private final ModuleController modules;
     private String stepBase;
     private final JSwordVersificationService versificationService;
+    private final AppManagerService appManagerService;
     private final EntityIndexReader definitions;
 
     /** Site map */
@@ -86,9 +88,12 @@ public class SiteMapController extends HttpServlet {
      */
     @Inject
     public SiteMapController(final ModuleController modules,
-            final JSwordVersificationService versificationService, final EntityManager entityManager) {
+            final JSwordVersificationService versificationService,
+            final EntityManager entityManager,
+            final AppManagerService appManagerService) {
         this.modules = modules;
         this.versificationService = versificationService;
+        this.appManagerService = appManagerService;
         this.definitions = entityManager.getReader("definition");
     }
 
@@ -97,7 +102,7 @@ public class SiteMapController extends HttpServlet {
     protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
             throws ServletException, IOException {
         if (this.stepBase == null) {
-            this.stepBase = "http://www.stepbible.org/";
+            this.stepBase = String.format("http://%s/", appManagerService.getAppDomain());
         }
 
         // response.setContentType("application/x-gzip");

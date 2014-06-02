@@ -63,6 +63,12 @@ step.state = {
         }
         return this.local;
     },
+    getDomain : function() {
+        if(this.domain == undefined) {
+            this.domain = $("meta[step-domain]").attr("content");
+        }
+        return this.domain;
+    },
     
     getCurrentVersion : function() {
         if(this.version == undefined) {

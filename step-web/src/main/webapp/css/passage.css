@@ -770,9 +770,3 @@ Analysis tabs
     font-variant: normal;
 }
 
-.versePopup {
-    border:1px solid #666;
-    border-radius:5px;
-    box-shadow:2px 2px 4px rgba(0,0,0,0.2);
-    background-color: white;
-}

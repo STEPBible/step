@@ -11,6 +11,10 @@ h1,h2,h3,h4,h5,h6,.panel-title {
   margin:20px 0 10px 0;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 body, .dropdown-menu, .searchResultRow, #quickLexicon h1 {
   font-size: $defaultFontSize;
 }

@@ -27,6 +27,7 @@
     @include max-height(500);
   }
   @media screen and (min-width: $stepMD + 1px) {
+    min-width: 500px;
     max-width: 600px;
     @include multi-column(2);
     @include overflow();

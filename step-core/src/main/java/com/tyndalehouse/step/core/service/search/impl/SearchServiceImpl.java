@@ -1352,7 +1352,6 @@ public class SearchServiceImpl implements SearchService {
      */
     private String getRelatedStrongQuery(final EntityDoc[] results) {
         final StringBuilder relatedQuery = new StringBuilder(results.length * 7);
-        relatedQuery.append("-stopWord:true ");
         for (final EntityDoc doc : results) {
             String relatedNumbers = doc.get("relatedNumbers");
             if (StringUtils.isNotBlank(relatedNumbers)) {
@@ -1374,25 +1373,29 @@ public class SearchServiceImpl implements SearchService {
      */
     private EntityDoc[] retrieveStrongDefinitions(final SearchQuery sq, final Set<String> filteredStrongs,
                                                   final QueryParser p, final String query, final StringBuilder fullQuery) {
-        Query q;
-        try {
-            q = p.parse(query);
-        } catch (final ParseException e) {
-            throw new TranslatedException(e, "search_invalid");
-        }
-        final EntityDoc[] results = this.definitions.search(q);
+        if(StringUtils.isNotBlank(query)) {
 
-        for (final EntityDoc doc : results) {
-            // remove from matched strong if not in filter
-            final String strongNumber = doc.get(STRONG_NUMBER_FIELD);
-            if (isInFilter(strongNumber, sq)) {
-                filteredStrongs.add(strongNumber);
-                fullQuery.append(STRONG_QUERY);
-                fullQuery.append(strongNumber);
-                fullQuery.append(' ');
+            Query q;
+            try {
+                q = p.parse(query);
+            } catch (final ParseException e) {
+                throw new TranslatedException(e, "search_invalid");
             }
+            final EntityDoc[] results = this.definitions.search(q);
+
+            for (final EntityDoc doc : results) {
+                // remove from matched strong if not in filter
+                final String strongNumber = doc.get(STRONG_NUMBER_FIELD);
+                if (isInFilter(strongNumber, sq)) {
+                    filteredStrongs.add(strongNumber);
+                    fullQuery.append(STRONG_QUERY);
+                    fullQuery.append(strongNumber);
+                    fullQuery.append(' ');
+                }
+            }
+            return results;
         }
-        return results;
+        return new EntityDoc[0];
     }
 
     /**
@@ -1623,7 +1626,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private String retrieveStrongs(final Set<String> strongsFromQuery) {
         final StringBuilder query = new StringBuilder(strongsFromQuery.size() * 6 + 16);
-        query.append("-stopWord:true ");
+//        query.append("-stopWord:true ");
         for (final String strong : strongsFromQuery) {
             query.append(strong);
             query.append(' ');

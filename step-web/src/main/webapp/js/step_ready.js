@@ -20,6 +20,8 @@
         markAsRecommended('LXX');
         markAsRecommended('SBLG');
         markAsRecommended('Neno');
+        markAsRecommended('NVI');
+        markAsRecommended('PNVI');
 
         //save 100k of space
         window.tempVersions = null;

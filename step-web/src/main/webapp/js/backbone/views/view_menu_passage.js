@@ -547,7 +547,15 @@ var PassageMenuView = Backbone.View.extend({
     /**
      * Closes the whole column by removing it from the DOM
      */
-    closeColumn: function () {
+    closeColumn: function (ev) {
+        var targetButton = $(ev.target).closest("button");
+        if(targetButton.hasClass("disabled")) {
+            ev.stopPropagation();
+            targetButton.blur();
+            return;
+        }
+
+
         this.model.trigger("destroy-column");
         this.column.remove();
 

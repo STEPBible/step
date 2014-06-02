@@ -1165,16 +1165,20 @@ step.util = {
                                     templatedTable.find(".bookCount").click(function () {
                                         step.util.trackAnalytics('verseVocab', 'bookCount');
                                         var bookKey = key.substring(0, key.indexOf('.'));
-                                        var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent($(this).parent().data("strong"));
+                                        var strong = $(this).parent().data("strong");
+                                        var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent(strong);
                                         //make this the active passage
                                         step.util.createNewLinkedColumn(passageId);
+                                        step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
                                         step.router.navigatePreserveVersions(args);
                                     });
                                     templatedTable.find(".bibleCount").click(function () {
                                         step.util.trackAnalytics('verseVocab', 'bibleCount');
-                                        var args = "strong=" + encodeURIComponent($(this).parent().data("strong"));
+                                        var strong = $(this).parent().data("strong");
+                                        var args = "strong=" + encodeURIComponent(strong);
                                         //make this the active passage
                                         step.util.createNewLinkedColumn(passageId);
+                                        step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
                                         step.router.navigatePreserveVersions(args);
                                     });
 

@@ -703,7 +703,11 @@ var MainSearchView = Backbone.View.extend({
                 }
             } else if (this.matchDropdownEntry(currentInput, currentVersion)) {
                 if (limit == VERSION || exactInitials.length + prefixInitials.length < 3) {
-                    others.push(step.itemisedVersions[ii]);
+                    if (currentVersion.item.recommended) {
+                        recommendedByLanguage.push(currentVersion);
+                    } else {
+                        others.push(currentVersion);
+                    }
                 } else {
                     totalNotDisplayed++;
                 }

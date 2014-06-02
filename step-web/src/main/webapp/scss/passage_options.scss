@@ -4,9 +4,11 @@
 
 .passageOptionsGroup {
   .closeColumn.disabled {
+    background-color: white;
+    background-image: none;
     pointer-events: initial;
     box-shadow: inset 0 1px 0 rgba(255,255,255,.15),0 1px 1px rgba(0,0,0,.075);
-    &:hover {
+    &:hover, &:active {
       background-position: inherit;
     }
   }

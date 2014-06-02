@@ -1,3 +1,4 @@
+<%@tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="option4" %>
 <%@ attribute name="option4type" %>
 <%@ attribute name="option5" %>
@@ -13,10 +14,8 @@
 <%@attribute name="option2type" required="false" %>
 <%@attribute name="option3" required="false" %>
 <%@attribute name="option3type" required="false" %>
-
 <fmt:message key="${explanation}"  var="explanationText" />
 ${ step:markTransliteration(explanationText) }
-
 <span class="input-group">
     <span class="form-control input-sm argSummary">
         <c:if test="${ not empty option1 }"><span class="argSelect select-${ option1type } ${fn:contains(option1, '.') ? 'transliteration' : ''}">${ option1 }</span></c:if>

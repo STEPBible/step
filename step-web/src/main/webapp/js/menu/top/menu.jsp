@@ -1,4 +1,4 @@
-<%@page import="com.tyndalehouse.step.core.models.Language" %>
+<%@page import="com.tyndalehouse.step.core.models.Language" trimDirectiveWhitespaces="true" %>
 <%@page import="java.util.List" %>
 <%@page import="com.tyndalehouse.step.core.service.LanguageService" %>
 <%@page import="com.google.inject.Injector" %>

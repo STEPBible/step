@@ -1,4 +1,4 @@
-<%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
+<%@page import="com.tyndalehouse.step.core.models.ClientSession" trimDirectiveWhitespaces="true" %>
 <%@page import="java.util.Locale"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ taglib prefix="search" tagdir="/WEB-INF/tags/search" %>
@@ -9,14 +9,12 @@
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
 <%@ page import="java.util.Calendar" %>
-
 <%
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
     Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
-
 <fmt:setBundle basename="HtmlBundle" scope="request" />
 <!DOCTYPE html  xmlns:fb="http://ogp.me/ns/fb#">
 <html>
@@ -43,7 +41,6 @@
     <meta name="step.version" content="${project.version}" />
     <meta name="description" content="${ description }" />
     <link rel="shortcut icon"  href="images/step-favicon.ico" />
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <c:choose>
@@ -54,7 +51,6 @@
             <link rel="canonical" href="http://${stepDomain}/?q=${canonicalUrl}" />
         </c:otherwise>
     </c:choose>
-
 
     <%
         if(request.getParameter("debug") != null) {
@@ -405,9 +401,7 @@
         <%
             }
         %>
-
     <script src="js/step.${project.version}.min.js" type="text/javascript" ></script>
-
     <%
 	}
 	%>
@@ -442,7 +436,5 @@
         }(window, document, 'script'));
     </script>
     <% } %>
-
-
 </body>
 </html>

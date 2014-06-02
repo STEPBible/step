@@ -32,9 +32,11 @@ div.versePopup.qtip-default.qtip {
         padding-bottom: 5px;
       }
     }
-    .even {
-      border-left: solid 1 lightgrey;
-      padding-left: 20px;
+    @media screen and (min-width: $stepXSBootstrap) {
+      .even {
+        border-left: solid 1 lightgrey;
+        padding-left: 20px;
+      }
     }
     .definition {
       overflow: hidden;

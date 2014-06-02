@@ -51,6 +51,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.String;
 
 /**
  * @author chrisburrell
@@ -61,11 +62,11 @@ public class BerkeleyOutputConverter {
     public static void main(String[] args) throws IOException {
 
         // David'
-        final String root = "C:\\temp\\autoTag\\Bibles\\";
-        final String strongs = FileUtils.readFileToString(new File(root + "bible.s"));        // strongs # only
-        final String other = FileUtils.readFileToString(new File(root + "bible.u"));          // unstemmed original
-        final String results = FileUtils.readFileToString(new File(root + "training.align")); // alignment from Berkeley
-        final String keyFile = FileUtils.readFileToString(new File(root + "keyList.txt"));    // refs only
+        final String root = "C:\\Users\\David IB\\Dropbox\\STEP-Tagging\\autoTag\\BibleSample\\";
+        final String strongs = FileUtils.readFileToString(new File(root + "NT.s"));        // strongs #
+        final String other = FileUtils.readFileToString(new File(root + "NT.u"));          // stems only
+        final String results = FileUtils.readFileToString(new File(root + "NT.training.align")); // alignment from Berkeley
+        final String keyFile = FileUtils.readFileToString(new File(root + "NT.keyList.txt"));    // refs only
 /**
  * Chris'
         final String strongs = FileUtils.readFileToString(new File("c:\\temp\\bible.s"));
@@ -86,7 +87,7 @@ public class BerkeleyOutputConverter {
 
 
         String resultTagging = parseResults(resultSentences, strongSentences, otherSentences, indexSearcher, keyList);
-        FileUtils.writeStringToFile(new File(root + "Bible.tagging.txt"), resultTagging);
+        FileUtils.writeStringToFile(new File(root + "NT.tagging.txt"), resultTagging);
     }
 
     private static String parseResults(final List<String[]> resultSentences, final List<String[]> strongSentences, final List<String[]> otherSentences, final IndexSearcher indexSearcher, final List<String[]> keyList) throws IOException {
@@ -105,6 +106,7 @@ public class BerkeleyOutputConverter {
             resultingTagging.append("$");
 
             prev =-1;
+            boolean first = true;
             sentence = reOrder(sentence);
             for (String word : sentence) {
 
@@ -115,13 +117,13 @@ public class BerkeleyOutputConverter {
             //            continue;
                     }
 
+
+
                     //find word in sentence in each bible.
                     String strong = strongSentences.get(i)[indexes[0]];
                     String other = otherSentences.get(i)[indexes[1]];
 
-                    if (indexes[1] != prev) {   // append extra Greek
-//                        resultingTagging.append(", ");
-//                    } else {
+                    if (indexes[1] != prev) {   // add ref
                         resultingTagging.append("\n");
                         resultingTagging.append(ref);
                         resultingTagging.append("-");
@@ -134,7 +136,7 @@ public class BerkeleyOutputConverter {
                             resultingTagging.append(" ");
                         }
                     }
-                    if (indexes[1] != prev) {   // add extra Greek
+                    if (indexes[1] != prev) {   // add aligned word
                         resultingTagging.append("\t");
                         resultingTagging.append(other);
                         resultingTagging.append("\t");
@@ -145,6 +147,50 @@ public class BerkeleyOutputConverter {
                     resultingTagging.append("{");
                     appendLexicalEntry(indexSearcher, resultingTagging, strong);
                     resultingTagging.append("} ");
+
+                    //add next Greek word(s) if not tagged
+                    int testStrong;
+                    boolean missingGreek;
+                    String checkMissing;
+                    if (first){
+                        first = false;
+                        for (int l=0; l < indexes[0]; l++){
+                            missingGreek = true;
+                            checkMissing = Integer.toString(l) + "-";
+                            for (int m = 0; m < sentence.length; m++) {
+                                if (sentence[m].startsWith(checkMissing)) {
+                                    missingGreek = false;
+                                    break;
+                                }
+                            }
+                            if (missingGreek) {
+                                String missingStrong = strongSentences.get(i)[l];
+                                resultingTagging.append("+ " + missingStrong);
+                                resultingTagging.append("{");
+                                appendLexicalEntry(indexSearcher, resultingTagging, missingStrong);
+                                resultingTagging.append("} ");
+                            }
+                        }
+
+                    }
+                    for (int n=indexes[0]+1; n < sentence.length; n++){
+                        missingGreek = true;
+                        testStrong = n;
+                        checkMissing = Integer.toString(testStrong) + "-";
+                        for (int k = 0; k < sentence.length; k++) {
+                            if (sentence[k].startsWith(checkMissing)) {
+                                missingGreek = false;
+                                break;
+                            }
+                        }
+                        if (!missingGreek) break;
+                        String missingStrong = strongSentences.get(i)[testStrong];
+                        resultingTagging.append("+ " + missingStrong);
+                        resultingTagging.append("{");
+                        appendLexicalEntry(indexSearcher, resultingTagging, missingStrong);
+                        resultingTagging.append("} ");
+
+                    }
 
                 } catch (Exception e) {
                     System.out.println("Error in verse " + ref + " for word: " + word);
@@ -213,6 +259,7 @@ public class BerkeleyOutputConverter {
         }
         resultingTagging.append(gloss);
     }
+
 
     private static List<String[]> splitByWord(final String strongs) {
         final String[] sentences = strongs.split("\r?\n");

@@ -131,6 +131,15 @@
     }
 
     @media (max-width: $stepXS) {
+      .navbar-toggle .icon-bar + .icon-bar {
+        margin-top: 3px;
+      }
+
+      .navbar-toggle .icon-bar {
+        height: 3px;
+
+      }
+
       .pull-right {
         position: relative;
       }

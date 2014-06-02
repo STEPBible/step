@@ -35,6 +35,7 @@ package com.tyndalehouse.step.guice.providers;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.Locale;
+import java.util.MissingResourceException;
 
 import javax.inject.Provider;
 import javax.servlet.http.Cookie;
@@ -74,8 +75,15 @@ public class ClientSessionProvider implements Provider<ClientSession> {
 
     @Override
     public ClientSession get() {
-        return new WebSessionImpl(this.session.getId(), getLocale().getISO3Language(),
-                this.request.getRemoteAddr(), getLocale(), this.request);
+        final Locale locale = getLocale();
+        final String remoteAddr = this.request.getRemoteAddr();
+        final String id = this.session.getId();
+        try {
+            return new WebSessionImpl(id, locale.getISO3Language(), remoteAddr, locale, this.request);
+        } catch(MissingResourceException ex) {
+            //attemping to set to unsupported Locale... So let's instead set to english
+            return new WebSessionImpl(id, Locale.ENGLISH.getISO3Language(), remoteAddr, Locale.ENGLISH, this.request);
+        }
     }
 
     /**

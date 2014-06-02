@@ -135,8 +135,6 @@ public class SearchServiceImpl implements SearchService {
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
-    private static final String DEFAULT_NT_REFERENCE = "Gen.1";
-    private static final String DEFAULT_OT_REFERENCE = "Gen.1";
     private static final String NO_FILTER = "all";
     private final JSwordSearchService jswordSearch;
     private final TimelineService timeline;
@@ -264,26 +262,12 @@ public class SearchServiceImpl implements SearchService {
      * @return the best reference
      */
     private String getBestReference(List<String> versions) {
-        boolean hasGreek = false;
-        boolean hasHebrew = false;
         for (int i = 0; i < versions.size(); i++) {
             String v = versions.get(i);
-            Book b = this.versificationService.getBookFromVersion(v);
-            String languageCode = b.getLanguage().getCode();
-            if ("grc".equals(languageCode)) {
-                return DEFAULT_NT_REFERENCE;
-            }
-            hasHebrew |= "he".equals(languageCode);
-            if (i == 0 && hasHebrew) {
-                return DEFAULT_OT_REFERENCE;
-            }
+            return this.jswordMetadata.getFirstChapterReference(v);
         }
-
-        if (hasHebrew && !hasGreek) {
-            return DEFAULT_OT_REFERENCE;
-        }
-
-        return DEFAULT_NT_REFERENCE;
+        //should never happen
+        return "Gen.1";
     }
 
     /**

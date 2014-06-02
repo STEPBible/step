@@ -47,6 +47,12 @@ import org.crosswire.jsword.book.Book;
  */
 public interface JSwordMetadataService {
     /**
+     * @param version the initials of the book to look up
+     * @return the first chapter OSIS ID
+     */
+    String getFirstChapterReference(String version);
+
+    /**
      * Gets the features for a module
      *
      * @param version       the initials of the book to look up

@@ -8,11 +8,14 @@ import java.util.*;
 
 import javax.inject.Inject;
 
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.FeatureType;
+import org.crosswire.jsword.book.basic.AbstractPassageBook;
+import org.crosswire.jsword.passage.VerseKey;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.DivisionName;
 import org.crosswire.jsword.versification.Versification;
@@ -40,6 +43,18 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     @Inject
     public JSwordMetadataServiceImpl(final JSwordVersificationService versificationService) {
         this.versificationService = versificationService;
+    }
+
+    @Override
+    public String getFirstChapterReference(final String version) {
+        final Book bookFromVersion = versificationService.getBookFromVersion(version);
+
+        if(bookFromVersion instanceof AbstractPassageBook) {
+            BibleBook bibleBook = ((AbstractPassageBook) bookFromVersion).getBibleBooks().iterator().next();
+            final Versification versificationForVersion = this.versificationService.getVersificationForVersion(bookFromVersion);
+            return String.format("%s.%d", bibleBook.getOSIS(), 1);
+        }
+        throw new StepInternalException("Unable to ascertain first chapter of book.");
     }
 
     @Override

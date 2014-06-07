@@ -69,6 +69,14 @@ step.state = {
         }
         return this.domain;
     },
+    getIncompleteLanguage : function() {
+        if(this.incomplete == undefined) {
+            this.incomplete = $("meta[step-incomplete-language]").attr("content") == "true";
+        } else {
+            this.incomplete = false;
+        }
+        return this.incomplete;
+    },
     
     getCurrentVersion : function() {
         if(this.version == undefined) {

@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.tyndalehouse.step.core.models.Language;
 
@@ -54,4 +55,10 @@ public interface LanguageService {
      * @return true to indicate it is supported.
      */
     boolean isSupported(String langParam);
+
+    /**
+     * @param langParam the language parameter
+     * @return true if the language has bee completed
+     */
+    boolean isCompleted(String langParam);
 }

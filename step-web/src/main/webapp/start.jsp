@@ -37,6 +37,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta step-local content="<%= appManager.isLocal() %>" />
     <meta step-domain content="<%= appManager.getAppDomain() %>" />
+    <c:if test="${ not languageComplete }">
+        <meta step-incomplete-language content="true" />
+    </c:if>
     <meta property="fb:admins" content="551996214" />
     <meta name="step.version" content="${project.version}" />
     <meta name="description" content="${ description }" />

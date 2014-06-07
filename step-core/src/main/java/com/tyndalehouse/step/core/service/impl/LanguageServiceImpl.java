@@ -109,6 +109,12 @@ public class LanguageServiceImpl implements LanguageService {
         return this.languageCodes.contains(langParam);
     }
 
+    @Override
+    public boolean isCompleted(final String langParam) {
+        return this.completedLanguages.contains(langParam);
+    }
+
+
     /**
      * Sets up the languages.
      * 

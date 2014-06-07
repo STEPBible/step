@@ -181,6 +181,9 @@
         
         //do cookie notification
         step.util.raiseOneTimeOnly("cookie_notification", 'info');
+        if(step.state.getIncompleteLanguage()) {
+            step.util.raiseOneTimeOnly("machine_translated", 'info');
+        }
         step.util.trackAnalytics('interface', 'language', step.state.language(1));
     });
 })();

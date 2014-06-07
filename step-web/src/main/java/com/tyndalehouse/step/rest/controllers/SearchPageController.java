@@ -156,6 +156,7 @@ public class SearchPageController extends HttpServlet {
         req.setAttribute("languageCode", userLocale.getLanguage());
         req.setAttribute("languageName", ContemporaryLanguageUtils.capitaliseFirstLetter(userLocale
                 .getDisplayLanguage(userLocale)).replace("\"", ""));
+        req.setAttribute("languageComplete", this.languageService.isCompleted(userLocale.getLanguage()));
         req.setAttribute("versions", objectMapper.get().writeValueAsString(modules.getAllModules()));
         req.setAttribute("searchType", data.getSearchType().name());
         req.setAttribute("versionList", getVersionList(data.getMasterVersion(), data.getExtraVersions()));

@@ -23,9 +23,9 @@
 @StrDeriv=	of Hebrew origin (H0175);
 @StrRelatedNos=	H0175,
 @StrCoRelatedNos=	
-@StepRelatedNos=	H0175,
-@StepRelatedNos=	
-@StepRelatedNos=	G1223, G0939,
+@StepRelatedNos2=	H0175,
+@StepRelatedNos2=	
+@StepRelatedNos2=	G1223, G0939,
 @AllRelatedNos=	H0175,
 @MounceShortDef=	Aaron (referring to both the person and his priesthood)
 @MounceMedDef=	<b>Aaron,</b> pr. name, indecl, the brother of Moses (<ref>Exod. 4:14</ref>), <ref>Lk. 1:15; Acts 7:40; Heb. 5:4; 7:11; 9:4* </ref>
@@ -80,5 +80,5 @@ $===============================
 @StrRelatedNos=	
 @StrCoRelatedNos=	H0013, H0012, H0011, H0009, H0008, H0007,
 @DaleRelatedNos=	H0007, H0008, H0009, H0011, H0012, H0013,
-@StepRelatedNos=	H0007, H0008, H0009, H0011, H0012, H0013, H0010,
+@StepRelatedNos2=	H0007, H0008, H0009, H0011, H0012, H0013, H0010,
 @AllRelatedNos=	G3077, H0013, H0012, H0011, H0009, H0008, H0007,

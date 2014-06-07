@@ -306,7 +306,7 @@
                         <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="brother" option3type="text" option4="he.sed" option4type="hebrew" />
                         <search:sample_search explanation="chained_searches_explanation_subject" option1="ESV" option1type="version" option2="throne" option2type="text" option3="David" option3type="subject" />
 
-                        <div class="text-muted step-copyright">&copy; Tyndale House, Cambridge, UK - <%= Calendar.getInstance().get(Calendar.YEAR) %></div>
+                        <div class="text-muted step-copyright">&copy; <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House, Cambridge, UK</a> - <%= Calendar.getInstance().get(Calendar.YEAR) %></div>
                     </div>
                 </div>
             </div>

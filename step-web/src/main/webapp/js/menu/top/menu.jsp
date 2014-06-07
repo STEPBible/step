@@ -42,8 +42,8 @@
                             <c:when test="${language.partial and not language.complete}"><fmt:message key="partially_translated" /></c:when>
                         </c:choose>
                     </c:set>
-                    <li title="${machineTranslatedWarning}"><a onclick="window.localStorage.clear(); $.cookie('lang', '')" lang="${language.code}" href="./?lang=${language.code}${param.debug eq null ? "" : "&debug" }">
-                        ${ language.originalLanguageName } - (${ language.userLocaleLanguageName })<c:if test="${not language.complete}">*</c:if>
+                    <li class="${ language.code eq languageCode ? 'active' : '' }" title="${machineTranslatedWarning}"><a onclick="window.localStorage.clear(); $.cookie('lang', '${language.code}')" lang="${language.code}" href="./?lang=${language.code}${param.debug eq null ? "" : "&debug" }">
+                        ${ language.userLocaleLanguageName } (${ language.originalLanguageName })<c:if test="${not language.complete}">*</c:if>
                     </a></li>
                 </c:forEach>
             </ul>

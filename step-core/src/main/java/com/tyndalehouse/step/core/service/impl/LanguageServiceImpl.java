@@ -146,7 +146,7 @@ public class LanguageServiceImpl implements LanguageService {
                     }
                 }
 
-                sortLanguages(currentLanguage, configuredLanguages);
+                sortLanguages(configuredLanguages);
                 this.languages.put(currentLocale, configuredLanguages);
             }
         }
@@ -186,22 +186,15 @@ public class LanguageServiceImpl implements LanguageService {
     /**
      * Sort languages by their original language name, and puts the current locale language at the top.
      * 
-     * @param currentLanguage the current language
      * @param languages a list of languages to be sorted
      */
-    private void sortLanguages(final Language currentLanguage, final List<Language> languages) {
+    private void sortLanguages(final List<Language> languages) {
         // sort list of languages
         Collections.sort(languages, new Comparator<Language>() {
 
             @Override
             public int compare(final Language o1, final Language o2) {
-                // CHECKSTYLE:OFF
-                if (o1.equals(currentLanguage)) {
-                    return 0;
-                }
-                // CHECKSTYLE:ONE
-
-                return o1.getOriginalLanguageName().compareTo(o2.getOriginalLanguageName());
+                return o1.getUserLocaleLanguageName().compareTo(o2.getUserLocaleLanguageName());
             }
         });
     }

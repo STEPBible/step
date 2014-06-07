@@ -166,12 +166,17 @@
 
         new FeedbackView();
         if (step.passages.length > 1) {
+            //delete all passages that are not passageId: 0
+            _.each(step.passages.reject(function(m) { return m.get("passageId") == 0 }), function(m) {
+                m.destroy();
+            });
+
             //we restore previous passages
-            new RestorePassageView({ callback: function() {
-                registerColumnChangeEvents();
-            }});
-        } else {
-            registerColumnChangeEvents();
+//            new RestorePassageView({ callback: function() {
+//                registerColumnChangeEvents();
+//            }});
+//        } else {
+//            registerColumnChangeEvents();
         }
         
         //do cookie notification

@@ -60,7 +60,8 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
             if (k != null) {
                 // check this book actually contains this key, based on the scope...
                 if (!JSwordUtils.containsAny(master, k)) {
-                    return getExactRange(input);
+                    return new BookName[0];
+//                    return getExactRange(input);
                 }
 
                 BookName bk;
@@ -81,17 +82,18 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         } catch (NoSuchKeyException ex) {
             //silently fail
         }
-        return getExactRange(input);
+//        return getExactRange(input);
+        return new BookName[0];
     }
 
     /**
-     * @param input the input
+//     * @param input the input
      * @return the list of matching ranges
      */
-    private BookName[] getExactRange(final String input) {
-        final List<BookName> ranges = internationalRangeService.getRanges(input, true);
-        return ranges.toArray(new BookName[ranges.size()]);
-    }
+//    private BookName[] getExactRange(final String input) {
+//        final List<BookName> ranges = internationalRangeService.getRanges(input, true);
+//        return ranges.toArray(new BookName[ranges.size()]);
+//    }
 
     @Override
     public BookName[] collectNonExactMatches(final TermsAndMaxCount<BookName> collector,
@@ -156,9 +158,9 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
             bookNames.addAll(extras);
         }
 
-        if(spaceLeft > 0) {
-            bookNames.addAll(this.internationalRangeService.getRanges(input, false));
-        }
+//        if(spaceLeft > 0) {
+//            bookNames.addAll(this.internationalRangeService.getRanges(input, false));
+//        }
         return bookNames.toArray(new BookName[bookNames.size()]);
     }
 
@@ -236,7 +238,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         }
 
         Verse firstKey = (Verse) k.get(0);
-        final boolean startOfBook = masterV11n.isStartOfBook(((Verse) firstKey));
+        final boolean startOfBook = masterV11n.isStartOfBook(firstKey);
         if (!startOfBook) {
             return false;
         }

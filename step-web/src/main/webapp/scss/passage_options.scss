@@ -48,7 +48,7 @@
     li {
       padding-right: 5px;
       &:hover {
-        background-color: $hoverColor;
+        background-color: $secondaryHoverColour;
       }
       &.contextContainer {
         button {
@@ -92,11 +92,11 @@
     //sub groups in the dropdown
     .panel {
       border: none;
-
+      border-radius: 0px;
       a {
         cursor: hand;
         &:hover {
-          background-color: $hoverColor;
+          background-color: $secondaryHoverColour;
         }
       }
 

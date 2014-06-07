@@ -35,10 +35,15 @@ package com.tyndalehouse.step.core.service.impl;
 import static com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils.capitaliseFirstLetter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -56,8 +61,11 @@ import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
  */
 @Singleton
 public class LanguageServiceImpl implements LanguageService {
-    private final String languageCodes;
+    private final Map<Locale, List<Language>> languages = new HashMap<Locale, List<Language>>();
+    private final Set<String> languageCodes;
     private final Provider<ClientSession> clientSessionProvider;
+    private final Set<String> completedLanguages;
+    private final Set<String> partialLanguages;
 
     /**
      * Instantiates a new language service impl.
@@ -66,10 +74,24 @@ public class LanguageServiceImpl implements LanguageService {
      * @param clientSessionProvider the client session provider
      */
     @Inject
-    public LanguageServiceImpl(@Named("app.languages.available") final String languageCodes,
+    public LanguageServiceImpl(
+            @Named("app.languages.available") final String languageCodes,
+            @Named("app.languages.completed") final String completedLanguages,
+            @Named("app.languages.partial") final String partialLanguages,
             final Provider<ClientSession> clientSessionProvider) {
-        this.languageCodes = languageCodes;
+        this.languageCodes = getLanguageCodes(languageCodes);
+        this.completedLanguages = getLanguageCodes(completedLanguages);
+        this.partialLanguages = getLanguageCodes(partialLanguages);
         this.clientSessionProvider = clientSessionProvider;
+    }
+
+    private Set<String> getLanguageCodes(final String languageCodes) {
+        if(StringUtils.isBlank(languageCodes)) {
+            return new HashSet<String>();
+        } else {
+
+            return new HashSet<String>(Arrays.asList(StringUtils.split(languageCodes, ",")));
+        }
     }
 
     /**
@@ -79,7 +101,12 @@ public class LanguageServiceImpl implements LanguageService {
      */
     @Override
     public List<Language> getAvailableLanguages() {
-        return init();
+        return getLanguagesForSession();
+    }
+
+    @Override
+    public boolean isSupported(final String langParam) {
+        return this.languageCodes.contains(langParam);
     }
 
     /**
@@ -87,29 +114,37 @@ public class LanguageServiceImpl implements LanguageService {
      * 
      * @return the list
      */
-    private List<Language> init() {
-        final List<Language> languages = new ArrayList<Language>(128);
-        final String[] codes = StringUtils.split(this.languageCodes, ",");
+    private List<Language> getLanguagesForSession() {
         final Locale currentLocale = this.clientSessionProvider.get().getLocale();
-        Language currentLanguage = null;
 
-        for (final String code : codes) {
-            final Locale locale = ContemporaryLanguageUtils.getLocaleFromTag(code);
-            final Language l = new Language();
-            l.setCode(code);
+        List<Language> configuredLanguages = this.languages.get(currentLocale);
+        if(configuredLanguages == null) {
+            synchronized (this) {
+                configuredLanguages = new ArrayList<Language>(64);
 
-            // attempt to make first letter upper case
-            l.setUserLocaleLanguageName(getLanguageName(currentLocale, locale));
-            l.setOriginalLanguageName(getLanguageName(locale, locale));
-            languages.add(l);
+                Language currentLanguage = null;
+                for (final String code : this.languageCodes) {
+                    final Locale locale = ContemporaryLanguageUtils.getLocaleFromTag(code);
+                    final Language l = new Language();
+                    l.setCode(code);
 
-            if (currentLocale.equals(locale)) {
-                currentLanguage = l;
+                    // attempt to make first letter upper case
+                    l.setUserLocaleLanguageName(getLanguageName(currentLocale, locale));
+                    l.setOriginalLanguageName(getLanguageName(locale, locale));
+                    l.setComplete(this.completedLanguages.contains(code));
+                    l.setPartial(this.partialLanguages.contains(code));
+                    configuredLanguages.add(l);
+
+                    if (currentLocale.equals(locale)) {
+                        currentLanguage = l;
+                    }
+                }
+
+                sortLanguages(currentLanguage, configuredLanguages);
+                this.languages.put(currentLocale, configuredLanguages);
             }
         }
-
-        sortLanguages(currentLanguage, languages);
-        return languages;
+        return configuredLanguages;
     }
 
     /**
@@ -156,7 +191,7 @@ public class LanguageServiceImpl implements LanguageService {
             public int compare(final Language o1, final Language o2) {
                 // CHECKSTYLE:OFF
                 if (o1.equals(currentLanguage)) {
-                    return -1;
+                    return 0;
                 }
                 // CHECKSTYLE:ONE
 

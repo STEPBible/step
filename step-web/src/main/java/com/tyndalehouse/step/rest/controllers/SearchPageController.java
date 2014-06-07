@@ -8,6 +8,7 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.AppManagerService;
+import com.tyndalehouse.step.core.service.LanguageService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.yammer.metrics.annotation.Timed;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +44,7 @@ public class SearchPageController extends HttpServlet {
     private final SearchController search;
     private final ModuleController modules;
     private final BibleController bible;
+    private final LanguageService languageService;
     private final AppManagerService appManagerService;
     private final Provider<ObjectMapper> objectMapper;
     private final Provider<ClientSession> clientSessionProvider;
@@ -50,12 +53,14 @@ public class SearchPageController extends HttpServlet {
     public SearchPageController(final SearchController search,
                                 final ModuleController modules,
                                 final BibleController bible,
+                                final LanguageService languageService,
                                 final AppManagerService appManagerService,
                                 Provider<ObjectMapper> objectMapper,
                                 Provider<ClientSession> clientSessionProvider) {
         this.search = search;
         this.modules = modules;
         this.bible = bible;
+        this.languageService = languageService;
         this.appManagerService = appManagerService;
         this.objectMapper = objectMapper;
         this.clientSessionProvider = clientSessionProvider;
@@ -64,6 +69,19 @@ public class SearchPageController extends HttpServlet {
     @Override
     @Timed(name = "home-page", group = "pages", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+        if(!checkLanguage(request)) {
+            //do redirect
+            //clear the lang cookie
+            for(Cookie c  : request.getCookies()) {
+                if("lang".equals(c.getName())) {
+                    c.setMaxAge(0);
+                    response.addCookie(c);
+                }
+            };
+            doRedirect(response);
+            return;
+        }
+
         AbstractComplexSearch text;
         try {
             //if we have a 'reference' and/or 'version' parameter, redirect to that page
@@ -84,10 +102,29 @@ public class SearchPageController extends HttpServlet {
         }
     }
 
+    private boolean checkLanguage(final HttpServletRequest request) {
+        final String langParam = request.getParameter("lang");
+        if(StringUtils.isBlank(langParam)) {
+            return true;
+        }
+        return this.languageService.isSupported(langParam);
+    }
+
     private void doRedirect(final HttpServletResponse response, final String oldReference, final String oldVersion) {
         try {
             response.setStatus(301);
             response.setHeader("Location", String.format("http://%s/?q=%s", appManagerService.getAppDomain(), getUrlFragmentForPassage(oldVersion, oldReference)));
+            response.setHeader("Connection", "close");
+        } catch (Exception ex) {
+            LOGGER.error("Failed to operate redirect", ex);
+            return;
+        }
+    }
+
+    private void doRedirect(final HttpServletResponse response) {
+        try {
+            response.setStatus(301);
+            response.setHeader("Location", String.format("http://%s", appManagerService.getAppDomain()));
             response.setHeader("Connection", "close");
         } catch (Exception ex) {
             LOGGER.error("Failed to operate redirect", ex);
@@ -122,6 +159,7 @@ public class SearchPageController extends HttpServlet {
         req.setAttribute("versions", objectMapper.get().writeValueAsString(modules.getAllModules()));
         req.setAttribute("searchType", data.getSearchType().name());
         req.setAttribute("versionList", getVersionList(data.getMasterVersion(), data.getExtraVersions()));
+        req.setAttribute("languages", this.languageService.getAvailableLanguages());
 
         //specific to passages
         if (data instanceof OsisWrapper) {

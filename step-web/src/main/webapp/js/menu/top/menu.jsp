@@ -7,34 +7,13 @@
 <%@page import="javax.servlet.jsp.jstl.core.Config" %>
 <%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
 <%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
-    List<Language> languages = injector.getInstance(LanguageService.class).getAvailableLanguages();
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
     Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
-
-    StringBuilder sb = new StringBuilder(1024);
-    for (Language l : languages) {
-        sb.append("<li><a onclick='window.localStorage.clear(); $.cookie(\"lang\", \""); 
-        sb.append(l.getCode());
-        sb.append("\")' lang='");
-        sb.append(l.getCode());
-        sb.append("' href='./?lang=");
-        sb.append(l.getCode());
-        
-        if(request.getParameter("debug") != null) {
-            sb.append("&debug");
-        }
-        
-        sb.append("' >");
-        sb.append(l.getOriginalLanguageName());
-        sb.append(" - (");
-        sb.append(l.getUserLocaleLanguageName());
-        sb.append(")");
-        sb.append("</a></li>");
-    }
 %>
 <fmt:setBundle basename="HtmlBundle"/>
 <div class="pull-right">
@@ -47,7 +26,6 @@
     <%--<li><a href="/step-web/config.jsp"><fmt:message key="tools_settings" /></a></li>--%>
     <%--<li><a href="/shutdown"><fmt:message key="tools_exit" /></a></li>--%>
     <%--}--%>
-
     <button  class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
         <span class="glyphicon glyphicon-save"></span></button>
     <div class="navbar-collapse collapse">
@@ -56,7 +34,18 @@
                     key="installation_book_language"/><span class="caret top-level"></span></a> <span class="separator">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
             <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
                 <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step"/></a></li>
-                <%= sb.toString() %>
+
+                <c:forEach var="language" items="${languages}">
+                    <c:set var="machineTranslatedWarning">
+                        <c:choose>
+                            <c:when test="${not language.complete and not language.partial}"><fmt:message key="machine_translated" /></c:when>
+                            <c:when test="${language.partial and not language.complete}"><fmt:message key="partially_translated" /></c:when>
+                        </c:choose>
+                    </c:set>
+                    <li title="${machineTranslatedWarning}"><a onclick="window.localStorage.clear(); $.cookie('lang', '')" lang="${language.code}" href="./?lang=${language.code}${param.debug eq null ? "" : "&debug" }">
+                        ${ language.originalLanguageName } - (${ language.userLocaleLanguageName })<c:if test="${not language.complete}">*</c:if>
+                    </a></li>
+                </c:forEach>
             </ul>
         </span>
         <span class="dropdown">

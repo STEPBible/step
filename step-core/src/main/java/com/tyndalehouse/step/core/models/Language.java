@@ -39,6 +39,8 @@ public class Language {
     private String code;
     private String originalLanguageName;
     private String userLocaleLanguageName;
+    private boolean isComplete;
+    private boolean isPartial;
 
     /**
      * @return the code
@@ -80,5 +82,21 @@ public class Language {
      */
     public void setUserLocaleLanguageName(final String userLocaleLanguageName) {
         this.userLocaleLanguageName = userLocaleLanguageName;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(final boolean isComplete) {
+        this.isComplete = isComplete;
+    }
+
+    public boolean isPartial() {
+        return isPartial;
+    }
+
+    public void setPartial(final boolean isPartial) {
+        this.isPartial = isPartial;
     }
 }

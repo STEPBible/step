@@ -47,4 +47,11 @@ public interface LanguageService {
      * @return the available languages
      */
     List<Language> getAvailableLanguages();
+
+    /**
+     * true if a language is supported. This method is faster than getAvailableLanguages().contains(en)
+     * @param langParam the language parameter
+     * @return true to indicate it is supported.
+     */
+    boolean isSupported(String langParam);
 }

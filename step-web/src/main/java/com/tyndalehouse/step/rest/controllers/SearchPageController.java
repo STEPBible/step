@@ -69,7 +69,7 @@ public class SearchPageController extends HttpServlet {
     @Override
     @Timed(name = "home-page", group = "pages", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-        if(!checkLanguage(request)) {
+        if(!checkLanguage()) {
             //do redirect
             //clear the lang cookie
             for(Cookie c  : request.getCookies()) {
@@ -77,7 +77,7 @@ public class SearchPageController extends HttpServlet {
                     c.setMaxAge(0);
                     response.addCookie(c);
                 }
-            };
+            }
             doRedirect(response);
             return;
         }
@@ -102,12 +102,12 @@ public class SearchPageController extends HttpServlet {
         }
     }
 
-    private boolean checkLanguage(final HttpServletRequest request) {
-        final String langParam = request.getParameter("lang");
-        if(StringUtils.isBlank(langParam)) {
+    private boolean checkLanguage() {
+        Locale userLocale = this.clientSessionProvider.get().getLocale();
+        if(userLocale.getLanguage() == null) {
             return true;
         }
-        return this.languageService.isSupported(langParam);
+        return this.languageService.isSupported(userLocale.getLanguage());
     }
 
     private void doRedirect(final HttpServletResponse response, final String oldReference, final String oldVersion) {

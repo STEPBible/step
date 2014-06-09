@@ -75,6 +75,9 @@ var PassageDisplayView = DisplayView.extend({
                 passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
             }
 
+            //if the new passage is below the other, then scroll downwards
+
+
 
             //get current column target data
             var column = passageContainer.closest(".column");

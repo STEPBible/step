@@ -106,7 +106,13 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public boolean isSupported(final String langParam) {
-        return this.languageCodes.contains(langParam);
+        if(langParam.equalsIgnoreCase("iw")) {
+            return this.languageCodes.contains("he");
+        } else if(langParam.equalsIgnoreCase("in")) {
+             return this.languageCodes.contains("id");
+        } else {
+            return this.languageCodes.contains(langParam);
+        }
     }
 
     @Override
@@ -163,7 +169,7 @@ public class LanguageServiceImpl implements LanguageService {
     private String getLanguageName(final Locale currentLocale, final Locale locale) {
         String extra = "";
         
-        if("bfo".equalsIgnoreCase(currentLocale.getLanguage())) {
+        if("bfo".equalsIgnoreCase(locale.getLanguage())) {
             return "Birifor";
         }
 

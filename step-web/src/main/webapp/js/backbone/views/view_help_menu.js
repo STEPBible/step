@@ -31,6 +31,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
     },
     resetEverything: function () {
         window.localStorage.clear();
+        $.cookie("lang", "");
 
         //set the location
         window.location.href = '/' + ($.getUrlVars() || []).indexOf("debug") != -1 ? "?debug" : "";

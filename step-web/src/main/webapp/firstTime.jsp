@@ -22,7 +22,7 @@
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
     <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
     <script src="international/interactive.js" type="text/javascript"></script>
-    <script src="js/ui_hooks.js" type="text/javascript"></script>
+    <script src="js/step_constants.js" type="text/javascript"></script>
     <script src="js/setup/step.firstTime.js" type="text/javascript"></script>
 </HEAD>
 <body style="font-size: 12px">

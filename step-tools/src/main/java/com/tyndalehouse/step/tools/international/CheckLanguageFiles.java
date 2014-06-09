@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Checks language files all contain the right number of markers
@@ -22,6 +24,7 @@ import java.util.Properties;
 public class CheckLanguageFiles {
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckLanguageFiles.class);
     private static final Map<String, Integer> ENTRIES = new HashMap<String, Integer>(1024);
+    private static final Pattern VALID = Pattern.compile("%[sd]|%%|%\\d+\\$[sd]");
 
     /**
      * Checks the language files are complete
@@ -123,6 +126,22 @@ public class CheckLanguageFiles {
         for (int i = 0; i < value.length(); i++) {
             if (value.charAt(i) == '%') {
                 count++;
+            }
+        }
+
+        if(count > 0) {
+            int remaining = count;
+            Matcher matcher = VALID.matcher(value);
+            while( remaining > 0 && matcher.find()) {
+                remaining--;
+            }
+
+            if(value.indexOf("%%") > 0) {
+                remaining --;
+            }
+
+            if(remaining != 0) {
+                LOGGER.error("Found invalid marker in {}", value);
             }
         }
 

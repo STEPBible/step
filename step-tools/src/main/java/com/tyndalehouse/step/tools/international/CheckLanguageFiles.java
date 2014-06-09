@@ -63,7 +63,7 @@ public class CheckLanguageFiles {
 
             final Integer numOccurrences = ENTRIES.get(key);
             if(numOccurrences == null) {
-                LOGGER.warn("{}:{} Extra key in file.", fileName, key);
+                LOGGER.warn("{}:{} Extra key in file.", fileName, key.substring(2));
                 continue;
 //                return;
             }
@@ -73,7 +73,7 @@ public class CheckLanguageFiles {
             }
 
             if(!value.equals(numOccurrences)) {
-                LOGGER.error("{}:{} original: {}, targetLang: {} ", fileName, key, numOccurrences, value);
+                LOGGER.error("{}:{} original: {}, targetLang: {} ", fileName, key.substring(2), numOccurrences, value);
             }
         }
     }

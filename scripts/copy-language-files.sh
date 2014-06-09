@@ -35,5 +35,66 @@ mv HtmlBundle_id.properties HtmlBundle_in.properties
 mv SetupBundle_id.properties SetupBundle_in.properties
 cd ..
 
+# s $ 1 , (coping for single s or d)
+echo Fudging markers
+echo "s $ 1"
+find -name *.properties -print | xargs sed -i 's/\s\([sd]\)\s\$\s%\([0-9]\)\s/ %\2$\1 /g'
+find -name *.properties -print | xargs sed -i 's/=\([sd]\)\s\$\s%\([0-9]\)\s/=%\2$\1 /g'
+find -name *.properties -print | xargs sed -i 's/=\([sd]\)\s\$\s%\([0-9]\)$/=%\2$\1/g'
+find -name *.properties -print | xargs sed -i 's/\s\([sd]\)\s\$\s%\([0-9]\)$/ %\2$\1/g'
+
+echo "set 2"
+find -name *.properties -print | xargs sed -i 's/=\$\s%\s\([0-9]\)/=%\1$s/g'
+find -name *.properties -print | xargs sed -i 's/=%\s\([0-9]\)\$\s/=%\1$s /g'
+find -name *.properties -print | xargs sed -i 's/=\$\([0-9]\)\s%\s/=%\1$s /g'
+
+echo "set 2b"
+find -name *.properties -print | xargs sed -i 's/\s\$\([0-9]\)\s%\s/ %\1$s /g'
+find -name *.properties -print | xargs sed -i 's/\s%\s\([0-9]\)\$/ %\1$s /g'
+
+echo "set 3"
+find -name *.properties -print | xargs sed -i 's/\s%\([0-9]\)\$\s/ %\1$s /g'
+find -name *.properties -print | xargs sed -i 's/=%\([0-9]\)\$\s/=%\1$s /g'
+find -name *.properties -print | xargs sed -i 's/\s%\([0-9]\)\s/ %\1$s /g'
+echo "set 3b"
+find -name *.properties -print | xargs sed -i 's/=%\([0-9]\)\s/=%\1$s /g'
+find -name *.properties -print | xargs sed -i 's/\s%\s%$/ %%/g'
+
+echo "set 4"
+find -name *.properties -print | xargs sed -i 's/\s%\s\([sd]\)\([ .]\)/ %\1\2/g'
+find -name *.properties -print | xargs sed -i 's/ \([sd]\)s \$ % \([0-9]\)$/ \2$\1/g'
+
+echo "set 5"
+find -name *.properties -print | xargs sed -i 's/ \$\s % \s \([0-9]\)/ \1$s/g'
+find -name *.properties -print | xargs sed -i 's/=\$\s % \s \([0-9]\)/=%\1$s/g'
+find -name *.properties -print | xargs sed -i 's/ % s\([.)]\)\([0-9]\)/=%\1$s/g'
+
+
+echo "set 6"
+find -name *.properties -print | xargs sed -i 's/=%\([0-9]\)\s/=%\1$s /g'
+find -name *.properties -print | xargs sed -i 's/\s%\([0-9]\)\s/ %\1$s /g'
+find -name *.properties -print | xargs sed -i 's/\s\([0-9]\)%\s/ %\1$s /g'
+find -name *.properties -print | xargs sed -i 's/=\([0-9]\)%\s/=%\1$s /g'
+
+echo "set 7"
+find -name *.properties -print | xargs sed -i 's/ % s\./ %s./g'
+find -name *.properties -print | xargs sed -i 's/ s \$%\([0-9]\)+\./ %\1$s/g'
+
+find -name *.properties -print | xargs sed -i 's/%\([0-9]\)\d \$?/%\1$s/g'
+find -name *.properties -print | xargs sed -i 's/\$ %\([0-9]\)\([^$]\)/\1$s\2/g'
+
+echo "set 8"
+find -name *.properties -print | xargs sed -i 's/%\([0-9]\)\$ /%\1$s /g'
+find -name *.properties -print | xargs sed -i 's/\$ % \([0-9]\)/%\1$s/g'
+find -name *.properties -print | xargs sed -i 's/\$%\([0-9]\)/%\1$s/g'
+
+echo "set 9"
+find -name *.properties -print | xargs sed -i 's/%1\$S/%1$s/g'
+find -name *.properties -print | xargs sed -i 's/%1 \$/%1$s/g'
+find -name *.properties -print | xargs sed -i 's/s 2\$s/%2$s/g'
+
+# sed -n 's/$%\([0-9]\)/p'  HtmlBundle_ms.properties | grep %3$s
+
+echo Moving files
 find -name *.properties | xargs -i{} mv {} `pwd`
 mv *.properties /c/dev/projects/step/step-core/src/main/resources/

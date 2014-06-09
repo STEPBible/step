@@ -37,6 +37,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta step-local content="<%= appManager.isLocal() %>" />
     <meta step-domain content="<%= appManager.getAppDomain() %>" />
+    <meta step-direction content="${ ltr }" />
     <c:if test="${ not languageComplete }">
         <meta step-incomplete-language content="true" />
     </c:if>
@@ -283,7 +284,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="hidden-xs col-sm-6 column examplesColumn">
+                <div class="hidden-xs col-sm-6 column examplesColumn" dir="${ ltr ? "ltr" : "rtl" }">
                     <div class="passageContainer examplesContainer">
                         <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button" >
                             <span class="glyphicon glyphicon-remove"></span>

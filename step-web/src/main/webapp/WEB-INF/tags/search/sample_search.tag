@@ -22,7 +22,7 @@ ${ step:markTransliteration(explanationText) }
         <c:if test="${ not empty option2 }"><span class="argSelect select-${ option2type } ${fn:contains(option2, '.') ? 'transliteration' : ''}">${ option2 }</span></c:if>
         <c:if test="${ not empty option3 }"><span class="argSelect select-${ option3type } ${fn:contains(option3, '.') ? 'transliteration' : ''}">${ option3 }</span></c:if>
         <c:if test="${ not empty option4 }"><span class="argSelect select-${ option4type } ${fn:contains(option4, '.') ? 'transliteration' : ''}">${ option4 }</span></c:if>
-        <c:if test="${ not empty option5 }"><span class="argSelect select-${ option4type } ${fn:contains(option5, '.') ? 'transliteration' : ''}">${ option5 }</span></c:if>
+        <c:if test="${ not empty option5 }"><span class="argSelect select-${ option5type } ${fn:contains(option5, '.') ? 'transliteration' : ''}">${ option5 }</span></c:if>
     </span>
     <span  class="input-group-btn">
         &nbsp;

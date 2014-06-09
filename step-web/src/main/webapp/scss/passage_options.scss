@@ -3,6 +3,13 @@
 @import 'warning_messages';
 
 .passageOptionsGroup {
+  [dir='rtl'] a {
+    text-align: right;
+    & > span:first-child {
+      margin-right: 20px;
+    }
+  }
+
   .closeColumn.disabled {
     background-color: white;
     background-image: none;
@@ -62,9 +69,6 @@
         padding-bottom: 10px;
         &:hover {
           background-color: inherit;
-          .btn-group {
-            margin-left: 10px;
-          }
         }
       }
     }
@@ -93,6 +97,8 @@
     .panel {
       border: none;
       border-radius: 0px;
+      box-shadow: none;
+      -webkit-box-shadow: none;
       a {
         cursor: hand;
         &:hover {

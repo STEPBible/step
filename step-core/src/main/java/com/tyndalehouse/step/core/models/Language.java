@@ -99,4 +99,5 @@ public class Language {
     public void setPartial(final boolean isPartial) {
         this.isPartial = isPartial;
     }
+
 }

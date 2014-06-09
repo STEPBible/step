@@ -71,13 +71,17 @@ step.state = {
     },
     getIncompleteLanguage : function() {
         if(this.incomplete == undefined) {
-            this.incomplete = $("meta[step-incomplete-language]").attr("content") == "true";
-        } else {
-            this.incomplete = false;
+            var incomplete = $("meta[step-incomplete-language]");
+            this.incomplete = incomplete.attr("content") == "true";
         }
         return this.incomplete;
     },
-    
+    isLtR: function() {
+        if(this.direction == undefined) {
+            this.direction = $("meta[step-direction]").attr("content") == "true";
+        }
+        return this.direction;
+    },
     getCurrentVersion : function() {
         if(this.version == undefined) {
             this.version = $("meta[name='step.version']").attr("content");

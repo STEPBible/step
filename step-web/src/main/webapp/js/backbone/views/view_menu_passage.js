@@ -12,7 +12,7 @@ var PassageMenuView = Backbone.View.extend({
         "click .openNewPanel": "openNewPanel",
         "show.bs.dropdown *": "handleDropdownMenu"
     },
-    fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="pull-right btn-group"><button class="btn btn-default btn-sm smallerFontSize" type="button" title="<%= __s.passage_smaller_fonts %>">' +
+    fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group"><button class="btn btn-default btn-sm smallerFontSize" type="button" title="<%= __s.passage_smaller_fonts %>">' +
         '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
         '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
@@ -266,7 +266,7 @@ var PassageMenuView = Backbone.View.extend({
 
     _initUI: function () {
         //create settings dropdown
-        var dropdownContainer = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
+        var dropdownContainer = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu").attr("dir", step.state.isLtR() ? "" : "rtl");
         this.displayModeContainer = $("<div>");
         var displayMode = $("<h1>").append(__s.display_mode);
         this.displayModeContainer.append(displayMode);
@@ -325,8 +325,8 @@ var PassageMenuView = Backbone.View.extend({
         var self = this;
         var context = this.model.get("context") || 0;
 
-        var li = $('<li class="noHighlight contextContainer">').append($('<span class="contextLabel"></span>').append(this.getContextLabel(context)));
-        li.append($('<span class="btn-group pull-right"></span>')
+        var li = $('<li class="noHighlight contextContainer">').append($('<span class="contextLabel" dir="' + (step.state.isLtR() ? "ltr" : "rtl") + '"></span>').append(this.getContextLabel(context)));
+        li.append($('<span class="btn-group ' + (step.state.isLtR() ? "pull-right" : "pull-left") + '"></span>')
             .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" title="' + __s.search_less_context + '"></span></button>')
             .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" title="' + __s.search_more_context + '"></span></button>'));
 

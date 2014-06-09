@@ -24,6 +24,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -157,6 +158,7 @@ public class SearchPageController extends HttpServlet {
         req.setAttribute("languageName", ContemporaryLanguageUtils.capitaliseFirstLetter(userLocale
                 .getDisplayLanguage(userLocale)).replace("\"", ""));
         req.setAttribute("languageComplete", this.languageService.isCompleted(userLocale.getLanguage()));
+        req.setAttribute("ltr", ComponentOrientation.getOrientation(userLocale).isLeftToRight());
         req.setAttribute("versions", objectMapper.get().writeValueAsString(modules.getAllModules()));
         req.setAttribute("searchType", data.getSearchType().name());
         req.setAttribute("versionList", getVersionList(data.getMasterVersion(), data.getExtraVersions()));

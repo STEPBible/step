@@ -222,6 +222,22 @@ h3 {
   .verseNumber {
     padding: 3 7 3 7;
   }
+  td {
+    .level1:last-child {
+      display: none;
+    }
+  }
+  .singleVerse {
+    & > .paragraph,
+    & > .startLineGroup,
+    > .level1:last-child,
+    > .smallResultKey + .startLineGroup,
+    .smallResultKey + .startLineGroup + .level1,
+    > .startLineGroup:last-child {
+      display: none;
+    }
+
+  }
 }
 
 .headingVerseNumber + .cell.primary {

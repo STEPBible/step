@@ -250,10 +250,7 @@
     <xsl:template match="div[@type='introduction'][@eID]">
         &lt;/span&gt;
     </xsl:template>
-    <xsl:template match="div[@type='paragraph'][@sID]">
-        <!--<xsl:value-of select="'&lt;br /&gt;'" />-->
-        <span class="paragraph"></span>
-    </xsl:template>
+    <xsl:template match="div[@type='paragraph'][@sID]"><span class="paragraph"></span></xsl:template>
     <xsl:template match="div[@type='paragraph'][@eID]">
         <br />
     </xsl:template>    
@@ -1536,9 +1533,8 @@
 		<xsl:element name="span">
 			<xsl:attribute name="class">singleVerse <xsl:value-of select="$classes" /><xsl:value-of select="$cell-direction" /></xsl:attribute>
 			<xsl:call-template name="interleavedVersion" />
-			<xsl:apply-templates />&#160;
-            <!-- for the space with #160, to ensure that float rights have something to float right against -->
-		</xsl:element>
+			<xsl:apply-templates />
+        </xsl:element>
   </xsl:template>
   
   <xsl:template name="columnVerse">

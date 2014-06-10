@@ -55,7 +55,6 @@ public class CheckLanguageFiles {
             if(f.getName().contains("step.core") || !f.getName().contains("_")) {
                 continue;
             }
-            LOGGER.error(f.getAbsolutePath());
 
             Map<String, Integer> languageEntries = new HashMap<String, Integer>(1024);
             FileInputStream resourceStream = null;
@@ -78,6 +77,8 @@ public class CheckLanguageFiles {
             validate(p, f, markers);
 
         }
+
+        LOGGER.error("Remember to 'MAKE' the module again before running, or Intellij will appear not to have done anything.");
     }
 
     private static void validate(final Properties p, File file, final Map<String, Set<String>> markers) {

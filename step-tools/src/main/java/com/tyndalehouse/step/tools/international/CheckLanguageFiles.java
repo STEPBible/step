@@ -7,12 +7,18 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,9 +28,13 @@ import java.util.regex.Pattern;
  * @author chrisburrell
  */
 public class CheckLanguageFiles {
+    public static final Map<String, Set<String>> MARKERS = new HashMap<String, Set<String>>();
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckLanguageFiles.class);
     private static final Map<String, Integer> ENTRIES = new HashMap<String, Integer>(1024);
     private static final Pattern VALID = Pattern.compile("%[sd]|%%|%\\d+\\$[sd]");
+
+    // an invalid marker is a % sign which is not followed by a digit, another % sign, or a d or an i
+    private static final Pattern INVALID = Pattern.compile("(?<!%)%(?![%sd0-9])");
 
     /**
      * Checks the language files are complete
@@ -38,44 +48,137 @@ public class CheckLanguageFiles {
         readInput(ENTRIES, "/SetupBundle.properties");
 
         final Collection<File> files = FileUtils.listFiles(new File(
-                CheckLanguageFiles.class.getResource("/HtmlBundle.properties").getPath()).getParentFile(),
-                new String[]{"properties"}, false);
+                        CheckLanguageFiles.class.getResource("/HtmlBundle.properties").getPath()).getParentFile(),
+                new String[]{"properties"}, false
+        );
         for (File f : files) {
+            if(f.getName().contains("step.core") || !f.getName().contains("_")) {
+                continue;
+            }
+            LOGGER.error(f.getAbsolutePath());
+
             Map<String, Integer> languageEntries = new HashMap<String, Integer>(1024);
             FileInputStream resourceStream = null;
-            try {
-                resourceStream = new FileInputStream(f);
-                final String prefix = getPrefix(f.getName());
-                if("/na/".equals(prefix)) {
-                    //skip
-                    continue;
-                }
-                getEntriesFromInputStream(languageEntries, prefix, resourceStream);
+            resourceStream = new FileInputStream(f);
+            final String name = f.getName();
+            final String prefix = getPrefix(name);
+            if ("/na/".equals(prefix)) {
+                //skip
+                continue;
+            }
+            final int beginIndex = name.indexOf('_');
+            String language = null;
+            if (beginIndex != -1) {
+                language = name.substring(beginIndex + 1, name.indexOf('.'));
+            }
+            final HashMap<String, Set<String>> markers = new HashMap<String, Set<String>>();
+            Properties p = getEntriesFromInputStream(markers, language, languageEntries, prefix, resourceStream);
+            IOUtils.closeQuietly(resourceStream);
+            check(name, languageEntries);
+            validate(p, f, markers);
 
-                check(f.getName(), languageEntries);
+        }
+    }
+
+    private static void validate(final Properties p, File file, final Map<String, Set<String>> markers) {
+        boolean changed = false;
+        List<String> extras = new ArrayList<String>(4);
+        List<String> missing = new ArrayList<String>(4);
+        for (Map.Entry<String, Set<String>> marker : markers.entrySet()) {
+            final String propertyKey = marker.getKey().substring(2);
+            final Set<String> englishPropertyMarkers = MARKERS.get(marker.getKey());
+            final Set<String> nonEnglishMarkers = marker.getValue();
+            //list of markers in non-english that shouldn't be there
+            for (String nonEnglishMarker : nonEnglishMarkers) {
+                if (!englishPropertyMarkers.contains(nonEnglishMarker)) {
+                    LOGGER.debug("{}:{} should not be present", marker.getKey(), nonEnglishMarker);
+                    extras.add(nonEnglishMarker);
+                }
+            }
+
+            //list of markers in non-english that are missing
+            for (String englishMarker : englishPropertyMarkers) {
+                if (!nonEnglishMarkers.contains(englishMarker)) {
+                    LOGGER.debug("{}:{} is missing.", marker.getKey(), englishMarker);
+                    missing.add(englishMarker);
+                }
+            }
+
+            while (extras.size() > 0 && missing.size() > 0) {
+                String extraMarker = extras.get(0);
+                String missingMarker = missing.get(0);
+                String property = p.getProperty(propertyKey);
+                String newPropertyValue = property.replace(extraMarker, missingMarker);
+                p.put(propertyKey, newPropertyValue);
+                changed = true;
+
+                extras.remove(0);
+                missing.remove(0);
+            }
+
+            if(extras.size() > 0) {
+                for(int ii = 0; ii < extras.size(); ii++) {
+                    String property = p.getProperty(propertyKey);
+                    String newPropertyValue = property.replace(extras.get(ii), "");
+                    p.put(propertyKey, newPropertyValue);
+                    changed = true;
+                }
+            }
+
+            if(missing.size() > 0) {
+                for(int ii = 0; ii < missing.size(); ii++) {
+                    String property = p.getProperty(propertyKey);
+                    String newPropertyValue = property +  " " + missing.get(ii);
+                    p.put(propertyKey, newPropertyValue);
+                    changed = true;
+                }
+            }
+
+            //finally clean up any non-matching percent sign - we've done our best, now is the time to move on!
+            final String property = p.getProperty(propertyKey);
+            final Matcher invalidMatches = INVALID.matcher(property);
+            if(invalidMatches.find()) {
+                LOGGER.error("Was [{}]", property);
+                final String cleansed = invalidMatches.replaceAll("");
+                p.setProperty(propertyKey, cleansed);
+                LOGGER.error("Was [{}]", cleansed);
+                changed = true;
+            }
+
+            extras = new ArrayList<String>(4);
+            missing = new ArrayList<String>(4);
+        }
+
+        if (changed) {
+            FileOutputStream fileOutputStream = null;
+            try {
+                fileOutputStream = new FileOutputStream("C:\\dev\\projects\\step\\step-core\\src\\main\\resources\\" + file.getName());
+                p.store(fileOutputStream, "Amended by STEP Language checker");
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage(), e);
             } finally {
-                IOUtils.closeQuietly(resourceStream);
+                IOUtils.closeQuietly(fileOutputStream);
             }
         }
     }
 
     private static void check(final String fileName, final Map<String, Integer> languageEntries) {
-        for(Map.Entry<String, Integer> entry : languageEntries.entrySet()) {
+        for (Map.Entry<String, Integer> entry : languageEntries.entrySet()) {
             final String key = entry.getKey();
             Integer value = entry.getValue();
 
             final Integer numOccurrences = ENTRIES.get(key);
-            if(numOccurrences == null) {
+            if (numOccurrences == null) {
                 LOGGER.warn("{}:{} Extra key in file.", fileName, key.substring(2));
                 continue;
 //                return;
             }
 
-            if(value == null) {
+            if (value == null) {
                 throw new RuntimeException("Value should never be null");
             }
 
-            if(!value.equals(numOccurrences)) {
+            if (!value.equals(numOccurrences)) {
                 LOGGER.error("{}:{} original: {}, targetLang: {} ", fileName, key.substring(2), numOccurrences, value);
             }
         }
@@ -88,7 +191,7 @@ public class CheckLanguageFiles {
      */
     private static void readInput(Map<String, Integer> entries, final String classpath) throws IOException {
         final InputStream resourceStream = CheckLanguageFiles.class.getResourceAsStream(classpath);
-        getEntriesFromInputStream(entries, getPrefix(classpath), resourceStream);
+        getEntriesFromInputStream(MARKERS, "en", entries, getPrefix(classpath), resourceStream);
     }
 
     private static String getPrefix(final String filename) {
@@ -107,13 +210,18 @@ public class CheckLanguageFiles {
         return "/na/";
     }
 
-    private static void getEntriesFromInputStream(final Map<String, Integer> entries, final String prefix, final InputStream resourceStream) throws IOException {
+    private static Properties getEntriesFromInputStream(Map<String, Set<String>> markers, final String language,
+                                                        final Map<String, Integer> entries, final String prefix, final InputStream resourceStream) throws IOException {
+
         Properties p = new Properties();
         p.load(resourceStream);
+
         for (Map.Entry<Object, Object> e : p.entrySet()) {
-            entries.put(prefix + e.getKey(), count((String) e.getValue()));
+            entries.put(prefix + e.getKey(), count(markers, prefix + e.getKey(), language, (String) e.getValue()));
         }
+        return p;
     }
+
 
     /**
      * Counts the number of percentage signs
@@ -121,7 +229,9 @@ public class CheckLanguageFiles {
      * @param value the value we are trying to count
      * @return the number of percentage signs
      */
-    private static Integer count(final String value) {
+    private static Integer count(final Map<String, Set<String>> markers,
+                                 final String key,
+                                 final String language, final String value) {
         int count = 0;
         for (int i = 0; i < value.length(); i++) {
             if (value.charAt(i) == '%') {
@@ -129,19 +239,22 @@ public class CheckLanguageFiles {
             }
         }
 
-        if(count > 0) {
+        if (count > 0) {
             int remaining = count;
             Matcher matcher = VALID.matcher(value);
-            while( remaining > 0 && matcher.find()) {
+            final Set<String> markerSet = new LinkedHashSet<String>();
+            markers.put(key, markerSet);
+            while (remaining > 0 && matcher.find()) {
+                markerSet.add(matcher.group());
                 remaining--;
             }
 
-            if(value.indexOf("%%") > 0) {
-                remaining --;
+            if (value.indexOf("%%") > 0) {
+                remaining--;
             }
 
-            if(remaining != 0) {
-                LOGGER.error("Found invalid marker in {}", value);
+            if (remaining != 0) {
+                LOGGER.error("{}: Found invalid marker in {}", language, value);
             }
         }
 

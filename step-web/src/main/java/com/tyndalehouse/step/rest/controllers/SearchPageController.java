@@ -73,13 +73,17 @@ public class SearchPageController extends HttpServlet {
         if(!checkLanguage()) {
             //do redirect
             //clear the lang cookie
-            for(Cookie c  : request.getCookies()) {
+            final Cookie[] cookies = request.getCookies();
+            if(cookies != null) {
+            for(Cookie c  : cookies) {
                 if("lang".equals(c.getName())) {
                     c.setMaxAge(0);
                     response.addCookie(c);
                 }
             }
             doRedirect(response);
+                return;
+            }
             return;
         }
 

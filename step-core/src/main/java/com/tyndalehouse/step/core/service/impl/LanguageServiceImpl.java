@@ -112,8 +112,7 @@ public class LanguageServiceImpl implements LanguageService {
         } else if(langParam.equalsIgnoreCase("in")) {
              return this.languageCodes.contains("id");
         } else {
-            String localeLanguage = StringUtils.isNotBlank(country) ? langParam + "-" + country : langParam;
-            return this.languageCodes.contains(localeLanguage);
+            return this.languageCodes.contains(langParam) || this.languageCodes.contains(StringUtils.isNotBlank(country) ? langParam + "-" + country : langParam);
         }
     }
 

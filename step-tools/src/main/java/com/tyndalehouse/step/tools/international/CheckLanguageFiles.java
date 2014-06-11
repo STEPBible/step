@@ -92,7 +92,7 @@ public class CheckLanguageFiles {
             //list of markers in non-english that shouldn't be there
             for (String nonEnglishMarker : nonEnglishMarkers) {
                 if (!englishPropertyMarkers.contains(nonEnglishMarker)) {
-                    LOGGER.debug("{}:{} should not be present", marker.getKey(), nonEnglishMarker);
+                    LOGGER.error("{}:{} should not be present", marker.getKey(), nonEnglishMarker);
                     extras.add(nonEnglishMarker);
                 }
             }
@@ -100,7 +100,7 @@ public class CheckLanguageFiles {
             //list of markers in non-english that are missing
             for (String englishMarker : englishPropertyMarkers) {
                 if (!nonEnglishMarkers.contains(englishMarker)) {
-                    LOGGER.debug("{}:{} is missing.", marker.getKey(), englishMarker);
+                    LOGGER.error("{}:{} is missing.", marker.getKey(), englishMarker);
                     missing.add(englishMarker);
                 }
             }

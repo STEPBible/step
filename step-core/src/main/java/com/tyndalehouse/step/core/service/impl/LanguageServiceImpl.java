@@ -106,13 +106,14 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     @Override
-    public boolean isSupported(final String langParam) {
+    public boolean isSupported(final String langParam, final String country) {
         if(langParam.equalsIgnoreCase("iw")) {
             return this.languageCodes.contains("he");
         } else if(langParam.equalsIgnoreCase("in")) {
              return this.languageCodes.contains("id");
         } else {
-            return this.languageCodes.contains(langParam);
+            String localeLanguage = StringUtils.isNotBlank(country) ? langParam + "-" + country : langParam;
+            return this.languageCodes.contains(localeLanguage);
         }
     }
 

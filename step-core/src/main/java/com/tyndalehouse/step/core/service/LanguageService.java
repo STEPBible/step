@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,10 +32,9 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
-import java.util.List;
-import java.util.Locale;
-
 import com.tyndalehouse.step.core.models.Language;
+
+import java.util.List;
 
 /**
  * The Class LanguageService.
@@ -44,17 +43,19 @@ public interface LanguageService {
 
     /**
      * Gets the available languages, which are at least partly translated
-     * 
+     *
      * @return the available languages
      */
     List<Language> getAvailableLanguages();
 
     /**
      * true if a language is supported. This method is faster than getAvailableLanguages().contains(en)
+     *
      * @param langParam the language parameter
+     * @param country   the country that is associated with the locale
      * @return true to indicate it is supported.
      */
-    boolean isSupported(String langParam);
+    boolean isSupported(String langParam, String country);
 
     /**
      * @param langParam the language parameter

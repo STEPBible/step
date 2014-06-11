@@ -108,7 +108,7 @@ public class SearchPageController extends HttpServlet {
         if(userLocale.getLanguage() == null) {
             return true;
         }
-        return this.languageService.isSupported(userLocale.getLanguage());
+        return this.languageService.isSupported(userLocale.getLanguage(), userLocale.getCountry());
     }
 
     private void doRedirect(final HttpServletResponse response, final String oldReference, final String oldVersion) {

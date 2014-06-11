@@ -4,7 +4,6 @@ requirejs.config({
     waitSeconds: 15000,
     paths : {
         sidebar: ["js/step.sidebar-STEP_SERVER_VERSION_TOKEN.min"],
-        defaults: ["js/step.defaults-STEP_SERVER_VERSION_TOKEN.min"],
         quick_lexicon : ["js/step.quick-lexicon-STEP_SERVER_VERSION_TOKEN.min"],
         qtip : ["js/step.qtip-STEP_SERVER_VERSION_TOKEN.min"],
         view_help_menu: ["js/step.help-menu-STEP_SERVER_VERSION_TOKEN.min"],

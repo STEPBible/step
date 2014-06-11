@@ -377,7 +377,7 @@
     <script src="js/step.util.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_main_search.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_restore.js" type="text/javascript"></script>
-    <script src="js/step_ready.js" type="text/javascript"></script>
+
     <script src="js/backbone/step_router.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_display.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>
@@ -388,6 +388,8 @@
     <script src="js/backbone/views/view_feedback.js" type="text/javascript"></script>
     <script src="js/state/step.state.js" type="text/javascript"></script>
     <script src="js/passage/step.passage.js" type="text/javascript"></script>
+    <script src="js/defaults/step.defaults.js" type="text/javascript"></script>
+    <script src="js/step_ready.js" type="text/javascript"></script>
 
         <%
 		} else {

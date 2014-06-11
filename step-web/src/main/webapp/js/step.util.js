@@ -836,7 +836,7 @@ step.util = {
          */
         showTutorial: function () {
             step.util.ui.initSidebar('help', { });
-            require(["sidebar", "defaults"], function (module) {
+            require(["sidebar"], function (module) {
                 step.sidebar.save({
                     mode: 'help'
                 });
@@ -861,12 +861,12 @@ step.util = {
             }
 
             step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph});
-            require(["sidebar", "defaults"], function (module) {
+            require(["sidebar"], function (module) {
                 step.util.ui.openStrongNumber(strong, morph);
             });
         },
         initSidebar: function (mode, data) {
-            require(["sidebar", "defaults"], function (module) {
+            require(["sidebar"], function (module) {
                 if (!data) {
                     data = {};
                 }
@@ -905,7 +905,7 @@ step.util = {
         },
         openStats: function (focusedPassage) {
             this.initSidebar("analysis", { ref: focusedPassage });
-            require(["sidebar", "defaults"], function (module) {
+            require(["sidebar"], function (module) {
                 step.sidebar.save({
                     mode: 'analysis',
                     focusedPassage: focusedPassage

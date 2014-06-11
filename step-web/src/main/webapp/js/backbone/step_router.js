@@ -134,7 +134,7 @@ var StepRouter = Backbone.Router.extend({
         return url;
     },
     handleSearchResults: function (passageModel, partRendered) {
-        require(["search", "defaults"], function (module) {
+        require(["search"], function (module) {
             if (passageModel.get("pageNumber") > 1) {
                 passageModel.trigger("newPage");
             } else {

@@ -28,7 +28,8 @@ var PassageMenuView = Backbone.View.extend({
         { group: "display_vocab_options", items: [
             { initial: "E", key: "display_englishVocab" },
             { initial: "A", key: "display_greekVocab" },
-            { initial: "T", key: "display_transliteration" }]
+            { initial: "T", key: "display_transliteration" }
+        ]
         },
         { group: "original_language_options", items: [
             { initial: "D", key: "display_divide_hebrew", help: "display_divide_hebrew_help" },
@@ -87,29 +88,29 @@ var PassageMenuView = Backbone.View.extend({
             titleSoFar += "<p />";
         }
 
-        if(opts.level == 'warning') {
+        if (opts.level == 'warning') {
             titleSoFar += '<span class="text-warning glyphicon glyphicon-warning-sign"></span> ';
-        } else if(opts.level == 'danger' || opts.level == 'error') {
+        } else if (opts.level == 'danger' || opts.level == 'error') {
             titleSoFar += '<span class="text-danger glyphicon glyphicon-exclamation-sign"></span> ';
-        } else if(opts.level == 'info') {
+        } else if (opts.level == 'info') {
             titleSoFar += '<span class="text-info glyphicon glyphicon-info-sign"></span> ';
         }
         titleSoFar += opts.message;
-        this.warnings.popover({ html : true }).on("hide.bs.popover", function() {
+        this.warnings.popover({ html: true }).on("hide.bs.popover", function () {
             self.handleInfoHide();
         });
         this.warnings.attr("data-content", titleSoFar);
         this._updateIcon();
         this.warnings.show();
-        if(opts.silent != true) {
+        if (opts.silent != true) {
             this.warnings.popover('show');
-            this.warnings.next(".popover").on('click', function() {
+            this.warnings.next(".popover").on('click', function () {
                 self.warnings.popover("hide");
                 self.handleInfoHide();
             })
         } else {
-            this.warnings.on("shown.bs.popover", function() {
-                self.warnings.next(".popover").on('click', function() {
+            this.warnings.on("shown.bs.popover", function () {
+                self.warnings.next(".popover").on('click', function () {
                     self.warnings.popover("hide");
                     self.handleInfoHide();
                 })
@@ -117,7 +118,7 @@ var PassageMenuView = Backbone.View.extend({
         }
 
     },
-    handleInfoHide: function() {
+    handleInfoHide: function () {
         this.warnings.removeClass("text-info text-warning text-danger");
         this.warnings.addClass("text-muted");
     },
@@ -130,13 +131,11 @@ var PassageMenuView = Backbone.View.extend({
     handleDropdownMenu: function (ev) {
         var self = this;
         if (!self.rendered) {
-            require(["defaults"], function () {
-                if (!self.rendered) {
-                    self._initUI();
-                    self.rendered = true;
-                    self._updateDropdownContents(ev.target);
-                }
-            });
+            if (!self.rendered) {
+                self._initUI();
+                self.rendered = true;
+                self._updateDropdownContents(ev.target);
+            }
         } else {
             self._updateDropdownContents(ev.target);
         }
@@ -192,12 +191,12 @@ var PassageMenuView = Backbone.View.extend({
 
         //don't show the section at all if we're not a passage
         this.displayOptions.toggle(isPassage);
-        
+
         // quit straight away if not a passage
-        if(!isPassage) {
+        if (!isPassage) {
             return;
         }
-        
+
         //make invisible all options except for 'available ones'
         var displayOptions = this.displayOptions.find("li.passage");
         for (var i = 0; i < displayOptions.length; i++) {
@@ -206,11 +205,11 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         //do we need to show the group headings...
-        this.displayOptions.find(".menuGroup").each(function(i, item) {
+        this.displayOptions.find(".menuGroup").each(function (i, item) {
             var heading = $(item);
             var subOptions = $(heading.data("target")).find("li");
             var visible = false;
-            for(var i = 0 ; i < subOptions.length; i++) {
+            for (var i = 0; i < subOptions.length; i++) {
                 // if we don't have 'display: ...' then we'll assume visible
                 visible = visible || ((subOptions.eq(i).css("display") || "") != "none");
             }
@@ -253,7 +252,7 @@ var PassageMenuView = Backbone.View.extend({
         for (var ii = 0; ii < extraVersions.length; ii++) {
             var extraResource = step.keyedVersions[extraVersions[ii]];
             allHaveStrong = allHaveStrong && extraResource.hasStrongs;
-            
+
             //js: &= gives us a 0 return value
             sameLanguaguageAndBible = sameLanguaguageAndBible && extraResource.languageCode == masterLanguage;
             sameLanguaguageAndBible = sameLanguaguageAndBible && extraResource.category == 'BIBLE';
@@ -312,7 +311,7 @@ var PassageMenuView = Backbone.View.extend({
 
         var dropdown = $("<ul>").addClass("passageOptions");
         dropdown.append(this._createPassageOptions(dropdown));
-        
+
         dropdownContainer.append(displayOptionsHeading);
         dropdownContainer.append(dropdown);
         return dropdownContainer;
@@ -366,13 +365,13 @@ var PassageMenuView = Backbone.View.extend({
      * @param items the items to iterate over
      * @private
      */
-    _createItemsInDropdown: function(dropdown, items) {
+    _createItemsInDropdown: function (dropdown, items) {
 //        <div class="panel-group" id="accordion">
 
 
         var selectedOptions = this.model.get("selectedOptions") || "";
         for (var i = 0; i < items.length; i++) {
-            if(items[i].group) {
+            if (items[i].group) {
                 var panel = $('<div class="panel panel-default">');
 
                 var collapseHeader =
@@ -380,7 +379,7 @@ var PassageMenuView = Backbone.View.extend({
                     'data-target="#displayOptions-' + items[i].group + this.model.get("passageId") + '">'
                     + __s[items[i].group] +
                     '<span class="caret"></span></a>';
-                var collapseBody = $('<div class="panel-collapse collapse"></div>').attr("id", 'displayOptions-' + items[i].group + this.model.get("passageId") );
+                var collapseBody = $('<div class="panel-collapse collapse"></div>').attr("id", 'displayOptions-' + items[i].group + this.model.get("passageId"));
                 var panelBody = $("<div class='panel-body'>");
                 collapseBody.append(panelBody);
                 this._createItemsInDropdown(panelBody, items[i].items || []);
@@ -404,7 +403,7 @@ var PassageMenuView = Backbone.View.extend({
             self._updateOptions();
         });
 
-        links.filter("[data-toggle]").on('click', function(ev) {
+        links.filter("[data-toggle]").on('click', function (ev) {
             ev.stopPropagation();
 
             var target = $($(this).closest("[data-target]").data("target"));
@@ -413,21 +412,21 @@ var PassageMenuView = Backbone.View.extend({
 
         return dropdown;
     },
-    _addTickHandlers: function (target, grouped,handler) {
+    _addTickHandlers: function (target, grouped, handler) {
         var self = this;
         target.click(function (e) {
             e.stopPropagation();
             var el = $(this);
-            if(grouped) {
+            if (grouped) {
                 //then untick all others
-                $.each(el.closest("ul").find("a"), function() { 
+                $.each(el.closest("ul").find("a"), function () {
                     self._setVisible($(this), false);
                 });
                 self._setVisible(el, true);
             } else {
-                self._setVisible(el, el.find('.glyphicon').css("visibility") == 'hidden');    
+                self._setVisible(el, el.find('.glyphicon').css("visibility") == 'hidden');
             }
-            
+
             if (handler) {
                 handler(el);
             }
@@ -524,7 +523,7 @@ var PassageMenuView = Backbone.View.extend({
         this.goToSiblingChapter(this.model.get("nextChapter"), ev);
     },
     goToSiblingChapter: function (key, ev) {
-        if(ev) {
+        if (ev) {
             ev.preventDefault();
         }
 
@@ -549,7 +548,7 @@ var PassageMenuView = Backbone.View.extend({
      */
     closeColumn: function (ev) {
         var targetButton = $(ev.target).closest("button");
-        if(targetButton.hasClass("disabled")) {
+        if (targetButton.hasClass("disabled")) {
             ev.stopPropagation();
             targetButton.blur();
             return;

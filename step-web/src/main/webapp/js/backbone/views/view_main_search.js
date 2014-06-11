@@ -324,7 +324,7 @@ var MainSearchView = Backbone.View.extend({
     },
     openAdvancedSearch: function (initialView, value) {
         var self = this;
-        require(["menu_extras", "defaults"], function () {
+        require(["menu_extras"], function () {
             //find master version
             var dataItems = self.masterSearch.select2("data");
             var masterVersion = REF_VERSION;
@@ -351,7 +351,7 @@ var MainSearchView = Backbone.View.extend({
     },
     pickBible: function () {
         var self = this;
-        require(["menu_extras", "defaults"], function () {
+        require(["menu_extras"], function () {
             new PickBibleView({ model: step.settings, searchView: self });
         });
     },

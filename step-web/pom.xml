@@ -209,6 +209,7 @@
                                 <jsSourceFile>js/passage/step.passage.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_feedback.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_restore.js</jsSourceFile>
+                                <jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
                                 <jsSourceFile>js/step_ready.js</jsSourceFile>
                             </jsSourceFiles>
 							<jsFinalFile>step.${project.version}.js</jsFinalFile>
@@ -259,20 +260,6 @@
                                 <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>step.qtip-${project.version}.js</jsFinalFile>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>minify-defaults</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                        <configuration>
-                            <jsSourceDir>.</jsSourceDir>
-                            <jsSourceFiles>
-                                <jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
-                            </jsSourceFiles>
-                            <jsFinalFile>step.defaults-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                     <execution>

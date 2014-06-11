@@ -4,7 +4,6 @@ requirejs.config({
     //line to line against non-dev version
     paths : {
         sidebar: ["js/backbone/views/view_sidebar"],
-        defaults: ["js/defaults/step.defaults"],
         quick_lexicon: ["js/backbone/views/view_quick_lexicon"],
         qtip : ["js/jquery-extensions/jquery-qtip"],
         view_help_menu: ["js/backbone/views/view_help_menu"],

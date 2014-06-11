@@ -34,7 +34,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
         $.cookie("lang", "");
 
         //set the location
-        window.location.href = '/' + ($.getUrlVars() || []).indexOf("debug") != -1 ? "?debug" : "";
+        window.location.href = '/' + ($.getUrlVars() || []).indexOf("debug") != -1 ? "" : "?debug";
     },
     openTutorial : function() {
         step.util.ui.showTutorial();

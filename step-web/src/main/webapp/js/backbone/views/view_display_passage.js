@@ -71,14 +71,29 @@ var PassageDisplayView = DisplayView.extend({
             }
         },
         scrollToTargetLocation: function (passageContainer) {
+            var self = this;
             if(!passageContainer) {
                 passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
             }
 
             //if the new passage is below the other, then scroll downwards
-
-
-
+            var linkedModel = step.passages.findWhere({ linked: 1 });
+            if(linkedModel != null) {
+                var linkedPassageId = linkedModel.get("passageId");
+                var container = step.util.getPassageContainer(linkedPassageId);
+                if(container.offset().top < passageContainer.offset().top) {
+                    //need to scroll to that location
+                    $("body").animate({
+                        scrollTop: passageContainer.offset().top
+                    }, 200, null, function() {
+                        self._scrollPassageToTarget(passageContainer);
+                    });
+                    return;
+                }
+            }
+            this._scrollPassageToTarget(passageContainer);
+        },
+        _scrollPassageToTarget: function(passageContainer) {
             //get current column target data
             var column = passageContainer.closest(".column");
             passageContainer.find(".secondaryBackground").removeClass("secondaryBackground");
@@ -87,7 +102,7 @@ var PassageDisplayView = DisplayView.extend({
             if (currentTarget) {
                 var link = passageContainer.find("[name='" + currentTarget + "']");
                 var linkOffset = link.offset();
-                var scroll = linkOffset == undefined ? 0 : linkOffset.top + passageContainer.scrollTop();
+                var scroll = linkOffset == undefined ? 0 : linkOffset.top + passageContainer.scrollTop() - passageContainer.offset().top;
 
                 var originalScrollTop = -200;
                 passageContainer.find(".passageContentHolder").animate({

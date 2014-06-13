@@ -63,6 +63,7 @@ import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
  * @author chrisburrell
  * 
  */
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class BibleControllerTest {
     private final BibleInformationService bibleInformation = mock(BibleInformationService.class);

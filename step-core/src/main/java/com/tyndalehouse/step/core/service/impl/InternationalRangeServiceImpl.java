@@ -105,7 +105,7 @@ public class InternationalRangeServiceImpl implements InternationalRangeService 
     }
 
     private BookName addRangeAsBookName(final String s) {
-        return new BookName(s, s, BookName.Section.BIBLE_SECTION, false, null, true);
+        return new BookName(s, s, BookName.Section.BIBLE_SECTION, false, null, true, s);
     }
 
     public List<BookName> getBooks() {
@@ -116,7 +116,7 @@ public class InternationalRangeServiceImpl implements InternationalRangeService 
             synchronized (BOOK_NAMES) {
                 ResourceBundle bundle = ResourceBundle.getBundle("InteractiveBundle", userLocale);
                 for (final String s : this.ranges) {
-                    bookNames.add(new BookName(bundle.getString(s + RANGE_SUFFIX), bundle.getString(s), BookName.Section.BIBLE_SECTION, false));
+                    bookNames.add(new BookName(bundle.getString(s + RANGE_SUFFIX), bundle.getString(s), BookName.Section.BIBLE_SECTION, false, s));
                 }
             }
 

@@ -12,25 +12,17 @@ import java.io.Serializable;
  * @author chrisburrell
  */
 public class BookName implements Serializable, PopularSuggestion {
-    public enum Section {
-        BIBLE_BOOK,
-        APOCRYPHA,
-        PASSAGE,
-        OTHER_NON_BIBLICAL,
-        BIBLE_SECTION;
-    }
-    
     private static final long serialVersionUID = 2406197083965523605L;
+    private final Section sectionType;
     private String shortName;
     private String fullName;
 
     @JsonIgnore
     private BibleBook bibleBook;
-
-    private final Section sectionType;
     /* indicates a whole book, OR a book that should be treated like a chapter */
     private boolean wholeBook;
     private boolean isPassage;
+    private String osisID;
 
     /**
      * wraps around a book name, giving the abbreviation and the full name
@@ -38,12 +30,16 @@ public class BookName implements Serializable, PopularSuggestion {
      * @param shortName   the short name
      * @param fullName    the full name
      * @param isWholeBook true to indicate the option refers to a whole book
+     * @param osisID
      */
-    public BookName(final String shortName, final String fullName, 
+    public BookName(final String shortName, final String fullName,
                     final Section sectionType,
-                    final boolean isWholeBook) {
-        this(shortName, fullName, sectionType, isWholeBook, null);
+                    final boolean isWholeBook,
+                    final String osisID
+    ) {
+        this(shortName, fullName, sectionType, isWholeBook, null, osisID);
     }
+
 
     /**
      * wraps around a book name, giving the abbreviation and the full name
@@ -53,18 +49,21 @@ public class BookName implements Serializable, PopularSuggestion {
      * @param isWholeBook true to indicate the option refers to a whole book
      * @param bibleBook   the bible book that originates this model
      * @param isPassage   true to indicate we're looking at a passage/chapter
+     * @param osisID      the OSIS ID that names this version.
      */
-    public BookName(final String shortName, 
-                    final String fullName, 
+    public BookName(final String shortName,
+                    final String fullName,
                     final Section sectionType,
                     final boolean isWholeBook, final BibleBook bibleBook,
-                    boolean isPassage) {
+                    boolean isPassage,
+                    final String osisID) {
         this.shortName = shortName;
         this.fullName = fullName;
         this.sectionType = sectionType;
         this.wholeBook = isWholeBook;
         this.bibleBook = bibleBook;
         this.isPassage = isPassage;
+        this.osisID = osisID;
     }
 
     /**
@@ -74,11 +73,13 @@ public class BookName implements Serializable, PopularSuggestion {
      * @param fullName    the full name
      * @param isWholeBook true to indicate the option refers to a whole book
      * @param bibleBook   the bible book that originates this model
+     * @param osisID      the OSIS ID that names this version.
      */
     public BookName(final String shortName, final String fullName,
                     final Section sectionType,
-                    final boolean isWholeBook, final BibleBook bibleBook) {
-        this(shortName, fullName, sectionType, isWholeBook, bibleBook, false);
+                    final boolean isWholeBook, final BibleBook bibleBook,
+                    final String osisID) {
+        this(shortName, fullName, sectionType, isWholeBook, bibleBook, false, osisID);
     }
 
     /**
@@ -144,6 +145,14 @@ public class BookName implements Serializable, PopularSuggestion {
         return sectionType;
     }
 
+    public String getOsisID() {
+        return osisID;
+    }
+
+    public void setOsisID(final String osisID) {
+        this.osisID = osisID;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -160,4 +169,13 @@ public class BookName implements Serializable, PopularSuggestion {
     public int hashCode() {
         return fullName != null ? fullName.hashCode() : 0;
     }
+
+    public enum Section {
+        BIBLE_BOOK,
+        APOCRYPHA,
+        PASSAGE,
+        OTHER_NON_BIBLICAL,
+        BIBLE_SECTION
+    }
+
 }

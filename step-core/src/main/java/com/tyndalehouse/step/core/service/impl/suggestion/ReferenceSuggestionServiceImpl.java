@@ -38,6 +38,7 @@ import java.util.Set;
  */
 public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSuggestionServiceImpl<BookName> {
     private static final String BOOK_CHAPTER_FORMAT = "%s %d";
+    private static final String BOOK_CHAPTER_OSIS_FORMAT = "%s.%d";
     private final JSwordVersificationService versificationService;
     private final InternationalRangeService internationalRangeService;
 
@@ -72,11 +73,11 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                         final BibleBook book = ((Verse) verseKey.iterator().next()).getBook();
                         bk = getBookFromBibleBook(book, masterV11n);
                     } else {
-                        bk = new BookName(verseKey.getName(), verseKey.getName(), BookName.Section.PASSAGE, wholeBook, ((Verse) verseKey.iterator().next()).getBook());
+                        bk = new BookName(verseKey.getName(), verseKey.getName(), BookName.Section.PASSAGE, wholeBook, ((Verse) verseKey.iterator().next()).getBook(), k.getOsisID());
                     }
                     return new BookName[]{bk};
                 } else {
-                    return new BookName[]{new BookName(k.getName(), k.getName(), BookName.Section.OTHER_NON_BIBLICAL, false)};
+                    return new BookName[]{new BookName(k.getName(), k.getName(), BookName.Section.OTHER_NON_BIBLICAL, false, k.getOsisID())};
                 }
             }
         } catch (NoSuchKeyException ex) {
@@ -222,8 +223,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                 .format(BOOK_CHAPTER_FORMAT, versification.getShortName(bibleBook), chapterNumber);
         final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, versification.getLongName(bibleBook),
                 chapterNumber);
-
-        return new BookName(chapNumber, longChapNumber, BookName.Section.PASSAGE, false, null, true);
+        return new BookName(chapNumber, longChapNumber, BookName.Section.PASSAGE, false, null, true, JSwordUtils.getChapterOsis(bibleBook, chapterNumber));
     }
 
     /**
@@ -292,6 +292,6 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         BookName.Section section = DivisionName.BIBLE.contains(bookName) ? BookName.Section.BIBLE_BOOK : BookName.Section.APOCRYPHA;
 
         return new BookName(versification.getShortName(bookName), versification
-                .getLongName(bookName), section, versification.getLastChapter(bookName) != 1, bookName, false);
+                .getLongName(bookName), section, versification.getLastChapter(bookName) != 1, bookName, false, bookName.getOSIS());
     }
 }

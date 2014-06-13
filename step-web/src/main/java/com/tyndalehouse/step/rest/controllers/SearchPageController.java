@@ -333,7 +333,7 @@ public class SearchPageController extends HttpServlet {
             final String preview = this.bible.getPlainTextPreview(osisWrapper.getMasterVersion(), osisWrapper.getOsisId());
             request.setAttribute("title", wrapTitle(osisWrapper.getReference(), osisWrapper.getMasterVersion(), preview));
             request.setAttribute("description", preview);
-            request.setAttribute("canonicalUrl", getUrlFragmentForPassage(osisWrapper.getMasterVersion(), osisWrapper.getReference()));
+            request.setAttribute("canonicalUrl", getUrlFragmentForPassage(osisWrapper.getMasterVersion(), osisWrapper.getOsisId()));
         } catch (Exception ex) {
             //a page with no title is better than no pages
             LOGGER.error("Unable to ascertain meta data", ex);

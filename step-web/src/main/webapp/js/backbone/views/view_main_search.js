@@ -153,7 +153,7 @@ var MainSearchView = Backbone.View.extend({
                 && event.object.item.wholeBook
                 ) {
                 event.preventDefault();
-                self._addSpecificContext(REFERENCE, event.object.item.shortName);
+                self._addSpecificContext(REFERENCE, event.object.item.osisID);
 
                 //wipe the last term to force a re-select
                 $.data(self.masterSearch.select2("container"), "select2-last-term", null);
@@ -189,6 +189,8 @@ var MainSearchView = Backbone.View.extend({
             if (replaceItemParent.length > 0) {
                 var replaceItemIndex = replaceItemParent.index();
                 data.splice(replaceItemIndex, 1, data[data.length - 1]);
+                //remove the last item as well
+                data.pop();
             }
 
             //needs to be outside if statement to ensure we recreate token handlers
@@ -510,7 +512,7 @@ var MainSearchView = Backbone.View.extend({
                     break;
                 case REFERENCE:
                     args += options[ii].itemType + "=";
-                    args += encodeURIComponent(options[ii].item.shortName);
+                    args += encodeURIComponent(options[ii].item.osisID);
                     break;
                 case GREEK:
                 case GREEK_MEANINGS:
@@ -870,7 +872,7 @@ var MainSearchView = Backbone.View.extend({
             case VERSION:
                 return step.keyedVersions[token];
             case REFERENCE:
-                return { fullName: enhancedInfo.fullName, shortName: enhancedInfo.shortName };
+                return { fullName: enhancedInfo.fullName, shortName: enhancedInfo.shortName, osisID: enhancedInfo.osisID };
             case GREEK_MEANINGS:
             case GREEK:
             case HEBREW_MEANINGS:

@@ -72,6 +72,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public final class JSwordUtils {
+    private static final String BOOK_CHAPTER_OSIS_FORMAT = "%s.%d";
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordUtils.class);
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "he";
@@ -271,5 +272,15 @@ public final class JSwordUtils {
             return false;
         }
         return false;
+    }
+
+    /**
+     * Gets the chapter OSIS in the form of Gen.1, except for short books, where it is the single chapter
+     * @param bibleBook
+     * @param chapterNumber
+     * @return
+     */
+    public static String getChapterOsis(final BibleBook bibleBook, final int chapterNumber) {
+        return bibleBook.isShortBook() ? bibleBook.getOSIS() : String.format(BOOK_CHAPTER_OSIS_FORMAT, bibleBook.getOSIS(), chapterNumber);
     }
 }

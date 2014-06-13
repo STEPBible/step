@@ -731,7 +731,7 @@ step.util = {
                 case REFERENCE:
                     return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(entry.item.shortName) + '">' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
                         entry.item.shortName + '</div>';
                 case VERSION:
                     return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "")

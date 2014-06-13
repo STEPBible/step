@@ -28,6 +28,7 @@ import com.tyndalehouse.step.core.utils.TestUtils;
  * 
  * @author chrisburrell
  */
+@SuppressWarnings("unchecked")
 public class JSwordSearchServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordSearchServiceImplTest.class);
     private JSwordSearchServiceImpl search;
@@ -73,8 +74,8 @@ public class JSwordSearchServiceImplTest {
     public void testGood() {
         final List<SearchEntry> results = this.search.search(
                 new SearchQuery("+[Mat-Rev] good~", new String[] {"ESV"}, "true", 0, 1, 1000000, null), "ESV").getResults();
-        for (int i = 0; i < results.size(); i++) {
-            LOGGER.trace(((VerseSearchEntry) results.get(i)).getKey());
+        for (SearchEntry result : results) {
+            LOGGER.trace(((VerseSearchEntry) result).getKey());
         }
         assertFalse(results.isEmpty());
     }
@@ -87,8 +88,8 @@ public class JSwordSearchServiceImplTest {
         final List<SearchEntry> results = this.search.search(
                 new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM*", new String[] {"KJV"}, "true", 0, 1, 1000000, null), "ESV")
                 .getResults();
-        for (int i = 0; i < results.size(); i++) {
-            LOGGER.info(((VerseSearchEntry) results.get(i)).getKey());
+        for (SearchEntry result : results) {
+            LOGGER.info(((VerseSearchEntry) result).getKey());
         }
         assertFalse(results.isEmpty());
     }

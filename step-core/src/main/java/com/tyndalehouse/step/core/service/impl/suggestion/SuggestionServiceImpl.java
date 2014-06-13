@@ -11,7 +11,6 @@ import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import org.apache.lucene.search.TopFieldCollector;
-import org.crosswire.jsword.versification.BibleBook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +62,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         dependencies.put(SearchToken.HEBREW_MEANINGS, new String[]{SearchToken.GREEK_MEANINGS});
         dependencies.put(SearchToken.GREEK, new String[]{SearchToken.GREEK_MEANINGS, SearchToken.HEBREW_MEANINGS});
         dependencies.put(SearchToken.HEBREW, new String[]{SearchToken.GREEK, SearchToken.GREEK_MEANINGS, SearchToken.HEBREW_MEANINGS});
-        
+
         //spare capcacity, will fudge the group total. -1 means we will attempt to retrieve 1 less than we could
         //+1 means we will attempt to retrieve 1 more than we should. 
         //for GREEK and HEBREW, we will attempt to retrieve 2+2, rather than 3 and 0
@@ -72,9 +71,10 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         // for GREEK and Hebrew, we can attempt to retrieve one more, but these won't show if the slots have been taken above
         extraSlots.put(SearchToken.GREEK, 1);
-        extraSlots.put(SearchToken.HEBREW, 1);        
+        extraSlots.put(SearchToken.HEBREW, 1);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public SuggestionsSummary getTopSuggestions(final SuggestionContext context) {
         final SuggestionsSummary summary = new SuggestionsSummary();
@@ -141,7 +141,7 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     private int getSpareSlotCapacity(final String searchType) {
         final Integer spareCapacity = extraSlots.get(searchType);
-        return spareCapacity == null ? 0 : spareCapacity.intValue();
+        return spareCapacity == null ? 0 : spareCapacity;
     }
 
     private void fillInTotalHits(final Object collector, int alreadyCollected, final SingleSuggestionsSummary singleTypeSummary) {
@@ -156,7 +156,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         }
     }
 
-
+    @SuppressWarnings("unchecked")
     @Override
     public SuggestionsSummary getFirstNSuggestions(SuggestionContext context) {
 

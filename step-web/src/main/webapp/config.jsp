@@ -19,15 +19,18 @@
     <TITLE>STEP :: Scripture Tools for Every Person</TITLE>
 
     <%@include file="jsps/offlinePage.jsp" %>
+    <link href="css/bootstrap.css" rel="stylesheet" media="screen" />
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen" />
     <link rel="stylesheet" type="text/css" href="css/setup-layout.css" />
     <link rel="stylesheet" type="text/css" href="static/static.css" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
     <script src="international/interactive.js" type="text/javascript"></script>
 
-    <script src="js/ui_hooks.js" type="text/javascript"></script>
-    <script src="js/util.js" type="text/javascript"></script>
+    <script src="js/step_constants.js" type="text/javascript"></script>
+    <script src="js/step.util.js" type="text/javascript"></script>
     <script src="js/setup/step.config.js" type="text/javascript"></script>
     <script src="js/jquery-extensions/jquery-sort.js" type="text/javascript"></script>
+
 </HEAD>
 <body style="font-size: 12px">
 	<div class="header">

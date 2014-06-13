@@ -48,13 +48,13 @@ step.config = {
             self.populateInstallableModules();
         });
 
-        $("#leftColumn, #rightColumn").droppable({
-            accept : ".version",
-            activeClass : "ui-state-highlight",
-            drop : function(event, ui) {
-                self.receiveItem(ui.draggable, this);
-            }
-        });
+//        $("#leftColumn, #rightColumn").droppable({
+//            accept : ".version",
+//            activeClass : "ui-state-highlight",
+//            drop : function(event, ui) {
+//                self.receiveItem(ui.draggable, this);
+//            }
+//        });
         
         //kick off update progress thread...
         this.updateProgress();
@@ -154,7 +154,7 @@ step.config = {
         
         this.queryProgress(SETUP_PROGRESS_INDEX, this.currentIndexing, 50);
                 
-        delay(function() { step.config.updateProgress(); }, 1000);
+        step.util.delay(function() { step.config.updateProgress(); }, 1000);
     },
     
     queryProgress : function(progressUrl, versions, offsetProgress, completeHandler) {
@@ -221,11 +221,12 @@ step.config = {
                         		"</a></div>" + 
                           "<div class='removeNow'><a href='#'>" + __s.remove +
                           "</a></div>" +                
-                            "</div></div>").draggable({
-            revert : "invalid",
-            containment : "document",
-            cursor : "move"
-        });
+                            "</div></div>")
+//            .draggable({
+//            revert : "invalid",
+//            containment : "document",
+//            cursor : "move"
+//        });
         
         $.data(module, "installer", installer);
 

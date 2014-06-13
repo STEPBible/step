@@ -150,7 +150,7 @@ td.primary {
 
 .inlineNoteHighlight {
     background-color: #F3E5B4;
-    color: #991C32;
+    color: #822433;
     font-weight: bold;
 }
 
@@ -381,7 +381,7 @@ H4.heading  {
 
 H2.xgen {
 	font-family: Verdana;
-	color: #991C32;
+	color: #822433;
 }
 
 H2.xgen ul {
@@ -706,7 +706,7 @@ FONT.usg {
 }
 
 .verseNumberStrongs th {
-    color: #991C32;
+    color: #822433;
 }
 
 .verseNumberStrongs a, .verseNumberStrongs a:visited {

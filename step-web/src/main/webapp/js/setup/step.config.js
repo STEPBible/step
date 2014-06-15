@@ -70,7 +70,7 @@ step.config = {
         if($(parent).attr('id') == 'rightColumn') {
             $("<div class='progress' id='"  + item.initials + "'>&nbsp;</div>").appendTo(module);
             
-            $(parent).find(".container").prepend(module);
+            $(parent).find(".versionsContainer").prepend(module);
             
             //index module
             //bible is about to be installed - add progress bar...
@@ -118,7 +118,7 @@ step.config = {
         $.get(MODULE_GET_ALL_INSTALLABLE_MODULES + index + "/BIBLE,COMMENTARY", function(data) {
             $("#loadingRepo").hide();
             
-            var versionsContainer = $("#leftColumn .container");
+            var versionsContainer = $("#leftColumn .versionsContainer");
             versionsContainer.empty();
             if(data.length == 0) {
                 versionsContainer.append(__s.installation_all_modules_installers);
@@ -202,26 +202,46 @@ step.config = {
             features = " " + __s.not_applicable;
         }
 
+
+
+
+        var isInstallColumn = column.attr("id") == "rightColumn";
+
+
         var module = $(
-                "<div class='version ui-corner-all'>" + 
-                "<div class='versionContainer'><div class='versionHeader'>" + 
-                "<span class='name'>" + 
-                item.name + 
-                "</span>" + 
-                " (<span class='initials'>" + item.shortInitials + "</span>) " + 
-                "</div>" + 
-                "<div class='versionColumn'>" +
-                __s.category +
-                "<div class='category'>" + category + "</div></div>" + 
-                "<div class='versionColumn'>" + __s.language +
-                "<div class='languageName'>" + item.languageName + "</div> (<span class='languageCode'>" +
-                        	item.languageCode + "</span>)</div>" + "<div class='features'>" +
-                        			__s.features + features + "</div>"
-                        + "<div class='installNow'><a href='#'>" + __s.install_now +
-                        		"</a></div>" + 
-                          "<div class='removeNow'><a href='#'>" + __s.remove +
-                          "</a></div>" +                
-                            "</div></div>")
+                "<div class='version ui-corner-all'>" +
+                        "<button class='pull-right' title='" + (isInstallColumn ? __s.remove : __s.install_now ) + "'>" +
+                            "<span class='glyphicon " + ( isInstallColumn ? "glyphicon-remove" : "glyphicon-plus") + "'></span>" +
+                        "</button>" +
+                        "<span class='versionContainer'>" +
+                            "<div class='versionHeader'>" +
+                                "<span class='name'>" +
+                                    item.name +
+                                "</span> " +
+                                "(<span class='initials'>" + item.shortInitials + "</span>) " +
+                            "</div>" +
+                            "<div class='row'>" +
+                                "<span class='col-xs-6 col-md-4'>" +
+                                    "<label>" +
+                                        __s.category +
+                                    "</label>" +
+                                    "<span class='category'>" + category + "</span>" +
+                                "</span>" +
+                                "<span class='col-xs-6 col-md-4'>" +
+                                    "<label>" + __s.language + "</label>" +
+                                    "<span class='languageName'>" + item.languageName + "</span> " +
+                                    "(<span class='languageCode'>" + item.languageCode + "</span>)" +
+                                "</span>" +
+                                "<span class='features col-xs-6 col-md-4'>" +
+                                    "<label>" +
+                                        __s.features +
+                                    "</label>" +
+                                    features +
+                                "</span>" +
+                            "</div>" +
+                        "</span>" +
+//                    "</div>" +
+                 "</div>");
 //            .draggable({
 //            revert : "invalid",
 //            containment : "document",
@@ -230,16 +250,14 @@ step.config = {
         
         $.data(module, "installer", installer);
 
-        module.find(".installNow a").click(function() {
-            self.receiveItem(module, $("#rightColumn"));
-        });
-
-        module.find(".removeNow a").click(function() {
-            self.receiveItem(module, $("#leftColumn"));
-        });
+        if(column.attr("id") == "rightColumn") {
+            module.addClass("bg-success");
+        } else {
+            module.addClass("bg-danger");
+        }
 
         $.data(module.get(0), "item", item);
-        column.find(".container").append(module);
+        column.find(".versionsContainer").append(module);
 
         this.resizeColumns();
 

@@ -185,5 +185,14 @@
             step.util.raiseOneTimeOnly("machine_translated", 'info');
         }
         step.util.trackAnalytics('interface', 'language', step.state.language(1));
+        if(window.localStorage) {
+            var storedVersion = window.localStorage.getItem("step.version");
+            var downloadedVersion = step.state.getCurrentVersion();
+            if(storedVersion != downloadedVersion) {
+                //we're upgrading to the new version
+                console.log("Upgrading versions: ", storedVersion, downloadedVersion);
+                window.localStorage.setItem("step.version", downloadedVersion);
+            }
+        }
     });
 })();

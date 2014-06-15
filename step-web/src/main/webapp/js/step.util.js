@@ -1024,7 +1024,7 @@ step.util = {
                 var v = (model.get("extraVersions").split(",")) || [];
                 for(var version in v) {
                     if(!step.util.isBlank(v[version])) {
-                        message += ",";
+                        message += ", ";
                         message += this._getCopyrightLink(v[version]);
                     }
                 }

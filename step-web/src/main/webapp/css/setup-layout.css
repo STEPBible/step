@@ -3,6 +3,33 @@
     float: left;
 }
 
+h2 {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.columnLeft h2, .columnRight h2 {
+    height: 40px;
+}
+
+.sortAndFilter {
+    padding: 5px;
+}
+
+.repositories {
+    font-size: 12px;
+    color: black;
+}
+
+#content h2 {
+    margin: 0px !important;
+}
+
+select {
+    font-size: 12px;
+}
+
 .optionContainer {
     background-color: #eef;
     padding: 2px;
@@ -36,7 +63,6 @@
 .version {
     margin: 2px;
     padding: 2px;
-    cursor: pointer;
 }
 
 .installNow, .removeNow {
@@ -54,12 +80,13 @@
     font-weight: bold;
 }
 
-#rightColumn .version {
-    background-color: lightgreen;
+label {
+    font-weight: normal;
+    font-style: italic;
 }
 
-#leftColumn .version {
-    background-color:lightpink;
+.spacer {
+    margin-right: 20px;
 }
 
 #rightColumn .installNow {
@@ -78,17 +105,21 @@
     margin-left: 4px;
 }
 
+
+.version button label {
+    margin-bottom: 0px;
+}
+
+.version {
+    padding: 3px;
+}
+
 .versionColumn {
     width: 49%;
     display: inline-block;
 }
 
 .versionColumn * {
-    display: inline-block;
-}
-
-.features {
-    width: 49%;
     display: inline-block;
 }
 

@@ -472,8 +472,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final List<Book> installedModules = this.jswordModule.getInstalledModules(BookCategory.BIBLE);
         for (final Book b : installedModules) {
             final String initials = b.getInitials();
-            LOGGER.debug("Indexing [{}]", initials);
-            this.jswordModule.index("WEB");
+            LOGGER.error("Indexing [{}]", initials);
+            this.jswordModule.index(b.getInitials());
             this.jswordModule.waitForIndexes(initials);
         }
     }

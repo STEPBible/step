@@ -42,6 +42,7 @@ var PassageDisplayView = DisplayView.extend({
                 this._warnIfNoStrongs(version);
                 this._warnIfFirstTimeCompare(interlinearMode);
                 this._warnIfInterlinearFirstTime(interlinearMode);
+                this._warnFirstTimeColourCoding();
                 this._warnCommentaryLookupVersion(version, extraVersions);
                 this.doFonts(passageHtml, options, interlinearMode, languages);
                 this.doSwapInterlinearLink(passageHtml);
@@ -148,6 +149,12 @@ var PassageDisplayView = DisplayView.extend({
                 step.settings.save({
                     noStrongCompareWarning: warnings
                 });
+            }
+        },
+        _warnFirstTimeColourCoding: function() {
+            var options = this.model.get("options") || "";
+            if(options.indexOf("D") != -1) {
+                step.util.raiseOneTimeOnly("display_divide_hebrew_explanation", "info");
             }
         },
         _warnIfInterlinearFirstTime: function (interlinearMode) {

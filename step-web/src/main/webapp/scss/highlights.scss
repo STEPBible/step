@@ -32,6 +32,9 @@ span[strong]:hover {
 .primaryLightBg {
   background-color: $quickLexiconColour !important;
   color: $quickLexiconFontColour;
+  .segC0, .segC1 {
+    color: $quickLexiconFontColour;
+  }
 }
 
 .secondaryBackground {

@@ -54,6 +54,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tyndalehouse.step.core.service.AppManagerService;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
@@ -105,7 +106,7 @@ public class FrontControllerTest {
         when(mockMapper.writeValueAsString(any(Object.class))).thenReturn("Test");
         when(this.objectMapper.get()).thenReturn(mockMapper);
         
-        this.fcUnderTest = new FrontController(this.guiceInjector, this.errorResolver,
+        this.fcUnderTest = new FrontController(this.guiceInjector, mock(AppManagerService.class), this.errorResolver,
                 this.clientSessionProvider, objectMapper);
     }
 

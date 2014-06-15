@@ -5,10 +5,10 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.exceptions.ValidationException;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.service.AppManagerService;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +31,14 @@ public abstract class AbstractAjaxController extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAjaxController.class);
     private final ObjectMapper jsonMapper;
     private final transient ClientErrorResolver errorResolver;
+    private final AppManagerService appManagerService;
     private final Provider<ClientSession> clientSessionProvider;
 
-    public AbstractAjaxController(final Provider<ClientSession> clientSessionProvider, 
+    public AbstractAjaxController(final AppManagerService appManagerService,
+                                  final Provider<ClientSession> clientSessionProvider,
                                   final ClientErrorResolver errorResolver,
                                   final Provider<ObjectMapper> objectMapperProvider) {
+        this.appManagerService = appManagerService;
         this.clientSessionProvider = clientSessionProvider;
         this.errorResolver = errorResolver;
         this.jsonMapper = objectMapperProvider.get();
@@ -55,7 +58,7 @@ public abstract class AbstractAjaxController extends HttpServlet {
             handleError(response, e, request);
         }
     }
-    
+
     @Override
     protected void doPost(final HttpServletRequest request, final HttpServletResponse response) {
         this.doGet(request, response);
@@ -78,8 +81,8 @@ public abstract class AbstractAjaxController extends HttpServlet {
     protected abstract Object invokeMethod(HttpServletRequest request) throws Exception;
 
     /**
-     * We attempt here to rethrow the exception that caused the invocation target exception, so that we can
-     * handle it nicely for the user
+     * We attempt here to rethrow the exception that caused the invocation target exception, so that we can handle it
+     * nicely for the user
      *
      * @param e the wrapped exception that happened during the reflective call
      * @return a client handled issue which wraps the exception that was raised
@@ -132,6 +135,7 @@ public abstract class AbstractAjaxController extends HttpServlet {
         response.setContentType("application/json");
         response.setContentLength(length);
         response.setHeader("step-language", this.clientSessionProvider.get().getLocale().getLanguage());
+        response.setHeader("step-version", this.appManagerService.getAppVersion());
     }
 
     /**
@@ -211,8 +215,8 @@ public abstract class AbstractAjaxController extends HttpServlet {
      * @return the string
      */
     private String returnInternalError(final Throwable e, final ResourceBundle bundle) {
-        if(e == null) {
-            LOGGER.error("An unknown internal error has occurred");   
+        if (e == null) {
+            LOGGER.error("An unknown internal error has occurred");
         } else {
             LOGGER.error(e.getMessage(), e);
         }

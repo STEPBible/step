@@ -934,40 +934,37 @@ step.util = {
             }).on("touchstart", function (ev) {
                 that.touchstart = new Date().getTime();
                 that.touchTriggered = true;
-                step.passage.higlightStrongs({
-                    passageId: undefined,
-                    strong: $(this).attr('strong'),
-                    morph: $(this).attr('morph'),
-                    classes: "primaryLightBg"
-                });
 
-                var hoverContext = this;
-                require(['quick_lexicon'], function () {
-                    var strong = $(hoverContext).attr('strong');
-                    var morph = $(hoverContext).attr('morph');
-                    new QuickLexicon({
-                        strong: strong, morph: morph, target: hoverContext,
-                        position: ev.pageY / $(window).height(), touchEvent: true,
-                        passageId: passageId
+                if(that.lastTapStrong == $(this).attr("strong")) {
+                    $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
+                    $(this).addClass("lexiconFocus");
+                    step.util.ui.showDef(this);
+                    step.passage.higlightStrongs({
+                        passageId: undefined,
+                        strong: $(this).attr('strong'),
+                        morph: $(this).attr('morph'),
+                        classes: "lexiconFocus"
                     });
-                });
-            }).on("touchend", function () {
-                if (that.touchstart) {
-                    var diff = new Date().getTime() - that.touchstart;
-                    that.touchstart = null;
-                    if (diff < 1000) {
-                        //do nothing - event has already triggered.
-                    } else {
-                        $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
-                        step.util.ui.showDef(this);
-                        step.passage.higlightStrongs({
-                            passageId: undefined,
-                            strong: $(this).attr('strong'),
-                            morph: $(this).attr('morph'),
-                            classes: "lexiconFocus"
+                } else {
+                    step.passage.higlightStrongs({
+                        passageId: undefined,
+                        strong: $(this).attr('strong'),
+                        morph: $(this).attr('morph'),
+                        classes: "primaryLightBg"
+                    });
+
+                    var hoverContext = this;
+                    require(['quick_lexicon'], function () {
+                        var strong = $(hoverContext).attr('strong');
+                        var morph = $(hoverContext).attr('morph');
+                        new QuickLexicon({
+                            strong: strong, morph: morph, target: hoverContext,
+                            position: ev.pageY / $(window).height(), touchEvent: true,
+                            passageId: passageId
                         });
-                    }
+                    });
                 }
+                that.lastTapStrong = $(this).attr("strong");
             }).hover(function (ev) {
                 step.passage.higlightStrongs({
                     passageId: undefined,

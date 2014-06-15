@@ -37,6 +37,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.service.AppManagerService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,10 +84,11 @@ public class FrontController extends AbstractAjaxController {
      */
     @Inject
     public FrontController(final Injector guiceInjector,
+                           final AppManagerService appManagerService,
                            final ClientErrorResolver errorResolver,
                            final Provider<ClientSession> clientSessionProvider,
                            final Provider<ObjectMapper> objectMapperProvider) {
-        super(clientSessionProvider, errorResolver, objectMapperProvider);
+        super(appManagerService, clientSessionProvider, errorResolver, objectMapperProvider);
         this.guiceInjector = guiceInjector;
     }
 

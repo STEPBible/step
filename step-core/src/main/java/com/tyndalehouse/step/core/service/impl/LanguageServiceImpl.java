@@ -201,7 +201,7 @@ public class LanguageServiceImpl implements LanguageService {
 
             @Override
             public int compare(final Language o1, final Language o2) {
-                return o1.getUserLocaleLanguageName().compareTo(o2.getUserLocaleLanguageName());
+                return o1.getOriginalLanguageName().compareTo(o2.getOriginalLanguageName());
             }
         });
     }

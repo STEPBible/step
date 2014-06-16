@@ -325,9 +325,9 @@
     <%
         if(request.getParameter("lang") == null) {
     %>
-    <script src="international/interactive.js?lang=<%= locale.getLanguage() %>" type="text/javascript"></script>
+    <script src="international/interactive.js?lang=<%= locale.getLanguage() %>&step.version=${project.version}" type="text/javascript"></script>
     <% } else { %>
-    <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>" type="text/javascript"></script>
+    <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>&step.version=${project.version}" type="text/javascript"></script>
     <% } %>
     <%@include file="jsps/initLib.jsp" %>
 

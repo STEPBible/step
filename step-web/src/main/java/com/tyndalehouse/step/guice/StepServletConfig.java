@@ -46,6 +46,7 @@ import com.tyndalehouse.step.rest.controllers.ImageController;
 import com.tyndalehouse.step.rest.controllers.IndexRedirect;
 import com.tyndalehouse.step.rest.controllers.InternationalJsonController;
 import com.tyndalehouse.step.rest.controllers.SearchPageController;
+import com.tyndalehouse.step.rest.controllers.SetupPageController;
 import com.tyndalehouse.step.rest.controllers.SiteMapController;
 import com.tyndalehouse.step.rest.framework.FrontController;
 import com.yammer.metrics.guice.InstrumentationModule;
@@ -91,7 +92,7 @@ public class StepServletConfig extends GuiceServletContextListener {
                         serve("/index.jsp").with(IndexRedirect.class);
                         serve("/").with(SearchPageController.class);
                         serve("/international/interactive.js").with(InternationalJsonController.class);
-
+                        serve("/config.jsp").with(SetupPageController.class);
                         if (Boolean.getBoolean("metrics.enabled")) {
                             serve("/metrics/*").with(AdminServlet.class);
                         }

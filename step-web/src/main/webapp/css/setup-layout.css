@@ -128,6 +128,7 @@ label {
 
 .version {
     padding: 3px;
+    position: relative;
 }
 
 .versionColumn {
@@ -154,14 +155,22 @@ label {
     text-align: center;
 }
 
-.progress {
-    background-color: lightpink !important;
+.progressBar {
+    background-color: #f2dede !important;
     position: absolute;
     width: 100%;
     height: 100%;
     right: 0px;
     top: 0px;
     opacity: 0.5;
+}
+
+.infoMessage {
+    padding: 5px;
+}
+
+.close {
+    margin-top: -3px;
 }
 
 .waiting {

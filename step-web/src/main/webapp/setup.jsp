@@ -26,7 +26,8 @@
     <link rel="stylesheet" type="text/css" href="static/static.css"/>
     <link rel="shortcut icon" href="images/step-favicon.ico"/>
     <script src="international/interactive.js" type="text/javascript"></script>
-
+    <script src="libs/bootstrap.js"></script>
+    <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
     <script src="js/step_constants.js" type="text/javascript"></script>
     <script src="js/step.util.js" type="text/javascript"></script>
     <script src="js/setup/step.config.js" type="text/javascript"></script>
@@ -38,7 +39,6 @@
         <div class="header">
             <h1>STEP :: Scripture Tools for Every Person</h1>
         </div>
-
         <div class="pageContent">
             <h2><fmt:message key="welcome_to_step_configuration"/></h2>
 
@@ -96,7 +96,7 @@
             <p/>
             <div class='versionsContainer'>
                 <c:forEach items="${installedVersions}" var="item">
-                    <div class='version bg-success'>
+                    <div class='version bg-success' data-initials="${ item.shortInitials }">
                         <fmt:bundle basename="InteractiveBundle">
                             <button class='pull-right' title='<fmt:message key="remove" />'>
                         </fmt:bundle>

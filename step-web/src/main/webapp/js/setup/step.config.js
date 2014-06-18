@@ -130,7 +130,14 @@ step.config = {
         });
 
         
-        this.queryProgress(SETUP_PROGRESS_INDEX, this.currentIndexing, 50);
+        this.queryProgress(SETUP_PROGRESS_INDEX, this.currentIndexing, 50, function(initials) {
+            //move the item to the other list
+            $("#installedColumn").append($("[data-initials='" + initials + "'"));
+            var infoMessage = $("<div class='bg-success infoMessage'>").append("<span class='pull-right close'>&times;</span>").append(sprintf(__s.installation_module_complete, initials));
+            infoMessage.on('click', function() { $(this).remove(); });
+            $("body").prepend(infoMessage);
+
+        });
                 
         step.util.delay(function() { step.config.updateProgress(); }, 1000);
     },
@@ -160,10 +167,11 @@ step.config = {
                     
                     if(data[i] == 1) {
                         //remove from in progress list
-                        var initials = versions.splice(i, 1);
-                        
-                        if(completeHandler) {
-                            completeHandler(initials);
+                        var initials = versions.splice(i, 1) || [];
+                        if(initials.length > 0) {
+                            if (completeHandler) {
+                                completeHandler(initials[0]);
+                            }
                         }
                     }
                 }
@@ -183,7 +191,7 @@ step.config = {
 
         var isInstallColumn = column.attr("id") == "installedColumn";
         var module = $(
-                "<div class='version'>" +
+                "<div class='version' data-initials='" + item.shortInitials + "'>" +
                         "<button class='pull-right' title='" + (isInstallColumn ? __s.remove : __s.install_now ) + "'>" +
                             "<span class='glyphicon " + ( isInstallColumn ? this.deleteModule: this.addModule) + "'></span>" +
                         "</button>" +
@@ -216,7 +224,7 @@ step.config = {
                         "</span>" +
                  "</div>");
 
-        $.data(module, "installer", installer);
+        $(module).data("installer", installer);
 
         if(column.attr("id") == "installedColumn") {
             module.addClass("bg-success");
@@ -231,26 +239,28 @@ step.config = {
         return module;
     },
     addHandlers: function(module) {
+        var self = this;
         $("." + this.addModule, module).parent().on("click", function() {
-            $("<div class='progress' id='"  + $(module).attr("initials") + "'>&nbsp;</div>").appendTo(module);
-
-            $(module).closest(".versionsContainer").prepend(module);
+            $("<div class='progressBar' id='"  + $(module).data("initials") + "'>&nbsp;</div>").appendTo(module);
+            module.removeClass("bg-danger");
+            module.addClass("bg-success");
 
             //index module
             //bible is about to be installed - add progress bar...
-            self.currentInstalls.push(item.initials);
-            var installer = $.data(draggedItem, "installer");
+            var initials = $(module).data("initials");
+            self.currentInstalls.push(initials);
+            var installer = $(module).data("installer");
             if(installer == undefined) {
                 installer = -1;
             }
 
-            $.get(SETUP_INSTALL_BIBLE + installer + "/" + item.initials, function() {
+            $.get(SETUP_INSTALL_BIBLE + installer + "/" + initials, function() {
             });
         });
         $("." + this.deleteModule, module).parent().on("click", function() {
             //remove item
-            $.get(SETUP_REMOVE_MODULE + $(module).attr("initials"), function(data) {
-
+            $.get(SETUP_REMOVE_MODULE + $(module).data("initials"), function(data) {
+                $(module).remove();
             });
         });
     },

@@ -15,6 +15,7 @@
     Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
+
 <fmt:setBundle basename="HtmlBundle" scope="request" />
 <!DOCTYPE html  xmlns:fb="http://ogp.me/ns/fb#">
 <html>

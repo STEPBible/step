@@ -65,9 +65,9 @@
 @mixin gradient($color, $start, $end) {
 //  background-color: inherit !important;
   background: lighten($color, $optionStartGradient) !important; /* for non-css3 browsers */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient)) !important; /* for IE */
-  background-image: -webkit-linear-gradient(left, lighten($color, $optionStartGradient), lighten($color, $optionEndGradient)) !important;
-  background: -moz-linear-gradient(left,  lighten($color, $optionStartGradient),  lighten($color, $optionEndGradient)) !important; /* for firefox 3.6+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(gradientType=1, startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient)) !important; /* for IE */
+  background-image: -webkit-linear-gradient(bottom, lighten($color, $optionStartGradient), lighten($color, $optionEndGradient)) !important;
+  background: -moz-linear-gradient(bottom,  lighten($color, $optionStartGradient),  lighten($color, $optionEndGradient)) !important; /* for firefox 3.6+ */
 }
 
 @mixin rotate($degrees) {

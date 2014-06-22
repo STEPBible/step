@@ -4,21 +4,22 @@
   margin-left: 5;
   display: block;
   padding: 1;
-  
+
   span.argSelect {
     display: inline-block;
     cursor: default !important;
     white-space: nowrap;
-    font-family:tahoma;
-    font-size: $defaultFontSize;
+    font-family: tahoma;
+    font-size: 14px;
     line-height: $defaultFontSize;
-    padding: 4px 6px 4px 6px;
-    margin: 0 0 0 5;
+    padding: 5px 13px 5px 13px;
+    margin: 0 0 0 3;
     cursor: default;
-    border: 1px solid #aaaaaa;
-    border-radius: 3px;
-    -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-    box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    //    border: 1px solid #aaaaaa;
+    border-radius: 4px;
+    color: white;
+    //    -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    //    box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
     background-clip: padding-box;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -26,4 +27,56 @@
     -ms-user-select: none;
     user-select: none;
   }
+}
+
+.passageOptionsGroup {
+    span.argSelect {
+      font-size: 14px;
+      background-image: none !important;
+      &.select-version {
+        background-color: white !important;
+        color: #8D5361 !important;
+        border: solid thin #651428;
+      }
+      &.select-reference {
+        background-color: #E8CFD6 !important;
+        border: solid thin #370B16;
+        color: #411822 !important;
+      }
+      &.select-hebrew {
+        background-color: white !important;
+        color: #122281 !important;
+        border: solid thin #12227F;
+      }
+      &.select-hebrewMeanings {
+        background-color: #C1CDE4 !important;
+        color: #232B4D !important;
+        border: solid thin #0A204B;
+      }
+      &.select-greek {
+        background-color: white !important;
+        color: #0E5242 !important;
+        border: solid thin #146451;
+      }
+      &.select-greekMeanings {
+        background-color: #BBDED6 !important;
+        color: #0B3B2E !important;
+        border: solid thin #0A352B;
+      }
+      &.select-subject {
+        color: #371465 !important;
+        background-color: white !important;
+        border: solid thin #381369;
+      }
+      &.select-text {
+        color: #210A38 !important;
+        background-color: #D7CAE3 !important;
+        border: solid thin #220B39;
+      }
+      &.select-meanings {
+        background-color: white !important;
+        color: #7C714B !important;
+        border: solid thin #6F5A12;
+      }
+    }
 }

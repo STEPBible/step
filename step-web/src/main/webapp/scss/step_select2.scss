@@ -22,11 +22,22 @@
   max-height: none;
 }
 
-.select2-search-choice-close {
+a.select2-search-choice-close {
   left: auto !important;
   top: 6px !important;
   right: 2px;
   margin-right: 4px;
+  font-size: 13px;
+  background: none;
+  &:after {
+    content: '\00d7';
+  }
+  color: white;
+  opacity: 0.7;
+  &:hover {
+    text-decoration: none;
+
+  }
 }
 
 .select2-dropdown-open ul {

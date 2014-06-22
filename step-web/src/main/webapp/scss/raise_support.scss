@@ -11,6 +11,10 @@
   }
 
   #stepDisclaimer {
+    &:hover {
+      background-color: inherit;
+      background-position: inherit;
+    }
     border-radius: 3 3 0 0;
   }
 }

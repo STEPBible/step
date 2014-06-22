@@ -63,12 +63,12 @@
 }
 
 @mixin gradient($color, $start, $end, $border) {
-//  background-color: inherit !important;
   background: lighten($color, $end) !important; /* for non-css3 browsers */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient), GradientType=1) !important; /* for IE */
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1, startColorstr=lighten($color, $start), endColorstr=lighten($color, $end)) !important; /* for IE */
 
-  background-image: -webkit-linear-gradient(bottom, lighten($color, $optionStartGradient), lighten($color, $optionEndGradient)) !important;
-  background: -moz-linear-gradient(bottom,  lighten($color, $optionStartGradient),  lighten($color, $optionEndGradient)) !important; /* for firefox 3.6+ */
+  background-image: -webkit-linear-gradient(bottom, lighten($color, $start), lighten($color, $end)) !important;
+  background: -moz-linear-gradient(bottom,  lighten($color, $start),  lighten($color, $end)) !important; /* for firefox 3.6+ */
+  background: -ms-linear-gradient(bottom,  lighten($color, $start),  lighten($color, $end)) !important; /* for firefox 3.6+ */
   border-bottom: solid thin $border !important;
 }
 
@@ -84,6 +84,63 @@
   -o-transform: scaleX(-1) rotate($degrees);
   -webkit-transform: scaleX(-1) rotate($degrees);
   transform: scaleX(-1) rotate($degrees);
+}
+
+@mixin bold-args($start, $end) {
+  .select-meanings {
+    cursor: hand !important;
+    @include gradient($meaningsRow, $start, $end, #4B3D0D);
+  }
+
+  .select-version {
+    cursor: hand !important;
+    @include gradient($bibleRow, $start, $end, #450914);
+  }
+
+  .select-reference {
+    cursor: hand !important;
+    @include gradient($referenceRow, $start, $end, #20050B);
+  }
+
+  .select-subject {
+    cursor: hand !important;
+    @include gradient($subjectRow, $start, $end, #1E0A42);
+  }
+
+  .select-text {
+    cursor: hand !important;
+    @include gradient($textRow, $start, $end, #11051D);
+  }
+
+  .select-greek {
+    cursor: hand !important;
+    @include gradient($greekRow, $start, $end, #06241C);
+  }
+
+  .select-greekMeanings {
+    cursor: hand !important;
+    @include gradient($greekMeaningsRow, $start, $end, #0A4232);
+  }
+
+  .select-hebrew {
+    cursor: hand !important;
+    @include gradient($hebrewRow, $start, $end, #05081D);
+  }
+
+  .select-hebrewMeanings {
+    cursor: hand !important;
+    @include gradient($hebrewMeaningsRow, $start, $end, #0A1242);
+  }
+
+  .select-exactForm {
+    cursor: hand !important;
+    @include gradient($exactForm, $start, $end, #878700);
+  }
+
+  .select-topicref {
+    cursor: hand !important;
+    @include gradient($topicByRefRow, $start, $end, #250E44);
+  }
 }
 
 @mixin muted-args {

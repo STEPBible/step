@@ -721,6 +721,12 @@ step.util = {
                 case TEXT_SEARCH:
                     source = __s.search_text;
                     break;
+                case RELATED_VERSES:
+                    source = __s.verse_related;
+                    break;
+                case TOPIC_BY_REF:
+                    source = __s.related_by_topic;
+                    break;
             }
             return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
         },
@@ -765,7 +771,7 @@ step.util = {
                 case EXACT_FORM:
                     return '<div class="exactFormItem" data-select-id="' + util.safeEscapeQuote(entry.item.text) + '"' +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'title="' + source + util.safeEscapeQuote(entry.item.text) + '">' + entry.item.text + "</div>";
+                        'title="' + source + util.safeEscapeQuote(entry.item.text) + '">' + '"' + entry.item.text + '"' + "</div>";
                 case SYNTAX:
                     return '<div class="syntaxItem"' +
                         'data-item-type="' + entry.itemType + '" ' +
@@ -773,15 +779,17 @@ step.util = {
                         'title="' + source + util.safeEscapeQuote(entry.item.value) + '">' + entry.item.text + "</div>";
                 case TOPIC_BY_REF:
                     return '<div class="topicByRefItem" ' +
+                        'title="' + source + util.safeEscapeQuote(entry.item.text) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.text) + '" ' +
-                        '>' +
+                        '>' + __s.related_prefix + " " +
                         entry.item.text + '</div>';
                 case RELATED_VERSES:
                     return '<div class="relatedVersesItem" ' +
+                        'title="' + source + util.safeEscapeQuote(entry.item.text) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.text) + '" ' +
-                        '>' +
+                        '>' + __s.related_prefix + " " +
                         entry.item.text + '</div>';
 
                     break;

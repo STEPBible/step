@@ -46,7 +46,11 @@ ul .glyphicon-ok {
 }
 
 .btn-danger {
-  background-image: linear-gradient(to bottom,#D14A4A 0,#9E2B2B 100%); /* Just changed the two colors */
+  background-image: -webkit-linear-gradient(bottom,$tyndaleBurgundy 0,lighten($tyndaleBurgundy, 10%) 100%);
+  background-image: linear-gradient(to top,$tyndaleBurgundy 0,lighten($tyndaleBurgundy, 10%) 100%) !important; /* Just changed the two colors */
+  border: solid thin $tyndaleBurgundy;
+  &:hover {
+  }
 }
 
 .text-info {

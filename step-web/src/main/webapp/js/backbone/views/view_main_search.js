@@ -742,6 +742,9 @@ var MainSearchView = Backbone.View.extend({
         return options;
     },
     formatResultCssClass: function (item) {
+        if(item && item.itemType == EXACT_FORM) {
+            return "select-" + item.itemType + " select-exactForm-" + (item.greek ? "greek" : "hebrew");
+        }
         return "select-" + item.itemType;
     },
 

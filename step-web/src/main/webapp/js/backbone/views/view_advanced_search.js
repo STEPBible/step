@@ -211,9 +211,9 @@ var AdvancedSearchView = Backbone.View.extend({
 
         var i = syntax.indexOf(' ');
         if (i != -1) {
-            return syntax.substring(0, i + 1) + "...";
+            return "[" + syntax.substring(0, i + 1) + "...]";
         }
-        return syntax + "...";
+        return "[" + syntax + "...]";
     },
     refreshExactDropdown: function (input, dropdown, target) {
         var self = this;

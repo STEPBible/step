@@ -130,7 +130,7 @@ public class SearchServiceImpl implements SearchService {
      * value representing a original spelling sort
      */
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
-
+    private static final String SYNTAX_FORMAT = "[%s...]";
     private static final String[] BASE_GREEK_VERSIONS = new String[]{"WHNU", "Byz", "LXX"};
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
@@ -373,9 +373,9 @@ public class SearchServiceImpl implements SearchService {
                 } else {
                     int i = syntax.indexOf(' ');
                     if (i != -1) {
-                        ss.setText(syntax.substring(0, i + 1) + "...");
+                        ss.setText(String.format(SYNTAX_FORMAT, syntax.substring(0, i + 1)));
                     } else {
-                        ss.setText(syntax + "...");
+                        ss.setText(String.format(SYNTAX_FORMAT, syntax));
                     }
                 }
                 ss.setValue(st.getToken());

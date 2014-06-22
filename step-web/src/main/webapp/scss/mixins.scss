@@ -87,59 +87,50 @@
 }
 
 @mixin bold-args($start, $end) {
-  .select-meanings {
+  &.select-meanings {
     cursor: hand !important;
     @include gradient($meaningsRow, $start, $end, #4B3D0D);
   }
 
-  .select-version {
+  &.select-version {
     cursor: hand !important;
     @include gradient($bibleRow, $start, $end, #450914);
   }
 
-  .select-reference {
+  &.select-reference, &.select-relatedrefs {
     cursor: hand !important;
     @include gradient($referenceRow, $start, $end, #20050B);
   }
 
-  .select-subject {
+  &.select-subject, &.select-topicref {
     cursor: hand !important;
     @include gradient($subjectRow, $start, $end, #1E0A42);
   }
 
-  .select-text {
+  &.select-text, &.select-syntax {
     cursor: hand !important;
     @include gradient($textRow, $start, $end, #11051D);
   }
 
-  .select-greek {
+
+  &.select-greek, &.select-exactForm-greek {
     cursor: hand !important;
     @include gradient($greekRow, $start, $end, #06241C);
   }
 
-  .select-greekMeanings {
+  &.select-greekMeanings {
     cursor: hand !important;
     @include gradient($greekMeaningsRow, $start, $end, #0A4232);
   }
 
-  .select-hebrew {
+  &.select-hebrew, &.select-exactForm-hebrew {
     cursor: hand !important;
     @include gradient($hebrewRow, $start, $end, #05081D);
   }
 
-  .select-hebrewMeanings {
+  &.select-hebrewMeanings {
     cursor: hand !important;
     @include gradient($hebrewMeaningsRow, $start, $end, #0A1242);
-  }
-
-  .select-exactForm {
-    cursor: hand !important;
-    @include gradient($exactForm, $start, $end, #878700);
-  }
-
-  .select-topicref {
-    cursor: hand !important;
-    @include gradient($topicByRefRow, $start, $end, #250E44);
   }
 }
 
@@ -150,12 +141,12 @@
     color: #8D5361 !important;
     border: solid thin #651428;
   }
-  &.select-reference {
+  &.select-reference, &.select-relatedrefs {
     background-color: #E8CFD6 !important;
     border: solid thin #370B16;
     color: #411822 !important;
   }
-  &.select-hebrew {
+  &.select-hebrew, &.select-exactForm-hebrew {
     background-color: white !important;
     color: #122281 !important;
     border: solid thin #12227F;
@@ -165,7 +156,7 @@
     color: #232B4D !important;
     border: solid thin #0A204B;
   }
-  &.select-greek {
+  &.select-greek, &.select-exactForm-greek {
     background-color: white !important;
     color: #0E5242 !important;
     border: solid thin #146451;
@@ -175,12 +166,12 @@
     color: #0B3B2E !important;
     border: solid thin #0A352B;
   }
-  &.select-subject {
+  &.select-subject, &.select-topicref {
     color: #371465 !important;
     background-color: white !important;
     border: solid thin #381369;
   }
-  &.select-text {
+  &.select-text, &.select-syntax {
     color: #210A38 !important;
     background-color: #D7CAE3 !important;
     border: solid thin #220B39;

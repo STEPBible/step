@@ -15,7 +15,6 @@ $stepLG: 1120px;
 
 // colours
 //active colour of panel
-$activeColor: #D14A4A;
 $topHeaderLinkColour: lightgrey;
 $dividerColor: $topHeaderLinkColour;
 $warningColour: orange;
@@ -24,8 +23,10 @@ $disabledColour: darkgrey;
 $linkColour: #26539e;
 
 // scrollbar colours
+$tyndaleBurgundy: #822433;
+$activeColor: $tyndaleBurgundy;
 $headerBackgroundColor: black;
-$scrollColor: #822433;
+$scrollColor: $tyndaleBurgundy;
 $scrollTrack: lighten($scrollColor, 0.05);
 $scrollTrackHover: lighten($scrollColor, 0.20);
 $scrollTrackActive: lighten($scrollColor, 0.35);
@@ -34,9 +35,9 @@ $scrollTrackBoxActive: lighten($scrollColor, 0.14);
 $scrollTrackThumbShadow: lighten($scrollColor, 0.07);
 
 // colours in dropdown
-$activeTabColour: #cd4848;
+$activeTabColour: $tyndaleBurgundy;
 $headingColour: #111;
-$quickLexiconColour: #822433;
+$quickLexiconColour: $tyndaleBurgundy;
 $quickLexiconFontColour: white;
 $quickLexiconRelatedFontColour: black;
 $hoverColor: $quickLexiconColour;

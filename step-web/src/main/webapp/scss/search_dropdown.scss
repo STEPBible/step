@@ -37,13 +37,15 @@
     background-image: inherit !important;
     color: white !important;
     &.select2-highlighted {
-      color: #D6D6D6 !important;
+      @include bold-args($optionStartGradient, $optionEndGradient);
     }
+    @include bold-args($optionEndGradient, $optionEndGradient);
   }
-  @include bold-args($optionEndGradient, $optionEndGradient);
 }
 
-@include bold-args($optionStartGradient, $optionEndGradient);
+li, span {
+  @include bold-args($optionStartGradient, $optionEndGradient);
+}
 
 @media screen and (min-width: $stepXSBootstrap) {
   .select2-drop-multi ul {

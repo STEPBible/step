@@ -8,6 +8,7 @@ import com.tyndalehouse.step.core.models.SuggestionsSummary;
 import com.tyndalehouse.step.core.models.search.AutoSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.models.search.SubjectEntries;
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.SuggestionService;
@@ -183,6 +184,21 @@ public class SearchController {
                 autoSuggestions.add(au);
             }
         }
+
+        //re-order the greek overflows
+        int lastNTWord = -1;
+        for(int ii = 0; ii < autoSuggestions.size(); ii++) {
+            if(SearchToken.GREEK_MEANINGS.equals(autoSuggestions.get(ii).getItemType())) {
+                lastNTWord = ii;
+            }
+
+            if(SearchToken.GREEK.equals(autoSuggestions.get(ii).getItemType())) {
+                AutoSuggestion as = autoSuggestions.remove(ii);
+                autoSuggestions.add(lastNTWord + 1, as);
+                lastNTWord++;
+            }
+        }
+
     }
 
     /**

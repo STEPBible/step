@@ -12,13 +12,13 @@
 }
 
 .select2-drop-active {
-  border:none;
-  border-bottom:1px solid #cd4848;
+  border: none;
+  border-bottom: 1px solid #cd4848;
 }
 
 .select2-results {
-  font-family:tahoma;
-  padding:0;
+  font-family: tahoma;
+  padding: 0;
   max-height: none;
 }
 
@@ -30,23 +30,24 @@
 }
 
 .select2-dropdown-open ul {
-  white-space: normal  !important;
+  white-space: normal !important;
   max-height: 70% !important;
 }
 
 .select2-container-multi .select2-choices {
   white-space: nowrap;
   overflow: hidden;
-  height: 35px;
-  max-height: 30px;
+  height: 34px;
+  max-height: 34px;
+  margin: -2 0;
 
   border-radius: 3 0 0 3 !important;
   .select2-search-choice {
     font-family: Tahoma;
-    margin-top: 2px;
+    margin-top: 3px;
     padding: 6px 26px 7px 12px;
     border-radius: 4px;
-    border:none;
+    border: none;
     color: white;
     font-size: 14px;
     box-shadow: none;
@@ -54,7 +55,6 @@
   }
 
   .select2-search-field input {
-
     font-family: inherit;
     padding: 6px 12px;
     margin: 0px -5px 0px 0px;
@@ -69,9 +69,15 @@
   border: 0px !important;
 }
 
-
 ul.select2-parent-no-results {
   @include multi-column(1);
+}
+
+.select2-no-results {
+  .message {
+    color: black;
+    margin-top: -1px;
+  }
 }
 
 .sortable-placeholder {

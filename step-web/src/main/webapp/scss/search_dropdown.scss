@@ -33,6 +33,12 @@
   li {
     background:#eee;
     padding:6px 5px;
+    background-image: none !important;
+    filter: none;
+    color: white !important;
+    &.select2-highlighted {
+      color: #D6D6D6 !important;
+    }
   }
 }
 

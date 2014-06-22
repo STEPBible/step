@@ -102,7 +102,7 @@
                 <div class="navbar-header search-form">
                     <div class="navbar-brand col-xs-12">
                         <span class="hidden-xs title">
-                            <a href="/"><img id="logo" src="images/step-top-left-logo.png" width="31" height="40" /></a>
+                            <a href="/"><img id="logo" src="images/step-top-left-logo.png" width="40" height="50" /></a>
                             <a href="/">STEP</a>
                             <br />
                             <span class="subtitle">

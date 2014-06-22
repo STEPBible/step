@@ -24,8 +24,14 @@
     a, .subtitle, .subtitle:hover {
       color: $header_title;
     }
-
+    [role="form"] {
+      margin-top: 5;
+    }
     &.form-group, form {
+      input {
+        margin-top: -2px;
+        height: 34px;
+      }
       margin-bottom: 0px;
       button {
         min-width: 80px;
@@ -37,17 +43,25 @@
   .navbar-brand {
 
     @media screen and (min-width: $stepXSBootstrap) {
-      padding-left: 40px;
+      padding-left: 50px;
     }
     padding-bottom: 0px;
     padding-top: 5px;
     height: $header_height;
 
     //find button to be aligned to top
+    #masterSearch {
+      border: 0 !important;
+      box-shadow: none;
+      -webkit-box-shadow: none;
+    }
     span.findButton {
       vertical-align: top;
+      box-shadow: none;
+      -webkit-box-shadow: none;
     }
     .title {
+      line-height: 25px;
       margin-right: 20px;
       float: left;
       & > a {
@@ -60,7 +74,7 @@
     .subtitle {
       margin-top: 5px;
       white-space: nowrap;
-      font-size: x-small;
+      font-size: 11px;
       line-height: 1;
     }
 
@@ -88,10 +102,15 @@
     }
 
     button.find.btn {
+      padding: 7 10;
+      margin-top: -2;
       font-size: 16px;
       line-height: 18px;
       font-weight: bold;
       text-shadow: -1px -1px 0 rgba(0, 0, 0, .2);
+      &:hover {
+        z-index: inherit !important;
+      }
     }
   }
   .searchLinks {
@@ -109,6 +128,7 @@
 
   // Help menu
   .help {
+    margin-top: 5;
     padding-top: 3px;
     font-size: 12px;
     margin-left: 10px;
@@ -210,8 +230,6 @@
         display: block;
       }
     }
-
-
 
     ul {
       float: right;

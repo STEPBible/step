@@ -46,9 +46,11 @@
     margin-top: 2px;
     padding: 6px 26px 7px 12px;
     border-radius: 4px;
-    border: none;
+    border:none;
     color: white;
     font-size: 14px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
   }
 
   .select2-search-field input {

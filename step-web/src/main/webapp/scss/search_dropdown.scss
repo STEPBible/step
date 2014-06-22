@@ -38,57 +38,57 @@
 
 .select-meanings {
   cursor: hand !important;
-  @include gradient($meaningsRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($meaningsRow, $optionStartGradient, $optionEndGradient, #4B3D0D);
 }
 
 .select-version {
   cursor: hand !important;
-  @include gradient($bibleRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($bibleRow, $optionStartGradient, $optionEndGradient, #450914);
 }
 
 .select-reference {
   cursor: hand !important;
-  @include gradient($referenceRow, $optionStartGradient, $optionEndGradient);  
+  @include gradient($referenceRow, $optionStartGradient, $optionEndGradient, #20050B);
 }
 
 .select-subject {
   cursor: hand !important;
-  @include gradient($subjectRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($subjectRow, $optionStartGradient, $optionEndGradient, #1E0A42);
 }
 
 .select-text {
   cursor: hand !important;
-  @include gradient($textRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($textRow, $optionStartGradient, $optionEndGradient, #11051D);
 }
 
 .select-greek {
   cursor: hand !important;
-  @include gradient($greekRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($greekRow, $optionStartGradient, $optionEndGradient, #06241C);
 }
 
 .select-greekMeanings {
   cursor: hand !important;
-  @include gradient($greekMeaningsRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($greekMeaningsRow, $optionStartGradient, $optionEndGradient, #0A4232);
 }
 
 .select-hebrew {
   cursor: hand !important;
-  @include gradient($hebrewRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($hebrewRow, $optionStartGradient, $optionEndGradient, #05081D);
 }
 
 .select-hebrewMeanings {
   cursor: hand !important;
-  @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient, #0A1242);
 }
 
 .select-exactForm {
   cursor: hand !important;
-  @include gradient($exactForm, $optionStartGradient, $optionEndGradient);
+  @include gradient($exactForm, $optionStartGradient, $optionEndGradient, #878700);
 }
 
 .select-topicref {
   cursor: hand !important;
-  @include gradient($topicByRefRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($topicByRefRow, $optionStartGradient, $optionEndGradient, #250E44);
 }
 
 @media screen and (min-width: $stepXSBootstrap) {
@@ -97,7 +97,6 @@
     li {
       padding: 0;
       display: inline-block;
-      border-bottom: solid 1 lightgrey;
       width: 100%;
     }
     .message {

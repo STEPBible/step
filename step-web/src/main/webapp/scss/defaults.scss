@@ -50,7 +50,14 @@ ul .glyphicon-ok {
   background-image: linear-gradient(to top,$tyndaleBurgundy 0,lighten($tyndaleBurgundy, 10%) 100%) !important; /* Just changed the two colors */
   border: solid thin $tyndaleBurgundy;
   &:hover {
+    background-position: 0 15px !important;
   }
+  &:focus {
+    background-position: inherit;
+    background-image: -webkit-linear-gradient(bottom,$tyndaleBurgundy 0,lighten($tyndaleBurgundy, 10%) 100%);
+    background-image: linear-gradient(to top,$tyndaleBurgundy 0,lighten($tyndaleBurgundy, 10%) 100%) !important; /* Just changed the two colors */
+  }
+
 }
 
 .text-info {

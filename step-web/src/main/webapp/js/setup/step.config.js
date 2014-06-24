@@ -32,6 +32,8 @@ if (!step) {
 }
 
 step.config = {
+    deleteModule: "glyphicon-remove",
+    addModule: "glyphicon-plus",
     currentInstalls : [],
     currentIndexing : [],
     confirmedInternet : false,
@@ -48,14 +50,6 @@ step.config = {
             self.populateInstallableModules();
         });
 
-//        $("#leftColumn, #rightColumn").droppable({
-//            accept : ".version",
-//            activeClass : "ui-state-highlight",
-//            drop : function(event, ui) {
-//                self.receiveItem(ui.draggable, this);
-//            }
-//        });
-        
         //kick off update progress thread...
         this.updateProgress();
     },
@@ -67,33 +61,17 @@ step.config = {
         var module = self.renderVersion(item, $(parent));
         
         //now work out where it landed and do the appropriate action:
-        if($(parent).attr('id') == 'rightColumn') {
-            $("<div class='progress' id='"  + item.initials + "'>&nbsp;</div>").appendTo(module);
-            
-            $(parent).find(".versionsContainer").prepend(module);
-            
-            //index module
-            //bible is about to be installed - add progress bar...
-            self.currentInstalls.push(item.initials);
-            var installer = $.data(draggedItem, "installer");
-            if(installer == undefined) {
-                installer = -1;
-            }
-            
-            $.get(SETUP_INSTALL_BIBLE + installer + "/" + item.initials, function() {
-            });
-        } else {
-            //remove item
-            $.get(SETUP_REMOVE_MODULE + item.initials, function(data) {
+        if($(parent).attr('id') == 'installedColumn') {
 
-            });
+        } else {
+
         }
     },
 
     /** modules that have yet to be installed */
     populateInstallableModules : function(index) {
         
-        var installableColumn = $("#leftColumn");
+        var installableColumn = $("#toBeInstalledColumn");
         var self = this;
         $("#loadingRepo").show();
         
@@ -118,7 +96,7 @@ step.config = {
         $.get(MODULE_GET_ALL_INSTALLABLE_MODULES + index + "/BIBLE,COMMENTARY", function(data) {
             $("#loadingRepo").hide();
             
-            var versionsContainer = $("#leftColumn .versionsContainer");
+            var versionsContainer = $("#toBeInstalledColumn .versionsContainer");
             versionsContainer.empty();
             if(data.length == 0) {
                 versionsContainer.append(__s.installation_all_modules_installers);
@@ -133,7 +111,7 @@ step.config = {
     /** loads the installed modules from the server */
     populateInstalledModules : function() {
         var self = this;
-        var installedColumn = $("#rightColumn");
+        var installedColumn = $("#installedColumn");
         $.get(MODULE_GET_ALL_MODULES, function(data) {
             $.each(data, function(i, item) {
                 self.renderVersion(item, installedColumn).addClass("installed");
@@ -152,7 +130,14 @@ step.config = {
         });
 
         
-        this.queryProgress(SETUP_PROGRESS_INDEX, this.currentIndexing, 50);
+        this.queryProgress(SETUP_PROGRESS_INDEX, this.currentIndexing, 50, function(initials) {
+            //move the item to the other list
+            $("#installedColumn").append($("[data-initials='" + initials + "'"));
+            var infoMessage = $("<div class='bg-success infoMessage'>").append("<span class='pull-right close'>&times;</span>").append(sprintf(__s.installation_module_complete, initials));
+            infoMessage.on('click', function() { $(this).remove(); });
+            $("body").prepend(infoMessage);
+
+        });
                 
         step.util.delay(function() { step.config.updateProgress(); }, 1000);
     },
@@ -182,10 +167,11 @@ step.config = {
                     
                     if(data[i] == 1) {
                         //remove from in progress list
-                        var initials = versions.splice(i, 1);
-                        
-                        if(completeHandler) {
-                            completeHandler(initials);
+                        var initials = versions.splice(i, 1) || [];
+                        if(initials.length > 0) {
+                            if (completeHandler) {
+                                completeHandler(initials[0]);
+                            }
                         }
                     }
                 }
@@ -203,15 +189,11 @@ step.config = {
         }
 
 
-
-
-        var isInstallColumn = column.attr("id") == "rightColumn";
-
-
+        var isInstallColumn = column.attr("id") == "installedColumn";
         var module = $(
-                "<div class='version ui-corner-all'>" +
+                "<div class='version' data-initials='" + item.shortInitials + "'>" +
                         "<button class='pull-right' title='" + (isInstallColumn ? __s.remove : __s.install_now ) + "'>" +
-                            "<span class='glyphicon " + ( isInstallColumn ? "glyphicon-remove" : "glyphicon-plus") + "'></span>" +
+                            "<span class='glyphicon " + ( isInstallColumn ? this.deleteModule: this.addModule) + "'></span>" +
                         "</button>" +
                         "<span class='versionContainer'>" +
                             "<div class='versionHeader'>" +
@@ -240,17 +222,11 @@ step.config = {
                                 "</span>" +
                             "</div>" +
                         "</span>" +
-//                    "</div>" +
                  "</div>");
-//            .draggable({
-//            revert : "invalid",
-//            containment : "document",
-//            cursor : "move"
-//        });
-        
-        $.data(module, "installer", installer);
 
-        if(column.attr("id") == "rightColumn") {
+        $(module).data("installer", installer);
+
+        if(column.attr("id") == "installedColumn") {
             module.addClass("bg-success");
         } else {
             module.addClass("bg-danger");
@@ -259,47 +235,58 @@ step.config = {
         $.data(module.get(0), "item", item);
         column.find(".versionsContainer").append(module);
 
-        this.resizeColumns();
-
+        this.addHandlers(module);
         return module;
     },
+    addHandlers: function(module) {
+        var self = this;
+        $("." + this.addModule, module).parent().on("click", function() {
+            $("<div class='progressBar' id='"  + $(module).data("initials") + "'>&nbsp;</div>").appendTo(module);
+            module.removeClass("bg-danger");
+            module.addClass("bg-success");
 
-    resizeColumns : function() {
-        $("#leftColumn, #rightColumn").css("height", "auto");
+            //index module
+            //bible is about to be installed - add progress bar...
+            var initials = $(module).data("initials");
+            self.currentInstalls.push(initials);
+            var installer = $(module).data("installer");
+            if(installer == undefined) {
+                installer = -1;
+            }
 
-        var leftHeight = $("#leftColumn").height();
-        var rightHeight = $("#rightColumn").height();
-        var maxHeight = leftHeight < rightHeight ? rightHeight : leftHeight;
-
-        $("#leftColumn, #rightColumn").height(maxHeight);
+            $.get(SETUP_INSTALL_BIBLE + installer + "/" + initials, function() {
+            });
+        });
+        $("." + this.deleteModule, module).parent().on("click", function() {
+            //remove item
+            $.get(SETUP_REMOVE_MODULE + $(module).data("initials"), function(data) {
+                $(module).remove();
+            });
+        });
     },
-    
     sortBy : function(field) {
         $("#sortLinks a").removeClass("selected");
         $("#" + field + "Sort").addClass('selected');
 
 
         var comparator = function(a, b) { return $.data(a, "item")[field] < $.data(b, "item")[field] ? -1 : 1; };
-        $("#rightColumn .version").sortElements(comparator);
-        $("#leftColumn .version").sortElements(comparator);
+        $("#installedColumn .version").sortElements(comparator);
+        $("#toBeInstalledColumn .version").sortElements(comparator);
 
         $(".version *").removeClass("ui-state-highlight");
         $(".version ." + field).addClass("ui-state-highlight");
     },
     
     filterBy : function(field) {
-        if(field) {
-            $("#filterLinks a").removeClass("selected");
-            $("#" + field + "Filter").addClass('selected');
-        } else {
-            field = $("#filterLinks a.selected").attr("filterType");
+        if(!field) {
+            field = $(".filterBy").val();
         }
         
         
         var value = $("#filterValue").val();
         $(".version").hide();
-        var lc = $("#leftColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
-        var rc = $("#rightColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
+        var lc = $("#toBeInstalledColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
+        var rc = $("#installedColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
     },
 
     createOption : function(option) {
@@ -336,13 +323,22 @@ step.config = {
             }
         });
     }
-}
+};
 
 $(document).ready(function() {
     step.config.init();
+    step.config.populateRepositories();
     $("#filterValue").keyup(function() {
         step.config.filterBy();
     });
-    
-    step.config.populateRepositories();
+    $(".filterBy").on("change", function() {
+       step.config.filterBy($(this).val());
+    });
+    $(".sortBy").on("change", function() {
+        step.config.sortBy($(this).val());
+    });
+
+    $.each($(".version"), function() {
+        step.config.addHandlers($(this));
+    });
 });

@@ -92,7 +92,7 @@ step.firstTime = {
                 step.firstTime.complete = true;
 
                 //now redirect to setup page where a user can choose which bible to install
-                window.location.href = "config.jsp";
+                window.location.href = "../../setup.jsp";
             }
         });
     }

@@ -23,7 +23,7 @@
         <span class="icon-bar"></span>
     </button>
     <%--if(appManager.isLocal()) {--%>
-    <%--<li><a href="/step-web/config.jsp"><fmt:message key="tools_settings" /></a></li>--%>
+    <%--<li><a href="/step-web/setup.jsp"><fmt:message key="tools_settings" /></a></li>--%>
     <%--<li><a href="/shutdown"><fmt:message key="tools_exit" /></a></li>--%>
     <%--}--%>
     <button  class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">

@@ -43,7 +43,7 @@ var ViewHistory = Backbone.View.extend({
     }, render: function () {
         var self = this;
         if(this.list) {
-            _getList.remove();
+            this.list.remove();
         }
         //force re-add
         this._getList();

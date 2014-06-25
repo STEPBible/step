@@ -338,7 +338,13 @@ public class SearchServiceImpl implements SearchService {
             } else if (SearchToken.REFERENCE.equals(tokenType)) {
                 //could take the key but that has all parts combined
                 final KeyWrapper kw = this.bibleInfoService.getKeyInfo(st.getToken(), masterVersion, masterVersion);
-                final BookName bookName = new BookName(kw.getName(), kw.getName(), BookName.Section.PASSAGE, false, kw.getOsisKeyId());
+                String osisRef;
+                if(kw.getKey() != null) {
+                    osisRef = kw.getKey().getOsisRef();
+                } else {
+                    osisRef = kw.getOsisKeyId();
+                }
+                final BookName bookName = new BookName(kw.getName(), kw.getName(), BookName.Section.PASSAGE, false, osisRef);
                 st.setEnhancedTokenInfo(bookName);
             } else if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
                 //hit the index and look up that strong number...

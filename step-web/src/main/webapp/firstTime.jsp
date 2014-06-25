@@ -7,9 +7,12 @@
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
-	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+    request.setAttribute("locale", locale.getLanguage());
+    request.setAttribute("localeVariant", locale.getVariant());
+	Config.set(request, Config.FMT_LOCALE, locale.getLanguage());
 %>
-<fmt:setBundle basename="HtmlBundle" />
+<fmt:setLocale value="${locale.g}" variant="${localeVariant}" />
+<fmt:setBundle basename="HtmlBundle" scope="request" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML>
 <HEAD>

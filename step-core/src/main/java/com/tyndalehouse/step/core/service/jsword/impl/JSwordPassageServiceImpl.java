@@ -193,7 +193,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 // we go down a book
                 final BibleBook previousBook = getNonIntroPreviousBook(bibleBook, v11n);
                 if(previousBook == null) {
-                    BibleBook firstBook = v11n.getFirstBook();
+                    BibleBook firstBook = getFirstNonIntroBook(v11n);
                     targetVerse = new Verse(v11n, firstBook, 1, 1);
                 } else {
                     targetVerse = new Verse(v11n, previousBook, v11n.getLastChapter(previousBook), 1);
@@ -227,6 +227,19 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         return keyWrapper;
+    }
+
+    /**
+     * Returns the first non-intro book
+     * @param v11n the alternative versification to be questioned
+     * @return the first non-intro book.
+     */
+    private BibleBook getFirstNonIntroBook(final Versification v11n) {
+        BibleBook b = v11n.getFirstBook();
+        while(BibleBook.INTRO_BIBLE.equals(b) || BibleBook.INTRO_NT.equals(b) || BibleBook.INTRO_OT.equals(b)) {
+            b = v11n.getNextBook(b);
+        }
+        return b;
     }
 
     /**

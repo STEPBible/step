@@ -11,7 +11,7 @@
     request.setAttribute("localeVariant", locale.getVariant());
 	Config.set(request, Config.FMT_LOCALE, locale.getLanguage());
 %>
-<fmt:setLocale value="${locale.g}" variant="${localeVariant}" />
+<%--<fmt:setLocale value="${locale.g}" variant="${localeVariant}" />--%>
 <fmt:setBundle basename="HtmlBundle" scope="request" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML>

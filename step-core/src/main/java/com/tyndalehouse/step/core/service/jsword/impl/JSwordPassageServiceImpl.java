@@ -192,9 +192,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             } else {
                 // we go down a book
                 final BibleBook previousBook = getNonIntroPreviousBook(bibleBook, v11n);
-
-                targetVerse = previousBook == null ? new Verse(v11n, BibleBook.GEN, 1, 1) : new Verse(
-                        v11n, previousBook, v11n.getLastChapter(previousBook), 1);
+                if(previousBook == null) {
+                    BibleBook firstBook = v11n.getFirstBook();
+                    targetVerse = new Verse(v11n, firstBook, 1, 1);
+                } else {
+                    targetVerse = new Verse(v11n, previousBook, v11n.getLastChapter(previousBook), 1);
+                }
             }
         } else {
             final int lastChapterInBook = v11n.getLastChapter(verse.getBook());
@@ -203,11 +206,14 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             } else {
                 // we go up a book
                 final BibleBook nextBook = getNonIntroNextBook(bibleBook, v11n);
-
-                final int lastChapter = v11n.getLastChapter(BibleBook.REV);
-                final int lastVerse = v11n.getLastVerse(BibleBook.REV, lastChapter);
-                targetVerse = nextBook == null ? new Verse(v11n, BibleBook.REV, lastChapter, lastVerse)
-                        : new Verse(v11n, nextBook, 1, 1);
+                if(nextBook == null) {
+                        final BibleBook lastBook = v11n.getLastBook();
+                        final int lastChapter = v11n.getLastChapter(lastBook);
+                        final int lastVerse = v11n.getLastVerse(lastBook, lastChapter);
+                    targetVerse =  new Verse(v11n, lastBook, lastChapter, 1);
+                } else {
+                    targetVerse = new Verse(v11n, nextBook, 1, 1);
+                }
             }
         }
 

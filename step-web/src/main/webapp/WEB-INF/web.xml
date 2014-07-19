@@ -2,6 +2,7 @@
          xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          id="STEP"
+         metadata-complete="true"
          version="3.0">
 	<display-name>STEP :: Scripture Tools for Every Person</display-name>
 	
@@ -44,4 +45,5 @@
 	<welcome-file-list>
 		<welcome-file>/</welcome-file>
 	</welcome-file-list>
+    <absolute-ordering />
 </web-app>

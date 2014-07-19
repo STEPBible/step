@@ -43,31 +43,57 @@
                         <phase>package</phase>
                         <configuration>
                             <warSourceDirectory>${project.build.directory}/step-web</warSourceDirectory>
-                            <webXml>${project.build.directory}/web.xml</webXml>
+                            <webXml>${project.build.directory}/jspweb.xml</webXml>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty-jspc-maven-plugin</artifactId>
-                <version>8.1.5.v20120716</version>
+                <groupId>org.jasig.mojo.jspc</groupId>
+                <artifactId>jspc-maven-plugin</artifactId>
+                <configuration>
+                    <defaultSourcesDirectory>${project.build.directory}/step-web</defaultSourcesDirectory>
+                    <inputWebXml>${project.build.directory}/step-web/WEB-INF/web.xml</inputWebXml>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>jspc</id>
                         <goals>
-                            <goal>jspc</goal>
+                            <goal>compile</goal>
                         </goals>
-                        <configuration>
-                            <packageRoot>com.tyndalehouse.step</packageRoot>
-                            <webXml>${project.build.directory}/step-web/WEB-INF/web.xml</webXml>
-                            <webAppSourceDirectory>${project.build.directory}/step-web</webAppSourceDirectory>
-                            <includes>**/*.jsp</includes>
-                        </configuration>
                     </execution>
                 </executions>
+
+                <!-- Use the Tomcat 7 JSP compiler -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jasig.mojo.jspc</groupId>
+                        <artifactId>jspc-compiler-tomcat7</artifactId>
+                        <version>2.0.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
+
+
+            <!--<plugin>-->
+                <!--<groupId>org.mortbay.jetty</groupId>-->
+                <!--<artifactId>jspc-maven-plugin</artifactId>-->
+                <!--<version>8.1.5.v20120716</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>jspc</id>-->
+                        <!--<goals>-->
+                            <!--<goal>jspc</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<packageRoot>com.tyndalehouse.step</packageRoot>-->
+                            <!--<webXml>${project.build.directory}/step-web/WEB-INF/web.xml</webXml>-->
+                            <!--<webAppSourceDirectory>${project.build.directory}/step-web</webAppSourceDirectory>-->
+                            <!--<includes>**/*.jsp</includes>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
         </plugins>
     </build>
     <dependencies>

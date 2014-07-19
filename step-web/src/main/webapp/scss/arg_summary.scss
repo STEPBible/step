@@ -1,24 +1,26 @@
 @import 'template_variables';
+@import 'mixins';
 
 .argSummary {
   margin-left: 5;
   display: block;
   padding: 1;
-  
+
   span.argSelect {
     display: inline-block;
     cursor: default !important;
     white-space: nowrap;
-    font-family:tahoma;
-    font-size: $defaultFontSize;
+    font-family: tahoma;
+    font-size: 14px;
     line-height: $defaultFontSize;
-    padding: 4px 6px 4px 6px;
-    margin: 0 0 0 5;
+    padding: 5px 13px 5px 13px;
+    margin: 0 0 0 3;
     cursor: default;
-    border: 1px solid #aaaaaa;
-    border-radius: 3px;
-    -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-    box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    //    border: 1px solid #aaaaaa;
+    border-radius: 4px;
+    color: white;
+    //    -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    //    box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
     background-clip: padding-box;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -26,4 +28,11 @@
     -ms-user-select: none;
     user-select: none;
   }
+}
+
+.passageOptionsGroup, #history {
+    span.argSelect {
+      font-size: 14px;
+      @include muted-args();
+    }
 }

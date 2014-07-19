@@ -16,7 +16,7 @@
     Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 %>
 <fmt:setBundle basename="HtmlBundle"/>
-<div class="pull-right">
+<div class="headerButtons pull-right">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>

@@ -49,8 +49,14 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         final Book bookFromVersion = versificationService.getBookFromVersion(version);
 
         if(bookFromVersion instanceof AbstractPassageBook) {
-            BibleBook bibleBook = ((AbstractPassageBook) bookFromVersion).getBibleBooks().iterator().next();
-            final Versification versificationForVersion = this.versificationService.getVersificationForVersion(bookFromVersion);
+            final Iterator<BibleBook> bookIterator = ((AbstractPassageBook) bookFromVersion).getBibleBooks().iterator();
+            BibleBook bibleBook = bookIterator.next();
+            if(BibleBook.INTRO_BIBLE.equals(bibleBook) || BibleBook.INTRO_OT.equals(bibleBook) || BibleBook.INTRO_NT.equals(bibleBook)) {
+                bibleBook = bookIterator.next();
+                if(BibleBook.INTRO_OT.equals(bibleBook) || BibleBook.INTRO_NT.equals(bibleBook)) {
+                    bibleBook = bookIterator.next();
+                }
+            }
             return String.format("%s.%d", bibleBook.getOSIS(), 1);
         }
         throw new StepInternalException("Unable to ascertain first chapter of book.");

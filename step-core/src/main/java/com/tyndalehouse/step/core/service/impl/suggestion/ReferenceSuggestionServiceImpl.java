@@ -73,11 +73,11 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                         final BibleBook book = ((Verse) verseKey.iterator().next()).getBook();
                         bk = getBookFromBibleBook(book, masterV11n);
                     } else {
-                        bk = new BookName(verseKey.getName(), verseKey.getName(), BookName.Section.PASSAGE, wholeBook, ((Verse) verseKey.iterator().next()).getBook(), k.getOsisID());
+                        bk = new BookName(verseKey.getName(), verseKey.getName(), BookName.Section.PASSAGE, wholeBook, ((Verse) verseKey.iterator().next()).getBook(), k.getOsisRef());
                     }
                     return new BookName[]{bk};
                 } else {
-                    return new BookName[]{new BookName(k.getName(), k.getName(), BookName.Section.OTHER_NON_BIBLICAL, false, k.getOsisID())};
+                    return new BookName[]{new BookName(k.getName(), k.getName(), BookName.Section.OTHER_NON_BIBLICAL, false, k.getOsisRef())};
                 }
             }
         } catch (NoSuchKeyException ex) {

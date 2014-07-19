@@ -15,6 +15,7 @@
     Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
+
 <fmt:setBundle basename="HtmlBundle" scope="request" />
 <!DOCTYPE html  xmlns:fb="http://ogp.me/ns/fb#">
 <html>
@@ -101,7 +102,7 @@
                 <div class="navbar-header search-form">
                     <div class="navbar-brand col-xs-12">
                         <span class="hidden-xs title">
-                            <a href="/"><img id="logo" src="images/step-top-left-logo.png" width="31" height="40" /></a>
+                            <a href="/"><img id="logo" src="images/step-top-left-logo.png" width="40" height="50" /></a>
                             <a href="/">STEP</a>
                             <br />
                             <span class="subtitle">
@@ -304,7 +305,7 @@
                         <search:sample_search explanation="multiple_versions_explanation" option1="Gen 1" option1type="reference" option2="ESV" option2type="version" option3="NIV" option3type="version" option4="KJV" option4type="version" />
                         <search:sample_search explanation="simple_search_explanation" option1="NIV" option1type="version" option2="brother" option2type="greekMeanings" />
                         <%--<search:sample_search explanation="simple_search_restricted_explanation" option1="${ pentateuch }" option1type="reference" option2="ESV" option2type="version" option3="he.sed" option3type="hebrew" />--%>
-                        <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="brother" option3type="text" option4="he.sed" option4type="hebrew" />
+                        <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="brother" option3type="text" option4="he.sed" option4type="hebrewMeanings" />
                         <search:sample_search explanation="chained_searches_explanation_subject" option1="ESV" option1type="version" option2="throne" option2type="text" option3="David" option3type="subject" />
 
                         <div class="text-muted step-copyright">&copy; <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House, Cambridge, UK</a> - <%= Calendar.getInstance().get(Calendar.YEAR) %></div>

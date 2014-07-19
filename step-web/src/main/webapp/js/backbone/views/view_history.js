@@ -44,10 +44,11 @@ var ViewHistory = Backbone.View.extend({
         var self = this;
         if(this.list) {
             this.list.remove();
+            this.list = null;
         }
-        
-        this.list = $(this.fullList({ bookmarks: step.bookmarks, view: this }));
-        this.$el.append(this.list);
+        //force re-add
+        this._getList();
+
         this.$el.find(".removeBookmark").click(function () {
             self.removeBookmarkHandler(this);
         });
@@ -98,24 +99,37 @@ var ViewHistory = Backbone.View.extend({
         this._insertBookmark(model, this._findByModel(model));
     },
     _insertBookmark: function(model, item) {
-        if(model.get("favourite")) {
-           var firstRecent =  this.list.find("li:has([data-favourite='true']):first");
-            if(firstRecent.length > 0) {
-                item.insertBefore(firstRecent);
-            } else {
-                this.list.filter(".list-group:first").append(item);
-            }
+        try {
+            if (model.get("favourite")) {
+                var firstRecent = this._getList().find("li:has([data-favourite='true']):first");
+                if (firstRecent.length > 0) {
+                    item.insertBefore(firstRecent);
+                } else {
+                    this._getList().filter(".list-group:first").append(item);
+                }
 
-        } else {
-            var firstRecent = this.list.find("li:has([data-favourite='false']):first");
-            if(firstRecent.length > 0) {
-                item.insertBefore(firstRecent);
             } else {
-                this.list.filter(".list-group:last").append(item);
+                var firstRecent = this._getList().find("li:has([data-favourite='false']):first");
+                if (firstRecent.length > 0) {
+                    item.insertBefore(firstRecent);
+                } else {
+                    this._getList().filter(".list-group:last").append(item);
+                }
             }
-        }    
+        } catch(e) {
+            console.log("FAILED TO ADD BOOKMARK");
+        }
+
     },
     _findByModel: function(model) {
         return this.$el.find("li[data-item='" + model.get("id") + "']");
+    },
+    _getList: function() {
+        if(this.list) {
+            return this.list;
+        }
+        this.list = $(this.fullList({ bookmarks: step.bookmarks, view: this }));
+        this.$el.append(this.list);
+        return this.list;
     }
 });

@@ -194,5 +194,11 @@
                 window.localStorage.setItem("step.version", downloadedVersion);
             }
         }
+
+        if(window != window.top) {
+            $(".headerButtons").append("<button class='stepBreakout btn btn-default btn-xs'><span class='glyphicon glyphicon-new-window'></button>").on("click", function() {
+                window.open(window.location);
+            });
+        }
     });
 })();

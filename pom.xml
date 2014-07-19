@@ -3,7 +3,7 @@
 
     <groupId>com.tyndalehouse.step</groupId>
     <artifactId>step-mvn</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>STEP :: Scripture Tools for Every pastor</name>
 
@@ -13,7 +13,7 @@
         <site.location>${project.build.directory}/site</site.location>
         <final.jsword.package>packages</final.jsword.package>
         
-        <java.version>1.6</java.version>
+        <java.version>1.7</java.version>
 
         <junit.parallel>method</junit.parallel>
         <junit.threads>4</junit.threads>
@@ -27,7 +27,7 @@
 
         <jackson-mapper-asl.version>1.9.11</jackson-mapper-asl.version>
         <org.slf4j.version>1.7.2</org.slf4j.version>
-        <servlet-api.version>3.0.1</servlet-api.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
         <jsp-api.version>2.2</jsp-api.version>
         <jstl.version>1.2</jstl.version>
         <pjl-comp-filter.version>1.7</pjl-comp-filter.version>
@@ -35,8 +35,7 @@
         <guice.version>3.1.3</guice.version>
         <guice-servlet.version>3.0</guice-servlet.version>
         <opencsv.version>2.3</opencsv.version>
-        
-        <!-- Last version compatible with Java 6 is 8.1.9.v20130131 -->
+
         <jetty.version>8.1.9.v20130131</jetty.version>
         <tomcat.version>7.0.34</tomcat.version>
         <xalan.version>2.7.1</xalan.version>

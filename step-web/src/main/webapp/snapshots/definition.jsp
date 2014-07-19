@@ -25,7 +25,7 @@
 	String lexiconMorph = request.getParameter("morph");
 	
 	String morphValue = lexiconMorph != null ? lexiconMorph : ""; 
-	Info infos = controller.getInfo(lexiconStrongs, morphValue, "");
+	Info infos = controller.getInfo(lexiconStrongs, morphValue);
 %>
 
 <fmt:setBundle basename="HtmlBundle" />

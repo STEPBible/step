@@ -33,62 +33,18 @@
   li {
     background:#eee;
     padding:6px 5px;
+    filter: none;
+    background-image: inherit !important;
+    color: white !important;
+    &.select2-highlighted {
+      @include bold-args($optionStartGradient, $optionEndGradient);
+    }
+    @include bold-args($optionEndGradient, $optionEndGradient);
   }
 }
 
-.select-meanings {
-  cursor: hand !important;
-  @include gradient($meaningsRow, $optionStartGradient, $optionEndGradient);
-}
-
-.select-version {
-  cursor: hand !important;
-  @include gradient($bibleRow, $optionStartGradient, $optionEndGradient);
-}
-
-.select-reference {
-  cursor: hand !important;
-  @include gradient($referenceRow, $optionStartGradient, $optionEndGradient);  
-}
-
-.select-subject {
-  cursor: hand !important;
-  @include gradient($subjectRow, $optionStartGradient, $optionEndGradient);
-}
-
-.select-text {
-  cursor: hand !important;
-  @include gradient($textRow, $optionStartGradient, $optionEndGradient);
-}
-
-.select-greek {
-  cursor: hand !important;
-  @include gradient($greekRow, $optionStartGradient, $optionEndGradient);
-}
-
-.select-greekMeanings {
-  cursor: hand !important;
-  @include gradient($greekMeaningsRow, $optionStartGradient, $optionEndGradient);
-}
-
-.select-hebrew {
-  cursor: hand !important;
-  @include gradient($hebrewRow, $optionStartGradient, $optionEndGradient);
-}
-
-.select-hebrewMeanings {
-  cursor: hand !important;
-  @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient);
-}
-
-.select-exactForm {
-  cursor: hand !important;
-  @include gradient($exactForm, $optionStartGradient, $optionEndGradient);
-}
-
-.select-topicref {
-  cursor: hand !important;
-  @include gradient($topicByRefRow, $optionStartGradient, $optionEndGradient);
+li, span {
+  @include bold-args($optionStartGradient, $optionEndGradient);
 }
 
 @media screen and (min-width: $stepXSBootstrap) {
@@ -97,7 +53,6 @@
     li {
       padding: 0;
       display: inline-block;
-      border-bottom: solid 1 lightgrey;
       width: 100%;
     }
     .message {

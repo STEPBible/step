@@ -16,7 +16,7 @@
 .searchResultRow {
 
   .passageContentHolder {
-    height: initial !important;
+    height: auto !important;
     &.hbFont {
       text-align: right;
     }
@@ -156,7 +156,7 @@ h4.lexicalGrouping {
 }
 
 .verseContent .passageContentHolder {
-  height: initial !important;
+  height: auto !important;
 }
 
 .resultsLabel {

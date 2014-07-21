@@ -239,4 +239,13 @@ public class SetupController {
         internationalJsonController.resetCache();
     }
 
+    /**
+     * Removes a module
+     *
+     */
+    public void shutdown() {
+        validateSession(this.sessionProvider);
+        LOGGER.warn("Shutdown triggered");
+        System.exit(0);
+    }
 }

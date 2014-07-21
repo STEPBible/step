@@ -26,7 +26,6 @@
     <link rel="stylesheet" type="text/css" href="static/static.css"/>
     <link rel="shortcut icon" href="images/step-favicon.ico"/>
     <script src="international/interactive.js" type="text/javascript"></script>
-    <script src="libs/bootstrap.js"></script>
     <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
     <script src="js/step_constants.js" type="text/javascript"></script>
     <script src="js/step.util.js" type="text/javascript"></script>
@@ -53,7 +52,7 @@
 
                         <div class="configOptions">
                             <input type="button" value="<fmt:message key="installation_use_step_application" />" id="useStep"
-                                   onclick='window.location.href="start.jsp";'/>
+                                   onclick='window.location.href="/";'/>
                         </div>
 
                         <p/>

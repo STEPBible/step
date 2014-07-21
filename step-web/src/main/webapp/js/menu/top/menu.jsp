@@ -22,10 +22,6 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
     </button>
-    <%--if(appManager.isLocal()) {--%>
-    <%--<li><a href="/step-web/setup.jsp"><fmt:message key="tools_settings" /></a></li>--%>
-    <%--<li><a href="/shutdown"><fmt:message key="tools_exit" /></a></li>--%>
-    <%--}--%>
     <button  class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
         <span class="glyphicon glyphicon-save"></span></button>
     <div class="navbar-collapse collapse">
@@ -51,6 +47,9 @@
         <span class="dropdown">
             <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" href="javascript:void(0)"><span class="caret mini-level"></span><fmt:message key="help"/><span class="caret top-level"></span></a>
             <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
+                if(appManager.isLocal()) {
+                <li><a href="/setup.jsp"><fmt:message key="tools_settings" /></a></li>
+                }
                 <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>
                 <li class="available_bibles_and_commentaries"><a href="/versions.jsp" target="_blank" name="AVAILABLE_BIBLES_AND_COMMENTARIES"><fmt:message key="available_versions"/></a></li>
                 <li><a href="https://stepweb.atlassian.net/wiki/x/AgAW" target="_blank"><fmt:message key="help_online"/></a>
@@ -68,6 +67,9 @@
                 <% } %>
                 <li><a target="_new" href="https://stepweb.atlassian.net/wiki/x/C4C_/" name="COPYRIGHT"><fmt:message key="copyright_info_link"/></a></li>
                 <li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about"/></a></li>
+                if(appManager.isLocal()) {
+                <li><a href="/shutdown"><fmt:message key="tools_exit" /></a></li>
+                }
             </ul>
         </span>
     </div>

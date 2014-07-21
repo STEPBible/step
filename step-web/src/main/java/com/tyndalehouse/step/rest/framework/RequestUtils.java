@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 
 import javax.inject.Provider;
 
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +36,22 @@ public final class RequestUtils {
      * @param sessionProvider provides the client session
      */
     public static void validateSession(final Provider<ClientSession> sessionProvider) {
+        LOGGER.warn("Attempting to validate session from external call");
+
         try {
-            final String ipAddress = sessionProvider.get().getIpAddress();
+
+            final ClientSession clientSession = sessionProvider.get();
+            final String requiredPassword = System.getProperty("step.setup.password");
+            if(StringUtils.isNotBlank(requiredPassword)) {
+                //check request has this parameter
+                if(!requiredPassword.equals(clientSession.getParam("step.setup.password"))) {
+                    LOGGER.warn("DENYING ACCESS");
+                    throw new StepInternalException("This functionality is not available");
+                }
+            }
+
+
+            final String ipAddress = clientSession.getIpAddress();
             final InetAddress addr = InetAddress.getByName(ipAddress);
 
             // Check if the address is a valid special local or loop back

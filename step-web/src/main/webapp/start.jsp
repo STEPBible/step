@@ -67,7 +67,6 @@
     <link href="css/select2-bootstrap.css" rel="stylesheet" media="screen" />
     <link href="scss/step-template.css" rel="stylesheet" media="screen" />
 
-    <%@include file="jsps/offlineJqueryCss.jsp" %>
     <link rel="stylesheet" type="text/css" href="css/qtip.css" />
     <link rel="stylesheet" type="text/css" href="css/passage.css" />
     <link rel="stylesheet" type="text/css" href="css/cardo.css" />
@@ -348,7 +347,6 @@
 
     <%-- NOTE: do not include in prod web minifying and use minified versions otherwise --%>
     <%@include file="jsps/offlineJqueryJs.jsp" %>
-    <script src="libs/bootstrap.js"></script>
 
     <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
     <script src="libs/underscore-min.js" type="text/javascript"></script>
@@ -404,7 +402,7 @@
             } else {
         %>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript" ></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js" type="text/javascript"></script>
         <%
             }
         %>

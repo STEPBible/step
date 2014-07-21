@@ -68,7 +68,7 @@
                 <li><a target="_new" href="https://stepweb.atlassian.net/wiki/x/C4C_/" name="COPYRIGHT"><fmt:message key="copyright_info_link"/></a></li>
                 <li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about"/></a></li>
                 if(appManager.isLocal()) {
-                <li><a href="/shutdown"><fmt:message key="tools_exit" /></a></li>
+                <li><a href="/shutdown.jsp"><fmt:message key="tools_exit" /></a></li>
                 }
             </ul>
         </span>

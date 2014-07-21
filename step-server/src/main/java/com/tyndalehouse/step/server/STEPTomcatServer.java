@@ -318,8 +318,6 @@ public class STEPTomcatServer {
         final Tomcat tomcat = new Tomcat();
         tomcat.setPort(this.stepPort);
 
-        tomcat.getServer().setShutdown("step-shutdown-now");
-
         try (Socket c = new Socket()) {
             c.connect(socket, MAX_WAIT_TO_TEST_PORT_IN_USE_MS);
             c.close();

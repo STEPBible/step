@@ -55,6 +55,13 @@
                     }
                 %>
                 <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>
+                <%
+                    if(!appManager.isLocal()) {
+                %>
+                <li><a href="/downloads.jsp" title="<fmt:message key="download_desktop_step_about" />"><fmt:message key="download_desktop_step" /><span class="new-notice"><fmt:message key="new_functionality" /></span></a></li>
+                <%
+                    }
+                %>
                 <li class="available_bibles_and_commentaries"><a href="/versions.jsp" target="_blank" name="AVAILABLE_BIBLES_AND_COMMENTARIES"><fmt:message key="available_versions"/></a></li>
                 <li><a href="https://stepweb.atlassian.net/wiki/x/AgAW" target="_blank"><fmt:message key="help_online"/></a>
                 </li>

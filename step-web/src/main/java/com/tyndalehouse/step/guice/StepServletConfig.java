@@ -55,6 +55,8 @@ import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
 import org.crosswire.common.xml.TransformingSAXEventProvider;
+import org.crosswire.jsword.book.sword.ConfigEntry;
+import org.crosswire.jsword.book.sword.ConfigValueInterceptor;
 import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
 import org.crosswire.jsword.index.IndexManagerFactory;
 import org.crosswire.jsword.internationalisation.LocaleProvider;
@@ -163,6 +165,7 @@ public class StepServletConfig extends GuiceServletContextListener {
         // set the type of book name
         BookName.setFullBookName(false);
         final Provider<ClientSession> provider = this.injector.getProvider(ClientSession.class);
+        ConfigEntry.setConfigValueInterceptor(this.injector.getInstance(ConfigValueInterceptor.class));
 
         // set the locale resolution
         LocaleProviderManager.setLocaleProvider(new LocaleProvider() {

@@ -40,7 +40,10 @@
 			<groupId>com.tyndalehouse.step</groupId>
 			<artifactId>step-core</artifactId>
 		</dependency>
-
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>

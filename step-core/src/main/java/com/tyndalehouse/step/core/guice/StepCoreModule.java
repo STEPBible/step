@@ -40,6 +40,7 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
 import com.tyndalehouse.step.core.guice.providers.OfflineInstallersProvider;
+import com.tyndalehouse.step.core.service.jsword.impl.StepConfigValueInterceptor;
 import com.tyndalehouse.step.core.service.*;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.impl.*;
@@ -62,6 +63,7 @@ import com.tyndalehouse.step.core.service.search.impl.SubjectEntryServiceImpl;
 import com.tyndalehouse.step.core.service.search.impl.SubjectSearchServiceImpl;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 import org.crosswire.jsword.book.install.Installer;
+import org.crosswire.jsword.book.sword.ConfigValueInterceptor;
 
 import java.util.List;
 import java.util.Properties;
@@ -108,7 +110,8 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(MeaningSuggestionServiceImpl.class).asEagerSingleton();
         bind(ReferenceSuggestionServiceImpl.class).asEagerSingleton();
         bind(TextSuggestionServiceImpl.class).asEagerSingleton();
-        
+        bind(ConfigValueInterceptor.class).to(StepConfigValueInterceptor.class).asEagerSingleton();
+
         // others that can wait
         bind(JSwordAnalysisService.class).to(JSwordAnalysisServiceImpl.class);
         bind(AnalysisService.class).to(AnalysisServiceImpl.class);

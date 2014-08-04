@@ -11,7 +11,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,6 +24,7 @@ public class StepConfigValueInterceptor implements ConfigValueInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepConfigValueInterceptor.class);
     private final BasicTextEncryptor encryptor;
     private final Set<String> books;
+    private final Map<String, String> decryptions = new HashMap<>();
 
     @Inject
     public StepConfigValueInterceptor(@Named("app.internal.key") String key, @Named("app.locked.books") String lockedBooks) {
@@ -42,7 +45,17 @@ public class StepConfigValueInterceptor implements ConfigValueInterceptor {
     public Object intercept(final String bookName, final ConfigEntryType configEntryType, final Object value) {
         if (value != null && ConfigEntryType.CIPHER_KEY.equals(configEntryType) && books.contains(bookName.toLowerCase())) {
             try {
-                return this.encryptor.decrypt((String) value);
+                String decryptedResult = decryptions.get(value);
+                if(decryptedResult != null) {
+                    return decryptedResult;
+                }
+
+                final String valueAsString = (String) value;
+                final String decrypt = this.encryptor.decrypt(valueAsString);
+                synchronized (this) {
+                    decryptions.put(valueAsString, decrypt);
+                }
+                return decrypt;
             } catch (Exception ex) {
                 //unable to decrypt
                 LOGGER.error(ex.getMessage());

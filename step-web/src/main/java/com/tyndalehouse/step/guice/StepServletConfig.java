@@ -51,6 +51,7 @@ import com.tyndalehouse.step.rest.controllers.SiteMapController;
 import com.tyndalehouse.step.rest.framework.FrontController;
 import com.yammer.metrics.guice.InstrumentationModule;
 import com.yammer.metrics.reporting.AdminServlet;
+import org.crosswire.common.util.CWProject;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
@@ -81,6 +82,7 @@ public class StepServletConfig extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
+        CWProject.instance().setFrontendName("step");
         if (injector == null) {
             synchronized (this) {
                 ServletModule servletModule = new ServletModule() {

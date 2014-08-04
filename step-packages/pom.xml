@@ -36,6 +36,7 @@
     <properties>
         <packages>${project.build.outputDirectory}</packages>
         <sword.home>c:\Users\Chris\AppData\Roaming\Sword</sword.home>
+        <jsword.home>${sword.home}/../JSword</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
         <modulesToInclude>esv,kjv,osmhb,whnu,lxx,sblgnt,niv</modulesToInclude>
     </properties>
@@ -60,6 +61,15 @@
                                                 <include name="**/@{version}/**"/>
                                             </fileset>
                                         </copy>
+
+                                        <mkdir dir="${jsword.home}/step/jsword-mods.d/"/>
+                                        <copy toDir="${explodedPackages}/step/jsword-mods.d/">
+                                            <fileset dir="${jsword.home}/step/jsword-mods.d/">
+                                                <include name="**/@{version}.conf"/>
+                                            </fileset>
+                                        </copy>
+
+
                                         <zip destFile="${packages}/@{version}.zip">
                                             <fileset dir="${explodedPackages}">
                                                 <include name="**/@{version}.conf"/>

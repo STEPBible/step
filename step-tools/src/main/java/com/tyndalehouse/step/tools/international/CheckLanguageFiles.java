@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +27,9 @@ import java.util.regex.Pattern;
  * @author chrisburrell
  */
 public class CheckLanguageFiles {
-    public static final Map<String, Set<String>> MARKERS = new HashMap<String, Set<String>>();
+    public static final Map<String, Set<String>> MARKERS = new LinkedHashMap<String, Set<String>>();
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckLanguageFiles.class);
-    private static final Map<String, Integer> ENTRIES = new HashMap<String, Integer>(1024);
+    private static final Map<String, Integer> ENTRIES = new LinkedHashMap<String, Integer>(1024);
     private static final Pattern VALID = Pattern.compile("%[sd]|%%|%\\d+\\$[sd]");
 
     // an invalid marker is a % sign which is not followed by a digit, another % sign, or a d or an i
@@ -52,11 +51,11 @@ public class CheckLanguageFiles {
                 new String[]{"properties"}, false
         );
         for (File f : files) {
-            if(f.getName().contains("step.core") || !f.getName().contains("_")) {
+            if (f.getName().contains("step.core") || !f.getName().contains("_")) {
                 continue;
             }
 
-            Map<String, Integer> languageEntries = new HashMap<String, Integer>(1024);
+            Map<String, Integer> languageEntries = new LinkedHashMap<String, Integer>(1024);
             FileInputStream resourceStream = null;
             resourceStream = new FileInputStream(f);
             final String name = f.getName();
@@ -70,7 +69,7 @@ public class CheckLanguageFiles {
             if (beginIndex != -1) {
                 language = name.substring(beginIndex + 1, name.indexOf('.'));
             }
-            final HashMap<String, Set<String>> markers = new HashMap<String, Set<String>>();
+            final LinkedHashMap<String, Set<String>> markers = new LinkedHashMap<String, Set<String>>();
             Properties p = getEntriesFromInputStream(markers, language, languageEntries, prefix, resourceStream);
             IOUtils.closeQuietly(resourceStream);
             check(name, languageEntries);
@@ -117,8 +116,8 @@ public class CheckLanguageFiles {
                 missing.remove(0);
             }
 
-            if(extras.size() > 0) {
-                for(int ii = 0; ii < extras.size(); ii++) {
+            if (extras.size() > 0) {
+                for (int ii = 0; ii < extras.size(); ii++) {
                     String property = p.getProperty(propertyKey);
                     String newPropertyValue = property.replace(extras.get(ii), "");
                     p.put(propertyKey, newPropertyValue);
@@ -126,10 +125,10 @@ public class CheckLanguageFiles {
                 }
             }
 
-            if(missing.size() > 0) {
-                for(int ii = 0; ii < missing.size(); ii++) {
+            if (missing.size() > 0) {
+                for (int ii = 0; ii < missing.size(); ii++) {
                     String property = p.getProperty(propertyKey);
-                    String newPropertyValue = property +  " " + missing.get(ii);
+                    String newPropertyValue = property + " " + missing.get(ii);
                     p.put(propertyKey, newPropertyValue);
                     changed = true;
                 }
@@ -138,7 +137,7 @@ public class CheckLanguageFiles {
             //finally clean up any non-matching percent sign - we've done our best, now is the time to move on!
             final String property = p.getProperty(propertyKey);
             final Matcher invalidMatches = INVALID.matcher(property);
-            if(invalidMatches.find()) {
+            if (invalidMatches.find()) {
                 LOGGER.error("Was [{}]", property);
                 final String cleansed = invalidMatches.replaceAll("");
                 p.setProperty(propertyKey, cleansed);

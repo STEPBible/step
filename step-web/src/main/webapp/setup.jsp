@@ -77,8 +77,8 @@
                     <div class="sortAndFilter">
                         <fmt:message key="installation_sort_by"/>
                         <select class="sortBy">
-                            <option value="initials" selected><fmt:message key="installation_book_initials"/></option>
-                            <option value="name"><fmt:message key="installation_book_name"/></option>
+                            <option value="initials"><fmt:message key="installation_book_initials"/></option>
+                            <option value="name" selected><fmt:message key="installation_book_name"/></option>
                             <option value="languageName"><fmt:message key="installation_book_language"/></option>
                             <option value="category"><fmt:message key="installation_book_category"/></option>
                         </select>

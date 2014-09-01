@@ -93,7 +93,7 @@ select {
     color: blue;
 }
 
-.name {
+.selected {
     font-weight: bold;
 }
 

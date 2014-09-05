@@ -4,6 +4,7 @@
 <%@ attribute name="option5" %>
 <%@ attribute name="option5type" %>
 <%@ attribute name="explanation" %>
+<%@ attribute name="sampleURL" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -14,8 +15,7 @@
 <%@attribute name="option2type" required="false" %>
 <%@attribute name="option3" required="false" %>
 <%@attribute name="option3type" required="false" %>
-<fmt:message key="${explanation}"  var="explanationText" />
-${ step:markTransliteration(explanationText) }
+
 <span class="input-group">
     <span class="form-control input-sm argSummary">
         <c:if test="${ not empty option1 }"><span class="argSelect select-${ option1type } ${fn:contains(option1, '.') ? ' transliteration' : ''}">${ option1 }</span></c:if>
@@ -28,5 +28,8 @@ ${ step:markTransliteration(explanationText) }
         &nbsp;
     </span>
 </span>
+    <A HREF="${sampleURL}">(Try this)</A><br />
+<fmt:message key="${explanation}"  var="explanationText" />
+${ step:markTransliteration(explanationText) }
 <br />
 <br />

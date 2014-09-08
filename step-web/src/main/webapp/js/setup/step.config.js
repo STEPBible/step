@@ -60,6 +60,12 @@ step.config = {
         draggedItem.remove();
         var module = self.renderVersion(item, $(parent));
         
+        //now work out where it landed and do the appropriate action:
+        if($(parent).attr('id') == 'installedColumn') {
+
+        } else {
+
+        }
     },
 
     /** modules that have yet to be installed */
@@ -99,8 +105,6 @@ step.config = {
             $.each(data, function(i, item) {
                 self.renderVersion(item, installableColumn, index);
             });
-
-            self.sortBy();
         });
     },
 
@@ -261,18 +265,16 @@ step.config = {
         });
     },
     sortBy : function(field) {
-        if(field == null) {
-            field = $("select.sortBy").val();
-        }
+        $("#sortLinks a").removeClass("selected");
+        $("#" + field + "Sort").addClass('selected');
 
-        var comparator = function(a, b) { return ($(a).find("." + field).text() || "").trim()   < ($(b).find("." + field).text() || "").trim()  ? -1 : 1; };
+
+        var comparator = function(a, b) { return $.data(a, "item")[field] < $.data(b, "item")[field] ? -1 : 1; };
         $("#installedColumn .version").sortElements(comparator);
         $("#toBeInstalledColumn .version").sortElements(comparator);
-        this.redoHighlights(field);
-    },
-    redoHighlights: function(field) {
-        $(".version .selected").removeClass("selected");
-        $(".version ." + field).addClass("selected");
+
+        $(".version *").removeClass("ui-state-highlight");
+        $(".version ." + field).addClass("ui-state-highlight");
     },
     
     filterBy : function(field) {
@@ -326,8 +328,6 @@ step.config = {
 $(document).ready(function() {
     step.config.init();
     step.config.populateRepositories();
-    step.config.sortBy();
-
     $("#filterValue").keyup(function() {
         step.config.filterBy();
     });

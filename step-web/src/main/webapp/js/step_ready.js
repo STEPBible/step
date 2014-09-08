@@ -195,7 +195,9 @@
             }
         }
 
+        //iframe
         if(window != window.top) {
+            step.util.showOrHideTutorial(true);
             $(".headerButtons").append("<button class='stepBreakout btn btn-default btn-xs'><span class='glyphicon glyphicon-new-window'></button>").on("click", function() {
                 window.open(window.location);
             });

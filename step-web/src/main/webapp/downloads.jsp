@@ -17,7 +17,7 @@
 <HTML>
 <HEAD>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <TITLE>STEP :: Scripture Tools for Every Person - <fmt:message key="download_desktop_step"/></TITLE>
+    <TITLE>Download free and trustworth Bible study tools, including the NIV and ESV | STEP :: Scripture Tools for Every Person - <fmt:message key="download_desktop_step"/></TITLE>
     <%@include file="jsps/offlinePage.jsp" %>
     <link href="css/bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>

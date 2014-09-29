@@ -161,7 +161,7 @@
         patchBackboneHistory();
         initCoreModelsAndRouter();
         initSearchDropdown();
-        
+
         Backbone.history.start({pushState: true, silent: true });
 
         new FeedbackView();
@@ -198,7 +198,9 @@
         //iframe
         if(window != window.top) {
             step.util.showOrHideTutorial(true);
-            $(".headerButtons").append("<button class='stepBreakout btn btn-default btn-xs'><span class='glyphicon glyphicon-new-window'></button>").on("click", function() {
+            var button = $("<button class='stepBreakout btn btn-default btn-xs'><span class='glyphicon glyphicon-new-window'></button>");
+            $(".headerButtons").append(button);
+            button.on("click", function() {
                 window.open(window.location);
             });
         }

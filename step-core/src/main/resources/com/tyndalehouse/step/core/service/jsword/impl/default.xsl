@@ -1460,7 +1460,28 @@
     <div class="speech"><xsl:apply-templates mode="jesus"/></div>
   </xsl:template>
 
-  <xsl:template match="table">
+    <!-- ====================================================================== -->
+    <!-- AJ 05-Oct-14 Simple table -->
+    <xsl:template match="table[@type='x-simpleTable']">
+        <div><table class='x-simpleTable'><xsl:apply-templates/></table></div><p/>
+    </xsl:template>
+
+    <xsl:template match="row[@type='x-simpleTable-row']">
+        <tr class='x-simpleTable-row'><xsl:apply-templates/></tr>
+    </xsl:template>
+
+    <xsl:template match="cell[@type='x-simpleTable-cell-left']">
+        <td class='x-simpleTable-td-left'><xsl:apply-templates/></td>
+    </xsl:template>
+
+    <xsl:template match="cell[@type='x-simpleTable-cell-right']">
+        <td class='x-simpleTable-td-right'><xsl:apply-templates/></td>
+    </xsl:template>
+    <!-- End AJ 05-Oct-14 Simple table -->
+    <!-- ====================================================================== -->
+
+
+    <xsl:template match="table">
     <xsl:choose>
     	<xsl:when test="$Interleave = 'true'">
     		<xsl:apply-templates select="row"/>
@@ -1590,7 +1611,7 @@
   </xsl:template>
 
 
-  <xsl:template match="cell[@type]">
+  <xsl:template match="cell[not(contains(@type, 'x-simpleTable'))]">
       <xsl:variable name="extraClasses"><xsl:if test="contains(@type, 'x-indented')">x-indented</xsl:if></xsl:variable>
         <div class="x-min-width {$extraClasses}">
             <xsl:apply-templates/>

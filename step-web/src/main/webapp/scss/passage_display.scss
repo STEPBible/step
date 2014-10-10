@@ -22,11 +22,35 @@
     }
   }
 
+  table.x-simpleTable {
+    width: auto;
+    display: inline;
+    font-size: inherit;
+    margin-bottom: 0px;
+    tr.row {
+      &:before, &:after {
+        display: none;
+      }
+    }
+    th {
+      border: none !important;
+    }
+  }
+
   td {
     //    font-size: $defaultFontSize;
     &.x-end-row {
       vertical-align: bottom;
       text-align: right;
+    }
+
+    &.x-simpleTable-td-left {
+      padding: 0px 15px;
+    }
+
+    &.x-simpleTable-td-right {
+      text-align: right;
+      padding:0px 15px
     }
   }
 

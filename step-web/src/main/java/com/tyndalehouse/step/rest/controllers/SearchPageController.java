@@ -39,8 +39,8 @@ import java.util.regex.Pattern;
 @Singleton
 public class SearchPageController extends HttpServlet {
     private static final Pattern COMMA_SEPARATORS = Pattern.compile(",");
-    private static String DEV_TOKEN = "UA-36285759-2";
-    private static String LIVE_TOKEN = "UA-36285759-1";
+    public static String DEV_TOKEN = "UA-36285759-2";
+    public static String LIVE_TOKEN = "UA-36285759-1";
     private static Logger LOGGER = LoggerFactory.getLogger(SearchPageController.class);
     private final SearchController search;
     private final ModuleController modules;

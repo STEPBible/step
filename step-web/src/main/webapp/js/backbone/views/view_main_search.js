@@ -696,7 +696,11 @@ var MainSearchView = Backbone.View.extend({
             if ((initials != "" && initials == currentInput) || (shortName != "" && shortName == currentInput)) {
                 exactInitials.push(currentVersion);
             } else if (shortName.startsWith(currentInput) || initials.startsWith(currentInput)) {
-                prefixInitials.push(currentVersion);
+                if (currentVersion.item.recommended) {
+                    prefixInitials.unshift(currentVersion);
+                } else {
+                    prefixInitials.push(currentVersion);
+                }
             } else if (languageName.startsWith(currentInput) || originalLanguage.startsWith(currentInput)) {
                 if (currentVersion.item.recommended) {
                     recommendedByLanguage.push(currentVersion);

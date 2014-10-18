@@ -8,8 +8,15 @@
   }
   
   .argSummary {
-    padding: 3 0 0 5;
+    padding: 3 0 0 3;
     border-right: none;
+    &:hover {
+      background-color: rgb(214, 214, 214);
+    }
+    .argSelect {
+      cursor: hand !important;
+    }
+
   }
   
   h1 {
@@ -37,8 +44,8 @@
   }
   .input-group {
     display: inline-table;
-    vertical-align: top;
-    
+    vertical-align: middle;
+
     .input-group-btn {
       width: 25px;
       border-top: dashed 1 lightgrey;

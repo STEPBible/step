@@ -16,7 +16,7 @@
         markAsRecommended('ESV');
         markAsRecommended('NIV');
         markAsRecommended('OHB');
-        markAsRecommended('SBLGNT');
+        markAsRecommended('SBLG');
         markAsRecommended('LXX');
         markAsRecommended('SBLG');
         markAsRecommended('Neno');

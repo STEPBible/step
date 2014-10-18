@@ -1611,12 +1611,6 @@
   </xsl:template>
 
 
-  <xsl:template match="cell[not(contains(@type, 'x-simpleTable'))]">
-      <xsl:variable name="extraClasses"><xsl:if test="contains(@type, 'x-indented')">x-indented</xsl:if></xsl:variable>
-        <div class="x-min-width {$extraClasses}">
-            <xsl:apply-templates/>
-        </div>
-  </xsl:template>
 
   <xsl:template match="cell">
 		<xsl:variable name="cell-direction">

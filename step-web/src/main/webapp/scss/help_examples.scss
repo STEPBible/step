@@ -1,7 +1,17 @@
 .examplesContainer {
   overflow-y: auto;
   overflow-x: hidden;
- 
+
+  .interlinearLinks {
+    margin-top: 5px;
+    display: inline-block;
+  }
+
+  .explanationText {
+    margin-left: 5px;
+    margin-top: 5px;
+  }
+
   .closeColumn {
     position: absolute;
     right: 10;

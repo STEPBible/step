@@ -4,7 +4,8 @@
 <%@ attribute name="option5" %>
 <%@ attribute name="option5type" %>
 <%@ attribute name="explanation" %>
-<%@ attribute name="extras" %>
+<%@ attribute name="sampleURL" %>
+<%@ attribute name="showInterlinear" required="false"  %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -31,9 +32,14 @@
     <span  class="input-group-btn">
     </span>
 </span>
-<c:if test="${ not empty extras }">${ step:markTransliteration(extras) }</c:if>
+<c:if test="${ showInterlinear eq 'true' }">
+    <div class="interlinearLinks">
+        <a href='?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR'><fmt:message key="hebrew_ot" /></a>
+        &amp;
+        <a href='?q=version=ABGk|version=ABEn&options=HVLCMUN&display=INTERLINEAR'><fmt:message key="hebrew_ot" /></a>
+    </div>
+</c:if>
 <br />
 <fmt:message key="${explanation}"  var="explanationText" />
-${ step:markTransliteration(explanationText) }
-<br />
+<div class="explanationText">${ step:markTransliteration(explanationText) }</div>
 <br />

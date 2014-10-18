@@ -52,7 +52,7 @@
                         <configuration>
                             <installDir></installDir>
                             <projectFile>${project.basedir}/src/main/assembly/step.install4j</projectFile>
-                            <macKeystorePassword></macKeystorePassword>
+                            <macKeystorePassword>password</macKeystorePassword>
                         </configuration>
                     </execution>
                 </executions>

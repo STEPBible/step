@@ -36,7 +36,7 @@
     <div class="interlinearLinks">
         <a href='?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR'><fmt:message key="hebrew_ot" /></a>
         &amp;
-        <a href='?q=version=ABGk|version=ABEn&options=HVLCMUN&display=INTERLINEAR'><fmt:message key="hebrew_ot" /></a>
+        <a href='?q=version=ABGk|version=ABEn&options=HVLCMUN&display=INTERLINEAR'><fmt:message key="greek_nt" /></a>
     </div>
 </c:if>
 <br />

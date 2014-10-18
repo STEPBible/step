@@ -329,7 +329,15 @@
         <button id="stepDisclaimer" type="button" class="btn btn-danger btn-xs" data-container="body" data-trigger="hover focus" data-toggle="popover" data-placement="top" data-content="<fmt:message key="step_disclaimer" />"/>
             BETA
         </button>
-        <button class="btn btn-primary btn-xs" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback" /></button>
+
+        <%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
+        <%
+            if(!appManager.isLocal()) {
+        %>
+            <button class="btn btn-primary btn-xs" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback" /></button>
+        <%
+            }
+        %>
     </span>
     <% if(request.getParameter("mobile") == null) { %>
         <%
@@ -405,7 +413,7 @@
         <%
 		} else {
 	%>
-    <%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
+        <%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
         <%
             if(appManager.isLocal()) {
         %>

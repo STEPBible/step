@@ -17,12 +17,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Downloads the home page and amends it to suit the purposes of the mobile app
  */
 public class RipHomePage {
     public static final String BASE_STEP = "http://localhost:8080/";
+    public static final Pattern CSS_URL = Pattern.compile("url\\('?([^')]+)'?\\)");
+    public static final Pattern JS_URL = Pattern.compile("\"(js/.*min\")");
 
     public static void main(String[] args) throws IOException {
         new RipHomePage().process(BASE_STEP, "?mobile=online", "C:\\dev\\projects\\temp\\my-test-app\\www");
@@ -49,10 +53,53 @@ public class RipHomePage {
 
         //download files and move to relevant directories
         for (final String relativeLink : relativeLinks) {
-            downloadFileToDisk(root, relativeLink);
+            File f = downloadFileToDisk(root, relativeLink);
+            downloadCSSReferencedResources(root, f);
+//            downloadJSReferences(root, f);
         }
 
         downloadInternationalFiles(root);
+    }
+
+    private void downloadJSReferencedResources(final File root, final File relativeLink) throws IOException {
+
+    }
+
+    private void downloadCSSReferencedResources(final File root, final File relativeLink) throws IOException {
+        final String suffix = ".css";
+        final Pattern urlMatcher = CSS_URL;
+
+        if(!relativeLink.getName().endsWith(suffix)) {
+            return;
+        }
+
+        //we're dealing with a CSS file, so scan the content for url()
+        List<String> resources = new ArrayList<>(32);
+        final String fileContents = FileUtils.readFileToString(relativeLink);
+
+        //now match the url(....)
+        final Matcher cssURLMatcher = urlMatcher.matcher(fileContents);
+        while(cssURLMatcher.find()) {
+            //extract first group, to download later
+            final String group = cssURLMatcher.group(1);
+            resources.add(group);
+        }
+
+        //calculate real root
+        for(String resource : resources) {
+            if(resource.contains("#")) {
+                continue;
+            }
+
+            File relativeRoot = resource.startsWith("../") || resource.startsWith("/") ? relativeLink.getParentFile().getParentFile() : relativeLink.getParentFile();
+
+            String finalName = resource.replace("../", "");
+            if(finalName.startsWith("/")) {
+                finalName = finalName.substring(1);
+            }
+
+            downloadFileToDisk(root, (relativeRoot.getAbsolutePath() + "/" + finalName).replace(root.getAbsolutePath(), "").replace('\\', '/'));
+        }
     }
 
     private void downloadInternationalFiles(final File root) throws IOException {
@@ -66,11 +113,11 @@ public class RipHomePage {
         }
     }
 
-    private void downloadFileToDisk(final File root, final String filePath) throws IOException {
-        downloadFileToDisk(root, filePath, null);
+    private File downloadFileToDisk(final File root, final String filePath) throws IOException {
+        return downloadFileToDisk(root, filePath, null);
     }
 
-    private void downloadFileToDisk(final File root, final String filePath, final String infix) throws IOException {
+    private File downloadFileToDisk(final File root, final String filePath, final String infix) throws IOException {
         final URL website = new URL(BASE_STEP + filePath);
         final ReadableByteChannel rbc = Channels.newChannel(website.openStream());
 
@@ -96,8 +143,10 @@ public class RipHomePage {
             fileName = fileName.substring(0, fileName.indexOf('.')) + '-' + infix + fileName.substring(fileName.indexOf("."));
         }
 
-        final FileOutputStream fos = new FileOutputStream(new File(fileDirectory, fileName));
+        final File outputFile = new File(fileDirectory, fileName);
+        final FileOutputStream fos = new FileOutputStream(outputFile);
         fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        return outputFile;
     }
 
     private List<String> scanLinks(final Document doc) {

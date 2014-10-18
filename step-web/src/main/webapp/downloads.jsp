@@ -69,11 +69,11 @@
 
         <table>
             <tr>
-                <td><a href="http://www.stepbible.org/downloads/STEP.exe" data-os="windows"><img src="images/WindowsCyan_Web.jpg"/>
+                <td><a href="/downloads/STEP.exe" data-os="windows"><img src="images/WindowsCyan_Web.jpg"/>
                     <br/>
                     <fmt:message key="download_windows_edition"/>&reg;
                 </a></td>
-                <td><a href="http://www.stepbible.org/downloads/STEP.dmg" data-os="mac"><img src="images/apple.png"/><br/>
+                <td><a href="/downloads/STEP.dmg" data-os="mac"><img src="images/apple.png"/><br/>
                     <fmt:message key="download_macos"/>&reg;
                     <br />
                     </a>
@@ -99,7 +99,7 @@
                     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-            ga('create', '${analyticsToken}', 'stepbible.org');
+            ga('create', '${analyticsToken}', 'auto');
             ga('require', 'displayfeatures');
             ga('send', 'pageview');
         }

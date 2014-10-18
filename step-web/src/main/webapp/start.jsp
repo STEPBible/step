@@ -331,13 +331,16 @@
         </button>
         <button class="btn btn-primary btn-xs" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback" /></button>
     </span>
-    <%
-        if(request.getParameter("lang") == null) {
-    %>
-    <script src="international/interactive.js?lang=<%= locale.getLanguage() %>&step.version=${project.version}" type="text/javascript"></script>
-    <% } else { %>
-    <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>&step.version=${project.version}" type="text/javascript"></script>
-    <% } %>
+    <% if(request.getParameter("mobile") == null) { %>
+        <%
+            if(request.getParameter("lang") == null) {
+        %>
+        <script src="international/interactive.js?lang=<%= locale.getLanguage() %>&step.version=${project.version}" type="text/javascript"></script>
+        <% } else { %>
+        <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>&step.version=${project.version}" type="text/javascript"></script>
+        <% }
+       }
+     %>
     <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>
@@ -415,7 +418,27 @@
         <%
             }
         %>
-    <script src="js/step.${project.version}.min.js" type="text/javascript" ></script>
+
+    <c:choose>
+        <c:when test="${ param.mobile eq 'online' }">
+            <script type="text/javascript">
+                var languages = document.createElement("script");
+                languages.src = 'international/interactive-en.js';
+                languages.id = "international";
+                languages.async = false;
+                document.head.appendChild(languages);
+
+                var stepJs = document.createElement("script");
+                stepJs.src = 'js/step.${project.version}.min.js';
+                stepJs.id = "international";
+                stepJs.async = false;
+                document.head.appendChild(stepJs);
+            </script>
+        </c:when>
+        <c:otherwise>
+            <script src="js/step.${project.version}.min.js" type="text/javascript" ></script>
+        </c:otherwise>
+    </c:choose>
     <%
 	}
 	%>
@@ -442,7 +465,7 @@
                         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                ga('create', '${analyticsToken}', 'stepbible.org');
+                ga('create', '${analyticsToken}', 'auto');
                 ga('require', 'displayfeatures');
                 ga('send', 'pageview');
             }

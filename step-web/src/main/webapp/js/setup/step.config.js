@@ -27,6 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
+// add case insensitive contains
+$.expr[":"].icontains = $.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
+
+
 if (!step) {
     step = {};
 }
@@ -285,8 +293,8 @@ step.config = {
         
         var value = $("#filterValue").val();
         $(".version").hide();
-        var lc = $("#toBeInstalledColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
-        var rc = $("#installedColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
+        var lc = $("#toBeInstalledColumn ." + field + ":icontains(\"" + value +"\")").closest(".version").show();
+        var rc = $("#installedColumn ." + field + ":icontains(\"" + value +"\")").closest(".version").show();
     },
 
     createOption : function(option) {

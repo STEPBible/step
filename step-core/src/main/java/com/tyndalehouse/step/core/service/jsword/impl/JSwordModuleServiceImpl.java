@@ -1,22 +1,14 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import static com.tyndalehouse.step.core.exceptions.UserExceptionType.SERVICE_VALIDATION_ERROR;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
-import static java.lang.String.format;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import com.tyndalehouse.step.core.data.DirectoryListingInstaller;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.BibleInstaller;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
+import com.tyndalehouse.step.core.utils.ValidateUtils;
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.Progress;
 import org.crosswire.common.progress.WorkEvent;
@@ -32,11 +24,18 @@ import org.crosswire.jsword.index.IndexManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.exceptions.TranslatedException;
-import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.utils.ValidateUtils;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.SERVICE_VALIDATION_ERROR;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
+import static java.lang.String.format;
 
 /**
  * Service to manipulate modules
@@ -52,16 +51,10 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     // BE CAREFUL about using these installers.
     private final List<Installer> bookInstallers;
     private final List<Installer> offlineInstallers;
-    private boolean offline = false;
     private final JSwordVersificationService versificationService;
+    private final VersionResolver versionResolver;
+    private boolean offline = false;
 
-
-    @Override
-    public List<Installer> getInstallers() {
-        return this.offline ? this.offlineInstallers : this.bookInstallers;
-    }
-
-    // CHECKSTYLE:OFF
 
     /**
      * @param installers        a list of installers to use to download books
@@ -70,10 +63,12 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     @Inject
     public JSwordModuleServiceImpl(@Named("onlineInstallers") final List<Installer> installers,
                                    @Named("offlineInstallers") final List<Installer> offlineInstallers,
-                                   final JSwordVersificationService versificationService) {
+                                   final JSwordVersificationService versificationService,
+                                   final VersionResolver versionResolver) {
         this.bookInstallers = installers;
         this.offlineInstallers = offlineInstallers;
         this.versificationService = versificationService;
+        this.versionResolver = versionResolver;
 
         // add a handler to be notified of all job progresses
         JobManager.addWorkListener(new WorkListener() {
@@ -91,6 +86,13 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
                         job.getTotalWork()});
             }
         });
+    }
+
+    // CHECKSTYLE:OFF
+
+    @Override
+    public List<Installer> getInstallers() {
+        return this.offline ? this.offlineInstallers : this.bookInstallers;
     }
 
     // CHECKSTYLE:ON
@@ -160,12 +162,15 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         LOGGER.debug("Installing module [{}]", initials);
         notBlank(initials, "No version was found", SERVICE_VALIDATION_ERROR);
 
+
         // check if already installed?
         if (!isInstalled(initials)) {
             LOGGER.debug("Book was not already installed, so kicking off installation process for [{}]",
                     initials);
             for (final Installer i : installers) {
-                final Book bookToBeInstalled = i.getBook(initials);
+                //long initials
+                String longInitials = this.versionResolver.getLongName(initials);
+                final Book bookToBeInstalled = i.getBook(longInitials);
 
                 if (bookToBeInstalled != null) {
                     // then we can kick off installation and return
@@ -176,7 +181,8 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
                         // we log error here,
                         LOGGER.error(
                                 "An error occurred error, and we unable to use this installer for module"
-                                        + initials, e);
+                                        + initials, e
+                        );
 
                         // but go round the loop to see if more options are available
                         continue;
@@ -200,11 +206,13 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             return 1;
         }
 
+
         // not yet installed (or at least wasn't on the lines above, so check job list
+        String longVersionName = this.versionResolver.getLongName(version);
         final Iterator<Progress> iterator = JobManager.iterator();
         while (iterator.hasNext()) {
             final Progress p = iterator.next();
-            final String expectedJobName = format(Progress.INSTALL_BOOK, version);
+            final String expectedJobName = format(Progress.INSTALL_BOOK, longVersionName);
             if (expectedJobName.equals(p.getJobID())) {
                 if (p.isFinished()) {
                     return 1;
@@ -222,7 +230,8 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
 
         throw new StepInternalException(
                 "An unknown error has occurred: the job has disappeared of the job list, "
-                        + "but the module is not installed");
+                        + "but the module is not installed"
+        );
     }
 
     @Override
@@ -234,10 +243,11 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         }
 
         // not yet installed (or at least wasn't on the lines above, so check job list
+        String longVersionName = this.versionResolver.getLongName(bookName);
         final Iterator<Progress> iterator = JobManager.iterator();
         while (iterator.hasNext()) {
             final Progress p = iterator.next();
-            final String expectedJobName = format(CURRENT_BIBLE_INDEX_JOB, bookName);
+            final String expectedJobName = format(CURRENT_BIBLE_INDEX_JOB, longVersionName);
             if (expectedJobName.equals(p.getJobName())) {
                 if (p.isFinished()) {
                     return 1;
@@ -254,7 +264,8 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
 
         throw new StepInternalException(
                 "An unknown error has occurred: the job has disappeared of the job list, "
-                        + "but the module is not installed");
+                        + "but the module is not installed"
+        );
     }
 
     @Override

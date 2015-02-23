@@ -82,6 +82,9 @@ select {
     padding: 2px;
 }
 
+.installed .add-version { display: none; }
+#toBeInstalledColumn .remove-version { display: none; }
+
 .installNow, .removeNow {
     color: blue;
     right: 5px;

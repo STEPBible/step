@@ -51,7 +51,7 @@ public class DirectoryInstallerTest {
         }
 
         final JSwordModuleServiceImpl jSwordModuleServiceImpl = new JSwordModuleServiceImpl(null, installers,
-                TestUtils.mockVersificationService());
+                TestUtils.mockVersificationService(), TestUtils.mockVersionResolver());
         jSwordModuleServiceImpl.setOffline(true);
         jSwordModuleServiceImpl.reloadInstallers();
 

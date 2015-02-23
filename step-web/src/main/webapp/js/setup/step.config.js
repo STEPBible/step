@@ -140,7 +140,7 @@ step.config = {
         
         this.queryProgress(SETUP_PROGRESS_INDEX, this.currentIndexing, 50, function(initials) {
             //move the item to the other list
-            $("#installedColumn").append($("[data-initials='" + initials + "'"));
+            $("#installedColumn").append($("[data-initials='" + initials + "'").addClass("installed"));
             var infoMessage = $("<div class='bg-success infoMessage'>").append("<span class='pull-right close'>&times;</span>").append(sprintf(__s.installation_module_complete, initials));
             infoMessage.on('click', function() { $(this).remove(); });
             $("body").prepend(infoMessage);
@@ -200,8 +200,11 @@ step.config = {
         var isInstallColumn = column.attr("id") == "installedColumn";
         var module = $(
                 "<div class='version' data-initials='" + item.shortInitials + "'>" +
-                        "<button class='pull-right' title='" + (isInstallColumn ? __s.remove : __s.install_now ) + "'>" +
-                            "<span class='glyphicon " + ( isInstallColumn ? this.deleteModule: this.addModule) + "'></span>" +
+                        "<button class='pull-right remove-version' title='" + __s.remove + "'>" +
+                            "<span class='glyphicon " + this.deleteModule + "'></span>" +
+                        "</button>" +
+                        "<button class='pull-right  add-version' title='" + __s.install_now + "'>" +
+                        "<span class='glyphicon " + this.addModule + "'></span>" +
                         "</button>" +
                         "<span class='versionContainer'>" +
                             "<div class='versionHeader'>" +

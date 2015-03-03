@@ -249,7 +249,24 @@ public class Loader {
 
         loadHotSpots();
         loadTimeline();
+        loadAugmentedStrongs();
         LOGGER.info("Finished loading...");
+    }
+
+    int loadAugmentedStrongs() {
+        LOGGER.debug("Indexing augmented strongs");
+        this.addUpdate("install_augmented_strongs");
+
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("augmentedstrongs");
+
+        final HeadwordLineBasedLoader loader = new HeadwordLineBasedLoader(writer,
+                this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
+        loader.init(this);
+
+        final int close = writer.close();
+
+        this.addUpdate("install_augmented_strongs_complete", close);
+        return close;
     }
 
     /**

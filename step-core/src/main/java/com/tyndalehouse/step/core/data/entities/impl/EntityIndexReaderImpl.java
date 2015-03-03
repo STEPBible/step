@@ -414,6 +414,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         final QueryParser parser = new QueryParser(LUCENE_30, fieldName, this.getAnalyzer());
         parser.setDefaultOperator(op);
         parser.setAllowLeadingWildcard(allowLeadingWildcard);
+        parser.setLowercaseExpandedTerms(false);
 
         try {
             final Query query = parser.parse(querySyntax);

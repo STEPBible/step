@@ -178,6 +178,17 @@ public class LoaderTest {
      * correctly.
      */
     @Test
+    public void testAugmentedStrongs() {
+        getLoader("test.data.path.augmentedstrongs", "augmented_strongs.txt").loadAugmentedStrongs();
+        assertExists(2, "augmentedstrongs", "augmentedStrong", "H0001?");
+        assertExists(1, "augmentedstrongs", "augmentedStrong", "H0002?");
+    }
+
+    /**
+     * for this one we need a real jsword service because we will test that scripture refs are resolved
+     * correctly.
+     */
+    @Test
     public void testSpecificForms() {
         final Loader l = getLoader("test.data.path.lexicon.forms", "specific_forms.txt");
         l.loadSpecificForms();
@@ -257,6 +268,20 @@ public class LoaderTest {
      */
     private void assertExists(final String entityName, final String key, final String value) {
         assertTrue(getIndexReader(entityName).searchSingleColumn(key, value).length > 0);
+    }
+
+    /**
+     * Uses a normal lucene query
+     *
+     * @param expected the number of elements expected
+     * @param entityName the entity name
+     * @param key the key for a search using searchUniqueBySingleField
+     * @param value the value to use in the search
+     */
+    private int assertExists(final int expected, final String entityName, final String key, final String value) {
+        final int length = getIndexReader(entityName).searchSingleColumn(key, value).length;
+        assertEquals(expected, length);
+        return length;
     }
 
     /**

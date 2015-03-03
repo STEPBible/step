@@ -45,7 +45,7 @@ var PickBibleView = Backbone.View.extend({
     suggestedEnglish: ['ESV', 'NIV', 'NASB', 'KJV', 'ASV', 'WEB', 'DRC'],
     ancientBlackList: ["HebModern"],
     ancientOrder: [
-        [__s.widely_used, ['OSMHB', 'LXX', 'Byz', 'TR', 'WHNU']],
+        [__s.widely_used, ['OSMHB', 'LXX', 'Byz', 'TR', 'SBLG']],
         [__s.hebrew_ot, ["Aleppo", "OSMHB", "SP", "WLC", "MapM"]],
         [__s.greek_ot, ["LXX", "ABPGRK", "ABP"]],
         [__s.greek_nt, ["Antoniades", "Byz", "Elzevir", "SBLGNT", "Nestle", "Tisch", "TNT", "TR", "WHNU"]],

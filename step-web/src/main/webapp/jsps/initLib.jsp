@@ -1,4 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="baseSTEP">
+    <c:choose>
+        <c:when test="${ param.mobile eq 'online' and not empty param.baseURL }">${ param.baseURL }</c:when>
+        <c:when test="${ param.mobile eq 'online' }">http://www.stepbible.org/</c:when>
+        <c:otherwise></c:otherwise>
+    </c:choose>
+</c:set>
+
 <!-- Set up some library variables -->
 <script type="text/javascript">
     var step = {};
@@ -22,7 +32,7 @@
     }
     
     //Set up the variables for accessing the server
-    STEP_SERVER_BASE_URL = "rest/";
+    STEP_SERVER_BASE_URL = "${baseSTEP}rest/";
 
     //Set up timeline:
     Timeline_ajax_url="libs/timeline_ajax/simile-ajax-api.js?bundle=true";

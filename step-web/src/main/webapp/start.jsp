@@ -83,13 +83,22 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <%
+        if(appManager.isLocal()) {
+        %>
+            <script src="libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="libs/respond.js/1.3.0/respond.min.js"></script>
+        <% } else { %>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <% } %>
     <![endif]-->
 
-    <script>
-        var _prum = [['id', '52698a2cabe53d8c20000000'], ['mark', 'firstbyte', (new Date()).getTime()]];
-    </script>
+    <% if(!appManager.isLocal()) { %>
+        <script type="text/javascript">
+            var _prum = [['id', '52698a2cabe53d8c20000000'], ['mark', 'firstbyte', (new Date()).getTime()]];
+        </script>
+    <% } %>
 </head>
 <body xmlns:fb="http://ogp.me/ns/fb#">
     <!-- Wrap all page content here -->
@@ -306,7 +315,7 @@
                         <%--<search:sample_search explanation="simple_search_restricted_explanation" option1="${ pentateuch }" option1type="reference" option2="ESV" option2type="version" option3="he.sed" option3type="hebrew" sampleURL="" />--%>
                         <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="land" option3type="text" option4="he.sed" option4type="hebrewMeanings" sampleURL="/?q=version=NIV|version=ESV|text=land|strong=H2617&options=VGUVNH&display=INTERLEAVED" />
                         <search:sample_search explanation="chained_searches_explanation_subject" option1="ESV" option1type="version" option2="throne" option2type="meanings" option3="David" option3type="subject" option4="Isa-Rev" option4type="reference" sampleURL="/?q=version=ESV|meanings=throne|subject=david|reference=Isa-Rev&options=HNVUG" />
-                        <search:sample_search explanation="interlinear_versions_explanation" option1="KJV" option1type="version" option2="WHNU" option2type="version" option3="John 1" option3type="reference" sampleURL="/?q=version=KJV|version=WHNU|reference=John.1&options=HVLUNM&display=INTERLINEAR" extras="<A HREF='?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR'>Hebrew OT</A> & <A HREF='?q=version=ABGk|version=ABEn&options=HVLCMUN&display=INTERLINEAR'>Greek OT</A>" />
+                        <search:sample_search explanation="interlinear_versions_explanation" option1="KJV" option1type="version" option2="WHNU" option2type="version" option3="John 1" option3type="reference" sampleURL="/?q=version=KJV|version=WHNU|reference=John.1&options=HVLUNM&display=INTERLINEAR" showInterlinear="true" />
 
                         <div class="text-muted step-copyright">&copy; <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House, Cambridge, UK</a> - <%= Calendar.getInstance().get(Calendar.YEAR) %></div>
                     </div>
@@ -321,15 +330,26 @@
         <button id="stepDisclaimer" type="button" class="btn btn-danger btn-xs" data-container="body" data-trigger="hover focus" data-toggle="popover" data-placement="top" data-content="<fmt:message key="step_disclaimer" />"/>
             BETA
         </button>
-        <button class="btn btn-primary btn-xs" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback" /></button>
+
+        <%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
+        <%
+            if(!appManager.isLocal()) {
+        %>
+            <button class="btn btn-primary btn-xs" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback" /></button>
+        <%
+            }
+        %>
     </span>
-    <%
-        if(request.getParameter("lang") == null) {
-    %>
-    <script src="international/interactive.js?lang=<%= locale.getLanguage() %>&step.version=${project.version}" type="text/javascript"></script>
-    <% } else { %>
-    <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>&step.version=${project.version}" type="text/javascript"></script>
-    <% } %>
+    <% if(request.getParameter("mobile") == null) { %>
+        <%
+            if(request.getParameter("lang") == null) {
+        %>
+        <script src="international/interactive.js?lang=<%= locale.getLanguage() %>&step.version=${project.version}" type="text/javascript"></script>
+        <% } else { %>
+        <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>&step.version=${project.version}" type="text/javascript"></script>
+        <% }
+       }
+     %>
     <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>
@@ -394,7 +414,7 @@
         <%
 		} else {
 	%>
-    <%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
+        <%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
         <%
             if(appManager.isLocal()) {
         %>
@@ -407,7 +427,27 @@
         <%
             }
         %>
-    <script src="js/step.${project.version}.min.js" type="text/javascript" ></script>
+
+    <c:choose>
+        <c:when test="${ param.mobile eq 'online' }">
+            <script type="text/javascript">
+                var languages = document.createElement("script");
+                languages.src = 'international/interactive-en.js';
+                languages.id = "international";
+                languages.async = false;
+                document.head.appendChild(languages);
+
+                var stepJs = document.createElement("script");
+                stepJs.src = 'js/step.${project.version}.min.js';
+                stepJs.id = "international";
+                stepJs.async = false;
+                document.head.appendChild(stepJs);
+            </script>
+        </c:when>
+        <c:otherwise>
+            <script src="js/step.${project.version}.min.js" type="text/javascript" ></script>
+        </c:otherwise>
+    </c:choose>
     <%
 	}
 	%>
@@ -434,7 +474,7 @@
                         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                ga('create', '${analyticsToken}', 'stepbible.org');
+                ga('create', '${analyticsToken}', 'auto');
                 ga('require', 'displayfeatures');
                 ga('send', 'pageview');
             }

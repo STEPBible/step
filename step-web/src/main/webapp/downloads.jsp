@@ -3,6 +3,7 @@
 <%@ page import="javax.servlet.jsp.jstl.core.Config" %>
 <%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
 <%@ page import="com.tyndalehouse.step.core.models.ClientSession" %>
+<%@ page import="com.tyndalehouse.step.rest.controllers.SearchPageController" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -11,13 +12,14 @@
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
     Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
+    request.setAttribute("analyticsToken", Boolean.TRUE.equals(Boolean.getBoolean("step.development")) ? SearchPageController.DEV_TOKEN : SearchPageController.LIVE_TOKEN);
 %>
 <fmt:setBundle basename="HtmlBundle"/>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML>
 <HEAD>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <TITLE>STEP :: Scripture Tools for Every Person - <fmt:message key="download_desktop_step"/></TITLE>
+    <TITLE>Download free and trustworth Bible study tools, including the NIV and ESV | STEP :: Scripture Tools for Every Person - <fmt:message key="download_desktop_step"/></TITLE>
     <%@include file="jsps/offlinePage.jsp" %>
     <link href="css/bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
@@ -67,11 +69,11 @@
 
         <table>
             <tr>
-                <td><a href="http://www.stepbible.org/downloads/STEP.exe" onclick="if(ga) ga('send', 'event', 'downloads', 'mac');"><img src="images/WindowsCyan_Web.jpg"/>
+                <td><a href="/downloads/STEP.exe" data-os="windows"><img src="images/WindowsCyan_Web.jpg"/>
                     <br/>
                     <fmt:message key="download_windows_edition"/>&reg;
                 </a></td>
-                <td><a href="http://www.stepbible.org/downloads/STEP.dmg" onclick="if(ga) ga('send', 'event', 'downloads', 'mac');"><img src="images/apple.png"/><br/>
+                <td><a href="/downloads/STEP.dmg" data-os="mac"><img src="images/apple.png"/><br/>
                     <fmt:message key="download_macos"/>&reg;
                     <br />
                     </a>
@@ -97,12 +99,19 @@
                     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-            ga('create', '${analyticsToken}', 'stepbible.org');
+            ga('create', '${analyticsToken}', 'auto');
             ga('require', 'displayfeatures');
+            ga('send', 'pageview');
         }
         if (w.addEventListener) { w.addEventListener("load", go, false); }
         else if (w.attachEvent) { w.attachEvent("onload",go); }
+
+        $("[data-os]").click(function() {
+            if(ga) ga('send', 'event', 'downloads', $(this).data('os'));
+        });
     }(window, document, 'script'));
+
+
 </script>
 <% } %>
 </body>

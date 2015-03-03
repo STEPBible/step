@@ -64,10 +64,10 @@ public class DownloadJSwordBiblesPreReq {
     @Test
     public void installDefaultJSwordDefaultBibleVersions() throws InstallException {
         final String[] modules = new String[] { "KJV", "ESV", "Byz", "FreSegond", "NETfree", "Tisch", "YLT",
-                "ASV", "Montgomery", "FreCrampon", "SBLGNT", "TR", "WHNU", "OSMHB" };
+                "ASV", "Montgomery", "FreCrampon", "SBLGNT", "TR", "WHNU", "OSMHB", "Chiuns" };
 
         final JSwordModuleServiceImpl jsword = new JSwordModuleServiceImpl(getInstallers(),
-                new ArrayList<Installer>(0), TestUtils.mockVersificationService());
+                new ArrayList<Installer>(0), TestUtils.mockVersificationService(), TestUtils.mockVersionResolver());
 
         for (final String moduleInitials : modules) {
             LOGGER.debug("Checking [{}] for install", moduleInitials);

@@ -16,7 +16,7 @@
         markAsRecommended('ESV');
         markAsRecommended('NIV');
         markAsRecommended('OHB');
-        markAsRecommended('WHNU');
+        markAsRecommended('SBLG');
         markAsRecommended('LXX');
         markAsRecommended('SBLG');
         markAsRecommended('Neno');
@@ -161,7 +161,7 @@
         patchBackboneHistory();
         initCoreModelsAndRouter();
         initSearchDropdown();
-        
+
         Backbone.history.start({pushState: true, silent: true });
 
         new FeedbackView();
@@ -195,8 +195,12 @@
             }
         }
 
+        //iframe
         if(window != window.top) {
-            $(".headerButtons").append("<button class='stepBreakout btn btn-default btn-xs'><span class='glyphicon glyphicon-new-window'></button>").on("click", function() {
+            step.util.showOrHideTutorial(true);
+            var button = $("<button class='stepBreakout btn btn-default btn-xs'><span class='glyphicon glyphicon-new-window'></button>");
+            $(".headerButtons").append(button);
+            button.on("click", function() {
                 window.open(window.location);
             });
         }

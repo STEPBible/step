@@ -52,7 +52,7 @@ public class AugmentedStrongProcessor implements PostProcessor {
 
     @Override
     public void process(final EntityConfiguration config, final Document doc) {
-        final String augmentedStrong = doc.get("augmentedStrong");
-        doc.add(config.getField("suffix", Character.toString(augmentedStrong.charAt(augmentedStrong.length()-1))));
+//        final String augmentedStrong = doc.get("augmentedStrong");
+//        doc.add(config.getField("suffix", Character.toString(augmentedStrong.charAt(augmentedStrong.length()-1))));
     }
 }

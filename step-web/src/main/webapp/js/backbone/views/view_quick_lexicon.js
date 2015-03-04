@@ -51,6 +51,8 @@ var QuickLexicon = Backbone.View.extend({
         '<%= view.templatedFooter %>',
     initialize: function (opts) {
         this.text = opts.text;
+        this.reference = opts.reference;
+        this.version = opts.version;
         this.strong = opts.strong;
         this.morph = opts.morph;
         this.position = opts.position;
@@ -64,7 +66,7 @@ var QuickLexicon = Backbone.View.extend({
 
     loadDefinition: function (time) {
         var self = this;
-        $.getSafe(MODULE_GET_QUICK_INFO, [this.strong, this.morph], function (data) {
+        $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);
             $("#quickLexicon").remove();

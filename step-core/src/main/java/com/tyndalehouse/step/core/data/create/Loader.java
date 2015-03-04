@@ -257,7 +257,7 @@ public class Loader {
         LOGGER.debug("Indexing augmented strongs");
         this.addUpdate("install_augmented_strongs");
 
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("augmentedstrongs");
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("augmentedStrongs");
 
         final HeadwordLineBasedLoader loader = new HeadwordLineBasedLoader(writer,
                 this.coreProperties.getProperty("test.data.path.augmentedstrongs"));

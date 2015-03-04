@@ -42,10 +42,12 @@ import com.tyndalehouse.step.core.models.VocabResponse;
  */
 public interface VocabularyService {
     /**
+     *
+     * @param version
      * @param vocabIdentifiers the identifier of the vocab entry (e.g. strong:G0001)
      * @return the lexicon definitions
      */
-    VocabResponse getDefinitions(String vocabIdentifiers);
+    VocabResponse getDefinitions(final String version, String reference, String vocabIdentifiers);
 
     /**
      * Gets the default transliteration as a string
@@ -74,8 +76,12 @@ public interface VocabularyService {
     /**
      * Gets quick information about the particular identifiers
      * 
+     *
+     *
+     * @param version
+     * @param reference
      * @param vocabIdentifiers the identifier
      * @return the quick information
      */
-    VocabResponse getQuickDefinitions(String vocabIdentifiers);
+    VocabResponse getQuickDefinitions(final String version, final String reference, String vocabIdentifiers);
 }

@@ -57,7 +57,7 @@ MODULE_GET_ALL_MODULES =            STEP_SERVER_BASE_URL + "module/getAllModules
 MODULE_GET_ALL_INSTALLABLE_MODULES= STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";
 MODULE_GET_INFO =                   STEP_SERVER_BASE_URL + "module/getInfo/";
 MODULE_GET_QUICK_INFO =             STEP_SERVER_BASE_URL + "module/getQuickInfo/";
-MODULE_ADD_DIRECTORY_INSTALLER =    STEP_SERVER_BASE_URL + "module/addDirectoryInstaller"
+MODULE_ADD_DIRECTORY_INSTALLER =    STEP_SERVER_BASE_URL + "module/addDirectoryInstaller";
 
 SETUP_INSTALL_FIRST_TIME =          STEP_SERVER_BASE_URL + "setup/installFirstTime/";
 SETUP_GET_PROGRESS =                STEP_SERVER_BASE_URL + "setup/getProgress/";

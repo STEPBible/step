@@ -32,10 +32,28 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.exceptions.UserExceptionType;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.VocabResponse;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
+import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
+import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
+import com.tyndalehouse.step.core.utils.SortingUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermDocs;
+import org.apache.lucene.search.IndexSearcher;
+import org.crosswire.jsword.index.lucene.LuceneIndex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,29 +63,9 @@ import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
-import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
-import com.tyndalehouse.step.core.utils.SortingUtils;
-import com.tyndalehouse.step.core.utils.StringConversionUtils;
-import com.tyndalehouse.step.core.utils.StringUtils;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermDocs;
-import org.apache.lucene.search.IndexSearcher;
-import org.crosswire.jsword.index.lucene.LuceneIndex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.exceptions.UserExceptionType;
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.VocabResponse;
-import com.tyndalehouse.step.core.service.VocabularyService;
-import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 /**
  * defines all vocab related queries
@@ -103,26 +101,63 @@ public class VocabularyServiceImpl implements VocabularyService {
             return l.get("accentedUnicode");
         }
     };
+    private final StrongAugmentationService strongAugmentationService;
     private final JSwordSearchService jSwordSearchService;
 
     /**
      * @param manager the entity manager
      */
     @Inject
-    public VocabularyServiceImpl(final EntityManager manager, final JSwordSearchService jSwordSearchService) {
+    public VocabularyServiceImpl(final EntityManager manager,
+                                 final StrongAugmentationService strongAugmentationService,
+                                 final JSwordSearchService jSwordSearchService) {
+        this.strongAugmentationService = strongAugmentationService;
         this.jSwordSearchService = jSwordSearchService;
         this.definitions = manager.getReader("definition");
     }
 
+    /**
+     * Pads a strong number with the correct number of 0s
+     *
+     * @param strongNumber the strong number
+     * @param prefix       true to indicate the strongNumber is preceded with strong:
+     * @return the padded strong number
+     */
+    public static String padStrongNumber(final String strongNumber, final boolean prefix) {
+        final int baseIndex = prefix ? START_STRONG_KEY : 0;
+        String subStrong = null;
+        try {
+            subStrong = strongNumber.substring(baseIndex + 1);
+            return String.format("%c%04d", strongNumber.charAt(baseIndex), Integer.parseInt(subStrong));
+        } catch (final NumberFormatException e) {
+            LOGGER.trace("Unable to parse strong number.", e);
+            // deals with dodgy modules
+            // perhaps someone added some random information at the end
+            if (subStrong != null && subStrong.length() > 3) {
+                final String first4Chars = subStrong.substring(0, 4);
+                try {
+                    return String.format("%c%04d", strongNumber.charAt(baseIndex),
+                            Integer.parseInt(first4Chars));
+                } catch (final NumberFormatException ex) {
+                    // couldn't convert to a padded number
+                    LOGGER.trace("Unable to convert [{}] to a padded number.", first4Chars);
+                    return strongNumber;
+                }
+            }
+
+            return "err";
+        }
+    }
+
     @Override
-    public VocabResponse getDefinitions(final String vocabIdentifiers) {
+    public VocabResponse getDefinitions(final String version, final String reference, final String vocabIdentifiers) {
+        notBlank(reference, "The verse reference was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = getKeys(vocabIdentifiers);
+        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
 
         if (strongList.length != 0) {
             final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber",
                     strongList);
-
 
             final EntityDoc[] definitions = reOrder(strongList, strongDefs);
             int[] counts = getTermCounts(definitions);
@@ -135,6 +170,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * Gets term counts for each strong number
+     *
      * @param definitions the definitions
      * @return the counts, array indices match the input array.
      */
@@ -167,7 +203,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                     termDocs = is.getIndexReader().termDocs();
                     termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, strongNumber));
 
-                    while(termDocs.next()) {
+                    while (termDocs.next()) {
                         counts[i] += termDocs.freq();
                     }
 
@@ -270,9 +306,9 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public VocabResponse getQuickDefinitions(final String vocabIdentifiers) {
+    public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = getKeys(vocabIdentifiers);
+        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
 
         if (strongList.length != 0) {
             EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
@@ -369,38 +405,5 @@ public class VocabularyServiceImpl implements VocabularyService {
             }
         }
         return ids;
-    }
-
-    /**
-     * Pads a strong number with the correct number of 0s
-     *
-     * @param strongNumber the strong number
-     * @param prefix       true to indicate the strongNumber is preceded with strong:
-     * @return the padded strong number
-     */
-    public static String padStrongNumber(final String strongNumber, final boolean prefix) {
-        final int baseIndex = prefix ? START_STRONG_KEY : 0;
-        String subStrong = null;
-        try {
-            subStrong = strongNumber.substring(baseIndex + 1);
-            return String.format("%c%04d", strongNumber.charAt(baseIndex), Integer.parseInt(subStrong));
-        } catch (final NumberFormatException e) {
-            LOGGER.trace("Unable to parse strong number.", e);
-            // deals with dodgy modules
-            // perhaps someone added some random information at the end
-            if (subStrong != null && subStrong.length() > 3) {
-                final String first4Chars = subStrong.substring(0, 4);
-                try {
-                    return String.format("%c%04d", strongNumber.charAt(baseIndex),
-                            Integer.parseInt(first4Chars));
-                } catch (final NumberFormatException ex) {
-                    // couldn't convert to a padded number
-                    LOGGER.trace("Unable to convert [{}] to a padded number.", first4Chars);
-                    return strongNumber;
-                }
-            }
-
-            return "err";
-        }
     }
 }

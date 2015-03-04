@@ -61,6 +61,7 @@ import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.JSwordRelatedVersesService;
 import com.tyndalehouse.step.core.service.LexiconDefinitionService;
 import com.tyndalehouse.step.core.service.SearchService;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.helpers.GlossComparator;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
@@ -85,7 +86,6 @@ import org.apache.lucene.util.Version;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.DefaultKeyList;
 import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.KeyFactory;
 import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.RangedPassage;
@@ -107,6 +107,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
@@ -129,6 +131,8 @@ public class SearchServiceImpl implements SearchService {
     /**
      * value representing a original spelling sort
      */
+    public static final Pattern AUGMENTED_STRONG = Pattern.compile("strong:([Hh]\\d+[a-zA-Z])");
+    public static final Pattern ALL_STRONGS = Pattern.compile("strong:[GgHh]\\d+\\w?");
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
     private static final String SYNTAX_FORMAT = "[%s...]";
     private static final String[] BASE_GREEK_VERSIONS = new String[]{"WHNU", "Byz", "LXX"};
@@ -145,17 +149,19 @@ public class SearchServiceImpl implements SearchService {
     private final JSwordVersificationService versificationService;
     private final SubjectSearchService subjects;
     private final BibleInformationService bibleInfoService;
+    private final StrongAugmentationService strongAugmentationService;
     private VersionResolver versionResolver;
     private LexiconDefinitionService lexiconDefinitionService;
     private JSwordRelatedVersesService relatedVerseService;
 
     /**
-     * @param jswordSearch        the search service
-     * @param subjects            the service that executes Subject searches
-     * @param timeline            the timeline service
-     * @param bibleInfoService    the service to get information about various bibles/commentaries
-     * @param entityManager       the manager for all entities stored in lucene
-     * @param relatedVerseService
+     * @param jswordSearch              the search service
+     * @param subjects                  the service that executes Subject searches
+     * @param timeline                  the timeline service
+     * @param bibleInfoService          the service to get information about various bibles/commentaries
+     * @param entityManager             the manager for all entities stored in lucene
+     * @param relatedVerseService       the related verse service
+     * @param strongAugmentationService the service to deal with augmentation of strong numbers
      */
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch,
@@ -166,7 +172,8 @@ public class SearchServiceImpl implements SearchService {
                              final EntityManager entityManager,
                              final VersionResolver versionResolver,
                              final LexiconDefinitionService lexiconDefinitionService,
-                             final JSwordRelatedVersesService relatedVerseService) {
+                             final JSwordRelatedVersesService relatedVerseService,
+                             final StrongAugmentationService strongAugmentationService) {
         this.jswordSearch = jswordSearch;
         this.jswordMetadata = jswordMetadata;
         this.versificationService = versificationService;
@@ -176,6 +183,7 @@ public class SearchServiceImpl implements SearchService {
         this.versionResolver = versionResolver;
         this.lexiconDefinitionService = lexiconDefinitionService;
         this.relatedVerseService = relatedVerseService;
+        this.strongAugmentationService = strongAugmentationService;
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
@@ -339,7 +347,7 @@ public class SearchServiceImpl implements SearchService {
                 //could take the key but that has all parts combined
                 final KeyWrapper kw = this.bibleInfoService.getKeyInfo(st.getToken(), masterVersion, masterVersion);
                 String osisRef;
-                if(kw.getKey() != null) {
+                if (kw.getKey() != null) {
                     osisRef = kw.getKey().getOsisRef();
                 } else {
                     osisRef = kw.getOsisKeyId();
@@ -596,7 +604,7 @@ public class SearchServiceImpl implements SearchService {
         for (IndividualSearch s : searches) {
             //we never return subject searches if we can avoid it
             final SearchType searchType = s.getType();
-            if (    SearchType.SUBJECT_RELATED != searchType &&
+            if (SearchType.SUBJECT_RELATED != searchType &&
                     SearchType.SUBJECT_EXTENDED != searchType &&
                     SearchType.SUBJECT_FULL != searchType &&
                     SearchType.SUBJECT_SIMPLE != searchType) {
@@ -1118,22 +1126,69 @@ public class SearchServiceImpl implements SearchService {
      */
     private List<String> getStrongs(final EntityDoc[] forms) {
         List<String> strongs = new ArrayList<String>(forms.length);
-        for(EntityDoc f : forms) {
+        for (EntityDoc f : forms) {
             strongs.add(f.get("strongNumber"));
         }
         return strongs;
     }
 
     /**
-     * Runs the search, and adds teh strongs to the search results
+     * Runs the search, and adds the strongs to the search results
      *
      * @param sq      the search criteria
      * @param strongs the list of strongs that were searched for
      * @return the search results
      */
     private SearchResult runStrongTextSearch(final SearchQuery sq, final Set<String> strongs) {
-        final SearchResult textResults = runJSwordTextSearch(sq);
-        textResults.setStrongHighlights(new ArrayList<String>(strongs));
+        //searches for strongs have got slightly more complicated now that we are doing augmented strongs as well...
+        // so for example, we have the query strong:h00001 strong:h00002 strong:h00003 strong:h00004a strong:h00005a
+        //we can run a simple strong search for normal strong numbers
+        //unfortunately, we to need run an extra search for each of the augmented strong numbers
+
+        //split the search into the standard search and the other searches
+        final List<String> augmentedStrongs = new ArrayList<>(2);
+        final IndividualSearch currentSearch = sq.getCurrentSearch();
+        String currentQuery = currentSearch.getQuery();
+        final Matcher matchAugmentedStrongs = AUGMENTED_STRONG.matcher(currentQuery);
+        final String simpleStrongSearch = matchAugmentedStrongs.replaceAll("");
+
+        matchAugmentedStrongs.reset();
+        while (matchAugmentedStrongs.find()) {
+            final String as = matchAugmentedStrongs.group(1);
+            augmentedStrongs.add(as);
+            strongs.remove(as);
+            strongs.add(this.strongAugmentationService.reduce(as));
+        }
+
+        //run the normal search
+        Key key = null;
+        if (simpleStrongSearch.contains("strong")) {
+            currentSearch.setQuery(simpleStrongSearch);
+            key = this.jswordSearch.searchKeys(sq);
+        }
+
+        //work out the original query without the normal strong numbers
+        String blankQuery = ALL_STRONGS.matcher(currentQuery).replaceAll("");
+        for (String as : augmentedStrongs) {
+            currentSearch.setQuery(blankQuery + " strong:" + as.substring(0, as.length() - 1));
+            Key potentialAugmentedResults = this.jswordSearch.searchKeys(sq);
+
+            //filter results by augmented strong data set
+            Key masterAugmentedFilter = this.strongAugmentationService.getVersesForAugmentedStrong(as);
+            potentialAugmentedResults = intersect(potentialAugmentedResults, masterAugmentedFilter);
+
+            //add results to current set
+            if (key == null) {
+                key = potentialAugmentedResults;
+            } else {
+                key.addAll(potentialAugmentedResults);
+            }
+        }
+
+        currentSearch.setQuery(currentQuery);
+        final SearchResult textResults = buildCombinedVerseBasedResults(sq, key);
+
+        textResults.setStrongHighlights(new ArrayList<>(strongs));
         return textResults;
     }
 
@@ -1148,7 +1203,7 @@ public class SearchServiceImpl implements SearchService {
         final String[] soughtAfterVersions = currentSearch.getVersions();
 
         // overwrite version with WHNU to do the search
-        if (GreekUtils.isGreekText(sq.getCurrentSearch().getQuery()) ){
+        if (GreekUtils.isGreekText(sq.getCurrentSearch().getQuery())) {
             currentSearch.setVersions(BASE_GREEK_VERSIONS);
             currentSearch.setQuery(unaccent(currentSearch.getQuery(), sq), true);
         } else {
@@ -1298,7 +1353,7 @@ public class SearchServiceImpl implements SearchService {
         final Set<String> strongsFromQuery = getStrongsFromTextCriteria(sq);
 
         // look up the related strong numbers
-        final Set<String> filteredStrongs = new HashSet<String>(strongsFromQuery.size());
+        final Set<String> filteredStrongs = new HashSet<>(strongsFromQuery.size());
         final StringBuilder fullQuery = new StringBuilder(64);
         final QueryParser p = new QueryParser(Version.LUCENE_30, STRONG_NUMBER_FIELD,
                 this.definitions.getAnalyzer());
@@ -1379,7 +1434,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private EntityDoc[] retrieveStrongDefinitions(final SearchQuery sq, final Set<String> filteredStrongs,
                                                   final QueryParser p, final String query, final StringBuilder fullQuery) {
-        if(StringUtils.isNotBlank(query)) {
+        if (StringUtils.isNotBlank(query)) {
 
             Query q;
             try {
@@ -1649,10 +1704,18 @@ public class SearchServiceImpl implements SearchService {
      */
     private Set<String> splitToStrongs(final String searchStrong, final SearchType searchType) {
         final List<String> strongs = Arrays.asList(searchStrong.split("[, ;]+"));
-        final Set<String> strongList = new HashSet<String>();
+        final Set<String> strongList = new HashSet<>();
         for (final String s : strongs) {
+            //if non-augmented, we take the string
             final String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
-            strongList.add(padStrongNumber(prefixedStrong.toUpperCase(Locale.ENGLISH), false));
+            String paddedStrong = padStrongNumber(prefixedStrong.toUpperCase(Locale.ENGLISH), false);
+
+            Character suffix = this.strongAugmentationService.getAugmentedStrongSuffix(s);
+            if (suffix != null) {
+                //add the suffix back
+                paddedStrong += suffix;
+            }
+            strongList.add(paddedStrong);
         }
         return strongList;
     }
@@ -1712,7 +1775,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         //if the other side is empty, then we have no results
-        if(searchKeys == null) {
+        if (searchKeys == null) {
             return results instanceof VerseKey ? new RangedPassage(((VerseKey) results).getVersification()) : new DefaultKeyList();
         }
 
@@ -1722,23 +1785,22 @@ public class SearchServiceImpl implements SearchService {
             final VerseKey resultVerses = (VerseKey) results;
             final VerseKey searchVerses = (VerseKey) searchKeys;
 
-            if(LOGGER.isTraceEnabled()) {
+            if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace("Full results: [{}], secondary search [{}]", resultVerses.getOsisRef(), searchVerses.getOsisRef());
             }
 
             Versification v11nResults = resultVerses.getVersification();
             Versification v11nSearchKeys = searchVerses.getVersification();
-            if (!!v11nResults.equals(v11nSearchKeys)) {
+            if (!v11nResults.equals(v11nSearchKeys)) {
                 versifiedSearchKeys = VersificationsMapper.instance().map(KeyUtil.getPassage(searchKeys), v11nResults);
             }
         }
 
 
-
         // otherwise we interesect and adjust the "total"
         results.retainAll(versifiedSearchKeys);
 
-        if(LOGGER.isTraceEnabled()) {
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("Results after retain: ", results.getOsisRef());
         }
         return results;

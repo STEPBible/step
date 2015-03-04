@@ -22,17 +22,6 @@ public class TransliteratorProcessor implements PostProcessor {
 
     @Override
     public void process(final EntityConfiguration config, final Document doc) {
-        //TODO: temporary hack to get the index building against dodgy strong numbers
-        Field strongNumber = doc.getField("strongNumber");
-        if(strongNumber != null) {
-            final String strongStringValue = strongNumber.stringValue();
-            if(Character.isLetter(strongStringValue.charAt(strongStringValue.length() - 1))) {
-                strongNumber.setValue(strongStringValue.substring(0, strongStringValue.length() -1));
-            }
-        }
-        
-        
-        
         final String accentedUnicode = doc.get("accentedUnicode");
 
         if (accentedUnicode == null || accentedUnicode.length() == 0) {

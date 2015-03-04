@@ -180,8 +180,8 @@ public class LoaderTest {
     @Test
     public void testAugmentedStrongs() {
         getLoader("test.data.path.augmentedstrongs", "augmented_strongs.txt").loadAugmentedStrongs();
-        assertExists(2, "augmentedstrongs", "augmentedStrong", "H0001?");
-        assertExists(1, "augmentedstrongs", "augmentedStrong", "H0002?");
+        assertExists(2, "augmentedStrongs", "augmentedStrong", "H0001?");
+        assertExists(1, "augmentedStrongs", "augmentedStrong", "H0002?");
     }
 
     /**

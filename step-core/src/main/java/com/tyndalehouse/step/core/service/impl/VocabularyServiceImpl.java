@@ -41,21 +41,14 @@ import com.tyndalehouse.step.core.models.VocabResponse;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
-import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
-import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
 import com.tyndalehouse.step.core.utils.SortingUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermDocs;
-import org.apache.lucene.search.IndexSearcher;
 import org.codehaus.jackson.map.util.LRUMap;
-import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +74,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final String HIGHER_STRONG = "STRONG:";
     private static final String LOWER_STRONG = "strong:";
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
-    private static final LRUMap<String,EntityDoc[]> DEFINITIION_CACHE = new LRUMap<>(128, 256);
+    private static final LRUMap<String, EntityDoc[]> DEFINITIION_CACHE = new LRUMap<>(128, 256);
     private final EntityIndexReader definitions;
 
     // define a few extraction methods
@@ -104,17 +97,14 @@ public class VocabularyServiceImpl implements VocabularyService {
         }
     };
     private final StrongAugmentationService strongAugmentationService;
-    private final JSwordSearchService jSwordSearchService;
 
     /**
      * @param manager the entity manager
      */
     @Inject
     public VocabularyServiceImpl(final EntityManager manager,
-                                 final StrongAugmentationService strongAugmentationService,
-                                 final JSwordSearchService jSwordSearchService) {
+                                 final StrongAugmentationService strongAugmentationService) {
         this.strongAugmentationService = strongAugmentationService;
-        this.jSwordSearchService = jSwordSearchService;
         this.definitions = manager.getReader("definition");
     }
 
@@ -182,7 +172,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                 defs.length * 2);
 
         // to avoid doing lookups twice, we key each short definition by its code as well
-        final Map<String, LexiconSuggestion> lookedUpWords = new HashMap<String, LexiconSuggestion>(
+        final Map<String, LexiconSuggestion> lookedUpWords = new HashMap<>(
                 defs.length * 2);
 
         for (final EntityDoc doc : defs) {
@@ -207,7 +197,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                 if (shortLexiconDefinition != null) {
                     SortedSet<LexiconSuggestion> associatedNumbersSoFar = relatedWords.get(sourceNumber);
                     if (associatedNumbersSoFar == null) {
-                        associatedNumbersSoFar = new TreeSet<LexiconSuggestion>(
+                        associatedNumbersSoFar = new TreeSet<>(
                                 SortingUtils.LEXICON_SUGGESTION_COMPARATOR);
                         relatedWords.put(sourceNumber, associatedNumbersSoFar);
                     }
@@ -227,7 +217,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      */
     private Map<String, List<LexiconSuggestion>> convertToListMap(
             final Map<String, SortedSet<LexiconSuggestion>> relatedWords) {
-        final Map<String, List<LexiconSuggestion>> results = new HashMap<String, List<LexiconSuggestion>>();
+        final Map<String, List<LexiconSuggestion>> results = new HashMap<>();
         for (final Entry<String, SortedSet<LexiconSuggestion>> relatedWordSet : relatedWords.entrySet()) {
             results.put(relatedWordSet.getKey(), new ArrayList<LexiconSuggestion>(relatedWordSet.getValue()));
         }
@@ -242,7 +232,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @return the entity doc[]
      */
     private EntityDoc[] reOrder(final String[] strongList, final EntityDoc[] strongDefs) {
-        final Map<String, EntityDoc> entitiesByStrong = new HashMap<String, EntityDoc>(strongList.length * 2);
+        final Map<String, EntityDoc> entitiesByStrong = new HashMap<>(strongList.length * 2);
         for (final EntityDoc def : strongDefs) {
             entitiesByStrong.put(def.get("strongNumber"), def);
         }
@@ -273,7 +263,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String getEnglishVocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version , reference, vocabIdentifiers, this.englishVocabProvider);
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.englishVocabProvider);
     }
 
     @Override
@@ -289,21 +279,16 @@ public class VocabularyServiceImpl implements VocabularyService {
     /**
      * gets data from the matched lexicon definitions
      *
-     *
-     * @param reference
+     * @param reference        the reference that anchors the strong number
      * @param vocabIdentifiers the identifiers
      * @param provider         the provider used to get data from it
      * @return the data in String form
      */
     private String getDataFromLexiconDefinition(final String version, final String reference, final String vocabIdentifiers,
                                                 final LexiconDataProvider provider) {
-        final String[] keys = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
-        if (keys.length == 0) {
-            return "";
-        }
 
         // else we lookup and concatenate
-        final EntityDoc[] lds = getLexiconDefinitions(keys, vocabIdentifiers, version, reference);
+        final EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
 
         if (lds.length == 0) {
             return vocabIdentifiers;
@@ -328,17 +313,17 @@ public class VocabularyServiceImpl implements VocabularyService {
         return sb.toString();
     }
 
-    /**
-     * returns the lexicon definitions
-     *
-     * @param keys the keys to match
-     * @return the lexicon definitions that were found
-     */
-    private EntityDoc[] getLexiconDefinitions(final String[] keys, final String vocabIdentifiers, final String version, final String reference) {
+    @Override
+    public EntityDoc[] getLexiconDefinitions(final String vocabIdentifiers, final String version, final String reference) {
+        final String[] keys = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
+        if (keys.length == 0) {
+            return new EntityDoc[0];
+        }
+
         final String cacheKey = getCacheKey(version, reference, vocabIdentifiers);
 
         final EntityDoc[] entityDocs = DEFINITIION_CACHE.get(cacheKey);
-        if(entityDocs != null) {
+        if (entityDocs != null) {
             return entityDocs;
         }
 
@@ -349,13 +334,14 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * Simple cache key that concatenates all the variables passed in
-     * @param version the version
-     * @param reference the reference
+     *
+     * @param version          the version
+     * @param reference        the reference
      * @param vocabIdentifiers the vocabulary identifiers
      * @return the cache key
      */
     private String getCacheKey(final String version, final String reference, final String vocabIdentifiers) {
-        return new StringBuilder().append(version).append('-').append(reference).append('-').append(vocabIdentifiers).toString();
+        return new StringBuilder(32).append(version).append('-').append(reference).append('-').append(vocabIdentifiers).toString();
     }
 
     /**

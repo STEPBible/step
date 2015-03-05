@@ -82,7 +82,7 @@ public class InterlinearProviderImplTest {
         // the initialisation, of the provider, we use reflection to open up its access for testing purposes!
 
         Versification NRSV = Versifications.instance().getVersification("NRSV");
-        interlinear.addTextualInfo(VerseFactory.fromString(NRSV, "Gen.1.1"), "strong", "word");
+        interlinear.addTextualInfo(VerseFactory.fromString(NRSV, "Gen.1.1"), "strong", "word", "");
         assertEquals(interlinear.getWord(PassageKeyFactory.instance().getKey(
                 NRSV, "Gen.1.1"), "strong", false), "word");
         assertEquals(interlinear.getWord(PassageKeyFactory.instance().getKey(

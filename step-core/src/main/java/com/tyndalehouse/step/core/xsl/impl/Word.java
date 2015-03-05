@@ -9,21 +9,23 @@ package com.tyndalehouse.step.core.xsl.impl;
 public class Word {
     private final String text;
     private boolean partial;
+    private final String untaggedText;
 
     /**
      * @param word the word to be used
      */
-    public Word(final String word) {
-        this(word, false);
+    public Word(final String word, final String untaggedText) {
+        this(word, false, untaggedText);
     }
 
     /**
      * @param text the word
      * @param partial true if should be used in conjunction with the next strong
      */
-    public Word(final String text, final boolean partial) {
+    public Word(final String text, final boolean partial, final String untaggedText) {
         this.text = text;
         this.partial = partial;
+        this.untaggedText = untaggedText;
     }
 
     /**
@@ -45,5 +47,9 @@ public class Word {
      */
     public void setPartial(final boolean partial) {
         this.partial = partial;
+    }
+
+    public String getUntaggedText() {
+        return untaggedText;
     }
 }

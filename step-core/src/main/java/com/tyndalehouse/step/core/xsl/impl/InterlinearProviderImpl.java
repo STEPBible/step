@@ -171,7 +171,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             setTestamentType(versifiedKey);
 
             bookData = getBookDataWithVerse0(versifiedKey);
-            scanForTextualInformation(bookData.getOsisFragment());
+            scanForTextualInformation(bookData.getOsisFragment(), null);
         } catch (final BookException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
@@ -313,7 +313,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
                     return retrieveWord(list);
                 }
             }
-            if(followMapping) {
+            if (followMapping) {
                 return lookupMappings(equivalentVerses, strong);
             }
         } else if (strong != null) {
@@ -333,7 +333,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * Lookup mappings, if the strong number is there, then it is used
      *
      * @param osisKey the OSIS key
-     * @param strong    the strong
+     * @param strong  the strong
      * @return the string
      */
     private String lookupMappings(final Key osisKey, final String strong) {
@@ -366,10 +366,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             final String alternativeTagging = strongDefinition[0].get("alternativeTagging");
             if (StringUtils.isNotBlank(alternativeTagging)) {
                 // then we look to see if we've perhaps got some more tagging around for the alternatives...
-                String[] alts = StringUtils.split(alternativeTagging, "[, ]");
-                for(String a : alts) {
-                    String alternativeWord = this.getWord(osisKey, a, false);
-                    if(StringUtils.isNotBlank(alternativeWord)) {
+                String[] alts = StringUtils.split(alternativeTagging, "[, ]+");
+                for (String a : alts) {
+                    String alternativeWord = this.getWord(osisKey, a.substring(1), false);
+                    if (StringUtils.isNotBlank(alternativeWord)) {
                         return alternativeWord;
                     }
                 }
@@ -394,11 +394,14 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     private String retrieveWord(final Deque<Word> list) {
         Word word = list.removeFirst();
         if (!word.isPartial()) {
-            return word.getText();
+            return word.getUntaggedText() != null ? word.getUntaggedText() + word.getText() : word.getText();
         }
 
         final StringBuilder text = new StringBuilder(32);
         while (word != null && word.isPartial()) {
+            if (word.getUntaggedText() != null) {
+                text.append(word.getUntaggedText());
+            }
             text.append(word.getText());
             text.append(", ");
 
@@ -420,13 +423,13 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param element element to start with.
      */
     @SuppressWarnings("unchecked")
-    private void scanForTextualInformation(final Element element) {
+    private void scanForTextualInformation(final Element element, final String untaggedText) {
         // check to see if we've hit a new verse, if so, we update the verse
         updateVerseRef(element);
 
         // check to see if we've hit a node of interest
         if (element.getName().equals(OSISUtil.OSIS_ELEMENT_W)) {
-            extractTextualInfoFromNode(element);
+            extractTextualInfoFromNode(element, untaggedText);
             return;
         }
 
@@ -439,11 +442,28 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         Object data;
         Element ele;
         final Iterator<Content> contentIter = element.getContent().iterator();
+        StringBuilder untaggedContent = null;
         while (contentIter.hasNext()) {
             data = contentIter.next();
+            //we capture untagged content at the same level as the elements that we process
+            if (data instanceof Text) {
+                if (untaggedContent == null) {
+                    untaggedContent = new StringBuilder(32);
+                }
+
+                untaggedContent.append(((Text) data).getText());
+            }
+
             if (data instanceof Element) {
                 ele = (Element) data;
-                scanForTextualInformation(ele);
+                if(untaggedContent != null) {
+                    scanForTextualInformation(ele, untaggedContent.toString());
+                } else {
+                    scanForTextualInformation(ele, null);
+                }
+
+                //we've consumed the untagged content, so remove it now
+                untaggedContent = null;
             }
         }
     }
@@ -471,7 +491,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      *
      * @param element the element to extract information from
      */
-    private void extractTextualInfoFromNode(final Element element) {
+    private void extractTextualInfoFromNode(final Element element, final String untaggedContent) {
         final String strong = element.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA);
         final String word = getText(element);
 
@@ -492,7 +512,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         for (int ii = 0; ii < strongs.length; ii++) {
             final String strongKey = getAnyKey(strongs[ii]);
             if (!isH00(strongKey) && !blacklisted(strongKey)) {
-                words.add(addTextualInfo(currentVerse, strongKey, word));
+                words.add(addTextualInfo(currentVerse, strongKey, word, untaggedContent));
             } else {
                 partial = true;
             }
@@ -586,14 +606,14 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param word           the word to be stored
      * @return the word that has been added
      */
-    Word addTextualInfo(final Verse verseReference, final String strongKey, final String word) {
+    Word addTextualInfo(final Verse verseReference, final String strongKey, final String word, final String untaggedContent) {
         final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference == null ? NO_VERSE : verseReference.getOsisIDNoSubIdentifier());
         Deque<Word> verseKeyedStrongs = this.limitedAccuracy.get(strongVerseKey);
         if (verseKeyedStrongs == null) {
-            verseKeyedStrongs = new LinkedList<Word>();
+            verseKeyedStrongs = new LinkedList<>();
             this.limitedAccuracy.put(strongVerseKey, verseKeyedStrongs);
         }
-        final Word w = new Word(word);
+        final Word w = new Word(word, untaggedContent);
         verseKeyedStrongs.add(w);
         return w;
     }

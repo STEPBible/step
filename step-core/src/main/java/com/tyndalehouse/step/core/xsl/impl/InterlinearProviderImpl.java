@@ -388,6 +388,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
+     * TODO: can be optimized by not iterating through major elements such as Notes for example
      * setups all the initial textual information for fast retrieval during XSL transformation.
      *
      * @param element element to start with.

@@ -871,7 +871,7 @@ step.util = {
                 version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
             }
 
-            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph});
+            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, version: version });
             require(["sidebar"], function (module) {
                 step.util.ui.openStrongNumber(strong, morph, ref, version);
             });
@@ -889,6 +889,7 @@ step.util = {
                         strong: data.strong,
                         morph: data.morph,
                         ref: data.ref,
+                        version: data.version,
                         mode: mode == null ? 'analysis' : mode
                     });
                     new SidebarList().add(step.sidebar);

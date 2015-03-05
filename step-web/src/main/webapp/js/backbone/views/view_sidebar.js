@@ -176,8 +176,10 @@ var SidebarView = Backbone.View.extend({
                 var args = "strong=" + encodeURIComponent(strongNumber);
                 step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
                 step.router.navigatePreserveVersions(args);
-            })).append('<span class="strongCount"> (' + sprintf(__s.stats_occurs, mainWord.count) + ')</span>').append('<br />');
-
+            }));
+        if(mainWord.count) {
+            panel.append('<span class="strongCount"> (' + sprintf(__s.stats_occurs, mainWord.count) + ')</span>').append('<br />');
+        }
 
         // append the meanings
         if (mainWord.mediumDef) {
@@ -196,16 +198,19 @@ var SidebarView = Backbone.View.extend({
             var ul = $('<ul>');
             var matchingExpression = "";
             for (var i = 0; i < mainWord.relatedNos.length; i++) {
-                var li = $("<li></li>").append($('<a href="javascript:void(0)">')
-                    .append(mainWord.relatedNos[i].gloss)
-                    .append(" (")
-                    .append("<span class='transliteration'>" + mainWord.relatedNos[i].stepTransliteration + "</span>")
-                    .append(" - ")
-                    .append(mainWord.relatedNos[i].matchingForm)
-                    .append(")")
-                    .data("strongNumber", mainWord.relatedNos[i].strongNumber));
-                ul.append(li);
-                matchingExpression += mainWord.relatedNos[i].strongNumber + " ";
+                if(mainWord.relatedNos[i].strongNumber != mainWord.strongNumber) {
+                    var li = $("<li></li>").append($('<a href="javascript:void(0)">')
+                        .append(mainWord.relatedNos[i].gloss)
+                        .append(" (")
+                        .append("<span class='transliteration'>" + mainWord.relatedNos[i].stepTransliteration + "</span>")
+                        .append(" - ")
+                        .append(mainWord.relatedNos[i].matchingForm)
+                        .append(")")
+                        .data("strongNumber", mainWord.relatedNos[i].strongNumber));
+                    ul.append(li);
+
+                    matchingExpression += mainWord.relatedNos[i].strongNumber + " ";
+                }
             }
                 step.passage.highlightStrong(null, matchingExpression, "lexiconRelatedFocus");
             panel.append(ul);

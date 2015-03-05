@@ -224,10 +224,9 @@ public class ModuleController {
         final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(
                 vocabResponse.getDefinitions().length);
         EntityDoc[] definitions = vocabResponse.getDefinitions();
-        int[] counts = vocabResponse.getCounts();
         for (int i = 0; i < definitions.length; i++) {
             EntityDoc d = definitions[i];
-            morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), counts[i], includeAllInfo));
+            morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), includeAllInfo));
         }
         return morphologyInfos;
     }

@@ -162,61 +162,13 @@ public class VocabularyServiceImpl implements VocabularyService {
                     strongList);
 
             final EntityDoc[] definitions = reOrder(strongList, strongDefs);
-            int[] counts = getTermCounts(definitions);
             final Map<String, List<LexiconSuggestion>> relatedWords = readRelatedWords(definitions);
-            return new VocabResponse(definitions, relatedWords, counts);
+            return new VocabResponse(definitions, relatedWords);
         }
 
         return new VocabResponse();
     }
 
-    /**
-     * Gets term counts for each strong number
-     *
-     * @param definitions the definitions
-     * @return the counts, array indices match the input array.
-     */
-    private int[] getTermCounts(EntityDoc[] definitions) {
-        IndexSearcher ot = null;
-        IndexSearcher nt = null;
-        int[] counts = new int[definitions.length];
-
-        for (int i = 0; i < definitions.length; i++) {
-            EntityDoc doc = definitions[i];
-            String strongNumber = doc.get("strongNumber");
-
-            if (StringUtils.isNotBlank(strongNumber)) {
-                boolean isOT = strongNumber.startsWith("H");
-                final IndexSearcher is;
-                if (isOT) {
-                    if (ot == null) {
-                        ot = jSwordSearchService.getIndexSearcher(JSwordStrongNumberHelper.getPreferredCountBook(isOT).getInitials());
-                    }
-                    is = ot;
-                } else {
-                    if (nt == null) {
-                        nt = jSwordSearchService.getIndexSearcher(JSwordStrongNumberHelper.getPreferredCountBook(isOT).getInitials());
-                    }
-                    is = nt;
-                }
-
-                final TermDocs termDocs;
-                try {
-                    termDocs = is.getIndexReader().termDocs();
-                    termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, strongNumber));
-
-                    while (termDocs.next()) {
-                        counts[i] += termDocs.freq();
-                    }
-
-                } catch (IOException e) {
-                    LOGGER.error("Unable to obtain counts.", e);
-                    //we continue, it's not the end of the world!
-                }
-            }
-        }
-        return counts;
-    }
 
     /**
      * Read related words, i.e. all the words that are in the related numbers fields.
@@ -314,7 +266,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
         if (strongList.length != 0) {
             EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
-            return new VocabResponse(strongNumbers, getTermCounts(strongNumbers));
+            return new VocabResponse(strongNumbers);
         }
         return new VocabResponse();
     }

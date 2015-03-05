@@ -84,8 +84,8 @@ public class InterlinearProviderImplTest {
         Versification NRSV = Versifications.instance().getVersification("NRSV");
         interlinear.addTextualInfo(VerseFactory.fromString(NRSV, "Gen.1.1"), "strong", "word");
         assertEquals(interlinear.getWord(PassageKeyFactory.instance().getKey(
-                NRSV, "Gen.1.1"), "strong", true), "word");
+                NRSV, "Gen.1.1"), "strong", false), "word");
         assertEquals(interlinear.getWord(PassageKeyFactory.instance().getKey(
-                NRSV, "Gen.2.1"), "strong", true), "");
+                NRSV, "Gen.2.1"), "strong", false), "");
     }
 }

@@ -423,19 +423,19 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param element element to start with.
      */
     @SuppressWarnings("unchecked")
-    private void scanForTextualInformation(final Element element, final String untaggedText) {
+    private boolean scanForTextualInformation(final Element element, final String untaggedText) {
         // check to see if we've hit a new verse, if so, we update the verse
         updateVerseRef(element);
 
         // check to see if we've hit a node of interest
         if (element.getName().equals(OSISUtil.OSIS_ELEMENT_W)) {
             extractTextualInfoFromNode(element, untaggedText);
-            return;
+            return true;
         }
 
         //small optimization to remove processing of potentially verbose notes
         if (element.getName().equals(OSISUtil.OSIS_ELEMENT_NOTE)) {
-            return;
+            return false;
         }
 
         // iterate through all children and call recursively
@@ -457,15 +457,16 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             if (data instanceof Element) {
                 ele = (Element) data;
                 if(untaggedContent != null) {
-                    scanForTextualInformation(ele, untaggedContent.toString());
+                    if(scanForTextualInformation(ele, untaggedContent.toString())) {
+                        //we've consumed the untagged content, so remove it now
+                        untaggedContent = null;
+                    }
                 } else {
                     scanForTextualInformation(ele, null);
                 }
-
-                //we've consumed the untagged content, so remove it now
-                untaggedContent = null;
             }
         }
+        return false;
     }
 
     /**

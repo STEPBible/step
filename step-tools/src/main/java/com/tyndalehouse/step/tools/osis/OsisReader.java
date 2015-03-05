@@ -43,7 +43,7 @@ public class OsisReader {
      */
     public static void main(final String[] args) throws Exception {
         final String version = "ESV";
-        final String ref = "1jo.3";
+        final String ref = "Ps.1.1";
         boolean format = true;
 
         final Book currentBook = Books.installed().getBook(version);

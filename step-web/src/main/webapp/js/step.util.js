@@ -854,23 +854,26 @@ step.util = {
          * called when click on a piece of text.
          */
         showDef: function (source) {
-            var strong;
-            var morph;
+            var strong, morph, ref, version;
 
             if (typeof source == "string") {
                 strong = source;
             } else if (source.strong) {
                 strong = source.strong;
+                ref = source.ref;
                 morph = source.morph;
+                version = source.version;
             } else {
                 var s = $(source);
                 strong = s.attr("strong");
                 morph = s.attr("morph");
+                ref = step.util.ui.getVerseNumber(s);
+                version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
             }
 
-            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph});
+            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, version: version });
             require(["sidebar"], function (module) {
-                step.util.ui.openStrongNumber(strong, morph);
+                step.util.ui.openStrongNumber(strong, morph, ref, version);
             });
         },
         initSidebar: function (mode, data) {
@@ -886,6 +889,7 @@ step.util = {
                         strong: data.strong,
                         morph: data.morph,
                         ref: data.ref,
+                        version: data.version,
                         mode: mode == null ? 'analysis' : mode
                     });
                     new SidebarList().add(step.sidebar);
@@ -904,11 +908,13 @@ step.util = {
                 }
             });
         },
-        openStrongNumber: function (strong, morph) {
+        openStrongNumber: function (strong, morph, reference, version) {
             step.sidebar.save({
                 strong: strong,
                 morph: morph,
-                mode: 'lexicon'
+                mode: 'lexicon',
+                ref: reference,
+                version: version
             });
         },
         openStats: function (focusedPassage) {
@@ -965,8 +971,12 @@ step.util = {
                     require(['quick_lexicon'], function () {
                         var strong = $(hoverContext).attr('strong');
                         var morph = $(hoverContext).attr('morph');
+                        var reference = step.util.ui.getVerseNumber(hoverContext);
+                        var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
                         new QuickLexicon({
-                            strong: strong, morph: morph, target: hoverContext,
+                            strong: strong, morph: morph,
+                            version: version, reference: reference,
+                            target: hoverContext,
                             position: ev.pageY / $(window).height(), touchEvent: true,
                             passageId: passageId
                         });
@@ -985,10 +995,14 @@ step.util = {
                 require(['quick_lexicon'], function () {
                     var strong = $(hoverContext).attr('strong');
                     var morph = $(hoverContext).attr('morph');
+                    var reference = step.util.ui.getVerseNumber(hoverContext);
+                    var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
+
                     step.util.delay(function () {
                         //do the quick lexicon
                         new QuickLexicon({
                             strong: strong, morph: morph,
+                            version: version, reference: reference,
                             target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: false,
                             passageId: passageId
                         });
@@ -1005,7 +1019,9 @@ step.util = {
          * @param passageHtml the JQuery HTML content
          * @private
          */
-
+        getVerseNumber: function(el) {
+              return $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
+        },
         emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();
 //            passageContent.detach();
@@ -1147,11 +1163,13 @@ step.util = {
                                         var verseData = data.strongData[key];
                                         for (var strong in verseData) {
                                             var strongData = verseData[strong];
-                                            var counts = data.counts[strongData.strongNumber];
-                                            rows.push({
-                                                strongData: strongData,
-                                                counts: counts
-                                            });
+                                            if(strongData && strongData.strongNumber) {
+                                                var counts = data.counts[strongData.strongNumber];
+                                                rows.push({
+                                                    strongData: strongData,
+                                                    counts: counts
+                                                });
+                                            }
                                         }
                                     }
 
@@ -1164,7 +1182,7 @@ step.util = {
 
                                     templatedTable.find(".definition").click(function () {
                                         step.util.trackAnalytics('verseVocab', 'definition');
-                                        self.showDef($(this).parent().data("strong"));
+                                        self.showDef({strong: $(this).parent().data("strong"), ref: reference, version: version });
                                     });
 
                                     templatedTable.find(".bookCount").click(function () {

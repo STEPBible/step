@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
+import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.VocabResponse;
 
 /**
@@ -42,40 +43,63 @@ import com.tyndalehouse.step.core.models.VocabResponse;
  */
 public interface VocabularyService {
     /**
+     *
+     * @param version
      * @param vocabIdentifiers the identifier of the vocab entry (e.g. strong:G0001)
      * @return the lexicon definitions
      */
-    VocabResponse getDefinitions(String vocabIdentifiers);
+    VocabResponse getDefinitions(final String version, String reference, String vocabIdentifiers);
 
     /**
      * Gets the default transliteration as a string
      * 
+     *
+     * @param version
      * @param vocabIdentifiers the vocab identifiers
+     * @param reference the reference in which the strongs can be found
      * @return the string to be displayed
      */
-    String getDefaultTransliteration(String vocabIdentifiers);
+    String getDefaultTransliteration(final String version, String vocabIdentifiers, final String reference);
 
     /**
      * gets the English vocab fields
      * 
+     *
+     * @param version the version that ancors the reference
+     * @param reference the reference in which the strongs can be found
      * @param vocabIdentifiers the vocab identifiers
      * @return the string to be displayed
      */
-    String getEnglishVocab(String vocabIdentifiers);
+    String getEnglishVocab(final String version, final String reference, String vocabIdentifiers);
 
     /**
      * Gets the Greek vocab fields
      * 
+     *
+     * @param version the version that ancors the reference
+     * @param reference the reference in which the strongs can be found
      * @param vocabIdentifiers the vocab identifiers
      * @return the string to be displayed
      */
-    String getGreekVocab(String vocabIdentifiers);
+    String getGreekVocab(final String version, final String reference, String vocabIdentifiers);
 
     /**
      * Gets quick information about the particular identifiers
-     * 
+     *
+     * @param version the version that ancors the reference
+     * @param reference the reference in which the strongs can be found
      * @param vocabIdentifiers the identifier
      * @return the quick information
      */
-    VocabResponse getQuickDefinitions(String vocabIdentifiers);
+    VocabResponse getQuickDefinitions(final String version, final String reference, String vocabIdentifiers);
+
+    /**
+     * returns the lexicon definitions
+     *
+     * @param version the version that ancors the reference
+     * @param reference the reference in which the strongs can be found
+     * @param vocabIdentifiers the identifier
+     * @return the lexicon definitions that were found
+     */
+    EntityDoc[] getLexiconDefinitions(String vocabIdentifiers, String version, String reference);
 }

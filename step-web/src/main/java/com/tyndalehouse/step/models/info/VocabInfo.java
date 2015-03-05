@@ -34,6 +34,7 @@ package com.tyndalehouse.step.models.info;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -80,7 +81,6 @@ public class VocabInfo implements Serializable {
      * @param includeAllInfo true to include all information
      */
     public VocabInfo(final EntityDoc d, final Map<String, List<LexiconSuggestion>> relatedVocabs,
-                     int count,
                      final boolean includeAllInfo) {
         this.accentedUnicode = d.get("accentedUnicode");
         this.shortDef = d.get("shortDefinition");
@@ -88,8 +88,9 @@ public class VocabInfo implements Serializable {
         this.stepTransliteration = d.get("stepTransliteration");
         this.mediumDef = d.get("mediumDefinition");
 
-        if (count >= 0) {
-            this.count = count;
+        final String popularity = d.get("popularity");
+        if(StringUtils.isNotBlank(popularity)) {
+            this.count = Integer.parseInt(popularity);
         }
 
         if (includeAllInfo) {

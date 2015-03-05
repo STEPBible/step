@@ -44,13 +44,15 @@ var QuickLexicon = Backbone.View.extend({
         '</h1> ' +
         '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
         '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
-        '<span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>)</span>' +
+        '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>)</span><% } %>' +
         '</div>' +
         '<% }); %>' +
         '<span class="infoTagLine"><%= __s.more_info_on_click_of_word %></span>' +
         '<%= view.templatedFooter %>',
     initialize: function (opts) {
         this.text = opts.text;
+        this.reference = opts.reference;
+        this.version = opts.version;
         this.strong = opts.strong;
         this.morph = opts.morph;
         this.position = opts.position;
@@ -64,7 +66,7 @@ var QuickLexicon = Backbone.View.extend({
 
     loadDefinition: function (time) {
         var self = this;
-        $.getSafe(MODULE_GET_QUICK_INFO, [this.strong, this.morph], function (data) {
+        $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);
             $("#quickLexicon").remove();

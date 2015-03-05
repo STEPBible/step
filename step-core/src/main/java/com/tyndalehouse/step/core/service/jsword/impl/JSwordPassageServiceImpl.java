@@ -192,7 +192,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             } else {
                 // we go down a book
                 final BibleBook previousBook = getNonIntroPreviousBook(bibleBook, v11n);
-                if(previousBook == null) {
+                if (previousBook == null) {
                     BibleBook firstBook = getFirstNonIntroBook(v11n);
                     targetVerse = new Verse(v11n, firstBook, 1, 1);
                 } else {
@@ -206,11 +206,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             } else {
                 // we go up a book
                 final BibleBook nextBook = getNonIntroNextBook(bibleBook, v11n);
-                if(nextBook == null) {
-                        final BibleBook lastBook = v11n.getLastBook();
-                        final int lastChapter = v11n.getLastChapter(lastBook);
-                        final int lastVerse = v11n.getLastVerse(lastBook, lastChapter);
-                    targetVerse =  new Verse(v11n, lastBook, lastChapter, 1);
+                if (nextBook == null) {
+                    final BibleBook lastBook = v11n.getLastBook();
+                    final int lastChapter = v11n.getLastChapter(lastBook);
+                    final int lastVerse = v11n.getLastVerse(lastBook, lastChapter);
+                    targetVerse = new Verse(v11n, lastBook, lastChapter, 1);
                 } else {
                     targetVerse = new Verse(v11n, nextBook, 1, 1);
                 }
@@ -231,12 +231,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Returns the first non-intro book
+     *
      * @param v11n the alternative versification to be questioned
      * @return the first non-intro book.
      */
     private BibleBook getFirstNonIntroBook(final Versification v11n) {
         BibleBook b = v11n.getFirstBook();
-        while(BibleBook.INTRO_BIBLE.equals(b) || BibleBook.INTRO_NT.equals(b) || BibleBook.INTRO_OT.equals(b)) {
+        while (BibleBook.INTRO_BIBLE.equals(b) || BibleBook.INTRO_NT.equals(b) || BibleBook.INTRO_OT.equals(b)) {
             b = v11n.getNextBook(b);
         }
         return b;
@@ -1202,7 +1203,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
                     // set parameters here
                     setOptions(tsep, options, bookData.getBooks());
-                    setInterlinearOptions(tsep, masterVersification, getInterlinearVersion(interlinearVersion), bookData.getKey()
+                    setInterlinearOptions(tsep,
+                            bookData.getBooks()[0].getInitials(),
+                            masterVersification,
+                            getInterlinearVersion(interlinearVersion),
+                            bookData.getKey()
                             .getOsisID(), displayMode, bookData.getKey(), options);
                     setInterleavingOptions(tsep, displayMode, bookData);
                     return tsep;
@@ -1251,6 +1256,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * sets up the default interlinear options
      *
      * @param tsep                the transformer that we want to set up
+     * @param masterVersion       the master version for this lookup
      * @param masterVersification the versification of the top line
      * @param interlinearVersion  the interlinear version(s) that the users have requested
      * @param reference           the reference the user is interested in
@@ -1259,6 +1265,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param options             the list of options to be applied (used to determine accenting
      */
     private MultiInterlinearProvider setInterlinearOptions(final TransformingSAXEventProvider tsep,
+                                                           final String masterVersion,
                                                            final Versification masterVersification,
                                                            final String interlinearVersion,
                                                            final String reference,
@@ -1293,7 +1300,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 }
             }
 
-            final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(masterVersification,
+            final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(masterVersion, masterVersification,
                     interlinearVersion, reference, this.versificationService, this.vocabProvider, stripGreekAccents, stripHebrewAccents, stripVowels);
             tsep.setParameter("interlinearProvider", multiInterlinear);
             return multiInterlinear;

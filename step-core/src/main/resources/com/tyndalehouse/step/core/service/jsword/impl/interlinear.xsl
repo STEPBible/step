@@ -360,7 +360,7 @@
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
           <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="interVerseNumbers verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></a>
+          	<a name="{@osisID}" class="verseLink"><span class="interVerseNumbers verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></a>
 
             <!-- The order of these is important for rendering on the UI -->
 			<!-- output a filling gap for strongs -->
@@ -391,7 +391,7 @@
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
           <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="text"><span class="smallHeaders interVerseNumbers verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></span></a>
+          	<a name="{@osisID}" class="verseLink"><span class="text"><span class="smallHeaders interVerseNumbers verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></span></a>
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$EnglishVocab = 'true'">
@@ -419,7 +419,7 @@
 		</span>
         </xsl:when>
         <xsl:when test="$TinyVNum = 'false' and $Notes = 'true'">
-          <a name="{@osisID}">(<xsl:value-of select="$versenum"/>)</a>
+          <a name="{@osisID}" class="verseLink">(<xsl:value-of select="$versenum"/>)</a>
           <xsl:text> </xsl:text>
         </xsl:when>
         <xsl:otherwise>
@@ -429,7 +429,7 @@
       </xsl:choose>
     </xsl:if>
     <xsl:if test="$VNum = 'false' and $Notes = 'true'">
-      <a name="{@osisID}"></a>
+      <a name="{@osisID}" class="verseLink"></a>
     </xsl:if>
   </xsl:template>
 
@@ -596,13 +596,13 @@
 					<xsl:if test="$EnglishVocab = 'true'">
 						<span class="strongs">
 								<xsl:value-of
-									select="vocab:getEnglishVocab($vocabProvider, @lemma)" />
+									select="vocab:getEnglishVocab($vocabProvider, $baseVersion, ./ancestor::*[@osisID]/@osisID ,@lemma)" />
 						</span>
 					</xsl:if>
 					<xsl:if test="$Transliteration = 'true'">
 						<span class="strongs stepTransliteration">
 								<xsl:value-of
-									select="vocab:getDefaultTransliteration($vocabProvider, @lemma)" />
+									select="vocab:getDefaultTransliteration($vocabProvider,  $baseVersion, ./ancestor::*[@osisID]/@osisID, @lemma)" />
 						</span>
 					</xsl:if>
 					<xsl:if test="$GreekVocab = 'true'">
@@ -614,7 +614,7 @@
                         </xsl:variable>
 						<span class="{$ancientClass}">
 								<xsl:value-of
-									select="vocab:getGreekVocab($vocabProvider, @lemma)" />
+									select="vocab:getGreekVocab($vocabProvider,  $baseVersion, ./ancestor::*[@osisID]/@osisID , @lemma)" />
 						</span>
 					</xsl:if>
 		

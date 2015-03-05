@@ -118,6 +118,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(JSwordSearchService.class).to(JSwordSearchServiceImpl.class);
         bind(MorphologyService.class).to(MorphologyServiceImpl.class);
         bind(VocabularyService.class).to(VocabularyServiceImpl.class);
+        bind(StrongAugmentationService.class).to(StrongAugmentationServiceImpl.class);
         bind(TimelineService.class).to(TimelineServiceImpl.class);
         bind(GeographyService.class).to(GeographyServiceImpl.class);
         bind(Loader.class);

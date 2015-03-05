@@ -32,11 +32,35 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.xsl.impl;
 
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
-import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
-import static java.lang.String.format;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.JSwordUtils;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
+import com.tyndalehouse.step.core.xsl.InterlinearProvider;
+import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.BookData;
+import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
+import org.crosswire.jsword.book.OSISUtil;
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyUtil;
+import org.crosswire.jsword.passage.NoSuchVerseException;
+import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.VerseFactory;
+import org.crosswire.jsword.passage.VerseKey;
+import org.crosswire.jsword.versification.Testament;
+import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.VersificationsMapper;
+import org.crosswire.jsword.versification.system.Versifications;
+import org.jdom2.Content;
+import org.jdom2.Element;
+import org.jdom2.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -49,50 +73,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.tyndalehouse.step.core.service.VocabularyService;
-import com.tyndalehouse.step.core.utils.JSwordUtils;
-import com.tyndalehouse.step.core.utils.StringConversionUtils;
-import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookData;
-import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.BookMetaData;
-import org.crosswire.jsword.book.OSISUtil;
-import org.crosswire.jsword.passage.*;
-import org.crosswire.jsword.versification.Testament;
-import org.crosswire.jsword.versification.Versification;
-import org.crosswire.jsword.versification.VersificationsMapper;
-import org.crosswire.jsword.versification.system.Versifications;
-import org.jdom2.Content;
-import org.jdom2.Element;
-import org.jdom2.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.utils.StringUtils;
-import com.tyndalehouse.step.core.xsl.InterlinearProvider;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
+import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
+import static java.lang.String.format;
 
 /**
- * This object is not purposed to be used as a singleton. It builds up textual information on initialisation,
- * and is specific to requests. On initialisation, the OSIS XML is retrieved and iterated through to find all
- * strong/morph candidates
+ * This object is not purposed to be used as a singleton. It builds up textual information on initialisation, and is
+ * specific to requests. On initialisation, the OSIS XML is retrieved and iterated through to find all strong/morph
+ * candidates
  *
  * @author chrisburrell
  */
 public class InterlinearProviderImpl implements InterlinearProvider {
 
+    public static final String NO_VERSE = "NO_VERSE";
     /**
      * The Constant LOGGER.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(InterlinearProviderImpl.class);
-
     /**
      * contains the set of tags that may contain biblical text, all lower case
      */
     private static final Set<String> VALID_TEXT_ELEMENTS = new HashSet<String>();
-    public static final String NO_VERSE = "NO_VERSE";
-
     /**
      * limited accuracy tries to do a location look up by using the verse number as part of the key.
      */
@@ -106,8 +110,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     private Map<String, String> hebrewDirectMapping;
     private Map<String, String> hebrewIndirectMappings;
     private Testament testament;
+    private String masterVersion;
     private Versification masterVersification;
-    private VocabularyService vocabProvider;
+    private VocabularyService vocabularyService;
     private boolean stripAccents = false;
     private boolean stripVowels = false;
 
@@ -132,12 +137,13 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param hebrewDirectMapping    the hebrew overriding mappings
      * @param hebrewIndirectMappings the mappings used if no other mapping is found
      */
-    public InterlinearProviderImpl(Versification masterVersification, JSwordVersificationService versificationService,
+    public InterlinearProviderImpl(final String masterVersion, Versification masterVersification, JSwordVersificationService versificationService,
                                    final String version, final Key versifiedKey, final Map<String, String> hebrewDirectMapping,
                                    final Map<String, String> hebrewIndirectMappings, final VocabularyService vocabProvider,
                                    boolean stripGreekAccents, boolean stripHebrewAccents, boolean stripVowels) {
+        this.masterVersion = masterVersion;
         this.masterVersification = masterVersification;
-        this.vocabProvider = vocabProvider;
+        this.vocabularyService = vocabProvider;
 
         // first check whether the values passed in are correct
         if (areAnyBlank(version)) {
@@ -174,9 +180,17 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * For verse 0, we can't simply lookup verse 0, because that doesn't return the pre-verse content which sits in verse 1
-     * so instead we need to replace the key to have verse 1 instead. For all purposes, such as verses 0-1, or verse 1, etc.
-     * then we continue as normal.
+     * package private version for testing purposes.
+     */
+    InterlinearProviderImpl() {
+        // exposing package private constructor
+        this.originalLanguage = false;
+    }
+
+    /**
+     * For verse 0, we can't simply lookup verse 0, because that doesn't return the pre-verse content which sits in
+     * verse 1 so instead we need to replace the key to have verse 1 instead. For all purposes, such as verses 0-1, or
+     * verse 1, etc. then we continue as normal.
      *
      * @param versifiedKey the key from the original versification
      * @return a bookdata with the correct verse
@@ -199,14 +213,6 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         }
 
         return new BookData(this.currentBook, versifiedKey);
-    }
-
-    /**
-     * package private version for testing purposes.
-     */
-    InterlinearProviderImpl() {
-        // exposing package private constructor
-        this.originalLanguage = false;
     }
 
     @Override
@@ -245,7 +251,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             LOGGER.debug("Finding strong key [{}]", s);
             final String strongKey = getAnyKey(s);
 
-            results.add(getWord(key, strongKey));
+            results.add(getWord(key, strongKey, true));
         }
 
         return convertToString(results);
@@ -288,9 +294,11 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      *
      * @param equivalentVerses the verse number
      * @param strong           the strong reference
+     * @param followMapping    true to indicate we should follow the mappings, false to indicate we are already
+     *                         following mappings and therefore want to prevent an infinite loop!
      * @return a word that matches or the empty string
      */
-    String getWord(final Key equivalentVerses, final String strong) {
+    String getWord(final Key equivalentVerses, final String strong, final boolean followMapping) {
         if (strong != null && equivalentVerses != null) {
 
             //Key may be made up of several keys
@@ -298,21 +306,23 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             while (keyIterator.hasNext()) {
                 Verse v = (Verse) keyIterator.next();
                 String osisID = v.getVerse() == 0 ? NO_VERSE : v.getOsisID();
-                
+
                 final DualKey<String, String> key = new DualKey<String, String>(strong, osisID);
                 final Deque<Word> list = this.limitedAccuracy.get(key);
                 if (list != null && !list.isEmpty()) {
                     return retrieveWord(list);
                 }
             }
-            return lookupMappings(strong);
-        } else if(strong != null) {
+            if(followMapping) {
+                return lookupMappings(equivalentVerses, strong);
+            }
+        } else if (strong != null) {
             //then we know we have a null verse, so assume we're in pre-verse mode...
             final DualKey<String, String> key = new DualKey<String, String>(strong, NO_VERSE);
             final Deque<Word> list = this.limitedAccuracy.get(key);
             if (list != null && !list.isEmpty()) {
                 return retrieveWord(list);
-            }            
+            }
         }
 
         // it is important to return an empty string here
@@ -322,10 +332,11 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /**
      * Lookup mappings, if the strong number is there, then it is used
      *
-     * @param strong the strong
+     * @param osisKey the OSIS key
+     * @param strong    the strong
      * @return the string
      */
-    private String lookupMappings(final String strong) {
+    private String lookupMappings(final Key osisKey, final String strong) {
         // we ignore mapping lookups for anything greek or hebrew...
         if (originalLanguage) {
             return "";
@@ -346,17 +357,36 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         }
 
         //else look up from vocab provider
-        String englishVocab = this.vocabProvider.getEnglishVocab(isOT ? 'H' + strong : 'G' + strong);
-        if (englishVocab != null) {
-            return "#" + englishVocab;
+        final String key = isOT ? 'H' + strong : 'G' + strong;
+        final String reference = osisKey.getOsisID();
+        final EntityDoc[] strongDefinition = this.vocabularyService.getLexiconDefinitions(key, this.masterVersion, reference);
+
+        //only examine the first one...
+        if (strongDefinition.length > 0) {
+            final String alternativeTagging = strongDefinition[0].get("alternativeTagging");
+            if (StringUtils.isNotBlank(alternativeTagging)) {
+                // then we look to see if we've perhaps got some more tagging around for the alternatives...
+                String[] alts = StringUtils.split(alternativeTagging, "[, ]");
+                for(String a : alts) {
+                    String alternativeWord = this.getWord(osisKey, a, false);
+                    if(StringUtils.isNotBlank(alternativeWord)) {
+                        return alternativeWord;
+                    }
+                }
+            }
+
+            final String englishVocab = strongDefinition[0].get("stepGloss");
+            if (StringUtils.isNotBlank(englishVocab)) {
+                return "#" + englishVocab;
+            }
         }
 
         return "";
     }
 
     /**
-     * Retrieves the first word from the list, and removes from the list. If the word is PARTIAL, then
-     * retrieves the next one too, and concatenates
+     * Retrieves the first word from the list, and removes from the list. If the word is PARTIAL, then retrieves the
+     * next one too, and concatenates
      *
      * @param list a dequue containing all the items in question
      * @return the string
@@ -384,7 +414,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * setups all the initial textual information for fast retrieval during XSL transformation.
+     * TODO: can be optimized by not iterating through major elements such as Notes for example setups all the initial
+     * textual information for fast retrieval during XSL transformation.
      *
      * @param element element to start with.
      */
@@ -396,6 +427,11 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         // check to see if we've hit a node of interest
         if (element.getName().equals(OSISUtil.OSIS_ELEMENT_W)) {
             extractTextualInfoFromNode(element);
+            return;
+        }
+
+        //small optimization to remove processing of potentially verbose notes
+        if (element.getName().equals(OSISUtil.OSIS_ELEMENT_NOTE)) {
             return;
         }
 
@@ -523,8 +559,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * Checks if is h00.
      *
      * @param currentStrong a strong number
-     * @return true, if is a single H followed by only 0s, which indicates that the strong numbers go with
-     * their next occurrence
+     * @return true, if is a single H followed by only 0s, which indicates that the strong numbers go with their next
+     * occurrence
      */
     private boolean isH00(final String currentStrong) {
         for (int ii = 0; ii < currentStrong.length(); ii++) {
@@ -539,9 +575,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /**
      * Finally, we have some information to add to this provider. We try and add it in an efficient fashion.
      * <p/>
-     * So, how do we store this? The most meaningful piece of data is a STRONG number, since it identifies the
-     * word that we want to retrieve. Without the strong number, we don't have any information at all.
-     * Therefore, the first level of lookup should be by Strong number.
+     * So, how do we store this? The most meaningful piece of data is a STRONG number, since it identifies the word that
+     * we want to retrieve. Without the strong number, we don't have any information at all. Therefore, the first level
+     * of lookup should be by Strong number.
      * <p/>
      * Made package private for testing purposes only.
      *
@@ -563,8 +599,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * Sets the testament, to be used to determine the indirect/direct mappings to use when generating the
-     * interlinear.
+     * Sets the testament, to be used to determine the indirect/direct mappings to use when generating the interlinear.
      *
      * @param key the key to the passage being looked up
      */
@@ -586,7 +621,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param vocabService sets the vocab service
      */
     void setVocabProvider(final VocabularyService vocabService) {
-        this.vocabProvider = vocabService;
+        this.vocabularyService = vocabService;
     }
 
     @Override

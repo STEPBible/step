@@ -224,6 +224,24 @@ public final class StringUtils {
 
         return titleCase.toString();
     }
+    /**
+     * Joins strings together, separated by a comma
+     *
+     * @param strings   the strings in question
+     * @return the concatenated version of the array
+     */
+    public static String join(final String[] strings) {
+        return join(strings, 0);
+    }
+    /**
+     * Joins strings together, separated by a comma
+     *
+     * @param strings   the strings in question
+     * @return the concatenated version of the array
+     */
+    public static String join(final String[] strings, final char separator) {
+        return join(strings, 0, separator);
+    }
 
     /**
      * Joins strings together, separated by a comma
@@ -233,10 +251,14 @@ public final class StringUtils {
      * @return the concatenated version of the array
      */
     public static String join(final String[] strings, final int startFrom) {
+        return join(strings, startFrom, ',');
+    }
+
+    public static String join(final String[] strings, final int startFrom, final char separator) {
         StringBuilder sb = new StringBuilder();
         for (int ii = startFrom; ii < strings.length; ii++) {
             if (ii > startFrom) {
-                sb.append(',');
+                sb.append(separator);
             }
             sb.append(strings[ii]);
         }

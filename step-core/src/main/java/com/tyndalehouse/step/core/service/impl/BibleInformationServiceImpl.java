@@ -32,40 +32,56 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
-import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
-import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import com.tyndalehouse.step.core.data.DirectoryInstaller;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.StepHttpSwordInstaller;
-import com.tyndalehouse.step.core.models.*;
+import com.tyndalehouse.step.core.models.BibleInstaller;
+import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.BookName;
+import com.tyndalehouse.step.core.models.EnrichedLookupOption;
+import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.TrimmedLookupOption;
+import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
+import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
-import com.tyndalehouse.step.core.service.jsword.*;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
+import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import com.yammer.metrics.annotation.Timed;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.install.Installer;
-import org.crosswire.jsword.passage.*;
+import org.crosswire.jsword.passage.KeyUtil;
+import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.VerseFactory;
 import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
-import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.helpers.VersionResolver;
-import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
-import com.tyndalehouse.step.core.service.search.SubjectSearchService;
-import com.tyndalehouse.step.core.utils.StringUtils;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
+import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
+import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 /**
  * Command handler returning all available bible versions.
@@ -85,24 +101,28 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private final EntityManager entityManager;
     private final JSwordVersificationService jswordVersification;
     private final VersionResolver resolver;
+    private final StrongAugmentationService strongAugmentationService;
 
     /**
      * The bible information service, retrieving content and meta data.
      *
-     * @param defaultVersions      a list of the default versions that should be installed
-     * @param jswordPassage        the jsword service
-     * @param jswordModule         provides information and handles information relating to module installation, etc.
-     * @param jswordMetadata       provides metadata on jsword modules
+     * @param defaultVersions           a list of the default versions that should be installed
+     * @param jswordPassage             the jsword service
+     * @param jswordModule              provides information and handles information relating to module installation,
+     *                                  etc.
+     * @param jswordMetadata            provides metadata on jsword modules
      * @param jswordSearch
-     * @param entityManager        the entity manager
-     * @param jswordVersification  the jsword versification
+     * @param entityManager             the entity manager
+     * @param jswordVersification       the jsword versification
+     * @param strongAugmentationService to augment strong numbers
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
                                        final PassageOptionsValidationService optionsValidationService,
                                        final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
                                        final JSwordMetadataService jswordMetadata, final JSwordSearchService jswordSearch,
-                                       final EntityManager entityManager, final JSwordVersificationService jswordVersification, 
+                                       final EntityManager entityManager, final JSwordVersificationService jswordVersification,
+                                       final StrongAugmentationService strongAugmentationService,
                                        final VersionResolver resolver) {
         this.optionsValidationService = optionsValidationService;
         this.jswordPassage = jswordPassage;
@@ -112,6 +132,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         this.jswordSearch = jswordSearch;
         this.entityManager = entityManager;
         this.jswordVersification = jswordVersification;
+        this.strongAugmentationService = strongAugmentationService;
         this.resolver = resolver;
     }
 
@@ -195,7 +216,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         passageText.setNextChapter(this.jswordPassage.getSiblingChapter(reference, version, false));
         passageText.setOptions(this.optionsValidationService.optionsToString(
                 this.optionsValidationService.getAvailableFeaturesForVersion(version, extraVersions, interlinearMode, realModeOfDisplay).getOptions()));
-        
+
         //the passage lookup wasn't made with the removed options, however, the client needs to think these were selected.
         passageText.setSelectedOptions(this.optionsValidationService.optionsToString(lookupOptions) + getRemovedOptions(removedOptions));
         return passageText;
@@ -238,7 +259,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
                 //try reversifying essentially
                 try {
                     key = KeyUtil.getVerse(this.jswordVersification.getBookFromVersion(JSwordPassageService.REFERENCE_BOOK).getKey(reference));
-                } catch(NoSuchKeyException ex) {
+                } catch (NoSuchKeyException ex) {
                     LOGGER.error("Unable to look up strongs for [{}]", reference, e);
                     return new StrongCountsAndSubjects();
                 }
@@ -246,7 +267,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         }
 
         final StrongCountsAndSubjects verseStrongs = new JSwordStrongNumberHelper(this.entityManager,
-                key, this.jswordVersification, this.jswordSearch).getVerseStrongs();
+                key, this.jswordVersification, this.jswordSearch, this.strongAugmentationService).getVerseStrongs();
         verseStrongs.setVerse(key.getName());
         verseStrongs.setMultipleVerses(true);
         return verseStrongs;

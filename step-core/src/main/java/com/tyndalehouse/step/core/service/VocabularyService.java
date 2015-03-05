@@ -52,26 +52,35 @@ public interface VocabularyService {
     /**
      * Gets the default transliteration as a string
      * 
+     *
+     * @param version
      * @param vocabIdentifiers the vocab identifiers
+     * @param reference
      * @return the string to be displayed
      */
-    String getDefaultTransliteration(String vocabIdentifiers);
+    String getDefaultTransliteration(final String version, String vocabIdentifiers, final String reference);
 
     /**
      * gets the English vocab fields
      * 
+     *
+     * @param version
+     * @param reference
      * @param vocabIdentifiers the vocab identifiers
      * @return the string to be displayed
      */
-    String getEnglishVocab(String vocabIdentifiers);
+    String getEnglishVocab(final String version, final String reference, String vocabIdentifiers);
 
     /**
      * Gets the Greek vocab fields
      * 
+     *
+     * @param version
+     * @param reference
      * @param vocabIdentifiers the vocab identifiers
      * @return the string to be displayed
      */
-    String getGreekVocab(String vocabIdentifiers);
+    String getGreekVocab(final String version, final String reference, String vocabIdentifiers);
 
     /**
      * Gets quick information about the particular identifiers

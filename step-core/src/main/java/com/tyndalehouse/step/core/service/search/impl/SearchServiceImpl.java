@@ -1156,8 +1156,7 @@ public class SearchServiceImpl implements SearchService {
         while (matchAugmentedStrongs.find()) {
             final String as = matchAugmentedStrongs.group(1);
             augmentedStrongs.add(as);
-            strongs.remove(as);
-            strongs.add(this.strongAugmentationService.reduce(as));
+            strongs.add(this.strongAugmentationService.reduce(as).toUpperCase());
         }
 
         //run the normal search

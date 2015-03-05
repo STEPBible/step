@@ -106,6 +106,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     private Map<String, String> hebrewDirectMapping;
     private Map<String, String> hebrewIndirectMappings;
     private Testament testament;
+    private String masterVersion;
     private Versification masterVersification;
     private VocabularyService vocabProvider;
     private boolean stripAccents = false;
@@ -132,10 +133,11 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param hebrewDirectMapping    the hebrew overriding mappings
      * @param hebrewIndirectMappings the mappings used if no other mapping is found
      */
-    public InterlinearProviderImpl(Versification masterVersification, JSwordVersificationService versificationService,
+    public InterlinearProviderImpl(final String masterVersion, Versification masterVersification, JSwordVersificationService versificationService,
                                    final String version, final Key versifiedKey, final Map<String, String> hebrewDirectMapping,
                                    final Map<String, String> hebrewIndirectMappings, final VocabularyService vocabProvider,
                                    boolean stripGreekAccents, boolean stripHebrewAccents, boolean stripVowels) {
+        this.masterVersion = masterVersion;
         this.masterVersification = masterVersification;
         this.vocabProvider = vocabProvider;
 
@@ -305,7 +307,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
                     return retrieveWord(list);
                 }
             }
-            return lookupMappings(strong);
+            return lookupMappings(equivalentVerses.getOsisID(), strong);
         } else if(strong != null) {
             //then we know we have a null verse, so assume we're in pre-verse mode...
             final DualKey<String, String> key = new DualKey<String, String>(strong, NO_VERSE);
@@ -322,10 +324,12 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /**
      * Lookup mappings, if the strong number is there, then it is used
      *
+     *
+     * @param reference
      * @param strong the strong
      * @return the string
      */
-    private String lookupMappings(final String strong) {
+    private String lookupMappings(final String reference, final String strong) {
         // we ignore mapping lookups for anything greek or hebrew...
         if (originalLanguage) {
             return "";
@@ -346,7 +350,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         }
 
         //else look up from vocab provider
-        String englishVocab = this.vocabProvider.getEnglishVocab(isOT ? 'H' + strong : 'G' + strong);
+        String englishVocab = this.vocabProvider.getEnglishVocab(this.masterVersion, reference, isOT ? 'H' + strong : 'G' + strong);
         if (englishVocab != null) {
             return "#" + englishVocab;
         }

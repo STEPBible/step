@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.service;
 
+import com.tyndalehouse.step.core.data.EntityDoc;
 import org.crosswire.jsword.passage.Key;
 
 /**
@@ -9,11 +10,11 @@ public interface StrongAugmentationService {
     /**
      * The STEP lexicon contains H0001a, H0002b, etc. where a,b are suffixes for homonyms. As a result,
      * with a reference, we can inform the user a bit more about the specific meaning of the word
-     * @param version
+     * @param version the version that anchors the reference
      * @param reference the reference
      * @param keys the keys  @return the list of returned / changed keyed
      */
-    String[] augment(final String version, String reference, String[] keys);
+    AugmentedStrongs augment(final String version, String reference, String[] keys);
 
     /**
      *
@@ -34,4 +35,31 @@ public interface StrongAugmentationService {
      * @return the normal strong number
      */
     String reduce(String augmentedStrong);
+
+    /**
+     * Augments multiple strong numbers from a string. For example H0001 H0002 H0003 may become H0001 H0002a H0003
+     * @param version version
+     * @param verseRef the reference
+     * @param unAugmentedStrongNumbers the unaugmented strong numbers
+     * @return the augmented form
+     */
+    AugmentedStrongs augment(String version, String verseRef, String unAugmentedStrongNumbers);
+
+    public class AugmentedStrongs {
+        private final String[] strongList;
+        private final EntityDoc[] entityDocs;
+
+        public AugmentedStrongs(final String[] strongList, final EntityDoc[] entityDocs) {
+            this.strongList = strongList;
+            this.entityDocs = entityDocs;
+        }
+
+        public EntityDoc[] getEntityDocs() {
+            return entityDocs;
+        }
+
+        public String[] getStrongList() {
+            return strongList;
+        }
+    }
 }

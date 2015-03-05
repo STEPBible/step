@@ -867,7 +867,7 @@ step.util = {
                 var s = $(source);
                 strong = s.attr("strong");
                 morph = s.attr("morph");
-                ref = s.closest(".verse").find(".verseLink").attr("name");
+                ref = step.util.ui.getVerseNumber(s);
                 version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
             }
 
@@ -970,7 +970,7 @@ step.util = {
                     require(['quick_lexicon'], function () {
                         var strong = $(hoverContext).attr('strong');
                         var morph = $(hoverContext).attr('morph');
-                        var reference = $(hoverContext).closest(".verse").find(".verseLink").attr("name");
+                        var reference = step.util.ui.getVerseNumber(hoverContext);
                         var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
                         new QuickLexicon({
                             strong: strong, morph: morph,
@@ -994,7 +994,7 @@ step.util = {
                 require(['quick_lexicon'], function () {
                     var strong = $(hoverContext).attr('strong');
                     var morph = $(hoverContext).attr('morph');
-                    var reference = $(hoverContext).closest(".verse").find(".verseLink").attr("name");
+                    var reference = step.util.ui.getVerseNumber(hoverContext);
                     var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 
                     step.util.delay(function () {
@@ -1018,7 +1018,9 @@ step.util = {
          * @param passageHtml the JQuery HTML content
          * @private
          */
-
+        getVerseNumber: function(el) {
+              return $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
+        },
         emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();
 //            passageContent.detach();
@@ -1160,11 +1162,13 @@ step.util = {
                                         var verseData = data.strongData[key];
                                         for (var strong in verseData) {
                                             var strongData = verseData[strong];
-                                            var counts = data.counts[strongData.strongNumber];
-                                            rows.push({
-                                                strongData: strongData,
-                                                counts: counts
-                                            });
+                                            if(strongData && strongData.strongNumber) {
+                                                var counts = data.counts[strongData.strongNumber];
+                                                rows.push({
+                                                    strongData: strongData,
+                                                    counts: counts
+                                                });
+                                            }
                                         }
                                     }
 

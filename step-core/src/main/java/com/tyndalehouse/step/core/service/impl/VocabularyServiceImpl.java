@@ -48,6 +48,7 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
 import org.apache.lucene.search.IndexSearcher;
+import org.codehaus.jackson.map.util.LRUMap;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +81,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final String HIGHER_STRONG = "STRONG:";
     private static final String LOWER_STRONG = "strong:";
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
+    private static final LRUMap<String,EntityDoc[]> DEFINITIION_CACHE = new LRUMap<>(128, 256);
     private final EntityIndexReader definitions;
 
     // define a few extraction methods
@@ -153,7 +155,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     public VocabResponse getDefinitions(final String version, final String reference, final String vocabIdentifiers) {
         notBlank(reference, "The verse reference was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
+        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
 
         if (strongList.length != 0) {
             final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber",
@@ -308,7 +310,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
+        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
 
         if (strongList.length != 0) {
             EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
@@ -318,36 +320,38 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public String getEnglishVocab(final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(vocabIdentifiers, this.englishVocabProvider);
+    public String getEnglishVocab(final String version, final String reference, final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(version , reference, vocabIdentifiers, this.englishVocabProvider);
     }
 
     @Override
-    public String getGreekVocab(final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(vocabIdentifiers, this.greekVocabProvider);
+    public String getGreekVocab(final String version, final String reference, final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.greekVocabProvider);
     }
 
     @Override
-    public String getDefaultTransliteration(final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(vocabIdentifiers, this.transliterationProvider);
+    public String getDefaultTransliteration(final String version, final String vocabIdentifiers, final String reference) {
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.transliterationProvider);
     }
 
     /**
      * gets data from the matched lexicon definitions
      *
+     *
+     * @param reference
      * @param vocabIdentifiers the identifiers
      * @param provider         the provider used to get data from it
      * @return the data in String form
      */
-    private String getDataFromLexiconDefinition(final String vocabIdentifiers,
+    private String getDataFromLexiconDefinition(final String version, final String reference, final String vocabIdentifiers,
                                                 final LexiconDataProvider provider) {
-        final String[] keys = getKeys(vocabIdentifiers);
+        final String[] keys = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
         if (keys.length == 0) {
             return "";
         }
 
         // else we lookup and concatenate
-        final EntityDoc[] lds = getLexiconDefinitions(keys);
+        final EntityDoc[] lds = getLexiconDefinitions(keys, vocabIdentifiers, version, reference);
 
         if (lds.length == 0) {
             return vocabIdentifiers;
@@ -378,8 +382,28 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @param keys the keys to match
      * @return the lexicon definitions that were found
      */
-    private EntityDoc[] getLexiconDefinitions(final String[] keys) {
-        return this.definitions.searchUniqueBySingleField("strongNumber", keys);
+    private EntityDoc[] getLexiconDefinitions(final String[] keys, final String vocabIdentifiers, final String version, final String reference) {
+        final String cacheKey = getCacheKey(version, reference, vocabIdentifiers);
+
+        final EntityDoc[] entityDocs = DEFINITIION_CACHE.get(cacheKey);
+        if(entityDocs != null) {
+            return entityDocs;
+        }
+
+        final EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", keys);
+        DEFINITIION_CACHE.put(cacheKey, strongNumbers);
+        return strongNumbers;
+    }
+
+    /**
+     * Simple cache key that concatenates all the variables passed in
+     * @param version the version
+     * @param reference the reference
+     * @param vocabIdentifiers the vocabulary identifiers
+     * @return the cache key
+     */
+    private String getCacheKey(final String version, final String reference, final String vocabIdentifiers) {
+        return new StringBuilder().append(version).append('-').append(reference).append('-').append(vocabIdentifiers).toString();
     }
 
     /**

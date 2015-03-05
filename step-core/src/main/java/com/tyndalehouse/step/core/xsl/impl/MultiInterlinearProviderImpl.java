@@ -58,24 +58,22 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
  * @author chrisburrell
  */
 public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MultiInterlinearProviderImpl.class);
-
-    /**
-     * The interlinear providers.
-     */
-    private final Map<String, InterlinearProvider> interlinearProviders = new HashMap<String, InterlinearProvider>();
-
     /**
      * we separate by commas and spaces.
      */
     static final String VERSION_SEPARATOR = ", ?";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(MultiInterlinearProviderImpl.class);
+    /**
+     * The interlinear providers.
+     */
+    private final Map<String, InterlinearProvider> interlinearProviders = new HashMap<String, InterlinearProvider>();
     private final JSwordVersificationService versificationService;
     private String lastSeenOsisId;
 
     /**
      * sets up the interlinear provider with the correct version and text scope.
      *
+     * @param masterVersion the master version
      * @param versions             the versions to use to set up the interlinear
      * @param textScope            the reference, or passage range that should be considered when setting up the
      *                             interlinear provider
@@ -85,16 +83,19 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
      * @param stripHebrewAccents   true to ensure Hebrew accents are stripped off Hebrew texts
      * @param stripVowels          true to ensure accents are stripped off Greek texts
      */
-    public MultiInterlinearProviderImpl(final Versification masterVersification, String versions, final String textScope,
-                                        final JSwordVersificationService versificationService, final VocabularyService vocabProvider,
-                                        final boolean stripGreekAccents, final boolean stripHebrewAccents, final boolean stripVowels) {
+    public MultiInterlinearProviderImpl(
+            final String masterVersion,
+            final Versification masterVersification,
+            String versions,
+            final String textScope,
+            final JSwordVersificationService versificationService, final VocabularyService vocabProvider,
+            final boolean stripGreekAccents, final boolean stripHebrewAccents, final boolean stripVowels) {
         this.versificationService = versificationService;
 
         // first check whether the values passed in are correct
         if (areAnyBlank(versions, textScope)) {
             return;
         }
-
 
         try {
             final Map<String, String> hebrewDirectMapping = initHebrewDirectMapping();
@@ -106,7 +107,7 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
             for (final String version : differentVersions) {
                 if (isNotBlank(version)) {
                     final String normalisedVersion = version.trim();
-                    this.interlinearProviders.put(normalisedVersion, new InterlinearProviderImpl(masterVersification,
+                    this.interlinearProviders.put(normalisedVersion, new InterlinearProviderImpl(masterVersion, masterVersification,
                             versificationService, normalisedVersion, versifiedKey, hebrewDirectMapping,
                             hebrewIndirectMappings, vocabProvider, stripGreekAccents, stripHebrewAccents, stripVowels));
                 }
@@ -168,7 +169,7 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
     @Override
     public boolean isDisabled(final String version) {
         final InterlinearProvider interlinearProvider = this.interlinearProviders.get(StringUtils.trim(version));
-        if(interlinearProvider != null) {
+        if (interlinearProvider != null) {
             return interlinearProvider.isDisabled();
         }
         return false;

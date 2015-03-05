@@ -36,14 +36,19 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     }
 
     @Override
-    public String[] augment(final String version, final String reference, final String[] keys) {
+    public AugmentedStrongs augment(final String version, final String verseRef, final String unAugmentedStrongNumbers) {
+        return augment(version, verseRef, StringUtils.split(unAugmentedStrongNumbers));
+    }
+
+    @Override
+    public AugmentedStrongs augment(final String version, final String reference, final String[] keys) {
         final Map<String, String> augmentedStrongs = new HashMap<>((keys.length + 4) * 2);
         //for each key, we see if there is an augment strong number
         final StringBuilder query = new StringBuilder(keys.length * 10 + 16);
         query.append("(");
         for (int i = 0; i < keys.length; i++) {
             //if Hebrew and not augmented
-            if (keys[i].charAt(0) == 'H' && Character.isDigit(keys[i].charAt(keys[i].length() - 1))) {
+            if (isNonAugmentedHebrew(keys[i])) {
                 //then we're looking at Hebrew, so look up the augmentedStrongs data
                 //and we're looking for the first of any strong number
                 //build the lucene query...
@@ -55,6 +60,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             }
         }
 
+        final EntityDoc[] docs;
         if (query.length() > 1) {
 
             //add the reference in the query. We may have several due to versifications mapping, so we're going to look for documents where at least 1 of the verses is in the doc
@@ -68,7 +74,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             query.append(")");
 
             //run the query for the hebrew words and add them to the list
-            final EntityDoc[] docs = this.augmentedStrongs.search("augmentedStrong", query.toString());
+            docs = this.augmentedStrongs.search("augmentedStrong", query.toString());
             for (EntityDoc d : docs) {
                 final String augmentedStrong = d.get("augmentedStrong");
                 augmentedStrongs.put(augmentedStrong.substring(augmentedStrong.length() - 1), augmentedStrong);
@@ -81,9 +87,15 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                     augmentedStrongs.put(k, k);
                 }
             }
+        } else {
+            docs = new EntityDoc[0];
         }
         final String[] augmented = new String[augmentedStrongs.size()];
-        return augmentedStrongs.values().toArray(augmented);
+        return new AugmentedStrongs(augmentedStrongs.values().toArray(augmented), docs);
+    }
+
+    private boolean isNonAugmentedHebrew(final String key) {
+        return key.charAt(0) == 'H' && Character.isDigit(key.charAt(key.length() - 1));
     }
 
     @Override
@@ -113,7 +125,10 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 
     @Override
     public String reduce(final String augmentedStrong) {
-        return augmentedStrong.substring(0, augmentedStrong.length() - 1);
+        if(augmentedStrong.charAt(0) == 'H' && Character.isLetter(augmentedStrong.charAt(augmentedStrong.length() -1))) {
+            return augmentedStrong.substring(0, augmentedStrong.length() - 1);
+        }
+        return augmentedStrong;
     }
 
     /**

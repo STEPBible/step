@@ -1,9 +1,4 @@
-﻿===============================
-@AugmentedStrong=	H1254a
-@References=	Gen.1.1 Gen.1.21 Gen.1.27 Gen.1.27 Gen.1.27 Gen.2.3 Gen.2.4 Gen.5.1 Gen.5.2 Gen.5.2 Gen.6.7 Exo.34.10 Num.16.30 Deu.4.32 Jos.17.15 Jos.17.18 1Sa.2.29 2Sa.12.17 Psa.51.12 Psa.89.13 Psa.89.48 Psa.102.19 Psa.104.30 Psa.148.5 Ecc.12.1 Isa.4.5 Isa.40.26 Isa.40.28 Isa.41.20 Isa.42.5 Isa.43.1 Isa.43.7 Isa.43.15 Isa.45.7 Isa.45.7 Isa.45.8 Isa.45.12 Isa.45.18 Isa.45.18 Isa.48.7 Isa.54.16 Isa.54.16 Isa.57.19 Isa.65.17 Isa.65.18 Isa.65.18 Jer.31.22 Eze.21.24 Eze.21.24 Eze.21.35 Eze.23.47 Eze.28.13 Eze.28.15 Amo.4.13 Mal.2.10 
-===============================
-
-@AugmentedStrong=	H0122a
+﻿@AugmentedStrong=	H0122a
 @References=	2Kgs.3.22 Isa.63.2 Num.19.2 Song.5.10 Zech.1.8 Zech.6.2 
 ===============================
 @AugmentedStrong=	H0122b

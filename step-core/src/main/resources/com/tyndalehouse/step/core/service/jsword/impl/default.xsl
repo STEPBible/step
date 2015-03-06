@@ -325,10 +325,10 @@
         <!-- Always output the verse number -->
         <xsl:choose>
             <xsl:when test=".//cell">
-                <div class="verse l {$languageDirection}Direction containsTable" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
+                <div class="verse l {$languageDirection}Direction containsTable" dir="{$languageDirection}"><a class="verseLink" name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
             </xsl:when>
             <xsl:when test="$VLine = 'true' or .//cell">
-                <div class="verse l {$languageDirection}Direction" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
+                <div class="verse l {$languageDirection}Direction" dir="{$languageDirection}"><a  class="verseLink" name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
             </xsl:when>
             <xsl:otherwise>
                 <span class="verse {$languageDirection}Direction" dir="{$languageDirection}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>

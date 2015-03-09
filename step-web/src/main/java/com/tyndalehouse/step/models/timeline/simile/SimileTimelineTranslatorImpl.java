@@ -56,6 +56,8 @@ public class SimileTimelineTranslatorImpl implements TimelineTranslator {
     public DigestableTimeline toDigestableForm(final EntityDoc[] events, final LocalDateTime suggestedDate) {
         final SimileTimelineImpl timeline = new SimileTimelineImpl();
 
+        timeline.setLegend(getLegendItems());
+
         timeline.setDateTimeFormat(SIMILE_DEFAULT_TIME_FORMAT);
 
         final List<SimileEvent> eventList = new ArrayList<SimileEvent>();
@@ -70,6 +72,27 @@ public class SimileTimelineTranslatorImpl implements TimelineTranslator {
             timeline.setSuggestedDate(suggestedDate.toString());
         }
         return timeline;
+    }
+
+    private List<LegendItem> getLegendItems() {
+        final List<LegendItem> legendItems = new ArrayList<>();
+        add(legendItems, "A something", "triangle_orange.png");
+        add(legendItems, "B something", "square_gray.png");
+        add(legendItems, "CD", "triangle_yellow.png");
+        add(legendItems, "D", "triangle_green.png");
+        add(legendItems, "E", "circle_green.png");
+        add(legendItems, "F", "square_blue.png");
+        add(legendItems, "G", "circle_blue.png");
+        add(legendItems, "H", "circle_purple.png");
+
+        return legendItems;
+    }
+
+    private void add(final List<LegendItem> legendItems, final String s, final String s1) {
+        LegendItem t = new LegendItem();
+        t.setTitle(s);
+        t.setIcon(s1);
+        legendItems.add(t);
     }
 
     @Override

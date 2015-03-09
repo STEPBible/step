@@ -65,6 +65,12 @@ public class SimileTimelineImpl implements DigestableTimeline {
     private String dateTimeFormat;
     private List<SimileEvent> events;
     private String suggestedDate;
+    public  String id = "bible-history";
+    public  String title = "A History of the Bible";
+    public  String description = "Some description <b> with HTML</b> can go here!";
+    public String focus_date = "0030-01-01T00:00:45.000";
+    public int initial_lane_height = 10;
+    private List<LegendItem> legend;
 
     /**
      * @return the dateTimeFormat
@@ -106,5 +112,33 @@ public class SimileTimelineImpl implements DigestableTimeline {
      */
     public void setSuggestedDate(final String suggestedDate) {
         this.suggestedDate = suggestedDate;
+    }
+
+    public void setLegend(List<LegendItem> legendItems) {
+        this.legend = legendItems;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getFocus_date() {
+        return focus_date;
+    }
+
+    public int getInitial_lane_height() {
+        return initial_lane_height;
+    }
+
+    public List<LegendItem> getLegend() {
+        return legend;
     }
 }

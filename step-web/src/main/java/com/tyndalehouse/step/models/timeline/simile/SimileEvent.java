@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,13 +32,14 @@
  ******************************************************************************/
 package com.tyndalehouse.step.models.timeline.simile;
 
-import java.io.Serializable;
-
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
+
+import java.io.Serializable;
+import java.util.Random;
 
 /**
  * This represents the following fragment:
- * 
+ * <p/>
  * <pre>
  *      {'start': '-1262',
  *       'title': 'Barfusserkirche',
@@ -47,9 +48,8 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
  *         'link': 'http://www.allposters.com/-sp/Barfusserkirche-1924-Posters_i1116895_.htm'
  *         },
  * </pre>
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class SimileEvent implements DigestableTimeline, Serializable {
     private static final long serialVersionUID = -7725905171349065886L;
@@ -67,6 +67,54 @@ public class SimileEvent implements DigestableTimeline, Serializable {
     private String endPrecision;
     private String certainty;
     private String flags;
+
+    public String getStartdate() {
+        return this.start;
+    }
+
+    public String getDate_display() {
+        if ("YEAR".equalsIgnoreCase(certainty)) {
+            return "ye";
+        } else if ("MONTH".equalsIgnoreCase(certainty)) {
+            return "mo";
+        } else {
+            return "da";
+        }
+    }
+
+    public String getIcon() {
+        int r = new Random().nextInt() % 7;
+        switch (r) {
+            case 0:
+                return "triangle_orange.png";
+            case 1:
+                return "square_gray.png";
+            case 2:
+                return "triangle_yellow.png";
+            case 3:
+                return "triangle_green.png";
+            case 4:
+                return "square_blue.png";
+            case 5:
+                return "circle_blue.png";
+            case 6:
+                return "circle_purple.png";
+        }
+
+        return "circle_purple.png";
+    }
+
+    public String getId() {
+        return getEventId();
+    }
+
+    public String getImportance() {
+        return "50";
+    }
+
+    public int getHigh_threshold() {
+        return 50;
+    }
 
     /**
      * @return the start

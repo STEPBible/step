@@ -43,6 +43,7 @@
     }
 
     .passageContentHolder {
+      outline: 0;
       overflow-y: auto;
       overflow-x: hidden;
       @include scrollableContainerHeight;

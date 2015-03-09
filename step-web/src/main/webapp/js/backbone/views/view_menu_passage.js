@@ -389,7 +389,7 @@ var PassageMenuView = Backbone.View.extend({
             require(["qtip"], function () {
                 $(".verseNumber", step.util.getPassageContainer(dropdown)).closest("a").qtip("destroy");
             });
-            
+
             //toggle the tick
             self._setVisible(this, verseVocab);
         }));

@@ -68,7 +68,8 @@ var PassageDisplayView = DisplayView.extend({
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 this.scrollToTargetLocation(passageContainer);
 
-
+                //give focus:
+                $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();
             }
         },
         scrollToTargetLocation: function (passageContainer) {

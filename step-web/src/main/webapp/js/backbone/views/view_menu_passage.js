@@ -16,6 +16,7 @@ var PassageMenuView = Backbone.View.extend({
         '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
         '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
+    quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
     },
@@ -247,6 +248,7 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         var allHaveStrong = masterVersion.hasStrongs;
+        var allSameTagging = true;
         var sameLanguaguageAndBible = masterVersion.category == 'BIBLE';
         var masterLanguage = masterVersion.languageCode;
         for (var ii = 0; ii < extraVersions.length; ii++) {
@@ -256,9 +258,10 @@ var PassageMenuView = Backbone.View.extend({
             //js: &= gives us a 0 return value
             sameLanguaguageAndBible = sameLanguaguageAndBible && extraResource.languageCode == masterLanguage;
             sameLanguaguageAndBible = sameLanguaguageAndBible && extraResource.category == 'BIBLE';
+            allSameTagging = allSameTagging && extraResource.hasSeptuagintTagging == masterVersion.hasSeptuagintTagging;
         }
 
-        this.displayModeContainer.find("a[data-value='INTERLINEAR']").closest("li").toggle(allHaveStrong);
+        this.displayModeContainer.find("a[data-value='INTERLINEAR']").closest("li").toggle(allHaveStrong && allSameTagging);
         this.displayModeContainer.find("a[data-value='INTERLEAVED_COMPARE']").closest("li").toggle(sameLanguaguageAndBible);
         this.displayModeContainer.find("a[data-value='COLUMN_COMPARE']").closest("li").toggle(sameLanguaguageAndBible);
     },
@@ -349,12 +352,29 @@ var PassageMenuView = Backbone.View.extend({
             self.model.save({ context: contextVal});
 
         });
-        //create context link
+
+        //create menu options
+        var currentQuickLexiconSetting = self.model.get("isQuickLexicon");
+        if(currentQuickLexiconSetting == null) {
+            this.model.save({ isQuickLexicon: true });
+            currentQuickLexiconSetting = true;
+        }
+
+        dropdown.append($(_.template(this.quickLexicon)({ isQuickLexicon: currentQuickLexiconSetting })).click(function(e) {
+            //prevent the bubbling up
+            e.stopPropagation();
+
+            //set the setting
+            var quickLexicon = !self.model.get("isQuickLexicon");
+            self.model.save({ isQuickLexicon: quickLexicon });
+
+            //toggle the tick
+            self._setVisible(this, quickLexicon);
+        }));
         dropdown.append(li);
         dropdown.append(_.template(this.fontButtons)())
             .find(".smallerFontSize").click(this.decreaseFontSize).end()
             .find(".largerFontSize").click(this.increaseFontSize);
-
 
         return dropdown;
 
@@ -459,7 +479,8 @@ var PassageMenuView = Backbone.View.extend({
         return selectedCode;
     },
 
-    _setVisible: function (link, visible) {
+    _setVisible: function (el, visible) {
+        var link = $(el);
         link.find(".glyphicon").css("visibility", visible ? "visible" : "hidden");
         link.attr("data-selected", visible);
     },

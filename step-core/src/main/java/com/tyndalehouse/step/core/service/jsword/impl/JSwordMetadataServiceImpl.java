@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
@@ -33,6 +34,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     private static final String BOOK_CHAPTER_FORMAT = "%s %d";
     private final JSwordVersificationService versificationService;
+    private final VersionResolver versionResolver;
 
     /**
      * Sets up the service for providing metadata information
@@ -40,8 +42,9 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param versificationService the versification service
      */
     @Inject
-    public JSwordMetadataServiceImpl(final JSwordVersificationService versificationService) {
+    public JSwordMetadataServiceImpl(final JSwordVersificationService versificationService, final VersionResolver versionResolver) {
         this.versificationService = versificationService;
+        this.versionResolver = versionResolver;
     }
 
     @Override
@@ -405,11 +408,28 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             return getSameOrDowngradedInterlinearMode(interlinearMode, sameLanguageAndBible);
         }
 
-        if (supportsStrongs) {
+        if (supportsStrongs && allVersionsSameTagging(version, extraVersions)) {
             return InterlinearMode.INTERLINEAR;
         }
 
         return InterlinearMode.INTERLEAVED;
+    }
+
+    /**
+     * We check that all versions have the same Greek/Hebrew tagging. For example, Septuagint tagged texts should
+     * not be mapped to the Hebrew texts
+     * @param version the version
+     * @param extraVersions the extra versions
+     * @return true if all versions are of the same kind
+     */
+    private boolean allVersionsSameTagging(final String version, final List<String> extraVersions) {
+        final boolean isSeptuagint = this.versionResolver.isSeptuagintTagging(version);
+        for(String v : extraVersions) {
+            if(isSeptuagint != this.versionResolver.isSeptuagintTagging(v)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

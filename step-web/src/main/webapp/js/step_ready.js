@@ -76,6 +76,23 @@
             }});
     }
 
+    function identifyLikelyPreviousPassage(firstModel) {
+        if(!step.passages || !firstModel) {
+            return null;
+        }
+
+        var firstReference = firstModel.signature;
+        for(var ii = 0; ii < step.passages.length; ii++) {
+            var p = step.passages.at(ii);
+            if(p.get("signature") == firstReference) {
+                //likely to be the same passage (crude, I know!)
+                return p;
+            }
+        }
+
+        return step.passages.at(0);
+    }
+
     function initCoreModelsAndRouter() {
         step.router = new StepRouter();
         step.passages = new PassageModelList();
@@ -110,8 +127,9 @@
 
             //reset some attributes that weren't on the model to start with (because of space reasons)
             window.tempModel.createSilently = true;
+            var likelyPreviousPassage = identifyLikelyPreviousPassage(window.tempModel);
             modelZero.save(window.tempModel, { silent: true });
-            modelZero.save({ results: null, linked: null, value: pageValue}, {silent: true});
+            modelZero.save({ isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true, results: null, linked: null, value: pageValue}, {silent: true});
             new PassageMenuView({
                 model: modelZero
             });

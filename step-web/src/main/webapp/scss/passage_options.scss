@@ -76,7 +76,7 @@
   a {
     color: black;
     display: block;
-    &:hover {
+    &:hover, &:focus {
       text-decoration: none;
     }
   }

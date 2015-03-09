@@ -205,10 +205,10 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             // split the versions
             lookupOptions.add(LookupOption.VERSE_NUMBERS);
             final String[] versions = getInterleavedVersions(version, interlinearVersion);
-            passageText = this.jswordPassage.getInterleavedVersions(versions, reference, new ArrayList<LookupOption>(lookupOptions),
+            passageText = this.jswordPassage.getInterleavedVersions(versions, reference, new ArrayList<>(lookupOptions),
                     desiredModeOfDisplay);
         } else {
-            passageText = this.jswordPassage.getOsisText(version, reference, new ArrayList<LookupOption>(lookupOptions),
+            passageText = this.jswordPassage.getOsisText(version, reference, new ArrayList(lookupOptions),
                     interlinearVersion, desiredModeOfDisplay);
         }
         passageText.setRemovedOptions(removedOptions);

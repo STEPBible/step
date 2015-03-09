@@ -134,6 +134,7 @@ public final class JSwordUtils {
             v.setHasRedLetter(b.hasFeature(FeatureType.WORDS_OF_CHRIST));
             v.setHasHeadings(b.hasFeature(FeatureType.HEADINGS));
             v.setHasNotes(b.hasFeature(FeatureType.FOOTNOTES) || b.hasFeature(FeatureType.SCRIPTURE_REFERENCES));
+            v.setHasSeptuagintTagging(resolver.isSeptuagintTagging(b));
             versions.add(v);
         }
 

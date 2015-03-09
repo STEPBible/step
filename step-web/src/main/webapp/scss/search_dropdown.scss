@@ -47,6 +47,12 @@ li, span {
   @include bold-args($optionStartGradient, $optionEndGradient);
 }
 
+@media screen and (max-width: $stepXSBootstrap - 1) {
+  .select2-drop-multi {
+    width: 90% !important;
+  }
+}
+
 @media screen and (min-width: $stepXSBootstrap) {
   .select2-drop-multi ul {
     margin: 0px;

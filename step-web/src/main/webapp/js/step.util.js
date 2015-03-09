@@ -969,17 +969,7 @@ step.util = {
 
                     var hoverContext = this;
                     require(['quick_lexicon'], function () {
-                        var strong = $(hoverContext).attr('strong');
-                        var morph = $(hoverContext).attr('morph');
-                        var reference = step.util.ui.getVerseNumber(hoverContext);
-                        var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
-                        new QuickLexicon({
-                            strong: strong, morph: morph,
-                            version: version, reference: reference,
-                            target: hoverContext,
-                            position: ev.pageY / $(window).height(), touchEvent: true,
-                            passageId: passageId
-                        });
+                        step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
                     });
                 }
                 that.lastTapStrong = $(this).attr("strong");
@@ -993,19 +983,9 @@ step.util = {
 
                 var hoverContext = this;
                 require(['quick_lexicon'], function () {
-                    var strong = $(hoverContext).attr('strong');
-                    var morph = $(hoverContext).attr('morph');
-                    var reference = step.util.ui.getVerseNumber(hoverContext);
-                    var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
-
                     step.util.delay(function () {
                         //do the quick lexicon
-                        new QuickLexicon({
-                            strong: strong, morph: morph,
-                            version: version, reference: reference,
-                            target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: false,
-                            passageId: passageId
-                        });
+                        step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, false);
                     }, MOUSE_PAUSE, 'show-quick-lexicon');
                 });
             }, function () {
@@ -1013,6 +993,22 @@ step.util = {
                 step.util.delay(undefined, 0, 'show-quick-lexicon');
                 $("#quickLexicon").remove();
             });
+        },
+        _displayNewQuickLexicon: function(hoverContext, ev, passageId, touchEvent) {
+            var strong = $(hoverContext).attr('strong');
+            var morph = $(hoverContext).attr('morph');
+            var reference = step.util.ui.getVerseNumber(hoverContext);
+            var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
+
+            var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
+            if(quickLexiconEnabled == true || quickLexiconEnabled == null) {
+                new QuickLexicon({
+                    strong: strong, morph: morph,
+                    version: version, reference: reference,
+                    target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: touchEvent,
+                    passageId: passageId
+                });
+            }
         },
         /**
          * Sets the HTML onto the passageContent holder which contains the passage
@@ -1104,7 +1100,7 @@ step.util = {
             if (item.hasStrongs) {
                 features += " " + "<span class='versionFeature' title='" + __s.vocabulary_available + "'>" + __s.vocabulary_available_initial + "</span>";
 
-                if (step.util.isSeptuagintVersion(item)) {
+                if (item.hasSeptuagintTagging) {
                     features += " " + "<span class='versionFeature' title='" + __s.septuagint_interlinear_available + "'>" + __s.septuagint_interlinear_available_initial + "</span>";
                 } else {
                     features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";

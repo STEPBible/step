@@ -55,6 +55,7 @@ public class BibleVersion implements Serializable {
     private String category;
     private String languageName;
     private String shortInitials;
+    private boolean hasSeptuagintTagging;
 
     /**
      * @return true if the version contains strong-tagged information
@@ -230,5 +231,13 @@ public class BibleVersion implements Serializable {
 
     public void setOriginalLanguage(String originalLanguage) {
         this.originalLanguage = originalLanguage;
+    }
+
+    public void setHasSeptuagintTagging(final boolean hasSeptuagintTagging) {
+        this.hasSeptuagintTagging = hasSeptuagintTagging;
+    }
+
+    public boolean isHasSeptuagintTagging() {
+        return hasSeptuagintTagging;
     }
 }

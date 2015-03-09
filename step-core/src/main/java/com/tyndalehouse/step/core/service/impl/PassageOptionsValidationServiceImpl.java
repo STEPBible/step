@@ -48,7 +48,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
 
     @Override
     public List<LookupOption> getLookupOptions(final String options) {
-        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
+        final List<LookupOption> lookupOptions = new ArrayList<>();
 
         if (isBlank(options)) {
             return lookupOptions;
@@ -80,7 +80,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
                 .get().getLocale());
 
         if (options.isEmpty()) {
-            return new HashSet<LookupOption>();
+            return new HashSet<>();
         }
 
         final Set<LookupOption> result = getUserOptionsForVersion(errors, options, version, extraVersions, trimmingExplanations);
@@ -210,7 +210,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
                                                        final List<String> extraVersions,
                                                        final List<TrimmedLookupOption> trimmingExplanations) {
         final Set<LookupOption> available = this.jswordMetadata.getFeatures(version, extraVersions);
-        final Set<LookupOption> result = new HashSet<LookupOption>(options.size());
+        final Set<LookupOption> result = new HashSet<>(options.size());
         // do a crazy bubble intersect, but it's tiny so that's fine
         for (final LookupOption loOption : options) {
             boolean added = false;
@@ -240,7 +240,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
                 extraVersions, getDisplayMode(inputDisplayMode, version, extraVersions),
                 finalDisplayMode, null);
 
-        return new AvailableFeatures(new ArrayList<LookupOption>(outcome), null);
+        return new AvailableFeatures(new ArrayList<>(outcome), null);
     }
 
     @Override

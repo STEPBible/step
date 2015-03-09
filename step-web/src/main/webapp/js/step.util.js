@@ -166,13 +166,13 @@ step.util = {
     escapeRegExp: function (str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     },
-    S4: function() {
-        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    S4: function () {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     },
 
     // Generate a pseudo-GUID by concatenating random hexadecimal.
     guid: function () {
-        return (this.S4()+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+this.S4()+this.S4());
+        return (this.S4() + this.S4() + "-" + this.S4() + "-" + this.S4() + "-" + this.S4() + "-" + this.S4() + this.S4() + this.S4());
     },
     squashErrors: function (model) {
         $("#errorContainer").remove();
@@ -417,7 +417,7 @@ step.util = {
 
         //call the post processor
         var activePassage = step.util.activePassage();
-        if(postProcessModelCallback) {
+        if (postProcessModelCallback) {
             postProcessModelCallback(activePassage);
         }
 
@@ -450,7 +450,7 @@ step.util = {
         } else {
             //if the panel is not required to be linked, then unlink any panel that is currently linked
             var linkedModelId = activePassageModel.get("linked")
-            if(linkedModelId) {
+            if (linkedModelId) {
                 step.util.unlink(linkedModelId);
             }
         }
@@ -534,8 +534,8 @@ step.util = {
             ga('send', 'event', eventType, eventName, eventValue, numValue);
         }
     },
-    trackAnalyticsTime: function(eventType, eventName, timeTaken) {
-        if(window["ga"]) {
+    trackAnalyticsTime: function (eventType, eventName, timeTaken) {
+        if (window["ga"]) {
             ga('send', 'timing', eventType, eventName, timeTaken);
         }
     },
@@ -554,7 +554,7 @@ step.util = {
         var container = $(".passageContainer[passage-id = " + passageIdOrElement + "]");
         return container;
     },
-    clearTimeout: function(timerName) {
+    clearTimeout: function (timerName) {
         var tn = this.timers[timerName];
         if (tn == undefined) {
             this.timers[timerName] = tn = 0;
@@ -635,7 +635,7 @@ step.util = {
         //now get the versions in the right order and overwrite the stored master version and extraVersions
         var versions = (newArgs || "").match(/version=[a-zA-Z0-9]+/ig) || [];
         var allVersions = [];
-        for(var i = 0; i < versions.length; i++) {
+        for (var i = 0; i < versions.length; i++) {
             var versionName = versions[i].substring("version=".length);
             allVersions.push(versionName);
         }
@@ -654,11 +654,11 @@ step.util = {
                 container = $("<span>");
             }
 
-            if(!searchTokens) {
+            if (!searchTokens) {
                 return container.html();
             }
 
-            var isMasterVersion = _.where(searchTokens, {tokenType: VERSION } ) > 1;
+            var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
             for (var i = 0; i < searchTokens.length; i++) {
                 container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
                 if (searchTokens[i].itemType == VERSION) {
@@ -835,7 +835,7 @@ step.util = {
                 return "chineseFont";
             } else if (language == "khm" || language == "km") {
                 return "khmerFont";
-            } else if (language == "far" || language == "fa" || language == "per")  {
+            } else if (language == "far" || language == "fa" || language == "per") {
                 return "farsiFont";
             }
         },
@@ -949,7 +949,7 @@ step.util = {
                 that.touchstart = new Date().getTime();
                 that.touchTriggered = true;
 
-                if(that.lastTapStrong == $(this).attr("strong")) {
+                if (that.lastTapStrong == $(this).attr("strong")) {
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
@@ -994,14 +994,14 @@ step.util = {
                 $("#quickLexicon").remove();
             });
         },
-        _displayNewQuickLexicon: function(hoverContext, ev, passageId, touchEvent) {
+        _displayNewQuickLexicon: function (hoverContext, ev, passageId, touchEvent) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
             var reference = step.util.ui.getVerseNumber(hoverContext);
             var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
-            if(quickLexiconEnabled == true || quickLexiconEnabled == null) {
+            if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
                     strong: strong, morph: morph,
                     version: version, reference: reference,
@@ -1015,8 +1015,8 @@ step.util = {
          * @param passageHtml the JQuery HTML content
          * @private
          */
-        getVerseNumber: function(el) {
-              return $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
+        getVerseNumber: function (el) {
+            return $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
         },
         emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();
@@ -1030,17 +1030,17 @@ step.util = {
             parent.append(passageContent);
             passageContent.append(this.getCopyrightInfo());
         },
-        getCopyrightInfo: function() {
+        getCopyrightInfo: function () {
             var model = step.util.activePassage();
             var message = __s.copyright_information_list;
-            if(model.get("masterVersion") != null) {
+            if (model.get("masterVersion") != null) {
                 message += " " + this._getCopyrightLink(model.get("masterVersion"));
             }
 
-            if(!step.util.isBlank(model.get("extraVersions"))) {
+            if (!step.util.isBlank(model.get("extraVersions"))) {
                 var v = (model.get("extraVersions").split(",")) || [];
-                for(var version in v) {
-                    if(!step.util.isBlank(v[version])) {
+                for (var version in v) {
+                    if (!step.util.isBlank(v[version])) {
                         message += ", ";
                         message += this._getCopyrightLink(v[version]);
                     }
@@ -1048,7 +1048,7 @@ step.util = {
             }
             return "<div class='copyrightInfo'>" + message + "<div>";
         },
-        _getCopyrightLink: function(v) {
+        _getCopyrightLink: function (v) {
             return "<a href='/version.jsp?version=" + v + "' target='_new'>" + v + "</a>";
         },
         /**
@@ -1110,7 +1110,10 @@ step.util = {
         },
         enhanceVerseNumbers: function (passageId, passageContent, version, isSearch) {
             $(".verseNumber", passageContent).closest("a").mouseenter(function () {
-                step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version, isSearch);
+                var isVerseVocab = step.passages.findWhere({ passageId: passageId }).get("isVerseVocab");
+                if (isVerseVocab || isVerseVocab == null) {
+                    step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version, isSearch);
+                }
             });
         },
 
@@ -1120,7 +1123,7 @@ step.util = {
 
             require(["qtip"], function () {
                 var delay = step.passages.findWhere({ passageId: passageId }).get("interlinearMode") == 'INTERLINEAR' ? 650 : 50;
-                step.util.delay(function() {
+                step.util.delay(function () {
                     var qtip = element.qtip({
                         show: { event: 'mouseenter' },
                         hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
@@ -1159,7 +1162,7 @@ step.util = {
                                         var verseData = data.strongData[key];
                                         for (var strong in verseData) {
                                             var strongData = verseData[strong];
-                                            if(strongData && strongData.strongNumber) {
+                                            if (strongData && strongData.strongNumber) {
                                                 var counts = data.counts[strongData.strongNumber];
                                                 rows.push({
                                                     strongData: strongData,
@@ -1223,9 +1226,10 @@ step.util = {
                             }
                         }
                     });
+
                     qtip.qtip("show");
                 }, delay, 'delay-strong-popup');
-                element.one('mouseleave', function() {
+                element.one('mouseleave', function () {
                     step.util.clearTimeout('delay-strong-popup');
                 });
             });

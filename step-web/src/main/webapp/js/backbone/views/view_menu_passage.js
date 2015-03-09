@@ -17,6 +17,7 @@ var PassageMenuView = Backbone.View.extend({
         '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
+    verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
     },
@@ -355,12 +356,11 @@ var PassageMenuView = Backbone.View.extend({
 
         //create menu options
         var currentQuickLexiconSetting = self.model.get("isQuickLexicon");
-        if(currentQuickLexiconSetting == null) {
+        if (currentQuickLexiconSetting == null) {
             this.model.save({ isQuickLexicon: true });
             currentQuickLexiconSetting = true;
         }
-
-        dropdown.append($(_.template(this.quickLexicon)({ isQuickLexicon: currentQuickLexiconSetting })).click(function(e) {
+        dropdown.append($(_.template(this.quickLexicon)({ isQuickLexicon: currentQuickLexiconSetting })).click(function (e) {
             //prevent the bubbling up
             e.stopPropagation();
 
@@ -371,6 +371,29 @@ var PassageMenuView = Backbone.View.extend({
             //toggle the tick
             self._setVisible(this, quickLexicon);
         }));
+
+        var currentVerseVocabSetting = self.model.get("isVerseVocab");
+        if (currentVerseVocabSetting == null) {
+            this.model.save({ isVerseVocab: true });
+            currentVerseVocabSetting = true;
+        }
+        dropdown.append($(_.template(this.verseVocab)({ isVerseVocab: currentVerseVocabSetting })).click(function (e) {
+            //prevent the bubbling up
+            e.stopPropagation();
+
+            //set the setting
+            var verseVocab = !self.model.get("isVerseVocab");
+            self.model.save({ isVerseVocab: verseVocab });
+
+            //if verse vocab has been turned off, then destroy all qtips
+            require(["qtip"], function () {
+                $(".verseNumber", step.util.getPassageContainer(dropdown)).closest("a").qtip("destroy");
+            });
+            
+            //toggle the tick
+            self._setVisible(this, verseVocab);
+        }));
+
         dropdown.append(li);
         dropdown.append(_.template(this.fontButtons)())
             .find(".smallerFontSize").click(this.decreaseFontSize).end()

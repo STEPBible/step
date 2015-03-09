@@ -129,7 +129,13 @@
             window.tempModel.createSilently = true;
             var likelyPreviousPassage = identifyLikelyPreviousPassage(window.tempModel);
             modelZero.save(window.tempModel, { silent: true });
-            modelZero.save({ isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true, results: null, linked: null, value: pageValue}, {silent: true});
+            modelZero.save({
+                isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true,
+                isVerseVocab: likelyPreviousPassage ? likelyPreviousPassage.get("isVerseVocab") : true,
+                results: null,
+                linked: null,
+                value: pageValue
+            }, {silent: true});
             new PassageMenuView({
                 model: modelZero
             });

@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.tools.esv;
+package com.tyndalehouse.step.tools.esv.deprecated;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +24,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+@Deprecated
 public class EsvCompleteTagging {
     private static final Logger LOGGER = LoggerFactory.getLogger(EsvCompleteTagging.class);
     private Map<Node, List<Node>> nodeChanges = new LinkedHashMap<Node, List<Node>>(72000);

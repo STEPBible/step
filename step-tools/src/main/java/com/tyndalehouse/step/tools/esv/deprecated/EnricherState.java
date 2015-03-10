@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.tools.esv;
+package com.tyndalehouse.step.tools.esv.deprecated;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;

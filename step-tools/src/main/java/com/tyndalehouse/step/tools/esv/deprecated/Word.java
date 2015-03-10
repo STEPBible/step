@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.tools.esv;
+package com.tyndalehouse.step.tools.esv.deprecated;
 
 class Word {
     private final String w;

@@ -44,7 +44,7 @@ import org.junit.Test;
 public class EsvXmlEnhancerTest {
     @Test
     public void testMultipleStrongs() {
-        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
+        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null, null);
         Tagging t = new Tagging();
         t.setRawStrongs("<07651> <03967> <08141> <07657> <07651>");
         esvXmlEnhancer.splitStrong(t);
@@ -54,7 +54,7 @@ public class EsvXmlEnhancerTest {
 
     @Test
     public void testMultipleStrongsRemoveSuffix() {
-        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
+        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null, null);
         Tagging t = new Tagging();
         t.setRawStrongs("<08337a> <03967> <0505> <07969> <0505> <02568> <03967> <02572>");
         esvXmlEnhancer.splitStrong(t);
@@ -64,7 +64,7 @@ public class EsvXmlEnhancerTest {
 
     @Test
     public void testNthOccurrence() {
-        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
+        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null, null);
         assertEquals(3, esvXmlEnhancer.findWordPosition("the dog", 0));
         assertEquals(10, esvXmlEnhancer.findWordPosition("the dog is in the garden", 2));
         assertEquals(11, esvXmlEnhancer.findWordPosition(" the dog is in the garden", 2));
@@ -77,7 +77,7 @@ public class EsvXmlEnhancerTest {
 
     @Test
     public void testEqualsIgnorePunctuationAndCase() {
-        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
+        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null, null);
         assertTrue(esvXmlEnhancer.equalsIngorePunctuationAndCase("the dog", "the dog"));
         assertTrue(esvXmlEnhancer.equalsIngorePunctuationAndCase("the,dog", "the dog"));
         assertTrue(esvXmlEnhancer.equalsIngorePunctuationAndCase("the dog", "the' dog"));
@@ -91,7 +91,7 @@ public class EsvXmlEnhancerTest {
 
     @Test
     public void testGetLengthInDomWord() {
-        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
+        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null, null);
         assertEquals(7, esvXmlEnhancer.getLengthInDomWord("the dog", "the dog"));
         assertEquals(8, esvXmlEnhancer.getLengthInDomWord("the, dog", "the dog"));
         assertEquals(6, esvXmlEnhancer.getLengthInDomWord("wife's", "wife s"));

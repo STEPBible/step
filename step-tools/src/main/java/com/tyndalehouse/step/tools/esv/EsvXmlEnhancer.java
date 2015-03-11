@@ -32,39 +32,18 @@
  ******************************************************************************/
 package com.tyndalehouse.step.tools.esv;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.join;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
+import com.tyndalehouse.step.tools.MultiMap;
+import com.tyndalehouse.step.tools.MultiMapIndexer;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.OSISUtil;
-import org.crosswire.jsword.passage.*;
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.NoSuchVerseException;
+import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.Testament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,12 +55,28 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.bean.ColumnPositionMappingStrategy;
-import au.com.bytecode.opencsv.bean.CsvToBean;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.tyndalehouse.step.tools.MultiMap;
-import com.tyndalehouse.step.tools.MultiMapIndexer;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  * The Class EsvXmlEnhancer.
@@ -98,6 +93,8 @@ public class EsvXmlEnhancer {
     private String currentVerse;
     private Deque<Tagging> verseTagging = null;
     private boolean error = false;
+    private File outputPath;
+    private String lastBook = "";
 
     /**
      * Instantiates a new esv xml enhancer.
@@ -105,9 +102,10 @@ public class EsvXmlEnhancer {
      * @param tagging the tagging
      * @param esvText the esv text
      */
-    public EsvXmlEnhancer(final File tagging, final File esvText) {
+    public EsvXmlEnhancer(final File tagging, final File esvText, File outputPath) {
         this.tagging = tagging;
         this.esvText = esvText;
+        this.outputPath = outputPath;
     }
 
     /**
@@ -119,21 +117,28 @@ public class EsvXmlEnhancer {
     public static void main(final String[] args) throws Exception {
         final File tagging = new File(args[0]);
         final File esvText = new File(args[1]);
+        final File outputPath = new File(args[2]);
+        if (!outputPath.exists()) {
+            new File(outputPath.getParent()).mkdirs();
+        }
 
-        new EsvXmlEnhancer(tagging, esvText).go();
+        new EsvXmlEnhancer(tagging, esvText, outputPath).go();
     }
 
     private void go() throws Exception {
         applyToText(parseTagging());
+        LOGGER.info("Done!");
     }
 
     private MultiMap<String, Tagging, Deque<Tagging>> parseTagging() throws Exception {
         final long start = System.currentTimeMillis();
         final List<Tagging> rawTagging = readTagging();
+        LOGGER.info("Cleaning up tagging");
         cleanupTagging(rawTagging);
+        LOGGER.info("Indexing tagging");
         final MultiMap<String, Tagging, Deque<Tagging>> indexTagging = indexTagging(rawTagging);
 
-        LOGGER.debug("Init phase took [{}]ms", System.currentTimeMillis() - start);
+        LOGGER.info("Init phase took [{}]ms", System.currentTimeMillis() - start);
         traceLog(indexTagging);
         return indexTagging;
     }
@@ -155,7 +160,7 @@ public class EsvXmlEnhancer {
         final TransformerFactory factory = TransformerFactory.newInstance();
         final Transformer transformer = factory.newTransformer();
         final DOMSource source = new DOMSource(esv);
-        final StreamResult result = new StreamResult(new File("c:\\temp\\esvtagging\\esv-out.xml"));
+        final StreamResult result = new StreamResult(this.outputPath);
         transformer.transform(source, result);
 
     }
@@ -179,7 +184,14 @@ public class EsvXmlEnhancer {
         }
 
         if ("chapter".equals(esv.getNodeName())) {
-            this.currentVerse = esv.getAttribute("osisID") + ".0";
+            final String osisID = esv.getAttribute("osisID");
+            String bookName = osisID.substring(0, esv.getAttribute("osisID").indexOf('.'));
+            this.currentVerse = osisID + ".0";
+
+            if (!this.lastBook.equalsIgnoreCase(bookName)) {
+                LOGGER.info("Processing chapter [{}]", this.currentVerse);
+                this.lastBook = bookName;
+            }
             this.error = false;
             this.verseTagging = indexTagging.get(this.currentVerse);
             processVerse(esv, indexTagging);
@@ -197,7 +209,7 @@ public class EsvXmlEnhancer {
                             final int advanceTokens = processVerseContent((Text) item, this.verseTagging);
 
                             if (advanceTokens != 0) {
-                                LOGGER.debug("Avancing by [{}] token(s)", 1);
+                                LOGGER.debug("Advancing by [{}] token(s)", 1);
                                 i++;
                             }
                         } catch (final AbortTagException e) {
@@ -309,38 +321,6 @@ public class EsvXmlEnhancer {
         remainder = matchEsvToTagging(remainder, firstTag, item);
         firstTag.setTaggedText(remainder.taggingText);
         return remainder;
-    }
-
-    class Remainder {
-        int positionInSourceText = 0;
-        String sourceText;
-        String taggingText;
-
-        int advance = 0;
-
-        /**
-         * @param sourceText
-         * @param taggingText
-         */
-        public Remainder(final String sourceText, final String taggingText, final int positionInSourceText) {
-            this.sourceText = sourceText;
-            this.taggingText = taggingText;
-            this.positionInSourceText = positionInSourceText;
-        }
-
-        /**
-         * @param sourceText
-         * @param taggingText
-         */
-        public Remainder(final String sourceText, final String taggingText) {
-            this.sourceText = sourceText;
-            this.taggingText = taggingText;
-        }
-
-        @Override
-        protected Remainder clone() throws CloneNotSupportedException {
-            return new Remainder(this.sourceText, this.taggingText, this.positionInSourceText);
-        }
     }
 
     /**
@@ -601,7 +581,8 @@ public class EsvXmlEnhancer {
                             LOGGER.warn(
                                     "{}: Attempting to tag elements with different parents. One case has not yet been catered for"
                                             + ", which is if the child is the only element different parent, then we can roll up. Portion of text was [{}]",
-                                    this.currentVerse, tagData.getTaggedText());
+                                    this.currentVerse, tagData.getTaggedText()
+                            );
                             this.error = true;
                             throw new AbortTagException();
                         }
@@ -906,10 +887,9 @@ public class EsvXmlEnhancer {
 
         final Document esv = newDocumentBuilder.parse(this.esvText);
 
-        LOGGER.debug("Took [{}]ms to read ESV into Document", System.currentTimeMillis() - start);
+        LOGGER.info("Took [{}]ms to read ESV into Document", System.currentTimeMillis() - start);
         return esv;
     }
-
 
     private void cleanupTagging(final List<Tagging> rawTagging) throws Exception {
         for (final Tagging t : rawTagging) {
@@ -1005,7 +985,7 @@ public class EsvXmlEnhancer {
         final StringBuilder sb = new StringBuilder(strongs.length() + 16);
 
         for (final String s : splits) {
-            if(sb.length() > 0) {
+            if (sb.length() > 0) {
                 sb.append(' ');
             }
             sb.append(prefixLetter);
@@ -1048,7 +1028,7 @@ public class EsvXmlEnhancer {
 
     private List<Tagging> readTagging() throws IOException {
 
-        LOGGER.debug("Reading in CSV file...");
+        LOGGER.info("Reading in CSV file...");
         List<Tagging> tags = new ArrayList<Tagging>(32000);
         final List<String> lines = FileUtils.readLines(this.tagging);
         for (String line : lines) {
@@ -1060,7 +1040,39 @@ public class EsvXmlEnhancer {
             if (lineParts.length > 3) t.setRawStrongs(lineParts[3]);
             tags.add(t);
         }
-        LOGGER.debug("Finished parsing CSV File...");
+        LOGGER.info("Finished parsing CSV File...");
         return tags;
+    }
+
+    class Remainder {
+        int positionInSourceText = 0;
+        String sourceText;
+        String taggingText;
+
+        int advance = 0;
+
+        /**
+         * @param sourceText
+         * @param taggingText
+         */
+        public Remainder(final String sourceText, final String taggingText, final int positionInSourceText) {
+            this.sourceText = sourceText;
+            this.taggingText = taggingText;
+            this.positionInSourceText = positionInSourceText;
+        }
+
+        /**
+         * @param sourceText
+         * @param taggingText
+         */
+        public Remainder(final String sourceText, final String taggingText) {
+            this.sourceText = sourceText;
+            this.taggingText = taggingText;
+        }
+
+        @Override
+        protected Remainder clone() throws CloneNotSupportedException {
+            return new Remainder(this.sourceText, this.taggingText, this.positionInSourceText);
+        }
     }
 }

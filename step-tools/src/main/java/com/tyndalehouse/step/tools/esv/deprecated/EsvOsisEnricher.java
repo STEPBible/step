@@ -1,8 +1,6 @@
-package com.tyndalehouse.step.tools.esv;
+package com.tyndalehouse.step.tools.esv.deprecated;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -15,7 +13,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.passage.NoSuchKeyException;
@@ -26,13 +23,13 @@ import org.jdom2.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import au.com.bytecode.opencsv.CSVReader;
-
 /**
  * Reads in an xml file and tries to track progress with a tagging sheet, enriching where it can
  *
+ * @deprecated
  * @author chrisburrell
  */
+@Deprecated
 public class EsvOsisEnricher {
     private static Pattern PUNCTUATION = Pattern.compile("[,?!./\\-:;'\"—]+");
     private static final Logger LOGGER = LoggerFactory.getLogger(EsvOsisEnricher.class);

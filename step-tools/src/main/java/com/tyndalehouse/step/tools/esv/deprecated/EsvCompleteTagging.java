@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.tools.esv;
+package com.tyndalehouse.step.tools.esv.deprecated;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +24,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+@Deprecated
 public class EsvCompleteTagging {
     private static final Logger LOGGER = LoggerFactory.getLogger(EsvCompleteTagging.class);
     private Map<Node, List<Node>> nodeChanges = new LinkedHashMap<Node, List<Node>>(72000);
@@ -33,10 +34,10 @@ public class EsvCompleteTagging {
      * @throws Exception
      */
     public static void main(final String[] args) throws Exception {
-        new EsvCompleteTagging().process("d:\\temp\\esv-out.xml");
+        new EsvCompleteTagging().process(args[0], args[1]);
     }
 
-    private void process(final String path) throws Exception {
+    private void process(final String path, final String output) throws Exception {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         final DocumentBuilder newDocumentBuilder = factory.newDocumentBuilder();
 
@@ -56,7 +57,7 @@ public class EsvCompleteTagging {
         final TransformerFactory tfFactory = TransformerFactory.newInstance();
         final Transformer t = tfFactory.newTransformer();
 
-        final OutputStream os = new FileOutputStream(new File("d:\\temp\\esv-v1.xml"));
+        final OutputStream os = new FileOutputStream(new File(output));
         t.transform(new DOMSource(root), new StreamResult(os));
         os.close();
     }

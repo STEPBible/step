@@ -19,12 +19,7 @@ import org.crosswire.jsword.versification.DivisionName;
 import org.crosswire.jsword.versification.Versification;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The getExactTerms method will attempt to parse the key as is, using the key factory. If sucessful,
@@ -55,7 +50,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         final Book master = this.versificationService.getBookFromVersion(masterBook);
         final Versification masterV11n = this.versificationService.getVersificationForVersion(masterBook);
 
-        final String input = context.getInput();
+        final String input = prepInput(context.getInput());
         try {
             Key k = master.getKey(input);
             if (k != null) {
@@ -88,14 +83,45 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
     }
 
     /**
-//     * @param input the input
+     * We adjust the input slightly to make more hits. For example, it is clear that someone typing a '-' at the end may or may not want the whole passage to the end of the chapter
+     * but he certainly doesn't want gen.1.1-. Similarly, with an 'f' at the end, we might as well do the same things
+     *
+     * @param input
+     * @return
+     */
+    String prepInput(String input) {
+        final int inputLength = input.length();
+        if (inputLength > 0) {
+            final char lastChar = input.charAt(inputLength - 1);
+
+            //if the reference finishes with a -, might as well suggest a -ff
+            if (lastChar == '-') {
+                return input.substring(0, inputLength - 1) + "ff";
+            }
+
+            //if the length is longer, then we might finish with for these cases: -f and 1f
+            if (inputLength > 1) {
+                final char secondLastChar = input.charAt((inputLength - 2));
+                if (inputLength > 1 && lastChar == 'f') {
+                    if(Character.isDigit(secondLastChar)) {
+                        return input.substring(0, inputLength - 1) + "ff";
+                    } else if(secondLastChar == '-')
+                    return input.substring(0, inputLength - 2) + "ff";
+                }
+            }
+        }
+        return input;
+    }
+
+    /**
+     * //     * @param input the input
+     *
      * @return the list of matching ranges
      */
 //    private BookName[] getExactRange(final String input) {
 //        final List<BookName> ranges = internationalRangeService.getRanges(input, true);
 //        return ranges.toArray(new BookName[ranges.size()]);
 //    }
-
     @Override
     public BookName[] collectNonExactMatches(final TermsAndMaxCount<BookName> collector,
                                              final SuggestionContext context, final BookName[] alreadyRetrieved,

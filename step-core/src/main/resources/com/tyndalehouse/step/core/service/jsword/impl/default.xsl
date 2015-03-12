@@ -39,6 +39,7 @@
         xmlns:jswordUtils="xalan://com.tyndalehouse.step.core.utils.JSwordUtils"
         xmlns:url="http://whatever/java/java.net.URLEncoder"
         xmlns:stringUtils="xalan://com.tyndalehouse.step.core.utils.StringUtils"
+        xmlns:c="http://www.w3.org/1999/XSL/Transform"
         extension-element-prefixes="jsword interleaving conversion url stringUtils">
 
     <!--  Version 3.0 is necessary to get br to work correctly. -->
@@ -782,7 +783,10 @@
                         <xsl:variable name="variantText">
                             <xsl:value-of select="."/>
                         </xsl:variable>
-                        <sup class="note variant" title="{$variantText}">va</sup>
+                        <xsl:choose>
+                            <xsl:when test="normalize-space($variantText) = '' "><sup class="note variant" title="[{$variantText}]">va</sup></xsl:when>
+                            <xsl:otherwise><sup class="note variant" title="{$variantText}">va</sup></xsl:otherwise>
+                        </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>

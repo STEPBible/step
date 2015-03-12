@@ -1093,7 +1093,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
                 @Override
                 public String unaccent(final String accentedForm) {
-                    return StringConversionUtils.unAccent(accentedForm);
+                    return StringConversionUtils.unAccent(accentedForm).toLowerCase();
                 }
             });
         }

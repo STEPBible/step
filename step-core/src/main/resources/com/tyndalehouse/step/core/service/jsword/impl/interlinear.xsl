@@ -60,6 +60,7 @@
   <xsl:param name="EnglishVocab" select="'false'"/>
   <xsl:param name="Transliteration" select="'false'"/>
   <xsl:param name="GreekVocab" select="'false'"/>
+  <xsl:param name="OriginalTransliteration" select="'false'" />
 
   <!-- Whether to show morphologic forms or not -->
   <xsl:param name="Morph" select="'false'"/>
@@ -370,6 +371,9 @@
 			<xsl:if test="$Transliteration = 'true'">
 				<span class="strongs">Trans.</span>
 			</xsl:if>
+              <xsl:if test="$OriginalTransliteration = 'true'">
+                  <span class="strongs">Orig. Trans.</span>
+              </xsl:if>
 			<xsl:if test="$GreekVocab = 'true'">
 				<span class="strongs">Orig. V.</span>
 			</xsl:if>
@@ -400,6 +404,9 @@
 			<xsl:if test="$Transliteration = 'true'">
 				<span class="text"><span class="smallHeaders strongs">Trans.</span></span>
 			</xsl:if>
+            <xsl:if test="$OriginalTransliteration = 'true'">
+                <span class="text"><span class="smallHeaders strongs">Orig. Trans.</span></span>
+            </xsl:if>
 			<xsl:if test="$GreekVocab = 'true'">
 				<span class="text"><span class="smallHeaders strongs">Orig. V.</span></span>
 			</xsl:if>
@@ -582,13 +589,14 @@
 			<span class="{$classes} {$colorClass}" strong="{$lemma}" morph="{@morph}">
 				<xsl:if test="normalize-space($remainingText) != ''">
 					<!-- 1st - Output first line or a blank if no text available. -->
-					<span class="text">
-					  	<xsl:call-template name="outputNonBlank">
-							<xsl:with-param name="string" select="$remainingText" />
-							<xsl:with-param name="nextText" select="$nextText" />
-						</xsl:call-template>
-					</span>
-		
+					<xsl:variable name="outputText">
+                            <xsl:call-template name="outputNonBlank">
+                                <xsl:with-param name="string" select="$remainingText" />
+                                <xsl:with-param name="nextText" select="$nextText" />
+                            </xsl:call-template>
+                    </xsl:variable>
+                    <span class="text"><xsl:value-of select="$outputText" /></span>
+
 					<!-- 2nd - Output strongs if turned on. If turned on and no Strong then 
 						we need a blank. So always call template if turned on 
 						There are three sets of strong possibilities
@@ -605,7 +613,13 @@
 									select="vocab:getDefaultTransliteration($vocabProvider,  $baseVersion, ./ancestor::*[@osisID]/@osisID, @lemma)" />
 						</span>
 					</xsl:if>
-					<xsl:if test="$GreekVocab = 'true'">
+                    <xsl:if test="$OriginalTransliteration = 'true'">
+                        <span class="strongs stepTransliteration">
+                            <xsl:value-of
+                                    select="vocab:getTransliteration($vocabProvider, string($outputText))" />
+                        </span>
+                    </xsl:if>
+                    <xsl:if test="$GreekVocab = 'true'">
                         <xsl:variable name="ancientClass">
                             <xsl:choose>
                                 <xsl:when test="$isOT = 'true'">hbFont ancientVocab</xsl:when>
@@ -617,7 +631,7 @@
 									select="vocab:getGreekVocab($vocabProvider,  $baseVersion, ./ancestor::*[@osisID]/@osisID , @lemma)" />
 						</span>
 					</xsl:if>
-		
+
 					<!-- 3rd - Output morphology if turned on. If turned on and no morphology, 
 						we need a blank. -->
 					<xsl:if test="$Morph = 'true'">
@@ -1223,6 +1237,13 @@
                     </xsl:call-template>
                 </span>
             </xsl:if>
+            <xsl:if test="$OriginalTransliteration = 'true'">
+                <span class="strongs  stepTransliteration">
+                    <xsl:call-template name="outputNonBlank">
+                        <xsl:with-param name="string" select="''" />
+                    </xsl:call-template>
+                </span>
+            </xsl:if>
             <xsl:if test="$GreekVocab = 'true'">
                 <span class="ancientVocab">
                     <xsl:call-template name="outputNonBlank">
@@ -1451,6 +1472,13 @@
 					</xsl:call-template>
 				</span>
 			</xsl:if>
+            <xsl:if test="$OriginalTransliteration = 'true'">
+                <span class="strongs  stepTransliteration">
+                    <xsl:call-template name="outputNonBlank">
+                        <xsl:with-param name="string" select="''" />
+                    </xsl:call-template>
+                </span>
+            </xsl:if>
 			<xsl:if test="$GreekVocab = 'true'">
 				<span class="ancientVocab">
 					<xsl:call-template name="outputNonBlank">
@@ -1779,7 +1807,10 @@
 					<xsl:if test="$Transliteration = 'true'">
 						<span class="text">&#160;</span>
 					</xsl:if>
-					<xsl:if test="$GreekVocab = 'true'">
+                    <xsl:if test="$OriginalTransliteration = 'true'">
+                        <span class="text">&#160;</span>
+                    </xsl:if>
+                    <xsl:if test="$GreekVocab = 'true'">
 						<span class="text">&#160;</span>
 					</xsl:if>
 		

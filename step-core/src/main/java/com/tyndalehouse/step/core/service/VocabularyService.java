@@ -61,6 +61,8 @@ public interface VocabularyService {
      */
     String getDefaultTransliteration(final String version, String vocabIdentifiers, final String reference);
 
+    String getTransliteration(String originalText);
+
     /**
      * gets the English vocab fields
      * 

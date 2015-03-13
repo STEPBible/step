@@ -34,6 +34,7 @@ var PassageMenuView = Backbone.View.extend({
         ]
         },
         { group: "original_language_options", items: [
+            { initial: "O", key: "display_original_transliteration" },
             { initial: "D", key: "display_divide_hebrew", help: "display_divide_hebrew_help" },
             { initial: "G", key: "display_greek_pointing", help: "display_greek_accents_help" },
             { initial: "U", key: "display_hebrew_vowels", help: "display_hebrew_vowels_help" },

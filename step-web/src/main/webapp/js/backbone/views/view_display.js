@@ -32,6 +32,9 @@ var DisplayView = Backbone.View.extend({
         if (options.indexOf("T") != -1) {
             languages.splice(indexToSplice++, 0, "en");
         }
+        if (options.indexOf("O") != -1) {
+            languages.splice(indexToSplice++, 0, "en");
+        }
         if (options.indexOf("A") != -1) {
             //we assume english, because we assume the server side has already rendered this class
             languages.splice(indexToSplice++, 0, "en");

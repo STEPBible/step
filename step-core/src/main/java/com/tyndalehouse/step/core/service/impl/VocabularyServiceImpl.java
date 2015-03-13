@@ -42,6 +42,7 @@ import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 import com.tyndalehouse.step.core.utils.SortingUtils;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.codehaus.jackson.map.util.LRUMap;
 import org.slf4j.Logger;
@@ -262,6 +263,11 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
+    public String getTransliteration(final String originalText) {
+        return StringConversionUtils.transliterate(originalText);
+    }
+
+    @Override
     public String getEnglishVocab(final String version, final String reference, final String vocabIdentifiers) {
         return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.englishVocabProvider);
     }
@@ -272,7 +278,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public String getDefaultTransliteration(final String version, final String vocabIdentifiers, final String reference) {
+    public String getDefaultTransliteration(final String version, final String reference, final String vocabIdentifiers) {
         return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.transliterationProvider);
     }
 

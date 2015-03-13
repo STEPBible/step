@@ -128,6 +128,10 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             options.add(LookupOption.HEBREW_ACCENTS);
             options.add(LookupOption.HEBREW_VOWELS);
         }
+
+        if(hasGreekVersion || hasHebrewVersion) {
+            options.add(LookupOption.TRANSLITERATE_ORIGINAL);
+        }
     }
 
     /**

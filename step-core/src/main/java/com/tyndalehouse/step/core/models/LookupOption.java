@@ -110,6 +110,10 @@ public enum LookupOption {
      * Adds Hebrew vowels from the underlying source text
      */
     HEBREW_VOWELS('U', "HebrewVowels", XslConversionType.DEFAULT),
+    /**
+     * Transliteration of the original master version text
+     */
+    TRANSLITERATE_ORIGINAL('O', "OriginalTransliteration", XslConversionType.INTERLINEAR),
 
     /**
      * Morphology

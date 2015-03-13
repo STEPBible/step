@@ -1371,6 +1371,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     case ENGLISH_VOCAB:
                     case TRANSLITERATION:
                     case GREEK_VOCAB:
+                    case TRANSLITERATE_ORIGINAL:
                         tsep.setParameter("vocabProvider", this.vocabProvider);
                         break;
                     case COLOUR_CODE:

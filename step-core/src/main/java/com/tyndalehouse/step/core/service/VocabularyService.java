@@ -61,6 +61,11 @@ public interface VocabularyService {
      */
     String getDefaultTransliteration(final String version, String vocabIdentifiers, final String reference);
 
+    /**
+     * For a given version, we transliterate the top line
+     * @param originalText the original text
+     * @return the transliterated text
+     */
     String getTransliteration(String originalText);
 
     /**

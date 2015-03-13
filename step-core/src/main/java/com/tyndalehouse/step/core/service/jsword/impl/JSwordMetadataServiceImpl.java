@@ -83,10 +83,17 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         addNotesOptions(book, options);
         addHebrewOptions(book, options);
         addAncientOptions(version, extraVersions, options);
+        addMasterAncientOptions(book, options);
         addAllMatchingLookupOptions(book, options);
         addHiddenOptions(options);
 
         return options;
+    }
+
+    private void addMasterAncientOptions(final Book currentVersion, final Set<LookupOption> options) {
+        if (JSwordUtils.isAncientGreekBook(currentVersion) || JSwordUtils.isAncientHebrewBook(currentVersion)) {
+            options.add(LookupOption.TRANSLITERATE_ORIGINAL);
+        }
     }
 
     private void addHiddenOptions(final Set<LookupOption> options) {
@@ -127,10 +134,6 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         if (hasHebrewVersion) {
             options.add(LookupOption.HEBREW_ACCENTS);
             options.add(LookupOption.HEBREW_VOWELS);
-        }
-
-        if(hasGreekVersion || hasHebrewVersion) {
-            options.add(LookupOption.TRANSLITERATE_ORIGINAL);
         }
     }
 

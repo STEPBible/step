@@ -33,6 +33,8 @@
 
 	<properties>
 		<skipTomcat>true</skipTomcat>
+        <!-- Empty by default -->
+        <personal.suffix></personal.suffix>
 	</properties>
 
 	<dependencies>
@@ -391,7 +393,7 @@
 							<artifactId>step-web</artifactId>
 							<type>war</type>
 							<properties>
-								<context>step-web</context>
+								<context>step-web${personal.suffix}</context>
 							</properties>
 						</deployable>
 					</deployables>

@@ -3340,6 +3340,12 @@
 @AugmentedStrong=	H8321b
 @References=	Gen.49.11 
 ===============================
+@AugmentedStrong=	H8323a
+@References=	Num.16.13 Judg 9.22 Esth.1.22 Prov.8.16 Isa.32.1 Hos.8.4 
+===============================
+@AugmentedStrong=	H8323b
+@References=	Jer.15.11 
+===============================
 @AugmentedStrong=	H8336a
 @References=	Esth.1.6 Song.5.15 
 ===============================

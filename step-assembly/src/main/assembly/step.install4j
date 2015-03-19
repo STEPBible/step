@@ -538,7 +538,7 @@
       <excludedComponents />
       <includedDownloadableComponents />
     </macos>
-    <unixInstaller name="Unix Installer" id="404" customizedId="" mediaFileName="" installDir="STEP" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
+    <unixArchive name="Unix Archive" id="408" customizedId="" mediaFileName="" installDir="STEP" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="" manualJREEntry="false">
       <excludedLaunchers />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
@@ -548,12 +548,7 @@
         <commentFiles />
         <customAttributes />
       </autoUpdate>
-      <excludedComponents />
-      <includedDownloadableComponents />
-      <installerScript mode="1" file="">
-        <content />
-      </installerScript>
-    </unixInstaller>
+    </unixArchive>
     <linuxRPM name="Linux RPM" id="405" customizedId="" mediaFileName="" installDir="/opt/step" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="" manualJREEntry="false" os="linux" arch="i386">
       <excludedLaunchers />
       <excludedBeans />
@@ -601,8 +596,8 @@
       </postUninstallScript>
     </linuxDeb>
   </mediaSets>
-  <buildIds buildAll="true">
-    <mediaSet refId="25" />
+  <buildIds buildAll="false">
+    <mediaSet refId="408" />
   </buildIds>
   <buildOptions verbose="false" faster="false" disableSigning="false" debug="false" />
 </install4j>

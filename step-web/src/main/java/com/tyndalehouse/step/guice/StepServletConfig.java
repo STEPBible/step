@@ -49,8 +49,6 @@ import com.tyndalehouse.step.rest.controllers.SearchPageController;
 import com.tyndalehouse.step.rest.controllers.SetupPageController;
 import com.tyndalehouse.step.rest.controllers.SiteMapController;
 import com.tyndalehouse.step.rest.framework.FrontController;
-import com.yammer.metrics.guice.InstrumentationModule;
-import com.yammer.metrics.reporting.AdminServlet;
 import org.crosswire.common.util.CWProject;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
@@ -71,8 +69,7 @@ import javax.servlet.ServletContextEvent;
 import java.util.Locale;
 
 /**
- * Configures the listener for the web app to return the injector used to configure the whole of the
- * application.
+ * Configures the listener for the web app to return the injector used to configure the whole of the application.
  *
  * @author chrisburrell
  */
@@ -82,7 +79,6 @@ public class StepServletConfig extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        CWProject.instance().setFrontendName("step");
         if (injector == null) {
             synchronized (this) {
                 ServletModule servletModule = new ServletModule() {
@@ -97,9 +93,9 @@ public class StepServletConfig extends GuiceServletContextListener {
                         serve("/").with(SearchPageController.class);
                         serve("/international/interactive.js").with(InternationalJsonController.class);
                         serve("/config.jsp").with(SetupPageController.class);
-                        if (Boolean.getBoolean("metrics.enabled")) {
-                            serve("/metrics/*").with(AdminServlet.class);
-                        }
+//                        if (Boolean.getBoolean("metrics.enabled")) {
+//                            serve("/metrics/*").with(AdminServlet.class);
+//                        }
                         serve("/sitemap*").with(SiteMapController.class);
                         serve("/SITEMAP*").with(SiteMapController.class);
                         // filters
@@ -109,13 +105,13 @@ public class StepServletConfig extends GuiceServletContextListener {
                     }
                 };
 
-                if (Boolean.getBoolean("metrics.enabled")) {
-                    this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
-                            new InstrumentationModule(), servletModule);
-                } else {
-                    this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
-                            servletModule);
-                }
+//                if (Boolean.getBoolean("metrics.enabled")) {
+//                    this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
+//                            new InstrumentationModule(), servletModule);
+//                } else {
+                this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
+                        servletModule);
+//                }
             }
         }
         return this.injector;
@@ -165,6 +161,9 @@ public class StepServletConfig extends GuiceServletContextListener {
      */
     private void configureJSword() {
         // set the type of book name
+        OpenFileStateManager.init(60, 60);
+        CWProject.instance().setFrontendName("step");
+
         BookName.setFullBookName(false);
         final Provider<ClientSession> provider = this.injector.getProvider(ClientSession.class);
         ConfigEntry.setConfigValueInterceptor(this.injector.getInstance(ConfigValueInterceptor.class));
@@ -181,8 +180,8 @@ public class StepServletConfig extends GuiceServletContextListener {
                 }
             }
         });
-        
-        if(Boolean.TRUE.equals(Boolean.getBoolean("step.development"))) {
+
+        if (Boolean.TRUE.equals(Boolean.getBoolean("step.development"))) {
             TransformingSAXEventProvider.setDevelopmentMode(true);
         }
     }
@@ -196,7 +195,7 @@ public class StepServletConfig extends GuiceServletContextListener {
     public void contextDestroyed(final ServletContextEvent servletContextEvent) {
         final ServletContext sc = servletContextEvent.getServletContext();
         // close some JSword things
-        OpenFileStateManager.shutDown();
+        OpenFileStateManager.instance().shutDown();
         IndexManagerFactory.getIndexManager().closeAllIndexes();
 
         sc.removeAttribute(Injector.class.getName());

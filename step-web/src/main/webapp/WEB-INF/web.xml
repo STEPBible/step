@@ -37,9 +37,9 @@
 		<listener-class>com.tyndalehouse.step.guice.StepServletConfig</listener-class>
 	</listener>
 
-	<listener>
-		<listener-class>com.yammer.metrics.reporting.MetricsServletContextListener</listener-class>
-	</listener>
+	<!--<listener>-->
+		<!--<listener-class>com.yammer.metrics.reporting.MetricsServletContextListener</listener-class>-->
+	<!--</listener>-->
 
 
 	<welcome-file-list>

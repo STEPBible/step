@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -40,17 +40,15 @@ import com.tyndalehouse.step.models.TimelineTranslator;
 import com.tyndalehouse.step.models.UiDefaults;
 import com.tyndalehouse.step.models.timeline.simile.SimileTimelineTranslatorImpl;
 import com.tyndalehouse.step.rest.framework.ObjectMapperProvider;
-import com.yammer.metrics.reporting.AdminServlet;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.inject.Singleton;
 
 /**
- * This module serves to inject data that is specific to the servlet layer. The purpose of it is therefore to
- * abstract away the identity of it being a java web servlet serving the page.
- * 
+ * This module serves to inject data that is specific to the servlet layer. The purpose of it is therefore to abstract
+ * away the identity of it being a java web servlet serving the page.
+ *
  * @author chrisburrell
- * 
  */
 public class StepWebModule extends AbstractStepGuiceModule {
     private static final String GUICE_PROPERTIES = "/step.web.properties";
@@ -69,6 +67,6 @@ public class StepWebModule extends AbstractStepGuiceModule {
         bind(ClientSession.class).toProvider(ClientSessionProvider.class).in(ServletScopes.REQUEST);
         bind(UiDefaults.class).asEagerSingleton();
         bind(TimelineTranslator.class).to(SimileTimelineTranslatorImpl.class);
-        bind(AdminServlet.class).in(Singleton.class);
+//        bind(AdminServlet.class).in(Singleton.class);
     }
 }

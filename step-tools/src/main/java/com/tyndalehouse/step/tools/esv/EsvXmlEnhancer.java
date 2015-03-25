@@ -39,20 +39,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.OSISUtil;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.NoSuchVerseException;
-import org.crosswire.jsword.passage.Passage;
-import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.Testament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -64,18 +55,12 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.*;
 import static org.apache.commons.lang3.StringUtils.join;
 
 /**
@@ -84,7 +69,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 @SuppressWarnings("all")
 public class EsvXmlEnhancer {
     private static final Logger LOGGER = LoggerFactory.getLogger(EsvXmlEnhancer.class);
-    private static final Pattern REF_CLEAN = Pattern.compile("[¬|¦#$]+");
+    private static final Pattern REF_CLEAN = Pattern.compile("[^a-zA-Z0-9: ]+");
     private static final Pattern PUNCTUATION = Pattern.compile("[—,.;*:'\\[\\]!\"`?’‘()-]+");
     private static final Pattern STRONGS_SPLITTING = Pattern.compile("<(\\d+)[a-z]?>");
     private static final Book ESV = Books.installed().getBook("ESV");
@@ -95,6 +80,7 @@ public class EsvXmlEnhancer {
     private boolean error = false;
     private File outputPath;
     private String lastBook = "";
+    private int runCode;
 
     /**
      * Instantiates a new esv xml enhancer.
@@ -122,12 +108,14 @@ public class EsvXmlEnhancer {
             new File(outputPath.getParent()).mkdirs();
         }
 
-        new EsvXmlEnhancer(tagging, esvText, outputPath).go();
+        int ret = new EsvXmlEnhancer(tagging, esvText, outputPath).go();
+        System.exit(ret);
     }
 
-    private void go() throws Exception {
+    private int go() throws Exception {
         applyToText(parseTagging());
         LOGGER.info("Done!");
+        return this.runCode;
     }
 
     private MultiMap<String, Tagging, Deque<Tagging>> parseTagging() throws Exception {
@@ -149,6 +137,7 @@ public class EsvXmlEnhancer {
             traverse(esv.getDocumentElement(), indexTagging);
         } catch (final AbortTagException abort) {
             LOGGER.warn("Aborted...");
+            this.runCode = -1;
         }
 
         // save document
@@ -252,6 +241,7 @@ public class EsvXmlEnhancer {
             if (isNotBlank(wordsFromESV)) {
                 LOGGER.warn("{}: No tagging for [{}]", this.currentVerse, wordsFromESV);
                 this.error = true;
+                this.runCode = -1;
                 throw new AbortTagException();
             }
             return 0;
@@ -280,6 +270,7 @@ public class EsvXmlEnhancer {
                 if (firstTag == null) {
                     LOGGER.warn("{}: Arrived at end of tagging data. Remainder of ESV text is: [{}]",
                             this.currentVerse, remainderAfterProcessingTag.sourceText);
+                    this.runCode = -1;
                     return remainderAfterProcessingTag.advance;
                 }
 
@@ -293,6 +284,7 @@ public class EsvXmlEnhancer {
                         this.currentVerse, remainderAfterProcessingTag.sourceText,
                         remainderAfterProcessingTag.taggingText);
                 this.error = true;
+                this.runCode = -1;
                 // abort the tag processing
                 throw new AbortTagException();
             }
@@ -398,6 +390,7 @@ public class EsvXmlEnhancer {
         if (tagData.getNonTaggedText().length() > 0) {
             LOGGER.error("{}:Tagging with still unmunched non-tagged data: [{}]", this.currentVerse,
                     tagData.getNonTaggedText());
+            this.runCode = -1;
             throw new AbortTagException();
         }
 
@@ -413,6 +406,7 @@ public class EsvXmlEnhancer {
                         item.getTextContent(), remainder.positionInSourceText - 1);
                 if (position == -1) {
                     LOGGER.error("Couldn't find a matched word to tag.");
+                    this.runCode = -1;
                     throw new AbortTagException();
                 }
                 finalPosition = position + 1;
@@ -451,6 +445,7 @@ public class EsvXmlEnhancer {
                 // we're looking for text content
                 // TODO remove after testing
                 // this.error = true;
+//                this.runCode = -1;
                 // throw new AbortTagException();
 
             }
@@ -464,6 +459,7 @@ public class EsvXmlEnhancer {
         } else {
             LOGGER.warn("{}: Tagging data has been split: [{}], original was [{}]", this.currentVerse,
                     tagData.getTaggedText(), tagData.getOriginalTaggedText());
+            this.runCode = -1;
         }
     }
 
@@ -524,6 +520,7 @@ public class EsvXmlEnhancer {
                 LOGGER.error("{}: Somehow we were unable to match the given texts [{}] and [{}]",
                         this.currentVerse, textContent, taggedText);
                 this.error = true;
+                this.runCode = -1;
                 throw new AbortTagException();
             }
         }
@@ -552,6 +549,7 @@ public class EsvXmlEnhancer {
                 LOGGER.error("[{}] We've gone too far - something didn't match [{}]", this.currentVerse,
                         tagData.getTaggedText());
                 this.error = true;
+                this.runCode = -1;
                 throw new AbortTagException();
             }
 
@@ -560,6 +558,7 @@ public class EsvXmlEnhancer {
             LOGGER.warn("{}: Need to traverse children - scenario not yet catered for. Data was [{}]",
                     tagData.getTaggedText());
             this.error = true;
+            this.runCode = -1;
             throw new AbortTagException();
         } else if (nextSibling instanceof Text) {
             // we've got some text, so we may want to split it
@@ -583,6 +582,7 @@ public class EsvXmlEnhancer {
                                             + ", which is if the child is the only element different parent, then we can roll up. Portion of text was [{}]",
                                     this.currentVerse, tagData.getTaggedText()
                             );
+                            this.runCode = -1;
                             this.error = true;
                             throw new AbortTagException();
                         }
@@ -607,6 +607,7 @@ public class EsvXmlEnhancer {
             this.error = true;
             LOGGER.error("{}: Attemping to match [{}] but unknown node type found: [{}]", this.currentVerse,
                     nextSibling.getNodeType());
+            this.runCode = -1;
             throw new AbortTagException();
         }
 
@@ -638,6 +639,7 @@ public class EsvXmlEnhancer {
         // LOGGER.warn("{}: Impossible tag: Not enough nodes in match for [{}]. Impossible portion is [{}]",
         // this.currentVerse, tagData.getTaggedText(), remainingText);
         // this.error = true;
+//        this.runCode = -1;
         // throw new AbortTagException();
         // }
 
@@ -657,6 +659,7 @@ public class EsvXmlEnhancer {
                             "{}: Impossible tag. Not all nodes from parent are present. Tag data [{}]. Impossible portion is [{}]",
                             this.currentVerse, tagData.getTaggedText(), remainingText);
                     this.error = true;
+                    this.runCode = -1;
                     throw new AbortTagException();
                 }
             }
@@ -728,6 +731,7 @@ public class EsvXmlEnhancer {
                     LOGGER.warn("{}: Failed to match [{}] against [{}] in cross-tag", this.currentVerse,
                             nextSibling, textLeftOver);
                     this.error = true;
+                    this.runCode = -1;
                     throw new AbortTagException();
                 }
             } // else move on to next character
@@ -753,6 +757,7 @@ public class EsvXmlEnhancer {
         if (!equalsIngorePunctuationAndCase(tagData.getTaggedText(), wordInDoc.getTextContent())) {
             LOGGER.warn("{}: The text node content [{}] differs from the tagged data [{}]",
                     this.currentVerse, wordInDoc.getTextContent(), tagData.getTaggedText());
+            this.runCode = -1;
         }
 
         final Element w = createWElement(tagData, wordInDoc.getOwnerDocument());
@@ -948,6 +953,7 @@ public class EsvXmlEnhancer {
         final String reference = REF_CLEAN.matcher(t.getRef()).replaceAll("").trim();
         if (isBlank(reference)) {
             LOGGER.warn("Unable to parse reference [{}]", t.getRef());
+            this.runCode = -1;
             return;
         }
 
@@ -974,6 +980,7 @@ public class EsvXmlEnhancer {
                 prefixStrong(t, 'G');
             } else {
                 LOGGER.warn("Unable to recognise [{}] as a reference", reference);
+                this.runCode = -1;
             }
         }
 

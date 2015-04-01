@@ -6,6 +6,8 @@
                 xmlns:c="http://www.w3.org/1999/XSL/Transform"
                 extension-element-prefixes="s"
         >
+    <xsl:param name="versification" />
+    <xsl:param name="identifier" />
 
     <!--xsi:schemaLocation="-->
     <!--http://www.Biblica.com/namespace/version_1.0 Biblica.xsd-->
@@ -14,17 +16,17 @@
     <xsl:output method="xml" indent="no"/>
     <xsl:template match="usx">
         <osisText osisIDWork="NIV" osisRefWork="defaultReferenceScheme" xml:lang="en">
-            <!--<header>-->
-                <!--<work osisWork="NIV">-->
-                    <!--<title>New International Version</title>-->
-                    <!--<identifier type="OSIS">Bible.NIV</identifier>-->
+            <header>
+                <work osisWork="NIV">
+                    <title><xsl:value-of select="./div[type='book']" /></title>
+                    <identifier type="OSIS">Bible.<xsl:value-of select="$identifier" /></identifier>
+                    <refSystem>Bible.<xsl:value-of select="$versification" /></refSystem>
                     <!--<scope>Gen-Rev</scope>-->
-                    <!--<refSystem>Bible.KJV</refSystem>-->
-                <!--</work>-->
-                <!--<work osisWork="defaultReferenceScheme">-->
-                    <!--<refSystem>Bible.KJV</refSystem>-->
-                <!--</work>-->
-            <!--</header>-->
+                </work>
+                <work osisWork="defaultReferenceScheme">
+                    <refSystem>Bible.<xsl:value-of select="$versification" /></refSystem>
+                </work>
+            </header>
             <xsl:apply-templates/>
         </osisText>
     </xsl:template>
@@ -156,22 +158,58 @@
         <xsl:apply-templates />
     </xsl:template>
 
-    <xsl:template match="para">
+    <xsl:template match="para[@style='p']">
         <!-- close an opening verse if it's immediately followed by a verse marker -->
-        <!--aaa<xsl:value-of select=""/>bbb-->
-
-
-
         <!-- Need extra condition here to cater for verses immediately going after -->
         <!--Similarly for empty nodes-->
-        <xsl:if test="s:isInVerse() and ./child::node()[1]/self::text() and name(./child::node()[2])">
-            <xsl:call-template name="closeUSXVerse" />
-        </xsl:if>
+        <!--<xsl:if test="s:isInVerse() and ( name(./child::node()[2]) = 'verse')">-->
+            <!---->
+        <!--</xsl:if>-->
 
         <p>
             <xsl:apply-templates />
+
+            <!-- before we close the paragraph, if we find that the next element is a paragraph, and that its
+            first child is a verse, then we want to close the verse early -->
+            <xsl:if test="s:isInVerse() ">
+
+                <xsl:if test="name(./following-sibling::node()[1]) = 'para'">
+                    <xsl:if test="./following-sibling::node()[1]/child::node()[1] = 'verse' or (normalize-space(./following-sibling::node()[1]/child::node()[1]/text()) = ''  and name(./following-sibling::node()[1]/child::node()[1]) = 'para')">
+                        <xsl:call-template name="closeUSXVerse" />
+                    </xsl:if>
+                </xsl:if>
+                <xsl:if test="normalize-space(./following-sibling::node()[1]/text()) = ''  and name(./following-sibling::node()[2]) = 'para'">
+                    <xsl:if test="./following-sibling::node()[2]/child::node()[1] = 'verse' or (normalize-space(./following-sibling::node()[2]/child::node()[1]/text()) = ''  and name(./following-sibling::node()[1]/child::node()[1]) = 'para')">
+                        <xsl:call-template name="closeUSXVerse" />
+                    </xsl:if>
+                </xsl:if>
+            </xsl:if>
+                <!--a<xsl:value-of select="name(./following-sibling::node()[2]) = 'para'" />-->
+                <!--b<xsl:value-of select="name(./child::node()[2]) = 'para'" />-->
+                <!--c<xsl:value-of select="" />-->
+                <!--d<xsl:value-of select="" />-->
+
+            <!--</xsl:if>-->
         </p>
     </xsl:template>
+
+    <xsl:template match="para[@style='ide']"><!-- All paragraphs do nothing --></xsl:template>
+    <xsl:template match="para[@style='rem']"><!-- All paragraphs do nothing --></xsl:template>
+    <xsl:template match="para[@style='toc1']"><!-- All paragraphs do nothing --></xsl:template>
+    <xsl:template match="para[@style='toc2']"><!-- All paragraphs do nothing --></xsl:template>
+    <xsl:template match="para[@style='toc3']"><!-- All paragraphs do nothing --></xsl:template>
+    <xsl:template match="para[@style='h']"><!-- All paragraphs do nothing --></xsl:template>
+
+    <xsl:template match="para[@style='mt1']">
+        <title><xsl:apply-templates/></title>
+    </xsl:template>
+
+
+    <!-- notes and references -->
+    <xsl:template match="note[@style='x']">
+        <note type="crossReference" n="{@caller}"><xsl:apply-templates/></note>
+    </xsl:template>
+
 
     <!--<xsl:template match="chapterEnd" mode="stepSilent">-->
         <!--&lt;!&ndash; do nothing but mark the end of the chapter &ndash;&gt;-->

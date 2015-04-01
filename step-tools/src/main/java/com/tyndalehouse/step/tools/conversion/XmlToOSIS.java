@@ -37,11 +37,14 @@ public class XmlToOSIS {
     private String conversionType;
     private String encryptKeyForNIV;
     private String stepObfuscationKey;
+    private final String moduleName;
+    private final String versification;
 
     public XmlToOSIS(final String otPath, final String ntPath, final String outputPath,
                      final String pathToOsis2Mod,
                      final String conversionType,
-                     final String encryptKeyForNIV, final String stepObfuscationKey) {
+                     final String encryptKeyForNIV, final String stepObfuscationKey,
+                     final String moduleName, final String versification) {
         this.otPath = otPath;
         this.ntPath = ntPath;
         this.outputPath = outputPath;
@@ -49,6 +52,8 @@ public class XmlToOSIS {
         this.conversionType = conversionType;
         this.encryptKeyForNIV = encryptKeyForNIV;
         this.stepObfuscationKey = stepObfuscationKey;
+        this.moduleName = moduleName;
+        this.versification = versification;
     }
 
     private void parse() throws Exception {
@@ -117,6 +122,8 @@ public class XmlToOSIS {
         Transformer transformer = tFactory.newTransformer(
                 new StreamSource(getClass().getResourceAsStream(String.format("/transform-%s.xsl", this.conversionType))));
         final DOMResult outputTarget = new DOMResult();
+        transformer.setParameter("identifier", this.moduleName);
+        transformer.setParameter("versification", this.versification);
         transformer.transform(new DOMSource(input), outputTarget);
 
 
@@ -249,24 +256,28 @@ public class XmlToOSIS {
     public static void main(String[] args) throws Exception {
         String otPath = "C:\\temp\\usx";
         String ntPath = null;
-        String outputPath = "C:\\Users\\Chris\\AppData\\Roaming\\Sword\\modules\\texts\\ztext\\rom";
-        String osis2mod = "C:\\dev\\personal\\sword-utilities-1.7.0-1\\osis2mod";
+        String outputPath = "C:\\temp\\rom";
+//        String osis2mod = "C:\\dev\\personal\\sword-utilities-1.7.0-1\\osis2mod";
         String type = "usx";
         String key = "aaaaaaaa";
         String obfuscation = "bbbbbbbb";
+        String moduleName = "NIV";
+        String versification = "KJV";
 
         if (args.length == 6) {
             otPath = args[0];
             ntPath = args[1];
             outputPath = args[2];
-            osis2mod = args[3];
+//            osis2mod = args[3];
             type = args[4];
             key = args[5];
             obfuscation = args[6];
+            moduleName = args[7];
+            versification = args[8];
         } else {
             System.out.println("!!!!!! Ignoring parameters on command line !!!!!!");
         }
 
-        new XmlToOSIS(otPath, ntPath, outputPath, osis2mod, type, key, obfuscation).parse();
+        new XmlToOSIS(otPath, ntPath, outputPath, null, type, key, obfuscation, moduleName, versification).parse();
     }
 }

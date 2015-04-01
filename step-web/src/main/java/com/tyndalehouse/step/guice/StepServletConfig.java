@@ -161,7 +161,7 @@ public class StepServletConfig extends GuiceServletContextListener {
      */
     private void configureJSword() {
         // set the type of book name
-        OpenFileStateManager.init(60, 60);
+        OpenFileStateManager.init(600, 600);
         CWProject.instance().setFrontendName("step");
 
         BookName.setFullBookName(false);

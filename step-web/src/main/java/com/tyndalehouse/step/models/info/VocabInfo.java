@@ -102,8 +102,31 @@ public class VocabInfo implements Serializable {
                 this.relatedNos = relatedVocabs.get(this.strongNumber);
             }
         } else {
-            this.rawRelatedNumbers = d.get("relatedNumbers");
+            this.rawRelatedNumbers = stripExtensions(d.get("relatedNumbers"));
         }
+    }
+
+    /**
+     * Typically, the strong numbers in the lexicon might finish with H0001a. In this method,
+     * we remove the extensions to the strong numbers
+     * @param relatedNumbers the separated list of strong numbers.
+     * @return
+     */
+    private String stripExtensions(final String relatedNumbers) {
+        StringBuilder sb = new StringBuilder();
+        for(int ii = 0; ii < relatedNumbers.length(); ii++) {
+            char c = relatedNumbers.charAt(ii);
+            //if the character is alphabetic and finishes a word, then we ignore it.
+            boolean isExtension = Character.isAlphabetic(c) && (
+                    ii+1 >= relatedNumbers.length() ||
+                    relatedNumbers.charAt(ii+1) == ',' ||
+                    relatedNumbers.charAt(ii+1) == ' ');
+
+            if(!isExtension) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
     /**

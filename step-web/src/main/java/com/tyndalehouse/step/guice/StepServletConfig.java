@@ -124,8 +124,13 @@ public class StepServletConfig extends GuiceServletContextListener {
      */
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
+        // set the type of book name
+        OpenFileStateManager.init(60, 60);
+        CWProject.instance().setFrontendName("step");
+
         // No call to super as it also calls getInjector()
         final ServletContext sc = servletContextEvent.getServletContext();
+
         sc.setAttribute(Injector.class.getName(), getInjector());
 
         configureJSword();
@@ -160,10 +165,6 @@ public class StepServletConfig extends GuiceServletContextListener {
      * Configure JSword.
      */
     private void configureJSword() {
-        // set the type of book name
-        OpenFileStateManager.init(60, 60);
-        CWProject.instance().setFrontendName("step");
-
         BookName.setFullBookName(false);
         final Provider<ClientSession> provider = this.injector.getProvider(ClientSession.class);
         ConfigEntry.setConfigValueInterceptor(this.injector.getInstance(ConfigValueInterceptor.class));

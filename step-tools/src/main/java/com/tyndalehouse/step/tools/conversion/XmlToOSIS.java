@@ -2,7 +2,6 @@ package com.tyndalehouse.step.tools.conversion;
 
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
-import org.jasypt.util.text.BasicTextEncryptor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -21,7 +20,10 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 /**
@@ -33,25 +35,17 @@ public class XmlToOSIS {
     private final String otPath;
     private final String ntPath;
     private final String outputPath;
-    private String pathToOsis2Mod;
     private String conversionType;
-    private String encryptKeyForNIV;
-    private String stepObfuscationKey;
     private final String moduleName;
     private final String versification;
 
     public XmlToOSIS(final String otPath, final String ntPath, final String outputPath,
-                     final String pathToOsis2Mod,
                      final String conversionType,
-                     final String encryptKeyForNIV, final String stepObfuscationKey,
                      final String moduleName, final String versification) {
         this.otPath = otPath;
         this.ntPath = ntPath;
         this.outputPath = outputPath;
-        this.pathToOsis2Mod = pathToOsis2Mod;
         this.conversionType = conversionType;
-        this.encryptKeyForNIV = encryptKeyForNIV;
-        this.stepObfuscationKey = stepObfuscationKey;
         this.moduleName = moduleName;
         this.versification = versification;
     }
@@ -65,7 +59,7 @@ public class XmlToOSIS {
         //now need to read in all files
         File[] files = fileList.toArray(new File[0]);
 //        File f = File.createTempFile("cjb-", "xml");
-        File f = new File("c:\\temp\\usx.xml");
+        File f = new File(outputPath);
 
         System.out.println("Merging...");
         timeNow = System.currentTimeMillis();
@@ -83,8 +77,6 @@ public class XmlToOSIS {
         timeNow = System.currentTimeMillis();
         System.out.println(String.format("Moving nodes..."));
         timeNow = System.currentTimeMillis();
-        System.out.println(String.format("Converting..."));
-//        convertToSwordModule(f);
         System.out.println(String.format("Converted... [%dms]", System.currentTimeMillis() - timeNow));
     }
 
@@ -96,25 +88,6 @@ public class XmlToOSIS {
                 return "/usx";
         }
         throw new ConversionException("Unable to identify type of conversion required");
-    }
-
-    private void convertToSwordModule(final File f) throws IOException, InterruptedException {
-        System.out.println("Converting to sword module...");
-
-        BasicTextEncryptor bte = new BasicTextEncryptor();
-        bte.setPassword(this.stepObfuscationKey);
-        System.out.println("Key for conf file: " + bte.encrypt(this.encryptKeyForNIV));
-
-        Process p = Runtime.getRuntime().exec(String.format("%s %s %s -z -c %s", this.pathToOsis2Mod, this.outputPath, f.getAbsolutePath(), encryptKeyForNIV));
-        String line;
-        BufferedReader inputReader =
-                new BufferedReader
-                        (new InputStreamReader(p.getInputStream()));
-        while ((line = inputReader.readLine()) != null) {
-            System.out.println(line);
-        }
-        p.waitFor();
-        inputReader.close();
     }
 
     private void applyXslt(final Document input, File output) throws Exception {
@@ -256,28 +229,31 @@ public class XmlToOSIS {
     public static void main(String[] args) throws Exception {
         String otPath = "C:\\temp\\usx";
         String ntPath = null;
-        String outputPath = "C:\\temp\\rom";
-//        String osis2mod = "C:\\dev\\personal\\sword-utilities-1.7.0-1\\osis2mod";
+        String outputPath = "C:\\temp\\rom.xml";
         String type = "usx";
-        String key = "aaaaaaaa";
-        String obfuscation = "bbbbbbbb";
         String moduleName = "NIV";
         String versification = "KJV";
+        int retCode = 0;
 
         if (args.length == 6) {
             otPath = args[0];
             ntPath = args[1];
             outputPath = args[2];
-//            osis2mod = args[3];
-            type = args[4];
-            key = args[5];
-            obfuscation = args[6];
-            moduleName = args[7];
-            versification = args[8];
+            type = args[3];
+            moduleName = args[4];
+            versification = args[5];
         } else {
             System.out.println("!!!!!! Ignoring parameters on command line !!!!!!");
+            retCode = -1;
         }
 
-        new XmlToOSIS(otPath, ntPath, outputPath, null, type, key, obfuscation, moduleName, versification).parse();
+        try {
+            new XmlToOSIS(otPath, ntPath, outputPath, type, moduleName, versification).parse();
+        } catch(Exception ex) {
+            retCode = -1;
+            System.exit(retCode);
+            throw ex;
+        }
+        System.exit(retCode);
     }
 }

@@ -99,4 +99,9 @@ public class EsvXmlEnhancerTest {
                 "you, that you have brought, on me and my kingdom a great sin as she tells you for",
                 "you that you have brought"));
     }
+
+    @Test
+    public void testPattern() {
+        assertEquals(" so for the", EsvXmlEnhancer.PUNCTUATION.matcher("— so for the").replaceAll(""));
+    }
 }

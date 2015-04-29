@@ -70,7 +70,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 public class EsvXmlEnhancer {
     private static final Logger LOGGER = LoggerFactory.getLogger(EsvXmlEnhancer.class);
     private static final Pattern REF_CLEAN = Pattern.compile("[^a-zA-Z0-9: ]+");
-    private static final Pattern PUNCTUATION = Pattern.compile("[—,.;*:'\\[\\]!\"`?’‘()-]+");
+    static final Pattern PUNCTUATION = Pattern.compile("[\\-—,.;*:'\\[\\]!\"`?’‘()-]+");
     private static final Pattern STRONGS_SPLITTING = Pattern.compile("<(\\d+)[a-z]?>");
     private static final Book ESV = Books.installed().getBook("ESV");
     private final File tagging;
@@ -556,6 +556,7 @@ public class EsvXmlEnhancer {
             // traverse children nodes...
             // TODO
             LOGGER.warn("{}: Need to traverse children - scenario not yet catered for. Data was [{}]",
+                    this.currentVerse,
                     tagData.getTaggedText());
             this.error = true;
             this.runCode = -1;

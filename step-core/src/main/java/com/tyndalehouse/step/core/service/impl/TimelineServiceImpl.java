@@ -157,7 +157,7 @@ public class TimelineServiceImpl implements TimelineService {
     @Override
     public EntityDoc[] lookupEventsMatchingReference(final String reference) {
         // first get the kjv reference
-        final String allReferences = this.jsword.getAllReferences(reference, "ESV");
+        final String allReferences = this.jsword.getAllReferences(reference, "ESV-THE");
 
         if (isBlank(allReferences)) {
             return new EntityDoc[0];

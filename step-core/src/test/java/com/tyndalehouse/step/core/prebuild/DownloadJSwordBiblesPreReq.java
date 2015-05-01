@@ -33,10 +33,12 @@
 package com.tyndalehouse.step.core.prebuild;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static junit.framework.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.book.install.sword.HttpSwordInstaller;
@@ -63,7 +65,9 @@ public class DownloadJSwordBiblesPreReq {
      */
     @Test
     public void installDefaultJSwordDefaultBibleVersions() throws InstallException {
-        final String[] modules = new String[] { "KJV", "ESV", "Byz", "FreSegond", "NETfree", "Tisch", "YLT",
+        assertNotNull("The ESV-THE module must be installed - please contact the dev team to obtain a manual copy.", Books.installed().getBook("ESV-THE"));
+
+        final String[] modules = new String[] { "KJV", "Byz", "FreSegond", "NETfree", "Tisch", "YLT",
                 "ASV", "Montgomery", "FreCrampon", "SBLGNT", "TR", "WHNU", "OSMHB", "Chiuns" };
 
         final JSwordModuleServiceImpl jsword = new JSwordModuleServiceImpl(getInstallers(),

@@ -9,6 +9,14 @@
     <xsl:param name="versification" />
     <xsl:param name="identifier" />
 
+    <!-- TODO: pass through TODOs in the rest of this file -->
+    <!-- TODO: ensure that unmatched elements get warnings -->
+    <!-- TODO: what is a para style="b" -->
+    <!-- TODO: check that mt1 and s are correct styles for para -->
+    <!-- TODO: check what other types of 'char' there are -->
+    <!-- TODO: Remove dead code -->
+    <!-- TODO: Check reference parsing -->
+
     <!--xsi:schemaLocation="-->
     <!--http://www.Biblica.com/namespace/version_1.0 Biblica.xsd-->
     <!--http://www.bibletechnologies.net/2003/OSIS/namespace osisCore.2.1.1.xsd"-->
@@ -167,19 +175,25 @@
         <!--</xsl:if>-->
 
         <p>
+            <!-- apply paragraph content -->
             <xsl:apply-templates />
 
-            <!-- before we close the paragraph, if we find that the next element is a paragraph, and that its
-            first child is a verse, then we want to close the verse early -->
+            <!-- often the pattern is that we have <p><verse> text</p> <p><verse> text</p>
+                 so if the next paragraph starts a verse, then we should close the verse now within the paragraph
+                 so do we have an open verse?
+                 -->
             <xsl:if test="s:isInVerse() ">
-
+                <!-- is the next element a paragraph -->
                 <xsl:if test="name(./following-sibling::node()[1]) = 'para'">
-                    <xsl:if test="./following-sibling::node()[1]/child::node()[1] = 'verse' or (normalize-space(./following-sibling::node()[1]/child::node()[1]/text()) = ''  and name(./following-sibling::node()[1]/child::node()[1]) = 'para')">
+                    <!-- is the next element a verse -->
+                    <xsl:if test="name(./following-sibling::node()[1]/child::node()[1]) = 'verse' or (normalize-space(./following-sibling::node()[1]/child::node()[1]/text()) = ''  and name(./following-sibling::node()[1]/child::node()[2]) = 'verse')">
                         <xsl:call-template name="closeUSXVerse" />
                     </xsl:if>
                 </xsl:if>
                 <xsl:if test="normalize-space(./following-sibling::node()[1]/text()) = ''  and name(./following-sibling::node()[2]) = 'para'">
-                    <xsl:if test="./following-sibling::node()[2]/child::node()[1] = 'verse' or (normalize-space(./following-sibling::node()[2]/child::node()[1]/text()) = ''  and name(./following-sibling::node()[1]/child::node()[1]) = 'para')">
+                    <!-- is the next element a verse, or a space followed by a verse -->
+                    <xsl:if test="name(./following-sibling::node()[2]/child::node()[1]) = 'verse' or (normalize-space(./following-sibling::node()[2]/child::node()[1]/text()) = '' and name(./following-sibling::node()[2]/child::node()[2]) = 'verse')">
+                        <!-- let's close the verse -->
                         <xsl:call-template name="closeUSXVerse" />
                     </xsl:if>
                 </xsl:if>
@@ -200,16 +214,25 @@
     <xsl:template match="para[@style='toc3']"><!-- All paragraphs do nothing --></xsl:template>
     <xsl:template match="para[@style='h']"><!-- All paragraphs do nothing --></xsl:template>
 
-    <xsl:template match="para[@style='mt1']">
+    <xsl:template match="para[@style='mt1' or @style='s']">
         <title><xsl:apply-templates/></title>
     </xsl:template>
 
+    <xsl:template match="para[@style='b']">
+        TODO TODO
+    </xsl:template>
 
     <!-- notes and references -->
     <xsl:template match="note[@style='x']">
         <note type="crossReference" n="{@caller}"><xsl:apply-templates/></note>
     </xsl:template>
 
+    <xsl:template match="char">
+        <xsl:choose>
+            <xsl:when test="@style = 'it'"><hi type="italic"><xsl:apply-templates /></hi></xsl:when>
+            <xsl:otherwise><hi><xsl:apply-templates /></hi></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
     <!--<xsl:template match="chapterEnd" mode="stepSilent">-->
         <!--&lt;!&ndash; do nothing but mark the end of the chapter &ndash;&gt;-->

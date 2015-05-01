@@ -129,7 +129,7 @@ public class JSwordPassageServiceImplTest {
 
     @Test
     public void readRev12FromNrsvEsv() {
-        this.jsi.getOsisText("ESV", "Rev.12.17-18");
+        this.jsi.getOsisText("ESV-THE", "Rev.12.17-18");
     }
 
     /**
@@ -166,7 +166,7 @@ public class JSwordPassageServiceImplTest {
         final List<LookupOption> options = new ArrayList<LookupOption>();
         // options.add(INTERLINEAR);
 
-        final String osisText = this.jsi.getOsisText("OSMHB", "Ps.51", options, "ESV",
+        final String osisText = this.jsi.getOsisText("OSMHB", "Ps.51", options, "ESV-THE",
                 InterlinearMode.INTERLINEAR).getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
@@ -215,7 +215,7 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testComparing() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final Book currentBook = Books.installed().getBook("ESV");
+        final Book currentBook = Books.installed().getBook("ESV-THE");
         final Book secondaryBook = Books.installed().getBook("KJV");
 
         final String reference = "Psalm.3";
@@ -244,7 +244,7 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testSingleReference() {
-        final String allRefs = this.jsi.getAllReferences("Gen.1", "ESV");
+        final String allRefs = this.jsi.getAllReferences("Gen.1", "ESV-THE");
 
         assertTrue(allRefs.contains("Gen.1.1"));
         assertTrue(allRefs.contains("Gen.1.2"));
@@ -258,7 +258,7 @@ public class JSwordPassageServiceImplTest {
         final JSwordMetadataServiceImpl jsi = new JSwordMetadataServiceImpl(
                 TestUtils.mockVersificationService(), null);
 
-        final List<BookName> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV", null);
+        final List<BookName> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV-THE", null);
         final String[] containedAbbrevations = new String[]{"Mal", "Mat", "Mar"};
 
         for (final String s : containedAbbrevations) {
@@ -284,26 +284,26 @@ public class JSwordPassageServiceImplTest {
         org.crosswire.jsword.versification.BookName.setFullBookName(false);
 
         // previous chapter tests
-        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 2", "ESV", true).getName());
-        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 2:5", "ESV", true).getName());
-        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 2-3:17", "ESV", true).getName());
-        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 2:3-3:17", "ESV", true).getName());
+        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 2", "ESV-THE", true).getName());
+        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 2:5", "ESV-THE", true).getName());
+        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 2-3:17", "ESV-THE", true).getName());
+        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 2:3-3:17", "ESV-THE", true).getName());
 
         // next chapter tests
-        assertEquals("Gen 4", this.jsi.getSiblingChapter("Genesis 2-3:17", "ESV", false).getName());
-        assertEquals("Gen 4", this.jsi.getSiblingChapter("Genesis 2-3:24", "ESV", false).getName());
-        assertEquals("Gen 4", this.jsi.getSiblingChapter("Genesis 3:17", "ESV", false).getName());
-        assertEquals("Gen 4", this.jsi.getSiblingChapter("Genesis 3:24", "ESV", false).getName());
-        assertEquals("Gen 3", this.jsi.getSiblingChapter("Genesis 2", "ESV", false).getName());
+        assertEquals("Gen 4", this.jsi.getSiblingChapter("Genesis 2-3:17", "ESV-THE", false).getName());
+        assertEquals("Gen 4", this.jsi.getSiblingChapter("Genesis 2-3:24", "ESV-THE", false).getName());
+        assertEquals("Gen 4", this.jsi.getSiblingChapter("Genesis 3:17", "ESV-THE", false).getName());
+        assertEquals("Gen 4", this.jsi.getSiblingChapter("Genesis 3:24", "ESV-THE", false).getName());
+        assertEquals("Gen 3", this.jsi.getSiblingChapter("Genesis 2", "ESV-THE", false).getName());
 
-        assertEquals("Mal 4", this.jsi.getSiblingChapter("Mat 1", "ESV", true).getName());
-        assertEquals("Mat 1", this.jsi.getSiblingChapter("Mal 4", "ESV", false).getName());
+        assertEquals("Mal 4", this.jsi.getSiblingChapter("Mat 1", "ESV-THE", true).getName());
+        assertEquals("Mat 1", this.jsi.getSiblingChapter("Mal 4", "ESV-THE", false).getName());
 
-        assertEquals("Mar 16", this.jsi.getSiblingChapter("Luke 1", "ESV", true).getName());
-        assertEquals("Luk 1", this.jsi.getSiblingChapter("Mark 16", "ESV", false).getName());
+        assertEquals("Mar 16", this.jsi.getSiblingChapter("Luke 1", "ESV-THE", true).getName());
+        assertEquals("Luk 1", this.jsi.getSiblingChapter("Mark 16", "ESV-THE", false).getName());
 
-        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 1:2", "ESV", true).getName());
-        assertEquals("Rev 22", this.jsi.getSiblingChapter("Revelation 22:5", "ESV", false).getName());
+        assertEquals("Gen 1", this.jsi.getSiblingChapter("Genesis 1:2", "ESV-THE", true).getName());
+        assertEquals("Rev 22", this.jsi.getSiblingChapter("Revelation 22:5", "ESV-THE", false).getName());
 
     }
 
@@ -408,7 +408,7 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testLongHeaders() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "ESV";
+        final String version = "ESV-THE";
         final String ref = "Luk 4:27";
 
         // set up the static JSword field
@@ -434,13 +434,13 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testNumberLookup() {
         assertTrue(this.jsi
-                .getOsisTextByVerseNumbers("ASV", "ESV", 4, 4, new ArrayList<LookupOption>(), null, null,
+                .getOsisTextByVerseNumbers("ASV", "ESV-THE", 4, 4, new ArrayList<LookupOption>(), null, null,
                         false).getValue().contains("In the beginning"));
         assertTrue(this.jsi
-                .getOsisTextByVerseNumbers("ASV", "ESV", 60000, 60000, new ArrayList<LookupOption>(), null,
+                .getOsisTextByVerseNumbers("ASV", "ESV-THE", 60000, 60000, new ArrayList<LookupOption>(), null,
                         null, false).getValue().contains("The grace of the Lord Jesus"));
         assertTrue(this.jsi
-                .getOsisTextByVerseNumbers("FreSegond", "ESV", 60000, 60000, new ArrayList<LookupOption>(),
+                .getOsisTextByVerseNumbers("FreSegond", "ESV-THE", 60000, 60000, new ArrayList<LookupOption>(),
                         null, null, false).getValue()
                 .contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
     }
@@ -455,7 +455,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
             InterruptedException {
-        final String[] names = {"KJV", "ESV"};
+        final String[] names = {"KJV", "ESV-THE"};
         final String ref = "Rom.1.1";
 
         final Runnable r1 = new Runnable() {
@@ -511,12 +511,12 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testPassageShrinking() {
-        assertEquals("Gen.1", this.jsi.getBookData("ESV", "Gen 1").getKey().getOsisRef());
-        assertEquals("Gen.1", this.jsi.getBookData("ESV", "Gen").getKey().getOsisRef());
-        assertEquals("Gen.1", this.jsi.getBookData("ESV", "Gen 1-50").getKey().getOsisRef());
-        assertEquals("Gen.1-Gen.8.8", this.jsi.getBookData("ESV", "Gen 1-12").getKey().getOsisRef());
-        assertEquals("Gen.1", this.jsi.getBookData("ESV", " Gen").getKey().getOsisRef());
-        assertEquals("Gen.1", this.jsi.getBookData("ESV", "Gen ").getKey().getOsisRef());
+        assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", "Gen 1").getKey().getOsisRef());
+        assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", "Gen").getKey().getOsisRef());
+        assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", "Gen 1-50").getKey().getOsisRef());
+        assertEquals("Gen.1-Gen.8.8", this.jsi.getBookData("ESV-THE", "Gen 1-12").getKey().getOsisRef());
+        assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", " Gen").getKey().getOsisRef());
+        assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", "Gen ").getKey().getOsisRef());
     }
 
     /**
@@ -524,16 +524,16 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testGetInterlinearVersions() {
-        assertEquals("ESV", this.jsi.getInterlinearVersion("ESV"));
-        assertEquals("ESV,KJV", this.jsi.getInterlinearVersion("ESV,KJV"));
-        assertEquals("ESV,KJV", this.jsi.getInterlinearVersion("ESV,,KJV"));
-        assertEquals("ESV,KJV", this.jsi.getInterlinearVersion("ESV,,,KJV"));
-        assertEquals("ESV,KJV", this.jsi.getInterlinearVersion("ESV,,,,KJV"));
-        assertEquals("ESV,KJV", this.jsi.getInterlinearVersion("ESV,KJV,"));
-        assertEquals("ESV,KJV", this.jsi.getInterlinearVersion(",ESV,KJV"));
-        assertEquals("ESV", this.jsi.getInterlinearVersion(",ESV,"));
-        assertEquals("ESV", this.jsi.getInterlinearVersion(",,ESV,,"));
-        assertEquals("ESV,KJV,AV", this.jsi.getInterlinearVersion(",,ESV,,KJV,,,AV"));
+        assertEquals("ESV-THE", this.jsi.getInterlinearVersion("ESV-THE"));
+        assertEquals("ESV-THE,KJV", this.jsi.getInterlinearVersion("ESV-THE,KJV"));
+        assertEquals("ESV-THE,KJV", this.jsi.getInterlinearVersion("ESV-THE,,KJV"));
+        assertEquals("ESV-THE,KJV", this.jsi.getInterlinearVersion("ESV-THE,,,KJV"));
+        assertEquals("ESV-THE,KJV", this.jsi.getInterlinearVersion("ESV-THE,,,,KJV"));
+        assertEquals("ESV-THE,KJV", this.jsi.getInterlinearVersion("ESV-THE,KJV,"));
+        assertEquals("ESV-THE,KJV", this.jsi.getInterlinearVersion(",ESV-THE,KJV"));
+        assertEquals("ESV-THE", this.jsi.getInterlinearVersion(",ESV-THE,"));
+        assertEquals("ESV-THE", this.jsi.getInterlinearVersion(",,ESV-THE,,"));
+        assertEquals("ESV-THE,KJV,AV", this.jsi.getInterlinearVersion(",,ESV-THE,,KJV,,,AV"));
     }
 
     /**
@@ -544,7 +544,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testReduceKeySize() throws NoSuchKeyException {
         final Versification v = Versifications.instance().getVersification("KJV");
-        final Book b = Books.installed().getBook("ESV");
+        final Book b = Books.installed().getBook("ESV-THE");
 
         assertEquals("Gen.2-Gen.9.17", reduceKeySize(v, b, "Gen.2-Rev.1").getOsisRef());
         assertEquals("Gen.2", reduceKeySize(v, b, "Gen.2").getOsisRef());

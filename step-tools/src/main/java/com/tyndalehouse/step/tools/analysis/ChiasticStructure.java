@@ -76,7 +76,7 @@ public class ChiasticStructure {
         FSDirectory directory = FSDirectory.open(path);
         final IndexSearcher indexSearcher = new IndexSearcher(directory);
 
-        Book esv = Books.installed().getBook("ESV");
+        Book esv = Books.installed().getBook("ESV-THE");
         final Key key = esv.getKey(ref);
 
         final Iterator<Key> iterator = key.iterator();

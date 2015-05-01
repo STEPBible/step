@@ -16,11 +16,11 @@ public class IndividualSearchTest {
      */
     @Test
     public void testMultiVersion() {
-        final IndividualSearch s = new IndividualSearch("t=blah", new String[] {"ESV", "KJV","ASV"}, null);
+        final IndividualSearch s = new IndividualSearch("t=blah", new String[] {"ESV-THE", "KJV","ASV"}, null);
 
         final String[] versions = s.getVersions();
         assertEquals(3, versions.length);
-        assertEquals("ESV", versions[0]);
+        assertEquals("ESV-THE", versions[0]);
         assertEquals("KJV", versions[1]);
         assertEquals("ASV", versions[2]);
         assertEquals(SearchType.TEXT, s.getType());
@@ -32,10 +32,10 @@ public class IndividualSearchTest {
      */
     @Test
     public void testIndividualVersion() {
-        final IndividualSearch s = new IndividualSearch("t=blah", new String[] {"ESV"}, null);
+        final IndividualSearch s = new IndividualSearch("t=blah", new String[] {"ESV-THE"}, null);
 
         final String[] versions = s.getVersions();
-        assertEquals("ESV", versions[0]);
+        assertEquals("ESV-THE", versions[0]);
         assertEquals(1, versions.length);
         assertEquals(SearchType.TEXT, s.getType());
         assertEquals("blah", s.getQuery());
@@ -46,7 +46,7 @@ public class IndividualSearchTest {
      */
     @Test
     public void testSubRangeText() {
-        final IndividualSearch s = new IndividualSearch("ot=+[Gen-Rev] {John} good", new String[] {"ESV"}, null);
+        final IndividualSearch s = new IndividualSearch("ot=+[Gen-Rev] {John} good", new String[] {"ESV-THE"}, null);
 
         assertEquals(SearchType.ORIGINAL_MEANING, s.getType());
         assertEquals("good", s.getQuery());

@@ -81,7 +81,7 @@ public class AlternativeTranslationsServiceImpl implements AlternativeVersionsSe
 
     @Override
     public VersionsData get(final String passage) {
-        final String allReferences = this.passageService.getAllReferences(passage, "ESV");
+        final String allReferences = this.passageService.getAllReferences(passage, "ESV-THE");
         final EntityDoc[] docs = this.alternativeTranslations.searchSingleColumn("reference", allReferences);
 
         final Map<String, VersionVerses> referenceToVV = new HashMap<String, VersionVerses>();

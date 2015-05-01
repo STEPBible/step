@@ -36,7 +36,7 @@ public class InterleavedOsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String[] versions = new String[] { "OSMHB", "ESV" };
+        final String[] versions = new String[] { "OSMHB", "ESV-THE" };
         final String ref = "Mic.5";
         final boolean unicodeBreakDown = false;
         final boolean compare = true;

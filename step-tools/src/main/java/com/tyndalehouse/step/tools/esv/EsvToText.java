@@ -21,7 +21,7 @@ public class EsvToText {
 
     public static void main(final String[] args) throws NoSuchKeyException, BookException, IOException {
         BookName.setFullBookName(false);
-        final Book esv = Books.installed().getBook("ESV");
+        final Book esv = Books.installed().getBook("ESV-THE");
         final Key key = esv.getKey("Gen.1-Mal.4");
 
         final StringBuilder txt = new StringBuilder(128000);

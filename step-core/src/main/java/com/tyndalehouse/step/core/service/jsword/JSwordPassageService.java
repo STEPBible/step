@@ -46,7 +46,7 @@ import org.crosswire.jsword.passage.Passage;
  * 
  */
 public interface JSwordPassageService {
-    String REFERENCE_BOOK = "ESV";
+    String REFERENCE_BOOK = "ESV-THE";
     String SECONDARY_REFERENCE_BOOK = "NIV";
     String OT_BOOK = "OSMHB";
     String BEST_VERSIFICATION = "KJV";

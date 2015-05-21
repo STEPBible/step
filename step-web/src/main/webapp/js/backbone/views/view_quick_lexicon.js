@@ -47,7 +47,6 @@ var QuickLexicon = Backbone.View.extend({
         '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>) <%= __s.more_info_on_click_of_word %></span><% } %>' +
         '</div>' +
         '<% }); %>' +
-        '<span class="infoTagLine"><%= __s.more_info_on_click_of_word %></span>' +
         '<%= view.templatedFooter %>',
     initialize: function (opts) {
         this.text = opts.text;

@@ -34,9 +34,9 @@
 </span>
 <c:if test="${ showInterlinear eq 'true' }">
     <div class="interlinearLinks">
-        <a href='?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR'><fmt:message key="hebrew_ot" /></a>
+        <a href='?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR'><fmt:message key="hebrew_interlin" /></a>
         &amp;
-        <a href='?q=version=ABGk|version=ABEn&options=HVLCMUN&display=INTERLINEAR'><fmt:message key="greek_nt" /></a>
+        <a href='?q=version=WHNU|reference=John.1|version=ESV&options=GHLVUN&display=INTERLINEAR'><fmt:message key="greek_interlin" /></a>
     </div>
 </c:if>
 <br />

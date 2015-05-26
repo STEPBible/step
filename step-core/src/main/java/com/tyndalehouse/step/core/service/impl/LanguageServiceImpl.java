@@ -111,6 +111,8 @@ public class LanguageServiceImpl implements LanguageService {
             return this.languageCodes.contains("he");
         } else if(langParam.equalsIgnoreCase("in")) {
              return this.languageCodes.contains("id");
+        } else if(langParam.equalsIgnoreCase("aa")) {
+            return true;
         } else {
             return this.languageCodes.contains(langParam) || this.languageCodes.contains(StringUtils.isNotBlank(country) ? langParam + "-" + country : langParam);
         }

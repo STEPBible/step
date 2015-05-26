@@ -80,6 +80,8 @@
                 </td>
             </tr>
         </table>
+        <br />
+        <fmt:message key="return_to_main_site"/><a href="http://www.stepbible.org">www.stepbible.org</a>
     </div>
 </div>
 

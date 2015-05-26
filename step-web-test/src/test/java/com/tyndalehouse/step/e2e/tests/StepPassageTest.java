@@ -16,14 +16,14 @@ public class StepPassageTest extends WebDriverTest {
 
     @Test
     public void testSimplePassage0Lookup() {
-        final Passage passage = PageOperations.loadPassage(this.getDriver(), 0, "ESV", "Mark 1", true);
+        final Passage passage = PageOperations.loadPassage(this.getDriver(), 0, "ESV-THE", "Mark 1", true);
         passage.verify();
         passage.checkPassageText("The beginning of the gospel of Jesus Christ");
     }
 
     @Test
     public void testSimplePassage1Lookup() {
-        final Passage passage = PageOperations.loadPassage(this.getDriver(), 1, "ESV", "Titus 1", true);
+        final Passage passage = PageOperations.loadPassage(this.getDriver(), 1, "ESV-THE", "Titus 1", true);
         passage.verify();
         passage.checkPassageText("For there are many who are insubordinate");
     }

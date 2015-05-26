@@ -49,11 +49,6 @@ import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
  */
 public interface TimelineService {
     /**
-     * the version used to key the timeline events when they are loaded
-     */
-    String KEYED_REFERENCE_VERSION = "ESV";
-
-    /**
      * Retrieves the whole configuration of the timeline. This defines a number of different bands, each with
      * their hotpots. Each timeband is given a suggested scale (or time unit - decade, century, month day),
      * etc. The hotspots also also given a unit.

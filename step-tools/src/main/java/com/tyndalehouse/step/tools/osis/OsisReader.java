@@ -42,7 +42,7 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "ESV";
+        final String version = "ESV-THE";
         final String ref = "Ps.1.1";
         boolean format = true;
 
@@ -64,7 +64,7 @@ public class OsisReader {
         options.add(LookupOption.HEADINGS);
         options.add(LookupOption.GREEK_ACCENTS);
 
-        final String osisText = jsi.getOsisText(version, ref, options, "ESV", InterlinearMode.NONE).getValue();
+        final String osisText = jsi.getOsisText(version, ref, options, "ESV-THE", InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();
 
         try {

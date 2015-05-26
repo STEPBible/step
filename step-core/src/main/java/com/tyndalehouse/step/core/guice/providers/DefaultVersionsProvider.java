@@ -57,7 +57,7 @@ public class DefaultVersionsProvider implements Provider<List<String>> {
     @Override
     public List<String> get() {
         final List<String> versions = new ArrayList<String>();
-        versions.add("ESV");
+        versions.add("ESV-THE");
         versions.add("KJV");
         versions.add("Byz");
         return versions;

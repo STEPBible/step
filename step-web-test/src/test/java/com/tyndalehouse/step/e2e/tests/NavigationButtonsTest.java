@@ -38,7 +38,7 @@ public class NavigationButtonsTest extends WebDriverTest {
 
     private void doTestContinuousScroll(final int passageId, final String reference, final String start,
             final String end, final String before) {
-        final Passage passage = PageOperations.loadPassage(this.getDriver(), 0, "ESV", reference, true);
+        final Passage passage = PageOperations.loadPassage(this.getDriver(), 0, "ESV-THE", reference, true);
 
         passage.checkPassageText(start);
         passage.checkPassageText(end);
@@ -61,7 +61,7 @@ public class NavigationButtonsTest extends WebDriverTest {
     private void doNavigationButtonTest(final int passageId, final String reference,
             final String previousText, final String nextText, final String previousReference,
             final String nextReference) {
-        final Passage passage = PageOperations.loadPassage(this.getDriver(), passageId, "ESV", reference,
+        final Passage passage = PageOperations.loadPassage(this.getDriver(), passageId, "ESV-THE", reference,
                 true);
 
         final WebElement previous = passage.findWithinPassage(".previousChapter");

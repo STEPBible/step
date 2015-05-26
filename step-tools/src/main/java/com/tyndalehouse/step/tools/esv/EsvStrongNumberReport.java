@@ -97,7 +97,7 @@ public class EsvStrongNumberReport {
 
     private void buildStats() throws Exception {
         BookName.setFullBookName(false);
-        statsByVersion("ESV", this.esvStrongsInVerses);
+        statsByVersion("ESV-THE", this.esvStrongsInVerses);
         statsByVersion(OT, this.originalsStrongsInVerses);
 //        statsByVersion(NT, this.originalsStrongsInVerses);
 

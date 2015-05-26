@@ -411,7 +411,7 @@ public class SearchPageController extends HttpServlet {
             text = this.search.masterSearch("reference=Gen.1|version=ESV", "HNV");
         } catch (Exception e) {
             LOGGER.error("Default search failed", e);
-            text = new OsisWrapper("", null, new String[]{"en"}, null, "ESV", InterlinearMode.NONE, "");
+            text = new OsisWrapper("", null, new String[]{"en"}, null, "ESV-THE", InterlinearMode.NONE, "");
         }
         return text;
     }

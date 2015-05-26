@@ -53,7 +53,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
  */
 @Singleton
 public class GeographyServiceImpl implements GeographyService {
-    private static final String OPEN_BIBLE_VERSION = "ESV";
+    private static final String OPEN_BIBLE_VERSION = "ESV-THE";
     private static final Logger LOG = LoggerFactory.getLogger(GeographyServiceImpl.class);
     private final JSwordPassageService jsword;
     private final EntityIndexReader openBiblePlaces;

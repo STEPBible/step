@@ -109,13 +109,13 @@ public class VersionResolver {
         return split;
     }
 
+    /**
+     * It is assumed that if there is a clash of versions between the STEP prefixes (short names) and
+     * the actual module names, then the STEP prefix will take precedence.
+     * @param longName the long name corresponding to the CrossWire module name
+     * @param shortName the prefix by which the Bible will be known in STEP
+     */
     private void addMapping(final String longName, final String shortName) {
-        // check we do not have a clash of versions
-        if (Books.installed().getBook(shortName) != null) {
-            LOGGER.warn("Unable to map version [{}] to [{}]", longName, shortName);
-            return;
-        }
-
         final String normalisedShort = shortName.toLowerCase();
         final String normalisedLong = longName.toLowerCase();
         this.longToShort.put(normalisedLong, shortName);

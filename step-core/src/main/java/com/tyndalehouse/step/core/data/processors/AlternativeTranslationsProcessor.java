@@ -65,7 +65,7 @@ public class AlternativeTranslationsProcessor implements PostProcessor {
         final String reference = doc.get("reference");
         doc.removeField("reference");
         try {
-            doc.add(config.getField("reference", this.jswordPassage.getKeyInfo(reference, "ESV", "ESV")
+            doc.add(config.getField("reference", this.jswordPassage.getKeyInfo(reference, "ESV-THE", "ESV-THE")
                     .getOsisKeyId()));
         } catch (final StepInternalException e) {
             LOGGER.error("Alternative Meanings: {}", e.getMessage());

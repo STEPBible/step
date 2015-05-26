@@ -157,7 +157,7 @@ public class LoaderTest {
     @Test
     public void testVersionInfo() {
         getLoader("test.data.path.versions.info", "versions.csv").loadVersionInformation();
-        assertLoaded(1, "versionInfo", "version", "ESV");
+        assertLoaded(1, "versionInfo", "version", "ESV-THE");
     }
 
     /**

@@ -129,8 +129,9 @@ public class VocabularyServiceImpl implements VocabularyService {
             if (subStrong != null && subStrong.length() > 3) {
                 final String first4Chars = subStrong.substring(0, 4);
                 try {
-                    return String.format("%c%04d", strongNumber.charAt(baseIndex),
-                            Integer.parseInt(first4Chars));
+                    String suffix = subStrong.length() > 4 && Character.isAlphabetic(subStrong.charAt(4)) ? subStrong.substring(4, 5).toLowerCase() : "";
+                    return String.format("%c%04d%s", strongNumber.charAt(baseIndex),
+                            Integer.parseInt(first4Chars), suffix);
                 } catch (final NumberFormatException ex) {
                     // couldn't convert to a padded number
                     LOGGER.trace("Unable to convert [{}] to a padded number.", first4Chars);
@@ -144,7 +145,6 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public VocabResponse getDefinitions(final String version, final String reference, final String vocabIdentifiers) {
-        notBlank(reference, "The verse reference was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
 

@@ -43,6 +43,14 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     @Override
     public AugmentedStrongs augment(final String version, final String reference, final String[] keys) {
         final Map<String, String> augmentedStrongs = new HashMap<>((keys.length + 4) * 2);
+        if(StringUtils.isBlank(version) || StringUtils.isBlank(reference)) {
+            //won't be able to resolve so just return the keys as is
+            for(String k : keys) {
+                augmentedStrongs.put(k, k);
+            }
+            return new AugmentedStrongs(keys, new EntityDoc[0]);
+        }
+
         //for each key, we see if there is an augment strong number
         final StringBuilder query = new StringBuilder(keys.length * 10 + 16);
         query.append("(");

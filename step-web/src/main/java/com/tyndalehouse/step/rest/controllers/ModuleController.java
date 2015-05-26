@@ -162,7 +162,6 @@ public class ModuleController {
             final String reference,
             final String vocabIdentifiers,
             final String morphIdentifiers) {
-        notEmpty(reference, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
         LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[]{reference, this.vocab, morphIdentifiers});
 
         final Info i = new Info();

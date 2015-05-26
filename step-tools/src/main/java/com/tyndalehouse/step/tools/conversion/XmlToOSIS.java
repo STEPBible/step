@@ -73,11 +73,17 @@ public class XmlToOSIS {
         timeNow = System.currentTimeMillis();
         System.out.println(f.getAbsolutePath());
 
-        //now call osis2mod to make the module
+        //now check no unsupported options
         timeNow = System.currentTimeMillis();
-        System.out.println(String.format("Moving nodes..."));
+        System.out.println(String.format("Checking all nodes recognised..."));
+        final String content = FileUtils.readFileToString(f);
+        if(content.indexOf("###NOT SUPPORTED###") != -1) {
+            //there are some errors
+            System.out.println("There were unrecognised elements in the input that yielded incorrect markup.");
+            System.exit(-1);
+        }
         timeNow = System.currentTimeMillis();
-        System.out.println(String.format("Converted... [%dms]", System.currentTimeMillis() - timeNow));
+        System.out.println(String.format("Checking all nodes recognised done... [%dms]", System.currentTimeMillis() - timeNow));
     }
 
     private String getRootName() {
@@ -87,7 +93,7 @@ public class XmlToOSIS {
             case "usx":
                 return "/usx";
         }
-        throw new ConversionException("Unable to identify type of conversion required");
+        throw new ConversionException("Unable to identify type of conversion required.");
     }
 
     private void applyXslt(final Document input, File output) throws Exception {

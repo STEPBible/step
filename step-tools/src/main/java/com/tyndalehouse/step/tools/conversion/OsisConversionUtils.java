@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.tools.conversion;
 
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.versification.BibleBook;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -37,6 +38,10 @@ public class OsisConversionUtils {
 
     private OsisConversionUtils() {
         //no implementation
+    }
+
+    public static String toTitleCase(String title) {
+        return StringUtils.toTitleCase(title, true);
     }
 
     public static String convertBookToOsis(final String bookAbbreviation) {
@@ -196,8 +201,30 @@ public class OsisConversionUtils {
         return stripIdAndConvertBook(chapterID);
     }
 
-    public static String openUSXVerse(final int verseNumber) {
-        currentVerseId = String.format("%s.%d.%d", currentBook, currentChapter, verseNumber);
+    public static String openUSXVerse(final String verseNumber) {
+        if(verseNumber.indexOf('-') != -1) {
+            //we have a range
+            final String[] split = StringUtils.split(verseNumber, "-");
+            if(split.length != 2) {
+                throw new RuntimeException("Unable to parse range of verses");
+            }
+            int start = Integer.parseInt(split[0]);
+            int end = Integer.parseInt(split[1]);
+            StringBuilder ref = new StringBuilder();
+            for(int ii = start; ii <= end; ii++) {
+                ref.append(currentBook);
+                ref.append('.');
+                ref.append(currentChapter);
+                ref.append('.');
+                ref.append(ii);
+                if(ii != end) {
+                    ref.append('_');
+                }
+            }
+            currentVerseId = ref.toString();
+        } else {
+            currentVerseId = String.format("%s.%d.%s", currentBook, currentChapter, verseNumber);
+        }
         inVerse = true;
         return currentVerseId;
     }

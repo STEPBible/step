@@ -72,7 +72,7 @@ public class EsvXmlEnhancer {
     private static final Pattern REF_CLEAN = Pattern.compile("[^a-zA-Z0-9: ]+");
     static final Pattern PUNCTUATION = Pattern.compile("[\\-—,.;*:'\\[\\]!\"`?’‘()-]+");
     private static final Pattern STRONGS_SPLITTING = Pattern.compile("<(\\d+)[a-z]?>");
-    private static final Book ESV = Books.installed().getBook("ESV-THE");
+    private static final Book ESV = Books.installed().getBook("ESV");
     private final File tagging;
     private final File esvText;
     private String currentVerse;

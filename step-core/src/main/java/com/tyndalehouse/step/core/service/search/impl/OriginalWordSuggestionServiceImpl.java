@@ -72,6 +72,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
 
         simplifiedTransliteration.append('(');
         for (final TransliterationOption option : translits) {
+            //we limit to something sensible
             simplifiedTransliteration.append(SIMPLIFIED_TRANSLITERATION);
             simplifiedTransliteration.append(QueryParser.escape(option.getOption().toString()));
             if (prefix) {

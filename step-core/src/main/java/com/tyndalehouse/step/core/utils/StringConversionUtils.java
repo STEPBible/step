@@ -64,6 +64,7 @@ public final class StringConversionUtils {
     private static final String UPPER_STRONG_PREFIX = "STRONG:";
     private static final int STRONG_PREFIX_LENGTH = STRONG_PREFIX.length();
     private static final int LANGUAGE_INDICATOR = STRONG_PREFIX_LENGTH;
+    private static final int MAX_TRANSLITERATIONS = 512;
 
     /**
      * hiding implementation
@@ -369,12 +370,12 @@ public final class StringConversionUtils {
             final String stepTransliteration, final boolean isGreek) {
         if (isGreek) {
             return multiplyTranslitOptions(removeGreekTranslitMarkUpForIndexing(stepTransliteration),
-                    GreekUtils.getTransliterationRules());
+                    GreekUtils.getTransliterationRules()).subList(0, MAX_TRANSLITERATIONS);
         }
 
         // otherwise hebrew, so run the pattern to remove everything...
         return multiplyTranslitOptions(removeHebrewTranslitMarkUpForIndexing(stepTransliteration),
-                HebrewUtils.getTransliterationRules());
+                HebrewUtils.getTransliterationRules()).subList(0, MAX_TRANSLITERATIONS);
     }
 
     /**

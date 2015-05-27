@@ -221,10 +221,10 @@
 
     <xsl:template match="para[@style='ms' or @style='s']"><title type="main"><xsl:apply-templates /></title></xsl:template>
     <xsl:template match="para[@style='ms1' or @style='s1']"><title><xsl:apply-templates /></title></xsl:template>
-    <xsl:template match="para[@style='ms2' or @style='s2']"><title type="sub"><xsl:apply-templates /></title></xsl:template>
+    <xsl:template match="para[@style='ms2' or @style='s2' or @style='mr']"><title type="sub"><xsl:apply-templates /></title></xsl:template>
     <xsl:template match="para[@style='ms3' or @style='s3']"><title type="x-major-section-2"><xsl:apply-templates /></title></xsl:template>
     <xsl:template match="para[@style='s4']"><title type="x-major-section-3"><xsl:apply-templates /></title></xsl:template>
-    <xsl:template match="para[@style='mr' or @style='r'  or @style='sr']"><reference><xsl:apply-templates /></reference></xsl:template>
+    <xsl:template match="para[@style='r' or @style='sr']"><reference><xsl:apply-templates /></reference></xsl:template>
     <xsl:template match="para[@style='sp']"><speaker><xsl:apply-templates /></speaker></xsl:template>
     <xsl:template match="para[@style='s']"><title><xsl:apply-templates/></title></xsl:template>
 

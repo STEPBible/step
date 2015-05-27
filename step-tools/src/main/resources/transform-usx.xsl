@@ -14,6 +14,7 @@
     <!-- TODO: ensure that unmatched elements get warnings -->
     <!-- TODO: what is a para style="b" -->
     <!-- TODO: check that mt1 and s are correct styles for para -->
+    <!-- TODO: x-major-section-{n} to be defined -->
     <!-- TODO: check what other types of 'char' there are -->
     <!-- TODO: Remove dead code -->
     <!-- TODO: Check reference parsing -->
@@ -41,11 +42,11 @@
     <!-- Book can have ID attribute, code. Id isn't defined. -->
     <xsl:template match="book">
         <xsl:value-of select="s:markBookStart(@code)" />
-        <!--<div osisID="{s:convertBookToOsis(@code)}" type="book">-->
+        <div osisID="{s:convertBookToOsis(@code)}" type="book">
             <!-- always close a chapter (which will close a verse) before the end of a book -->
             <xsl:call-template name="closeChapter" />
 
-        <!--</div>-->
+        </div>
     </xsl:template>
     <!-- MAJOR SECTION IN USX DOC - END BOOK -->
 
@@ -173,7 +174,7 @@
 
     <xsl:template match="para[@style='restore']"><!-- comment about when text was restored --></xsl:template>
 
-    <xsl:template match="para[@style='b']"><lb /><xsl:apply-templates /></xsl:template>
+    <xsl:template match="para[@style='b']"><lg sID="" /><lg eID="" /><xsl:apply-templates /></xsl:template>
     <xsl:template match="para[@style='cls'
         or @style='iex'
         or @style='lit'
@@ -208,8 +209,8 @@
     <xsl:template match="para[@style='qa']"><title type="acrostic"><xsl:apply-templates /></title></xsl:template>
     <xsl:template match="para[@style='qc']"><l type="x-centered"><xsl:apply-templates /></l></xsl:template>
 
-    <xsl:template match="para[@style='qm' or @style='li']"><l level="1"><xsl:apply-templates /></l></xsl:template>
-    <xsl:template match="para[@style='qm1' or @style='li1']"><l level="1"><xsl:apply-templates /></l></xsl:template>
+    <xsl:template match="para[@style='qm' or @style='li']"><lg sID="" /><l level="1"><xsl:apply-templates /></l><lg eID="" /></xsl:template>
+    <xsl:template match="para[@style='qm1' or @style='li1']"><lg sID="" /><l level="1"><xsl:apply-templates /></l><lg eID="" /></xsl:template>
     <xsl:template match="para[@style='qm2' or @style='li2']"><l level="2"><xsl:apply-templates /></l></xsl:template>
     <xsl:template match="para[@style='qm3' or @style='li3']"><l level="3"><xsl:apply-templates /></l></xsl:template>
     <xsl:template match="para[@style='qm4' or @style='li4']"><l level="4"><xsl:apply-templates /></l></xsl:template>
@@ -219,9 +220,9 @@
     <xsl:template match="para[@style='d']"><title canonical="true"><xsl:apply-templates /></title></xsl:template>
 
     <xsl:template match="para[@style='ms' or @style='s']"><title type="main"><xsl:apply-templates /></title></xsl:template>
-    <xsl:template match="para[@style='ms1' or @style='s1']"><title type="sub"><xsl:apply-templates /></title></xsl:template>
-    <xsl:template match="para[@style='ms2' or @style='s2']"><title type="x-major-section-2"><xsl:apply-templates /></title></xsl:template>
-    <xsl:template match="para[@style='ms3' or @style='s3']"><title type="x-major-section-3"><xsl:apply-templates /></title></xsl:template>
+    <xsl:template match="para[@style='ms1' or @style='s1']"><title><xsl:apply-templates /></title></xsl:template>
+    <xsl:template match="para[@style='ms2' or @style='s2']"><title type="sub"><xsl:apply-templates /></title></xsl:template>
+    <xsl:template match="para[@style='ms3' or @style='s3']"><title type="x-major-section-2"><xsl:apply-templates /></title></xsl:template>
     <xsl:template match="para[@style='s4']"><title type="x-major-section-3"><xsl:apply-templates /></title></xsl:template>
     <xsl:template match="para[@style='mr' or @style='r'  or @style='sr']"><reference><xsl:apply-templates /></reference></xsl:template>
     <xsl:template match="para[@style='sp']"><speaker><xsl:apply-templates /></speaker></xsl:template>
@@ -252,7 +253,7 @@
             <xsl:when test="@style = 'va' or @style='vp' or @style='ca' or @style='addpn' or @style='efm' or @style='fm' or @style='ndx'
                 or @style='pn' or @style='pro' or @style='w' or @style='wh' or @style='wg' or @style='ior' or style='iqt'">###NOT SUPPORTED### attribute: <xsl:value-of select="@style" /></xsl:when>
             <xsl:when test="@style = 'qac'"><hi type="acrostic"><xsl:apply-templates /></hi></xsl:when>
-            <xsl:when test="@style = 'qs'"><l type="selah"><xsl:apply-templates /></l></xsl:when>
+            <xsl:when test="@style = 'qs'"><foreign type="x-selah"><xsl:apply-templates /></foreign></xsl:when>
             <xsl:when test="@style = 'add'"><transChange type="added"><xsl:apply-templates /></transChange></xsl:when>
             <xsl:when test="@style = 'bk'"><reference type="x-bookName"><xsl:apply-templates /></reference></xsl:when>
             <xsl:when test="@style = 'dc'"><transChange type="added" edition="dc"><xsl:apply-templates /></transChange></xsl:when>

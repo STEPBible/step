@@ -77,7 +77,7 @@ public class XmlToOSIS {
         timeNow = System.currentTimeMillis();
         System.out.println(String.format("Checking all nodes recognised..."));
         final String content = FileUtils.readFileToString(f);
-        if(content.indexOf("###NOT SUPPORTED###") != -1) {
+        if (content.indexOf("###NOT SUPPORTED###") != -1) {
             //there are some errors
             System.out.println("There were unrecognised elements in the input that yielded incorrect markup.");
             System.exit(-1);
@@ -235,9 +235,9 @@ public class XmlToOSIS {
     public static void main(String[] args) throws Exception {
         String otPath = "C:\\temp\\usx";
         String ntPath = null;
-        String outputPath = "C:\\temp\\rom.xml";
+        String outputPath = "C:\\temp\\cym.xml";
         String type = "usx";
-        String moduleName = "NIV";
+        String moduleName = "CYM";
         String versification = "KJV";
         int retCode = 0;
 
@@ -255,11 +255,19 @@ public class XmlToOSIS {
 
         try {
             new XmlToOSIS(otPath, ntPath, outputPath, type, moduleName, versification).parse();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             retCode = -1;
             System.exit(retCode);
             throw ex;
         }
+
+        //temporarily create osis 2 mod from here...
+        if (Boolean.getBoolean("run-osis2mod")) {
+            System.out.println("Converting to osis module");
+            Process p = Runtime.getRuntime().exec("C:\\dev\\personal\\sword-utilities-1.7.0-1\\osis2mod c:\\Users\\cjburrell\\AppData\\Roaming\\Sword\\modules\\texts\\ztext\\cym c:\\temp\\cym.xml -z");
+            p.waitFor();
+        }
+
         System.exit(retCode);
     }
 }

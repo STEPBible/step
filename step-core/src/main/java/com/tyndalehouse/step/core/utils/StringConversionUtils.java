@@ -369,13 +369,18 @@ public final class StringConversionUtils {
     public static List<TransliterationOption> adaptTransliterationForQuerying(
             final String stepTransliteration, final boolean isGreek) {
         if (isGreek) {
-            return multiplyTranslitOptions(removeGreekTranslitMarkUpForIndexing(stepTransliteration),
-                    GreekUtils.getTransliterationRules()).subList(0, MAX_TRANSLITERATIONS);
+            return trimmedTranslits(multiplyTranslitOptions(removeGreekTranslitMarkUpForIndexing(stepTransliteration),
+                    GreekUtils.getTransliterationRules()));
         }
 
         // otherwise hebrew, so run the pattern to remove everything...
-        return multiplyTranslitOptions(removeHebrewTranslitMarkUpForIndexing(stepTransliteration),
-                HebrewUtils.getTransliterationRules()).subList(0, MAX_TRANSLITERATIONS);
+        return trimmedTranslits(multiplyTranslitOptions(removeHebrewTranslitMarkUpForIndexing(stepTransliteration),
+                HebrewUtils.getTransliterationRules()));
+    }
+
+    private static List<TransliterationOption> trimmedTranslits(final List<TransliterationOption> transliterationRules) {
+        return transliterationRules.subList(0, Math.min(transliterationRules.size(), MAX_TRANSLITERATIONS));
+
     }
 
     /**

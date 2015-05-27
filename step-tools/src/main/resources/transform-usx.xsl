@@ -281,7 +281,15 @@
             <xsl:when test="@style = 'fp'"><p><xsl:apply-templates /></p></xsl:when>
             <xsl:when test="@style = 'fv'"><seg type="verseNumber"><xsl:apply-templates /></seg></xsl:when>
             <xsl:when test="@style = 'fdc'"><seg edition="dc"><xsl:apply-templates /></seg></xsl:when>
-            <xsl:when test="@style = 'xt'"><xsl:apply-templates /></xsl:when>
+            <xsl:when test="@style = 'xt'">
+                <xsl:variable name="osisRef" select="s:langRefToRef($versification, ./text())" />
+                <xsl:choose>
+                    <xsl:when test="$osisRef = '##error##'"><xsl:apply-templates /></xsl:when>
+                    <xsl:otherwise><reference osisRef="{$osisRef}"><xsl:apply-templates/></reference></xsl:otherwise>
+                </xsl:choose>
+
+                    <!-- covered in the references section -->
+            </xsl:when>
             <xsl:when test="@style = 'xo'"><!-- the original verse which should be enclosing this anyway --></xsl:when>
             <xsl:when test="@style = 'xk'"><catchWord><xsl:apply-templates /></catchWord></xsl:when>
             <xsl:when test="@style = 'xq'"><q><xsl:apply-templates /></q></xsl:when>
@@ -332,7 +340,9 @@
 
     <!-- notes and references -->
     <xsl:template match="note[@style='x' or @style='ex']">
-        <note type="crossReference" n="{@caller}"><xsl:apply-templates/></note>
+        <xsl:choose>
+            <xsl:otherwise><note type="crossReference" n="{@caller}"><xsl:apply-templates/></note></xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template match="note[@style='f']">
         <note type="explanation" n="{@caller}"><xsl:apply-templates/></note>

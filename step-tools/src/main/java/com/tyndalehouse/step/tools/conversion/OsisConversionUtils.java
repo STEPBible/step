@@ -1,7 +1,11 @@
 package com.tyndalehouse.step.tools.conversion;
 
 import com.tyndalehouse.step.core.utils.StringUtils;
+import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.passage.PassageKeyFactory;
 import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.system.Versifications;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -365,6 +369,15 @@ public class OsisConversionUtils {
         return null;
     }
 
+    public static String langRefToRef(String v11n, String langRef) {
+        try {
+            final Passage key = PassageKeyFactory.instance().getKey(Versifications.instance().getVersification(v11n), langRef);
+            return key.getOsisRef();
+        } catch (NoSuchKeyException e) {
+//            e.printStackTrace(); silently ignore, because there can be all sorts of things in there...
+            return "##error##";
+        }
+    }
 
     public static void pushTitle(Object o) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();

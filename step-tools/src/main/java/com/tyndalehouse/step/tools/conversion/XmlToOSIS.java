@@ -2,6 +2,8 @@ package com.tyndalehouse.step.tools.conversion;
 
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
+import org.crosswire.jsword.internationalisation.LocaleProvider;
+import org.crosswire.jsword.internationalisation.LocaleProviderManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,16 +40,19 @@ public class XmlToOSIS {
     private String conversionType;
     private final String moduleName;
     private final String versification;
+    private final String languageCode;
 
     public XmlToOSIS(final String otPath, final String ntPath, final String outputPath,
                      final String conversionType,
-                     final String moduleName, final String versification) {
+                     final String moduleName, final String versification,
+                     final String languageCode) {
         this.otPath = otPath;
         this.ntPath = ntPath;
         this.outputPath = outputPath;
         this.conversionType = conversionType;
         this.moduleName = moduleName;
         this.versification = versification;
+        this.languageCode = languageCode;
     }
 
     private void parse() throws Exception {
@@ -103,6 +108,12 @@ public class XmlToOSIS {
         final DOMResult outputTarget = new DOMResult();
         transformer.setParameter("identifier", this.moduleName);
         transformer.setParameter("versification", this.versification);
+        LocaleProviderManager.setLocaleProvider(new LocaleProvider() {
+            @Override
+            public Locale getUserLocale() {
+                return new Locale(XmlToOSIS.this.languageCode);
+            }
+        });
         transformer.transform(new DOMSource(input), outputTarget);
 
 
@@ -239,22 +250,24 @@ public class XmlToOSIS {
         String type = "usx";
         String moduleName = "CYM";
         String versification = "KJV";
+        String languageCode = "cy";
         int retCode = 0;
 
-        if (args.length == 6) {
+        if (args.length == 7) {
             otPath = args[0];
             ntPath = args[1];
             outputPath = args[2];
             type = args[3];
             moduleName = args[4];
             versification = args[5];
+            languageCode = args[6];
         } else {
             System.out.println("!!!!!! Ignoring parameters on command line !!!!!!");
             retCode = -1;
         }
 
         try {
-            new XmlToOSIS(otPath, ntPath, outputPath, type, moduleName, versification).parse();
+            new XmlToOSIS(otPath, ntPath, outputPath, type, moduleName, versification, languageCode).parse();
         } catch (Exception ex) {
             retCode = -1;
             System.exit(retCode);

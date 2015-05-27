@@ -150,7 +150,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         return step.util.getPassageContainer(model.get("passageId")).find(".verseNumber").closest("a[name]").attr("name")
     },
 
-    _getStats: function (statType, scope, title, callback, animate) {
+    _getStats: function (statType, scope, callback, animate) {
         var self = this;
         var model = step.util.activePassage();
 
@@ -187,7 +187,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                 self.animateWordleHandler();
             }
 
-            self._createWordleTab(self.statsContainer, scope, title, data.passageStat, statType, callback, data.lexiconWords, animate);
+            self._createWordleTab(self.statsContainer, scope, data.passageStat, statType, callback, data.lexiconWords, animate);
         });
     },
 
@@ -220,7 +220,7 @@ var ViewLexiconWordle = Backbone.View.extend({
     doStats: function () {
         console.log(new Date().getTime(), "Doing stats");
 
-        this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"), __s.word_cloud, function (key, statType) {
+        this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"), function (key, statType) {
             if (statType == 'WORD') {
                 var args = "strong=" + encodeURIComponent(key);
                 step.router.navigatePreserveVersions(args);
@@ -288,7 +288,7 @@ var ViewLexiconWordle = Backbone.View.extend({
      * @param animate - true to indicate previous results weren't cleared, and that an animation is required
      * @private
      */
-    _createWordleTab: function (container, scope, title, wordleData, statType, callback, lexiconWords, animate) {
+    _createWordleTab: function (container, scope, wordleData, statType, callback, lexiconWords, animate) {
         var self = this;
 
         //create order of strong numbers

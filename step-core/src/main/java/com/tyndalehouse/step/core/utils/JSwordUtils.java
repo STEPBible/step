@@ -35,13 +35,7 @@ package com.tyndalehouse.step.core.utils;
 import static java.util.Collections.sort;
 import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import org.crosswire.common.util.Language;
 import org.crosswire.common.util.Languages;
@@ -94,7 +88,8 @@ public final class JSwordUtils {
      */
     public static List<BibleVersion> getSortedSerialisableList(final Collection<Book> bibles,
             final Locale userLocale, final VersionResolver resolver) {
-        final List<BibleVersion> versions = new ArrayList<BibleVersion>();
+//        final List<BibleVersion> versions = new ArrayList<BibleVersion>();
+        final Map<String, BibleVersion> versions = new HashMap<>();
 
         // we only send back what we need
         for (final Book b : bibles) {
@@ -135,18 +130,26 @@ public final class JSwordUtils {
             v.setHasHeadings(b.hasFeature(FeatureType.HEADINGS));
             v.setHasNotes(b.hasFeature(FeatureType.FOOTNOTES) || b.hasFeature(FeatureType.SCRIPTURE_REFERENCES));
             v.setHasSeptuagintTagging(resolver.isSeptuagintTagging(b));
-            versions.add(v);
+
+            //now only put the version in if
+            // a- it is not in the map already
+            // b- it is in the map, but the initials of the one being put in are different, meaning STEP
+            // has a better version that is overwriting the existing version
+            if(!versions.containsKey(v.getShortInitials()) || !v.getShortInitials().equalsIgnoreCase(v.getInitials())) {
+                versions.put(v.getShortInitials(), v);
+            }
         }
 
         // finally sort by initials
-        sort(versions, new Comparator<BibleVersion>() {
+        final List<BibleVersion> values = new ArrayList<>(versions.values());
+        sort(values, new Comparator<BibleVersion>() {
             @Override
             public int compare(final BibleVersion o1, final BibleVersion o2) {
-                return o1.getInitials().compareTo(o2.getInitials());
+                return o1.getShortInitials().compareTo(o2.getShortInitials());
             }
         });
 
-        return versions;
+        return values;
     }
 
     /**

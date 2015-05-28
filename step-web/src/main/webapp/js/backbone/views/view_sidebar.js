@@ -162,7 +162,7 @@ var SidebarView = Backbone.View.extend({
             $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
                 .append(mainWord.accentedUnicode))
                 .append(" (")
-                .append(mainWord.stepTransliteration)
+                .append("<span class='transliteration'>" + mainWord.stepTransliteration + "</span>")
                 .append("): ")
                 .append(mainWord.shortDef || "")
                 .append(" ")

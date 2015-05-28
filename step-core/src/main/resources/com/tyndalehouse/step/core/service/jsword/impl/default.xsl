@@ -251,8 +251,8 @@
     <xsl:template match="div[@type='introduction'][@eID]">
         &lt;/span&gt;
     </xsl:template>
-    <xsl:template match="div[@type='paragraph'][@sID]"><span class="paragraph"></span></xsl:template>
-    <xsl:template match="div[@type='paragraph'][@eID]">
+    <xsl:template match="div[@type='paragraph' or @type='x-p'][@sID]"><span class="paragraph"></span></xsl:template>
+    <xsl:template match="div[@type='paragraph' or @type='x-p'][@eID]">
         <br />
     </xsl:template>
     <xsl:template match="div[@subType='x-duplicate']">

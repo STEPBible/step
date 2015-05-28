@@ -114,7 +114,7 @@ public class SearchServiceImplTest {
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         final PassageOptionsValidationService optionsValidationService = mock(PassageOptionsValidationService.class);
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null,
-                null, null, mock(VersionResolver.class), optionsValidationService);
+                null, null, TestUtils.mockVersionResolver(), optionsValidationService);
 
         when(optionsValidationService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class), any(InterlinearMode.class)))
                 .thenReturn(new AvailableFeatures());

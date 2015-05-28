@@ -23,6 +23,13 @@
         markAsRecommended('NVI');
         markAsRecommended('PNVI');
 
+        markAsRecommended('FreSegond');
+        markAsRecommended('GerElb1905');
+        markAsRecommended('GerSch');
+        markAsRecommended('ItaRive');
+        markAsRecommended('RusSynodal');
+        markAsRecommended('NRT');
+
         //save 100k of space
         window.tempVersions = null;
     };

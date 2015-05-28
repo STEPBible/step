@@ -40,18 +40,8 @@ import com.tyndalehouse.step.core.utils.JSwordUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
-import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookData;
-import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.BookMetaData;
-import org.crosswire.jsword.book.OSISUtil;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.KeyUtil;
-import org.crosswire.jsword.passage.NoSuchVerseException;
-import org.crosswire.jsword.passage.Passage;
-import org.crosswire.jsword.passage.Verse;
-import org.crosswire.jsword.passage.VerseFactory;
-import org.crosswire.jsword.passage.VerseKey;
+import org.crosswire.jsword.book.*;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
@@ -62,21 +52,10 @@ import org.jdom2.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
-import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.StringUtils.*;
 import static java.lang.String.format;
 
 /**
@@ -337,22 +316,21 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @return the string
      */
     private String lookupMappings(final Key osisKey, final String strong) {
-        // we ignore mapping lookups for anything greek or hebrew...
-        if (originalLanguage) {
-            return "";
-        }
-
-        // currently only supporting OLD Testament
         final boolean isOT = this.testament == Testament.OLD;
-        if (isOT) {
-            final String direct = this.hebrewDirectMapping.get(strong);
-            if (direct != null) {
-                return direct;
-            }
 
-            final String indirect = this.hebrewIndirectMappings.get(strong);
-            if (indirect != null) {
-                return indirect;
+        // we ignore mapping lookups for anything greek or hebrew...
+        if (!originalLanguage) {
+            // currently only supporting OLD Testament
+            if (isOT) {
+                final String direct = this.hebrewDirectMapping.get(strong);
+                if (direct != null) {
+                    return direct;
+                }
+
+                final String indirect = this.hebrewIndirectMappings.get(strong);
+                if (indirect != null) {
+                    return indirect;
+                }
             }
         }
 
@@ -456,8 +434,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
             if (data instanceof Element) {
                 ele = (Element) data;
-                if(untaggedContent != null) {
-                    if(scanForTextualInformation(ele, untaggedContent.toString())) {
+                if (untaggedContent != null) {
+                    if (scanForTextualInformation(ele, untaggedContent.toString())) {
                         //we've consumed the untagged content, so remove it now
                         untaggedContent = null;
                     }

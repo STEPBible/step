@@ -1404,7 +1404,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             tsep.setParameter("RemoveVowels", false);
         }
         tsep.setParameter("direction", books[0].getBookMetaData().isLeftToRight() ? "ltr" : "rtl");
-        tsep.setParameter("baseVersion", books[0].getInitials());
+        tsep.setParameter("baseVersion", this.resolver.getShortName(books[0].getInitials()));
     }
 
     /**

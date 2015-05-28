@@ -79,9 +79,10 @@ step.passage = {
         for(var i = 0; i < strongs.length; i++) {
             // check for black listed strongs
             if ($.inArray(strongs[i], this.blacklistedStrongs) == -1) {
-                $(".heading [strong~='" + strongs[i] + "']", container).addClass(classes);
-                $(".verse [strong~='" + strongs[i] + "']", container).addClass(classes);
-                $("span.w[strong~='" + strongs[i] + "'] span", container).addClass(classes);
+                //un-augmented here is potentially unecessary until we have resources that have such numbers in them.
+                $(".heading [strong~='" + step.util.unaugmentStrong(strongs[i]) + "']", container).addClass(classes);
+                $(".verse [strong~='" + step.util.unaugmentStrong(strongs[i]) + "']", container).addClass(classes);
+                $("span.w[strong~='" + step.util.unaugmentStrong(strongs[i]) + "'] span", container).addClass(classes);
             }
         }
     },

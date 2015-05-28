@@ -155,6 +155,9 @@ window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
     timers: {},
+    unaugmentStrong : function(strong) {
+      return (strong || "").replace(/[a-zA-Z]$/, "");
+    },
     refreshWaitStatus: function () {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
         if (this.outstandingRequests > 0) {

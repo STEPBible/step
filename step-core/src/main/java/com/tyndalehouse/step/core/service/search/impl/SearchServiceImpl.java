@@ -1709,10 +1709,12 @@ public class SearchServiceImpl implements SearchService {
             final String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
             String paddedStrong = padStrongNumber(prefixedStrong.toUpperCase(Locale.ENGLISH), false);
 
-            Character suffix = this.strongAugmentationService.getAugmentedStrongSuffix(s);
-            if (suffix != null) {
-                //add the suffix back
-                paddedStrong += suffix;
+            if(Character.isDigit(paddedStrong.charAt(paddedStrong.length() - 1))) {
+                Character suffix = this.strongAugmentationService.getAugmentedStrongSuffix(s);
+                if (suffix != null) {
+                    //add the suffix back
+                    paddedStrong += suffix;
+                }
             }
             strongList.add(paddedStrong);
         }

@@ -175,7 +175,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             resultsPerVersion.put(version, luceneSearchResults);
         } else {
             LOGGER.error("Module [{}] is not indexed.", version);
-            resultsPerVersion.put(version, new DefaultKeyList());
+            resultsPerVersion.put(version, PassageKeyFactory.instance().createEmptyKeyList(av11nService.getVersificationForVersion(bible)));
         }
     }
 

@@ -153,6 +153,7 @@ var MainSearchView = Backbone.View.extend({
                 && event.object.item.wholeBook
                 ) {
                 event.preventDefault();
+                self.isOpeningBibleList = true;
                 self._addSpecificContext(REFERENCE, event.object.item.osisID);
 
                 //wipe the last term to force a re-select

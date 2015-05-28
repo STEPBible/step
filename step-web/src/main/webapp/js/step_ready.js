@@ -58,7 +58,7 @@
 
     function initSearchDropdown() {
         //setup search view
-        var searchView = new MainSearchView();
+        window.searchView = new MainSearchView();
         //we will sync the URL on load, if and only if there are arguments, i.e. not the home page...
         //to be firmed up
         searchView.syncWithUrl(step.util.activePassage());

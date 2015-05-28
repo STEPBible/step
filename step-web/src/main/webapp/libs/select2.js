@@ -2577,12 +2577,15 @@ the specific language governing permissions and limitations under the Apache Lic
                         this.moveHighlight((e.which === KEY.UP) ? -1 : 1);
                         killEvent(e);
                         return;
-                    case KEY.ENTER:
+                        case KEY.ENTER:
                          var selectedData = this.selectHighlighted();
 
-                        //STEP MOFICATION
-                        //only kill event if we're showing results
-                        if($(".select2-parent-no-results").length == 0 && selectedData.isControl == true) {
+                        //STEP MODIFICATION
+                        //only kill event if we're showing results, or if there is nothing highlighted or kill for all BIBLE_BOOK
+                        if(selectedData == null || $(".select2-parent-no-results").length == 0 && selectedData.isControl == true ||
+                            window.searchView.isOpeningBibleList == true
+                        ) {
+                            window.searchView.isOpeningBibleList = false;
                             killEvent(e);
                         }
                         //END STEP MODIFICATION

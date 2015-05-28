@@ -113,7 +113,11 @@ public class VocabInfo implements Serializable {
      * @return
      */
     private String stripExtensions(final String relatedNumbers) {
-        StringBuilder sb = new StringBuilder();
+        if(relatedNumbers == null) {
+            return "";
+        }
+
+        final StringBuilder sb = new StringBuilder();
         for(int ii = 0; ii < relatedNumbers.length(); ii++) {
             char c = relatedNumbers.charAt(ii);
             //if the character is alphabetic and finishes a word, then we ignore it.

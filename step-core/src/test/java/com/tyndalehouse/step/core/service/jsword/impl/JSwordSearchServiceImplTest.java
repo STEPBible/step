@@ -43,7 +43,7 @@ public class JSwordSearchServiceImplTest {
         when(mockOptionsService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class), any(InterlinearMode.class)))
                 .thenReturn(new AvailableFeatures());
         this.search = new JSwordSearchServiceImpl(mockVersificationService, null, new JSwordPassageServiceImpl(
-                mockVersificationService, null, null, null, mock(VersionResolver.class), mockOptionsService));
+                mockVersificationService, null, null, null, TestUtils.mockVersionResolver(), mockOptionsService));
     }
 
     /**

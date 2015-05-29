@@ -133,7 +133,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 
     @Override
     public String reduce(final String augmentedStrong) {
-        if(augmentedStrong.charAt(0) == 'H' && Character.isLetter(augmentedStrong.charAt(augmentedStrong.length() -1))) {
+        final char firstChar = augmentedStrong.charAt(0);
+        if((firstChar == 'H' || firstChar == 'h') && Character.isLetter(augmentedStrong.charAt(augmentedStrong.length() -1))) {
             return augmentedStrong.substring(0, augmentedStrong.length() - 1);
         }
         return augmentedStrong;

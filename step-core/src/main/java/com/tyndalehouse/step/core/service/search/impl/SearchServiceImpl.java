@@ -779,7 +779,7 @@ public class SearchServiceImpl implements SearchService {
                 continue;
             }
 
-            if (verseText.contains(strong)) {
+            if (verseText.contains(this.strongAugmentationService.reduce(strong))) {
                 List<LexicalSearchEntry> list = keyedOrder.get(strong);
                 if (list == null) {
                     list = new ArrayList<LexicalSearchEntry>(16);

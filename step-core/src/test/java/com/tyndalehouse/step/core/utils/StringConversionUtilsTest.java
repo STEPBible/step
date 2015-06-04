@@ -140,9 +140,9 @@ public class StringConversionUtilsTest {
     public void testGetStrongPaddedKey() {
         assertEquals("", getStrongPaddedKey(null));
         assertEquals("", getStrongPaddedKey(""));
-        assertEquals("G", getStrongPaddedKey("G"));
-        assertEquals("H", getStrongPaddedKey("H"));
-        assertEquals("000A", getStrongPaddedKey("A"));
+        assertEquals("g", getStrongPaddedKey("G"));
+        assertEquals("h", getStrongPaddedKey("H"));
+        assertEquals("000a", getStrongPaddedKey("A"));
         assertEquals("G1020", getStrongPaddedKey("strong:G1020"));
         assertEquals("G0001", getStrongPaddedKey("strong:G1"));
         assertEquals("G0012", getStrongPaddedKey("strong:G12"));
@@ -153,7 +153,9 @@ public class StringConversionUtilsTest {
         assertEquals("0012", getStrongPaddedKey("strong:12"));
         assertEquals("0123", getStrongPaddedKey("strong:123"));
         assertEquals("1234", getStrongPaddedKey("strong:1234"));
-        assertEquals("H1234 H5678", getStrongPaddedKey("H01234 H5678"));
+        assertEquals("H1234 H5678",  getStrongPaddedKey("H01234 H5678"));
+        assertEquals("H1234 H5678a", getStrongPaddedKey("H01234 H5678A"));
+        assertEquals("H1234a H5678", getStrongPaddedKey("H01234A H5678"));
     }
 
     /**

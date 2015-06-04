@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Demonstrates how to write a JUnit test that runs tests against Sauce Labs using multiple browsers in parallel.
@@ -29,7 +30,7 @@ import static org.junit.Assert.assertEquals;
  * @author Ross Rowe
  */
 @RunWith(ConcurrentParameterized.class)
-public class AbstractSTEPTest implements SauceOnDemandSessionIdProvider {
+public abstract class AbstractSTEPTest implements SauceOnDemandSessionIdProvider {
 
     /**
      * Constructs a {@link SauceOnDemandAuthentication} instance using the supplied user name/access key.  To use the authentication
@@ -135,6 +136,10 @@ public class AbstractSTEPTest implements SauceOnDemandSessionIdProvider {
         if (System.getProperty("local") != null) {
             this.driver = new RemoteWebDriver(service.getUrl(), DesiredCapabilities.chrome());
         } else {
+            if(authentication.getUsername() == null || authentication.getAccessKey() == null) {
+                fail("No login credentials for sauce. Maybe use -Dlocal to execute locally");
+            }
+
             this.driver = new RemoteWebDriver(
                     new URL("http://" + authentication.getUsername() + ":" + authentication.getAccessKey() + "@ondemand.saucelabs.com:80/wd/hub"),
                     capabilities);

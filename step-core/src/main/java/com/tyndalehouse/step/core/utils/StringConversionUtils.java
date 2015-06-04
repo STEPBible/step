@@ -171,13 +171,6 @@ public final class StringConversionUtils {
             }
         }
 
-        //if it's an augmented strong, we need to lower case the last letter, so
-        final int lastCharPosition = sb.length() - 1;
-        final char lastChar = sb.charAt(lastCharPosition);
-        if(Character.isAlphabetic(lastChar)) {
-            sb.setCharAt(lastCharPosition, Character.toLowerCase(lastChar));
-        }
-
         return sb.toString().trim();
     }
 
@@ -195,6 +188,16 @@ public final class StringConversionUtils {
             sb.append('0');
         }
         sb.append(strongNumber);
+        fixAugmentedSuffix(sb);
+    }
+
+    private static void fixAugmentedSuffix(StringBuilder sb) {
+        //if it's an augmented strong, we need to lower case the last letter, so
+        final int lastCharPosition = sb.length() - 1;
+        final char lastChar = sb.charAt(lastCharPosition);
+        if (Character.isAlphabetic(lastChar)) {
+            sb.setCharAt(lastCharPosition, Character.toLowerCase(lastChar));
+        }
     }
 
     /**
@@ -210,13 +213,26 @@ public final class StringConversionUtils {
     /**
      * Pads the given prefixed number, from say G12 to G0012
      *
-     * @param sb           the string to build up
-     * @param strongNumber the strong number
-     * @param length       the length of the string
-     * @param firstChar    the first character, i.e. either G or H
+     * @param sb                   the string to build up
+     * @param suffixedStrongNumber the strong number
+     * @param length               the length of the string
+     * @param firstChar            the first character, i.e. either G or H
      */
-    private static void padPrefixedStrongNumber(final StringBuilder sb, final String strongNumber,
-                                                final int length, final char firstChar) {
+    private static void padPrefixedStrongNumber(final StringBuilder sb, final String suffixedStrongNumber,
+                                                final int suffixedLength, final char firstChar) {
+        String strongNumber;
+        boolean suffix = false;
+        int length = 0;
+        final char lastChar = suffixedStrongNumber.charAt(suffixedStrongNumber.length() - 1);
+        if (Character.isAlphabetic(lastChar)) {
+            strongNumber = suffixedStrongNumber.substring(0, suffixedStrongNumber.length() - 1);
+            suffix = true;
+            length = suffixedLength - 1;
+        } else {
+            strongNumber = suffixedStrongNumber;
+            length = suffixedLength;
+        }
+
         switch (length) {
             case 1:
                 sb.append(strongNumber);
@@ -257,6 +273,10 @@ public final class StringConversionUtils {
             default:
                 sb.append(strongNumber);
                 break;
+        }
+
+        if (suffix) {
+            sb.append(Character.toLowerCase(lastChar));
         }
     }
 
@@ -309,7 +329,7 @@ public final class StringConversionUtils {
      * @return the unaccented form
      */
     public static String unAccent(final String word, final boolean isGreek) {
-      return unAccent(word, isGreek, true);
+        return unAccent(word, isGreek, true);
     }
 
 

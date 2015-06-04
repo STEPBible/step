@@ -74,11 +74,31 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 
             //add the reference in the query. We may have several due to versifications mapping, so we're going to look for documents where at least 1 of the verses is in the doc
             query.append(") AND (");
-            String[] individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getOsisKeyId());
-            for (String v : individualVerses) {
-                query.append("references:");
-                query.append(v);
-                query.append(' ');
+            String[] individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
+            //a single chapter can be optimized, also JSword returns the key as Gen.1 rather than expanded
+            boolean queryAppended = false;
+            if(individualVerses.length == 1) {
+                int countSeparators = 0;
+                for(int ii = 0; ii < individualVerses[0].length() && countSeparators < 2; ii++) {
+                    if(individualVerses[0].charAt(ii) == '.') {
+                        countSeparators++;
+                    }
+                }
+                if(countSeparators < 2) {
+                    query.append("references:");
+                    query.append(individualVerses[0]);
+                    query.append(".*");
+                    query.append(' ');
+                    queryAppended = true;
+                }
+            }
+
+            if(!queryAppended) {
+                for (String v : individualVerses) {
+                    query.append("references:");
+                    query.append(v);
+                    query.append(' ');
+                }
             }
             query.append(")");
 

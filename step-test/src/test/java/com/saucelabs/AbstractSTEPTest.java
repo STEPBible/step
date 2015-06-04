@@ -99,8 +99,24 @@ public abstract class AbstractSTEPTest implements SauceOnDemandSessionIdProvider
     @ConcurrentParameterized.Parameters
     public static LinkedList browsersStrings() {
         LinkedList browsers = new LinkedList();
+
+        //internet explorer on all windows versions
         browsers.add(new String[]{"Windows 8.1", "11", "internet explorer"});
-        browsers.add(new String[]{"OSX 10.8", "6", "safari"});
+        browsers.add(new String[]{"Windows 8", "10", "internet explorer"});
+        browsers.add(new String[]{"Windows 7", "9", "internet explorer"});
+
+        //chrome & opera
+        browsers.add(new String[]{"Windows 8.1", null, "chrome"});
+        browsers.add(new String[]{"Windows 8.1", null, "opera"});
+
+        //firefox
+        browsers.add(new String[]{"Windows 8.1", null, "firefox"});
+
+        //mac osx
+        browsers.add(new String[]{"OSX 10.8", null, "safari"});
+        browsers.add(new String[]{"OSX 10.9", null, "safari"});
+        browsers.add(new String[]{"OSX 10.10", null, "safari"});
+
         return browsers;
     }
 

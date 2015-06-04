@@ -132,6 +132,7 @@
         <module>step-server</module>
         <module>step-tools</module>
         <module>step-mobile-generator</module>
+        <module>step-test</module>
         <!-- <module>step-web-test</module> -->
     </modules>
 

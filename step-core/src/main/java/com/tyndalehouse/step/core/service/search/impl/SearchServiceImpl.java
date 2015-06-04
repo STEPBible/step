@@ -84,12 +84,7 @@ import org.apache.lucene.queryParser.QueryParser.Operator;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.passage.DefaultKeyList;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.KeyUtil;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.RangedPassage;
-import org.crosswire.jsword.passage.VerseKey;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
 import org.slf4j.Logger;
@@ -1752,12 +1747,17 @@ public class SearchServiceImpl implements SearchService {
         // combine the results into 1 giant keyed map
         final IndividualSearch currentSearch = sq.getCurrentSearch();
 
-        int total = results.getCardinality();
-        final Key pagedKeys = this.jswordSearch.rankAndTrimResults(sq, results);
+        Key adaptedResults = results;
+        if(adaptedResults == null) {
+            adaptedResults = PassageKeyFactory.instance().createEmptyKeyList(this.versificationService.getVersificationForVersion(JSwordPassageService.BEST_VERSIFICATION));
+        }
+
+        int total = adaptedResults.getCardinality();
+        final Key pagedKeys = this.jswordSearch.rankAndTrimResults(sq, adaptedResults);
 
         // retrieve scripture content and set up basics
         final SearchResult resultsForKeys = this.jswordSearch.getResultsFromTrimmedKeys(sq, currentSearch.getVersions(), total, pagedKeys);
-        resultsForKeys.setTotal(this.jswordSearch.getTotal(results));
+        resultsForKeys.setTotal(this.jswordSearch.getTotal(adaptedResults));
         resultsForKeys.setQuery(sq.getOriginalQuery());
         return resultsForKeys;
     }

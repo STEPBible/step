@@ -113,6 +113,10 @@
   }
 
   .notesPane {
+    &> a:hover {
+      cursor: text;
+      text-decoration: none;
+    }
     text-align: left;
     min-height: 100%;
     &:empty {

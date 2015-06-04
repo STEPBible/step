@@ -38,6 +38,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.tyndalehouse.step.core.models.stats.ScopeType;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
@@ -69,6 +70,7 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     private final Versification strongsV11n;
     private final Book strongsBook;
     private final Properties stopWordsProperties;
+    private StrongAugmentationService strongAugmentationService;
 
     /**
      * Instantiates a new jsword analysis service impl.
@@ -78,9 +80,11 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     @Inject
     public JSwordAnalysisServiceImpl(final JSwordVersificationService versification,
                                      @Named("StepCoreProperties") final Properties stopWordsProperties,
-                                     @Named("analysis.stopStrongs") final String configuredStopStrongs) {
+                                     @Named("analysis.stopStrongs") final String configuredStopStrongs,
+                                     final StrongAugmentationService strongAugmentationService) {
         this.versification = versification;
         this.stopWordsProperties = stopWordsProperties;
+        this.strongAugmentationService = strongAugmentationService;
         stopStrongs = StringUtils.createSet(configuredStopStrongs);
         strongsBook = this.versification.getBookFromVersion(JSwordPassageService.REFERENCE_BOOK);
         strongsV11n = this.versification.getVersificationForVersion(strongsBook);
@@ -91,7 +95,7 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
         try {
             //change the reference to match what we need
             final BookData expandedBook = getExpandedBookData(reference, scopeType, strongsV11n, strongsBook);
-            return getStatsFromStrongArray(split(OSISUtil.getStrongsNumbers(expandedBook.getOsisFragment())));
+            return getStatsFromStrongArray(expandedBook.getFirstBook().getInitials(), expandedBook.getKey(), split(OSISUtil.getStrongsNumbers(expandedBook.getOsisFragment())));
         } catch (final BookException e) {
             throw new StepInternalException("Unable to read passage text", e);
         }
@@ -232,12 +236,17 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
      * @param words the words
      * @return the stats from word array
      */
-    private PassageStat getStatsFromStrongArray(final String[] words) {
+    private PassageStat getStatsFromStrongArray(final String version, final Key reference, final String[] words) {
         final PassageStat stat = new PassageStat();
-        for (final String word : words) {
-            final String paddedStrongNumber = StringConversionUtils.getStrongPaddedKey(word);
-            if (!this.stopStrongs.contains(paddedStrongNumber.toUpperCase())) {
-                stat.addWord(paddedStrongNumber);
+        //slight annoyance that we are deserializing the key to re-serialise later
+        final String ref = reference.getOsisRef();
+        for (final String unaugmentedWord : words) {
+            StrongAugmentationService.AugmentedStrongs strongs = this.strongAugmentationService.augment(version, ref, unaugmentedWord);
+            for(String word : strongs.getStrongList()) {
+                final String paddedStrongNumber = StringConversionUtils.getStrongPaddedKey(word);
+                if (!this.stopStrongs.contains(paddedStrongNumber.toUpperCase())) {
+                    stat.addWord(paddedStrongNumber);
+                }
             }
         }
         return stat;

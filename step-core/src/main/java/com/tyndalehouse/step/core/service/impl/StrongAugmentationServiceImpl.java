@@ -8,6 +8,7 @@ import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
@@ -60,7 +61,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 //then we're looking at Hebrew, so look up the augmentedStrongs data
                 //and we're looking for the first of any strong number
                 //build the lucene query...
-                query.append(keys[i]);
+                query.append(StringConversionUtils.getStrongPaddedKey(keys[i]));
                 query.append("? ");
             } else {
                 //add directly to the augmented list
@@ -85,14 +86,15 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             docs = this.augmentedStrongs.search("augmentedStrong", query.toString());
             for (EntityDoc d : docs) {
                 final String augmentedStrong = d.get("augmentedStrong");
-                augmentedStrongs.put(augmentedStrong.substring(augmentedStrong.length() - 1), augmentedStrong);
+                augmentedStrongs.put(augmentedStrong.substring(0, augmentedStrong.length() - 1).toLowerCase(), augmentedStrong);
             }
 
             //now we need to work out which strongs were not augmented and add them to the list
             //check which strongs didn't make it
             for (String k : keys) {
-                if (!augmentedStrongs.containsKey(k)) {
-                    augmentedStrongs.put(k, k);
+                final String keyingStrong = StringConversionUtils.getStrongPaddedKey(k).toLowerCase();
+                if (!augmentedStrongs.containsKey(keyingStrong)) {
+                    augmentedStrongs.put(keyingStrong, k);
                 }
             }
         } else {

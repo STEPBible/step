@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
 import com.tyndalehouse.step.core.models.stats.ScopeType;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.utils.TestUtils;
 import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.system.Versifications;
@@ -42,6 +43,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * The Class JSwordAnalysisServiceImplTest.
@@ -58,7 +60,7 @@ public class JSwordAnalysisServiceImplTest {
 
     @Test
     public void testExpand() throws NoSuchKeyException {
-        JSwordAnalysisServiceImpl impl = new JSwordAnalysisServiceImpl(TestUtils.mockVersificationService(), null, null);
+        JSwordAnalysisServiceImpl impl = new JSwordAnalysisServiceImpl(TestUtils.mockVersificationService(), null, null, mock(StrongAugmentationService.class));
 
         //normal use cases
         assertEquals("Gen.3", impl.getExpandedBookData(get("Gen.3.3"), ScopeType.CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());

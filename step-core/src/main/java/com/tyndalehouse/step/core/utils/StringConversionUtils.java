@@ -170,6 +170,14 @@ public final class StringConversionUtils {
                 padNonPrefixedStrongNumber(sb, strongNumber, length);
             }
         }
+
+        //if it's an augmented strong, we need to lower case the last letter, so
+        final int lastCharPosition = sb.length() - 1;
+        final char lastChar = sb.charAt(lastCharPosition);
+        if(Character.isAlphabetic(lastChar)) {
+            sb.setCharAt(lastCharPosition, Character.toLowerCase(lastChar));
+        }
+
         return sb.toString().trim();
     }
 

@@ -59,6 +59,7 @@ public class SearchQuery {
     private final String sortOrder;
     private List<EntityDoc> definitions;
     private String interlinearMode;
+    private String augmentedRange;
 
     /**
      * @param searchQuery the query to be run
@@ -319,5 +320,13 @@ public class SearchQuery {
 
     public void setCurrentSearchAsFirstSearch() {
         this.currentSearch = 0;
+    }
+
+    public String getAugmentedRange() {
+        return augmentedRange;
+    }
+
+    public void setAugmentedRange(String augmentedRange) {
+        this.augmentedRange = augmentedRange;
     }
 }

@@ -284,6 +284,9 @@ var PassageDisplayView = DisplayView.extend({
             var myPosition = passageId == 0 ? "left" : "right";
             var atPosition = passageId == 0 ? "right" : "left";
 
+            //remove click functionality from verse headers...
+            $(".notesPane > a", passageContent).click(function(e) { e.preventDefault(); })
+
             var xrefs = $(".notesPane [xref]", passageContent);
             for (var i = 0; i < xrefs.length; i++) {
                 var item = xrefs.eq(i);

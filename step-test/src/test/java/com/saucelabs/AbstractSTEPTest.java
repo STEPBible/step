@@ -142,16 +142,6 @@ public class AbstractSTEPTest implements SauceOnDemandSessionIdProvider {
         this.sessionId = (((RemoteWebDriver) driver).getSessionId()).toString();
     }
 
-    /**
-     * Runs a simple test verifying the title of the amazon.com homepage.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void homePage() throws Exception {
-        driver.get(System.getProperty("url"));
-        assertEquals("Gen.1 | ESV | STEP | In the beginning, God created the heavens and the earth.", driver.getTitle());
-    }
 
     /**
      * Closes the {@link WebDriver} session.
@@ -176,5 +166,13 @@ public class AbstractSTEPTest implements SauceOnDemandSessionIdProvider {
     @Override
     public String getSessionId() {
         return sessionId;
+    }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public String getDefaultURL() {
+        return System.getProperty("url") == null ? "http://dev.stepbible.org" : System.getProperty("url");
     }
 }

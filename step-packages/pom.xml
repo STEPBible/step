@@ -38,7 +38,7 @@
         <sword.home>c:\Users\Chris\AppData\Roaming\Sword</sword.home>
         <jsword.home>${sword.home}/../JSword</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-        <modulesToInclude>esv,kjv,osmhb,lxx-the,sblg-the,niv,abpen-the,abpgk-the</modulesToInclude>
+        <modulesToInclude>esv-the,kjv,osmhb,lxx-the,sblg-the,niv,abpen-the,abpgk-the</modulesToInclude>
     </properties>
 
 

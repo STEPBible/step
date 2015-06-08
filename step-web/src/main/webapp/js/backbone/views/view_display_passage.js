@@ -55,7 +55,7 @@ var PassageDisplayView = DisplayView.extend({
                 step.util.restoreFontSize(this.model, passageHtml);
                 this._addStrongHandlers(passageId, passageHtml);
                 this._doDuplicateNotice(passageId, passageHtml);
-                this._updatePageTitle(passageId, passageHtml, version, reference);
+                this._updatePageTitle(passageId, passageHtml, version, this.model.get("reference"));
                 this._doInterlinearDividers(passageHtml);
                 this._doAlternatives(passageId, passageHtml, version, reference);
 

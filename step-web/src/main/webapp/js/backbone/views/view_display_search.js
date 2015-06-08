@@ -80,7 +80,8 @@ var SearchDisplayView = DisplayView.extend({
         step.util.restoreFontSize(this.model, results.find(".passageContentHolder"));
 
         if (append) {
-            this.getScrollableArea().append(results);
+            //already appended?
+            //this.getScrollableArea().append(results);
         } else {
             var passageHtml = results;
             if (!this.options.partRendered) {

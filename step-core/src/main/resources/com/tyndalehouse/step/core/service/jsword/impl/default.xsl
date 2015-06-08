@@ -267,6 +267,9 @@
         <xsl:apply-templates/>
     </xsl:template>
 
+    <xsl:template match="div[@type='x-p']">
+        <p />
+    </xsl:template>
 
     <xsl:template match="div">
         <xsl:apply-templates/>
@@ -293,7 +296,7 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:for-each>
-        <!-- Handle the KJV paragraph marker. -->
+        <!-- Handle the KJV and ESV paragraph marker. -->
         <xsl:if test="milestone[@type = 'x-p']"><p /></xsl:if>
         <!-- If the verse doesn't start on its own line and -->
         <!-- the verse is not the first verse of a set of siblings, -->

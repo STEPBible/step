@@ -1,4 +1,4 @@
-package com.saucelabs;
+package com.tyndalehouse.step.test;
 
 import com.saucelabs.common.SauceOnDemandAuthentication;
 import com.saucelabs.common.SauceOnDemandSessionIdProvider;
@@ -6,6 +6,7 @@ import com.saucelabs.junit.ConcurrentParameterized;
 import com.saucelabs.junit.SauceOnDemandTestWatcher;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.remote.CapabilityType;
@@ -99,24 +100,25 @@ public abstract class AbstractSTEPTest implements SauceOnDemandSessionIdProvider
     @ConcurrentParameterized.Parameters
     public static LinkedList browsersStrings() {
         LinkedList browsers = new LinkedList();
-
-        //internet explorer on all windows versions
-        browsers.add(new String[]{"Windows 8.1", "11", "internet explorer"});
-        browsers.add(new String[]{"Windows 8", "10", "internet explorer"});
-        browsers.add(new String[]{"Windows 7", "9", "internet explorer"});
-
-        //chrome & opera
         browsers.add(new String[]{"Windows 8.1", null, "chrome"});
-        browsers.add(new String[]{"Windows 8.1", null, "opera"});
 
-        //firefox
-        browsers.add(new String[]{"Windows 8.1", null, "firefox"});
+        if(System.getProperty("local") == null) {
+            //internet explorer on all windows versions
+            browsers.add(new String[]{"Windows 8.1", "11", "internet explorer"});
+            browsers.add(new String[]{"Windows 8", "10", "internet explorer"});
+            browsers.add(new String[]{"Windows 7", "9", "internet explorer"});
 
-        //mac osx
-        browsers.add(new String[]{"OSX 10.8", null, "safari"});
-        browsers.add(new String[]{"OSX 10.9", null, "safari"});
-        browsers.add(new String[]{"OSX 10.10", null, "safari"});
+            //chrome & opera
+            browsers.add(new String[]{"Windows 8.1", null, "opera"});
 
+            //firefox
+            browsers.add(new String[]{"Windows 8.1", null, "firefox"});
+
+            //mac osx
+            browsers.add(new String[]{"OSX 10.8", null, "safari"});
+            browsers.add(new String[]{"OSX 10.9", null, "safari"});
+            browsers.add(new String[]{"OSX 10.10", null, "safari"});
+        }
         return browsers;
     }
 
@@ -196,4 +198,15 @@ public abstract class AbstractSTEPTest implements SauceOnDemandSessionIdProvider
     public String getDefaultURL() {
         return System.getProperty("url") == null ? "http://dev.stepbible.org" : System.getProperty("url");
     }
+
+    public void openHomePage() {
+        getDriver().get(getDefaultURL());
+    }
+
+    public void openHomePage(String language) {
+        openHomePage();
+        getDriver().findElement(By.linkText("Language")).click();
+        getDriver().findElement(By.xpath(String.format("//a[@lang='%s']", language))).click();
+    }
+
 }

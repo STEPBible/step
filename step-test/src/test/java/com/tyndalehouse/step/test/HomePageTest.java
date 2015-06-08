@@ -32,6 +32,6 @@ public class HomePageTest extends AbstractSTEPTest {
     @Test
     public void homePage() throws Exception {
         openHomePage();
-        assertEquals("Gen.1 | ESV | STEP | In the beginning, God created the heavens and the earth.", getDriver().getTitle());
+        assertEquals("Gen 1 | ESV | STEP | In the beginning, God created the heavens and the earth.", getDriver().getTitle());
     }
 }

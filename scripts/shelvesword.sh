@@ -1,5 +1,4 @@
 #!/bin/sh 
-set -e
 
 #swaps the user home on Windows
 mv $APPDATA/Sword $APPDATA/Sword.push

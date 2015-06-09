@@ -898,8 +898,8 @@ public class SearchServiceImpl implements SearchService {
                     break;
                 case ORIGINAL_GREEK_RELATED:
                 case ORIGINAL_HEBREW_RELATED:
-                    adaptQueryForRelatedStrongSearch(sq);
-                    results = intersect(results, this.jswordSearch.searchKeys(sq));
+                    Set<String> strongs = adaptQueryForRelatedStrongSearch(sq);
+                    results = intersect(results, this.runStrongTextSearchKeys(sq, strongs));
                     break;
                 case ORIGINAL_MEANING:
                     adaptQueryForMeaningSearch(sq);
@@ -1135,6 +1135,15 @@ public class SearchServiceImpl implements SearchService {
      * @return the search results
      */
     private SearchResult runStrongTextSearch(final SearchQuery sq, final Set<String> strongs) {
+        Key key = runStrongTextSearchKeys(sq, strongs);
+
+        final SearchResult textResults = buildCombinedVerseBasedResults(sq, key);
+
+        textResults.setStrongHighlights(new ArrayList<>(strongs));
+        return textResults;
+    }
+
+    private Key runStrongTextSearchKeys(SearchQuery sq, Set<String> strongs) {
         //searches for strongs have got slightly more complicated now that we are doing augmented strongs as well...
         // so for example, we have the query strong:h00001 strong:h00002 strong:h00003 strong:h00004a strong:h00005a
         //we can run a simple strong search for normal strong numbers
@@ -1180,10 +1189,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         currentSearch.setQuery(currentQuery);
-        final SearchResult textResults = buildCombinedVerseBasedResults(sq, key);
-
-        textResults.setStrongHighlights(new ArrayList<>(strongs));
-        return textResults;
+        return key;
     }
 
     /**

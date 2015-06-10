@@ -109,7 +109,7 @@ public abstract class AbstractSTEPTest implements SauceOnDemandSessionIdProvider
             browsers.add(new String[]{"Windows 7", "9", "internet explorer"});
 
             //chrome & opera
-            browsers.add(new String[]{"Windows 8.1", null, "opera"});
+            browsers.add(new String[]{"Linux", null, "opera"});
 
             //firefox
             browsers.add(new String[]{"Windows 8.1", null, "firefox"});

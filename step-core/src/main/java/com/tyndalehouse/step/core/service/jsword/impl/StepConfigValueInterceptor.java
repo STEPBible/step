@@ -1,6 +1,8 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
 import com.tyndalehouse.step.core.utils.StringUtils;
+import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.sword.ConfigEntryType;
 import org.crosswire.jsword.book.sword.ConfigValueInterceptor;
 import org.jasypt.util.text.BasicTextEncryptor;
@@ -13,6 +15,7 @@ import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,11 +26,11 @@ import java.util.Set;
 public class StepConfigValueInterceptor implements ConfigValueInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepConfigValueInterceptor.class);
     private final BasicTextEncryptor encryptor;
-    private final Set<String> books;
+//    private final Set<String> books;
     private final Map<String, String> decryptions = new HashMap<>();
 
     @Inject
-    public StepConfigValueInterceptor(@Named("app.internal.key") String key, @Named("app.locked.books") String lockedBooks) {
+    public StepConfigValueInterceptor(@Named("app.internal.key") String key) {
         final BasicTextEncryptor encryptor = new BasicTextEncryptor();
 
         final String sysKey = System.getProperty("app.internal.key");
@@ -38,12 +41,12 @@ public class StepConfigValueInterceptor implements ConfigValueInterceptor {
             encryptor.setPassword(key);
         }
         this.encryptor = encryptor;
-        this.books = new HashSet(Arrays.asList(StringUtils.split(lockedBooks)));
+//        this.books = new HashSet(Arrays.asList(StringUtils.split(lockedBooks)));
     }
 
     @Override
     public Object intercept(final String bookName, final ConfigEntryType configEntryType, final Object value) {
-        if (value != null && ConfigEntryType.CIPHER_KEY.equals(configEntryType) && books.contains(bookName.toLowerCase())) {
+        if (value != null && ConfigEntryType.CIPHER_KEY.equals(configEntryType) && isSTEPBook(bookName.toLowerCase())) {
             try {
                 String decryptedResult = decryptions.get(value);
                 if(decryptedResult != null) {
@@ -63,5 +66,14 @@ public class StepConfigValueInterceptor implements ConfigValueInterceptor {
             }
         }
             return value;
+    }
+
+    private boolean isSTEPBook(final String initials) {
+        Book b = Books.installed().getBook(initials);
+        final Object stepLocked = b.getBookMetaData().getProperty("STEPLocked");
+        if(stepLocked instanceof List) {
+            return Boolean.parseBoolean((String)((List) stepLocked).get(0));
+        }
+        return Boolean.parseBoolean((String) stepLocked);
     }
 }

@@ -25,7 +25,7 @@
     <parent>
         <groupId>com.tyndalehouse.step</groupId>
         <artifactId>step-mvn</artifactId>
-        <version>2.0.6-SNAPSHOT</version>
+        <version>2.0.8-SNAPSHOT</version>
     </parent>
 
     <groupId>com.tyndalehouse.step</groupId>
@@ -38,7 +38,7 @@
         <sword.home>c:\Users\Chris\AppData\Roaming\Sword</sword.home>
         <jsword.home>${sword.home}/../JSword</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-        <modulesToInclude>esv,kjv,osmhb,whnu,lxx,sblg-the,niv</modulesToInclude>
+        <modulesToInclude>esv-the,kjv,osmhb,lxx-the,sblg-the,niv,abpen-the,abpgk-the</modulesToInclude>
     </properties>
 
 
@@ -57,8 +57,8 @@
                                     <sequential>
                                         <copy toDir="${explodedPackages}">
                                             <fileset dir="${sword.home}">
-                                                <include name="**/@{version}.conf"/>
-                                                <include name="**/@{version}/**"/>
+                                                <include name="mods.d/@{version}.conf"/>
+                                                <include name="modules/**/@{version}/**"/>
                                             </fileset>
                                         </copy>
 

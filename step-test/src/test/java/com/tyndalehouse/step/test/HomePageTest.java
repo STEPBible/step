@@ -1,5 +1,6 @@
-package com.saucelabs;
+package com.tyndalehouse.step.test;
 
+import com.tyndalehouse.step.test.AbstractSTEPTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +31,7 @@ public class HomePageTest extends AbstractSTEPTest {
      */
     @Test
     public void homePage() throws Exception {
-        getDriver().get(getDefaultURL());
-        assertEquals("Gen.1 | ESV | STEP | In the beginning, God created the heavens and the earth.", getDriver().getTitle());
+        openHomePage();
+        assertEquals("Gen 1 | ESV | STEP | In the beginning, God created the heavens and the earth.", getDriver().getTitle());
     }
 }

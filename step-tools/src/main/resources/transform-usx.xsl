@@ -41,10 +41,11 @@
     <!-- MAJOR SECTION IN USX DOC - BOOK -->
     <!-- Book can have ID attribute, code. Id isn't defined. -->
     <xsl:template match="book">
+        <!-- always close a chapter (which will close a verse) before the end of a book -->
+        <xsl:call-template name="closeChapter" />
+
         <xsl:value-of select="s:markBookStart(@code)" />
         <div osisID="{s:convertBookToOsis(@code)}" type="book">
-            <!-- always close a chapter (which will close a verse) before the end of a book -->
-            <xsl:call-template name="closeChapter" />
 
         </div>
     </xsl:template>

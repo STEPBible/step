@@ -70,6 +70,10 @@ public class StepConfigValueInterceptor implements ConfigValueInterceptor {
 
     private boolean isSTEPBook(final String initials) {
         Book b = Books.installed().getBook(initials);
+        if(b == null) {
+            return false;
+        }
+
         final Object stepLocked = b.getBookMetaData().getProperty("STEPLocked");
         if(stepLocked instanceof List) {
             return Boolean.parseBoolean((String)((List) stepLocked).get(0));

@@ -702,26 +702,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * We have a whole book reference. If the book is less than 5 chapters, we display the whole book. Otherwise we
-     * display the first chapter only.
-     *
-     * @param v11n             the alternative versification
-     * @param requestedPassage the passage
-     * @return the new key
-     * @throws NoSuchKeyException the no such key exception
-     */
-    private Key trimExceedingVersesFromWholeReference(final Versification v11n, final Passage requestedPassage)
-            throws NoSuchKeyException {
-        // Return first chapter only.
-        VerseRange firstChapter = requestedPassage.getRangeAt(0, RestrictionType.CHAPTER);
-        if (firstChapter.getStart().getChapter() == 0) {
-            // go for second chapter, which is chapter 1, going [0, 1, ...]
-            firstChapter = requestedPassage.getRangeAt(1, RestrictionType.CHAPTER);
-        }
-        return normalize(firstChapter, v11n);
-    }
-
-    /**
      * @param requestedPassage the key passage object
      * @return true if represents a whole book.
      */
@@ -771,11 +751,16 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         // if we're looking at a whole book, then we will deal with it in one way,
         final Passage requestedPassage = KeyUtil.getPassage(key);
-        if (requestedPassage.countRanges(RestrictionType.NONE) == 1 && isWholeBook(requestedPassage)) {
-            key = trimExceedingVersesFromWholeReference(v11n, requestedPassage);
-        } else if (cardinality > MAX_VERSES_RETRIEVED) {
-            requestedPassage.trimVerses(MAX_VERSES_RETRIEVED);
-            key = requestedPassage;
+        if (cardinality > MAX_VERSES_RETRIEVED) {
+            VerseRange firstChapter = requestedPassage.getRangeAt(0, RestrictionType.CHAPTER);
+            if (firstChapter.getStart().getChapter() == 0) {
+                key = requestedPassage.getRangeAt(1, RestrictionType.CHAPTER);
+            } else {
+                key = firstChapter;
+            }
+        } else if (isWholeBook(requestedPassage) && !requestedPassage.getRangeAt(0, RestrictionType.CHAPTER).getStart().getBook().isShortBook()) {
+            //we only serve whole books if they don't have a single chapter. e.g. Ruth would yield Ruth.1, but Jude would yield Jude
+            key = requestedPassage.getRangeAt(1, RestrictionType.CHAPTER);
         }
         return key;
     }
@@ -1203,7 +1188,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                             masterVersification,
                             getInterlinearVersion(interlinearVersion),
                             bookData.getKey()
-                            .getOsisID(), displayMode, bookData.getKey(), options);
+                                    .getOsisID(), displayMode, bookData.getKey(), options);
                     setInterleavingOptions(tsep, displayMode, bookData);
                     return tsep;
                 } catch (final URISyntaxException e) {

@@ -546,14 +546,14 @@ public class JSwordPassageServiceImplTest {
         final Versification v = Versifications.instance().getVersification("KJV");
         final Book b = Books.installed().getBook("ESV-THE");
 
-        assertEquals("Gen.2-Gen.9.17", reduceKeySize(v, b, "Gen.2-Rev.1").getOsisRef());
+        assertEquals("Gen.2", reduceKeySize(v, b, "Gen.2-Rev.1").getOsisRef());
         assertEquals("Gen.2", reduceKeySize(v, b, "Gen.2").getOsisRef());
         assertEquals("Gen.0", reduceKeySize(v, b, "Gen.0").getOsisRef());
         assertEquals("Gen.0", reduceKeySize(v, b, "Gen.0").getOsisRef());
         assertEquals("Gen.1.1", reduceKeySize(v, b, "Gen.1.1").getOsisRef());
         assertEquals("Judg.1", reduceKeySize(v, b, "Judg").getOsisRef());
         assertEquals("Jude", reduceKeySize(v, b, "Jude").getOsisRef());
-        assertEquals("Ruth", reduceKeySize(v, b, "Rut").getOsisRef());
+        assertEquals("Ruth.1", reduceKeySize(v, b, "Rut").getOsisRef());
 
     }
 

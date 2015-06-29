@@ -383,7 +383,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         final Book book = this.versificationService.getBookFromVersion(initials);
 
         if (book != null) {
-            Book deadBook = Books.installed().getBook(initials);
+            Book deadBook = Books.installed().getBook(book.getInitials());
             try {
                 IndexManagerFactory.getIndexManager().deleteIndex(deadBook);
             } catch (Exception e) {

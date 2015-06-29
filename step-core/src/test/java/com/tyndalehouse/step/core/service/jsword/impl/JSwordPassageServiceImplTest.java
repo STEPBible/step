@@ -514,7 +514,7 @@ public class JSwordPassageServiceImplTest {
         assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", "Gen 1").getKey().getOsisRef());
         assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", "Gen").getKey().getOsisRef());
         assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", "Gen 1-50").getKey().getOsisRef());
-        assertEquals("Gen.1-Gen.8.8", this.jsi.getBookData("ESV-THE", "Gen 1-12").getKey().getOsisRef());
+        assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", "Gen 1-12").getKey().getOsisRef());
         assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", " Gen").getKey().getOsisRef());
         assertEquals("Gen.1", this.jsi.getBookData("ESV-THE", "Gen ").getKey().getOsisRef());
     }

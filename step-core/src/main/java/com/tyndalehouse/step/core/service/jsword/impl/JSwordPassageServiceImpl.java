@@ -712,12 +712,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     private Key trimExceedingVersesFromWholeReference(final Versification v11n, final Passage requestedPassage)
             throws NoSuchKeyException {
-        if (v11n.getLastChapter(requestedPassage.getRangeAt(0, RestrictionType.NONE).getStart().getBook()) <= MAX_SMALL_BOOK_CHAPTER_COUNT) {
-            // return whole chapter
-            return requestedPassage;
-        }
-
-        // else return first chapter only.
+        // Return first chapter only.
         VerseRange firstChapter = requestedPassage.getRangeAt(0, RestrictionType.CHAPTER);
         if (firstChapter.getStart().getChapter() == 0) {
             // go for second chapter, which is chapter 1, going [0, 1, ...]

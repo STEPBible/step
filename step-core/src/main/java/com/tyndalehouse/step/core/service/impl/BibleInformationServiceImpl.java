@@ -212,8 +212,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
                     interlinearVersion, desiredModeOfDisplay);
         }
         passageText.setRemovedOptions(removedOptions);
-        passageText.setPreviousChapter(this.jswordPassage.getSiblingChapter(reference, version, true));
-        passageText.setNextChapter(this.jswordPassage.getSiblingChapter(reference, version, false));
+        passageText.setPreviousChapter(this.jswordPassage.getSiblingChapter(passageText.getOsisId(), version, true));
+        passageText.setNextChapter(this.jswordPassage.getSiblingChapter(passageText.getOsisId(), version, false));
         passageText.setOptions(this.optionsValidationService.optionsToString(
                 this.optionsValidationService.getAvailableFeaturesForVersion(version, extraVersions, interlinearMode, realModeOfDisplay).getOptions()));
 

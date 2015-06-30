@@ -252,7 +252,7 @@
     <xsl:template match="char">
         <xsl:choose>
             <xsl:when test="@style = 'va' or @style='vp' or @style='ca' or @style='addpn' or @style='efm' or @style='fm' or @style='ndx'
-                or @style='pn' or @style='pro' or @style='w' or @style='wh' or @style='wg' or @style='ior' or style='iqt'">###NOT SUPPORTED### attribute: <xsl:value-of select="@style" /></xsl:when>
+                or @style='pro' or @style='w' or @style='wh' or @style='wg' or @style='ior' or style='iqt'">###NOT SUPPORTED### attribute: <xsl:value-of select="@style" /></xsl:when>
             <xsl:when test="@style = 'qac'"><hi type="acrostic"><xsl:apply-templates /></hi></xsl:when>
             <xsl:when test="@style = 'qs'"><foreign type="x-selah"><xsl:apply-templates /></foreign></xsl:when>
             <xsl:when test="@style = 'add'"><transChange type="added"><xsl:apply-templates /></transChange></xsl:when>
@@ -295,6 +295,7 @@
             <xsl:when test="@style = 'xk'"><catchWord><xsl:apply-templates /></catchWord></xsl:when>
             <xsl:when test="@style = 'xq'"><q><xsl:apply-templates /></q></xsl:when>
             <xsl:when test="@style = 'xot'"><xsl:apply-templates /></xsl:when>
+            <xsl:when test="@style = 'pn'"><name><xsl:apply-templates /></name></xsl:when>
             <xsl:when test="@style = 'xnt'"><xsl:apply-templates /></xsl:when>
             <xsl:when test="@style = 'xdc'"><seg edition="dc"><xsl:apply-templates /></seg></xsl:when>
             <xsl:otherwise><hi><xsl:apply-templates /></hi></xsl:otherwise>

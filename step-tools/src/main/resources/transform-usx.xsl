@@ -62,6 +62,7 @@
     <xsl:template match="para[@style='toc3']"><!-- Book abbreviation --></xsl:template>
     <xsl:template match="para[@style='rem']"><!-- Remark --></xsl:template>
     <!-- MAJOR SECTION IN USX DOC - END HEADER PARA -->
+    <xsl:template match="para[starts-with(@style, 'z')]"><xsl:apply-templates /></xsl:template>
 
     <!-- MAJOR SECTION IN USX DOC - TitlePara -->
     <!-- Various book titles, secondary and tertiary and small titles
@@ -70,6 +71,7 @@
     <xsl:template match="para[@style='mt' or @style='mt1' or @style='mt2' or @style='mt3' or @style='mt4']">
         <title><xsl:apply-templates/></title>
     </xsl:template>
+    <xsl:template match="para[@style='cl']"></xsl:template>
     <!-- MAJOR SECTION IN USX DOC - END TitlePara -->
 
     <!-- MAJOR SECTION IN USX DOC - IntroPara -->
@@ -83,62 +85,35 @@
         or @style='imt2'
         or @style='imt3'
         or @style='imt4'
-        ]">
-    </xsl:template>
-    <xsl:template match="para[@style='ib']">
-    </xsl:template>
-    <xsl:template match="para[@style='ie']">
-    </xsl:template>
-    <xsl:template match="para[@style='ili']">
-    </xsl:template>
-    <xsl:template match="para[@style='ili2']">
-    </xsl:template>
-    <xsl:template match="para[@style='im']">
-    </xsl:template>
-    <xsl:template match="para[@style='imi']">
-    </xsl:template>
-    <xsl:template match="para[@style='imq']">
-    </xsl:template>
-    <xsl:template match="para[@style='io']">
-    </xsl:template>
-    <xsl:template match="para[@style='io1']">
-    </xsl:template>
-    <xsl:template match="para[@style='io2']">
-    </xsl:template>
-    <xsl:template match="para[@style='io3']">
-    </xsl:template>
-    <xsl:template match="para[@style='io4']">
-    </xsl:template>
-    <xsl:template match="para[@style='ip']">
-    </xsl:template>
-    <xsl:template match="para[@style='ipi']">
-    </xsl:template>
-    <xsl:template match="para[@style='ipq']">
-    </xsl:template>
-    <xsl:template match="para[@style='ipr']">
-    </xsl:template>
-    <xsl:template match="para[@style='iq']">
-    </xsl:template>
-    <xsl:template match="para[@style='iq1']">
-    </xsl:template>
-    <xsl:template match="para[@style='iq2']">
-    </xsl:template>
-    <xsl:template match="para[@style='iq3']">
-    </xsl:template>
-    <xsl:template match="para[@style='is']">
-    </xsl:template>
-    <xsl:template match="para[@style='is1']">
-    </xsl:template>
-    <xsl:template match="para[@style='is2']">
-    </xsl:template>
-    <xsl:template match="para[@style='imte']">
-    </xsl:template>
-    <xsl:template match="para[@style='imte1']">
-    </xsl:template>
-    <xsl:template match="para[@style='imte2']">
-    </xsl:template>
-    <xsl:template match="para[@style='iex']">
-    </xsl:template>
+        ]"></xsl:template>
+    <xsl:template match="para[@style='ib']"></xsl:template>
+    <xsl:template match="para[@style='ie']"></xsl:template>
+    <xsl:template match="para[@style='ili']"></xsl:template>
+    <xsl:template match="para[@style='ili2']"></xsl:template>
+    <xsl:template match="para[@style='im']"></xsl:template>
+    <xsl:template match="para[@style='imi']"></xsl:template>
+    <xsl:template match="para[@style='imq']"></xsl:template>
+    <xsl:template match="para[@style='io']"></xsl:template>
+    <xsl:template match="para[@style='iot']"></xsl:template>
+    <xsl:template match="para[@style='io1']"></xsl:template>
+    <xsl:template match="para[@style='io2']"></xsl:template>
+    <xsl:template match="para[@style='io3']"></xsl:template>
+    <xsl:template match="para[@style='io4']"></xsl:template>
+    <xsl:template match="para[@style='ip']"></xsl:template>
+    <xsl:template match="para[@style='ipi']"></xsl:template>
+    <xsl:template match="para[@style='ipq']"></xsl:template>
+    <xsl:template match="para[@style='ipr']"></xsl:template>
+    <xsl:template match="para[@style='iq']"></xsl:template>
+    <xsl:template match="para[@style='iq1']"></xsl:template>
+    <xsl:template match="para[@style='iq2']"></xsl:template>
+    <xsl:template match="para[@style='iq3']"></xsl:template>
+    <xsl:template match="para[@style='is']"></xsl:template>
+    <xsl:template match="para[@style='is1']"></xsl:template>
+    <xsl:template match="para[@style='is2']"></xsl:template>
+    <xsl:template match="para[@style='imte']"></xsl:template>
+    <xsl:template match="para[@style='imte1']"></xsl:template>
+    <xsl:template match="para[@style='imte2']"></xsl:template>
+    <xsl:template match="para[@style='iex']"></xsl:template>
 
     <!-- MAJOR SECTION IN USX DOC - END IntroPara -->
     <!-- MAJOR SECTION IN USX DOC - paraStyle-->
@@ -183,7 +158,6 @@
         or @style='pmo'
         or @style='pmc'
         or @style='cp'
-        or @style='cl'
         or @style='cd'
         or @style='mte'
         or @style='mte1'
@@ -199,6 +173,9 @@
     <xsl:template match="para[@style='pi1']"><l level="1"><xsl:apply-templates /></l></xsl:template>
     <xsl:template match="para[@style='pi2']"><l level="2"><xsl:apply-templates /></l></xsl:template>
     <xsl:template match="para[@style='pi3']"><l level="3"><xsl:apply-templates /></l></xsl:template>
+    <xsl:template match="para[@style='pm']"><l type="embedded"><xsl:apply-templates /></l></xsl:template>
+    <xsl:template match="para[@style='pmo']"><l type="embedded"><xsl:apply-templates /></l></xsl:template>
+    <xsl:template match="para[@style='pmc']"><l type="embedded"><xsl:apply-templates /></l></xsl:template>
     <xsl:template match="para[@style='pmr']"><l type="refrain"><xsl:apply-templates /></l></xsl:template>
 
     <xsl:template match="para[@style='q']"><l level="1"><xsl:apply-templates /></l></xsl:template>
@@ -275,6 +252,8 @@
             <xsl:when test="@style = 'sc'"><hi type="small-caps"><xsl:apply-templates /></hi></xsl:when>
             <xsl:when test="@style = 'fr'"><reference type="source"><xsl:apply-templates /></reference></xsl:when>
             <xsl:when test="@style = 'ft'"><xsl:apply-templates /></xsl:when>
+            <!-- we will not process custom tags, but rather simply ignore them -->
+            <xsl:when test="starts-with(@style, 'z')"><xsl:apply-templates /></xsl:when>
             <xsl:when test="@style = 'fk'"><catchWord><xsl:apply-templates /></catchWord></xsl:when>
             <xsl:when test="@style = 'fq'"><q><xsl:apply-templates /></q></xsl:when>
             <xsl:when test="@style = 'fqa'"><rdg><xsl:apply-templates /></rdg></xsl:when>

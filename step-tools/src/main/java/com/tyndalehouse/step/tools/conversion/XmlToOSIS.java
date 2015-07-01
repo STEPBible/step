@@ -244,13 +244,13 @@ public class XmlToOSIS {
     }
 
     public static void main(String[] args) throws Exception {
-        String otPath = "C:\\temp\\usx";
+        String otPath = "C:\\dev\\personal\\step-data\\bibles\\biblica\\swahili-neno\\usx";
         String ntPath = null;
-        String outputPath = "C:\\temp\\cym.xml";
+        String outputPath = "C:\\temp\\nvi.xml";
         String type = "usx";
-        String moduleName = "CYM";
+        String moduleName = "PNVI";
         String versification = "KJV";
-        String languageCode = "cy";
+        String languageCode = "pt";
         int retCode = 0;
 
         if (args.length == 7) {

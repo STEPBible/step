@@ -26,7 +26,6 @@ import java.util.Set;
 public class StepConfigValueInterceptor implements ConfigValueInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepConfigValueInterceptor.class);
     private final BasicTextEncryptor encryptor;
-//    private final Set<String> books;
     private final Map<String, String> decryptions = new HashMap<>();
 
     @Inject
@@ -75,9 +74,6 @@ public class StepConfigValueInterceptor implements ConfigValueInterceptor {
         }
 
         final Object stepLocked = b.getBookMetaData().getProperty("STEPLocked");
-        if(stepLocked instanceof List) {
-            return Boolean.parseBoolean((String)((List) stepLocked).get(0));
-        }
         return Boolean.parseBoolean((String) stepLocked);
     }
 }

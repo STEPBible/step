@@ -39,6 +39,7 @@
 
         td {
             text-align: center;
+            border-bottom: lightgrey solid 2px;
         }
 
         td:first-child {
@@ -68,22 +69,51 @@
         <p><fmt:message key="download_intro"/></p>
 
         <table>
-            <tr>
-                <td><a href="/downloads/STEP.exe" data-os="windows"><img src="images/WindowsCyan_Web.jpg"/>
-                    <br/>
+            <tr VALIGN="TOP">
+                <td WIDTH="50%"><a href="/downloads/STEP.exe" data-os="windows"><img src="images/WindowsCyan_Web.jpg"/>
+                    <br />
                     <fmt:message key="download_windows_edition"/>&reg;
                 </a></td>
-                <td><a href="/downloads/STEP.dmg" data-os="mac"><img src="images/apple.png"/><br/>
+                <td WIDTH="50%"><a href="/downloads/STEP.dmg" data-os="mac"><img src="images/apple.png"/><br />
                     <fmt:message key="download_macos"/>&reg;
-                    <br />
-                    </a>
+                    <br /><br />
+                </a>
+                </td>
+            </tr>
+            <tr VALIGN="TOP">
+                <td><br /><br />
+                    <fmt:message key="download_installer"/>
+                    <br /><a href="/downloads/STEP_installers+450Bibles.zip"><img src="/images/SD+USB.jpg"/>
+                        <br />
+                        <br /><fmt:message key="download3"/></a>
+                    <br /><a href="/downloads/STEP_installers+200Bibles.zip"><fmt:message key="download2"/></a>
+                    <br /><a href="/downloads/STEP_installers+20Bibles.zip"><fmt:message key="download1"/></a>
+
+                </td>
+                <td><br /><br />
+                    <fmt:message key="return_to_main_site"/>
+                    <br /><a href="https://www.stepbible.org">www.stepbible.org
+                        <br />
+                        <br /><img src="images/STEPonline.jpg"/></a>
+                    <br /><br /><br />
+                    <a href="https://www.stepbible.org/?q=version=NAV&lang=ar">Arabic</a>,
+                    <a href="https://www.stepbible.org/?q=version=FarsiOPV&lang=fa">Farsi</a>,
+                    <a href="https://www.stepbible.org/?q=version=CUns&lang=zh">Mainland Chinese</a>,
+                    <a href="https://www.stepbible.org/?q=version=CUn&lang=zh-TW">Traditional Chinese</a>,
+                    <a href="https://www.stepbible.org/?q=version=NVI&lang=es">Spanish</a>,
+                    <a href="https://www.stepbible.org/?q=version=PNVI&lang=pt">Portuguese</a>,
+                    <a href="https://www.stepbible.org/?q=version=Neno&lang=sw">Swahili</a>,
+                    <a href="https://www.stepbible.org/?q=version=NRT&lang=ru">Russian</a>,
+                    <a href="https://www.stepbible.org/?q=version=NTLR&lang=ro">Romanian</a>,
+                    etc...
+
                 </td>
             </tr>
         </table>
         <br />
-        <fmt:message key="return_to_main_site"/> <a href="http://www.stepbible.org">www.stepbible.org</a>
     </div>
 </div>
+
 
 <% if(!appManager.isLocal()) { %>
 <script>

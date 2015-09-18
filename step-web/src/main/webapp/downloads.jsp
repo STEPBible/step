@@ -83,11 +83,11 @@
             <tr VALIGN="TOP">
                 <td><br /><br />
                     <fmt:message key="download_installer"/>
-                    <br /><a href="/downloads/STEP_installers+450Bibles.zip"><img src="/images/SD+USB.jpg"/>
+                    <br /><a href="/downloads/pre-packaged/STEP_installers+450Bibles.zip"><img src="/images/SD+USB.jpg"/>
                         <br />
                         <br /><fmt:message key="download3"/></a>
-                    <br /><a href="/downloads/STEP_installers+200Bibles.zip"><fmt:message key="download2"/></a>
-                    <br /><a href="/downloads/STEP_installers+20Bibles.zip"><fmt:message key="download1"/></a>
+                    <br /><a href="/downloads/pre-packaged/STEP_installers+200Bibles.zip"><fmt:message key="download2"/></a>
+                    <br /><a href="/downloads/pre-packaged/STEP_installers+20Bibles.zip"><fmt:message key="download1"/></a>
 
                 </td>
                 <td><br /><br />

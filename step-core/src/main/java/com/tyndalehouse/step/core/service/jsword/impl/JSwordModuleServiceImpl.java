@@ -191,6 +191,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             }
             // if we get here, then we were unable to install the book
             // since we couldn't find it.
+            LOGGER.error("Unable to install: [{}]", initials);
             throw new TranslatedException("book_not_found", initials);
         }
 

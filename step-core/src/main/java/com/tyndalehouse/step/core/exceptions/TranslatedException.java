@@ -74,6 +74,12 @@ public class TranslatedException extends StepInternalException {
      */
     @Override
     public String getMessage() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(this.message);
+        for(String a : args) {
+            sb.append(a);
+            sb.append(", ");
+        }
         return this.message;
     }
 

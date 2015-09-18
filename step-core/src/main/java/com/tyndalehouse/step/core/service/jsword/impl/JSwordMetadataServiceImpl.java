@@ -415,7 +415,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             return getSameOrDowngradedInterlinearMode(interlinearMode, sameLanguageAndBible);
         }
 
-        if (supportsStrongs && allVersionsSameTagging(version, extraVersions)) {
+        if (interlinearMode == InterlinearMode.INTERLINEAR && supportsStrongs && allVersionsSameTagging(version, extraVersions)) {
             return InterlinearMode.INTERLINEAR;
         }
 

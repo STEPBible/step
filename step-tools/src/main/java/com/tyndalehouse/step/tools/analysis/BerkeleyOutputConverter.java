@@ -221,23 +221,23 @@ public class BerkeleyOutputConverter {
 
     private static String[] reOrder(final String[] sentence) {
         List<String> words = Arrays.asList(sentence);
-        
+
         Collections.sort(words, new Comparator<String>() {
             @Override
             public int compare(final String o1, final String o2) {
                 if(o1 == null || o1.length() == 0) {
                     return 1;
                 }
-                
+
                 if(o2 == null || o2.length() == 0) {
                     return -1;
                 }
-                
-                
+
+
                 return ((Integer)Integer.parseInt(o1.split("-")[1])).compareTo(Integer.parseInt(o2.split("-")[1]));
             }
         });
-        
+
         return words.toArray(new String[words.size()]);
     }
 

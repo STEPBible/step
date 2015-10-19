@@ -47,14 +47,7 @@
         <span class="dropdown">
             <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" href="javascript:void(0)"><span class="caret mini-level"></span><fmt:message key="help"/><span class="caret top-level"></span></a>
             <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
-                <%
-                    if(appManager.isLocal()) {
-                %>
-                <li><a href="/setup.jsp"><fmt:message key="tools_settings" /></a></li>
-                <%
-                    }
-                %>
-                <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>
+                <!-- # Download STEP -->
                 <%
                     if(!appManager.isLocal()) {
                 %>
@@ -62,22 +55,44 @@
                 <%
                     }
                 %>
+                <!-- # Quick tryout links -->
+                <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>
+                <!-- # Video demonstrations -->
+                <li><a href="https://www.stepbible.org/videos" target="_blank"><fmt:message key="video_help"/></a></li>
+                <!-- # Guide and Instructions -->
+                <li><a href="https://stepweb.atlassian.net/wiki/display/SUG/Quick+overview" target="_blank"><fmt:message key="help_online"/></a></li>
+                <!-- # Available Bibles etc -->
+                <!-- # - (offline list + Install more) -->
+                <%
+                    if(appManager.isLocal()) {
+                %>
                 <li class="available_bibles_and_commentaries"><a href="/versions.jsp" target="_blank" name="AVAILABLE_BIBLES_AND_COMMENTARIES"><fmt:message key="available_versions"/></a></li>
-                <li><a href="https://stepweb.atlassian.net/wiki/x/AgAW" target="_blank"><fmt:message key="help_online"/></a>
-                </li>
-                <li><a href="https://stepweb.atlassian.net/wiki/x/iICV" target="_blank"><fmt:message
-                    key="we_need_help"/></a>
-                <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile"/></a>
-                </li>
+                <li><a href="/setup.jsp"><fmt:message key="tools_settings" /></a></li>
+                <%
+                    } else {
+                %>
+                <!-- # - (online to Resources) -->
+                <li><a href="https://stepweb.atlassian.net/wiki/display/SUG/Resources" target="_blank"><fmt:message key="available_versions"/></a></li>
+                <%
+                    }
+                %>
+                <!-- # Reset everything -->
+                <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile"/></a></li>
+                <!-- # We need your help! -->
+                <li><a href="https://stepweb.atlassian.net/wiki/x/iICV" target="_blank"><fmt:message key="we_need_help"/></a></li>
+                <!-- # Feedback & contact -->
                 <%
                     if (!appManager.isLocal()) {
                 %>
                 <li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback"/></a></li>
-                <li><a href="http://www.tyndale.cam.ac.uk/index.php?page=cookie-policy" target="_blank"><fmt:message
-                    key="help_privacy_policy"/></a></li>
+                <!-- # Privacy policy -->
+                <li><a href="http://www.tyndale.cam.ac.uk/index.php?page=cookie-policy" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
                 <% } %>
+                <!-- # Copyright & licences -->
                 <li><a target="_new" href="https://stepweb.atlassian.net/wiki/x/C4C_/" name="COPYRIGHT"><fmt:message key="copyright_info_link"/></a></li>
+                <!-- # About... -->
                 <li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about"/></a></li>
+                <!-- # Exit -->
                 <%
                     if(appManager.isLocal()) {
                 %>

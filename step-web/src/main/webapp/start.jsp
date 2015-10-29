@@ -173,7 +173,7 @@
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </button>
                                 </div>
-                                <div class="resultsLabel pull-right">
+                                <div class="resultsLabel pull-right" style="margin-right: 5px">
                                     <c:if test="${'PASSAGE' ne searchType}">
                                         <c:set var="pageMessage" scope="request"><fmt:message key="paging_showing" /></c:set>
                                         <%= String.format((String) request.getAttribute("pageMessage"), (Integer) request.getAttribute("numResults")) %>

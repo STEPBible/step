@@ -1,44 +1,54 @@
 # Translations = the top 5 translations in a version where it is translated this way 5x or more
 # CJB: All I've changed is href="#" to href="javascript:void(0)"
-ααατος$+L===============================
-@UnicodeAccented=	ἀάατος
-@LsjNo=	1
-@LsjUnicodeAccented=	ἀάατος
-@LsjUnicodeUnaccented=	ααατος
-@LsjBetaUnaccented=	aaatos
-@LsjGramm=	<span class='ancientGreek'>ἀάα_τος</span> from a_privat <span class='ancientGreek'>ἀάω</span>.
-@LsjDefs=	1. <span class='ancientGreek'>ἀάα_τος</span>: in [<a href="javascript:void(0)" class=cdate title="Iliad by Homer">8th/7th BCE</a>] with penult. long, <b>not to be injured, inviolable </b>, <span class='ancientGreek'>νῦν μοι ὄμοσσον ἀάα_τον Στυγὸς ὕδωρ</span>, because the gods swore their most binding oaths thereby. <br> <span class='ancientGreek'>ἀάατος</span> from a_copul <span class='ancientGreek'>ἀάω</span>. <br>2. <span class='ancientGreek'>ἀάατος</span>: in [<a href="javascript:void(0)" class=cdate title="Odyssey by Homer">8th/7th BCE</a>] with penult. short, <b>hurtful, perilous, aweful </b>; <span class='ancientGreek'>ἄεθλος ἀάατος</span>. 
-ααρων$+S===============================
-@UnicodeAccented=	Ἀαρών
-@StrNo=	G0002
-@StopWord=	
-@StrBetaAccented=	*)aarw/n
-@StrUnicodeAccented=	Ἀαρών
-@StrUnicodeUnaccented=	Ααρων
-@StrTranslit=	Aarṓn
-@StrPronunc=	ah-ar-ohn'
-@StrAltern=	
-@StrMorph=	
-@StrDef=	Aaron, the brother of Moses
-@StrDeriv=	of Hebrew origin (H0175);
-@StrRelatedNos=	H0175,
-@StrCoRelatedNos=	
-@StepRelatedNos2=	H0175,
-@StepRelatedNos2=	
-@StepRelatedNos2=	G1223, G0939,
-@AllRelatedNos=	H0175,
-@MounceShortDef=	Aaron (referring to both the person and his priesthood)
-@MounceMedDef=	<b>Aaron,</b> pr. name, indecl, the brother of Moses (<ref>Exod. 4:14</ref>), <ref>Lk. 1:15; Acts 7:40; Heb. 5:4; 7:11; 9:4* </ref>
-@DodsonMorph=	Prop.n.
-@DodsonGloss=	Aaron
-@StepGloss=	Aaron
-@KJV_Trans=	
-@ASV_Trans=	
-@WEB_Trans=	
-@ESV_Trans=	Aaron
-@RWB_Trans=	
-@NAS_Trans=	
-@Translations=	Aaron
+$ αβαρης=G0004 ============================
+@STEPUnicodeAccented=	ἀβαρής
+@MLsjNo=	10
+@MLsjUnicodeAccented=	ἀβαρής
+@MLsjUnicodeUnaccented=	αβαρης
+@MLsjBetaUnaccented=	abarhs
+@MLsjGramm=	βάρος
+@MLsjDefs=	<b>without weight: not burdensome </b>, of persons, [<a href="javascript:void(0)" title="New Testament">1st c.AD</a>]
+@FLsjType=	Entry in LSJ:
+@FLsjNo=	000055
+@FLsjUnicodeAccented=	ἀβαρής
+@FLsjUnicodeUnaccented=	αβαρης
+@FLsjDefs=	<b> ἀβαρής</b>, ές, <br />&nbsp;&nbsp;(βάρος) <b>without weight,</b> <sup>[<a href="javascript:void(0)" title=" 4th c.BC: Aristoteles Philosophus “de Caelo” 277b19; ἀβαρῆ εἶναι ἀέρα καὶ πῦρ 4th-3rd c.BC: Zeno Citieus Stoicus 1.27, cf. 3rd c.BC: Chrysippus Stoicus 2.143, 3rd c.AD: Plotinus Philosophus 6.9.9, etc.">4th c.BC→</a>]</sup>; <b>light,</b> γῆ<sup>[<a href="javascript:void(0)" title=" “Anthologia Graeca” 7.461 (1st c.BC: Meleager Epigrammaticus): _metaphorically_, ἀ. χρῆμα">1st c.BC→</a>]</sup> a <b>light</b> matter, <sup>[<a href="javascript:void(0)" title=" “Comica Adespota” 158; παρρησία.. μαλακὴ καὶ ἀ. 1st-2nd c.AD: Plutarchus Biographus et Philosophus 2.59c ">1st c.AD→</a>]</sup>; of the pulse, <sup>[<a href="javascript:void(0)" title=" 2nd c.AD: Archigenes Medicus cited in 2nd c.AD: Galenus Medicus 8.651. ">2nd c.AD→</a>]</sup><br /><Level2>II</Level2> <b>not offensive,</b> ὀσμαί<sup>[<a href="javascript:void(0)" title=" 2nd c.AD: Aretaeus Medicus “ὀξέων νούσων θεραπευτικόν” 2.3 ">2nd c.AD→</a>]</sup>; of persons, <b>not burdensome,</b> ἀ. ἑαυτὸν τηρεῖν, παρέχειν, <sup>[<a href="javascript:void(0)" title=" NT.2Cor.11.9, “CIG” “Corpus Inscriptionum Graecarum” “Corpus Inscriptionum Graecarum” 5361.15 (from Berenice)">NT</a>]</sup>. <i>adverb</i> <b>-ρῶς</b> <b>without giving offence,</b> <sup>[<a href="javascript:void(0)" title=" 6th c.AD: Simplicius Philosophus “in Epictetum commentaria” p.85D.">6th c.AD→</a>]</sup>; <b>without taking offence,</b> <sup>[<a href="javascript:void(0)" title="[prev. work] p.88D.">Refs</a>]</sup>
+@StrNo=	G0004
+@AltStrongTags=
+@STEP_LexicalTag=	G0004
+@ABNo=	AB G0004 = not burdensome // easy
+@ABSUnicodeAccented=
+@StrFreq=	1
+@StopWord=
+@StrBetaAccented=	a)barh/s
+@StrUnicodeAccented=	ἀβαρής
+@StrUnicodeUnaccented=	αβαρης
+@StrTranslit=	abarḗs
+@StrPronunc=	ab-ar-ace'
+@StrAltern=
+@StrMorph=
+@STEPMorph=
+@MT_No=
+@StrDef=	weightless, i.e. (figuratively) not burdensome
+@StrDeriv=	from G0001 (as a negative particle) and G0922;
+@StrRelatedNos=	G0922,
+@StrCoRelatedNos=
+@MounceShortDef=	not burdensome
+@MounceMedDef=	literally: <b>weightless</b>; figurately: <b>not burdensome,</b> <ref>2Cor. 11:9* </ref>
+@DodsonMorph=	Adj.
+@DodsonGloss=	not burdensome
+@StepGloss=	not burdensome
+@KJV_Trans=
+@ASV_Trans=
+@WEB_Trans=
+@ESV_Trans=
+@RWB_Trans=
+@NAS_Trans=
+@Translations=	not burdensome
+@StepRelatedNos=	G0922,
+@AllRelatedNos=	G0922,
+@StepRelatedNos2=	G0922, G0916, G0917, G0925, G0926, G0927, G1912, G2599
+@RelatedTheme=	weight
 $===============================
 @StrNo=	H0006
 @AltStrongTags=	

@@ -22,6 +22,8 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
     </button>
+    <button  class="btn btn-default btn-sm showBooks" type="button" title="<fmt:message key="see_books" />">
+        <span class="glyphicon glyphicon-book"></span></button>
     <button  class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
         <span class="glyphicon glyphicon-save"></span></button>
     <div class="navbar-collapse collapse">

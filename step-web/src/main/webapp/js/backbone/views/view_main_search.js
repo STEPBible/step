@@ -2,7 +2,9 @@ var MainSearchView = Backbone.View.extend({
     el: ".search-form",
     events: {
         "click .find ": "search",
-        "click .showStats": "showAnalysis"
+        "click .showStats": "showAnalysis",
+        "click .showBooks": "showBooks"
+
     },
     //context items are of the form { itemType: x, value: y }
     specificContext: [],
@@ -963,6 +965,7 @@ var MainSearchView = Backbone.View.extend({
         }
     },
     showAnalysis: function () {
+        console.log("Showing stats");
         //trigger side bar
         require(["sidebar"], function (module) {
             //read up on requirejs to see if init can form part of download call
@@ -980,5 +983,21 @@ var MainSearchView = Backbone.View.extend({
         } else {
             this.masterVersion = null;
         }
+    },
+    showBooks: function() {
+        console.log("Triggering book selection");
+
+        var dropdownOfBooks = $("<select>");
+        var versions = _.template(
+            "<% _.each(versions, function(version, i) { %> <option value='<%= version.item.initials %>'><%= version.item.name %></option> <% }) %>")(
+            { versions: step.itemisedVersions});
+        dropdownOfBooks.append(versions);
+        $("body").append(dropdownOfBooks);
+        dropdownOfBooks.click();
+        dropdownOfBooks.css("left", "30");
+        dropdownOfBooks.css("top", "50");
+        dropdownOfBooks.css("position", "absolute");
+
+        //we could add an Advanced... option.
     }
 });

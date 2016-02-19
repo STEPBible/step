@@ -188,7 +188,7 @@ var SidebarView = Backbone.View.extend({
         }
 
         //longer definitions
-        if (mainWord.lsjDefs) {
+        if (mainWord.lsjDefs ) {
             panel.append($("<h2>").append(mainWord.strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
             panel.append(mainWord.lsjDefs);
         }

@@ -69,7 +69,7 @@
   background-image: -webkit-linear-gradient(bottom, lighten($color, $start), lighten($color, $end)) !important;
   background: -moz-linear-gradient(bottom,  lighten($color, $start),  lighten($color, $end)) !important; /* for firefox 3.6+ */
   background: -ms-linear-gradient(bottom,  lighten($color, $start),  lighten($color, $end)) !important; /* for firefox 3.6+ */
-  border-bottom: solid thin $border !important;
+  border-right: solid thin $border !important; border-right-color: #ccc!important;
 }
 
 @mixin rotate($degrees) {
@@ -137,40 +137,47 @@
 @mixin muted-args {
   background-image: none !important;
   &.select-version {
-    background-color: #E8CFD6 !important;
-    color: #8D5361 !important;
-    border: solid thin #651428;
+    background-color: #ffffff !important;
+    color: #333 !important;
+    border: none;
+    font-weight: bold;
   }
   &.select-reference, &.select-relatedrefs {
-    background-color: #BC8B97 !important;
-    border: solid thin #370B16;
-    color: #411822 !important;
+    background-color: #ffffff !important;
+    border: none;
+    font-weight: bold;
+    color: #333 !important;
   }
 
   &.select-hebrewMeanings, &.select-hebrew, &.select-exactForm-hebrew {
-    background-color: #C1CDE4 !important;
-    color: #232B4D !important;
-    border: solid thin #0A204B;
+    background-color: #ffffff !important;
+    color: #333 !important;
+    border: none;
+    font-weight: bold;
   }
 
   &.select-greekMeanings, &.select-greek, &.select-exactForm-greek {
-    background-color: #BBDED6 !important;
-    color: #0B3B2E !important;
-    border: solid thin #0A352B;
+    background-color: #ffffff !important;
+    color: #333 !important;
+    border: none;
+    font-weight: bold;
   }
   &.select-subject, &.select-topicref {
-    color: #371465 !important;
-    background-color: #F1E2FF !important;
-    border: solid thin #381369;
+    color: #333 !important;
+    background-color: #ffffff !important;
+    border: none;
+    font-weight: bold;
   }
   &.select-text, &.select-syntax {
-    color: #210A38 !important;
-    background-color: #D7CAE3 !important;
-    border: solid thin #220B39;
+    color: #333 !important;
+    background-color: #ffffff !important;
+    border: none;
+    font-weight: bold;
   }
   &.select-meanings {
-    background-color: #E8E2D3 !important;
-    color: #7C714B !important;
-    border: solid thin #6F5A12;
+    background-color: #ffffff !important;
+    color: #333 !important;
+    border: none;
+    font-weight: bold;
   }
 }

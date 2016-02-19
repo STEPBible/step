@@ -777,6 +777,9 @@
             <xsl:when test="starts-with(@type, 'font-size:')">
                 <font size="{substring-before(substring-after(@type, 'font-size: '), ';')}"><xsl:apply-templates/></font>
             </xsl:when>
+            <xsl:when test="starts-with(@type, 'font-face:')">
+                <font face="{substring-before(substring-after(@type, 'font-face: '), ';')}"><xsl:apply-templates/></font>
+            </xsl:when>
             <xsl:when test="@type = 'x-variant'">
                 <xsl:choose>
                     <xsl:when test="@subType = 'x-class-1' or @subType ='x-1'">

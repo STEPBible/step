@@ -58,16 +58,21 @@
 	
 	
 	<% if (vocab.getMediumDef() != null) { %>
-		<h3>Medium Definition</h3>
-		<%= vocab.getMediumDef() %>
+	<h3>Medium Definition</h3>
+	<%= vocab.getMediumDef() %>
 	
 	<% } %>
-	
-	<% if (vocab.getShortDef() != null) { %>
-	<h3>Long Definition</h3>
-	<%= vocab.getLsjDefs() %>
-	<% } %>
-	
+
+    <% if (vocab.getMLsjDefs() != null) { %>
+    <h3>Middle LSJ Definition</h3>
+    <%= vocab.getMLsjDefs() %>
+    <% } %>
+
+    <% if (vocab.getLsjDefs() != null) { %>
+    <h3>Full LSJ Definition</h3>
+    <%= vocab.getLsjDefs() %>
+    <% } %>
+
 	<h3>Related numbers</h3>
 	<% 
 		List<LexiconSuggestion> similarStrongs = vocab.getRelatedNos();

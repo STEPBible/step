@@ -42,7 +42,7 @@ public class MorphologyProcessor implements PostProcessor {
         html.append("<span onclick='javascript:showDef(this)' ");
         html.append("title='");
 
-        final String function = doc.get("function");
+        final String function = doc.get("functionAbrev");
         final String functionNotes = getFunctionNotes(function);
         if (function != null && functionNotes != null) {
             html.append(functionNotes);

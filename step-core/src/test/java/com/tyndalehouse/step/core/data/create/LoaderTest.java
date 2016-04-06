@@ -227,7 +227,7 @@ public class LoaderTest {
 
         entities = getEntities(1, "morphology", "code", "D-NPM-C");
         e = entities[0];
-        assertEquals("Contracted form", e.get("suffix"));
+        assertEquals("Contracted", e.get("suffix"));
     }
 
     /**

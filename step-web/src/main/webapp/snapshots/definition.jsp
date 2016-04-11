@@ -63,10 +63,6 @@
 	
 	<% } %>
 
-    <% if (vocab.getMLsjDefs() != null) { %>
-    <h3>Middle LSJ Definition</h3>
-    <%= vocab.getMLsjDefs() %>
-    <% } %>
 
     <% if (vocab.getLsjDefs() != null) { %>
     <h3>Full LSJ Definition</h3>

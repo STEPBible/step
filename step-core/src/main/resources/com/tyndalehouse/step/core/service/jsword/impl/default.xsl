@@ -112,6 +112,7 @@
     <xsl:param name="HideXGen" select="'false'" />
 
     <xsl:param name="baseVersion" select="''" />
+    <xsl:param name="defaultVersion" select="'ESV'" />
     <xsl:param name="Interleave" select="'false'" />
     <xsl:param name="interleavingProvider" />
     <xsl:param name="comparing" select="false()" />
@@ -1011,7 +1012,7 @@
 
         <xsl:choose>
             <xsl:when test="string-length($encodedPassageKey) = 0"><xsl:apply-templates/></xsl:when>
-            <xsl:otherwise><a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a></xsl:otherwise>
+            <xsl:otherwise><a href="?version={$defaultVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a></xsl:otherwise>
         </xsl:choose>
 
     </xsl:template>
@@ -1023,7 +1024,7 @@
 
         <xsl:choose>
             <xsl:when test="string-length($encodedPassageKey) = 0"><xsl:apply-templates/></xsl:when>
-            <xsl:otherwise><a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" xref="{$passageKey}"><xsl:apply-templates/></a></xsl:otherwise>
+            <xsl:otherwise><a href="?version={$defaultVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" xref="{$passageKey}"><xsl:apply-templates/></a></xsl:otherwise>
         </xsl:choose>
 
 

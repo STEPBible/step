@@ -179,7 +179,7 @@ a.smallHeaders {
 .notesPane {
     padding-right: 3px;
     margin-right: 8px;
-	max-width: 100px;
+	max-width: 20%;
 	color: #33339F !important;
     /*overflow: hidden;	*/
 }

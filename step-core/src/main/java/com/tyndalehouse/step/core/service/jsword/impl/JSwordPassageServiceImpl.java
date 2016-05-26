@@ -1333,7 +1333,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                               final Book[] books) {
         final boolean isHebrew = JSwordUtils.isAncientHebrewBook(books);
         final boolean isGreek = JSwordUtils.isAncientGreekBook(books);
-        options.remove(LookupOption.VERSE_NEW_LINE);
+//        options.remove(LookupOption.VERSE_NEW_LINE);
 
         for (final LookupOption lookupOption : options) {
             if (lookupOption.getXsltParameterName() != null) {

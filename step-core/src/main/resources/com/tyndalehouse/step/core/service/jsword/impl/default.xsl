@@ -1357,7 +1357,7 @@
         <xsl:choose>
             <xsl:when test="@marker"><xsl:value-of select="@marker"/></xsl:when>
             <!-- The chosen mark should be based on the work's author's locale. -->
-            <xsl:otherwise>"</xsl:otherwise>
+            <!--<xsl:otherwise>"</xsl:otherwise>-->
         </xsl:choose>
     </xsl:template>
 
@@ -1365,7 +1365,7 @@
         <xsl:choose>
             <xsl:when test="@marker"><xsl:value-of select="@marker"/></xsl:when>
             <!-- The chosen mark should be based on the work's author's locale. -->
-            <xsl:otherwise>"</xsl:otherwise>
+            <!--<xsl:otherwise>"</xsl:otherwise>-->
         </xsl:choose>
     </xsl:template>
 

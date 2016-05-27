@@ -229,6 +229,11 @@ h2.heading {
     font-weight: bold;
     text-align: center;
   }
+  &.part {
+    font-size: 100%;
+    font-weight: bold;
+    text-align: center;
+  }
   &.x-speaker {
     @include canonicalHeading;
     margin-bottom: 0;

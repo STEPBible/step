@@ -1073,6 +1073,26 @@
         <xsl:apply-templates mode="jesus"/>
     </xsl:template>
 
+    <xsl:template match="catchWord">
+        <span class="bold">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
+    <xsl:template match="doxology">
+        <span class="italic">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
+    <xsl:template match="colophon">
+        <span class="italic">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
+    <xsl:template match="refrain">
+        <span class="italic">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
+    <xsl:template match="attribution">
+        <span class="italic">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
     <xsl:template match="divineName">
         <span class="small-caps">&#160;<xsl:apply-templates /></span>
     </xsl:template>

@@ -105,6 +105,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         VALID_TEXT_ELEMENTS.add("w");
         VALID_TEXT_ELEMENTS.add("seg");
         VALID_TEXT_ELEMENTS.add("transChange");
+        VALID_TEXT_ELEMENTS.add("doxology");
+        VALID_TEXT_ELEMENTS.add("colophon");
+        VALID_TEXT_ELEMENTS.add("refrain");
+        VALID_TEXT_ELEMENTS.add("attribution");
     }
 
     /**

@@ -1384,7 +1384,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             tsep.setParameter("RemovePointing", false);
             tsep.setParameter("RemoveVowels", false);
         }
-        if (isHebrew) {
+        if (!books[0].getBookMetaData().isLeftToRight())        {
             tsep.setParameter(LookupOption.VERSE_NEW_LINE.getXsltParameterName(), true);
         }
 

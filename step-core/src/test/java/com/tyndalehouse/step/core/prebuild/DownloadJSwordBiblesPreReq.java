@@ -95,6 +95,10 @@ public class DownloadJSwordBiblesPreReq {
                 LOGGER.debug("Indexing [{}]", moduleInitials);
                 jsword.index(moduleInitials);
             }
+
+            if(!jsword.isIndexed("ESV-THE")) {
+                jsword.index("ESV-THE");
+            }
         }
     }
 

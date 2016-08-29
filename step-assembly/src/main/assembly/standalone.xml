@@ -26,7 +26,7 @@
 				<include>com.tyndalehouse.step:step-packages:jar:${project.version}</include>
 			</includes>
 			<binaries>
-				<outputDirectory>/offlineModules</outputDirectory>
+				<outputDirectory>/</outputDirectory>
 				<unpack>true</unpack>
 				<includeDependencies>false</includeDependencies>
 			</binaries>

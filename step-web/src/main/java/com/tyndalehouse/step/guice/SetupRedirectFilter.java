@@ -40,10 +40,11 @@ public class SetupRedirectFilter implements Filter {
         //server installations always going forward
         if (!appManager.isLocal() || (installedVersion != null && installedVersion.equals(runningAppVersion))) {
             // do nothing
-            chain.doFilter(request, response);
         } else {
-            request.getRequestDispatcher("firstTime.jsp").forward(request, response);
+            //set the version up one - installer will have taken care of upgrades... hopefully.
+            appManager.setAndSaveAppVersion(runningAppVersion);
         }
+        chain.doFilter(request, response);
     }
 
     @Override

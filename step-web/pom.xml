@@ -43,6 +43,10 @@
 			<artifactId>step-core</artifactId>
 		</dependency>
         <dependency>
+            <groupId>com.tyndalehouse.step</groupId>
+            <artifactId>step-core-data</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt</artifactId>
         </dependency>

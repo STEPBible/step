@@ -75,6 +75,7 @@
       </infoPlist>
       <iconImageFiles>
         <file path="../../../../step-web/src/main/webapp/images/step-favicon.ico" />
+        <file path="../../../../step-web/src/main/webapp/images/step-logo-128.png" />
       </iconImageFiles>
     </launcher>
   </launchers>

@@ -16,4 +16,5 @@ bin
 *.orig
 *.versionsBackup
 *-SNAPSHOT*.min.js
+*.map
 

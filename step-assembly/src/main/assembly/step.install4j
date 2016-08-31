@@ -685,7 +685,7 @@ return "~/.jsword";
         <content />
       </postUninstallScript>
     </linuxRPM>
-    <linuxDeb name="Linux Deb Archive" id="406" customizedId="" mediaFileName="" installDir="/opt/step" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="true" includedJRE="" manualJREEntry="false" overwriteNeverAsConfigFiles="false" bzip="true" description="" dependencies="" maintainerEmail="" architectureSet="false" architecture="">
+    <linuxDeb name="Linux Deb Archive" id="406" customizedId="" mediaFileName="" installDir="/opt/step" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="true" includedJRE="" manualJREEntry="false" overwriteNeverAsConfigFiles="false" bzip="true" description="STEP Bible ::  Scripture Tools for Every Person" dependencies="" maintainerEmail="tech@tyndale.cam.ac.uk" architectureSet="false" architecture="">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />

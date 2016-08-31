@@ -363,7 +363,7 @@ if(os.contains("Windows") || os.contains("Mac OS X")) {
     return (String) context.getVariable("sys.appdataDir") + "\\Sword";
  }
 
-return "~/.sword";
+return (String)context.getVariable("sys.userHome") + "/.sword";
 
  </string>
                           </void>
@@ -391,7 +391,7 @@ if(os.contains("Windows") || os.contains("Mac OS X")) {
     return (String) context.getVariable("sys.appdataDir") + "\\JSword";
  }
 
-return "~/.jsword";
+return (String)context.getVariable("sys.userHome") + "/.jsword";
 
  </string>
                           </void>

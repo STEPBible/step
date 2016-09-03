@@ -660,7 +660,7 @@ return (String)context.getVariable("sys.userHome") + "/.jsword";
         <customAttributes />
       </autoUpdate>
     </unixArchive>
-    <linuxRPM name="Linux RPM" id="405" customizedId="" mediaFileName="${compiler:sys.shortName}Bible_${compiler:sys.platform}_${compiler:sys.version}" installDir="/opt/step" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="true" includedJRE="" manualJREEntry="false" overwriteNeverAsConfigFiles="false" os="linux" arch="i386">
+    <linuxRPM name="Linux RPM" id="405" customizedId="" mediaFileName="" installDir="/opt/step" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="true" includedJRE="" manualJREEntry="false" overwriteNeverAsConfigFiles="false" os="linux" arch="i386">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />
@@ -686,7 +686,7 @@ sudo mv /opt/step/homes/sword ~/.jsword</content>
         <content />
       </postUninstallScript>
     </linuxRPM>
-    <linuxDeb name="Linux Deb Archive" id="406" customizedId="" mediaFileName="${compiler:sys.shortName}Bible_${compiler:sys.platform}_${compiler:sys.version}" installDir="/opt/step" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="true" includedJRE="" manualJREEntry="false" overwriteNeverAsConfigFiles="false" bzip="true" description="STEP Bible ::  Scripture Tools for Every Person" dependencies="" maintainerEmail="tech@tyndale.cam.ac.uk" architectureSet="false" architecture="">
+    <linuxDeb name="Linux Deb Archive" id="406" customizedId="" mediaFileName="" installDir="/opt/step" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="true" includedJRE="" manualJREEntry="false" overwriteNeverAsConfigFiles="false" bzip="true" description="STEP Bible ::  Scripture Tools for Every Person" dependencies="" maintainerEmail="tech@tyndale.cam.ac.uk" architectureSet="false" architecture="">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />

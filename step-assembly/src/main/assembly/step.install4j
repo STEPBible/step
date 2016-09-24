@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="6.1.2" transformSequenceNumber="5">
-  <directoryPresets config="../../../../../secret/mac-code-signing.pfx" />
+  <directoryPresets config="." />
   <application name="STEP - Scripture Tools for Every Person" distributionSourceDir="" applicationId="1137-2379-2234-7255" mediaDir="../../../target" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="9" lzmaCompression="true" pack200Compression="true" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="false" shortName="stepbible" publisher="Tyndale House, Cambridge, UK" publisherWeb="http://www.stepbible.org" version="2.0.10-SNAPSHOT" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="a99b8b185558ecf" javaMinVersion="1.7" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -30,6 +30,7 @@
       <dirEntry mountPoint="23" file="../../../target/step-assembly-${compiler:sys.version}-package-step-standalone" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="direct" subDirectory="step-mvn-1.0-SNAPSHOT-package-step-standalone" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
+      <fileEntry mountPoint="23" file="./post-install.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
     </entries>
     <components>
       <component name="Scripture Tools for Every Person" id="96" customizedId="" displayDescription="false" hideHelpButton="false" selected="true" changeable="false" downloadable="false" hidden="true">
@@ -74,8 +75,10 @@
         <content />
       </infoPlist>
       <iconImageFiles>
-        <file path="../../../../step-web/src/main/webapp/images/step-favicon.ico" />
-        <file path="../../../../step-web/src/main/webapp/images/step-logo-128.png" />
+        <file path="./step-icon-16.png" />
+        <file path="./step-icon-32.png" />
+        <file path="./step-icon-48.png" />
+        <file path="./step-icon-128.png" />
       </iconImageFiles>
     </launcher>
   </launchers>
@@ -625,9 +628,7 @@ return (String)context.getVariable("sys.userHome") + "/.jsword";
       <excludedLaunchers />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
-      <exclude>
-        <entry location=".i4j_fileset_187" fileType="regular" />
-      </exclude>
+      <exclude />
       <variables />
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
@@ -676,8 +677,7 @@ return (String)context.getVariable("sys.userHome") + "/.jsword";
         <content />
       </preInstallScript>
       <postInstallScript mode="3" file="">
-        <content>sudo mv /opt/step/homes/jsword ~/.sword
-sudo mv /opt/step/homes/sword ~/.jsword</content>
+        <content>sh /opt/step/post-install.sh</content>
       </postInstallScript>
       <preUninstallScript mode="1" file="">
         <content />
@@ -702,8 +702,7 @@ sudo mv /opt/step/homes/sword ~/.jsword</content>
         <content />
       </preInstallScript>
       <postInstallScript mode="3" file="">
-        <content>sudo mv /opt/step/homes/jsword ~/.sword
-sudo mv /opt/step/homes/sword ~/.jsword</content>
+        <content>sh /opt/step/post-install.sh</content>
       </postInstallScript>
       <preUninstallScript mode="1" file="">
         <content />

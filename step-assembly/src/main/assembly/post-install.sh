@@ -6,7 +6,7 @@ echo "Changing permissions to allow read/write to this directory"
 chmod -R 777 /opt/step/homes >> /var/log/step-post-install.log
 
 echo "Linking files" >> /var/log/step-post-install.log
-ln -s /opt/step/homes/sword ~/.sword >> /var/log/step-post-install.log
-ln -s /opt/step/homes/jsword ~/.jsword >> /var/log/step-post-install.log
-ln -s /opt/step/step.desktop ~/Desktop/step.desktop >> /var/log/step-post-install.log
+ln -sf /opt/step/homes/sword ~/.sword >> /var/log/step-post-install.log
+ln -sf /opt/step/homes/jsword ~/.jsword >> /var/log/step-post-install.log
+ln -sf /opt/step/step.desktop ~/Desktop/step.desktop >> /var/log/step-post-install.log
 

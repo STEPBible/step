@@ -79,8 +79,8 @@ public class BerkeleyOutputConverter {
         //This file needs some variables set to work properly on one's system. They follow here.
         // Stefan's
         //portionPassage indicates the passage to be processed. It is located (1) in a corresponding subdirectory, (2) having corresponding filenames. So if desired, they can all be distinguished at one point from each-other, just by virtue of their filenames. Having a special directory, allows the easy processing of portions of passages, and allows for later access for backreferencing.
-        final String portionPassage = "NT";
-        final String root = "C:\\Users\\David IB\\Dropbox\\Work on Spanish\\alignment\\SpaRV1909_NT\\";
+        final String portionPassage = "OT";
+        final String root = "C:\\Users\\David IB\\Dropbox\\STEP-Tagging(DIB)\\autoTag\\NIV\\NIV2011A_NT+OT-SimplifiedHebTags\\";
         String strongs = FileUtils.readFileToString(new File(root + portionPassage + ".s"));        // Original Text in Strong Numbers; strongs # in a file for a section of verses; each verse on a new line
         String other = FileUtils.readFileToString(new File(root + portionPassage + ".u"));          // Target Language in Stems Only; stems only -- Done with Paratext?; each verse on a new line
         String results = FileUtils.readFileToString(new File(root + portionPassage + ".align.txt")); // Original Language Aligned with Target Language; alignment from Berkeley; each verse on a new line

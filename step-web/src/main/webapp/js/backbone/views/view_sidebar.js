@@ -171,9 +171,9 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.accentedUnicode))
                 .append(" (")
                 .append("<span class='transliteration'>" + mainWord.stepTransliteration + "</span>")
-                .append(") “")
+                .append(") '")
                 .append(mainWord.stepGloss)
-                .append("” ")
+                .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
         );
     },

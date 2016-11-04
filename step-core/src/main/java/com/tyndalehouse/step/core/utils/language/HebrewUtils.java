@@ -136,7 +136,7 @@ public final class HebrewUtils {
         while (i < sb.length()) {
             final char currentChar = sb.charAt(i);
             //ignore characters outside of the Hebrew character set
-            if(currentChar < ETNAHTA || currentChar > ALEPH_LAMED) {
+            if(currentChar < ETNAHTA || currentChar > ALEPH_LAMED   || currentChar == METEG) {
                 i++;
             } else if (currentChar < endChar) {
                 sb.deleteCharAt(i);

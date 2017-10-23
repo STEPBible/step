@@ -38,8 +38,8 @@
         <sword.home>C:\Users\Chris\AppData\Roaming\Sword</sword.home>
         <jsword.home>${sword.home}/../JSword</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-        <modulesToInclude>esv-the,kjv,osmhb,lxx-the,sblg-the,niv,abpen-the,abpgk-the</modulesToInclude>
-        <indexesToInclude>ESV-THE,KJV,OSMHB,LXX,SBLG-THE,NIV,ABPGRK</indexesToInclude>
+        <modulesToInclude>esv_th,kjv,osmhb,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
+        <indexesToInclude>ESV_th,KJV,OSMHB,LXX,SBLG_th,NIV,ABPGRK</indexesToInclude>
     </properties>
 
     <build>

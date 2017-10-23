@@ -13,7 +13,7 @@ import com.tyndalehouse.step.e2e.framework.WebDriverTest;
 public class TimelineComponentOpensTest extends WebDriverTest {
     @Test
     public void testTimelineComponentOpensAndEventAppears() {
-        final Passage passage = loadPassage(this.getDriver(), 1, "ESV-THE", "Exodus 5", true);
+        final Passage passage = loadPassage(this.getDriver(), 1, "ESV_th", "Exodus 5", true);
 
         MenuOperations.clickMenuItem(passage, "Context", "Timeline", 3);
 

@@ -81,7 +81,7 @@ public class EsvOsisEnricher {
     }
 
     private void readMappingFile(final File tagging) throws IOException, NoSuchKeyException {
-        final Book b = Books.installed().getBook("ESV-THE");
+        final Book b = Books.installed().getBook("ESV_th");
 
         List<String> lines = FileUtils.readLines(tagging);
 

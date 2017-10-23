@@ -49,7 +49,7 @@ public class ModuleToStrong {
     private static final Pattern PUNCTUATION = Pattern.compile("[—,.;*:'\\[\\]!\"`?’‘()-]+");
 
     public static void main(String[] args) throws BookException, IOException {
-        Book kjv = Books.installed().getBook("ESV-THE");
+        Book kjv = Books.installed().getBook("ESV_th");
         Book other = Books.installed().getBook("Swahili");
 
         Key k = kjv.getGlobalKeyList();

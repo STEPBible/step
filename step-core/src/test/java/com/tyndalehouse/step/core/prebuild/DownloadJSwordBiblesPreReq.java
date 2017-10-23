@@ -65,7 +65,7 @@ public class DownloadJSwordBiblesPreReq {
      */
     @Test
     public void installDefaultJSwordDefaultBibleVersions() throws InstallException {
-        assertNotNull("The ESV-THE module must be installed - please contact the dev team to obtain a manual copy.", Books.installed().getBook("ESV-THE"));
+        assertNotNull("The ESV_th module must be installed - please contact the dev team to obtain a manual copy.", Books.installed().getBook("ESV_th"));
 
         final String[] modules = new String[] { "KJV", "Byz", "FreSegond", "NETfree", "Tisch", "YLT",
                 "ASV", "Montgomery", "FreCrampon", "SBLGNT", "TR", "WHNU", "OSMHB", "Chiuns" };
@@ -96,8 +96,8 @@ public class DownloadJSwordBiblesPreReq {
                 jsword.index(moduleInitials);
             }
 
-            if(!jsword.isIndexed("ESV-THE")) {
-                jsword.index("ESV-THE");
+            if(!jsword.isIndexed("ESV_th")) {
+                jsword.index("ESV_th");
             }
         }
     }

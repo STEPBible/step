@@ -1,17 +1,12 @@
 package com.tyndalehouse.step.tools.modules;
 
-import com.google.inject.Binder;
-import com.google.inject.Guice;
-import com.google.inject.Module;
-import com.google.inject.Provider;
+import com.google.inject.*;
 import com.tyndalehouse.step.core.guice.StepCoreModule;
 import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import org.crosswire.common.util.CWProject;
-import org.crosswire.jsword.book.sword.SwordBookPath;
-
-import java.io.File;
+import org.crosswire.jsword.book.sword.ConfigEntry;
+import org.crosswire.jsword.book.sword.ConfigValueInterceptor;
 
 /**
  * Indexes a single module modules
@@ -28,7 +23,7 @@ public class IndexModule {
     public static void main(final String[] args) {
         CWProject.instance().setFrontendName("step");
 
-        final JSwordModuleService instance = Guice.createInjector(new StepCoreModule(), new Module() {
+        Injector injector = Guice.createInjector(new StepCoreModule(), new Module() {
 
             @Override
             public void configure(final Binder binder) {
@@ -42,7 +37,11 @@ public class IndexModule {
                 });
             }
 
-        }).getInstance(JSwordModuleService.class);
+        });
+        final JSwordModuleService instance = injector.getInstance(JSwordModuleService.class);
+        ConfigEntry.setConfigValueInterceptor(injector.getInstance(ConfigValueInterceptor.class));
+
+
         System.out.println("Indexing " + args[0]);
         instance.index(args[0]);
 

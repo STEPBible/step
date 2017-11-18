@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.server;
 
+import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
@@ -334,7 +335,7 @@ public class STEPTomcatServer {
 
                 final org.apache.catalina.Container child = tomcat.getHost().findChild("");
 
-                initLanguages(child.getLoader().getClassLoader());
+                initLanguages(((Context)child).getLoader().getClassLoader());
                 addSystemTray(tomcat);
 
                 finishStartUp();

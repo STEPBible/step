@@ -136,6 +136,10 @@ var SidebarView = Backbone.View.extend({
                     panelContentContainer.addClass("in");
                 }
 
+                this._createBriefWordPanel(panelBody, item);
+                if(i < data.morphInfos.length) {
+                    this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
+                }
                 this._createWordPanel(panelBody, item);
                 if(i < data.morphInfos.length) {
                     this._createMorphInfo(panelBody, data.morphInfos[i]);
@@ -150,6 +154,10 @@ var SidebarView = Backbone.View.extend({
             this.lexicon.append(panelGroup);
 
         } else {
+            this._createBriefWordPanel(this.lexicon, data.vocabInfos[0]);
+            if (data.morphInfos.length > 0) {
+                this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
+            }
             this._createWordPanel(this.lexicon, data.vocabInfos[0]);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(this.lexicon, data.morphInfos[0]);
@@ -157,18 +165,23 @@ var SidebarView = Backbone.View.extend({
         }
         this.tabContainer.append(this.lexicon);
     },
-    _createWordPanel: function (panel, mainWord) {
+    _createBriefWordPanel: function (panel, mainWord) {
         panel.append(
             $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
                 .append(mainWord.accentedUnicode))
                 .append(" (")
                 .append("<span class='transliteration'>" + mainWord.stepTransliteration + "</span>")
-                .append("): ")
-                .append(mainWord.shortDef || "")
-                .append(" ")
-                .append(mainWord.stepGloss)
+                .append(") '")
+                                                                                                             .append(mainWord.stepGloss)
+                .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
         );
+    },
+
+        _createWordPanel: function (panel, mainWord) {
+            panel.append(
+                $("<div>").append(mainWord.shortDef || "")
+            );
 
         panel.append("<br />")
             .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
@@ -218,6 +231,28 @@ var SidebarView = Backbone.View.extend({
                 step.util.ui.showDef($(this).data("strongNumber"));
             });
         }
+    },
+    // for one-line morphology
+    _createBriefMorphInfo: function (panel, info) {
+        panel.append("( ");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_function, "function");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_person, "person");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_number, "number");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
+        panel.append(")<br />");
+    },
+    renderBriefMorphItem: function (panel, info, title, param) {
+        if(info && param && info[param]) {
+            var value = $("<span>" + this.replaceEmphasis(info[param]) + "</span>");
+            panel.append(value);
+            panel.append(" ");
+        }
+
     },
     _createMorphInfo: function (panel, info) {
         panel.append($("<h2>").append(__s.display_grammar));

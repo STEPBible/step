@@ -58,7 +58,7 @@ public class SearchServiceImplTest {
     @Test
     public void testMultiVersionSearch() {
         final List<SearchEntry> results = this.searchServiceUnderTest.search(
-                new SearchQuery("t=elijah", new String[]{"ESV-THE", "KJV", "ASV"}, "false", 0, 1, 1, null)).getResults();
+                new SearchQuery("t=elijah", new String[]{"ESV_th", "KJV", "ASV"}, "false", 0, 1, 1, null)).getResults();
         assertFalse(results.isEmpty());
     }
 
@@ -69,7 +69,7 @@ public class SearchServiceImplTest {
     public void testSubjectSearch() {
 
         final SearchResult searchSubject = this.searchServiceUnderTest.search(
-                new SearchQuery("sh=elijah", new String[]{"ESV-THE"}, "false", 0, 1, 1, null));
+                new SearchQuery("sh=elijah", new String[]{"ESV_th"}, "false", 0, 1, 1, null));
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();
@@ -83,26 +83,26 @@ public class SearchServiceImplTest {
     @Test
     public void testLuceneScope() {
         System.out.println(this.subjects.getLuceneScopeFragment(new String[]{"OSMHB"}));
-        System.out.println(this.subjects.getLuceneScopeFragment(new String[]{"OSMHB", "ESV-THE"}));
+        System.out.println(this.subjects.getLuceneScopeFragment(new String[]{"OSMHB", "ESV_th"}));
         final String luceneScopeFragment = this.subjects.getLuceneScopeFragment(new String[]{"OSMHB"});
 
         assertTrue(luceneScopeFragment.contains("expandedReferences:Lev.*"));
         assertTrue(luceneScopeFragment.contains("+("));
 
         //we should have 66 books here, so we're not restricting anything
-        assertEquals("", this.subjects.getLuceneScopeFragment(new String[]{"OSMHB", "ESV-THE"}));
+        assertEquals("", this.subjects.getLuceneScopeFragment(new String[]{"OSMHB", "ESV_th"}));
     }
 
     @Test
     public void testExpandingToLucene() {
-        assertEquals("+(expandedReferences:Matt.*)", this.subjects.getLuceneInputReferenceRestriction("ESV-THE", "Mat").getValue());
-        assertEquals("+(expandedReferences:Matt.1.*)", this.subjects.getLuceneInputReferenceRestriction("ESV-THE", "Mat 1").getValue());
-        assertEquals("+(expandedReferences:Matt.1.1)", this.subjects.getLuceneInputReferenceRestriction("ESV-THE", "Mat 1:1").getValue());
-        assertEquals("+(expandedReferences:Matt.1.2 expandedReferences:Matt.1.3)", this.subjects.getLuceneInputReferenceRestriction("ESV-THE", "Mat 1:2-3").getValue());
-        assertEquals("+(expandedReferences:Obad.*)", this.subjects.getLuceneInputReferenceRestriction("ESV-THE", "Obadiah").getValue());
-        assertEquals("+(expandedReferences:Obad.1.2)", this.subjects.getLuceneInputReferenceRestriction("ESV-THE", "Obadiah 2").getValue());
-        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* )", this.subjects.getLuceneInputReferenceRestriction("ESV-THE", "Gen-Exo").getValue());
-        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* expandedReferences:Lev.* expandedReferences:Mark.* )", this.subjects.getLuceneInputReferenceRestriction("ESV-THE", "Gen-Lev ; Mark").getValue());
+        assertEquals("+(expandedReferences:Matt.*)", this.subjects.getLuceneInputReferenceRestriction("ESV_th", "Mat").getValue());
+        assertEquals("+(expandedReferences:Matt.1.*)", this.subjects.getLuceneInputReferenceRestriction("ESV_th", "Mat 1").getValue());
+        assertEquals("+(expandedReferences:Matt.1.1)", this.subjects.getLuceneInputReferenceRestriction("ESV_th", "Mat 1:1").getValue());
+        assertEquals("+(expandedReferences:Matt.1.2 expandedReferences:Matt.1.3)", this.subjects.getLuceneInputReferenceRestriction("ESV_th", "Mat 1:2-3").getValue());
+        assertEquals("+(expandedReferences:Obad.*)", this.subjects.getLuceneInputReferenceRestriction("ESV_th", "Obadiah").getValue());
+        assertEquals("+(expandedReferences:Obad.1.2)", this.subjects.getLuceneInputReferenceRestriction("ESV_th", "Obadiah 2").getValue());
+        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* )", this.subjects.getLuceneInputReferenceRestriction("ESV_th", "Gen-Exo").getValue());
+        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* expandedReferences:Lev.* expandedReferences:Mark.* )", this.subjects.getLuceneInputReferenceRestriction("ESV_th", "Gen-Lev ; Mark").getValue());
     }
 
     /**
@@ -119,7 +119,7 @@ public class SearchServiceImplTest {
         when(optionsValidationService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class), any(InterlinearMode.class)))
                 .thenReturn(new AvailableFeatures());
 
-        when(module.isInstalled("ESV-THE")).thenReturn(true);
+        when(module.isInstalled("ESV_th")).thenReturn(true);
         when(module.isIndexed(any(String.class))).thenReturn(true);
         when(meta.supportsFeature(any(String.class), any(LookupOption.class))).thenReturn(true);
 

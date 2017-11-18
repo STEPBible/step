@@ -45,7 +45,7 @@ public final class HebrewUtils {
     private static final char PATAH = 0x5B7;
     private static final char QAMATS = 0x5B8;
     private static final char HOLAM = 0x5B9;
-    private static final char QAMATS_2 = 0x5BA;
+    private static final char HOLAM_HASER = 0x5BA;
     private static final char QUBUTS = 0x5BB;
     private static final char DAGESH = 0x5BC;
     private static final char METEG = 0x05BD;
@@ -136,7 +136,7 @@ public final class HebrewUtils {
         while (i < sb.length()) {
             final char currentChar = sb.charAt(i);
             //ignore characters outside of the Hebrew character set
-            if(currentChar < ETNAHTA || currentChar > ALEPH_LAMED) {
+            if(currentChar < ETNAHTA || currentChar > ALEPH_LAMED   || currentChar == METEG) {
                 i++;
             } else if (currentChar < endChar) {
                 sb.deleteCharAt(i);
@@ -354,7 +354,7 @@ public final class HebrewUtils {
 
         if (isAny(input[position], SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
             letter.setVowelLengthType(VowelLengthType.VERY_SHORT);
-        } else if (isAny(input[position], TSERE, QAMATS, QAMATS_2, HOLAM)) {
+        } else if (isAny(input[position], TSERE, QAMATS, HOLAM_HASER, HOLAM)) {
             letter.setVowelLengthType(VowelLengthType.LONG);
         } else if (input[position] == HIRIQ && hasAnyPointing(input, position, true, METEG)
                 || hasAnyPointing(input, position, false, METEG)) {
@@ -711,8 +711,8 @@ public final class HebrewUtils {
                     output.append('o');
                 }
                 break;
-            case QAMATS_2:
-                output.append('a');
+            case HOLAM_HASER:
+                output.append('o');
                 break;
             case QUBUTS:
                 output.append('u');
@@ -1150,7 +1150,7 @@ public final class HebrewUtils {
                 if (input[ii] == ALEPH || input[ii] == AYIN) {
                     return !hasAnyPointing(input, currentPosition, true, QAMATS_QATAN, SHEVA,
                             HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS, HIRIQ, TSERE, SEGOL, PATAH,
-                            QAMATS, HOLAM, QAMATS_2, QUBUTS);
+                            QAMATS, HOLAM, HOLAM_HASER, QUBUTS);
                 }
 
                 return false;
@@ -1405,9 +1405,9 @@ public final class HebrewUtils {
      * @return true if yod is a vowel
      */
     private static boolean isYodVowel(final char[] inputString, final int currentPosition, final HebrewLetter[] letters) {
-        return hasAnyPointing(inputString, currentPosition, false, HIRIQ, TSERE, SEGOL, QAMATS, QAMATS_2)
+        return hasAnyPointing(inputString, currentPosition, false, HIRIQ, TSERE, SEGOL, QAMATS, HOLAM_HASER)
                 && !hasAnyPointing(inputString, currentPosition, true, QAMATS_QATAN, SHEVA, HATAF_SEGOL,
-                HATAF_PATAH, HATAF_QAMATS, HIRIQ, TSERE, SEGOL, PATAH, QAMATS, HOLAM, QAMATS_2,
+                HATAF_PATAH, HATAF_QAMATS, HIRIQ, TSERE, SEGOL, PATAH, QAMATS, HOLAM, HOLAM_HASER,
                 QUBUTS, DAGESH);
     }
 

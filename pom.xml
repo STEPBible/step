@@ -3,7 +3,7 @@
 
     <groupId>com.tyndalehouse.step</groupId>
     <artifactId>step-mvn</artifactId>
-    <version>2.0.8-SNAPSHOT</version>
+    <version>2.0.12-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>STEP :: Scripture Tools for Every pastor</name>
 
@@ -39,7 +39,8 @@
         <opencsv.version>2.3</opencsv.version>
 
         <jetty.version>8.1.9.v20130131</jetty.version>
-        <tomcat.version>7.0.34</tomcat.version>
+        <tomcat.version>8.5.4</tomcat.version>
+        <tomcat.secondary.version>8.5.2</tomcat.secondary.version>
         <xalan.version>2.7.1</xalan.version>
 
         <yammer-metrics.version>2.2.0</yammer-metrics.version>
@@ -129,6 +130,7 @@
 
     <modules>
         <module>step-build</module>
+        <module>step-core-data</module>
         <module>step-core</module>
         <module>step-web</module>
         <module>step-server</module>
@@ -144,6 +146,7 @@
             <id>standalone-install</id>
             <modules>
                 <module>step-build</module>
+                <module>step-core-data</module>
                 <module>step-core</module>
                 <module>step-web</module>
                 <module>step-server</module>
@@ -330,6 +333,11 @@
                         <groupId>com.google.inject</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.tyndalehouse.step</groupId>
+                <artifactId>step-core-data</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tyndalehouse.step</groupId>
@@ -526,7 +534,7 @@
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-logging-juli</artifactId>
-                <version>${tomcat.version}</version>
+                <version>${tomcat.secondary.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>

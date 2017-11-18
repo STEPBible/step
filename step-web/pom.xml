@@ -24,7 +24,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>2.0.8-SNAPSHOT</version>
+		<version>2.0.12-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -42,6 +42,10 @@
 			<groupId>com.tyndalehouse.step</groupId>
 			<artifactId>step-core</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.tyndalehouse.step</groupId>
+            <artifactId>step-core-data</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt</artifactId>

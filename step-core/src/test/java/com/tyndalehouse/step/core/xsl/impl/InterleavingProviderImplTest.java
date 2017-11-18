@@ -69,10 +69,10 @@ public class InterleavingProviderImplTest {
         });
 
         final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(versification,
-                new String[] { "KJV", "ESV-THE", "NETfree", "Byz", "Tisch", "YLT", "ASV", "Montgomery",
+                new String[] { "KJV", "ESV_th", "NETfree", "Byz", "Tisch", "YLT", "ASV", "Montgomery",
                         "FreCrampon" }, true);
 
-        final String[] expected = new String[] { "KJV", "ESV-THE", "KJV", "NETfree", "KJV", "YLT", "KJV", "ASV",
+        final String[] expected = new String[] { "KJV", "ESV_th", "KJV", "NETfree", "KJV", "YLT", "KJV", "ASV",
                 "KJV", "Montgomery", };
         assertEqualVersions(expected, interleavingProviderImpl);
     }
@@ -93,9 +93,9 @@ public class InterleavingProviderImplTest {
         });
 
         final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(versification,
-                new String[] { "KJV", "ESV-THE", "KJV", "ESV-THE"}, true);
+                new String[] { "KJV", "ESV_th", "KJV", "ESV_th"}, true);
 
-        assertEqualVersions(new String[] { "KJV", "ESV-THE", "KJV", "ESV-THE"}, interleavingProviderImpl);
+        assertEqualVersions(new String[] { "KJV", "ESV_th", "KJV", "ESV_th"}, interleavingProviderImpl);
     }
 
 
@@ -106,9 +106,9 @@ public class InterleavingProviderImplTest {
     @Test
     public void testInterleavingNoCompare() {
         final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(null,
-                new String[] { "ESV-THE", "SBLGNT" }, false);
+                new String[] { "ESV_th", "SBLGNT" }, false);
 
-        final String[] expected = new String[] { "ESV-THE", "SBLGNT" };
+        final String[] expected = new String[] { "ESV_th", "SBLGNT" };
         assertEqualVersions(expected, interleavingProviderImpl);
     }
 

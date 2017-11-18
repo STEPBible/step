@@ -97,7 +97,7 @@ public class NaveProcessor implements PostProcessor {
      */
     private String expandRefs(final String refs) {
         try {
-            return this.jswordPassage.getAllReferences(refs, "ESV-THE");
+            return this.jswordPassage.getAllReferences(refs, "ESV_th");
         } catch (final StepInternalException ex) {
             LOGGER.error("Nave data: {}", ex.getMessage());
             LOGGER.trace("Expanded refs failed", ex);

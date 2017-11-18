@@ -51,7 +51,7 @@ public class GeoStreamingCsvModuleLoader extends StreamingCsvModuleLoader {
         getWriter().addFieldToCurrentDocument("precision", this.precisionType);
 
         getWriter().addFieldToCurrentDocument("references",
-                this.jsword.getAllReferences(line[4].replace("Sng", "Song"), "ESV-THE").replace(',', ';'));
+                this.jsword.getAllReferences(line[4].replace("Sng", "Song"), "ESV_th").replace(',', ';'));
     }
 
     /**

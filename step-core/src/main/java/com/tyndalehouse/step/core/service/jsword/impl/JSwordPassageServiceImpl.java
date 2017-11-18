@@ -1333,6 +1333,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                               final Book[] books) {
         final boolean isHebrew = JSwordUtils.isAncientHebrewBook(books);
         final boolean isGreek = JSwordUtils.isAncientGreekBook(books);
+//        options.remove(LookupOption.VERSE_NEW_LINE);
 
         for (final LookupOption lookupOption : options) {
             if (lookupOption.getXsltParameterName() != null) {
@@ -1383,6 +1384,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             tsep.setParameter("RemovePointing", false);
             tsep.setParameter("RemoveVowels", false);
         }
+        if (!books[0].getBookMetaData().isLeftToRight())        {
+            tsep.setParameter(LookupOption.VERSE_NEW_LINE.getXsltParameterName(), true);
+        }
+
         tsep.setParameter("direction", books[0].getBookMetaData().isLeftToRight() ? "ltr" : "rtl");
         tsep.setParameter("baseVersion", this.resolver.getShortName(books[0].getInitials()));
     }

@@ -55,7 +55,7 @@ public class BibleAnalysis {
     // private TreeSet<WordCount> targetKeyOrder;
 
     public static void main(final String[] args) throws Exception {
-        new BibleAnalysis().read("OSMHB", "ESV-THE");
+        new BibleAnalysis().read("OSMHB", "ESV_th");
         // processLeastFrequent(sortedKeys, this.sourceWords);
 
     }

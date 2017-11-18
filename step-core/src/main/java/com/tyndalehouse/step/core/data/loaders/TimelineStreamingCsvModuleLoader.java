@@ -40,7 +40,7 @@ public class TimelineStreamingCsvModuleLoader extends StreamingCsvModuleLoader {
 
         // do references
         getWriter().addFieldToCurrentDocument("storedReferences", line[12]);
-        getWriter().addFieldToCurrentDocument("references", this.jsword.getAllReferences(line[12], "ESV-THE"));
+        getWriter().addFieldToCurrentDocument("references", this.jsword.getAllReferences(line[12], "ESV_th"));
     }
 
     /**

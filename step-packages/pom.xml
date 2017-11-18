@@ -25,7 +25,7 @@
     <parent>
         <groupId>com.tyndalehouse.step</groupId>
         <artifactId>step-mvn</artifactId>
-        <version>2.0.8-SNAPSHOT</version>
+        <version>2.0.12-SNAPSHOT</version>
     </parent>
 
     <groupId>com.tyndalehouse.step</groupId>
@@ -35,12 +35,12 @@
 
     <properties>
         <packages>${project.build.outputDirectory}</packages>
-        <sword.home>c:\Users\Chris\AppData\Roaming\Sword</sword.home>
+        <sword.home>C:\Users\Chris\AppData\Roaming\Sword</sword.home>
         <jsword.home>${sword.home}/../JSword</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-        <modulesToInclude>esv-the,kjv,osmhb,lxx-the,sblg-the,niv,abpen-the,abpgk-the</modulesToInclude>
+        <modulesToInclude>esv_th,kjv,osmhb,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
+        <indexesToInclude>ESV_th,KJV,OSMHB,LXX,SBLG_th,NIV,ABPGRK</indexesToInclude>
     </properties>
-
 
     <build>
         <plugins>
@@ -53,39 +53,45 @@
                         <phase>compile</phase>
                         <configuration>
                             <target>
+                                <!-- make some default directories -->
+                                <mkdir dir="${jsword.home}/step/jsword-mods.d/"/>
+
                                 <ac:for list="${modulesToInclude}" param="version" xmlns:ac="antlib:net.sf.antcontrib">
                                     <sequential>
-                                        <copy toDir="${explodedPackages}">
+                                        <!-- copy the files for the installation process -->
+                                        <copy toDir="${packages}/homes/sword">
                                             <fileset dir="${sword.home}">
                                                 <include name="mods.d/@{version}.conf"/>
                                                 <include name="modules/**/@{version}/**"/>
                                             </fileset>
                                         </copy>
 
-                                        <mkdir dir="${jsword.home}/step/jsword-mods.d/"/>
-                                        <copy toDir="${explodedPackages}/step/jsword-mods.d/">
+                                        <!--<mkdir dir="${jsword.home}/homes/jsword/step/jsword-mods.d/"/>-->
+                                        <copy toDir="${packages}/homes/jsword/step/jsword-mods.d/">
                                             <fileset dir="${jsword.home}/step/jsword-mods.d/">
                                                 <include name="**/@{version}.conf"/>
                                             </fileset>
                                         </copy>
-
-
-                                        <zip destFile="${packages}/@{version}.zip">
-                                            <fileset dir="${explodedPackages}">
-                                                <include name="**/@{version}.conf"/>
-                                                <include name="**/@{version}/**"/>
-                                            </fileset>
-                                        </zip>
                                     </sequential>
-
                                 </ac:for>
-                                <!-- next we need to pack up all mods.d/*.conf files... -->
-                                <tar destFile="${explodedPackages}/mods.d.tar" basedir="${explodedPackages}">
-                                    <include name="mods.d/*"/>
-                                </tar>
 
-                                <gzip src="${explodedPackages}/mods.d.tar"
-                                      destFile="${packages}/mods.d.tar.gz"/>
+                               <ac:for list="${indexesToInclude}" param="version"  xmlns:ac="antlib:net.sf.antcontrib">
+                                   <sequential>
+                                        <!-- copy the files for the index files to jsword -->
+                                        <copy toDir="${packages}/homes/jsword/lucene/Sword">
+                                            <fileset dir="${jsword.home}/lucene/Sword">
+                                                <include name="@{version}/*"/>
+                                            </fileset>
+                                        </copy>
+                                   </sequential>
+                                </ac:for>
+
+                                <!-- copy the STEP indexes over -->
+                                <copy toDir="${packages}/homes/jsword/step/entities">
+                                    <fileset dir="${jsword.home}/step/entities">
+                                        <include name="**/*"/>
+                                    </fileset>
+                                </copy>
                             </target>
                         </configuration>
                         <goals>

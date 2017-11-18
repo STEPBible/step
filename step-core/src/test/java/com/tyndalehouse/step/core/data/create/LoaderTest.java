@@ -157,7 +157,7 @@ public class LoaderTest {
     @Test
     public void testVersionInfo() {
         getLoader("test.data.path.versions.info", "versions.csv").loadVersionInformation();
-        assertLoaded(1, "versionInfo", "version", "ESV-THE");
+        assertLoaded(1, "versionInfo", "version", "ESV_th");
     }
 
     /**
@@ -227,7 +227,7 @@ public class LoaderTest {
 
         entities = getEntities(1, "morphology", "code", "D-NPM-C");
         e = entities[0];
-        assertEquals("Contracted form", e.get("suffix"));
+        assertEquals("Contracted", e.get("suffix"));
     }
 
     /**

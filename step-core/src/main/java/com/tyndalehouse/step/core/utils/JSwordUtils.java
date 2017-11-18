@@ -187,7 +187,7 @@ public final class JSwordUtils {
                 return true;
             }
         }
-        return ancientHebrew;        
+        return ancientHebrew;
     }
 
     /**

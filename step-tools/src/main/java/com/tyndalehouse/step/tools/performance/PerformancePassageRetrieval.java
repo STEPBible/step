@@ -26,7 +26,7 @@ public class PerformancePassageRetrieval {
 
     public static void testConcurrencyIssueThroughStep() throws NoSuchKeyException, BookException,
             InterruptedException {
-        final String[] names = { "KJV", "ESV-THE" };
+        final String[] names = { "KJV", "ESV_th" };
         final String[] ref = { "Rom.2", "John 7", "2Ki.2", "Rom.1;John 4;2Ki.2", "Acts 3:4-6" };
 
         final ThreadMXBean thbean = ManagementFactory.getThreadMXBean();

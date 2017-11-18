@@ -26,7 +26,7 @@ public class StepBookmarkTest extends WebDriverTest {
     }
 
     private void doBookmarkMenuItemTest(final int passageId, final String reference) {
-        final Passage passage = PageOperations.loadPassage(this.getDriver(), passageId, "ESV-THE", reference, true);
+        final Passage passage = PageOperations.loadPassage(this.getDriver(), passageId, "ESV_th", reference, true);
 
         final WebElement topMenu = this.getDriver().findElements(By.linkText("Tools")).get(1 + passageId);
         new Actions(this.getDriver()).moveToElement(topMenu).perform();
@@ -45,7 +45,7 @@ public class StepBookmarkTest extends WebDriverTest {
     }
 
     private void doBookmarkButtonTest(final int passageId, final String reference) {
-        final Passage passage = PageOperations.loadPassage(this.getDriver(), passageId, "ESV-THE", reference, true);
+        final Passage passage = PageOperations.loadPassage(this.getDriver(), passageId, "ESV_th", reference, true);
         final WebElement bookmark = passage.findWithinPassage(".bookmarkPassageLink");
 
         bookmark.click();

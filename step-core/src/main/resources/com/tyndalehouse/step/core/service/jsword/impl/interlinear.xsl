@@ -940,8 +940,28 @@
   <xsl:template match="date" mode="jesus">
     <xsl:apply-templates mode="jesus"/>
   </xsl:template>
-  
-  <xsl:template match="divineName">
+
+    <xsl:template match="catchWord">
+        <span class="bold">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
+    <xsl:template match="doxology">
+        <span class="italic">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
+    <xsl:template match="colophon">
+        <span class="italic">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
+    <xsl:template match="refrain">
+        <span class="italic">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
+    <xsl:template match="attribution">
+        <span class="italic">&#160;<xsl:apply-templates /></span>
+    </xsl:template>
+
+    <xsl:template match="divineName">
     <xsl:apply-templates mode="small-caps"/>
   </xsl:template>
   

@@ -1,19 +1,13 @@
 package com.tyndalehouse.step.core.utils.language;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.tyndalehouse.step.core.utils.language.hebrew.*;
+import com.tyndalehouse.step.core.utils.language.transliteration.StringToStringRule;
+import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.utils.language.hebrew.ConsonantType;
-import com.tyndalehouse.step.core.utils.language.hebrew.HebrewLetter;
-import com.tyndalehouse.step.core.utils.language.hebrew.HebrewLetterType;
-import com.tyndalehouse.step.core.utils.language.hebrew.SoundingType;
-import com.tyndalehouse.step.core.utils.language.hebrew.VowelLengthType;
-import com.tyndalehouse.step.core.utils.language.hebrew.VowelStressType;
-import com.tyndalehouse.step.core.utils.language.transliteration.StringToStringRule;
-import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationRule;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utilities for doing Hebrew transliteration
@@ -136,7 +130,7 @@ public final class HebrewUtils {
         while (i < sb.length()) {
             final char currentChar = sb.charAt(i);
             //ignore characters outside of the Hebrew character set
-            if(currentChar < ETNAHTA || currentChar > ALEPH_LAMED   || currentChar == METEG) {
+            if(currentChar < ETNAHTA || currentChar > ALEPH_LAMED   || currentChar == MAQAF) {
                 i++;
             } else if (currentChar < endChar) {
                 sb.deleteCharAt(i);

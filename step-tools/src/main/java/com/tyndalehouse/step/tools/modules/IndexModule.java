@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.tools.modules;
 
 import com.google.inject.*;
+import com.google.inject.Module;
 import com.tyndalehouse.step.core.guice.StepCoreModule;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;

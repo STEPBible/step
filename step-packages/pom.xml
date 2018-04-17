@@ -44,83 +44,81 @@
     </properties>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.7</version>
-                    <executions>
-                        <execution>
-                            <phase>compile</phase>
-                            <configuration>
-                                <target>
-                                    <!-- make some default directories -->
-                                    <mkdir dir="${jsword.home}/step/jsword-mods.d/"/>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <!-- make some default directories -->
+                                <mkdir dir="${jsword.home}/step/jsword-mods.d/"/>
 
-                                    <ac:for list="${modulesToInclude}" param="version" xmlns:ac="antlib:net.sf.antcontrib">
-                                        <sequential>
-                                            <!-- copy the files for the installation process -->
-                                            <copy toDir="${packages}/homes/sword">
-                                                <fileset dir="${sword.home}">
-                                                    <include name="mods.d/@{version}.conf"/>
-                                                    <include name="modules/**/@{version}/**"/>
-                                                </fileset>
-                                            </copy>
+                                <ac:for list="${modulesToInclude}" param="version" xmlns:ac="antlib:net.sf.antcontrib">
+                                    <sequential>
+                                        <!-- copy the files for the installation process -->
+                                        <copy toDir="${packages}/homes/sword">
+                                            <fileset dir="${sword.home}">
+                                                <include name="mods.d/@{version}.conf"/>
+                                                <include name="modules/**/@{version}/**"/>
+                                            </fileset>
+                                        </copy>
 
-                                            <!--<mkdir dir="${jsword.home}/homes/jsword/step/jsword-mods.d/"/>-->
-                                            <copy toDir="${packages}/homes/jsword/step/jsword-mods.d/">
-                                                <fileset dir="${jsword.home}/step/jsword-mods.d/">
-                                                    <include name="**/@{version}.conf"/>
-                                                </fileset>
-                                            </copy>
-                                        </sequential>
-                                    </ac:for>
+                                        <!--<mkdir dir="${jsword.home}/homes/jsword/step/jsword-mods.d/"/>-->
+                                        <copy toDir="${packages}/homes/jsword/step/jsword-mods.d/">
+                                            <fileset dir="${jsword.home}/step/jsword-mods.d/">
+                                                <include name="**/@{version}.conf"/>
+                                            </fileset>
+                                        </copy>
+                                    </sequential>
+                                </ac:for>
 
-								   <ac:for list="${indexesToInclude}" param="version"  xmlns:ac="antlib:net.sf.antcontrib">
-									   <sequential>
-											<!-- copy the files for the index files to jsword -->
-											<copy toDir="${packages}/homes/jsword/lucene/Sword">
-												<fileset dir="${jsword.home}/lucene/Sword">
-													<include name="@{version}/*"/>
-												</fileset>
-											</copy>
-									   </sequential>
-									</ac:for>
+                               <ac:for list="${indexesToInclude}" param="version"  xmlns:ac="antlib:net.sf.antcontrib">
+                                   <sequential>
+                                        <!-- copy the files for the index files to jsword -->
+                                        <copy toDir="${packages}/homes/jsword/lucene/Sword">
+                                            <fileset dir="${jsword.home}/lucene/Sword">
+                                                <include name="@{version}/*"/>
+                                            </fileset>
+                                        </copy>
+                                   </sequential>
+                                </ac:for>
 
-									<!-- copy the STEP indexes over -->
-									<copy toDir="${packages}/homes/jsword/step/entities">
-										<fileset dir="${jsword.home}/step/entities">
-											<include name="**/*"/>
-										</fileset>
-									</copy>
-								</target>
-							</configuration>
-							<goals>
-								<goal>run</goal>
-							</goals>
-						</execution>
-					</executions>
-					<dependencies>
-						<dependency>
-							<groupId>ant-contrib</groupId>
-							<artifactId>ant-contrib</artifactId>
-							<version>1.0b3</version>
-							<exclusions>
-								<exclusion>
-									<groupId>ant</groupId>
-									<artifactId>ant</artifactId>
-								</exclusion>
-							</exclusions>
-						</dependency>
-						<dependency>
-							<groupId>org.apache.ant</groupId>
-							<artifactId>ant-nodeps</artifactId>
-							<version>1.8.1</version>
-						</dependency>
-					</dependencies>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+                                <!-- copy the STEP indexes over -->
+                                <copy toDir="${packages}/homes/jsword/step/entities">
+                                    <fileset dir="${jsword.home}/step/entities">
+                                        <include name="**/*"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
     </build>
 </project>

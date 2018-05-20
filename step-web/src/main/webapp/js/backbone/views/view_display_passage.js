@@ -252,9 +252,17 @@ var PassageDisplayView = DisplayView.extend({
                 link.on("touchstart", function () {
                     self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
                 }).hover(function (ev) {
-                    self.doInlineNoteQuickLexicon(passageContent, $(this), ev)
+                    // If another note is already open, don't replace the content on hover
+                    if (!step.util.keepQuickLexiconOpen) {
+                        self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
+                    }
                 }, function () {
-                    $("#quickLexicon").remove();
+                    // Avoid automatically hiding quickLexicon if the user has clicked
+                    if (!step.util.keepQuickLexiconOpen) {
+                        $("#quickLexicon").remove();
+                    }
+                }).click(function (ev) {
+                    step.util.keepQuickLexiconOpen = true;
                 });
             }
         },

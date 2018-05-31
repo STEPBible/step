@@ -1019,7 +1019,8 @@ step.util = {
          * @private
          */
         getVerseNumber: function (el) {
-            return $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
+            return $(el).closest(".verseGrouping").find(".heading .verseLink").attr("name") ||
+                $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
         },
         emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();

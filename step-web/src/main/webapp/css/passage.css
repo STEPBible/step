@@ -249,7 +249,7 @@ span.strongs a {
 }
 
 
-SUP.verseNumber {
+sup.verseNumber {
 	font-size: 75%;
 	color: gray;
 }
@@ -259,13 +259,18 @@ sup.variant.note {
 	color: #33339F;
 }
 
-SUP.note a {
+sup.note a {
+	cursor: pointer;
 	font-size: 100%;
     font-weight:normal;
 	color: #26539e;
 }
 
-SUP.note a:visited {
+sup.note a:hover {
+	text-decoration: none;
+}
+
+sup.note a:visited {
 	font-size: 100%;
     font-weight:normal;
 	color: #26539e;
@@ -448,16 +453,13 @@ h3.psalmHeading .note {
 
 a.linkRef {
 	color: #26539e;
+	cursor: pointer;
 	font-weight: normal;
-	front-size: smaller;
 }
 
 a:hover.linkRef {
 	color: #33339F;	
-	font-weight: normal;
-	front-size: smaller;
 }
-
 
 /* the following are for dictionary entries */
 FONT.orth {

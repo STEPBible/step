@@ -36,7 +36,7 @@ var QuickLexicon = Backbone.View.extend({
         '<div>' +
         '<button type="button" class="close" aria-hidden="true">&times;</button>',
     templateFooter: '</div>',
-    templateDef: '<%= view.templateHeader %>' +
+    template: _.template('<%= view.templateHeader %>' +
         '<% _.each(data, function(item) { %>' +
         '<div><h1>' +
         '<%= item.stepGloss %> (<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
@@ -47,7 +47,7 @@ var QuickLexicon = Backbone.View.extend({
         '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <%= __s.more_info_on_click_of_word %></span><% } %>' +
         '</div>' +
         '<% }); %>' +
-        '<%= view.templatedFooter %>',
+        '<%= view.templatedFooter %>'),
     initialize: function (opts) {
         this.text = opts.text;
         this.reference = opts.reference;
@@ -65,16 +65,18 @@ var QuickLexicon = Backbone.View.extend({
 
     loadDefinition: function (time) {
         var self = this;
-        $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph], function (data) {
+        return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);
             $("#quickLexicon").remove();
             if (data.vocabInfos) {
-                var lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos, fontClass: step.util.ui.getFontForStrong(self.strong), view: self }));
+                var lexicon = $(self.template({ data: data.vocabInfos, fontClass: step.util.ui.getFontForStrong(self.strong), view: self }));
                 if (self.position > 0.66) {
-                    lexicon.css("padding-top", "2px");
-                    lexicon.css("height", "1px");
-                    lexicon.css("top", "0");
+                    lexicon.css({
+                        "padding-top": "2px",
+                        "height": "1px",
+                        "top": "0"
+                    });
                 }
                 self.displayQuickDef(lexicon);
             }
@@ -99,6 +101,7 @@ var QuickLexicon = Backbone.View.extend({
             var time = new Date().getTime();
             this.loadDefinition(time);
         }
+        return this;
     },
     displayQuickDef: function(lexicon) {
         var self = this;

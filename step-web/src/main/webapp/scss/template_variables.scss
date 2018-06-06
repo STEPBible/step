@@ -14,8 +14,11 @@ $stepMD: 991px;
 $stepLG: 1120px;
 
 // colours
+$brand-primary: #17758F;
+
 //active colour of panel
-$topHeaderLinkColour: lightgrey;
+$headerBackgroundColor: #F2F2F2;
+$topHeaderLinkColour: #5E5E5E;
 $dividerColor: $topHeaderLinkColour;
 $warningColour: orange;
 $infoColour: #a9d3ff;
@@ -25,7 +28,6 @@ $linkColour: #26539e;
 // scrollbar colours
 $tyndaleBurgundy: #822433;
 $activeColor: $tyndaleBurgundy;
-$headerBackgroundColor: black;
 $scrollColor: $tyndaleBurgundy;
 $scrollTrack: lighten($scrollColor, 0.05);
 $scrollTrackHover: lighten($scrollColor, 0.20);
@@ -48,17 +50,17 @@ $hoverColorText: white;
 $verseNumberBackground: #eee;
 $inactiveTabColor: black;
 
-$bibleRow: #631427;
-$subjectRow: #361463;
-$meaningsRow: #635314;
-$greekRow: #0A352B;
-$greekMeaningsRow: #146350;
-$hebrewRow: #0B1135;
-$hebrewMeaningsRow: #142263;
+$bibleRow: #963535;
+$subjectRow: #5B468A;
+$meaningsRow: #DCBD30;
+$greekRow: #3B9B89;
+$greekMeaningsRow: #3B9B89;
+$hebrewRow: #46598A;
+$hebrewMeaningsRow: #46598A;
 $exactForm: #3F3207;
-$textRow: #200A35;
+$textRow: #8A467B;
 $topicByRefRow: #4C1D8E;
-$referenceRow: #340B15;
+$referenceRow: #AA1B41;
 $optionStartGradient: 0%;
 $optionEndGradient: 20%;
 

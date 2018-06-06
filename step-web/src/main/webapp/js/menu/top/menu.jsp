@@ -24,12 +24,14 @@
     </button>
     <%--<button  class="btn btn-default btn-sm showBooks" type="button" title="<fmt:message key="see_books" />">--%>
         <%--<span class="glyphicon glyphicon-book"></span></button>--%>
-    <button  class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
-        <span class="glyphicon glyphicon-save"></span></button>
+
+    <a class="showStats" title="<fmt:message key="passage_open_sidebar" />">
+        <i class="glyphicon glyphicon-info-sign"></i>
+    </a>
     <div class="navbar-collapse collapse">
         <span class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><span class="caret mini-level"></span><fmt:message
-                    key="installation_book_language"/><span class="caret top-level"></span></a> <span class="separator">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <a class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language"/>">
+                <i class="glyphicon glyphicon-globe" ></i>
             <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
                 <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step"/></a></li>
 
@@ -47,7 +49,9 @@
             </ul>
         </span>
         <span class="dropdown">
-            <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" href="javascript:void(0)"><span class="caret mini-level"></span><fmt:message key="help"/><span class="caret top-level"></span></a>
+            <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help"/>">
+                <i class="glyphicon glyphicon-question-sign"></i>
+            </a>
             <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
                 <!-- # Download STEP -->
                 <%

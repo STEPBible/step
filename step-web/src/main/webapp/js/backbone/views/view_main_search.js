@@ -1,7 +1,7 @@
 var MainSearchView = Backbone.View.extend({
     el: ".search-form",
     events: {
-        "click .find ": "search",
+        "click .find": "search",
         "click .showStats": "showAnalysis",
         "click .showBooks": "showBooks"
 

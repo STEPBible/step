@@ -15,7 +15,7 @@
 
 #columnHolder {
   overflow-y: hidden;
-  @include padding-from-header;
+  padding: 0 $paddingFromHeader $paddingFromHeader;
 
   // divider between passage options and passage
   hr {

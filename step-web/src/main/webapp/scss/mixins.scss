@@ -89,48 +89,48 @@
 @mixin bold-args($start, $end) {
   &.select-meanings {
     cursor: hand !important;
-    @include gradient($meaningsRow, $start, $end, #4B3D0D);
+    background: $meaningsRow !important;
   }
 
   &.select-version {
     cursor: hand !important;
-    @include gradient($bibleRow, $start, $end, #450914);
+    background: $bibleRow !important;
   }
 
   &.select-reference, &.select-relatedrefs {
     cursor: hand !important;
-    @include gradient($referenceRow, $start, $end, #20050B);
+    background: $referenceRow !important;
   }
 
   &.select-subject, &.select-topicref {
     cursor: hand !important;
-    @include gradient($subjectRow, $start, $end, #1E0A42);
+    background: $subjectRow !important;
   }
 
   &.select-text, &.select-syntax {
     cursor: hand !important;
-    @include gradient($textRow, $start, $end, #11051D);
+    background: $textRow !important;
   }
 
 
   &.select-greek, &.select-exactForm-greek {
     cursor: hand !important;
-    @include gradient($greekRow, $start, $end, #06241C);
+    background: $greekRow !important;
   }
 
   &.select-greekMeanings {
     cursor: hand !important;
-    @include gradient($greekMeaningsRow, $start, $end, #0A4232);
+    background: $greekMeaningsRow !important;
   }
 
   &.select-hebrew, &.select-exactForm-hebrew {
     cursor: hand !important;
-    @include gradient($hebrewRow, $start, $end, #05081D);
+    background: $hebrewRow !important;
   }
 
   &.select-hebrewMeanings {
     cursor: hand !important;
-    @include gradient($hebrewMeaningsRow, $start, $end, #0A1242);
+    background: $hebrewMeaningsRow !important;
   }
 }
 

@@ -16,17 +16,14 @@
     }
 
     #logo {
-      top: 0;
-      left: 0;
-      position: absolute;
+      width: 90px;
+      height: 24px;
     }
 
     a, .subtitle, .subtitle:hover {
       color: $header_title;
     }
-    [role="form"] {
-      margin-top: 5;
-    }
+
     &.form-group, form {
       input {
         margin-top: -2px;
@@ -41,13 +38,12 @@
   }
 
   .navbar-brand {
-
     @media screen and (min-width: $stepXSBootstrap) {
-      padding-left: 50px;
+      padding-left: 20px;
     }
-    padding-bottom: 0px;
-    padding-top: 5px;
-    height: $header_height;
+
+    padding-bottom: 8px;
+    padding-top: 8px;
 
     //find button to be aligned to top
     #masterSearch {
@@ -55,11 +51,7 @@
       box-shadow: none;
       -webkit-box-shadow: none;
     }
-    span.findButton {
-      vertical-align: top;
-      box-shadow: none;
-      -webkit-box-shadow: none;
-    }
+
     .title {
       line-height: 25px;
       margin-right: 20px;
@@ -72,49 +64,34 @@
     }
 
     .subtitle {
+      display: block;
       margin-top: 5px;
       white-space: nowrap;
       font-size: 11px;
       line-height: 1;
-    }
-
-    .showStats {
-      width: 24px;
-      span {
-        margin-bottom: 2px;
-      }
-    }
-    .glyphicon.glyphicon-save {
-      @include rotate(90deg);
-      transition: 0.3s;
-      &.active {
-        @include rotate(270deg);
-        transition: 0.3s;
-      }
     }
   }
 
   // Search form
   .search-form {
     font-size: x-small;
+
     a {
       color: $topHeaderLinkColour;
     }
 
-    button.find.btn {
-      border-top: none;
-      padding: 7 10 8 10;
-      margin-top: -2;
+    .findButton {
+      padding: 0 8px;
+    }
+
+    i.find {
+      position: absolute;
+      right: 16px;
+      top: -1px;
+      z-index: 2;
+      cursor: pointer;
       font-size: 16px;
-      line-height: 18px;
-      font-weight: bold;
-      text-shadow: -1px -1px 0 rgba(0, 0, 0, .2);
-      box-shadow: none;
-      -webkit-box-shadow: none;
-      height: 34px;
-      &:hover {
-        z-index: initial !important;
-      }
+      padding: 8px 12px;
     }
   }
   .searchLinks {
@@ -132,12 +109,33 @@
 
   // Help menu
   .help {
-    margin-top: 5;
-    padding-top: 3px;
+    margin-top: 5px;
     font-size: 12px;
-    margin-left: 10px;
     float: right;
     color: $topHeaderLinkColour;
+
+    a {
+      cursor: pointer;
+      display: inline-block;
+      opacity: .85;
+
+      &:hover {
+        opacity: 1;
+        text-decoration: none;
+      }
+    }
+
+    .glyphicon {
+      font-size: 18px;
+
+      &.active {
+        color: $brand-primary;
+      }
+    }
+
+    .navbar-collapse a {
+      padding-left: 15px;
+    }
 
     @media (min-width: $stepXSBootstrap) {
       .navbar-collapse {

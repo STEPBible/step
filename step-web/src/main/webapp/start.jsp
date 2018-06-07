@@ -332,7 +332,7 @@
                                 <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="land" option3type="text" option4="he.sed" option4type="hebrewMeanings" sampleURL="/?q=version=NIV|version=ESV|text=land|strong=H2617a&options=VGUVNH&display=INTERLEAVED" />
                                 <search:sample_search explanation="chained_searches_explanation_subject" option1="ESV" option1type="version" option2="throne" option2type="meanings" option3="David" option3type="subject" option4="Isa-Rev" option4type="reference" sampleURL="/?q=version=ESV|meanings=throne|subject=david|reference=Isa-Rev&options=HNVUG" />
                                 <search:sample_search explanation="interlinear_versions_explanation" option1="KJV" option1type="version" option2="WHNU" option2type="version" option3="John 1" option3type="reference" sampleURL="/?q=version=KJV|version=WHNU|reference=John.1&options=HVLUNM&display=INTERLINEAR" showInterlinear="true" />
-                            </div>    
+                            </div>
                         </div>
                         <div class="parent-div">
                             <h5 id="accordion-heading2">Examples of some Bible study tools <span id="plusminus2">+</span></h5>
@@ -351,7 +351,7 @@
                                     option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Quick tryout links<span style='background-color:white'>&nbsp;<span class='glyphicon glyphicon-plus'>   </span></span><span class='glyphicon glyphicon-stats'></span></span>"
                                     option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=ESV|reference=1Jo.1&options=HVGUN', 'function:openStats', 'Mouse over the words on the analysis tool (on the right panel) to see where the words are located.  Select book next to Bible text field in the right panel to see the word frequency for the entire book.')" />
-                            </div>    
+                            </div>
                         </div>
                         <div class="parent-div">
                             <h5 id="accordion-heading3">Examples to enable color code grammar <span id="plusminus3">+</span></h5>
@@ -367,12 +367,12 @@
                                     option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=CUn|reference=Col.1&options=HVGUNC', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
                                 <search:sample_search explanation="interlinear_verb_color_explanation" option1="SBLG" option1type="version" option2="KJV" option2type="version" option3="CUN" option3type="version" option4="Eph 5" option4type="reference"
-                                    option5="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" 
+                                    option5="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>"
                                     option5type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
                                 <div id='colorCodeTableDiv'></div>
-                            </div>    
-                        </div>                                                                                                                 
+                            </div>
+                        </div>
                         <div class="text-muted step-copyright"><span>&copy; <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House, Cambridge, UK</a> - <%= Calendar.getInstance().get(Calendar.YEAR) %><span></span></div>
                     </div>
                 </div>
@@ -381,20 +381,6 @@
         </div>
     </div>
 
-    <%-- Feedback form button--%>
-    <span id="supportContainer">
-        <button id="stepDisclaimer" type="button" class="btn btn-danger btn-xs" data-container="body" data-trigger="hover focus" data-toggle="popover" data-placement="top" data-content="<fmt:message key="step_disclaimer" />"/>
-            BETA
-        </button>
-        <%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
-        <%
-            if(!appManager.isLocal()) {
-        %>
-            <button class="btn btn-primary btn-xs" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback" /></button>
-        <%
-            }
-        %>
-    </span>
     <% if(request.getParameter("mobile") == null) { %>
         <%
             if(request.getParameter("lang") == null) {
@@ -579,7 +565,7 @@
                 }
             }
 
-            $("#accordion-heading1").click(function() {  
+            $("#accordion-heading1").click(function() {
                 if($("#accordion-body1").is(':visible')) {  /* check the condition accordion-body is visible or not */
                     $("#accordion-body1").slideUp(600);  /*if content is visible then close accordion-body with specific time duration */
                     $("#plusminus1").text('+')    /* add plus sign */
@@ -592,8 +578,8 @@
                 }
                 if (typeof displayQuickTryoutAccordion1 !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion1', JSON.stringify(displayQuickTryoutAccordion1));
             });
-            
-            $("#accordion-heading2").click(function() {  
+
+            $("#accordion-heading2").click(function() {
                 if($("#accordion-body2").is(':visible')) {  /* check the condition accordion-body is visible or not */
                     $("#accordion-body2").slideUp(600);  /*if content is visible then close accordion-body with specific time duration */
                     $("#plusminus2").text('+')    /* add plus sign */
@@ -606,8 +592,8 @@
                 }
                 if (typeof displayQuickTryoutAccordion2 !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion2', JSON.stringify(displayQuickTryoutAccordion2));
             });
-            
-            $("#accordion-heading3").click(function(){  
+
+            $("#accordion-heading3").click(function(){
                 if($("#accordion-body3").is(':visible')){  /* check the condition accordion-body is visible or not */
                     $("#accordion-body3").slideUp(600);  /*if content is visible then close accordion-body with specific time duration */
                     $("#plusminus3").text('+')    /* add plus sign */

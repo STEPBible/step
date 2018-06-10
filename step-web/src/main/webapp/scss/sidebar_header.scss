@@ -1,21 +1,49 @@
 @import 'template_variables';
 
 #sidebar {
-  &> ul > li {
-    text-align: center;
-    &.closeSidebar {
-      float: right;
-    }
-    &.active {
-      a {
-        color: $activeTabColour;
+  .nav-tabs {
+    background-color: white;
+    border-bottom: none;
+    padding-left: 10px;
+    position: relative;
+    top: -1px;
+
+    & > li {
+      text-align: center;
+
+      & > a {
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        color: $inactive-tab-color;
+        font-size: $panel-icon-size;
+        padding: 8px;
+        line-height: 20px;
+
+        &.stepglyph-help {
+          font-size: 18px;
+          font-weight: bold;
+        }
       }
-    }
-    a {
-      color: $inactiveTabColor;
-      padding: 2 5 2 5;
-      &.stepglyph-help {
-        font-weight: bold;
+
+      &.active > a {
+        color: $active-tab-color;
+      }
+
+      & > a:hover,
+      &.active > a,
+      &.active > a:hover,
+      &.active > a:focus {
+        border: none;
+        background-color: $header-background-color;
+      }
+
+      &.closeSidebar {
+        float: right;
+
+        & > a:hover {
+          background-color: transparent;
+        }
       }
     }
   }

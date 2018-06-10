@@ -1,15 +1,27 @@
 @import 'template_variables';
 
 #lexicon {
-  
+  color: $text-color;
+
+  font-size: 14px;
+  font-family: $font-family-primary;
+
+  h1,
+  h2,
+  h3 {
+    font-family: $font-family-header;
+    margin-bottom: 10px;
+  }
+
   h1 {
-    font-size: 16px;
-    margin-bottom: 0px;
+    font-size: $chapter-title-size;
+    margin-top: 0;
   }
+
   h2 {
-    font-size: 14px;
-    margin-bottom: 0px;
+    font-size: 17px;
   }
+
   h3 {
     font-size: 12px;
     display: inline;

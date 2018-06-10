@@ -17,7 +17,8 @@
   }
 
   .closeColumn.disabled {
-    pointer-events: initial;
+    cursor: not-allowed;
+    pointer-events: none;
 
     &:hover, &:active {
       background-position: inherit;
@@ -75,7 +76,7 @@
   a {
     color: $text-color;
     cursor: pointer;
-    font-size: 13px;
+    font-size: $panel-icon-size;
     line-height: 33px;
     padding: 5px 0 5px 15px;
 

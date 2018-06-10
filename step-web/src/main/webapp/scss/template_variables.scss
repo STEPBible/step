@@ -15,22 +15,22 @@ $stepLG: 1120px;
 
 // colours
 $brand-primary: #17758F;
+$brand-secondary: #9D0025;
 $text-color: #5D5D5D;
 $border-color: #C8C8C8;
 
 //active colour of panel
-$headerBackgroundColor: #F2F2F2;
+$header-background-color: #F2F2F2;
 $topHeaderLinkColour: #5E5E5E;
 $dividerColor: $topHeaderLinkColour;
 $warningColour: orange;
 $infoColour: #a9d3ff;
 $disabledColour: darkgrey;
-$linkColour: #26539e;
+$linkColour: $brand-secondary;
 
 // scrollbar colours
-$tyndaleBurgundy: #822433;
-$activeColor: $tyndaleBurgundy;
-$scrollColor: $tyndaleBurgundy;
+$activeColor: $brand-secondary;
+$scrollColor: $brand-secondary;
 $scrollTrack: lighten($scrollColor, 0.05);
 $scrollTrackHover: lighten($scrollColor, 0.20);
 $scrollTrackActive: lighten($scrollColor, 0.35);
@@ -39,9 +39,10 @@ $scrollTrackBoxActive: lighten($scrollColor, 0.14);
 $scrollTrackThumbShadow: lighten($scrollColor, 0.07);
 
 // colours in dropdown
-$activeTabColour: $tyndaleBurgundy;
+$inactive-tab-color: $text-color;
+$active-tab-color: $brand-secondary;
 $headingColour: #111;
-$quickLexiconColour: $tyndaleBurgundy;
+$quickLexiconColour: $brand-secondary;
 $quickLexiconFontColour: white;
 $quickLexiconRelatedFontColour: black;
 $hoverColor: $quickLexiconColour;
@@ -50,7 +51,7 @@ $lexiconFocusColour: lightgrey;
 $lexiconFocusRelatedColour: #E8E8E8;
 $hoverColorText: white;
 $verseNumberBackground: #eee;
-$inactiveTabColor: black;
+
 
 $bibleRow: #963535;
 $subjectRow: #5B468A;
@@ -80,3 +81,11 @@ $defaultFontSize: 12px;
 $defaultFontFamily: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $border-width: 1px;
 $activeBorderWidth: 2px;
+
+// fonts
+$font-family-primary: Georgia, 'Times New Roman', Times, serif;
+$font-family-header: 'Helvetica Neue', Helvetica, Tahoma, sans-serif;
+
+// font sizes
+$panel-icon-size: 14px;
+$chapter-title-size: 24px;

@@ -1,5 +1,9 @@
 @import 'template_variables';
 
+.searchResults {
+  padding: $page-padding $page-padding 40px;
+}
+
 .passageContent {
   .notApplicable {
     color: grey !important;
@@ -14,9 +18,10 @@
 }
 
 .searchResultRow {
-
   .passageContentHolder {
+    padding: 0;
     height: auto !important;
+
     &.hbFont {
       text-align: right;
     }
@@ -162,5 +167,5 @@ h4.lexicalGrouping {
 .resultsLabel {
   font-style: italic;
   margin-right: 15px;
-  margin-top: 3;
+  line-height: 33px;
 }

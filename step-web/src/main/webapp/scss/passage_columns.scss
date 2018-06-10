@@ -31,6 +31,14 @@
   border-right: 1px solid #EAEAEA;
 }
 
+.passageContentHolder {
+  padding: $page-padding $page-padding 40px;
+  outline: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  @include scrollableContainerHeight;
+}
+
 #columnHolder {
   overflow-y: hidden;
   padding: 0;
@@ -61,14 +69,6 @@
       }
     }
 
-    .passageContentHolder {
-      padding: $page-padding $page-padding 40px;
-      outline: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      @include scrollableContainerHeight;
-    }
-
     .passageText .popover {
       max-height: 60%;
       overflow-y: auto;
@@ -86,7 +86,7 @@
         position: absolute;
         top: $border-width;
         left: 50%;
-        border: 7px solid $tyndaleBurgundy;
+        border: 7px solid $brand-secondary;
         border-right-color: transparent;
         border-bottom: 0 dotted;
         border-left-color: transparent;

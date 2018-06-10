@@ -1,6 +1,8 @@
 @import 'template_variables';
 
-a {
+a,
+a:hover,
+a:active {
   color: $linkColour;
 }
 
@@ -46,16 +48,16 @@ ul .glyphicon-ok {
 }
 
 .btn-danger {
-  background-image: -webkit-linear-gradient(bottom,$tyndaleBurgundy 0,lighten($tyndaleBurgundy, 10%) 100%);
-  background-image: linear-gradient(to top,$tyndaleBurgundy 0,lighten($tyndaleBurgundy, 10%) 100%) !important; /* Just changed the two colors */
-  border: solid thin $tyndaleBurgundy;
+  background-image: -webkit-linear-gradient(bottom,$brand-secondary 0,lighten($brand-secondary, 10%) 100%);
+  background-image: linear-gradient(to top,$brand-secondary 0,lighten($brand-secondary, 10%) 100%) !important; /* Just changed the two colors */
+  border: solid thin $brand-secondary;
   &:hover {
     background-position: 0 15px !important;
   }
   &:focus {
     background-position: inherit;
-    background-image: -webkit-linear-gradient(bottom,$tyndaleBurgundy 0,lighten($tyndaleBurgundy, 10%) 100%);
-    background-image: linear-gradient(to top,$tyndaleBurgundy 0,lighten($tyndaleBurgundy, 10%) 100%) !important; /* Just changed the two colors */
+    background-image: -webkit-linear-gradient(bottom,$brand-secondary 0,lighten($brand-secondary, 10%) 100%);
+    background-image: linear-gradient(to top,$brand-secondary 0,lighten($brand-secondary, 10%) 100%) !important; /* Just changed the two colors */
   }
 
 }

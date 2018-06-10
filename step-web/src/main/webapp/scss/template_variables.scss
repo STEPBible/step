@@ -15,6 +15,8 @@ $stepLG: 1120px;
 
 // colours
 $brand-primary: #17758F;
+$text-color: #5D5D5D;
+$border-color: #C8C8C8;
 
 //active colour of panel
 $headerBackgroundColor: #F2F2F2;
@@ -72,7 +74,9 @@ $defaultSidebarSize: 100% / $gridPoints * $sidebarWidth;
 $defaultColumnsSize: 100% - $defaultSidebarSize;
 
 //various paddings
+$page-padding: 15px;
 $paddingFromHeader: 4px;
 $defaultFontSize: 12px;
 $defaultFontFamily: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$border-width: 1px;
 $activeBorderWidth: 2px;

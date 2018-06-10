@@ -172,27 +172,6 @@ a.smallHeaders {
 	color: #33339F;
 }
 
-.notesPane {
-    padding-right: 3px;
-    margin-right: 8px;
-	max-width: 20%;
-	color: #33339F !important;
-    /*overflow: hidden;	*/
-}
-
-.column .notesPane {
-	margin-left: 5px;
-	float: left;
-	border-right: 1px solid #EAEAEA
-}
-
-.notesPane a {
-	color: #333;
-    font-family:tahoma;
-	font-weight: bold;
-	font-size: smaller;
-}
-
 
 br.paragraph {
 	padding-top: 2px;	
@@ -404,10 +383,6 @@ input.heading {
 
 H2.heading {
     font-size: 100%;
-}
-
-div.margin {
-	font-size: 90%;
 }
 
 TD.notes {

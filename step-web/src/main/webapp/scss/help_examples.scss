@@ -1,6 +1,9 @@
+@import 'template_variables';
+
 .examplesContainer {
   overflow-y: auto;
   overflow-x: hidden;
+  padding: $page-padding;
 
   .interlinearLinks {
     margin-top: 5px;

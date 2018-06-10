@@ -112,6 +112,7 @@
     display: none;
   }
 
+  // TODO: Can notesPane be hidden behind an icon or positioned absolute
   .notesPane {
     &> a:hover {
       cursor: text;

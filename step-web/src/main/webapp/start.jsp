@@ -152,38 +152,38 @@
                         <span class="activeMarker"></span>
                         <div class="passageText ui-widget">
                             <div class="passageOptionsGroup">
-                                    <div class="btn-group pull-left nextPreviousChapterGroup" style="${ 'PASSAGE' ne searchType ? 'display: none' : '' }">
-                                    <a class="btn btn-default btn-sm previousChapter" type="button" href="/?q=${previousChapter}" title="<fmt:message key="passage_previous_chapter" />">
-                                        <span class="glyphicon glyphicon-arrow-left"></span></a>
-                                    <a class="btn btn-default btn-sm nextChapter" type="button" href="/?q=${nextChapter}" title='<fmt:message key="passage_next_chapter" />'>
-                                        <span class="glyphicon glyphicon-arrow-right"></span>
-                                    </a>
-                                </div>
-                                <div class="btn-group pull-right">
+                                <div class="pull-right">
+                                    <span class="nextPreviousChapterGroup" style="${ 'PASSAGE' ne searchType ? 'display: none' : '' }">
+                                        <a class="previousChapter" href="/?q=${previousChapter}" title="<fmt:message key="passage_previous_chapter" />">
+                                            <i class="glyphicon glyphicon-arrow-left"></i></a>
+                                        <a class="nextChapter" href="/?q=${nextChapter}" title='<fmt:message key="passage_next_chapter" />'>
+                                            <i class="glyphicon glyphicon-arrow-right"></i>
+                                        </a>
+                                    </span>
                                     <%
                                         if(!appManager.isLocal()) {
                                     %>
-                                    <div class="dropdown btn-group">
-                                        <button class="btn btn-default btn-sm dropdown-share" data-toggle="dropdown" type="button" title="<fmt:message key="share" />">
-                                            <span class="glyphicon glyphicon-thumbs-up"></span>
-                                        </button>
-                                    </div>
+                                    <span class="dropdown">
+                                        <a class="dropdown-share" data-toggle="dropdown" title="<fmt:message key="share" />">
+                                            <i class="glyphicon glyphicon-thumbs-up"></i>
+                                        </a>
+                                    </span>
                                     <%
                                         }
                                     %>
-                                    <div class="dropdown btn-group settingsDropdown">
-                                        <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
-                                            <span class="glyphicon glyphicon-cog"></span>
-                                        </button>
-                                    </div>
+                                    <span class="dropdown settingsDropdown">
+                                        <a class="dropdown-toggle showSettings" data-toggle="dropdown" title="<fmt:message key="view" />">
+                                            <i class="glyphicon glyphicon-cog"></i>
+                                        </a>
+                                    </span>
 
                                     <%--  this button starts hidden as there is only 1 column showing --%>
-                                    <button class="btn btn-default btn-sm openNewPanel" title="<fmt:message key="open_in_new_panel" />">
-                                        <span class="glyphicon glyphicon-plus"></span>
-                                    </button>
-                                    <button class="btn btn-default btn-sm closeColumn disabled" title="<fmt:message key="close" />" type="button">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </button>
+                                    <a class="openNewPanel" title="<fmt:message key="open_in_new_panel" />">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                    </a>
+                                    <a class="closeColumn disabled" title="<fmt:message key="close" />">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                    </a>
                                 </div>
                                 <div class="resultsLabel pull-right" style="margin-right: 5px">
                                     <c:if test="${'PASSAGE' ne searchType}">
@@ -192,8 +192,6 @@
                                     </c:if>
                                 </div>
                             </div>
-
-                            <hr />
                             <div class="passageContent" itemprop="text">
                                 <c:choose>
                                     <c:when test="${ 'PASSAGE' eq searchType }">
@@ -307,9 +305,9 @@
                 </div>
                 <div class="hidden-xs col-sm-6 column examplesColumn" dir="${ ltr ? "ltr" : "rtl" }">
                     <div class="passageContainer examplesContainer">
-                        <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button" >
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
+                        <a class="closeColumn" title="<fmt:message key="close" />">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </a>
 
                         <h1><fmt:message key="simple_intro_welcome" /></h1>
                         <h1><fmt:message key="simple_intro_tyndale_house_project" /></h1>

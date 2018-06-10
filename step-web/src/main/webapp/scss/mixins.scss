@@ -1,5 +1,13 @@
 @import 'template_variables';
 
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
 @mixin canonicalHeading {
   font-style: italic;
   font-weight: normal;
@@ -18,26 +26,7 @@
 }
 
 @mixin scrollableContainerHeight {
-  @media screen and (min-height: 000px) {
-    height: 100%;
-  }
-  @media screen and (min-height: 300px) {
-    height: 94%;
-  }
-  @media screen and (min-height: 400px) {
-    height: 95%;
-  }
-  @media screen and (min-height: 500px) {
-    height: 96%;
-  }
-  @media screen and (min-height: 600px) {
-    height: 97%;
-  }
-  @media screen and (min-height: 700px) {
-    height: 98%;
-  }
-
-
+  height: 100%;
 }
 
 // Vertical height creates a class called .className where maxHeight is set to 400, 600, 900 depending on screen size

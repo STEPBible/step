@@ -1,6 +1,8 @@
 @import 'template_variables';
 @import 'mixins';
 
+// TODO: Create a sane scss structure for easy understanding of file responsibilities
+
 .passageContainer.waiting, .searchResults .waiting {
   background-position: 50% 5;
 }
@@ -50,24 +52,16 @@
 
     &.x-simpleTable-td-right {
       text-align: right;
-      padding:0px 15px
+      padding: 0px 15px
     }
   }
 
   text-align: justify;
-  h2 {
-    margin-bottom: 5px;
-    &.xgen {
-      margin-top: 0px;
-      text-align: left;
-      font-family: arial;
-      font-weight: bold;
-      font-size: 30px;
-    }
-    &.sub {
-      font-size: 90%;
-    }
+
+  h2.sub {
+    font-size: 90%;
   }
+
   .paragraph {
     margin-top: 8px;
     content: ' ';
@@ -105,7 +99,8 @@
   }
   span.level5 {
     padding-left: 110px;
-  }  span.level1, span.level2, span.level3, span.level4, span.level5 {
+  }
+  span.level1, span.level2, span.level3, span.level4, span.level5 {
     content: ' ';
   }
   br + br {
@@ -114,7 +109,9 @@
 
   // TODO: Can notesPane be hidden behind an icon or positioned absolute
   .notesPane {
-    &> a:hover {
+    line-height: 1.4;
+
+    & > a:hover {
       cursor: text;
       text-decoration: none;
     }
@@ -188,24 +185,14 @@
 }
 
 .verseNumber {
-  min-width: 10px;
+  margin-right: 5px;
   vertical-align: top;
-  font-size: 8pt;
+  color: $text-color;
   cursor: hand;
-  background-color: $verseNumberBackground;
-  color: $headingColour;
   text-align: center;
   display: inline-block;
-  margin-right: 2px;
-  font-weight: bold;
-  font-family: tahoma;
-  border-radius: 20px;
-  padding: 0 3px 0 5px;
-
-  &:hover {
-    background: #26539e;
-    color: #fff;
-  }
+  line-height: 1;
+  font-size: 80%;
 }
 
 h3.canonicalHeading {

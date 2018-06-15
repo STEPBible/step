@@ -26,7 +26,7 @@ $dividerColor: $topHeaderLinkColour;
 $warningColour: orange;
 $infoColour: #a9d3ff;
 $disabledColour: darkgrey;
-$linkColour: $brand-secondary;
+$link-color: $brand-secondary;
 
 // scrollbar colours
 $activeColor: $brand-secondary;
@@ -83,7 +83,7 @@ $border-width: 1px;
 $activeBorderWidth: 2px;
 
 // fonts
-$font-family-primary: Georgia, 'Times New Roman', Times, serif;
+$font-family-primary: Georgia, serif;
 $font-family-header: 'Helvetica Neue', Helvetica, Tahoma, sans-serif;
 
 // font sizes

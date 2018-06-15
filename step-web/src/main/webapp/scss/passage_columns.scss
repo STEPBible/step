@@ -14,8 +14,8 @@
 }
 
 .notesPane {
-  padding-right: $page-padding / 2;
-  margin-right: $page-padding / 2;
+  padding-right: $page-padding;
+  margin-right: $page-padding;
   max-width: 20%;
   color: #33339F !important;
 
@@ -108,10 +108,10 @@
         position: absolute;
         font-size: 11px;
         color: darkgrey;
-        bottom: 0;
-        left: $border-width;
-        right: $border-width;
-        padding: 4px $page-padding 8px;
+        bottom: $border-width;
+        left: $border-width + $page-padding;
+        right: $border-width + $page-padding;
+        padding: 4px 0 8px;
 
         &:before {
           content: "";

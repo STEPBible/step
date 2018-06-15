@@ -68,7 +68,6 @@
     <link href="scss/step-template.css" rel="stylesheet" media="screen" />
 
     <link rel="stylesheet" type="text/css" href="css/qtip.css" />
-    <link rel="stylesheet" type="text/css" href="css/passage.css" />
     <link rel="stylesheet" type="text/css" href="css/cardo.css" />
     <%
     } else {

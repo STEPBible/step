@@ -185,14 +185,17 @@
 }
 
 .verseNumber {
-  margin-right: 5px;
   vertical-align: top;
   color: $text-color;
-  cursor: hand;
-  text-align: center;
+  cursor: pointer;
   display: inline-block;
-  line-height: 1;
-  font-size: 80%;
+  line-height: 1.2;
+  font-size: 85%;
+
+  &:after {
+    content: "";
+    margin-right: 5px;
+  }
 }
 
 h3.canonicalHeading {
@@ -225,7 +228,7 @@ h2.heading {
   &.x-speaker {
     @include canonicalHeading;
     margin-bottom: 0;
-  }
+  }verseNumber
   &.x-acrostic {
     @include canonicalHeading;
     margin-bottom: 0;
@@ -243,7 +246,7 @@ h3 {
 
 .comparingTable, .interlinear, .verseGrouping {
   .verseNumber {
-    padding: 3 7 3 7;
+    padding: 3px 0;
   }
   td {
     .level1:last-child {

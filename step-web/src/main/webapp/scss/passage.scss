@@ -5,6 +5,10 @@
   font-size: 15px;
 }
 
+.passageContentHolder {
+  line-height: 1.6;
+}
+
 // headings
 h1, h2, h3, h4, h5, h6 {
   color: $text-color;
@@ -83,6 +87,10 @@ input.heading {
 input.heading {
   font-size: 130%;
   text-align: left;
+}
+
+span[strong] {
+  color: #796060;
 }
 
 /** Some interlinear rules */
@@ -314,6 +322,11 @@ sup.variant.note {
 sup.note a {
   font-size: 100%;
   font-weight: normal;
+}
+
+sup.note a[notetype="alternative"],
+sup.note a[notetype="explanation"] {
+  font-size: 75%;
 }
 
 sup.note a:hover {
@@ -702,10 +715,6 @@ a.related, a.related:visited {
   font-weight: bold;
   color: #33339F;
 
-}
-
-.passageContentHolder {
-  line-height: 1.5;
 }
 
 /**

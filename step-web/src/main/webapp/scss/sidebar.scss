@@ -4,3 +4,9 @@
 @import 'sidebar_wordle';
 @import 'sidebar_history';
 @import 'sidebar_help';
+
+#sidebar {
+  h2 {
+    margin-top: 1em;
+  }
+}

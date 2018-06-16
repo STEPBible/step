@@ -74,13 +74,13 @@ $sidebarWidth: 2.75;
 $defaultSidebarSize: 100% / $gridPoints * $sidebarWidth;
 $defaultColumnsSize: 100% - $defaultSidebarSize;
 
-//various paddings
+// spacing
 $page-padding: 15px;
 $paddingFromHeader: 4px;
 $defaultFontSize: 12px;
 $defaultFontFamily: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $border-width: 1px;
-$activeBorderWidth: 2px;
+$active-border-width: 2px;
 
 // fonts
 $font-family-primary: Georgia, serif;

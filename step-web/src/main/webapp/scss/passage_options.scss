@@ -79,6 +79,8 @@
     font-size: $panel-icon-size;
     line-height: 33px;
     padding: 5px 0 5px 15px;
+    position: relative;
+    top: 1px;
 
     &:hover, &:focus {
       text-decoration: none;

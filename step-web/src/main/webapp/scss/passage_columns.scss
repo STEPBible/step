@@ -75,7 +75,7 @@
     }
 
     .passageContainer {
-      border: 1px solid $border-color;
+      border: $border-width solid $border-color;
       height: 100%;
 
       &.active {
@@ -121,6 +121,7 @@
           right: 0;
           height: 25px;
           background-image: linear-gradient(-180deg, rgba(255,255,255,0.25) 0%, #FFFFFF 100%);
+          pointer-events: none;
         }
       }
     }

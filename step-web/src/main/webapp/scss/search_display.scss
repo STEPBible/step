@@ -39,7 +39,9 @@
   }
   .verseNumber {
     vertical-align: middle;
-    font-family: $defaultFontFamily;
+    font-family: $font-family-header;
+    font-weight: bold;
+    line-height: 1.6;
   }
   br, .startLineGroup, .paragraph {
     display: none;

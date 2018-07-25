@@ -129,20 +129,6 @@
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
-
-    span.argSelect {
-      font-size: 15px;
-      line-height: 18px;
-      padding: 0 8px;
-      margin: 6px 0;
-      border-left: 1px solid $text-color;
-      letter-spacing: .5px;
-
-      &:first-child {
-        padding-left: 0;
-        border-left: none;
-      }
-    }
   }
 
 }

@@ -123,50 +123,25 @@
   }
 }
 
-@mixin muted-args {
+@mixin muted-args($bg-color: #fff) {
   background-image: none !important;
-  &.select-version {
-    background-color: #ffffff !important;
-    color: #333 !important;
-    border: none;
-    font-weight: bold;
-  }
-  &.select-reference, &.select-relatedrefs {
-    background-color: #ffffff !important;
-    border: none;
-    font-weight: bold;
-    color: #333 !important;
-  }
 
-  &.select-hebrewMeanings, &.select-hebrew, &.select-exactForm-hebrew {
-    background-color: #ffffff !important;
-    color: #333 !important;
-    border: none;
-    font-weight: bold;
-  }
-
-  &.select-greekMeanings, &.select-greek, &.select-exactForm-greek {
-    background-color: #ffffff !important;
-    color: #333 !important;
-    border: none;
-    font-weight: bold;
-  }
-  &.select-subject, &.select-topicref {
-    color: #333 !important;
-    background-color: #ffffff !important;
-    border: none;
-    font-weight: bold;
-  }
-  &.select-text, &.select-syntax {
-    color: #333 !important;
-    background-color: #ffffff !important;
-    border: none;
-    font-weight: bold;
-  }
+  &.select-version,
+  &.select-reference,
+  &.select-relatedrefs,
+  &.select-hebrewMeanings,
+  &.select-hebrew,
+  &.select-exactForm-hebrew,
+  &.select-greekMeanings,
+  &.select-greek,
+  &.select-exactForm-greek,
+  &.select-subject,
+  &.select-topicref,
+  &.select-text,
+  &.select-syntax,
   &.select-meanings {
-    background-color: #ffffff !important;
+    background-color: $bg-color !important;
     color: #333 !important;
-    border: none;
     font-weight: bold;
   }
 }

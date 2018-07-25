@@ -164,6 +164,20 @@
       }
     }
 
+    .icon-sidebar {
+      width: 22px;
+      height: 16px;
+      fill: $topHeaderLinkColour;
+    }
+
+    .icon-sidebar-lines {
+      visibility: hidden;
+    }
+
+    .active .icon-sidebar .icon-sidebar-lines {
+      visibility: visible;
+    }
+
     .headerButtons > a {
       padding-left: 15px;
 

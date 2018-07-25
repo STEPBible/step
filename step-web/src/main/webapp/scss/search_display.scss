@@ -10,6 +10,7 @@
     font-weight: normal;
     clear: left;
     display: block;
+    padding: 15px 15px 40px;
 
     em {
       font-weight: bold;
@@ -78,7 +79,12 @@ h4.lexicalGrouping {
 
 .originalWordSearchToolbar {
   clear: both;
-  padding-top: 5px;
+  padding: 15px 15px 0;
+
+  .panel {
+    margin-bottom: 0;
+  }
+
   .thisOnly, .untick {
     font-size: 10px;
   }
@@ -89,7 +95,6 @@ h4.lexicalGrouping {
   .sortOptions {
     display: inline-block;
     font-weight: normal;
-
 
     a {
       font-weight: bold;

@@ -27,16 +27,7 @@ $warningColour: orange;
 $infoColour: #a9d3ff;
 $disabledColour: darkgrey;
 $link-color: $brand-secondary;
-
-// scrollbar colours
 $activeColor: $brand-secondary;
-$scrollColor: $brand-secondary;
-$scrollTrack: lighten($scrollColor, 0.05);
-$scrollTrackHover: lighten($scrollColor, 0.20);
-$scrollTrackActive: lighten($scrollColor, 0.35);
-$scrollTrackBox: lighten($scrollColor, 0.1);
-$scrollTrackBoxActive: lighten($scrollColor, 0.14);
-$scrollTrackThumbShadow: lighten($scrollColor, 0.07);
 
 // colours in dropdown
 $inactive-tab-color: $text-color;
@@ -47,11 +38,10 @@ $quickLexiconFontColour: white;
 $quickLexiconRelatedFontColour: black;
 $hoverColor: $quickLexiconColour;
 $secondaryHoverColour: #ddd;
-$lexiconFocusColour: lightgrey;
-$lexiconFocusRelatedColour: #E8E8E8;
+$lexiconFocusColour: #e0cece;
+$lexiconFocusRelatedColour: #e0e0e0;
 $hoverColorText: white;
 $verseNumberBackground: #eee;
-
 
 $bibleRow: #963535;
 $subjectRow: #5B468A;

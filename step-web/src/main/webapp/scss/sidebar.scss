@@ -8,5 +8,10 @@
 #sidebar {
   h2 {
     margin-top: 1em;
+    font-size: 17px;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }

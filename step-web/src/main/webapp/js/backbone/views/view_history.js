@@ -10,9 +10,9 @@ var ViewHistory = Backbone.View.extend({
         '</span>' +
         '</li>'),
     fullList: _.template(
-        '<h3><%= __s.bookmarks_pinned %></h3><ul class="list-group">' +
+        '<h2><%= __s.bookmarks_pinned %></h2><ul class="list-group">' +
         '<% var bks = bookmarks.where({favourite: true }); for(var i = 0; i < bks.length; i++) { %><%= view.itemTemplate({ item: bks[i], view: view }) %> <% } %>' +
-        '</ul><h3><%= __s.bookmarks_recent %></h3><ul class="list-group">' +
+        '</ul><h2><%= __s.bookmarks_recent %></h2><ul class="list-group">' +
         '<% var bks = bookmarks.where({favourite: false }); for(var i = 0; i < bks.length; i++) { %><%= view.itemTemplate({ item: bks[i], view: view }) %> <% } %>' +
         '</ul>'),
     initialize: function () {

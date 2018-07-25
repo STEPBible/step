@@ -1,5 +1,14 @@
 @import 'template_variables';
 
+[strong] {
+  color: #796060;
+
+  &:hover {
+    cursor: pointer;
+    color: $quickLexiconFontColour;
+  }
+}
+
 //highlights in text
 .emphasisePassagePhrase {
   background-color: #F3E5B4;
@@ -14,11 +23,6 @@
   background-color: rgba($quickLexiconColour, 0.2);
   color: $quickLexiconRelatedFontColour;
 }
-span[strong]:hover {
-  cursor: pointer;
-  background-color: $quickLexiconColour;
-  color: $quickLexiconFontColour;
-}
 
 .lexiconFocus {
   background-color: $lexiconFocusColour;
@@ -30,9 +34,10 @@ span[strong]:hover {
 }
 
 .primaryLightBg {
-  background-color: $quickLexiconColour !important;
-  color: $quickLexiconFontColour !important;
+  background-color: $quickLexiconColour;
+  color: $quickLexiconFontColour;
   text-shadow: none !important;
+
   .segC0, .segC1 {
     color: $quickLexiconFontColour;
   }

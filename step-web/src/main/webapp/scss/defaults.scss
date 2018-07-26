@@ -47,6 +47,15 @@ ul .glyphicon-ok {
     font-style: italic !important;
 }
 
+.btn {
+  transition: background-color 200ms;
+}
+
+.btn-default {
+  background-image: none;
+  background-color: #f3f3f3;
+}
+
 .btn-danger {
   background-image: -webkit-linear-gradient(bottom,$brand-secondary 0,lighten($brand-secondary, 10%) 100%);
   background-image: linear-gradient(to top,$brand-secondary 0,lighten($brand-secondary, 10%) 100%) !important; /* Just changed the two colors */
@@ -56,10 +65,9 @@ ul .glyphicon-ok {
   }
   &:focus {
     background-position: inherit;
-    background-image: -webkit-linear-gradient(bottom,$brand-secondary 0,lighten($brand-secondary, 10%) 100%);
-    background-image: linear-gradient(to top,$brand-secondary 0,lighten($brand-secondary, 10%) 100%) !important; /* Just changed the two colors */
+    background-image: -webkit-linear-gradient(bottom, $brand-secondary 0, lighten($brand-secondary, 10%) 100%);
+    background-image: linear-gradient(to top, $brand-secondary 0, lighten($brand-secondary, 10%) 100%) !important; /* Just changed the two colors */
   }
-
 }
 
 .text-info {

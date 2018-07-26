@@ -278,7 +278,7 @@ var PassageMenuView = Backbone.View.extend({
         //create settings dropdown
         var dropdownContainer = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu").attr("dir", step.state.isLtR() ? "" : "rtl");
         this.displayModeContainer = $("<div>");
-        var displayMode = $("<h1>").append(__s.display_mode);
+        var displayMode = $("<h2>").append(__s.display_mode);
         this.displayModeContainer.append(displayMode);
         this.displayModeContainer.append(this._createDisplayModes());
         dropdownContainer.append(this.displayModeContainer);
@@ -287,7 +287,7 @@ var PassageMenuView = Backbone.View.extend({
         this.otherOptions = this._createSearchOptions();
         dropdownContainer
             .append(this.displayOptions)
-            .append(_.template("<h1><%= __s.general_options %></h1>")())
+            .append(_.template("<h2><%= __s.general_options %></h2>")())
             .append(this.otherOptions);
 
         var shareDropdownMenu = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
@@ -318,7 +318,7 @@ var PassageMenuView = Backbone.View.extend({
     },
     _createDisplayOptions: function () {
         var dropdownContainer = $('<span class="displayOptionsContainer panel-group">').attr("id", "displayOptions-" + this.model.get("passageId"));
-        var displayOptionsHeading = $("<h1>").append(__s.display_options);
+        var displayOptionsHeading = $("<h2>").append(__s.display_options);
 
         var dropdown = $("<ul>").addClass("passageOptions");
         var context = this.model.get("context") || 0;

@@ -8,6 +8,15 @@
   width: 100%;
   z-index: 40;
 
+  .close {
+    color: #fff;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
   a {
     color: inherit;
     text-decoration: underline;
@@ -21,18 +30,25 @@
     display: inline;
     margin-left: 10px;
     content: ' ';
+
+    &:last-child {
+      margin-left: 0;
+      content: '';
+    }
   }
   .shortDef {
     line-height: 18px;
   }
   .mediumDef {
+    font-size: 13px;
     line-height: 18px;
-    max-height: 36px;
-    margin-top: 0px;
+    max-height: 108px;
+    margin-top: 0;
     margin-left: 10px;
     overflow: hidden;
+
     &:after {
-      content: '...';
+      content: "\2026";
     }
   }
 
@@ -52,9 +68,7 @@
     display: inline-block;
     clear: left;
     margin-top: 5px;
-    &:after {
-      content:" -- ";
-    }
+    font-size: 18px;
   }
 
   .hbFontSmall {
@@ -80,6 +94,7 @@
     display: block;
     width: auto;
     text-align: left;
+    margin-top: 3px;
   }
 
   .close {

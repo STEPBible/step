@@ -308,12 +308,10 @@
                             <i class="glyphicon glyphicon-remove"></i>
                         </a>
 
-                        <h1><fmt:message key="simple_intro_welcome" /></h1>
-                        <h1><fmt:message key="simple_intro_tyndale_house_project" /></h1>
-                        <br />
+                        <h3><fmt:message key="simple_intro_welcome" /></h3>
+                        <h4><fmt:message key="simple_intro_tyndale_house_project" /></h4>
 
-                        <fmt:message key="simple_intro" />
-                        <br /><br />
+                        <p><fmt:message key="simple_intro" /></p>
 
                         <fmt:bundle basename="InteractiveBundle">
                             <fmt:message key="the_pentateuch" var="pentateuch" />

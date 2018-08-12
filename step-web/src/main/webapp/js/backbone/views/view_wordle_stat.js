@@ -24,10 +24,10 @@ var ViewLexiconWordle = Backbone.View.extend({
         scopeContainer.append(this.wordScope);
         scopeContainer.append(this.scope);
         scopeContainer.append(
-            $('<div class="formGroup"><label for="sortByFrequency">' + __s.analyse_sort_label + '</label></div>').append(this.sortCloud));
+            $('<div class="form-group"><label for="sortByFrequency">' + __s.analyse_sort_label + '</label></div>').append(this.sortCloud));
 
         scopeContainer.append(
-            $('<div class="formGroup"><label for="animateWordle">' + __s.analyse_animate_label + '</label></div>').append(this.animateCloud));
+            $('<div class="form-group"><label for="animateWordle">' + __s.analyse_animate_label + '</label></div>').append(this.animateCloud));
 
         this.$el.append(scopeContainer);
         this.$el.append(this.statsContainer);

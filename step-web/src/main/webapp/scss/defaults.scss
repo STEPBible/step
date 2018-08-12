@@ -6,11 +6,10 @@ a:active {
   color: $link-color;
 }
 
-
-h1,h2,h3,h4,h5,h6,.panel-title {
+h1, h2, h3, h4, h5, h6, .panel-title {
   color: $headingColour;
   font-weight: bold;
-  margin:20px 0 10px 0;
+  margin: 20px 0 10px 0;
 }
 
 body {
@@ -21,8 +20,24 @@ body, .dropdown-menu, .searchResultRow, #quickLexicon h1 {
   font-size: $defaultFontSize;
 }
 
+.dropdown-menu > li > a {
+  padding-left: 12px;
+  padding-right: 12px;
+
+  &:hover,
+  &:focus {
+    background: $secondaryHoverColour;
+  }
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  background: $brand-primary;
+}
+
 ul .glyphicon-ok {
-  margin-right: 10px;
+  margin-right: 8px;
   color: $headingColour;
   visibility: hidden;
   &.active {
@@ -44,7 +59,7 @@ ul .glyphicon-ok {
 }
 
 .transliteration {
-    font-style: italic !important;
+  font-style: italic !important;
 }
 
 .btn {
@@ -57,8 +72,8 @@ ul .glyphicon-ok {
 }
 
 .btn-danger {
-  background-image: -webkit-linear-gradient(bottom,$brand-secondary 0,lighten($brand-secondary, 10%) 100%);
-  background-image: linear-gradient(to top,$brand-secondary 0,lighten($brand-secondary, 10%) 100%) !important; /* Just changed the two colors */
+  background-image: -webkit-linear-gradient(bottom, $brand-secondary 0, lighten($brand-secondary, 10%) 100%);
+  background-image: linear-gradient(to top, $brand-secondary 0, lighten($brand-secondary, 10%) 100%) !important; /* Just changed the two colors */
   border: solid thin $brand-secondary;
   &:hover {
     background-position: 0 15px !important;
@@ -72,4 +87,8 @@ ul .glyphicon-ok {
 
 .text-info {
   color: #26539e;
+}
+
+.input-sm {
+  height: 32px;
 }

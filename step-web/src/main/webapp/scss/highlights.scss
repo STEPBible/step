@@ -1,11 +1,11 @@
 @import 'template_variables';
 
 [strong] {
-  color: #796060;
+  color: $strong-color;
 
   &:hover {
     cursor: pointer;
-    color: $quickLexiconFontColour;
+    color: #fff;
   }
 }
 
@@ -20,7 +20,7 @@
 
 .relatedWordEmphasisHover {
   text-decoration: underline;
-  background-color: rgba($quickLexiconColour, 0.2);
+  background-color: rgba($highlight-color, 0.2);
   color: $quickLexiconRelatedFontColour;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .primaryLightBg {
-  background-color: $quickLexiconColour;
+  background-color: $highlight-color;
   color: $quickLexiconFontColour;
   text-shadow: none !important;
 

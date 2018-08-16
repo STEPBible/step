@@ -1,9 +1,21 @@
 @import 'template_variables';
 
+.qtip {
+  font-size: 13px;
+  line-height:18px;
+  overflow: hidden;
+  max-width: 300px;
+}
+
 .qtip-titlebar {
-  background-color: black !important;
-  color: white !important;
-  cursor: move !important;
+  margin-top: -1px;
+
+  .close {
+    color: white;
+    opacity: 1;
+    line-height: 12px;
+    margin: 0 5px;
+  }
 
   button, .glyphicon {
     cursor: hand;
@@ -12,11 +24,30 @@
   .openRefInColumn {
     float: right;
     margin-right: 5px;
-
   }
-  .close {
-    color: white;
-    opacity: 1;
+}
+
+.qtip-default {
+  .qtip-titlebar {
+    background-color: $highlight-color;
+    color: #fff;
+    cursor: move;
+  }
+}
+
+// qtip
+.qtip-content {
+  .passageContentHolder {
+    padding: 0;
+
+    .startLineGroup {
+      padding: 0;
+      margin: 0;
+    }
+
+    p:empty {
+      display: none;
+    }
   }
 }
 
@@ -25,6 +56,7 @@
   border-radius: 5px;
   box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
   background-color: white;
+
   .qtip-content {
     padding: 5px;
     color: rgb(51, 51, 51);
@@ -33,4 +65,25 @@
   .paragraph {
     display: none;
   }
+}
+
+
+.draggable-tooltip {
+  z-index: 10001 !important;
+  border-color: darkgrey;
+  border-top: solid 2 darkgrey;
+}
+
+.draggable-tooltip .ui-tooltip-titlebar {
+  cursor: move;
+  color: #33339F;
+  padding: 5px 0px;
+}
+
+.qtip-content {
+  padding: 15px;
+}
+
+.draggable-tooltip * .xgen {
+  display: none;
 }

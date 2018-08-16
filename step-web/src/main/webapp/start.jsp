@@ -60,15 +60,16 @@
     <%
         if(request.getParameter("debug") != null) {
     %>
+    <%-- 3rd party libs --%>
+    <link rel="stylesheet" type="text/css" href="css/qtip.css" />
+    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
+
     <!-- Bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet" media="screen" />
     <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen" />
     <link href="css/select2.css" rel="stylesheet" media="screen" />
     <link href="css/select2-bootstrap.css" rel="stylesheet" media="screen" />
     <link href="scss/step-template.css" rel="stylesheet" media="screen" />
-
-    <link rel="stylesheet" type="text/css" href="css/qtip.css" />
-    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
     <%
     } else {
     %>

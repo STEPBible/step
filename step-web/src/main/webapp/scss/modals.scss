@@ -11,23 +11,6 @@
   z-index: 10001;
 }
 
-.qtip {
-  line-height:18px;
-}
-
-//qtip "modals"
-.qtip-titlebar {
-  //collapse title bar with container
-  margin-top: -1px;
-  
-  //close button
-  .close {
-    line-height: 12px;
-    margin: 0 5 -2 0;
-    font-size: 18px;
-  }
-}
-
 #restorePassages {
   form {
     max-height: 200px;

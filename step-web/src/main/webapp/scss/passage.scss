@@ -526,38 +526,9 @@ FONT.usg {
   color: black;
 }
 
-.draggable-tooltip {
-  z-index: 10001 !important;
-  border-color: darkgrey;
-  border-top: solid 2 darkgrey;
-}
-
-.draggable-tooltip .ui-tooltip-titlebar {
-  cursor: move;
-  color: #33339F;
-  padding: 5px 0px;
-}
-
-.draggable-tooltip .qtip-titlebar {
-  padding: 4px 26px 4px 10px;
-
-  background-color: black;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 .ui-tooltip-content {
   max-height: 400px;
   overflow: auto;
-}
-
-.qtip-content {
-  padding: 15px;
-}
-
-.draggable-tooltip * .xgen {
-  display: none;
 }
 
 .commentaryItalic {

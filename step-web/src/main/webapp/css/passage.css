@@ -265,6 +265,12 @@ SUP.note a {
 	color: #26539e;
 }
 
+sup.note a:hover,
+sup.note a:focus,
+sup.note a:visited {
+	text-decoration: none;
+}
+
 SUP.note a:visited {
 	font-size: 100%;
     font-weight:normal;

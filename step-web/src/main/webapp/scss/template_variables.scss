@@ -24,7 +24,7 @@ $highlight-color: $brand-primary;
 // lexicon
 $quickLexiconFontColour: white;
 $quickLexiconRelatedFontColour: black;
-$strong-color: desaturate($highlight-color, 25%);
+$strong-color: lighten(desaturate($highlight-color, 40%), 10%);
 $lexiconFocusColour: lighten(desaturate($highlight-color, 50%), 50%);
 $lexiconFocusRelatedColour: #e0e0e0;
 

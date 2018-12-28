@@ -4,7 +4,10 @@
 // TODO: Create a sane scss structure for easy understanding of file responsibilities
 
 .passageContainer.waiting, .searchResults .waiting {
-  background-position: 50% 5;
+  background-position: 51% 10px;
+  background-position: -webkit-calc(50% + 7px) 10px;
+  background-position: -moz-calc(50% + 7px) 10px;
+  background-position: calc(50% + 7px) 10px;
 }
 
 .passageContentHolder {

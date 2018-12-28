@@ -6,7 +6,6 @@
     height: $header_height;
     min-height: $header_height;
     margin-bottom: 0px;
-    min-height: initial;
     background-image: none;
 
     .navbar-header {
@@ -47,6 +46,7 @@
     }
 
     #logo {
+      display: inline-block;
       width: 90px;
       height: 24px;
     }
@@ -96,7 +96,6 @@
 
     .subtitle {
       display: block;
-      margin-top: 5px;
       white-space: nowrap;
       font-size: 11px;
       line-height: 1;

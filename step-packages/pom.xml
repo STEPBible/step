@@ -35,7 +35,8 @@
 
     <properties>
         <packages>${project.build.outputDirectory}</packages>
-        <sword.home>C:\Users\Chris\AppData\Roaming\Sword</sword.home>
+<!-- The following line would be different for differ user account! -->
+        <sword.home>C:\Users\pat\AppData\Roaming\Sword</sword.home>
         <jsword.home>${sword.home}/../JSword</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
         <modulesToInclude>esv_th,kjv,osmhb,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>

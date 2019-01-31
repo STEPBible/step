@@ -362,7 +362,7 @@ public class StringConversionUtilsTest {
      */
     @Test
     public void testUnaccentedHebrewPointingForms() {
-        final String source = " ֑֖֛֚֒֓֔֕֗֘֙֜֝֞֟    ֢֣֤֥֦֧֪֭֮֠֡֨֩֫֬֯    ְֱֲֳִֵֶַָֹֺֻּֽ־ֿ    ׀ׁׂ׃ׅׄ׆ׇ";
+        final String source = " ֑֖֛֚֒֓֔֕֗֘֙֜֝֞֟    ֢֣֤֥֦֧֪֭֮֠֡֨֩֫֬֯    ְֱֲֳִֵֶַָֹֺֻּֽֿ    ׀ׁׂ׃ׅׄ׆ׇ";
         final String expected = "";
 
         assertEquals(expected.trim(), StringConversionUtils.unAccent(source, false).trim());

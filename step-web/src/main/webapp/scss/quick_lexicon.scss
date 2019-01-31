@@ -9,6 +9,15 @@
   width: 100%;
   z-index: 40;
 
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .sideNote {
+    text-decoration: none;
+  }
+
   br {
     display: inline;
     margin-left: 10px;
@@ -75,6 +84,8 @@
   }
 
   .close {
-    padding-left:10px;
+    color: white;
+    opacity: .8;
+    padding-left: 10px;
   }
 }

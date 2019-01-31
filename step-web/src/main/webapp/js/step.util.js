@@ -987,14 +987,17 @@ step.util = {
                 var hoverContext = this;
                 require(['quick_lexicon'], function () {
                     step.util.delay(function () {
-                        //do the quick lexicon
+                        // do the quick lexicon
                         step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, false);
+                        step.util.keepQuickLexiconOpen = false;
                     }, MOUSE_PAUSE, 'show-quick-lexicon');
                 });
             }, function () {
                 step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
                 step.util.delay(undefined, 0, 'show-quick-lexicon');
-                $("#quickLexicon").remove();
+                if (!step.util.keepQuickLexiconOpen) {
+                    $("#quickLexicon").remove();
+                }
             });
         },
         _displayNewQuickLexicon: function (hoverContext, ev, passageId, touchEvent) {
@@ -1019,7 +1022,8 @@ step.util = {
          * @private
          */
         getVerseNumber: function (el) {
-            return $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
+            return $(el).closest(".verseGrouping").find(".heading .verseLink").attr("name") ||
+                $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
         },
         emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();

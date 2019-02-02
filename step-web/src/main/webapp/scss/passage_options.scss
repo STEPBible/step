@@ -112,6 +112,15 @@
     }
   }
 
+  .dropdown-share + .dropdown-menu > ul > li {
+    float: left;
+    padding: 10px 0 0 10px;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
   .nested-btn-group {
     float: left;
     margin-left: -1px;

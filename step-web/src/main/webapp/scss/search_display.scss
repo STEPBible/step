@@ -116,6 +116,11 @@ h4.lexicalGrouping {
   .panel-body {
     padding: 5px;
   }
+
+  [strong]:hover {
+    color: $strong-color;
+  }
+
   ul {
     padding: 0px;
     list-style: none;

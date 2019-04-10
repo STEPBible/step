@@ -48,7 +48,13 @@
     #logo {
       display: inline-block;
       width: 90px;
-      height: 24px;
+      height: 21px;
+      margin-bottom: 3px;
+
+      & > svg {
+        fill: $brand-primary;
+      }
+
     }
 
     a, .subtitle, .subtitle:hover {

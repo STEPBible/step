@@ -13,8 +13,7 @@ h1 {
 	padding: 10px;
 }
 
-h1 a,h1 a:visited {
-	color: white;
+h1 a {
 	text-decoration: none;
 }
 
@@ -28,6 +27,10 @@ h3 {
 	color: #822433;
 	padding: 0px;
 	margin: 0px;
+}
+
+a {
+	color: #17758F;
 }
 
 .copyright {

@@ -1,7 +1,5 @@
 var PassageMenuView = Backbone.View.extend({
     infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-html="true" data-toggle="popover" data-placement="bottom">' +
-        '<span class="argOverflowExtended"></span>' +
-        '<span class="argOverflow"></span>' +
         '<span class="glyphicon glyphicon-info-sign"></span>' +
         '</a>',
     events: {

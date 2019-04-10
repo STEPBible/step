@@ -11,30 +11,6 @@
   font-size: 120%;
   display: none;
   z-index: 10;
-
-  .argOverflow {
-    position: absolute;
-    left: -30;
-    width: 30px;
-    height: 28;
-    top: -4;
-
-    $argOverflowGradientFrom: rgba(255, 255, 255, 1);
-    $argOverflowGradientTo: rgba(255, 255, 255, 0);
-//    background-image: -webkit-gradient(linear, right top, left top, from($argOverflowGradientFrom), to($argOverflowGradientTo));
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=$argOverflowGradientFrom, endColorstr=$argOverflowGradientTo) !important; /* for IE */
-    background-image: -webkit-linear-gradient(right, $argOverflowGradientFrom, $argOverflowGradientTo) !important;
-    background: -moz-linear-gradient(right,  $argOverflowGradientFrom,  $argOverflowGradientTo) !important; /* for firefox 3.6+ */
-  }
-
-  .argOverflowExtended {
-    background-color: white;
-    top: -4;
-    left: 0;
-    width: 100px;
-    height: 200%;
-    position: absolute;
-  }
 }
 
 .passageContainer {

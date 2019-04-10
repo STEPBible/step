@@ -245,11 +245,11 @@ Version: 3.4.5 Timestamp: Mon Nov  4 08:22:42 PST 2013
 }
 
 .select2-search input.select2-active {
-    background: #fff url('select2-spinner.gif') no-repeat 100%;
-    background: url('select2-spinner.gif') no-repeat 100%, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
-    background: url('select2-spinner.gif') no-repeat 100%, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: url('select2-spinner.gif') no-repeat 100%, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: url('select2-spinner.gif') no-repeat 100%, linear-gradient(top, #fff 85%, #eee 99%);
+    background: #fff url('select2-spinner.gif') no-repeat 96%;
+    background: url('select2-spinner.gif') no-repeat 96%, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
+    background: url('select2-spinner.gif') no-repeat 96%, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
+    background: url('select2-spinner.gif') no-repeat 96%, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
+    background: url('select2-spinner.gif') no-repeat 96%, linear-gradient(top, #fff 85%, #eee 99%);
 }
 
 .select2-container-active .select2-choice,
@@ -364,14 +364,18 @@ Version: 3.4.5 Timestamp: Mon Nov  4 08:22:42 PST 2013
     color: #000;
 }
 
-
 .select2-results .select2-no-results,
 .select2-results .select2-searching,
 .select2-results .select2-selection-limit {
     display: list-item;
     padding: 8px;
     border: 1px solid #C8C8C8;
+    color: #000;
     background-color: #f2f2f2;
+}
+
+.select2-results .select2-searching {
+    display: inline-block;
 }
 
 /*

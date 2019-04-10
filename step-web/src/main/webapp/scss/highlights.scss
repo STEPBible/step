@@ -5,7 +5,6 @@
 
   &:hover {
     cursor: pointer;
-    color: #fff;
   }
 }
 
@@ -15,11 +14,9 @@
 }
 
 .relatedWordEmphasis {
-  text-decoration: underline;
 }
 
 .relatedWordEmphasisHover {
-  text-decoration: underline;
   background-color: rgba($highlight-color, 0.2);
   color: $quickLexiconRelatedFontColour;
 }
@@ -30,7 +27,6 @@
 
 .lexiconRelatedFocus {
   background-color: $lexiconFocusRelatedColour;
-  text-decoration: underline;
 }
 
 .primaryLightBg {

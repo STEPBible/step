@@ -347,6 +347,27 @@
 								<jsFinalFile>step.html2canvas-${project.version}.js</jsFinalFile>
 							</configuration>
 						</execution>
+					
+						<execution>
+							<id>minify-color_code_grammar</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>minify</goal>
+							</goals>
+							<configuration>
+								<cssSourceDir>.</cssSourceDir>
+								<cssSourceFiles>
+									<cssSourceFile>css/color_code_grammar.css</cssSourceFile>
+								</cssSourceFiles>
+								<cssFinalFile>color_code_grammar.SNAPSHOT.css</cssFinalFile>							
+								<jsSourceDir>.</jsSourceDir>
+								<jsSourceFiles>
+									<jsSourceFile>js/color_code_grammar.js</jsSourceFile>
+								</jsSourceFiles>
+								<jsFinalFile>color_code_grammar.${project.version}.js</jsFinalFile>
+							</configuration>
+						</execution>
+						
 					</executions>
 				</plugin>
 				

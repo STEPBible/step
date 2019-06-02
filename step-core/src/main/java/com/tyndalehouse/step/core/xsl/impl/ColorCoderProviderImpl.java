@@ -118,6 +118,78 @@ public class ColorCoderProviderImpl {
             final EntityDoc[] results = this.morphology.searchExactTermBySingleField("code", 1, code);
             if (results.length > 0) {
                 classes = results[0].get("cssClasses");
+                // Added on Feb 27, 2018 to annotate verbs
+				String funct;
+				try {
+					funct = results[0].get("function").toLowerCase();
+				}
+				catch (NullPointerException e) {
+					funct = "";
+				}
+                if (funct.equals("verb")) {					
+                	String tense, voice, mood;
+					try {
+						tense = results[0].get("tense").toLowerCase();
+						voice = results[0].get("voice").toLowerCase();
+						mood = results[0].get("mood").toLowerCase();
+					}
+					catch (NullPointerException e) {
+						tense = voice = mood = "";
+					}
+					if (!tense.isEmpty() && !mood.isEmpty()) {
+						// Annotate 2nd Aorist as Aorist, 2nd Future as Future, 2nd Perfect as Perfect, 2nd Pluperfect ...
+						if (tense.startsWith("2nd ")) {
+							tense = tense.substring(4);
+						} else if (tense.equals("indefinite tense")) {
+							tense = "indefinite";
+						}
+						if ( (voice.equals("passive")) || (voice.equals("either middle or passive")) ) {
+							voice = "p";
+						}
+						else if (voice.equals("middle") ) {
+							voice = "m";
+						}
+						else if ((voice.indexOf("active") > -1) || (voice.indexOf("deponent") > -1) || (voice.indexOf("indefinite") > -1) ) {
+							voice = "a";
+						}
+						else {
+							LOGGER.warn("cannot identify voice [{}]", voice);
+							voice = "a";
+						}
+						classes = classes + " v" + getShortCodeTense(tense) + voice + getShortCodeMood(mood);
+					}
+                }
+            }
+            /* Added this section for the Chinese Bible which has the morphology on verbs */
+            else if (code.length() > 4) {
+            	if (code.substring(0,1).equalsIgnoreCase("v")) {
+            		String tense = code.substring(2,3).toLowerCase();
+					String voice = code.substring(3,4).toLowerCase();
+            		String mood = code.substring(4,5).toLowerCase();
+            		if (tense.equals("2")) {
+                		tense = code.substring(3,4).toLowerCase();
+						voice = code.substring(4,5).toLowerCase();
+                		mood = code.substring(5,6).toLowerCase();
+            		}
+					if (voice.equals("e")) {
+						voice = "p";
+					}
+					else if ( (!(voice.equals("p"))) && (!(voice.equals("m"))) ) {
+						String voice_displayed_as_active = "adnoqx"; // active, middle deponent, middle or passive deponent, passive deponent, impersonal active, indefinite
+						if (voice_displayed_as_active.indexOf(voice) == -1)  {
+							LOGGER.warn("cannot identify morphology for [{}]", code);
+						}
+						voice = "a";
+					}
+					classes = "v" + tense + voice + mood;
+
+            		if (classes == null) {
+                        LOGGER.warn("cannot identify morphology for [{}]", code);
+            		}
+            	}
+            	else {
+					LOGGER.warn("other than verb [{}]", code);
+				}
             }
 
             if (isBlank(classes) && firstSpace != -1) {
@@ -127,4 +199,32 @@ public class ColorCoderProviderImpl {
         }
         return classes != null ? classes : "";
     }
+
+	public String getShortCodeTense(final String tense) {
+		if (tense.equals("aorist")) return "a";
+		else if (tense.equals("present")) return "p";
+		else if (tense.equals("perfect")) return "r";
+		else if (tense.equals("pluperfect")) return "l";
+		else if (tense.equals("future")) return "f";
+		else if (tense.equals("imperfect")) return "i";
+		else if (tense.equals("indefinite")) return "x";
+		else {
+			LOGGER.warn("cannot identify tense for [{}]", tense);
+			return "";
+		}
+	}
+
+	public String getShortCodeMood(final String mood) {
+		if (mood.equals("indicative")) return "i";
+		else if (mood.equals("imperative")) return "m";
+		else if (mood.equals("participle")) return "p";
+		else if (mood.equals("infinitive")) return "n";
+		else if (mood.equals("subjunctive")) return "s";
+		else if (mood.equals("optative")) return "o";
+		else {
+			LOGGER.warn("cannot identify mood for [{}]", mood);
+			return "";
+		}
+	}
+
 }

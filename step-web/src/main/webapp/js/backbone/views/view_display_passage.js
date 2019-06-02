@@ -34,6 +34,7 @@ var PassageDisplayView = DisplayView.extend({
             var extraVersions = this.model.get("extraVersions");
             var reference = this.model.get("osisId");
             var options = this.model.get("selectedOptions") || [];
+            var availableOptions = this.model.get("options") || [];
             var version = this.model.get("masterVersion");
             var languages = this.model.get("languageCode");
             var passageContainer = this.$el.closest(".passageContainer");
@@ -70,6 +71,55 @@ var PassageDisplayView = DisplayView.extend({
 
                 //give focus:
                 $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();
+            }
+            if ((colorCodeGrammarAvailableAndSelected !== undefined) && (numberOfAnimationOnSamePage !== undefined) &&
+                (handleOfRequestedAnimation !== undefined) ) {
+                colorCodeGrammarAvailableAndSelected = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
+                if (colorCodeGrammarAvailableAndSelected) {
+                    numberOfAnimationOnSamePage = 0;
+                    if ((currentColorCodeSettings !== undefined) && (currentColorCodeSettings !== null)) {
+                        refreshForAllInstancesOfTense();
+                        if (handleOfRequestedAnimation == -1) goAnimate();
+                    }
+                    else initCanvasAndCssForColorCodeGrammar();
+                    /*var classArray = [];
+                    var a = performance.now();
+                    $('.passageContentHolder').children().children().find('class').prevObject.each(function(){
+                    //$('*').each(function(){
+                        var currentClassName = this.className.trim();
+                        if(currentClassName != "" && ( (currentClassName.indexOf(" v") > -1) || (currentClassName.indexOf("v") == 0) ) ) {
+                            while (currentClassName.length >= 4) {
+                                var classToAdd = "";
+                                if (currentClassName.indexOf("v") == 0) {
+                                    if (currentClassName.length == 4) {
+                                        classToAdd = currentClassName;
+                                        currentClassName = "";
+                                    }
+                                    else {
+                                        if ((currentClassName.length > 4) && (currentClassName.substring(4,1) == " ")) {
+                                            classToAdd = currentClassName.substring(0,4);
+                                            currentClassName = currentClassName.substring(4),trim();
+                                        }
+                                        else {
+                                            var nextSpace = currentClassName.indexOf(" ");
+                                            if (nextSpace == -1) currentClassName = "";
+                                            else currentClassName = currentClassName.substring(nextSpace + 1).trim();
+                                        }
+                                    }
+                                }
+                                else if (currentClassName.indexOf(" v") > -1) {
+                                    currentClassName = currentClassName.substring(currentClassName.indexOf(" v") + 1).trim();
+                                }
+                                else currentClassName = "";
+                                if ((classToAdd != "") && (classArray.indexOf(classToAdd) == -1) ) 
+                                    classArray.push(classToAdd);
+                            }
+                        }
+                    })
+                    classArray.sort();
+                    var b = performance.now();
+                    console.log(classArray.length + " " + (b - a) + ' ms.' + ": " + classArray);*/
+                }
             }
         },
         scrollToTargetLocation: function (passageContainer) {

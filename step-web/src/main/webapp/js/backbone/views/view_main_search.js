@@ -33,41 +33,46 @@ var MainSearchView = Backbone.View.extend({
                 }
 
                 var id = entry.itemType + "-";
-                switch (entry.itemType) {
-                    case REFERENCE:
-                        id += entry.item.fullName + step.util.guid();
-                        break;
-                    case VERSION:
-                        id += entry.item.shortInitials;
-                        break;
-                    case GREEK:
-                    case GREEK_MEANINGS:
-                    case HEBREW_MEANINGS:
-                    case HEBREW:
-                        //for these searches, we prevent multiple searches for the same strong number
-                        //and therefore share an id.
-                        id += entry.item.strongNumber;
-                        break;
-                    //some searches default to their item
-                    case SYNTAX:
-                    case TEXT_SEARCH:
-                        id += entry.item.value;
-                        break;
-                    case SUBJECT_SEARCH:
-                        id += (entry.item.searchTypes || []).join("-") + ":" + entry.item.value;
-                        break;
-                    case MEANINGS:
-                        id += entry.item.gloss;
-                        break;
-                    case EXACT_FORM:
-                        id += entry.item.text;
-                        break;
-                    case TOPIC_BY_REF:
-                    case RELATED_VERSES:
-                    default:
-                        id += entry.item;
-                        break;
-                }
+				if (entry.item != null) {
+					switch (entry.itemType) {
+						case REFERENCE:
+							id += entry.item.fullName + step.util.guid();
+							break;
+						case VERSION:
+							if (entry.item.shortInitials != null) { 
+								id += entry.item.shortInitials;
+							}
+							break;
+						case GREEK:
+						case GREEK_MEANINGS:
+						case HEBREW_MEANINGS:
+						case HEBREW:
+							//for these searches, we prevent multiple searches for the same strong number
+							//and therefore share an id.
+							id += entry.item.strongNumber;
+							break;
+						//some searches default to their item
+						case SYNTAX:
+						case TEXT_SEARCH:
+							id += entry.item.value;
+							break;
+						case SUBJECT_SEARCH:
+							id += (entry.item.searchTypes || []).join("-") + ":" + entry.item.value;
+							break;
+						case MEANINGS:
+							id += entry.item.gloss;
+							break;
+						case EXACT_FORM:
+							id += entry.item.text;
+							break;
+						case TOPIC_BY_REF:
+						case RELATED_VERSES:
+						default:
+							id += entry.item;
+							break;
+					}
+				}
+
                 return id;
             },
             formatInputTooShort: function (input, min) {

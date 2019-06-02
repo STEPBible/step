@@ -71,13 +71,13 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         //get max length
         var menu = $('<ul class="dropdown-menu" role="menu"></ul>');
-
-        if (includeText) {
+/*      if (includeText) {
             var activePassageData = step.util.activePassage();
             var activeReference = activePassageData.get("reference") || this._getBestReference(activePassageData);
             var textReference = $('<input type="text" class="refInput" />')
                 .attr("placeholder", __s.analyse_book_ref)
-                .val(activeReference);
+                .val(activeReference)
+                .prop('disabled', true);;
             textReference.data(data[0]);
             var li = $('<li role="presentation"></li>');
             var link = $("<a></a>");
@@ -86,9 +86,10 @@ var ViewLexiconWordle = Backbone.View.extend({
             menu.append(li);
             li.addClass("selected").find(".glyphicon").addClass("active");
             li.data("value", activeReference);
-        }
+        } 
 
-        for (var i = includeText ? 1 : 0; i < data.length; i++) {
+        for (var i = includeText ? 1 : 0; i < data.length; i++) { */
+        for (var i = 0; i < data.length; i++) {
             var link = $('<a role="menuitem" tabIndex="-1" href="javascript:void(0)">' + data[i] + '</a>');
             var li = $('<li role="presentation"></li>');
             li.append(link.prepend(step.util.ui.selectMark()));

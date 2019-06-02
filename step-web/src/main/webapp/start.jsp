@@ -309,14 +309,58 @@
                         <fmt:bundle basename="InteractiveBundle">
                             <fmt:message key="the_pentateuch" var="pentateuch" />
                         </fmt:bundle>
-                        <search:sample_search explanation="simple_passage_explanation" option1="ESV" option1type="version" option2="Gen 1" option2type="reference" sampleURL="/?q=version=ESV|reference=Gen.1&options=VHNUG" />
-                        <search:sample_search explanation="multiple_versions_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="KJV" option3type="version" option4="Gen 1" option4type="reference" sampleURL="/?q=version=NIV|version=ESV|version=KJV|reference=Gen.1&options=HVGUN&display=COLUMN" />
-                        <search:sample_search explanation="simple_search_explanation" option1="ESV" option1type="version" option2="brother" option2type="greekMeanings" sampleURL="/?q=version=ESV|strong=G0080&options=HVNGU" />
-                        <%--<search:sample_search explanation="simple_search_restricted_explanation" option1="${ pentateuch }" option1type="reference" option2="ESV" option2type="version" option3="he.sed" option3type="hebrew" sampleURL="" />--%>
-                        <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="land" option3type="text" option4="he.sed" option4type="hebrewMeanings" sampleURL="/?q=version=NIV|version=ESV|text=land|strong=H2617a&options=VGUVNH&display=INTERLEAVED" />
-                        <search:sample_search explanation="chained_searches_explanation_subject" option1="ESV" option1type="version" option2="throne" option2type="meanings" option3="David" option3type="subject" option4="Isa-Rev" option4type="reference" sampleURL="/?q=version=ESV|meanings=throne|subject=david|reference=Isa-Rev&options=HNVUG" />
-                        <search:sample_search explanation="interlinear_versions_explanation" option1="KJV" option1type="version" option2="WHNU" option2type="version" option3="John 1" option3type="reference" sampleURL="/?q=version=KJV|version=WHNU|reference=John.1&options=HVLUNM&display=INTERLINEAR" showInterlinear="true" />
-
+                        <div class="parent-div">
+                            <h5 id="accordion-heading1">Examples to use the search box to find Bibles, passages, search terms, etc.<span id="plusminus1">-</span></h5>
+                            <div id="accordion-body1">
+                                <br>
+                                <search:sample_search explanation="simple_passage_explanation" option1="ESV" option1type="version" option2="Gen 1" option2type="reference" sampleURL="/?q=version=ESV|reference=Gen.1&options=VHNUG" />
+                                <search:sample_search explanation="multiple_versions_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="KJV" option3type="version" option4="Gen 1" option4type="reference" sampleURL="/?q=version=NIV|version=ESV|version=KJV|reference=Gen.1&options=HVGUN&display=COLUMN" />
+                                <search:sample_search explanation="simple_search_explanation" option1="ESV" option1type="version" option2="brother" option2type="greekMeanings" sampleURL="/?q=version=ESV|strong=G0080&options=HVNGU" />
+                                <%--<search:sample_search explanation="simple_search_restricted_explanation" option1="${ pentateuch }" option1type="reference" option2="ESV" option2type="version" option3="he.sed" option3type="hebrew" sampleURL="" />--%>
+                                <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="land" option3type="text" option4="he.sed" option4type="hebrewMeanings" sampleURL="/?q=version=NIV|version=ESV|text=land|strong=H2617a&options=VGUVNH&display=INTERLEAVED" />
+                                <search:sample_search explanation="chained_searches_explanation_subject" option1="ESV" option1type="version" option2="throne" option2type="meanings" option3="David" option3type="subject" option4="Isa-Rev" option4type="reference" sampleURL="/?q=version=ESV|meanings=throne|subject=david|reference=Isa-Rev&options=HNVUG" />
+                                <search:sample_search explanation="interlinear_versions_explanation" option1="KJV" option1type="version" option2="WHNU" option2type="version" option3="John 1" option3type="reference" sampleURL="/?q=version=KJV|version=WHNU|reference=John.1&options=HVLUNM&display=INTERLINEAR" showInterlinear="true" />
+                            </div>    
+                        </div>
+                        <div class="parent-div">
+                            <h5 id="accordion-heading2">Examples of some Bible study tools <span id="plusminus2">+</span></h5>
+                            <div id="accordion-body2">
+                                <br>
+                                <search:sample_search explanation="kjv_verb_imperative_explanation" option1="KJV" option1type="version" option2="Col 3" option2type="reference"
+                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Col.3&options=HVGUNC', 'verb, imperative mood', ' Words with a red underlines are verbs in imperative mood.')" />
+                                <search:sample_search explanation="kjv_verb_main_supporting_explanation" option1="KJV" option1type="version" option2="Col 1" option2type="reference"
+                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Col.1&options=HVGUNC', 'verb, main vs supporting verbs', 'Words with a green underlines are usually main verbs in either indicative or imperative moods.  Words with a purple underline are support verbs in either subjunctive, optative, infinitive or particple moods.  Move your mouse over the word to see the verb grammar at the bottom of the screen.')" />
+                                <search:sample_search explanation="kjv_verb_number_and_gender_explanation" option1="KJV" option1type="version" option2="Mat 1" option2type="reference"
+                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Mat.1&options=HVGUNC', 'gender and number', 'Word with blue color font are masculine, red are feminine and black are neuter.  Words with bold font are plural.  Mouse over a word to see the grammar of the word.')" />
+                                <search:sample_search explanation="esv_word_frequency_explanation" option1="ESV" option1type="version" option2="1Jo 1" option2type="reference"
+                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Quick tryout links<span style='background-color:white'>&nbsp;<span class='glyphicon glyphicon-plus'>   </span></span><span class='glyphicon glyphicon-stats'></span></span>"
+                                    option3type="other"
+                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=ESV|reference=1Jo.1&options=HVGUN', 'function:openStats', 'Mouse over the words on the analysis tool (on the right panel) to see where the words are located.  Select book next to Bible text field in the right panel to see the word frequency for the entire book.')" />
+                            </div>    
+                        </div>
+                        <div class="parent-div">
+                            <h5 id="accordion-heading3">Examples to enable color code grammar <span id="plusminus3">+</span></h5>
+                            <div id="accordion-body3">
+                                <br>
+                                <search:sample_search explanation="kjv_verb_color_explanation" option1="KJV" option1type="version" option2="Eph 1" option2type="reference"
+                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Eph.1&options=HVGUNC', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
+                                <search:sample_search explanation="sblg_verb_color_explanation" option1="SBLG" option1type="version" option2="Rom 12" option2type="reference"
+                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=SBLG-THE|reference=Rom.12&options=CEMVALHUN', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
+                                <search:sample_search explanation="cun_verb_color_explanation" option1="CUn" option1type="version" option2="Col 1" option2type="reference"
+                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=CUn|reference=Col.1&options=HVGUNC', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
+                                <search:sample_search explanation="interlinear_verb_color_explanation" option1="SBLG" option1type="version" option2="KJV" option2type="version" option3="CUN" option3type="version" option4="Eph 5" option4type="reference"
+                                    option5="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" 
+                                    option5type="other"
+                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=SBLG-THE|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
+                                <div id='colorCodeTableDiv'></div>
+                            </div>    
+                        </div>                                                                                                                 
                         <div class="text-muted step-copyright"><span>&copy; <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House, Cambridge, UK</a> - <%= Calendar.getInstance().get(Calendar.YEAR) %><span></span></div>
                     </div>
                 </div>
@@ -330,7 +374,6 @@
         <button id="stepDisclaimer" type="button" class="btn btn-danger btn-xs" data-container="body" data-trigger="hover focus" data-toggle="popover" data-placement="top" data-content="<fmt:message key="step_disclaimer" />"/>
             BETA
         </button>
-
         <%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
         <%
             if(!appManager.isLocal()) {
@@ -410,6 +453,7 @@
     <script src="js/passage/step.passage.js" type="text/javascript"></script>
     <script src="js/defaults/step.defaults.js" type="text/javascript"></script>
     <script src="js/step_ready.js" type="text/javascript"></script>
+    <script src="js/color_code_grammar.js" type="text/javascript"></script>
 
         <%
 		} else {
@@ -446,6 +490,8 @@
         </c:when>
         <c:otherwise>
             <script src="js/step.${project.version}.min.js" type="text/javascript" ></script>
+	        <script src="js/color_code_grammar.${project.version}.min.js" type="text/javascript" ></script>
+
         </c:otherwise>
     </c:choose>
     <%
@@ -483,5 +529,89 @@
         }(window, document, 'script'));
     </script>
     <% } %>
+    <script>
+        $(document).ready(function(){
+            if (typeof displayQuickTryoutAccordion1 !== "undefined") {
+                var tmp = localStorage.getItem('stepBible-displayQuickTryoutAccordion1');
+                if (tmp) displayQuickTryoutAccordion1 = JSON.parse(tmp);
+                if (displayQuickTryoutAccordion1 == true) {
+                    $("#accordion-body1").slideDown(600); /*if content not visible then show the accordion-body */
+                    $("#plusminus1").text('-');  /* add minus sign */
+                }
+                else {
+                    $("#accordion-body1").slideUp(600); /*if content not visible then show the accordion-body */
+                    $("#plusminus1").text('+');  /* add minus sign */
+                }
+            }
+            if (typeof displayQuickTryoutAccordion2 !== "undefined") {
+                var tmp = localStorage.getItem('stepBible-displayQuickTryoutAccordion2');
+                if (tmp) displayQuickTryoutAccordion2 = JSON.parse(tmp);
+                if (displayQuickTryoutAccordion2 == true) {
+                    $("#accordion-body2").slideDown(600); /*if content not visible then show the accordion-body */
+                    $("#plusminus2").text('-');  /* add minus sign */
+                }
+                else {
+                    $("#accordion-body2").slideUp(600); /*if content not visible then show the accordion-body */
+                    $("#plusminus2").text('+');  /* add minus sign */
+                }
+            }
+            if (typeof displayQuickTryoutAccordion3 !== "undefined") {
+                var tmp = localStorage.getItem('stepBible-displayQuickTryoutAccordion3');
+                if (tmp) displayQuickTryoutAccordion3 = JSON.parse(tmp);
+                if (displayQuickTryoutAccordion3 == true) {
+                    $("#accordion-body3").slideDown(600); /*if content not visible then show the accordion-body */
+                    $("#plusminus3").text('-');  /* add minus sign */
+                }
+                else {
+                    $("#accordion-body3").slideUp(600); /*if content not visible then show the accordion-body */
+                    $("#plusminus3").text('+');  /* add minus sign */
+                }
+            }
+
+            $("#accordion-heading1").click(function() {  
+                if($("#accordion-body1").is(':visible')) {  /* check the condition accordion-body is visible or not */
+                    $("#accordion-body1").slideUp(600);  /*if content is visible then close accordion-body with specific time duration */
+                    $("#plusminus1").text('+')    /* add plus sign */
+                    if (typeof displayQuickTryoutAccordion1 !== "undefined") displayQuickTryoutAccordion1 = false;
+                }
+                else{
+                    $("#accordion-body1").slideDown(600); /*if content not visible then show the accordion-body */
+                    $("#plusminus1").text('-');  /* add minus sign */
+                    if (typeof displayQuickTryoutAccordion1 !== "undefined") displayQuickTryoutAccordion1 = true;
+                }
+                if (typeof displayQuickTryoutAccordion1 !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion1', JSON.stringify(displayQuickTryoutAccordion1));
+            });
+            
+            $("#accordion-heading2").click(function() {  
+                if($("#accordion-body2").is(':visible')) {  /* check the condition accordion-body is visible or not */
+                    $("#accordion-body2").slideUp(600);  /*if content is visible then close accordion-body with specific time duration */
+                    $("#plusminus2").text('+')    /* add plus sign */
+                    if (typeof displayQuickTryoutAccordion2 !== "undefined") displayQuickTryoutAccordion2 = false;
+                }
+                else{
+                    $("#accordion-body2").slideDown(600); /*if content not visible then show the accordion-body */
+                    $("#plusminus2").text('-');  /* add minus sign */
+                    if (typeof displayQuickTryoutAccordion2 !== "undefined") displayQuickTryoutAccordion2 = true;
+                }
+                if (typeof displayQuickTryoutAccordion2 !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion2', JSON.stringify(displayQuickTryoutAccordion2));
+            });
+            
+            $("#accordion-heading3").click(function(){  
+                if($("#accordion-body3").is(':visible')){  /* check the condition accordion-body is visible or not */
+                    $("#accordion-body3").slideUp(600);  /*if content is visible then close accordion-body with specific time duration */
+                    $("#plusminus3").text('+')    /* add plus sign */
+                    if (typeof displayQuickTryoutAccordion3 !== "undefined") displayQuickTryoutAccordion3 = false;
+                }
+                else{
+                    $("#accordion-body3").slideDown(600); /*if content not visible then show the accordion-body */
+                    $("#plusminus3").text('-');  /* add minus sign */
+                    if (typeof displayQuickTryoutAccordion3 !== "undefined") displayQuickTryoutAccordion3 = true;
+                }
+                if (typeof displayQuickTryoutAccordion3 !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion3', JSON.stringify(displayQuickTryoutAccordion3));
+            });
+
+        });
+    </script>
+
 </body>
 </html>

@@ -109,8 +109,9 @@ var QuickLexicon = Backbone.View.extend({
             var time = new Date().getTime();
             this.loadDefinition(time);
         }
-        if ((numberOfAnimationOnSamePage !== undefined) && (numberOfAnimationOnSamePage !== null)) 
-            numberOfAnimationOnSamePage = 0;
+        // added for colour code grammar
+        if ((numOfAnimationsAlreadyPerformedOnSamePage !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== null)) 
+            numOfAnimationsAlreadyPerformedOnSamePage = 0;
     },
     displayQuickDef: function(lexicon) {
         var self = this;

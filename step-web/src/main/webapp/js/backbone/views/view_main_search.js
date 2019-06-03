@@ -33,12 +33,14 @@ var MainSearchView = Backbone.View.extend({
                 }
 
                 var id = entry.itemType + "-";
+                // I have seen entry.item is null.  I added an if statement to test it
 				if (entry.item != null) {
 					switch (entry.itemType) {
 						case REFERENCE:
 							id += entry.item.fullName + step.util.guid();
 							break;
 						case VERSION:
+			                // I have seen entry.item.shortInitials is null.  I added an if statement to test it
 							if (entry.item.shortInitials != null) { 
 								id += entry.item.shortInitials;
 							}

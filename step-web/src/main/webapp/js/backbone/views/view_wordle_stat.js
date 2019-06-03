@@ -71,6 +71,9 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         //get max length
         var menu = $('<ul class="dropdown-menu" role="menu"></ul>');
+// The following 19 lines were commented out because the input field is not processed even if the user enter another book or chapter
+// I suspect this function was not fully implemented.  Since this does not work and could confuse the user, the code is commented out.
+// This should work better for the user.  PT June 2, 2019
 /*      if (includeText) {
             var activePassageData = step.util.activePassage();
             var activeReference = activePassageData.get("reference") || this._getBestReference(activePassageData);
@@ -89,6 +92,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         } 
 
         for (var i = includeText ? 1 : 0; i < data.length; i++) { */
+// The following line was added when the above 19 lines were commented out
         for (var i = 0; i < data.length; i++) {
             var link = $('<a role="menuitem" tabIndex="-1" href="javascript:void(0)">' + data[i] + '</a>');
             var li = $('<li role="presentation"></li>');

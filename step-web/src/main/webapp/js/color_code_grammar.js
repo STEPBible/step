@@ -83,8 +83,8 @@ var animationIndexArray = [];
 var handleOfRequestedAnimation = -1;
 var timestampOfLastAnimation = 0;
 var animationInterval = 800; // Milliseconds per frame for animation.  Lower number will use more CPU
-var numberOfAnimationOnSamePage = 0; // If the number of animation on the same page is high, the user might not be around
-var maxAnimationOnSamePageWithoutMovement = 1800000 / animationInterval; // there are 1,800,000 is milliseconds in 30 minutes. Stop wasting CPU if the user did not display a new passage, used quick lexicon and use the sidebar
+var numOfAnimationsAlreadyPerformedOnSamePage = 0; // If the number of animation on the same page is high, the user might not be around
+var maxAnimationOnSamePageWithoutMovement = 900000 / animationInterval; // there are 900,000 is milliseconds in 15 minutes. Stop wasting CPU if the user did not display a new passage, used quick lexicon and use the sidebar
 var colorCodeGrammarAvailableAndSelected = false;
 var displayQuickTryoutAccordion1 = true; // display the first section of the quick link by default
 var displayQuickTryoutAccordion2 = false;
@@ -885,8 +885,8 @@ function goAnimate(givenTime) {
   if ((animateUlForPassive || animateUlForMiddle || (animationIndexArray.length > 0)) &&
        colorCodeGrammarAvailableAndSelected && currentColorCodeSettings.enableGreekVerbColor) {
     if (((givenTime - timestampOfLastAnimation) > animationInterval) || (givenTime === undefined)) {
-      if (numberOfAnimationOnSamePage < maxAnimationOnSamePageWithoutMovement * 2) {
-        if (numberOfAnimationOnSamePage < maxAnimationOnSamePageWithoutMovement) {
+      if (numOfAnimationsAlreadyPerformedOnSamePage < maxAnimationOnSamePageWithoutMovement * 2) {
+        if (numOfAnimationsAlreadyPerformedOnSamePage < maxAnimationOnSamePageWithoutMovement) {
           if (animateUlForMiddle) {
             for (var counter2 = 0; counter2 < copyOfmiddleIndexArray.length; counter2 += 1) {
               if (displayUlVerbCSSOrNot(copyOfmiddleIndexArray[counter2]))
@@ -908,7 +908,7 @@ function goAnimate(givenTime) {
         handleOfRequestedAnimation = requestAnimationFrame(goAnimate);
       }
       else handleOfRequestedAnimation = -1;
-      numberOfAnimationOnSamePage += 1;
+      numOfAnimationsAlreadyPerformedOnSamePage += 1;
     }
     else handleOfRequestedAnimation = requestAnimationFrame(goAnimate); // Not time yet
   } 
@@ -1710,7 +1710,7 @@ function getVariablesForVerbTable() {
 function addVerbTable(createUserInputFields, htmlElement) {
   var r = getVariablesForVerbTable();
   var htmlTable = '';
-  if (!createUserInputFields) htmlTable = '<link href="css/color_code_grammar.SNAPSHOT.min.css" rel="stylesheet" media="screen"/>';
+  if (!createUserInputFields) htmlTable = '<link href="css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
   htmlTable += '<table class="tg2"><tr>' +
     '<th valign="middle" align="center" colspan="2" rowspan="2">';
   if (createUserInputFields) htmlTable +=
@@ -1811,7 +1811,7 @@ function addVerbTable(createUserInputFields, htmlElement) {
 function addVerbTable2(createUserInputFields, htmlElement) {
   var r = getVariablesForVerbTable();
   var htmlTable = '';
-  if (!createUserInputFields) htmlTable = '<link href="css/color_code_grammar.SNAPSHOT.min.css" rel="stylesheet" media="screen"/>';
+  if (!createUserInputFields) htmlTable = '<link href="css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
   htmlTable += '<table class="tg2"><tr>' +
     '<th valign="middle" align="center" colspan="2" rowspan="2">';
   htmlTable += '</th>';

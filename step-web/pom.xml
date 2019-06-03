@@ -354,11 +354,6 @@
 								<goal>minify</goal>
 							</goals>
 							<configuration>
-								<cssSourceDir>.</cssSourceDir>
-								<cssSourceFiles>
-									<cssSourceFile>css/color_code_grammar.css</cssSourceFile>
-								</cssSourceFiles>
-								<cssFinalFile>color_code_grammar.SNAPSHOT.css</cssFinalFile>							
 								<jsSourceDir>.</jsSourceDir>
 								<jsSourceFiles>
 									<jsSourceFile>js/color_code_grammar.js</jsSourceFile>
@@ -384,6 +379,7 @@
 					<configuration>
 						<includes>
 							<include>${basedir}/target/**/step.*.js</include>
+							<include>${basedir}/target/**/color_code_grammar.*.js</include>
 						</includes>
 						<replacements>
 							<replacement>

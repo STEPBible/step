@@ -490,7 +490,8 @@
         </c:when>
         <c:otherwise>
             <script src="js/step.${project.version}.min.js" type="text/javascript" ></script>
-	        <script src="js/color_code_grammar.${project.version}.min.js" type="text/javascript" ></script>
+	        <script src="js/color_code_grammar.js" type="text/javascript" ></script>
+
         </c:otherwise>
     </c:choose>
     <%

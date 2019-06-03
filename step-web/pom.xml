@@ -354,6 +354,11 @@
 								<goal>minify</goal>
 							</goals>
 							<configuration>
+								<cssSourceDir>.</cssSourceDir>
+								<cssSourceFiles>
+									<cssSourceFile>css/color_code_grammar.css</cssSourceFile>
+								</cssSourceFiles>
+								<cssFinalFile>color_code_grammar.${project.version}.css</cssFinalFile>							
 								<jsSourceDir>.</jsSourceDir>
 								<jsSourceFiles>
 									<jsSourceFile>js/color_code_grammar.js</jsSourceFile>
@@ -362,8 +367,7 @@
 							</configuration>
 						</execution>
 					</executions>
-				</plugin>
-				
+				</plugin>				
 				<plugin>
 					<groupId>com.google.code.maven-replacer-plugin</groupId>
 					<artifactId>replacer</artifactId>

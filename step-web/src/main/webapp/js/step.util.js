@@ -743,11 +743,25 @@ step.util = {
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
                         entry.item.shortName + '</div>';
                 case VERSION:
-                    return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "")
-                        + '" title="' + source + util.safeEscapeQuote(entry.item.shortInitials + ' - ' + step.keyedVersions[entry.item.shortInitials].name) + '' +
+                    // I have seen the code crashed at this point when entry.item.shortInitialis is not defined.  It might be caused by an old installation of the Bible modules.
+                    // I added the following code to reduce the chance of crash.
+					var shortInitialsOfTranslation = ''; // added so it does not crash at startup
+					var nameOfTranslation = '';          //  added so it does not crash at startup
+					if (entry.item != undefined) {       // added so it does not crash at startup
+                        if (entry.item.shortInitials !== undefined) {
+                            shortInitialsOfTranslation = entry.item.shortInitials;
+                            var temp = entry.item.initials; // Sometimes the crash is caused by a mismatch upper and lower case
+                            if (step.keyedVersions[temp] === undefined) temp = temp.toUpperCase();
+                            if (step.keyedVersions[temp] === undefined)
+                                nameOfTranslation = step.keyedVersions[temp].name;
+                            else if (step.keyedVersions[shortInitialsOfTranslation] !== undefined) nameOfTranslation = step.keyedVersions[shortInitialsOfTranslation].name;
+                        }
+					}
+                    return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") +
+                        '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
                         (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(entry.item.shortInitials) + '">' + entry.item.shortInitials + "</div>";
+                        'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation + "</div>"; // added so it does not crash at startup
                 case GREEK:
                 case HEBREW:
                 case GREEK_MEANINGS:

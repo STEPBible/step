@@ -73,6 +73,9 @@ var SidebarView = Backbone.View.extend({
         } else {
             self.createHelp();
         }
+        // added for colour code grammar
+        if ((numOfAnimationsAlreadyPerformedOnSamePage !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== null)) 
+            numOfAnimationsAlreadyPerformedOnSamePage = 0;
     },
     _createBaseTabs: function () {
         var tabContent = $("<div class='tab-content'></div>");
@@ -235,15 +238,16 @@ var SidebarView = Backbone.View.extend({
     // for one-line morphology
     _createBriefMorphInfo: function (panel, info) {
         panel.append("( ");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
+        // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_function, "function");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_person, "person");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_number, "number");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_person, "person");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_number, "number");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
         panel.append(")<br />");
     },
     renderBriefMorphItem: function (panel, info, title, param) {
@@ -255,16 +259,17 @@ var SidebarView = Backbone.View.extend({
 
     },
     _createMorphInfo: function (panel, info) {
+        // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
         panel.append($("<h2>").append(__s.display_grammar));
         this.renderMorphItem(panel, info, "function");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "function");
-        this.renderMorphItem(panel, info, __s.lexicon_grammar_person, "person");
-        this.renderMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
-        this.renderMorphItem(panel, info, __s.lexicon_grammar_number, "number");
-        this.renderMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
-        this.renderMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_person, "person");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_number, "number");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
         panel.append("<br />");
 

@@ -347,7 +347,6 @@
 								<jsFinalFile>step.html2canvas-${project.version}.js</jsFinalFile>
 							</configuration>
 						</execution>
-					
 						<execution>
 							<id>minify-color_code_grammar</id>
 							<phase>generate-resources</phase>
@@ -359,7 +358,7 @@
 								<cssSourceFiles>
 									<cssSourceFile>css/color_code_grammar.css</cssSourceFile>
 								</cssSourceFiles>
-								<cssFinalFile>color_code_grammar.SNAPSHOT.css</cssFinalFile>							
+								<cssFinalFile>color_code_grammar.${project.version}.css</cssFinalFile>							
 								<jsSourceDir>.</jsSourceDir>
 								<jsSourceFiles>
 									<jsSourceFile>js/color_code_grammar.js</jsSourceFile>
@@ -367,10 +366,8 @@
 								<jsFinalFile>color_code_grammar.${project.version}.js</jsFinalFile>
 							</configuration>
 						</execution>
-						
 					</executions>
-				</plugin>
-				
+				</plugin>				
 				<plugin>
 					<groupId>com.google.code.maven-replacer-plugin</groupId>
 					<artifactId>replacer</artifactId>
@@ -386,6 +383,7 @@
 					<configuration>
 						<includes>
 							<include>${basedir}/target/**/step.*.js</include>
+							<include>${basedir}/target/**/color_code_grammar.*.js</include>
 						</includes>
 						<replacements>
 							<replacement>

@@ -34,6 +34,7 @@ var PassageDisplayView = DisplayView.extend({
             var extraVersions = this.model.get("extraVersions");
             var reference = this.model.get("osisId");
             var options = this.model.get("selectedOptions") || [];
+            var availableOptions = this.model.get("options") || [];
             var version = this.model.get("masterVersion");
             var languages = this.model.get("languageCode");
             var passageContainer = this.$el.closest(".passageContainer");
@@ -70,6 +71,19 @@ var PassageDisplayView = DisplayView.extend({
 
                 //give focus:
                 $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();
+            }
+            // following 11 lines were added to enhance the Colour Code Grammar  PT
+            if ((colorCodeGrammarAvailableAndSelected !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== undefined) &&
+                (handleOfRequestedAnimation !== undefined) ) {
+                colorCodeGrammarAvailableAndSelected = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
+                if (colorCodeGrammarAvailableAndSelected) {
+                    numOfAnimationsAlreadyPerformedOnSamePage = 0;
+                    if ((currentColorCodeSettings !== undefined) && (currentColorCodeSettings !== null)) {
+                        refreshForAllInstancesOfTense();
+                        if (handleOfRequestedAnimation == -1) goAnimate();
+                    }
+                    else initCanvasAndCssForColorCodeGrammar();
+                }
             }
         },
         scrollToTargetLocation: function (passageContainer) {

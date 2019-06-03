@@ -14,7 +14,6 @@ span.interlinear span { /* Make each word follow the other */
     text-align: right;
 }
 
-
 span.rtl span { /* Make each word follow the other */
 	float: right;
 }
@@ -31,9 +30,6 @@ span.interlinear span span { /* Make this stack on top of each other. */
 	padding: 0;
 /* 	height: 20px; */
 }
-
-
-
 
 .ancientVocab a {
     font-style: italic;
@@ -549,7 +545,7 @@ FONT.usg {
 .sing { }
 .mas { color: #000099; }
 .fem { color: #C90000; }
-.neut { color: black; }   
+.neut { color: black; }
 
 .draggable-tooltip {
     z-index: 10001 !important;
@@ -777,3 +773,76 @@ Analysis tabs
     font-variant: normal;
 }
 
+
+/* Added by Patrick Tang on May 2019 to highlight tense and mood of verbs.  
+Indicative:			   Subjunctive:			 Optative:		Imperative:			  Infinitive:			Participle:
+Active  Middle Passive Active Middle Passive Active	Middle Passive	Active Middle Passive Active Middle	Passive	Active Middle Passive */
+.vpai, .vpmi,  .vppi,  .vpas, .vpms, .vpps,  .vpao,	.vpmo,	        .vpam, .vpmm, .vppm,  .vpan, .vpmn, .vppn,	.vpap, .vpmp, .vppp,
+.viai, .vimi,  .vipi,  .vias,                                                                                   .viap,
+.vrai, .vrmi,  .vrpi,  .vras,   			 .vrao,				    .vram, .vrmm, .vrpm,  .vran, .vrmn, .vrpn,	.vrap, .vrmp, .vrpp,
+.vlai, .vlmi,  .vlpi,                                                                                                  .vlmp, .vlpp,
+.vaai, .vami,  .vapi,  .vaas, .vams, .vaps,  .vaao,	.vamo, .vapo,	.vaam, .vamm, .vapm,  .vaan, .vamn, .vapn,	.vaap, .vamp, .vapp,
+.vfai, .vfmi,  .vfpi,  .vfas, .vfms, .vfps,  .vfao,	.vfmo,			.vfam,		          .vfan, .vfmn,	.vfpn,  .vfap, .vfmp, .vfpp {
+	text-decoration: none;
+	white-space: nowrap;
+	padding-bottom: 7px;
+	border: none;
+	text-shadow: 1px 1px white;
+}
+
+.parent-div{
+    width: 100%; 
+    border: 1px solid #f1f1f1; 
+    padding: 5px 10px;
+    margin: 0; 
+    background: #ffffff;
+}
+#accordion-heading1{
+    background: #8d2f42; 
+    padding: 5px 10px; 
+    margin: 0; 
+    cursor: pointer; 
+    color: #ffffff;
+    font-size: 12px;
+}
+#accordion-heading1 span{
+    float: right;
+    font-family: "Courier New", Courier, monospace;
+}
+
+#accordion-body1 {
+  padding: 5px 10px;
+}
+
+#accordion-heading2 {
+    background: #8d2f42; 
+    padding: 5px 10px; 
+    margin: 0; 
+    cursor: pointer; 
+    color: #ffffff;
+    font-size: 12px;
+}
+#accordion-heading2 span {
+    float: right;
+    font-family: "Courier New", Courier, monospace;
+}
+
+#accordion-body2 {
+  padding: 5px 10px;
+}
+#accordion-heading3 {
+    background: #8d2f42; 
+    padding: 5px 10px; 
+    margin: 0; 
+    cursor: pointer; 
+    color: #ffffff;
+    font-size: 12px;
+}
+#accordion-heading3 span {
+    float: right;
+    font-family: "Courier New", Courier, monospace;
+}
+
+#accordion-body3 {
+  padding: 5px 10px;
+}

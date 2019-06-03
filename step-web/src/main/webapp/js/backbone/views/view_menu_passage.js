@@ -16,7 +16,7 @@ var PassageMenuView = Backbone.View.extend({
         '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
         '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
-    quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
+	quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -31,8 +31,7 @@ var PassageMenuView = Backbone.View.extend({
             { initial: "E", key: "display_englishVocab" },
             { initial: "A", key: "display_greekVocab" },
             { initial: "T", key: "display_transliteration" }
-        ]
-        },
+        ]},
         { group: "original_language_options", items: [
             { initial: "O", key: "display_original_transliteration" },
             { initial: "D", key: "display_divide_hebrew", help: "display_divide_hebrew_help" },
@@ -40,14 +39,13 @@ var PassageMenuView = Backbone.View.extend({
             { initial: "U", key: "display_hebrew_vowels", help: "display_hebrew_vowels_help" },
             { initial: "P", key: "display_pointing_include_hebrew", help: "display_pointing_include_hebrew_vowels_help" }
         ]},
-        { initial: "M", key: "display_grammar" },
-        { initial: "C", key: "display_grammarColor" }
+   		{ initial: "M", key: "display_grammar" },
+		{ initial: "C", key: "display_grammarColor" }
     ],
 
     initialize: function () {
         var self = this;
         _.bindAll(this);
-
         //listen for model changes
         this.listenTo(this.model, "sync-update", this._updateVisibleDropdown);
         this.listenTo(this.model, "destroy-column", this.remove);
@@ -204,9 +202,17 @@ var PassageMenuView = Backbone.View.extend({
         var displayOptions = this.displayOptions.find("li.passage");
         for (var i = 0; i < displayOptions.length; i++) {
             var displayOption = displayOptions.eq(i);
-            displayOption.toggle(availableOptions.indexOf(displayOption.find("[data-value]").attr("data-value")) != -1);
+			var displayOptionCode = displayOption.find("[data-value]").attr("data-value");
+            displayOption.toggle(availableOptions.indexOf(displayOptionCode) != -1);
+			if (displayOptionCode == "C") {
+				if ((availableOptions.indexOf("C") > -1) && (displayOption.find(".glyphicon").css("visibility") != "hidden")) {
+					this.displayOptions.find("li#grammar_list_item.noHighlight.grammarContainer")[0].hidden = false;
+				}
+				else {
+					this.displayOptions.find("li#grammar_list_item.noHighlight.grammarContainer")[0].hidden = true;
+				}
+			}
         }
-
         //do we need to show the group headings...
         this.displayOptions.find(".menuGroup").each(function (i, item) {
             var heading = $(item);
@@ -315,7 +321,23 @@ var PassageMenuView = Backbone.View.extend({
         var displayOptionsHeading = $("<h1>").append(__s.display_options);
 
         var dropdown = $("<ul>").addClass("passageOptions");
+        var context = this.model.get("context") || 0;
+        var li = $('<li class="noHighlight contextContainer">').append($('<span class="contextLabel" dir="' + (step.state.isLtR() ? "ltr" : "rtl") + '"></span>').append(this.getContextLabel(context)));
+
         dropdown.append(this._createPassageOptions(dropdown));
+		
+		dropdown.append(li);
+        
+        if ((window.location.hostname.toLowerCase().indexOf('color.com') > -1)) {
+            __s.config_color_grammar = __s.config_color_grammar.replace("olour", "olor");
+            __s.config_color_grammar_explain = __s.config_color_grammar_explain.replace("olour", "olor");
+        }
+        colorCodeGrammarButton = '<li id=grammar_list_item class="noHighlight grammarContainer"><%= __s.config_color_grammar %>' +
+            '<span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group">' +
+            '<button class="btn btn-default btn-xs grammarColor" type="button" title="<%= __s.config_color_grammar_explain %>">' +
+            '<span class="glyphicon glyphicon-cog"></span></button></span></li>',
+		dropdown.append(_.template(colorCodeGrammarButton)())
+			.find(".grammarColor").click(this.showConfigGrammarColor);
 
         dropdownContainer.append(displayOptionsHeading);
         dropdownContainer.append(dropdown);
@@ -411,8 +433,6 @@ var PassageMenuView = Backbone.View.extend({
      */
     _createItemsInDropdown: function (dropdown, items) {
 //        <div class="panel-group" id="accordion">
-
-
         var selectedOptions = this.model.get("selectedOptions") || "";
         for (var i = 0; i < items.length; i++) {
             if (items[i].group) {
@@ -431,7 +451,13 @@ var PassageMenuView = Backbone.View.extend({
                 panel.append(collapseHeader).append(collapseBody);
                 dropdown.append(panel);
             } else {
-                var link = this._createLink(items[i].initial, __s[items[i].key], __s[items[i].help]);
+                var keyText = __s[items[i].key];
+                var helpText = __s[items[i].help];
+                if ((items[i].initial == "C") && (keyText !== undefined) && (window.location.hostname.toLowerCase().indexOf('color.com') > -1)) {
+                    keyText = keyText.replace("olour", "olor");
+                    if (helpText !== undefined) helpText = helpText.replace("olour", "olor");
+                }
+                var link = this._createLink(items[i].initial, keyText, helpText);
                 this._setVisible(link, selectedOptions.indexOf(items[i].initial) != -1);
             }
             dropdown.append($("<li>").addClass("passage").append(link)).attr("role", "presentation");
@@ -494,7 +520,6 @@ var PassageMenuView = Backbone.View.extend({
         for (var i = 0; i < selectedOptions.length; i++) {
             selectedCode += selectedOptions.eq(i).data('value');
         }
-
         this.model.save({
             pageNumber: 1,
             selectedOptions: selectedCode,
@@ -653,5 +678,16 @@ var PassageMenuView = Backbone.View.extend({
 //            ensure last element
 //            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
 //        }
-    }
+    },
+		
+	showConfigGrammarColor: function (e) {
+		var grammarColorConfigPage = $('<div id="theGrammarColorModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +	
+			'<div class="modal-dialog">' +
+			'<div class="modal-content">');
+		var temp = document.getElementById("theGrammarColorModal");
+		e.preventDefault();
+		if (!temp) grammarColorConfigPage.appendTo("body");
+		$('#theGrammarColorModal').modal('show').find('.modal-content').load('/color_code_grammar.html');
+	}
+	
 });

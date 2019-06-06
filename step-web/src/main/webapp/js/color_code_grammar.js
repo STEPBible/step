@@ -1330,7 +1330,7 @@ function enableOrDisableVerbAndNounButtons() {
 function enableOrDisableAxisConfigButtons(axis) {
   var iconName = '#config' + axis + 'AxisIcon';
   var onOffClassName = '.vrbInpt' + axis;
-  var onOffCheckBox = 'axis' + axis + 'OnOff_checkbox';
+  var onOffCheckBox = 'axis' + axis + 'OnOffCheckbox';
   var r = getVariablesForVerbTable();
   var moodOrTense = r[axis.toLowerCase() + 'AxisTitle'];
   moodOrTense = moodOrTense.substr(0, moodOrTense.length - 1);

@@ -31,11 +31,17 @@
 }
 
 .passageContentHolder {
-  padding: $page-padding $page-padding 60px;
+  padding: $page-padding $page-padding 0;
   outline: 0;
   overflow-y: auto;
   overflow-x: hidden;
   @include scrollableContainerHeight;
+
+  &:after {
+    display: block;
+    content: "";
+    height: 60px;
+  }
 }
 
 #columnHolder {

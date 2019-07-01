@@ -333,16 +333,16 @@
                             <div id="accordion-body2">
                                 <br>
                                 <search:sample_search explanation="kjv_verb_imperative_explanation" option1="KJV" option1type="version" option2="Col 3" option2type="reference"
-                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    option3="<span class='glyphicon glyphicon-plus'></span><span> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Col.3&options=HVGUNC', 'verb, imperative mood', ' Words with a red underlines are verbs in imperative mood.')" />
                                 <search:sample_search explanation="kjv_verb_main_supporting_explanation" option1="KJV" option1type="version" option2="Col 1" option2type="reference"
-                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    option3="<span class='glyphicon glyphicon-plus'></span><span> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Col.1&options=HVGUNC', 'verb, main vs supporting verbs', 'Words with a green underlines are usually main verbs in either indicative or imperative moods.  Words with a purple underline are support verbs in either subjunctive, optative, infinitive or particple moods.  Move your mouse over the word to see the verb grammar at the bottom of the screen.')" />
                                 <search:sample_search explanation="kjv_verb_number_and_gender_explanation" option1="KJV" option1type="version" option2="Mat 1" option2type="reference"
-                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    option3="<span class='glyphicon glyphicon-plus'></span><span> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Mat.1&options=HVGUNC', 'gender and number', 'Word with blue color font are masculine, red are feminine and black are neuter.  Words with bold font are plural.  Mouse over a word to see the grammar of the word.')" />
                                 <search:sample_search explanation="esv_word_frequency_explanation" option1="ESV" option1type="version" option2="1Jo 1" option2type="reference"
-                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Quick tryout links<span style='background-color:white'>&nbsp;<span class='glyphicon glyphicon-plus'>   </span></span><span class='glyphicon glyphicon-stats'></span></span>"
+                                    option3="<span class='glyphicon glyphicon-plus'></span><span> Quick tryout links<span>&nbsp;<span class='glyphicon glyphicon-plus'>   </span></span><span class='glyphicon glyphicon-stats'></span></span>"
                                     option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=ESV|reference=1Jo.1&options=HVGUN', 'function:openStats', 'Mouse over the words on the analysis tool (on the right panel) to see where the words are located.  Select book next to Bible text field in the right panel to see the word frequency for the entire book.')" />
                             </div>
@@ -352,16 +352,16 @@
                             <div id="accordion-body3">
                                 <br>
                                 <search:sample_search explanation="kjv_verb_color_explanation" option1="KJV" option1type="version" option2="Eph 1" option2type="reference"
-                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    option3="<span class='glyphicon glyphicon-plus'></span><span> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Eph.1&options=HVGUNC', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
                                 <search:sample_search explanation="sblg_verb_color_explanation" option1="SBLG" option1type="version" option2="Rom 12" option2type="reference"
-                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    option3="<span class='glyphicon glyphicon-plus'></span><span> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=SBLG|reference=Rom.12&options=CEMVALHUN', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
                                 <search:sample_search explanation="cun_verb_color_explanation" option1="CUn" option1type="version" option2="Col 1" option2type="reference"
-                                    option3="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
+                                    option3="<span class='glyphicon glyphicon-plus'></span><span> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>" option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=CUn|reference=Col.1&options=HVGUNC', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
                                 <search:sample_search explanation="interlinear_verb_color_explanation" option1="SBLG" option1type="version" option2="KJV" option2type="version" option3="CUN" option3type="version" option4="Eph 5" option4type="reference"
-                                    option5="<span style='color:black' class='glyphicon glyphicon-plus'></span><span style='color:black;background-color:lightgrey'> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>"
+                                    option5="<span class='glyphicon glyphicon-plus'></span><span> Color code grammar <span class='glyphicon glyphicon-ok'></span></span>"
                                     option5type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED', 'verb, gender and number', 'Look at the color table on the lower right of the screen to see the definition of the different underlines.')" />
                                 <div id='colorCodeTableDiv'></div>

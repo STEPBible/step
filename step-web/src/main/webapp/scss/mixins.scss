@@ -118,7 +118,6 @@
     background: $textRow !important;
   }
 
-
   &.select-greek, &.select-exactForm-greek {
     cursor: hand !important;
     background: $greekRow !important;
@@ -137,6 +136,15 @@
   &.select-hebrewMeanings {
     cursor: hand !important;
     background: $hebrewMeaningsRow !important;
+  }
+
+  &.select-other {
+    background: #868686;
+
+    .glyphicon {
+      font-size: 10px;
+      top: -1px;
+    }
   }
 }
 

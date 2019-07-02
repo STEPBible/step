@@ -29,17 +29,13 @@
         <c:if test="${ not empty option5 }"><span class="argSelect select-${ option5type } ${fn:contains(option5, '.') ? ' transliteration' : ''}">${ option5 }</span></c:if>
     </span>
 </a>
-    <span  class="input-group-btn">
-    </span>
 </span>
 <c:if test="${ showInterlinear eq 'true' }">
     <div class="interlinearLinks">
         <a href='?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR'><fmt:message key="hebrew_interlin" /></a>
         &amp;
-        <a href='?q=version=WHNU|reference=John.1|version=ESV&options=GHLVUN&display=INTERLINEAR'><fmt:message key="greek_interlin" /></a>
+        <a href='?q=version=THGNT|version=ESV|reference=John.1&options=HLVGUN&display=INTERLINEAR'><fmt:message key="greek_interlin" /></a>
     </div>
 </c:if>
-<br />
 <fmt:message key="${explanation}"  var="explanationText" />
 <div class="explanationText">${ step:markTransliteration(explanationText) }</div>
-<br />

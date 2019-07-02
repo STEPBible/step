@@ -11,11 +11,9 @@ body,h1 {
 h1 {
 	font-size: 16px;
 	padding: 10px;
-	color: white;
 }
 
-h1 a,h1 a:visited {
-	color: white;
+h1 a {
 	text-decoration: none;
 }
 
@@ -31,6 +29,10 @@ h3 {
 	margin: 0px;
 }
 
+a {
+	color: #17758F;
+}
+
 .copyright {
 	margin-left: 5px;
 	font-size: 11px;
@@ -42,9 +44,10 @@ h3 {
 	background-image: url('../images/step-top-left-logo.png');
 	background-repeat: no-repeat;
 	background-position: left;
-	background-color: black;
-	border-bottom: 1px solid white;
-	color: white;
+	background-size: 40px 50px;
+	background-color: #f8f8f8;
+	border-bottom: 1px solid #C8C8C8;
+	color: #5E5E5E;
 	height: 40px;
     padding-left: 40px;
 }

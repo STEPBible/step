@@ -22,14 +22,26 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
     </button>
-    <%--<button  class="btn btn-default btn-sm showBooks" type="button" title="<fmt:message key="see_books" />">--%>
-        <%--<span class="glyphicon glyphicon-book"></span></button>--%>
-    <button  class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
-        <span class="glyphicon glyphicon-save"></span></button>
+
+    <a class="showStats" title="<fmt:message key="passage_open_sidebar" />">
+        <i class="glyphicon">
+            <svg class="icon-sidebar" width="22px" height="16px" viewBox="0 0 58 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g>
+                    <path d="M0,6.00638655 C0,2.68915086 2.68113741,0 6.00212389,0 L51.9978761,0 C55.3127576,0 58,2.68354127 58,6.00638655 L58,41.9936134 C58,45.3108491 55.3188626,48 51.9978761,48 L6.00212389,48 C2.6872424,48 0,45.3164587 0,41.9936134 L0,6.00638655 Z M5,6.00638655 L5,41.9936134 C5,42.5531699 5.44680121,43 6.00212389,43 L51.9978761,43 C52.5537478,43 53,42.5531169 53,41.9936134 L53,6.00638655 C53,5.44683008 52.5531988,5 51.9978761,5 L6.00212389,5 C5.44625218,5 5,5.44688308 5,6.00638655 Z M33,5 L33,43 L37,43 L37,5 L33,5 Z"></path>
+                    <g class="icon-sidebar-lines" transform="translate(39.000000, 11.000000)">
+                        <polygon points="0.5 4 11.5 4 11.5 0 0.5 0"></polygon>
+                        <polygon points="0.5 15 11.5 15 11.5 11 0.5 11"></polygon>
+                        <polygon points="0.5 26 11.5 26 11.5 22 0.5 22"></polygon>
+                    </g>
+                </g>
+            </svg>
+        </i>
+    </a>
     <div class="navbar-collapse collapse">
         <span class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><span class="caret mini-level"></span><fmt:message
-                    key="installation_book_language"/><span class="caret top-level"></span></a> <span class="separator">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <a class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language"/>">
+                <i class="glyphicon glyphicon-globe" ></i>
+                <span><fmt:message key="installation_book_language"/></span>
             <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
                 <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step"/></a></li>
 
@@ -47,7 +59,10 @@
             </ul>
         </span>
         <span class="dropdown">
-            <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" href="javascript:void(0)"><span class="caret mini-level"></span><fmt:message key="help"/><span class="caret top-level"></span></a>
+            <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help"/>">
+                <i class="glyphicon glyphicon-question-sign"></i>
+                <span><fmt:message key="help"/></span>
+            </a>
             <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
                 <!-- # Download STEP -->
                 <%
@@ -105,4 +120,13 @@
             </ul>
         </span>
     </div>
+    <%
+        if(!appManager.isLocal()) {
+    %>
+    <a id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
+        <i class="glyphicon glyphicon-bullhorn"></i>
+    </a>
+    <%
+        }
+    %>
 </div>

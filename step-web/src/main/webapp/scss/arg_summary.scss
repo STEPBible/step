@@ -10,17 +10,13 @@
     display: inline-block;
     cursor: default !important;
     white-space: nowrap;
-    font-family: tahoma;
     font-size: 12px;
     line-height: $defaultFontSize;
     padding: 5px 3px 5px 3px;
-    margin: 0 0 0 3;
+    margin: 0 0 0 3px;
     cursor: default;
-    //    border: 1px solid #aaaaaa;
     border-radius: 1px;
     color: white;
-    //    -webkit-box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-    //    box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
     background-clip: padding-box;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -30,9 +26,23 @@
   }
 }
 
-.passageOptionsGroup, #history {
+.passageOptionsGroup,
+#history {
+  .argSummary {
     span.argSelect {
-      font-size: 14px;
-      @include muted-args();
+      @include muted-args(transparent);
+
+      font-size: 15px;
+      line-height: 18px;
+      padding: 0 8px;
+      margin: 6px 0;
+      border-left: 1px solid $text-color;
+      letter-spacing: .5px;
+
+      &:first-child {
+        padding-left: 0;
+        border-left: none;
+      }
     }
+  }
 }

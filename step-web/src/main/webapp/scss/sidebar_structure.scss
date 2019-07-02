@@ -4,9 +4,12 @@
 //default visibility when sidebar is not active
 #sidebar {
   display: none;
-  @include padding-from-header;
-  > div {
-    @include divider-left;
+  background-color: $header-background-color;
+  padding-top: 0;
+  border-top: $border-width solid $border-color;
+
+  .tab-content {
+    padding: $page-padding;
   }
 }
 

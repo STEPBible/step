@@ -30,16 +30,16 @@ var WordDisplayView = TextDisplayView.extend({
 
         toolbarContainer.find("li").hover(
             function(){
-                $(this).find(">a").each(function() {
-                    var el = $(this);
-                    el.append("<span class='untick' href='javascript:void(0)'>&nbsp;&nbsp;" + (el.find(".active").length > 0 ?  __s.this_entry_untick : __s.this_entry_tick) + "</span> ");
-                });
+                var $this = $(this);
+                var includeWord = $("<span class='untick' href='javascript:void(0)'>&nbsp;&nbsp;" + (el.find(".active").length > 0 ?  __s.this_entry_untick : __s.this_entry_tick) + "</span> ");
+                $this.append(includeWord);
+
                 var untickAll = $("<a class='thisOnly' href='javascript:void(0)'>" + __s.this_entry_only + "</a>");
                 untickAll.on('click', function() {
                     toolbarContainer.find(".active").removeClass("active");
                     $(this).closest("li").find("a:first").trigger("click");
                 });
-                $(this).append(untickAll);
+                $this.append(untickAll);
             },
             function() {
                 $(this).find(".thisOnly, .untick").remove();

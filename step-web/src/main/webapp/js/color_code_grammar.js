@@ -91,6 +91,7 @@ var displayQuickTryoutAccordion2 = false;
 var displayQuickTryoutAccordion3 = false;
 var axisUserSelectedToSort = '';
 var userProvidedSortOrder = [];
+var updatedNounCSS = false;
 
 var robinsonCodeOfTense = {
   p: 'present',
@@ -219,20 +220,24 @@ var defaultColorCodeGrammarSettingsVerbMoodTense = {
 };
 
 var defaultColorCodeGrammarSettingsVerbMoodTense2 = {
-  enableGreekNounColor: false,
-  inputColorVerbItem0: '#ff0000',
-  inputColorVerbItem1: '#ff8800',
-  inputColorVerbItem2: '#ffff00',
-  inputColorVerbItem3: '#00ff00',
-  inputColorVerbItem4: '#0000ff',
-  inputColorVerbItem5: '#ff00ff',
-  selectedHighlightVerbItem0: 'Wave',
+  enableGreekNounColor: true,
+  enableGreekVerbColor: true,
+  inputColorVerbItem0: '#000000',
+  inputColorVerbItem1: '#ff0000',
+  inputColorVerbItem2: '#ff8800',
+  inputColorVerbItem3: '#0000ff',
+  inputColorVerbItem4: '#ff00ff',
+  selectedHighlightVerbItem0: 'Arrow',
   selectedHighlightVerbItem1: 'Dash',
   selectedHighlightVerbItem2: '2 lines',
-  selectedHighlightVerbItem3: '2 lines',
-  selectedHighlightVerbItem4: 'Underline',
-  selectedHighlightVerbItem5: 'Dots',
-  orderOfTense: ['p', 'i', 'r', 'l', 'a', 'f']
+  selectedHighlightVerbItem3: 'Underline',
+  selectedHighlightVerbItem4: 'Dots',
+  orderOfTense: ['p', 'i', 'r', 'l', 'a', 'f'],
+  tenseToCombineWithPrevious: [false, false, false, true, false, false],
+  orderOfMood: ['i', 'm', 's', 'o', 'n', 'p'],
+  moodToCombineWithPrevious: [false, false, false, true, false, false],
+  inputCheckboxPassiveBackgroundColorCheckValue: true,
+  inputCheckboxMiddleBackgroundColorCheckValue: true
 };
 
 var defaultColorCodeGrammarSettings = JSON.parse(JSON.stringify(defaultColorCodeGrammarSettingsVerbMoodTense)); // Quick way to make a copy of the object
@@ -637,11 +642,21 @@ function refreshForAllInstancesOfTense() {
     updateCssForNumber('singular', currentColorCodeSettings.selectedHighlightSingular);
     updateCssForNumber('plural', currentColorCodeSettings.selectedHighlightPlural);
   } else {
-    $('.mas').css('color', '#000000');
-    $('.fem').css('color', '#000000');
-    $('.neut').css('color', '#000000');
-    updateCssForNumber('singular', 'normal');
-    updateCssForNumber('plural', 'normal');
+    if (updatedNounCSS) {
+      $('.mas').css('color', '');
+      $('.fem').css('color', '');
+      $('.neut').css('color', '');
+      $('.sing').css('font-weight', '');
+      $('.plur').css('font-weight', '');
+      $('.sing').css('font-style', '');
+      $('.plur').css('font-style', '');
+      updatedNounCSS = false;
+    }
+    $('.mas').removeClass('mas');
+    $('.fem').removeClass('fem');
+    $('.neut').removeClass('neut');
+    $('.sing').removeClass('sing');
+    $('.plur').removeClass('plur');
   }
   $('.primaryLightBg').css('text-shadow', 'none'); // Need to set it in the program, if not the browser will prioritize the CSS updated in this Javascript.  
 //  var b = performance.now();
@@ -811,6 +826,7 @@ function userUpdateNounColor(gender, color) {
   $(cssName).css({
     'color': color
   });
+  updatedNounCSS = true;
 }
 
 function userUpdateNumber(type, fontHighlight) {
@@ -836,6 +852,7 @@ function updateCssForNumber(type, fontHighlight) {
     $(cssName).css('font-style', 'italic');
     $(cssName).css('font-weight', 'normal');
   }
+  updatedNounCSS = true;
 }
 
 function userUpdateAnimation(itemNumber) {
@@ -1945,12 +1962,12 @@ function openColorConfig() {
 function initOpenColorCodeModal() {
   var s = $('<select id="openColorConfigDropdown"/>');
   s.append($('<option/>').html('Verb, Gender and Number'));
+  s.append($('<option/>').html('Verb, Gender and Number, 2nd version'));
   s.append($('<option/>').html('Verb only (tense-mood)'));
   s.append($('<option/>').html('Verb with Middle and Passive Voices'));
   s.append($('<option/>').html('Verb, imperative mood'));
   s.append($('<option/>').html('Verb, main vs supporting verbs'));
   s.append($('<option/>').html('Gender and Number'));
-  s.append($('<option/>').html('Verb only (mood-tense), 2nd version'));
   var tmp = localStorage.getItem('colorCode-UserColorConfigNames');
   if (tmp) {
     var UserColorConfigNames = JSON.parse(tmp);
@@ -2075,7 +2092,7 @@ function openUserSelectedConfig(name) {
   else if (selectedConfig === 'verb with middle and passive voices') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsVerbWithMiddlePassive);
   else if (selectedConfig === 'verb, imperative mood') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsImperativesOnly);
   else if (selectedConfig === 'verb, main vs supporting verbs') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsMainVsSupporingVerbs);
-  else if (selectedConfig === 'verb only (mood-tense), 2nd version') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsVerbMoodTense2);
+  else if (selectedConfig === 'verb, gender and number, 2nd version') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsVerbMoodTense2);
   else {
     var found = false;
     var tmp = localStorage.getItem('colorCode-UserColorConfigNames');

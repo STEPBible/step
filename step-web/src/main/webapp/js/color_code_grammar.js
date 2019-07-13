@@ -91,7 +91,8 @@ var displayQuickTryoutAccordion2 = false;
 var displayQuickTryoutAccordion3 = false;
 var axisUserSelectedToSort = '';
 var userProvidedSortOrder = [];
-var updatedNounCSS = false;
+var updatedGenderNumberCSS = false;
+var userTurnGenderNumberFromOffToOn = false;
 
 var robinsonCodeOfTense = {
   p: 'present',
@@ -165,7 +166,7 @@ var canvasUnderlineName = {
 
 var defaultColorCodeGrammarSettingsVerbMoodTense = {
   enableGreekVerbColor: true,
-  enableGreekNounColor: true,
+  enableGenderNumberColor: true,
   inputPassiveBackgroundColor: '#ffd6b8',
   inputPassiveUlColor1: '#000000',
   inputPassiveUlColor2: '#ffffff',
@@ -220,8 +221,8 @@ var defaultColorCodeGrammarSettingsVerbMoodTense = {
 };
 
 var defaultColorCodeGrammarSettingsVerbMoodTense2 = {
-  enableGreekNounColor: true,
   enableGreekVerbColor: true,
+  enableGenderNumberColor: true,
   inputColorVerbItem0: '#000000',
   inputColorVerbItem1: '#ff0000',
   inputColorVerbItem2: '#ff8800',
@@ -255,12 +256,12 @@ var defaultColorCodeGrammarSettingsVerbWithMiddlePassive = {
 };
 
 var defaultColorCodeGrammarSettingsVerbTenseMood = {
-  enableGreekNounColor: false,
+  enableGenderNumberColor: false,
   xAxisForMood: false
 };
 
 var defaultColorCodeGrammarSettingsMainVsSupporingVerbs = {
-  enableGreekNounColor: false,
+  enableGenderNumberColor: false,
   inputColorVerbItem0: '#008000',
   inputColorVerbItem1: '#ed12ed',
   inputColorVerbItem2: '#ed12ed',
@@ -277,11 +278,11 @@ var defaultColorCodeGrammarSettingsMainVsSupporingVerbs = {
 
 var defaultColorCodeGrammarSettingsNounOnly = {
   enableGreekVerbColor: false,
-  enableGreekNounColor: true
+  enableGenderNumberColor: true
 };
 
 var defaultColorCodeGrammarSettingsImperativesOnly = {
-  enableGreekNounColor: false,
+  enableGenderNumberColor: false,
   granularControlOfMoods: true,
   moodsOnOff: [false, false, false, true, false, false],
   selectedHighlightVerbItem0: 'Underline',
@@ -635,14 +636,22 @@ function refreshForAllInstancesOfTense() {
     }
   }
 
-  if (currentColorCodeSettings.enableGreekNounColor) {
+  if (currentColorCodeSettings.enableGenderNumberColor) {
+    if (userTurnGenderNumberFromOffToOn) {
+      userTurnGenderNumberFromOffToOn = false;
+      $('.old_mas').removeClass('old_mas').addClass('mas');
+      $('.old_fem').removeClass('old_fem').addClass('fem');
+      $('.old_neut').removeClass('old_neut').addClass('neut');
+      $('.old_sing').removeClass('old_sing').addClass('sing');
+      $('.old_plur').removeClass('old_plur').addClass('plur');
+    }
     $('.mas').css('color', currentColorCodeSettings.inputColorMasculine);
     $('.fem').css('color', currentColorCodeSettings.inputColorFeminine);
     $('.neut').css('color', currentColorCodeSettings.inputColorNeuter);
     updateCssForNumber('singular', currentColorCodeSettings.selectedHighlightSingular);
     updateCssForNumber('plural', currentColorCodeSettings.selectedHighlightPlural);
   } else {
-    if (updatedNounCSS) {
+    if (updatedGenderNumberCSS) {
       $('.mas').css('color', '');
       $('.fem').css('color', '');
       $('.neut').css('color', '');
@@ -650,13 +659,13 @@ function refreshForAllInstancesOfTense() {
       $('.plur').css('font-weight', '');
       $('.sing').css('font-style', '');
       $('.plur').css('font-style', '');
-      updatedNounCSS = false;
+      updatedGenderNumberCSS = false;
     }
-    $('.mas').removeClass('mas');
-    $('.fem').removeClass('fem');
-    $('.neut').removeClass('neut');
-    $('.sing').removeClass('sing');
-    $('.plur').removeClass('plur');
+    $('.mas').removeClass('mas').addClass('old_mas');
+    $('.fem').removeClass('fem').addClass('old_fem');
+    $('.neut').removeClass('neut').addClass('old_neut');
+    $('.sing').removeClass('sing').addClass('old_sing');
+    $('.plur').removeClass('plur').addClass('old_plur');
   }
   $('.primaryLightBg').css('text-shadow', 'none'); // Need to set it in the program, if not the browser will prioritize the CSS updated in this Javascript.  
 //  var b = performance.now();
@@ -826,7 +835,7 @@ function userUpdateNounColor(gender, color) {
   $(cssName).css({
     'color': color
   });
-  updatedNounCSS = true;
+  updatedGenderNumberCSS = true;
 }
 
 function userUpdateNumber(type, fontHighlight) {
@@ -852,7 +861,7 @@ function updateCssForNumber(type, fontHighlight) {
     $(cssName).css('font-style', 'italic');
     $(cssName).css('font-weight', 'normal');
   }
-  updatedNounCSS = true;
+  updatedGenderNumberCSS = true;
 }
 
 function userUpdateAnimation(itemNumber) {
@@ -1078,9 +1087,8 @@ function updateVerbsBackground(voice) {
 }
 
 function updateHtmlForYAxis() {
-  r = getVariablesForVerbTable();
+  var r = getVariablesForVerbTable();
   for (var i = 0; i < r.nameOfYAxisItems.length; i += 1) {
-    var item = r.nameOfYAxisItems[i];
     var currentULForItem = currentColorCodeSettings['selectedHighlightVerbItem' + i];
     $('#selectedHighlightVerbItem' + i + ' option')
       .filter(function() {
@@ -1339,7 +1347,7 @@ function enableOrDisableVerbAndNounButtons() {
   var checkedValue = currentColorCodeSettings.enableGreekVerbColor;
   $('#verbonoffswitch').prop('checked', checkedValue);
   updateVerbInputFields(checkedValue);
-  checkedValue = currentColorCodeSettings.enableGreekNounColor;
+  checkedValue = currentColorCodeSettings.enableGenderNumberColor;
   $('#nounonoffswitch').prop('checked', checkedValue);
   updateNounInputFields(checkedValue);
 }
@@ -1456,12 +1464,14 @@ function userToggleColorGrammar(grammarFunction) {
   var checkedValue;
   if (document.getElementById(grammarFunction + 'onoffswitch').checked) checkedValue = true;
   else checkedValue = false;
-  updateLocalStorage('enableGreek' + upCaseFirst(grammarFunction) + 'Color', checkedValue);
   if (grammarFunction === 'verb') {
+    updateLocalStorage('enableGreekVerbColor', checkedValue);
     updateVerbInputFields(checkedValue);
   }
-  if (grammarFunction === 'noun') {
+  else if (grammarFunction === 'noun') {
+    updateLocalStorage('enableGenderNumberColor', checkedValue);
     updateNounInputFields(checkedValue);
+    userTurnGenderNumberFromOffToOn = checkedValue;
   }
   refreshForAllInstancesOfTense();
   if ((grammarFunction === 'verb') && (checkedValue) && (handleOfRequestedAnimation === -1)) goAnimate();
@@ -1540,10 +1550,12 @@ function updateNounInputFields(inputOnOff) {
 
 function cancelColorChanges() {
   if (typeof(Storage) !== 'undefined') {
+    var previousEnableGenderNumberColor = currentColorCodeSettings.enableGenderNumberColor;
     var tmp = localStorage.getItem('colorCode-PreviousSettings');
     if (tmp) currentColorCodeSettings = JSON.parse(tmp);
     else currentColorCodeSettings = JSON.parse(JSON.stringify(defaultColorCodeGrammarSettings));
     localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
+    if ((!previousEnableGenderNumberColor) && (currentColorCodeSettings.enableGenderNumberColor)) userTurnGenderNumberFromOffToOn = true;
     alert('Your color settings has been reset to your previous setting.');
     updateAllSettingsAndInputFields();
   }
@@ -1551,8 +1563,10 @@ function cancelColorChanges() {
 
 function resetColorConfig() {
   if (typeof(Storage) !== 'undefined') {
+    var previousEnableGenderNumberColor = currentColorCodeSettings.enableGenderNumberColor;
     currentColorCodeSettings = JSON.parse(JSON.stringify(defaultColorCodeGrammarSettings));
     localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
+    if ((!previousEnableGenderNumberColor) && (currentColorCodeSettings.enableGenderNumberColor)) userTurnGenderNumberFromOffToOn = true;
     alert('Your color settings has been reset to default setting.');
     updateAllSettingsAndInputFields();
   }
@@ -2086,6 +2100,8 @@ function openUserSelectedConfig(name) {
   var selectedConfig;
   if (name != null) selectedConfig = name;
   else selectedConfig = document.getElementById('openColorConfigDropdown').value.toLowerCase();
+  var previousEnableGenderNumberColor = true;
+  if (currentColorCodeSettings != undefined) previousEnableGenderNumberColor = currentColorCodeSettings.enableGenderNumberColor;
   if (selectedConfig === 'verb, gender and number') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsVerbMoodTense);
   else if (selectedConfig === 'verb only (tense-mood)') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsVerbTenseMood);
   else if (selectedConfig === 'gender and number') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsNounOnly);
@@ -2114,6 +2130,7 @@ function openUserSelectedConfig(name) {
     }
   }
   localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
+  if ((!previousEnableGenderNumberColor) && (currentColorCodeSettings.enableGenderNumberColor)) userTurnGenderNumberFromOffToOn = true;
   if (name == null) { 
     $('#openColorModal .close').click();
     var element = document.getElementById('openColorModal');

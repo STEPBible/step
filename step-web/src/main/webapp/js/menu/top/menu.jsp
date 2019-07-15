@@ -103,7 +103,7 @@
                 %>
                 <li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback"/></a></li>
                 <!-- # Privacy policy -->
-                <li><a href="http://www.tyndale.cam.ac.uk/index.php?page=cookie-policy" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
+                <li><a href="https://academic.tyndalehouse.com/privacy-policy" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
                 <% } %>
                 <!-- # Copyright & licences -->
                 <li><a target="_new" href="https://stepweb.atlassian.net/wiki/x/C4C_/" name="COPYRIGHT"><fmt:message key="copyright_info_link"/></a></li>

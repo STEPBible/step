@@ -1,23 +1,24 @@
 @import 'template_variables';
 
+[strong] {
+  color: $strong-color;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 //highlights in text
 .emphasisePassagePhrase {
   background-color: #F3E5B4;
 }
 
 .relatedWordEmphasis {
-  text-decoration: underline;
 }
 
 .relatedWordEmphasisHover {
-  text-decoration: underline;
-  background-color: rgba($quickLexiconColour, 0.2);
+  background-color: rgba($highlight-color, 0.2);
   color: $quickLexiconRelatedFontColour;
-}
-span[strong]:hover {
-  cursor: pointer;
-  background-color: $quickLexiconColour;
-  color: $quickLexiconFontColour;
 }
 
 .lexiconFocus {
@@ -26,13 +27,13 @@ span[strong]:hover {
 
 .lexiconRelatedFocus {
   background-color: $lexiconFocusRelatedColour;
-  text-decoration: underline;
 }
 
 .primaryLightBg {
-  background-color: $quickLexiconColour !important;
-  color: $quickLexiconFontColour !important;
+  background-color: $highlight-color !important;
+  color: $quickLexiconFontColour;
   text-shadow: none !important;
+
   .segC0, .segC1 {
     color: $quickLexiconFontColour;
   }

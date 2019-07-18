@@ -47,7 +47,7 @@ var QuickLexicon = Backbone.View.extend({
         '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <%= __s.more_info_on_click_of_word %></span><% } %>' +
         '</div>' +
         '<% if (brief_morph_info[data_index] != null) { %> ' +
-		'&nbsp;&nbsp;<span><%= brief_morph_info[data_index] %></span> ' + 
+		'&nbsp;&nbsp;<span><%= brief_morph_info[data_index] %></span> ' +
 		'<% } %>' +
         '<% }); %>' +
         '<%= view.templatedFooter %>',
@@ -68,7 +68,7 @@ var QuickLexicon = Backbone.View.extend({
 
     loadDefinition: function (time) {
         var self = this;
-        $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph], function (data) {
+        return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);
             $("#quickLexicon").remove();
@@ -78,14 +78,12 @@ var QuickLexicon = Backbone.View.extend({
 					var item = data.morphInfos[counter];
 					if (item) morph_information[counter] = self._createBriefMorphInfo(item);
 				}
-                var lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos, 
+                var lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos,
 					brief_morph_info: morph_information,
-					fontClass: step.util.ui.getFontForStrong(self.strong), 
+					fontClass: step.util.ui.getFontForStrong(self.strong),
 					view: self }));
                 if (self.position > 0.66) {
-                    lexicon.css("padding-top", "2px");
-                    lexicon.css("height", "1px");
-                    lexicon.css("top", "0");
+                    lexicon.css({"top": "0", "bottom": "auto"});
                 }
                 self.displayQuickDef(lexicon);
             }
@@ -110,8 +108,10 @@ var QuickLexicon = Backbone.View.extend({
             this.loadDefinition(time);
         }
         // added for colour code grammar
-        if ((numOfAnimationsAlreadyPerformedOnSamePage !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== null)) 
+        if ((numOfAnimationsAlreadyPerformedOnSamePage !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== null))
             numOfAnimationsAlreadyPerformedOnSamePage = 0;
+
+        return this;
     },
     displayQuickDef: function(lexicon) {
         var self = this;

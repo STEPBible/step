@@ -6,20 +6,28 @@
     box-shadow: none;
     -webkit-box-shadow: none;
   }
+
   .list-group-item {
+    background-color: transparent;
     border: none;
-    padding: 1px 0px;
+    padding: 1px 0;
     line-height: 18pt;
     a {
-      padding: 0px;
+      padding: 0;
+      margin-right: 5px;
     }
   }
+
+  .openBookmark {
+    .glyphicon {
+      top: 0;
+    }
+  }
+
   .glyphicon {
-    font-size: 12pt;
-    line-height: 12pt;
-    vertical-align: text-bottom;
-    padding: 0px;
-    margin: 0 5px 0 0;
+    font-size: 1em;
+    line-height: 1em;
+    padding: 0;
 
     &:hover {
       color: $headingColour;
@@ -31,11 +39,13 @@
     }
 
     &.glyphicon-pushpin {
+      transition: transform 100ms;
       &:hover {
         @include rotate(-45deg);
       }
     }
     &.glyphicon-pushpin-pinned {
+      transition: transform 100ms;
       &:before {
         content: "\e146";
       }
@@ -46,14 +56,7 @@
     }
   }
   
-  h3 {
-    font-size: 13px;
-    margin: 0 0 5 0;
-    padding: 5 0 0 0;
-  }
-  
   .historyItem .argSummary {
-    margin-left: 0;
     display: inline;
   }
 }

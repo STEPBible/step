@@ -22,8 +22,9 @@
 }
 
 .form-control.select2-container .select2-choices {
-    border: 0 !important;
+    border: 1px solid #C8C8C8;
     border-radius: 3px;
+    background-image: none;
 }
 
 .control-group.warning .select2-container .select2-choice,
@@ -34,6 +35,7 @@
 .control-group.warning .select2-dropdown-open.select2-drop-above .select2-choices,
 .control-group.warning .select2-container-multi.select2-container-active .select2-choices {
     border: 1px solid #C09853 !important;
+    box-shadow: none;
 }
 
 .control-group.warning .select2-container .select2-choice div {

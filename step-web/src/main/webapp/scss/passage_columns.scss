@@ -1,39 +1,71 @@
 @import 'template_variables';
 @import 'mixins';
-@import 'passage_options';
 @import 'arg_summary';
+@import 'passage_options';
 @import 'passage_display';
 @import 'search_display';
 @import 'cross_references';
 @import 'help_examples';
- 
+
 .mainPanel {
   min-height: 100%;
   height: 100%;
   margin: 0 auto;
 }
 
+.notesPane {
+  padding-right: $page-padding;
+  margin-right: $page-padding;
+  max-width: 20%;
+  font-size: 85%;
+
+  a {
+    color: #333;
+    font-weight: bold;
+  }
+}
+
+.column .notesPane {
+  float: left;
+  border-right: 1px solid #EAEAEA;
+}
+
+.passageContentHolder {
+  padding: $page-padding $page-padding 0;
+  outline: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  @include scrollableContainerHeight;
+
+  &:after {
+    display: block;
+    content: "";
+    height: 60px;
+  }
+}
+
 #columnHolder {
   overflow-y: hidden;
-  @include padding-from-header;
+  padding: 0;
 
   // divider between passage options and passage
   hr {
     width: 100%;
     clear: both;
-    border: 0; 
+    border: 0;
     border-bottom: 1px solid #ddd;
     padding-bottom: $topSectionPadding;
     margin: 0px 20px $topSectionMarginBottom 5px;
   }
   .column {
     height: 100%;
-    padding: 0px 2px;
+    padding: 0;
 
     .passageContent {
       clear: left;
       height: 100%;
       padding-bottom: $topSectionHeight;
+
       &> span {
         @include scrollableContainerHeight;
         padding-bottom: $topSectionHeight;
@@ -42,39 +74,30 @@
       }
     }
 
-    .passageContentHolder {
-      outline: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      @include scrollableContainerHeight;
-    }
-
     .passageText .popover {
       max-height: 60%;
       overflow-y: auto;
     }
 
     .passageContainer {
-      border: $activeBorderWidth solid lightgrey;
-      padding: 5px;
-      border-radius: 3;
+      border: $border-width solid $border-color;
       height: 100%;
-      -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
-      
+
       &.active {
         border-color: $activeColor;
       }
 
       .activeMarker {
         position: absolute;
-        top: $activeBorderWidth;
+        top: $border-width;
         left: 50%;
-        border: 4px solid $tyndaleBurgundy;
+        z-index: 10;
+        border: 7px solid $activeColor;
         border-right-color: transparent;
         border-bottom: 0 dotted;
         border-left-color: transparent;
       }
+
       .linkPanel {
           margin-left: -10px;
           top: 50%;
@@ -87,12 +110,24 @@
           }
       }
       .copyrightInfo {
+        background-color: #fff;
         position: absolute;
-        bottom: 5;
         font-size: 11px;
         color: darkgrey;
-        @media screen and (max-height: 300px) {
-          display: none;
+        bottom: $border-width;
+        left: $border-width + $page-padding;
+        right: $border-width + $page-padding;
+        padding: 4px 0 8px;
+
+        &:before {
+          content: "";
+          position: absolute;
+          top: -25px;
+          left: 0;
+          right: 0;
+          height: 25px;
+          background-image: linear-gradient(-180deg, rgba(255,255,255,0.25) 0%, #FFFFFF 100%);
+          pointer-events: none;
         }
       }
     }

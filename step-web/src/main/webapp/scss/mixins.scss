@@ -1,5 +1,13 @@
 @import 'template_variables';
 
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
 @mixin canonicalHeading {
   font-style: italic;
   font-weight: normal;
@@ -36,8 +44,6 @@
   @media screen and (min-height: 700px) {
     height: 98%;
   }
-
-
 }
 
 // Vertical height creates a class called .className where maxHeight is set to 400, 600, 900 depending on screen size
@@ -89,95 +95,78 @@
 @mixin bold-args($start, $end) {
   &.select-meanings {
     cursor: hand !important;
-    @include gradient($meaningsRow, $start, $end, #4B3D0D);
+    background: $meaningsRow !important;
   }
 
   &.select-version {
     cursor: hand !important;
-    @include gradient($bibleRow, $start, $end, #450914);
+    background: $bibleRow !important;
   }
 
   &.select-reference, &.select-relatedrefs {
     cursor: hand !important;
-    @include gradient($referenceRow, $start, $end, #20050B);
+    background: $referenceRow !important;
   }
 
   &.select-subject, &.select-topicref {
     cursor: hand !important;
-    @include gradient($subjectRow, $start, $end, #1E0A42);
+    background: $subjectRow !important;
   }
 
   &.select-text, &.select-syntax {
     cursor: hand !important;
-    @include gradient($textRow, $start, $end, #11051D);
+    background: $textRow !important;
   }
-
 
   &.select-greek, &.select-exactForm-greek {
     cursor: hand !important;
-    @include gradient($greekRow, $start, $end, #06241C);
+    background: $greekRow !important;
   }
 
   &.select-greekMeanings {
     cursor: hand !important;
-    @include gradient($greekMeaningsRow, $start, $end, #0A4232);
+    background: $greekMeaningsRow !important;
   }
 
   &.select-hebrew, &.select-exactForm-hebrew {
     cursor: hand !important;
-    @include gradient($hebrewRow, $start, $end, #05081D);
+    background: $hebrewRow !important;
   }
 
   &.select-hebrewMeanings {
     cursor: hand !important;
-    @include gradient($hebrewMeaningsRow, $start, $end, #0A1242);
+    background: $hebrewMeaningsRow !important;
+  }
+
+  &.select-other {
+    background: #868686;
+
+    .glyphicon {
+      font-size: 10px;
+      top: -1px;
+    }
   }
 }
 
-@mixin muted-args {
+@mixin muted-args($bg-color: #fff) {
   background-image: none !important;
-  &.select-version {
-    background-color: #ffffff !important;
-    color: #333 !important;
-    border: none;
-    font-weight: bold;
-  }
-  &.select-reference, &.select-relatedrefs {
-    background-color: #ffffff !important;
-    border: none;
-    font-weight: bold;
-    color: #333 !important;
-  }
 
-  &.select-hebrewMeanings, &.select-hebrew, &.select-exactForm-hebrew {
-    background-color: #ffffff !important;
-    color: #333 !important;
-    border: none;
-    font-weight: bold;
-  }
-
-  &.select-greekMeanings, &.select-greek, &.select-exactForm-greek {
-    background-color: #ffffff !important;
-    color: #333 !important;
-    border: none;
-    font-weight: bold;
-  }
-  &.select-subject, &.select-topicref {
-    color: #333 !important;
-    background-color: #ffffff !important;
-    border: none;
-    font-weight: bold;
-  }
-  &.select-text, &.select-syntax {
-    color: #333 !important;
-    background-color: #ffffff !important;
-    border: none;
-    font-weight: bold;
-  }
+  &.select-version,
+  &.select-reference,
+  &.select-relatedrefs,
+  &.select-hebrewMeanings,
+  &.select-hebrew,
+  &.select-exactForm-hebrew,
+  &.select-greekMeanings,
+  &.select-greek,
+  &.select-exactForm-greek,
+  &.select-subject,
+  &.select-topicref,
+  &.select-text,
+  &.select-syntax,
   &.select-meanings {
-    background-color: #ffffff !important;
+    background-color: $bg-color !important;
     color: #333 !important;
-    border: none;
     font-weight: bold;
   }
 }

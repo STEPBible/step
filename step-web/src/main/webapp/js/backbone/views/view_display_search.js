@@ -119,11 +119,11 @@ var SearchDisplayView = DisplayView.extend({
         if (step.util.isBlank(reference)) {
             reference = __s.whole_bible_range;
             message = sprintf(__s.search_no_search_results_found_in_version_reference_master_restriction,
-                    "<em>" + versions.join(", ") + "</em>", "<em>" + versions[0] + "</em>");
+                    "<b>" + versions.join(", ") + "</b>", "<b>" + versions[0] + "</b>");
         } else {
             message = sprintf(__s.search_no_search_results_found_in_version_reference,
-                    "<em>" + reference + "</em>",
-                    "<em>" + versions.join(", ") + "</em>");
+                    "<b>" + reference + "</b>",
+                    "<b>" + versions.join(", ") + "</b>");
         }
 
         errorMessage.append(message).addClass("notApplicable");

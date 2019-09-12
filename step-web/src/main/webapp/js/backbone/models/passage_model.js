@@ -1,11 +1,20 @@
 var PassageModel = Backbone.Model.extend({
     defaults: function () {
-        return {
-            passageId: 0,
-            pageNumber: 1,
-            options: "NHVUG",
-            interlinearMode: ""
-        }
+        if (step.util.problematicChromeVersion()) 
+            return {
+                passageId: 0,
+                pageNumber: 1,
+                options: "NHVUG",
+                isVerseVocab: false,
+                interlinearMode: ""
+            }
+        else
+            return {
+                passageId: 0,
+                pageNumber: 1,
+                options: "NHVUG",
+                interlinearMode: ""
+            }
     }
 });
 

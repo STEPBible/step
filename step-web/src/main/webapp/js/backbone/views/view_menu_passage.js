@@ -398,18 +398,14 @@ var PassageMenuView = Backbone.View.extend({
             this.model.save({ isVerseVocab: true });
             currentVerseVocabSetting = true;
         }
-        if (step.util.problematicChromeVersion() && currentVerseVocabSetting) {
-            alert ('You are using a version of Google Chrome browser that might be incompatible with the Verse Vocabulary function.');
-        }
+        if (step.util.problematicChromeVersion() && currentVerseVocabSetting) alert ('You are using a version of Google Chrome browser that might be incompatible with the Verse Vocabulary function.  This is caused by a known bug in Chrome.  STEP Bible will look for a Chrome resolution on this.  If you need the Verse Vocabulary function, please try an alternative web browsers.');
         dropdown.append($(_.template(this.verseVocab)({ isVerseVocab: currentVerseVocabSetting })).click(function (e) {
             //prevent the bubbling up
             e.stopPropagation();
 
             //set the setting
             var verseVocab = !self.model.get("isVerseVocab");
-            if (step.util.problematicChromeVersion() && verseVocab) {
-                alert ('You are using a version of Google Chrome browser that might be incompatible with the Verse Vocabulary function.');
-            }
+            if (step.util.problematicChromeVersion() && verseVocab) alert ('You are using a version of Google Chrome browser that might be incompatible with the Verse Vocabulary function.  This is caused by a known bug in Chrome.  STEP Bible will look for a Chrome resolution on this.  If you need the Verse Vocabulary function, please try an alternative web browsers.');
             self.model.save({ isVerseVocab: verseVocab });
 
             //if verse vocab has been turned off, then destroy all qtips

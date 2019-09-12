@@ -2007,6 +2007,7 @@ function initSortVerbItem() {
     axisName = 'vertical'; 
     otherAxisName = 'horizontal';
   }
+  userProvidedSortOrder = [];
   var s = '<p class="col-12">The ' + sortType + ' are currently in the ' + axisName + ' axis.</p>' +
     '<button id="swapAxisBtn" class="btn btn-default btn-sm icon-not-highlighted" type="button" title="Swap" onclick="userSwapAxis()">' +
     '<p class="col-10">Swap the ' + sortType + ' from the ' + axisName + ' to the ' + otherAxisName + ' axis.</p>' +
@@ -2061,35 +2062,38 @@ function saveSortOrder() {
   var currentItem;
   var orderOfUserProvidedItems = [], itemsToCombineWithPrevious = [false, false, false, false, false, false];
   var j = 0;
-  for (i = 0; i < userProvidedSortOrder.length; i ++) {
-    var verbItem = userProvidedSortOrder[i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n    
-    while (verbItem.length > 0) {
-      indexOfLineBreak = verbItem.indexOf('\n');
-      if (indexOfLineBreak == -1) {
-        currentItem = verbItem;
-        verbItem = '';
+  if (userProvidedSortOrder.length > 0) {
+    for (i = 0; i < userProvidedSortOrder.length; i ++) {
+      var verbItem = userProvidedSortOrder[i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n    
+      while (verbItem.length > 0) {
+        indexOfLineBreak = verbItem.indexOf('\n');
+        if (indexOfLineBreak == -1) {
+          currentItem = verbItem;
+          verbItem = '';
+        }
+        else {
+          currentItem = verbItem.substr(0, indexOfLineBreak).toLowerCase();
+          verbItem = verbItem.substr(indexOfLineBreak + 1);
+          if (verbItem.length > 0) itemsToCombineWithPrevious[j+1] = true; // Edge can add an extra \n to the end.
+        }
+        if (sortType == 'moods')
+          orderOfUserProvidedItems[j] = robinsonNameOfMood[currentItem];
+        else
+          orderOfUserProvidedItems[j] = robinsonNameOfTense[currentItem];
+        j++;
       }
-      else {
-        currentItem = verbItem.substr(0, indexOfLineBreak).toLowerCase();
-        verbItem = verbItem.substr(indexOfLineBreak + 1);
-        if (verbItem.length > 0) itemsToCombineWithPrevious[j+1] = true; // Edge can add an extra \n to the end.
-      }
-      if (sortType == 'moods')
-        orderOfUserProvidedItems[j] = robinsonNameOfMood[currentItem];
-      else
-        orderOfUserProvidedItems[j] = robinsonNameOfTense[currentItem];
-      j++;
     }
+    if (sortType == 'moods') {
+      currentColorCodeSettings.orderOfMood = orderOfUserProvidedItems;
+      currentColorCodeSettings.moodToCombineWithPrevious = itemsToCombineWithPrevious;
+    }
+    else {
+      currentColorCodeSettings.orderOfTense = orderOfUserProvidedItems;
+      currentColorCodeSettings.tenseToCombineWithPrevious = itemsToCombineWithPrevious;
+    }
+    localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
+    userProvidedSortOrder = [];
   }
-  if (sortType == 'moods') {
-    currentColorCodeSettings.orderOfMood = orderOfUserProvidedItems;
-    currentColorCodeSettings.moodToCombineWithPrevious = itemsToCombineWithPrevious;
-  }
-  else {
-    currentColorCodeSettings.orderOfTense = orderOfUserProvidedItems;
-    currentColorCodeSettings.tenseToCombineWithPrevious = itemsToCombineWithPrevious;
-  }
-  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
   element.parentNode.removeChild(element);

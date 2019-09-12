@@ -136,9 +136,14 @@
             window.tempModel.createSilently = true;
             var likelyPreviousPassage = identifyLikelyPreviousPassage(window.tempModel);
             modelZero.save(window.tempModel, { silent: true });
+            var isVerseVocabFromPreviousPassage = likelyPreviousPassage ? likelyPreviousPassage.get("isVerseVocab") : true;
+            if (isVerseVocabFromPreviousPassage && step.util.problematicChromeVersion()) {
+                console.log('Turn off the isVerseVocab because problematic Chrome browser detected/')
+                isVerseVocabFromPreviousPassage = false; // Make it false if it is a problematic Chrome version.
+            }
             modelZero.save({
                 isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true,
-                isVerseVocab: likelyPreviousPassage ? likelyPreviousPassage.get("isVerseVocab") : true,
+                isVerseVocab: isVerseVocabFromPreviousPassage,
                 results: null,
                 linked: null,
                 value: pageValue

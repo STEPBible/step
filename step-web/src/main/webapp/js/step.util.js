@@ -1284,5 +1284,19 @@ step.util = {
             doHighlight(nonJqElement, cssClasses, regex);
         }
     },
+    problematicChromeVersion: function () {
+        if ( ((window.opr && opr.addons) || window.opera || (navigator.userAgent.indexOf(' OPR/') >= 0)) || // Opera 8.0
+             (typeof InstallTrigger !== 'undefined') || // Firefox 1.0+
+             (Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0) || // At least Safari 3+: "[object HTMLElementConstructor]"
+             ((/*@cc_on!@*/false) || (document.documentMode)) || // Internet Explorer 6-11
+             (!(document.documentMode) && window.StyleMedia) ) { // Edge 20+
+            return false;
+        }
+        if ((window.chrome) && (navigator.userAgent.match(/Chrom(?:e|ium)\/[7][6789]\.[\d]+\.[\d]+\.[\d]+/)) ) {
+            return true;
+        }
+        return false;
+    }
+
 }
 ;

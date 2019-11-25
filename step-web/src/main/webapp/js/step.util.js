@@ -1132,7 +1132,7 @@ step.util = {
         enhanceVerseNumbers: function (passageId, passageContent, version, isSearch) {
             $(".verseNumber", passageContent).closest("a").mouseenter(function () {
                 var isVerseVocab = step.passages.findWhere({ passageId: passageId }).get("isVerseVocab");
-                if (isVerseVocab || ((isVerseVocab == null) && (!step.util.problematicChromeVersion())) ) {
+                if (isVerseVocab || isVerseVocab == null) {
                     step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version, isSearch);
                 }
             });
@@ -1171,7 +1171,10 @@ step.util = {
                                         '<a href="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
                                         '</span><% }); %>' +
                                         '<% if(rows.length % 2 == 1) { %>' +
-                                        '<span class="even">&nbsp;</span>' +
+// The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued started in September 2019.   
+//                                        '<span class="even">&nbsp;</span>' +
+// Removed the "&nbsp;" to resolve the Chrome browser issue
+                                        '<span class="even"></span>' +
                                         '<% } %>' +
                                         '</div>' +
                                         '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
@@ -1283,18 +1286,6 @@ step.util = {
             var regex = new RegExp(regexPattern, "ig");
             doHighlight(nonJqElement, cssClasses, regex);
         }
-    },
-    problematicChromeVersion: function () {
-        if ((window.chrome) && (navigator.userAgent.match(/Chrom(?:e|ium)\/[7][6789]\.[\d]+\.[\d]+\.[\d]+/)) ) {
-            if (!( ((window.opr && opr.addons) || window.opera || (navigator.userAgent.indexOf(' OPR/') >= 0)) || // Opera 8.0
-                    (typeof InstallTrigger !== 'undefined') || // Firefox 1.0+
-                    (Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0) || // At least Safari 3+: "[object HTMLElementConstructor]"
-                    ((/*@cc_on!@*/false) || (document.documentMode)) || // Internet Explorer 6-11
-                    (!(document.documentMode) && window.StyleMedia) ) ) // Edge 20+
-                return true; // return true if it there are no sign of other browsers
-        }
-        return false;
     }
-
 }
 ;

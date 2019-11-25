@@ -398,14 +398,12 @@ var PassageMenuView = Backbone.View.extend({
             this.model.save({ isVerseVocab: true });
             currentVerseVocabSetting = true;
         }
-        if (step.util.problematicChromeVersion() && currentVerseVocabSetting) alert ('You are using a version of Google Chrome browser that might be incompatible with the Verse Vocabulary function.  This is caused by a known bug in Chrome.  STEP Bible will look for a Chrome resolution on this.  If you need the Verse Vocabulary function, please try an alternative web browsers.');
         dropdown.append($(_.template(this.verseVocab)({ isVerseVocab: currentVerseVocabSetting })).click(function (e) {
             //prevent the bubbling up
             e.stopPropagation();
 
             //set the setting
             var verseVocab = !self.model.get("isVerseVocab");
-            if (step.util.problematicChromeVersion() && verseVocab) alert ('You are using a version of Google Chrome browser that might be incompatible with the Verse Vocabulary function.  This is caused by a known bug in Chrome.  STEP Bible will look for a Chrome resolution on this.  If you need the Verse Vocabulary function, please try an alternative web browsers.');
             self.model.save({ isVerseVocab: verseVocab });
 
             //if verse vocab has been turned off, then destroy all qtips
@@ -688,18 +686,5 @@ var PassageMenuView = Backbone.View.extend({
 		e.preventDefault();
 		if (!temp) grammarColorConfigPage.appendTo("body");
 		$('#theGrammarColorModal').modal('show').find('.modal-content').load('/color_code_grammar.html');
-    }	
-});
-/*
-function getChromeVersion() {
-    var pieces = navigator.userAgent.match(/Chrom(?:e|ium)\/([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/);
-    if (pieces == null || pieces.length != 5) {
-        return undefined;
     }
-    return {
-        major: parseInt(pieces[1]),
-        minor: parseInt(pieces[2]),
-        build: parseInt(pieces[3]),
-        patch: parseInt(pieces[4])
-    };
-} */
+});

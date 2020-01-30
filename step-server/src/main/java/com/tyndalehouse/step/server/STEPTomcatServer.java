@@ -349,7 +349,7 @@ public class STEPTomcatServer {
 
                 tomcat.getServer().await();
                 return tomcat;
-            } catch (LifecycleException | ServletException ex) {
+            } catch (LifecycleException ex) { // | ServletException ex) {
                 throw e;
             }
 

@@ -15,7 +15,7 @@
         
         <java.version>1.7</java.version>
         <selenium.version>2.43.0</selenium.version>
-        <sauce.version>2.1.25</sauce.version>
+        <!-- <sauce.version>2.1.25</sauce.version>  -->
 
         <junit.parallel>method</junit.parallel>
         <junit.threads>4</junit.threads>
@@ -135,8 +135,8 @@
         <module>step-web</module>
         <module>step-server</module>
         <module>step-tools</module>
-        <module>step-mobile-generator</module>
-        <module>step-test</module>
+        <!-- <<module>step-mobile-generator</module> -->
+        <!-- <<module>step-test</module> -->
         <!-- <module>step-web-test</module> -->
     </modules>
 
@@ -154,7 +154,7 @@
                 <module>step-packages</module>
                 <module>step-war-precompiled</module>
                 <module>step-assembly</module>
-                <module>step-test</module>
+                <!-- <module>step-test</module>  -->
             </modules>
         </profile>
     </profiles>
@@ -577,12 +577,12 @@
                 <version>${selenium.version}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>com.saucelabs</groupId>
-                <artifactId>sauce_junit</artifactId>
-                <version>${sauce.version}</version>
-                <scope>test</scope>
-            </dependency>
+            <!-- <dependency> -->
+            <!--    <groupId>com.saucelabs</groupId> -->
+            <!--    <artifactId>sauce_junit</artifactId> -->
+            <!--    <version>${sauce.version}</version> -->
+            <!--    <scope>test</scope> -->
+            <!-- </dependency> -->
         </dependencies>
     </dependencyManagement>
 

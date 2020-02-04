@@ -41,7 +41,7 @@
             <plugin>
                 <groupId>org.sonatype.install4j</groupId>
                 <artifactId>install4j-maven-plugin</artifactId>
-                <version>1.0.6</version>
+                <version>1.0.7</version>
                 <executions>
                     <execution>
                         <id>compile-installers</id>
@@ -50,7 +50,7 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <installDir></installDir>
+                            <installDir>/opt/install4j6</installDir>
                             <projectFile>${project.basedir}/src/main/assembly/step.install4j</projectFile>
                             <macKeystorePassword>password</macKeystorePassword>
                         </configuration>

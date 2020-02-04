@@ -50,7 +50,7 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <installDir></installDir>
+                            <installDir>${project.build.directory}/media</installDir>
                             <projectFile>${project.basedir}/src/main/assembly/step.install4j</projectFile>
                             <macKeystorePassword>password</macKeystorePassword>
                         </configuration>

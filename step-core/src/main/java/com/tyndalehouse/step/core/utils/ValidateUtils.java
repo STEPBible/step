@@ -37,6 +37,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.exceptions.ValidationException;
+import java.util.Locale;
 
 /**
  * Checks various assertions and throws the exception: {@link ValidationException}
@@ -94,5 +95,24 @@ public final class ValidateUtils {
         if (s.length() < minCharacters) {
             throw new ValidationException(exceptionMessage, type);
         }
+    }
+
+    /**
+     * @param inputLangCode the input Language Code that we need to check
+     * @param locale passed in from the .jsp page
+     * @return the validated Language Code
+     */
+    public static String checkLangCode(final String inputLangCode, final Locale locale)
+    {
+       String result = "en";
+        if(inputLangCode == null) {
+            result = locale.getLanguage();
+        }
+        else {
+            if ((inputLangCode.length() >= 2) && (inputLangCode.length() <= 5)) {
+                result = inputLangCode;
+            }
+        }
+        return result;
     }
 }

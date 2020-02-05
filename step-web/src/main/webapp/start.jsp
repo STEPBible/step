@@ -10,6 +10,7 @@
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
 <%@ page import="java.util.Calendar" %>
+<%@ page import="com.tyndalehouse.step.core.utils.ValidateUtils " %>
 <%
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
@@ -377,16 +378,9 @@
     </div>
 
     <% if (request.getParameter("mobile") == null) {
-            String langCode = "en";
-            if(request.getParameter("lang") == null) {
-                langCode = locale.getLanguage();
-            }
-            else {
-                if ((request.getParameter("lang").length() >= 2) && (request.getParameter("lang").length() <= 5)) {
-                    langCode = URLEncoder.encode(request.getParameter("lang"));
-                }
-            } %>
-        <script src="international/interactive.js?lang=<%= langCode %>&step.version=${project.version}" type="text/javascript"></script>
+            String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale);
+             %>
+        <script src="international/interactive.js?lang=<%= URLEncoder.encode(langCode, "UTF-8") %>&step.version=${project.version}" type="text/javascript"></script>
     <% } %>
     <%@include file="jsps/initLib.jsp" %>
 

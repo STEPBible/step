@@ -741,7 +741,7 @@ step.util = {
                     return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
-                        entry.item.shortName + '</div>';
+                        entry.item.shortName + '&nbsp;&#9660;</div>';
                 case VERSION:
                     // I have seen the code crashed at this point when entry.item.shortInitialis is not defined.  It might be caused by an old installation of the Bible modules.
                     // I added the following code to reduce the chance of crash.
@@ -761,7 +761,7 @@ step.util = {
                         '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
                         (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation + "</div>"; // added so it does not crash at startup
+                        'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation + "&nbsp;&#9660;</div>"; // added so it does not crash at startup
                 case GREEK:
                 case HEBREW:
                 case GREEK_MEANINGS:

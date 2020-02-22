@@ -17,4 +17,4 @@ bin
 *.versionsBackup
 *-SNAPSHOT*.min.js
 *.map
-
+.sass-cache/

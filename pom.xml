@@ -39,7 +39,7 @@
         <opencsv.version>2.3</opencsv.version>
 
         <jetty.version>8.1.9.v20130131</jetty.version>
-        <tomcat.version>9.0.29</tomcat.version>
+        <tomcat.version>9.0.31</tomcat.version>
         <tomcat.secondary.version>9.0.0.M6</tomcat.secondary.version>
         <xalan.version>2.7.1</xalan.version>
 

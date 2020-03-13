@@ -32,8 +32,8 @@
     <packaging>jar</packaging>
     <name>STEP :: A tool that generates the online-mobile app</name>
     <properties>
-        <httpcomponents-httpcore.version>4.3.2</httpcomponents-httpcore.version>
-        <httpcomponents-httpclient.version>4.3.2</httpcomponents-httpclient.version>
+        <httpcomponents-httpcore.version>4.3.6</httpcomponents-httpcore.version>
+        <httpcomponents-httpclient.version>4.3.6</httpcomponents-httpclient.version>
     </properties>
 
     <dependencies>

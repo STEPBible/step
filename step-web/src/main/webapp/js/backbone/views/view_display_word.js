@@ -31,7 +31,7 @@ var WordDisplayView = TextDisplayView.extend({
         toolbarContainer.find("li").hover(
             function(){
                 var $this = $(this);
-                var includeWord = $("<span class='untick' href='javascript:void(0)'>&nbsp;&nbsp;" + (el.find(".active").length > 0 ?  __s.this_entry_untick : __s.this_entry_tick) + "</span> ");
+                var includeWord = $("<span class='untick' href='javascript:void(0)'>&nbsp;&nbsp;" + ($this.find(".active").length > 0 ?  __s.this_entry_untick : __s.this_entry_tick) + "</span> ");
                 $this.append(includeWord);
 
                 var untickAll = $("<a class='thisOnly' href='javascript:void(0)'>" + __s.this_entry_only + "</a>");
@@ -68,7 +68,7 @@ var WordDisplayView = TextDisplayView.extend({
             self.model.save({strongHighlights: filter, pageNumber: 1}, { silent: true });
             step.router.navigateSearch();
         });
-        
+
         var expandableToolbar = toolbarContainer.find(".panel-body");
         expandableToolbar.on("show.bs.collapse", function () {
             step.settings.save({ relatedWordsOpen: true});
@@ -103,7 +103,7 @@ var WordDisplayView = TextDisplayView.extend({
             //then let's take it from the last set of results
             lastHeader = existingResults.find(".searchResultStrongHeader:last").attr("strongNumber");
         }
-        
+
         if (item.strongNumber && item.strongNumber != lastHeader) {
             var header = $("<h4>").addClass("searchResultStrongHeader").attr("strongNumber", item.strongNumber);
 

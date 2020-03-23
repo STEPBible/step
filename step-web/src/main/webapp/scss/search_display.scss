@@ -1,16 +1,11 @@
 @import 'template_variables';
 
-.searchResults {
-  padding: $page-padding $page-padding 40px;
-}
-
 .passageContent {
   .notApplicable {
     color: grey !important;
     font-weight: normal;
     clear: left;
     display: block;
-    padding: 15px 15px 40px;
 
     em {
       font-weight: bold;
@@ -20,12 +15,7 @@
 
 .searchResultRow {
   .passageContentHolder {
-    padding: 0;
     height: auto !important;
-
-    &:after {
-      display: none;
-    }
 
     &.hbFont {
       text-align: right;
@@ -83,7 +73,7 @@ h4.lexicalGrouping {
 
 .originalWordSearchToolbar {
   clear: both;
-  padding: 15px 15px 0;
+  margin-bottom: 10px;
 
   .panel {
     margin-bottom: 0;
@@ -143,10 +133,8 @@ h4.lexicalGrouping {
   display: inline-block;
   float: initial;
   width: initial;
+  margin-bottom: 10px;
 
-  input[type='radio'] {
-    vertical-align: text-bottom;
-  }
   label {
     padding-right: 20px;
     padding-left: 5px;
@@ -156,7 +144,10 @@ h4.lexicalGrouping {
     display: inline-block;
     width: initial;
   }
+}
 
+.searchResultRow {
+  margin-bottom: 5px;
 }
 
 // other sections that don't go anywhere in particular
@@ -170,18 +161,10 @@ h4.lexicalGrouping {
     color: darkgrey;
     font-style: italic;
   }
-
-  .passageContentHolder:after {
-    display: none;
-  }
 }
 
 .searchResultStrongHeader {
   font-size: $defaultFontSize + 2;
-}
-
-.verseContent .passageContentHolder {
-  height: auto !important;
 }
 
 .resultsLabel {

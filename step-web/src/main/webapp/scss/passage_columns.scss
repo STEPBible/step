@@ -30,20 +30,6 @@
   border-right: 1px solid #EAEAEA;
 }
 
-.passageContentHolder {
-  padding: $page-padding $page-padding 0;
-  outline: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  @include scrollableContainerHeight;
-
-  &:after {
-    display: block;
-    content: "";
-    height: 60px;
-  }
-}
-
 #columnHolder {
   overflow-y: hidden;
   padding: 0;
@@ -57,6 +43,7 @@
     padding-bottom: $topSectionPadding;
     margin: 0px 20px $topSectionMarginBottom 5px;
   }
+
   .column {
     height: 100%;
     padding: 0;
@@ -66,11 +53,18 @@
       height: 100%;
       padding-bottom: $topSectionHeight;
 
-      &> span {
+      & > div:first-child,
+      & > span:first-child {
         @include scrollableContainerHeight;
-        padding-bottom: $topSectionHeight;
         display: block;
         overflow-y: auto;
+        padding: $page-padding $page-padding $topSectionHeight;
+
+        &:after {
+          display: block;
+          content: "";
+          height: 60px;
+        }
       }
     }
 
@@ -99,15 +93,15 @@
       }
 
       .linkPanel {
-          margin-left: -10px;
-          top: 50%;
-          left: 0;
-          font-size: 150%;
-          position: absolute;
+        margin-left: -10px;
+        top: 50%;
+        left: 0;
+        font-size: 150%;
+        position: absolute;
 
-          &:hover {
-            color: gray;
-          }
+        &:hover {
+          color: gray;
+        }
       }
       .copyrightInfo {
         background-color: #fff;
@@ -126,7 +120,7 @@
           left: 0;
           right: 0;
           height: 25px;
-          background-image: linear-gradient(-180deg, rgba(255,255,255,0.25) 0%, #FFFFFF 100%);
+          background-image: linear-gradient(-180deg, rgba(255, 255, 255, 0.25) 0%, #FFFFFF 100%);
           pointer-events: none;
         }
       }

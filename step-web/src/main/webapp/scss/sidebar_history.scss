@@ -31,7 +31,7 @@
 
     &:hover {
       color: $headingColour;
-      cursor: hand;
+      cursor: pointer;
     }
     &.glyphicon-open {
       @include rotate(-90deg);

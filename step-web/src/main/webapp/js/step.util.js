@@ -234,7 +234,7 @@ step.util = {
         if (activePassageEl.length == 0) {
             //default to the first passage that is visible on the screen
             activePassageEl = $(".passageContainer:first");
-            //force the setter to trigger 
+            //force the setter to trigger
             currentActivePassageId = val = parseInt(activePassageEl.attr("passage-id"));
             force = true;
         } else {
@@ -325,7 +325,7 @@ step.util = {
     },
     refreshColumnSize: function (columns) {
         if (!columns) {
-            columns = $(".column").not(".examplesColumn");
+            columns = $(".column");
         }
 
         //change the width all columns
@@ -397,12 +397,12 @@ step.util = {
      * show or hide tutorial, when there is more than 1 column
      */
     showOrHideTutorial: function (hide) {
+        console.log("showOrHideTutorial");
         var allRealColumns = $(".column").not(".examplesColumn");
         var exampleContainer = $(".examplesContainer");
         if (exampleContainer.parent().hasClass("column")) {
             if (allRealColumns.length > 1 || hide) {
-                exampleContainer.parent().hide();
-                exampleContainer.find(".closeColumn").remove();
+                exampleContainer.parent().remove();
             }
         }
         this.refreshColumnSize();
@@ -487,7 +487,7 @@ step.util = {
         this.refreshColumnSize(allColumns);
         newColumn.insertAfter(activeColumn);
         if (linked) {
-            //add a link  
+            //add a link
             var link = $("<span class='glyphicon glyphicon-arrow-right linkPanel'></span>").attr("title", __s.panels_linked).click(function () {
                 //unlink all passages
                 step.util.unlink(newPassageId);
@@ -1171,7 +1171,7 @@ step.util = {
                                         '<a href="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
                                         '</span><% }); %>' +
                                         '<% if(rows.length % 2 == 1) { %>' +
-// The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued started in September 2019.   
+// The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued started in September 2019.
 //                                        '<span class="even">&nbsp;</span>' +
 // Removed the "&nbsp;" to resolve the Chrome browser issue
                                         '<span class="even"></span>' +

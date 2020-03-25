@@ -11,11 +11,17 @@ var ExamplesView = Backbone.View.extend({
     initAccordions: function () {
         var count = this.$el.find(".accordion-row").length;
         var i;
+        var hasStoredState = false;
 
         for (i = 0; i < count; i++) {
             if (localStorage.getItem("stepBible-displayQuickTryoutAccordion" + i) === "true") {
+                hasStoredState = true;
                 this.toggleAccordion(i);
             }
+        }
+
+        if (!hasStoredState) {
+            this.toggleAccordion(0);
         }
     },
     toggleAccordion: function (index) {

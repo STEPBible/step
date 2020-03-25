@@ -147,7 +147,7 @@ var MainSearchView = Backbone.View.extend({
                     view.masterVersion = entry;
                 }
 
-                return step.util.ui.renderEnhancedToken(entry, versions.length > 1);
+                return step.util.ui.renderEnhancedToken(entry, versions.length > 1, true);
             },
             escapeMarkup: function (m) {
                 return m;

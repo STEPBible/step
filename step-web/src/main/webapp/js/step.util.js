@@ -685,7 +685,7 @@ step.util = {
             }
 
             return '<span class="argSelect select-' + searchToken.itemType + '">' +
-                this.renderEnhancedToken(searchToken, isMasterVersion) +
+                this.renderEnhancedToken(searchToken, isMasterVersion, false) +
                 '</span>';
         },
         getSource: function (itemType, nowrap) {
@@ -733,17 +733,25 @@ step.util = {
             }
             return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
         },
-        renderEnhancedToken: function (entry, isMasterVersion) {
+        renderEnhancedToken: function (entry, isMasterVersion, inMainSearch) {
+            var result;
             var util = step.util;
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
                 case REFERENCE:
-                    return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
+                    result = '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
-                        entry.item.shortName + '</div>';
+                        entry.item.shortName;
+                    // Add a down arrow if in the main search select2 control.
+                    if (inMainSearch) {
+                        result = result + '&nbsp;&#9660;';
+                    }
+                    result = result + '</div>';
+                    return result;
+
                 case VERSION:
-                    // I have seen the code crashed at this point when entry.item.shortInitialis is not defined.  It might be caused by an old installation of the Bible modules.
+                    // I have seen the code crashed at this point when entry.item.shortInitials is not defined.  It might be caused by an old installation of the Bible modules.
                     // I added the following code to reduce the chance of crash.
 					var shortInitialsOfTranslation = ''; // added so it does not crash at startup
 					var nameOfTranslation = '';          //  added so it does not crash at startup
@@ -757,11 +765,18 @@ step.util = {
                             else if (step.keyedVersions[shortInitialsOfTranslation] !== undefined) nameOfTranslation = step.keyedVersions[shortInitialsOfTranslation].name;
                         }
 					}
-                    return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") +
-                        '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
-                        (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
-                        'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation + "</div>"; // added so it does not crash at startup
+					result = '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") +
+                    '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
+                    (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
+                    'data-item-type="' + entry.itemType + '" ' +
+                    'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation;  // added so it does not crash at startup
+                    // Add a down arrow if in the main search select2 control.
+					if (inMainSearch) {
+                        result = result + "&nbsp;&#9660;";
+                    }
+					result = result + "</div>";
+                    return result;
+
                 case GREEK:
                 case HEBREW:
                 case GREEK_MEANINGS:

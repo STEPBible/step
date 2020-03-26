@@ -11,6 +11,14 @@
   .tab-content {
     padding: $page-padding;
   }
+
+  // Hide close icon for help tab
+  // TODO: It would be better to not include the html for the closeColumn button in the sidebar
+  .tab-pane {
+    .closeColumn {
+      display: none;
+    }
+  }
 }
 
 //default visibility when sidebar is active
@@ -24,7 +32,7 @@
     -webkit-transition: all 0.25s ease-out;
     -moz-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;
- 
+
     .sidebar-offcanvas {
       right: -$smallSidebarSize;
       top: $header_height;
@@ -34,7 +42,7 @@
       right: $smallSidebarSize;
     }
   }
-  
+
   .sidebar-offcanvas {
     position: absolute;
     top: 0;
@@ -60,5 +68,5 @@
     height: 100%;
     padding-right: 0px;
   }
-  
+
 }

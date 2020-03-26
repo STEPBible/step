@@ -1,5 +1,6 @@
 var ExamplesView = Backbone.View.extend({
     events: {
+        'click .closeColumn': 'onClickClose',
         'click .accordion-heading': 'onClickHeading'
     },
     initialize: function () {
@@ -46,5 +47,8 @@ var ExamplesView = Backbone.View.extend({
         var $accordionRow = $target.parent();
         var index = $accordionRow.attr("data-row");
         this.toggleAccordion(index);
+    },
+    onClickClose: function () {
+        step.util.showOrHideTutorial(true);
     }
 });

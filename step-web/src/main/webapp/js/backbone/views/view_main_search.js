@@ -41,7 +41,7 @@ var MainSearchView = Backbone.View.extend({
 							break;
 						case VERSION:
 			                // I have seen entry.item.shortInitials is null.  I added an if statement to test it
-							if (entry.item.shortInitials != null) { 
+							if (entry.item.shortInitials != null) {
 								id += entry.item.shortInitials;
 							}
 							break;
@@ -147,7 +147,7 @@ var MainSearchView = Backbone.View.extend({
                     view.masterVersion = entry;
                 }
 
-                return step.util.ui.renderEnhancedToken(entry, versions.length > 1, true);
+                return step.util.ui.renderEnhancedToken(entry, versions.length > 1);
             },
             escapeMarkup: function (m) {
                 return m;

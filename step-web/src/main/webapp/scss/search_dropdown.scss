@@ -22,17 +22,17 @@
     float: right;
     margin-right: 5px;
     padding: 0 2;
-    
+
     font-weight: bold;
   }
 
   .glyphicon-plus {
-    font-size: 90%; 
+    font-size: 90%;
   }
 
   li {
-    background:#eee;
-    padding:6px 5px;
+    background: #eee;
+    padding: 6px 5px;
     filter: none;
     background-image: inherit !important;
     color: white !important;
@@ -45,6 +45,18 @@
 
 li, span {
   @include bold-args($optionStartGradient, $optionEndGradient);
+}
+
+// Adds down arrow for resources in main search
+.select2-search-choice {
+  .versionItem,
+  .referenceItem {
+    &:after {
+      content: "\25BE"; // ▾
+      font-style: normal;
+      margin-left: 5px;
+    }
+  }
 }
 
 @media screen and (max-width: $stepXSBootstrap - 1) {

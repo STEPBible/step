@@ -24,11 +24,11 @@
     </button>
 
     <a class="showStats" title="<fmt:message key="passage_open_sidebar" />">
-        <i class="glyphicon">
-            <svg class="icon-sidebar" width="22px" height="16px" viewBox="0 0 58 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <i class="glyphicon icon-sidebar">
+            <svg width="22px" height="16px" viewBox="0 0 58 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g>
                     <path d="M0,6.00638655 C0,2.68915086 2.68113741,0 6.00212389,0 L51.9978761,0 C55.3127576,0 58,2.68354127 58,6.00638655 L58,41.9936134 C58,45.3108491 55.3188626,48 51.9978761,48 L6.00212389,48 C2.6872424,48 0,45.3164587 0,41.9936134 L0,6.00638655 Z M5,6.00638655 L5,41.9936134 C5,42.5531699 5.44680121,43 6.00212389,43 L51.9978761,43 C52.5537478,43 53,42.5531169 53,41.9936134 L53,6.00638655 C53,5.44683008 52.5531988,5 51.9978761,5 L6.00212389,5 C5.44625218,5 5,5.44688308 5,6.00638655 Z M33,5 L33,43 L37,43 L37,5 L33,5 Z"></path>
-                    <g class="icon-sidebar-lines" transform="translate(39.000000, 11.000000)">
+                    <g transform="translate(39.000000, 11.000000)">
                         <polygon points="0.5 4 11.5 4 11.5 0 0.5 0"></polygon>
                         <polygon points="0.5 15 11.5 15 11.5 11 0.5 11"></polygon>
                         <polygon points="0.5 26 11.5 26 11.5 22 0.5 22"></polygon>
@@ -40,7 +40,9 @@
     <div class="navbar-collapse collapse">
         <span class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language"/>">
-                <i class="glyphicon glyphicon-globe" ></i>
+                <i class="glyphicon icon-language">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+                </i>
                 <span><fmt:message key="installation_book_language"/></span>
             <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
                 <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step"/></a></li>
@@ -60,7 +62,7 @@
         </span>
         <span class="dropdown">
             <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help"/>">
-                <i class="glyphicon glyphicon-question-sign"></i>
+                <i class="glyphicon glyphicon-option-vertical"></i>
                 <span><fmt:message key="help"/></span>
             </a>
             <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
@@ -120,13 +122,4 @@
             </ul>
         </span>
     </div>
-    <%
-        if(!appManager.isLocal()) {
-    %>
-    <a id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
-        <i class="glyphicon glyphicon-bullhorn"></i>
-    </a>
-    <%
-        }
-    %>
 </div>

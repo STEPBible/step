@@ -167,20 +167,24 @@
       &.active {
         color: $brand-primary;
       }
+
+      svg {
+        fill: $topHeaderLinkColour;
+      }
     }
 
     .icon-sidebar {
       width: 22px;
       height: 16px;
-      fill: $topHeaderLinkColour;
     }
 
-    .icon-sidebar-lines {
-      visibility: hidden;
-    }
+    .icon-language {
+      vertical-align: text-bottom;
 
-    .active .icon-sidebar .icon-sidebar-lines {
-      visibility: visible;
+      & > svg {
+        width: 22px;
+        height: 22px;
+      }
     }
 
     .headerButtons > a {
@@ -199,7 +203,7 @@
         }
       }
       .caret {
-        margin-left: 5;
+        margin-left: 5px;
       }
       .caret.mini-level {
         display: none;
@@ -207,6 +211,10 @@
     }
 
     @media (max-width: $stepXS) {
+      .icon-sidebar {
+        top: 2px;
+      }
+
       .navbar-collapse {
         background-color: #F2F2F2;
         border: none;
@@ -240,6 +248,17 @@
           margin-right: 5px;
         }
 
+        // Use question mark when inside dropdown menu
+        .glyphicon-option-vertical:before {
+          content: "\e085";
+        }
+
+        // Use question mark when inside dropdown menu
+        .icon-language > svg {
+          width: 16px;
+          height: 16px;
+        }
+
         .helpMenu {
           width: 234px;
         }
@@ -263,8 +282,19 @@
         ul {
           max-height: 300px;
         }
-        li a {
-          padding-left: 20px;
+
+        li {
+          &.active a {
+            color: white;
+
+            &:hover {
+              background-color: #17758F;
+            }
+          }
+
+          a {
+            padding-left: 20px;
+          }
         }
         .separator {
           display: none;

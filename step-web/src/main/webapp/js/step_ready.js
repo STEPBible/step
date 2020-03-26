@@ -155,13 +155,6 @@
                     new ViewHelpMenuOptions({});
                 });
             });
-
-            //bind to the examples close button
-            $(".examplesContainer .closeColumn").on('click', function () {
-                step.util.showOrHideTutorial(true);
-                //resize the columns
-                step.util.refreshColumnSize();
-            })
         }
 
         if (step.passages.length == 0) {

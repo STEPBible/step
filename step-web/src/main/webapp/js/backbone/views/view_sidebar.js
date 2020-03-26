@@ -315,7 +315,7 @@ var SidebarView = Backbone.View.extend({
 
         var tabContainer = $(_.template(template)());
 
-        //add close button
+        //add close buttonx
         tabContainer.append(
             $("<li class='closeSidebar'><a class='glyphicon glyphicon-remove' /></li>")
                 .click(this.closeSidebar));

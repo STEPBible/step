@@ -397,7 +397,6 @@ step.util = {
      * show or hide tutorial, when there is more than 1 column
      */
     showOrHideTutorial: function (hide) {
-        console.log("showOrHideTutorial");
         var allRealColumns = $(".column").not(".examplesColumn");
         var exampleContainer = $(".examplesContainer");
         if (exampleContainer.parent().hasClass("column")) {

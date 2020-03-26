@@ -685,7 +685,7 @@ step.util = {
             }
 
             return '<span class="argSelect select-' + searchToken.itemType + '">' +
-                this.renderEnhancedToken(searchToken, isMasterVersion, false) +
+                this.renderEnhancedToken(searchToken, isMasterVersion) +
                 '</span>';
         },
         getSource: function (itemType, nowrap) {
@@ -733,7 +733,7 @@ step.util = {
             }
             return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
         },
-        renderEnhancedToken: function (entry, isMasterVersion, inMainSearch) {
+        renderEnhancedToken: function (entry, isMasterVersion) {
             var result;
             var util = step.util;
             var source = this.getSource(entry.itemType, true) + " ";
@@ -743,10 +743,7 @@ step.util = {
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
                         entry.item.shortName;
-                    // Add a down arrow if in the main search select2 control.
-                    if (inMainSearch) {
-                        result = result + '&nbsp;&#9660;';
-                    }
+
                     result = result + '</div>';
                     return result;
 
@@ -770,13 +767,9 @@ step.util = {
                     (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
                     'data-item-type="' + entry.itemType + '" ' +
                     'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation;  // added so it does not crash at startup
-                    // Add a down arrow if in the main search select2 control.
-					if (inMainSearch) {
-                        result = result + "&nbsp;&#9660;";
-                    }
+
 					result = result + "</div>";
                     return result;
-
                 case GREEK:
                 case HEBREW:
                 case GREEK_MEANINGS:

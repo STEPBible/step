@@ -171,3 +171,29 @@
 .active .passageOptionsGroup {
   opacity: 1;
 }
+
+.nextPreviousChapterGroup {
+  .previousChapter,
+  .nextChapter {
+    position: absolute;
+    top: auto;
+    bottom: 45px;
+    z-index: 1;
+    padding: 12px;
+    background-color: white;
+    border-radius: 100%;
+    box-shadow: 0 0 5px;
+
+    .glyphicon {
+      top: 0;
+    }
+  }
+
+  .previousChapter {
+    left: 20px;
+  }
+
+  .nextChapter {
+    right: 20px;
+  }
+}

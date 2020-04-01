@@ -13,7 +13,7 @@
         <site.location>${project.build.directory}/site</site.location>
         <final.jsword.package>packages</final.jsword.package>
         
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <selenium.version>2.43.0</selenium.version>
         <!-- <sauce.version>2.1.25</sauce.version>  -->
 

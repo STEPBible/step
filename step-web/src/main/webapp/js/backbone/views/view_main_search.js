@@ -4,7 +4,6 @@ var MainSearchView = Backbone.View.extend({
         "click .find": "search",
         "click .showStats": "showAnalysis",
         "click .showBooks": "showBooks"
-
     },
     //context items are of the form { itemType: x, value: y }
     specificContext: [],
@@ -28,52 +27,52 @@ var MainSearchView = Backbone.View.extend({
             minimumInputLength: 2,
             openOnEnter: false,
             id: function (entry) {
-                if(entry == null) {
+                if (entry == null) {
                     return null;
                 }
 
                 var id = entry.itemType + "-";
                 // I have seen entry.item is null.  I added an if statement to test it
-				if (entry.item != null) {
-					switch (entry.itemType) {
-						case REFERENCE:
-							id += entry.item.fullName + step.util.guid();
-							break;
-						case VERSION:
-			                // I have seen entry.item.shortInitials is null.  I added an if statement to test it
-							if (entry.item.shortInitials != null) {
-								id += entry.item.shortInitials;
-							}
-							break;
-						case GREEK:
-						case GREEK_MEANINGS:
-						case HEBREW_MEANINGS:
-						case HEBREW:
-							//for these searches, we prevent multiple searches for the same strong number
-							//and therefore share an id.
-							id += entry.item.strongNumber;
-							break;
-						//some searches default to their item
-						case SYNTAX:
-						case TEXT_SEARCH:
-							id += entry.item.value;
-							break;
-						case SUBJECT_SEARCH:
-							id += (entry.item.searchTypes || []).join("-") + ":" + entry.item.value;
-							break;
-						case MEANINGS:
-							id += entry.item.gloss;
-							break;
-						case EXACT_FORM:
-							id += entry.item.text;
-							break;
-						case TOPIC_BY_REF:
-						case RELATED_VERSES:
-						default:
-							id += entry.item;
-							break;
-					}
-				}
+                if (entry.item != null) {
+                    switch (entry.itemType) {
+                        case REFERENCE:
+                            id += entry.item.fullName + step.util.guid();
+                            break;
+                        case VERSION:
+                            // I have seen entry.item.shortInitials is null.  I added an if statement to test it
+                            if (entry.item.shortInitials != null) {
+                                id += entry.item.shortInitials;
+                            }
+                            break;
+                        case GREEK:
+                        case GREEK_MEANINGS:
+                        case HEBREW_MEANINGS:
+                        case HEBREW:
+                            //for these searches, we prevent multiple searches for the same strong number
+                            //and therefore share an id.
+                            id += entry.item.strongNumber;
+                            break;
+                        //some searches default to their item
+                        case SYNTAX:
+                        case TEXT_SEARCH:
+                            id += entry.item.value;
+                            break;
+                        case SUBJECT_SEARCH:
+                            id += (entry.item.searchTypes || []).join("-") + ":" + entry.item.value;
+                            break;
+                        case MEANINGS:
+                            id += entry.item.gloss;
+                            break;
+                        case EXACT_FORM:
+                            id += entry.item.text;
+                            break;
+                        case TOPIC_BY_REF:
+                        case RELATED_VERSES:
+                        default:
+                            id += entry.item;
+                            break;
+                    }
+                }
 
                 return id;
             },
@@ -89,7 +88,7 @@ var MainSearchView = Backbone.View.extend({
                         view.openAdvancedSearch();
                     }));
                 var container = $("<span>").append(labels).append($('<span class="message">').append(message));
-                return  container;
+                return container;
             },
             ajax: {
                 url: function (term, page) {
@@ -126,9 +125,10 @@ var MainSearchView = Backbone.View.extend({
                         datum.push({
                             text: itemAndText.text,
                             item: itemAndText.item,
-                            itemType: data[ii].itemType });
+                            itemType: data[ii].itemType
+                        });
                     }
-                    return { results: view.patch(datum, term) };
+                    return {results: view.patch(datum, term)};
                 }
             },
 
@@ -141,9 +141,9 @@ var MainSearchView = Backbone.View.extend({
              * @returns {*}
              */
             formatSelection: function (entry) {
-                var versions = _.where($("#masterSearch").select2("data"), { itemType: "version" }) || [];
+                var versions = _.where($("#masterSearch").select2("data"), {itemType: "version"}) || [];
                 view.masterVersion = versions.length > 0 ? versions[0] : null;
-                if(view.masterVersion == null && entry != null && entry.itemType == VERSION) {
+                if (view.masterVersion == null && entry != null && entry.itemType == VERSION) {
                     view.masterVersion = entry;
                 }
 
@@ -160,7 +160,7 @@ var MainSearchView = Backbone.View.extend({
                 self._getSpecificContext(REFERENCE) == null &&
                 (event.object.item.sectionType == 'BIBLE_BOOK' || event.object.item.sectionType == 'APOCRYPHA')
                 && event.object.item.wholeBook
-                ) {
+            ) {
                 event.preventDefault();
                 self.isOpeningBibleList = true;
                 self._addSpecificContext(REFERENCE, event.object.item.osisID);
@@ -168,13 +168,15 @@ var MainSearchView = Backbone.View.extend({
                 //wipe the last term to force a re-select
                 $.data(self.masterSearch.select2("container"), "select2-last-term", null);
                 select2Input.select2("search", event.object.item.shortName);
-            } else if (event.object.item.grouped) {
+            }
+            else if (event.object.item.grouped) {
                 event.preventDefault();
                 $.data(self.masterSearch.select2("container"), "select2-last-term", null);
                 self._addSpecificContext(LIMIT, event.object.itemType);
                 select2Input.select2("search", self.getCurrentInput());
                 select2Input.select2("container").find("input").focus();
-            } else if (event.object.item.exit) {
+            }
+            else if (event.object.item.exit) {
                 //exiting, so clear limit context
                 event.preventDefault();
                 self._removeSpecificContext(LIMIT);
@@ -194,7 +196,6 @@ var MainSearchView = Backbone.View.extend({
 
             var replaceItem = container.find(".replaceItem");
             var replaceItemParent = replaceItem.parent().parent().first();
-            var newItem;
             var data = self.masterSearch.select2("data");
             if (replaceItemParent.length > 0) {
                 var replaceItemIndex = replaceItemParent.index();
@@ -208,6 +209,8 @@ var MainSearchView = Backbone.View.extend({
 
             //now get rid of all .replaceItems
             self._resetReplaceItems();
+
+            self.search();
             //get last item in list
             var select2Input = $(this);
             var values = select2Input.select2("data") || [];
@@ -235,20 +238,31 @@ var MainSearchView = Backbone.View.extend({
         }).on("select2-removed", function () {
             //re-evaluate master version
             self._reEvaluateMasterVersion();
+
+            // submit search automatically if we have more than just resources in the search
+            var searchData = self.masterSearch.select2("data");
+
+            if (!_.isEmpty(searchData)) {
+                if (_.any(searchData, function (item) {
+                    return item.itemType !== "version";
+                })) {
+                    self.search();
+                }
+            }
         });
 
         var container = this.masterSearch.select2("container");
         container.find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
         container.find("ul.select2-choices")
             .sortable({})
-            .on('dragstart.h5s', function() {
+            .on('dragstart.h5s', function () {
                 self.masterSearch.select2("onSortStart");
-            }).bind('sortupdate', function() {
+            }).bind('sortupdate', function () {
             //Triggered when the user stopped sorting and the DOM position has changed.
-                self.masterSearch.select2("onSortEnd");
-                self._reEvaluateMasterVersion();
+            self.masterSearch.select2("onSortEnd");
+            self._reEvaluateMasterVersion();
         });
-        this.masterSearch.on('change', function() {
+        this.masterSearch.on('change', function () {
             self.masterSearch.html(self.masterSearch.val());
         });
 
@@ -265,7 +279,8 @@ var MainSearchView = Backbone.View.extend({
         var tokens;
         if (tokenElement) {
             tokens = $(tokenElement).not('[data-handler]');
-        } else {
+        }
+        else {
             tokens = this.$el.find("[data-select-id]").not('[data-handler]');
         }
 
@@ -313,7 +328,7 @@ var MainSearchView = Backbone.View.extend({
         var self = this;
         $(tokens).filter(".greekMeaningsItem, .hebrewMeaningsItem, .hebrewItem, .greekItem, .meaningsItem, .subjectItem").click(function (ev) {
             self._markItemForReplacing(ev, $(this));
-            self._searchExampleData(ev, $(this).attr("data-item-type"), ($(this).attr("data-select-id") || "").replace(/\./g, "").substring(0,2));
+            self._searchExampleData(ev, $(this).attr("data-item-type"), ($(this).attr("data-select-id") || "").replace(/\./g, "").substring(0, 2));
         });
     },
     _searchExampleData: function (ev, itemType, term) {
@@ -347,7 +362,12 @@ var MainSearchView = Backbone.View.extend({
                 }
             }
 
-            new AdvancedSearchView({ searchView: self, masterVersion: masterVersion, initialView: initialView, value: value || "" });
+            new AdvancedSearchView({
+                searchView: self,
+                masterVersion: masterVersion,
+                initialView: initialView,
+                value: value || ""
+            });
         });
     },
     /**
@@ -364,7 +384,7 @@ var MainSearchView = Backbone.View.extend({
     pickBible: function () {
         var self = this;
         require(["menu_extras"], function () {
-            new PickBibleView({ model: step.settings, searchView: self });
+            new PickBibleView({model: step.settings, searchView: self});
         });
     },
     convertResultTermToNormalOption: function (termSuggestion, datum) {
@@ -398,21 +418,22 @@ var MainSearchView = Backbone.View.extend({
                 break;
         }
 
-        return {text: text, item: item.suggestion };
+        return {text: text, item: item.suggestion};
     },
     convertResultToGroup: function (item, term, isExpanded) {
         var returnedItem = item;
 
         item.isControl = true;
-        if(isExpanded) {
+        if (isExpanded) {
             //we have reached the maximum allowed
             item.text = sprintf(__s.too_many_options_to_show, item.count);
             item.maxGroupReached = true;
-        } else {
+        }
+        else {
             this.setGroupText(returnedItem, term);
         }
 
-        return { text: returnedItem.text, item: returnedItem } ;
+        return {text: returnedItem.text, item: returnedItem};
     },
     convertResultTermToTypedOptions: function (termSuggestion, datum, term, isExpanded) {
         if (termSuggestion.grouped) {
@@ -470,15 +491,16 @@ var MainSearchView = Backbone.View.extend({
     },
     _appendVersions: function (data) {
         var originalData = this.masterSearch.select2("data");
-        originalData.push({ item: data.value, itemType: data.itemType});
+        originalData.push({item: data.value, itemType: data.itemType});
 
         var replaceItem = this.masterSearch.select2("container").find(".replaceItem");
         var replaceItemParent = replaceItem.parent().parent().first();
-        var newItem = { item: data.value, itemType: data.itemType};
+        var newItem = {item: data.value, itemType: data.itemType};
         if (replaceItemParent.length > 0) {
             var replaceItemIndex = replaceItemParent.index();
             originalData.splice(replaceItemIndex, 1, newItem);
-        } else {
+        }
+        else {
             originalData.push(newItem);
         }
         this._setData(originalData);
@@ -497,16 +519,14 @@ var MainSearchView = Backbone.View.extend({
         }
         this._setData(versions);
     },
-    _trackSearch: function(options) {
-          if(!options) {
-              return;
-          }
-
+    _trackSearch: function (options) {
+        if (!options) {
+            return;
+        }
 
 
     },
     search: function () {
-        console.log("Searching...");
         var options = this.masterSearch.select2("data");
         this._trackSearch(options);
         var args = "";
@@ -540,7 +560,8 @@ var MainSearchView = Backbone.View.extend({
                     if (previouslySelectedIndex != -1) {
                         //use the last selection
                         selectedSubjectSearchType = options[ii].item.searchTypes[previouslySelectedIndex];
-                    } else {
+                    }
+                    else {
                         //use the first item
                         selectedSubjectSearchType = options[ii].item.searchTypes[0];
                     }
@@ -580,7 +601,7 @@ var MainSearchView = Backbone.View.extend({
         }
 
         //reset defaults:
-        step.util.activePassage().save({ pageNumber: 1, filter: null, strongHighlights: null }, { silent: true});
+        step.util.activePassage().save({pageNumber: 1, filter: null, strongHighlights: null}, {silent: true});
         console.log("Arguments are: ", args);
         step.router.navigateSearch(args);
     },
@@ -589,11 +610,11 @@ var MainSearchView = Backbone.View.extend({
     },
     patch: function (results, term) {
         //check we don't have a limit:
-        var limit = (_.findWhere(this.specificContext, { itemType: LIMIT }) || {}).value;
+        var limit = (_.findWhere(this.specificContext, {itemType: LIMIT}) || {}).value;
 
         //splice in the 'exit' item
         if (limit) {
-            var item = { itemType: limit, item: { exit: true  }};
+            var item = {itemType: limit, item: {exit: true}};
             results.splice(0, 0, item);
         }
 
@@ -602,7 +623,8 @@ var MainSearchView = Backbone.View.extend({
         if (limit == null) {
             staticResources = this._getData(null, term);
             //push some of the options that are also always present:
-        } else if (limit == VERSION) {
+        }
+        else if (limit == VERSION) {
             staticResources = this._getData(limit, term);
         }
 
@@ -653,10 +675,10 @@ var MainSearchView = Backbone.View.extend({
     },
     _addSpecificContext: function (itemType, value) {
         this._removeSpecificContext(itemType);
-        this.specificContext.push({ itemType: itemType, value: value });
+        this.specificContext.push({itemType: itemType, value: value});
     },
     _getSpecificContext: function (itemType) {
-        return (_.findWhere(this.specificContext, { itemType: itemType }) || {}).value;
+        return (_.findWhere(this.specificContext, {itemType: itemType}) || {}).value;
     },
     /**
      * Removes all contexts of a particular type
@@ -666,7 +688,8 @@ var MainSearchView = Backbone.View.extend({
     _removeSpecificContext: function (itemType) {
         if (itemType == null) {
             itemType = [];
-        } else if (!$.isArray(itemType)) {
+        }
+        else if (!$.isArray(itemType)) {
             itemType = [itemType];
         }
 
@@ -705,26 +728,33 @@ var MainSearchView = Backbone.View.extend({
 
             if ((initials != "" && initials == currentInput) || (shortName != "" && shortName == currentInput)) {
                 exactInitials.push(currentVersion);
-            } else if (shortName.startsWith(currentInput) || initials.startsWith(currentInput)) {
+            }
+            else if (shortName.startsWith(currentInput) || initials.startsWith(currentInput)) {
                 if (currentVersion.item.recommended) {
                     prefixInitials.unshift(currentVersion);
-                } else {
+                }
+                else {
                     prefixInitials.push(currentVersion);
                 }
-            } else if (languageName.startsWith(currentInput) || originalLanguage.startsWith(currentInput)) {
+            }
+            else if (languageName.startsWith(currentInput) || originalLanguage.startsWith(currentInput)) {
                 if (currentVersion.item.recommended) {
                     recommendedByLanguage.push(currentVersion);
-                } else {
+                }
+                else {
                     languageMatches.push(currentVersion);
                 }
-            } else if (this.matchDropdownEntry(currentInput, currentVersion)) {
+            }
+            else if (this.matchDropdownEntry(currentInput, currentVersion)) {
                 if (limit == VERSION || exactInitials.length + prefixInitials.length < 3) {
                     if (currentVersion.item.recommended) {
                         recommendedByLanguage.push(currentVersion);
-                    } else {
+                    }
+                    else {
                         others.push(currentVersion);
                     }
-                } else {
+                }
+                else {
                     totalNotDisplayed++;
                 }
             }
@@ -737,26 +767,29 @@ var MainSearchView = Backbone.View.extend({
 
         if (limit == VERSION) {
             options = options.concat(others);
-        } else if (options.length < 3) {
+        }
+        else if (options.length < 3) {
             totalNotDisplayed = others.length - 3;
             options = options.concat(others.splice(0, 3 - options.length));
         }
 
         if (totalNotDisplayed > 0) {
-            var groupedItem = {  itemType: VERSION, item: {}, grouped: true,
-                count: totalNotDisplayed, maxReached: false, extraExamples: others.splice(0, 2) };
+            var groupedItem = {
+                itemType: VERSION, item: {}, grouped: true,
+                count: totalNotDisplayed, maxReached: false, extraExamples: others.splice(0, 2)
+            };
             this.setGroupText(groupedItem, term);
-            options.push({ text: groupedItem.text, item: groupedItem, itemType: VERSION });
+            options.push({text: groupedItem.text, item: groupedItem, itemType: VERSION});
         }
 
-        if(term.indexOf('=') != -1) {
-            options.push({ item: { value: term, text: term}, itemType: SYNTAX });
+        if (term.indexOf('=') != -1) {
+            options.push({item: {value: term, text: term}, itemType: SYNTAX});
         }
 
         return options;
     },
     formatResultCssClass: function (item) {
-        if(item && item.itemType == EXACT_FORM) {
+        if (item && item.itemType == EXACT_FORM) {
             return "select-" + item.itemType + " select-exactForm-" + (item.greek ? "greek" : "hebrew");
         }
         return "select-" + item.itemType;
@@ -775,7 +808,7 @@ var MainSearchView = Backbone.View.extend({
         var source = step.util.ui.getSource(v.itemType);
         var row;
 
-        if(v.item.maxGroupReached) {
+        if (v.item.maxGroupReached) {
             return "<span class='maxSelected'>" + source + v.item.text + "</span>";
         }
 
@@ -796,9 +829,9 @@ var MainSearchView = Backbone.View.extend({
                 row = [
                     '<div class="versionItem">',
                     source,
-                        '<span class="features">' + step.util.ui.getFeaturesLabel(v.item) + '</span>',
-                        '<span class="initials">' + this._markMatch(v.item.shortInitials, query.term) + '</span> - ',
-                        '<span class="name">' + this._markMatch(v.item.name, query.term) + '</span>',
+                    '<span class="features">' + step.util.ui.getFeaturesLabel(v.item) + '</span>',
+                    '<span class="initials">' + this._markMatch(v.item.shortInitials, query.term) + '</span> - ',
+                    '<span class="name">' + this._markMatch(v.item.name, query.term) + '</span>',
                     '</div>'
                 ].join('');
                 break;
@@ -817,12 +850,13 @@ var MainSearchView = Backbone.View.extend({
             case REFERENCE:
                 var internationalisedSectionName;
                 if (this._getSpecificContext(REFERENCE) != null &&
-                        (v.item.sectionType == 'BIBLE_BOOK' || (!v.item.wholeBook && !v.item.passage ))) {
+                    (v.item.sectionType == 'BIBLE_BOOK' || (!v.item.wholeBook && !v.item.passage))) {
                     //then we are listing all chapters, and should display 'Whole book' instead
                     internationalisedSectionName = __s.bible_whole_book_section;
-                } else {
+                }
+                else {
                     var internationalName = __s[v.item.sectionType.toLowerCase() + "_section"];
-                    if(internationalName == null) {
+                    if (internationalName == null) {
                         internationalName = __s[v.item.sectionType.toLowerCase()];
                     }
                     internationalisedSectionName = internationalName;
@@ -889,7 +923,11 @@ var MainSearchView = Backbone.View.extend({
             case VERSION:
                 return step.keyedVersions[token];
             case REFERENCE:
-                return { fullName: enhancedInfo.fullName, shortName: enhancedInfo.shortName, osisID: enhancedInfo.osisID };
+                return {
+                    fullName: enhancedInfo.fullName,
+                    shortName: enhancedInfo.shortName,
+                    osisID: enhancedInfo.osisID
+                };
             case GREEK_MEANINGS:
             case GREEK:
             case HEBREW_MEANINGS:
@@ -907,29 +945,30 @@ var MainSearchView = Backbone.View.extend({
                 //else default to something (in the future, we may change the URLs
                 if (token.length > 0 && token[0] == 'G') {
                     tokenItem.tokenType = GREEK_MEANINGS;
-                } else {
+                }
+                else {
                     tokenItem.tokenType = HEBREW_MEANINGS;
                 }
 
                 return enhancedInfo;
             case SUBJECT_SEARCH:
-                return { value: token, searchTypes: ["SUBJECT_SIMPLE"] };
+                return {value: token, searchTypes: ["SUBJECT_SIMPLE"]};
             case NAVE_SEARCH:
-                return { value: token, searchTypes: ["SUBJECT_EXTENDED"] };
+                return {value: token, searchTypes: ["SUBJECT_EXTENDED"]};
             case NAVE_SEARCH_EXTENDED:
-                return { value: token, searchTypes: ["SUBJECT_FULL"] };
+                return {value: token, searchTypes: ["SUBJECT_FULL"]};
             case EXACT_FORM:
-                return { text: token, greek: enhancedInfo.greek};
+                return {text: token, greek: enhancedInfo.greek};
             case TOPIC_BY_REF:
             case RELATED_VERSES:
-                return { text: token };
+                return {text: token};
             case MEANINGS:
-                return { gloss: token };
+                return {gloss: token};
             case TEXT_SEARCH:
-                return { text: enhancedInfo.text, value: enhancedInfo.text };
+                return {text: enhancedInfo.text, value: enhancedInfo.text};
             case SYNTAX:
                 return enhancedInfo == null ? {text: "&lt;...&gt;", value: token} :
-                    {text: enhancedInfo.text, value: enhancedInfo.value };
+                    {text: enhancedInfo.text, value: enhancedInfo.value};
             default:
                 return token;
         }
@@ -945,7 +984,7 @@ var MainSearchView = Backbone.View.extend({
                 break;
         }
 
-        return { item: item, itemType: tokenType };
+        return {item: item, itemType: tokenType};
     },
     syncWithUrl: function (model) {
         if (model == null) {
@@ -986,18 +1025,19 @@ var MainSearchView = Backbone.View.extend({
             versions.removeClass("masterVersion");
             masterVersion.addClass("masterVersion");
             masterVersion.attr("title", masterVersion.attr("title") + "\n" + __s.master_version_info);
-            this.masterVersion = _.findWhere(this.masterSearch.select2("data"), { itemType: "version" });
-        } else {
+            this.masterVersion = _.findWhere(this.masterSearch.select2("data"), {itemType: "version"});
+        }
+        else {
             this.masterVersion = null;
         }
     },
-    showBooks: function() {
+    showBooks: function () {
         console.log("Triggering book selection");
 
         var dropdownOfBooks = $("<select>");
         var versions = _.template(
             "<% _.each(versions, function(version, i) { %> <option value='<%= version.item.initials %>'><%= version.item.name %></option> <% }) %>")(
-            { versions: step.itemisedVersions});
+            {versions: step.itemisedVersions});
         dropdownOfBooks.append(versions);
         $("body").append(dropdownOfBooks);
         dropdownOfBooks.click();

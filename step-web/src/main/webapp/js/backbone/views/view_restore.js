@@ -85,7 +85,7 @@ var RestorePassageView = Backbone.View.extend({
                     if (!firstMatchDeleted && p.get("signature") == corePassage.get("signature")) {
                         //copy over the position
                         corePassage.save({ position: p.get("position") }, { silent: true }, { silent: true });
-                        
+
                         //we simply delete p, as it's highly likely we're already restored it.
                         p.destroy();
                         i--;
@@ -117,14 +117,14 @@ var RestorePassageView = Backbone.View.extend({
                     if (el.prop('checked')) {
                         //restore column
                         step.util.createNewColumn(false, model);
-                        step.router.handleRenderModel(model, null, null, -1);
+                        step.router.handleRenderPanel(model, null, null, -1);
                     } else {
                         //never notify, no point
                         step.passages.remove(model, {silent: true});
                     }
                 });
 
-                
+
                 //now let's restore the correct order
                 var comparator = function(a, b) { return $.data(a, "item")[field] < $.data(b, "item")[field] ? -1 : 1; };
                 $(".column").not(".examplesColumn").sortElements(function(a,b) {
@@ -137,8 +137,8 @@ var RestorePassageView = Backbone.View.extend({
                     var bModel = step.passages.findWhere({passageId: parseInt(bPassageId) });
                     return aModel.get("position") < bModel.get("position") ? -1 : 1;
                 });
-                
-                
+
+
                 self.closeModal();
             });
             this.restoreForm.modal("show");
@@ -160,7 +160,7 @@ var RestorePassageView = Backbone.View.extend({
 
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
-            
+
             this.closeCallback();
         }
     })

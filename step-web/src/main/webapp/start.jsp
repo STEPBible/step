@@ -427,6 +427,7 @@
 <script src="js/backbone/views/view_restore.js" type="text/javascript"></script>
 
 <script src="js/backbone/step_router.js" type="text/javascript"></script>
+<script src="js/backbone/views/view_panel.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_display.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>
 <script src="js/backbone/models/model_history.js" type="text/javascript"></script>

@@ -208,6 +208,7 @@
 									<jsSourceFile>js/step.util.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_main_search.js</jsSourceFile>
 									<jsSourceFile>js/backbone/step_router.js</jsSourceFile>
+									<jsSourceFile>js/backbone/views/view_panel.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_display.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_display_passage.js</jsSourceFile>
 									<jsSourceFile>js/backbone/models/model_history.js</jsSourceFile>

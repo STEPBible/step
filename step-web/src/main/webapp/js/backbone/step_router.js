@@ -8,7 +8,8 @@ var StepRouter = Backbone.Router.extend({
     _addArg: function (url, argName, argValue) {
         if (url == "") {
             url += '?';
-        } else if (url[url.length - 1] != '?') {
+        }
+        else if (url[url.length - 1] != '?') {
             url += '&';
         }
         url += argName;
@@ -19,7 +20,7 @@ var StepRouter = Backbone.Router.extend({
     },
     overwriteUrl: function (inputUrl) {
         var url = inputUrl || Backbone.history.fragment || "";
-        this.navigate(url, { trigger: false, replace: true});
+        this.navigate(url, {trigger: false, replace: true});
     },
 
     navigatePreserveVersions: function (partial, stripCommentaries) {
@@ -47,7 +48,7 @@ var StepRouter = Backbone.Router.extend({
     },
     navigateSearch: function (args, historyOptions) {
         var activePassageId = step.util.activePassageId();
-        var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
+        var activePassageModel = step.passages.findWhere({passageId: activePassageId});
         var options = activePassageModel.get("selectedOptions") || "";
         var interlinearMode = activePassageModel.get("interlinearMode") || "";
         var pageNumber = activePassageModel.get("pageNumber");
@@ -57,7 +58,7 @@ var StepRouter = Backbone.Router.extend({
         var position = activePassageModel.get("passageId");
 
         if (step.util.isBlank(context)) {
-            activePassageModel.set({context: 0 }, { silent: true });
+            activePassageModel.set({context: 0}, {silent: true});
             context = 0;
         }
         var urlStub = "";
@@ -65,7 +66,8 @@ var StepRouter = Backbone.Router.extend({
         if (step.util.isBlank(args) && (!historyOptions || !historyOptions.replace)) {
             var modelArgs = activePassageModel.get("args") || "";
             urlStub = this._addArg(urlStub, "q", modelArgs);
-        } else {
+        }
+        else {
             urlStub = this._addArg(urlStub, "q", args);
         }
 
@@ -97,22 +99,23 @@ var StepRouter = Backbone.Router.extend({
         }
 
         if (!historyOptions) {
-            historyOptions = { trigger: true};
+            historyOptions = {trigger: true};
         }
 
         //we will get a null-arg as part of the replacing of the URL with the correct URL
         //call back from after the routing call to rest backend call. So need
         //to avoid writing over 'args'
         if (args != null) {
-            activePassageModel.save({ args: decodeURIComponent(args) }, { silent: true });
+            activePassageModel.save({args: decodeURIComponent(args)}, {silent: true});
         }
 
         //code copied from bootstraps navigate - bringing up to work out if anything will be triggered.
         var currentFragment = Backbone.history.fragment;
         var targetFragment = Backbone.history.getFragment(urlStub);
-        if(currentFragment === targetFragment) {
+        if (currentFragment === targetFragment) {
             activePassageModel.trigger("afterRender");
-        } else {
+        }
+        else {
             this.navigate(urlStub, historyOptions);
         }
     },
@@ -133,72 +136,22 @@ var StepRouter = Backbone.Router.extend({
         $("link[rel='canonical']").attr("href", url);
         return url;
     },
-    handleSearchResults: function (passageModel, partRendered) {
-        require(["search"], function (module) {
-            if (passageModel.get("pageNumber") > 1) {
-                passageModel.trigger("newPage");
-            } else {
-                passageModel.trigger("destroyViews");
-                switch (passageModel.get("searchType")) {
-                    case "TEXT":
-                    case "RELATED_VERSES":
-                        new TextDisplayView({
-                            model: passageModel,
-                            partRendered: partRendered
-                        });
-                        break;
-                    case "SUBJECT_SIMPLE" :
-                    case "SUBJECT_EXTENDED" :
-                    case "SUBJECT_FULL" :
-                    case "SUBJECT_RELATED" :
-                        new SubjectDisplayView({
-                            model: passageModel,
-                            partRendered: partRendered
-                        });
-                        break;
-                    case "ORIGINAL_MEANING" :
-                    case "EXACT_FORM" :
-                    case "ORIGINAL_GREEK_FORMS" :
-                    case "ORIGINAL_GREEK_RELATED" :
-                    case "ORIGINAL_HEBREW_EXACT" :
-                    case "ORIGINAL_HEBREW_FORMS" :
-                    case "ORIGINAL_HEBREW_RELATED":
-                        new WordDisplayView({
-                            model: passageModel,
-                            partRendered: partRendered
-                        });
-                        break;
-                }
-            }
-        });
-    },
-    handleRenderModel: function (passageModel, partRendered, queryArgs, totalTime) {
+    handleRenderPanel: function (panelModel, partRendered, queryArgs, totalTime) {
         var startRender = new Date().getTime();
-        passageModel.save({
-                args: queryArgs != null ? decodeURIComponent(queryArgs) : "",
-                urlFragment: Backbone.history.getFragment()
-            },
-            {
-                silent: true
-            }
-        );
+        panelModel.save({
+            args: queryArgs != null ? decodeURIComponent(queryArgs) : "",
+            urlFragment: Backbone.history.getFragment()
+        }, {silent: true});
 
         //then trigger the refresh of menu options and such like
-        passageModel.trigger("sync-update", passageModel);
+        panelModel.trigger("sync-update", panelModel);
 
-        var searchType = passageModel.get("searchType");
-        if (searchType == 'PASSAGE') {
-            //destroy all views for this column
-            passageModel.trigger("destroyViews");
-            new PassageDisplayView({
-                model: passageModel,
-                partRendered: partRendered
-            });
-        } else {
-            this.handleSearchResults(passageModel, partRendered);
-        }
+        var searchType = panelModel.get("searchType");
 
-        this._renderSummary(passageModel);
+        new PanelView({
+            model: panelModel,
+            partRendered: partRendered
+        });
 
         var endRender = new Date().getTime();
         var totalRender = endRender - startRender;
@@ -208,37 +161,28 @@ var StepRouter = Backbone.Router.extend({
             step.util.trackAnalyticsTime("search", "totalTime", totalTime + endRender - startRender);
             step.util.trackAnalyticsTime(searchType, "totalTime", totalTime + endRender - startRender);
             step.util.trackAnalytics("search", "searchType", searchType);
-            step.util.trackAnalytics("search", "masterVersion", passageModel.get("masterVersion"));
+            step.util.trackAnalytics("search", "masterVersion", panelModel.get("masterVersion"));
 
-            if (passageModel.get("interlinearMode") != null) {
-                step.util.trackAnalytics("search", "interlinearMode", passageModel.get("interlinearMode"));
+            if (panelModel.get("interlinearMode") != null) {
+                step.util.trackAnalytics("search", "interlinearMode", panelModel.get("interlinearMode"));
             }
 
             if (searchType == 'PASSAGE') {
-                step.util.trackAnalytics("search", "passage", passageModel.get("osisId"));
-            } else {
-                if (passageModel.get("query") != null) {
-                    step.util.trackAnalytics("search", "query", passageModel.get("query"));
+                step.util.trackAnalytics("search", "passage", panelModel.get("osisId"));
+            }
+            else {
+                if (panelModel.get("query") != null) {
+                    step.util.trackAnalytics("search", "query", panelModel.get("query"));
                 }
             }
 
-            var searchTokens = passageModel.get("searchTokens") || [];
-            for(var i = 0; i < searchTokens.length; i++) {
-                if(searchTokens[i].tokenType && searchTokens[i].token) {
+            var searchTokens = panelModel.get("searchTokens") || [];
+            for (var i = 0; i < searchTokens.length; i++) {
+                if (searchTokens[i].tokenType && searchTokens[i].token) {
                     step.util.trackAnalytics("search", searchTokens[i].tokenType, searchTokens[i].token);
                 }
             }
         }
-    },
-
-    _renderSummary: function (passageModel) {
-        var searchTokens = passageModel.get("searchTokens");
-        var container = $("<span></span>").addClass("argSummary");
-        step.util.ui.renderArgs(searchTokens, container);
-
-        var passageOptions = step.util.getPassageContainer(passageModel.get("passageId")).find(".passageOptionsGroup");
-        passageOptions.find(".argSummary").remove();
-        passageOptions.append(container);
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;
@@ -323,13 +267,13 @@ var StepRouter = Backbone.Router.extend({
                 }
 
                 step.util.unlinkThis(activePassageId);
-                var passageModel = step.passages.findWhere({ passageId: activePassageId});
+                var passageModel = step.passages.findWhere({passageId: activePassageId});
                 if (passageModel == null) {
                     console.error("No passages defined for ", activePassageId);
                 }
 
-                passageModel.save(text, { silent: true });
-                self._addBookmark({ args: query, searchTokens: text.searchTokens });
+                passageModel.save(text, {silent: true});
+                self._addBookmark({args: query, searchTokens: text.searchTokens});
                 step.util.squashErrors(passageModel);
 
                 //don't trigger a full search, but replace the URL with the one that makes sense
@@ -337,7 +281,7 @@ var StepRouter = Backbone.Router.extend({
                     step.router.overwriteUrl();
                 }
 
-                self.handleRenderModel(passageModel, false, query, totalSoFar);
+                self.handleRenderPanel(passageModel, false, query, totalSoFar);
             },
             passageId: activePassageId,
             level: 'error'
@@ -345,9 +289,9 @@ var StepRouter = Backbone.Router.extend({
     },
     _addBookmark: function (query) {
         var normalizedArgs = this._normalizeArgs(query.args);
-        var existingModel = step.bookmarks.findWhere({ args: normalizedArgs });
+        var existingModel = step.bookmarks.findWhere({args: normalizedArgs});
         if (existingModel) {
-            existingModel.save({ lastAccessed: new Date().getTime() });
+            existingModel.save({lastAccessed: new Date().getTime()});
             return;
         }
 
@@ -373,15 +317,20 @@ var StepRouter = Backbone.Router.extend({
                     return aTokens[1] < bTokens[1] ? -1 : 1;
                 }
                 return 0;
-            } else if (aKey == VERSION) {
+            }
+            else if (aKey == VERSION) {
                 return -1;
-            } else if (bKey == VERSION) {
+            }
+            else if (bKey == VERSION) {
                 return 1;
-            } else if (aKey == REFERENCE) {
+            }
+            else if (aKey == REFERENCE) {
                 return -1;
-            } else if (bKey == REFERENCE) {
+            }
+            else if (bKey == REFERENCE) {
                 return 1
-            } else {
+            }
+            else {
                 //preserve the order so equal
                 return 0;
             }

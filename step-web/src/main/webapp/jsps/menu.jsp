@@ -79,7 +79,7 @@
                 <!-- # Video demonstrations -->
                 <li><a href="https://www.stepbible.org/videos" target="_blank"><fmt:message key="video_help"/></a></li>
                 <!-- # Guide and Instructions -->
-                <li><a href="https://stepweb.atlassian.net/wiki/display/SUG/Quick+overview" target="_blank"><fmt:message key="help_online"/></a></li>
+                <li><a href="https://stepbibleguide.blogspot.com" target="_blank"><fmt:message key="help_online"/></a></li>
                 <!-- # Available Bibles etc -->
                 <!-- # - (offline list + Install more) -->
                 <%

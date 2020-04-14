@@ -18,7 +18,7 @@
   }
 
   button, .glyphicon {
-    cursor: hand;
+    cursor: pointer;
   }
 
   .openRefInColumn {
@@ -38,12 +38,6 @@
 // qtip
 .qtip-content {
   .passageContentHolder {
-    padding: 0;
-
-    &:after {
-      display: none;
-    }
-
     .startLineGroup {
       padding: 0;
       margin: 0;

@@ -6,7 +6,7 @@
         step.itemisedVersions = [];
         for (var ii = 0; ii < window.tempVersions.length; ii++) {
             var tempVersion = window.tempVersions[ii];
-            var item = { item: tempVersion, itemType: 'version' };
+            var item = {item: tempVersion, itemType: 'version'};
             step.itemisedVersions.push(item);
             step.keyedVersions[tempVersion.initials] = tempVersion;
             step.keyedVersions[tempVersion.shortInitials] = tempVersion;
@@ -53,7 +53,7 @@
 
         //override some particular settings to avoid UI shifting on load:
         //we never open up a related words section
-        step.settings.save({ relatedWordsOpen: false });
+        step.settings.save({relatedWordsOpen: false});
     };
 
     function initSearchDropdown() {
@@ -80,18 +80,19 @@
                     return path;
                 }
                 return fragment.replace(/^[#\/]|\s+$/g, '');
-            }});
+            }
+        });
     }
 
     function identifyLikelyPreviousPassage(firstModel) {
-        if(!step.passages || !firstModel) {
+        if (!step.passages || !firstModel) {
             return null;
         }
 
         var firstReference = firstModel.signature;
-        for(var ii = 0; ii < step.passages.length; ii++) {
+        for (var ii = 0; ii < step.passages.length; ii++) {
             var p = step.passages.at(ii);
-            if(p.get("signature") == firstReference) {
+            if (p.get("signature") == firstReference) {
                 //likely to be the same passage (crude, I know!)
                 return p;
             }
@@ -119,7 +120,7 @@
                 results: p.get("firstPageResults"),
                 linked: null
             }, {
-                silent: true 
+                silent: true
             });
         }
 
@@ -129,13 +130,13 @@
             var pageValue = $(".passageContainer").find(".passageContent").html().trim();
 
             //now we can create the correct views
-            var modelZero = new PassageModel({ passageId: 0, position: -1 });
+            var modelZero = new PassageModel({passageId: 0, position: -1});
             step.passages.add(modelZero);
 
             //reset some attributes that weren't on the model to start with (because of space reasons)
             window.tempModel.createSilently = true;
             var likelyPreviousPassage = identifyLikelyPreviousPassage(window.tempModel);
-            modelZero.save(window.tempModel, { silent: true });
+            modelZero.save(window.tempModel, {silent: true});
             modelZero.save({
                 isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true,
                 isVerseVocab: likelyPreviousPassage ? likelyPreviousPassage.get("isVerseVocab") : true,
@@ -154,24 +155,20 @@
                     new ViewHelpMenuOptions({});
                 });
             });
-            
-            //bind to the examples close button
-            $(".examplesContainer .closeColumn").on('click', function() {
-                step.util.showOrHideTutorial(true);
-                //resize the columns
-                step.util.refreshColumnSize();
-            })
         }
+
         if (step.passages.length == 0) {
-            step.passages.add(new PassageModel({ passageId: 0 }));
+            step.passages.add(new PassageModel({passageId: 0}));
         }
+
+        new ExamplesView({ el: $(".examplesColumn") });
 
         $("#stepDisclaimer").popover();
     }
 
     //can this be done before load? self executing function
     function registerColumnChangeEvents() {
-        Backbone.Events.listenTo(Backbone.Events, "columnsChanged", function() {
+        Backbone.Events.listenTo(Backbone.Events, "columnsChanged", function () {
             step.util.reNumberModels();
         });
         step.util.reNumberModels();
@@ -182,7 +179,7 @@
         define.amd = null;
 
         //first of all, if we have a fragment, let's get rid of it
-        if((window.location.hash||"").indexOf("#") != -1) {
+        if ((window.location.hash || "").indexOf("#") != -1) {
             window.location.hash = "";
         }
 
@@ -193,12 +190,14 @@
         initCoreModelsAndRouter();
         initSearchDropdown();
 
-        Backbone.history.start({pushState: true, silent: true });
+        Backbone.history.start({pushState: true, silent: true});
 
         new FeedbackView();
         if (step.passages.length > 1) {
             //delete all passages that are not passageId: 0
-            _.each(step.passages.reject(function(m) { return m.get("passageId") == 0 }), function(m) {
+            _.each(step.passages.reject(function (m) {
+                return m.get("passageId") == 0
+            }), function (m) {
                 m.destroy();
             });
 
@@ -209,7 +208,7 @@
 //        } else {
 //            registerColumnChangeEvents();
         }
-        
+
         //do cookie notification
         step.util.raiseOneTimeOnly("cookie_notification", 'info');
         var tmp = localStorage.getItem('colorCode-openStatus');
@@ -222,14 +221,14 @@
             localStorage.removeItem('colorCode-InfoMsg');
             step.util.raiseInfo(JSON.parse(tmp), 'info');
         }
-        if(step.state.getIncompleteLanguage()) {
+        if (step.state.getIncompleteLanguage()) {
             step.util.raiseOneTimeOnly("machine_translated", 'info');
         }
         step.util.trackAnalytics('interface', 'language', step.state.language(1));
-        if(window.localStorage) {
+        if (window.localStorage) {
             var storedVersion = window.localStorage.getItem("step.version");
             var downloadedVersion = step.state.getCurrentVersion();
-            if(storedVersion != downloadedVersion) {
+            if (storedVersion != downloadedVersion) {
                 //we're upgrading to the new version
                 console.log("Upgrading versions: ", storedVersion, downloadedVersion);
                 window.localStorage.setItem("step.version", downloadedVersion);
@@ -237,11 +236,11 @@
         }
 
         //iframe
-        if(window != window.top) {
+        if (window != window.top) {
             step.util.showOrHideTutorial(true);
             var button = $("<button class='stepBreakout btn btn-default btn-xs'><span class='glyphicon glyphicon-new-window'></button>");
             $(".headerButtons").append(button);
-            button.on("click", function() {
+            button.on("click", function () {
                 window.open(window.location);
             });
         }

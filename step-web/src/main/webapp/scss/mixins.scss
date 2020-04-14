@@ -94,47 +94,47 @@
 
 @mixin bold-args($start, $end) {
   &.select-meanings {
-    cursor: hand !important;
+    cursor: pointer !important;
     background: $meaningsRow !important;
   }
 
   &.select-version {
-    cursor: hand !important;
+    cursor: pointer !important;
     background: $bibleRow !important;
   }
 
   &.select-reference, &.select-relatedrefs {
-    cursor: hand !important;
+    cursor: pointer !important;
     background: $referenceRow !important;
   }
 
   &.select-subject, &.select-topicref {
-    cursor: hand !important;
+    cursor: pointer !important;
     background: $subjectRow !important;
   }
 
   &.select-text, &.select-syntax {
-    cursor: hand !important;
+    cursor: pointer !important;
     background: $textRow !important;
   }
 
   &.select-greek, &.select-exactForm-greek {
-    cursor: hand !important;
+    cursor: pointer !important;
     background: $greekRow !important;
   }
 
   &.select-greekMeanings {
-    cursor: hand !important;
+    cursor: pointer !important;
     background: $greekMeaningsRow !important;
   }
 
   &.select-hebrew, &.select-exactForm-hebrew {
-    cursor: hand !important;
+    cursor: pointer !important;
     background: $hebrewRow !important;
   }
 
   &.select-hebrewMeanings {
-    cursor: hand !important;
+    cursor: pointer !important;
     background: $hebrewMeaningsRow !important;
   }
 

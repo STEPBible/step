@@ -113,7 +113,6 @@ public class StepRequest {
         LOGGER.debug("Request parsed as controller: [{}], method [{}]", this.controllerName, this.methodName);
         final int endOfMethodName = startOfMethodName + this.methodName.length();
         final String[] calculatedArguments = parseArguments(endOfMethodName + 1, encoding);
-
         this.args = calculatedArguments == null ? new String[] {} : calculatedArguments;
     }
 

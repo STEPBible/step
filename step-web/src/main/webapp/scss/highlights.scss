@@ -34,6 +34,10 @@
   color: $quickLexiconFontColour;
   text-shadow: none !important;
 
+  & > .secondaryBackground {
+    background-color: $highlight-color !important;
+  }
+
   .segC0, .segC1 {
     color: $quickLexiconFontColour;
   }

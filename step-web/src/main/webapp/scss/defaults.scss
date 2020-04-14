@@ -16,7 +16,7 @@ body {
   overflow-x: hidden;
 }
 
-body, .dropdown-menu, .searchResultRow, #quickLexicon h1 {
+body, .dropdown-menu, #quickLexicon h1 {
   font-size: $defaultFontSize;
 }
 
@@ -48,7 +48,7 @@ ul .glyphicon-ok {
 .panel-heading {
   padding: 2px 5px;
   h4 {
-    cursor: hand;
+    cursor: pointer;
     margin: 0px;
     font-size: 12px;
   }

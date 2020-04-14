@@ -3,7 +3,7 @@
 
     <groupId>com.tyndalehouse.step</groupId>
     <artifactId>step-mvn</artifactId>
-    <version>2.0.17-SNAPSHOT</version>
+    <version>2.0.18-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>STEP :: Scripture Tools for Every pastor</name>
 
@@ -13,7 +13,7 @@
         <site.location>${project.build.directory}/site</site.location>
         <final.jsword.package>packages</final.jsword.package>
         
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <selenium.version>2.43.0</selenium.version>
         <!-- <sauce.version>2.1.25</sauce.version>  -->
 
@@ -27,7 +27,7 @@
         <!-- <jdom.version>1.1.1</jdom.version> -->
         <javatar.version>2.5</javatar.version>
 
-        <jackson-mapper-asl.version>1.9.11</jackson-mapper-asl.version>
+        <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
         <org.slf4j.version>1.7.2</org.slf4j.version>
         <servlet-api.version>3.1.0</servlet-api.version>
         <jsp-api.version>2.2</jsp-api.version>
@@ -38,9 +38,9 @@
         <guice-servlet.version>3.0</guice-servlet.version>
         <opencsv.version>2.3</opencsv.version>
 
-        <jetty.version>8.1.9.v20130131</jetty.version>
-        <tomcat.version>8.5.4</tomcat.version>
-        <tomcat.secondary.version>8.5.2</tomcat.secondary.version>
+        <jetty.version>9.3.27.v20190418</jetty.version>
+        <tomcat.version>9.0.31</tomcat.version>
+        <tomcat.secondary.version>9.0.0.M6</tomcat.secondary.version>
         <xalan.version>2.7.1</xalan.version>
 
         <yammer-metrics.version>2.2.0</yammer-metrics.version>
@@ -54,7 +54,7 @@
         <commons-collections.version>3.2.1</commons-collections.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-configuration.version>1.8</commons-configuration.version>
-        <commons-httpclient.version>4.3.2</commons-httpclient.version>
+        <commons-httpclient.version>4.3.6</commons-httpclient.version>
         <httpcomponents-httpclient.version>4.3.2</httpcomponents-httpclient.version>
         <!-- testing dependencies -->
         <mockito.version>1.9.5</mockito.version>

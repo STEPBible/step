@@ -320,7 +320,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public EntityDoc[] getLexiconDefinitions(final String vocabIdentifiers, final String version, final String reference) {
+    public synchronized EntityDoc[] getLexiconDefinitions(final String vocabIdentifiers, final String version, final String reference) {
         final String[] keys = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
         if (keys.length == 0) {
             return new EntityDoc[0];

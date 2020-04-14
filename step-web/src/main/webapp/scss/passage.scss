@@ -7,6 +7,7 @@
 
 .passageContentHolder {
   line-height: 1.6;
+  outline: 0;
 }
 
 // headings
@@ -380,11 +381,6 @@ span.caps {
   font-style: normal;
 }
 
-.headingContainer {
-  /* 	height: 30px; */
-  /*padding-bottom: 5px;*/
-}
-
 TD.notes {
   width: 20%;
   background: #f4f4e8;
@@ -733,61 +729,30 @@ Active  Middle Passive Active Middle Passive Active	Middle Passive	Active Middle
   text-shadow: 1px 1px white;
 }
 
-.parent-div{
+.accordion-row {
   width: 100%;
   border: 1px solid #f1f1f1;
   padding: 5px 10px;
   margin: 0;
   background: #ffffff;
 }
-#accordion-heading1{
+
+.accordion-heading {
   background: #8d2f42;
   padding: 5px 10px;
   margin: 0;
   cursor: pointer;
   color: #ffffff;
   font-size: 12px;
-}
-#accordion-heading1 span{
-  float: right;
-  font-family: "Courier New", Courier, monospace;
+
+  span {
+    float: right;
+    font-family: "Courier New", Courier, monospace;
+  }
 }
 
-#accordion-body1 {
+.accordion-body {
+  display: none;
   padding: 5px 10px;
 }
-
-#accordion-heading2 {
-  background: #8d2f42;
-  padding: 5px 10px;
-  margin: 0;
-  cursor: pointer;
-  color: #ffffff;
-  font-size: 12px;
-}
-#accordion-heading2 span {
-  float: right;
-  font-family: "Courier New", Courier, monospace;
-}
-
-#accordion-body2 {
-  padding: 5px 10px;
-}
-#accordion-heading3 {
-  background: #8d2f42;
-  padding: 5px 10px;
-  margin: 0;
-  cursor: pointer;
-  color: #ffffff;
-  font-size: 12px;
-}
-#accordion-heading3 span {
-  float: right;
-  font-family: "Courier New", Courier, monospace;
-}
-
-#accordion-body3 {
-  padding: 5px 10px;
-}
-
 

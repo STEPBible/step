@@ -234,7 +234,7 @@ step.util = {
         if (activePassageEl.length == 0) {
             //default to the first passage that is visible on the screen
             activePassageEl = $(".passageContainer:first");
-            //force the setter to trigger 
+            //force the setter to trigger
             currentActivePassageId = val = parseInt(activePassageEl.attr("passage-id"));
             force = true;
         } else {
@@ -325,7 +325,7 @@ step.util = {
     },
     refreshColumnSize: function (columns) {
         if (!columns) {
-            columns = $(".column").not(".examplesColumn");
+            columns = $(".column");
         }
 
         //change the width all columns
@@ -401,8 +401,7 @@ step.util = {
         var exampleContainer = $(".examplesContainer");
         if (exampleContainer.parent().hasClass("column")) {
             if (allRealColumns.length > 1 || hide) {
-                exampleContainer.parent().hide();
-                exampleContainer.find(".closeColumn").remove();
+                exampleContainer.parent().remove();
             }
         }
         this.refreshColumnSize();
@@ -487,7 +486,7 @@ step.util = {
         this.refreshColumnSize(allColumns);
         newColumn.insertAfter(activeColumn);
         if (linked) {
-            //add a link  
+            //add a link
             var link = $("<span class='glyphicon glyphicon-arrow-right linkPanel'></span>").attr("title", __s.panels_linked).click(function () {
                 //unlink all passages
                 step.util.unlink(newPassageId);
@@ -734,16 +733,21 @@ step.util = {
             return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
         },
         renderEnhancedToken: function (entry, isMasterVersion) {
+            var result;
             var util = step.util;
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
                 case REFERENCE:
-                    return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
+                    result = '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
-                        entry.item.shortName + '</div>';
+                        entry.item.shortName;
+
+                    result = result + '</div>';
+                    return result;
+
                 case VERSION:
-                    // I have seen the code crashed at this point when entry.item.shortInitialis is not defined.  It might be caused by an old installation of the Bible modules.
+                    // I have seen the code crashed at this point when entry.item.shortInitials is not defined.  It might be caused by an old installation of the Bible modules.
                     // I added the following code to reduce the chance of crash.
 					var shortInitialsOfTranslation = ''; // added so it does not crash at startup
 					var nameOfTranslation = '';          //  added so it does not crash at startup
@@ -757,11 +761,14 @@ step.util = {
                             else if (step.keyedVersions[shortInitialsOfTranslation] !== undefined) nameOfTranslation = step.keyedVersions[shortInitialsOfTranslation].name;
                         }
 					}
-                    return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") +
-                        '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
-                        (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
-                        'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation + "</div>"; // added so it does not crash at startup
+					result = '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") +
+                    '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
+                    (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
+                    'data-item-type="' + entry.itemType + '" ' +
+                    'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation;  // added so it does not crash at startup
+
+					result = result + "</div>";
+                    return result;
                 case GREEK:
                 case HEBREW:
                 case GREEK_MEANINGS:
@@ -1171,7 +1178,7 @@ step.util = {
                                         '<a href="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
                                         '</span><% }); %>' +
                                         '<% if(rows.length % 2 == 1) { %>' +
-// The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued started in September 2019.   
+// The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued started in September 2019.
 //                                        '<span class="even">&nbsp;</span>' +
 // Removed the "&nbsp;" to resolve the Chrome browser issue
                                         '<span class="even"></span>' +

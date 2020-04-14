@@ -39,8 +39,8 @@
         <opencsv.version>2.3</opencsv.version>
 
         <jetty.version>9.3.27.v20190418</jetty.version>
-        <tomcat.version>9.0.31</tomcat.version>
-        <tomcat.secondary.version>9.0.0.M6</tomcat.secondary.version>
+        <tomcat.version>8.5.4</tomcat.version>
+        <tomcat.secondary.version>8.5.2</tomcat.secondary.version>
         <xalan.version>2.7.1</xalan.version>
 
         <yammer-metrics.version>2.2.0</yammer-metrics.version>

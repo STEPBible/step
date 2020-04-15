@@ -366,7 +366,7 @@ if (os.contains("Windows")) {
     return (String) context.getVariable("sys.appdataDir") + "\\Sword";
 }
 if (os.contains("Mac OS X")) {
-    return (String) context.getVariable("sys.appdataDir") + "\/Sword";
+    return (String) context.getVariable("sys.appdataDir") + "/Sword";
 }
 
 return (String)context.getVariable("sys.userHome") + "/.sword";
@@ -397,7 +397,7 @@ if (os.contains("Windows")) {
     return (String) context.getVariable("sys.appdataDir") + "\\JSword";
 }
 if (os.contains("Mac OS X")) {
-    return (String) context.getVariable("sys.appdataDir") + "\/JSword";
+    return (String) context.getVariable("sys.appdataDir") + "/JSword";
 }
 
 return (String)context.getVariable("sys.userHome") + "/.jsword";

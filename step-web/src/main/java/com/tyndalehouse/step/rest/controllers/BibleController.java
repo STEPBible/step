@@ -240,6 +240,10 @@ public class BibleController {
                 Integer.parseInt(endVerseId), options, interlinearVersion, roundingUp);
     }
 
+    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference) {
+        return this.getStrongNumbersAndSubjects(version, reference, "");
+    }
+
     /**
      * Gets the strong numbers for a particular passage
      *
@@ -247,10 +251,10 @@ public class BibleController {
      * @return the strong numbers attached to the passage
      */
     @Timed(name = "vocab-popup", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference) {
+    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference, final String userLanguage) {
         notEmpty(reference, "A verse must be provided", APP_MISSING_FIELD);
         notEmpty(reference, "A version must be provided", APP_MISSING_FIELD);
-        return this.bibleInformation.getStrongNumbersAndSubjects(version, reference);
+        return this.bibleInformation.getStrongNumbersAndSubjects(version, reference, userLanguage);
     }
 
     /**

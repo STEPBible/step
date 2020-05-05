@@ -738,6 +738,11 @@ step.util = {
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
                 case REFERENCE:
+                    if (entry.item.shortName.length > 20) {
+                        var lastComma = entry.item.shortName.substr(0, 17).lastIndexOf(",");
+                        if (lastComma < 5) lastComma = 17;
+                        entry.item.shortName = entry.item.shortName.substr(0, lastComma) + '...';
+                    }
                     result = '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
@@ -1161,7 +1166,7 @@ step.util = {
                         content: {
                             text: function (event, api) {
                                 //otherwise, exciting new strong numbers to apply:
-                                $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
+                                $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference, step.userLanguageCode], function (data) {
                                     var template = '<div class="vocabTable">' +
 
                                         '<div class="col-xs-8 col-sm-4 heading"><h1><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1></div>' +
@@ -1178,7 +1183,7 @@ step.util = {
                                         '<a href="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
                                         '</span><% }); %>' +
                                         '<% if(rows.length % 2 == 1) { %>' +
-// The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued started in September 2019.
+// The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued was discovered in September 2019.
 //                                        '<span class="even">&nbsp;</span>' +
 // Removed the "&nbsp;" to resolve the Chrome browser issue
                                         '<span class="even"></span>' +
@@ -1189,12 +1194,22 @@ step.util = {
                                         '<% if(isSearch) { %><a href="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
 
                                     var rows = [];
+                                    
+                                    // Check step.userLanguageCode and $.getURlvar
+                                    var urlLang = $.getUrlVar("lang");
+                                    if (urlLang == null) urlLang = "";
+                                    else urlLang = urlLang.toLowerCase();
+                                    var currentLang = step.userLanguageCode.toLowerCase();
+                                    if (urlLang == "zh_tw") currentLang = "zh_tw";
+                                    else if (urlLang == "zh") currentLang = "zh";
                                     for (var key in data.strongData) {
                                         var verseData = data.strongData[key];
                                         for (var strong in verseData) {
                                             var strongData = verseData[strong];
                                             if (strongData && strongData.strongNumber) {
                                                 var counts = data.counts[strongData.strongNumber];
+                                                if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
+                                                else if ((currentLang == "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
                                                 rows.push({
                                                     strongData: strongData,
                                                     counts: counts

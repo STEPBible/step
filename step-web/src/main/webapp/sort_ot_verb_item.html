@@ -1,0 +1,26 @@
+<style>
+    #nestedVerbItem div, .nested-1 {
+        margin-top: 5px;
+    }
+    .nested-1 {
+        background-color: #e6e6e6;
+    }
+</style>  
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">X</button>
+</div>
+<div class="modal-body">
+<div id="sortVerbItemArea"></div>
+<div class="footer">
+<button id="saveButton" class="btn btn-default btn-xs closeModal" onclick=saveSortOTOrder()><label>Save</label></button>
+<button id="resetButton" class="btn btn-default btn-xs" onclick=resetSortOTOrder()><label>Reset</label></button>
+</div>
+</div>
+</div>
+</div>
+<script src="/libs/Sortable.min.js"></script>
+<script>
+	$( document ).ready(function() {
+		initSortOTVerbItem();
+    });
+</script>

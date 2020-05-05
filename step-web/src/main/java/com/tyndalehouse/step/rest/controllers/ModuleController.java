@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
@@ -141,10 +142,23 @@ public class ModuleController {
      *
      * @param vocabIdentifiers the strong number
      * @param reference        the reference in which this can be found
+     * @param vocabIdentifiers the strong number
      * @return the definition(s) that can be resolved from the reference provided
      */
     public Info getInfo(final String version, final String reference, final String vocabIdentifiers) {
-        return this.getInfo(version, reference, vocabIdentifiers, null);
+        return this.getInfo(version, reference, vocabIdentifiers, null, null);
+    }
+    /**
+     * a method that returns all the definitions for a particular key
+     *
+     * @param vocabIdentifiers the strong number
+     * @param reference        the reference in which this can be found
+     * @param vocabIdentifiers the strong number
+     * @param morphIdentifiers the morphology code to lookup
+     * @return the definition(s) that can be resolved from the reference provided
+     */
+    public Info getInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers) {
+        return this.getInfo(version, reference, vocabIdentifiers, morphIdentifiers, null);
     }
 
     /**
@@ -154,6 +168,7 @@ public class ModuleController {
      * @param reference        the reference in which this can be found
      * @param vocabIdentifiers the strong number
      * @param morphIdentifiers the morphology code to lookup
+     * @param userLanguage     user's browser language code (e.g.: en, es, zh, ...)
      * @return the definition(s) that can be resolved from the reference provided
      */
     @Timed(name = "full-vocab", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
@@ -161,14 +176,21 @@ public class ModuleController {
             final String version,
             final String reference,
             final String vocabIdentifiers,
-            final String morphIdentifiers) {
+            final String morphIdentifiers,
+            final String userLanguage) {
         LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[]{reference, this.vocab, morphIdentifiers});
 
         final Info i = new Info();
         i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morphIdentifiers), true));
 
         if (isNotBlank(vocabIdentifiers)) {
-            i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, vocabIdentifiers), true));
+            i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, vocabIdentifiers, userLanguage), true, userLanguage));
+            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equalsIgnoreCase("a")) {
+                    String modifiedVocabIdentifiers = vocabIdentifiers.concat("a");
+                    i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
+                }
+            }
         }
         return i;
     }
@@ -182,22 +204,37 @@ public class ModuleController {
      * @param vocabIdentifiers the strong number
      * @return the definition(s) that can be resolved from the reference provided
      */
-    @Timed(name = "quick-vocab", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers) {
-        return getQuickInfo(version, reference, vocabIdentifiers, null);
+        return getQuickInfo(version, reference, vocabIdentifiers, null, null);
     }
-
+    
+    /**
+     * a method that returns all the definitions for a particular key
+     *
+     *
+     * @param version the version that holds the reference
+     * @param reference        the reference in which this can be found
+     * @param vocabIdentifiers the strong number
+     * @param morphIdentifiers the morphology code to lookup
+     * @return the definition(s) that can be resolved from the reference provided
+     */
+    public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers) {
+        return getQuickInfo(version, reference, vocabIdentifiers, morphIdentifiers, null);
+    }
+    
     /**
      * a method that returns all the definitions for a particular key
      *
      * @param version the version that holds the reference
+     * @param reference        the reference in which this can be found
      * @param vocabIdentifiers the strong number
      * @param morphIdentifiers the morphology code to lookup
+     * @param userLanguage     the language code (e.g.: en, es, zh) selected by the user in his/her browser.
      * @return the definition(s) that can be resolved from the reference provided
      * @parma reference the verse in which the word is found
      */
     @Timed(name = "quick-vocab", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers) {
+    public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers, final String userLanguage) {
         // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
         LOGGER.debug("Getting quick information for [{}], [{}]",
                 new Object[]{this.vocab, morphIdentifiers});
@@ -206,7 +243,13 @@ public class ModuleController {
         i.setMorphInfos(translateToInfo(this.morphology.getQuickMorphology(morphIdentifiers), false));
 
         if (isNotBlank(vocabIdentifiers)) {
-            i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, vocabIdentifiers), false));
+            i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, vocabIdentifiers, userLanguage), false, userLanguage));
+            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equalsIgnoreCase("a")) {
+                    String modifiedVocabIdentifiers = vocabIdentifiers.concat("a");
+                    i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
+                }
+            }
         }
         return i;
     }
@@ -219,13 +262,13 @@ public class ModuleController {
      * @return a list of infos
      */
     private List<VocabInfo> translateToVocabInfo(final VocabResponse vocabResponse,
-                                                 final boolean includeAllInfo) {
+                                                 final boolean includeAllInfo, final String userLanguage) {
         final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(
                 vocabResponse.getDefinitions().length);
         EntityDoc[] definitions = vocabResponse.getDefinitions();
         for (int i = 0; i < definitions.length; i++) {
             EntityDoc d = definitions[i];
-            morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), includeAllInfo));
+            morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), includeAllInfo, userLanguage));
         }
         return morphologyInfos;
     }

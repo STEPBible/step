@@ -133,7 +133,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     }
 
     @Override
-    public EntityDoc[] searchUniqueBySingleField(final String fieldName, final String... values) {
+    public EntityDoc[] searchUniqueBySingleField(final String fieldName, final String userLanguage, final String... values) {
         final Query query = getQuery(fieldName, values);
         return search(query, values.length, null, null);
     }

@@ -141,7 +141,7 @@ public class JSwordStrongNumberHelper {
     /**
      * Calculate counts for a particular key.
      */
-    private void calculateCounts() {
+    private void calculateCounts(String userLanguage) {
         try {
             //is key OT or NT
             final BibleBook book = this.reference.getBook();
@@ -166,7 +166,7 @@ public class JSwordStrongNumberHelper {
                 final String strongQuery = StringConversionUtils.getStrongPaddedKey(strongsNumbers);
                 final StrongAugmentationService.AugmentedStrongs augmentedStrongs = strongAugmentationService.augment(preferredCountBook.getInitials(), verseRef, strongQuery);
                 final String augmentedStrongNumbers = StringUtils.join(augmentedStrongs.getStrongList(), ' ');
-                readDataFromLexicon(this.definitions, verseRef, augmentedStrongNumbers);
+                readDataFromLexicon(this.definitions, verseRef, augmentedStrongNumbers, userLanguage);
 
                 //build references that apply to each augmented strong number
                 final EntityDoc[] entityDocs = augmentedStrongs.getEntityDocs();
@@ -264,7 +264,8 @@ public class JSwordStrongNumberHelper {
      */
     private void readDataFromLexicon(final EntityIndexReader reader,
                                      final String verseRef,
-                                     final String augmentedStrongNumbers) {
+                                     final String augmentedStrongNumbers,
+                                     final String userLanguage) {
 
         final EntityDoc[] docs = reader.search("strongNumber", augmentedStrongNumbers);
         final List<LexiconSuggestion> verseSuggestions = new ArrayList<>();
@@ -274,6 +275,12 @@ public class JSwordStrongNumberHelper {
             final LexiconSuggestion ls = new LexiconSuggestion();
             ls.setStrongNumber(d.get("strongNumber"));
             ls.setGloss(d.get("stepGloss"));
+            if (userLanguage.equalsIgnoreCase("zh")) {
+                ls.set_zh_Gloss(d.get("zh_Gloss"));
+            }
+            else if (userLanguage.equalsIgnoreCase("zh_tw")) {
+                ls.set_zh_tw_Gloss(d.get("zh_tw_Gloss"));
+            }
             ls.setMatchingForm(d.get("accentedUnicode"));
             ls.setStepTransliteration(d.get("stepTransliteration"));
             suggestionsFromSearch.put(ls.getStrongNumber(), ls);
@@ -288,13 +295,11 @@ public class JSwordStrongNumberHelper {
         this.verseStrongs.put(verseRef, verseSuggestions);
     }
 
-
     /**
      * @return the verseStrongs
      */
-    public StrongCountsAndSubjects getVerseStrongs() {
-        calculateCounts();
-
+    public StrongCountsAndSubjects getVerseStrongs(String userLanguage) {
+        calculateCounts(userLanguage);
         final StrongCountsAndSubjects sac = new StrongCountsAndSubjects();
         sac.setCounts(this.allStrongs);
         sac.setStrongData(this.verseStrongs);

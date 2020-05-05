@@ -38,6 +38,14 @@ public class EntityDoc implements Serializable {
     }
 
     /**
+     * @param fieldName the name of the field
+     */
+    @JsonIgnore
+    public void removeField(final String fieldName) {
+        this.doc.removeField(fieldName);
+    }
+
+    /**
      * Returns all fields as a map
      * 
      * @return the map of values

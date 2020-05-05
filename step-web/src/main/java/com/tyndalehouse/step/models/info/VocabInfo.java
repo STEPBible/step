@@ -60,6 +60,10 @@ public class VocabInfo implements Serializable {
     private List<LexiconSuggestion> relatedNos;
     private String shortDef;
     private String mediumDef;
+    private String zh_tw_Gloss;
+    private String zh_Gloss;
+    private String zh_tw_Definition;
+    private String zh_Definition;
     private String stepGloss;
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
@@ -82,16 +86,28 @@ public class VocabInfo implements Serializable {
      * @param includeAllInfo true to include all information
      */
     public VocabInfo(final EntityDoc d, final Map<String, List<LexiconSuggestion>> relatedVocabs,
-                     final boolean includeAllInfo) {
+                     final boolean includeAllInfo, final String userLanguage) {
         this.accentedUnicode = d.get("accentedUnicode");
         this.shortDef = d.get("shortDefinition");
         this.stepGloss = d.get("stepGloss");
         this.stepTransliteration = d.get("stepTransliteration");
         this.mediumDef = d.get("mediumDefinition");
+        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh"))) {
+            this.zh_Gloss = d.get("zh_Gloss");
+            this.zh_Definition = d.get("zh_Definition");
+        }
+        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh_tw"))) {
+            this.zh_tw_Gloss = d.get("zh_tw_Gloss");
+            this.zh_tw_Definition = d.get("zh_tw_Definition");
+        }
 
         final String popularity = d.get("popularity");
+        
         if(StringUtils.isNotBlank(popularity)) {
-            this.count = Integer.parseInt(popularity);
+            if (popularity.matches("^\\d+")) {
+                this.count = Integer.parseInt(popularity);
+            }
+            else this.count = 0;
         }
 
         if (includeAllInfo) {
@@ -260,6 +276,62 @@ public class VocabInfo implements Serializable {
      */
     public void setMediumDef(final String mediumDef) {
         this.mediumDef = mediumDef;
+    }
+
+    /**
+     * @return the zh_tw_Def
+     */
+    public String get_zh_tw_Definition() {
+        return this.zh_tw_Definition;
+    }
+
+    /**
+     * @param zh_tw_Definition the zh_tw_Def to set
+     */
+    public void set_zh_tw_Definition(final String zh_tw_Definition) {
+        this.zh_tw_Definition = zh_tw_Definition;
+    }
+
+    /**
+     * @return the zh_Definition
+     */
+    public String get_zh_Definition() {
+        return this.zh_Definition;
+    }
+
+    /**
+     * @param zh_Definition the zh_Definition to set
+     */
+    public void set_zh_Definition(final String zh_Definition) {
+        this.zh_Definition = zh_Definition;
+    }
+
+    /**
+     * @return the traditional Chinese Gloss
+     */
+    public String get_zh_tw_Gloss() {
+        return this.zh_tw_Gloss;
+    }
+
+    /**
+     * @param zh_tw_Gloss the zh_tw_Gloss to set
+     */
+    public void set_zh_tw_Gloss(final String zh_tw_Gloss) {
+        this.zh_tw_Gloss = zh_tw_Gloss;
+    }
+
+    /**
+     * @return the simplified Chinese Gloss
+     */
+    public String get_zh_Gloss() {
+        return this.zh_Gloss;
+    }
+
+    /**
+     * @param zh_Gloss the zh_Gloss to set
+     */
+    public void set_zh_Gloss(final String zh_Gloss) {
+        this.zh_Gloss = zh_Gloss;
     }
 
     /**

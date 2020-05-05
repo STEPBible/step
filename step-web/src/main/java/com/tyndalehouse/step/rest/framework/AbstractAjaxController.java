@@ -102,7 +102,7 @@ public abstract class AbstractAjaxController extends HttpServlet {
      * @return the encoded form of the JSON response
      */
     byte[] getEncodedJsonResponse(final Object responseValue) {
-        LOGGER.debug("Encoding the following response [{}]", responseValue);
+        /* LOGGER.debug("Encoding the following response [{}]", responseValue); */
 
         try {
             String response;

@@ -139,6 +139,7 @@
             modelZero.save(window.tempModel, {silent: true});
             modelZero.save({
                 isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true,
+                isEnWithZhLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isEnWithZhLexicon") : false,
                 isVerseVocab: likelyPreviousPassage ? likelyPreviousPassage.get("isVerseVocab") : true,
                 results: null,
                 linked: null,
@@ -219,7 +220,7 @@
         var tmp = localStorage.getItem('colorCode-InfoMsg');
         if (tmp) {
             localStorage.removeItem('colorCode-InfoMsg');
-            step.util.raiseInfo(JSON.parse(tmp), 'info');
+            if (tmp != '""') step.util.raiseOneTimeOnly(JSON.parse(tmp), 'info');
         }
         if (step.state.getIncompleteLanguage()) {
             step.util.raiseOneTimeOnly("machine_translated", 'info');

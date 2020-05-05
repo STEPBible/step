@@ -200,6 +200,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     private void addStrongNumberOptions(final Book book, final Set<LookupOption> options) {
         if (book.getBookMetaData().hasFeature(FeatureType.STRONGS_NUMBERS)) {
             options.add(LookupOption.ENGLISH_VOCAB);
+            options.add(LookupOption.ZH_TW_VOCAB);
+            options.add(LookupOption.ZH_VOCAB);
             options.add(LookupOption.GREEK_VOCAB);
             options.add(LookupOption.TRANSLITERATION);
             options.add(LookupOption.INTERLINEAR);

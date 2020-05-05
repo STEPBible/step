@@ -11,7 +11,7 @@
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     VersionResolver resolver = injector.getInstance(VersionResolver.class);
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
-    Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+    Config.set(session, Config.FMT_LOCALE, locale);
     VersionStepRequest stepRequest = new VersionStepRequest(injector, request);
 %>
 <fmt:setBundle basename="HtmlBundle"/>

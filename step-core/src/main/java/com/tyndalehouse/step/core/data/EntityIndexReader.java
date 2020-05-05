@@ -55,7 +55,7 @@ public interface EntityIndexReader extends Closeable {
      * @param values    the list of values to be retrieved
      * @return the scored documents
      */
-    EntityDoc[] searchUniqueBySingleField(String fieldName, String... values);
+    EntityDoc[] searchUniqueBySingleField(String fieldName, String userLanguage, String... values);
 
     /**
      * Searches for a particular value across multiple fields

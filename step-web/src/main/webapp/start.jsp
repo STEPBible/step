@@ -10,10 +10,11 @@
 <%@ page import="com.google.inject.Injector" %>
 <%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
 <%@ page import="java.util.Calendar" %>
+<%@ page import="com.tyndalehouse.step.core.utils.ValidateUtils" %>
 <%
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
-    Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+    Config.set(session, Config.FMT_LOCALE, locale);
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
 
@@ -259,7 +260,17 @@
                                                                             <a href="javascript:void(0)"
                                                                                strong="${ definition.strongNumber}">
                                                                                 <span class="glyphicon glyphicon-ok ${isActive ? 'active' : '' }"></span>
-                                                                                ${ definition.gloss}
+                                                                                
+                                                                                <%  if (locale.getLanguage().equalsIgnoreCase("zh")) {
+                                                                                        if (locale.getCountry().equalsIgnoreCase("tw")) %>
+                                                                                            ${ definition._zh_tw_Gloss}
+                                                                                <%      else %>
+                                                                                            ${ definition._zh_Gloss}
+                                                                                <%  }
+                                                                                    else { %>
+                                                                                        ${ definition.gloss}
+                                                                                <%  } %>                                                                                
+                                                                                
                                                                                 (<span
                                                                                     class="transliteration">${ definition.stepTransliteration }</span>
                                                                                 - <span
@@ -364,16 +375,8 @@
 </div>
 
 <% if (request.getParameter("mobile") == null) {
-    String langCode = "en";
-    if (request.getParameter("lang") == null) {
-        langCode = locale.getLanguage();
-    } else {
-        if ((request.getParameter("lang").length() >= 2) && (request.getParameter("lang").length() <= 5)) {
-            langCode = URLEncoder.encode(request.getParameter("lang"));
-        }
-    } %>
-<script src="international/interactive.js?lang=<%= langCode %>&step.version=${project.version}"
-        type="text/javascript"></script>
+    String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
+    <script src="international/interactive.js?lang=<%= URLEncoder.encode(langCode, "UTF-8") %>&step.version=${project.version}" type="text/javascript"></script>
 <% } %>
 <%@include file="jsps/initLib.jsp" %>
 

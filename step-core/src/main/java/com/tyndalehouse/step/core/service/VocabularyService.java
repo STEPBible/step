@@ -48,7 +48,7 @@ public interface VocabularyService {
      * @param vocabIdentifiers the identifier of the vocab entry (e.g. strong:G0001)
      * @return the lexicon definitions
      */
-    VocabResponse getDefinitions(final String version, String reference, String vocabIdentifiers);
+    VocabResponse getDefinitions(final String version, String reference, String vocabIdentifiers, String userLanguage);
 
     /**
      * Gets the default transliteration as a string
@@ -80,6 +80,28 @@ public interface VocabularyService {
     String getEnglishVocab(final String version, final String reference, String vocabIdentifiers);
 
     /**
+     * gets the traditional Chinese vocab fields
+     * 
+     *
+     * @param version the version that ancors the reference
+     * @param reference the reference in which the strongs can be found
+     * @param vocabIdentifiers the vocab identifiers
+     * @return the string to be displayed
+     */
+    String get_zh_tw_Vocab(final String version, final String reference, String vocabIdentifiers);
+
+    /**
+     * gets the simplified Chinese vocab fields
+     * 
+     *
+     * @param version the version that ancors the reference
+     * @param reference the reference in which the strongs can be found
+     * @param vocabIdentifiers the vocab identifiers
+     * @return the string to be displayed
+     */
+    String get_zh_Vocab(final String version, final String reference, String vocabIdentifiers);
+
+    /**
      * Gets the Greek vocab fields
      * 
      *
@@ -98,7 +120,7 @@ public interface VocabularyService {
      * @param vocabIdentifiers the identifier
      * @return the quick information
      */
-    VocabResponse getQuickDefinitions(final String version, final String reference, String vocabIdentifiers);
+    VocabResponse getQuickDefinitions(final String version, final String reference, String vocabIdentifiers, String userLanguage);
 
     /**
      * returns the lexicon definitions

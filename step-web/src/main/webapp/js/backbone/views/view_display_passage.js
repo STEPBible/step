@@ -22,19 +22,59 @@ var PassageDisplayView = DisplayView.extend({
             this.model.set("startRange", this.model.get("startRange"), {silent: true });
             this.model.set("endRange", this.model.get("endRange"), {silent: true });
             this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true });
-
-            var passageHtml;
+            var options = this.model.get("selectedOptions") || [];
+            var availableOptions = this.model.get("options") || [];
+            const C_colorCodeGrammarAvailableAndSelected = 0, C_otMorph = 1; // This must match the definition in the color_code_grammar.js
+            cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
+            if ((cv[C_colorCodeGrammarAvailableAndSelected]) && ((c4 == undefined) || (c4 == null))) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
+            var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', pch, hasTOS = false, hasNTMorph = false;
+            var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
+            if ((bibleVersions.indexOf('THOT') > -1)) {
+                if (cv[C_otMorph] == null) {
+                  var notIE = !(/*@cc_on!@*/false || !!document.documentMode);
+                  // If browser is not IE, use "cache: true".  If IE, use "cache: false"
+                  // This is required because of an IE and Jquery issue.
+                  jQuery.ajax({
+                      dataType: "script", 
+                      cache: notIE, 
+                      url: "js/tos_morph.js",
+                      error: function (jqXHR, exception) {
+                        console.log('load tos_morph.js Failed: ' + exception);
+                      }
+                    });
+                }
+                hasTOS = true;
+            }
+            if ((bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
             if (this.partRendered) {
+                if (cv[C_colorCodeGrammarAvailableAndSelected]) {
+                  if (hasTOS) {
+                    pch = document.getElementsByClassName('passageContentHolder');
+                    var r = cf.addClassForTHOT(pch[0].outerHTML);
+                    pch[0].outerHTML = r[0];
+                    otCSSOnThisPage = r[1];
+                  }
+                  if (hasNTMorph) {
+                    if (pch == null) pch = document.getElementsByClassName('passageContentHolder');
+                    ntCSSOnThisPage = cf.getClassesForNT(pch[0].outerHTML);
+                  }
+                }
                 passageHtml = this.$el.find(".passageContentHolder");
             } else {
+                if (cv[C_colorCodeGrammarAvailableAndSelected]) {
+                    if (hasTOS) {
+                        var r = cf.addClassForTHOT(this.model.attributes.value);
+                        this.model.attributes.value = r[0];
+                        otCSSOnThisPage =  r[1];
+                    }
+                    if (hasNTMorph) ntCSSOnThisPage = cf.getClassesForNT(this.model.attributes.value);
+                }
                 passageHtml = $(this.model.get("value"));
             }
             var passageId = this.model.get("passageId");
             var interlinearMode = this.model.get("interlinearMode");
             var extraVersions = this.model.get("extraVersions");
             var reference = this.model.get("osisId");
-            var options = this.model.get("selectedOptions") || [];
-            var availableOptions = this.model.get("options") || [];
             var version = this.model.get("masterVersion");
             var languages = this.model.get("languageCode");
             var passageContainer = this.$el.closest(".passageContainer");
@@ -72,17 +112,14 @@ var PassageDisplayView = DisplayView.extend({
                 //give focus:
                 $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();
             }
-            // following 11 lines were added to enhance the Colour Code Grammar  PT
-            if ((colorCodeGrammarAvailableAndSelected !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== undefined) &&
-                (handleOfRequestedAnimation !== undefined) ) {
-                colorCodeGrammarAvailableAndSelected = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
-                if (colorCodeGrammarAvailableAndSelected) {
-                    numOfAnimationsAlreadyPerformedOnSamePage = 0;
-                    if ((currentColorCodeSettings !== undefined) && (currentColorCodeSettings !== null)) {
-                        refreshForAllInstancesOfTense();
-                        if (handleOfRequestedAnimation == -1) goAnimate();
-                    }
-                    else initCanvasAndCssForColorCodeGrammar();
+            // following 10 lines were added to enhance the Colour Code Grammar  PT
+            const C_handleOfRequestedAnimation = 11, C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
+            if ((cv[C_colorCodeGrammarAvailableAndSelected] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) &&
+                (cv[C_handleOfRequestedAnimation] !== undefined) ) {
+                if (cv[C_colorCodeGrammarAvailableAndSelected]) {
+                    cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
+                    cf.refreshClrGrammarCSS(ntCSSOnThisPage, otCSSOnThisPage);
+                    if (cv[C_handleOfRequestedAnimation] == -1) cf.goAnimate();
                 }
             }
         },

@@ -312,6 +312,16 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         return "";
     }
 
+    private String lookupChineseGloss(final String book, final EntityDoc strong) {
+        String chineseVocab = "";
+        if (this.currentBook.toString().equals("ChiUns")) {
+            chineseVocab = strong.get("zh_Gloss");
+        } else if (this.currentBook.toString().equals("ChiUn")) {
+            chineseVocab = strong.get("zh_tw_Gloss");
+        }
+        return chineseVocab;
+    }
+
     /**
      * Lookup mappings, if the strong number is there, then it is used
      *
@@ -323,7 +333,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         final boolean isOT = this.testament == Testament.OLD;
 
         // we ignore mapping lookups for anything greek or hebrew...
-        if (!originalLanguage) {
+        if ((!originalLanguage) && (!this.currentBook.toString().equals("ChiUns")) && (!this.currentBook.toString().equals("ChiUn"))) {
             // currently only supporting OLD Testament
             if (isOT) {
                 final String direct = this.hebrewDirectMapping.get(strong);
@@ -356,13 +366,15 @@ public class InterlinearProviderImpl implements InterlinearProvider {
                     }
                 }
             }
-
+            String chineseVocab = lookupChineseGloss(this.currentBook.toString(), strongDefinition[0]);
+            if (StringUtils.isNotBlank(chineseVocab)) {
+                return "#" + chineseVocab;
+            }
             final String englishVocab = strongDefinition[0].get("stepGloss");
             if (StringUtils.isNotBlank(englishVocab)) {
                 return "#" + englishVocab;
             }
         }
-
         return "";
     }
 

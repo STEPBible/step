@@ -153,6 +153,7 @@ var PickBibleView = Backbone.View.extend({
         var self = this;
         var selectedTab = this._getSelectedTab();
         var selectedLanguage = this._getLanguage();
+		if (selectedLanguage == "zh_TW") selectedLanguage = "zh";
 
         var filter = "BIBLE"
         if (selectedTab == '#commentaryList') {

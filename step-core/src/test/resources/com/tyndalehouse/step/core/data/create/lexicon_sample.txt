@@ -1,6 +1,10 @@
 # Translations = the top 5 translations in a version where it is translated this way 5x or more
 # CJB: All I've changed is href="#" to href="javascript:void(0)"
 $ ααρων=G0002 ============================
+@zh_Definition=	亚伦 这个阳性专有名词在希伯来文的意思是 "带来光的人"<br>摩西的兄弟。是第一位以色列的祭司，以及祭司阶级的首领。
+@zh_tw_Definition=	亞倫 这个陽性專有名詞在希伯來文的意思是 "帶來光的人"<br>摩西的兄弟。是第一位以色列的祭司，以及祭司階級的首領。
+@zh_Gloss=	亚伦
+@zh_tw_Gloss=	亞倫
 @STEPUnicodeAccented=	Ἀαρών
 @FLsjType=	Proper Name (no entry from Full LSJ)  
 @FLsjNo=	

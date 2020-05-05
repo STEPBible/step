@@ -223,7 +223,7 @@ public interface BibleInformationService {
      * @param reference the reference to be looked up
      * @return the strong numbers return keyed by OSIS ID
      */
-    StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, String reference);
+    StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, String reference, String userLanguage);
 
     /**
      * Converts a reference from the source versification to the target versification

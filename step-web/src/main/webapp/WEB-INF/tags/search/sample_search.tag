@@ -19,7 +19,7 @@
 
 
 
-<span class="input-group">
+<span class="input-group" style="overflow: hidden">
 <a href="${sampleURL}" title="<fmt:message key="click_to_try_this" />">
     <span class="form-control input-sm argSummary">
         <c:if test="${ not empty option1 }"><span class="argSelect select-${ option1type } ${fn:contains(option1, '.') ? ' transliteration' : ''}">${ option1 }</span></c:if>

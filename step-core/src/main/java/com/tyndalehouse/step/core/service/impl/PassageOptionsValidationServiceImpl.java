@@ -23,6 +23,8 @@ import java.util.Set;
 import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
 import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
 import static com.tyndalehouse.step.core.models.LookupOption.ENGLISH_VOCAB;
+import static com.tyndalehouse.step.core.models.LookupOption.ZH_TW_VOCAB;
+import static com.tyndalehouse.step.core.models.LookupOption.ZH_VOCAB;
 import static com.tyndalehouse.step.core.models.LookupOption.GREEK_VOCAB;
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS;
 import static com.tyndalehouse.step.core.models.LookupOption.MORPHOLOGY;
@@ -140,6 +142,12 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
         explainRemove(errors, ENGLISH_VOCAB, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);
 
+        explainRemove(errors, ZH_TW_VOCAB, result, trimmingExplanations, originalModeHasChanged,
+                interleavedMessage);
+
+        explainRemove(errors, ZH_VOCAB, result, trimmingExplanations, originalModeHasChanged,
+                interleavedMessage);
+
         explainRemove(errors, GREEK_VOCAB, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);
 
@@ -192,6 +200,8 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
     private boolean hasInterlinearOption(final List<LookupOption> options) {
         return options.contains(LookupOption.GREEK_VOCAB) || options.contains(LookupOption.MORPHOLOGY)
                 || options.contains(LookupOption.ENGLISH_VOCAB)
+                || options.contains(LookupOption.ZH_TW_VOCAB)
+                || options.contains(LookupOption.ZH_VOCAB)
                 || options.contains(LookupOption.TRANSLITERATION);
     }
 

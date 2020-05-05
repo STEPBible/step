@@ -297,11 +297,10 @@ var StepRouter = Backbone.Router.extend({
 
         //remove debug if present
         query = encodeURIComponent(query.replace(/&debug/ig, ""));
-        console.log(query, options, display, pageNumber, filter, sort, context);
-
+        console.log(query, options, display, pageNumber, filter, sort, context, step.userLanguageCode);
         $.getPassageSafe({
             url: SEARCH_MASTER,
-            args: [query, options, display, pageNumber, filter, sort, context],
+            args: [query, options, display, pageNumber, filter, sort, context, step.userLanguageCode],
             callback: function (text) {
                 text.startTime = startTime;
 

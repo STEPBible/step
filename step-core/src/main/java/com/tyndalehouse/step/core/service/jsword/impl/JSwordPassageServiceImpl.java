@@ -1350,6 +1350,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                         tsep.setParameter("morphologyProvider", this.morphologyProvider);
                         break;
                     case ENGLISH_VOCAB:
+                    case ZH_TW_VOCAB:
+                    case ZH_VOCAB:
                     case TRANSLITERATION:
                     case GREEK_VOCAB:
                     case TRANSLITERATE_ORIGINAL:

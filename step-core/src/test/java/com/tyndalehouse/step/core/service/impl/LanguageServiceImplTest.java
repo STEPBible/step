@@ -74,7 +74,7 @@ public class LanguageServiceImplTest {
     @Test
     public void testGetLanguages() {
         final LanguageServiceImpl languageServiceImpl = new LanguageServiceImpl(
-                "ru,uk,zh,zh-TW,es,mk,fr,bg,sw,ar,vi,fi,no,tr,pt-BR,en", "en", "en", this.clientSessionProvider);
+                "ru,uk,zh,zh_TW,es,mk,fr,bg,sw,ar,vi,fi,no,tr,pt-BR,en", "en", "en", this.clientSessionProvider);
         final List<Language> availableLanguages = languageServiceImpl.getAvailableLanguages();
         assertTrue(availableLanguages.size() > 10);
 

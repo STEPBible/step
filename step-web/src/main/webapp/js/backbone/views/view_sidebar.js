@@ -1,4 +1,5 @@
 var SidebarView = Backbone.View.extend({
+    lastMorphCode: '',
     initialize: function () {
         //hide the help
         step.util.showOrHideTutorial(true);
@@ -59,7 +60,11 @@ var SidebarView = Backbone.View.extend({
             this.lexicon.addClass("active");
             //load content
             var requestTime = new Date().getTime();
-            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph")], function (data) {
+            lastMorphCode = '';
+            if ((this.model.get("morph") != undefined) && (this.model.get("morph").startsWith('TOS:'))) {
+                lastMorphCode = this.model.get("morph");
+            }
+            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
                 step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
                 self.createDefinition(data);
@@ -75,8 +80,9 @@ var SidebarView = Backbone.View.extend({
             self.createHelp();
         }
         // added for colour code grammar
-        if ((numOfAnimationsAlreadyPerformedOnSamePage !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== null))
-            numOfAnimationsAlreadyPerformedOnSamePage = 0;
+        const C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
+        if ((cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
+            cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
     },
     _createBaseTabs: function () {
         var tabContent = $("<div class='tab-content'></div>");
@@ -127,6 +133,12 @@ var SidebarView = Backbone.View.extend({
         if (data.vocabInfos.length == 0) {
             return;
         }
+        var urlLang = $.getUrlVar("lang");
+        if (urlLang == null) urlLang = "";
+        else urlLang = urlLang.toLowerCase();
+        var currentUserLang = step.userLanguageCode.toLowerCase();
+        if (urlLang == "zh_tw") currentUserLang = "zh_tw";
+        else if (urlLang == "zh") currentUserLang = "zh";
 
         if (data.vocabInfos.length > 1) {
             //multiple entries
@@ -147,11 +159,15 @@ var SidebarView = Backbone.View.extend({
                     panelContentContainer.addClass("in");
                 }
 
-                this._createBriefWordPanel(panelBody, item);
+                this._createBriefWordPanel(panelBody, item, currentUserLang);
+// need to handle multiple morphInfo (array)
+                if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
+                    data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
+                } 
                 if (i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 }
-                this._createWordPanel(panelBody, item);
+                this._createWordPanel(panelBody, item, currentUserLang);
                 if (i < data.morphInfos.length) {
                     this._createMorphInfo(panelBody, data.morphInfos[i]);
                 }
@@ -166,56 +182,190 @@ var SidebarView = Backbone.View.extend({
 
         }
         else {
-            this._createBriefWordPanel(this.lexicon, data.vocabInfos[0]);
+            this._createBriefWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang);
+            // need to handle multiple morphInfo (array)
+            if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
+                data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
+            }
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
             }
-            this._createWordPanel(this.lexicon, data.vocabInfos[0]);
+            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(this.lexicon, data.morphInfos[0]);
             }
         }
         this.tabContainer.append(this.lexicon);
     },
-    _createBriefWordPanel: function (panel, mainWord) {
+    _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
+        var chineseGloss = "";
+        if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Gloss != undefined)) chineseGloss = "&nbsp;" + mainWord._zh_tw_Gloss + "&nbsp;";
+        else if ((currentUserLang == "zh") && (mainWord._zh_Gloss != undefined)) chineseGloss = "&nbsp;" + mainWord._zh_Gloss + "&nbsp;";
         panel.append(
             $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
                 .append(mainWord.accentedUnicode))
                 .append(" (")
                 .append("<span class='transliteration'>" + mainWord.stepTransliteration + "</span>")
-                .append(") '")
+                .append(") " + chineseGloss + "'")
                 .append(mainWord.stepGloss)
                 .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
         );
     },
 
-    _createWordPanel: function (panel, mainWord) {
-        panel.append(
-            $("<div>").append(mainWord.shortDef || "")
-        );
+    _addLinkAndAppend: function (panel, textToAdd, currentWordLangCode, bibleVersion) {
+        // Find all ref tang and change
+        //        panel.append('<a sbRef=" PASSAGE1 " class="linkRef" href="?q=version= VERSION &amp;reference= PASSAGE1 "> PASSAGE2 </a>');
+        //        '<ref=\'' . PASSAGE1 . '\'>' . PASSAGE2 . '</ref>';
+        var remainingText = textToAdd;
+        var textToAdd2 = remainingText;
+        var pos1 = remainingText.search("<ref=['\"]");
+        if (pos1 > -1) {
+            textToAdd2 = "";
+            while (pos1 > -1) {
+                textToAdd2 += remainingText.substr(0, pos1);
+                var typeOfQuoteChar = remainingText.substr(pos1 + 5, 1);
+                remainingText = remainingText.substr(pos1 + 6);
+                var pos2 = remainingText.search(typeOfQuoteChar + ">");
+                if (pos2 > 2) {
+                    var passageRef = remainingText.substr(0, pos2);
+                    remainingText = remainingText.substr(pos2 + 2);
+                    var pos3 = remainingText.indexOf("</ref>");
+                    if (pos3 > -1) {
+                        textToAdd2 += '<a sbRef=' + typeOfQuoteChar + passageRef + typeOfQuoteChar +
+                            ' class="linkRef" href="?q=version=' + bibleVersion +
+                            '&amp;reference=' + passageRef + '">' + remainingText.substr(0, pos3) +
+                            '</a>';
+                        remainingText = remainingText.substr(pos3 + 6);
+                        pos1 = remainingText.search("<ref=['\"]"); // Search for the next iteration of while loop.
+                    }
+                    else {
+                        textToAdd2 += "<ref=" + typeOfQuoteChar + passageRef + typeOfQuoteChar + ">" + remainingText;
+                        remainingText = "";
+                        pos1 = -1; // Incomplete ref tag
+                    }
+                }
+                else {
+                    textToAdd2 += "<ref=" + typeOfQuoteChar + remainingText;
+                    remainingText = "";
+                    pos1 = -1; // Incomplete <ref=' tag.  Cannot find the '> after that.
+                }
+            }
+            textToAdd2 += remainingText;
+        }
+        remainingText = textToAdd2;
+        var matchExpression = new RegExp(/[GH]?\d{4,5}/g);
+        var matchResult = remainingText.match(matchExpression);
+        if (matchResult != null) {
+            for (var i = 0; i < matchResult.length; i++) {
+                var pos = remainingText.search(matchResult[i]);
+                var matchLength = matchResult[i].length;
+                var currentMatch = remainingText.substr(pos, matchLength);
+                var currentStrongNumber = currentMatch;
+                if ((currentStrongNumber.substr(0,1) != "G") && (currentStrongNumber.substr(0,1) != "H"))
+                    currentStrongNumber = currentWordLangCode + currentMatch;
+                if ((currentStrongNumber.length > 5) && (currentStrongNumber.substr(1,1) == "0"))
+                    currentStrongNumber = currentStrongNumber.substr(0,1) + currentStrongNumber.substr(2);
+                panel.append(remainingText.substr(0, pos));  // text before the 4 character code
+                panel.append($('<a sbstrong href="javascript:void(0)">')
+                    .append(currentMatch)
+                    .data("strongNumber", currentStrongNumber));
+                remainingText = remainingText.substr(pos + matchLength);
+            }
+        }
+        panel.append(remainingText).append("<br />");        
+    },
 
-        panel.append("<br />")
-            .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
+    _addChineseDefinitions: function (panel, mainWord, currentUserLang, bibleVersion, appendLexiconSearchFunction, addLinkAndAppendFunction) {
+        var currentWordLangCode = mainWord.strongNumber.substr(0, 1);
+        var foundChineseJSON = false;
+        $.ajaxSetup({async: false});
+        $.getJSON("lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
+            foundChineseJSON = true;
+            panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
+            panel.append($("<h2>").append(__s.lexicon_definition_for_zh + ":"));
+
+            addLinkAndAppendFunction(panel, chineseVars.definition, currentWordLangCode, bibleVersion);
+
+            appendLexiconSearchFunction(panel, mainWord);
+
+            panel.append($("<h2>").append(__s.lexicon_usage_for_zh + ":"));
+            var ul = $('<ul>');
+            for (var i = 0; i < chineseVars.usage.length; i = i+2) {
+                var li = $("<li></li>");
+                var displayTextOnUsage = chineseVars.usage[i];
+                var refArray1 = chineseVars.usage[i+1];
+                if (refArray1.length > 1) li.append("<span><abbr title=\"Over 100 usage of this word.  Each of the following link will display about 100 usage.\">" + displayTextOnUsage + "</abbr></span>");
+                for (var j = 0; j < refArray1.length; j++) {
+                    var refURLString = "";
+                    var refArray2 = refArray1[j];
+                    for (var k = 0; k < refArray2.length; k++) {
+                        refURLString += "|reference=" + refArray2[k];
+                    }
+                    if (refArray1.length > 1) {
+                        var displayGroupText = "";
+                        if ((j/26) >= 1) displayGroupText = String.fromCharCode(97 + Math.floor(j/26) - 1);
+                        displayGroupText += String.fromCharCode(97 + (j % 26));
+                        displayTextOnUsage = "&nbsp;<span title=\"Usage " + 
+                            (1 + (j * 100)) + " to " + 
+                            (100 + (j * 100)) + "\">(" + displayGroupText + ")</span>";
+                    }
+                    li.append($("<a sbstrong></a>").attr("href", "javascript:void(0)")
+                        .data("strongNumber", mainWord.strongNumber)
+                        .data("refURLStr", refURLString)
+                        .append(displayTextOnUsage).click(function () {
+                            var strongNumber = $(this).data("strongNumber");
+                            var refURLStr = $(this).data("refURLStr");
+                            var args = "strong=" + encodeURIComponent(strongNumber) + refURLStr;
+                            step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
+                            step.router.navigatePreserveVersions(args);
+                    }));
+                }
+                ul.append(li);
+            }
+            panel.append(ul);
+        });
+        $.ajaxSetup({async: true});
+        return foundChineseJSON;
+    },
+
+    _appendLexiconSearch: function (panel, mainWord) {
+        panel.append("<br />").append(__s.lexicon_search_for_this_word);
+        if (mainWord.count) {
+            panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, mainWord.count) + '</span>').click(function () {
                 var strongNumber = $(this).data("strongNumber");
                 var args = "strong=" + encodeURIComponent(strongNumber);
                 step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
                 step.router.navigatePreserveVersions(args);
             }));
-        if (mainWord.count) {
-            panel.append('<span class="strongCount"> (' + sprintf(__s.stats_occurs, mainWord.count) + ')</span>').append('<br />');
         }
+        panel.append().append('<br />');
+    },
 
-        // append the meanings
-        if (mainWord.mediumDef) {
-            panel.append($("<h2>").append(__s.lexicon_meaning));
-            panel.append(mainWord.mediumDef);
+    _createWordPanel: function (panel, mainWord, currentUserLang) {
+        var currentWordLanguageCode = mainWord.strongNumber[0];
+        var bibleVersion = this.model.get("version") || "ESV";
+        if (mainWord.shortDef) {
+            this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode, bibleVersion);
         }
+        var foundChineseJSON = false;
+        if (currentUserLang.startsWith("zh")) 
+            foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, bibleVersion, this._appendLexiconSearch, this._addLinkAndAppend);
+        if (!foundChineseJSON) this._appendLexiconSearch(panel, mainWord); // Run this if it is not Chinese language or if Chinese language, but did not find the Chinese json files.
+        var isEnWithZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon");
+        if (isEnWithZhLexicon === undefined) isEnWithZhLexicon = false;
+        if ((!currentUserLang.startsWith("zh")) || (isEnWithZhLexicon)) {
+            // append the meanings
+            if (mainWord.mediumDef) {
+                panel.append($("<h2>").append(__s.lexicon_meaning));
+                this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion);
+            }
 
-        //longer definitions
-        if (mainWord.lsjDefs) {
-            panel.append($("<h2>").append(mainWord.strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
-            panel.append(mainWord.lsjDefs);
+            //longer definitions
+            if (mainWord.lsjDefs) {
+                panel.append($("<h2>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
+                panel.append(mainWord.lsjDefs);
+            }
         }
 
         if (mainWord.relatedNos) {
@@ -224,7 +374,11 @@ var SidebarView = Backbone.View.extend({
             var matchingExpression = "";
             for (var i = 0; i < mainWord.relatedNos.length; i++) {
                 if (mainWord.relatedNos[i].strongNumber != mainWord.strongNumber) {
-                    var li = $("<li></li>").append($('<a href="javascript:void(0)">')
+                    var chineseGloss = "";
+                    if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) chineseGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
+                    else if ((currentUserLang == "zh") && (mainWord.relatedNos[i]._zh_Gloss != undefined)) chineseGloss =  mainWord.relatedNos[i]._zh_Gloss + "&nbsp;";
+                    var li = $("<li></li>").append($('<a sbstrong href="javascript:void(0)">')
+                        .append(chineseGloss)
                         .append(mainWord.relatedNos[i].gloss)
                         .append(" (")
                         .append("<span class='transliteration'>" + mainWord.relatedNos[i].stepTransliteration + "</span>")
@@ -239,53 +393,70 @@ var SidebarView = Backbone.View.extend({
             }
             step.passage.highlightStrong(null, matchingExpression, "lexiconRelatedFocus");
             panel.append(ul);
-            panel.find("a").click(function () {
-                step.util.ui.showDef($(this).data("strongNumber"));
-            });
         }
+        panel.find("[sbstrong]").click(function () {
+            step.util.ui.showDef($(this).data("strongNumber"));
+        });
+        if (currentUserLang.startsWith("zh") && (foundChineseJSON)) {
+            panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
+                "\" target=\"_blank\">" +
+                __s.additional_chinese_lexicon_info + "</a>");
+        }
+        this._doSideNotes(panel, bibleVersion);
     },
     // for one-line morphology
     _createBriefMorphInfo: function (panel, info) {
-        panel.append("( ");
+        panel.append("(");
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_function, "function");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_person, "person");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_number, "number");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
+        this.renderBriefMorphItem(panel, info, "ot_function");
+        this.renderBriefMorphItem(panel, info, "tense");
+        this.renderBriefMorphItem(panel, info, "voice");
+        this.renderBriefMorphItem(panel, info, "mood");
+        this.renderBriefMorphItem(panel, info, "stem");
+        this.renderBriefMorphItem(panel, info, "ot_form");
+        this.renderBriefMorphItem(panel, info, "wordCase");
+        this.renderBriefMorphItem(panel, info, "person");
+        this.renderBriefMorphItem(panel, info, "number");
+        this.renderBriefMorphItem(panel, info, "gender");
+        this.renderBriefMorphItem(panel, info, "state");
+        this.renderBriefMorphItem(panel, info, "suffix");
         panel.append(")<br />");
     },
-    renderBriefMorphItem: function (panel, info, title, param) {
-        if (info && param && info[param]) {
+    renderBriefMorphItem: function (panel, info, param) {
+        if(info && param && info[param]) {
             var value = $("<span>" + this.replaceEmphasis(info[param]) + "</span>");
             panel.append(value);
             panel.append(" ");
         }
-
     },
     _createMorphInfo: function (panel, info) {
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
         panel.append($("<h2>").append(__s.display_grammar));
-        this.renderMorphItem(panel, info, "function");
-        this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "function");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_language, "language");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "ot_function");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_stem, "stem");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_action, "ot_action");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_voice, "ot_voice");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_form, "ot_form");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_tense, "ot_tense");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_mood, "ot_mood");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_person, "person");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_number, "number");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_state, "state");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
         panel.append("<br />");
 
-
-        panel.append($("<h3>").append(__s.lexicon_ie)).append(this.replaceEmphasis(info["explanation"]));
-        panel.append("<br />");
-        panel.append($("<h3>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
+        if (info["explanation"] != undefined) {
+            panel.append($("<h3>").append(__s.lexicon_ie)).append(this.replaceEmphasis(info["explanation"]));
+            panel.append("<br />");
+        }
+        if (info["description"] != undefined)
+            panel.append($("<h3>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
     },
     renderMorphItem: function (panel, info, title, param) {
         if (info && param && info[param]) {
@@ -337,5 +508,107 @@ var SidebarView = Backbone.View.extend({
     closeSidebar: function () {
         this.sidebarButtonIcon.removeClass("active");
         this.$el.closest('.row-offcanvas').removeClass('active');
+    },
+    /**
+     * Creates a QTIP for a particular xref
+     * @param item the item which is targetted in the side note bar
+     * @param xref the actual cross-reference
+     * @param version the version to be used for lookups
+     * @private
+     */
+    _makeSideNoteQtip: function (item, xref, version) {
+        var self = this;
+        item.on("mouseover", function () {
+            self._makeSideNoteQtipHandler(item, xref, version, false);
+        }).on("touchstart", function () {
+            self._makeSideNoteQtipHandler(item, xref, version, true);
+        });
+    },
+
+    /**
+     * Sets up qtip on all side notes
+     * @param passageContent the html content
+     * @param version the current version
+     * @private
+     */
+    _doSideNotes: function (passageContent, version) {
+        var self = this;
+
+        //remove click functionality from verse headers...
+        $("[sbRef]", passageContent).click(function(e) { e.preventDefault(); })
+
+        var xrefs = $("[sbRef]", passageContent);
+        for (var i = 0; i < xrefs.length; i++) {
+            var item = xrefs.eq(i);
+            var xref = item.attr("sbRef");
+
+            item.click(function (e) {
+                e.preventDefault();
+            });
+
+            this._makeSideNoteQtip(item, xref, version);
+        }
+    },
+
+    _makeSideNoteQtipHandler: function (item, xref, version, touch) {
+        var self = this;
+        if (!$.data(item, "initialised")) {
+            require(["qtip", "drag"], function () {
+                item.qtip({
+                    position: { my: "top right", at: "top left", viewport: $(window) },
+                    style: { tip: false, classes: 'draggable-tooltip xrefPopup', width: { min: 800, max: 800} },
+                    show: { event: 'click' }, hide: { event: 'click' },
+                    content: {
+                        text: function (event, api) {
+                            var chosenVersion = version;
+                            if (step.keyedVersions[version] && step.keyedVersions[version].category != 'BIBLE') {
+                                //get the first version in the current search that is non-commentary
+                                var allVersions = _.where(self.model.get("searchTokens"), {itemType: VERSION });
+                                chosenVersion = 'ESV';
+                                for (var i = 0; i < allVersions.length; i++) {
+                                    var keyedVersion = step.keyedVersions[(allVersions[i].item || {}).initials];
+                                    if (keyedVersion != null && keyedVersion.category == 'BIBLE') {
+                                        chosenVersion = keyedVersion.initials;
+                                    }
+                                }
+                            }
+
+                            $.getSafe(BIBLE_GET_BIBLE_TEXT + chosenVersion + "/" + encodeURIComponent(xref), function (data) {
+                                api.set('content.title.text', data.longName);
+                                api.set('content.text', data.value.replace(/ strong=['"][GHabcdef\d\s]{5,30}['"]/g, "")); // Strip the strong tag
+                                api.set('content.osisId', data.osisId)
+                            });
+                        },
+                        title: { text: xref, button: false }
+                    },
+                    events: {
+                        render: function (event, api) {
+                            $(api.elements.titlebar).css("padding-right", "0px");
+                            $(api.elements.titlebar)
+                                .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
+                                    .click(function () {
+                                        step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
+                                    })).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
+                                api.hide();
+                            }));
+                        },
+                        visible: function (event, api) {
+                            var tooltip = api.elements.tooltip;
+                            var selector = touch ? ".qtip-title" : ".qtip-titlebar";
+                            if (touch) {
+                                tooltip.find(".qtip-title").css("width", "90%");
+                            }
+                            new Draggabilly($(tooltip).get(0), {
+                                containment: 'body',
+                                handle: selector
+                            });
+                        }
+                    }
+                });
+                //set to initialized
+                $.data(item, "initialised", true);
+
+            });
+        }
     }
 });

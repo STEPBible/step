@@ -10,7 +10,7 @@
 <%
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
-    Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+    Config.set(session, Config.FMT_LOCALE, locale);
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
     request.setAttribute("analyticsToken", Boolean.TRUE.equals(Boolean.getBoolean("step.development")) ? SearchPageController.DEV_TOKEN : SearchPageController.LIVE_TOKEN);
 %>
@@ -99,7 +99,7 @@
                     <a href="https://www.stepbible.org/?q=version=NAV&lang=ar">Arabic</a>,
                     <a href="https://www.stepbible.org/?q=version=FarsiOPV&lang=fa">Farsi</a>,
                     <a href="https://www.stepbible.org/?q=version=CUns&lang=zh">Mainland Chinese</a>,
-                    <a href="https://www.stepbible.org/?q=version=CUn&lang=zh-TW">Traditional Chinese</a>,
+                    <a href="https://www.stepbible.org/?q=version=CUn&lang=zh_TW">Traditional Chinese</a>,
                     <a href="https://www.stepbible.org/?q=version=NVI&lang=es">Spanish</a>,
                     <a href="https://www.stepbible.org/?q=version=PNVI&lang=pt">Portuguese</a>,
                     <a href="https://www.stepbible.org/?q=version=Neno&lang=sw">Swahili</a>,

@@ -362,9 +362,12 @@
                             <string>
 String os = java.lang.System.getProperty("os.name");
  
-if(os.contains("Windows") || os.contains("Mac OS X")) {
+if (os.contains("Windows")) {
     return (String) context.getVariable("sys.appdataDir") + "\\Sword";
- }
+}
+if (os.contains("Mac OS X")) {
+    return (String) context.getVariable("sys.appdataDir") + "/Sword";
+}
 
 return (String)context.getVariable("sys.userHome") + "/.sword";
 
@@ -390,9 +393,12 @@ return (String)context.getVariable("sys.userHome") + "/.sword";
                             <string>
 String os = java.lang.System.getProperty("os.name");
  
-if(os.contains("Windows") || os.contains("Mac OS X")) {
+if (os.contains("Windows")) {
     return (String) context.getVariable("sys.appdataDir") + "\\JSword";
- }
+}
+if (os.contains("Mac OS X")) {
+    return (String) context.getVariable("sys.appdataDir") + "/JSword";
+}
 
 return (String)context.getVariable("sys.userHome") + "/.jsword";
 

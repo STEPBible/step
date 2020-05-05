@@ -219,7 +219,7 @@ public class SearchController {
      * @param items the list of all items
      */
     public AbstractComplexSearch masterSearch(final String items) {
-        return this.masterSearch(items, null, null, null, null, null);
+        return this.masterSearch(items, null, null, null, null, null, null, null);
     }
 
     /**
@@ -227,7 +227,7 @@ public class SearchController {
      * @param options current display options
      */
     public AbstractComplexSearch masterSearch(final String items, final String options) {
-        return this.masterSearch(items, options, null, null, null, null);
+        return this.masterSearch(items, options, null, null, null, null, null, null);
     }
 
     /**
@@ -236,7 +236,7 @@ public class SearchController {
      * @param display the display options
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display) {
-        return this.masterSearch(items, options, display, null, null, null);
+        return this.masterSearch(items, options, display, null, null, null, null, null);
     }
 
     /**
@@ -246,7 +246,7 @@ public class SearchController {
      * @param pageNumber the number of the page that is desired
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber) {
-        return this.masterSearch(items, options, display, pageNumber, null, null);
+        return this.masterSearch(items, options, display, pageNumber, null, null, null, null);
     }
 
     /**
@@ -257,7 +257,7 @@ public class SearchController {
      * @param filter     the type of filter required on an original word search
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter) {
-        return this.masterSearch(items, options, display, pageNumber, filter, null, null);
+        return this.masterSearch(items, options, display, pageNumber, filter, null, null, null);
     }
 
     /**
@@ -266,9 +266,10 @@ public class SearchController {
      * @param display    the display options
      * @param pageNumber the number of the page that is desired
      * @param filter     the type of filter required on an original word search
+     * @param sort
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter, final String sort) {
-        return this.masterSearch(items, options, display, pageNumber, filter, sort, null);
+        return this.masterSearch(items, options, display, pageNumber, filter, sort, null, null);
     }
 
     /**
@@ -279,13 +280,26 @@ public class SearchController {
      * @param filter     the type of filter required on an original word search
      * @param context    the amount of context to add to the verses hit by a search
      */
+    public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter, final String sort, final String context) {
+        return this.masterSearch(items, options, display, pageNumber, filter, sort, context, null);
+    }
+
+    /**
+     * @param items      the list of all items
+     * @param options    current display options
+     * @param display    the display options
+     * @param pageNumber the number of the page that is desired
+     * @param filter     the type of filter required on an original word search
+     * @param context    the amount of context to add to the verses hit by a search
+     * @param userLanguage    the language of the user (e.g.: en, zh, es, ...
+     */
     @Timed(name = "master-search", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display,
-                                              final String pageNumber, final String filter, final String sortOrder, final String context) {
+                                              final String pageNumber, final String filter, final String sortOrder, final String context, final String userLanguage) {
         final List<SearchToken> searchTokens = parseTokens(items);
         final int page = ConversionUtils.getValidInt(pageNumber, 1);
         final int searchContext = ConversionUtils.getValidInt(context, 0);
-        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, sortOrder, searchContext, items);
+        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, sortOrder, searchContext, items, userLanguage);
     }
 
     /**

@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +76,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final String HIGHER_STRONG = "STRONG:";
     private static final String LOWER_STRONG = "strong:";
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
-    private static final LRUMap<String, EntityDoc[]> DEFINITIION_CACHE = new LRUMap<>(128, 256);
+    private static final LRUMap<String, EntityDoc[]> DEFINITION_CACHE = new LRUMap<>(512, 1024);
     private final EntityIndexReader definitions;
 
     // define a few extraction methods
@@ -89,6 +90,18 @@ public class VocabularyServiceImpl implements VocabularyService {
         @Override
         public String getData(final EntityDoc l) {
             return l.get("stepGloss");
+        }
+    };
+    private final LexiconDataProvider zh_tw_VocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final EntityDoc l) {
+            return l.get("zh_tw_Gloss");
+        }
+    };
+    private final LexiconDataProvider zh_VocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final EntityDoc l) {
+            return l.get("zh_Gloss");
         }
     };
     private final LexiconDataProvider greekVocabProvider = new LexiconDataProvider() {
@@ -144,16 +157,26 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public VocabResponse getDefinitions(final String version, final String reference, final String vocabIdentifiers) {
+    public VocabResponse getDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
 
         if (strongList.length != 0) {
-            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber",
-                    strongList);
-
+            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
+            for (int i = 0; i < strongDefs.length; i ++) {
+                if ((userLanguage != null) && (userLanguage != "")) {
+                    if (!userLanguage.equalsIgnoreCase("zh")) {
+                        strongDefs[0].removeField("zh_Gloss");
+                        strongDefs[0].removeField("zh_Definition");
+                    }
+                    if (!userLanguage.equalsIgnoreCase("zh_tw")) {
+                        strongDefs[0].removeField("zh_tw_Gloss");
+                        strongDefs[0].removeField("zh_tw_Definition");
+                    }
+                }
+            }
             final EntityDoc[] definitions = reOrder(strongList, strongDefs);
-            final Map<String, List<LexiconSuggestion>> relatedWords = readRelatedWords(definitions);
+            final Map<String, List<LexiconSuggestion>> relatedWords = readRelatedWords(definitions, userLanguage);
             return new VocabResponse(definitions, relatedWords);
         }
 
@@ -167,7 +190,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @param defs the definitions that have been looked up.
      * @return the map
      */
-    private Map<String, List<LexiconSuggestion>> readRelatedWords(final EntityDoc[] defs) {
+    private Map<String, List<LexiconSuggestion>> readRelatedWords(final EntityDoc[] defs, final String userLanguage) {
         // this map keys the original word strong number to all the related codes
         final Map<String, SortedSet<LexiconSuggestion>> relatedWords = new HashMap<String, SortedSet<LexiconSuggestion>>(
                 defs.length * 2);
@@ -185,11 +208,10 @@ public class VocabularyServiceImpl implements VocabularyService {
 
                 // look up related word from index
                 if (shortLexiconDefinition == null) {
-                    final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber",
-                            relatedWord);
+                    final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, relatedWord);
                     // assume first doc
                     if (relatedDoc.length > 0) {
-                        shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0]);
+                        shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage);
                         lookedUpWords.put(relatedWord, shortLexiconDefinition);
                     }
                 }
@@ -251,12 +273,12 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers) {
+    public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
 
         if (strongList.length != 0) {
-            EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
             return new VocabResponse(strongNumbers);
         }
         return new VocabResponse();
@@ -270,6 +292,16 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public String getEnglishVocab(final String version, final String reference, final String vocabIdentifiers) {
         return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.englishVocabProvider);
+    }
+
+    @Override
+    public String get_zh_tw_Vocab(final String version, final String reference, final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_tw_VocabProvider);
+    }
+
+    @Override
+    public String get_zh_Vocab(final String version, final String reference, final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_VocabProvider);
     }
 
     @Override
@@ -294,13 +326,12 @@ public class VocabularyServiceImpl implements VocabularyService {
                                                 final LexiconDataProvider provider) {
 
         // else we lookup and concatenate
-        final EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
+        EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
 
         if (lds.length == 0) {
             return vocabIdentifiers;
         }
-
-        if (lds.length == 1) {
+        else if (lds.length == 1) {
             return provider.getData(lds[0]);
         }
 
@@ -326,16 +357,43 @@ public class VocabularyServiceImpl implements VocabularyService {
             return new EntityDoc[0];
         }
 
-        final String cacheKey = getCacheKey(version, reference, vocabIdentifiers);
-
-        final EntityDoc[] entityDocs = DEFINITIION_CACHE.get(cacheKey);
-        if (entityDocs != null) {
-            return entityDocs;
+        EntityDoc[] entityDocsResults = new EntityDoc[keys.length];
+        int resultArrayIndex = 0;
+        for (int counter = 0; counter < keys.length; counter ++) {
+            EntityDoc[] strongNumber = DEFINITION_CACHE.get(keys[counter]);
+            if (strongNumber != null) {
+                entityDocsResults[resultArrayIndex] = strongNumber[0];
+                resultArrayIndex ++;
+            }
+            else {
+                String[] tmpKeys = {keys[counter]};
+                while (tmpKeys[0].length() > 0) {
+                    strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
+                    if ((strongNumber != null) && (strongNumber.length > 0)) {
+                        DEFINITION_CACHE.put(keys[counter], strongNumber);
+                        entityDocsResults[counter] = strongNumber[0];
+                        resultArrayIndex ++;
+                        tmpKeys[0] = "";
+                    } else {
+                        if ((tmpKeys[0].substring(0, 1).equalsIgnoreCase("h")) && (tmpKeys[0].length() == 5) && (!tmpKeys[0].endsWith("a"))) { // check for start with H, do not append if already ends with letter "a"
+                            tmpKeys[0] = tmpKeys[0].concat("a");
+                        }
+                        else tmpKeys[0] = "";
+                    }
+                }
+            }
         }
 
-        final EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", keys);
-        DEFINITIION_CACHE.put(cacheKey, strongNumbers);
-        return strongNumbers;
+        if (resultArrayIndex == keys.length) return entityDocsResults;
+        else if (resultArrayIndex == 0) return new EntityDoc[0];
+        else if (resultArrayIndex < keys.length) {
+            EntityDoc[] entityDocsResults2 = new EntityDoc[resultArrayIndex];
+            for (int counter = 0; counter < resultArrayIndex; counter ++) {
+                entityDocsResults2[counter] = entityDocsResults[counter];
+            }
+            return entityDocsResults2;
+        }
+        return new EntityDoc[0]; // Something wrong (resultArrayIndex > keys.length)
     }
 
     /**

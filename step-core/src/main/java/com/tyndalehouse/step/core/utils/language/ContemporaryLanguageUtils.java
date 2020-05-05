@@ -47,7 +47,7 @@ public final class ContemporaryLanguageUtils {
     }
 
     /**
-     * Gets the locale from tag, for e.g. zh-TW constructs new Locale(zh, TW). Only deals with 2 parts at the
+     * Gets the locale from tag, for e.g. zh_TW constructs new Locale(zh, TW). Only deals with 2 parts at the
      * moment
      * 
      * @param tag the tag

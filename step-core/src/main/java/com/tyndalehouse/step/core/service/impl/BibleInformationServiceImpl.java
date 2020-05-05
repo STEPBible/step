@@ -243,7 +243,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference) {
+    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference, final String userLanguage) {
         boolean isMultipleVerses = false;
         Verse key = null;
         final Versification versificationForVersion = this.jswordVersification.getVersificationForVersion(version);
@@ -267,7 +267,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         }
 
         final StrongCountsAndSubjects verseStrongs = new JSwordStrongNumberHelper(this.entityManager,
-                key, this.jswordVersification, this.jswordSearch, this.strongAugmentationService).getVerseStrongs();
+                key, this.jswordVersification, this.jswordSearch, this.strongAugmentationService).getVerseStrongs(userLanguage);
         verseStrongs.setVerse(key.getName());
         verseStrongs.setMultipleVerses(true);
         return verseStrongs;

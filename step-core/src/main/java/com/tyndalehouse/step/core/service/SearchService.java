@@ -78,9 +78,10 @@ public interface SearchService {
      * @param filter        the filter to apply (or blank to retrieve just the particular search query.
      * @param options       the options ticked by the user
      * @param originalItems the original query as given by the user
+     * @param userLanguage  the user language in the browser (e.g.: en, zh, es, ...)
      * @return the results from the search/passage lookup
      */
     AbstractComplexSearch runQuery(List<SearchToken> searchTokens, final String options, final String display,
                                    final int pageNumber, final String filter, final String sort, int context,
-                                   final String originalItems);
+                                   final String originalItems, final String userLanguage);
 }

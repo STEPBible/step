@@ -9,7 +9,7 @@
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
     request.setAttribute("locale", locale.getLanguage());
     request.setAttribute("localeVariant", locale.getVariant());
-	Config.set(request, Config.FMT_LOCALE, locale.getLanguage());
+	Config.set(request, Config.FMT_LOCALE, locale);
 %>
 <%--<fmt:setLocale value="${locale.g}" variant="${localeVariant}" />--%>
 <fmt:setBundle basename="HtmlBundle" scope="request" />

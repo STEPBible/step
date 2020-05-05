@@ -46,13 +46,18 @@ public final class OriginalWordUtils {
      * @param def the definition
      * @return the suggestion
      */
-    public static LexiconSuggestion convertToSuggestion(final EntityDoc def) {
+    public static LexiconSuggestion convertToSuggestion(final EntityDoc def, final String userLanguage) {
         final LexiconSuggestion suggestion = new LexiconSuggestion();
         suggestion.setGloss(def.get("stepGloss"));
         suggestion.setMatchingForm(def.get("accentedUnicode"));
         suggestion.setStepTransliteration(def.get("stepTransliteration"));
         suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
-
+        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh"))) {
+            suggestion.set_zh_Gloss(def.get("zh_Gloss"));
+        }
+        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh_tw"))) {
+            suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
+        }
         return suggestion;
     }
  

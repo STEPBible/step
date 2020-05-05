@@ -104,7 +104,7 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
         if (results != null) {
             for (final EntityDoc def : results) {
-                suggestions.add(convertToSuggestion(def));
+                suggestions.add(convertToSuggestion(def, null));
             }
         }
         return suggestions;

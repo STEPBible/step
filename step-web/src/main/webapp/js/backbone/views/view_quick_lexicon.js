@@ -39,11 +39,22 @@ var QuickLexicon = Backbone.View.extend({
     templateDef: '<%= view.templateHeader %>' +
         '<% _.each(data, function(item, data_index) { %>' +
         '<div><h1>' +
-        '<%= item.stepGloss %> (<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
+        '<%= item.stepGloss %>' +
+        '<% var urlLang = $.getUrlVar("lang") || ""; %>' +
+        '<% urlLang = urlLang.toLowerCase(); %>' +
+        '<% var currentLang = step.userLanguageCode.toLowerCase(); %>' +
+        '<% if (urlLang == "zh_tw") { currentLang = "zh_tw"; } else if (urlLang == "zh") { currentLang = "zh"; } %>' +
+        '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
+        '<% if (currentEnWithZhLexiconSetting == undefined) currentEnWithZhLexiconSetting = false; %>' +
+        '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_tw_Gloss %></span> <% } else if ( (currentLang == "zh") && (item._zh_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_Gloss %></span> <% } %>' +
+        '&nbsp;(<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1> ' +
-        '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
-        '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
+        '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
+        '<% if ((currentEnWithZhLexiconSetting) || (!currentLang.startsWith("zh"))) { %>' +
+            '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
+            '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
+        '<% } %>' +
         '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <%= __s.more_info_on_click_of_word %></span><% } %>' +
         '</div>' +
         '<% if (brief_morph_info[data_index] != null) { %> ' +
@@ -51,6 +62,10 @@ var QuickLexicon = Backbone.View.extend({
 		'<% } %>' +
         '<% }); %>' +
         '<%= view.templatedFooter %>',
+    templateDef2: '<%= view.templateHeader %>' +
+		'&nbsp;&nbsp;<span><%= brief_morph_info[0] %></span> ' +
+        '<%= view.templatedFooter %>',
+    lastMorphCode: '',
     initialize: function (opts) {
         this.text = opts.text;
         this.reference = opts.reference;
@@ -68,17 +83,29 @@ var QuickLexicon = Backbone.View.extend({
 
     loadDefinition: function (time) {
         var self = this;
-        return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph], function (data) {
+        lastMorphCode = '';
+        if ((this.morph != undefined) && (this.morph.startsWith('TOS:'))) {
+            lastMorphCode = this.morph;
+        }
+        return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph, step.userLanguageCode], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);
             $("#quickLexicon").remove();
-            if (data.vocabInfos) {
-				var morph_information = [];
+            var morphOnly = false;
+            if ((data.vocabInfos.length == 0) && (lastMorphCode != '') && (data.morphInfos.length == 0)) morphOnly = true;
+            if ((data.vocabInfos.length > 0) || (morphOnly)) {
+                var morph_information = [];
+                if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
+                    data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
+                } 
 				for (counter = 0; counter < data.morphInfos.length; counter ++) {
 					var item = data.morphInfos[counter];
 					if (item) morph_information[counter] = self._createBriefMorphInfo(item);
-				}
-                var lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos,
+                }
+                var lexicon;
+                if (morphOnly) lexicon = $(_.template(self.templateDef2)({ brief_morph_info: morph_information,
+					view: self }));
+                else lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos,
 					brief_morph_info: morph_information,
 					fontClass: step.util.ui.getFontForStrong(self.strong),
 					view: self }));
@@ -108,9 +135,9 @@ var QuickLexicon = Backbone.View.extend({
             this.loadDefinition(time);
         }
         // added for colour code grammar
-        if ((numOfAnimationsAlreadyPerformedOnSamePage !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== null))
-            numOfAnimationsAlreadyPerformedOnSamePage = 0;
-
+        const C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
+        if ((cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
+            cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
         return this;
     },
     displayQuickDef: function(lexicon) {
@@ -145,19 +172,23 @@ var QuickLexicon = Backbone.View.extend({
     },
 	// for one-line morphology
     _createBriefMorphInfo: function (morphInfo) {
-		var morph_css_class = "";
-		var grammar_function = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_function, "function");
+		var grammar_function = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_function, "ot_function");
 		var tense = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_tense, "tense");
 		var voice = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_tense, "voice");
 		var mood = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_mood, "mood");
         var briefMorph = grammar_function;
 		briefMorph += tense + voice + mood;
-		briefMorph += this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_case, "wordCase") +
-		this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_person, "person");
+        var stem = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_stem, "stem");
+        var form = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_form, "ot_form");
+        var state = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_state, "state");
+		briefMorph += stem + form;
+        briefMorph += this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_case, "wordCase") +
+        	this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_person, "person");
 		var number = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_number, "number");
 		var gender = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_gender, "gender");
 		briefMorph += number;
-		briefMorph += gender;
+        briefMorph += gender;
+        briefMorph += state;
 		briefMorph += this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_suffix, "suffix");
         briefMorph = briefMorph.trim();
 		if (briefMorph.length > 0) {
@@ -170,36 +201,5 @@ var QuickLexicon = Backbone.View.extend({
 			return morphInfo[param] + ' ';
         }
 		return '';
-    },
-	_getShortCodeTense: function (tense) {
-		temp_compare_string = tense.toLowerCase();
-		if (temp_compare_string == "aorist") return "a";
-		else if (temp_compare_string == "present") return "p";
-		else if ((temp_compare_string == "perfect") || (temp_compare_string == "pluperfect")) return "r";
-		else if (temp_compare_string == "future") return "f";
-		else if (temp_compare_string == "imperfect") return "i";
-		else if (temp_compare_string == "indefinite") return "x";
-		else {
-			console.log("view_quick_lexicon: Cannot find the matching tense: " + temp_compare_string);
-		}
-		return "";
-    },
-	_getShortCodeMood: function (mood) {
-		temp_compare_string = mood.toLowerCase();
-		if (temp_compare_string == "indicative") return "i";
-		else if (temp_compare_string == "imperative") return "m";
-		else if (temp_compare_string == "participle") return "p";
-		else if (temp_compare_string == "infinitive") return "n";
-		else if (temp_compare_string == "subjunctive") return "s";
-		else if (temp_compare_string == "optative") return "o";
-		else {
-			console.log("view_quick_lexicon: Cannot find the matching mood: " + temp_compare_string);
-		}
-		return "";
-    },
-	_getShortCodeVoice: function (voice) {
-		temp_compare_string = voice.toLowerCase();
-		if (temp_compare_string.startsWith("passive")) return "p";
-		else return "a";
     }
 });

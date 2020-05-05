@@ -80,7 +80,8 @@ public class InternationalJsonController extends HttpServlet {
         
         final String langParameter = req.getParameter("lang");
         if (isNotBlank(langParameter)) {
-            locale = new Locale(langParameter);
+            if (langParameter.equalsIgnoreCase("zh_tw")) locale = new Locale("zh", "TW");
+            else locale = new Locale(langParameter);
         } else {
             locale = clientSessionProvider.get().getLocale();
         }

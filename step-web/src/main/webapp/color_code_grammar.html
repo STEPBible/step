@@ -1,31 +1,34 @@
 <link href="css/color_code_grammar.css" rel="stylesheet"/>
 <link rel='stylesheet' href='css/spectrum.css'/>
+<script src='js/color_code_config.js'></script>
 <script src='libs/spectrum.js'></script>
 <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal">X</button>
+  <button type="button" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>
 </div>
 <div class="modal-body">
 <div id="colortabs">
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="#nounColors" data-toggle="tab">Greek Number and Gender</a></li>
-		<li><a href="#verbColors" data-toggle="tab">Greek Verbs</a></li>
+		<li class="active"><a href="#nounClrs" data-toggle="tab">Number & Gender</a></li>
+		<li><a href="#verbClrs" data-toggle="tab">Greek Verbs</a></li>
+		<li><a href="#hVerbClrs" data-toggle="tab">OT Verbs</a></li>
 	</ul>
 	<div class="tab-content">
-	<div class="tab-pane fade in active" id="nounColors">
+	<div class="tab-pane fade in active" id="nounClrs">
 	</div>
-<div class="tab-pane fade" id="verbColors"></div>
+<div class="tab-pane fade" id="verbClrs"></div>
+<div class="tab-pane fade" id="hVerbClrs"></div>
 <div class="footer">
-	<button id="openButton" class="btn btn-default btn-xs closeModal" onclick=openColorConfig()><label>Open</label></button>
-	<button id="saveButton" class="btn btn-default btn-xs closeModal" onclick=saveColorConfig()><label>Save</label></button>
-	<button id="cancelButton" class="btn btn-default btn-xs closeModal" onclick=cancelColorChanges()><label>Cancel</label></button>
-	<button id="resetButton" class="btn btn-default btn-xs closeModal" onclick=resetColorConfig()><label>Reset</label></button>
-	<button class="btn btn-default btn-xs closeModal" data-dismiss="modal" ><label>Exit</label></button>
+	<button id="openButton" class="btn btn-default btn-xs" onclick=openClrConfig()><label>Open</label></button>
+	<button id="saveButton" class="btn btn-default btn-xs" onclick=saveClrConfig()><label>Save</label></button>
+	<button id="cancelButton" class="btn btn-default btn-xs" onclick=cancelClrChanges()><label>Cancel</label></button>
+	<button id="resetButton" class="btn btn-default btn-xs" onclick=resetClrConfig()><label>Reset</label></button>
+	<button class="btn btn-default btn-xs" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>
 </div>
 </div>
 </div>
 </div>
 <script>	
 	$( document ).ready(function() {
-		initializeColorCodeHtmlModalPage();
+		initializeClrCodeHtmlModalPage();
 	});
 </script>

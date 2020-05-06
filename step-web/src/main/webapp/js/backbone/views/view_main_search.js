@@ -856,19 +856,16 @@ var MainSearchView = Backbone.View.extend({
                 if (this._getSpecificContext(REFERENCE) != null &&
                     (v.item.sectionType == 'BIBLE_BOOK' || (!v.item.wholeBook && !v.item.passage))) {
                     //then we are listing all chapters, and should display 'Whole book' instead
-                    internationalisedSectionName = '[' + __s.bible_whole_book_section + ']';
+                    internationalisedSectionName = __s.bible_whole_book_section;
                 }
                 else {
-                    if (v.item.sectionType != 'BIBLE_BOOK') {
-                        var internationalName = __s[v.item.sectionType.toLowerCase() + "_section"];
-                        if (internationalName == null) {
-                            internationalName = __s[v.item.sectionType.toLowerCase()];
-                        }
-                        internationalisedSectionName = '[' + internationalName + ']';
-                    }
-                    else internationalisedSectionName = '';
+					var internationalName = __s[v.item.sectionType.toLowerCase() + "_section"];
+					if (internationalName == null) {
+						internationalName = __s[v.item.sectionType.toLowerCase()];
+					}
+					internationalisedSectionName = internationalName;
                 }
-                row = ['<span class="source">' + internationalisedSectionName + '</span>',
+                row = ['<span class="source">[' + internationalisedSectionName + ']</span>',
                     this._markMatch(v.item.fullName, query.term)
                 ].join('');
                 break;

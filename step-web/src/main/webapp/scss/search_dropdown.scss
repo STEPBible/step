@@ -4,7 +4,7 @@
 
 .select2-results {
   @media screen and (min-width: $stepXSBootstrap) {
-    @include multi-column(4);
+    @include multi-column(2);
   }
 
   .maxSelected {

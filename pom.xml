@@ -51,7 +51,7 @@
 
         <!-- Commons -->
         <commons-beanutils.version>1.8.3</commons-beanutils.version>
-        <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-configuration.version>1.8</commons-configuration.version>
         <commons-httpclient.version>4.3.6</commons-httpclient.version>

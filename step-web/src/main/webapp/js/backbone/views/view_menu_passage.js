@@ -1,7 +1,7 @@
 var PassageMenuView = Backbone.View.extend({
     infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-html="true" data-toggle="popover" data-placement="bottom">' +
-    '<span class="glyphicon glyphicon-info-sign"></span>' +
-    '</a>',
+        '<span class="glyphicon glyphicon-info-sign"></span>' +
+        '</a>',
     events: {
         "click a[name]": "updateModel",
         "click .previousChapter": "goToPreviousChapter",
@@ -11,11 +11,12 @@ var PassageMenuView = Backbone.View.extend({
         "show.bs.dropdown *": "handleDropdownMenu"
     },
     fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group"><button class="btn btn-default btn-sm smallerFontSize" type="button" title="<%= __s.passage_smaller_fonts %>">' +
-    '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
-    '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
-    '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
+        '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
+        '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
+        '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
+    secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -414,18 +415,23 @@ var PassageMenuView = Backbone.View.extend({
                 currentEnWithZhLexiconSetting = false;
             }
             dropdown.append($(_.template(this.enWithZhLexicon)({ isEnWithZhLexicon: currentEnWithZhLexiconSetting })).click(function (e) {
-                //prevent the bubbling up
-                e.stopPropagation();
-
-                //set the setting
+                e.stopPropagation(); //prevent the bubbling up
                 var enWithZhLexicon = !self.model.get("isEnWithZhLexicon");
                 self.model.save({ isEnWithZhLexicon: enWithZhLexicon });
-
-                //toggle the tick
-                self._setVisible(this, enWithZhLexicon);
+                self._setVisible(this, enWithZhLexicon); // toggle the tick
+            }));
+            var currentSecondZhLexiconSetting = self.model.get("isSecondZhLexicon");
+            if (currentSecondZhLexiconSetting == null) {
+                this.model.save({ isSecondZhLexicon: true });
+                currentSecondZhLexiconSetting = true;
+            }
+            dropdown.append($(_.template(this.secondZhLexicon)({ isSecondZhLexicon: currentSecondZhLexiconSetting })).click(function (e) {
+                e.stopPropagation(); //prevent the bubbling up
+                var secondZhLexicon = !self.model.get("isSecondZhLexicon");  // reverse true or false
+                self.model.save({ isSecondZhLexicon: secondZhLexicon }); // toggle the tick
+                self._setVisible(this, secondZhLexicon);
             }));
         }
-
         var currentVerseVocabSetting = self.model.get("isVerseVocab");
         if (currentVerseVocabSetting == null) {
             this.model.save({isVerseVocab: true});
@@ -638,8 +644,8 @@ var PassageMenuView = Backbone.View.extend({
         else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
         console.log("key.osisKeyId: " + reference);
         args = args.replace(/reference=[^|]+\|?/ig, "")
-                   .replace(/&&/ig, "")
-                   .replace(/&$/ig, "");
+            .replace(/&&/ig, "")
+            .replace(/&$/ig, "");
         var isPassageForChineseLexicon = (this.model.get("searchType") == 'ORIGINAL_GREEK_RELATED') || (this.model.get("searchType") == 'ORIGINAL_HEBREW_RELATED');
         if (isPassageForChineseLexicon) {
             args = args.replace(/strong=[GH]\d{3}[\dA-D][a-f]?\|?/i, "");
@@ -721,8 +727,8 @@ var PassageMenuView = Backbone.View.extend({
 //        }
     },
 
-	showConfigGrammarColor: function (e) {
-        var grammarColorConfigPage = $('<div id="theGrammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +	
+    showConfigGrammarColor: function (e) {
+        var grammarColorConfigPage = $('<div id="theGrammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">');
         var temp = document.getElementById("theGrammarClrModal");
@@ -732,9 +738,9 @@ var PassageMenuView = Backbone.View.extend({
             $.ajaxSetup({ cache: true });
             $('#theGrammarClrModal').modal('show').find('.modal-content').load('/color_code_grammar.min.html');
         }
-        else 
+        else
             $('#theGrammarClrModal').modal('show').find('.modal-content').load('/color_code_grammar.html');
 
-	}
-	
+    }
+
 });

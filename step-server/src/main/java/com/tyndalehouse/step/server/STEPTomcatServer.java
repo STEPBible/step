@@ -148,12 +148,12 @@ public class STEPTomcatServer {
             Desktop.getDesktop().browse(new URI(browserUrl));
         } catch (final IOException e1) {
             if (!ignoreBrowserError) {
-                showError("error_generic", ENGLISH_GENERIC_ERROR, "error_unable_to_show_browser", ENGLISH_BROWSER_ERROR, "");
+                showError("error_generic", ENGLISH_GENERIC_ERROR, "error_unable_to_show_browser", ENGLISH_BROWSER_ERROR);
             }
             LOGGER.error("Unable to launch browser.", e1);
         } catch (final URISyntaxException e1) {
             if (!ignoreBrowserError) {
-                showError("error_generic", ENGLISH_GENERIC_ERROR, "error_unable_to_show_browser", ENGLISH_BROWSER_ERROR, "");
+                showError("error_generic", ENGLISH_GENERIC_ERROR, "error_unable_to_show_browser", ENGLISH_BROWSER_ERROR);
             }
             LOGGER.error("Unable to launch browser.", e1);
         }
@@ -167,7 +167,7 @@ public class STEPTomcatServer {
      * @param bundleKey             the key to the error bundle
      * @param defaultEnglishMessage the message to display if no error bundle has been loaded
      */
-    private void showError(String title, String defaultTitle, String bundleKey, String defaultEnglishMessage, String args) {
+    private void showError(String title, String defaultTitle, String bundleKey, String defaultEnglishMessage, String... args) {
         String finalTitle = this.errorMessages == null ? defaultTitle : this.errorMessages.getString(title);
         String message = this.errorMessages == null ? defaultEnglishMessage : setupMessages.getString(bundleKey);
         String formattedMessage = String.format(message, args);

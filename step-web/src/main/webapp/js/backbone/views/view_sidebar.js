@@ -282,12 +282,12 @@ var SidebarView = Backbone.View.extend({
         $.ajaxSetup({async: false});
         $.getJSON("lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
             foundChineseJSON = true;
+            // appendLexiconSearchFunction(panel, mainWord);
+            panel.append($("<h2>").append(__s.lexicon_chinese_name + ':'));
             panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
             panel.append($("<h2>").append(__s.lexicon_definition_for_zh + ":"));
 
             addLinkAndAppendFunction(panel, chineseVars.definition, currentWordLangCode, bibleVersion);
-
-            appendLexiconSearchFunction(panel, mainWord);
 
             panel.append($("<h2>").append(__s.lexicon_usage_for_zh + ":"));
             var ul = $('<ul>');
@@ -348,26 +348,33 @@ var SidebarView = Backbone.View.extend({
         if (mainWord.shortDef) {
             this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode, bibleVersion);
         }
+        this._appendLexiconSearch(panel, mainWord);
+        var displayEnglishLexicon = true;
         var foundChineseJSON = false;
-        if (currentUserLang.startsWith("zh")) 
-            foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, bibleVersion, this._appendLexiconSearch, this._addLinkAndAppend);
-        if (!foundChineseJSON) this._appendLexiconSearch(panel, mainWord); // Run this if it is not Chinese language or if Chinese language, but did not find the Chinese json files.
-        var isEnWithZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon");
-        if (isEnWithZhLexicon === undefined) isEnWithZhLexicon = false;
-        if ((!currentUserLang.startsWith("zh")) || (isEnWithZhLexicon)) {
-            // append the meanings
+        if (currentUserLang.startsWith("zh")) {
+            displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon") || false;
+            var chineseDef;
+            if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Definition != undefined)) chineseDef = mainWord._zh_tw_Definition;
+            else if (mainWord._zh_Definition != undefined) chineseDef =  mainWord._zh_Definition;
+            if (chineseDef) {
+                panel.append($("<h2>").append(__s.lexicon_meaning_fhl));
+                this._addLinkAndAppend(panel, chineseDef, currentWordLanguageCode, bibleVersion);
+            }
+            var useSecondZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSecondZhLexicon");
+            if ((useSecondZhLexicon == null) || (useSecondZhLexicon))
+                foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, bibleVersion, this._appendLexiconSearch, this._addLinkAndAppend);
+        }
+        if (displayEnglishLexicon) { // This might be false if Chinese lexicon is displayed and isEnWithZhLexicon is false append the meanings
             if (mainWord.mediumDef) {
                 panel.append($("<h2>").append(__s.lexicon_meaning));
                 this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion);
             }
-
             //longer definitions
             if (mainWord.lsjDefs) {
                 panel.append($("<h2>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
                 panel.append(mainWord.lsjDefs);
             }
         }
-
         if (mainWord.relatedNos) {
             panel.append($("<h2>").append(__s.lexicon_related_words));
             var ul = $('<ul>');
@@ -397,11 +404,10 @@ var SidebarView = Backbone.View.extend({
         panel.find("[sbstrong]").click(function () {
             step.util.ui.showDef($(this).data("strongNumber"));
         });
-        if (currentUserLang.startsWith("zh") && (foundChineseJSON)) {
+        if ((foundChineseJSON) && (!step.state.isLocal())) 
             panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
                 "\" target=\"_blank\">" +
                 __s.additional_chinese_lexicon_info + "</a>");
-        }
         this._doSideNotes(panel, bibleVersion);
     },
     // for one-line morphology
@@ -422,10 +428,13 @@ var SidebarView = Backbone.View.extend({
         this.renderBriefMorphItem(panel, info, "suffix");
         panel.append(")<br />");
     },
-    renderBriefMorphItem: function (panel, info, param) {
-        if(info && param && info[param]) {
-            var value = $("<span>" + this.replaceEmphasis(info[param]) + "</span>");
-            panel.append(value);
+    renderBriefMorphItem: function (panel, morphInfo, param) {
+        if(morphInfo && param && morphInfo[param]) {
+            var morphValue = this.replaceEmphasis(morphInfo[param]);
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(" ", "_");
+			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
+            var htmlValue = $("<span>" + morphValue + "</span>");
+            panel.append(htmlValue);
             panel.append(" ");
         }
     },
@@ -458,14 +467,16 @@ var SidebarView = Backbone.View.extend({
         if (info["description"] != undefined)
             panel.append($("<h3>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
     },
-    renderMorphItem: function (panel, info, title, param) {
-        if (info && param && info[param]) {
-            var value = $("<span>" + this.replaceEmphasis(info[param]) + "</span>");
-            panel.append($("<h3>").append(title)).append(value);
-
-            if (info[param + "Explained"] || param == 'wordCase' && info["caseExplained"]) {
-                var explanation = info[param + "Explained"] || param == 'wordCase' && info["caseExplained"];
-                value.attr("title", this.stripEmphasis(explanation));
+    renderMorphItem: function (panel, morphInfo, title, param) {
+        if (morphInfo && param && morphInfo[param]) {
+			var morphValue = this.replaceEmphasis(morphInfo[param]);
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(" ", "_");
+			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
+            var htmlValue = $("<span>" + morphValue + "</span>");
+            panel.append($("<h3>").append(title)).append(htmlValue);
+            if (morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"]) {
+                var explanation = morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"];
+                htmlValue.attr("title", this.stripEmphasis(explanation));
             }
             panel.append("<br />");
         }

@@ -21,6 +21,23 @@
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 
+	<!-- The following are used for the stand-alone version of STEP -->
+	<!-- The stand-alone version of STEP should only support the users' -->
+	<!-- own computer.  Therefore, it should only allow the localhost address -->
+	<!-- The following lines will be uncommented by the maven process when -->
+	<!-- the "-Pstandalone-install" parameter is used in the mvn command. -->
+	<!--localhost.acl<filter> LOCALHOST.ACL-->
+	<!--localhost.acl	<filter-name>Remote Address Filter</filter-name> LOCALHOST.ACL-->
+	<!--localhost.acl	<filter-class>org.apache.catalina.filters.RemoteAddrFilter</filter-class> LOCALHOST.ACL-->
+	<!--localhost.acl	<init-param> LOCALHOST.ACL-->
+	<!--localhost.acl		<param-name>allow</param-name> LOCALHOST.ACL-->
+	<!--localhost.acl		<param-value>127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1</param-value> LOCALHOST.ACL-->
+	<!--localhost.acl	</init-param> LOCALHOST.ACL-->
+	<!--localhost.acl</filter> LOCALHOST.ACL-->
+    <!--localhost.acl<filter-mapping> LOCALHOST.ACL-->
+    <!--localhost.acl	<filter-name>Remote Address Filter</filter-name> LOCALHOST.ACL-->
+    <!--localhost.acl	<url-pattern>*</url-pattern> LOCALHOST.ACL-->
+    <!--localhost.acl</filter-mapping> LOCALHOST.ACL-->
 
 	<filter>
 		<filter-name>guiceFilter</filter-name>

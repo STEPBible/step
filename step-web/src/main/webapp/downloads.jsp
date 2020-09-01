@@ -80,6 +80,17 @@
                 </a>
                 </td>
             </tr>
+			<tr VALIGN="TOP">
+                <td WIDTH="50%"><a href="/downloads/STEP_zh.exe" data-os="windows"><img src="images/WindowsCyan_Web_zh.jpg"/>
+                    <br />
+                    <fmt:message key="download_windows_edition_zh"/>&reg;
+                </a></td>
+                <td WIDTH="50%"><a href="/downloads/STEP_zh.dmg" data-os="mac"><img src="images/apple_zh.png"/><br />
+                    <fmt:message key="download_macos_zh"/>&reg;
+                    <br /><br />
+                </a>
+                </td>
+            </tr>
             <tr VALIGN="TOP">
                 <td><br /><br />
                     <fmt:message key="download_installer"/>

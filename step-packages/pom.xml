@@ -25,7 +25,7 @@
     <parent>
         <groupId>com.tyndalehouse.step</groupId>
         <artifactId>step-mvn</artifactId>
-        <version>2.0.19-SNAPSHOT</version>
+        <version>2.0.20-SNAPSHOT</version>
     </parent>
 
     <groupId>com.tyndalehouse.step</groupId>
@@ -39,8 +39,8 @@
         <sword.home>C:\Users\pat\AppData\Roaming\Sword</sword.home>
         <jsword.home>${sword.home}/../JSword</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-        <modulesToInclude>esv_th,kjv,osmhb,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
-        <indexesToInclude>ESV_th,KJV,OSMHB,LXX,SBLG_th,NIV,ABPGRK</indexesToInclude>
+        <modulesToInclude>esv_th,kjv,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
+        <indexesToInclude>ESV_th,KJV,OSMHB,THOT,LXX,SBLG_th,NIV,ABPGRK</indexesToInclude>
     </properties>
 
     <build>
@@ -121,4 +121,15 @@
             </plugin>
         </plugins>
     </build>
+	
+	<profiles>
+		<profile>
+			<id>standalone-zh</id>
+			<properties>
+			    <modulesToInclude>esv_th,kjv,chiun,chiuns,chincvt,chincvs,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
+				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,OSMHB,THOT,LXX,SBLG_th,NIV,ABPGRK</indexesToInclude>
+			</properties>
+		</profile>
+	</profiles>
+	
 </project>

@@ -24,7 +24,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>2.0.19-SNAPSHOT</version>
+		<version>2.0.20-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -33,6 +33,7 @@
 
 	<properties>
 		<skipTomcat>true</skipTomcat>
+		<skipLocalHostACL>true</skipLocalHostACL>
         <!-- Empty by default -->
         <personal.suffix></personal.suffix>
 	</properties>
@@ -132,17 +133,25 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<configuration>
-						<webResources>
-							<resource>
-								<directory>${basedir}/src/main/webapp</directory>
-								<filtering>true</filtering>
-								<includes>
-									<include>start.jsp</include>
-								</includes>
-							</resource>
-						</webResources>
-					</configuration>
+					<version>2.0.1</version>
+					<executions>
+						<execution>
+							<id>prepare-war</id>
+							<phase>prepare-package</phase>
+							<goals> <goal>exploded</goal> </goals>
+							<configuration>
+								<webResources>
+									<resource>
+										<directory>${basedir}/src/main/webapp</directory>
+										<filtering>true</filtering>
+										<includes>
+											<include>start.jsp</include>
+										</includes>
+									</resource>
+								</webResources>
+							</configuration>
+						</execution> 
+					</executions> 
 				</plugin>
 
 				<plugin>
@@ -383,6 +392,7 @@
 						</execution>
 					</executions>
 				</plugin>
+
 				<plugin>
 					<groupId>com.google.code.maven-replacer-plugin</groupId>
 					<artifactId>replacer</artifactId>
@@ -590,6 +600,43 @@
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags> 
                             </configuration>
 						</execution>
+						
+						<execution>
+                            <id>change-acl</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+                            <configuration>
+                                <includes>
+                                    <include>${basedir}/target/step-web/WEB-INF/web.xml</include>
+                                </includes>
+                                <replacements>
+                                    <replacement><token><![CDATA[<!--localhost.acl]]></token><value></value></replacement>
+                                    <replacement><token><![CDATA[LOCALHOST.ACL-->]]></token><value></value></replacement>
+                                </replacements>
+                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
+								<skip>${skipLocalHostACL}</skip>
+                            </configuration>
+						</execution>
+
+						<execution>
+                            <id>update-color_code-html</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+                            <configuration>
+                                <includes>
+                                    <include>${basedir}/target/step-web/color_code_grammar.min.html</include>
+                                </includes>
+                                <replacements>
+                                    <replacement><token>color_code_config\.js</token><value>color_code_config.${project.version}.min.js</value></replacement>
+                                </replacements>
+                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
+                            </configuration>
+						</execution>
+
 					</executions>
 				</plugin>
 
@@ -642,7 +689,12 @@
 				<skipTomcat>false</skipTomcat>
 			</properties>
 		</profile>
-
+		<profile>
+			<id>standalone-install</id>
+			<properties>
+				<skipLocalHostACL>false</skipLocalHostACL>
+			</properties>
+		</profile>
 	</profiles>
 
 </project>

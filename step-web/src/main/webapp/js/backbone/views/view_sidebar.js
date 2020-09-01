@@ -150,7 +150,10 @@ var SidebarView = Backbone.View.extend({
                 var item = data.vocabInfos[i];
                 var hebrew = data.vocabInfos[i].strongNumber == 'H';
                 var panelId = "lexicon-" + data.vocabInfos[i].strongNumber;
-                var panelTitle = item.stepGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (hebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
+				var currentGloss = item.stepGloss;
+				currentGloss += (currentUserLang =="zh") ? " " + item._zh_Gloss : 
+					(currentUserLang =="zh_tw") ? " " + item._zh_tw_Gloss : "";
+                var panelTitle = currentGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (hebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
                 var panelContentContainer = $('<div class="panel-collapse collapse">').attr("id", panelId);
                 var panelBody = $('<div class="panel-body"></div>');
                 panelContentContainer.append(panelBody);
@@ -431,7 +434,7 @@ var SidebarView = Backbone.View.extend({
     renderBriefMorphItem: function (panel, morphInfo, param) {
         if(morphInfo && param && morphInfo[param]) {
             var morphValue = this.replaceEmphasis(morphInfo[param]);
-			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(" ", "_");
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
 			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
             var htmlValue = $("<span>" + morphValue + "</span>");
             panel.append(htmlValue);
@@ -470,7 +473,7 @@ var SidebarView = Backbone.View.extend({
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {
 			var morphValue = this.replaceEmphasis(morphInfo[param]);
-			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(" ", "_");
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
 			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
             var htmlValue = $("<span>" + morphValue + "</span>");
             panel.append($("<h3>").append(title)).append(htmlValue);

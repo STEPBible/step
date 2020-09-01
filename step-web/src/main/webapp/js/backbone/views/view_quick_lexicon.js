@@ -199,7 +199,7 @@ var QuickLexicon = Backbone.View.extend({
     _renderBriefMorphItem: function (morphInfo, title, param) {
         if(morphInfo && param && morphInfo[param]) {
 			var morphValue = morphInfo[param];
-			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(" ", "_");
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
 			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ") " : " ";
 			return morphValue;
         }

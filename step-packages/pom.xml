@@ -126,8 +126,8 @@
 		<profile>
 			<id>standalone-zh</id>
 			<properties>
-			    <modulesToInclude>esv_th,kjv,chiun,chiuns,chincvt,chincvs,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
-				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,OSMHB,THOT,LXX,SBLG_th,NIV,ABPGRK</indexesToInclude>
+			    <modulesToInclude>esv_th,kjv,chiun,chiuns,chincvt,chincvs,ccb,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
+				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,CCB,OSMHB,THOT,LXX,SBLG_th,NIV,ABPGRK</indexesToInclude>
 			</properties>
 		</profile>
 	</profiles>

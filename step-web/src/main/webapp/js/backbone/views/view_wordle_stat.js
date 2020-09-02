@@ -174,7 +174,8 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         var lastTime = new Date().getTime();
         console.log(new Date().getTime(), reference, "Wordle server call");
-        $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, animate == true], function (data) {
+        var currentUserLang = (step.userLanguageCode) ? step.userLanguageCode.toLowerCase() : "en";
+        $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, animate == true, currentUserLang], function (data) {
             console.log(new Date().getTime(), "Wordle server data received");
             step.util.trackAnalyticsTime('wordle', 'loaded', new Date().getTime() - new Date().getTime());
             step.util.trackAnalytics('wordle', 'type', statType);

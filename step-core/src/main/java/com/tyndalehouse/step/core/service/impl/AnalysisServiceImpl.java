@@ -102,7 +102,7 @@ public class AnalysisServiceImpl implements AnalysisService {
     @Override
     public CombinedPassageStats getStatsForPassage(
             final String version, final String reference,
-            final StatType statType, final ScopeType scopeType, boolean nextChapter) {
+            final StatType statType, final ScopeType scopeType, boolean nextChapter, final String userLanguage) {
         
         
         final String keyResolutionVersion = statType == StatType.TEXT ? version : JSwordPassageService.REFERENCE_BOOK;
@@ -116,7 +116,7 @@ public class AnalysisServiceImpl implements AnalysisService {
             case WORD:
                 stat = this.jswordAnalysis.getWordStats(centralReference.getKey(), scopeType);
                 stat.trim(maxWords);
-                statsForPassage.setLexiconWords(convertWordStatsToDefinitions(stat));
+                statsForPassage.setLexiconWords(convertWordStatsToDefinitions(stat, userLanguage));
                 break;
             case TEXT:
                 stat = this.jswordAnalysis.getTextStats(version, centralReference.getKey(), scopeType);
@@ -140,9 +140,9 @@ public class AnalysisServiceImpl implements AnalysisService {
      * @param passageStat the retrieved strongs
      * @return the set of lexical entries associated with these keys
      */
-    private Map<String, LexiconSuggestion> convertWordStatsToDefinitions(final PassageStat passageStat) {
+    private Map<String, LexiconSuggestion> convertWordStatsToDefinitions(final PassageStat passageStat, final String userLanguage) {
         final Map<String, LexiconSuggestion> lexiconEntries =
-                this.definitions.lookup(passageStat.getStats().keySet());
+                this.definitions.lookup(passageStat.getStats().keySet(), userLanguage);
         return lexiconEntries;
     }
 

@@ -106,7 +106,7 @@ public class WebStepRequest {
         this.analysis = injector.getInstance(AnalysisService.class);
         try {
             this.description =  ""; 
-            stats = this.analysis.getStatsForPassage(this.version, this.reference, StatType.TEXT, ScopeType.PASSAGE, false);
+            stats = this.analysis.getStatsForPassage(this.version, this.reference, StatType.TEXT, ScopeType.PASSAGE, false, "en");
         } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);
             this.description = "";

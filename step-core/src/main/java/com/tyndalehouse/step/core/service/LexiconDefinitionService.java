@@ -15,8 +15,7 @@ public interface LexiconDefinitionService {
      * @param strongNumbers the strong numbers to be looked up
      * @return a map from strong numbers to the found lexical entries.
      */
-    Map<String,LexiconSuggestion> lookup(Set<String> strongNumbers);
-
+    Map<String,LexiconSuggestion> lookup(Set<String> strongNumbers, String userLanguage);
     /**
      * Looks up a single strong number
      * @param strongNumber a single strong number

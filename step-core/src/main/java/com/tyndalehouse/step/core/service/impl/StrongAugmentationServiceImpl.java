@@ -75,19 +75,19 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             //add the reference in the query. We may have several due to versifications mapping, so we're going to look for documents where at least 1 of the verses is in the doc
             query.append(") AND (");
             String[] individualVerses;
-            final int len = reference.length();
-            int i;
-            for (i = len - 1; i > 2; i--) { // Check to see if there are chapter or verse number
+            boolean foundDigit = false;
+            for (int i = reference.length() - 1; i > 1; i--) { // Check to see if there are chapter or verse number
                 if (Character.isDigit(reference.charAt(i))) {
+                    foundDigit = true;
                     break;
                 }
             }
-            if (i <= 2) {  // If there are no chapter or verse number, the query does not need to list all the verses in the book.
+            if (foundDigit) {
+                individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
+            }
+            else { // If there are no chapter or verse number, the query does not need to list all the verses in the book.
                 individualVerses = new String[1];
                 individualVerses[0] = reference;
-            }
-            else {
-                individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
             }
             //a single chapter can be optimized, also JSword returns the key as Gen.1 rather than expanded
             boolean queryAppended = false;

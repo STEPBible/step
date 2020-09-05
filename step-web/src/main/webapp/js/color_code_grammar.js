@@ -1635,6 +1635,10 @@ var cf = {
         title_range_low += rowsCovered;
       }
     }
+    if (__s["tense_" + descOfYAxisItems.toLowerCase().replaceAll(" ", "_")])
+        descOfYAxisItems += " (" + __s["tense_" + descOfYAxisItems.toLowerCase().replaceAll(" ", "_")] + ")";
+    else if (__s["mood_" + descOfYAxisItems.toLowerCase().replaceAll(" ", "_")])
+        descOfYAxisItems += " (" + __s["mood_" + descOfYAxisItems.toLowerCase().replaceAll(" ", "_")] + ")";
     htmlTable += '<td>' + descOfYAxisItems;
     return htmlTable;
   },
@@ -1842,7 +1846,11 @@ var cf = {
     htmlTable += '<tr>';
     for (var j = 0; j < descOfXAxisItems.length; j += 1) {
       htmlTable += '<td class="tg-yw4l"';
-      if (descOfXAxisItems[j].length < 10) htmlTable += ' width=72';
+        if (__s["mood_" + descOfXAxisItems[j].toLowerCase().replaceAll(" ", "_")])
+            descOfXAxisItems[j] += " (" + __s["mood_" + descOfXAxisItems[j].toLowerCase().replaceAll(" ", "_")] + ")";
+        else if (__s["tense_" + descOfXAxisItems[j].toLowerCase().replaceAll(" ", "_")])
+            descOfXAxisItems[j] += " (" + __s["tense_" + descOfXAxisItems[j].toLowerCase().replaceAll(" ", "_")] + ")";
+        if (descOfXAxisItems[j].length < 10) htmlTable += ' width=72';
       htmlTable += '>' + descOfXAxisItems[j];
       if (createUserInputs) htmlTable += cf.htmlToAdd3(j);
       htmlTable += '</td>';
@@ -2036,12 +2044,12 @@ var cf = {
     r[C_Greek][C_enableVerbClr] = true;
     r[C_Greek][C_chkbxPassiveBkgrdColrValue] = true;
     r[C_Greek][C_chkbxMiddleBkgrdColrValue] = true;
-    r[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
-    r[C_Greek][C_slctUlVerbItem] = ['Arrow', 'Dash', '2 lines', 'Underline', 'Dots', 'Underline'];
+    r[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
+    r[C_Greek][C_slctUlVerbItem] = ['Arrow', 'Dash', '2 lines', '2 lines', 'Underline', 'Dots', 'Underline'];
     r[C_Greek][C_orderOfTense] = ['p', 'i', 'r', 'l', 'a', 'f'];
-    r[C_Greek][C_tenseToCombineWithPrevious] = [false, false, false, true, false, false];
+    r[C_Greek][C_tenseToCombineWithPrevious] = [false, false, false, false, false, false];
     r[C_Greek][C_orderOfMood] = ['i', 'm', 's', 'o', 'n', 'p'];
-    r[C_Greek][C_moodToCombineWithPrevious] = [false, false, false, true, false, false];
+    r[C_Greek][C_moodToCombineWithPrevious] = [false, false, false, false, false, false];
     r[C_Greek][C_verbTableYHeader] = null;
     r[C_enableGenderNumberClr] = true;
     r[C_OT][C_verbTableXHeader] = null;

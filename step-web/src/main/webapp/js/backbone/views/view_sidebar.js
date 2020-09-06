@@ -416,8 +416,10 @@ var SidebarView = Backbone.View.extend({
     // for one-line morphology
     _createBriefMorphInfo: function (panel, info) {
         panel.append("(");
+		// Added following two lines. Accidentally delected the info["function'] 2019 - PT Sept 2020.
+		if (info["ot_function"] === undefined) this.renderBriefMorphItem(panel, info, "function");
+		else this.renderBriefMorphItem(panel, info, "ot_function");
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
-        this.renderBriefMorphItem(panel, info, "ot_function");
         this.renderBriefMorphItem(panel, info, "tense");
         this.renderBriefMorphItem(panel, info, "voice");
         this.renderBriefMorphItem(panel, info, "mood");
@@ -434,7 +436,8 @@ var SidebarView = Backbone.View.extend({
     renderBriefMorphItem: function (panel, morphInfo, param) {
         if(morphInfo && param && morphInfo[param]) {
             var morphValue = this.replaceEmphasis(morphInfo[param]);
-			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(/ /g, "_");
+		 // var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
 			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
             var htmlValue = $("<span>" + morphValue + "</span>");
             panel.append(htmlValue);
@@ -445,7 +448,9 @@ var SidebarView = Backbone.View.extend({
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
         panel.append($("<h2>").append(__s.display_grammar));
         this.renderMorphItem(panel, info, __s.lexicon_grammar_language, "language");
-        this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "ot_function");
+		// Added following two lines. Accidentally delected the info["function'] 2019 - PT Sept 2020.
+		if (info["ot_function"] === undefined) this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "function");
+		else this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "ot_function");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
@@ -473,7 +478,8 @@ var SidebarView = Backbone.View.extend({
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {
 			var morphValue = this.replaceEmphasis(morphInfo[param]);
-			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
+		//  var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(/ /g, "_");
 			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
             var htmlValue = $("<span>" + morphValue + "</span>");
             panel.append($("<h3>").append(title)).append(htmlValue);

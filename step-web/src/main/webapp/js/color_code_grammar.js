@@ -1635,10 +1635,10 @@ var cf = {
         title_range_low += rowsCovered;
       }
     }
-    if (__s["tense_" + descOfYAxisItems.toLowerCase().replaceAll(" ", "_")])
-        descOfYAxisItems += " (" + __s["tense_" + descOfYAxisItems.toLowerCase().replaceAll(" ", "_")] + ")";
-    else if (__s["mood_" + descOfYAxisItems.toLowerCase().replaceAll(" ", "_")])
-        descOfYAxisItems += " (" + __s["mood_" + descOfYAxisItems.toLowerCase().replaceAll(" ", "_")] + ")";
+    if (__s["tense_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")])
+        descOfYAxisItems += " (" + __s["tense_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
+    else if (__s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")])
+        descOfYAxisItems += " (" + __s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
     htmlTable += '<td>' + descOfYAxisItems;
     return htmlTable;
   },
@@ -1846,10 +1846,10 @@ var cf = {
     htmlTable += '<tr>';
     for (var j = 0; j < descOfXAxisItems.length; j += 1) {
       htmlTable += '<td class="tg-yw4l"';
-        if (__s["mood_" + descOfXAxisItems[j].toLowerCase().replaceAll(" ", "_")])
-            descOfXAxisItems[j] += " (" + __s["mood_" + descOfXAxisItems[j].toLowerCase().replaceAll(" ", "_")] + ")";
-        else if (__s["tense_" + descOfXAxisItems[j].toLowerCase().replaceAll(" ", "_")])
-            descOfXAxisItems[j] += " (" + __s["tense_" + descOfXAxisItems[j].toLowerCase().replaceAll(" ", "_")] + ")";
+        if (__s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
+            descOfXAxisItems[j] += " (" + __s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
+        else if (__s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
+            descOfXAxisItems[j] += " (" + __s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
         if (descOfXAxisItems[j].length < 10) htmlTable += ' width=72';
       htmlTable += '>' + descOfXAxisItems[j];
       if (createUserInputs) htmlTable += cf.htmlToAdd3(j);

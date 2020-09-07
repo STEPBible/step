@@ -92,25 +92,27 @@ var MainSearchView = Backbone.View.extend({
             },
             ajax: {
                 url: function (term, page) {
-                    var url = SEARCH_AUTO_SUGGESTIONS + term;
-                    var contextArgs = "";
-                    if (self.specificContext.length != 0) {
-                        for (var i = 0; i < self.specificContext.length; i++) {
-                            contextArgs += self.specificContext[i].itemType + "=" + self.specificContext[i].value;
-                            if (i < self.specificContext.length) {
-                                contextArgs += '|';
-                            }
-                        }
-                    }
-
-                    if (self.clearContextAfterSearch) {
-                        self._removeSpecificContext(EXAMPLE_DATA);
-                    }
-
                     var lang = step.state.language();
-                    var langParam = step.util.isBlank(lang) ? "" : "?lang=" + lang;
+					if ((term.length >= 2) || (!step.util.isBlank(lang) && (lang.toLowerCase().startsWith("zh")))) {
+						var url = SEARCH_AUTO_SUGGESTIONS + term;
+						var contextArgs = "";
+						if (self.specificContext.length != 0) {
+							for (var i = 0; i < self.specificContext.length; i++) {
+								contextArgs += self.specificContext[i].itemType + "=" + self.specificContext[i].value;
+								if (i < self.specificContext.length) {
+									contextArgs += '|';
+								}
+							}
+						}
 
-                    return url + "/" + encodeURIComponent(contextArgs) + langParam;
+						if (self.clearContextAfterSearch) {
+							self._removeSpecificContext(EXAMPLE_DATA);
+						}
+
+						var langParam = step.util.isBlank(lang) ? "" : "?lang=" + lang;
+
+						return url + "/" + encodeURIComponent(contextArgs) + langParam;
+					}
                 },
                 dataType: "json",
                 quietMillis: KEY_PAUSE,
@@ -252,6 +254,8 @@ var MainSearchView = Backbone.View.extend({
         });
 
         var container = this.masterSearch.select2("container");
+		if (step.state.language().startsWith("zh"))
+			container.data("select2").opts.minimumInputLength = 1; // Chinese Bible short names and search words can be 1 character 1 long
         container.find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
         container.find("ul.select2-choices")
             .sortable({})
@@ -407,6 +411,7 @@ var MainSearchView = Backbone.View.extend({
                 text = termSuggestion.suggestion.fullName;
                 item = termSuggestion;
                 // Some of the shortname of the books in the Bible does not work in Chinese.  PT 4/21/2020
+				// Need to review this line again PT 9/7/2020
                 if (step.state.language().startsWith("zh")) {
                     item.suggestion.shortName = item.suggestion.fullName;
                 }

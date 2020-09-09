@@ -134,7 +134,10 @@ public abstract class AbstractAjaxController extends HttpServlet {
         response.setCharacterEncoding(FrontController.UTF_8_ENCODING);
         response.setContentType("application/json");
         response.setContentLength(length);
-        response.setHeader("step-language", this.clientSessionProvider.get().getLocale().getLanguage());
+        String lang = this.clientSessionProvider.get().getLocale().getLanguage();
+        // For Chinese there is zh and zh_TW.  The getLanguage() will return zh even if it is zh_TW
+        if (lang.equals("zh")) lang = this.clientSessionProvider.get().getLocale().toString();
+        response.setHeader("step-language", lang);
         response.setHeader("step-version", this.appManagerService.getAppVersion());
     }
 

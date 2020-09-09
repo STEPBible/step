@@ -411,10 +411,10 @@ var MainSearchView = Backbone.View.extend({
                 text = termSuggestion.suggestion.fullName;
                 item = termSuggestion;
                 // Some of the shortname of the books in the Bible does not work in Chinese.  PT 4/21/2020
-				// Need to review this line again PT 9/7/2020
-                if (step.state.language().startsWith("zh")) {
-                    item.suggestion.shortName = item.suggestion.fullName;
-                }
+				// Need to review this line again PT 9/7/2020.  Maybe it is working
+                // if (step.state.language().startsWith("zh")) {
+                //    item.suggestion.shortName = item.suggestion.fullName;
+                // }
                 break;
             case SUBJECT_SEARCH:
                 text = termSuggestion.suggestion.value;

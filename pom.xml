@@ -23,7 +23,7 @@
         <junit.version>4.11</junit.version>
 
         <!-- jsword dependencies -->
-        <jsword.version>1.6.1-SNAPSHOT</jsword.version>
+        <jsword.version>1.6.2-SNAPSHOT</jsword.version>
         <!-- <jdom.version>1.1.1</jdom.version> -->
         <javatar.version>2.5</javatar.version>
 

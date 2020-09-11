@@ -230,8 +230,11 @@ public class SearchServiceImpl implements SearchService {
 
         //now default the version and references
         if (versions.size() == 0) {
-            versions.add(JSwordPassageService.REFERENCE_BOOK);
-            searchTokens.add(new SearchToken("version", JSwordPassageService.REFERENCE_BOOK));
+            String defaultVersion = JSwordPassageService.REFERENCE_BOOK;
+            if (userLanguage.equalsIgnoreCase("zh")) defaultVersion = "CUns";
+            else if (userLanguage.equalsIgnoreCase("zh_tw")) defaultVersion = "CUn";
+            versions.add(defaultVersion);
+            searchTokens.add(new SearchToken("version", defaultVersion));
         }
 
         if (!hasSearches && references.length() == 0) {

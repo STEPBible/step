@@ -43,7 +43,7 @@ import java.util.Map;
  * @author chrisburrell
  */
 public class PassageStat {
-    private Map<String, Integer> stats = new HashMap<String, Integer>(128);
+    private Map<String, Integer[]> stats = new HashMap<String, Integer[]>(128);
     private KeyWrapper reference;
 
     /**
@@ -52,12 +52,12 @@ public class PassageStat {
      * @param word the word
      */
     public void addWord(final String word) {
-        Integer counts = this.stats.get(word);
+        Integer[] counts = this.stats.get(word);
         if (counts == null) {
-            counts = 0;
+            counts = new Integer[]{0, 0, 0};
         }
-
-        this.stats.put(word, counts + 1);
+        counts[0] ++;
+        this.stats.put(word, counts);
     }
 
     /**
@@ -66,7 +66,7 @@ public class PassageStat {
      */
     public void addWordTryCases(final String word) {
         String key = word;
-        Integer counts = this.stats.get(word);
+        Integer[] counts = this.stats.get(word);
         if(counts == null) {
             //try upper case
             key = word.toUpperCase();
@@ -89,50 +89,61 @@ public class PassageStat {
         
         if(counts == null) {
             //didn't find it anywhere in the list, so if the word is all upper case, we'll favour the title case version
-            counts = 0;
+            counts = new Integer[]{0, 0, 0};
         }
-        
         //key ends up being one of the chain of ifs above in priority order. 
-        this.stats.put(key, counts + 1);
+        counts[0] ++;
+        this.stats.put(key, counts);
     }
 
     /**
      * Trims from the bottom up, leaving the more frequent words there until we have < maxWords
      */
-    public void trim(final int maxWords) {
-        trimWords(maxWords, 1);
+    public void trim(int maxWords, boolean mostOccurrences) {
+        int startOccurrences = 1;
+//        mostOccurrences = false; // Temporary set to true.  Waiting for David's response PT 09/14/2020
+        if (!mostOccurrences) {
+            final Iterator<Map.Entry<String, Integer[]>> iterator = this.stats.entrySet().iterator();
+            while (iterator.hasNext()) {
+                final Map.Entry<String, Integer[]> next = iterator.next();
+                if (next.getValue()[0] > startOccurrences) startOccurrences = next.getValue()[0];
+            }
+        }
+        trimWords(maxWords, startOccurrences, mostOccurrences);
     }
 
     /**
      * @param maxWords the number of words to keep
      * @param trimOutOccurrences the number for which we won't keep
      */
-    private void trimWords(final int maxWords, final int trimOutOccurrences) {
+    private void trimWords(final int maxWords, final int trimOutOccurrences, final boolean mostOccurrences) {
         if(this.stats.size() < maxWords) {
             return;
         }
+        if ((!mostOccurrences) && (trimOutOccurrences == 1)) return;
 
-        final Iterator<Map.Entry<String, Integer>> iterator = this.stats.entrySet().iterator();
+        final Iterator<Map.Entry<String, Integer[]>> iterator = this.stats.entrySet().iterator();
         while (iterator.hasNext()) {
-            final Map.Entry<String, Integer> next = iterator.next();
-            if (next.getValue() == trimOutOccurrences) {
+            final Map.Entry<String, Integer[]> next = iterator.next();
+            if (next.getValue()[0] == trimOutOccurrences) {
                 iterator.remove();
             }
         }
-        trimWords(maxWords, trimOutOccurrences+1);
+        int nextTrimOutOccurrences = (mostOccurrences) ? trimOutOccurrences + 1 : trimOutOccurrences - 1;
+        trimWords(maxWords, nextTrimOutOccurrences, mostOccurrences);
     }
 
     /**
      * @return the stats
      */
-    public Map<String, Integer> getStats() {
+    public Map<String, Integer[]> getStats() {
         return this.stats;
     }
 
     /**
      * @param stats the new stats
      */
-    public void setStats(final Map<String, Integer> stats) {
+    public void setStats(final Map<String, Integer[]> stats) {
         this.stats = stats;
     }
 

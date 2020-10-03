@@ -173,6 +173,11 @@ public class VocabularyServiceImpl implements VocabularyService {
                         strongDefs[0].removeField("zh_tw_Gloss");
                         strongDefs[0].removeField("zh_tw_Definition");
                     }
+                    if (!userLanguage.equalsIgnoreCase("vi")) {
+                        strongDefs[0].removeField("zh_tw_Gloss");
+                        strongDefs[0].removeField("vi_Definition");
+                    }
+
                 }
             }
             final EntityDoc[] definitions = reOrder(strongList, strongDefs);

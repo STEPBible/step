@@ -68,6 +68,8 @@ step.defaults = {
     analysis : {
         scope : [__s.stats_scope_chapter, __s.stats_scope_nearby_chapters, __s.stats_scope_book],
         scopeType : ["CHAPTER", "NEAR_BY_CHAPTER", "BOOK" ],
+		sort: [__s.stats_sort_by_frequency, __s.stats_sort_by_reversed_frequency, __s.stats_sort_by_alphabet],
+		sortType: ["SORT_BY_FREQUENCY", "SORT_BY_REVERSED_FREQUENCY", "SORT_BY_ALPHABET"],
         kind : [__s.stats_type_word, __s.stats_type_text, __s.stats_type_subjects],
         //it is deliberate that PASSAGE has no associated translation. - it should be the last unmatched element
         kindTypes : ["WORD", "TEXT", "SUBJECT", "PASSAGE"]

@@ -1,49 +1,49 @@
 var ViewLexiconWordle = Backbone.View.extend({
     events: {
     },
-    minFont: 9,
+    minFont: 14,
     minSubjectFont: 12,
     maxFont: 24,
     passageId: 0,
 
     initialize: function () {
         var self = this;
-        this.isAnimating = false;
+        this.isNextChapter = false;
 
         var scopeContainer = $("<form class='scopeContainer '>");
 
         this.wordType = this.populateMenu(step.defaults.analysis.kind,  step.defaults.analysis.kindTypes, __s.analyse_label, "wordType");
         this.wordScope = this.populateMenu(step.defaults.analysis.scope, step.defaults.analysis.scopeType, __s.bible_text, "wordScope", true);
-        this.sortCloud = $('<input type="checkbox" id="sortByFrequency" checked="checked" class="pull-right" />');
-        this.animateCloud = $('<button class="btn btn-default btn-xs pull-right" id="animateWordle"><span type="button" class="glyphicon glyphicon-play" /></button>');
+        this.sortSelection = this.populateMenu(step.defaults.analysis.sort, step.defaults.analysis.sortType, __s.analyse_sort_label, "sortSelection");
+        this.newLineSelected = $('<button class="btn btn-default btn-xs pull-right" id="newLineWordle"><span type="button"/>Selected passage</button>');
+        this.resultWithLineBreak = $('<input type="checkbox" id="resultWithLineBreak" checked="checked" class="pull-right" />');
+        this.nextChapter = $('<button class="btn btn-default btn-xs pull-right" id="nextChapterWordle"><span type="button"/>' + __s.stats_next_chapter + '</button>');
         this.statsContainer = $('<div id="statsContainer"></div>');
+        this.addRefreshStats(this.resultWithLineBreak);
 
-        this.addRefreshStats(this.sortCloud);
-        
         scopeContainer.append(this.wordType);
         scopeContainer.append(this.wordScope);
         scopeContainer.append(this.scope);
+        scopeContainer.append(this.sortSelection);
         scopeContainer.append(
-            $('<div class="form-group"><label for="sortByFrequency">' + __s.analyse_sort_label + '</label></div>').append(this.sortCloud));
+            $('<div class="form-group"><label for="resultWithLineBreak">' + __s.analyse_result_linebreak + '</label></div>').append(this.resultWithLineBreak));
 
         scopeContainer.append(
-            $('<div class="form-group"><label for="animateWordle">' + __s.analyse_animate_label + '</label></div>').append(this.animateCloud));
+            $('<div id="nextChapterInputLine" class="form-group"><label for="nextChapterWordle">' + __s.analyse_update + ':</label></div>').append(this.nextChapter).append(this.newLineSelected));
 
         this.$el.append(scopeContainer);
         this.$el.append(this.statsContainer);
 
-        this.animateCloud.click(function(ev) {
+        this.newLineSelected.click(function(ev) {
             event.preventDefault();
-            self.animateWordleHandler(); 
+            self.doStats();
         });
-
-        this.$el.closest(".tab-content").on("tab-change", function(ev) { self._stopAnimationOnTabChange(ev); });
-    },
-    _stopAnimationOnTabChange: function(ev) {
-        ev.stopPropagation();
-        if(ev.target != this.$el.get(0)) {
-            this._stopAnimation();
-        }
+        this.nextChapter.click(function(ev) {
+            self.isNextChapter = true;
+            event.preventDefault();
+            self.doStats();
+        });
+//        this.$el.closest(".tab-content").on("tab-change", function(ev) { self._stopAnimationOnTabChange(ev); });
     },
     refresh: function() {
         if(this.$el.hasClass("active")) {
@@ -155,70 +155,36 @@ var ViewLexiconWordle = Backbone.View.extend({
         return step.util.getPassageContainer(model.get("passageId")).find(".verseNumber").closest("a[name]").attr("name")
     },
 
-    _getStats: function (statType, scope, callback, animate) {
+    _getStats: function (statType, scope, sortType, callback) {
         var self = this;
         var model = step.util.activePassage();
 
         var modelReference = model.get("reference") || this._getBestReference(model);
         var modelVersion = model.get("masterVersion");
-        var reference = this.isAnimating ? this.transientReference || modelReference : modelReference;
+        var reference = (this.isNextChapter) ? this.transientReference || modelReference : modelReference;
 
         var scopeTypes = step.defaults.analysis.scopeType;
         if(scopeTypes.indexOf(scope) == -1) {
             scope = scopeTypes[0];
         }
-        
-        if (!animate) {
-            this.statsContainer.empty();
-        }
+
+        var mostOccurences = (sortType == "SORT_BY_REVERSED_FREQUENCY") ? false : true;
+        this.statsContainer.empty();
 
         var lastTime = new Date().getTime();
         console.log(new Date().getTime(), reference, "Wordle server call");
         var currentUserLang = (step.userLanguageCode) ? step.userLanguageCode.toLowerCase() : "en";
-        $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, animate == true, currentUserLang], function (data) {
+        $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, (this.isNextChapter), currentUserLang, mostOccurences], function (data) {
             console.log(new Date().getTime(), "Wordle server data received");
             step.util.trackAnalyticsTime('wordle', 'loaded', new Date().getTime() - new Date().getTime());
             step.util.trackAnalytics('wordle', 'type', statType);
             step.util.trackAnalytics('wordle', 'scope', scope);
             self.transientReference = data.passageStat.reference.name;
-
-            //set the current ref if we're in animation mode...
-            if(animate) {
-                self.wordScope.find(".currentRef").html(self.transientReference);
-                self.wordScope.find(".refInput").val(self.transientReference);
-            }
-            
-            //we're going to animate this, but we're going to finish and not keep going if the flag is set
-            if (data.passageStat.reference.lastChapter) {
-                self.animateWordleHandler();
-            }
-
-            self._createWordleTab(self.statsContainer, scope, data.passageStat, statType, callback, data.lexiconWords, animate);
+            self._createWordleTab(self.statsContainer, scope, data.passageStat, statType, callback, data.lexiconWords, self.isNextChapter, self.transientReference);
         });
+        this.isNextChapter = false;
     },
 
-    animateWordleHandler: function () {
-        console.log(new Date().getTime(), "Animate word handler");
-
-        this.isAnimating = !this.isAnimating;
-        if (this.isAnimating) {
-            this.previousSortValue = this.sortCloud.prop('checked');
-            this.sortCloud.prop("checked", true).prop("disabled", true);
-            this.animateCloud.find(".glyphicon").removeClass("glyphicon-play").addClass("glyphicon-pause");
-            
-            this.doStats();
-        } else {
-            this._stopAnimation();
-        }
-    },
-    _stopAnimation: function() {
-        this.isAnimating = false;
-        this.stopping = true;
-        //don't trigger again
-        //don't reset reference
-        this.sortCloud.prop("checked", this.previousSortValue || false).prop("disabled", false);
-        this.animateCloud.find(".glyphicon").addClass("glyphicon-play").removeClass("glyphicon-pause");
-    },
     /**
      * Gets the stats for a passage and shows a wordle
      * @private
@@ -226,7 +192,7 @@ var ViewLexiconWordle = Backbone.View.extend({
     doStats: function () {
         console.log(new Date().getTime(), "Doing stats");
 
-        this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"), function (key, statType) {
+        this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"),  this.sortSelection.find(".selected").data("value"),  function (key, statType) {
             if (statType == 'WORD') {
                 var args = "strong=" + encodeURIComponent(key);
                 step.router.navigatePreserveVersions(args);
@@ -237,7 +203,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                 var args = "subject=" + encodeURIComponent(key);
                 step.router.navigatePreserveVersions(args);
             }
-        }, this.isAnimating);
+        });
     },
 
     /**
@@ -251,33 +217,57 @@ var ViewLexiconWordle = Backbone.View.extend({
     createWordleLink: function (key, value, scope, statType, lexiconWords, callback) {
         var analysisConstants = step.defaults.analysis;
         var scopeText = analysisConstants.scope[analysisConstants.scopeType.indexOf(scope)];
-         
+        var isLineBreakSelected = this.resultWithLineBreak.prop('checked')
+        var relativeSize = (isLineBreakSelected) ? 10 : value[0];
         var wordLink = $("<a></a>")
             .attr('href', 'javascript:void(0)')
-            .attr('rel', value)
-            .attr('title', sprintf(__s.stats_occurs_times, value, scopeText));
+            .attr('rel', relativeSize);
+        if (isLineBreakSelected) {
+            if (statType == "WORD") wordLink.attr('title', sprintf(__s.stats_occurs_times_in_book_bible, value[1], value[2]));
+        }
+        else wordLink.attr('title', sprintf(__s.stats_occurs_times, value[0], scopeText));
 
         if (lexiconWords && lexiconWords[key]) {
             //assume key is a strong number
             var fontClass = step.util.ui.getFontForStrong(key);
 
             if (lexiconWords[key].matchingForm) {
-                wordLink.append(lexiconWords[key].gloss);
-                var ancientVocab = $("<span></span>").addClass(fontClass).append(lexiconWords[key].matchingForm);
-                wordLink.append(' (');
+                var ancientVocab = $("<span>" + lexiconWords[key].matchingForm +"</span>").addClass(fontClass);
                 wordLink.append(ancientVocab);
-                wordLink.append(')');
+                wordLink.append(' (');
+                if (isLineBreakSelected) {
+                    var transliteration = $("<i>" + lexiconWords[key].stepTransliteration + "</i>");
+                    wordLink.append(transliteration);
+                    wordLink.append(") ");
+                    wordLink.append(lexiconWords[key].gloss);
+                    wordLink.append(' - ');
+                    wordLink.append(value[0]);
+                    wordLink.append('x');
+                }
+                else {
+                        wordLink.append(lexiconWords[key].gloss);
+                        wordLink.append(')');
+                }
                 wordLink.prop("strong", key);
             } else {
-                wordLink.append(lexiconWords[key].gloss);
+                    wordLink.append(lexiconWords[key].gloss);
+                    wordLink.append(' - ');
+                    wordLink.append(value[0]);
+                    wordLink.append(' ');
+                    wordLink.append(__s.analyse_times);
             }
         } else {
-            wordLink.html(key)
+            wordLink.html(key);
+            wordLink.append(' - ');
+            wordLink.append(value[0]);
+            wordLink.append(' ');
+            wordLink.append(__s.analyse_times);
         }
 
         wordLink.attr("key", key);
 
         wordLink.click(function () {
+            step.util.activePassage().save({strongHighlights: ""})
             callback(key, statType);
         });
         return wordLink;
@@ -291,24 +281,47 @@ var ViewLexiconWordle = Backbone.View.extend({
      * @param statType WORD / SUBJECT/ TEXT
      * @param callback the callback when a word is clicked
      * @param lexiconWords the lexicon words
-     * @param animate - true to indicate previous results weren't cleared, and that an animation is required
      * @private
      */
-    _createWordleTab: function (container, scope, wordleData, statType, callback, lexiconWords, animate) {
+    _createWordleTab: function (container, scope, wordleData, statType, callback, lexiconWords, isNextChapter, passageScope) {
         var self = this;
 
-        //create order of strong numbers
-        var strongs = [];
+        var strongs = []; //create order of strong numbers
+		var displayScope = passageScope;
+		if (scope == "BOOK") {
+			displayScope = displayScope.replace(/\d+$/, "");
+		}
+        $(container).append("<span style=\"font-size:150%;font-weight:bold\">" + displayScope + " (" + scope + "):</span><br><br>");
         $.each(wordleData.stats, function (key, value) {
             strongs.push(key);
         });
 
-        var shouldSort = this.sortCloud.prop("checked");
-        if (shouldSort) {
+        if (this.sortSelection.find(".selected").data("value") === step.defaults.analysis.sortType[0]) {
             strongs.sort(function (a, b) {
-                return wordleData.stats[b] - wordleData.stats[a];
+				var diff = wordleData.stats[b][0] - wordleData.stats[a][0];
+				if (diff == 0) {
+					diff = wordleData.stats[b][1] - wordleData.stats[a][1];
+					if (diff == 0) {
+					    diff = wordleData.stats[b][2] - wordleData.stats[a][2];
+                        if (diff == 0) diff = a.toLowerCase() < b.toLowerCase() ? -1 : 1;
+                    }
+				}
+                return diff;
             });
-        } else {
+        } else if (this.sortSelection.find(".selected").data("value") === step.defaults.analysis.sortType[1]) {
+            strongs.sort(function (b, a) {
+				var diff = wordleData.stats[b][0] - wordleData.stats[a][0];
+				if (diff == 0) {
+					diff = wordleData.stats[b][1] - wordleData.stats[a][1];
+					if (diff == 0) {
+					    diff = wordleData.stats[b][2] - wordleData.stats[a][2];
+                        if (diff == 0) diff = b.toLowerCase() < a.toLowerCase() ? -1 : 1;
+                    }
+				}
+                return diff;
+            });
+        }
+        else {
             strongs.sort(function (a, b) {
                 return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
             });
@@ -320,26 +333,13 @@ var ViewLexiconWordle = Backbone.View.extend({
             var value = wordleData.stats[key];
 
             var wordLink;
-            if (animate) {
-                //then try and find the link first
-                var foundLink = $("[key='" + key + "']");
-                if (foundLink.length > 0) {
-                    wordLink = foundLink;
-                    wordLink.attr('rel', value)
-                        .attr('title', sprintf(__s.stats_occurs_times, value, scope));
-                }
-            }
 
             //if we're still null, then create the link
             if (wordLink == null) {
                 wordLink = self.createWordleLink(key, value, scope, statType, lexiconWords, callback);
-
-                //we set the font size to 0
-                if (animate) {
-                    wordLink.css("font-size", 0);
-                }
                 container.append(wordLink);
-                container.append(" ");
+                if (self.resultWithLineBreak.prop('checked')) container.append("<br>");
+                else container.append(" ");
             }
         });
 
@@ -350,7 +350,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                 end: self.maxFont,
                 unit: "px"
             },
-            animate: animate
+            animate: isNextChapter
         });
 
         if (statType == 'WORD') {
@@ -365,17 +365,14 @@ var ViewLexiconWordle = Backbone.View.extend({
             );
         }
 
-        //base it on the isAnimating rather than passed in value
-        if (this.isAnimating) {
-            console.log(new Date().getTime(), "trigger delay");
-            step.util.delay(function () {
-                console.log(new Date().getTime(), "delay triggered");
-                if(!self.stopping) {
-                    self.doStats();
-                } else {
-                    self.stopping = false;
-                }
-            }, 3500);
+        if ( (scope == "CHAPTER") && (!wordleData.reference.lastChapter) ) {
+            $("#nextChapterWordle").show();
+            $("#nextChapterInputLine").show();
         }
+        else {
+            $("#nextChapterWordle").hide();
+            $("#nextChapterInputLine").hide();
+        }
+        $("#newLineWordle").hide();
     }
 });

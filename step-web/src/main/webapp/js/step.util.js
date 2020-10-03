@@ -156,7 +156,9 @@ step.util = {
     outstandingRequests: 0,
     timers: {},
     unaugmentStrong : function(strong) {
-      return (strong || "").replace(/[a-zA-Z]$/, "");
+        var result = (strong || "");
+        if (!result.search(/\![a-zA-Z]$/)) result.replace(/[a-zA-Z]$/, "");
+        return result;
     },
     refreshWaitStatus: function () {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());

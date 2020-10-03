@@ -19,7 +19,7 @@ public interface JSwordAnalysisService {
      * @param scopeType the scope, whether chapter, near by chapters, or whole book
      * @return the passage stat
      */
-    PassageStat getWordStats(Key reference, final ScopeType scopeType);
+    PassageStat getWordStats(Key reference, final ScopeType scopeType, final String userLanguage);
     /**
      * Gets the text stats.
      *

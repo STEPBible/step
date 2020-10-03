@@ -93,6 +93,7 @@ public class STEPTomcatServer {
     public static void main(String[] args) throws ServletException, LifecycleException {
         try {
             System.setProperty("step.jetty", "true");
+			System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", "|");
             final boolean backgroundLaunch = args.length > 0 && BACKGROUND_LAUNCH.equals(args[0]);
             if (backgroundLaunch) {
                 if (SplashScreen.getSplashScreen() != null) {

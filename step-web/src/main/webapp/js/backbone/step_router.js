@@ -99,7 +99,6 @@ var StepRouter = Backbone.Router.extend({
         if (!historyOptions) {
             historyOptions = { trigger: true};
         }
-
         //we will get a null-arg as part of the replacing of the URL with the correct URL
         //call back from after the routing call to rest backend call. So need
         //to avoid writing over 'args'
@@ -335,7 +334,10 @@ var StepRouter = Backbone.Router.extend({
                 if (!quiet) {
                     step.router.overwriteUrl();
                 }
-
+                $("#newLineWordle").text(text.reference);
+                $("#nextChapterWordle").hide();
+                $("#newLineWordle").show();
+                $("#nextChapterInputLine").show();
                 self.handleRenderModel(passageModel, false, query, totalSoFar);
             },
             passageId: activePassageId,

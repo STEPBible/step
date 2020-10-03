@@ -21,6 +21,6 @@ public interface AnalysisService {
      * @param nextChapter perform analysis on next chapter, not this one
      * @return the all stats
      */
-    CombinedPassageStats getStatsForPassage(String version, String reference, final StatType statType, final ScopeType scopeType, boolean nextChapter, final String userLanguage);
+    CombinedPassageStats getStatsForPassage(String version, String reference, final StatType statType, final ScopeType scopeType, boolean nextChapter, final String userLanguage, boolean mostOccurrences);
 
 }

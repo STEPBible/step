@@ -45,6 +45,7 @@ import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.TrimmedLookupOption;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
+import com.tyndalehouse.step.core.models.stats.PassageStat;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
@@ -271,6 +272,31 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         verseStrongs.setVerse(key.getName());
         verseStrongs.setMultipleVerses(true);
         return verseStrongs;
+    }
+
+//    @Override
+    public PassageStat getArrayOfStrongNumbers(final String version, final String reference, PassageStat stat, final String userLanguage) {
+        Verse key = null;
+        final Versification versificationForVersion = this.jswordVersification.getVersificationForVersion(version);
+        try {
+            key = VerseFactory.fromString(versificationForVersion, reference);
+        } catch (NoSuchKeyException e) {
+            //perhaps we're looking at multiple verses....
+            try {
+                //currently not supporting multiple verses
+                key = KeyUtil.getVerse(this.jswordVersification.getBookFromVersion(version).getKey(reference));
+            } catch (NoSuchKeyException e1) {
+                //try reversifying essentially
+                try {
+                    key = KeyUtil.getVerse(this.jswordVersification.getBookFromVersion(JSwordPassageService.REFERENCE_BOOK).getKey(reference));
+                } catch (NoSuchKeyException ex) {
+                    LOGGER.error("Unable to look up strongs for [{}]", reference, e);
+                }
+            }
+        }
+
+        return new JSwordStrongNumberHelper(this.entityManager,
+                key, this.jswordVersification, this.jswordSearch, this.strongAugmentationService).calculateStrongArrayCounts(version, stat, userLanguage);
     }
 
     @Override

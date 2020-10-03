@@ -39,6 +39,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.BookAndBibleCount;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
+import com.tyndalehouse.step.core.models.stats.PassageStat;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
@@ -183,6 +184,28 @@ public class JSwordStrongNumberHelper {
         } catch (final BookException ex) {
             LOG.warn("Unable to enhance verse number", ex);
         }
+    }
+
+    /**
+     * Calculate counts for an array of Strong number.
+     */
+    public PassageStat calculateStrongArrayCounts(final String version, PassageStat stat, final String userLanguage) {
+        Map<String, Integer[]> result = new HashMap<String, Integer[]>(128);
+        this.isOT = DivisionName.OLD_TESTAMENT.contains(this.reference.getBook());
+        final Versification targetVersification = isOT ? otV11n : ntV11n;
+        final Key key = VersificationsMapper.instance().mapVerse(this.reference, targetVersification);
+        this.allStrongs = new HashMap<>(256);
+        Map<String, Integer[]> temp = stat.getStats();
+        temp.forEach((strongNum, feq) -> this.allStrongs.put(strongNum, new BookAndBibleCount()));
+        Map<String, EntityDoc> augmentedReferences = new HashMap<>(0);
+        // now get counts in the relevant portion of text
+        applySearchCounts(getBookFromKey(key), augmentedReferences);
+        temp.forEach((strongNum, freq) -> {
+            BookAndBibleCount bBCount = this.allStrongs.get(strongNum);
+            result.put(strongNum, new Integer[]{freq[0], bBCount.getBook(), bBCount.getBible()});
+        });
+        stat.setStats(result);
+        return stat;
     }
 
     /**

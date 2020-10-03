@@ -64,6 +64,7 @@ public class VocabInfo implements Serializable {
     private String zh_Gloss;
     private String zh_tw_Definition;
     private String zh_Definition;
+	private String vi_Definition;
     private String stepGloss;
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
@@ -96,9 +97,12 @@ public class VocabInfo implements Serializable {
             this.zh_Gloss = d.get("zh_Gloss");
             this.zh_Definition = d.get("zh_Definition");
         }
-        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh_tw"))) {
+        else if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh_tw"))) {
             this.zh_tw_Gloss = d.get("zh_tw_Gloss");
             this.zh_tw_Definition = d.get("zh_tw_Definition");
+        }
+        else if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("vi"))) {
+            this.vi_Definition = d.get("vi_Definition");
         }
 
         final String popularity = d.get("popularity");
@@ -332,6 +336,20 @@ public class VocabInfo implements Serializable {
      */
     public void set_zh_Gloss(final String zh_Gloss) {
         this.zh_Gloss = zh_Gloss;
+    }
+
+    /**
+     * @return the vi_Definition
+     */
+    public String get_vi_Definition() {
+        return this.vi_Definition;
+    }
+
+    /**
+     * @param vi_Definition the vi_Definition to set
+     */
+    public void set_vi_Definition(final String vi_Definition) {
+        this.vi_Definition = vi_Definition;
     }
 
     /**

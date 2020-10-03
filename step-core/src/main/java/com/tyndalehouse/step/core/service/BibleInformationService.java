@@ -37,6 +37,7 @@ import java.util.Locale;
 
 import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
+import com.tyndalehouse.step.core.models.stats.PassageStat;
 
 /**
  * Interface to the service that gives information about the books of the bible, the different types of bible,
@@ -224,6 +225,16 @@ public interface BibleInformationService {
      * @return the strong numbers return keyed by OSIS ID
      */
     StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, String reference, String userLanguage);
+
+    /**
+     * Gets the strong numbers statistics for an array of strong number.
+     *
+     * @param version the version attached to the reference
+	 * @param reference (passage, eg: Gen 1)
+     * @param stat the array of strong numbers
+     * @return the PassageStat
+     */
+    PassageStat getArrayOfStrongNumbers(final String version, final String reference, PassageStat stat, final String userLanguage);
 
     /**
      * Converts a reference from the source versification to the target versification

@@ -91,11 +91,14 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     }
 
     @Override
-    public PassageStat getWordStats(final Key reference, final ScopeType scopeType) {
+    public PassageStat getWordStats(final Key reference, final ScopeType scopeType, final String userLanguage) {
         try {
             //change the reference to match what we need
+//            Book currentBook = this.versification.getBookFromVersion("OHB");
+//            Versification currentV11n = this.versification.getVersificationForVersion(currentBook);
+
             final BookData expandedBook = getExpandedBookData(reference, scopeType, strongsV11n, strongsBook);
-            return getStatsFromStrongArray(expandedBook.getFirstBook().getInitials(), expandedBook.getKey(), split(OSISUtil.getStrongsNumbers(expandedBook.getOsisFragment())));
+            return getStatsFromStrongArray(expandedBook.getFirstBook().getInitials(), expandedBook.getKey(), split(OSISUtil.getStrongsNumbers(expandedBook.getOsisFragment())), userLanguage);
         } catch (final BookException e) {
             throw new StepInternalException("Unable to read passage text", e);
         }
@@ -236,8 +239,8 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
      * @param words the words
      * @return the stats from word array
      */
-    private PassageStat getStatsFromStrongArray(final String version, final Key reference, final String[] words) {
-        final PassageStat stat = new PassageStat();
+    private PassageStat getStatsFromStrongArray(final String version, final Key reference, final String[] words, final String userLanguage) {
+        PassageStat stat = new PassageStat();
         //slight annoyance that we are deserializing the key to re-serialise later
         final String ref = reference.getOsisRef();
         for (final String unaugmentedWord : words) {

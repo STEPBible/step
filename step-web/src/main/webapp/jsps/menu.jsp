@@ -60,6 +60,15 @@
                 </c:forEach>
             </ul>
         </span>
+        <%
+            if (!appManager.isLocal()) {
+        %>
+        <a id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
+            <i class="glyphicon glyphicon-bullhorn"></i>
+        </a>
+        <%
+            }
+        %>
         <span class="dropdown">
             <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help"/>">
                 <i class="glyphicon glyphicon-option-vertical"></i>

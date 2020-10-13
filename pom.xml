@@ -20,7 +20,7 @@
         <junit.parallel>method</junit.parallel>
         <junit.threads>4</junit.threads>
 
-        <junit.version>4.11</junit.version>
+        <junit.version>4.13.1</junit.version>
 
         <!-- jsword dependencies -->
         <jsword.version>1.6.2-SNAPSHOT</jsword.version>

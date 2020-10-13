@@ -117,7 +117,7 @@
                 <li><a href="https://academic.tyndalehouse.com/privacy-policy" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
                 <% } %>
                 <!-- # Copyright & licences -->
-                <li><a target="_new" href="https://stepweb.atlassian.net/wiki/x/C4C_/" name="COPYRIGHT"><fmt:message key="copyright_info_link"/></a></li>
+                <li><a target="_new" href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" name="COPYRIGHT"><fmt:message key="copyright_info_link"/></a></li>
                 <!-- # About... -->
                 <li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about"/></a></li>
                 <!-- # Exit -->

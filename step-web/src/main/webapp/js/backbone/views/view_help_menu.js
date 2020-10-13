@@ -18,7 +18,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
                 '<div class="modal-body">' +
                 '<div>' +
                 '<%= __s.step_thanks %><ul><li><%= __s.step_thanks_crosswire %></li><li><%= __s.step_thanks_crossway %></li><li><%= __s.step_thanks_biblica %></li></ul>' +
-                '<a href="https://stepweb.atlassian.net/wiki/x/C4C_/" target="_new">Copyright and License information</a>' +
+                '<a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_new">Copyright and License information</a>' +
                 '<p />' +
                 '&copy; Tyndale House, Cambridge <%= new Date().getYear() + 1900 %> </p>' +
                 '</div>' +

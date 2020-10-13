@@ -172,10 +172,10 @@ var ViewLexiconWordle = Backbone.View.extend({
         this.statsContainer.empty();
 
         var lastTime = new Date().getTime();
-        console.log(new Date().getTime(), reference, "Wordle server call");
+        //console.log(new Date().getTime(), reference, "Wordle server call");
         var currentUserLang = (step.userLanguageCode) ? step.userLanguageCode.toLowerCase() : "en";
         $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, (this.isNextChapter), currentUserLang, mostOccurences], function (data) {
-            console.log(new Date().getTime(), "Wordle server data received");
+            //console.log(new Date().getTime(), "Wordle server data received");
             step.util.trackAnalyticsTime('wordle', 'loaded', new Date().getTime() - new Date().getTime());
             step.util.trackAnalytics('wordle', 'type', statType);
             step.util.trackAnalytics('wordle', 'scope', scope);
@@ -190,7 +190,7 @@ var ViewLexiconWordle = Backbone.View.extend({
      * @private
      */
     doStats: function () {
-        console.log(new Date().getTime(), "Doing stats");
+        //console.log(new Date().getTime(), "Doing stats");
 
         this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"),  this.sortSelection.find(".selected").data("value"),  function (key, statType) {
             if (statType == 'WORD') {

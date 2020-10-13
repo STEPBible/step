@@ -425,7 +425,7 @@ public final class StringConversionUtils {
         // run a rule, and that gives me, a new set of prefixes, keep on running rules iterating through
         final StringBuilder base = new StringBuilder();
 
-        final List<TransliterationOption> options = new ArrayList<TransliterationOption>();
+        List<TransliterationOption> options = new ArrayList<TransliterationOption>();
         options.add(new TransliterationOption(0, base));
 
         final char[] baseChars = baseString.toCharArray();
@@ -441,6 +441,7 @@ public final class StringConversionUtils {
                     leftBehind.setNextValidPosition(ii + 1);
                 }
             }
+            if (options.size() > (MAX_TRANSLITERATIONS * 10)) break;
         }
 
         //trim the empty options off
@@ -450,7 +451,11 @@ public final class StringConversionUtils {
                 iterator.remove();
             }
         }
-
+        if (options.size() > MAX_TRANSLITERATIONS) { // If there is an excessive number of transliteration, trim and clean up memory to prevent Java out of heap space
+            LOGGER.error("multipleTranslitOpions over 512 final size: [{}] input [{}]", options.size(), baseString);
+            options = trimmedTranslits(options);
+            System.gc();
+        }
         return options;
     }
 

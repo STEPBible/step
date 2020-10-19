@@ -47,7 +47,7 @@
     <meta property="fb:admins" content="551996214"/>
     <meta name="step.version" content="${project.version}"/>
     <meta name="description" content="${ description }"/>
-    <link rel="shortcut icon" href="images/step-favicon.ico"/>
+    <link rel="shortcut icon" href="step-favicon.ico"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <c:choose>
@@ -91,8 +91,8 @@
     <script src="libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="libs/respond.js/1.3.0/respond.min.js"></script>
     <% } else { %>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.min.js"></script>
     <% } %>
     <![endif]-->
 
@@ -455,8 +455,14 @@
 <%
 } else {
 %>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  if (typeof jQuery == 'undefined') {
+      document.write(unescape("%3Cscript src='/libs/jquery-1.10.2.min.js' type='text/javascript'%3E%3C/script%3E"));
+      document.write(unescape("%3Cscript src='/libs/bootstrap.min.js' type='text/javascript'%3E%3C/script%3E"));
+  }
+</script>
 <%
     }
 %>

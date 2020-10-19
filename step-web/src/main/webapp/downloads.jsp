@@ -24,7 +24,7 @@
     <link href="css/bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
     <link rel="stylesheet" type="text/css" href="static/static.css"/>
-    <link rel="shortcut icon" href="images/step-favicon.ico"/>
+    <link rel="shortcut icon" href="step-favicon.ico"/>
     <script src="international/interactive.js" type="text/javascript"></script>
     <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
     <script src="js/step_constants.js" type="text/javascript"></script>

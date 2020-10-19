@@ -10,7 +10,7 @@
 	<meta name="keywords" content="<%= request.getParameter("keywords") %>" />
 	
 	<link rel="stylesheet" type="text/css" href="static/static.css" />
-	<link rel="shortcut icon"  href="images/step-favicon.ico" />
+	<link rel="shortcut icon"  href="step-favicon.ico" />
 </HEAD>
 <body>
 

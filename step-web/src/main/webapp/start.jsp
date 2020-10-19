@@ -47,7 +47,7 @@
     <meta property="fb:admins" content="551996214"/>
     <meta name="step.version" content="${project.version}"/>
     <meta name="description" content="${ description }"/>
-    <link rel="shortcut icon" href="step-favicon.ico"/>
+    <link rel="shortcut icon" href="images/step-favicon.ico"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <c:choose>

@@ -18,3 +18,4 @@ bin
 *-SNAPSHOT*.min.js
 *.map
 .sass-cache/
+.DS_Store

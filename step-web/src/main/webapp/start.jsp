@@ -22,6 +22,7 @@
 <!DOCTYPE html xmlns:fb="http://ogp.me/ns/fb#">
 <html>
 <head>
+
     <%
         if (request.getParameter("translate") != null) {
     %>
@@ -47,7 +48,7 @@
     <meta property="fb:admins" content="551996214"/>
     <meta name="step.version" content="${project.version}"/>
     <meta name="description" content="${ description }"/>
-    <link rel="shortcut icon" href="images/step-favicon.ico"/>
+    <link rel="shortcut icon" href="/images/step-favicon.ico"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <c:choose>
@@ -63,20 +64,20 @@
         if (request.getParameter("debug") != null) {
     %>
     <%-- 3rd party libs --%>
-    <link rel="stylesheet" type="text/css" href="css/qtip.css"/>
-    <link rel="stylesheet" type="text/css" href="css/cardo.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/qtip.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cardo.css"/>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.css" rel="stylesheet" media="screen"/>
-    <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
-    <link href="css/select2.css" rel="stylesheet" media="screen"/>
-    <link href="css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
-    <link href="scss/step-template.css" rel="stylesheet" media="screen"/>
+    <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
     <%
     } else {
     %>
     <%-- Contains the jquery ui css --%>
-    <link rel="stylesheet" type="text/css" href="css/step.${project.version}.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/step.${project.version}.min.css"/>
     <%
         }
     %>
@@ -88,8 +89,8 @@
     <%
     if(appManager.isLocal()) {
     %>
-    <script src="libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="/libs/respond.js/1.3.0/respond.min.js"></script>
     <% } else { %>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.0/html5shiv.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.min.js"></script>
@@ -139,7 +140,7 @@
                                 <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House</a>
                             </span>
                         </span>
-                    <span class="help"><jsp:include page="jsps/menu.jsp"/></span>
+                    <span class="help"><jsp:include page="/jsps/menu.jsp"/></span>
                     <form role="form">
                         <div class="input-group">
                             <input id="masterSearch" type="text" class="form-control input-sm"
@@ -376,9 +377,9 @@
 
 <% if (request.getParameter("mobile") == null) {
     String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
-    <script src="international/interactive.js?lang=<%= URLEncoder.encode(langCode, "UTF-8") %>&step.version=${project.version}" type="text/javascript"></script>
+    <script src="/international/interactive.js?lang=<%= URLEncoder.encode(langCode, "UTF-8") %>&step.version=${project.version}" type="text/javascript"></script>
 <% } %>
-<%@include file="jsps/initLib.jsp" %>
+<%@include file="/jsps/initLib.jsp" %>
 
 <%-- Now do javascript --%>
 <script type="text/javascript">
@@ -391,80 +392,60 @@
     step.userLanguage = "${ languageName }";
     step.userLanguageCode = "${ languageCode }";
 </script>
-
-
+<script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="/libs/bootstrap.min.js" type="text/javascript"></script>
 <%
     if (request.getParameter("debug") != null) {
 %>
 
 <%-- NOTE: do not include in prod web minifying and use minified versions otherwise --%>
-<%@include file="jsps/offlineJqueryJs.jsp" %>
 
-<script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
-<script src="libs/underscore-min.js" type="text/javascript"></script>
-<script src="libs/json2.js" type="text/javascript"></script>
+<script src="/libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
+<script src="/libs/underscore-min.js" type="text/javascript"></script>
+<script src="/libs/json2.js" type="text/javascript"></script>
 
 <c:choose>
     <c:when test="${ param.debug eq '' }">
-        <script src="libs/backbone.js" type="text/javascript"></script>
-        <script src="libs/backbone.localStorage.js" type="text/javascript"></script>
-        <script src="libs/select2.js" type="text/javascript"></script>
-        <script src="libs/require-2.1.9.js" type="text/javascript"></script>
+        <script src="/libs/backbone.js" type="text/javascript"></script>
+        <script src="/libs/backbone.localStorage.js" type="text/javascript"></script>
+        <script src="/libs/select2.js" type="text/javascript"></script>
+        <script src="/libs/require-2.1.9.js" type="text/javascript"></script>
     </c:when>
     <c:otherwise>
-        <script src="libs/backbone-min.js" type="text/javascript"></script>
-        <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
-        <script src="libs/select2-3.4.5.min.js" type="text/javascript"></script>
-        <script src="libs/require-2.1.9.min.js" type="text/javascript"></script>
+        <script src="/libs/backbone-min.js" type="text/javascript"></script>
+        <script src="/libs/backbone.localStorage-min.js" type="text/javascript"></script>
+        <script src="/libs/select2-3.4.5.min.js" type="text/javascript"></script>
+        <script src="/libs/require-2.1.9.min.js" type="text/javascript"></script>
     </c:otherwise>
 </c:choose>
-<script src="libs/jquery-sortable.js" type="text/javascript"></script>
+<script src="/libs/jquery-sortable.js" type="text/javascript"></script>
 
 <%-- Do these need to use $.ready? --%>
-<script src="js/require_config_dev.js" type="text/javascript"></script>
-<script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
-<script src="js/jquery-extensions/jquery-sort.js" type="text/javascript"></script>
-<script src="js/step_constants.js" type="text/javascript"></script>
-<script src="js/step.util.js" type="text/javascript"></script>
-<script src="js/backbone/views/view_main_search.js" type="text/javascript"></script>
-<script src="js/backbone/views/view_restore.js" type="text/javascript"></script>
+<script src="/js/require_config_dev.js" type="text/javascript"></script>
+<script src="/js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
+<script src="/js/jquery-extensions/jquery-sort.js" type="text/javascript"></script>
+<script src="/js/step_constants.js" type="text/javascript"></script>
+<script src="/js/step.util.js" type="text/javascript"></script>
+<script src="/js/backbone/views/view_main_search.js" type="text/javascript"></script>
+<script src="/js/backbone/views/view_restore.js" type="text/javascript"></script>
 
-<script src="js/backbone/step_router.js" type="text/javascript"></script>
-<script src="js/backbone/views/view_display.js" type="text/javascript"></script>
-<script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>
-<script src="js/backbone/models/model_history.js" type="text/javascript"></script>
-<script src="js/backbone/models/passage_model.js" type="text/javascript"></script>
-<script src="js/backbone/views/view_menu_passage.js" type="text/javascript"></script>
-<script src="js/backbone/models/model_settings.js" type="text/javascript"></script>
-<script src="js/backbone/views/view_feedback.js" type="text/javascript"></script>
-<script src="js/backbone/views/view_examples.js" type="text/javascript"></script>
-<script src="js/state/step.state.js" type="text/javascript"></script>
-<script src="js/passage/step.passage.js" type="text/javascript"></script>
-<script src="js/defaults/step.defaults.js" type="text/javascript"></script>
-<script src="js/step_ready.js" type="text/javascript"></script>
-<script src="js/color_code_grammar.js" type="text/javascript"></script>
+<script src="/js/backbone/step_router.js" type="text/javascript"></script>
+<script src="/js/backbone/views/view_display.js" type="text/javascript"></script>
+<script src="/js/backbone/views/view_display_passage.js" type="text/javascript"></script>
+<script src="/js/backbone/models/model_history.js" type="text/javascript"></script>
+<script src="/js/backbone/models/passage_model.js" type="text/javascript"></script>
+<script src="/js/backbone/views/view_menu_passage.js" type="text/javascript"></script>
+<script src="/js/backbone/models/model_settings.js" type="text/javascript"></script>
+<script src="/js/backbone/views/view_feedback.js" type="text/javascript"></script>
+<script src="/js/backbone/views/view_examples.js" type="text/javascript"></script>
+<script src="/js/state/step.state.js" type="text/javascript"></script>
+<script src="/js/passage/step.passage.js" type="text/javascript"></script>
+<script src="/js/defaults/step.defaults.js" type="text/javascript"></script>
+<script src="/js/step_ready.js" type="text/javascript"></script>
+<script src="/js/color_code_grammar.js" type="text/javascript"></script>
 
 <%
 } else {
-%>
-<%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
-<%
-    if (appManager.isLocal()) {
-%>
-<%@include file="jsps/offlineJqueryJs.jsp" %>
-<%
-} else {
-%>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-  if (typeof jQuery == 'undefined') {
-      document.write(unescape("%3Cscript src='/libs/jquery-1.10.2.min.js' type='text/javascript'%3E%3C/script%3E"));
-      document.write(unescape("%3Cscript src='/libs/bootstrap.min.js' type='text/javascript'%3E%3C/script%3E"));
-  }
-</script>
-<%
-    }
 %>
 
 <c:choose>
@@ -477,15 +458,15 @@
             document.head.appendChild(languages);
 
             var stepJs = document.createElement("script");
-            stepJs.src = 'js/step.${project.version}.min.js';
+            stepJs.src = '/js/step.${project.version}.min.js';
             stepJs.id = "international";
             stepJs.async = false;
             document.head.appendChild(stepJs);
         </script>
     </c:when>
     <c:otherwise>
-        <script src="js/step.${project.version}.min.js" type="text/javascript"></script>
-        <script src="js/color_code_grammar.${project.version}.min.js" type="text/javascript"></script>
+        <script src="/js/step.${project.version}.min.js" type="text/javascript"></script>
+        <script src="/js/color_code_grammar.${project.version}.min.js" type="text/javascript"></script>
     </c:otherwise>
 </c:choose>
 <%
@@ -538,6 +519,7 @@
         }
     }(window, document, 'script'));
 </script>
-<% } %>
+<% }
+%>
 </body>
 </html>

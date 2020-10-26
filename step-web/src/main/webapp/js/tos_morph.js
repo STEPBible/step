@@ -1,4 +1,6 @@
-const C_otMorph = 1;
+// should be const instead of var because of older browser
+// Do not take away the TBRMBR comment (to be removed by maven replacer)
+var C_otMorph = 1; // TBRBMR
 cv[C_otMorph] = {
 language:{A:1,H:0},
 ot_function:{A:139,C:2,D:4,N:110,P:49,R:6,S:91,T:13,V:205,c:2},

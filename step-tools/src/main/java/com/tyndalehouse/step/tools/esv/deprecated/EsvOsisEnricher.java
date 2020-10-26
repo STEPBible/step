@@ -91,7 +91,7 @@ public class EsvOsisEnricher {
         int lineNumber = 1;
         for (String lineText : lines) {
             String[] line = lineText.split("\\t");
-            LOGGER.trace("line: {}", line);
+            LOGGER.trace("line: {}", (Object[]) line);
             Word w;
             if (line.length <= 1) {
                 LOGGER.warn("Blank line found in file, line {}", lineNumber);

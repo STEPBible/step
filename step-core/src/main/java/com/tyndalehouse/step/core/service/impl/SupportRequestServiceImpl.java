@@ -20,11 +20,10 @@ import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.BasicHttpEntity;
-import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
@@ -32,7 +31,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.crosswire.common.util.IOUtil;
 
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -92,7 +90,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
 
         InputStream imageData = null;
         HttpPost attachmentRequest = null;
-        MultipartEntity entity = null;
+        MultipartEntityBuilder entityBuilder = null;
         HttpResponse response = null;
         try {
             imageData = clientSessionProvider.get().getAttachment("screenshot-part");
@@ -101,9 +99,10 @@ public class SupportRequestServiceImpl implements SupportRequestService {
                 return;
             }
             attachmentRequest = getJiraHttpPost(String.format(ATTACH_API, id), null);
-            entity = new MultipartEntity();
-            entity.addPart("file", new ByteArrayBody(imageAsBytes, "screenshot.png"));
-            
+            entityBuilder = MultipartEntityBuilder.create();
+            entityBuilder.addPart("file", new ByteArrayBody(imageAsBytes, "screenshot.png"));
+
+            HttpEntity entity = entityBuilder.build();
             attachmentRequest.setEntity(entity);
             DefaultHttpClient httpClient = getDefaultHttpClient(attachmentRequest);
             response = httpClient.execute(attachmentRequest, getHttpContext(httpClient));
@@ -114,6 +113,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
             handleHttpResponseFailure(response, null);
         } finally {
             IOUtils.closeQuietly(imageData);
+            HttpEntity entity = entityBuilder.build();
             EntityUtils.consumeQuietly(entity);
             if (attachmentRequest != null) {
                 attachmentRequest.releaseConnection();
@@ -294,13 +294,13 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     static class PreemptiveAuthInterceptor implements HttpRequestInterceptor {
 
         public void process(final HttpRequest request, final HttpContext context) throws HttpException, IOException {
-            AuthState authState = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
+            AuthState authState = (AuthState) context.getAttribute(HttpClientContext.TARGET_AUTH_STATE);
 
             // If no auth scheme avaialble yet, try to initialize it
             // preemptively
             if (authState.getAuthScheme() == null) {
                 AuthScheme authScheme = (AuthScheme) context.getAttribute("preemptive-auth");
-                CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(ClientContext.CREDS_PROVIDER);
+                CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(HttpClientContext.CREDS_PROVIDER);
                 HttpHost targetHost = (HttpHost) context.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
                 if (authScheme != null) {
                     Credentials creds = credsProvider.getCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()));

@@ -24,7 +24,11 @@ var PassageDisplayView = DisplayView.extend({
             this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true });
             var options = this.model.get("selectedOptions") || [];
             var availableOptions = this.model.get("options") || [];
-            const C_colorCodeGrammarAvailableAndSelected = 0, C_otMorph = 1; // This must match the definition in the color_code_grammar.js
+			// should be const instead of var, but not compatible with older browser
+			// This must match the definition in the color_code_grammar.js
+			// Do not take away the TBRMBR comment (to be removed by maven replacer
+            var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
+            var C_otMorph = 1; // TBRBMR
             cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
             if ((cv[C_colorCodeGrammarAvailableAndSelected]) && ((c4 == undefined) || (c4 == null))) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
             var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', pch, hasTOS = false, hasNTMorph = false;
@@ -37,7 +41,7 @@ var PassageDisplayView = DisplayView.extend({
                   jQuery.ajax({
                       dataType: "script", 
                       cache: notIE, 
-                      url: "js/tos_morph.js",
+                      url: "/js/tos_morph.js",
                       error: function (jqXHR, exception) {
                         console.log('load tos_morph.js Failed: ' + exception);
                       }
@@ -112,8 +116,12 @@ var PassageDisplayView = DisplayView.extend({
                 //give focus:
                 $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();
             }
-            // following 10 lines were added to enhance the Colour Code Grammar  PT
-            const C_handleOfRequestedAnimation = 11, C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
+            // following 11 lines were added to enhance the Colour Code Grammar  PT
+			// should be const instead of var, but not compatible with older browser
+			// This must match the definition in the color_code_grammar.js
+			// Do not take away the TBRMBR comment (to be removed by maven replacer
+            var C_handleOfRequestedAnimation = 11; // TBRMBR 
+            var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRMBR 
             if ((cv[C_colorCodeGrammarAvailableAndSelected] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) &&
                 (cv[C_handleOfRequestedAnimation] !== undefined) ) {
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {

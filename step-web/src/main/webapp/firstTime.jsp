@@ -18,8 +18,6 @@
 <HEAD>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
     <TITLE>STEP :: Scripture Tools for Every Person</TITLE>
-
-    <%@include file="jsps/offlinePage.jsp" %>
     <link rel="stylesheet" type="text/css" href="css/setup-layout.css" />
     <link rel="stylesheet" type="text/css" href="static/static.css" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />

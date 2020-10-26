@@ -5,7 +5,7 @@
     <c:choose>
         <c:when test="${ param.mobile eq 'online' and not empty param.baseURL }">${ param.baseURL }</c:when>
         <c:when test="${ param.mobile eq 'online' }">http://www.stepbible.org/</c:when>
-        <c:otherwise></c:otherwise>
+        <c:otherwise>/</c:otherwise>
     </c:choose>
 </c:set>
 

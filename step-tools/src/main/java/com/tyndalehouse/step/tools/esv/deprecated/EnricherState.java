@@ -253,7 +253,7 @@ public class EnricherState {
         } else {
             if (!tryNextMatch(output, wordSoFar)) {
                 LOGGER.warn("[{}]: Next word [{}] in matching files does not match tagged data [{}]",
-                        new String[] { this.currentVerse, wordSoFar, this.wWords[this.wWordsII] });
+                        (Object[]) new String[] { this.currentVerse, wordSoFar, this.wWords[this.wWordsII] });
                 output.append(wordSoFar);
                 word = new StringBuilder(16);
             } else {

@@ -377,7 +377,7 @@
 
 <% if (request.getParameter("mobile") == null) {
     String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
-    <script src="/international/interactive.js?lang=<%= URLEncoder.encode(langCode, "UTF-8") %>&step.version=${project.version}" type="text/javascript"></script>
+    <script src="/international/<%= URLEncoder.encode(langCode, "UTF-8") %>.js" type="text/javascript"></script>
 <% } %>
 <%@include file="/jsps/initLib.jsp" %>
 

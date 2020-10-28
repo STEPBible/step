@@ -76,9 +76,14 @@ public class InternationalJsonController extends HttpServlet {
                          final HttpServletResponse response)
             throws ServletException, IOException {
 
-        final Locale locale;
-        
-        final String langParameter = req.getParameter("lang");
+        Locale locale;
+        final String pathInfo = req.getPathInfo();
+        String langParameter = "";
+        if ((pathInfo != null) && (pathInfo.charAt(0) == '/')) {
+            int pos = pathInfo.indexOf(".", 1);
+            if ((pos > 2) && (pos < 7)) langParameter = pathInfo.substring(1, pos).toLowerCase();
+        }
+        else langParameter = req.getParameter("lang");
         if (isNotBlank(langParameter)) {
             if (langParameter.equalsIgnoreCase("zh_tw")) locale = new Locale("zh", "TW");
             else locale = new Locale(langParameter);
@@ -93,7 +98,7 @@ public class InternationalJsonController extends HttpServlet {
 
         response.setCharacterEncoding(FrontController.UTF_8_ENCODING);
         response.setLocale(locale);
-        response.setContentType("application/json");
+        response.setContentType("text/js");
         response.getOutputStream().write(qualifiedResponse.getBytes(FrontController.UTF_8_ENCODING));
         response.flushBuffer();
         response.getOutputStream().close();

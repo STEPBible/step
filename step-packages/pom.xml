@@ -40,7 +40,7 @@
         <jsword.home>${sword.home}/../JSword</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
         <modulesToInclude>esv_th,kjv,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
-        <indexesToInclude>ESV_th,KJV,OSMHB,THOT,LXX,SBLG_th,NIV,ABPGRK</indexesToInclude>
+        <indexesToInclude>ESV_th,KJV,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_th,abpgk_th</indexesToInclude>
     </properties>
 
     <build>
@@ -127,7 +127,7 @@
 			<id>standalone-zh</id>
 			<properties>
 			    <modulesToInclude>esv_th,kjv,chiun,chiuns,chincvt,chincvs,ccb,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
-				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,CCB,OSMHB,THOT,LXX,SBLG_th,NIV,ABPGRK</indexesToInclude>
+				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,CCB,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_th,abpgk_th</indexesToInclude>
 			</properties>
 		</profile>
 	</profiles>

@@ -92,6 +92,7 @@ public class StepServletConfig extends GuiceServletContextListener {
                         serve("/index.jsp").with(IndexRedirect.class);
                         serve("/").with(SearchPageController.class);
                         serve("/international/interactive.js").with(InternationalJsonController.class);
+                        serve("/international/*").with(InternationalJsonController.class);
                         serve("/config.jsp").with(SetupPageController.class);
 //                        if (Boolean.getBoolean("metrics.enabled")) {
 //                            serve("/metrics/*").with(AdminServlet.class);

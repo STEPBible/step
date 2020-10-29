@@ -29,6 +29,7 @@ KEY_PAUSE=200;
 MOUSE_PAUSE=200;
 
 DS_VERSIONS = "allVersions";
+if (typeof STEP_SERVER_BASE_URL === "undefined") STEP_SERVER_BASE_URL = "/rest/";
 BOOKMARKS_GET =                     STEP_SERVER_BASE_URL + "favourites/getBookmarks";
 BOOKMARKS_ADD =                     STEP_SERVER_BASE_URL + "favourites/addBookmark/";
 HISTORY_GET =                       STEP_SERVER_BASE_URL + "favourites/getHistory/";

@@ -20,14 +20,15 @@
 <HEAD>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
     <TITLE>Download free and trustworth Bible study tools, including the NIV and ESV | STEP :: Scripture Tools for Every Person - <fmt:message key="download_desktop_step"/></TITLE>
-    <link href="css/bootstrap.css" rel="stylesheet" media="screen"/>
-    <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
+    <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
     <link rel="stylesheet" type="text/css" href="static/static.css"/>
     <link rel="shortcut icon" href="images/step-favicon.ico"/>
-    <script src="international/interactive.js" type="text/javascript"></script>
-    <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
-    <script src="js/step_constants.js" type="text/javascript"></script>
-    <script src="js/step.util.js" type="text/javascript"></script>
+    <script src="/international/interactive.js" type="text/javascript"></script>
+    <script src="/libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
+    <script src="/js/step_constants.js" type="text/javascript"></script>
+    <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/step.util.js" type="text/javascript"></script>
 
     <style type="text/css">
         table {
@@ -155,7 +156,6 @@
     </div>
 </div>
 
-
 <% if(!appManager.isLocal()) { %>
 <script>
     (function(w, d, s) {
@@ -169,7 +169,7 @@
 
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
             ga('create', '${analyticsToken}', 'auto');
@@ -183,7 +183,6 @@
             if(ga) ga('send', 'event', 'downloads', $(this).data('os'));
         });
     }(window, document, 'script'));
-
 
 </script>
 <% } %>

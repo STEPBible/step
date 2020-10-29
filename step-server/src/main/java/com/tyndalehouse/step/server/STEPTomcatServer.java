@@ -168,11 +168,11 @@ public class STEPTomcatServer {
      * @param bundleKey             the key to the error bundle
      * @param defaultEnglishMessage the message to display if no error bundle has been loaded
      */
-    private void showError(String title, String defaultTitle, String bundleKey, String defaultEnglishMessage, String... args) {
+    private void showError(String title, String defaultTitle, String bundleKey, String defaultEnglishMessage) {
         String finalTitle = this.errorMessages == null ? defaultTitle : this.errorMessages.getString(title);
         String message = this.errorMessages == null ? defaultEnglishMessage : setupMessages.getString(bundleKey);
-        String formattedMessage = String.format(message, args);
-        JOptionPane.showMessageDialog(null, formattedMessage, finalTitle, JOptionPane.ERROR_MESSAGE);
+        // String formattedMessage = String.format(message, args);
+        JOptionPane.showMessageDialog(null, message, finalTitle, JOptionPane.ERROR_MESSAGE);
     }
 
     /**

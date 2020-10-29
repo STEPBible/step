@@ -69,36 +69,67 @@
 
         <table>
             <tr VALIGN="TOP">
-                <td WIDTH="50%"><a href="/downloads/STEP.exe" data-os="windows"><img src="images/WindowsCyan_Web.jpg"/>
-                    <br />
+                <td WIDTH="50%"><img src="images/WindowsCyan_Web.jpg"/><br />
                     <fmt:message key="download_windows_edition"/>&reg;
-                </a></td>
-                <td WIDTH="50%"><a href="/downloads/STEP.dmg" data-os="mac"><img src="images/apple.png"/><br />
+                    <br />
+                    <p>Download from a server at:
+                    <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP.exe" data-os="windows">USA,</a>&nbsp;
+                    <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP.exe" data-os="windows">Europe,</a>&nbsp;
+                    <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP.exe" data-os="windows">Asia Pacific</a>
+                    </p>
+                </td>
+                <td WIDTH="50%"><img src="images/apple.png"/><br />
                     <fmt:message key="download_macos"/>&reg;
-                    <br /><br />
-                </a>
+                    <br />
+                    <p>Download from a server at:
+                    <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP.dmg" data-os="mac">USA,</a>&nbsp;
+                    <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP.dmg" data-os="mac">Europe,</a>&nbsp;
+                    <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP.dmg" data-os="mac">Asia Pacific</a>
+                    </p>
                 </td>
             </tr>
 			<tr VALIGN="TOP">
-                <td WIDTH="50%"><a href="/downloads/STEP_zh.exe" data-os="windows"><img src="images/WindowsCyan_Web_zh.jpg"/>
-                    <br />
+                <td WIDTH="50%"><img src="images/WindowsCyan_Web_zh.jpg"/><br />
                     <fmt:message key="download_windows_edition_zh"/>&reg;
-                </a></td>
-                <td WIDTH="50%"><a href="/downloads/STEP_zh.dmg" data-os="mac"><img src="images/apple_zh.png"/><br />
+                    <br />
+                    <p>Download from a server at:
+                    <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_zh.exe" data-os="windows">USA,</a>&nbsp;
+                    <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_zh.exe" data-os="windows">Europe,</a>&nbsp;
+                    <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.exe" data-os="windows">Asia Pacific</a>
+                    </p>
+                </td>
+                <td WIDTH="50%"><img src="images/apple_zh.png"/><br />
                     <fmt:message key="download_macos_zh"/>&reg;
-                    <br /><br />
-                </a>
+                    <br />
+                    <p>Download from a server at:
+                    <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_zh.dmg" data-os="mac">USA,</a>&nbsp;
+                    <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_zh.dmg" data-os="mac">Europe,</a>&nbsp;
+                    <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.dmg" data-os="mac">Asia Pacific</a>
+                    </p>
                 </td>
             </tr>
             <tr VALIGN="TOP">
                 <td><br /><br />
-                    <fmt:message key="download_installer"/>
-                    <br /><a href="/downloads/pre-packaged/STEP_installers+450Bibles.zip"><img src="/images/SD+USB.jpg"/>
-                        <br />
-                        <br /><fmt:message key="download3"/></a>
-                    <br /><a href="/downloads/pre-packaged/STEP_installers+200Bibles.zip"><fmt:message key="download2"/></a>
-                    <br /><a href="/downloads/pre-packaged/STEP_installers+20Bibles.zip"><fmt:message key="download1"/></a>
-
+                    <fmt:message key="download_installer"/><br />
+                    <img src="/images/SD+USB.jpg"/>
+                    <br /><fmt:message key="download3"/>
+                    <p>Server at:
+                        <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_installers%2B450Bibles.zip">USA,</a>&nbsp;
+                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_installers%2B450Bibles.zip">Europe,</a>&nbsp;
+                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_installers%2B450Bibles.zip">Asia Pacific</a>
+                    </p>
+                    <fmt:message key="download2"/>
+                    <p>Server at:
+                        <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_installers%2B200Bibles.zip">USA,</a>&nbsp;
+                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_installers%2B200Bibles.zip">Europe,</a>&nbsp;
+                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_installers%2B200Bibles.zip">Asia Pacific</a>
+                    </p>
+                    <fmt:message key="download1"/><
+                    <p>Server at:
+                        <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_installers%2B20Bibles.zip">USA,</a>&nbsp;
+                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_installers%2B20Bibles.zip">Europe,</a>&nbsp;
+                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_installers%2B20Bibles.zip">Asia Pacific</a>
+                    </p>
                 </td>
                 <td><br /><br />
                     <fmt:message key="return_to_main_site"/>

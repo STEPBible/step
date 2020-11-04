@@ -588,15 +588,7 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         var url = step.router.getShareableColumnUrl(this.model.get("passageId"), true);
-
-        //do google plus
-        if (window.gapi != undefined) {
-            var gPlusOne = $('<g:plusone size="medium"></g:plusone>');
-            gPlusOne.attr("href", url);
-            this.sharingBar.append($("<li>").append(gPlusOne));
-            window.gapi.plusone.go(this.sharingBar.get(0));
-        }
-
+		
         //do twitter
         if (window.twttr != undefined) {
             var twitter = $('<a href="https://twitter.com/share" class="twitter-share-button" data-via="Tyndale_House">Tweet</a>')
@@ -608,6 +600,7 @@ var PassageMenuView = Backbone.View.extend({
 
         //do facebook share
         if (window.FB && window.FB.XFBML) {
+        	if (url != null) url = url.replace(/\|/g, "%7C");
             var facebook = $('<fb:share-button type="button_count"></fb:share-button>').attr("href", url);
             this.sharingBar.append($("<li>").append(facebook));
             window.FB.XFBML.parse(facebook.parent().get(0));

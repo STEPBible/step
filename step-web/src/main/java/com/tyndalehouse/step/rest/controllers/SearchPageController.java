@@ -26,10 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.File;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -41,6 +41,9 @@ public class SearchPageController extends HttpServlet {
     private static final Pattern COMMA_SEPARATORS = Pattern.compile(",");
     public static String DEV_TOKEN = "UA-36285759-2";
     public static String LIVE_TOKEN = "UA-36285759-1";
+    private static String USER_LANGUAGES = "";
+    private static String COOKIE_COUNTRIES = "";
+    private static String CACHE_VERSION = "";
     private static Logger LOGGER = LoggerFactory.getLogger(SearchPageController.class);
     private final SearchController search;
     private final ModuleController modules;
@@ -65,6 +68,7 @@ public class SearchPageController extends HttpServlet {
         this.appManagerService = appManagerService;
         this.objectMapper = objectMapper;
         this.clientSessionProvider = clientSessionProvider;
+        loadLanguageCacheInfo();
     }
 
     @Override
@@ -88,6 +92,7 @@ public class SearchPageController extends HttpServlet {
         }
 
         AbstractComplexSearch text;
+        String userLanguage = null;
         try {
             //if we have a 'reference' and/or 'version' parameter, redirect to that page
             final String oldVersion = request.getParameter("version");
@@ -96,7 +101,7 @@ public class SearchPageController extends HttpServlet {
                 doRedirect(response, oldReference, oldVersion);
                 return;
             }
-            String userLanguage = request.getParameter("lang");
+            userLanguage = request.getParameter("lang");
             if (userLanguage == null) userLanguage = this.clientSessionProvider.get().getLocale().toString();
             text = doSearch(request, userLanguage);
             setupRequestContext(request, text);
@@ -104,6 +109,50 @@ public class SearchPageController extends HttpServlet {
         } catch (Exception exc) {
             LOGGER.warn(exc.getMessage(), exc);
         } finally {
+            final String qString = request.getQueryString();
+            if (qString == null) {
+                if (USER_LANGUAGES.length() > 0) {
+                    if ((userLanguage != null) && (userLanguage.length() >= 2)) {
+                        int pos = -1;
+                        String ul = userLanguage.toLowerCase();
+                        if (ul.length() > 5) ul = ul.substring(0, 5);
+                        if (ul.length() == 5) {
+                            if ((ul.equals("zh_tw")) || (ul.equals("zh-tw")) || (ul.equals("zh_hk")) || (ul.equals("zh-hk"))) {
+                                ul = "zh_tw";
+                                pos = 0;
+                            }
+                        }
+                        if (pos == -1) {
+                            if (ul.length() > 3) ul = ul.substring(0, 3);
+                            if (ul.equals("fil")) pos = 0;
+                            else {
+                                if (ul.length() > 2) ul = ul.substring(0, 2);
+                                pos = USER_LANGUAGES.indexOf(ul);
+                            }
+                        }
+                        if (pos > -1) {
+                            String cookieWarningRequired = "-c";
+                            String userCountry = request.getHeader("cf-ipcountry");
+                            if ((userCountry != null) && ((userCountry.length() != 2) ||
+                                    (COOKIE_COUNTRIES.length() < 2) || (!COOKIE_COUNTRIES.contains(userCountry.toUpperCase()))))
+                                cookieWarningRequired = "";
+                            String redirectURL = new String("html/" + ul + "-" + CACHE_VERSION + cookieWarningRequired + ".html");
+                            response.setStatus(response.SC_MOVED_TEMPORARILY);
+                            response.setHeader("Location", redirectURL);
+                            return;
+                        }
+                    }
+                }
+            }
+            else if (qString.toLowerCase().equals("loadlanguagecacheinfo")) {
+                String result = loadLanguageCacheInfo();
+                response.setContentType("text/html");
+                PrintWriter out = response.getWriter();
+                out.println("<html><body><h1>Language cache and cookie countries</h1><p>");
+                out.println(result);
+                out.println("</p></body></html>");
+                return;
+            }
             request.getRequestDispatcher("/start.jsp").include(request, response);
         }
     }
@@ -419,5 +468,27 @@ public class SearchPageController extends HttpServlet {
             text = new OsisWrapper("", null, new String[]{"en"}, null, "ESV_th", InterlinearMode.NONE, "");
         }
         return text;
+    }
+
+    private String loadLanguageCacheInfo() {
+        try {
+            File myFile = new File("/var/www/languagecacheinfo.txt");
+            Scanner myReader = new Scanner(myFile);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                if (data.indexOf("USER_LANGUAGES=") == 0) {
+                    USER_LANGUAGES = data.substring(15);
+                }
+                else if (data.indexOf("COOKIE_COUNTRIES=") == 0) COOKIE_COUNTRIES = data.substring(17);
+                else if (data.indexOf("CACHE_VERSION=") == 0) CACHE_VERSION = data.substring(14);
+            }
+            myReader.close();
+        } catch (Exception e) {
+            USER_LANGUAGES = "";
+            COOKIE_COUNTRIES = "";
+            CACHE_VERSION = "";
+        }
+        return "Cache version: " + CACHE_VERSION + "<br>COOKIE_COUNTRIES: " + COOKIE_COUNTRIES + "<br>USER_LANGUAGES: " +
+                USER_LANGUAGES;
     }
 }

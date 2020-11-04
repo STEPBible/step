@@ -211,7 +211,8 @@
         }
 
         //do cookie notification
-        step.util.raiseOneTimeOnly("cookie_notification", 'info');
+        var countriesRequiringCookie = "UNKNOWN GB DE FR IT ES PL RO NL BE GR SE PT AT BG CY CZ DK EE FI HR HU IE LT LU LV MT SI SK";
+        if (countriesRequiringCookie.indexOf(step.userCountryCode) > -1) step.util.raiseOneTimeOnly("cookie_notification", 'info');
         var tmp = localStorage.getItem('colorCode-openStatus');
         if (tmp) {
             localStorage.removeItem('colorCode-openStatus');

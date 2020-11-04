@@ -17,12 +17,10 @@
     Config.set(session, Config.FMT_LOCALE, locale);
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
-
 <fmt:setBundle basename="HtmlBundle" scope="request"/>
 <!DOCTYPE html xmlns:fb="http://ogp.me/ns/fb#">
 <html>
 <head>
-
     <%
         if (request.getParameter("translate") != null) {
     %>
@@ -379,8 +377,11 @@
     String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
     <script src="/international/<%= URLEncoder.encode(langCode, "UTF-8") %>.js" type="text/javascript"></script>
 <% } %>
-<%@include file="/jsps/initLib.jsp" %>
-
+<%@include file="/jsps/initLib.jsp"%>
+<%
+String userCountry = request.getHeader("cf-ipcountry");
+userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
+%>
 <%-- Now do javascript --%>
 <script type="text/javascript">
     window.tempModel = ${ not empty passageModel ? passageModel : 'undefined' };
@@ -388,9 +389,9 @@
     if (!window.step) {
         window.step = {}
     }
-    ;
     step.userLanguage = "${ languageName }";
     step.userLanguageCode = "${ languageCode }";
+    step.userCountryCode = "<%=userCountry%>";
 </script>
 <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
 <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
@@ -489,10 +490,7 @@
             };
 
             load('//connect.facebook.net/en_GB/all.js#xfbml=1', 'fbjssdk');
-            load('https://apis.google.com/js/plusone.js', 'gplus1js');
             load('//platform.twitter.com/widgets.js', 'tweetjs');
-            load('//rum-static.pingdom.net/prum.min.js', 'pingdom');
-
 
             (function (i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r;

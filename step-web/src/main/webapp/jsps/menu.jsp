@@ -114,7 +114,7 @@
                 %>
                 <li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback"/></a></li>
                 <!-- # Privacy policy -->
-                <li><a href="https://academic.tyndalehouse.com/privacy-policy" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
+                <li><a href="/cookies_policy.html" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
                 <% } %>
                 <!-- # Copyright & licences -->
                 <li><a target="_new" href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" name="COPYRIGHT"><fmt:message key="copyright_info_link"/></a></li>

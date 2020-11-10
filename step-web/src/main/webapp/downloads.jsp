@@ -113,24 +113,12 @@
                 <td><br /><br />
                     <fmt:message key="download_installer"/><br />
                     <img src="/images/SD+USB.jpg"/>
-                    <br /><fmt:message key="download3"/>
-                    <p>Server at:
-                        <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_installers%2B450Bibles.zip">USA,</a>&nbsp;
-                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_installers%2B450Bibles.zip">Europe,</a>&nbsp;
-                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_installers%2B450Bibles.zip">Asia Pacific</a>
-                    </p>
-                    <fmt:message key="download2"/>
-                    <p>Server at:
-                        <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_installers%2B200Bibles.zip">USA,</a>&nbsp;
-                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_installers%2B200Bibles.zip">Europe,</a>&nbsp;
-                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_installers%2B200Bibles.zip">Asia Pacific</a>
-                    </p>
-                    <fmt:message key="download1"/><
-                    <p>Server at:
-                        <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_installers%2B20Bibles.zip">USA,</a>&nbsp;
-                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_installers%2B20Bibles.zip">Europe,</a>&nbsp;
-                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_installers%2B20Bibles.zip">Asia Pacific</a>
-                    </p>
+                    <br />
+                    <a href="https://downloads.stepbible.org/file/Stepbible/STEP_installers_450Bibles.zip"><fmt:message key="download3"/></a>&nbsp;
+                    <br />
+                    <a href="https://downloads.stepbible.org/file/Stepbible/STEP_installers_200Bibles.zip"><fmt:message key="download2"/></a>&nbsp;
+                    <br />
+                    <a href="https://downloads.stepbible.org/file/Stepbible/STEP_installers_9Bibles.zip"><fmt:message key="download1"/></a>
                 </td>
                 <td><br /><br />
                     <fmt:message key="return_to_main_site"/>

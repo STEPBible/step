@@ -68,7 +68,7 @@ public class SearchPageController extends HttpServlet {
         this.appManagerService = appManagerService;
         this.objectMapper = objectMapper;
         this.clientSessionProvider = clientSessionProvider;
-        loadLanguageCacheInfo();
+        loadFirstPageCacheInfo();
     }
 
     @Override
@@ -144,11 +144,11 @@ public class SearchPageController extends HttpServlet {
                     }
                 }
             }
-            else if (qString.toLowerCase().equals("loadlanguagecacheinfo")) {
-                String result = loadLanguageCacheInfo();
+            else if (qString.toLowerCase().equals("firstpagecacheinfo")) {
+                String result = loadFirstPageCacheInfo();
                 response.setContentType("text/html");
                 PrintWriter out = response.getWriter();
-                out.println("<html><body><h1>Language cache and cookie countries</h1><p>");
+                out.println("<html><body><h1>First page cache and cookie countries</h1><p>");
                 out.println(result);
                 out.println("</p></body></html>");
                 return;
@@ -470,9 +470,9 @@ public class SearchPageController extends HttpServlet {
         return text;
     }
 
-    private String loadLanguageCacheInfo() {
+    private String loadFirstPageCacheInfo() {
         try {
-            File myFile = new File("/var/www/languagecacheinfo.txt");
+            File myFile = new File("/var/www/firstpagecacheinfo.txt");
             Scanner myReader = new Scanner(myFile);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();

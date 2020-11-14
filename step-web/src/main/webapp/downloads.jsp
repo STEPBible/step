@@ -114,11 +114,11 @@
                     <fmt:message key="download_installer"/><br />
                     <img src="/images/SD+USB.jpg"/>
                     <br />
-                    <a href="https://downloads.stepbible.org/file/Stepbible/STEP_installers_450Bibles.zip"><fmt:message key="download3"/></a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_installers_450Bibles.zip"><fmt:message key="download3"/></a>&nbsp;
                     <br />
-                    <a href="https://downloads.stepbible.org/file/Stepbible/STEP_installers_200Bibles.zip"><fmt:message key="download2"/></a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_installers_200Bibles.zip"><fmt:message key="download2"/></a>&nbsp;
                     <br />
-                    <a href="https://downloads.stepbible.org/file/Stepbible/STEP_installers_9Bibles.zip"><fmt:message key="download1"/></a>
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_installers_9Bibles.zip"><fmt:message key="download1"/></a>
                 </td>
                 <td><br /><br />
                     <fmt:message key="return_to_main_site"/>

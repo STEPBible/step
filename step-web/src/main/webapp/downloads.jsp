@@ -74,7 +74,7 @@
                     <fmt:message key="download_windows_edition"/>&reg;
                     <br />
                     <p>Download from a server at:
-                    <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP.exe" data-os="windows">USA,</a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP.exe" data-os="windows">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP.exe" data-os="windows">Europe,</a>&nbsp;
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP.exe" data-os="windows">Asia Pacific</a>
                     </p>
@@ -83,7 +83,7 @@
                     <fmt:message key="download_macos"/>&reg;
                     <br />
                     <p>Download from a server at:
-                    <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP.dmg" data-os="mac">USA,</a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP.dmg" data-os="mac">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP.dmg" data-os="mac">Europe,</a>&nbsp;
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP.dmg" data-os="mac">Asia Pacific</a>
                     </p>
@@ -94,7 +94,7 @@
                     <fmt:message key="download_windows_edition_zh"/>&reg;
                     <br />
                     <p>Download from a server at:
-                    <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_zh.exe" data-os="windows">USA,</a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_zh.exe" data-os="windows">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_zh.exe" data-os="windows">Europe,</a>&nbsp;
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.exe" data-os="windows">Asia Pacific</a>
                     </p>
@@ -103,7 +103,7 @@
                     <fmt:message key="download_macos_zh"/>&reg;
                     <br />
                     <p>Download from a server at:
-                    <a href="https://stepbible.s3-us-west-2.amazonaws.com/STEP_zh.dmg" data-os="mac">USA,</a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_zh.dmg" data-os="mac">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_zh.dmg" data-os="mac">Europe,</a>&nbsp;
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.dmg" data-os="mac">Asia Pacific</a>
                     </p>

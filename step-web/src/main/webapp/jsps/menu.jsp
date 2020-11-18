@@ -54,7 +54,7 @@
                             <c:when test="${language.partial and not language.complete}"><fmt:message key="partially_translated" /></c:when>
                         </c:choose>
                     </c:set>
-                    <li class="${ language.code eq languageCode or languageCode eq 'iw' and language.code eq 'he' or languageCode eq 'in' and language.code eq 'id' ? 'active' : '' }" title="${machineTranslatedWarning}"><a onclick="window.localStorage.clear(); $.cookie('lang', '${language.code}')" lang="${language.code}" href="./?lang=${language.code}${param.debug eq null ? "" : "&debug" }">
+                    <li class="${ language.code eq languageCode or languageCode eq 'iw' and language.code eq 'he' or languageCode eq 'in' and language.code eq 'id' ? 'active' : '' }" title="${machineTranslatedWarning}"><a onclick="window.localStorage.clear(); $.cookie('lang', '${language.code}')" lang="${language.code}" href="/?lang=${language.code}${param.debug eq null ? "" : "&debug" }">
                           ${ language.originalLanguageName } - ${ language.userLocaleLanguageName }<c:if test="${not language.complete}">*</c:if>
                     </a></li>
                 </c:forEach>

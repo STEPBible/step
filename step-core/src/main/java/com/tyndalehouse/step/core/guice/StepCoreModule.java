@@ -120,7 +120,8 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(VocabularyService.class).to(VocabularyServiceImpl.class);
         bind(StrongAugmentationService.class).to(StrongAugmentationServiceImpl.class);
         bind(TimelineService.class).to(TimelineServiceImpl.class);
-        bind(GeographyService.class).to(GeographyServiceImpl.class);
+//pt20201119 This code was never used so Patrick Tang commented it out on November 19, 2020.  Search for the "November 19, 2020" string to find all the related changes in the Java code.
+//pt20201119        bind(GeographyService.class).to(GeographyServiceImpl.class);
         bind(Loader.class);
         bind(UserService.class).to(UserServiceImpl.class);
         bind(LexiconDefinitionService.class).to(LexiconDefinitionServiceImpl.class);

@@ -119,37 +119,39 @@ public class LoaderTest {
     /**
      * tests the openbible data
      */
-    @Test
-    public void testGeographyLoader() {
-        getLoader("test.data.path.geography.openbible", "geography.tab").loadOpenBibleGeography();
-        assertLoaded(1, "obplace", "esvName", "Ekron");
 
-        assertTrue(getEntities(1, "obplace", "references", "Isa.11.11").length > 0);
-    }
-
-    /**
-     * tests the timeline
-     */
-    @Test
-    public void testTimeline() {
-        getLoader("test.data.path.timeline.events.directory", "timeline.csv").loadTimeline();
-        assertExists("timelineEvent", "name", "John the Baptist");
-    }
-
-    /**
-     * tests the timeline
-     */
-    @Test
-    public void testHotSpots() {
-        getLoader("test.data.path.timeline.hotspots", "hotspots.csv").loadHotSpots();
-        final long start = DateTimeUtils.getInstantMillis(DateTime.parse("-2000")) / 60000;
-        final long end = DateTimeUtils.getInstantMillis(DateTime.parse("-1999")) / 60000;
-
-        final EntityIndexReader reader = this.entityManager.getReader("hotspot");
-        final NumericRangeQuery<Long> range = NumericRangeQuery.newLongRange("startTime", start, end, true,
-                true);
-        assertTrue(reader.search(range).length > 0);
-    }
+//pt20201119 This code was never used so Patrick Tang commented it out on November 19, 2020.  Search for the "November 19, 2020" string to find all the related changes in the Java code.
+//pt20201119    @Test
+//pt20201119    public void testGeographyLoader() {
+//pt20201119        getLoader("test.data.path.geography.openbible", "geography.tab").loadOpenBibleGeography();
+//pt20201119        assertLoaded(1, "obplace", "esvName", "Ekron");
+//pt20201119
+//pt20201119        assertTrue(getEntities(1, "obplace", "references", "Isa.11.11").length > 0);
+//pt20201119    }
+//pt20201119
+//pt20201119    /**
+//pt20201119     * tests the timeline
+//pt20201119     */
+//pt20201119    @Test
+//pt20201119    public void testTimeline() {
+//pt20201119        getLoader("test.data.path.timeline.events.directory", "timeline.csv").loadTimeline();
+//pt20201119        assertExists("timelineEvent", "name", "John the Baptist");
+//pt20201119    }
+//pt20201119
+//pt20201119    /**
+//pt20201119     * tests the timeline
+//pt20201119     */
+//pt20201119    @Test
+//pt20201119    public void testHotSpots() {
+//pt20201119        getLoader("test.data.path.timeline.hotspots", "hotspots.csv").loadHotSpots();
+//pt20201119        final long start = DateTimeUtils.getInstantMillis(DateTime.parse("-2000")) / 60000;
+//pt20201119        final long end = DateTimeUtils.getInstantMillis(DateTime.parse("-1999")) / 60000;
+//pt20201119
+//pt20201119        final EntityIndexReader reader = this.entityManager.getReader("hotspot");
+//pt20201119        final NumericRangeQuery<Long> range = NumericRangeQuery.newLongRange("startTime", start, end, true,
+//pt20201119                true);
+//pt20201119        assertTrue(reader.search(range).length > 0);
+//pt20201119    }
 
     /**
      * tests the version information is loaded

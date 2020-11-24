@@ -30,9 +30,10 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.service;
+//pt20201119 This code was never used so Patrick Tang commented it out on November 19, 2020.  Search for the "November 19, 2020" string to find all the related changes in the Java code.
+//pt20201119package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
+//pt20201119import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Access to the geography module
@@ -40,12 +41,12 @@ import com.tyndalehouse.step.core.data.EntityDoc;
  * @author cjburrell
  * 
  */
-public interface GeographyService {
+//pt20201119public interface GeographyService {
     /**
      * returns all places that are within a passage reference
      * 
      * @param reference the biblical reference
      * @return the list of places (lat/long/precisions)
      */
-    EntityDoc[] getPlaces(String reference);
-}
+//pt20201119    EntityDoc[] getPlaces(String reference);
+//pt20201119}

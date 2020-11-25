@@ -17,6 +17,7 @@
     <TITLE>STEP :: Scripture Tools for Every Person</TITLE>
     <link rel="stylesheet" type="text/css" href="static/static.css" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
+    <%@include file="/jsps/offlinePage.jsp" %>
 </HEAD>
 <body style="font-size: 12px">
 	<div class="header">

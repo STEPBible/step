@@ -1199,13 +1199,14 @@
         <xsl:variable name="passage" select="jswordUtils:getSafeKey($versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
         <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
+		<xsl:variable name="encodedPassageKeyForLink" select="url:encode(@osisRef)"/>
 
         <xsl:choose>
             <xsl:when test="string-length($encodedPassageKey) = 0">
                 <xsl:apply-templates/>
             </xsl:when>
             <xsl:otherwise>
-                <a href="?version={$defaultVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}"
+                <a href="?q=version={$defaultVersion}&#124;reference={$encodedPassageKeyForLink}" title="{$passageKey}"
                    class="linkRef" xref="{$passageKey}">
                     <xsl:apply-templates/>
                 </a>
@@ -1224,7 +1225,7 @@
                 <xsl:apply-templates/>
             </xsl:when>
             <xsl:otherwise>
-                <a href="?version={$defaultVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}"
+                <a href="?q=version={$defaultVersion}&#124;reference={$encodedPassageKey}" title="{$passageKey}"
                    xref="{$passageKey}">
                     <xsl:apply-templates/>
                 </a>

@@ -190,7 +190,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     @Override
     @Timed(name = "passage-lookup", group = "service", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public OsisWrapper getPassageText(final String version, final String reference, final String options,
-                                      final String interlinearVersion, final String interlinearMode) {
+                                      final String interlinearVersion, final String interlinearMode, final String userLanguage) {
 
         final List<String> extraVersions = getExtraVersionsFromString(interlinearVersion);
         final InterlinearMode desiredModeOfDisplay = this.optionsValidationService.getDisplayMode(interlinearMode, version, extraVersions);
@@ -207,7 +207,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             lookupOptions.add(LookupOption.VERSE_NUMBERS);
             final String[] versions = getInterleavedVersions(version, interlinearVersion);
             passageText = this.jswordPassage.getInterleavedVersions(versions, reference, new ArrayList<>(lookupOptions),
-                    desiredModeOfDisplay);
+                    desiredModeOfDisplay, userLanguage);
         } else {
             passageText = this.jswordPassage.getOsisText(version, reference, new ArrayList(lookupOptions),
                     interlinearVersion, desiredModeOfDisplay);

@@ -161,7 +161,7 @@ public class BibleControllerTest {
 
         // verify
         verify(this.bibleInformation).getPassageText(eq("version"), eq("reference"),
-                eq("HEADINGS,VERSE_NUMBERS"), eq("kjv,esv"), eq("INTERLINEAR"));
+                eq("HEADINGS,VERSE_NUMBERS"), eq("kjv,esv"), eq("INTERLINEAR"), eq("en"));
 
     }
 

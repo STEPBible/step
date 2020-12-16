@@ -189,7 +189,7 @@ public class BibleController {
         notEmpty(reference, "reference_required", USER_MISSING_FIELD);
 
         return this.bibleInformation.getPassageText(version, reference, options, interlinearVersion,
-                interlinearMode);
+                interlinearMode, "en");
     }
 
 

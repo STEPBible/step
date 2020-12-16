@@ -36,7 +36,7 @@
 
     <title>${ title }</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <meta step-local content="<%= appManager.isLocal() %>"/>
     <meta step-domain content="<%= appManager.getAppDomain() %>"/>
     <meta step-direction content="${ ltr }"/>
@@ -141,7 +141,7 @@
                     <span class="help"><jsp:include page="/jsps/menu.jsp"/></span>
                     <form role="form">
                         <div class="input-group">
-                            <input id="masterSearch" type="text" class="form-control input-sm"
+                            <input id="masterSearch" type="text" class="form-control input-lg"
                                    placeholder="<fmt:message key="search_placeholder" />">
                             <span class="input-group-btn findButton">
                                     <span>Search</span>

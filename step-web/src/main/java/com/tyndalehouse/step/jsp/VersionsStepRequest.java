@@ -150,7 +150,7 @@ public class VersionsStepRequest {
 
             bookList.append("<td>");
 
-            bookList.append("<a href='version.jsp?version=");
+            bookList.append("<a href='/version.jsp?version=");
             bookList.append(initials);
             bookList.append("' class='info' title='");
 

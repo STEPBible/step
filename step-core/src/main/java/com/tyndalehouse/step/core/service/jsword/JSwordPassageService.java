@@ -147,7 +147,7 @@ public interface JSwordPassageService {
      * @return the osis wrapper
      */
     OsisWrapper getInterleavedVersions(String[] versions, String reference, List<LookupOption> options,
-            InterlinearMode displayMode);
+            InterlinearMode displayMode, String userLanuage);
 
     /**
      * Returns some plain text for a passage

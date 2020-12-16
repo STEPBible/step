@@ -308,7 +308,7 @@ public class SiteMapController extends HttpServlet {
 
             // if we got here, then we have been able to read the module
             if (!mainFile) {
-                addUrl(siteMap, null, null, null, "version.jsp?version=", version.getInitials());
+                addUrl(siteMap, null, null, null, "/version.jsp?version=", version.getInitials());
                 mainFile = true;
             }
 

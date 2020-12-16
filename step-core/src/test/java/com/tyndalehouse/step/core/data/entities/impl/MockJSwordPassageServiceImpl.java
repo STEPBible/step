@@ -169,7 +169,7 @@ public class MockJSwordPassageServiceImpl implements JSwordPassageService {
      */
     @Override
     public OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
-            final List<LookupOption> options, final InterlinearMode displayMode) {
+            final List<LookupOption> options, final InterlinearMode displayMode, final String userLanguage) {
 
         return null;
     }

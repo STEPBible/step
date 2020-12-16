@@ -73,7 +73,7 @@ public interface BibleInformationService {
      * @return the HTML string passed back for consumption
      */
     OsisWrapper getPassageText(String version, String reference, String lookupOptions,
-            String interlinearVersion, String interlinearMode);
+            String interlinearVersion, String interlinearMode, String userLanguage);
 
     /**
      * This method selects passage text and forms XML for the client. This is done server side so that the

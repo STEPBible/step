@@ -233,6 +233,7 @@ public class SearchServiceImpl implements SearchService {
             String defaultVersion = JSwordPassageService.REFERENCE_BOOK;
             if (userLanguage.equalsIgnoreCase("zh")) defaultVersion = "CUns";
             else if (userLanguage.equalsIgnoreCase("zh_tw")) defaultVersion = "CUn";
+			else if (userLanguage.toLowerCase().startsWith("es")) defaultVersion = "SpaRV1909";
             versions.add(defaultVersion);
             searchTokens.add(new SearchToken("version", defaultVersion));
         }
@@ -250,7 +251,7 @@ public class SearchServiceImpl implements SearchService {
         final AbstractComplexSearch complexSearch = runCorrectSearch(
                 versions, aggregatedReferences,
                 options, StringUtils.isBlank(display) ? InterlinearMode.NONE.name() : display,
-                searchTokens, page, filter, sort, context);
+                searchTokens, page, filter, sort, context, userLanguage);
 
         aggregateTokenForPassageLookups(searchTokens, referenceTokens, complexSearch);
         enhanceSearchTokens(versions.get(0), searchTokens);
@@ -428,7 +429,7 @@ public class SearchServiceImpl implements SearchService {
                                                    final int pageNumber,
                                                    final String filter,
                                                    final String sort,
-                                                   final int context) {
+                                                   final int context, final String userLanguage) {
         final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
         String[] filters = null;
         if (StringUtils.isNotBlank(filter)) {
@@ -472,7 +473,7 @@ public class SearchServiceImpl implements SearchService {
         }
         return this.bibleInfoService.getPassageText(
                 versions.get(0), references, options,
-                getExtraVersions(versions), displayMode);
+                getExtraVersions(versions), displayMode, userLanguage);
     }
 
     /**

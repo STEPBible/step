@@ -27,7 +27,7 @@ function openClrConfig() {
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('openClrModal');
   if (!temp) openConfigPage.appendTo('body');
-  $('#openClrModal').modal('show').find('.modal-content').load('/open_color_code_grammar.html');
+  $('#openClrModal').modal('show').find('.modal-content').load('/html/open_color_code_grammar.html');
 }
 
 function initOpenClrCodeModal() {
@@ -455,7 +455,7 @@ function saveClrConfig() {
   if (!temp) {
     saveConfigPage.appendTo('body');
   }
-  $('#saveClrModal').modal('show').find('.modal-content').load('/save_color_code_grammar.html');
+  $('#saveClrModal').modal('show').find('.modal-content').load('/html/save_color_code_grammar.html');
 }
 
 function initSaveClrCodeModal() {
@@ -705,7 +705,7 @@ function userSortAxis(axis) {
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('sortAxisModal');
   if (!temp) openConfigPage.appendTo('body');
-  $('#sortAxisModal').modal('show').find('.modal-content').load('/sort_verb_item.html');
+  $('#sortAxisModal').modal('show').find('.modal-content').load('/html/sort_verb_item.html');
 }
 
 function userAddHeaderInfo(axis, ot) {
@@ -718,7 +718,7 @@ function userAddHeaderInfo(axis, ot) {
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('addHeaderInfoModal');
   if (!temp) openConfigPage.appendTo('body');
-  $('#addHeaderInfoModal').modal('show').find('.modal-content').load('/add_header_to_color_config.html');
+  $('#addHeaderInfoModal').modal('show').find('.modal-content').load('/html/add_header_to_color_config.html');
 }
 
 function userSortOTAxis(axis) {
@@ -727,7 +727,7 @@ function userSortOTAxis(axis) {
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('sortAxisModal');
   if (!temp) openConfigPage.appendTo('body');
-  $('#sortAxisModal').modal('show').find('.modal-content').load('/sort_ot_verb_item.html');
+  $('#sortAxisModal').modal('show').find('.modal-content').load('/html/sort_ot_verb_item.html');
 }
 
 function userToggleXOrYAxisConfig(ot, axis, index) {
@@ -1602,7 +1602,7 @@ function resetClrConfig() {
 function closeClrConfig() {
   $('#theGrammarClrModal').modal('hide');
   $('#theGrammarClrModal').modal({
-    show: 'false'
+    show: false
   });
   var element = document.getElementById('theGrammarClrModal');
   element.parentNode.removeChild(element);
@@ -1619,12 +1619,12 @@ function updateAllSettingsAndInputFields() {
   cf.createUlForAllItemsInYAndX();
   cf.createUlFor_OT();
   $('#theGrammarClrModal').modal({
-    show: 'false'
+    show: false
   });
   if ($.getUrlVars().indexOf("debug") == -1)
-    $('#theGrammarClrModal').modal('show').find('.modal-content').load('/color_code_grammar.min.html');
+    $('#theGrammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.min.html');
   else
-    $('#theGrammarClrModal').modal('show').find('.modal-content').load('/color_code_grammar.html');
+    $('#theGrammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.html');
 }
 
 function updateNounInputFields(inputOnOff) {

@@ -71,7 +71,7 @@ public class InterleavedOsisReader {
 //        options.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
         
         final String osisText = jsi.getInterleavedVersions(versions, ref, options,
-                interlinearMode).getValue();
+                interlinearMode, "en").getValue();
         LOGGER.debug(osisText);
         final SAXBuilder sb = new SAXBuilder();
 //        final Document d = sb.build(new StringReader(osisText));

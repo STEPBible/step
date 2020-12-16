@@ -231,7 +231,7 @@ public class JSwordPassageServiceImplTest {
 
         final String osisText = this.jsi.getInterleavedVersions(
                 new String[]{currentBook.getInitials(), secondaryBook.getInitials()}, reference, options,
-                InterlinearMode.INTERLEAVED_COMPARE).getValue();
+                InterlinearMode.INTERLEAVED_COMPARE, "en").getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 
@@ -360,7 +360,7 @@ public class JSwordPassageServiceImplTest {
         LOGGER.debug("Original is:\n {}", xmlOutputter.outputString(data.getOsisFragment()));
 
         final OsisWrapper interleavedVersions = this.jsi.getInterleavedVersions(versions, ref,
-                new ArrayList<LookupOption>(), InterlinearMode.COLUMN_COMPARE);
+                new ArrayList<LookupOption>(), InterlinearMode.COLUMN_COMPARE, "en");
 
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(interleavedVersions.getValue()));

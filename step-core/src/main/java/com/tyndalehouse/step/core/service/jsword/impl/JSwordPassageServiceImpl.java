@@ -543,7 +543,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
             // split the versions
             passageText = this.getInterleavedVersions(versionsInput.toArray(new String[versionsInput.size()]), reference, new ArrayList<LookupOption>(lookupOptions),
-                    desiredModeOfDisplay);
+                    desiredModeOfDisplay, "en");
         } else {
             final String extraVersionsAsString = this.getVersionsAsStrings(extraVersions);
             passageText = this.getOsisText(masterVersion, reference, new ArrayList<LookupOption>(lookupOptions),
@@ -795,7 +795,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
 
             final TransformingSAXEventProvider htmlsep = executeStyleSheet(versification, options, interlinearVersion,
-                    bookData, osissep, displayMode);
+                    bookData, osissep, displayMode, "en");
 
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key,
                     getLanguages(book, displayMode, htmlsep, options), versification,
@@ -909,21 +909,21 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
-                                              final List<LookupOption> options, final InterlinearMode displayMode) {
+                                              final List<LookupOption> options, final InterlinearMode displayMode, final String userLanguage) {
         final Book[] books = getValidInterleavedBooks(versions, displayMode);
         final Versification v11n = this.versificationService.getVersificationForVersion(books[0]);
 
         try {
             Key key = normalize(books[0].getKey(reference), v11n);
-            return this.getInterleavedVersions(versions, key, options, displayMode);
+            return this.getInterleavedVersions(versions, key, options, displayMode, userLanguage);
         } catch (NoSuchKeyException nske) {
             return doInterleavedVersionsLookup(versions, handlePassageLookupNSKException(reference, books[0], v11n, nske),
-                    v11n, options, displayMode);
+                    v11n, options, displayMode, userLanguage);
         }
     }
 
     private OsisWrapper getInterleavedVersions(final String[] versions, final Key key,
-                                               final List<LookupOption> options, final InterlinearMode displayMode) {
+                                               final List<LookupOption> options, final InterlinearMode displayMode, final String userLanguage) {
         notNull(versions, "No versions were passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
         notNull(key, "No reference was passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
@@ -935,20 +935,20 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         BookData data = new BookData(books, key, isComparingMode(displayMode));
-        return doInterleavedVersionsLookup(versions, data, this.versificationService.getVersificationForVersion(books[0]), options, displayMode);
+        return doInterleavedVersionsLookup(versions, data, this.versificationService.getVersificationForVersion(books[0]), options, displayMode, userLanguage);
 
     }
 
     private OsisWrapper doInterleavedVersionsLookup(String[] versions, final BookData data,
                                                     final Versification v11n,
                                                     final List<LookupOption> options,
-                                                    final InterlinearMode displayMode) {
+                                                    final InterlinearMode displayMode, final String userLanguage) {
         Book[] books = data.getBooks();
         try {
             setUnaccenter(data, displayMode);
 
             final TransformingSAXEventProvider transformer = executeStyleSheet(v11n, options, null, data,
-                    data.getSAXEventProvider(), displayMode);
+                    data.getSAXEventProvider(), displayMode, userLanguage);
 
             String[] languages = new String[books.length];
             for (int ii = 0; ii < books.length; ii++) {
@@ -1168,7 +1168,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final Versification masterVersification,
             final List<LookupOption> options,
             final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
-            final InterlinearMode displayMode) throws TransformerException {
+            final InterlinearMode displayMode, final String userLanguage) throws TransformerException {
         final XslConversionType requiredTransformation = identifyStyleSheet(options, displayMode);
 
         return (TransformingSAXEventProvider) new Converter() {
@@ -1182,6 +1182,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                             osissep);
 
                     // set parameters here
+                    String changeVersion = "";
+                    if (userLanguage.equalsIgnoreCase("zh")) changeVersion = "CUns";
+                    else if (userLanguage.equalsIgnoreCase("zh_tw")) changeVersion = "CUn";
+                    else if (userLanguage.toLowerCase().startsWith("es")) changeVersion = "SpaRV1909";
+                    if (changeVersion.length() > 0) {
+                        tsep.setParameter("defaultVersion", changeVersion);
+                    }
                     setOptions(tsep, options, bookData.getBooks());
                     setInterlinearOptions(tsep,
                             bookData.getBooks()[0].getInitials(),

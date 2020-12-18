@@ -441,14 +441,19 @@ var PassageDisplayView = DisplayView.extend({
                         },
                         events: {
                             render: function (event, api) {
-                                $(api.elements.titlebar).css("padding-right", "0px");
+                            	$(api.elements.titlebar).css("padding-right", "0px");
                                 $(api.elements.titlebar)
-                                    .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
-                                        .click(function () {
+                                	.prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
+                                        .on('click touchstart', function() {
                                             step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
-                                        })).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
-                                        api.hide();
-                                    }));
+                                            return false;
+                                        }));
+                                $(api.elements.titlebar)
+                                	.prepend($('<button type="button" class="close" aria-hidden="true">X</button>')
+                                        .on('click touchstart', function() {
+                                            api.hide();
+                                            return false;
+                                        }));
                             },
                             visible: function (event, api) {
                                 var tooltip = api.elements.tooltip;

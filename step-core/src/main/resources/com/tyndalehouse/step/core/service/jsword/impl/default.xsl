@@ -633,7 +633,7 @@
                             <sup class="note">
                                 <a noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
                                     <xsl:call-template name="generateNoteLetter"/>
-                                </a>&amp;nbsp;
+                                </a>
                             </sup>
                         </xsl:when>
                         <xsl:otherwise>

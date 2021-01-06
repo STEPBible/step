@@ -19,14 +19,14 @@ var PassageDisplayView = DisplayView.extend({
 
         render: function () {
             //set the range attributes, silently, so as not to cause events
-            this.model.set("startRange", this.model.get("startRange"), {silent: true });
-            this.model.set("endRange", this.model.get("endRange"), {silent: true });
-            this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true });
+            this.model.set("startRange", this.model.get("startRange"), {silent: true});
+            this.model.set("endRange", this.model.get("endRange"), {silent: true});
+            this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true});
             var options = this.model.get("selectedOptions") || [];
             var availableOptions = this.model.get("options") || [];
-			// should be const instead of var, but not compatible with older browser
-			// This must match the definition in the color_code_grammar.js
-			// Do not take away the TBRMBR comment (to be removed by maven replacer
+            // should be const instead of var, but not compatible with older browser
+            // This must match the definition in the color_code_grammar.js
+            // Do not take away the TBRMBR comment (to be removed by maven replacer
             var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
             var C_otMorph = 1; // TBRBMR
             cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
@@ -35,16 +35,16 @@ var PassageDisplayView = DisplayView.extend({
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
             if ((bibleVersions.indexOf('THOT') > -1)) {
                 if (cv[C_otMorph] == null) {
-                  var notIE = !(/*@cc_on!@*/false || !!document.documentMode);
-                  // If browser is not IE, use "cache: true".  If IE, use "cache: false"
-                  // This is required because of an IE and Jquery issue.
-                  jQuery.ajax({
-                      dataType: "script", 
-                      cache: notIE, 
-                      url: "/js/tos_morph.js",
-                      error: function (jqXHR, exception) {
-                        console.log('load tos_morph.js Failed: ' + exception);
-                      }
+                    var notIE = !(/*@cc_on!@*/false || !!document.documentMode);
+                    // If browser is not IE, use "cache: true".  If IE, use "cache: false"
+                    // This is required because of an IE and Jquery issue.
+                    jQuery.ajax({
+                        dataType: "script",
+                        cache: notIE,
+                        url: "/js/tos_morph.js",
+                        error: function (jqXHR, exception) {
+                            console.log('load tos_morph.js Failed: ' + exception);
+                        }
                     });
                 }
                 hasTOS = true;
@@ -52,24 +52,25 @@ var PassageDisplayView = DisplayView.extend({
             if ((bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
             if (this.partRendered) {
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {
-                  if (hasTOS) {
-                    pch = document.getElementsByClassName('passageContentHolder');
-                    var r = cf.addClassForTHOT(pch[0].outerHTML);
-                    pch[0].outerHTML = r[0];
-                    otCSSOnThisPage = r[1];
-                  }
-                  if (hasNTMorph) {
-                    if (pch == null) pch = document.getElementsByClassName('passageContentHolder');
-                    ntCSSOnThisPage = cf.getClassesForNT(pch[0].outerHTML);
-                  }
+                    if (hasTOS) {
+                        pch = document.getElementsByClassName('passageContentHolder');
+                        var r = cf.addClassForTHOT(pch[0].outerHTML);
+                        pch[0].outerHTML = r[0];
+                        otCSSOnThisPage = r[1];
+                    }
+                    if (hasNTMorph) {
+                        if (pch == null) pch = document.getElementsByClassName('passageContentHolder');
+                        ntCSSOnThisPage = cf.getClassesForNT(pch[0].outerHTML);
+                    }
                 }
                 passageHtml = this.$el.find(".passageContentHolder");
-            } else {
+            }
+            else {
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {
                     if (hasTOS) {
                         var r = cf.addClassForTHOT(this.model.attributes.value);
                         this.model.attributes.value = r[0];
-                        otCSSOnThisPage =  r[1];
+                        otCSSOnThisPage = r[1];
                     }
                     if (hasNTMorph) ntCSSOnThisPage = cf.getClassesForNT(this.model.attributes.value);
                 }
@@ -117,13 +118,13 @@ var PassageDisplayView = DisplayView.extend({
                 $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();
             }
             // following 11 lines were added to enhance the Colour Code Grammar  PT
-			// should be const instead of var, but not compatible with older browser
-			// This must match the definition in the color_code_grammar.js
-			// Do not take away the TBRMBR comment (to be removed by maven replacer
-            var C_handleOfRequestedAnimation = 11; // TBRMBR 
-            var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRMBR 
+            // should be const instead of var, but not compatible with older browser
+            // This must match the definition in the color_code_grammar.js
+            // Do not take away the TBRMBR comment (to be removed by maven replacer
+            var C_handleOfRequestedAnimation = 11; // TBRMBR
+            var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRMBR
             if ((cv[C_colorCodeGrammarAvailableAndSelected] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) &&
-                (cv[C_handleOfRequestedAnimation] !== undefined) ) {
+                (cv[C_handleOfRequestedAnimation] !== undefined)) {
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {
                     cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
                     cf.refreshClrGrammarCSS(ntCSSOnThisPage, otCSSOnThisPage);
@@ -133,20 +134,20 @@ var PassageDisplayView = DisplayView.extend({
         },
         scrollToTargetLocation: function (passageContainer) {
             var self = this;
-            if(!passageContainer) {
+            if (!passageContainer) {
                 passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
             }
 
             //if the new passage is below the other, then scroll downwards
-            var linkedModel = step.passages.findWhere({ linked: 1 });
-            if(linkedModel != null) {
+            var linkedModel = step.passages.findWhere({linked: 1});
+            if (linkedModel != null) {
                 var linkedPassageId = linkedModel.get("passageId");
                 var container = step.util.getPassageContainer(linkedPassageId);
-                if(container.offset().top < passageContainer.offset().top) {
+                if (container.offset().top < passageContainer.offset().top) {
                     //need to scroll to that location
                     $("body").animate({
                         scrollTop: passageContainer.offset().top
-                    }, 200, null, function() {
+                    }, 200, null, function () {
                         self._scrollPassageToTarget(passageContainer);
                     });
                     return;
@@ -154,7 +155,7 @@ var PassageDisplayView = DisplayView.extend({
             }
             this._scrollPassageToTarget(passageContainer);
         },
-        _scrollPassageToTarget: function(passageContainer) {
+        _scrollPassageToTarget: function (passageContainer) {
             //get current column target data
             var column = passageContainer.closest(".column");
             passageContainer.find(".secondaryBackground").removeClass("secondaryBackground");
@@ -176,7 +177,7 @@ var PassageDisplayView = DisplayView.extend({
                 $(link).closest(".interlinear").find("*").addClass("secondaryBackground");
 
                 //reset the data attribute
-                this.model.save({ targetLocation: null }, { silent: true });
+                this.model.save({targetLocation: null}, {silent: true});
             }
         },
         _warnCommentaryLookupVersion: function (version, extraVersions) {
@@ -189,10 +190,10 @@ var PassageDisplayView = DisplayView.extend({
             var keyed = _.map(vs, function (v) {
                 return step.keyedVersions[v];
             });
-            var hasCommentaries = _.findWhere(keyed, { category: 'COMMENTARY' }) != null;
+            var hasCommentaries = _.findWhere(keyed, {category: 'COMMENTARY'}) != null;
             if (hasCommentaries) {
                 //find out which Bible should be used
-                var firstBible = _.findWhere(keyed, {category: 'BIBLE' });
+                var firstBible = _.findWhere(keyed, {category: 'BIBLE'});
                 if (firstBible == null) {
                     step.util.raiseInfo(sprintf(__s.commentary_version_default), 'info', this.model.get("passageId"), null, true);
                     return;
@@ -211,9 +212,9 @@ var PassageDisplayView = DisplayView.extend({
                 });
             }
         },
-        _warnFirstTimeColourCoding: function() {
+        _warnFirstTimeColourCoding: function () {
             var options = this.model.get("options") || "";
-            if(options.indexOf("D") != -1) {
+            if (options.indexOf("D") != -1) {
                 step.util.raiseOneTimeOnly("display_divide_hebrew_explanation", "info");
             }
         },
@@ -269,7 +270,7 @@ var PassageDisplayView = DisplayView.extend({
 
         _doAlternatives: function (passageId, passageContent, version, reference) {
             // only do this if we've got a particular parameter set in the URL
-            if($.getUrlVar("altMeanings") != "true") {
+            if ($.getUrlVar("altMeanings") != "true") {
                 return;
             }
 
@@ -325,7 +326,7 @@ var PassageDisplayView = DisplayView.extend({
                 });
             }
         },
-        doInlineNoteQuickLexicon: function(target, link, ev) {
+        doInlineNoteQuickLexicon: function (target, link, ev) {
             require(['quick_lexicon'], function () {
                 var text = link.closest(".note").find(".inlineNote");
                 //do the quick note
@@ -352,7 +353,9 @@ var PassageDisplayView = DisplayView.extend({
             var atPosition = passageId == 0 ? "right" : "left";
 
             //remove click functionality from verse headers...
-            $(".notesPane > a", passageContent).click(function(e) { e.preventDefault(); })
+            $(".notesPane > a", passageContent).click(function (e) {
+                e.preventDefault();
+            })
 
             var xrefs = $(".notesPane [xref]", passageContent);
             for (var i = 0; i < xrefs.length; i++) {
@@ -385,7 +388,8 @@ var PassageDisplayView = DisplayView.extend({
 
                 if (lastVerse == undefined) {
                     passageContent.find(".notesPane").scrollTop(0);
-                } else {
+                }
+                else {
 
                 }
             });
@@ -413,15 +417,15 @@ var PassageDisplayView = DisplayView.extend({
             if (!$.data(item, "initialised")) {
                 require(["qtip", "drag"], function () {
                     item.qtip({
-                        position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
-                        style: { tip: false, classes: 'draggable-tooltip xrefPopup', width: { min: 800, max: 800} },
-                        show: { event: 'click' }, hide: { event: 'click' },
+                        position: {my: "top " + myPosition, at: "top " + atPosition, viewport: $(window)},
+                        style: {tip: false, classes: 'draggable-tooltip xrefPopup', width: {min: 800, max: 800}},
+                        show: {event: 'click'}, hide: {event: 'click'},
                         content: {
                             text: function (event, api) {
                                 var chosenVersion = version;
                                 if (step.keyedVersions[version] && step.keyedVersions[version].category != 'BIBLE') {
                                     //get the first version in the current search that is non-commentary
-                                    var allVersions = _.where(self.model.get("searchTokens"), {itemType: VERSION });
+                                    var allVersions = _.where(self.model.get("searchTokens"), {itemType: VERSION});
                                     chosenVersion = 'ESV';
                                     for (var i = 0; i < allVersions.length; i++) {
                                         var keyedVersion = step.keyedVersions[(allVersions[i].item || {}).initials];
@@ -437,20 +441,20 @@ var PassageDisplayView = DisplayView.extend({
                                     api.set('content.osisId', data.osisId)
                                 });
                             },
-                            title: { text: xref, button: false }
+                            title: {text: xref, button: false}
                         },
                         events: {
                             render: function (event, api) {
-                            	$(api.elements.titlebar).css("padding-right", "0px");
+                                $(api.elements.titlebar).css("padding-right", "0px");
                                 $(api.elements.titlebar)
-                                	.prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
-                                        .on('click touchstart', function() {
+                                    .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
+                                        .on('click touchstart', function () {
                                             step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
                                             return false;
                                         }));
                                 $(api.elements.titlebar)
-                                	.prepend($('<button type="button" class="close" aria-hidden="true">X</button>')
-                                        .on('click touchstart', function() {
+                                    .prepend($('<button type="button" class="close" aria-hidden="true">X</button>')
+                                        .on('click touchstart', function () {
                                             api.hide();
                                             return false;
                                         }));
@@ -487,7 +491,7 @@ var PassageDisplayView = DisplayView.extend({
             var nonInlineNotes = verseNotes.not(verseNotes.has(".inlineNote"));
 
             for (var i = 0; i < nonInlineNotes.length; i++) {
-                var link = this._doHighlightNoteInPane(passageContent, $("a", nonInlineNotes.eq(i)));
+                this._doHighlightNoteInPane(passageContent, $("a", nonInlineNotes.eq(i)));
             }
         },
 
@@ -497,30 +501,75 @@ var PassageDisplayView = DisplayView.extend({
          */
         _doHighlightNoteInPane: function (passageContent, link) {
             var self = this;
-            var inlineLink = $(".notesPane strong", passageContent).filter(function () {
+            var $note = $(".notesPane strong", passageContent).filter(function () {
                 return $(this).text() == link.text();
             }).closest(".margin");
 
-            var links = $(inlineLink).add(link);
+            var $link = $(link);
+            var $scollWindow = $link.closest(".passageContentHolder");
 
-            $(links).hover(function () {
-                    self._highlightBothLinks(links);
+            var onLink = false;
+            var onNote = false;
+            var delay = 200;
+
+            function hideNote() {
+                self._hideNote($note);
+
+                onLink = false;
+                onNote = false;
+            }
+
+            $link.hover(function () {
+                    setTimeout(function () {
+                        onLink = true;
+                        self._showNote($note, $link);
+
+                        $scollWindow.on("scroll", function () {
+                            hideNote($note);
+                            $scollWindow.off("scroll");
+                        })
+                    }, 50);
                 },
                 function () {
-                    self._unhighlighBothLinks(links);
+                    setTimeout(function () {
+                        if (!onNote) {
+                            hideNote($note);
+                        }
+
+                        onLink = false;
+                    }, delay);
                 });
-            $(links).on("touchstart", function () {
-                self._highlightBothLinks(links);
-            });
-            $(links).on("touchend", function () {
-                self._unhighlighBothLinks(links)
+
+            $note.hover(function () {
+                setTimeout(function () {
+                    onNote = true;
+                }, 50);
+            }, function () {
+                setTimeout(function () {
+                    if (!onLink) {
+                        hideNote($note);
+                    }
+
+                    onNote = false;
+                }, delay);
             });
         },
-        _highlightBothLinks: function (links) {
-            links.addClass("secondaryBackground");
+        _showNote: function ($note, $this) {
+            var linkPosition = $this.offset();
+            var containerPosition = $this.closest(".passageContainer").offset();
+            var linkHeight = $this.outerHeight();
+            var noteWidth = $note.outerWidth();
+            var top = linkPosition.top - containerPosition.top + linkHeight - 4;
+            var left = Math.max(linkPosition.left - containerPosition.left - (noteWidth / 2), 10);
+
+            $note.css({
+                display: "block",
+                top: top,
+                left: left
+            })
         },
-        _unhighlighBothLinks: function (links) {
-            links.removeClass("secondaryBackground");
+        _hideNote: function ($note) {
+            $note.hide();
         },
 
         /**
@@ -580,7 +629,6 @@ var PassageDisplayView = DisplayView.extend({
         },
 
 
-
         handleFontSizeChange: function () {
             this.doInterlinearVerseNumbers(
                 this.$el,
@@ -588,4 +636,4 @@ var PassageDisplayView = DisplayView.extend({
                 this.model.get("options"));
         }
     })
-    ;
+;

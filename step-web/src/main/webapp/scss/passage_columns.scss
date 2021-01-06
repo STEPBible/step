@@ -14,20 +14,25 @@
 }
 
 .notesPane {
-  padding-right: $page-padding;
-  margin-right: $page-padding;
-  max-width: 20%;
   font-size: 85%;
+  float: left;
+  width: 0;
+  height: 0;
 
   a {
     color: #333;
     font-weight: bold;
   }
-}
 
-.column .notesPane {
-  float: left;
-  border-right: 1px solid #EAEAEA;
+  .margin {
+    display: none;
+    position: absolute;
+    background-color: white;
+    padding: 8px;
+    border: 1px solid #ccc;
+    max-width: 150px;
+    z-index: 1;
+  }
 }
 
 #columnHolder {

@@ -319,6 +319,8 @@ sup.variant.note {
 sup.note a {
   font-size: 100%;
   font-weight: normal;
+  padding: 0 .3em .6em .2em;
+  margin-left: -.3em;
 }
 
 sup.note a[notetype="alternative"],

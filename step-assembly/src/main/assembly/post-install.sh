@@ -14,8 +14,10 @@ origUser=`pstree -lu -s $$ | grep --max-count=1 -o '([^)]*)' | head -n 1 | sed '
 echo "Orig user is $origUser.  Adding links for $origUser home directory."
 if [ ! -z "$origUser" ]
 then
-    [ -d "/home/$origUser/Desktop" ] && [ ! -f "/home/$origUser/Desktop/step.desktop" ] && ln -s /opt/step/step.desktop /home/$origUser/Desktop/step.desktop  >> /var/log/step-post-install.log
-    [ -d "/home/$origUser" ] && [ ! -h "/home/$origUser/.sword" ] && ln -s /opt/step/homes/sword /home/$origUser/.sword >> /var/log/step-post-install.log
-    [ -d "/home/$origUser" ] && [ ! -h "/home/$origUser/.jsword" ] && ln -s /opt/step/homes/jsword /home/$origUser/.jsword >> /var/log/step-post-install.log
+    [ -d "/home/$origUser/Desktop" ] && ln -sf /opt/step/step.desktop /home/$origUser/Desktop/step.desktop  >> /var/log/step-post-install.log
+    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/sword /home/$origUser/.sword >> /var/log/step-post-install.log
+    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/jsword /home/$origUser/.jsword >> /var/log/step-post-install.log
 fi
-echo "Click on the STEP icon on the desktop to start STEP.  If the icon is not available, enter \"step\" at the command line."
+echo ""
+echo "Click on the STEP icon on the desktop to start STEP."
+echo "If the icon is not available, enter \"step\" at the command line."

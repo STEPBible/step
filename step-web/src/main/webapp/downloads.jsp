@@ -69,9 +69,9 @@
 
         <p><fmt:message key="download_intro"/></p>
 
-        <table>
+        <table style="width: 100%; max-width: 800px;">
             <tr VALIGN="TOP">
-                <td WIDTH="50%"><img src="images/WindowsCyan_Web.jpg"/><br />
+                <td WIDTH="33%"><img src="images/WindowsCyan_Web.jpg"/><br />
                     <fmt:message key="download_windows_edition"/>&reg;
                     <br />
                     <p>Download from a server at:
@@ -80,7 +80,7 @@
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP.exe" data-os="windows">Asia Pacific</a>
                     </p>
                 </td>
-                <td WIDTH="50%"><img src="images/apple.png"/><br />
+                <td WIDTH="33%"><img src="images/apple.png"/><br />
                     <fmt:message key="download_macos"/>&reg;
                     <br />
                     <p>Download from a server at:
@@ -89,9 +89,23 @@
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP.dmg" data-os="mac">Asia Pacific</a>
                     </p>
                 </td>
+                <td WIDTH="33%"><img src="images/linux.jpg"/><br />
+                    <fmt:message key="download_linux"/>&reg;
+                    <br />
+                    <p>Download DEB installation file from:
+                        <a href="https://downloads.stepbible.com/file/Stepbible/STEP.deb" data-os="linux">USA,</a>&nbsp;
+                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP.deb" data-os="linux">Europe,</a>&nbsp;
+                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP.deb" data-os="linux">Asia Pacific</a>
+                    </p>
+                    <p>Download RPM installation file from:
+                        <a href="https://downloads.stepbible.com/file/Stepbible/STEP.rpm" data-os="linux">USA,</a>&nbsp;
+                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP.rpm" data-os="linux">Europe,</a>&nbsp;
+                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP.rpm" data-os="linux">Asia Pacific</a>
+                    </p>
+                </td>
             </tr>
 			<tr VALIGN="TOP">
-                <td WIDTH="50%"><img src="images/WindowsCyan_Web_zh.jpg"/><br />
+                <td WIDTH="33%"><img src="images/WindowsCyan_Web_zh.jpg"/><br />
                     <fmt:message key="download_windows_edition_zh"/>&reg;
                     <br />
                     <p>Download from a server at:
@@ -100,13 +114,27 @@
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.exe" data-os="windows">Asia Pacific</a>
                     </p>
                 </td>
-                <td WIDTH="50%"><img src="images/apple_zh.png"/><br />
+                <td WIDTH="33%"><img src="images/apple_zh.jpg"/><br />
                     <fmt:message key="download_macos_zh"/>&reg;
                     <br />
                     <p>Download from a server at:
                     <a href="https://downloads.stepbible.com/file/Stepbible/STEP_zh.dmg" data-os="mac">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_zh.dmg" data-os="mac">Europe,</a>&nbsp;
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.dmg" data-os="mac">Asia Pacific</a>
+                    </p>
+                </td>
+                <td WIDTH="33%"><img src="images/linux_zh.jpg"/><br />
+                    <fmt:message key="download_linux_zh"/>&reg;
+                    <br />
+                    <p>Download DEB installation file from:
+                        <a href="https://downloads.stepbible.com/file/Stepbible/STEP_zh.deb" data-os="linux">USA,</a>&nbsp;
+                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_zh.deb" data-os="linux">Europe,</a>&nbsp;
+                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.deb" data-os="linux">Asia Pacific</a>
+                    </p>
+                    <p>Download RPM installation file from:
+                        <a href="https://downloads.stepbible.com/file/Stepbible/STEP_zh.rpm" data-os="linux">USA,</a>&nbsp;
+                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_zh.rpm" data-os="linux">Europe,</a>&nbsp;
+                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.rpm" data-os="linux">Asia Pacific</a>
                     </p>
                 </td>
             </tr>

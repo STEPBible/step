@@ -1,70 +1,23 @@
-<style>
-	.onoffswitch2 {
-		position: relative; width: 35px;
-		-webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
-	}
-	.onoffswitch2-checkbox {
-		display: none;
-	}
-	.onoffswitch2-label {
-		display: block; overflow: hidden; cursor: pointer;
-		border: 1px solid #999999; border-radius: 14px;
-	}
-	.onoffswitch2-inner {
-		display: block; width: 200%; margin-left: -100%;
-		transition: margin 0.3s ease-in 0s;
-	}
-	.onoffswitch2-inner:before, .onoffswitch2-inner:after {
-		display: block; float: left; width: 50%; height: 16px; padding: 0; line-height: 16px;
-		font-size: 10px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
-		box-sizing: border-box;
-	}
-	.onoffswitch2-inner:before {
-		content: "On";
-		padding-left: 10px;
-		background-color: green; color: #FFFFFF;
-	}
-	.onoffswitch2-inner:after {
-		content: "";
-		padding-right: 10px;
-		background-color: #EEEEEE; color: #999999;
-		text-align: right;
-	}
-	.onoffswitch2-switch {
-		display: block; width: 6px; margin: 3.5px;
-		background: #FFFFFF;
-		position: absolute; top: 0; bottom: 0;
-		right: 20px;
-		border: 1px solid #999999; border-radius: 14px;
-		transition: all 0.3s ease-in 0s; 
-	}
-	.onoffswitch2-checkbox:checked + .onoffswitch2-label .onoffswitch2-inner {
-		margin-left: 0;
-	}
-	.onoffswitch2-checkbox:checked + .onoffswitch2-label .onoffswitch2-switch {
-		right: 0px; 
-	}
-</style>
 <div id="bookchaptermodalbody" class="modal-body">
 </div>
 <script>
-	var version = "ESV_th";
-	var userLang = "en";
-	var addInsteadOfReplace = false;
-	$( document ).ready(function() {
+    var version = "ESV_th";
+    var userLang = "en";
+    var addInsteadOfReplace = false;
+    $(document).ready(function () {
         userLang = step.state.language() || "en-US";
-		var html = _buildBookHeaderAndSkeleton();
-		$('#bookchaptermodalbody').append(html);
-		var data = step.util.activePassage().get("searchTokens") || [];
-		for (var i = 0; i < data.length; i++) {
-			if (data[i].itemType == "version") {
-				version = data[i].item.initials;
+        var html = _buildBookHeaderAndSkeleton();
+        $('#bookchaptermodalbody').append(html);
+        var data = step.util.activePassage().get("searchTokens") || [];
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].itemType == "version") {
+                version = data[i].item.initials;
                 versionAltName = data[i].item.shortInitials;
-				break;
-			}
-		}
+                break;
+            }
+        }
         var translationsWithPopularBooksChapters = " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ";
-        var translationsWithPopularNTBooksChapters =' 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag ee elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblg sblgntapp spavnt swahili swaulb thgnt tisch tnt tr ukrkulish uma varapp weym whnu wors ';
+        var translationsWithPopularNTBooksChapters = ' 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag ee elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblg sblgntapp spavnt swahili swaulb thgnt tisch tnt tr ukrkulish uma varapp weym whnu wors ';
         var translationsWithPopularOTBooksChapters = ' ab gertextbibel kd wlc lees lxx rusmakarij ';
         var lowerCaseVersion = ' ' + version.toLowerCase() + ' ';
         versionAltName = ' ' + versionAltName.toLowerCase() + ' ';
@@ -74,96 +27,97 @@
         else if ((translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
         if ((userLang.toLowerCase().startsWith("en") || userLang.toLowerCase().startsWith("es") || userLang.toLowerCase().startsWith("zh")) &&
             (translationType !== "")) {
-		    buildBookTable(translationType);
+            buildBookTable(translationType);
         }
-		else {
+        else {
             var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/examples%3Dreference%7Climit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
             $.getJSON(url, function (data) {
                 buildBookTable(data);
             });
         }
-	});
+    });
 
-	function addPassage() {
-		if (document.getElementById('addpassageonoffswitch').checked) {
-			addInsteadOfReplace = true;
-			$('#appendMsg').css({'color':'black','font-weight':'bold'});
-		}
-		else {
-			addInsteadOfReplace = false;
-			$('#appendMsg').css({'color':'#787878','font-weight':'normal'});
-		}
-	}
-	function buildBookTable(data) {
-		//var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
-		var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
-		var osisChapterJsword = [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
-            ["Gen",50],
-            ["Exo",40,"Exod"],
-            ["Lev",27],
-            ["Num",36],
-            ["Deu",34,"Deut"],
-            ["Jos",24,"Josh"],
-            ["Judg",21],
-            ["Rut",4,"Ruth"],
-            ["1Sa",31,"1Sam"],
-            ["2Sa",24,"2Sam"],
-            ["1Ki",22,"1Kgs"],
-            ["2Ki",25,"2Kgs"],
-            ["1Ch",29,"1Chr"],
-            ["2Ch",36,"2Chr"],
-            ["Ezr",10,"Ezra"],
-            ["Neh",13],
-            ["Est",10,"Esth"],
-            ["Job",42],
-            ["Psa",150,"Ps"],
-            ["Pro",31,"Prov"],
-            ["Ecc",12,"Eccl"],
-            ["Song",8],
-            ["Isa",66],
-            ["Jer",52],
-            ["Lam",5],
-            ["Eze",48,"Ezek"],
-            ["Dan",12],
-            ["Hos",14],
-            ["Joe",3,"Joel"],
-            ["Amo",9,"Amos"],
-            ["Obd",1,"Obad"],
-            ["Jon",4,"Jonah"],
-            ["Mic",7],
-            ["Nah",3],
-            ["Hab",3],
-            ["Zep",3,"Zeph"],
-            ["Hag",2],
-            ["Zec",14,"Zech"],
-            ["Mal",4],
-            ["Mat",28,"Matt"],
-            ["Mar",16,"Mark"],
-            ["Luk",24,"Luke"],
-            ["Joh",21,"John"],
-            ["Act",28,"Acts"],
-            ["Rom",16],
-            ["1Cor",16],
-            ["2Cor",13],
-            ["Gal",6],
-            ["Eph",6],
-            ["Phili",4,"Phil"],
-            ["Col",4],
-            ["1Th",5,"1Thess"],
-            ["2Th",3,"2Thess"],
-            ["1Ti",6,"1Tim"],
-            ["2Ti",4,"2Tim"],
-            ["Tit",3,"Titus"],
-            ["Phile",1,"Phlm"],
-            ["Heb",13],
-            ["Jam",5,"Jas"],
-            ["1Pe",5,"1Pet"],
-            ["2Pe",3,"2Pet"],
-            ["1Jo",5,"1John"],
-            ["2Jo",1,"2John"],
-            ["3Jo",1,"3John"],
-            ["Jude",1],
-            ["Rev",22]
+    function addPassage() {
+        if (document.getElementById('addpassageonoffswitch').checked) {
+            addInsteadOfReplace = true;
+            $('#appendMsg').addClass('checked');
+        }
+        else {
+            addInsteadOfReplace = false;
+            $('#appendMsg').removeClass('checked');
+        }
+    }
+
+    function buildBookTable(data) {
+        var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
+        var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
+        var osisChapterJsword = [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
+            ["Gen", 50],
+            ["Exo", 40, "Exod"],
+            ["Lev", 27],
+            ["Num", 36],
+            ["Deu", 34, "Deut"],
+            ["Jos", 24, "Josh"],
+            ["Judg", 21],
+            ["Rut", 4, "Ruth"],
+            ["1Sa", 31, "1Sam"],
+            ["2Sa", 24, "2Sam"],
+            ["1Ki", 22, "1Kgs"],
+            ["2Ki", 25, "2Kgs"],
+            ["1Ch", 29, "1Chr"],
+            ["2Ch", 36, "2Chr"],
+            ["Ezr", 10, "Ezra"],
+            ["Neh", 13],
+            ["Est", 10, "Esth"],
+            ["Job", 42],
+            ["Psa", 150, "Ps"],
+            ["Pro", 31, "Prov"],
+            ["Ecc", 12, "Eccl"],
+            ["Song", 8],
+            ["Isa", 66],
+            ["Jer", 52],
+            ["Lam", 5],
+            ["Eze", 48, "Ezek"],
+            ["Dan", 12],
+            ["Hos", 14],
+            ["Joe", 3, "Joel"],
+            ["Amo", 9, "Amos"],
+            ["Obd", 1, "Obad"],
+            ["Jon", 4, "Jonah"],
+            ["Mic", 7],
+            ["Nah", 3],
+            ["Hab", 3],
+            ["Zep", 3, "Zeph"],
+            ["Hag", 2],
+            ["Zec", 14, "Zech"],
+            ["Mal", 4],
+            ["Mat", 28, "Matt"],
+            ["Mar", 16, "Mark"],
+            ["Luk", 24, "Luke"],
+            ["Joh", 21, "John"],
+            ["Act", 28, "Acts"],
+            ["Rom", 16],
+            ["1Cor", 16],
+            ["2Cor", 13],
+            ["Gal", 6],
+            ["Eph", 6],
+            ["Phili", 4, "Phil"],
+            ["Col", 4],
+            ["1Th", 5, "1Thess"],
+            ["2Th", 3, "2Thess"],
+            ["1Ti", 6, "1Tim"],
+            ["2Ti", 4, "2Tim"],
+            ["Tit", 3, "Titus"],
+            ["Phile", 1, "Phlm"],
+            ["Heb", 13],
+            ["Jam", 5, "Jas"],
+            ["1Pe", 5, "1Pet"],
+            ["2Pe", 3, "2Pet"],
+            ["1Jo", 5, "1John"],
+            ["2Jo", 1, "2John"],
+            ["3Jo", 1, "3John"],
+            ["Jude", 1],
+            ["Rev", 22]
         ];
         var counter = 0;
         var notSeenNT = true;
@@ -173,9 +127,11 @@
             columns = 6;
             if (browserWidth < 800) columns = 5;
         }
-		var tableHTML = _buildBookTableHeader(columns);
-        var typlicalBooksChapters = false; var arrayOfTyplicalBooksChapters;
-        var start = 0; var end = 0;
+        var tableHTML = _buildBookTableHeader(columns);
+        var typlicalBooksChapters = false;
+        var arrayOfTyplicalBooksChapters;
+        var start = 0;
+        var end = 0;
         if (typeof data === "string") {
             if (data == "OTNT") end = 66;
             else if (data == "OT") end = 39;
@@ -190,134 +146,144 @@
         else {
             end = data.length;
         }
-		for (var i = start; i < end; i++) {
-		    var currentOsisID; var shortNameToDisplay; var longNameToDisplay; var numOfChapters; var jSwordName;
-		    if (typlicalBooksChapters) {
+        var additionalBooks = false;
+        for (var i = start; i < end; i++) {
+            var currentOsisID;
+            var shortNameToDisplay;
+            var longNameToDisplay;
+            var numOfChapters;
+            var jSwordName;
+            if (typlicalBooksChapters) {
                 currentOsisID = (data[i].length === 3) ? data[i][2] : data[i][0];
                 numOfChapters = data[i][1];
                 longNameToDisplay = arrayOfTyplicalBooksChapters[i][0];
                 shortNameToDisplay = (arrayOfTyplicalBooksChapters[i].length === 2) ? arrayOfTyplicalBooksChapters[i][1] : currentOsisID;
             }
-		    else {
+            else {
                 currentOsisID = data[i].suggestion.osisID;
                 numOfChapters = 0; // don't know yet, need to find out
                 longNameToDisplay = data[i].suggestion.fullName;
                 shortNameToDisplay = (userLang.toLowerCase().startsWith("en")) ? currentOsisID : data[i].suggestion.shortName.replaceAll(" ", "").substr(0, 6);
             }
+            var newTestament;
+            var oldTestment = false;
             newTestament = (nt.indexOf(currentOsisID) > -1);
-			if ((newTestament) && (notSeenNT)) {
-				notSeenNT = false;
-				counter = 0; // reset counter for NT table
-				tableHTML += '</tr></table>';
-				$('#ot_table').append(tableHTML);
-				tableHTML = _buildBookTableHeader(columns);
-			}
-			if (shortNameToDisplay === "Ps") shortNameToDisplay = "Psalm";
-			tableHTML += '<td title="' + longNameToDisplay + '">' +
-					'<a style="color:blue;font-size:14px;" href="javascript:getChapters(\'' + currentOsisID + '\', \'' + version + '\', \'' + userLang + '\', ' + numOfChapters + ');">' +
-					shortNameToDisplay + '</a></td>';
-			counter ++;
-			if ((counter % columns) == 0) {
-				tableHTML += '</tr><tr style="height:30px">';
-			}
-		}
-		tableHTML += '</tr></table>';
-		if (notSeenNT) $('#ot_table').append(tableHTML);
-		else $('#nt_table').append(tableHTML);
-	}
-	function _buildBookHeaderAndSkeleton() {
-		return '<table align="right">' +
-			'<colgroup>' +
-				'<col span="1" style="width: 80%;">' +
-				'<col span="1" style="width: 20%;">' +
-			'</colgroup>' +
-			'<tr>' +
-				'<td id="appendMsg" style="font-size:11px;color:#787878">Append the new passage to the current web page</td>' +
-				'<td>' +
-					'<div class="onoffswitch2">' +
-						'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
-						'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
-						'<span class="onoffswitch2-inner"></span>' +
-						'<span class="onoffswitch2-switch"></span>' +
-						'</label>' +
-					'</div>' +
-				'</td>' +
-			'</tr>' +
-		'</table><br>' +
-		'<h4>' + __s.bible_book_name + '</h4>' +
-			'<h5 style="background-color:#dcdcdc;">Old Testament</h5>' +
-				'<div id="ot_table"/>' +
-			'<h5 style="background-color:#dcdcdc;">New Testament</h5>' +
-				'<div id="nt_table"/>' +
-		'</div>';
-	}
-	function _buildBookTableHeader(columns) {
-		var columnPercent = Math.floor(100 / columns);
-		html = '<table style="width:95%;margin-left:auto;margin-right:auto;color:blue;font-size:14px;">' +
-				'<colgroup>';
-		for (var i = 0; i < columns; i++) {
-			html += '<col span="1" style="width:' + columnPercent + '%;">';
-		}
-		html += '</colgroup>';
-		html += '<tr style="height:30px">';
-		return html;
-	}
-	function goToPassage(osisID) {
-		var activePassageData = step.util.activePassage().get("searchTokens") || [];
-		var allVersions = "";
-		var existingReferences = "";
-		for (var i = 0; i < activePassageData.length; i++) {
-			if (activePassageData[i].itemType == "version") {
-				if (allVersions.length > 0) allVersions += "|version=";
-				allVersions += activePassageData[i].item.shortInitials;
-			}
-			else if ((addInsteadOfReplace) && (activePassageData[i].itemType == "reference")) {
-				existingReferences += "|reference=" + activePassageData[i].item.osisID;
-			}
-		}
-		var url = 'version=' + allVersions + existingReferences + '|reference=' + osisID;
-		closeChapterSelect();
-		console.log("navigateSearch from passage_selection.html: " + url)
-		step.router.navigateSearch(url);
-	}
+            if (!newTestament) oldTestament = (ot.indexOf(currentOsisID) > -1);
+            if (!newTestament && !oldTestament) {
+                shortNameToDisplay += '<span style="color:brown">*</span>';
+                additionalBooks = true;
+            }
+            if ((newTestament) && (notSeenNT)) {
+                notSeenNT = false;
+                counter = 0; // reset counter for NT table
+                tableHTML += '</tr></table>';
+                $('#ot_table').append(tableHTML);
+                tableHTML = _buildBookTableHeader(columns);
+            }
+            if (shortNameToDisplay === "Ps") shortNameToDisplay = "Psalm";
+            tableHTML += '<td title="' + longNameToDisplay + '">' +
+                '<a href="javascript:getChapters(\'' + currentOsisID + '\', \'' + version + '\', \'' + userLang + '\', ' + numOfChapters + ');">' +
+                shortNameToDisplay + '</a></td>';
+            counter++;
+            if ((counter % columns) == 0) {
+                tableHTML += '</tr><tr style="height:30px">';
+            }
+        }
+        tableHTML += '</tr></table>';
+        if (additionalBooks) tableHTML += '<p style="color:brown">* Deuterocanonical or other books</p>';
+        if (notSeenNT) $('#ot_table').append(tableHTML);
+        else $('#nt_table').append(tableHTML);
+    }
 
-	function getChapters(bookOsisID, version, userLang, numOfChapters) {
-		var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3Dreference%7Cversion%3D" + version + "%7Creference%3D" + bookOsisID + "%7C?lang=" + userLang;
-		console.log('num of chapters: ' + numOfChapters);
-		if (numOfChapters > 0) {
+    function _buildBookHeaderAndSkeleton() {
+        return '<div class="header">' +
+            '<h4>' + __s.bible_book_name + '</h4>' +
+            '<div class="append">' +
+            '<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
+            '<div class="onoffswitch2">' +
+            '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
+            '<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
+            '<span class="onoffswitch2-inner"></span>' +
+            '<span class="onoffswitch2-switch"></span>' +
+            '</label>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<h5>Old Testament</h5>' +
+            '<div id="ot_table"/>' +
+            '<h5>New Testament</h5>' +
+            '<div id="nt_table"/>' +
+            '</div>';
+    }
+
+    function _buildBookTableHeader(columns) {
+        var columnPercent = Math.floor(100 / columns);
+        html = '<table>' +
+            '<colgroup>';
+        for (var i = 0; i < columns; i++) {
+            html += '<col span="1" style="width:' + columnPercent + '%;">';
+        }
+        html += '</colgroup>';
+        html += '<tr style="height:30px">';
+        return html;
+    }
+
+    function goToPassage(osisID) {
+        var activePassageData = step.util.activePassage().get("searchTokens") || [];
+        var allVersions = "";
+        var existingReferences = "";
+        for (var i = 0; i < activePassageData.length; i++) {
+            if (activePassageData[i].itemType == "version") {
+                if (allVersions.length > 0) allVersions += "|version=";
+                allVersions += activePassageData[i].item.shortInitials;
+            }
+            else if ((addInsteadOfReplace) && (activePassageData[i].itemType == "reference")) {
+                existingReferences += "|reference=" + activePassageData[i].item.osisID;
+            }
+        }
+        var url = 'version=' + allVersions + existingReferences + '|reference=' + osisID;
+        closeChapterSelect();
+        console.log("navigateSearch from passage_selection.html: " + url)
+        step.router.navigateSearch(url);
+    }
+
+    function getChapters(bookOsisID, version, userLang, numOfChapters) {
+        var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3Dreference%7Cversion%3D" + version + "%7Creference%3D" + bookOsisID + "%7C?lang=" + userLang;
+        console.log('num of chapters: ' + numOfChapters);
+        if (numOfChapters > 0) {
             _buildChapterTable(null, bookOsisID, numOfChapters);
         }
-		else {
+        else {
             $.getJSON(url, function (data) {
                 _buildChapterTable(data, bookOsisID, numOfChapters);
             });
         }
-	}
+    }
 
-	function _buildChapterTable(data, bookOsisID, numOfChapters) {
+    function _buildChapterTable(data, bookOsisID, numOfChapters) {
         var html = '<h4>' + __s.chapters_in_book + '</h4>' +
-			'<table style="width:95%;margin-left:auto;margin-right:auto;">' +
-			'<colgroup>' +
-			'<col span="1" style="width: 10%;">' +
-			'<col span="1" style="width: 10%;">' +
-			'<col span="1" style="width: 10%;">' +
-			'<col span="1" style="width: 10%;">' +
-			'<col span="1" style="width: 10%;">' +
-			'<col span="1" style="width: 10%;">' +
-			'<col span="1" style="width: 10%;">' +
-			'<col span="1" style="width: 10%;">' +
-			'<col span="1" style="width: 10%;">' +
-			'<col span="1" style="width: 10%;">' +
-			'</colgroup>' +
-			'<tr style="height:30px">';
+            '<table>' +
+            '<colgroup>' +
+            '<col span="1" style="width: 10%;">' +
+            '<col span="1" style="width: 10%;">' +
+            '<col span="1" style="width: 10%;">' +
+            '<col span="1" style="width: 10%;">' +
+            '<col span="1" style="width: 10%;">' +
+            '<col span="1" style="width: 10%;">' +
+            '<col span="1" style="width: 10%;">' +
+            '<col span="1" style="width: 10%;">' +
+            '<col span="1" style="width: 10%;">' +
+            '<col span="1" style="width: 10%;">' +
+            '</colgroup>' +
+            '<tr style="height:30px">';
 
         var chapterNum = 0;
-		var osisIDLink = "";
+        var osisIDLink = "";
         if (numOfChapters > 0) {
             for (var i = 0; i < numOfChapters; i++) {
-                chapterNum ++;
+                chapterNum++;
                 osisIDLink = (numOfChapters === 1) ? bookOsisID : bookOsisID + '.' + chapterNum;
-                html += '<td><a style="color:blue;font-size:14px;" href="javascript:goToPassage(\'' + osisIDLink + '\');">' + chapterNum + '</a></td>'
+                html += '<td><a href="javascript:goToPassage(\'' + osisIDLink + '\');">' + chapterNum + '</a></td>'
                 if ((chapterNum > 9) && ((chapterNum % 10) == 0)) {
                     html += '</tr><tr style="height:30px">';
                 }
@@ -327,15 +293,15 @@
             for (var i = 0; i < data.length; i++) {
                 if (data[i].suggestion.sectionType == "PASSAGE") {
                     chapterNum++;
-					osisIDLink = data[i].suggestion.osisID;
-                    html += '<td><a style="color:blue;font-size:14px;" href="javascript:goToPassage(\'' + osisIDLink + '\');">' + chapterNum + '</a></td>'
+                    osisIDLink = data[i].suggestion.osisID;
+                    html += '<td><a href="javascript:goToPassage(\'' + osisIDLink + '\');">' + chapterNum + '</a></td>'
                     if ((chapterNum > 9) && ((chapterNum % 10) == 0)) {
                         html += '</tr><tr style="height:30px">';
                     }
                 }
             }
         }
-		if (chapterNum === 1) goToPassage(osisIDLink); // If there is only one chapter, just go to it.  
+        if (chapterNum === 1) goToPassage(osisIDLink); // If there is only one chapter, just go to it.
         html +=
             '</tr></table>' +
             '</div>';
@@ -344,12 +310,12 @@
     }
 
     function closeChapterSelect() {
-		$('#bookSelectionModal').modal('hide');
-		$('#bookSelectionModal').modal({
-			show: false
-		});
-		var element = document.getElementById('bookSelectionModal');
-		element.parentNode.removeChild(element);
-	}
+        $('#bookSelectionModal').modal('hide');
+        $('#bookSelectionModal').modal({
+            show: false
+        });
+        var element = document.getElementById('bookSelectionModal');
+        element.parentNode.removeChild(element);
+    }
 
 </script>

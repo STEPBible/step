@@ -4,7 +4,11 @@
   font-size: 13px;
   line-height:18px;
   overflow: hidden;
-  width: 280px;
+  max-width: 360px;
+
+  &.xrefPopup {
+    width: 280px;
+  }
 }
 
 .qtip-titlebar {

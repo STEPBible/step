@@ -1,11 +1,14 @@
 @import 'template_variables';
 
 div.versePopup.qtip-default.qtip {
-  max-width: 650px !important;
   border:1px solid #666;
   border-radius:5px;
   box-shadow:2px 2px 4px rgba(0,0,0,0.2);
   background-color: white;
+
+  @media screen and (min-width: $stepXSBootstrap) {
+    max-width: 650px !important;
+  }
 
   .qtip-tip canvas {
     background-color: #666;

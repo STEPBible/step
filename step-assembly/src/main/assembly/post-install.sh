@@ -1,32 +1,23 @@
-echo "Starting post install script..." > /var/log/step-post-install.log
-
-eval echo "Home directory is ~" >> /var/log/step-post-install.log
-
-echo "Changing permissions to allow read/write to this directory"
-chmod -R 777 /opt/step/homes >> /var/log/step-post-install.log
-
-echo "Linking files" >> /var/log/step-post-install.log
-origUser=`whoami`
-if [[ ! -z "$origUser"  && "$origUser" != "root" ]];
-then
-    if [[ ! -h ~/.sword || ! -h ~/.jsword ]];
-    then
-        [ -d "/home/$origUser/Desktop" ] && cp /opt/step/step.desktop /home/$origUser/Desktop/step.desktop
+#!/bin/sh
+user=`whoami`
+if [ "$user" = "root" ]; then
+	echo "Starting post install script..." > /var/log/step-post-install.log
+	echo "Changing permissions to allow read/write to this directory"
+	chmod -R 777 /opt/step/homes >> /var/log/step-post-install.log
+	chmod +x /opt/step/post-install.sh
+	echo "Linking files" >> /var/log/step-post-install.log
+	user=`pstree -lu -s $$ | grep --max-count=1 -o '([^)]*)' | head -n 1 | sed 's/(//' | sed 's/)//'`
+fi
+if [ ! -z "$user" ] && [ "$user" != "root" ]; then
+	userHome=$(awk -v u="$user" -v FS=':' '$1==u {print $6}' /etc/passwd)
+	[ -z "$userHome" ] && userHome = "/home/$user"
+    if [ ! -h "$userHome/.sword" ] || [ ! -h "$userHome/.jsword"	]; then
+        [ -d "$userHome/Desktop" ] && cp /opt/step/step.desktop $userHome/Desktop/step.desktop && chown $user: $userHome/Desktop/step.desktop
     fi
-    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/sword /home/$origUser/.sword
-    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/jsword /home/$origUser/.jsword
+    ln -sf /opt/step/homes/sword $userHome/.sword
+    ln -sf /opt/step/homes/jsword $userHome/.jsword
 fi
 
-origUser=`pstree -lu -s $$ | grep --max-count=1 -o '([^)]*)' | head -n 1 | sed 's/(//' | sed 's/)//'`
-if [[ ! -z "$origUser"  && "$origUser" != "root" ]];
-then
-    if [[ ! -h ~/.sword || ! -h ~/.jsword ]];
-    then
-        [ -d "/home/$origUser/Desktop" ] && cp /opt/step/step.desktop /home/$origUser/Desktop/step.desktop
-    fi
-    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/sword /home/$origUser/.sword
-    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/jsword /home/$origUser/.jsword
-fi
 echo ""
 echo "Click on the STEP icon on the desktop to start STEP."
-echo "If the STEP icon is not available, enter \"step\" at the command line."
+echo "If there is no STEP icon, enter \"/opt/step/step &\" at the command line."

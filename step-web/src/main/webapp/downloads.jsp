@@ -69,7 +69,7 @@
 
         <p><fmt:message key="download_intro"/></p>
 
-        <table style="width: 100%; max-width: 800px;">
+        <table  border="1" style="width: 100%; max-width: 800px;">
             <tr VALIGN="TOP">
                 <td WIDTH="33%"><img src="images/WindowsCyan_Web.jpg"/><br />
                     <fmt:message key="download_windows_edition"/>&reg;
@@ -92,6 +92,7 @@
                 <td WIDTH="33%"><img src="images/linux.jpg"/><br />
                     <fmt:message key="download_linux"/>&reg;
                     <br />
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_linux.pdf" data-os="linux">Download installation instructions for Linux</a>&nbsp;
                     <p>Download DEB installation file from:
                         <a href="https://downloads.stepbible.com/file/Stepbible/STEP.deb" data-os="linux">USA,</a>&nbsp;
                         <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP.deb" data-os="linux">Europe,</a>&nbsp;
@@ -126,6 +127,7 @@
                 <td WIDTH="33%"><img src="images/linux_zh.jpg"/><br />
                     <fmt:message key="download_linux_zh"/>&reg;
                     <br />
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_linux.pdf" data-os="linux">Download installation instructions for Linux</a>&nbsp;
                     <p>Download DEB installation file from:
                         <a href="https://downloads.stepbible.com/file/Stepbible/STEP_zh.deb" data-os="linux">USA,</a>&nbsp;
                         <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEP_zh.deb" data-os="linux">Europe,</a>&nbsp;

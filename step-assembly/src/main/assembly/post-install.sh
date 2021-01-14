@@ -6,16 +6,26 @@ echo "Changing permissions to allow read/write to this directory"
 chmod -R 777 /opt/step/homes >> /var/log/step-post-install.log
 
 echo "Linking files" >> /var/log/step-post-install.log
-ln -sf /opt/step/homes/sword ~/.sword >> /var/log/step-post-install.log
-ln -sf /opt/step/homes/jsword ~/.jsword >> /var/log/step-post-install.log
-[ -d "~/Desktop" ] && ln -sf /opt/step/step.desktop ~/Desktop/step.desktop >> /var/log/step-post-install.log
+origUser=`whoami`
+if [[ ! -z "$origUser"  && "$origUser" != "root" ]];
+then
+    if [[ ! -h ~/.sword || ! -h ~/.jsword ]];
+    then
+        [ -d "/home/$origUser/Desktop" ] && cp /opt/step/step.desktop /home/$origUser/Desktop/step.desktop
+    fi
+    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/sword /home/$origUser/.sword
+    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/jsword /home/$origUser/.jsword
+fi
 
 origUser=`pstree -lu -s $$ | grep --max-count=1 -o '([^)]*)' | head -n 1 | sed 's/(//' | sed 's/)//'`
-if [ ! -z "$origUser" ]
+if [[ ! -z "$origUser"  && "$origUser" != "root" ]];
 then
-    [ -d "/home/$origUser/Desktop" ] && ln -sf /opt/step/step.desktop /home/$origUser/Desktop/step.desktop  >> /var/log/step-post-install.log
-    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/sword /home/$origUser/.sword >> /var/log/step-post-install.log
-    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/jsword /home/$origUser/.jsword >> /var/log/step-post-install.log
+    if [[ ! -h ~/.sword || ! -h ~/.jsword ]];
+    then
+        [ -d "/home/$origUser/Desktop" ] && cp /opt/step/step.desktop /home/$origUser/Desktop/step.desktop
+    fi
+    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/sword /home/$origUser/.sword
+    [ -d "/home/$origUser" ] && ln -sf /opt/step/homes/jsword /home/$origUser/.jsword
 fi
 echo ""
 echo "Click on the STEP icon on the desktop to start STEP."

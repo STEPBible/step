@@ -6,6 +6,9 @@ if [ "$user" = "root" ]; then
 	chmod -R 777 /opt/step/homes >> /var/log/step-post-install.log
 	chmod +x /opt/step/post-install.sh
 	echo "Linking files" >> /var/log/step-post-install.log
+	echo ""
+	echo "Click on the STEP icon on the desktop to start STEP."
+	echo "If there is no STEP icon, enter \"/opt/step/step &\" at the command line."
 	user=`pstree -lu -s $$ | grep --max-count=1 -o '([^)]*)' | head -n 1 | sed 's/(//' | sed 's/)//'`
 fi
 if [ ! -z "$user" ] && [ "$user" != "root" ]; then
@@ -17,7 +20,3 @@ if [ ! -z "$user" ] && [ "$user" != "root" ]; then
     ln -sf /opt/step/homes/sword $userHome/.sword
     ln -sf /opt/step/homes/jsword $userHome/.jsword
 fi
-
-echo ""
-echo "Click on the STEP icon on the desktop to start STEP."
-echo "If there is no STEP icon, enter \"/opt/step/step &\" at the command line."

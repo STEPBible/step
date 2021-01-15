@@ -5,6 +5,7 @@ if [ "$user" = "root" ]; then
 	echo "Changing permissions to allow read/write to this directory"
 	chmod -R 777 /opt/step/homes >> /var/log/step-post-install.log
 	chmod +x /opt/step/post-install.sh
+	chmod +x /opt/step/step
 	echo "Linking files" >> /var/log/step-post-install.log
 	echo ""
 	echo "Click on the STEP icon on the desktop to start STEP."

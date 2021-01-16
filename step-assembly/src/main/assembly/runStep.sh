@@ -1,1 +1,1 @@
-java -jar step-server-${project.version}.jar
+/opt/step/step-install4j  > ~/step.log 2>&1 &

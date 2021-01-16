@@ -5,6 +5,7 @@ if [ "$user" = "root" ]; then
 	echo "Changing permissions to allow read/write to this directory"
 	chmod -R 777 /opt/step/homes >> /var/log/step-post-install.log
 	chmod +x /opt/step/post-install.sh
+	cp /opt/step/runStep.sh step
 	chmod +x /opt/step/step
 	echo "Linking files" >> /var/log/step-post-install.log
 	echo ""
@@ -16,7 +17,7 @@ if [ ! -z "$user" ] && [ "$user" != "root" ]; then
 	userHome=$(awk -v u="$user" -v FS=':' '$1==u {print $6}' /etc/passwd)
 	[ -z "$userHome" ] && userHome = "/home/$user"
     if [ ! -h "$userHome/.sword" ] || [ ! -h "$userHome/.jsword"	]; then
-        [ -d "$userHome/Desktop" ] && cp /opt/step/step.desktop $userHome/Desktop/step.desktop && chown $user: $userHome/Desktop/step.desktop
+        [ -d "$userHome/Desktop" ] && cp /opt/step/step-install4j.desktop $userHome/Desktop/step.desktop && chown $user: $userHome/Desktop/step.desktop
     fi
     ln -sf /opt/step/homes/sword $userHome/.sword
     ln -sf /opt/step/homes/jsword $userHome/.jsword

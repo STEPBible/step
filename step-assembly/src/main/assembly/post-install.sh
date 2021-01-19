@@ -13,7 +13,7 @@ if [ "$user" = "root" ]; then
 	echo "Linking files" >> /var/log/step-post-install.log
 	echo ""
 	echo "Click on the STEP icon on the desktop to start STEP."
-	echo "If there is no STEP icon, enter \"/opt/step/step &\" at the command line."
+	echo "If there is no STEP icon, enter \"step\" or \"/opt/step/step\" at the command line."
 	user=`pstree -lu -s $$ | grep --max-count=1 -o '([^)]*)' | head -n 1 | sed 's/(//' | sed 's/)//'`
 fi
 if [ ! -z "$user" ] && [ "$user" != "root" ]; then

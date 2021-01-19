@@ -5,6 +5,7 @@ if [ "$user" = "root" ]; then
 	echo "Changing permissions to allow read/write to this directory"
 	chmod -R 777 /opt/step/homes >> /var/log/step-post-install.log
 	chmod +x /opt/step/post-install.sh
+	rm -f /opt/step/step-install4j
 	mv /opt/step/step /opt/step/step-install4j
 	cp /opt/step/runStep.sh step
 	chmod +x /opt/step/step

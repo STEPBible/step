@@ -14,7 +14,7 @@
 %>
 <fmt:setBundle basename="HtmlBundle" />
 <% request.setCharacterEncoding("utf-8"); %>
-<jsp:include page="jsps/header.jsp">
+<jsp:include page="/jsps/header.jsp">
 	<jsp:param><jsp:attribute name='name'>title</jsp:attribute>
 		<jsp:attribute name='value'><fmt:message key='available_versions_in_step' /></jsp:attribute>
 	</jsp:param>

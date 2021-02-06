@@ -201,7 +201,7 @@ public class SiteMapController extends HttpServlet {
                 addVersions(siteMap, BookCategory.COMMENTARY, specifier);
                 break;
             case SITEMAP_BIBLE:
-                addUrl(siteMap, null, null, null, "versions.jsp");
+                addUrl(siteMap, null, null, null, "/versions.jsp");
                 addVersions(siteMap, BookCategory.BIBLE, specifier);
                 break;
             default:
@@ -245,7 +245,7 @@ public class SiteMapController extends HttpServlet {
         final List<BibleVersion> allModules = this.modules.getAllModules();
 
         if (specifier == 'A') {
-            addUrl(siteMap, null, null, null, "versions.jsp");
+            addUrl(siteMap, null, null, null, "/versions.jsp");
         }
         for (final BibleVersion version : allModules) {
 

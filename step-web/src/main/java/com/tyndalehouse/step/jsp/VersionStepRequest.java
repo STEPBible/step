@@ -119,7 +119,7 @@ public class VersionStepRequest {
             bookList.append("<tr class=\"even\"><td class=\"bookName\">");
             final String copyrightHolderIntro = this.bundle.getString("intro_from_copyright_holder");
             bookList.append(copyrightHolderIntro);
-            bookList.append("</td><td><a href=\"preface.jsp?version=");
+            bookList.append("</td><td><a href=\"/preface.jsp?version=");
             bookList.append(this.book.getInitials());
             bookList.append("\">");
             bookList.append(copyrightHolderIntro);

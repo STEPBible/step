@@ -1,14 +1,26 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" onclick=closeChapterSelect()>X</button>
+</div>
 <div id="bookchaptermodalbody" class="modal-body">
+</div>
+<div class="footer">
+	<a id="keyboardEntry" href="javascript:_userEnterPassage();">
+		<img src="/images/keyboard.jpg" alt="Keyboard entry">
+		<span>Type in the passage (optional)</span>
+	</a>
 </div>
 <script>
     var version = "ESV_th";
     var userLang = "en";
     var addInsteadOfReplace = false;
+	var lastInput = "";
+	var lastInputChecked = "";
     $(document).ready(function () {
         userLang = step.state.language() || "en-US";
         var html = _buildBookHeaderAndSkeleton();
         $('#bookchaptermodalbody').append(html);
         var data = step.util.activePassage().get("searchTokens") || [];
+        $('#keyboardEntry').show();
         for (var i = 0; i < data.length; i++) {
             if (data[i].itemType == "version") {
                 version = data[i].item.initials;
@@ -259,6 +271,73 @@
             });
         }
     }
+
+	function _handleEnteredPassage(verifyOnly) {
+		var userInput = $('textarea#enterYourPassage').val();
+		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',');
+		lastInput = userInput;
+		if (verifyOnly) {
+			var pos = userInput.lastIndexOf(",");
+			if (pos > -1) userInput = userInput.substring(pos + 1);
+		}
+		userInput = userInput.replace(/^\s+/g, '');
+		lastInputChecked = userInput;
+		var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
+		$.getJSON(url, function (data) {
+			if (data.length > 0) {
+				if (data[0].suggestion.passage) {
+					console.log(data);
+					$('#userEnterPassageError').text("Program error: 1st element not false");
+				}
+				else if (!verifyOnly) goToPassage(data[0].suggestion.osisID);
+			}
+			else {
+				var errorText = (lastInputChecked != "") ? errorText = ' for "' + lastInputChecked + '"' : "";
+				$('#userEnterPassageError').text("No match" + errorText + ", please update the passage you entered.");
+				$('textarea#enterYourPassage').focus();
+				$('textarea#enterYourPassage').val(lastInput);
+			}
+		});
+	}
+
+	function _userEnterPassage() {
+		$('#keyboardEntry').hide();
+		var html = '<h4>Type in your passage</h4>' +
+			'<div class="append">' +
+			'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
+			'<div class="onoffswitch2">' +
+			'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
+			'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
+			'<span class="onoffswitch2-inner"></span>' +
+			'<span class="onoffswitch2-switch"></span>' +
+			'</label>' +
+			'</div>' +
+			'</div><br>' +
+			'<p>&nbsp;&nbsp;&nbsp;<b>Examples:</b>	Matt 6</p>' +
+			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Isa 40:1-2</p>' +
+			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;John 3:16, Rom 3:23, Rev 1:8</p><br><br>' +
+			'<p>Enter passage(s):</p>' +
+			'<textarea id="enterYourPassage" rows="1" cols="75"></textarea>' +
+			'<br><br>' +
+			'<button type="button" onclick=_handleEnteredPassage(false)>Go to passage</button>&nbsp;' +
+			'<span id="userEnterPassageError" style="color: red;"></span>';
+		$('#bookchaptermodalbody').empty();
+		$('#bookchaptermodalbody').append(html);
+		$(function(){
+			$("#bookchaptermodalbody").keypress(function(e){
+				var code = (e.keyCode ? e.keyCode : e.which);
+				if (code == 13) _handleEnteredPassage(false);
+				else if (code == 44) _handleEnteredPassage(true);
+			});
+		});
+		$(function(){
+			$("#bookchaptermodalbody").keyup(function(e){
+				var code = (e.keyCode ? e.keyCode : e.which);
+				if ((code == 8) || (code == 46)) $('#userEnterPassageError').text("");
+			});
+		});
+		$('textarea#enterYourPassage').focus();
+	}
 
     function _buildChapterTable(data, bookOsisID, numOfChapters) {
         var html = '<h4>' + __s.chapters_in_book + '</h4>' +

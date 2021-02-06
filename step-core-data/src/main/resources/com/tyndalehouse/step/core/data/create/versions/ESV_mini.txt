@@ -20,5 +20,5 @@
     <p>The Holy Bible, English Standard Version (ESV) is adapted from the Revised Standard Version of the Bible, copyright Division of Christian Education of the National Council of the Churches of Christ in the U.S.A. All rights reserved.</p>
     <p><a href="http://crossway.org">Crossway</a> is a not-for-profit organization (a publishing ministry of Good News Publishers) that exists solely for the purpose of publishing the good news of the gospel and the truth of God’s Word, the Bible. A portion of the purchase price of every Bible is donated to help support Bible distribution ministry around the world.</p>
 
- 	<a href="preface.jsp?version=ESV">Read the full preface</a>
+ 	<a href="/preface.jsp?version=ESV">Read the full preface</a>
     </div><!-- #mn -->

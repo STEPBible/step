@@ -18,14 +18,14 @@
 <HEAD>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
     <TITLE>STEP :: Scripture Tools for Every Person</TITLE>
-    <%@include file="jsps/offlinePage.jsp" %>
+    <%@include file="/jsps/offlinePage.jsp" %>
     <link rel="stylesheet" type="text/css" href="css/setup-layout.css" />
     <link rel="stylesheet" type="text/css" href="static/static.css" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-    <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
-    <script src="international/interactive.js" type="text/javascript"></script>
-    <script src="js/step_constants.js" type="text/javascript"></script>
-    <script src="js/setup/step.firstTime.js" type="text/javascript"></script>
+    <script src="/libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
+    <script src="/international/interactive.js" type="text/javascript"></script>
+    <script src="/js/step_constants.js" type="text/javascript"></script>
+    <script src="/js/setup/step.firstTime.js" type="text/javascript"></script>
 </HEAD>
 <body style="font-size: 12px">
 	<div class="header">

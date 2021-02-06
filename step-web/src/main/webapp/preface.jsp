@@ -29,7 +29,7 @@
 %>
 
 
-<jsp:include page="jsps/header.jsp">
+<jsp:include page="/jsps/header.jsp">
 	<jsp:param value="<%= title %>" name="title"/>
 	<jsp:param value="<%= longTitle %>" name="description"/>
 	<jsp:param value="<%= title %>" name="keywords"/>

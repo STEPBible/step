@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.10" transformSequenceNumber="8">
-  <directoryPresets config="./post-install.sh" />
-  <application name="STEP - Scripture Tools for Every Person" applicationId="1068-8958-4931-1958" mediaDir="../../../target/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="stepbible" publisher="STEP Bible" publisherWeb="http://www.stepbible.org" version="2.0.29" allPathsRelative="true" macVolumeId="a99b8b185558ecf" javaMinVersion="1.8" javaMaxVersion="1.8">
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk8/jdk8u282-b08" />
+<install4j version="6.1.2" transformSequenceNumber="5">
+  <directoryPresets config="." />
+  <application name="STEP - Scripture Tools for Every Person" distributionSourceDir="" applicationId="1137-2379-2234-7255" mediaDir="../../../target" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="9" lzmaCompression="true" pack200Compression="true" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="false" shortName="stepbible" publisher="Tyndale House, Cambridge, UK" publisherWeb="http://www.stepbible.org" version="2.0.12-SNAPSHOT" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="a99b8b185558ecf" javaMinVersion="1.7" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
+    <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
+      <principalLanguage id="en" customLocalizationFile="" />
+      <additionalLanguages />
+    </languages>
+    <searchSequence>
+      <registry />
+      <envVar name="JAVA_HOME" />
+      <envVar name="JDK_HOME" />
+    </searchSequence>
+    <variables />
+    <mergedProjects />
+    <codeSigning macEnabled="true" macPkcs12File="../../../../../../../codesigning/mac-code-signing.pfx" windowsEnabled="false" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="../../../../../secret/mac-code-signing.pfx" />
   </application>
-  <files>
+  <files keepModificationTimes="false" missingFilesStrategy="warn" globalExcludeSuffixes="" defaultOverwriteMode="4" defaultUninstallMode="0" launcherOverwriteMode="3" defaultFileMode="644" defaultDirMode="755">
+    <filesets />
     <roots>
-      <root id="118" location="${installer:sys.userHome}" />
+      <root id="118" fileset="" location="${installer:sys.userHome}" />
     </roots>
     <mountPoints>
-      <mountPoint id="111" location="logs" />
-      <mountPoint id="23" />
-      <mountPoint id="220" root="118" location=".${compiler:sys.shortName}" />
-      <mountPoint id="221" root="118" location=".${compiler:sys.shortName}/logs" />
+      <mountPoint id="111" root="" location="logs" mode="755" />
+      <mountPoint id="23" root="" location="" mode="755" />
+      <mountPoint id="220" root="118" location=".${compiler:sys.shortName}" mode="755" />
+      <mountPoint id="221" root="118" location=".${compiler:sys.shortName}/logs" mode="755" />
     </mountPoints>
     <entries>
-	    <dirEntry mountPoint="23" file="../../../target/step-assembly-${compiler:sys.version}-SNAPSHOT-package-step-standalone" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="direct" excludeSuffixes="" dirMode="755" overrideDirMode="false">
-	    </dirEntry>
-        <fileEntry mountPoint="23" file="./post-install.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <dirEntry mountPoint="23" file="../../../target/step-assembly-${compiler:sys.version}-package-step-standalone" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="direct" subDirectory="step-mvn-1.0-SNAPSHOT-package-step-standalone" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+        <exclude />
+      </dirEntry>
+      <fileEntry mountPoint="23" file="./post-install.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
     </entries>
     <components>
-      <component name="Scripture Tools for Every Person" id="96" changeable="false" hidden="true">
-        <include all="true">
-          <entry defaultFileset="true" />
+      <component name="Scripture Tools for Every Person" id="96" customizedId="" displayDescription="false" hideHelpButton="false" selected="true" changeable="false" downloadable="false" hidden="true">
+        <description />
+        <include all="false">
+          <entry location=".i4j_fileset_" fileType="regular" />
+          <entry location=".i4j_fileset_192" fileType="regular" />
         </include>
         <dependencies>
           <component id="412" />
@@ -31,203 +46,320 @@
     </components>
   </files>
   <launchers>
-    <launcher name="STEP" id="28" useJavaMinVersionOverride="true" javaMinVersionOverride="1.8">
-      <executable name="step" iconSet="true" stderrFile="${installer:sys.userHome}/.${compiler:sys.shortName}/logs/install4j-error.log" stderrMode="append" stdoutFile="${installer:sys.userHome}/.${compiler:sys.shortName}/logs/install4j-output.log" stdoutMode="append" executableMode="gui" dpiAware="false" />
-      <splashScreen show="true" bitmapFile="splash.png" />
-      <java mainClass="com.tyndalehouse.step.server.STEPTomcatServer">
+    <launcher name="STEP" id="28" customizedId="" external="false" excludeFromMenu="false" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="" useCustomMacosExecutableName="false" customMacosExecutableName="" useJavaMinVersionOverride="false" javaMinVersionOverride="" useJavaMaxVersionOverride="false" javaMaxVersionOverride="">
+      <executable name="step" type="1" iconSet="true" iconFile="" executableDir="" redirectStderr="true" stderrFile="${installer:sys.userHome}/.${compiler:sys.shortName}/logs/install4j-error.log" stderrMode="append" redirectStdout="true" stdoutFile="${installer:sys.userHome}/.${compiler:sys.shortName}/logs/install4j-output.log" stdoutMode="append" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="true" width="0" height="0" bitmapFile="../../../../step-server/src/main/resources/splash.jpg" windowsNative="false" textOverlay="false">
+        <text>
+          <statusLine x="20" y="20" text="" fontSize="8" fontColor="0,0,0" bold="false" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" fontSize="8" fontColor="0,0,0" bold="false" />
+        </text>
+      </splashScreen>
+      <java mainClass="com.tyndalehouse.step.server.STEPTomcatServer" vmParameters="" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
         <classPath>
-          <archive location="step-server-2.0.29-SNAPSHOT.jar" failOnError="false" />
+          <archive location="step-server-${compiler:sys.version}.jar" failOnError="false" />
         </classPath>
+        <nativeLibraryDirectories />
+        <vmOptions />
       </java>
-      <macStaticAssociationActions mode="selected" />
-      <vmOptionsFile mode="content" overwriteMode="1">
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="content" overwriteMode="1" fileMode="644">
         <content>-Dlog4j.configuration=log4j.properties</content>
       </vmOptionsFile>
-      <customScript>user=`whoami`
-if [ "$user" = "root" ]; then
-    echo "STEP should not run under root. Exiting ... Please run STEP in another account."
-    exit
-fi
-sh /opt/step/post-install.sh</customScript>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
       <iconImageFiles>
-        <file path="step-icon-16.png" />
-        <file path="step-icon-32.png" />
-        <file path="step-icon-48.png" />
-        <file path="step-icon-128.png" />
+        <file path="./step-icon-16.png" />
+        <file path="./step-icon-32.png" />
+        <file path="./step-icon-48.png" />
+        <file path="./step-icon-128.png" />
       </iconImageFiles>
     </launcher>
   </launchers>
-  <installerGui autoUpdateDescriptorUrl="http://www.stepbible.org/downloads/updates.xml">
+  <installerGui installerType="1" addOnAppId="" suggestPreviousLocations="true" autoUpdateDescriptorUrl="http://www.stepbible.org/downloads/updates.xml" useAutoUpdateBaseUrl="false" autoUpdateBaseUrl="">
+    <staticMembers script="" />
+    <customCode />
+    <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+      <commentFiles />
+      <customAttributes />
+    </autoUpdate>
     <applications>
-      <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" actionElevationType="elevated" launchInNewProcess="false">
+      <application name="" id="installer" customizedId="" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" enabled="true" commentSet="false" comment="" actionElevationType="elevated" fileset="" customIcnsFile="" customIcoFile="" macEntitlementsFile="" automaticLauncherIntegration="false" launchMode="startupFirstWindow" launchInNewProcess="false" launchSchedule="updateSchedule" allLaunchers="true">
+        <serializedBean>
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.applications.InstallerApplication" />
+          </java>
+        </serializedBean>
+        <launcherIds />
         <variables>
-          <variable name="variable" valueClass="string" registerForResponseFile="false" responseFileComment="" hidden="false" />
+          <variable name="variable" value="" description="" category="" valueClass="string" registerForResponseFile="false" responseFileComment="" hidden="false" />
         </variables>
         <startup>
-          <screen id="1" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
+          <screen name="" id="1" customizedId="" beanClass="com.install4j.runtime.beans.screens.StartupScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
             <actions>
-              <action id="13" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" />
+              <action name="" id="13" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
             </actions>
+            <formComponents />
           </screen>
         </startup>
         <screens>
-          <screen id="2" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" styleId="484">
+          <screen name="" id="2" customizedId="" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.WelcomeScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
             <actions>
-              <action id="3" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" multiExec="true">
+              <action name="" id="3" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" multiExec="true" failureStrategy="1" errorMessage="">
                 <serializedBean>
-                  <property name="excludedVariables" type="array" elementType="string" length="1">
-                    <element index="0">sys.installationDir</element>
-                  </property>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction">
+                      <void property="excludedVariables">
+                        <array class="java.lang.String" length="1">
+                          <void index="0">
+                            <string>sys.installationDir</string>
+                          </void>
+                        </array>
+                      </void>
+                    </object>
+                  </java>
                 </serializedBean>
                 <condition>context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
               </action>
             </actions>
             <formComponents>
-              <formComponent id="232" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+              <formComponent name="" id="216" customizedId="" beanClass="com.install4j.runtime.beans.formcomponents.SpacerComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
                 <serializedBean>
-                  <property name="labelText" type="string">${form:welcomeMessage}</property>
-                </serializedBean>
-                <visibilityScript>!context.isConsole()</visibilityScript>
-              </formComponent>
-              <formComponent id="233" beanClass="com.install4j.runtime.beans.formcomponents.ConsoleHandlerFormComponent">
-                <serializedBean>
-                  <property name="consoleScript">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string">String message = context.getMessage("ConsoleWelcomeLabel", context.getApplicationName());
-return console.askOkCancel(message, true);
-</property>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.SpacerComponent">
+                      <void property="height">
+                        <int>40</int>
+                      </void>
                     </object>
-                  </property>
+                  </java>
                 </serializedBean>
+                <initScript />
+                <visibilityScript />
               </formComponent>
-              <formComponent id="234" beanClass="com.install4j.runtime.beans.formcomponents.UpdateAlertComponent" useExternalParametrization="true" externalParametrizationName="Update Alert" externalParametrizationMode="include">
-                <externalParametrizationPropertyNames>
-                  <propertyName>updateCheck</propertyName>
-                </externalParametrizationPropertyNames>
-              </formComponent>
-              <formComponent id="235" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetTop="20">
+              <formComponent name="" id="215" customizedId="" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
                 <serializedBean>
-                  <property name="labelText" type="string">${i18n:ClickNext}</property>
-                </serializedBean>
-              </formComponent>
-              <formComponent id="216" beanClass="com.install4j.runtime.beans.formcomponents.SpacerComponent">
-                <serializedBean>
-                  <property name="height" type="int" value="40" />
-                </serializedBean>
-              </formComponent>
-              <formComponent id="215" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
-                <serializedBean>
-                  <property name="labelFont">
-                    <object class="java.awt.Font">
-                      <string>Arial</string>
-                      <int>2</int>
-                      <int>10</int>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                      <void property="labelFont">
+                        <object class="java.awt.Font">
+                          <string>Arial</string>
+                          <int>2</int>
+                          <int>10</int>
+                        </object>
+                      </void>
+                      <void property="labelText">
+                        <string>Please note that if you already have SWORD Bible tools installed (such as Xiphos or BibleDesktop), STEP will re-install the ESV and OSMHB modules when launched for the first time.</string>
+                      </void>
                     </object>
-                  </property>
-                  <property name="labelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="CUSTOM" />
-                  <property name="labelText" type="string">Please note that if you already have SWORD Bible tools installed (such as Xiphos or BibleDesktop), STEP will re-install the ESV and OSMHB modules when launched for the first time.</property>
+                  </java>
                 </serializedBean>
+                <initScript />
+                <visibilityScript />
               </formComponent>
             </formComponents>
           </screen>
-          <screen id="4" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen">
+          <screen name="" id="4" customizedId="" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" />
+              </java>
+            </serializedBean>
             <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
+            <validation />
+            <preActivation />
+            <postActivation />
             <actions>
-              <action id="5" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" multiExec="true">
+              <action name="" id="5" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" multiExec="true" failureStrategy="1" errorMessage="">
                 <serializedBean>
-                  <property name="excludedVariables" type="array" elementType="string" length="1">
-                    <element index="0">sys.installationDir</element>
-                  </property>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction">
+                      <void property="excludedVariables">
+                        <array class="java.lang.String" length="1">
+                          <void index="0">
+                            <string>sys.installationDir</string>
+                          </void>
+                        </array>
+                      </void>
+                    </object>
+                  </java>
                 </serializedBean>
                 <condition>context.getVariable("sys.responseFile") == null</condition>
               </action>
             </actions>
-            <formComponents>
-              <formComponent id="239" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="25">
-                <serializedBean>
-                  <property name="labelText" type="string">${i18n:SelectDirLabel(${compiler:sys.fullName})}</property>
-                </serializedBean>
-              </formComponent>
-              <formComponent id="240" beanClass="com.install4j.runtime.beans.formcomponents.InstallationDirectoryChooserComponent" useExternalParametrization="true" externalParametrizationName="Installation Directory Chooser" externalParametrizationMode="include">
-                <serializedBean>
-                  <property name="requestFocus" type="boolean" value="true" />
-                </serializedBean>
-                <externalParametrizationPropertyNames>
-                  <propertyName>suggestAppDir</propertyName>
-                  <propertyName>validateApplicationId</propertyName>
-                  <propertyName>existingDirWarning</propertyName>
-                  <propertyName>checkWritable</propertyName>
-                  <propertyName>manualEntryAllowed</propertyName>
-                  <propertyName>checkFreeSpace</propertyName>
-                  <propertyName>showRequiredDiskSpace</propertyName>
-                  <propertyName>showFreeDiskSpace</propertyName>
-                  <propertyName>allowSpacesOnUnix</propertyName>
-                  <propertyName>validationScript</propertyName>
-                  <propertyName>standardValidation</propertyName>
-                </externalParametrizationPropertyNames>
-              </formComponent>
-            </formComponents>
+            <formComponents />
           </screen>
-          <screen id="7" beanClass="com.install4j.runtime.beans.screens.StandardProgramGroupScreen">
+          <screen name="" id="7" customizedId="" beanClass="com.install4j.runtime.beans.screens.StandardProgramGroupScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
             <serializedBean>
-              <property name="programGroupName" type="string">${compiler:sys.fullName}</property>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StandardProgramGroupScreen">
+                  <void property="programGroupName">
+                    <string>${compiler:sys.fullName}</string>
+                  </void>
+                </object>
+              </java>
             </serializedBean>
             <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
           </screen>
-          <screen id="100" beanClass="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen">
+          <screen name="" id="100" customizedId="" beanClass="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
             <formComponents>
-              <formComponent id="244" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="10">
+              <formComponent name="Add a desktop link" id="101" customizedId="" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
                 <serializedBean>
-                  <property name="labelText" type="string">${form:confirmationMessage}</property>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:CreateDesktopIcon}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>createDesktopLinkAction</string>
+                      </void>
+                    </object>
+                  </java>
                 </serializedBean>
-                <visibilityScript>!context.isConsole()</visibilityScript>
-              </formComponent>
-              <formComponent name="Add a desktop link" id="101" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
-                <serializedBean>
-                  <property name="checkboxText" type="string">${i18n:CreateDesktopIcon}</property>
-                  <property name="initiallySelected" type="boolean" value="true" />
-                  <property name="variableName" type="string">createDesktopLinkAction</property>
-                </serializedBean>
+                <initScript />
+                <visibilityScript />
               </formComponent>
             </formComponents>
           </screen>
-          <screen id="8" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" rollbackBarrier="true">
+          <screen name="" id="8" customizedId="" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="true" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.InstallationScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
             <actions>
-              <action id="322" beanClass="com.install4j.runtime.beans.actions.misc.CheckRunningProcessesAction" actionElevationType="none" failureStrategy="quit">
+              <action name="" id="322" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.CheckRunningProcessesAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" multiExec="false" failureStrategy="2" errorMessage="">
                 <serializedBean>
-                  <property name="closeStrategy" type="enum" class="com.install4j.runtime.beans.actions.misc.CloseStrategy" value="ASK_FOR_TERMINATE" />
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.CheckRunningProcessesAction">
+                      <void property="closeStrategy">
+                        <object class="java.lang.Enum" method="valueOf">
+                          <class>com.install4j.runtime.beans.actions.misc.CloseStrategy</class>
+                          <string>ASK_FOR_TERMINATE</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
                 </serializedBean>
+                <condition />
               </action>
-              <action id="363" beanClass="com.install4j.runtime.beans.actions.UninstallPreviousAction" actionElevationType="none" />
-              <action id="9" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" actionElevationType="elevated" failureStrategy="quit" errorMessage="${i18n:FileCorrupted}" />
-              <action id="10" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" actionElevationType="elevated">
+              <action name="" id="363" customizedId="" beanClass="com.install4j.runtime.beans.actions.UninstallPreviousAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
-                  <property name="addUninstaller" type="boolean" value="true" />
-                  <property name="uninstallerMenuName" type="string">${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</property>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.UninstallPreviousAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="9" customizedId="" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="2" errorMessage="${i18n:FileCorrupted}">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.InstallFilesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="10" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction">
+                      <void property="uninstallerMenuName">
+                        <string>${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</string>
+                      </void>
+                    </object>
+                  </java>
                 </serializedBean>
                 <condition>!context.getBooleanVariable("sys.programGroupDisabled")</condition>
               </action>
-              <action id="11" beanClass="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction" actionElevationType="elevated">
+              <action name="" id="11" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
-                  <property name="itemName" type="string">${compiler:sys.fullName} ${compiler:sys.version}</property>
-                </serializedBean>
-              </action>
-              <action id="209" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="file">
-                    <object class="java.io.File">
-                      <string>${installer:sys.contentDir}/step.exe</string>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction">
+                      <void property="itemName">
+                        <string>${compiler:sys.fullName} ${compiler:sys.version}</string>
+                      </void>
                     </object>
-                  </property>
-                  <property name="name" type="string">${compiler:sys.fullName}</property>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="209" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>${installer:sys.contentDir}/step.exe</string>
+                        </object>
+                      </void>
+                      <void property="name">
+                        <string>${compiler:sys.fullName}</string>
+                      </void>
+                    </object>
+                  </java>
                 </serializedBean>
                 <condition>context.getBooleanVariable("createDesktopLinkAction")</condition>
               </action>
-              <action id="420" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
+              <action name="" id="420" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
-                  <property name="script">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>
 String os = java.lang.System.getProperty("os.name");
  
 if (os.contains("Windows")) {
@@ -239,17 +371,26 @@ if (os.contains("Mac OS X")) {
 
 return (String)context.getVariable("sys.userHome") + "/.sword";
 
- </property>
+ </string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>swordHome</string>
+                      </void>
                     </object>
-                  </property>
-                  <property name="variableName" type="string">swordHome</property>
+                  </java>
                 </serializedBean>
+                <condition />
               </action>
-              <action id="421" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
+              <action name="" id="421" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
-                  <property name="script">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>
 String os = java.lang.System.getProperty("os.name");
  
 if (os.contains("Windows")) {
@@ -261,371 +402,324 @@ if (os.contains("Mac OS X")) {
 
 return (String)context.getVariable("sys.userHome") + "/.jsword";
 
- </property>
+ </string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>jswordHome</string>
+                      </void>
                     </object>
-                  </property>
-                  <property name="variableName" type="string">jswordHome</property>
+                  </java>
                 </serializedBean>
+                <condition />
               </action>
-              <action id="419" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" actionElevationType="elevated">
+              <action name="" id="419" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:swordHome}</string>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.MoveFileAction">
+                      <void property="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:swordHome}</string>
+                        </object>
+                      </void>
+                      <void property="files">
+                        <array class="java.io.File" length="1">
+                          <void index="0">
+                            <object class="java.io.File">
+                              <string>homes/sword</string>
+                            </object>
+                          </void>
+                        </array>
+                      </void>
+                      <void property="showProgress">
+                        <boolean>true</boolean>
+                      </void>
                     </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>homes/sword</string>
-                      </object>
-                    </element>
-                  </property>
-                  <property name="showProgress" type="boolean" value="true" />
+                  </java>
                 </serializedBean>
+                <condition />
               </action>
-              <action id="422" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" actionElevationType="elevated">
+              <action name="" id="422" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>/${installer:jswordHome}</string>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.MoveFileAction">
+                      <void property="destinationFile">
+                        <object class="java.io.File">
+                          <string>/${installer:jswordHome}</string>
+                        </object>
+                      </void>
+                      <void property="files">
+                        <array class="java.io.File" length="1">
+                          <void index="0">
+                            <object class="java.io.File">
+                              <string>homes/jsword</string>
+                            </object>
+                          </void>
+                        </array>
+                      </void>
                     </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>homes/jsword</string>
-                      </object>
-                    </element>
-                  </property>
+                  </java>
                 </serializedBean>
+                <condition />
               </action>
             </actions>
-            <formComponents>
-              <formComponent id="425" beanClass="com.install4j.runtime.beans.formcomponents.ProgressComponent">
-                <serializedBean>
-                  <property name="initialStatusMessage" type="string">${i18n:WizardPreparing}</property>
-                </serializedBean>
-              </formComponent>
-            </formComponents>
+            <formComponents />
           </screen>
-          <screen id="12" beanClass="com.install4j.runtime.beans.screens.FinishedScreen" styleId="484" finishScreen="true">
+          <screen name="" id="12" customizedId="" beanClass="com.install4j.runtime.beans.screens.FinishedScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="true" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FinishedScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
             <actions>
-              <action id="97" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" actionElevationType="none">
+              <action name="" id="97" customizedId="" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
-                  <property name="launcherId" type="string">28</property>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction">
+                      <void property="launcherId">
+                        <string>28</string>
+                      </void>
+                    </object>
+                  </java>
                 </serializedBean>
                 <condition>context.getBooleanVariable("executeLauncherAction") &amp;&amp; (!context.isUnattended())</condition>
               </action>
             </actions>
             <formComponents>
-              <formComponent id="429" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="10">
+              <formComponent name="Execute launcher" id="98" customizedId="" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
                 <serializedBean>
-                  <property name="labelText" type="string">${form:finishedMessage}</property>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:RunEntryExec("${compiler:sys.fullName}")}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>executeLauncherAction</string>
+                      </void>
+                    </object>
+                  </java>
                 </serializedBean>
-              </formComponent>
-              <formComponent name="Execute launcher" id="98" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
-                <serializedBean>
-                  <property name="checkboxText" type="string">${i18n:RunEntryExec("${compiler:sys.fullName}")}</property>
-                  <property name="initiallySelected" type="boolean" value="true" />
-                  <property name="variableName" type="string">executeLauncherAction</property>
-                </serializedBean>
+                <initScript />
+                <visibilityScript />
               </formComponent>
             </formComponents>
           </screen>
         </screens>
       </application>
-      <application id="uninstaller" beanClass="com.install4j.runtime.beans.applications.UninstallerApplication" launchInNewProcess="false">
+      <application name="" id="uninstaller" customizedId="" beanClass="com.install4j.runtime.beans.applications.UninstallerApplication" enabled="true" commentSet="false" comment="" actionElevationType="none" fileset="" customIcnsFile="" customIcoFile="" macEntitlementsFile="" automaticLauncherIntegration="false" launchMode="startupFirstWindow" launchInNewProcess="false" launchSchedule="updateSchedule" allLaunchers="true">
         <serializedBean>
-          <property name="customMacosExecutableName" type="string">${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</property>
-          <property name="useCustomMacosExecutableName" type="boolean" value="true" />
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.applications.UninstallerApplication">
+              <void property="customMacosExecutableName">
+                <string>${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</string>
+              </void>
+              <void property="useCustomMacosExecutableName">
+                <boolean>true</boolean>
+              </void>
+            </object>
+          </java>
         </serializedBean>
+        <launcherIds />
+        <variables />
         <startup>
-          <screen id="14" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
+          <screen name="" id="14" customizedId="" beanClass="com.install4j.runtime.beans.screens.StartupScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
             <actions>
-              <action id="20" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" />
-              <action id="21" beanClass="com.install4j.runtime.beans.actions.misc.RequireInstallerPrivilegesAction" actionElevationType="none" />
+              <action name="" id="20" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="21" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.RequireInstallerPrivilegesAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.RequireInstallerPrivilegesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
             </actions>
+            <formComponents />
           </screen>
         </startup>
         <screens>
-          <screen id="15" beanClass="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" styleId="484">
-            <formComponents>
-              <formComponent id="435" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="10">
-                <serializedBean>
-                  <property name="labelText" type="string">${form:welcomeMessage}</property>
-                </serializedBean>
-                <visibilityScript>!context.isConsole()</visibilityScript>
-              </formComponent>
-              <formComponent id="436" beanClass="com.install4j.runtime.beans.formcomponents.ConsoleHandlerFormComponent">
-                <serializedBean>
-                  <property name="consoleScript">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string">String message = context.getMessage("ConfirmUninstall", context.getApplicationName());
-return console.askYesNo(message, true);
-</property>
-                    </object>
-                  </property>
-                </serializedBean>
-              </formComponent>
-            </formComponents>
+          <screen name="" id="15" customizedId="" beanClass="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
           </screen>
-          <screen id="16" beanClass="com.install4j.runtime.beans.screens.UninstallationScreen">
+          <screen name="" id="16" customizedId="" beanClass="com.install4j.runtime.beans.screens.UninstallationScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallationScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
             <actions>
-              <action id="17" beanClass="com.install4j.runtime.beans.actions.UninstallFilesAction" actionElevationType="elevated" />
+              <action name="" id="17" customizedId="" beanClass="com.install4j.runtime.beans.actions.UninstallFilesAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.UninstallFilesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
             </actions>
-            <formComponents>
-              <formComponent id="440" beanClass="com.install4j.runtime.beans.formcomponents.ProgressComponent">
-                <serializedBean>
-                  <property name="initialStatusMessage" type="string">${i18n:UninstallerPreparing}</property>
-                </serializedBean>
-              </formComponent>
-            </formComponents>
+            <formComponents />
           </screen>
-          <screen id="19" beanClass="com.install4j.runtime.beans.screens.UninstallFailureScreen" finishScreen="true" />
-          <screen id="18" beanClass="com.install4j.runtime.beans.screens.UninstallSuccessScreen" styleId="484" finishScreen="true">
-            <formComponents>
-              <formComponent id="443" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="10">
-                <serializedBean>
-                  <property name="labelText" type="string">${form:successMessage}</property>
-                </serializedBean>
-              </formComponent>
-            </formComponents>
+          <screen name="" id="19" customizedId="" beanClass="com.install4j.runtime.beans.screens.UninstallFailureScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="true" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallFailureScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="18" customizedId="" beanClass="com.install4j.runtime.beans.screens.UninstallSuccessScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="true" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallSuccessScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
           </screen>
         </screens>
       </application>
     </applications>
-    <styles defaultStyleId="478">
-      <style name="Standard" id="478" beanClass="com.install4j.runtime.beans.styles.FormStyle">
-        <formComponents>
-          <formComponent name="Header" id="479" beanClass="com.install4j.runtime.beans.styles.NestedStyleComponent" insetTop="0" insetBottom="0">
-            <serializedBean>
-              <property name="styleId" type="string">491</property>
-            </serializedBean>
-          </formComponent>
-          <group name="Main" id="480" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
-            <beans>
-              <formComponent id="481" beanClass="com.install4j.runtime.beans.styles.ContentComponent" insetTop="10" insetLeft="20" insetBottom="10" insetRight="20" />
-              <formComponent name="Watermark" id="482" beanClass="com.install4j.runtime.beans.formcomponents.SeparatorComponent" insetTop="0" insetLeft="5" insetBottom="0" useExternalParametrization="true" externalParametrizationName="Custom watermark" externalParametrizationMode="include">
-                <serializedBean>
-                  <property name="enabledTitleText" type="boolean" value="false" />
-                  <property name="labelText" type="string">install4j</property>
-                </serializedBean>
-                <externalParametrizationPropertyNames>
-                  <propertyName>labelText</propertyName>
-                </externalParametrizationPropertyNames>
-              </formComponent>
-              <formComponent name="Footer" id="483" beanClass="com.install4j.runtime.beans.styles.NestedStyleComponent" insetTop="0" insetBottom="0">
-                <serializedBean>
-                  <property name="styleId" type="string">495</property>
-                </serializedBean>
-              </formComponent>
-            </beans>
-          </group>
-        </formComponents>
-      </style>
-      <style name="Banner" id="484" beanClass="com.install4j.runtime.beans.styles.FormStyle">
-        <formComponents>
-          <group id="485" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
-            <serializedBean>
-              <property name="backgroundColor">
-                <object class="java.awt.Color">
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
-                </object>
-              </property>
-              <property name="borderSides">
-                <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
-                  <property name="bottom" type="boolean" value="true" />
-                </object>
-              </property>
-              <property name="imageEdgeBackgroundColor">
-                <object class="java.awt.Color">
-                  <int>25</int>
-                  <int>143</int>
-                  <int>220</int>
-                  <int>255</int>
-                </object>
-              </property>
-              <property name="imageEdgeBorder" type="boolean" value="true" />
-              <property name="imageFile">
-                <object class="com.install4j.api.beans.ExternalFile">
-                  <string>${compiler:sys.install4jHome}/resource/styles/wizard.png</string>
-                </object>
-              </property>
-              <property name="insets">
-                <object class="java.awt.Insets">
-                  <int>5</int>
-                  <int>10</int>
-                  <int>10</int>
-                  <int>10</int>
-                </object>
-              </property>
-            </serializedBean>
-            <beans>
-              <formComponent id="486" beanClass="com.install4j.runtime.beans.styles.ScreenTitleComponent" insetTop="0">
-                <serializedBean>
-                  <property name="labelFontSizePercent" type="int" value="130" />
-                  <property name="labelFontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
-                  <property name="labelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
-                </serializedBean>
-              </formComponent>
-              <formComponent id="487" beanClass="com.install4j.runtime.beans.formcomponents.SeparatorComponent" />
-              <formComponent id="488" beanClass="com.install4j.runtime.beans.styles.ContentComponent" insetTop="10" insetBottom="0" />
-            </beans>
-            <externalParametrizationPropertyNames>
-              <propertyName>imageAnchor</propertyName>
-              <propertyName>imageEdgeBackgroundColor</propertyName>
-              <propertyName>imageFile</propertyName>
-            </externalParametrizationPropertyNames>
-          </group>
-          <formComponent id="489" beanClass="com.install4j.runtime.beans.styles.NestedStyleComponent" insetBottom="0">
-            <serializedBean>
-              <property name="styleId" type="string">495</property>
-            </serializedBean>
-          </formComponent>
-        </formComponents>
-      </style>
-      <group name="Style components" id="490" beanClass="com.install4j.runtime.beans.groups.StyleGroup">
-        <beans>
-          <style name="Standard header" id="491" beanClass="com.install4j.runtime.beans.styles.FormStyle">
-            <serializedBean>
-              <property name="fillVertical" type="boolean" value="false" />
-              <property name="standalone" type="boolean" value="false" />
-              <property name="verticalAnchor" type="enum" class="com.install4j.api.beans.Anchor" value="NORTH" />
-            </serializedBean>
-            <formComponents>
-              <group id="492" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize title bar" externalParametrizationMode="include">
-                <serializedBean>
-                  <property name="backgroundColor">
-                    <object class="java.awt.Color">
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
-                    </object>
-                  </property>
-                  <property name="borderSides">
-                    <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
-                      <property name="bottom" type="boolean" value="true" />
-                    </object>
-                  </property>
-                  <property name="imageAnchor" type="enum" class="com.install4j.api.beans.Anchor" value="NORTHEAST" />
-                  <property name="imageEdgeBorderWidth" type="int" value="2" />
-                  <property name="imageFile">
-                    <object class="com.install4j.api.beans.ExternalFile">
-                      <string>icon:${installer:sys.installerApplicationMode}_header.png</string>
-                    </object>
-                  </property>
-                  <property name="imageInsets">
-                    <object class="java.awt.Insets">
-                      <int>0</int>
-                      <int>5</int>
-                      <int>1</int>
-                      <int>1</int>
-                    </object>
-                  </property>
-                  <property name="insets">
-                    <object class="java.awt.Insets">
-                      <int>0</int>
-                      <int>20</int>
-                      <int>0</int>
-                      <int>10</int>
-                    </object>
-                  </property>
-                </serializedBean>
-                <beans>
-                  <formComponent name="Title" id="493" beanClass="com.install4j.runtime.beans.styles.ScreenTitleComponent">
-                    <serializedBean>
-                      <property name="labelFontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
-                      <property name="labelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
-                    </serializedBean>
-                  </formComponent>
-                  <formComponent name="Subtitle" id="494" beanClass="com.install4j.runtime.beans.styles.ScreenTitleComponent" insetLeft="8">
-                    <serializedBean>
-                      <property name="titleType" type="enum" class="com.install4j.runtime.beans.styles.TitleType" value="SUB_TITLE" />
-                    </serializedBean>
-                  </formComponent>
-                </beans>
-                <externalParametrizationPropertyNames>
-                  <propertyName>backgroundColor</propertyName>
-                  <propertyName>foregroundColor</propertyName>
-                  <propertyName>imageAnchor</propertyName>
-                  <propertyName>imageFile</propertyName>
-                  <propertyName>imageOverlap</propertyName>
-                </externalParametrizationPropertyNames>
-              </group>
-            </formComponents>
-          </style>
-          <style name="Standard footer" id="495" beanClass="com.install4j.runtime.beans.styles.FormStyle">
-            <serializedBean>
-              <property name="fillVertical" type="boolean" value="false" />
-              <property name="standalone" type="boolean" value="false" />
-              <property name="verticalAnchor" type="enum" class="com.install4j.api.beans.Anchor" value="SOUTH" />
-            </serializedBean>
-            <formComponents>
-              <group id="496" beanClass="com.install4j.runtime.beans.groups.HorizontalFormComponentGroup">
-                <serializedBean>
-                  <property name="alignFirstLabel" type="boolean" value="false" />
-                  <property name="insets">
-                    <object class="java.awt.Insets">
-                      <int>3</int>
-                      <int>5</int>
-                      <int>8</int>
-                      <int>5</int>
-                    </object>
-                  </property>
-                </serializedBean>
-                <beans>
-                  <formComponent id="497" beanClass="com.install4j.runtime.beans.formcomponents.SpringComponent" />
-                  <formComponent name="Back button" id="498" beanClass="com.install4j.runtime.beans.styles.StandardControlButtonComponent">
-                    <serializedBean>
-                      <property name="buttonText" type="string">&lt; ${i18n:ButtonBack}</property>
-                      <property name="controlButtonType" type="enum" class="com.install4j.api.context.ControlButtonType" value="PREVIOUS" />
-                    </serializedBean>
-                  </formComponent>
-                  <formComponent name="Next button" id="499" beanClass="com.install4j.runtime.beans.styles.StandardControlButtonComponent">
-                    <serializedBean>
-                      <property name="buttonText" type="string">${i18n:ButtonNext} &gt;</property>
-                      <property name="controlButtonType" type="enum" class="com.install4j.api.context.ControlButtonType" value="NEXT" />
-                    </serializedBean>
-                  </formComponent>
-                  <formComponent name="Cancel button" id="500" beanClass="com.install4j.runtime.beans.styles.StandardControlButtonComponent" insetLeft="5">
-                    <serializedBean>
-                      <property name="buttonText" type="string">${i18n:ButtonCancel}</property>
-                      <property name="controlButtonType" type="enum" class="com.install4j.api.context.ControlButtonType" value="CANCEL" />
-                    </serializedBean>
-                  </formComponent>
-                </beans>
-              </group>
-            </formComponents>
-          </style>
-        </beans>
-      </group>
-    </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows with Java" id="25" installDir="STEP" jreBitType="32">
-      <jreBundle jreBundleSource="generated" shared="true" />
+    <windows name="Windows with Java" id="25" customizedId="" mediaFileName="" installDir="STEP" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="windows-x86-1.8.0_102" manualJREEntry="false" bundleType="1" jreURL="" jreShared="true" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" verifyIntegrity="true">
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude />
+      <variables />
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
     </windows>
-    <macosFolder name="macOS Folder" id="507" compressDmg="true" signLaunchers="true">
-      <jreBundle jreBundleSource="generated" />
-    </macosFolder>
-    <unixArchive name="Unix Archive" id="408" installDir="/opt/step">
-      <jreBundle usePack200="true" jreBundleSource="generated" />
+    <macos name="Mac OS X With Java" id="178" customizedId="" mediaFileName="" installDir="STEP" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="macosx-amd64-1.8.0_102" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" requiredVmIdPrefix="" customInstallBaseDir="" contentFilesType="1" installerName="${i18n:InstallerName(${compiler:sys.fullName})}" volumeName="${compiler:sys.shortName}" compressDmg="false" launcherId="28">
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude />
+      <variables />
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <topLevelFiles />
+    </macos>
+    <unixArchive name="Unix Archive" id="408" customizedId="" mediaFileName="" installDir="STEP" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="true" includedJRE="" manualJREEntry="false">
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude />
+      <variables />
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
     </unixArchive>
-    <linuxRPM name="Linux RPM" id="405" installDir="/opt/step">
-      <jreBundle usePack200="true" jreBundleSource="generated" />
-      <postInstallScript>sh /opt/step/post-install.sh</postInstallScript>
+    <linuxRPM name="Linux RPM" id="405" customizedId="" mediaFileName="" installDir="/opt/step" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="true" includedJRE="" manualJREEntry="false" overwriteNeverAsConfigFiles="false" os="linux" arch="i386">
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude />
+      <variables />
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <preInstallScript mode="1" file="">
+        <content />
+      </preInstallScript>
+      <postInstallScript mode="3" file="">
+        <content>sh /opt/step/post-install.sh</content>
+      </postInstallScript>
+      <preUninstallScript mode="1" file="">
+        <content />
+      </preUninstallScript>
+      <postUninstallScript mode="1" file="">
+        <content />
+      </postUninstallScript>
     </linuxRPM>
-    <linuxDeb name="Linux Deb Archive" id="406" installDir="/opt/step" bzip="true" description="STEP Bible ::  Scripture Tools for Every Person" maintainerEmail="feedback@stepbible.org">
-      <jreBundle usePack200="true" jreBundleSource="generated" />
-      <postInstallScript>sh /opt/step/post-install.sh</postInstallScript>
+    <linuxDeb name="Linux Deb Archive" id="406" customizedId="" mediaFileName="" installDir="/opt/step" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="true" includedJRE="" manualJREEntry="false" overwriteNeverAsConfigFiles="false" bzip="true" description="STEP Bible ::  Scripture Tools for Every Person" dependencies="" maintainerEmail="tech@tyndale.cam.ac.uk" architectureSet="false" architecture="">
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude />
+      <variables />
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <preInstallScript mode="1" file="">
+        <content />
+      </preInstallScript>
+      <postInstallScript mode="3" file="">
+        <content>sh /opt/step/post-install.sh</content>
+      </postInstallScript>
+      <preUninstallScript mode="1" file="">
+        <content />
+      </preUninstallScript>
+      <postUninstallScript mode="1" file="">
+        <content />
+      </postUninstallScript>
     </linuxDeb>
   </mediaSets>
-  <buildIds buildAll="false">
+  <buildIds buildAll="true">
     <mediaSet refId="25" />
   </buildIds>
+  <buildOptions verbose="false" faster="true" disableSigning="false" disableJreBundling="false" debug="false" />
 </install4j>

@@ -317,9 +317,9 @@ sup.variant.note {
 }
 
 sup.note a {
-  font-size: 100%;
+  font-size: 10px; // Not % based or it will be too big for Hebrew
   font-weight: normal;
-  padding: 0 .3em .6em .2em;
+  padding: 0 5px 9px 3px;
   margin-left: -.3em;
 }
 

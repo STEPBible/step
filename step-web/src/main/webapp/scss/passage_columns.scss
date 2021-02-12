@@ -13,28 +13,6 @@
   margin: 0 auto;
 }
 
-.notesPane {
-  font-size: 85%;
-  float: left;
-  width: 0;
-  height: 0;
-
-  a {
-    color: #333;
-    font-weight: bold;
-  }
-
-  .margin {
-    display: none;
-    position: absolute;
-    background-color: white;
-    padding: 8px;
-    border: 1px solid #ccc;
-    max-width: 150px;
-    z-index: 1;
-  }
-}
-
 #columnHolder {
   overflow-y: hidden;
   padding: 0;

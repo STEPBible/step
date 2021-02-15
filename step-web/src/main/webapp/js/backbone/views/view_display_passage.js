@@ -500,76 +500,24 @@ var PassageDisplayView = DisplayView.extend({
          * @private
          */
         _doHighlightNoteInPane: function (passageContent, link) {
-            var self = this;
             var $note = $(".notesPane strong", passageContent).filter(function () {
                 return $(this).text() == link.text();
             }).closest(".margin");
 
             var $link = $(link);
-            var $scollWindow = $link.closest(".passageContentHolder");
 
-            var onLink = false;
-            var onNote = false;
-            var delay = 200;
-
-            function hideNote() {
-                self._hideNote($note);
-
-                onLink = false;
-                onNote = false;
-            }
-
-            $link.hover(function () {
-                    setTimeout(function () {
-                        onLink = true;
-                        self._showNote($note, $link);
-
-                        $scollWindow.on("scroll", function () {
-                            hideNote($note);
-                            $scollWindow.off("scroll");
-                        })
-                    }, 50);
-                },
-                function () {
-                    setTimeout(function () {
-                        if (!onNote) {
-                            hideNote($note);
-                        }
-
-                        onLink = false;
-                    }, delay);
-                });
-
-            $note.hover(function () {
-                setTimeout(function () {
-                    onNote = true;
-                }, 50);
-            }, function () {
-                setTimeout(function () {
-                    if (!onLink) {
-                        hideNote($note);
+            require(["qtip"], function () {
+                $link.qtip({
+                    show: {event: 'mouseenter'},
+                    hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
+                    position: {my: "top center", at: "top center", of: $link, viewport: $(window), effect: false},
+                    style: {classes: "xrefHover"},
+                    overwrite: true,
+                    content: {
+                        text: $note
                     }
-
-                    onNote = false;
-                }, delay);
+                });
             });
-        },
-        _showNote: function ($note, $this) {
-            var linkPosition = $this.offset();
-            var containerPosition = $this.closest(".passageContainer").offset();
-            var linkHeight = $this.outerHeight();
-            var noteWidth = $note.outerWidth();
-            var top = linkPosition.top - containerPosition.top + linkHeight - 4;
-            var left = Math.max(linkPosition.left - containerPosition.left - (noteWidth / 2), 10);
-
-            $note.css({
-                display: "block",
-                top: top,
-                left: left
-            })
-        },
-        _hideNote: function ($note) {
-            $note.hide();
         },
 
         /**

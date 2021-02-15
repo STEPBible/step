@@ -1159,123 +1159,119 @@ step.util = {
             require(["qtip"], function () {
                 var delay = step.passages.findWhere({ passageId: passageId }).get("interlinearMode") == 'INTERLINEAR' ? 650 : 50;
                 step.util.delay(function () {
-                    var qtip = element.qtip({
-                        show: { event: 'mouseenter' },
-                        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-                        position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
-                        style: { classes: "versePopup" },
-                        overwrite: false,
-                        content: {
-                            text: function (event, api) {
-                                //otherwise, exciting new strong numbers to apply:
-                                $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference, step.userLanguageCode], function (data) {
-                                    var template = '<div class="vocabTable">' +
+                    $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference, step.userLanguageCode], function (data) {
+                        var template = '<div class="vocabTable">' +
+                            '<div class="col-xs-8 col-sm-4 heading"><h1><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1></div>' +
+                            '<div class="col-xs-2 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
+                            '<div class="col-xs-2 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+                            '<div class="hidden-xs col-sm-4 heading even"><h1><%= __s.vocab_for_verse_continued %></h1></div>' +
+                            '<div class="hidden-xs col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
+                            '<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+                            '<% _.each(rows, function(row, i) { %>' +
+                            '<span data-strong="<%= row.strongData.strongNumber %>">' +
+                            '<a href="javascript:void(0)" class="definition col-xs-8 col-sm-4 <%= i % 2 == 1 ? "even" : "" %>"><%= row.strongData.gloss %> ' +
+                            '(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)</a>' +
+                            '<a href="javascript:void(0)" class="bookCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.book) %></a>' +
+                            '<a href="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
+                            '</span><% }); %>' +
+                            '<% if(rows.length % 2 == 1) { %>' +
+                            // The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued was discovered in September 2019.
+                            //                                        '<span class="even">&nbsp;</span>' +
+                            // Removed the "&nbsp;" to resolve the Chrome browser issue
+                            '<span class="even"></span>' +
+                            '<% } %>' +
+                            '</div>' +
+                            '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
+                            '<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
+                            '<% if(isSearch) { %><a href="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
 
-                                        '<div class="col-xs-8 col-sm-4 heading"><h1><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1></div>' +
-                                        '<div class="col-xs-2 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
-                                        '<div class="col-xs-2 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
-                                        '<div class="hidden-xs col-sm-4 heading even"><h1><%= __s.vocab_for_verse_continued %></h1></div>' +
-                                        '<div class="hidden-xs col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
-                                        '<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
-                                        '<% _.each(rows, function(row, i) { %>' +
-                                        '<span data-strong="<%= row.strongData.strongNumber %>">' +
-                                        '<a href="javascript:void(0)" class="definition col-xs-8 col-sm-4 <%= i % 2 == 1 ? "even" : "" %>"><%= row.strongData.gloss %> ' +
-                                        '(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)</a>' +
-                                        '<a href="javascript:void(0)" class="bookCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.book) %></a>' +
-                                        '<a href="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
-                                        '</span><% }); %>' +
-                                        '<% if(rows.length % 2 == 1) { %>' +
-// The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued was discovered in September 2019.
-//                                        '<span class="even">&nbsp;</span>' +
-// Removed the "&nbsp;" to resolve the Chrome browser issue
-                                        '<span class="even"></span>' +
-                                        '<% } %>' +
-                                        '</div>' +
-                                        '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
-                                        '<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
-                                        '<% if(isSearch) { %><a href="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
+                        var rows = [];
 
-                                    var rows = [];
-                                    
-                                    // Check step.userLanguageCode and $.getURlvar
-                                    var urlLang = $.getUrlVar("lang");
-                                    if (urlLang == null) urlLang = "";
-                                    else urlLang = urlLang.toLowerCase();
-                                    var currentLang = step.userLanguageCode.toLowerCase();
-                                    if (urlLang == "zh_tw") currentLang = "zh_tw";
-                                    else if (urlLang == "zh") currentLang = "zh";
-                                    for (var key in data.strongData) {
-                                        var verseData = data.strongData[key];
-                                        for (var strong in verseData) {
-                                            var strongData = verseData[strong];
-                                            if (strongData && strongData.strongNumber) {
-                                                var counts = data.counts[strongData.strongNumber];
-                                                if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
-                                                else if ((currentLang == "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
-                                                rows.push({
-                                                    strongData: strongData,
-                                                    counts: counts
-                                                });
-                                            }
-                                        }
-                                    }
-
-                                    var templatedTable = $(_.template(template)({
-                                        rows: rows,
-                                        ot: data.ot,
-                                        data: data,
-                                        isSearch: isSearch
-                                    }));
-
-                                    templatedTable.find(".definition").click(function () {
-                                        step.util.trackAnalytics('verseVocab', 'definition');
-                                        self.showDef({strong: $(this).parent().data("strong"), ref: reference, version: version });
+                        // Check step.userLanguageCode and $.getURlvar
+                        var urlLang = $.getUrlVar("lang");
+                        if (urlLang == null) urlLang = "";
+                        else urlLang = urlLang.toLowerCase();
+                        var currentLang = step.userLanguageCode.toLowerCase();
+                        if (urlLang == "zh_tw") currentLang = "zh_tw";
+                        else if (urlLang == "zh") currentLang = "zh";
+                        for (var key in data.strongData) {
+                            var verseData = data.strongData[key];
+                            for (var strong in verseData) {
+                                var strongData = verseData[strong];
+                                if (strongData && strongData.strongNumber) {
+                                    var counts = data.counts[strongData.strongNumber];
+                                    if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
+                                    else if ((currentLang == "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
+                                    rows.push({
+                                        strongData: strongData,
+                                        counts: counts
                                     });
-
-                                    templatedTable.find(".bookCount").click(function () {
-                                        step.util.trackAnalytics('verseVocab', 'bookCount');
-                                        var bookKey = key.substring(0, key.indexOf('.'));
-                                        var strong = $(this).parent().data("strong");
-                                        var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent(strong);
-                                        //make this the active passage
-                                        step.util.createNewLinkedColumn(passageId);
-                                        step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
-                                        step.router.navigatePreserveVersions(args);
-                                    });
-                                    templatedTable.find(".bibleCount").click(function () {
-                                        step.util.trackAnalytics('verseVocab', 'bibleCount');
-                                        var strong = $(this).parent().data("strong");
-                                        var args = "strong=" + encodeURIComponent(strong);
-                                        //make this the active passage
-                                        step.util.createNewLinkedColumn(passageId);
-                                        step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
-                                        step.router.navigatePreserveVersions(args);
-                                    });
-
-                                    templatedTable.find(".relatedVerses").click(function () {
-                                        step.util.trackAnalytics('verseVocab', 'relatedVerses');
-                                        step.util.createNewLinkedColumn(passageId);
-                                        step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
-                                    });
-
-                                    templatedTable.find(".relatedSubjects").click(function () {
-                                        step.util.trackAnalytics('verseVocab', 'relatedSubjects');
-                                        step.util.createNewLinkedColumn(passageId);
-                                        step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
-                                    });
-
-                                    templatedTable.find(".verseInContext").click(function () {
-                                        step.util.trackAnalytics('verseVocab', 'verseInContext');
-                                        element.trigger("click");
-                                    });
-
-                                    api.set('content.text', templatedTable);
-                                });
+                                }
                             }
                         }
-                    });
 
-                    qtip.qtip("show");
+                        var templatedTable = $(_.template(template)({
+                            rows: rows,
+                            ot: data.ot,
+                            data: data,
+                            isSearch: isSearch
+                        }));
+
+                        templatedTable.find(".definition").click(function () {
+                            step.util.trackAnalytics('verseVocab', 'definition');
+                            self.showDef({strong: $(this).parent().data("strong"), ref: reference, version: version });
+                        });
+
+                        templatedTable.find(".bookCount").click(function () {
+                            step.util.trackAnalytics('verseVocab', 'bookCount');
+                            var bookKey = key.substring(0, key.indexOf('.'));
+                            var strong = $(this).parent().data("strong");
+                            var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent(strong);
+                            //make this the active passage
+                            step.util.createNewLinkedColumn(passageId);
+                            step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
+                            step.router.navigatePreserveVersions(args);
+                        });
+                        templatedTable.find(".bibleCount").click(function () {
+                            step.util.trackAnalytics('verseVocab', 'bibleCount');
+                            var strong = $(this).parent().data("strong");
+                            var args = "strong=" + encodeURIComponent(strong);
+                            //make this the active passage
+                            step.util.createNewLinkedColumn(passageId);
+                            step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
+                            step.router.navigatePreserveVersions(args);
+                        });
+
+                        templatedTable.find(".relatedVerses").click(function () {
+                            step.util.trackAnalytics('verseVocab', 'relatedVerses');
+                            step.util.createNewLinkedColumn(passageId);
+                            step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
+                        });
+
+                        templatedTable.find(".relatedSubjects").click(function () {
+                            step.util.trackAnalytics('verseVocab', 'relatedSubjects');
+                            step.util.createNewLinkedColumn(passageId);
+                            step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
+                        });
+
+                        templatedTable.find(".verseInContext").click(function () {
+                            step.util.trackAnalytics('verseVocab', 'verseInContext');
+                            element.trigger("click");
+                        });
+
+                        var qtip = element.qtip({
+                            show: { event: 'mouseenter' },
+                            hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+                            position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
+                            style: { classes: "versePopup" },
+                            overwrite: false,
+                            content: {
+                                text: templatedTable
+                            }
+                        });
+
+                        qtip.qtip("show");
+                    });
                 }, delay, 'delay-strong-popup');
                 element.one('mouseleave', function () {
                     step.util.clearTimeout('delay-strong-popup');

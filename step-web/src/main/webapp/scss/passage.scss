@@ -323,6 +323,10 @@ sup.note a {
   margin-left: -.3em;
 }
 
+sup.note a[notetype="crossReference"] {
+  font-size: 90%;
+}
+
 sup.note a[notetype="alternative"],
 sup.note a[notetype="explanation"] {
   font-size: 75%;

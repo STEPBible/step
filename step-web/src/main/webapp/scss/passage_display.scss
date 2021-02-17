@@ -126,30 +126,6 @@
     & > * {
       display: none;
     }
-
-    & > a:hover {
-      cursor: text;
-      text-decoration: none;
-    }
-
-    .margin {
-      position: absolute;
-      background-color: white;
-      padding: 8px;
-      border: 1px solid #ccc;
-      max-width: 150px;
-      z-index: 1;
-
-      a.sideNote {
-        color: #333;
-        font-weight: bold;
-
-        &:hover {
-          cursor: text;
-          text-decoration: none;
-        }
-      }
-    }
   }
   .verse.containsTable {
     text-align: left;

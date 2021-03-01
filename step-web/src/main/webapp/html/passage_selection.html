@@ -1,4 +1,5 @@
-<div class="modal-header">
+﻿<div class="modal-header">
+	<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
 	<button type="button" class="close" data-dismiss="modal" onclick=closeChapterSelect()>X</button>
 </div>
 <div id="bookchaptermodalbody" class="modal-body">
@@ -17,18 +18,42 @@
 	var lastInputChecked = "";
     $(document).ready(function () {
         userLang = step.state.language() || "en-US";
+        _displayListOfBooks();
+    });
+
+	function _displayListOfBooks() {
         var html = _buildBookHeaderAndSkeleton();
         $('#bookchaptermodalbody').append(html);
-        var data = step.util.activePassage().get("searchTokens") || [];
         $('#keyboardEntry').show();
+		_buildBookTable();
+        $('#pssgModalBackButton').hide();
+    }
+
+	function _buildBookTable() {
+        var translationType = _getTranslationType();
+        if ((userLang.toLowerCase().startsWith("en") || userLang.toLowerCase().startsWith("es") || userLang.toLowerCase().startsWith("zh")) &&
+            (translationType !== "")) {
+            _buildBookHTMLTable(translationType);
+        }
+        else {
+            var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
+            $.getJSON(url, function (data) {
+                _buildBookHTMLTable(data);
+            });
+        }	
+	}
+
+	function _getTranslationType() {
+		var versionAltName = '';
+		var data = step.util.activePassage().get("searchTokens") || [];
         for (var i = 0; i < data.length; i++) {
-            if (data[i].itemType == "version") {
+            if (data[i].itemType == VERSION) {
                 version = data[i].item.initials;
                 versionAltName = data[i].item.shortInitials;
                 break;
             }
         }
-        var translationsWithPopularBooksChapters = " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ";
+		var translationsWithPopularBooksChapters = " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ";
         var translationsWithPopularNTBooksChapters = ' 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag ee elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblg sblgntapp spavnt swahili swaulb thgnt tisch tnt tr ukrkulish uma varapp weym whnu wors ';
         var translationsWithPopularOTBooksChapters = ' ab gertextbibel kd wlc lees lxx rusmakarij ';
         var lowerCaseVersion = ' ' + version.toLowerCase() + ' ';
@@ -37,30 +62,10 @@
         if ((translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
         else if ((translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
         else if ((translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
-        if ((userLang.toLowerCase().startsWith("en") || userLang.toLowerCase().startsWith("es") || userLang.toLowerCase().startsWith("zh")) &&
-            (translationType !== "")) {
-            buildBookTable(translationType);
-        }
-        else {
-            var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/examples%3Dreference%7Climit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
-            $.getJSON(url, function (data) {
-                buildBookTable(data);
-            });
-        }
-    });
-
-    function addPassage() {
-        if (document.getElementById('addpassageonoffswitch').checked) {
-            addInsteadOfReplace = true;
-            $('#appendMsg').addClass('checked');
-        }
-        else {
-            addInsteadOfReplace = false;
-            $('#appendMsg').removeClass('checked');
-        }
-    }
-
-    function buildBookTable(data) {
+		return translationType;		
+	}
+	
+    function _buildBookHTMLTable(data) {
         var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
         var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
         var osisChapterJsword = [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
@@ -139,7 +144,7 @@
             columns = 6;
             if (browserWidth < 800) columns = 5;
         }
-        var tableHTML = _buildBookTableHeader(columns);
+        var tableHTML = __buildBookTableHeader(columns);
         var typlicalBooksChapters = false;
         var arrayOfTyplicalBooksChapters;
         var start = 0;
@@ -190,9 +195,9 @@
                 counter = 0; // reset counter for NT table
                 tableHTML += '</tr></table>';
                 $('#ot_table').append(tableHTML);
-                tableHTML = _buildBookTableHeader(columns);
+                tableHTML = __buildBookTableHeader(columns);
             }
-            if (shortNameToDisplay === "Ps") shortNameToDisplay = "Psalm";
+			if ((longNameToDisplay.length > 0) && (longNameToDisplay.length < 6)) shortNameToDisplay = longNameToDisplay;
             tableHTML += '<td title="' + longNameToDisplay + '">' +
                 '<a href="javascript:getChapters(\'' + currentOsisID + '\', \'' + version + '\', \'' + userLang + '\', ' + numOfChapters + ');">' +
                 shortNameToDisplay + '</a></td>';
@@ -208,27 +213,29 @@
     }
 
     function _buildBookHeaderAndSkeleton() {
-        return '<div class="header">' +
-            '<h4>' + __s.bible_book_name + '</h4>' +
-            '<div class="append">' +
-            '<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
-            '<div class="onoffswitch2">' +
-            '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
-            '<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
-            '<span class="onoffswitch2-inner"></span>' +
-            '<span class="onoffswitch2-switch"></span>' +
-            '</label>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
+         var html = '<div class="header">' +
+            '<h4>' + __s.bible_book_name + '</h4>';
+			if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() === "")
+				html += '<div class="append">' +
+					'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
+					'<div class="onoffswitch2">' +
+					'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
+					'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
+					'<span class="onoffswitch2-inner"></span>' +
+					'<span class="onoffswitch2-switch"></span>' +
+					'</label>' +
+					'</div>' +
+					'</div>';
+            html += '</div>' +
             '<h5>Old Testament</h5>' +
             '<div id="ot_table"/>' +
             '<h5>New Testament</h5>' +
             '<div id="nt_table"/>' +
             '</div>';
+		return html;
     }
 
-    function _buildBookTableHeader(columns) {
+    function __buildBookTableHeader(columns) {
         var columnPercent = Math.floor(100 / columns);
         html = '<table>' +
             '<colgroup>';
@@ -238,6 +245,17 @@
         html += '</colgroup>';
         html += '<tr style="height:30px">';
         return html;
+    }
+
+    function addPassage() {
+        if (document.getElementById('addpassageonoffswitch').checked) {
+            addInsteadOfReplace = true;
+            $('#appendMsg').addClass('checked');
+        }
+        else {
+            addInsteadOfReplace = false;
+            $('#appendMsg').removeClass('checked');
+        }
     }
 
     function goToPassage(osisID) {
@@ -253,15 +271,16 @@
                 existingReferences += "|reference=" + activePassageData[i].item.osisID;
             }
         }
-        var url = 'version=' + allVersions + existingReferences + '|reference=' + osisID;
+        var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
         closeChapterSelect();
         console.log("navigateSearch from passage_selection.html: " + url)
-        step.router.navigateSearch(url);
+		step.previousUserSearch[step.util.activePassageId()] = "";
+        step.router.navigateSearch(url, true); // skip QFilter
     }
 
     function getChapters(bookOsisID, version, userLang, numOfChapters) {
-        var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3Dreference%7Cversion%3D" + version + "%7Creference%3D" + bookOsisID + "%7C?lang=" + userLang;
-        console.log('num of chapters: ' + numOfChapters);
+        var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C" + REFERENCE + "%3D" + bookOsisID + "%7C?lang=" + userLang;
+        $('#pssgModalBackButton').show();
         if (numOfChapters > 0) {
             _buildChapterTable(null, bookOsisID, numOfChapters);
         }
@@ -282,7 +301,8 @@
 		}
 		userInput = userInput.replace(/^\s+/g, '');
 		lastInputChecked = userInput;
-		var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
+		
+		var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
 		$.getJSON(url, function (data) {
 			if (data.length > 0) {
 				if (data[0].suggestion.passage) {
@@ -302,22 +322,24 @@
 
 	function _userEnterPassage() {
 		$('#keyboardEntry').hide();
-		var html = '<h4>Type in your passage</h4>' +
-			'<div class="append">' +
-			'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
-			'<div class="onoffswitch2">' +
-			'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
-			'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
-			'<span class="onoffswitch2-inner"></span>' +
-			'<span class="onoffswitch2-switch"></span>' +
-			'</label>' +
-			'</div>' +
-			'</div><br>' +
-			'<p>&nbsp;&nbsp;&nbsp;<b>Examples:</b>	Matt 6</p>' +
+        $('#pssgModalBackButton').show();
+		var html = '<h4>Type in your passage</h4>';
+		if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() === "")
+			html += '<div class="append">' +
+				'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
+				'<div class="onoffswitch2">' +
+				'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
+				'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
+				'<span class="onoffswitch2-inner"></span>' +
+				'<span class="onoffswitch2-switch"></span>' +
+				'</label>' +
+				'</div>' +
+				'</div><br>';
+		html += '<p>&nbsp;&nbsp;&nbsp;<b>Examples:</b>	Matt 6</p>' +
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Isa 40:1-2</p>' +
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;John 3:16, Rom 3:23, Rev 1:8</p><br><br>' +
 			'<p>Enter passage(s):</p>' +
-			'<textarea id="enterYourPassage" rows="1" cols="75"></textarea>' +
+			'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"></textarea>' + // size 16px so the mobile devices will not expand
 			'<br><br>' +
 			'<button type="button" onclick=_handleEnteredPassage(false)>Go to passage</button>&nbsp;' +
 			'<span id="userEnterPassageError" style="color: red;"></span>';
@@ -328,10 +350,7 @@
 				var code = (e.keyCode ? e.keyCode : e.which);
 				if (code == 13) _handleEnteredPassage(false);
 				else if (code == 44) _handleEnteredPassage(true);
-			});
-		});
-		$(function(){
-			$("#bookchaptermodalbody").keyup(function(e){
+			}).keyup(function(e){
 				var code = (e.keyCode ? e.keyCode : e.which);
 				if ((code == 8) || (code == 46)) $('#userEnterPassageError').text("");
 			});
@@ -389,12 +408,17 @@
     }
 
     function closeChapterSelect() {
-        $('#bookSelectionModal').modal('hide');
-        $('#bookSelectionModal').modal({
+        $('#passageSelectionModal').modal('hide');
+        $('#passageSelectionModal').modal({
             show: false
         });
-        var element = document.getElementById('bookSelectionModal');
-        element.parentNode.removeChild(element);
+        var element = document.getElementById('passageSelectionModal');
+        if (element) element.parentNode.removeChild(element);
+    }
+
+    function goBackToPreviousPage() {
+        $('#bookchaptermodalbody').empty();
+        _displayListOfBooks();
     }
 
 </script>

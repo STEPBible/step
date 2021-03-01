@@ -1,0 +1,45 @@
+﻿<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" onclick=closeSelectConfirm()>X</button>
+</div>
+<div id="bookchaptermodalbody" class="modal-body">
+</div>
+<div class="footer">
+</div>
+<script>
+    var userLang = "en";
+    $(document).ready(function () {
+        userLang = step.state.language() || "en-US";
+        var html = _buildConfirmHeaderAndSkeleton();
+        $('#bookchaptermodalbody').append(html);
+    });
+
+
+    function _buildConfirmHeaderAndSkeleton() {
+        return '<div class="header">' +
+            '<h4>Please select one of the following options:</h4>' +
+            '</div><br>' +
+            '<button type="button" onclick="_goToUserSelection(true)" ' + 
+                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#fffff;border:1px solid #498090">' +
+                '<div>Update search range</div></button><br><br>' +
+            '<button type="button" onclick="_goToUserSelection(false)" ' + 
+                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#ffffff;border:1px solid #498090">' +
+                '<div>Display a new passage</div></button>' +            
+            '</div>';
+    }
+
+    function _goToUserSelection(userSelection) {
+        closeSelectConfirm();
+        if (userSelection) step.util.searchSelectionModal(true);
+        else step.util.passageSelectionModal(true);
+    }
+
+    function closeSelectConfirm() {
+        $('#passageSelectionConfirmModal').modal('hide');
+        $('#passageSelectionConfirmModal').modal({
+            show: false
+        });
+        var element = document.getElementById('passageSelectionConfirmModal');
+        if (element) element.parentNode.removeChild(element);
+    }
+
+</script>

@@ -69,7 +69,7 @@
 
         <p><fmt:message key="download_intro"/></p>
 
-        <table  border="1" style="width: 100%; max-width: 800px;">
+        <table border="1" style="width: 100%; max-width: 800px;">
             <tr VALIGN="TOP">
                 <td WIDTH="33%"><img src="images/WindowsCyan_Web.jpg"/><br />
                     <fmt:message key="download_windows_edition"/>&reg;
@@ -83,6 +83,7 @@
                 <td WIDTH="33%"><img src="images/apple.png"/><br />
                     <fmt:message key="download_macos"/>&reg;
                     <br />
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Mac.pdf" data-os="linux">Download instructions for Linux</a>&nbsp;
                     <p>Download from a server at:
                     <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible.dmg" data-os="mac">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible.dmg" data-os="mac">Europe,</a>&nbsp;
@@ -92,7 +93,7 @@
                 <td WIDTH="33%"><img src="images/linux.jpg"/><br />
                     <fmt:message key="download_linux"/>&reg;
                     <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_linux.pdf" data-os="linux">Download instructions for Linux</a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Linux.pdf" data-os="linux">Download instructions for Linux</a>&nbsp;
                     <p>Download DEB installation file from:
                         <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible.deb" data-os="linux">USA,</a>&nbsp;
                         <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible.deb" data-os="linux">Europe,</a>&nbsp;

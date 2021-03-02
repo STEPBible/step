@@ -83,7 +83,7 @@
                 <td WIDTH="33%"><img src="images/apple.png"/><br />
                     <fmt:message key="download_macos"/>&reg;
                     <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Mac.pdf" data-os="linux">Download instructions for Linux</a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Mac.pdf" data-os="linux">Download instructions for Mac</a>&nbsp;
                     <p>Download from a server at:
                     <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible.dmg" data-os="mac">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible.dmg" data-os="mac">Europe,</a>&nbsp;
@@ -119,6 +119,7 @@
                 <td WIDTH="33%"><img src="images/apple_zh.jpg"/><br />
                     <fmt:message key="download_macos_zh"/>&reg;
                     <br />
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Mac.pdf" data-os="linux">Download instructions for Mac</a>&nbsp;
                     <p>Download from a server at:
                     <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_zh.dmg" data-os="mac">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible_zh.dmg" data-os="mac">Europe,</a>&nbsp;
@@ -128,7 +129,7 @@
                 <td WIDTH="33%"><img src="images/linux_zh.jpg"/><br />
                     <fmt:message key="download_linux_zh"/>&reg;
                     <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_linux.pdf" data-os="linux">Download instructions for Linux</a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Linux.pdf" data-os="linux">Download instructions for Linux</a>&nbsp;
                     <p>Download DEB installation file from:
                         <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_zh.deb" data-os="linux">USA,</a>&nbsp;
                         <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible_zh.deb" data-os="linux">Europe,</a>&nbsp;

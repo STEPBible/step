@@ -74,6 +74,7 @@
                 <td WIDTH="33%"><img src="images/WindowsCyan_Web.jpg"/><br />
                     <fmt:message key="download_windows_edition"/>&reg;
                     <br />
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Windows.pdf" data-os="windows">Download instructions for Windows</a>&nbsp;
                     <p>Download from a server at:
                     <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible.exe" data-os="windows">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible.exe" data-os="windows">Europe,</a>&nbsp;
@@ -83,7 +84,7 @@
                 <td WIDTH="33%"><img src="images/apple.png"/><br />
                     <fmt:message key="download_macos"/>&reg;
                     <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Mac.pdf" data-os="linux">Download instructions for Mac</a>&nbsp;
+                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Mac.pdf" data-os="mac">Download instructions for Mac</a>&nbsp;
                     <p>Download from a server at:
                     <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible.dmg" data-os="mac">USA,</a>&nbsp;
                     <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible.dmg" data-os="mac">Europe,</a>&nbsp;

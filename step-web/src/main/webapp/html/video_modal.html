@@ -1,0 +1,34 @@
+﻿<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" onclick=closeModal("videoModal")>X</button>
+</div>
+<div id="videomodalbody" class="modal-body" style="text-align:center;background-color:grey">
+<p id="pleasewait">Loading video, please wait...
+</div>
+<script>
+    $(document).ready(function () {
+        var file = $('#videoModal').data('videofile');
+        var time = $('#videoModal').data('videotime') * 1000;
+        var gifElement = document.createElement("img");
+        gifElement.src = "/images/" + file;
+        gifElement.onload = function() {
+            $('#pleasewait').remove();
+            $('#videomodalbody').append(this);
+            console.log('timeout ' + time);
+            setTimeout(()=> {
+                closeModal('videoModal')
+            }, time);
+        }
+    });
+
+
+    function closeModal(modalID) {
+        var element = document.getElementById(modalID);
+		if (element) {	
+			$('#' + modalID).modal('hide');
+			$('#' + modalID).modal({
+				show: false
+			});
+			element.parentNode.removeChild(element);
+		}
+    }
+</script>

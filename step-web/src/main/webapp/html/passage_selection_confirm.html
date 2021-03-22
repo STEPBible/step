@@ -1,5 +1,5 @@
 ﻿<div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal" onclick=closeSelectConfirm()>X</button>
+	<button type="button" class="close" data-dismiss="modal" onclick=closeModal("passageSelectionConfirmModal")>X</button>
 </div>
 <div id="bookchaptermodalbody" class="modal-body">
 </div>
@@ -16,30 +16,33 @@
 
     function _buildConfirmHeaderAndSkeleton() {
         return '<div class="header">' +
-            '<h4>Please select one of the following options:</h4>' +
+            '<h4>' + __s.please_select + ':</h4>' +
             '</div><br>' +
             '<button type="button" onclick="_goToUserSelection(true)" ' + 
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#fffff;border:1px solid #498090">' +
-                '<div>Update search range</div></button><br><br>' +
+                '<div>' + __s.update_search_range + '</div></button><br><br>' +
             '<button type="button" onclick="_goToUserSelection(false)" ' + 
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#ffffff;border:1px solid #498090">' +
-                '<div>Display a new passage</div></button>' +            
+                '<div>' + __s.click_passage + '</div></button>' +            
             '</div>';
     }
 
     function _goToUserSelection(userSelection) {
-        closeSelectConfirm();
+        closeModal('passageSelectionConfirmModal');
+		closeModal('searchSelectionModal');
+		closeModal('passageSelectionModal');
         if (userSelection) step.util.searchSelectionModal(true);
-        else step.util.passageSelectionModal(true);
+        else step.util.passageSelectionModal(-1, true); // PT: come back to check this
     }
 
-    function closeSelectConfirm() {
-        $('#passageSelectionConfirmModal').modal('hide');
-        $('#passageSelectionConfirmModal').modal({
-            show: false
-        });
-        var element = document.getElementById('passageSelectionConfirmModal');
-        if (element) element.parentNode.removeChild(element);
+    function closeModal(modalID) {
+        var element = document.getElementById(modalID);
+		if (element) {	
+			$('#' + modalID).modal('hide');
+			$('#' + modalID).modal({
+				show: false
+			});
+			element.parentNode.removeChild(element);
+		}
     }
-
 </script>

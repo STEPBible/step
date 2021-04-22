@@ -176,7 +176,7 @@
                 <td><br />
                   <h2>Tyndale Keyboard and Unicode Font Kits</h2>
 				  <br />
-These kits include intuitive and customisable keyboards for typing in and Greek Hebrew, allowing you to create text that can be used directly in publications and websites. The Greek font includes breathing, accents and ancient forms, while the Hebrew font includes vowel pointing and Masoretic punctuation. The packages also include the Cardo Unicode font by David Parry.
+These kits include intuitive and customisable keyboards for typing in Greek and Hebrew, allowing you to create text that can be used directly in publications and websites. The Greek font includes breathing, accents and ancient forms, while the Hebrew font includes vowel pointing and Masoretic punctuation. The packages also include the Cardo Unicode font by David Parry.
 
 				  <br /><br />
                   <a href="https://downloads.stepbible.com/file/Stepbible/TyndaleUnicodePC.zip" data-os="windows">Windows</a> 

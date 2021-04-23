@@ -17,10 +17,10 @@ var ViewHelpMenuOptions = Backbone.View.extend({
                 '</div>' + //end header
                 '<div class="modal-body">' +
                 '<div>' +
-                '<%= __s.step_thanks %><ul><li><%= __s.step_thanks_crosswire %></li><li><%= __s.step_thanks_crossway %></li><li><%= __s.step_thanks_biblica %></li></ul>' +
+                '<%= __s.step_thanks %><ul><li><%= __s.step_thanks_tyndale_house %></li><li><%= __s.step_thanks_crosswire %></li><li><%= __s.step_thanks_crossway %></li><li><%= __s.step_thanks_biblica %></li></ul>' +
                 '<a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_new">Copyright and License information</a>' +
                 '<p />' +
-                '&copy; Tyndale House, Cambridge <%= new Date().getYear() + 1900 %> </p>' +
+                '&copy; STEPBible, Cambridge <%= new Date().getYear() + 1900 %> </p>' +
                 '</div>' +
                 '<div class="footer"><button class="btn btn-default btn-sm closeModal" data-dismiss="modal" ><label><%= __s.ok %></label></button></div>' +
                 '</div>' + //end modal body

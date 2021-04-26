@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<TITLE>Download free and trustworthy Bible study tools, including the NIV and ESV | STEP :: Scripture Tools for Every Person - Download STEP</TITLE>
+	<style type="text/css">
+	  table {
+	  width: 1200px;
+	  }
+
+	  .td1 {
+	  width: 550px;
+	  vertical-align:top;
+	  }
+	  
+	  .td2 {
+	  width: 50px;
+	  }
+	  
+	  .td3 {
+	  width: 600px;
+	  vertical-align:center;
+	  }
+
+	  .tr {
+	  height: 600px;
+	  }
+	  
+	  .pageContent {
+	  margin-left: 100px;
+	  }
+
+	  .h {
+	  font-weight: bold;
+	  font-size: 40px;
+	  }
+
+	  .p {
+	  font-size: 20px;
+	  }
+
+	  .image {
+	  width: 600px;
+	  }
+
+	  .label {
+	  width: 220px;
+	  text-align: right;
+	  display:inline-block;
+	  }
+
+	  .button {
+	  background-color: #227891;
+	  border: none;
+	  border-radius: 12px;
+	  color: white;
+	  padding: 20px;
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 24px;
+	  margin: 4px 2px;
+	  cursor: pointer;
+	  width: 200px;
+	  margin-left: 120px;
+	  }
+
+	</style>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	
+	<script>
+    $(document).ready(function () {
+		__s = {}; // Will not needed
+		__s.download_step_header = "Download STEPBible to your computer"; // Will not needed
+		$('#download_step_header').text(__s.download_step_header);
+    });
+	function _userDownload(clickItemID) {
+		if (clickItemID === "exeDownload") {
+			var os =  $( "#step_os option:selected" ).val();
+			var lexicon = $('#lexicon option:selected').val();
+			var region = $('#region option:selected').val();
+			console.log("Executable os: " + os + ", lexicon: " + lexicon + ", region: " + region);
+			var fileExtension = "";
+			if (os === "windows") fileExtension = "exe";
+			else if (os === "mac") fileExtension = "dmg";
+			else if (os === "linux_deb") fileExtension = "deb";
+			else if (os === "linux_rpm") fileExtension = "rpm";
+			else console.log("Unknown os selected: " + os);
+			var fileName = "";
+			if (lexicon === "lexicon_english") fileName = "STEPBible";
+			else if (lexicon === "lexicon_english_chinese") fileName = "STEPBible_zh";
+			else console.log("Unknown lexicon selected: " + lexicon);
+			var path = "";
+			if (region === "region_usa") path = "https://downloads.stepbible.com/file/Stepbible/";
+			else if (region === "region_europe") path = "https://stepbible-eu.s3.eu-north-1.amazonaws.com/";
+			else if (region === "region_asia_pacific") path = "https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/";
+			else console.log("Unknown region selected: " + region);
+			var downloadPath = path + fileName + "." + fileExtension;
+			console.log("Download path: " + downloadPath);
+			window.location.href = downloadPath;
+		}
+		else if (clickItemID === "exeInstruction") {
+			var os =  $( "#step_os option:selected" ).val();
+			console.log("Executable os: " + os);
+			var fileName = "";
+			if (os === "windows") fileName = "STEPBible_Windows.pdf";
+			else if (os === "mac") fileName = "STEPBible_Mac.pdf";
+			else if (os === "linux_deb") fileName = "STEPBible_Linux.pdf";
+			else if (os === "linux_rpm") fileName = "STEPBible_Linux.pdf";
+			else console.log("Unknown os selected: " + os);
+			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
+			console.log("Download path: " + fileName);
+			window.location.href = downloadPath;
+		}
+		else if (clickItemID === "keyboardDownload") {
+			var os = $('#keyboard_os option:selected').val();
+			console.log("Keyboard, os: " + os);
+			var fileNames = "";
+			if (os === "windows") fileName = "TyndaleUnicodePC.zip";
+			else if (os === "mac") fileName = "TyndaleUnicodeMac.zip";
+			else if (os === "linux") fileName = "Tyndale_keyboards_for_Linux.tgz";
+			else console.log("Unknown os selected: " + os);
+			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
+			console.log("Download path: " + downloadPath);
+			window.location.href = downloadPath;
+		}
+		else if (clickItemID === "keyboardInstruction") {
+			var os = $('#keyboard_os option:selected').val();
+			console.log("Keyboard, os: " + os);
+			var fileNames = "";
+			if (os === "windows") fileName = "Tyndale_Keyboards_for_Windows_Installation_Guide.pdf";
+			else if (os === "mac") fileName = "Tyndale_Keyboards_for_Mac_Installation_Guide.pdf";
+			else if (os === "linux") fileName = "Tyndale_Keyboards_for_Linux_Installation_Guide.pdf";
+			else console.log("Unknown os selected: " + os);
+			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
+			console.log("Download path: " + downloadPath);
+			window.location.href = downloadPath;
+		}
+		else if (clickItemID === "keyboardGuide") {
+			var os = $('#keyboard_os option:selected').val();
+			console.log("Keyboard, os: " + os);
+			var fileNames = "";
+			if (os === "windows") fileName = "Tyndale_Keyboards_Usage_Guide.pdf";
+			else if (os === "mac") fileName = "Tyndale_Keyboards_Usage_Guide.pdf";
+			else if (os === "linux") fileName = "Tyndale_Keyboards_for_Linux_Usage_Guide.pdf";
+			else console.log("Unknown os selected: " + os);
+			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
+			console.log("Download path: " + downloadPath);
+			window.location.href = downloadPath;
+		}
+	}
+	</script>
+
+	
+  </HEAD>
+
+  <body>
+	<div class="pageContent">
+
+	  <img src="images/STEPBible_logo.png" width=1200px/>
+
+	  <table>
+		<tr class="tr">
+		  <td class="td1">
+			<p class="h" id="download_step_header">DOWNLOAD STEPBible to your computer</p>
+			<p class="p">
+			  Run STEPBible from your computer when disconnected from the internet.  ESV,
+			  NIV and ancient language Bibles are included.
+
+			  <br/><br/>
+
+			  <label class="label" for="step_os">Operating system:</label>
+			  <select name="step_os" id="step_os">
+				<option value="windows">Windows</option>
+				<option value="mac">Mac OS</option>
+				<option value="linux_deb">Linux (.deb)</option>
+				<option value="linux_rpm">Linux (.rpm)</option>
+			  </select>
+
+			  <br/>
+
+			  <label class="label" for="lexicon">With lexicon(s):</label>
+			  <select name="lexicon" id="lexicon">
+				<option value="lexicon_english">English</option>
+				<option value="lexicon_english_chinese">English + Chinese</option>
+			  </select>
+
+			  <br/>
+
+			  <label class="label" for="region">Download region:</label>
+			  <select name="region" id="region">
+				<option value="region_usa">USA</option>
+				<option value="region_europe">Europe</option>
+				<option value="region_asia_pacific">Asia Pacific</option>
+			  </select>
+
+			  <br/><br/><br/>
+
+			  <button id="exeDownload" class="button" onclick=_userDownload(this.id)>Download</button>
+
+			  <br/><br/>
+
+			  Click <a id="exeInstruction" onclick=_userDownload(this.id)>here</a> for installation instructions.
+
+			  <br/><br/>
+
+			</p>
+			<p>
+			  STEP is available on different platforms, thanks to the
+			  <a href="https://www.ej-technologies.com/products/install4j/overview.html"
+				 target="_new">install4j multi-platform installer builder</a>.
+			</p>
+
+		  </td>
+		  <td class="td2">
+		  <td class="td3">
+			<img class="image" src="images/STEP_screenshot.png">
+		  </td>
+		</tr>
+		<tr class="tr">
+		  <td class="td1">
+			<p class="h">Tyndale Keyboard and Unicode Font Kits</p>
+			<p class="p">
+			  These kits include intuitive and customisable keyboards for typing
+			  in Greek and Hebrew, allowing you to create text that can be used
+			  directly in publications and websites. The Greek font includes
+			  breathing, accents and ancient forms, while the Hebrew font includes
+			  vowel pointing and Masoretic punctuation. The packages also include
+			  the Cardo Unicode font by David Parry.
+
+			  <br/><br/>
+
+			  <label class="label" for="keyboard_os">Operating system:</label>
+			  <select name="keyboard_os" id="keyboard_os">
+				<option value="windows">Windows</option>
+				<option value="mac">Mac OS</option>
+				<option value="linux">Linux</option>
+			  </select>
+
+			  <br/><br/><br/>
+			  
+			  <button id="keyboardDownload" class="button" onclick=_userDownload(this.id)>Download</button>
+
+			  <br/><br/>
+
+			  Click <a id="keyboardInstruction" onclick=_userDownload(this.id)>here</a> for installation instructions.
+			  <br/>
+			  Click <a id="keyboardGuide" onclick=_userDownload(this.id)>here</a> for usage guide.
+			</p>
+		  </td>
+		  <td class="td2">
+		  <td class="td3">
+			<img class="image" src="images/keyboards.png">
+		  </td>
+		</tr>
+	  </table>
+  </body>
+</HTML>

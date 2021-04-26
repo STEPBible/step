@@ -32,11 +32,11 @@
 
 	  .h {
 	  font-weight: bold;
-	  font-size: 40px;
+	  font-size: 36px;
 	  }
 
 	  .p {
-	  font-size: 20px;
+	  font-size: 18px;
 	  }
 
 	  .image {
@@ -47,6 +47,13 @@
 	  width: 220px;
 	  text-align: right;
 	  display:inline-block;
+	  }
+
+
+	  .here {
+	  color: blue;
+	  text-decoration: underline;
+	  cursor: pointer;
 	  }
 
 	  .button {
@@ -63,6 +70,7 @@
 	  cursor: pointer;
 	  width: 200px;
 	  margin-left: 120px;
+	  outline: none;
 	  }
 
 	</style>
@@ -158,7 +166,7 @@
   <body>
 	<div class="pageContent">
 
-	  <img src="images/STEPBible_logo.png" width=1200px/>
+	  <img src="../images/STEPBible_logo.png" width=1200px/>
 
 	  <table>
 		<tr class="tr">
@@ -201,7 +209,7 @@
 
 			  <br/><br/>
 
-			  Click <a id="exeInstruction" onclick=_userDownload(this.id)>here</a> for installation instructions.
+			  Click <a class="here" id="exeInstruction" onclick=_userDownload(this.id)>here</a> for installation instructions.
 
 			  <br/><br/>
 
@@ -215,7 +223,7 @@
 		  </td>
 		  <td class="td2">
 		  <td class="td3">
-			<img class="image" src="images/STEP_screenshot.png">
+			<img class="image" src="../images/STEP_screenshot.png">
 		  </td>
 		</tr>
 		<tr class="tr">
@@ -244,14 +252,14 @@
 
 			  <br/><br/>
 
-			  Click <a id="keyboardInstruction" onclick=_userDownload(this.id)>here</a> for installation instructions.
+			  Click <a class="here" id="keyboardInstruction" onclick=_userDownload(this.id)>here</a> for installation instructions.
 			  <br/>
-			  Click <a id="keyboardGuide" onclick=_userDownload(this.id)>here</a> for usage guide.
+			  Click <a class="here" id="keyboardGuide" onclick=_userDownload(this.id)>here</a> for usage guide.
 			</p>
 		  </td>
 		  <td class="td2">
 		  <td class="td3">
-			<img class="image" src="images/keyboards.png">
+			<img class="image" src="../images/keyboards.png">
 		  </td>
 		</tr>
 	  </table>

@@ -61,6 +61,7 @@
 	  .h {
 	  font-weight: bold;
 	  font-size: 36px;
+      line-height: 1;
 	  }
 
 	  .p {

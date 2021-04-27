@@ -32,30 +32,75 @@
     <script src="/js/step.util.js" type="text/javascript"></script>
 
     <style type="text/css">
-        table {
-            margin-top: 50px;
-            width: 100%;
+	  table {
+	  width: 1200px;
+	  }
 
-        }
+	  .td1 {
+	  width: 550px;
+	  vertical-align:top;
+	  }
+	  
+	  .td2 {
+	  width: 50px;
+	  }
+	  
+	  .td3 {
+	  width: 600px;
+	  vertical-align:center;
+	  }
 
-        td {
-            text-align: center;
-            border-bottom: lightgrey solid 2px;
-        }
+	  .tr {
+	  height: 600px;
+	  }
+	  
+	  .pageContent {
+	  margin-left: 100px;
+	  }
 
-        td:first-child {
-            border-right: lightgrey solid 1px;
-        }
+	  .h {
+	  font-weight: bold;
+	  font-size: 36px;
+	  }
 
-        .pageContent {
-            margin: 10px;
-        }
+	  .p {
+	  font-size: 18px;
+	  }
 
-        .corner {
-            position: absolute;
-            bottom: 3px;
-            right: 3px;
-        }
+	  .image {
+	  width: 600px;
+	  }
+
+	  .label {
+	  width: 220px;
+	  text-align: right;
+	  display:inline-block;
+	  }
+
+
+	  .here {
+	  color: blue;
+	  text-decoration: underline;
+	  cursor: pointer;
+	  }
+
+	  .button {
+	  background-color: #227891;
+	  border: none;
+	  border-radius: 12px;
+	  color: white;
+	  padding: 20px;
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 24px;
+	  margin: 4px 2px;
+	  cursor: pointer;
+	  width: 200px;
+	  margin-left: 120px;
+	  outline: none;
+	  }
+
     </style>
 
 </HEAD>

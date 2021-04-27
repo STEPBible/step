@@ -60,143 +60,108 @@
 
 </HEAD>
 <body>
-<div>
-    <div class="header">
-        <h1>STEP :: Scripture Tools for Every Person</h1>
-    </div>
-    <div class="pageContent">
-        <h2><fmt:message key="download_desktop_step"/></h2>
 
-        <p><fmt:message key="download_intro"/></p>
+	<div class="pageContent">
 
-        <table border="1" style="width: 100%; max-width: 800px;">
-            <tr VALIGN="TOP">
-                <td WIDTH="33%"><img src="images/WindowsCyan_Web.jpg"/><br />
-                    <fmt:message key="download_windows_edition"/>&reg;
-                    <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Windows.pdf" data-os="windows">Download instructions for Windows</a>&nbsp;
-                    <p>Download from a server at:
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible.exe" data-os="windows">USA,</a>&nbsp;
-                    <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible.exe" data-os="windows">Europe,</a>&nbsp;
-                    <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEPBible.exe" data-os="windows">Asia Pacific</a>
-                    </p>
-                </td>
-                <td WIDTH="33%"><img src="images/apple.png"/><br />
-                    <fmt:message key="download_macos"/>&reg;
-                    <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Mac.pdf" data-os="mac">Download instructions for Mac</a>&nbsp;
-                    <p>Download from a server at:
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible.dmg" data-os="mac">USA,</a>&nbsp;
-                    <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible.dmg" data-os="mac">Europe,</a>&nbsp;
-                    <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEPBible.dmg" data-os="mac">Asia Pacific</a>
-                    </p>
-                </td>
-                <td WIDTH="33%"><img src="images/linux.jpg"/><br />
-                    <fmt:message key="download_linux"/>&reg;
-                    <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Linux.pdf" data-os="linux">Download instructions for Linux</a>&nbsp;
-                    <p>Download DEB installation file from:
-                        <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible.deb" data-os="linux">USA,</a>&nbsp;
-                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible.deb" data-os="linux">Europe,</a>&nbsp;
-                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEPBible.deb" data-os="linux">Asia Pacific</a>
-                    </p>
-                    <p>Download RPM installation file from:
-                        <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible.rpm" data-os="linux">USA,</a>&nbsp;
-                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible.rpm" data-os="linux">Europe,</a>&nbsp;
-                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEPBible.rpm" data-os="linux">Asia Pacific</a>
-                    </p>
-                </td>
-            </tr>
-			<tr VALIGN="TOP">
-                <td WIDTH="33%"><img src="images/WindowsCyan_Web_zh.jpg"/><br />
-                    <fmt:message key="download_windows_edition_zh"/>&reg;
-                    <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Windows.pdf" data-os="windows">Download instructions for Windows</a>&nbsp;
-                    <p>Download from a server at:
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_zh.exe" data-os="windows">USA,</a>&nbsp;
-                    <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible_zh.exe" data-os="windows">Europe,</a>&nbsp;
-                    <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEPBible_zh.exe" data-os="windows">Asia Pacific</a>
-                    </p>
-                </td>
-                <td WIDTH="33%"><img src="images/apple_zh.jpg"/><br />
-                    <fmt:message key="download_macos_zh"/>&reg;
-                    <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Mac.pdf" data-os="mac">Download instructions for Mac</a>&nbsp;
-                    <p>Download from a server at:
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_zh.dmg" data-os="mac">USA,</a>&nbsp;
-                    <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible_zh.dmg" data-os="mac">Europe,</a>&nbsp;
-                    <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEPBible_zh.dmg" data-os="mac">Asia Pacific</a>
-                    </p>
-                </td>
-                <td WIDTH="33%"><img src="images/linux_zh.jpg"/><br />
-                    <fmt:message key="download_linux_zh"/>&reg;
-                    <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Linux.pdf" data-os="linux">Download instructions for Linux</a>&nbsp;
-                    <p>Download DEB installation file from:
-                        <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_zh.deb" data-os="linux">USA,</a>&nbsp;
-                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible_zh.deb" data-os="linux">Europe,</a>&nbsp;
-                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEPBible_zh.deb" data-os="linux">Asia Pacific</a>
-                    </p>
-                    <p>Download RPM installation file from:
-                        <a href="https://downloads.stepbible.com/file/Stepbible/STEPBible_zh.rpm" data-os="linux">USA,</a>&nbsp;
-                        <a href="https://stepbible-eu.s3.eu-north-1.amazonaws.com/STEPBible_zh.rpm" data-os="linux">Europe,</a>&nbsp;
-                        <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEPBible_zh.rpm" data-os="linux">Asia Pacific</a>
-                    </p>
-                </td>
-            </tr>
-            <tr VALIGN="TOP">
-                <td><br /><br />
-                    <fmt:message key="download_installer"/><br />
-                    <img src="/images/SD+USB.jpg"/>
-                    <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_installers_450Bibles.zip"><fmt:message key="download3"/></a>&nbsp;
-                    <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_installers_200Bibles.zip"><fmt:message key="download2"/></a>&nbsp;
-                    <br />
-                    <a href="https://downloads.stepbible.com/file/Stepbible/STEP_installers_9Bibles.zip"><fmt:message key="download1"/></a>
-                </td>
-                <td><br /><br />
-                    <fmt:message key="return_to_main_site"/>
-                    <br /><a href="https://www.stepbible.org">www.stepbible.org
-                        <br />
-                        <br /><img src="images/STEPonline.jpg"/></a>
-                    <br /><br /><br />
-                    <a href="https://www.stepbible.org/?q=version=NAV&lang=ar">Arabic</a>,
-                    <a href="https://www.stepbible.org/?q=version=FarsiOPV&lang=fa">Farsi</a>,
-                    <a href="https://www.stepbible.org/?q=version=CUns&lang=zh">Mainland Chinese</a>,
-                    <a href="https://www.stepbible.org/?q=version=CUn&lang=zh_TW">Traditional Chinese</a>,
-                    <a href="https://www.stepbible.org/?q=version=NVI&lang=es">Spanish</a>,
-                    <a href="https://www.stepbible.org/?q=version=PNVI&lang=pt">Portuguese</a>,
-                    <a href="https://www.stepbible.org/?q=version=Neno&lang=sw">Swahili</a>,
-                    <a href="https://www.stepbible.org/?q=version=NRT&lang=ru">Russian</a>,
-                    <a href="https://www.stepbible.org/?q=version=NTLR&lang=ro">Romanian</a>,
-                    etc...
+	  <img src="/images/STEPBible_logo.png" width=1200px/>
 
-                </td>
-                <td><br />
-                  <h2>Tyndale Keyboard and Unicode Font Kits</h2>
-				  <br />
-These kits include intuitive and customisable keyboards for typing in Greek and Hebrew, allowing you to create text that can be used directly in publications and websites. The Greek font includes breathing, accents and ancient forms, while the Hebrew font includes vowel pointing and Masoretic punctuation. The packages also include the Cardo Unicode font by David Parry.
+	  <table>
+		<tr class="tr">
+		  <td class="td1">
+			<p class="h" id="download_step_header">DOWNLOAD STEPBible to your computer</p>
+			<p class="p">
+			  Run STEPBible from your computer when disconnected from the internet.  ESV,
+			  NIV and ancient language Bibles are included.
 
-				  <br /><br />
-                  <a href="https://downloads.stepbible.com/file/Stepbible/TyndaleUnicodePC.zip" data-os="windows">Windows</a> 
-                  (<a href="https://downloads.stepbible.com/file/Stepbible/Tyndale_Keyboards_for_Windows_Installation_Guide.pdf" data-os="windows">Install instructions</a>, 
-                  <a href="https://downloads.stepbible.com/file/Stepbible/Tyndale_Keyboards_Usage_Guide.pdf" data-os="windows">Usage Guide</a>)
-				  <br>
-                  <a href="https://downloads.stepbible.com/file/Stepbible/TyndaleUnicodeMac.zip" data-os="mac">Mac</a>
-                  (<a href="https://downloads.stepbible.com/file/Stepbible/Tyndale_Keyboards_for_Mac_Installation_Guide.pdf" data-os="mac">Install instructions</a>,
-                  <a href="https://downloads.stepbible.com/file/Stepbible/Tyndale_Keyboards_Usage_Guide.pdf" data-os="mac">Usage Guide</a>)
-				  <br>
-                  <a href="https://downloads.stepbible.com/file/Stepbible/Tyndale_keyboards_for_Linux.tgz" data-os="linux">Linux</a> 
-                  (<a href="https://downloads.stepbible.com/file/Stepbible/Tyndale_Keyboards_for_Linux_Installation_Guide.pdf" data-os="linux">Install instructions</a>, 
-                  <a href="https://downloads.stepbible.com/file/Stepbible/Tyndale_Keyboards_for_Linux_Usage_Guide.pdf" data-os="linux">Usage Guide</a>)
+			  <br/><br/>
 
-                </td>
-            </tr>
-        </table>
-        <br />
-    </div>
-</div>
+			  <label class="label" for="step_os">Operating system:</label>
+			  <select name="step_os" id="step_os">
+				<option value="windows">Windows</option>
+				<option value="mac">Mac OS</option>
+				<option value="linux_deb">Linux (.deb)</option>
+				<option value="linux_rpm">Linux (.rpm)</option>
+			  </select>
+
+			  <br/>
+
+			  <label class="label" for="lexicon">With lexicon(s):</label>
+			  <select name="lexicon" id="lexicon">
+				<option value="lexicon_english">English</option>
+				<option value="lexicon_english_chinese">English + Chinese</option>
+			  </select>
+
+			  <br/>
+
+			  <label class="label" for="region">Download region:</label>
+			  <select name="region" id="region">
+				<option value="region_usa">USA</option>
+				<option value="region_europe">Europe</option>
+				<option value="region_asia_pacific">Asia Pacific</option>
+			  </select>
+
+			  <br/><br/><br/>
+
+			  <button id="exeDownload" class="button" onclick=_userDownload(this.id)>Download</button>
+
+			  <br/><br/>
+
+			  Click <a class="here" id="exeInstruction" onclick=_userDownload(this.id)>here</a> for installation instructions.
+
+			  <br/><br/>
+
+			</p>
+			<p>
+			  STEP is available on different platforms, thanks to the
+			  <a href="https://www.ej-technologies.com/products/install4j/overview.html"
+				 target="_new">install4j multi-platform installer builder</a>.
+			</p>
+
+		  </td>
+		  <td class="td2">
+		  <td class="td3">
+			<img class="image" src="/images/STEP_screenshot.png">
+		  </td>
+		</tr>
+		<tr class="tr">
+		  <td class="td1">
+			<p class="h">Tyndale Keyboard and Unicode Font Kits</p>
+			<p class="p">
+			  These kits include intuitive and customisable keyboards for typing
+			  in Greek and Hebrew, allowing you to create text that can be used
+			  directly in publications and websites. The Greek font includes
+			  breathing, accents and ancient forms, while the Hebrew font includes
+			  vowel pointing and Masoretic punctuation. The packages also include
+			  the Cardo Unicode font by David Parry.
+
+			  <br/><br/>
+
+			  <label class="label" for="keyboard_os">Operating system:</label>
+			  <select name="keyboard_os" id="keyboard_os">
+				<option value="windows">Windows</option>
+				<option value="mac">Mac OS</option>
+				<option value="linux">Linux</option>
+			  </select>
+
+			  <br/><br/><br/>
+			  
+			  <button id="keyboardDownload" class="button" onclick=_userDownload(this.id)>Download</button>
+
+			  <br/><br/>
+
+			  Click <a class="here" id="keyboardInstruction" onclick=_userDownload(this.id)>here</a> for installation instructions.
+			  <br/>
+			  Click <a class="here" id="keyboardGuide" onclick=_userDownload(this.id)>here</a> for usage guide.
+			</p>
+		  </td>
+		  <td class="td2">
+		  <td class="td3">
+			<img class="image" src="/images/keyboards.png">
+		  </td>
+		</tr>
+	  </table>
+	</div>
+
 
 <% if(!appManager.isLocal()) { %>
 <script>
@@ -227,6 +192,88 @@ These kits include intuitive and customisable keyboards for typing in Greek and 
     }(window, document, 'script'));
 
 </script>
+	<script>
+    $(document).ready(function () {
+		__s = {}; // Will not needed
+		__s.download_step_header = "Download STEPBible to your computer"; // Will not needed
+		$('#download_step_header').text(__s.download_step_header);
+    });
+	function _userDownload(clickItemID) {
+		if (clickItemID === "exeDownload") {
+			var os =  $( "#step_os option:selected" ).val();
+			var lexicon = $('#lexicon option:selected').val();
+			var region = $('#region option:selected').val();
+			console.log("Executable os: " + os + ", lexicon: " + lexicon + ", region: " + region);
+			var fileExtension = "";
+			if (os === "windows") fileExtension = "exe";
+			else if (os === "mac") fileExtension = "dmg";
+			else if (os === "linux_deb") fileExtension = "deb";
+			else if (os === "linux_rpm") fileExtension = "rpm";
+			else console.log("Unknown os selected: " + os);
+			var fileName = "";
+			if (lexicon === "lexicon_english") fileName = "STEPBible";
+			else if (lexicon === "lexicon_english_chinese") fileName = "STEPBible_zh";
+			else console.log("Unknown lexicon selected: " + lexicon);
+			var path = "";
+			if (region === "region_usa") path = "https://downloads.stepbible.com/file/Stepbible/";
+			else if (region === "region_europe") path = "https://stepbible-eu.s3.eu-north-1.amazonaws.com/";
+			else if (region === "region_asia_pacific") path = "https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/";
+			else console.log("Unknown region selected: " + region);
+			var downloadPath = path + fileName + "." + fileExtension;
+			console.log("Download path: " + downloadPath);
+			window.location.href = downloadPath;
+		}
+		else if (clickItemID === "exeInstruction") {
+			var os =  $( "#step_os option:selected" ).val();
+			console.log("Executable os: " + os);
+			var fileName = "";
+			if (os === "windows") fileName = "STEPBible_Windows.pdf";
+			else if (os === "mac") fileName = "STEPBible_Mac.pdf";
+			else if (os === "linux_deb") fileName = "STEPBible_Linux.pdf";
+			else if (os === "linux_rpm") fileName = "STEPBible_Linux.pdf";
+			else console.log("Unknown os selected: " + os);
+			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
+			console.log("Download path: " + fileName);
+			window.location.href = downloadPath;
+		}
+		else if (clickItemID === "keyboardDownload") {
+			var os = $('#keyboard_os option:selected').val();
+			console.log("Keyboard, os: " + os);
+			var fileNames = "";
+			if (os === "windows") fileName = "TyndaleUnicodePC.zip";
+			else if (os === "mac") fileName = "TyndaleUnicodeMac.zip";
+			else if (os === "linux") fileName = "Tyndale_keyboards_for_Linux.tgz";
+			else console.log("Unknown os selected: " + os);
+			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
+			console.log("Download path: " + downloadPath);
+			window.location.href = downloadPath;
+		}
+		else if (clickItemID === "keyboardInstruction") {
+			var os = $('#keyboard_os option:selected').val();
+			console.log("Keyboard, os: " + os);
+			var fileNames = "";
+			if (os === "windows") fileName = "Tyndale_Keyboards_for_Windows_Installation_Guide.pdf";
+			else if (os === "mac") fileName = "Tyndale_Keyboards_for_Mac_Installation_Guide.pdf";
+			else if (os === "linux") fileName = "Tyndale_Keyboards_for_Linux_Installation_Guide.pdf";
+			else console.log("Unknown os selected: " + os);
+			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
+			console.log("Download path: " + downloadPath);
+			window.location.href = downloadPath;
+		}
+		else if (clickItemID === "keyboardGuide") {
+			var os = $('#keyboard_os option:selected').val();
+			console.log("Keyboard, os: " + os);
+			var fileNames = "";
+			if (os === "windows") fileName = "Tyndale_Keyboards_Usage_Guide.pdf";
+			else if (os === "mac") fileName = "Tyndale_Keyboards_Usage_Guide.pdf";
+			else if (os === "linux") fileName = "Tyndale_Keyboards_for_Linux_Usage_Guide.pdf";
+			else console.log("Unknown os selected: " + os);
+			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
+			console.log("Download path: " + downloadPath);
+			window.location.href = downloadPath;
+		}
+	}
+	</script>
 <% } %>
 </body>
 </HTML>

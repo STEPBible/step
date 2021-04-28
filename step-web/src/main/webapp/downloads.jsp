@@ -118,7 +118,7 @@
 	  <table>
 		<tr class="tr">
 		  <td class="td1">
-			<p class="h" id="download_step_header">DOWNLOAD STEPBible to your computer</p>
+			<p class="h" id="download_step_header">Download STEPBible to your computer</p>
 			<p class="p">
 			  Run STEPBible from your computer when disconnected from the internet.  ESV,
 			  NIV and ancient language Bibles are included.
@@ -243,17 +243,11 @@
 
 </script>
 	<script>
-    $(document).ready(function () {
-		__s = {}; // Will not needed
-		__s.download_step_header = "Download STEPBible to your computer"; // Will not needed
-		$('#download_step_header').text(__s.download_step_header);
-    });
 	function _userDownload(clickItemID) {
 		if (clickItemID === "exeDownload") {
 			var os =  $( "#step_os option:selected" ).val();
 			var lexicon = $('#lexicon option:selected').val();
 			var region = $('#region option:selected').val();
-			console.log("Executable os: " + os + ", lexicon: " + lexicon + ", region: " + region);
 			var fileExtension = "";
 			if (os === "windows") fileExtension = "exe";
 			else if (os === "mac") fileExtension = "dmg";
@@ -270,12 +264,10 @@
 			else if (region === "region_asia_pacific") path = "https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/";
 			else console.log("Unknown region selected: " + region);
 			var downloadPath = path + fileName + "." + fileExtension;
-			console.log("Download path: " + downloadPath);
 			window.location.href = downloadPath;
 		}
 		else if (clickItemID === "exeInstruction") {
 			var os =  $( "#step_os option:selected" ).val();
-			console.log("Executable os: " + os);
 			var fileName = "";
 			if (os === "windows") fileName = "STEPBible_Windows.pdf";
 			else if (os === "mac") fileName = "STEPBible_Mac.pdf";
@@ -283,43 +275,36 @@
 			else if (os === "linux_rpm") fileName = "STEPBible_Linux.pdf";
 			else console.log("Unknown os selected: " + os);
 			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
-			console.log("Download path: " + fileName);
 			window.location.href = downloadPath;
 		}
 		else if (clickItemID === "keyboardDownload") {
 			var os = $('#keyboard_os option:selected').val();
-			console.log("Keyboard, os: " + os);
 			var fileNames = "";
 			if (os === "windows") fileName = "TyndaleUnicodePC.zip";
 			else if (os === "mac") fileName = "TyndaleUnicodeMac.zip";
 			else if (os === "linux") fileName = "Tyndale_keyboards_for_Linux.tgz";
 			else console.log("Unknown os selected: " + os);
 			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
-			console.log("Download path: " + downloadPath);
 			window.location.href = downloadPath;
 		}
 		else if (clickItemID === "keyboardInstruction") {
 			var os = $('#keyboard_os option:selected').val();
-			console.log("Keyboard, os: " + os);
 			var fileNames = "";
 			if (os === "windows") fileName = "Tyndale_Keyboards_for_Windows_Installation_Guide.pdf";
 			else if (os === "mac") fileName = "Tyndale_Keyboards_for_Mac_Installation_Guide.pdf";
 			else if (os === "linux") fileName = "Tyndale_Keyboards_for_Linux_Installation_Guide.pdf";
 			else console.log("Unknown os selected: " + os);
 			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
-			console.log("Download path: " + downloadPath);
 			window.location.href = downloadPath;
 		}
 		else if (clickItemID === "keyboardGuide") {
 			var os = $('#keyboard_os option:selected').val();
-			console.log("Keyboard, os: " + os);
 			var fileNames = "";
 			if (os === "windows") fileName = "Tyndale_Keyboards_Usage_Guide.pdf";
 			else if (os === "mac") fileName = "Tyndale_Keyboards_Usage_Guide.pdf";
 			else if (os === "linux") fileName = "Tyndale_Keyboards_for_Linux_Usage_Guide.pdf";
 			else console.log("Unknown os selected: " + os);
 			var downloadPath = "https://downloads.stepbible.com/file/Stepbible/" + fileName;
-			console.log("Download path: " + downloadPath);
 			window.location.href = downloadPath;
 		}
 	}

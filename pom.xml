@@ -38,7 +38,7 @@
         <guice-servlet.version>3.0</guice-servlet.version>
         <opencsv.version>2.3</opencsv.version>
 
-        <jetty.version>9.3.27.v20190418</jetty.version>
+        <jetty.version>9.4.41.v20210516</jetty.version>
 		<tomcat.version>8.5.47</tomcat.version>
 		<tomcat.secondary.version>8.5.2</tomcat.secondary.version>
         <xalan.version>2.7.1</xalan.version>

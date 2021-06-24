@@ -1,13 +1,33 @@
+<%@page import="java.io.FileReader"%>
+<%@page import="java.io.BufferedReader"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<c:set var="baseSTEP">
-    <c:choose>
-        <c:when test="${ param.mobile eq 'online' and not empty param.baseURL }">${ param.baseURL }</c:when>
-        <c:when test="${ param.mobile eq 'online' }">http://www.stepbible.org/</c:when>
-        <c:otherwise>/</c:otherwise>
-    </c:choose>
-</c:set>
+<%!
+    public String restAPIURL;
+%>
+<%-- Don't know if the following lines are useful, commented them out on Jan 20, 2021.  PT --%>
+<%-- <c:set var="baseSTEP"> --%>
+<%--     <c:choose> --%>
+<%--         <c:when test="${ param.mobile eq 'online' and not empty param.baseURL }">${ param.baseURL }</c:when> --%>
+<%--         <c:when test="${ param.mobile eq 'online' }">http://www.stepbible.org/</c:when> --%>
+<%--         <c:otherwise>/</c:otherwise> --%>
+<%--     </c:choose> --%>
+<%-- </c:set> --%>
+<%	if (restAPIURL == null) {
+        restAPIURL = "/rest/";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("/var/www/rest_api_url.txt"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.indexOf("REST_API_URL=") == 0) restAPIURL = line.substring(13) + "/rest/";
+            }
+            reader.close();
+        }
+        catch (Exception e) {
+            restAPIURL = "/rest/";
+        }
+	}
+%>
 
 <!-- Set up some library variables -->
 <script type="text/javascript">
@@ -30,9 +50,9 @@
             this.send(new Uint8Array(bytes).buffer);
         };
     }
-    
+
     //Set up the variables for accessing the server
-    STEP_SERVER_BASE_URL = "${baseSTEP}rest/";
+    STEP_SERVER_BASE_URL = "<%= restAPIURL %>";
 
     //Set up timeline:
     Timeline_ajax_url="libs/timeline_ajax/simile-ajax-api.js?bundle=true";

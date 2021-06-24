@@ -16,10 +16,11 @@
 <%	if (restAPIURL == null) {
         restAPIURL = "/rest/";
         try {
+            String prefixForThisTomcatContext = "REST_API_URL-" + getServletContext().getRealPath("/") + ":";
             BufferedReader reader = new BufferedReader(new FileReader("/var/www/rest_api_url.txt"));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.indexOf("REST_API_URL=") == 0) restAPIURL = line.substring(13) + "/rest/";
+                if (line.indexOf(prefixForThisTomcatContext) == 0) restAPIURL = line.substring(prefixForThisTomcatContext.length()) + "/rest/";
             }
             reader.close();
         }

@@ -7,10 +7,8 @@ var ExamplesView = Backbone.View.extend({
 			'<h3><%= __s.simple_intro_welcome %></h3>' +
 			'<h4><%= __s.simple_intro_tyndale_house_project %></h4>' +
 			'<p><%= __s.simple_intro %></p>' +
-			
 			'<p style="font-size:16px">' +
-			'<a href="https://beta.stepbible.org"><span class="new-notice">A new version</span></a> of STEP will be implemented on August 30. Please try it at <a href="https://beta.stepbible.org">beta.stepbible.org</a> and let us know if there are any issues.</p>' +
-			
+			'<a href="https://beta.stepbible.org"><span class="new-notice">A new version</span></a> of STEP will be implemented on August 23. Please try it at <a href="https://beta.stepbible.org">beta.stepbible.org</a> and let us know if there are any issues.</p>' +
 			'<div class="accordion-row" data-row="0">' +
 				'<h5 class="accordion-heading"><%= __s.quick_tutorial_header1 %>' +
 					'<span class="plusminus">+</span>' +

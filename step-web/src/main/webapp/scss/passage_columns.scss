@@ -64,17 +64,6 @@
         border-color: $activeColor;
       }
 
-      .activeMarker {
-        position: absolute;
-        top: $border-width;
-        left: 50%;
-        z-index: 10;
-        border: 7px solid $activeColor;
-        border-right-color: transparent;
-        border-bottom: 0 dotted;
-        border-left-color: transparent;
-      }
-
       .linkPanel {
         margin-left: -10px;
         top: 50%;

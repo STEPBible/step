@@ -18,5 +18,203 @@
   }
 }
 
+#searchmodalbody,
+#bookchaptermodalbody {
+  h4 {
+    margin-bottom: 15px;
+  }
+
+  h5 {
+    background-color: #dcdcdc;
+    padding: 6px;
+    margin-top: 0.5em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  table {
+    width: 100%;
+    text-align: center;
+
+    td > a {
+      display: block;
+      padding: 8px 0;
+      font-size: 14px;
+
+      &:hover {
+        text-decoration: none;
+        background-color: #dcdcdc;
+      }
+    }
+  }
+
+  .header {
+    padding: 10px 0;
+
+    h4 {
+      display: inline;
+    }
+  }
+  
+	ul {
+	  list-style-type: none;
+	  padding: 0;
+	  margin: 0;
+	}
+	ul li {
+	  border: 1px solid rgb(221, 221, 221);
+	  background-color: #498098;
+	  color: white;
+	  padding: 4px 6px 4px 8px;
+	  font-size: 14px;
+	  display: block;
+	  position: relative;
+	}
+	ul li:hover {
+	  background-color: #366072;
+	}
+	tr th,
+	tr td {
+	  padding: 4px 6px 4px 8px;
+	  font-size: 14px;
+	}
+	.closeMark {
+	  color: white;
+	  cursor: pointer;
+	  position: absolute;
+	  top: 50%;
+	  right: 0%;
+	  padding: 12px 16px;
+	  transform: translate(0%, -50%);
+	}
+	.closeMark:hover {
+	  background: red;
+	}
+}
+
+@media screen and (min-height: 400px) {
+	.scrollPart {
+		max-height: 70%;
+		width:100%;
+		overflow-y:scroll;
+	}
+}
+@media screen and (min-height: 600px) {
+    .scrollPart {
+        max-height: 80%;
+        width:100%;
+        overflow-y:scroll;
+    }
+}
+@media screen and (min-height: 900px) {
+    .scrollPart {
+        max-height: 85%;
+        width:100%;
+        overflow-y:scroll;
+    }
+}
+
+#modalonoffswitch {
+  .append {
+    float: right;
+
+    h6,
+    .onoffswitch2 {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    h6 {
+      font-weight: normal;
+      line-height: 20px;
+      margin: 0 5px 0 0;
+
+      &.checked {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .onoffswitch2 {
+    position: relative;
+    width: 35px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  .onoffswitch2-checkbox {
+    display: none;
+  }
+
+  .onoffswitch2-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid #999999;
+    border-radius: 14px;
+    margin: 0;
+  }
+
+  .onoffswitch2-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+  }
+
+  .onoffswitch2-inner:before, .onoffswitch2-inner:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 16px;
+    padding: 0;
+    line-height: 16px;
+    font-size: 10px;
+    color: white;
+    font-family: Trebuchet, Arial, sans-serif;
+    font-weight: bold;
+    box-sizing: border-box;
+  }
+
+  .onoffswitch2-inner:before {
+    content: "On";
+    padding-left: 8px;
+    background-color: green;
+    color: #FFFFFF;
+  }
+
+  .onoffswitch2-inner:after {
+    content: "";
+    padding-right: 10px;
+    background-color: #EEEEEE;
+    color: #999999;
+    text-align: right;
+  }
+
+  .onoffswitch2-switch {
+    display: block;
+    width: 6px;
+    margin: 3.5px;
+    background: #FFFFFF;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 20px;
+    border: 1px solid #999999;
+    border-radius: 14px;
+    transition: all 0.3s ease-in 0s;
+  }
+
+  .onoffswitch2-checkbox:checked + .onoffswitch2-label .onoffswitch2-inner {
+    margin-left: 0;
+  }
+
+  .onoffswitch2-checkbox:checked + .onoffswitch2-label .onoffswitch2-switch {
+    right: 0px;
+  }
+  
+}
+
 @import 'bible_versions';
 @import 'advanced_search';

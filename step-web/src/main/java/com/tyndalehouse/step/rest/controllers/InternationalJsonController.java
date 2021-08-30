@@ -32,10 +32,11 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-
-import java.io.IOException;
-import java.util.*;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.rest.framework.FrontController;
+import com.tyndalehouse.step.rest.framework.JsonResourceBundle;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -44,14 +45,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
-import com.tyndalehouse.step.core.models.ClientSession;
-import org.codehaus.jackson.map.ObjectMapper;
-
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.rest.framework.FrontController;
-import com.tyndalehouse.step.rest.framework.JsonResourceBundle;
-import org.crosswire.common.xml.TransformingSAXEventProvider;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 /**
  * Serves the images by downloading them from a remote source if they do not already exist.

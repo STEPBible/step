@@ -366,6 +366,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
                     }
                 }
             }
+            String spanishVocab = strongDefinition[0].get("es_Gloss");
+            if (StringUtils.isNotBlank(spanishVocab)) {
+                return "#" + spanishVocab;
+            }
             String chineseVocab = lookupChineseGloss(this.currentBook.toString(), strongDefinition[0]);
             if (StringUtils.isNotBlank(chineseVocab)) {
                 return "#" + chineseVocab;

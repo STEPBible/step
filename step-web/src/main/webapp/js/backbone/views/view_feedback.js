@@ -69,11 +69,14 @@ var FeedbackView = Backbone.View.extend({
         '<textarea class="form-control" placeholder="<%= __s.feedback_description %>" id="feedbackDescription" />' +
         '</div>' + 
         '<p class="help-block"><%= __s.include_screenshot %></p>' +
+		'<p class="help-block">Hebrew and Greek text cannot be sent through this form.</p>' +
         '</form>' +
         '</div>' + //end body
         '<div class="modal-footer">' +
-        '<button type="button" class="btn btn-default" data-dismiss="modal"><%= __s.close %></button>' +
-        '<button type="button" class="btn btn-primary sendFeedback"><%= __s.help_feedback %></button>' +
+//        '<button type="button" class="btn btn-default stepButton" data-dismiss="modal"><%= __s.close %></button>' +
+//        '<button type="button" class="btn btn-primary sendFeedback stepButton"><%= __s.help_feedback %></button>' +
+        '<button type="button" class="btn stepButton" data-dismiss="modal"><%= __s.close %></button>' +
+        '<button type="button" class="btn sendFeedback stepButton"><%= __s.help_feedback %></button>' +
         '</div>' + //end footer
         '</div>' + //end content
         '</div>' + //end dialog

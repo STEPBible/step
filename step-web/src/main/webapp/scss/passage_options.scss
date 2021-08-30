@@ -4,8 +4,7 @@
 
 .passageOptionsGroup {
   border-bottom: 1px solid $border-color;
-  padding-left: $page-padding;
-  padding-right: $page-padding;
+  padding: 5px $page-padding;
   opacity: .6;
   @include clearfix;
 
@@ -19,6 +18,7 @@
   .closeColumn.disabled {
     cursor: not-allowed;
     pointer-events: none;
+    opacity: .5;
 
     &:hover, &:active {
       background-position: inherit;
@@ -46,7 +46,7 @@
     color: $text-color;
     cursor: pointer;
     font-size: $panel-icon-size;
-    line-height: 33px;
+    line-height: 28px;
     padding: 5px 0 5px 15px;
     position: relative;
     top: 1px;
@@ -57,7 +57,7 @@
   }
 
   .dropdown-menu {
-    min-width: 240px;
+    min-width: 180px;
     padding-top: 0;
 
     h2 {
@@ -96,6 +96,8 @@
       }
 
       &.contextContainer {
+        min-width: 220px;
+
         button {
           padding: 5px 7px;
         }
@@ -104,7 +106,8 @@
         }
       }
       &.noHighlight {
-        padding-bottom: 10px;
+        @include clearfix;
+
         &:hover {
           background-color: inherit;
         }

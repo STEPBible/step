@@ -25,8 +25,8 @@ var AdvancedSearchView = Backbone.View.extend({
         '<span><button id="addRow" class="btn btn-default addRow"><span class="glyphicon glyphicon-plus"></span></button><label for="addRow"><%= __s.add_search_row %></label></span>' +
         '<div class="footerContainer">' +
         '<textarea readonly class="textQuerySyntax form-control input-sm" placeholder="<%= __s.search_query_syntax %>" />' +
-        '<button type="submit" class="btn btn-default closeModal" aria-hidden="true"><label><%= __s.close %></label></button>' +
-        '<button type="submit" class="btn btn-primary closeAndAdd" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
+        '<button type="submit" class="btn btn-default closeModal stepButton" aria-hidden="true"><label><%= __s.close %></label></button>' +
+        '<button type="submit" class="btn btn-primary closeAndAdd stepButton" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
         '</div>' +
         '</form>' +
         '</div>' +
@@ -41,8 +41,8 @@ var AdvancedSearchView = Backbone.View.extend({
         '</div>' +
         '</div>' +
         '<div class="footerContainer">' +
-        '<button type="button" class="btn btn-default closeModal" aria-hidden="true"><label><%= __s.close %></label></button>' +
-        '<button type="submit" class="btn btn-primary closeAndAdd" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
+        '<button type="button" class="btn btn-default closeModal stepButton" aria-hidden="true"><label><%= __s.close %></label></button>' +
+        '<button type="submit" class="btn btn-primary closeAndAdd stepButton" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
         '</div>' +
         '</form></div>' +
         // exact lexical form
@@ -64,8 +64,8 @@ var AdvancedSearchView = Backbone.View.extend({
         '</div>' +
         '</div>' +
         '<div class="footerContainer">' +
-        '<button type="button" class="btn btn-default closeModal" aria-hidden="true"><label><%= __s.close %></label></button>' +
-        '<button type="submit" class="btn btn-primary closeAndAdd" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
+        '<button type="button" class="btn btn-default closeModal stepButton" aria-hidden="true"><label><%= __s.close %></label></button>' +
+        '<button type="submit" class="btn btn-primary closeAndAdd stepButton" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
         '</div>' +
         '</form></div>' +
         //advanced query syntax search
@@ -75,8 +75,8 @@ var AdvancedSearchView = Backbone.View.extend({
         '<a id="infoAboutQuerySyntax" target="_blank" href="https://stepweb.atlassian.net/wiki/x/CYDE">' +
         '<span class="glyphicon glyphicon-question-sign"></span> <span class="infoAboutQuerySyntaxText"><%= __s.query_syntax_help %></span></a>' +
         '<div class="footerContainer">' +
-        '<button type="button" class="btn btn-default closeModal" aria-hidden="true"><label><%= __s.close %></label></button>' +
-        '<button type="submit" class="btn btn-primary closeAndAdd" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
+        '<button type="button" class="btn btn-default closeModal stepButton" aria-hidden="true"><label><%= __s.close %></label></button>' +
+        '<button type="submit" class="btn btn-primary closeAndAdd stepButton" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
         '</div>' +
         '</form>' +
         '</div>' +

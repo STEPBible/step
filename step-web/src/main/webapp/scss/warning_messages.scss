@@ -3,10 +3,9 @@
 
 .infoIcon {
   position: absolute;
-  left: 50%;
+  left: 67%;
   text-align: center;
-  
-  top: 10px;
+  bottom: 1%;
   font-size: 120%;
   display: none;
   z-index: 10;
@@ -18,17 +17,17 @@
     -webkit-box-shadow: none;
     box-shadow: none;
     background-color: transparent;
-    margin-top: 0px;
+    margin-bottom: 0px;
 
     .arrow {
-      top: 2px;
+      bottom: 0px;
     }
   }
 
   .popover-content {
     padding:15px;
     background-color: white;
-    margin-top: 11px;
+    margin-bottom: 11px;
     background-clip: padding-box;
     border: 1px solid #ccc;
     border: 1px solid rgba(0, 0, 0, .2);

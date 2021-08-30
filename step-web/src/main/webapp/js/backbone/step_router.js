@@ -22,7 +22,7 @@ var StepRouter = Backbone.Router.extend({
         this.navigate(url, { trigger: false, replace: true});
     },
 
-    navigatePreserveVersions: function (partial, stripCommentaries) {
+    navigatePreserveVersions: function (partial, stripCommentaries, skipPage) {
         //get versions of current active passage
         //add versions from current active passage
         var activePassage = step.util.activePassage();
@@ -43,9 +43,10 @@ var StepRouter = Backbone.Router.extend({
                 }
             }
         }
-        this.navigateSearch(extra);
+		skipPage = (skipPage) ? true : false;
+        this.navigateSearch(extra, false, skipPage);
     },
-    navigateSearch: function (args, historyOptions) {
+    navigateSearch: function (args, skipQFilter, skipPage) {
         var activePassageId = step.util.activePassageId();
         var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
         var options = activePassageModel.get("selectedOptions") || "";
@@ -62,7 +63,7 @@ var StepRouter = Backbone.Router.extend({
         }
         var urlStub = "";
 
-        if (step.util.isBlank(args) && (!historyOptions || !historyOptions.replace)) {
+        if (step.util.isBlank(args)) {
             var modelArgs = activePassageModel.get("args") || "";
             urlStub = this._addArg(urlStub, "q", modelArgs);
         } else {
@@ -75,13 +76,13 @@ var StepRouter = Backbone.Router.extend({
         if (!step.util.isBlank(interlinearMode) && interlinearMode != "NONE") {
             urlStub = this._addArg(urlStub, "display", interlinearMode);
         }
-        if (!step.util.isBlank(pageNumber) && pageNumber != "1") {
+        if (!step.util.isBlank(pageNumber) && (pageNumber != "1") && (!skipPage)) {
             urlStub = this._addArg(urlStub, "page", pageNumber);
         }
         if (context != 0) {
             urlStub = this._addArg(urlStub, "context", context);
         }
-        if (!step.util.isBlank(filter)) {
+        if (!step.util.isBlank(filter) && (!skipQFilter)) {
             urlStub = this._addArg(urlStub, "qFilter", filter);
         }
         if (!step.util.isBlank(sort)) {
@@ -96,9 +97,6 @@ var StepRouter = Backbone.Router.extend({
             urlStub = this._addArg(urlStub, "debug");
         }
 
-        if (!historyOptions) {
-            historyOptions = { trigger: true};
-        }
         //we will get a null-arg as part of the replacing of the URL with the correct URL
         //call back from after the routing call to rest backend call. So need
         //to avoid writing over 'args'
@@ -112,6 +110,7 @@ var StepRouter = Backbone.Router.extend({
         if(currentFragment === targetFragment) {
             activePassageModel.trigger("afterRender");
         } else {
+        	var historyOptions = { trigger: true};
             this.navigate(urlStub, historyOptions);
         }
     },
@@ -232,12 +231,16 @@ var StepRouter = Backbone.Router.extend({
 
     _renderSummary: function (passageModel) {
         var searchTokens = passageModel.get("searchTokens");
-        var container = $("<span></span>").addClass("argSummary");
-        step.util.ui.renderArgs(searchTokens, container);
 
-        var passageOptions = step.util.getPassageContainer(passageModel.get("passageId")).find(".passageOptionsGroup");
-        passageOptions.find(".argSummary").remove();
-        passageOptions.append(container);
+        var currentPassageID = passageModel.get("passageId");
+        var passageContainer = step.util.getPassageContainer(currentPassageID);
+        var passageOptions = passageContainer.find(".passageOptionsGroup");
+			
+		passageOptions.find(".argSummary").remove();
+		var container = $("<span></span>").addClass("argSummary argSumSpan");
+		step.util.ui.renderArgs(searchTokens, container, "button");
+		passageOptions.append(container);
+		// step.util.adjustPassageOptionHeight(passageContainer);
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;
@@ -296,7 +299,7 @@ var StepRouter = Backbone.Router.extend({
 
         //remove debug if present
         query = encodeURIComponent(query.replace(/&debug/ig, ""));
-        //console.log(query, options, display, pageNumber, filter, sort, context, step.userLanguageCode);
+        console.log(query, options, display, pageNumber, filter, sort, context, step.userLanguageCode);
         $.getPassageSafe({
             url: SEARCH_MASTER,
             args: [query, options, display, pageNumber, filter, sort, context, step.userLanguageCode],

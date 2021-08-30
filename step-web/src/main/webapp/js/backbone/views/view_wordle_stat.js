@@ -31,6 +31,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         scopeContainer.append(
             $('<div id="nextChapterInputLine" class="form-group"><label for="nextChapterWordle">' + __s.analyse_update + ':</label></div>').append(this.nextChapter).append(this.newLineSelected));
 
+		this.$el.append("<h2>" + __s.vocabulary_analysis + "</h2>");
         this.$el.append(scopeContainer);
         this.$el.append(this.statsContainer);
 
@@ -195,13 +196,13 @@ var ViewLexiconWordle = Backbone.View.extend({
         this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"),  this.sortSelection.find(".selected").data("value"),  function (key, statType) {
             if (statType == 'WORD') {
                 var args = "strong=" + encodeURIComponent(key);
-                step.router.navigatePreserveVersions(args);
+                step.router.navigatePreserveVersions(args, false, true);
             } else if (statType == 'TEXT') {
                 var args = "text=" + encodeURIComponent(key);
-                step.router.navigatePreserveVersions(args);
+                step.router.navigatePreserveVersions(args, false, true);
             } else if (statType == 'SUBJECT') {
                 var args = "subject=" + encodeURIComponent(key);
-                step.router.navigatePreserveVersions(args);
+                step.router.navigatePreserveVersions(args, false, true);
             }
         });
     },
@@ -242,7 +243,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                     wordLink.append(lexiconWords[key].gloss);
                     wordLink.append(' - ');
                     wordLink.append(value[0]);
-                    wordLink.append('x');
+                    wordLink.append(__s.analyse_times);
                 }
                 else {
                         wordLink.append(lexiconWords[key].gloss);
@@ -291,7 +292,9 @@ var ViewLexiconWordle = Backbone.View.extend({
 		if (scope == "BOOK") {
 			displayScope = displayScope.replace(/\d+$/, "");
 		}
-        $(container).append("<span style=\"font-size:150%;font-weight:bold\">" + displayScope + " (" + scope + "):</span><br><br>");
+        var scopeText = step.defaults.analysis.scope[step.defaults.analysis.scopeType.indexOf(scope)];
+        
+        $(container).append("<span style=\"font-size:150%;font-weight:bold\">" + displayScope + " (" + scopeText + "):</span><br><br>");
         $.each(wordleData.stats, function (key, value) {
             strongs.push(key);
         });
@@ -353,7 +356,7 @@ var ViewLexiconWordle = Backbone.View.extend({
             animate: isNextChapter
         });
 
-        if (statType == 'WORD') {
+        if (statType === 'WORD') {
             links.hover(
                 function () {
                     step.passage.higlightStrongs({
@@ -365,7 +368,7 @@ var ViewLexiconWordle = Backbone.View.extend({
             );
         }
 
-        if ( (scope == "CHAPTER") && (!wordleData.reference.lastChapter) ) {
+        if ( (scope === "CHAPTER") && (!wordleData.reference.lastChapter) ) {
             $("#nextChapterWordle").show();
             $("#nextChapterInputLine").show();
         }

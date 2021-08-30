@@ -47,7 +47,7 @@ var RestorePassageView = Backbone.View.extend({
             '<div class="checkbox">' +
             '<label>' +
             '<input type="checkbox" class="" data-passage-id="<%= p.get(\'passageId\') %>" checked="checked" />' +
-            '<span class="argSummary"><%= step.util.ui.renderArgs(p.get("searchTokens")) %></span>' +
+            '<span class="argSummary argSumSpan"><%= step.util.ui.renderArgs(p.get("searchTokens"), null, "span") %></span>' +
             '</label>' +
             '</div>' +
             '<% }); %>' +

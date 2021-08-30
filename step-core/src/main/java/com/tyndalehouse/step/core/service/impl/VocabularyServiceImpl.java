@@ -43,21 +43,14 @@ import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 import com.tyndalehouse.step.core.utils.SortingUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
-import com.tyndalehouse.step.core.utils.StringUtils;
 import org.codehaus.jackson.map.util.LRUMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
@@ -90,6 +83,12 @@ public class VocabularyServiceImpl implements VocabularyService {
         @Override
         public String getData(final EntityDoc l) {
             return l.get("stepGloss");
+        }
+    };
+	private final LexiconDataProvider es_VocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final EntityDoc l) {
+            return l.get("es_Gloss");
         }
     };
     private final LexiconDataProvider zh_tw_VocabProvider = new LexiconDataProvider() {
@@ -165,6 +164,10 @@ public class VocabularyServiceImpl implements VocabularyService {
             final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
             for (int i = 0; i < strongDefs.length; i ++) {
                 if ((userLanguage != null) && (userLanguage != "")) {
+                    if (!userLanguage.equalsIgnoreCase("es")) {
+                        strongDefs[0].removeField("es_Gloss");
+                        strongDefs[0].removeField("es_Definition");
+                    }
                     if (!userLanguage.equalsIgnoreCase("zh")) {
                         strongDefs[0].removeField("zh_Gloss");
                         strongDefs[0].removeField("zh_Definition");
@@ -174,10 +177,8 @@ public class VocabularyServiceImpl implements VocabularyService {
                         strongDefs[0].removeField("zh_tw_Definition");
                     }
                     if (!userLanguage.equalsIgnoreCase("vi")) {
-                        strongDefs[0].removeField("zh_tw_Gloss");
                         strongDefs[0].removeField("vi_Definition");
                     }
-
                 }
             }
             final EntityDoc[] definitions = reOrder(strongList, strongDefs);
@@ -296,9 +297,25 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String getEnglishVocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.englishVocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.englishVocabProvider);
     }
 
+    // The Spanish SpaRV1909 uses a "Strong:" tag.  Change "Strong:" or "StRoNg:" (any upper or lower case) to "strong:"
+    public String checkStrongCode(final String input) {
+        String result = input;
+        if (result.length() > 10) {
+            String prefixTmp = result.substring(0, 7);
+            if ((!prefixTmp.equals("strong:")) && (prefixTmp.toLowerCase().equals("strong:")))
+                result = "strong:" + result.substring(7);
+        }
+        return result;
+    }
+
+    @Override
+    public String get_es_Vocab(final String version, final String reference, String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.es_VocabProvider);
+    }
+	
     @Override
     public String get_zh_tw_Vocab(final String version, final String reference, final String vocabIdentifiers) {
         return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_tw_VocabProvider);
@@ -311,12 +328,12 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String getGreekVocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.greekVocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.greekVocabProvider);
     }
 
     @Override
     public String getDefaultTransliteration(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.transliterationProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.transliterationProvider);
     }
 
     /**

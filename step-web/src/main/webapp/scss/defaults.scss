@@ -13,7 +13,7 @@ h1, h2, h3, h4, h5, h6, .panel-title {
 }
 
 body {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body, .dropdown-menu, #quickLexicon h1 {
@@ -66,6 +66,10 @@ ul .glyphicon-ok {
   transition: background-color 200ms;
 }
 
+.btn > label {
+  margin: 0;
+}
+
 .btn-default {
   background-image: none;
   background-color: #f3f3f3;
@@ -91,4 +95,42 @@ ul .glyphicon-ok {
 
 .input-sm {
   height: 32px;
+}
+
+.stepButton {
+	white-space:normal!important;
+	padding:6px 7px 5px 7px;
+	color:#498090;
+	font-size:14px;
+	line-height:13px;
+	border-radius:4px;
+	background:#FFFFFF!important;
+	border:1px solid #498090;
+	font-style: normal;
+	margin-left: 5px;
+}
+
+.stepButtonTriangle {
+	white-space:normal!important;
+	padding:6px 7px 5px 7px;
+	color:#498090;
+	font-size:14px;
+	line-height:13px;
+	border-radius:4px;
+	background:#FFFFFF!important;
+	border:1px solid #498090;
+	font-style: normal;
+	margin-left: 5px;
+
+    &:after {
+      content: "\25BE"; // upside down triangle
+      display: inline-block;
+      margin-left: 3px;
+    }
+}
+
+.stepPressedButton {
+	background-color: #498090 !important;
+	color: white !important;
+	border: 1px solid black;
 }

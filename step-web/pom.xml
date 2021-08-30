@@ -24,7 +24,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>2.0.34-SNAPSHOT</version>
+		<version>2.1.22-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -215,6 +215,8 @@
 									<jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>
 									<jsSourceFile>js/step_constants.js</jsSourceFile>
 									<jsSourceFile>js/step.util.js</jsSourceFile>
+									<jsSourceFile>js/passage_selection.js</jsSourceFile>
+									<jsSourceFile>js/search_selection.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_main_search.js</jsSourceFile>
 									<jsSourceFile>js/backbone/step_router.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_display.js</jsSourceFile>
@@ -388,6 +390,20 @@
 									<jsSourceFile>js/color_code_config.js</jsSourceFile>
 								</jsSourceFiles>
 								<jsFinalFile>color_code_config.${project.version}.js</jsFinalFile>
+							</configuration>
+						</execution>
+                        <execution>
+							<id>minify-order_version</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>minify</goal>
+							</goals>
+							<configuration>
+								<jsSourceDir>.</jsSourceDir>
+								<jsSourceFiles>
+									<jsSourceFile>js/order_version.js</jsSourceFile>
+								</jsSourceFiles>
+								<jsFinalFile>order_version.${project.version}.js</jsFinalFile>
 							</configuration>
 						</execution>
 					</executions>
@@ -600,7 +616,6 @@
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags> 
                             </configuration>
 						</execution>
-						
 						<execution>
                             <id>change-acl</id>
 							<phase>prepare-package</phase>
@@ -619,27 +634,8 @@
 								<skip>${skipLocalHostACL}</skip>
                             </configuration>
 						</execution>
-
-						<execution>
-                            <id>update-color_code-html</id>
-							<phase>prepare-package</phase>
-							<goals>
-								<goal>replace</goal>
-							</goals>
-                            <configuration>
-                                <includes>
-                                    <include>${basedir}/target/step-web/html/color_code_grammar.min.html</include>
-                                </includes>
-                                <replacements>
-                                    <replacement><token>color_code_config\.js</token><value>color_code_config.${project.version}.min.js</value></replacement>
-                                </replacements>
-                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
-                            </configuration>
-						</execution>
-
 					</executions>
 				</plugin>
-
 				<plugin>
 					<groupId>org.codehaus.cargo</groupId>
 					<artifactId>cargo-maven2-plugin</artifactId>

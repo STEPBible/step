@@ -25,7 +25,7 @@
     <parent>
         <groupId>com.tyndalehouse.step</groupId>
         <artifactId>step-mvn</artifactId>
-        <version>2.0.34-SNAPSHOT</version>
+        <version>2.1.22-SNAPSHOT</version>
     </parent>
 
     <groupId>com.tyndalehouse.step</groupId>
@@ -36,11 +36,12 @@
     <properties>
         <packages>${project.build.outputDirectory}</packages>
 <!-- The following line would be different for differ user account! -->
+<!-- sword.home and jsword.home should be provided as paramenters to mvn (maven) -->
         <sword.home>C:\Users\pat\AppData\Roaming\Sword</sword.home>
         <jsword.home>${sword.home}/../JSword</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-        <modulesToInclude>esv_th,kjv,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
-        <indexesToInclude>ESV_th,KJV,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_th,abpgk_th</indexesToInclude>
+        <modulesToInclude>esv_th,kjv,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th,sparv1909</modulesToInclude>
+        <indexesToInclude>ESV_th,KJV,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_th,abpgk_th,SpaRV1909</indexesToInclude>
     </properties>
 
     <build>
@@ -126,8 +127,8 @@
 		<profile>
 			<id>standalone-zh</id>
 			<properties>
-			    <modulesToInclude>esv_th,kjv,chiun,chiuns,chincvt,chincvs,ccb,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th</modulesToInclude>
-				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,CCB,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_th,abpgk_th</indexesToInclude>
+			    <modulesToInclude>esv_th,kjv,chiun,chiuns,chincvt,chincvs,ccb,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th,sparv1909</modulesToInclude>
+				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,CCB,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_th,abpgk_th,SpaRV1909</indexesToInclude>
 			</properties>
 		</profile>
 	</profiles>

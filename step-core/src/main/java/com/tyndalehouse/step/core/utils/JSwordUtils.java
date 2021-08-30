@@ -32,11 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.utils;
 
-import static java.util.Collections.sort;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
-
-import java.util.*;
-
+import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import org.crosswire.common.util.Language;
 import org.crosswire.common.util.Languages;
 import org.crosswire.jsword.book.Book;
@@ -44,20 +41,18 @@ import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.book.basic.AbstractPassageBook;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.KeyUtil;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.PassageKeyFactory;
-import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.BibleBook;
-
-import com.tyndalehouse.step.core.models.BibleVersion;
-import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import org.crosswire.jsword.versification.Versification;
 import org.jdom2.Element;
 import org.jdom2.filter.ElementFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+import static java.util.Collections.sort;
+import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 
 /**
  * a set of utility methods to manipulate the JSword objects coming out
@@ -145,7 +140,15 @@ public final class JSwordUtils {
         sort(values, new Comparator<BibleVersion>() {
             @Override
             public int compare(final BibleVersion o1, final BibleVersion o2) {
-                return o1.getShortInitials().compareTo(o2.getShortInitials());
+                String lang1 = org.apache.commons.lang3.StringUtils.stripAccents(o1.getLanguageName().toLowerCase());
+                String lang2 = org.apache.commons.lang3.StringUtils.stripAccents(o2.getLanguageName().toLowerCase());
+                if (lang1.startsWith("'")) lang1 = lang1.substring(1);
+                if (lang2.startsWith("'")) lang2 = lang2.substring(1);
+                int result = lang1.compareTo(lang2);
+                if (result == 0) return o1.getShortInitials().compareTo(o2.getShortInitials());
+                else if (lang1.equals("english")) return -1; // This will put English at the beginning of the list.
+                else if (lang2.equals("english")) return 1; // This will put English at the beginning of the list.
+                return result;
             }
         });
 

@@ -250,7 +250,7 @@ step.util = {
         //are we going to set a different passage
         if ((val !== null && val !== undefined && val != currentActivePassageId) || force) {
             var columns = $(".passageContainer");
-            columns.filter(".active").removeClass("active").find(".activeMarker").remove();
+            columns.filter(".active").removeClass("active");
 
             //do we need to create a new passage model? only if no others exists with the same passageId.
             var existingModel = step.passages.findWhere({ passageId: val });
@@ -273,7 +273,7 @@ step.util = {
 
 
             //make the new panel active
-            step.util.getPassageContainer(val).addClass("active").append('<span class="activeMarker"></span>');
+            step.util.getPassageContainer(val).addClass("active");
             return val;
         }
 
@@ -380,6 +380,40 @@ step.util = {
                 break;
         }
         columns.addClass(columnClass);
+        var heightToSet = $('.passageContainer.active').height();
+        if (typeof heightToSet === "number") {
+            heightToSet -= 60;
+            heightToSet += "px";
+        }
+        else heightToSet = "85vh";
+		$("#lexicon").height(heightToSet);
+		$("#analysis").height(heightToSet);
+		$("#history").height(heightToSet);
+		$("#help").height(heightToSet);
+    },
+    findSearchTermsInQuotesAndRemovePrefix: function(syntaxWords) {
+        var indxNeedConcatenate = -1;
+        var quoteChar = "";
+        for (var j = 0; j < syntaxWords.length; j++) {
+            if (indxNeedConcatenate == -1) {
+				if (syntaxWords[j].substr(0, 2) === "t=") syntaxWords[j] = syntaxWords[j].substr(2);
+                if ((syntaxWords[j].substr(0, 1) === '"') ||
+                    (syntaxWords[j].substr(0, 1) === "'")) {
+                    indxNeedConcatenate = j;
+                    quoteChar = syntaxWords[j].substr(0, 1);
+                }
+            }
+            else {
+                if (syntaxWords[j].substr(-1) == quoteChar) {
+                    for (var k = indxNeedConcatenate + 1; k <= j; k++) {
+                        syntaxWords[indxNeedConcatenate] += " " + syntaxWords[k];
+                        syntaxWords[k] = "";
+                    }
+                    indxNeedConcatenate = -1;
+                    quoteChar = "";
+                }
+            }
+        }
     },
     /**
      * Renumbers the models from 0, so that we can track where things are.
@@ -401,11 +435,9 @@ step.util = {
     showOrHideTutorial: function (hide) {
         var allRealColumns = $(".column").not(".examplesColumn");
         var exampleContainer = $(".examplesContainer");
-        if (exampleContainer.parent().hasClass("column")) {
-            if (allRealColumns.length > 1 || hide) {
-                exampleContainer.parent().remove();
-            }
-        }
+        if ((exampleContainer.parent().hasClass("column")) &&
+			(allRealColumns.length > 0)) exampleContainer.parent().remove();
+		else if (hide) $(".examplescolumn").remove();
         this.refreshColumnSize();
     },
     /**
@@ -413,6 +445,12 @@ step.util = {
      * @param el
      */
     createNewLinkedColumn: function (passageId) {
+		if ($(window).width() < 768) {
+			var msg = "Your screen is not wide enough to open another panel.";
+			if ((step.touchDevice) && ($(window).height() > 768))
+				msg += " Rotate your screen to horizontal mode if available.";
+			alert(msg);
+		}
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
@@ -432,11 +470,15 @@ step.util = {
         if (step.util.isBlank(chapterRef)) {
             chapterRef = verseRef;
         }
-
+		if (chapterRef.substr(chapterRef.indexOf(".")+1) === "1") { // if chapter number is 1
+			var bookName = chapterRef.substr(0, chapterRef.indexOf("."));
+			var numOfChaptersInBook = step.passageSelect.getNumOfChapters(bookName);
+			if (numOfChaptersInBook == 1) chapterRef = bookName;
+		}
         step.router.navigatePreserveVersions("reference=" + chapterRef, stripCommentaries);
 
         //we prevent the event from bubbling up to set the passage id, as we expect a new passage to take focus
-        ev.stopPropagation();
+        if (ev) ev.stopPropagation();
     },
 
     /**
@@ -479,7 +521,10 @@ step.util = {
         newColumn
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
-        newColumn.find(".argSummary").remove();
+        newColumn.find(".argSelect").remove();
+        newColumn.find(".select-reference").text(__s.short_title_for_ref + ":");
+		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")");
+		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>');
         newColumn.find(".resultsLabel").html("");
         newColumn.find(".infoIcon").attr("title", "").data("content", "").hide();
         newColumn.find(".popover").remove();
@@ -496,7 +541,6 @@ step.util = {
             newColumn.find(".passageContainer").append(link);
             activePassageModel.save({ linked: newPassageId }, { silent: true });
         }
-
         this.showOrHideTutorial();
         step.util.activePassageId(newPassageId);
 
@@ -653,24 +697,191 @@ step.util = {
         selectMark: function (classes) {
             return '<span class="glyphicon glyphicon-ok ' + classes + '"></span>';
         },
-        renderArgs: function (searchTokens, container) {
+        shortenDisplayText: function (text, maxLength) {
+			if (text.length <= maxLength) return text;
+            var lastComma = text.substr(0, maxLength).lastIndexOf(",");
+            if (lastComma < 5) lastComma = maxLength;
+            return text.substr(0, lastComma) + '...';
+		},
+        renderArgs: function (searchTokens, container, outputMode) {
+			if ((outputMode !== "button") && (outputMode !== "span")) {
+				console.log("called renderArgs with wrong outputMode: " + outputMode);
+				return;
+			}
             if (!container) {
                 container = $("<span>");
-            }
-
-            if (!searchTokens) {
-                return container.html();
+				if (!searchTokens) return container.html();
             }
 
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
-            for (var i = 0; i < searchTokens.length; i++) {
-                container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
-                if (searchTokens[i].itemType == VERSION) {
+            var firstVersion = "";
+            var allSelectedBibleVersions = "";
+            var allSelectedReferences = "";
+			var foundSearch = false;
+			var searchWords = "";
+            for (var i = 0; i < searchTokens.length; i++) { // process all the VERSION and REFERENCE first so that the buttons will always show up first at the top of the panel
+				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType; // This is needed for syntax search.  Don't know why.  PT 5/26/2021
+				var itemType = searchTokens[i].itemType;
+                if (itemType == VERSION) {
+                    searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
+                    if (allSelectedBibleVersions.length > 0) allSelectedBibleVersions += ", ";
+					allSelectedBibleVersions += (searchTokens[i].item.shortInitials.length > 0) ?
+						step.util.safeEscapeQuote(searchTokens[i].item.shortInitials) : step.util.safeEscapeQuote(searchTokens[i].token);
+                    if (firstVersion == "") firstVersion = allSelectedBibleVersions;
                     isMasterVersion = false;
                 }
+                else if (itemType === REFERENCE) {
+                    searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
+                    if (allSelectedReferences.length > 0) allSelectedReferences += ", ";
+                    allSelectedReferences += (searchTokens[i].item.shortName.length > 0) ?
+                        step.util.safeEscapeQuote(searchTokens[i].item.shortName) : step.util.safeEscapeQuote(searchTokens[i].token);
+                }
+				else if ((itemType === SYNTAX) ||
+                         (itemType === STRONG_NUMBER) ||
+						 (itemType === TEXT_SEARCH) ||
+						 (itemType === SUBJECT_SEARCH) ||
+						 (itemType === GREEK) ||
+						 (itemType === HEBREW) ||
+						 (itemType === GREEK_MEANINGS) ||
+						 (itemType === HEBREW_MEANINGS) ||
+						 (itemType === MEANINGS)) {
+                    foundSearch = true;
+					var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
+					if (word.length > 0) {
+						if (searchWords.length > 0) searchWords += ', ';
+                        if (itemType === SYNTAX) {
+                            var syntaxWords = searchTokens[i].token.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').split(" ");
+                            step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
+   							var searchRelationship = "";
+                            for (var j = 0; j < syntaxWords.length; j++) {
+                                if (syntaxWords[j] == "") continue;
+								if ((j > 0) && (searchRelationship === "") &&
+									((syntaxWords[j] === "AND") || (syntaxWords[j] === "OR") || (syntaxWords[j] === "NOT"))) {
+									searchRelationship = syntaxWords[j];
+									continue;
+								}
+                                if ((j > 0) && (searchWords.length > 0)) {
+									if ((searchRelationship === "AND") || (searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
+									else searchWords += ', ';
+								}
+                                if (syntaxWords[j].search(/\s*(\(*)\s*strong:([GH]\d{4,5}[abcdefg]?)\s*(\)*)/) > -1) {
+                                    // RegExp.$1 is prefix of open parathesis, RegExp.$2 is the strong number, RegExp.$2 is the suffix of close parathesis
+                                    var prefix = RegExp.$1;
+                                    var strongNum = RegExp.$2;
+                                    var suffix = RegExp.$3;
+                                    var stepTransliteration = step.util.getDetailsOfStrong(strongNum, firstVersion)[1];
+                                    if (stepTransliteration === "") stepTransliteration = strongNum;
+                                    searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
+                                }
+                                else searchWords += syntaxWords[j];
+								searchRelationship = "";
+                            }
+                        }
+                        else if ((itemType === GREEK_MEANINGS) ||
+							(itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
+						else if (itemType === SUBJECT_SEARCH) searchWords += word.toUpperCase();
+						else if (itemType === MEANINGS) searchWords += "~" + word;
+						else searchWords += word;
+					}
+                }
             }
+			
+			var widthAvailable = $(".passageContainer.active").width();
+			if (foundSearch) widthAvailable -= 45; // space to show the number of occurance.  eg: 105x
+			if (widthAvailable < 400) $("#thumbsup").hide(); // Not enough space to show the thumbs up icon (Facebook or Tweeter)
+			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9)) + 12;
+			if (!foundSearch) {
+				if (((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) <= (charAvailable - 9)) &&
+					(allSelectedReferences === 'Gen 1')) allSelectedReferences = __s.short_title_for_ref + ": " + allSelectedReferences;
+				else if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
+			}
+			else if (allSelectedReferences.length == 0) charAvailable -= 10; // save space for "Passage:"
+			if (outputMode === "span") {
+				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
+				allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
+				searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
+			}
+			else if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) { // outputMode should be button
+				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
+				if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
+					allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
+					if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
+						searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
+						var charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
+						if (charUsed > charAvailable) {
+							allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, Math.max(4, allSelectedBibleVersions.length - (charUsed - charAvailable)));
+							charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
+							if (charUsed > charAvailable) {
+								allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, Math.max(6, allSelectedReferences.length - (charAvailable - charUsed)));
+								charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
+								if (charUsed > charAvailable)
+									searchWords = step.util.ui.shortenDisplayText(searchWords, Math.max(6, searchWords.length - (charAvailable - charUsed)));
+							}
+						}
+					}
+				}
+			}
+			if ((foundSearch) && (allSelectedReferences.length > 0)) {
+				searchWords += " (" + allSelectedReferences + ")";
+				allSelectedReferences = "";
+			}
+			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
+			charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
+			
+			if (outputMode === "button") {
+				if (allSelectedBibleVersions.length > 0)
+					container.append(
+						'<button type="button" ' +
+							'onclick="step.util.startPickBible()" ' +
+							'title="' + __s.click_translation + '" class="select-' + VERSION + ' stepButtonTriangle">' +
+							allSelectedBibleVersions +
+						'</button>' +
+						'<span class="separator-' + VERSION + '">&nbsp;</span>');
 
-            return container.html();
+				container.append(
+					'<button type="button" ' +
+						'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" ' +
+						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' stepButtonTriangle">' +
+						allSelectedReferences +
+					'</button>' +
+					'<span class="separator-' + REFERENCE + '">&nbsp;</span>');
+
+				container.append(
+					'<button type="button" ' +
+						'onclick="step.util.searchSelectionModal()" ' +
+						'title="' + __s.click_search + '" class="select-search stepButtonTriangle">' +
+						'<i style="font-size:10px" class="find glyphicon glyphicon-search"></i>' +
+						'&nbsp;' + searchWords +
+					'</button>' );
+				return container.html();
+			}
+			else if (outputMode === "span") {
+				if (allSelectedBibleVersions.length > 0)
+					container.append(
+						'<span ' +
+							'title="' + __s.click_translation + '" class="' + 'argSumSpan">' +
+							allSelectedBibleVersions +
+						'</span>' );
+
+				if (allSelectedReferences !== "Passage:") {
+					if (allSelectedReferences === "Passage: Gen 1") allSelectedReferences = "Gen 1";
+					container.append(
+						'<span ' +
+							'title="' + __s.click_passage + '" class="' + 'argSumSpan">|&nbsp;' +
+							allSelectedReferences +
+						'</span>' );
+				}
+
+				if (searchWords !== '')
+					container.append(
+						'|' +
+						'<span ' +
+							'title="' + __s.click_search + '" class="argSumSpan">' +
+							'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
+							'&nbsp;' + searchWords +
+						'</span>' );
+				return container.html();
+			}
         },
         renderArg: function (searchToken, isMasterVersion) {
             //a search token isn't quite a item, so we need to fudge a few things
@@ -678,13 +889,10 @@ step.util = {
             searchToken.item = searchToken.enhancedTokenInfo;
 
             //rewrite the item type in case it's a strong number
-            if (searchToken.itemType == STRONG_NUMBER) {
-                //pretend it's a Greek meaning, or a Hebrew meaning
+            if (searchToken.itemType == STRONG_NUMBER) //pretend it's a Greek meaning, or a Hebrew meaning
                 searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
-            } else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH) {
+            else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH)
                 searchToken.itemType = SUBJECT_SEARCH;
-            }
-
             return '<span class="argSelect select-' + searchToken.itemType + '">' +
                 this.renderEnhancedToken(searchToken, isMasterVersion) +
                 '</span>';
@@ -740,19 +948,10 @@ step.util = {
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
                 case REFERENCE:
-                    if (entry.item.shortName.length > 20) {
-                        var lastComma = entry.item.shortName.substr(0, 17).lastIndexOf(",");
-                        if (lastComma < 5) lastComma = 17;
-                        entry.item.shortName = entry.item.shortName.substr(0, lastComma) + '...';
-                    }
-                    result = '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
+                    return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
-                        entry.item.shortName;
-
-                    result = result + '</div>';
-                    return result;
-
+                        entry.item.shortName + '</div>';
                 case VERSION:
                     // I have seen the code crashed at this point when entry.item.shortInitials is not defined.  It might be caused by an old installation of the Bible modules.
                     // I added the following code to reduce the chance of crash.
@@ -769,11 +968,10 @@ step.util = {
                         }
 					}
 					result = '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") +
-                    '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
-                    (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
-                    'data-item-type="' + entry.itemType + '" ' +
-                    'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation;  // added so it does not crash at startup
-
+                      '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
+                      (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
+                      'data-item-type="' + entry.itemType + '" ' +
+                      'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation;  // added so it does not crash at startup
 					result = result + "</div>";
                     return result;
                 case GREEK:
@@ -963,83 +1161,126 @@ step.util = {
         addStrongHandlers: function (passageId, passageContent) {
             var that = this;
             var allStrongElements = $("[strong]", passageContent);
-
+			step.touchForQuickLexiconTime = 0; // only use for touch screen
+			step.displayQuickLexiconTime = 0;  // only use for touch screen
+			step.strongOfLastQuickLexicon = "";  // only use for touch screen
+			step.lastTapStrong = ""  // only use for touch screen
+			that.pageY = 0;
             allStrongElements.click(function () {
-                if (!that.touchTriggered) {
+                if (!step.touchDevice) {
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "lexiconFocus"
-                    });
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "lexiconFocus"
+					});
                 }
-            }).on("touchstart", function (ev) {
-                that.touchstart = new Date().getTime();
-                that.touchTriggered = true;
-
-                if (that.lastTapStrong == $(this).attr("strong")) {
-                    $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
-                    $(this).addClass("lexiconFocus");
-                    step.util.ui.showDef(this);
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "lexiconFocus"
-                    });
-                } else {
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "primaryLightBg"
-                    });
-
-                    var hoverContext = this;
-                    require(['quick_lexicon'], function () {
-                        step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
-                    });
-                }
-                that.lastTapStrong = $(this).attr("strong");
-            }).hover(function (ev) {
-                step.passage.higlightStrongs({
-                    passageId: undefined,
-                    strong: $(this).attr('strong'),
-                    morph: $(this).attr('morph'),
-                    classes: "primaryLightBg"
-                });
-
-                var hoverContext = this;
-                require(['quick_lexicon'], function () {
-                    step.util.delay(function () {
-                        // do the quick lexicon
-                        step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, false);
-                        step.util.keepQuickLexiconOpen = false;
-                    }, MOUSE_PAUSE, 'show-quick-lexicon');
-                });
-            }, function () {
-                step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-                step.util.delay(undefined, 0, 'show-quick-lexicon');
-                if (!step.util.keepQuickLexiconOpen) {
-                    $("#quickLexicon").remove();
-                }
+			}).on("touchstart", function (ev) {
+				if ((typeof ev.originalEvent == "object") &&
+					(typeof ev.originalEvent.touches == "object") &&
+					(typeof ev.originalEvent.touches[0] == "object") &&
+					(typeof ev.originalEvent.touches[0].pageY == "number")) 
+					that.pageY = ev.originalEvent.touches[0].pageY;
+				step.touchForQuickLexiconTime = Date.now();
+				var strongStringAndPrevHTML = step.util.ui._getStrongStringAndPrevHTML(this); // Try to get something unique on the word touch by the user to compare if it is the 2nd touch
+				var userTouchedSameWord = (strongStringAndPrevHTML == step.lastTapStrong);
+				step.lastTapStrong = "notdisplayed" + strongStringAndPrevHTML;
+				step.util.ui._processTouchOnStrong(this, passageId, userTouchedSameWord, that.pageY); 
+			}).on("touchend", function (ev) {
+				var diff = Date.now() - step.touchForQuickLexiconTime;
+				if (diff < TOUCH_DURATION) {
+					step.touchForQuickLexiconTime = 0; // If the quick lexicon has not been rendered, the quick lexicon code will see the change in this variable and not proceed
+					step.strongOfLastQuickLexicon = "";
+				}
+			}).on("touchcancel", function (ev) {
+				step.touchForQuickLexiconTime = 0; // If the quick lexicon has not been rendered, the quick lexicon code will see the change in this variable and not proceed
+				step.strongOfLastQuickLexicon = "";
+			}).on("touchmove", function (ev) {
+				step.touchForQuickLexiconTime = 0;
+				step.strongOfLastQuickLexicon = "";
+				var diff = Date.now() - step.displayQuickLexiconTime;
+				if ((diff) < 900) { // Cancel the quick lexicon and highlight of words because touch move detected less than 900 ms later.  The user probably want to scroll instead of quick lexicon.
+					$("#quickLexicon").remove();
+					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+					step.lastTapStrong = "";
+				}
+			}).hover(function (ev) { // mouse pointer starts hover (enter)
+				if (!step.touchDevice) {
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "primaryLightBg"
+					});
+					var hoverContext = this;
+					require(['quick_lexicon'], function () {
+						step.util.delay(function () {
+							// do the quick lexicon
+							step.util.ui._displayNewQuickLexicon(hoverContext, passageId, false, ev.pageY);
+							step.util.keepQuickLexiconOpen = false;
+						}, MOUSE_PAUSE, 'show-quick-lexicon');
+					});
+				}
+            }, function () { // mouse pointer ends hover (leave)
+				if (!step.touchDevice) {
+					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+					step.util.delay(undefined, 0, 'show-quick-lexicon');
+					if (!step.util.keepQuickLexiconOpen) {
+						$("#quickLexicon").remove();
+					}
+				}
             });
         },
-        _displayNewQuickLexicon: function (hoverContext, ev, passageId, touchEvent) {
+        _getStrongStringAndPrevHTML: function (touchedObject) {
+			var result = "";
+			if (typeof $(touchedObject).attr("strong") === "string") {
+				result = $(touchedObject).attr("strong");
+				if ((typeof $(touchedObject).prev()[0] === "object") &&
+					(typeof $(touchedObject).prev()[0].outerHTML === "string"))
+					result += $(touchedObject).prev()[0].outerHTML.replace(/\s?primaryLightBg\s?/g, "")
+														   .replace(/\s?relatedWordEmphasisHover\s?/g, "")
+														   .replace(/\s?lexiconFocus\s?/g, "")
+														   .replace(/\s?lexiconRelatedFocus\s?/g, "")
+														   .replace(/\s?secondaryBackground\s?/g, "");
+			}
+			return result;
+		},
+        _processTouchOnStrong: function (touchedObject, passageId, touchSameWord, pageY) {
+			if (touchSameWord) { // touched 2nd time
+				step.strongOfLastQuickLexicon = "";
+				step.touchForQuickLexiconTime = 0;
+				$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
+				$(touchedObject).addClass("lexiconFocus");
+				step.util.ui.showDef(touchedObject);
+				step.passage.higlightStrongs({
+					passageId: undefined,
+					strong: $(touchedObject).attr('strong'),
+					morph: $(touchedObject).attr('morph'),
+					classes: "lexiconFocus"
+				});
+			}
+			else {
+				step.strongOfLastQuickLexicon = $(touchedObject).attr('strong');
+				require(['quick_lexicon'], function () {
+					step.util.ui._displayNewQuickLexicon(touchedObject, passageId, true, pageY);
+				});
+			}
+		},
+        _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
             var reference = step.util.ui.getVerseNumber(hoverContext);
             var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
-
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
+			var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
                     strong: strong, morph: morph,
                     version: version, reference: reference,
-                    target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: touchEvent,
+                    target: hoverContext, position: pageY / $(window).height(), touchEvent: touchEvent,
                     passageId: passageId
                 });
             }
@@ -1141,7 +1382,7 @@ step.util = {
                     features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";
                 }
             }
-            return features;
+            return features + "&nbsp;";
         },
         enhanceVerseNumbers: function (passageId, passageContent, version, isSearch) {
             $(".verseNumber", passageContent).closest("a").mouseenter(function () {
@@ -1200,7 +1441,8 @@ step.util = {
                                 var strongData = verseData[strong];
                                 if (strongData && strongData.strongNumber) {
                                     var counts = data.counts[strongData.strongNumber];
-                                    if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
+                                    if ((currentLang == "es") && (strongData._es_Gloss)) strongData.gloss = strongData._es_Gloss;
+                                    else if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
                                     else if ((currentLang == "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
                                     rows.push({
                                         strongData: strongData,
@@ -1306,6 +1548,764 @@ step.util = {
             var regex = new RegExp(regexPattern, "ig");
             doHighlight(nonJqElement, cssClasses, regex);
         }
+    },
+	showConfigGrammarColor: function (e) {
+        if (e) e.preventDefault();
+        // var temp = document.getElementById("grammarClrModal");
+        // if (!temp) grammarColorConfigPage.appendTo("body");
+        var element = document.getElementById('grammarClrModal');
+        if (element) element.parentNode.removeChild(element);
+		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+        $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+					'<link href="css/color_code_grammar.' + jsVersion + 'css" rel="stylesheet"/>' +
+					'<link rel="stylesheet" href="css/spectrum.css"/>' +
+					'<script src="js/color_code_config.' + jsVersion + 'js"></script>' +
+					'<script src="libs/spectrum.js"></script>' +
+					'<div class="modal-header">' +
+						'<button type="button" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
+					'</div>' +
+					'<div class="modal-body">' +
+						'<div id="colortabs">' +
+							'<ul class="nav nav-tabs">' +
+								'<li class="active"><a href="#nounClrs" data-toggle="tab">Number & Gender</a></li>' +
+								'<li><a href="#verbClrs" data-toggle="tab">Greek Verbs</a></li>' +
+								'<li><a href="#hVerbClrs" data-toggle="tab">OT Verbs</a></li>' +
+							'</ul>' +
+							'<div class="tab-content">' +
+								'<div class="tab-pane fade in active" id="nounClrs"></div>' +
+								'<div class="tab-pane fade" id="verbClrs"></div>' +
+								'<div class="tab-pane fade" id="hVerbClrs"></div>' +
+							'</div>' +
+						'</div>' +
+					'</div>' +
+					'<div class="footer">' +
+						'<br>' +
+						'<button id="openButton" class="stepButton" onclick=openClrConfig()><label>Open</label></button>' +
+						'<button id="saveButton" class="stepButton" onclick=saveClrConfig()><label>Save</label></button>' +
+						'<button id="cancelButton" class="stepButton" onclick=cancelClrChanges()><label>Cancel</label></button>' +
+						'<button id="resetButton" class="stepButton" onclick=resetClrConfig()><label>Reset</label></button>' +
+						'<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>' +
+					'</div>' +
+				'</div>' +
+			'</div>' +
+			'<script>' +
+				'$( document ).ready(function() {' +
+					'initializeClrCodeHtmlModalPage();' +
+				'});' +
+			'</script>' +
+		'</div>').modal("show");
+    },
+    passageSelectionModal: function (activePassageNumber) {
+        var element = document.getElementById('passageSelectionModal');
+        if (element) element.parentNode.removeChild(element);
+		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
+			step.util.activePassageId(activePassageNumber); // make the passage active
+		$(_.template('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+					'<div class="modal-header">' +
+						'<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.passageSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
+						'<span class="pull-right">' +
+							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("passageSelectionModal")>X</button>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+							'<div id="modalonoffswitch" class="pull-right">' +
+								'<span id="select_verse_number">&nbsp;<b><%= __s.select_verse_number %></b></span>' +
+								'<div class="onoffswitch2 append pull-right">' +
+									'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectverseonoffswitch" onchange="addSelectVerse()"/>' +
+									'<label class="onoffswitch2-label" for="selectverseonoffswitch">' +
+									'<span class="onoffswitch2-inner"></span>' +
+									'<span class="onoffswitch2-switch"></span>' +
+									'</label>' +
+								'</div>' +
+							'</div>' +
+						'</span>' +
+						'<br>' +
+						'<div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">' +
+							'<label for="displayLocation"><%= __s.display_passage_at %></label>' +
+							'<select type="text" id="displayLocation">' +
+								'<option value="replace"> <%= __s.current_panel %></option>' +
+								'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
+								'<option id="append_to_panel" value="append"><%= __s.append_to_panel %></option>' +
+							'</select>' +
+						'</div>' +
+						'<br>' +
+					'</div>' +
+					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
+					'<div class="footer">' +
+						'<img id="keyboard_icon" src="/images/keyboard.jpg" alt="Keyboard entry" title="<%= __s.type_in_your_passage %>">' +
+						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"  title="<%= __s.type_in_your_passage %>"></textarea>' +
+						'<br>' +
+						'<span id="userEnterPassageError" style="color: red;"></span>' +
+					'</div>' +
+					'<script>' +
+						'$(document).ready(function () {' +
+							'step.passageSelect.initPassageSelect();' +
+						'});' +
+						'function addSelectVerse() {' +
+							'if (document.getElementById("selectverseonoffswitch").checked) {' +
+								'step.passageSelect.addVerseSelection = true;' +
+								'$("#select_verse_number").addClass("checked");' +
+							'}' +
+							'else {' +
+								'step.passageSelect.addVerseSelection = false;' +
+								'$("#select_verse_number").removeClass("checked");' +
+							'}' +
+						'}' +
+					'</script>' +
+				'</div>' +
+			'</div>' +
+		'</div>')()).modal("show");
+		var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
+		if (!step.touchDevice) $('textarea#enterYourPassage').focus();
+    },
+
+	searchSelectionModal: function () {
+        var element = document.getElementById('searchSelectionModal');
+        if (element) element.parentNode.removeChild(element);
+        $(_.template('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+				'<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
+					'<div class="modal-header">' +
+						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
+						'<span class="pull-right">' +
+							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
+								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +
+								'<select type="text" id="displayLocation">' +
+									'<option value="replace"><%= __s.current_panel %></option>' +
+									'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
+								'</select>' +
+							'</span>' +
+						'</span>' +
+					'</div>' +
+					'<div id="searchmodalbody" class="modal-body">' +
+						'<div id="searchHdrTable"></div>' +
+						'<br>' +
+						'<div id="previousSearch"></div>' +
+					'</div>' +
+					'<div class="footer">' +
+						'<br>' +
+						'<span id="searchSelectError"></span>' +
+						'<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"' +
+						'onclick=step.searchSelect._updateRange()></button>' +
+						'<button id="updateButton" style="display:none;float:right" type="button" class="stepButton"' +
+						'onclick=step.searchSelect.goSearch()><%= __s.update_search %></button><br><br><br>' +
+					'</div>' +
+					'<script>' +
+						'$(document).ready(function () {' +
+							'step.searchSelect.initSearchSelection();' +
+						'});' +
+						'function showPreviousSearch() {' +
+							'var element = document.getElementById("showprevioussearchonoff");' +
+							'if ((element) && (element.checked)) {' +
+								'step.searchSelect.includePreviousSearches = true;' +
+								'$("#listofprevioussearchs").show();' +
+								'var onlyFoundSubjectOrMeaningsSearch = true;' +
+								'for (var i = 0; i < step.searchSelect.previousSearchTokens.length; i++) {' +
+									'if ((step.searchSelect.previousSearchTokens[i] !== "") &&' +
+										'(!step.searchSelect.previousSearchTokens[i].startsWith(MEANINGS)) &&' +
+										'(!step.searchSelect.previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))' +
+										'onlyFoundSubjectOrMeaningsSearch = false;' +
+								'}' +
+								'if (onlyFoundSubjectOrMeaningsSearch) $("#searchAndOrNot").hide();' +
+								'else $("#searchAndOrNot").show();' +
+								'if (step.searchSelect.searchUserInput.length == 0) {' +
+									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
+										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +
+								'}' +
+								'step.searchSelect.handlePreviousSearchAndOrNot();' +
+							'}' +
+							'else {' +
+								'step.searchSelect.includePreviousSearches = false;' +
+								'$("#listofprevioussearchs").hide();' +
+								'$("#searchAndOrNot").hide();' +
+								'$("#updateButton").hide();' +
+								'$("#searchResultssubject").show();' +
+								'$("#searchResultsmeanings").show();' +
+								'$("#searchResultssubjectWarn").hide();' +
+								'$("#searchResultsmeaningsWarn").hide();' +
+							'}' +
+						'}' +
+					'</script>' +
+				'</div>' +
+			'</div>' +
+		'</div>')()).modal("show");
+		$('textarea#userTextInput').focus();
+    },
+	showVideoModal: function (videoFile, seconds) {
+        var element = document.getElementById('videoModal');
+        if (element) element.parentNode.removeChild(element);
+        var videoModalDiv = $('<div id="videoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-videofile="' + videoFile + '" data-videotime="' + seconds + '">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">');
+        videoModalDiv.appendTo("body");
+        $('#videoModal').modal('show').find('.modal-content').load('/html/video_modal.html');
+    },
+    startPickBible: function () {
+        require(["menu_extras"], function () {
+            new PickBibleView({model: step.settings, searchView: self});
+        });
+    },
+	setClassicalUI: function (classicalUI) {
+		if (classicalUI) {
+			$('#top_input_area').show();
+			// $('#s2id_masterSearch').show();
+			// $('.findButton').show();
+			$('span.tmp-rm-hidden-xs.title').removeClass('tmp-rm-hidden-xs').addClass('hidden-xs');
+			$('.navbarIconDesc').hide();
+			$('.quick_tutorial').show();
+			$('#classicalUICheck').show();
+		}
+		else {
+			$('#top_input_area').hide();
+			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
+			$('.navbarIconDesc').show();
+			$('.quick_tutorial').hide();
+			$('#classicalUICheck').hide();
+		}
+	},
+	// adjustPassageOptionHeight: function (passageContainer) {
+		// var passageContainerHeight = passageContainer.height();
+		// var passageOptionHeight = passageContainer.find(".passageOptionsGroup").height();
+		// if (passageOptionHeight === null) return;
+		// var passageContentHeight = passageContainer.find(".passageContent").height();
+		// var totalHeight = passageOptionHeight + passageContentHeight;
+		// var diff = passageContainerHeight - totalHeight;
+		// if (Math.abs(diff) > 10) {
+			// var heightForPassage = passageContainerHeight + diff;
+			// console.log("passageContent h: " + heightForPassage + " diff " + diff);
+			// var passContent = passageContainer.find(".passageContent");
+			// $(passContent).css({'height':heightForPassage + 'px'});
+		// }
+	// },
+	showIntro: function (showAnyway) {
+	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
+		var introCount = parseInt(introCountFromStorageOrCookie, 10);
+		if (isNaN(introCount)) introCount = 0;
+		if ((introCount < 3) || (showAnyway)) {
+			var introJsSteps = [
+				{
+					intro: __s.introjs_intro
+				},
+				{
+					element: document.querySelector('.passageContainer.active').querySelector('.select-version.stepButtonTriangle'),
+					intro: __s.introjs_bible,
+					position: 'bottom'
+				},
+				{
+					element: document.querySelector('.passageContainer.active').querySelector('.select-reference.stepButtonTriangle'),
+					intro: __s.introjs_passage,
+					position: 'bottom'
+				}
+			];
+			if (window.innerWidth > 499) introJsSteps.push(
+				{
+					element: document.querySelector('.passageContainer.active').querySelector('.select-search.stepButtonTriangle'),
+					intro: __s.introjs_search,
+					position: 'bottom'
+				});
+			introJs().setOptions({
+				steps: introJsSteps, nextLabel: " > ", prevLabel: " < ", doneLabel: __s.done
+			}).start();
+		}
+	},
+	closeModal: function (modalID) {
+        var element = document.getElementById(modalID);
+		if (element) {	
+			$('#' + modalID).modal('hide');
+			$('#' + modalID).modal({
+				show: false
+			});
+			element.parentNode.removeChild(element);
+		}
+    },
+	addTagLine: function(){
+		var numOfBibleDisplayed = $('.list-group-item:visible').length;
+		var numOfBibleInMostWidelyUsed = $('.ul_Most_widely_used').find('.list-group-item:visible').length;
+		if (numOfBibleDisplayed > numOfBibleInMostWidelyUsed)
+			numOfBibleDisplayed -= numOfBibleInMostWidelyUsed; // The most widely used can be included in other language groups 
+		$(".tagLine").text(sprintf(__s.filtering_total_bibles_and_commentaries, numOfBibleDisplayed, step.itemisedVersions.length));
+    },
+	showByGeo: function(testMode) { // The following arrays need to be updated when new Bible with additional language codes are added.
+		var africa_lang = [
+			"af",  // Afrikaans
+			"am",  // Amharic
+			"ar",  // Arabic
+			"ee",  // Ewe
+			"ewe", // Ewe *
+			"lg",  // Ganda
+			"gbr", // Gbagyi
+			"gez", // Geez
+			"ha",  // Hausa
+			"hau", // Hausa
+			"ig",  // Igbo
+			"kpo", // Ikposo
+			"ki",  // Kikuyu
+			"las", // Lama (Togo)
+			"ln",  // Lingala
+			"lpx", // Lopit
+			"mg",  // Malagasy
+			"plt", // Malagasy, Plateau
+			"hna", // Mina (Cameroon)
+			"nhr", // Naro
+			"nd",  // North Ndebele
+			"ny",  // Nyanja
+			"pt",  // Portuguese
+			"sn",  // Shona
+			"so",  // Somali
+			"sw",  // Swahili
+			"swa", // Swahili *
+			"swh", // Swahili (individual language) *
+			"tn",  // Tswana
+			"tw",  // Twi
+			"twi", // Twi *
+			"yom", // Yombe
+			"yor", // Yoruba
+			"en",  // English
+			"fr",  // French
+			"fre", // French *
+			"es"   // Spanish
+		];
+		var americas_lang = [
+			"acr", // Achi
+			"rmq", // Caló
+			"chr", // Cherokee
+			"en",  // English
+			"ht",  // Haitian
+			"kek", // Kekchí
+			"pt",  // Portuguese
+			"pot", // Potawatomi
+			"ser", // Serrano
+			"es",  // Spanish
+			"fr",  // French
+			"fre"  // French *
+		];
+		var east_asia_lang = [
+			"zh", // Chinese
+			"ko", // Korean
+			"mn", // Mongolian
+			"en"  // English
+		];
+		var europe_lang = [
+			"sq",  // Albanian
+			"eu",  // Basque
+			"br",  // Breton
+			"bg",  // Bulgarian
+			"bul", // Bulgarian
+			"cu",  // Church Slavic
+			"hr",  // Croatian
+			"hrv", // Croatian *
+			"cs",  // Czech
+			"da",  // Danish
+			"nl",  // Dutch
+			"en",  // English
+			"enm", // English Middle
+			"eo",  // Esperanto
+			"et",  // Estonian
+			"fo",  // Faroese
+			"fi",  // Finnish
+			"fr",  // French
+			"fre", // French *
+			"de",  // German
+			"got", // Gothic
+			"el",  // Greek
+			"grc", // Greek, Ancient (to 1453)
+			"hu",  // Hungarian
+			"hun", // Hungarian *
+			"is",  // Icelandic
+			"ga",  // Irish
+			"it",  // Italian
+			"la",  // Latin
+			"lv",  // Latvian
+			"lt",  // Lithuanian
+			"gv",  // Manx
+			"nb",  // Norwegian Bokmål
+			"nn",  // Norwegian Nynorsk
+			"pl",  // Polish
+			"pt",  // Portuguese
+			"ro",  // Romanian
+			"ru",  // Russian
+			"gd",  // Scottish Gaelic
+			"sr",  // Serbian
+			"sl",  // Slovenian
+			"es",  // Spanish
+			"sv",  // Swedish
+			"uk",  // Ukrainian
+			"cy"   // Welsh
+		];
+		var oceania_lang = [
+			"aau", // Abau
+			"adz", // Adzera
+			"agd", // Agarabi
+			"amp", // Alamblak
+			"gah", // Alekano
+			"amm", // Ama (Papua New Guinea)
+			"amn", // Amanab
+			"tvk", // Ambrym, Southeast
+			"abt", // Ambulas
+			"aey", // Amele
+			"aby", // Aneme Wake
+			"agm", // Angaataha
+			"akh", // Angal Heneng
+			"agg", // Angor
+			"boj", // Anjam
+			"aak", // Ankave
+			"aui", // Anuki
+			"aon", // Arapesh, Bumbita
+			"mwc", // Are
+			"aai", // Arifama-Miniafia
+			"msy", // Aruamu
+			"avt", // Au
+			"kud", // 'Auhelawa
+			"awb", // Awa (Papua New Guinea)
+			"awx", // Awara
+			"auy", // Awiyaana
+			"ptu", // Bambam
+			"bbb", // Barai
+			"mlp", // Bargam
+			"bch", // Bariai
+			"byr", // Baruya
+			"bef", // Benabena
+			"big", // Biangai
+			"bhl", // Bimin
+			"bon", // Bine
+			"bjr", // Binumarien
+			"bnp", // Bola
+			"ksr", // Borong
+			"mux", // Bo-Ung
+			"mmo", // Buang, Mangga
+			"bzh", // Buang, Mapos
+			"buk", // Bugawac
+			"ape", // Bukiyip
+			"bdd", // Bunama
+			"tte", // Bwanabwana
+			"ch",  // Chamorro
+			"caa", // Chortí
+			"cjv", // Chuave
+			"mps", // Dadibi
+			"dgz", // Daga
+			"aso", // Dano
+			"dww", // Dawawa
+			"ded", // Dedua
+			"dob", // Dobu
+			"kqc", // Doromu-Koki
+			"etr", // Edolo
+			"enq", // Enga
+			"pwg", // Gapapaiwa
+			"bmk", // Ghayavi
+			"bbr", // Girawa
+			"gvf", // Golin
+			"ghs", // Guhu-Samane
+			"dah", // Gwahatike
+			"hla", // Halia
+			"wos", // Hanga Hundi
+			"hmo", // Hiri Motu
+			"hot", // Hote
+			"hui", // Huli
+			"yml", // Iamalele
+			"ian", // Iatmul
+			"viv", // Iduna
+			"imo", // Imbongu
+			"ino", // Inoke-Yate
+			"ipi", // Ipili
+			"kbm", // Iwal
+			"iws", // Iwam, Sepik
+			"nca", // Iyo
+			"kqf", // Kakabai
+			"kmh", // Kalam
+			"bco", // Kaluli
+			"kms", // Kamasau
+			"xla", // Kamula
+			"soq", // Kanasi
+			"kqw", // Kandas
+			"gam", // Kandawo
+			"kmu", // Kanite
+			"kpg", // Kapingamarangi
+			"leu", // Kara (Papua New Guinea)
+			"yuj", // Karkar-Yuri
+			"kmg", // Kâte
+			"khz", // Keapara
+			"bmh", // Kein
+			"kjs", // Kewa, East
+			"kew", // Kewa, West
+			"kyg", // Keyagana
+			"kpw", // Kobon
+			"kpx", // Koiali, Mountain
+			"kpf", // Komba
+			"xbi", // Kombio
+			"kpr", // Korafe-Yegha
+			"kze", // Kosena
+			"ksd", // Kuanua
+			"kgf", // Kube
+			"kue", // Kuman
+			"kup", // Kunimaipa
+			"kto", // Kuot
+			"tnk", // Kwamera
+			"kwj", // Kwanga
+			"kmo", // Kwoma
+			"kyc", // Kyaka
+			"lbb", // Label
+			"uvl", // Lote
+			"mmx", // Madak
+			"mzz", // Maiadomu
+			"mti", // Maiwa (Papua New Guinea)
+			"mva", // Manam
+			"mbh", // Mangseng
+			"mi",  // Maori
+			"mlh", // Mape
+			"dad", // Marik
+			"klv", // Maskelynes
+			"mhl", // Mauwake
+			"mna", // Mbula
+			"mek", // Mekeo
+			"med", // Melpa
+			"sim", // Mende (Papua New Guinea)
+			"mee", // Mengen
+			"mpt", // Mian
+			"mpp", // Migabac
+			"mpx", // Misima-Panaeati
+			"mox", // Molima
+			"meu", // Motu
+			"aoj", // Mufian
+			"emi", // Mussau-Emira
+			"tuc", // Mutu
+			"myw", // Muyuw
+			"nas", // Naasioi
+			"naf", // Nabak
+			"nak", // Nakanai
+			"nss", // Nali
+			"nvm", // Namiae
+			"nsn", // Nehan
+			"nif", // Nek
+			"nbq", // Nggem
+			"nii", // Nii
+			"gaw", // Nobonob
+			"nop", // Numanggang
+			"lid", // Nyindrou
+			"kkc", // Odoodee
+			"opm", // Oksapmin
+			"ong", // Olo
+			"aom", // Ömie
+			"okv", // Orokaiva
+			"pma", // Paama
+			"ptp", // Patep
+			"gfk", // Patpatar
+			"ata", // Pele-Ata
+			"pon", // Pohnpeian
+			"byx", // Qaqet
+			"rai", // Ramoaaina
+			"rwo", // Rawa
+			"roo", // Rotokas
+			"apz", // Safeyoka
+			"sbe", // Saliba
+			"sll", // Salt-Yui
+			"ssx", // Samberigi
+			"sny", // Saniyo-Hiyewe
+			"sps", // Saposa
+			"ssg", // Seimat
+			"spl", // Selepet
+			"snp", // Siane
+			"snc", // Sinaugoro
+			"xsi", // Sio
+			"ssd", // Siroi
+			"bmu", // Somba-Siawari
+			"swp", // Suau
+			"sue", // Suena
+			"sua", // Sulka
+			"sgz", // Sursurunga
+			"knv", // Tabo
+			"tbg", // Tairora, North
+			"omw", // Tairora, South
+			"tbc", // Takia
+			"tgg", // Tangga
+			"tgp", // Tangoa
+			"tnn", // Tanna, North
+			"nwi", // Tanna, Southwest
+			"tpa", // Taupota
+			"tbo", // Tawala
+			"tlf", // Telefol
+			"tim", // Timbe
+			"tpz", // Tinputz
+			"tpi", // Tok Pisin
+			"iou", // Tuma-Irumu
+			"lcm", // Tungag
+			"ubr", // Ubir
+			"gdn", // Umanakaina
+			"ubu", // Umbu-Ungu
+			"wnu", // Usan
+			"usa", // Usarufa
+			"waj", // Waffa
+			"rro", // Waima
+			"wnc", // Wantoat
+			"wrs", // Waris
+			"wsk", // Waskia
+			"wed", // Wedau
+			"wer", // Weri
+			"gdr", // Wipi
+			"wiu", // Wiru
+			"wuv", // Wuvulu-Aua
+			"jae", // Yabem
+			"yrb", // Yareba
+			"yuw", // Yau (Morobe Province)
+			"yby", // Yaweyuha
+			"yle", // Yele
+			"yss", // Yessan-Mayo
+			"yon", // Yongkom
+			"yut", // Yopno
+			"zia", // Zia
+			"en",  // English
+			"fr",  // French
+			"fre"  // French *
+		];
+		var south_asia_lang = [
+			"asm", // Assamese
+			"ben", // Bengali
+			"hne", // Chhattisgarhi
+			"guj", // Gujarati
+			"hi",  // Hindi
+			"kan", // Kannada
+			"ckb", // Kurdish, Central
+			"kpb", // Kurumba, Mullu
+			"mar", // Marathi
+			"nep", // Nepali
+			"ori", // Oriya
+			"pan", // Panjabi
+			"fa",  // Persian
+			"pes", // Persian, Iranian
+			"tam", // Tamil
+			"tel", // Telugu
+			"ur",  // Urdu
+			"urd", // Urdu *
+			"en"   // English
+		];
+		var southeast_asia_lang = [
+			"my",  // Burmese
+			"ceb", // Cebuano
+			"khm", // Central Khmer
+			"hil", // Hiligaynon
+			"ilo", // Iloko
+			"id",  // Indonesian
+			"ind", // Indonesian *
+			"ml",  // Malayalam
+			"mal", // Malayalam *
+			"ury", // Orya
+			"sml", // Sama, Central
+			"tl",  // Tagalog
+			"tgl", // Tagalog *
+			"th",  // Thai
+			"ppk", // Uma
+			"vi",  // Vietnamese
+			"vie", // Vietnamese *
+			"zom", // Zou
+			"en",  // English
+			"fr",  // French
+			"fre", // French *
+			"es",  // Spanish
+			"zh"   // Chinese
+		];
+		var western_asia_lang = [
+			"ar",  // Arabic
+			"hy",  // Armenian
+			"az",  // Azerbaijani
+			"azb", // Azerbaijani, South
+			"cop", // Coptic
+			"fa",  // Persian
+			"pes", // Persian, Iranian
+			"he",  // Hebrew
+			"heb", // Hebrew *
+			"syr", // Syriac
+			"tr",  // Turkish
+			"en"   // English
+		];
+        var arrayToProcess = [];
+        if (testMode) { // This has to be called inside the debugger when the modal is showing "All" the languages and they type in, "step.util.showByGeo(true)" in the debugger's console.
+						// If the above language codes covers all the Bibles on the web server, it should hide everything.
+            $('.langSpan').show();
+            $('.langBtn').show();
+            $('.langUL').show();
+			var tmp = confirm("Make sure you run this in the All languages tab.");
+            arrayToProcess = africa_lang.concat(americas_lang).concat(east_asia_lang).concat(europe_lang).concat(oceania_lang)
+                .concat(south_asia_lang).concat(southeast_asia_lang).concat(western_asia_lang);
+            for (var i = 0; i < arrayToProcess.length; i++) {
+                $('.btn_' + arrayToProcess[i]).hide();
+                $('.ul_' + arrayToProcess[i]).hide();
+            }
+			tmp = confirm("All buttons for the different languages and Bibles should be hidden");
+        }
+        else {
+       		var geo = $( ".selectGeo option:selected" ).val();
+            if (geo === "all") {
+                $('.langSpan').show();
+                $('.langBtn').show();
+                $('.langUL').hide();
+            }
+            else {
+                if (geo === "africa") arrayToProcess = africa_lang;
+                else if (geo === "americas") arrayToProcess = americas_lang;
+                else if (geo === "east_south_east_asia") arrayToProcess = east_asia_lang.concat(southeast_asia_lang);
+                else if (geo === "europe") arrayToProcess = europe_lang;
+                else if (geo === "oceania") arrayToProcess = oceania_lang;
+                else if (geo === "south_asia") arrayToProcess = south_asia_lang;
+                else if (geo === "western_asia") arrayToProcess = western_asia_lang;
+                $('.langSpan').hide();
+                $('.langBtn').hide();
+                $('.langUL').hide();
+                for (var i = 0; i < arrayToProcess.length; i++) {
+                    $('.btn_' + arrayToProcess[i]).show();
+					$('.span_' + arrayToProcess[i]).show();
+                    $('.plusminus_' + arrayToProcess[i]).text('+');
+                }
+            }
+			$('.langBtn').removeClass('stepPressedButton');
+        }
+		step.util.addTagLine();
+	},
+  	getDetailsOfStrong: function(strongNum, version) {
+        var gloss = strongNum;
+        var stepTransliteration = "";
+        var matchingForm = "";
+        if ((typeof step.srchTxt !== "undefined") &&
+            (typeof step.srchTxt[strongNum] !== "undefined") &&
+            (step.srchTxt[strongNum].search(/(.+)\s\(<i>(.+)<\/i>\s-\s(.+)\)/) > -1)) {
+            gloss = RegExp.$1;
+            stepTransliteration = RegExp.$2;
+            matchingForm = RegExp.$3;
+        }
+        else { // get the info from server
+            var limitType = "";
+            var firstChar = strongNum.substr(0, 1);
+            if (firstChar === "G") limitType = GREEK;
+            else if (firstChar === "H") limitType = HEBREW;
+            if (limitType !== "") {
+                var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + version + "%7C" + LIMIT + "%3D" + limitType + "%7C?lang=" + step.userLanguageCode;
+                var value = $.ajax({ 
+                    url: url,
+                    async: false
+                }).responseText;
+                if (value.length > 10) {
+                    var data = JSON.parse(value);
+                    if ((data.length > 0) && (typeof data[0] !== "undefined") &&
+                        (typeof data[0].suggestion !== "undefined")) {
+                        if (typeof data[0].suggestion.gloss !== "undefined") 
+                            gloss = data[0].suggestion.gloss;
+                        if (typeof data[0].suggestion.stepTransliteration !== "undefined") 
+                            stepTransliteration = data[0].suggestion.stepTransliteration;
+                        if (typeof data[0].suggestion.matchingForm !== "undefined") 
+                            matchingForm = data[0].suggestion.matchingForm;
+                    }
+                }
+            }
+        }
+        return [gloss, stepTransliteration, matchingForm];
+    },
+    putStrongDetails: function(strongNum, details) {
+        if (typeof step.srchTxt === "undefined") step.srchTxt = {};
+        if (strongNum.search(/([GH]\d{4,5})[abcdefg]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
+        if ((typeof step.srchTxt[strongNum] === "undefined") || (step.srchTxt[strongNum].length < 7))
+            step.srchTxt[strongNum] = details;
     }
 }
 ;

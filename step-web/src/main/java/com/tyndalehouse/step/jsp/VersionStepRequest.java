@@ -32,12 +32,15 @@
  ******************************************************************************/
 package com.tyndalehouse.step.jsp;
 
-import java.util.Iterator;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.inject.Injector;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.SearchToken;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.IOUtils;
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.BibleBook;
@@ -45,14 +48,9 @@ import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Injector;
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.utils.IOUtils;
-import com.tyndalehouse.step.core.utils.JSwordUtils;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Iterator;
+import java.util.ResourceBundle;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page
@@ -245,8 +243,10 @@ public class VersionStepRequest {
             bookList.append(SearchToken.REFERENCE);
             bookList.append('=');
             bookList.append(v11n.getShortName(bb));
-            bookList.append(".");
-            bookList.append(ii);
+            if (lastChapter > 1) {
+                bookList.append(".");
+                bookList.append(ii);
+            }
             bookList.append("'>");
             bookList.append(ii);
             bookList.append("</a> ");

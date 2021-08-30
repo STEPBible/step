@@ -80,6 +80,17 @@ public interface VocabularyService {
     String getEnglishVocab(final String version, final String reference, String vocabIdentifiers);
 
     /**
+     * gets the Spanish vocab fields
+     * 
+     *
+     * @param version the version that ancors the reference
+     * @param reference the reference in which the strongs can be found
+     * @param vocabIdentifiers the vocab identifiers
+     * @return the string to be displayed
+     */
+    String get_es_Vocab(final String version, final String reference, String vocabIdentifiers);
+
+    /**
      * gets the traditional Chinese vocab fields
      * 
      *

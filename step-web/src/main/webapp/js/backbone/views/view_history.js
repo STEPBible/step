@@ -5,8 +5,8 @@ var ViewHistory = Backbone.View.extend({
         '<a class="starBookmark" data-favourite="<%= item.get("favourite")%>" title="<%= item.get("favourite") ? __s.passage_tools_delete_bookmark : __s.passage_tools_bookmark %>">' +
         '<span class="glyphicon <%= item.get("favourite") ? "glyphicon-pushpin-pinned" : "glyphicon-pushpin" %>"></span></a>' +
         '<a class="removeBookmark" title="<%= __s.bookmark_remove %>"><span class="glyphicon glyphicon-remove"></span></a>' +
-        '<span class="argSummary">' +
-        '<%= step.util.ui.renderArgs(item.get("searchTokens")) %>' +
+        '<span class="argSummary argSumSpan">' +
+        '<%= step.util.ui.renderArgs(item.get("searchTokens"), null, "span") %>' +
         '</span>' +
         '</li>'),
     fullList: _.template(
@@ -39,7 +39,7 @@ var ViewHistory = Backbone.View.extend({
         var item = $(self).closest("li");
         var bookmarkId = item.data("item");
         var model = step.bookmarks.findWhere({id: bookmarkId });
-        step.router.navigateSearch(model.get("args"));
+        step.router.navigateSearch(model.get("args"), true, true);
     }, render: function () {
         var self = this;
         if(this.list) {

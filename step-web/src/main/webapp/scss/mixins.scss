@@ -51,19 +51,19 @@
 @mixin verticalHeight($className, $gap: 100px) {
   @media screen and (min-height: 400px) {
   #{$className} {
-      max-height: 400px - $gap;
+      height: 400px - $gap;
     }
   }
 
   @media screen and (min-height: 600px) {
     #{$className} {
-      max-height: 600px - $gap;
+      height: 600px - $gap;
     }
   }
 
   @media screen and (min-height: 900px) {
     #{$className} {
-      max-height: 900px - $gap;
+      height: 900px - $gap;
     }
   }
 }

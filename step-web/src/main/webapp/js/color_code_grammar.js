@@ -515,26 +515,23 @@ var cf = {
   },
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
   initCanvasAndCssForClrCodeGrammar: function() {
-      //  var a = performance.now();
       if (c4 === undefined) { cf.getC4(); } //c4 is currentClrCodeConfig.  It is changed to c4 to save space
-      cf.addVerbTable(false, '#colorCodeTableDiv');
-      cf.createUlArrow();
-      cf.createUlShortArrow();
-      cf.createUlReverseArrow();
-      cf.createUlShortReverseArrow();
-      cf.createUl_Dash();
-      cf.createUlSolid();
-      cf.createUlDash_Dot();
-      cf.createUlDashDotDot();
-      cf.createUlNone();
-      cf.createUlDoubleSolid();
-      cf.createUlDot();
-      cf.createUlWave();
-      cf.createUlForAllItemsInYAndX();
-      cf.createUlFor_OT();
-      cf.goAnimate(0);
-    //  var b = performance.now();
-    //  console.log('init took ' + (b - a) + ' ms.');
+	  cf.addVerbTable(false, '#colorCodeTableDiv');
+	  cf.createUlArrow();
+	  cf.createUlShortArrow();
+	  cf.createUlReverseArrow();
+	  cf.createUlShortReverseArrow();
+	  cf.createUl_Dash();
+	  cf.createUlSolid();
+	  cf.createUlDash_Dot();
+	  cf.createUlDashDotDot();
+	  cf.createUlNone();
+	  cf.createUlDoubleSolid();
+	  cf.createUlDot();
+	  cf.createUlWave();
+	  cf.createUlForAllItemsInYAndX();
+	  cf.createUlFor_OT();
+	  cf.goAnimate(0);
   },
 
   calcAnimationPixelIncrement: function (width) {
@@ -921,7 +918,6 @@ var cf = {
       $('.sing').removeClass('sing').addClass('hide_sing');
       $('.plur').removeClass('plur').addClass('hide_plur');
     }
-  //  var a = performance.now();
     if ((ntCSSOnThisPage == undefined) || (ntCSSOnThisPage.length > 0)) {
       for (var j = 0; j < cv[C_ulVerbCSS].length; j += 1) {
         if (cf.displayVerbUlOrNot(j)) {
@@ -952,8 +948,6 @@ var cf = {
         }
       }
     }
-  //  var b = performance.now();
-  //  console.log('refresh took ' + (b - a) + ' ms.');
     $('.primaryLightBg').css('text-shadow', 'none'); // Need to set it in the program, if not the browser will prioritize the CSS updated in this Javascript.
   },
 
@@ -1356,14 +1350,13 @@ var cf = {
   upCaseFirst: function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   },
-// Do not shorten name, called by start.jsp
+// Do not shorten name, called by view_examples.js
   setNextPageURL: function (url, configName, infoMsg) {
 
     if (configName.indexOf("function:") == 0){
       var functionName = configName.substr(9);
-      if (functionName == "openStats") {
+      if (functionName == "openStats")
         window.localStorage.setItem('colorCode-openStatus', JSON.stringify(true));
-      }
     }
     else cf.openUserSelectedConfig(configName);
     window.localStorage.setItem('colorCode-InfoMsg', JSON.stringify(infoMsg));
@@ -1692,6 +1685,10 @@ var cf = {
   },
 
   addVerbTable: function (createUserInputs, htmlElement) {
+	if ($(htmlElement).length == 0) {
+		console.log("addVerbTable return without creating table, no html element: " + htmlElement + " to append to");
+		return;
+	}
     var r = cf.getVariablesForVerbTable();
     var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
     xAxisItems = r.orderOfXAxisItems;
@@ -1699,7 +1696,10 @@ var cf = {
     descOfXAxisItems = r.descOfXAxisItems;
     descOfYAxisItems = r.descOfYAxisItems;
     var htmlTable = '';
-    if (!createUserInputs) htmlTable = '<link href="/css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
+    if (!createUserInputs) {
+		var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+		htmlTable = '<link href="/css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>';
+	}
     var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs);
     htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
       yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs) + '">';
@@ -1989,7 +1989,7 @@ var cf = {
     else if (selectedConfig === 'verb with middle and passive voices') c4 = cf.c4VerbWithMiddlePassive();
     else if (selectedConfig === 'verb, imperative mood') c4 = cf.c4ImperativesOnly();
     else if (selectedConfig === 'verb, main vs supporting verbs') c4 = cf.c4MainVsSupporingVerbs();
-    else if (selectedConfig === 'verb, gender and number, 2nd version') c4 = cf.c4VerbMoodTense2();
+    else if (selectedConfig === 'verb, without reference to time') c4 = cf.c4VerbMoodTense2();
     else {
       var found = false;
       var tmp = window.localStorage.getItem('colorCode-UserClrConfigNames');
@@ -2012,12 +2012,8 @@ var cf = {
     }
     cf.updtLocalStorage();
     if ((!previousEnableGenderNumberClr) && (c4[C_enableGenderNumberClr])) cv[C_userTurnGenderNumberFromOffToOn] = true;
-    if (name == null) {
-      $('#openClrModal .close').click();
-      var element = document.getElementById('openClrModal');
-      element.parentNode.removeChild(element);
-      updateAllSettingsAndInputFields();
-    }
+	step.util.closeModal("openClrModal");
+    if (name == null) updateAllSettingsAndInputFields();
   },
 
   c4VerbTenseMood: function() {
@@ -2044,8 +2040,8 @@ var cf = {
   c4VerbMoodTense2: function() {
     var r = cf.createC4();
     r[C_Greek][C_enableVerbClr] = true;
-    r[C_Greek][C_chkbxPassiveBkgrdColrValue] = true;
-    r[C_Greek][C_chkbxMiddleBkgrdColrValue] = true;
+    r[C_Greek][C_chkbxPassiveBkgrdColrValue] = false;
+    r[C_Greek][C_chkbxMiddleBkgrdColrValue] = false;
     r[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
     r[C_Greek][C_slctUlVerbItem] = ['Arrow', 'Dash', '2 lines', '2 lines', 'Underline', 'Dots', 'Underline'];
     r[C_Greek][C_orderOfTense] = ['p', 'i', 'r', 'l', 'a', 'f'];
@@ -2053,7 +2049,7 @@ var cf = {
     r[C_Greek][C_orderOfMood] = ['i', 'm', 's', 'o', 'n', 'p'];
     r[C_Greek][C_moodToCombineWithPrevious] = [false, false, false, false, false, false];
     r[C_Greek][C_verbTableYHeader] = null;
-    r[C_enableGenderNumberClr] = true;
+    r[C_enableGenderNumberClr] = false;
     r[C_OT][C_verbTableXHeader] = null;
     r[C_OT][C_verbTableYHeader] = null;
     return r;

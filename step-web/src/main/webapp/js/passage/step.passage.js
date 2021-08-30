@@ -44,9 +44,9 @@ step.passage = {
      *            the references of all strongs and morphs asked for
      */
     higlightStrongs : function(strongMorphReference) {
-        if (strongMorphReference.strong == null) {
-            return;
-        }
+		var showSimilarWord = step.passages.findWhere({ passageId: 0}).get("isSimilarWord");
+		if (typeof showSimilarWord === "undefined") showSimilarWord = true;
+        if ((strongMorphReference.strong == null) || (!showSimilarWord)) return;
 
         var references = strongMorphReference.strong.split(" ");
         var container = step.util.getPassageContainer(strongMorphReference.passageId);
@@ -67,9 +67,9 @@ step.passage = {
      *                  highlight
      */
     highlightStrong : function(passageId, strongReference, emphasiseClass) {
-        if(!strongReference) {
-            return;
-        }
+		var showSimilarWord = step.passages.findWhere({ passageId: 0}).get("isSimilarWord");
+		if (typeof showSimilarWord === "undefined") showSimilarWord = true;
+        if ((!strongReference) || (!showSimilarWord)) return;
 
         var classes = emphasiseClass || "emphasisePassagePhrase";
 

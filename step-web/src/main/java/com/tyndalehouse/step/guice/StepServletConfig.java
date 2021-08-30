@@ -49,6 +49,7 @@ import com.tyndalehouse.step.rest.controllers.SearchPageController;
 import com.tyndalehouse.step.rest.controllers.SetupPageController;
 import com.tyndalehouse.step.rest.controllers.SiteMapController;
 import com.tyndalehouse.step.rest.framework.FrontController;
+
 import org.crosswire.common.util.CWProject;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
@@ -73,6 +74,7 @@ import java.util.Locale;
  *
  * @author chrisburrell
  */
+
 public class StepServletConfig extends GuiceServletContextListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepServletConfig.class);
     private Injector injector = null;
@@ -131,6 +133,10 @@ public class StepServletConfig extends GuiceServletContextListener {
 
         // No call to super as it also calls getInjector()
         final ServletContext sc = servletContextEvent.getServletContext();
+
+        String servletPath = sc.getRealPath("/");
+        String[] servletContextSplits = servletPath.split("[\\\\\\/]"); // Either \ for Windows or / characters for Linux
+        SearchPageController.SERVLET_CONTEXT = servletContextSplits[servletContextSplits.length - 1];
 
         sc.setAttribute(Injector.class.getName(), getInjector());
 

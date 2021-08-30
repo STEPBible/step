@@ -1,11 +1,12 @@
 <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal">X</button>
+  <button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("openClrModal")>X</button>
 </div>
 <div class="modal-body">
 <p>Select an existing color configuration:
 <div id="openClrModalSelectArea"></div>
 <div class="footer">
-<button id="openButton" class="btn btn-default btn-xs closeModal" onclick=cf.openUserSelectedConfig()><label>Open</label></button>
+<br>
+<button id="openButton" class="stepButton closeModal" onclick=cf.openUserSelectedConfig()><label>Open</label></button>
 </div>
 </div>
 </div>

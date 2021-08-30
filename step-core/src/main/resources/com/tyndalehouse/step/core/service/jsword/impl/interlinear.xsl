@@ -58,6 +58,7 @@
 
   <!-- Whether to show Strongs or not -->
   <xsl:param name="EnglishVocab" select="'false'"/>
+  <xsl:param name="es_Vocab" select="'false'"/>
   <xsl:param name="zh_tw_Vocab" select="'false'"/>
   <xsl:param name="zh_Vocab" select="'false'"/>
   <xsl:param name="Transliteration" select="'false'"/>
@@ -379,6 +380,9 @@
 			<xsl:if test="$EnglishVocab = 'true'">
 				<span class="strongs">Eng. Vocab.</span>
 			</xsl:if>
+			<xsl:if test="$es_Vocab = 'true'">
+				<span class="strongs">Esp Vocab.</span>
+			</xsl:if>
 			<xsl:if test="$zh_tw_Vocab = 'true'">
 				<span class="strongs">中文詞</span>
 			</xsl:if>
@@ -417,6 +421,9 @@
 			</xsl:if>
               <xsl:if test="$EnglishVocab = 'true'">
                   <span class="text"><span class="smallHeaders strongs">Eng Vocab.</span></span>
+              </xsl:if>
+              <xsl:if test="$es_Vocab = 'true'">
+                  <span class="text"><span class="smallHeaders strongs">Esp Vocab.</span></span>
               </xsl:if>
               <xsl:if test="$zh_tw_Vocab = 'true'">
                   <span class="text"><span class="smallHeaders strongs">中文詞</span></span>
@@ -643,6 +650,12 @@
 						<span class="strongs">
 								<xsl:value-of
 									select="vocab:getEnglishVocab($vocabProvider, $baseVersion, ./ancestor::*[@osisID]/@osisID ,@lemma)" />
+						</span>
+					</xsl:if>
+					<xsl:if test="$es_Vocab = 'true'">
+						<span class="strongs">
+								<xsl:value-of
+									select="vocab:get_es_Vocab($vocabProvider, $baseVersion, ./ancestor::*[@osisID]/@osisID ,@lemma)" />
 						</span>
 					</xsl:if>
 					<xsl:if test="$zh_tw_Vocab = 'true'">
@@ -1297,6 +1310,13 @@
                     </xsl:call-template>
                 </span>
             </xsl:if>
+            <xsl:if test="$es_Vocab = 'true'">
+                <span class="strongs">
+                    <xsl:call-template name="outputNonBlank">
+                        <xsl:with-param name="string" select="''" />
+                    </xsl:call-template>
+                </span>
+            </xsl:if>
             <xsl:if test="$zh_tw_Vocab = 'true'">
                 <span class="strongs">
                     <xsl:call-template name="outputNonBlank">
@@ -1540,6 +1560,13 @@
 				</span>
 			</xsl:if>
             <xsl:if test="$EnglishVocab = 'true'">
+                <span class="strongs">
+                    <xsl:call-template name="outputNonBlank">
+                        <xsl:with-param name="string" select="''" />
+                    </xsl:call-template>
+                </span>
+            </xsl:if>
+            <xsl:if test="$es_Vocab = 'true'">
                 <span class="strongs">
                     <xsl:call-template name="outputNonBlank">
                         <xsl:with-param name="string" select="''" />
@@ -1885,6 +1912,9 @@
 						<span class="text">&#160;</span>
 					</xsl:if>
                     <xsl:if test="$EnglishVocab = 'true'">
+                        <span class="text">&#160;</span>
+                    </xsl:if>
+                    <xsl:if test="$es_Vocab = 'true'">
                         <span class="text">&#160;</span>
                     </xsl:if>
                     <xsl:if test="$zh_tw_Vocab = 'true'">

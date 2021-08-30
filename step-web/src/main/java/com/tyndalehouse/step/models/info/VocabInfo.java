@@ -60,8 +60,10 @@ public class VocabInfo implements Serializable {
     private List<LexiconSuggestion> relatedNos;
     private String shortDef;
     private String mediumDef;
+    private String es_Gloss;
     private String zh_tw_Gloss;
     private String zh_Gloss;
+    private String es_Definition;
     private String zh_tw_Definition;
     private String zh_Definition;
 	private String vi_Definition;
@@ -93,15 +95,28 @@ public class VocabInfo implements Serializable {
         this.stepGloss = d.get("stepGloss");
         this.stepTransliteration = d.get("stepTransliteration");
         this.mediumDef = d.get("mediumDefinition");
-        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh"))) {
+        if ((userLanguage == null) || (userLanguage == "")) {
+            this.es_Gloss = d.get("es_Gloss");
+            this.es_Definition = d.get("es_Definition");
             this.zh_Gloss = d.get("zh_Gloss");
             this.zh_Definition = d.get("zh_Definition");
-        }
-        else if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh_tw"))) {
+            this.zh_tw_Gloss = d.get("zh_tw_Gloss");
+            this.zh_tw_Definition = d.get("zh_tw_Definition");
+            this.vi_Definition = d.get("vi_Definition");
+		}
+		else if (userLanguage.equalsIgnoreCase("es")) {
+            this.es_Gloss = d.get("es_Gloss");
+            this.es_Definition = d.get("es_Definition");
+		}
+		else if (userLanguage.equalsIgnoreCase("zh")) {
+            this.zh_Gloss = d.get("zh_Gloss");
+            this.zh_Definition = d.get("zh_Definition");
+		}
+        else if (userLanguage.equalsIgnoreCase("zh_tw")) {
             this.zh_tw_Gloss = d.get("zh_tw_Gloss");
             this.zh_tw_Definition = d.get("zh_tw_Definition");
         }
-        else if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("vi"))) {
+        else if (userLanguage.equalsIgnoreCase("vi")) {
             this.vi_Definition = d.get("vi_Definition");
         }
 
@@ -283,6 +298,20 @@ public class VocabInfo implements Serializable {
     }
 
     /**
+     * @return the es_Def
+     */
+    public String get_es_Definition() {
+        return this.es_Definition;
+    }
+
+    /**
+     * @param es_Definition the es_Def to set
+     */
+    public void set_es_Definition(final String es_Definition) {
+        this.es_Definition = es_Definition;
+    }
+
+    /**
      * @return the zh_tw_Def
      */
     public String get_zh_tw_Definition() {
@@ -308,6 +337,20 @@ public class VocabInfo implements Serializable {
      */
     public void set_zh_Definition(final String zh_Definition) {
         this.zh_Definition = zh_Definition;
+    }
+
+    /**
+     * @return the Spanish Gloss
+     */
+    public String get_es_Gloss() {
+        return this.es_Gloss;
+    }
+
+    /**
+     * @param es_Gloss the es_Gloss to set
+     */
+    public void set_es_Gloss(final String es_Gloss) {
+        this.es_Gloss = es_Gloss;
     }
 
     /**

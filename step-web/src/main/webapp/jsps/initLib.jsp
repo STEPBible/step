@@ -16,8 +16,11 @@
 <%	if (restAPIURL == null) {
         restAPIURL = "/rest/";
         try {
-            String prefixForThisTomcatContext = "REST_API_URL-" + getServletContext().getRealPath("/") + ":";
-            BufferedReader reader = new BufferedReader(new FileReader("/var/www/rest_api_url.txt"));
+            String pathOfServlet = getServletContext().getRealPath("/");
+            String[] pathOfServletSplits = pathOfServlet.split("[\\\\\\/]"); // Either \ for Windows or / characters for Linux
+            pathOfServlet = "/var/www/" + pathOfServletSplits[pathOfServletSplits.length - 1]  + "_rest_api_url.txt";
+            String prefixForThisTomcatContext = "REST_API_URL:";
+            BufferedReader reader = new BufferedReader(new FileReader(pathOfServlet));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.indexOf(prefixForThisTomcatContext) == 0) restAPIURL = line.substring(prefixForThisTomcatContext.length()) + "/rest/";

@@ -298,7 +298,10 @@ public class JSwordStrongNumberHelper {
             final LexiconSuggestion ls = new LexiconSuggestion();
             ls.setStrongNumber(d.get("strongNumber"));
             ls.setGloss(d.get("stepGloss"));
-            if (userLanguage.equalsIgnoreCase("zh")) {
+            if (userLanguage.equalsIgnoreCase("es")) {
+                ls.set_es_Gloss(d.get("es_Gloss"));
+            }
+            else if (userLanguage.equalsIgnoreCase("zh")) {
                 ls.set_zh_Gloss(d.get("zh_Gloss"));
             }
             else if (userLanguage.equalsIgnoreCase("zh_tw")) {

@@ -33,7 +33,7 @@ function openClrConfig() {
 function initOpenClrCodeModal() {
   var s = $('<select id="openClrConfigDropdown"/>');
   s.append($('<option/>').html('Verb, Gender and Number'));
-  s.append($('<option/>').html('Verb, Gender and Number, 2nd version'));
+  s.append($('<option/>').html('Verb, without reference to time'));
   s.append($('<option/>').html('Verb only (tense-mood)'));
   s.append($('<option/>').html('Verb with Middle and Passive Voices'));
   s.append($('<option/>').html('Verb, imperative mood'));
@@ -178,9 +178,10 @@ function saveHeaderInfo() {
     (axis == 'X') ? c4[C_Greek][C_verbTableXHeader] = newHeader : c4[C_Greek][C_verbTableYHeader] = newHeader;
   }
   cf.updtLocalStorage();
-  $('#addHeaderInfoModal .close').click();
-  var element = document.getElementById('addHeaderInfoModal');
-  element.parentNode.removeChild(element);
+  step.util.closeModal("addHeaderInfoModal");
+  // $('#addHeaderInfoModal .close').click();
+  // var element = document.getElementById('addHeaderInfoModal');
+  // element.parentNode.removeChild(element);
   $('#sortAxisModal .close').click();
   updateAllSettingsAndInputFields();
 }
@@ -347,9 +348,7 @@ function saveSortOrder() {
     }
     cv[C_userProvidedSortOrder] = [];
   }
-  $('#sortAxisModal .close').click();
-  var element = document.getElementById('sortAxisModal');
-  element.parentNode.removeChild(element);
+  step.util.closeModal("sortAxisModal");
   updateAllSettingsAndInputFields();
 }
 
@@ -442,9 +441,7 @@ function saveSortOTOrder() {
     }
     cv[C_userProvidedSortOrder] = [];
   }
-  $('#sortAxisModal .close').click();
-  var element = document.getElementById('sortAxisModal');
-  element.parentNode.removeChild(element);
+  step.util.closeModal("sortAxisModal");
   updateAllSettingsAndInputFields();
 }
 
@@ -498,9 +495,10 @@ function saveUserClrConfig() {
     window.localStorage.setItem('colorCode-UserClrConfigNames', JSON.stringify(userClrConfigNames));
   }
   window.localStorage.setItem('colorCode-UserClrConfigName-' + inTxt, JSON.stringify(c4));
-  $('#saveClrModal .close').click();
-  var element = document.getElementById('saveClrModal');
-  element.parentNode.removeChild(element);
+  step.util.closeModal("saveClrModal");
+  // $('#saveClrModal .close').click();
+  // var element = document.getElementById('saveClrModal');
+  // element.parentNode.removeChild(element);
 }
 
 function addNounTable() {
@@ -638,7 +636,10 @@ function addOTVerbTable(createUserInputs, htmlElement) {
     descOfYAxisItems = r.nameOfAllYAxisItems;
   }
   var htmlTable = '';
-  if (!createUserInputs) htmlTable = '<link href="/css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
+  if (!createUserInputs) {
+      var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+	  htmlTable = '<link href="/css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>';
+  }
   var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs, 'OT');
   htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
   yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs, 'OT') + '">';
@@ -1600,13 +1601,9 @@ function resetClrConfig() {
 }
 
 function closeClrConfig() {
-  $('#theGrammarClrModal').modal('hide');
-  $('#theGrammarClrModal').modal({
-    show: false
-  });
-  var element = document.getElementById('theGrammarClrModal');
-  element.parentNode.removeChild(element);
   $('.sp-container').remove(); // The color selection tool is not totally removed so manually remove it. 08/19/2019
+  step.util.closeModal("grammarClrModal");
+  $('.modal-backdrop.in').remove(); // The color selection tool is not totally removed so manually remove it. 05/15/2021
 }
 
 function updateAllSettingsAndInputFields() {
@@ -1618,13 +1615,10 @@ function updateAllSettingsAndInputFields() {
   updateVerbsBkgrd('middle');
   cf.createUlForAllItemsInYAndX();
   cf.createUlFor_OT();
-  $('#theGrammarClrModal').modal({
+  $('#grammarClrModal').modal({
     show: false
   });
-  if ($.getUrlVars().indexOf("debug") == -1)
-    $('#theGrammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.min.html');
-  else
-    $('#theGrammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.html');
+  step.util.showConfigGrammarColor();
 }
 
 function updateNounInputFields(inputOnOff) {

@@ -131,7 +131,8 @@ public class AnalysisServiceImpl implements AnalysisService {
                     if (!curBookName.equals("")) {
                         CombinedPassageStats cachedStatsForPassage = getPutBookAnalysisCache(curBookName, mostOccurrences, null);
                         if (cachedStatsForPassage != null) {
-                            if (!userLanguage.toLowerCase().startsWith("zh")) return cachedStatsForPassage;
+                            if ((!userLanguage.toLowerCase().startsWith("es")) &&
+								(!userLanguage.toLowerCase().startsWith("zh"))) return cachedStatsForPassage;
                             stat = cachedStatsForPassage.getPassageStat();
                         }
                     }
@@ -156,7 +157,7 @@ public class AnalysisServiceImpl implements AnalysisService {
         }
         stat.setReference(centralReference);
         statsForPassage.setPassageStat(stat);
-        if ((scopeType == ScopeType.BOOK) && (!curBookName.equals("")) && (!userLanguage.toLowerCase().startsWith("zh")))
+        if ((scopeType == ScopeType.BOOK) && (!curBookName.equals("")) && (!userLanguage.toLowerCase().startsWith("es")) && (!userLanguage.toLowerCase().startsWith("zh")))
             getPutBookAnalysisCache(curBookName, mostOccurrences, statsForPassage);
         return statsForPassage;
     }

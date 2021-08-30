@@ -43,6 +43,9 @@ var QuickLexicon = Backbone.View.extend({
         '<% var urlLang = $.getUrlVar("lang") || ""; %>' +
         '<% urlLang = urlLang.toLowerCase(); %>' +
         '<% var currentLang = step.userLanguageCode.toLowerCase(); %>' +
+        // '<% var currentEnWithEsLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon"); %>' +
+        // '<% if (currentEnWithEsLexiconSetting == undefined) currentEnWithEsLexiconSetting = false; %>' +
+		'<% if ((currentLang.startsWith("es")) && (item._es_Gloss != undefined)) { %><span>,&nbsp;<%= item._es_Gloss %></span> <% } %>' +
         '<% if (urlLang == "zh_tw") { currentLang = "zh_tw"; } else if (urlLang == "zh") { currentLang = "zh"; } %>' +
         '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
         '<% if (currentEnWithZhLexiconSetting == undefined) currentEnWithZhLexiconSetting = false; %>' +
@@ -50,13 +53,15 @@ var QuickLexicon = Backbone.View.extend({
         '&nbsp;(<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1> ' +
+        '<% if ( (currentLang == "es") && (item._es_Definition != undefined) ) { %><div class="mediumDef"><%= item._es_Definition %></div><% } %>' +
         '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
         '<% if ( (currentLang == "vi") && (item._vi_Definition != undefined) ) { %><div class="mediumDef"><%= item._vi_Definition %></div> <% } %>' +
+        // '<% if ((currentEnWithZhLexiconSetting) || (currentEnWithEsLexiconSetting) || ( (!currentLang.startsWith("zh")) && (!currentLang.startsWith("es")))) { %>' +
         '<% if ((currentEnWithZhLexiconSetting) || (!currentLang.startsWith("zh"))) { %>' +
             '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
             '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
         '<% } %>' +
-        '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <%= __s.more_info_on_click_of_word %></span><% } %>' +
+        '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <span id="clickMoreInfo"><%= __s.more_info_on_click_of_word %></span></span><% } %>' +
         '</div>' +
         '<% if (brief_morph_info[data_index] != null) { %> ' +
 		'&nbsp;&nbsp;<span><%= brief_morph_info[data_index] %></span> ' +
@@ -110,14 +115,41 @@ var QuickLexicon = Backbone.View.extend({
 					brief_morph_info: morph_information,
 					fontClass: step.util.ui.getFontForStrong(self.strong),
 					view: self }));
+				if (step.touchDevice) $(lexicon).find("#clickMoreInfo").text(__s.more_info_on_touch_of_word);
                 if (self.position > 0.66) {
-                    lexicon.css({"top": "0", "bottom": "auto"});
+                    lexicon.css({"top": "37", "bottom": "auto"});
                 }
-                self.displayQuickDef(lexicon);
-            }
-
-            for (var i = 0; i < (data.vocabInfos || []).length; i++) {
-                self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+				if (self.touchEvent) {
+					if ((step.strongOfLastQuickLexicon == self.strong) && (step.touchForQuickLexiconTime > 0)) {
+						var timeToWait = Math.max(0, (TOUCH_CANCELLATION_TIME) - (Date.now() - step.touchForQuickLexiconTime));
+						var previoustouchForQuickLexiconTime = step.touchForQuickLexiconTime;
+						var timer = setTimeout( function( ) { 
+							if ((step.strongOfLastQuickLexicon == self.strong) && // Make sure user has not touched another word after the timeout
+								(previoustouchForQuickLexiconTime == step.touchForQuickLexiconTime)) {
+								step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
+								step.displayQuickLexiconTime = Date.now();
+								step.passage.higlightStrongs({
+									passageId: undefined,
+									strong: self.strong,
+									morph: self.morph,
+									classes: "primaryLightBg"
+								});
+								self.displayQuickDef(lexicon);
+								for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+									self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+								}
+								if (step.lastTapStrong.substr(0,12) === "notdisplayed") step.lastTapStrong = step.lastTapStrong.substr(12);
+							}
+						  },
+						  timeToWait);
+					}
+				}
+				else {
+					self.displayQuickDef(lexicon);
+					for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+						self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+					}
+				}
             }
         });
     }, /**
@@ -128,6 +160,7 @@ var QuickLexicon = Backbone.View.extend({
         var self = this;
         if(this.text) {
             var note = $(this.templateHeader + this.text.html() + this.templateFooter);
+			$("#quickLexicon").remove();
             this.displayQuickDef(note);
         } else {
             //remove all quick lexicons
@@ -161,6 +194,8 @@ var QuickLexicon = Backbone.View.extend({
         this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span").one('scroll', function() {
             lexicon.remove();
         })
+		step.touchForQuickLexiconTime = 0;
+		step.strongOfLastQuickLexicon = "";
     },
 
     /**
@@ -206,7 +241,10 @@ var QuickLexicon = Backbone.View.extend({
         if(morphInfo && param && morphInfo[param]) {
 			var morphValue = morphInfo[param];
 			var local_var_name = morphValue.toLowerCase().replace(/ /g, "_");
-			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ") " : " ";
+			if ((typeof __s[local_var_name] !== "undefined") &&
+				(morphValue.toLowerCase() !== __s[local_var_name].toLowerCase()))
+					morphValue += " (" + __s[local_var_name] + ") ";
+			else morphValue += " ";
 			return morphValue;
         }
 		return '';

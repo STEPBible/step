@@ -44,6 +44,7 @@ public class SearchPageController extends HttpServlet {
     private static String USER_LANGUAGES = "";
     private static String COOKIE_COUNTRIES = "";
     private static String CACHE_VERSION = "";
+    public static String SERVLET_CONTEXT = "";
     private static Logger LOGGER = LoggerFactory.getLogger(SearchPageController.class);
     private final SearchController search;
     private final ModuleController modules;
@@ -472,15 +473,14 @@ public class SearchPageController extends HttpServlet {
 
     private String loadFirstPageCacheInfo() {
         try {
-            File myFile = new File("/var/www/firstpagecacheinfo.txt");
+            File myFile = new File("/var/www/" + SERVLET_CONTEXT + "_firstpagecacheinfo.txt");
             Scanner myReader = new Scanner(myFile);
             while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                if (data.indexOf("USER_LANGUAGES=") == 0) {
-                    USER_LANGUAGES = data.substring(15);
-                }
-                else if (data.indexOf("COOKIE_COUNTRIES=") == 0) COOKIE_COUNTRIES = data.substring(17);
-                else if (data.indexOf("CACHE_VERSION=") == 0) CACHE_VERSION = data.substring(14);
+                String line = myReader.nextLine();
+                if (line.indexOf("USER_LANGUAGES=") == 0) {
+                    USER_LANGUAGES = line.substring(15);
+                } else if (line.indexOf("COOKIE_COUNTRIES=") == 0) COOKIE_COUNTRIES = line.substring(17);
+                else if (line.indexOf("CACHE_VERSION=") == 0) CACHE_VERSION = line.substring(14);
             }
             myReader.close();
         } catch (Exception e) {

@@ -52,12 +52,14 @@ public final class OriginalWordUtils {
         suggestion.setMatchingForm(def.get("accentedUnicode"));
         suggestion.setStepTransliteration(def.get("stepTransliteration"));
         suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
-        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh"))) {
-            suggestion.set_zh_Gloss(def.get("zh_Gloss"));
+        if ((userLanguage == null) || (userLanguage == "")) {
+			suggestion.set_es_Gloss(def.get("es_Gloss"));
+			suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
+			suggestion.set_zh_Gloss(def.get("zh_Gloss"));
         }
-        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh_tw"))) {
-            suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
-        }
+		else if (userLanguage.equalsIgnoreCase("es")) 	 suggestion.set_es_Gloss(def.get("es_Gloss"));
+		else if (userLanguage.equalsIgnoreCase("zh_tw")) suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
+		else if (userLanguage.equalsIgnoreCase("zh")) 	 suggestion.set_zh_Gloss(def.get("zh_Gloss"));
         return suggestion;
     }
  

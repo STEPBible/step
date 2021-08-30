@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.tyndalehouse.step</groupId>
         <artifactId>step-mvn</artifactId>
-        <version>2.0.34-SNAPSHOT</version>
+        <version>2.1.22-SNAPSHOT</version>
     </parent>
 
     <groupId>com.tyndalehouse.step</groupId>
@@ -162,5 +162,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.7</version>
+        </dependency>
+
     </dependencies>
 </project>

@@ -74,7 +74,8 @@ public class LexiconDefinitionServiceImpl implements LexiconDefinitionService {
      */
     private LexiconSuggestion getLexiconSuggestion(final EntityDoc lexiconDefinition, final String strongNumber, final String userLanguage) {
         final LexiconSuggestion suggestion = new LexiconSuggestion();
-        if (userLanguage.equalsIgnoreCase("zh")) suggestion.setGloss(lexiconDefinition.get("zh_Gloss"));
+        if (userLanguage.equalsIgnoreCase("es")) suggestion.setGloss(lexiconDefinition.get("es_Gloss"));
+        else if (userLanguage.equalsIgnoreCase("zh")) suggestion.setGloss(lexiconDefinition.get("zh_Gloss"));
         else if (userLanguage.equalsIgnoreCase("zh_tw")) suggestion.setGloss(lexiconDefinition.get("zh_tw_Gloss"));
         else suggestion.setGloss(lexiconDefinition.get("stepGloss"));
         suggestion.setMatchingForm(lexiconDefinition.get("accentedUnicode"));

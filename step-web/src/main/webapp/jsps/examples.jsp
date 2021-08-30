@@ -24,7 +24,6 @@
     </a>
 
     <h3><fmt:message key="simple_intro_welcome"/></h3>
-    <h4><fmt:message key="simple_intro_tyndale_house_project"/></h4>
 
     <p><fmt:message key="simple_intro"/></p>
 
@@ -57,7 +56,7 @@
                                   option1type="version" option2="throne" option2type="meanings" option3="David"
                                   option3type="subject" option4="Isa-Rev" option4type="reference"
                                   sampleURL="/?q=version=ESV|meanings=throne|subject=david|reference=Isa-Rev&options=HNVUG"/>
-            <search:sample_search explanation="interlinear_versions_explanation" option1="KJV" option1type="version"
+            <search:sample_search explanation="interlinear_grammar_explanation" option1="KJV" option1type="version"
                                   option2="THGNT" option2type="version" option3="John 1" option3type="reference"
                                   sampleURL="/?q=version=KJV|version=THGNT|reference=John.1&options=HVLUNM&display=INTERLINEAR"
                                   showInterlinear="true"/>
@@ -135,7 +134,7 @@
         </div>
     </div>
     <div class="text-muted step-copyright">
-                <span>&copy; <a href="http://www.tyndale.cam.ac.uk"
+                <span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html"
                                 target="_blank">Tyndale House, Cambridge, UK</a> - <%= Calendar.getInstance().get(Calendar.YEAR) %></span>
     </div>
 </div>

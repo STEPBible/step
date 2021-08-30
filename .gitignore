@@ -16,6 +16,5 @@ bin
 *.orig
 *.versionsBackup
 *-SNAPSHOT*.min.js
-*.map
 .sass-cache/
 .DS_Store

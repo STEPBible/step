@@ -178,6 +178,7 @@ var PickBibleView = Backbone.View.extend({
 				$('.list-group').show();
 				$('.list-group-item').hide();
 				$('.list-group-item.active').show();
+				$('.ul_selected').hide()
 				var regex1 = new RegExp("(^\\w*" + userInput + "|[\\s\\.]" + userInput + ")", "i");
 				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
 				step.util.addTagLine();

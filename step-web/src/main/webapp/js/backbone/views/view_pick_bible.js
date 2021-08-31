@@ -283,7 +283,6 @@ var PickBibleView = Backbone.View.extend({
 
         var bibleList = {};
 
-
         var versionsSelected = (typeof self.searchView._getCurrentInitials === "undefined") ?
 			window.searchView._getCurrentInitials() : self.searchView._getCurrentInitials();
         numberOfVersionsSelected = 0;
@@ -297,20 +296,21 @@ var PickBibleView = Backbone.View.extend({
 			}
         }
 		var addedToSelectedGroup = [];
-		for (var v in step.keyedVersions) {
-			var version = step.keyedVersions[v];
-			var i = versionsSelected.indexOf(version.shortInitials);
-			if (version.category == 'BIBLE' && (i > -1) && addedToSelectedGroup.indexOf(version.shortInitials) == -1) {
-				if (!bibleList["Selected"]) {
-					bibleList["Selected"] = [];
-				}
-				version.languageCode = "selected";
-				bibleList["Selected"].push(version);
-				addedToSelectedGroup.push(version.shortInitials);
-				console.log("version " + version.shortInitials);
-			}
-		}
-
+        if (filter == 'BIBLE') {
+            for (var v in step.keyedVersions) {
+                var version = step.keyedVersions[v];
+                var i = versionsSelected.indexOf(version.shortInitials);
+                if (version.category == 'BIBLE' && (i > -1) && addedToSelectedGroup.indexOf(version.shortInitials) == -1) {
+                    if (!bibleList["Selected"]) {
+                        bibleList["Selected"] = [];
+                    }
+                    version.languageCode = "selected";
+                    bibleList["Selected"].push(version);
+                    addedToSelectedGroup.push(version.shortInitials);
+                    console.log("version " + version.shortInitials);
+                }
+            }
+        }
 
         if (selectedLanguage == "_ancient" && filter == 'BIBLE') {
             var added = this._populateAncientBibles(bibleList);

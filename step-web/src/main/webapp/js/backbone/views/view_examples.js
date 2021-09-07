@@ -12,7 +12,7 @@ var ExamplesView = Backbone.View.extend({
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<br>' +
-					'<div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black"><%= __s.display_classical_ui %></span>' +
+					'<div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black"><mark><%= __s.display_classical_ui %></mark></span>' +
 					'<br><span class="explanationText"><%= __s.advanced_interface_explain %></span>' +
 					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					'</div>' +

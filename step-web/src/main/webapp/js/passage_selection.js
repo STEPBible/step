@@ -6,6 +6,7 @@ step.passageSelect = {
 	modalMode: 'book',
 	lastOsisID: '',
 	lastNumOfChapters: '',
+	arrayOfTyplicalBooksChapters: [],
 	osisChapterJsword: [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
 		["Gen", 50, [54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,40,16,54,42,56,29,34,13]],
 		["Exo", 40, [22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,36,31,33,18,40,37,21,43,46,38,18,35,23,35,35,38,29,31,43,38], "Exod"],
@@ -82,6 +83,7 @@ step.passageSelect = {
 		this.modalMode = 'book';
 		this.lastOsisID = '';
 		this.lastNumOfChapters = '';
+		this.arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
 		step.util.closeModal('searchSelectionModal');
 		var hideAppend = false;
 		if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
@@ -91,7 +93,6 @@ step.passageSelect = {
 		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
 		this._displayListOfBooks();
 		$("textarea#enterYourPassage").on('input', function(e){
-		// .keyup(function(e) {
 			step.passageSelect._handleKeyboardEntry(e);
 		});
 	},
@@ -107,8 +108,21 @@ step.passageSelect = {
 		var firstWord = lastPassageEntered.split(/\.|:|\s/)[0].toLowerCase();
 		if (firstWord.length > 0) {
 			if (firstWord == "jas") firstWord = "jam";
-			else if (firstWord == "phile") firstWord = "phlm";
 			else if (firstWord == "obd") firstWord = "obad";
+			else if ((firstWord == "phi") || (firstWord == "phil")) firstWord = "ph(il|lm)"; // Can be either Philippians or Philemon
+			else if (firstWord.length > 3) {
+				for (var i = 0; i < this.arrayOfTyplicalBooksChapters.length; i ++) {
+					var checkString = this.arrayOfTyplicalBooksChapters[i][0].toLowerCase();
+					var first2Char = checkString.substr(0, 2);
+					if ((first2Char === "1 ") || (first2Char === "2 ") || (first2Char === "3 "))
+						checkString = checkString.substr(0,1) + checkString.substr(2);
+					if (checkString.startsWith(firstWord)) {
+						firstWord = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
+						firstWord = firstWord.toLowerCase();
+						break;
+					}
+				}
+			}
 			var regex1 = RegExp("^" + firstWord, "i")
 			$("td").filter(function () { return regex1.test($(this).text());}).css("background-color", "fafad2");
 		}
@@ -184,7 +198,6 @@ step.passageSelect = {
 		}
 		var tableHTML = this._buildBookTableHeader(columns);
 		var typlicalBooksChapters = false;
-		var arrayOfTyplicalBooksChapters;
 		var start = 0;
 		var end = 0;
 		if (typeof data === "string") {
@@ -195,7 +208,6 @@ step.passageSelect = {
 				end = 66;
 			}
 			typlicalBooksChapters = true;
-			arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
 		}
 		else {
 			end = data.length;
@@ -212,8 +224,8 @@ step.passageSelect = {
 			if (typlicalBooksChapters) {
 				currentOsisID = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
 				numOfChapters = this.osisChapterJsword[i][1];
-				longNameToDisplay = arrayOfTyplicalBooksChapters[i][0];
-				shortNameToDisplay = (arrayOfTyplicalBooksChapters[i].length === 2) ? arrayOfTyplicalBooksChapters[i][1] : currentOsisID;
+				longNameToDisplay = this.arrayOfTyplicalBooksChapters[i][0];
+				shortNameToDisplay = (this.arrayOfTyplicalBooksChapters[i].length === 2) ? this.arrayOfTyplicalBooksChapters[i][1] : currentOsisID;
 			}
 			else {
 				currentOsisID = data[i].suggestion.osisID;

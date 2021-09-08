@@ -40,7 +40,19 @@ var DisplayView = Backbone.View.extend({
             languages.splice(indexToSplice++, 0, "en");
         }
         if (options.indexOf("M") != -1) {
-            languages.splice(indexToSplice++, 0, "en");
+			var data = step.util.activePassage().get("searchTokens") || [];
+			var numOfVersion = 0;
+			var versionInitials = "";
+			for (var i = 0; (i < data.length) && (numOfVersion < 2); i++) {
+				if (data[i].tokenType == VERSION) {
+					versionInitials = data[i].enhancedTokenInfo.initials;
+					numOfVersion ++;
+				}
+			}
+			if ((numOfVersion == 1) &&
+				(step.keyedVersions[versionInitials].hasMorphology) &&
+				(step.keyedVersions[versionInitials].languageCode === "grc")) // As of Sept 2021, there is no support of Hebrew grammar.  The code on the backend has not been created.
+				languages.splice(indexToSplice++, 0, "en");
         }
 
         //do display options make it an interlinear

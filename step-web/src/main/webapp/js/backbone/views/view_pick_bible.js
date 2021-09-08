@@ -181,6 +181,18 @@ var PickBibleView = Backbone.View.extend({
 				$('.ul_selected').hide()
 				var regex1 = new RegExp("(^\\w*" + userInput + "|[\\s\\.]" + userInput + ")", "i");
 				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
+				var itemsShown = $("li.list-group-item:visible");
+				for (var i = 0; i < itemsShown.length; i++) {
+					var classes = $(itemsShown[i]).parent().attr('class').split(' ');
+					for (var j = 0; j < classes.length; j++) {
+						if (classes[j].substr(0, 3) === "ul_") {
+							var langCode = classes[j].substr(3);
+							$('.span_' + langCode).show();
+							$('.btn_' + langCode).show();
+							break;
+						}
+					}
+				}
 				step.util.addTagLine();
 			}
 			else filterFunc(); // reset back to the modal without keyboard input
@@ -304,10 +316,10 @@ var PickBibleView = Backbone.View.extend({
                     if (!bibleList["Selected"]) {
                         bibleList["Selected"] = [];
                     }
-                    version.languageCode = "selected";
-                    bibleList["Selected"].push(version);
+					var copiedVersion = JSON.parse(JSON.stringify(version)); // Don't want to update the original step.keyedVersions object
+                    copiedVersion.languageCode = "selected";
+                    bibleList["Selected"].push(copiedVersion);
                     addedToSelectedGroup.push(version.shortInitials);
-                    console.log("version " + version.shortInitials);
                 }
             }
         }
@@ -367,7 +379,7 @@ var PickBibleView = Backbone.View.extend({
 		var uniqueBibleList = [];
 		for (var key in bibleList) { 
 			if (bibleList[key].length == 0) {
-				console.log("No Bible module for " + key);
+				// console.log("No Bible module for " + key);
 				delete bibleList[key];
 			}
 			else if (selectedLanguage == "_all") {

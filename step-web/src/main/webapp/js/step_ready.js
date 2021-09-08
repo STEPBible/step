@@ -72,7 +72,7 @@
 						else if (step.tempKeyInput === "s") step.util.searchSelectionModal();
 						step.tempKeyInput = "";
 					}
-					else if ((code > 64) && (code < 91)) { // 65 = A, 90 = Z
+					else if (((code > 48) && (code < 52)) || ((code > 64) && (code < 91))) { // 49 = 1, 51 = 3, 65 = A, 90 = Z
 						timer && clearTimeout(timer);
 						step.tempKeyInput += String.fromCharCode(code).toLowerCase();
 						if (step.tempKeyInput.length >= 2) {

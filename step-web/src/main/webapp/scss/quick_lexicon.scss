@@ -59,7 +59,8 @@
 
   &>div {
     padding:10px;
-    background: $highlight-color;
+//    background: $highlight-color;
+    background: var(--highlight_color);
     color: $quickLexiconFontColour;
 //    opacity:.95;
     line-height:22px;

@@ -313,12 +313,12 @@ var PickBibleView = Backbone.View.extend({
                 var version = step.keyedVersions[v];
                 var i = versionsSelected.indexOf(version.shortInitials);
                 if (version.category == 'BIBLE' && (i > -1) && addedToSelectedGroup.indexOf(version.shortInitials) == -1) {
-                    if (!bibleList["Selected"]) {
-                        bibleList["Selected"] = [];
+                    if (!bibleList[__s.selected_bibles]) {
+                        bibleList[__s.selected_bibles] = [];
                     }
 					var copiedVersion = JSON.parse(JSON.stringify(version)); // Don't want to update the original step.keyedVersions object
-                    copiedVersion.languageCode = "selected";
-                    bibleList["Selected"].push(copiedVersion);
+                    copiedVersion.languageCode = __s.selected_bibles;
+                    bibleList[__s.selected_bibles].push(copiedVersion);
                     addedToSelectedGroup.push(version.shortInitials);
                 }
             }

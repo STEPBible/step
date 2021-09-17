@@ -110,6 +110,20 @@ var PassageDisplayView = DisplayView.extend({
                 }
 
                 //needs to happen after appending to DOM
+          		var rootVar = document.querySelector(':root');
+                var color = step.settings.get("highlight_color");
+		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
+					rootVar.style.setProperty('--highlight_color',color);
+                color = step.settings.get("strong_color");
+		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
+					rootVar.style.setProperty('--strong_color',color);
+                color = step.settings.get("lexiconFocusColour");
+		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
+					rootVar.style.setProperty('--lexiconFocusColour',color);
+                color = step.settings.get("relatedWordBackground");
+		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
+					rootVar.style.setProperty('--relatedWordBackground',color);					
+
                 this._doChromeHack(passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 this.scrollToTargetLocation(passageContainer);

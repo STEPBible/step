@@ -64,7 +64,8 @@
 
 .qtip-default {
   .qtip-titlebar {
-    background-color: $highlight-color;
+//    background-color: $highlight-color;
+    background-color: var(--highlight_color);
     color: #fff;
     cursor: move;
   }

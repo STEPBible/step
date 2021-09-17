@@ -64,25 +64,82 @@
 		if (!step.touchDevice) {
 			var timer;
 			$(document).keyup(function(e) {
-				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0)) {
+				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0) &&
+					(!e.altKey) && (!e.ctrlKey)) {
 					var code = (e.keyCode ? e.keyCode : e.which);
-					console.log("key " + code);
-					if ((code == 186) || (code == 13)) {
-						if (step.tempKeyInput === "t") step.util.startPickBible();
-						else if (step.tempKeyInput === "s") step.util.searchSelectionModal();
-						step.tempKeyInput = "";
-					}
+					console.log("key " + code + " shift key: " + e.shiftKey);
+                    if ((code == 188) || (code == 190)) {
+                        var pC = $(".passageContainer");
+                        if (pC.length > 1) {
+                            var curActiveId = $(".passageContainer.active")[0].getAttribute("passage-id");
+                            var panelToMakeActive = 0;
+                            for (var i = 0; i < pC.length; i ++) {
+                                if ($(".passageContainer")[i].getAttribute("passage-id") == curActiveId) {
+                                    if (code == 188) {
+                                        if (i > 0) panelToMakeActive = i - 1;
+                                        else panelToMakeActive = pC.length - 1;
+                                    }
+                                    else {
+                                        if (i < (pC.length - 1)) panelToMakeActive = i + 1;
+                                        else panelToMakeActive = 0;
+                                    }
+                                    step.util.activePassageId(panelToMakeActive);
+                                    break;
+                                }
+                            }
+                        }
+                        step.tempKeyInput = "";
+                    }
+                    else if (code == 37) {
+                        if (e.shiftKey) $("a.previousChapter").click();
+                        else $(".passageContainer.active").find("a.previousChapter").click();
+                        step.tempKeyInput = "";
+                    }
+                    else if (code == 39) {
+                        if (e.shiftKey) $("a.nextChapter").click();
+                        else $(".passageContainer.active").find("a.nextChapter").click();
+                        step.tempKeyInput = "";
+                    }
+                    else if (code == 187) {
+                    	step.util.createNewColumn();
+                    	step.tempKeyInput = "";
+                    }
+                    else if (code == 191) {
+                    	step.util.ui.showTutorial();
+                    	step.tempKeyInput = "";
+                    }
 					else if (((code > 48) && (code < 52)) || ((code > 64) && (code < 91))) { // 49 = 1, 51 = 3, 65 = A, 90 = Z
-						timer && clearTimeout(timer);
-						step.tempKeyInput += String.fromCharCode(code).toLowerCase();
-						if (step.tempKeyInput.length >= 2) {
-							step.util.passageSelectionModal();
-						}
-						else {
-							timer = setTimeout( function( ) { // If input is less than 2 characters within 1.5 seconds, clear the input
-								step.tempKeyInput = "";
-							}, 1500);
-						}
+                        var curChar = String.fromCharCode(code).toLowerCase();
+                        if (e.shiftKey) {
+                            step.tempKeyInput = "";
+                            if ((curChar === "t") || (curChar === "b")) step.util.startPickBible();
+                            else if (curChar === "s") step.util.searchSelectionModal();
+                            else if (curChar === "h") step.util.ui.initSidebar('history');
+                            else if ((curChar === "p") || (curChar === "r")) step.util.passageSelectionModal();
+                            else if ((curChar === "a") || (curChar === "v")) step.util.ui.initSidebar('analysis');
+                            else if (curChar === "c") {
+                                $(".sidebar-offcanvas").find("a.glyphicon-remove").click();
+                                $("#welcomeExamples").find(".closeColumn").click();
+                            }
+                        }
+                        else {
+                            timer && clearTimeout(timer);
+                            step.tempKeyInput += curChar;
+                            timer = setTimeout( function( ) { // If input is less than 2 characters within 1.5 seconds, clear the input
+                                    step.tempKeyInput = "";
+                            }, 1500);
+                            if (step.tempKeyInput.length >= 2) {
+                                var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
+                                for (var i = 0; i < arrayOfTyplicalBooksChapters.length; i++) {
+                                    if (arrayOfTyplicalBooksChapters[i][0].normalize("NFD").replace(/[\u0300-\u036f\s]/g,"").toLowerCase().startsWith(step.tempKeyInput)) {
+                                        step.util.passageSelectionModal();
+                                        step.tempKeyInput = "";
+                                        return;
+                                    }
+                                }
+                                step.tempKeyInput = step.tempKeyInput.substr(1); // does not match any of 66 books, remove the first character
+                            }
+                        }
 					}
 				}
 			});

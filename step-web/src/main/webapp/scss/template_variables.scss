@@ -19,13 +19,13 @@ $brand-secondary: #9D0025;
 $text-color: #5D5D5D;
 $border-color: #C8C8C8;
 
-$highlight-color: $brand-primary;
+// $highlight-color: $brand-primary;
 
 // lexicon
 $quickLexiconFontColour: white;
 $quickLexiconRelatedFontColour: black;
-$strong-color: lighten(desaturate($highlight-color, 40%), 10%);
-$lexiconFocusColour: lighten(desaturate($highlight-color, 50%), 50%);
+// $strong-color: lighten(desaturate($highlight-color, 40%), 10%);  // 38626e 498090
+// $lexiconFocusColour: lighten(desaturate($highlight-color, 50%), 50%); // 405d65 c8d8dc
 $lexiconFocusRelatedColour: #e0e0e0;
 
 //active colour of panel
@@ -35,15 +35,19 @@ $dividerColor: $topHeaderLinkColour;
 $warningColour: orange;
 $infoColour: #a9d3ff;
 $disabledColour: darkgrey;
-$link-color: $highlight-color;
-$activeColor: $highlight-color;
+//$link-color: $highlight-color;
+$link-color: var(--highlight_color);
+//$activeColor: $highlight-color;
+$activeColor: var(--highlight_color);
 
 // colours in dropdown
 $inactive-tab-color: $text-color;
-$active-tab-color: $brand-primary;
+//$active-tab-color: $brand-primary;
+$active-tab-color: var(--highlight_color);
 $headingColour: #111;
 
-$hoverColor: $highlight-color;
+//$hoverColor: $highlight-color;
+$hoverColor: var(--highlight_color);
 $secondaryHoverColour: #d3d3d3;
 $hoverColorText: white;
 $verseNumberBackground: #eee;

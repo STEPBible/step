@@ -1,7 +1,8 @@
 @import 'template_variables';
 
 [strong] {
-  color: $strong-color;
+//  color: $strong-color;
+  color: var(--strong_color);
 
   &:hover {
     cursor: pointer;
@@ -17,12 +18,14 @@
 }
 
 .relatedWordEmphasisHover {
-  background-color: rgba($highlight-color, 0.2);
+//  background-color: rgba($highlight-color, 0.2);
+  background-color: var(--relatedWordBackground);
   color: $quickLexiconRelatedFontColour;
 }
 
 .lexiconFocus {
-  background-color: $lexiconFocusColour;
+//  background-color: $lexiconFocusColour;
+  background-color: var(--lexiconFocusColour);
 }
 
 .lexiconRelatedFocus {
@@ -30,12 +33,14 @@
 }
 
 .primaryLightBg {
-  background-color: $highlight-color !important;
+//background-color: $highlight-color !important;
+  background-color: var(--highlight_color) !important;
   color: $quickLexiconFontColour;
   text-shadow: none !important;
 
   & > .secondaryBackground {
-    background-color: $highlight-color !important;
+//  background-color: $highlight-color !important;
+    background-color: var(--highlight_color) !important;
   }
 
   .segC0, .segC1 {

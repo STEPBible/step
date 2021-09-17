@@ -100,12 +100,12 @@ ul .glyphicon-ok {
 .stepButton {
 	white-space:normal!important;
 	padding:6px 7px 5px 7px;
-	color:#498090;
+	color:var(--strong_color);
 	font-size:14px;
 	line-height:13px;
 	border-radius:4px;
 	background:#FFFFFF!important;
-	border:1px solid #498090;
+	border:1px solid var(--highlight_color);
 	font-style: normal;
 	margin-left: 5px;
 }
@@ -113,12 +113,12 @@ ul .glyphicon-ok {
 .stepButtonTriangle {
 	white-space:normal!important;
 	padding:6px 7px 5px 7px;
-	color:#498090;
+	color:var(--strong_color);
 	font-size:14px;
 	line-height:13px;
 	border-radius:4px;
 	background:#FFFFFF!important;
-	border:1px solid #498090;
+	border:1px solid var(--highlight_color);
 	font-style: normal;
 	margin-left: 5px;
 
@@ -130,7 +130,7 @@ ul .glyphicon-ok {
 }
 
 .stepPressedButton {
-	background-color: #498090 !important;
+	background-color: var(--highlight_color) !important;
 	color: white !important;
 	border: 1px solid black;
 }

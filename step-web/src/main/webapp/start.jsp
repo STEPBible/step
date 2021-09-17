@@ -58,6 +58,14 @@
         </c:otherwise>
     </c:choose>
 
+	<style>
+	:root {
+		--highlight_color: #17758F;
+		--strong_color: #498090;
+		--lexiconFocusColour: #c8d8dc;
+		--relatedWordBackground: #b2e5f3;
+	}
+	</style>
     <%
         if (request.getParameter("debug") != null) {
     %>

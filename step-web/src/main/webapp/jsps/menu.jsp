@@ -35,14 +35,10 @@
     <a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
         <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="examples" /></span>
     </a>
-    <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
-        title="<fmt:message key="passage_smaller_fonts"/>">
-        <span class="smallerFont" style="color:white;background:#5E5E5E;font-size:16px"> <fmt:message key="passage_font_size_symbol"/> </span>
-    </a>					
-    <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), 1);"
+    <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.showFontSettings();"
         title="<fmt:message key="passage_larger_fonts"/>">
         <span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px"><fmt:message key="passage_font_size_symbol"/></span>
-        <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font_sizes"/></span>
+        <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font"/></span>
     </a>
     <span class="navbar-collapse collapse">
         <span class="dropdown">

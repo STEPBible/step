@@ -545,11 +545,13 @@ var MainSearchView = Backbone.View.extend({
         var refArgs = "";
         var searchArgs = "";
         var searchFound = false;
+        var moreThanOneVersion = 0;
         for (var ii = 0; ii < options.length; ii++) {
               switch (options[ii].itemType) {
                 case VERSION:
                     args += "|" + options[ii].itemType + "=";
                     args += encodeURIComponent(options[ii].item.shortInitials);
+                    moreThanOneVersion ++;
                     break;
                 case REFERENCE:
                     refArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.osisID);
@@ -627,6 +629,7 @@ var MainSearchView = Backbone.View.extend({
         }
         console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
+        if (moreThanOneVersion > 1) step.util.showIntroOfMultiVersion();
     },
     getCurrentInput: function () {
         return this.masterSearch.select2("container").find(".select2-input").val();

@@ -1,12 +1,12 @@
 /* TODO: Refactor font names to be abstracted away, since Cardo isn't really cardo!  */
 @font-face {
-  font-family: 'Cardo', serif;
+  font-family: 'Cardo';
   font-style: normal;
   font-size: 18px;
   src: local("Times New Roman");
 }
 @font-face {
-    font-family: 'Cardo', serif;
+    font-family: 'Cardo';
     font-style: normal;
     font-size: 18px;
     src: url('../fonts/SBL_grk.woff') format('woff');

@@ -1,7 +1,7 @@
 @import 'template_variables';
 
 [strong] {
-//  color: $strong-color;
+  color: $strong-color; // This line is for IE browser
   color: var(--strong_color);
 
   &:hover {
@@ -18,13 +18,13 @@
 }
 
 .relatedWordEmphasisHover {
-//  background-color: rgba($highlight-color, 0.2);
+  background-color: rgba($highlight-color, 0.2);  // This line is for IE browser
   background-color: var(--relatedWordBackground);
   color: $quickLexiconRelatedFontColour;
 }
 
 .lexiconFocus {
-//  background-color: $lexiconFocusColour;
+  background-color: $lexiconFocusColour;  // This line is for IE browser
   background-color: var(--lexiconFocusColour);
 }
 
@@ -33,13 +33,13 @@
 }
 
 .primaryLightBg {
-//background-color: $highlight-color !important;
+  background-color: $highlight-color !important;  // This line is for IE browser
   background-color: var(--highlight_color) !important;
   color: $quickLexiconFontColour;
   text-shadow: none !important;
 
   & > .secondaryBackground {
-//  background-color: $highlight-color !important;
+    background-color: $highlight-color !important;  // This line is for IE browser
     background-color: var(--highlight_color) !important;
   }
 

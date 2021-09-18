@@ -1670,7 +1670,6 @@ step.util = {
         $(_.template('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
 				'<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
-				
 					'<script>' +
 						'$(document).ready(function () {' +
 							'step.searchSelect.initSearchSelection();' +
@@ -1779,129 +1778,143 @@ step.util = {
     showFontSettings: function () {
         var element = document.getElementById('fontSettings');
         if (element) element.parentNode.removeChild(element);
-        $(_.template(
-			'<div id="fontSettings" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-				'<div class="modal-dialog" style="width:300px">' +
-					'<div class="modal-content">' +
-						'<link rel="stylesheet" href="css/spectrum.css">' +
-						'<script src="libs/spectrum.js"></script>' +
-						'<script src="libs/tinycolor-min.js"></script>' +
-						'<script>' +
-							'$(document).ready(function () {' +
-								'var color = step.settings.get("highlight_color");' +
-								'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
-								'$("#inClrStrongFont").spectrum({' +
-									'color: color,' +
-									'clickoutFiresChange: false,' +
-									'showPalette: true,' +
-									'palette: [' +
-										'["rgb(23, 117, 143);", "green"],' +
-										'["rgb(172, 9, 35);", "rgb(110, 11, 116);"]' +
-									'],' +
-									'change: function(color) {' +
-										'var currentClrPicker = $("#inClrStrongFont").spectrum("get").toHexString();' +
-										'setColor(currentClrPicker);' +
-									'},' +
-									'show: function(color) {' +
-										'var currentClrPicker = $("#inClrStrongFont").spectrum("get").toHexString();' +
-										'var color = step.settings.get("highlight_color");' +
-										'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
-										'if (color != currentClrPicker) setColor(currentClrPicker);' +
-									'}' +
-								'});' +
-							'}); ' +
-							'function closeFontSetting() {' +
-								'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
-								'step.util.closeModal("fontSettings");' +
-								'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021
-							'}' +
-							'function setColor(baseColor) {' +
-								'if (!((typeof baseColor === "string") && (baseColor.length == 7) && (baseColor.substr(0,1) === "#"))) baseColor = "#17758F";' +
-								'if (tinycolor(baseColor).getLuminance() > 0.3) {' +
-									'alert("Color selected is not dark enough and can be difficult to read.  Please select a darker color.");' +
-									'return;' +
+        var notIE = !(false || !!document.documentMode);
+		var modalHTML = '<div id="fontSettings" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog" style="width:300px">' +
+				'<div class="modal-content">';
+		if (notIE) modalHTML +=
+					'<link rel="stylesheet" href="css/spectrum.css">' +
+					'<script src="libs/spectrum.js"></script>' +
+					'<script src="libs/tinycolor-min.js"></script>';
+		modalHTML +=
+					'<script>';
+
+		if (notIE) modalHTML +=
+						'$(document).ready(function () {' +
+							'var color = step.settings.get("highlight_color");' +
+							'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+							'$("#inClrStrongFont").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'showPalette: true,' +
+								'palette: [' +
+									'["rgb(23, 117, 143);", "green"],' +
+									'["rgb(172, 9, 35);", "rgb(110, 11, 116);"]' +
+								'],' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#inClrStrongFont").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker);' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#inClrStrongFont").spectrum("get").toHexString();' +
+									'var color = step.settings.get("highlight_color");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker);' +
 								'}' +
-								'var t = tinycolor(baseColor);' +
-								'var hsl = t.toHsl();' +
-								'var colorH = hsl["h"];' +
-								'var colorS = hsl["s"] * 100;' +
-								'var colorL = hsl["l"] * 100;' +
-								'var rootVar = document.querySelector(":root");' +
-								'rootVar.style.setProperty("--highlight_color",baseColor);' +
-								'step.settings.save({"highlight_color":baseColor});' +
-								
-								'var desaturate = colorS - 40;' +
-								'var desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
-								'var desHsl = desColor.toHsl();' +
-								'var desColorH = desHsl["h"];' +
-								'var desColorS = desHsl["s"] * 100;' +
-								'var desColorL = desHsl["l"] * 100;' +
-
-								'var lighten = desColorL + 10;' +
-								'var lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
-								'var lightHex = lightColor.toHexString();' +
-								'rootVar.style.setProperty("--strong_color",lightHex);' +
-								'step.settings.save({"strong_color":lightHex});' +
-
-								'desaturate = colorS - 50;' +
-								'desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
-								'desHsl = desColor.toHsl();' +
-								'desColorH = desHsl["h"];' +
-								'desColorS = desHsl["s"] * 100;' +
-								'desColorL = desHsl["l"] * 100;' +
-
-								'lighten = desColorL + 50;' +
-								'lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
-								'lightHex = lightColor.toHexString();' +
-								'rootVar.style.setProperty("--lexiconFocusColour",lightHex);' +
-								'step.settings.save({"lexiconFocusColour":lightHex});' +
-								
-								'lighten = colorL + 55;' +
-								'lightColor = tinycolor("hsl(" + colorH + ", " + colorS + "%, " + lighten + "%)");' +
-								'lightHex = lightColor.toHexString();' +
-								'rootVar.style.setProperty("--relatedWordBackground",lightHex);' +
-								'step.settings.save({"relatedWordBackground":lightHex});' +
+							'});' +
+						'}); ' +
+						'function setColor(baseColor) {' +
+							'if (!((typeof baseColor === "string") && (baseColor.length == 7) && (baseColor.substr(0,1) === "#"))) baseColor = "#17758F";' +
+							'if (tinycolor(baseColor).getLuminance() > 0.3) {' +
+								'alert("Color selected is not dark enough and can be difficult to read.  Please select a darker color.");' +
+								'return;' +
 							'}' +
-						'</script>' +
-						'<div class="modal-header">' +
-							'<button type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
+							'var t = tinycolor(baseColor);' +
+							'var hsl = t.toHsl();' +
+							'var colorH = hsl["h"];' +
+							'var colorS = hsl["s"] * 100;' +
+							'var colorL = hsl["l"] * 100;' +
+							'var rootVar = document.querySelector(":root");' +
+							'rootVar.style.setProperty("--highlight_color",baseColor);' +
+							'step.settings.save({"highlight_color":baseColor});' +
+							
+							'var desaturate = colorS - 40;' +
+							'var desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
+							'var desHsl = desColor.toHsl();' +
+							'var desColorH = desHsl["h"];' +
+							'var desColorS = desHsl["s"] * 100;' +
+							'var desColorL = desHsl["l"] * 100;' +
+
+							'var lighten = desColorL + 10;' +
+							'var lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
+							'var lightHex = lightColor.toHexString();' +
+							'rootVar.style.setProperty("--strong_color",lightHex);' +
+							'step.settings.save({"strong_color":lightHex});' +
+
+							'desaturate = colorS - 50;' +
+							'desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
+							'desHsl = desColor.toHsl();' +
+							'desColorH = desHsl["h"];' +
+							'desColorS = desHsl["s"] * 100;' +
+							'desColorL = desHsl["l"] * 100;' +
+
+							'lighten = desColorL + 50;' +
+							'lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
+							'lightHex = lightColor.toHexString();' +
+							'rootVar.style.setProperty("--lexiconFocusColour",lightHex);' +
+							'step.settings.save({"lexiconFocusColour":lightHex});' +
+							
+							'lighten = colorL + 55;' +
+							'lightColor = tinycolor("hsl(" + colorH + ", " + colorS + "%, " + lighten + "%)");' +
+							'lightHex = lightColor.toHexString();' +
+							'rootVar.style.setProperty("--relatedWordBackground",lightHex);' +
+							'step.settings.save({"relatedWordBackground":lightHex});' +
+						'}';
+
+		modalHTML +=	'function closeFontSetting() {' +
+							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
+							'step.util.closeModal("fontSettings");' +
+							'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021
+						'}' +
+					'</script>' +
+					'<div class="modal-header">' +
+						'<button type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
+					'</div>' +
+					'<div class="modal-body" style="text-align:center">' +
+						'<table>' +
+							'<tr>' +
+								'<th style="width:70%">' +
+								'<th style="width:30%">' +
+							'</tr>' +
+							'<tr>' +
+								'<td>Font size</td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeFontSize($(\'.passageOptionsGroup\'), -1)"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeFontSize($(\'.passageOptionsGroup\'), 1)"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>';
+
+		if (notIE) modalHTML +=
+							'<tr>' +
+								'<td>Color</td>' +
+								'<td class="pull-right">' +
+									'<input id="inClrStrongFont" type="color" class="nInptC" value="#17758F"/>' +
+								'</td>' +
+							'</tr>';
+		modalHTML +=
+						'</table>' +
+						'<br>';
+						
+		if (notIE) modalHTML +=
+						'<p style="text-align:left;font-size:18px">Examples for the selected color</p>' +
+						'<p class="passageContent" style="color:var(--strong_color)">Text with color</p>' +
+						'<p class="passageContent primaryLightBg">Highlighted text (general)</p>' +
+						'<p class="passageContent lexiconFocus">Highlighted for lexicon</p>' +
+						'<p class="passageContent relatedWordEmphasisHover">Highlighted for related text</p>';
+						
+		modalHTML +=
+						'<div class="footer">' +
+							'<button class="stepButton pull-right" data-dismiss="modal" onclick=closeFontSetting()><label>Ok</label></button>';
+		if (notIE) modalHTML +=
+							'<button class="stepButton pull-right" onclick=setColor()><label>Original color</label></button>';
+		modalHTML +=
 						'</div>' +
-						'<div class="modal-body" style="text-align:center">' +
-							'<table>' +
-								'<tr>' +
-									'<th style="width:70%">' +
-									'<th style="width:30%">' +
-								'</tr>' +
-								'<tr>' +
-									'<td>Font size</td>' +
-									'<td class="pull-right">' +
-										'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeFontSize($(\'.passageOptionsGroup\'), -1)"><span style="font-size:8px;line-height:12px">A</span></button>' +
-										'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeFontSize($(\'.passageOptionsGroup\'), 1)"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
-									'</td>' +
-								'</tr>' +
-								'<tr>' +
-									'<td>Color</td>' +
-									'<td class="pull-right">' +
-										'<input id="inClrStrongFont" type="color" class="nInptC" value="#17758F"/>' +
-									'</td>' +
-								'</tr>' +
-							'</table>' +
-							'<br>' +
-							'<p style="text-align:left;font-size:18px">Examples for the selected color</p>' +
-							'<p class="passageContent" style="color:var(--strong_color)">Text with color</p>' +
-							'<p class="passageContent primaryLightBg">Highlighted text (general)</p>' +
-							'<p class="passageContent lexiconFocus">Highlighted for lexicon</p>' +
-							'<p class="passageContent relatedWordEmphasisHover">Highlighted for related text</p>' +
-							'<div class="footer">' +
-								'<button class="stepButton pull-right" data-dismiss="modal" onclick=closeFontSetting()><label>Ok</label></button>' +
-								'<button class="stepButton pull-right" onclick=setColor()><label>Original color</label></button>' +
-							'</div>' +
-							'<br>' +
-						'</div>' +
+						'<br>' +
 					'</div>' +
 				'</div>' +
-			'</div>'
-		)()).modal("show");
+			'</div>' +
+		'</div>';
+        $(_.template(modalHTML)()).modal("show");
     },
     startPickBible: function () {
         require(["menu_extras"], function () {

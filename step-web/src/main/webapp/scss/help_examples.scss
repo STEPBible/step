@@ -48,14 +48,17 @@
 	  margin: 4px 0 3px 5px;
       box-shadow: none;
       padding: 6px 7px 5px 7px;
+	  color: $strong-color; // This line is for IE browsers
       color:var(--strong_color);
       font-size: 14px;
 	  line-height:13px;
       border-radius: 4px;
 	  background:#FFFFFF;
+	  border:1px solid $highlight-color;
 	  border:1px solid var(--highlight_color);
 
 	  button {
+		border:1px solid $highlight-color;
 		border:1px solid var(--highlight_color);
 		&:after {
 		  content: '';

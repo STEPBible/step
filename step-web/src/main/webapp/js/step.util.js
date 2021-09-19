@@ -1601,8 +1601,7 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
-		var placeHolderTag = step.touchDevice ? "" : 'placeholder="Optionally type in passage, e.g.: \'Rev 21\' or \'John 3:16, Rom 3:23\'"';
-		$(_.template('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+		var modalHTML = '<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
 				'<div class="modal-content">' +
 					'<div class="modal-header">' +
@@ -1630,13 +1629,17 @@ step.util = {
 								'<option id="append_to_panel" value="append"><%= __s.append_to_panel %></option>' +
 							'</select>' +
 						'</div>' +
-						'<br>' +
-					'</div>' +
+					'</div>' ;
+		if (!step.touchDevice) modalHTML +=
+						'<textarea id="enterYourPassage" rows="1" style="font-size:13px; width: 95%;"  title="<%= __s.type_in_your_passage %>"' +
+						' placeholder="<%= __s.select_passage_input_placeholder %>"></textarea>';
+		modalHTML +=
 					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
-					'<div class="footer">' +
-						'<img id="keyboard_icon" src="/images/keyboard.jpg" alt="Keyboard entry" title="<%= __s.type_in_your_passage %>">' +
-						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"  title="<%= __s.type_in_your_passage %>"' +
-						placeHolderTag + '></textarea>' +
+					'<div class="footer">';
+		if (step.touchDevice) modalHTML +=
+						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;">' +
+						'</textarea>';
+		modalHTML +=
 						'<br>' +
 						'<span id="userEnterPassageError" style="color: red;"></span>' +
 					'</div>' +
@@ -1657,7 +1660,8 @@ step.util = {
 					'</script>' +
 				'</div>' +
 			'</div>' +
-		'</div>')()).modal("show");
+		'</div>';
+		$(_.template(modalHTML)()).modal("show");
 		if (!step.touchDevice) {
 			$('textarea#enterYourPassage').focus().val(step.tempKeyInput);
 			step.tempKeyInput = "";
@@ -1793,6 +1797,8 @@ step.util = {
 						'$(document).ready(function () {' +
 							'var color = step.settings.get("highlight_color");' +
 							'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+							'var closeButton = $("#fontSettings").find("button.close");' +
+							'if (closeButton.length == 1) $(closeButton[0]).attr("onclick", "closeFontSetting(\'" + color + "\')");' +
 							'$("#inClrStrongFont").spectrum({' +
 								'color: color,' +
 								'clickoutFiresChange: false,' +
@@ -1861,7 +1867,8 @@ step.util = {
 							'step.settings.save({"relatedWordBackground":lightHex});' +
 						'}';
 
-		modalHTML +=	'function closeFontSetting() {' +
+		modalHTML +=	'function closeFontSetting(baseColor) {' +
+							'if ((typeof baseColor === "string") && (baseColor.length == 7)) setColor(baseColor);' +
 							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
 							'step.util.closeModal("fontSettings");' +
 							'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021

@@ -63,7 +63,7 @@ var PickBibleView = Backbone.View.extend({
 		  '<option value="western_asia">Western Asia</option>' +
 		'</select>' +
         '<p><%= __s.bible_version_features %></p>' +
-		((step.touchDevice) ? "" : '<textarea id="enterYourTranslation" class="pull-left" rows="1" style="font-size:13px;width:95%" placeholder="<%= __s.pick_bible_input_placeholder %>"></textarea><br><br><br>') +
+		((step.touchDevice) ? "" : '<textarea id="enterYourTranslation" rows="1" style="font-size:13px;width:95%" placeholder="<%= __s.pick_bible_input_placeholder %>"></textarea><br><br>') +
         '<div class="tab-content">' +
         '<div class="tab-pane" id="bibleList">' +
         '</div>' +
@@ -71,7 +71,7 @@ var PickBibleView = Backbone.View.extend({
         '</div>' +
         '</div>' + //end body
         '<div class="modal-footer">' +
-			((step.touchDevice) ? '<textarea id="enterYourTranslation" class="pull-left" rows="1" style="font-size:16px;width:90%" placeholder="<%= __s.pick_bible_input_short_placeholder %>"></textarea>' : "") +
+			((step.touchDevice) ? '<textarea id="enterYourTranslation" rows="1" style="font-size:16px;width:90%" placeholder="<%= __s.pick_bible_input_short_placeholder %>"></textarea>' : "") +
 			'<br><br><span class="tagLine"></span>' +
 			'<button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.update_display_order %></label></button>' +
             '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +

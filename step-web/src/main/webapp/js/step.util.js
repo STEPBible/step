@@ -1631,13 +1631,13 @@ step.util = {
 						'</div>' +
 					'</div>' ;
 		if (!step.touchDevice) modalHTML +=
-						'<textarea id="enterYourPassage" rows="1" style="font-size:13px;width:95%;margin-left:5"  title="<%= __s.type_in_your_passage %>"' +
+						'<textarea id="enterYourPassage" rows="1" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px" title="<%= __s.type_in_your_passage %>"' +
 						' placeholder="<%= __s.select_passage_input_placeholder %>"></textarea>';
 		modalHTML +=
 					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
 					'<div class="footer">';
 		if (step.touchDevice) modalHTML +=
-						'<textarea id="enterYourPassage" rows="1" style="font-size:16px;width:80%;margin-left:5;margin-bottom:5"' +
+						'<textarea id="enterYourPassage" rows="1" style="font-size:16px;width:80%;margin-left:5;margin-bottom:5;resize=none;height:24px"' +
 						' placeholder="<%= __s.select_passage_input_short_placeholder %>"></textarea>';
 		modalHTML +=
 						'<br>' +

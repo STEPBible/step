@@ -7,9 +7,6 @@ var ViewHelpMenuOptions = Backbone.View.extend({
     },
     el: ".helpMenu",
     showAbout: function () {
-		var stepVersionNum = window.localStorage.getItem("step.version");
-		if (typeof stepVersionNum === "string") stepVersionNum = "Version: " + stepVersionNum;
-		else stepVersionNum = "";
         $(_.template(
             '<div class="modal aboutModal" role="dialog" aria-labelledby="about" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
@@ -26,7 +23,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
                 '<p />' +
                 '&copy; STEPBible, Cambridge <%= new Date().getYear() + 1900 %> </p>' +
                 '</div>' +
-				'<p>' + stepVersionNum + '</p>' +
+				'<p>' + step.state.getCurrentVersion() + '</p>' +
                 '<div class="footer"><button class="btn btn-default btn-sm closeModal" data-dismiss="modal" ><label><%= __s.ok %></label></button></div>' +
                 '</div>' + //end modal body
                 '</div>' + //end content

@@ -360,6 +360,10 @@
       <!--
         == Surround versenum with dup
         -->
+	  <!-- If the following are updated, please update doFonts function in view_display.js
+	       doFonts expects to find 'span.w.verseStart' and then "span.strongs" or "span.morphs"
+		   doFonts also look for ["Text Trans", "Orig Vocab", "Vocab Trans", "Eng Vocab", "Esp Vocab", "中文詞", "中文词"] or "Grammar"
+	    -->
       <xsl:choose>
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
           <span class="w verseStart">
@@ -368,20 +372,20 @@
 
             <!-- The order of these is important for rendering on the UI -->
 			<!-- output a filling gap for strongs -->
-              <xsl:if test="$OriginalTransliteration = 'true'">
-                  <span class="strongs">Text. Trans.</span>
-              </xsl:if>
+            <xsl:if test="$OriginalTransliteration = 'true'">
+                <span class="strongs">Text Trans</span>
+            </xsl:if>
 			<xsl:if test="$GreekVocab = 'true'">
-				<span class="strongs">Orig. Vocab.</span>
+				<span class="strongs">Orig Vocab</span>
 			</xsl:if>
 			<xsl:if test="$Transliteration = 'true'">
-				<span class="strongs">Vocab Trans.</span>
+				<span class="strongs">Vocab Trans</span>
 			</xsl:if>
 			<xsl:if test="$EnglishVocab = 'true'">
-				<span class="strongs">Eng. Vocab.</span>
+				<span class="strongs">Eng Vocab</span>
 			</xsl:if>
 			<xsl:if test="$es_Vocab = 'true'">
-				<span class="strongs">Esp Vocab.</span>
+				<span class="strongs">Esp Vocab</span>
 			</xsl:if>
 			<xsl:if test="$zh_tw_Vocab = 'true'">
 				<span class="strongs">中文詞</span>
@@ -404,6 +408,10 @@
 			</xsl:if>
 		</span>
         </xsl:when>
+	  <!-- If the following are updated, please update doFonts function in view_display.js
+	       doFonts expects to find 'span.w.verseStart' and then "span.strongs" or "span.morphs"
+		   doFonts also look for ["Text Trans", "Orig Vocab", "Vocab Trans", "Eng Vocab", "Esp Vocab", "中文詞", "中文词"] or "Grammar"
+	    -->
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
           <span class="w verseStart">
           	<!--  the verse number -->
@@ -411,19 +419,19 @@
           	
 			<!-- output a filling gap for strongs -->
               <xsl:if test="$OriginalTransliteration = 'true'">
-                  <span class="text"><span class="smallHeaders strongs">Text. Trans.</span></span>
+                  <span class="text"><span class="smallHeaders strongs">Text Trans</span></span>
               </xsl:if>
               <xsl:if test="$GreekVocab = 'true'">
-                  <span class="text"><span class="smallHeaders strongs">Orig. Vocab.</span></span>
+                  <span class="text"><span class="smallHeaders strongs">Orig Vocab</span></span>
               </xsl:if>
-			<xsl:if test="$Transliteration = 'true'">
-				<span class="text"><span class="smallHeaders strongs">Vocab Trans.</span></span>
-			</xsl:if>
+			  <xsl:if test="$Transliteration = 'true'">
+				  <span class="text"><span class="smallHeaders strongs">Vocab Trans</span></span>
+			  </xsl:if>
               <xsl:if test="$EnglishVocab = 'true'">
-                  <span class="text"><span class="smallHeaders strongs">Eng Vocab.</span></span>
+                  <span class="text"><span class="smallHeaders strongs">Eng Vocab</span></span>
               </xsl:if>
               <xsl:if test="$es_Vocab = 'true'">
-                  <span class="text"><span class="smallHeaders strongs">Esp Vocab.</span></span>
+                  <span class="text"><span class="smallHeaders strongs">Esp Vocab</span></span>
               </xsl:if>
               <xsl:if test="$zh_tw_Vocab = 'true'">
                   <span class="text"><span class="smallHeaders strongs">中文詞</span></span>

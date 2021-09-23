@@ -312,14 +312,22 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         return "";
     }
 
-    private String lookupChineseGloss(final String book, final EntityDoc strong) {
-        String chineseVocab = "";
+    private String shouldChineseGlossBeUsed(final String book, final EntityDoc strong) {
+        String chineseGloss = "";
         if (this.currentBook.toString().equals("ChiUns")) {
-            chineseVocab = strong.get("zh_Gloss");
+            chineseGloss = strong.get("zh_Gloss");
         } else if (this.currentBook.toString().equals("ChiUn")) {
-            chineseVocab = strong.get("zh_tw_Gloss");
+            chineseGloss = strong.get("zh_tw_Gloss");
         }
-        return chineseVocab;
+        return chineseGloss;
+    }
+
+    private String shouldSpanishGlossBeUsed(final String book, final EntityDoc strong) {
+        String spanishGloss = "";
+        if (this.currentBook.toString().equals("SpaRV1909")) {
+            spanishGloss = strong.get("es_Gloss");
+        }
+        return spanishGloss;
     }
 
     /**
@@ -366,11 +374,11 @@ public class InterlinearProviderImpl implements InterlinearProvider {
                     }
                 }
             }
-            String spanishVocab = strongDefinition[0].get("es_Gloss");
+            String spanishVocab = shouldSpanishGlossBeUsed(this.currentBook.toString(), strongDefinition[0]);
             if (StringUtils.isNotBlank(spanishVocab)) {
                 return "#" + spanishVocab;
             }
-            String chineseVocab = lookupChineseGloss(this.currentBook.toString(), strongDefinition[0]);
+            String chineseVocab = shouldChineseGlossBeUsed(this.currentBook.toString(), strongDefinition[0]);
             if (StringUtils.isNotBlank(chineseVocab)) {
                 return "#" + chineseVocab;
             }

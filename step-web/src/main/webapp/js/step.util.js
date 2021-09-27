@@ -625,34 +625,161 @@ step.util = {
         return (passageModel.get("languageCode") || ["en"])[0];
     },
     restoreFontSize: function (passageModel, element) {
+		var fontArray = ["defaultfont", "hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
         var passageId = passageModel.get("passageId");
-        var key = this.getMainLanguage(passageModel);
-        var fontClass = this.ui._getFontClassForLanguage(key) || 'defaultfont';
-
-        var fontSize = step.settings.get(fontClass);
-        if (fontSize && fontSize != 0) {
-            element.css("font-size", fontSize);
-        }
+		var passageModel = step.passages.findWhere({ passageId: passageId});
+		var id = passageModel.attributes.id;
+		var processedAlready = false;
+		for (var j = 0; j < fontArray.length; j++) {
+			var fontKey = "panel_" + id + "_font_" + fontArray[j];
+			var fontSize = step[fontKey];
+			if (fontSize && fontSize != 0) {
+				processedAlready = true;
+				if ((fontArray[j] === "defaultfont") || ($(element).hasClass(fontArray[j])))
+					element.css("font-size", fontSize);
+				var fontInElements = element.find("." + fontArray[j]);
+				if (fontInElements.length > 0) 
+					fontInElements.css("font-size", fontSize);
+			}
+		}
+		if (!processedAlready) { // Have to verify that there is no specific font size for the panel in step.settings before processing the items below.
+			for (var j = 0; j < fontArray.length; j++) {
+				var fontSize = step.settings.get(fontArray[j]);
+				if (fontSize && fontSize != 0) {
+					if ((fontArray[j] === "defaultfont") || ($(element).hasClass(fontArray[j])))
+						element.css("font-size", fontSize);
+					var fontInElements = element.find("." + fontArray[j]);
+					if (fontInElements.length > 0)
+						fontInElements.css("font-size", fontSize);
+				}
+			}
+		}
     },
-    changeFontSize: function (source, increment) {
-        var elements = $(".passageContentHolder", step.util.getPassageContainer(source));
-        var passageId = step.passage.getPassageId(source);
-        var passageModel = step.passages.findWhere({ passageId: passageId});
-        var key = this.getMainLanguage(passageModel);
-        var fontClass = this.ui._getFontClassForLanguage(key);
-        for (var i = 0; i < elements.length; i++) {
-            var fontSize = parseInt($(elements[i]).css("font-size"));
-            var newFontSize = fontSize + increment;
+    changeSpecificFontSize: function (fontName, increment, panelNumber) {
+		var key = fontName;
+		var currentFontSize = 0;
+		var panelId = "";
+		var elements;
+		if (typeof panelNumber === "number") {
+			var passageModel = step.passages.findWhere({ passageId: panelNumber});
+			panelId = passageModel.attributes.id;
+			key = "panel_" + panelId + "_font_" + fontName;
+			elements = $(".passageContentHolder", step.util.getPassageContainer(panelNumber));
+		}
+		else elements = $(".passageContentHolder", step.util.getPassageContainer(".passageOptionsGroup"));
 
-            //key it to be the default font, unicodeFont or Hebrew font
-            var fontKey = fontClass || 'defaultfont';
-            var diff = {};
-            diff[fontKey] = newFontSize;
-            step.settings.save(diff);
-            $(elements[i]).css("font-size", newFontSize);
-        }
-        passageModel.trigger("font:change");
+		currentFontSize = step.util.getFontSize(fontName, panelNumber, elements);
+		var fontArray = ["hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
+		if (currentFontSize > 0) {
+			for (var i = 0; i < elements.length; i++) {
+				var fontNeedToRestoreSize = {};
+				if (fontName === "defaultfont") {
+					for (var j = 0; j < fontArray.length; j++) {
+						if ($(elements[i]).hasClass(fontArray[j])) {
+							console.log("unexpected base font " + fontArray[j]);
+							alert("unexpected base font " + fontArray[j]);
+							currentFontSize = 0; // Should not change font because the base font is not defaultfont
+							break;
+						}
+						var fontInElements = $(elements[i]).find("." + fontArray[j]);
+						if (fontInElements.length > 0)
+							fontNeedToRestoreSize[fontArray[j]] = parseInt(fontInElements.css("font-size"));
+					}
+				}
+				if (currentFontSize > 0) {
+					var newFontSize = currentFontSize + increment;
+					if (typeof panelNumber === "number") {
+						step[key] = newFontSize;
+					}
+					else {
+						var diff = {};
+						diff[key] = newFontSize;
+						step.settings.save(diff);
+					}
+					if (fontName === "defaultfont") {
+						$(elements[i]).css("font-size", newFontSize);
+						// restore font size of other fonts which are not defaultfont
+						// When the defaultfont size change, the other font size can be affected because 
+						// some font size (e.g. hbFont is 150%) of the default size.
+						for (var nameOfFont in fontNeedToRestoreSize) {
+							if (typeof panelNumber === "number")
+								step["panel_" + panelId + "_font_" + nameOfFont] = fontNeedToRestoreSize[nameOfFont];
+							$(elements[i]).find("." + nameOfFont).css("font-size", fontNeedToRestoreSize[nameOfFont]);
+						}
+					}
+					else {
+						if ($(elements[i]).hasClass(fontName)) $(elements[i]).css("font-size", newFontSize);
+						$(elements[i]).find("." + fontName).css("font-size", newFontSize);
+					}
+					$("#" + fontName + "Btn").find("." + fontName).css("font-size", newFontSize); // change the size of the example font in the modal
+					$("#" + fontName + "Size").text("(" + newFontSize + "px)");
+					if (typeof panelNumber === "undefined") {
+						for (var tmpKey in step) {
+							if ((tmpKey.startsWith("panel_")) && (tmpKey.endsWith("_font_" + fontName)))
+								delete step[tmpKey]; // Global font has changed so the panel specific font will not be kept.
+						}
+					}
+					var passageId = step.passage.getPassageId(elements[i]);
+					var passageModel = step.passages.findWhere({ passageId: passageId});
+					passageModel.trigger("font:change");
+				}
+			}
+		}
+		else console.log("cannot find current font size so cannot change the font size");
     },
+    getFontSize: function (fontName, panelNumber, elements) {
+		var currentFontSize = 0;
+		if (typeof elements === "undefined")
+			elements = (typeof panelNumber === "number") ? $(".passageContentHolder", step.util.getPassageContainer(panelNumber)) : 
+														   $(".passageContentHolder", step.util.getPassageContainer(".passageOptionsGroup"));
+		if (typeof panelNumber === "number") {
+			if (fontName === "defaultfont") {
+				currentFontSize = parseInt($(elements[0]).css("font-size"));
+			}
+			else {
+				var fontInElements = $(elements[0]).find("." + fontName);
+				if (fontInElements.length > 0)
+					currentFontSize = parseInt(fontInElements.css("font-size"));
+			}
+		}
+		else {
+			var allPanelsWithSpecificFontChange = [];
+			for (var tmpKey in step) {
+				if (tmpKey.startsWith("panel_")) {
+					var pos = tmpKey.indexOf("_font_" + fontName);
+					if (pos > -1) {
+						tmpPanelId = tmpKey.substr(6, pos - 6);
+						console.log("panel " + tmpKey + " " + tmpPanelId);
+						allPanelsWithSpecificFontChange.push(tmpPanelId);
+					}
+				}
+			}
+			var sizeAffectedByPanelFontChange = 0;
+			for (var i = 0; i < elements.length; i++) {
+				var panelId = step.passages.findWhere({ passageId: step.passage.getPassageId(elements[i]) }).attributes.id;
+				var panelHasSpecificFontChange = (allPanelsWithSpecificFontChange.indexOf(panelId) > -1);
+				if (fontName === "defaultfont") {
+					if (panelHasSpecificFontChange) sizeAffectedByPanelFontChange = parseInt($(elements[i]).css("font-size"));
+					else {
+						currentFontSize = parseInt($(elements[i]).css("font-size"));
+						break; // Got the answer, leave loop
+					}
+				}
+				else {
+					var fontInElements = $(elements[i]).find("." + fontName);
+					if (fontInElements.length > 0) {
+						if (panelHasSpecificFontChange) sizeAffectedByPanelFontChange = parseInt(fontInElements.css("font-size"));
+						else {
+							currentFontSize = parseInt(fontInElements.css("font-size"));
+							break; // Got the answer, leave loop
+						}
+					}
+				}	
+			}
+			if (currentFontSize == 0) currentFontSize = sizeAffectedByPanelFontChange;
+		}
+		return currentFontSize;
+	},
     getKeyValues: function (args) {
         var tokens = (args || "").split("|");
         var data = [];
@@ -1779,22 +1906,40 @@ step.util = {
 			'</div>'
 		)()).modal("show");
     },
-    showFontSettings: function () {
+    showFontSettings: function (panelNumber) {
         var element = document.getElementById('fontSettings');
         if (element) element.parentNode.removeChild(element);
         var notIE = !(false || !!document.documentMode);
+		var panelNumArg = "";
+		var styleForColorExamples = "";
+		var singleOrAllPanel = "in all panels";
+		if (typeof panelNumber === "number") {
+			panelNumArg =  ", " + panelNumber;
+			styleForColorExamples = 'display:none';
+			singleOrAllPanel = "in current panel";
+		}
 		var modalHTML = '<div id="fontSettings" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-			'<div class="modal-dialog" style="width:300px">' +
+			'<div class="modal-dialog" style="width:350px">' +
 				'<div class="modal-content">';
 		if (notIE) modalHTML +=
 					'<link rel="stylesheet" href="css/spectrum.css">' +
 					'<script src="libs/spectrum.js"></script>' +
 					'<script src="libs/tinycolor-min.js"></script>';
 		modalHTML +=
-					'<script>';
+					'<script>' +
+						'$(document).ready(function () {' +
+							'showFontSizeBtns("defaultfont"' + panelNumArg + ');' +
+							'showFontSizeBtns("hbFont"' + panelNumArg + ');' +
+							'showFontSizeBtns("unicodeFont"' + panelNumArg + ');' +
+							'showFontSizeBtns("arabicFont"' + panelNumArg + ');' +
+							'showFontSizeBtns("burmeseFont"' + panelNumArg + ');' +
+							'showFontSizeBtns("chineseFont"' + panelNumArg + ');' +
+							'showFontSizeBtns("copticFont"' + panelNumArg + ');' +
+							'showFontSizeBtns("farsiFont"' + panelNumArg + ');' +
+							'showFontSizeBtns("khmerFont"' + panelNumArg + ');' +
+							'showFontSizeBtns("syriacFont"' + panelNumArg + ');';
 
 		if (notIE) modalHTML +=
-						'$(document).ready(function () {' +
 							'var color = step.settings.get("highlight_color");' +
 							'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 							'var closeButton = $("#fontSettings").find("button.close");' +
@@ -1817,8 +1962,19 @@ step.util = {
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker);' +
 								'}' +
-							'});' +
-						'}); ' +
+							'});';
+		modalHTML +=	'}); ' +
+						'function showFontSizeBtns(fontName, panelNumber) {' +
+							'var currentFontSize = step.util.getFontSize(fontName, panelNumber);' +
+							'if (fontName === "defaultfont") $("#" + fontName + "Btn").show();' +
+							'if (currentFontSize > 0) {' +
+								'$("#" + fontName + "Btn").find("." + fontName).css("font-size", currentFontSize);' +
+								'$("#" + fontName + "Size").text("(" + currentFontSize + "px)");' +
+								'$("#" + fontName + "Btn").show();' +
+							'}' +
+						'}';
+
+		if (notIE) modalHTML +=
 						'function setColor(baseColor) {' +
 							'if (!((typeof baseColor === "string") && (baseColor.length == 7) && (baseColor.substr(0,1) === "#"))) baseColor = "#17758F";' +
 							'if (tinycolor(baseColor).getLuminance() > 0.3) {' +
@@ -1875,24 +2031,88 @@ step.util = {
 						'}' +
 					'</script>' +
 					'<div class="modal-header">' +
+						'<span><b>Update font ' + singleOrAllPanel + '</b></span>' +
 						'<button type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
 					'</div>' +
 					'<div class="modal-body" style="text-align:center">' +
-						'<table>' +
+						'<table style="height:auto;width:95%">' +
 							'<tr>' +
 								'<th style="width:70%">' +
 								'<th style="width:30%">' +
 							'</tr>' +
-							'<tr>' +
-								'<td>Font size</td>' +
+							'<tr id="defaultfontBtn">' +
+								'<td class="passageContent defaultfont">Default font <span id="defaultfontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeFontSize($(\'.passageOptionsGroup\'), -1)"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeFontSize($(\'.passageOptionsGroup\'), 1)"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr id="hbFontBtn" style="display:none">' +
+								'<td class="passageContent hbFont">Hebrew: חֶ֫סֶד <span id="hbFontSize"></span></td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr id="unicodeFontBtn" style="display:none">' +
+								'<td class="passageContent unicodeFont">Greek: Ἀγαπητοί <span id="unicodeFontSize"></span></td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr id="arabicFontBtn" style="display:none">' +
+								'<td class="passageContent arabicFont">Arabic: أَيُّهَا الأَحِبَّاءُ، <span id="arabicFontSize"></span></td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr id="burmeseFontBtn" style="display:none">' +
+								'<td class="passageContent burmeseFont">(ချစ်သူတို့၊) မြန်မာ <span id="burmeseFontSize"></span></td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr id="chineseFontBtn" style="display:none">' +
+								'<td class="passageContent chineseFont">Chinese: 亲爱的弟兄 <span id="chineseFontSize"></span></td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr id="copticFontBtn" style="display:none">' +
+								'<td class="passageContent copticFont">Coptic: ϯⲡⲁⲣⲁⲕⲁⲗⲉⲓ <span id="copticFontSize"></span></td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr id="farsiFontBtn" style="display:none">' +
+								'<td class="passageContent farsiFont">Farsi: برادران‌ عزيز <span id="farsiFontSize"></span></td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr id="khmerFontBtn" style="display:none">' +
+								'<td class="passageContent khmerFont">Khmer: ​ទី​ស្រលាញ់ <span id="khmerFontSize"></span></td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr id="syriacFontBtn" style="display:none">' +
+								'<td class="passageContent syriacFont">Syriac: ܚܒܝܒܝ ܒܥܐ <span id="syriacFontSize"></span></td>' +
+								'<td class="pull-right">' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
 								'</td>' +
 							'</tr>';
 
 		if (notIE) modalHTML +=
-							'<tr>' +
+							'<tr style="' + styleForColorExamples + '">' +
 								'<td>Color</td>' +
 								'<td class="pull-right">' +
 									'<input id="inClrStrongFont" type="color" class="nInptC" value="#17758F"/>' +
@@ -1903,17 +2123,19 @@ step.util = {
 						'<br>';
 						
 		if (notIE) modalHTML +=
-						'<p style="text-align:left;font-size:18px">Examples for the selected color</p>' +
-						'<p class="passageContent" style="color:var(--strong_color)">Text with color</p>' +
-						'<p class="passageContent primaryLightBg">Highlighted text (general)</p>' +
-						'<p class="passageContent lexiconFocus">Highlighted for lexicon</p>' +
-						'<p class="passageContent relatedWordEmphasisHover">Highlighted for related text</p>';
+						'<span>' +
+							'<p style="text-align:left;font-size:18px;' + styleForColorExamples + '">Examples for the selected color</p>' +
+							'<p class="passageContent" style="color:var(--strong_color);' + styleForColorExamples + '">Text with color</p>' +
+							'<p class="passageContent primaryLightBg" style="' + styleForColorExamples + '">Highlighted text (general)</p>' +
+							'<p class="passageContent lexiconFocus" style="' + styleForColorExamples + '">Highlighted for lexicon</p>' +
+							'<p class="passageContent relatedWordEmphasisHover" style="' + styleForColorExamples + '">Highlighted for related text</p>' +
+						'</span>';
 						
 		modalHTML +=
 						'<div class="footer">' +
 							'<button class="stepButton pull-right" data-dismiss="modal" onclick=closeFontSetting()><label>Ok</label></button>';
 		if (notIE) modalHTML +=
-							'<button class="stepButton pull-right" onclick=setColor()><label>Original color</label></button>';
+							'<button class="stepButton pull-right" style="' + styleForColorExamples + '" onclick=setColor()><label>Original color</label></button>';
 		modalHTML +=
 						'</div>' +
 						'<br>' +
@@ -1961,6 +2183,7 @@ step.util = {
 		// }
 	// },
 	showIntro: function (showAnyway) {
+		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
@@ -1992,6 +2215,7 @@ step.util = {
 		}
 	},
     showIntroOfMultiVersion: function () {
+		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.multiVersionCount") : $.cookie('step.multiVersionCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;

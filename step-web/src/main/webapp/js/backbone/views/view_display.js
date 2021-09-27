@@ -26,47 +26,58 @@ var DisplayView = Backbone.View.extend({
 
         //for interlinear options, we need to splice in a few extra languages.
         var indexToSplice = 1;
-        if (options.indexOf("E") != -1) {
-            languages.splice(indexToSplice++, 0, "en");
-        }
-        if (options.indexOf("T") != -1) {
-            languages.splice(indexToSplice++, 0, "en");
-        }
-        if (options.indexOf("O") != -1) {
-            languages.splice(indexToSplice++, 0, "en");
-        }
-        if (options.indexOf("A") != -1) {
-			var data = step.util.activePassage().get("searchTokens") || [];
-			var numOfVersion = 0;
-            var allHaveStrong = true;
-			for (var i = 0; i < data.length; i++) {
-				if (data[i].tokenType == VERSION) {
-					var versionInitials = data[i].enhancedTokenInfo.initials;
-                    allHaveStrong = ((allHaveStrong) && (step.keyedVersions[versionInitials].hasStrongs));
-					numOfVersion ++;
-				}
+		var numOfItemsToAddToArray = 0;
+		var interLinearElements = passageContent.find('span.w.verseStart');
+		if (interLinearElements.length > 0) {
+			var elementsWithInterLinearOptions = interLinearElements.first().find("span.strongs");
+			// defined in interlinear.xsl around line 369 and 416
+			var interLinearOptions = ["Text Trans", "Orig Vocab", "Vocab Trans", "Eng Vocab", "Esp Vocab", "中文詞", "中文词"];
+			for (var i = 0; i < elementsWithInterLinearOptions.length; i++ ) {
+				if (interLinearOptions.indexOf(elementsWithInterLinearOptions[i].textContent) > -1)
+					numOfItemsToAddToArray ++;
 			}
-			if ( ((numOfVersion == 1) || ((numOfVersion > 1) && (interlinearMode === "INTERLINEAR"))) && 
-                (allHaveStrong) )
-				languages.splice(indexToSplice++, 0, "en");
-        }
-        if (options.indexOf("M") != -1) {
-			var data = step.util.activePassage().get("searchTokens") || [];
-			var numOfVersion = 0;
-            var allCanShowGrammar = true;
-			for (var i = 0; i < data.length; i++) {
-				if (data[i].tokenType == VERSION) {
-					var versionInitials = data[i].enhancedTokenInfo.initials;
-                    allCanShowGrammar = ((allCanShowGrammar) &&
-                        (step.keyedVersions[versionInitials].hasMorphology) &&
-                        ((step.keyedVersions[versionInitials].languageCode === "grc") || (versionInitials.toLowerCase().startsWith("kjv"))) ); // As of Sept 2021, there is no support of Hebrew grammar.  The code on the backend has not been created.
-					numOfVersion ++;
-				}
-			}
-			if ( ((numOfVersion == 1) || ((numOfVersion > 1) && (interlinearMode === "INTERLINEAR"))) && 
-                (allCanShowGrammar) )
-				languages.splice(indexToSplice++, 0, "en");
-        }
+			elementsWithInterLinearOptions = interLinearElements.first().find("span.morphs");
+			if ((elementsWithInterLinearOptions.length > 0) && (elementsWithInterLinearOptions[0].textContent === "Grammar"))
+				numOfItemsToAddToArray ++;
+		}
+		for (var i = 0; i < numOfItemsToAddToArray; i++) {
+			languages.splice(1, 0, "en");
+		}
+		// var numOfVersion = 0;
+		// var allHaveStrong = true;
+		// var allCanShowGrammar = true;
+		// var data = step.util.activePassage().get("searchTokens") || [];
+		// for (var i = 0; i < data.length; i++) {
+			// if (data[i].tokenType == VERSION) {
+				// var versionInitials = data[i].enhancedTokenInfo.initials;
+				// allHaveStrong = ((allHaveStrong) && (step.keyedVersions[versionInitials].hasStrongs));
+                // allCanShowGrammar = ((allCanShowGrammar) &&
+                    // (step.keyedVersions[versionInitials].hasMorphology) &&
+                    // ((step.keyedVersions[versionInitials].languageCode === "grc") || (versionInitials.toLowerCase().startsWith("kjv"))) ); // As of Sept 2021, there is no support of Hebrew grammar.  The code on the backend has not been created.
+				// numOfVersion ++;
+			// }
+		// }
+
+        // if (options.indexOf("E") != -1) {
+			// if ((numOfVersion == 1) || ((numOfVersion > 1) && (interlinearMode === "INTERLINEAR")))
+				// languages.splice(indexToSplice++, 0, "en");
+        // }
+        // if (options.indexOf("T") != -1) {
+            // languages.splice(indexToSplice++, 0, "en");
+        // }
+        // if (options.indexOf("O") != -1) {
+            // languages.splice(indexToSplice++, 0, "en");
+        // }
+        // if (options.indexOf("A") != -1) {
+			// if ( ((numOfVersion == 1) || ((numOfVersion > 1) && (interlinearMode === "INTERLINEAR"))) && 
+                // (allHaveStrong) )
+				// languages.splice(indexToSplice++, 0, "en");
+        // }
+        // if (options.indexOf("M") != -1) {
+			// if ( ((numOfVersion == 1) || ((numOfVersion > 1) && (interlinearMode === "INTERLINEAR"))) && 
+                // (allCanShowGrammar) )
+				// languages.splice(indexToSplice++, 0, "en");
+        // }
 
         //do display options make it an interlinear
         var isInterlinearOption = languages.length != originalLanguageLength;

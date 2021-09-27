@@ -10,9 +10,8 @@ var PassageMenuView = Backbone.View.extend({
         "click .openNewPanel": "openNewPanel",
         "show.bs.dropdown *": "handleDropdownMenu"
     },
-    fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group"><button class="btn btn-default btn-sm smallerFontSize" type="button" title="<%= __s.passage_smaller_fonts %>">' +
-        '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
-        '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
+    fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group">' +
+        '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.font %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     similarWord: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.similar_word %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSimilarWord ? "visible" : "hidden" %>;"></span></a></li>',
@@ -488,8 +487,7 @@ var PassageMenuView = Backbone.View.extend({
 
         dropdown.append(li);
         dropdown.append(_.template(this.fontButtons)())
-            .find(".smallerFontSize").click(this.decreaseFontSize).end()
-            .find(".largerFontSize").click(this.increaseFontSize);
+            .find(".largerFontSize").click(this.changeFontSizeInThisPanel);
 
         return dropdown;
 
@@ -647,16 +645,15 @@ var PassageMenuView = Backbone.View.extend({
 			}
         }
     },
-    decreaseFontSize: function (ev) {
+    // decreaseFontSize: function (ev) {
+        // ev.stopPropagation();
+        // step.util.activePassageId(this.model.get("passageId"));
+        // step.util.changeFontSize(this.$el, -1);
+        // return false;
+    // },
+    changeFontSizeInThisPanel: function (ev) {
         ev.stopPropagation();
-        step.util.activePassageId(this.model.get("passageId"));
-        step.util.changeFontSize(this.$el, -1);
-        return false;
-    },
-    increaseFontSize: function (ev) {
-        ev.stopPropagation();
-        step.util.activePassageId(this.model.get("passageId"));
-        step.util.changeFontSize(this.$el, 1);
+        step.util.showFontSettings(this.model.get("passageId"));
         return false;
     },
     goToPreviousChapter: function (ev) {

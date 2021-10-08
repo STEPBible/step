@@ -13,7 +13,9 @@
 
 .qtip.xrefHover {
   background-color: white;
+  background-color: var(--clrBackground);
   border: 1px solid #ccc;
+  border: 1px solid var(--clrText);
   padding: 8px;
   margin: 10px;
   max-width: 150px;

@@ -233,6 +233,8 @@ var SubjectDisplayView = SearchDisplayView.extend({
             if(results && results.length > 0) {
                 self.doFonts(resultsEl, [], results[0].interlinearMode, results[0].languageCode);
             }
+        }).error(function() {
+            changeBaseURL();
         });
     }
 });

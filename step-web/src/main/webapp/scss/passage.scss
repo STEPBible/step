@@ -761,9 +761,11 @@ Active  Middle Passive Active Middle Passive Active	Middle Passive	Active Middle
 .accordion-row {
   width: 100%;
   border: 1px solid #f1f1f1;
+  border: 1px solid var(--clrBackground);
   padding: 5px 10px;
   margin: 0;
   background: #ffffff;
+  background: var(--clrBackground);
 }
 
 .accordion-heading {

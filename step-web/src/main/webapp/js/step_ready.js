@@ -131,7 +131,9 @@
                             if (step.tempKeyInput.length >= 2) {
                                 var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
                                 for (var i = 0; i < arrayOfTyplicalBooksChapters.length; i++) {
-                                    if (arrayOfTyplicalBooksChapters[i][0].normalize("NFD").replace(/[\u0300-\u036f\s]/g,"").toLowerCase().startsWith(step.tempKeyInput)) {
+                                    var tempVar = arrayOfTyplicalBooksChapters[i][0];
+                                    if (!(false || !!document.documentMode)) tempVar = tempVar.normalize("NFD"); // For characters with accent.  For example, Spanish
+                                    if (tempVar.replace(/[\u0300-\u036f\s]/g,"").toLowerCase().indexOf(step.tempKeyInput) == 0) {
                                         step.util.passageSelectionModal();
                                         step.tempKeyInput = "";
                                         return;
@@ -352,7 +354,21 @@
                 window.open(window.location);
             });
         }
-		if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) $("#panel-icon").hide(); // Firefox has some issues with this.
+		var ua = navigator.userAgent.toLowerCase();
+		if (ua.indexOf('firefox') > -1) $("#panel-icon").hide(); // Firefox has some issues with this.
+		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));
+		if ( ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os [345678]_/) > -1)) || // older versions of iOS shows a light grey color.  Probably similiar issue as Internet Explorer
+			(false || !!document.documentMode) ) { // Internet Explorer use the wrong css based on the <a> tag, so change it to black
+			$("#panel-icon").css("color", "black");
+			$("#stats-icon").css("color", "black");
+			$("#bookmark-icon").css("color", "black");
+			$("#examples-icon").css("color", "black");
+			$("#fonts-icon").css("color", "black");
+			$("#languages-icon").css("color", "black");
+			$(".icon-language").css("color", "black");
+			$("#raiseSupportTrigger").css("color", "black");
+			$("#more-icon").css("color", "black");
+		}
 		step.util.showIntro();
     });
 	$( window ).resize(function() {

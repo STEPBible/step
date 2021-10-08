@@ -117,6 +117,8 @@
                         userFunction(data);
                     }
                 }
+            }).error(function() {
+                changeBaseURL();
             });
         },
 
@@ -137,7 +139,6 @@
                 if (hash[1]) {
                     vars[hash[0]] = hash.slice(1).join("=").split('#')[0];
                 }
-
             }
             return vars;
         },
@@ -187,7 +188,8 @@ step.util = {
     },
     getErrorPopup: function (message, level) {
         var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
-            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+			// the close button could not pickup the stepFgBg class so it has to be added in the style
+            '<button type="button" style="background:var(--clrBackground);color:var(--clrTextColor)" class="close" data-dismiss="alert" aria-hidden="true">X</button>' +
             '<%= message %></div>')({ message: message, level: level}));
         return errorPopup;
     },
@@ -668,22 +670,16 @@ step.util = {
 		}
 		else elements = $(".passageContentHolder", step.util.getPassageContainer(".passageOptionsGroup"));
 
-		currentFontSize = step.util.getFontSize(fontName, panelNumber, elements);
 		var fontArray = ["hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
+		currentFontSize = step.util.getFontSize(fontName, panelNumber, elements);
 		if (currentFontSize > 0) {
 			for (var i = 0; i < elements.length; i++) {
 				var fontNeedToRestoreSize = {};
 				if (fontName === "defaultfont") {
 					for (var j = 0; j < fontArray.length; j++) {
-						if ($(elements[i]).hasClass(fontArray[j])) {
-							console.log("unexpected base font " + fontArray[j]);
-							alert("unexpected base font " + fontArray[j]);
-							currentFontSize = 0; // Should not change font because the base font is not defaultfont
-							break;
-						}
-						var fontInElements = $(elements[i]).find("." + fontArray[j]);
-						if (fontInElements.length > 0)
-							fontNeedToRestoreSize[fontArray[j]] = parseInt(fontInElements.css("font-size"));
+						var tmpFontSize = step.util.getFontSizeByName(fontArray[j], elements[i]);
+						if (tmpFontSize > 0)
+							fontNeedToRestoreSize[fontArray[j]] = tmpFontSize;
 					}
 				}
 				if (currentFontSize > 0) {
@@ -715,7 +711,7 @@ step.util = {
 					$("#" + fontName + "Size").text("(" + newFontSize + "px)");
 					if (typeof panelNumber === "undefined") {
 						for (var tmpKey in step) {
-							if ((tmpKey.startsWith("panel_")) && (tmpKey.endsWith("_font_" + fontName)))
+							if ((tmpKey.startsWith("panel_")) && (tmpKey.indexOf("_font_" + fontName) > -1))
 								delete step[tmpKey]; // Global font has changed so the panel specific font will not be kept.
 						}
 					}
@@ -727,20 +723,32 @@ step.util = {
 		}
 		else console.log("cannot find current font size so cannot change the font size");
     },
+	getFontSizeByName: function(fontName, element) {
+		if (fontName === "defaultfont") {
+			var classes = $(element).attr('class').split(' '); // verify that there is no other font (e.g. hbFont, unicodeFont, ... classes 
+			for (var j = 0; j < classes.length; j++) {
+				var pos = classes[j].indexOf("Font");
+				if ((pos >= 2) && ((pos + 4) == classes[j].length)) // Font is at the end of the class name
+					return 0;
+			}
+			return parseInt($(element).css("font-size"));
+		}
+		else {
+			var fontInElements = $(element).find("." + fontName);
+			if (fontInElements.length > 0)
+				return parseInt(fontInElements.css("font-size"));
+			else if ($(element).hasClass(fontName))
+				return parseInt($(element).css("font-size"));
+		}
+		return 0;
+	},
     getFontSize: function (fontName, panelNumber, elements) {
 		var currentFontSize = 0;
 		if (typeof elements === "undefined")
 			elements = (typeof panelNumber === "number") ? $(".passageContentHolder", step.util.getPassageContainer(panelNumber)) : 
 														   $(".passageContentHolder", step.util.getPassageContainer(".passageOptionsGroup"));
 		if (typeof panelNumber === "number") {
-			if (fontName === "defaultfont") {
-				currentFontSize = parseInt($(elements[0]).css("font-size"));
-			}
-			else {
-				var fontInElements = $(elements[0]).find("." + fontName);
-				if (fontInElements.length > 0)
-					currentFontSize = parseInt(fontInElements.css("font-size"));
-			}
+			currentFontSize = step.util.getFontSizeByName(fontName, elements[0]);
 		}
 		else {
 			var allPanelsWithSpecificFontChange = [];
@@ -758,23 +766,14 @@ step.util = {
 			for (var i = 0; i < elements.length; i++) {
 				var panelId = step.passages.findWhere({ passageId: step.passage.getPassageId(elements[i]) }).attributes.id;
 				var panelHasSpecificFontChange = (allPanelsWithSpecificFontChange.indexOf(panelId) > -1);
-				if (fontName === "defaultfont") {
-					if (panelHasSpecificFontChange) sizeAffectedByPanelFontChange = parseInt($(elements[i]).css("font-size"));
+				var fontSize = step.util.getFontSizeByName(fontName, elements[i]);
+				if (fontSize > 0) {
+					if (panelHasSpecificFontChange) sizeAffectedByPanelFontChange = fontSize;
 					else {
-						currentFontSize = parseInt($(elements[i]).css("font-size"));
+						currentFontSize = fontSize;
 						break; // Got the answer, leave loop
 					}
 				}
-				else {
-					var fontInElements = $(elements[i]).find("." + fontName);
-					if (fontInElements.length > 0) {
-						if (panelHasSpecificFontChange) sizeAffectedByPanelFontChange = parseInt(fontInElements.css("font-size"));
-						else {
-							currentFontSize = parseInt(fontInElements.css("font-size"));
-							break; // Got the answer, leave loop
-						}
-					}
-				}	
 			}
 			if (currentFontSize == 0) currentFontSize = sizeAffectedByPanelFontChange;
 		}
@@ -821,7 +820,7 @@ step.util = {
     },
     ui: {
         selectMark: function (classes) {
-            return '<span class="glyphicon glyphicon-ok ' + classes + '"></span>';
+            return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--clrTextColor);background:var(--clrBackground)"></span>';
         },
         shortenDisplayText: function (text, maxLength) {
 			if (text.length <= maxLength) return text;
@@ -911,7 +910,7 @@ step.util = {
 					}
                 }
             }
-			
+
 			var widthAvailable = $(".passageContainer.active").width();
 			if (foundSearch) widthAvailable -= 45; // space to show the number of occurance.  eg: 105x
 			if (widthAvailable < 400) $("#thumbsup").hide(); // Not enough space to show the thumbs up icon (Facebook or Tweeter)
@@ -953,7 +952,7 @@ step.util = {
 			}
 			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
 			charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
-			
+
 			if (outputMode === "button") {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
@@ -1639,6 +1638,8 @@ step.util = {
                         });
 
                         qtip.qtip("show");
+                    }).error(function() {
+                        changeBaseURL();
                     });
                 }, delay, 'delay-strong-popup');
                 element.one('mouseleave', function () {
@@ -1684,13 +1685,13 @@ step.util = {
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
         $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-				'<div class="modal-content">' +
+				'<div class="modal-content stepModalFgBg"">' +
 					'<link href="css/color_code_grammar.' + jsVersion + 'css" rel="stylesheet"/>' +
 					'<link rel="stylesheet" href="css/spectrum.css"/>' +
 					'<script src="js/color_code_config.' + jsVersion + 'js"></script>' +
 					'<script src="libs/spectrum.js"></script>' +
 					'<div class="modal-header">' +
-						'<button type="button" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
+						'<button type="button" style="background:var(--clrBackground);color:var(--clrTextColor)" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="colortabs">' +
@@ -1726,15 +1727,16 @@ step.util = {
     passageSelectionModal: function (activePassageNumber) {
         var element = document.getElementById('passageSelectionModal');
         if (element) element.parentNode.removeChild(element);
+        $("div.modal-backdrop.in").remove();
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
 		var modalHTML = '<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
-				'<div class="modal-content">' +
+				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<div class="modal-header">' +
 						'<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.passageSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
-							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("passageSelectionModal")>X</button>' +
+							step.util.modalCloseBtn("passageSelectionModal") +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
 							'<div id="modalonoffswitch" class="pull-right">' +
 								'<span id="select_verse_number">&nbsp;<b><%= __s.select_verse_number %></b></span>' +
@@ -1750,21 +1752,21 @@ step.util = {
 						'<br>' +
 						'<div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">' +
 							'<label for="displayLocation"><%= __s.display_passage_at %></label>' +
-							'<select type="text" id="displayLocation">' +
+							'<select class="stepFgBg" type="text" id="displayLocation">' +
 								'<option value="replace"> <%= __s.current_panel %></option>' +
 								'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
 								'<option id="append_to_panel" value="append"><%= __s.append_to_panel %></option>' +
 							'</select>' +
-						'</div>' +
+						'</div><br>' +
 					'</div>' ;
 		if (!step.touchDevice) modalHTML +=
-						'<textarea id="enterYourPassage" rows="1" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px" title="<%= __s.type_in_your_passage %>"' +
+						'<textarea id="enterYourPassage" rows="1" class="stepFgBg" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px" title="<%= __s.type_in_your_passage %>"' +
 						' placeholder="<%= __s.select_passage_input_placeholder %>"></textarea>';
 		modalHTML +=
 					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
 					'<div class="footer">';
 		if (step.touchDevice) modalHTML +=
-						'<textarea id="enterYourPassage" rows="1" style="font-size:16px;width:80%;margin-left:5;margin-bottom:5;resize=none;height:24px"' +
+						'<textarea id="enterYourPassage" rows="1"  class="stepFgBg" style="font-size:16px;width:80%;margin-left:5;margin-bottom:5;resize=none;height:24px"' +
 						' placeholder="<%= __s.select_passage_input_short_placeholder %>"></textarea>';
 		modalHTML +=
 						'<br>' +
@@ -1800,7 +1802,7 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
         $(_.template('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-				'<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
+				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<script>' +
 						'$(document).ready(function () {' +
 							'step.searchSelect.initSearchSelection();' +
@@ -1837,20 +1839,20 @@ step.util = {
 							'}' +
 						'}' +
 					'</script>' +
-				
+
 					'<div class="modal-header">' +
 						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
-							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>' +
+							step.util.modalCloseBtn("searchSelectionModal") +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
 							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
 								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +
-								'<select type="text" id="displayLocation">' +
+								'<select type="text" id="displayLocation" class="stepFgBg">' +
 									'<option value="replace"><%= __s.current_panel %></option>' +
 									'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
 								'</select>' +
 							'</span>' +
-						'</span>' +
+						'</span><br>' +
 					'</div>' +
 					'<div id="searchmodalbody" class="modal-body">' +
 						'<div id="searchHdrTable"></div>' +
@@ -1876,7 +1878,7 @@ step.util = {
         $(_.template(
 			'<div id="videoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-videofile="' + videoFile + '" data-videotime="' + seconds + '">' +
 				'<div class="modal-dialog">' +
-					'<div class="modal-content">' +
+					'<div class="modal-content stepModalFgBg">' +
 						'<script>' +
 							'$(document).ready(function () {' +
 								'var file = $("#videoModal").data("videofile");' +
@@ -1896,7 +1898,7 @@ step.util = {
 							'})' +
 						'</script>' +
 						'<div class="modal-header">' +
-							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("videoModal")>X</button>' +
+							step.util.modalCloseBtn("videoModal") +
 						'</div>' +
 						'<div id="videomodalbody" class="modal-body" style="text-align:center;background-color:grey">' +
 							'<p id="pleasewait">Loading video, please wait...</p>' +
@@ -1906,22 +1908,256 @@ step.util = {
 			'</div>'
 		)()).modal("show");
     },
+    showSummary: function (reference) {
+        element = document.getElementById('showBookOrChapterSummaryModal');
+        if (element) element.parentNode.removeChild(element);
+        $(".modal-backdrop.in").remove();
+        var tmpArray = reference.split(".");
+        var osisID = tmpArray[0]; // get the string before the "." character
+        var longBookName = osisID;
+		var posOfBook = step.searchSelect.idx2osisChapterJsword[osisID];
+        var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
+		if ((posOfBook > -1) &&
+			(typeof arrayOfTyplicalBooksChapters !== "undefined"))
+			longBookName = arrayOfTyplicalBooksChapters[posOfBook][0];
+        var chapterNum = (tmpArray.length > 1) ? parseInt(tmpArray[1].split(":")[0].split("-")[0].split(";")[0]) : 1;
+        if (typeof chapterNum !== "number") chapterNum = 1;
+        var bibleSummary = 
+            '<br><span class="stepFgBg" style="font-size:16px"><b>Old Testament</b></span>' +
+            '<div>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>From Eden to wilderness</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Genesis - Beginnings</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Exodus - Escape from Egypt</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Leviticus - Ceremonial laws</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Numbers - Wilderness years</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Deuteronomy - Moses\' farewell</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>From conquest to King Saul</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Joshua - Taking the land</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Judges - Living among enemies</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ruth - David\'s ancestors\' love story</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Samuel - Prophets versus Kings</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>From King David to exile</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Samuel - Uniting the Kingdom</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Kings - Dividing the kingdom</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Kings - End of Israel &amp; Judah</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Chronicles - Retelling 1 &amp; 2 Samuel</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Chronicles - Retelling Judah\'s Kings</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Return and faith on trial</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ezra - Return from exile</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Nehemiah - Rebuilding Jerusalem</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Esther - Surviving in exile</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Job - Understanding suffering</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Worship and wisdom</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Psalms - Songs of worship</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Proverbs - Understanding society</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ecclesiastes - Understanding life</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Song of Solomon - Understanding love</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Major Prophets</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Isaiah - Judgement brings hope</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Jeremiah - Warnings of Judgement</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Lamentations - Jerusalem\'s destruction</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ezekiel - Judgement brings new life</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Daniel - Witnessing in exile</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Minor (brief) Prophets</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Hosea - Acting out God\'s love</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Joel - Day of the Lord</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Amos - Judgement is inescapable</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Obadiah - Judgement on Edom</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Jonah - Anyone can repent</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Micah - Judgement\'s restoration</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Nahum - Judgement on Nineveh</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Habakkuk - Judgement on evil</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Zephaniah - Judgement\'s remnant</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Haggai - Rebuilding the temple</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Zechariah - Repentance after exile</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Malachi - God is coming</p>' +
+            '</div>' +
+            '<br><span class="stepFgBg" style="font-size:16px"><b>New Testament</b></span>' +
+            '<div>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Life of Jesus</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Matthew - Jesus the Messiah</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Mark - Jesus the Man</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Luke - Jesus the Saviour</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">John - Jesus is God</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Acts - Church growth</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Pauline letters to churches</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Romans - Paul\'s theology</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Corinthians - Church problems</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Corinthians - Leadership problems</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Galatians - Freedom from Law</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ephesians - Church unity</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Philippians - Encouragement</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Colossians - Christian lifestyle</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Thessalonians - Expecting the End</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Thessalonians - The End delayed</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Pauline letters to individuals</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Timothy - False teachings</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Timothy - Paul\'s farewell</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Titus - A difficult ministry</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Philemon - Slaves as brothers</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Letters from others</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Hebrews - Jewish Christianity</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">James - Trials of faith</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Peter - Life among unbelievers</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Peter - Peter\'s farewell</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 John - God loves us</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 John - Love each other</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">3 John - Practical love</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Jude - Deserters</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Prophecies for the future</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px"">Revelation of John - Visions of the End</p>' +
+            '<tr></tr></tbody></table>' +
+            '</div>';
+
+        $.ajaxSetup({async: false});
+        $.getJSON("/html/json/" + osisID.toLowerCase() + ".json", function(summary) {
+            var bookSummary =
+                '<br><span style="font-size:18px"><b>Book summary of ' + longBookName + '</b></span><br>' +
+                '<span style="font-size:16px">' +
+                    '<p style="border:2px solid grey;padding:5px">' + summary.book_description + '<br><br>' +
+                    summary.book_overview + '</p>' +
+					'<p style="margin:8px">ESV Introduction:<br>' + summary.ESV_introduction + '</p>' +
+                    '<p style="margin:8px">ESV Summary:<br>' + summary.ESV_summary + '</p>' +
+                '</span>' +
+                '<div class="copyrightInfo">' +
+                    'Copyright information for <a href="/version.jsp?version=ESV" target="_new">ESV</a>' +
+                '</div>';
+            var chptSummary =
+                '<br><span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
+                '<span style="font-size:16px">' +
+                    '<p style="border:2px solid grey;padding:5px">' + summary["chapter_" + chapterNum + "_description"] + '<br><br>' +
+                    summary["chapter_" + chapterNum + "_overview"] + '</p>' +
+                    '<p style="margin:8px">' + summary["chapter_" + chapterNum + "_summary"] + '</p>' +
+                '</span><br><br><br>' +
+                '<span class="nextPreviousChapterGroup">';
+            if (chapterNum > 1) chptSummary +=
+                    '<a class="previousChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum - 1) + '\')">' +
+                        '<i class="glyphicon glyphicon-arrow-left"></i>' +
+                    '</a>';
+            if (chapterNum < step.passageSelect.osisChapterJsword[posOfBook][1]) chptSummary +=
+                    '<a class="nextChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum + 1) + '\')">' +
+                        '<i class="glyphicon glyphicon-arrow-right"></i>' +
+                    '</a>';
+            chptSummary += 
+                '</span>';
+
+            $(_.template(
+                '<div id="showBookOrChapterSummaryModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                    '<div class="modal-dialog">' +
+                        '<div class="modal-content stepModalFgBg"">' +
+                            '<script>' +
+                            '$(document).keydown(function(event) {' +
+                              'if (event.keyCode == 27) {' +
+                                'step.util.closeModal("showBookOrChapterSummaryModal");' +
+                              '}' +
+                            '});' +
+                            '</script>' +
+                            '<div class="modal-header">' +
+								step.util.modalCloseBtn("showBookOrChapterSummaryModal") + '<br>' +
+                            '</div>' +
+                            '<div class="modal-body" style="text-align:left font-size:16px">' +
+                                '<div>' +
+                                    '<ul class="nav nav-tabs">' +
+                                        '<li class="active"><a href="#chptSummary" data-toggle="tab">Chapter summary</a></li>' +
+                                        '<li><a href="#bookSummary" data-toggle="tab">Book summary</a></li>' +
+                                        '<li><a href="#bibleSummary" data-toggle="tab">Bible summary</a></li>' +
+                                    '</ul>' +
+                                    '<div class="tab-content">' +
+                                        '<div class="tab-pane fade in active" id="chptSummary">' + chptSummary + '</div>' +
+                                        '<div class="tab-pane fade" id="bookSummary">' + bookSummary + '</div>' +
+                                        '<div class="tab-pane fade" id="bibleSummary">' + bibleSummary + '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+            )()).modal("show");
+        });
+        $.ajaxSetup({async: true});
+    },
+    setDefaultColor: function(option) {
+        var newBtnText;
+		var setToDarkMode = false;
+		if (option === "flip") {
+			if (!step.util.isDarkMode()) setToDarkMode = true;
+		}
+		else setToDarkMode = step.util.isDarkMode();
+   		var rootVar = document.querySelector(':root');
+        if (setToDarkMode) {
+            rootVar.style.setProperty('--clrTextColor',"#BCC0C3");
+            step.settings.save({"clrTextColor":"#BCC0C3"});
+            rootVar.style.setProperty('--clrStrongText',"#8ab4f8");
+            step.settings.save({"clrStrongText":"#8ab4f8"});
+            rootVar.style.setProperty('--clrBackground',"#202124");
+            step.settings.save({"clrBackground":"#202124"});
+            rootVar.style.setProperty('--clrHighlight',"#c58af9");
+            step.settings.save({"clrHighlight":"#c58af9"});
+            rootVar.style.setProperty('--clrHighlightBg',"#800080");
+            step.settings.save({"clrHighlightBg":"#800080"});
+            rootVar.style.setProperty('--clr2ndHover',"#c5d0fb");
+            step.settings.save({"clr2ndHover":"#c5d0fb"});
+            $('body,html').css('color-scheme','dark');
+            newBtnText = "Disable";
+        }
+        else {
+            rootVar.style.setProperty('--clrTextColor',"#5d5d5d");
+            step.settings.save({"clrTextColor":"#5d5d5d"});
+            rootVar.style.setProperty('--clrStrongText',"#498090");
+            step.settings.save({"clrStrongText":"#498090"});
+            rootVar.style.setProperty('--clrBackground',"#ffffff");
+            step.settings.save({"clrBackground":"#ffffff"});
+            rootVar.style.setProperty('--clrHighlight',"#17758F");
+            step.settings.save({"clrHighlight":"#17758F"});
+            rootVar.style.setProperty('--clrHighlightBg',"#17758F");
+            step.settings.save({"clrHighlightBg":"#17758F"});
+            rootVar.style.setProperty('--clr2ndHover',"#d3d3d3");
+            step.settings.save({"clr2ndHover":"#d3d3d3"});
+            $('body,html').css('color-scheme','normal');
+            newBtnText = "Enable";
+        }
+        rootVar.style.setProperty('--clrLexiconFocusBG',"#c8d8dc");
+        step.settings.save({"clrLexiconFocusBG":"#c8d8dc"});
+        rootVar.style.setProperty('--clrRelatedWordBg',"#b2e5f3");
+        step.settings.save({"clrRelatedWordBg":"#b2e5f3"});
+        $('#darkModeBtn').text(newBtnText);
+		if (option !== "close") step.util.showFontSettings();
+    },
+	switchColorMode: function () {
+		if (step.colorUpdateMode) step.colorUpdateMode = false;
+		else step.colorUpdateMode = true;
+		step.util.showFontSettings();
+	},
     showFontSettings: function (panelNumber) {
         var element = document.getElementById('fontSettings');
         if (element) element.parentNode.removeChild(element);
-        var notIE = !(false || !!document.documentMode);
+		$(".modal-backdrop.in").remove();
+        var colorReady = !(false || !!document.documentMode); // not Internet Explorer are not compatible with out color code
+		var darkModeReady = colorReady; // Internet Explorer is not ready for dark mode
+		var ua = navigator.userAgent.toLowerCase();
+		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));
+		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os [345678]_/) > -1)) { // older versions of iOS are not compatible with out color code
+			colorReady = false;
+			darkModeReady = false;
+		}
+		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os 9_/) > -1)) { // older versions of iOS 9 can run in dark mode, but not the best with displaying updated colors in the font modal.
+			colorReady = false;
+		}
+		else if (ua.search(/android [1234]\./) > -1) { // older versions of Android are not compatible with out color code, but compatible with dark mode
+			colorReady = false;
+		}
 		var panelNumArg = "";
 		var styleForColorExamples = "";
-		var singleOrAllPanel = "in all panels";
 		if (typeof panelNumber === "number") {
 			panelNumArg =  ", " + panelNumber;
 			styleForColorExamples = 'display:none';
-			singleOrAllPanel = "in current panel";
 		}
+        var darkModeEnabled = step.util.isDarkMode();
+
 		var modalHTML = '<div id="fontSettings" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog" style="width:350px">' +
-				'<div class="modal-content">';
-		if (notIE) modalHTML +=
+				'<div class="modal-content stepModalFgBg">';
+		if (colorReady) modalHTML +=
 					'<link rel="stylesheet" href="css/spectrum.css">' +
 					'<script src="libs/spectrum.js"></script>' +
 					'<script src="libs/tinycolor-min.js"></script>';
@@ -1939,12 +2175,58 @@ step.util = {
 							'showFontSizeBtns("khmerFont"' + panelNumArg + ');' +
 							'showFontSizeBtns("syriacFont"' + panelNumArg + ');';
 
-		if (notIE) modalHTML +=
-							'var color = step.settings.get("highlight_color");' +
+		if (colorReady) modalHTML +=
+							'var color = step.settings.get("clrHighlight");' +
 							'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 							'var closeButton = $("#fontSettings").find("button.close");' +
 							'if (closeButton.length == 1) $(closeButton[0]).attr("onclick", "closeFontSetting(\'" + color + "\')");' +
-							'$("#inClrStrongFont").spectrum({' +
+							'color = step.settings.get("clrTextColor");' +
+							'$("#clrTextColor").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrTextColor").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrTextColor");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrTextColor").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrTextColor");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#5D5D5D";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrTextColor");' +
+								'}' +
+							'});' +
+							'color = step.settings.get("clrBackground");' +
+							'$("#clrBackground").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrBackground").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrBackground");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrBackground").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrBackground");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#ffffff";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrBackground");' +
+								'}' +
+							'});' +
+							'color = step.settings.get("clrStrongText");' +
+							'$("#clrStrongText").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrStrongText").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrStrongText");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrStrongText").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrStrongText");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrStrongText");' +
+								'}' +
+							'});' +
+							'color = step.settings.get("clrHighlight");' +
+							'$("#clrHighlight").spectrum({' +
 								'color: color,' +
 								'clickoutFiresChange: false,' +
 								'showPalette: true,' +
@@ -1953,20 +2235,82 @@ step.util = {
 									'["rgb(172, 9, 35);", "rgb(110, 11, 116);"]' +
 								'],' +
 								'change: function(color) {' +
-									'var currentClrPicker = $("#inClrStrongFont").spectrum("get").toHexString();' +
-									'setColor(currentClrPicker);' +
+									'var currentClrPicker = $("#clrHighlight").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrHighlight");' +
 								'},' +
 								'show: function(color) {' +
-									'var currentClrPicker = $("#inClrStrongFont").spectrum("get").toHexString();' +
-									'var color = step.settings.get("highlight_color");' +
+									'var currentClrPicker = $("#clrHighlight").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrHighlight");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
-									'if (color != currentClrPicker) setColor(currentClrPicker);' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrHighlight");' +
 								'}' +
-							'});';
+							'});' +
+							'color = step.settings.get("clrHighlightBg");' +
+							'$("#clrHighlightBg").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrHighlightBg").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrHighlightBg");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrHighlightBg").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrHighlightBg");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrHighlightBg");' +
+								'}' +
+							'});' +
+							'color = step.settings.get("clr2ndHover");' +
+							'$("#clr2ndHover").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clr2ndHover").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clr2ndHover");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clr2ndHover").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clr2ndHover");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#d3d3d3";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clr2ndHover");' +
+								'}' +
+							'});' +
+							'color = step.settings.get("clrLexiconFocusBG");' +
+							'$("#clrLexiconFocusBG").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrLexiconFocusBG").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrLexiconFocusBG");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrLexiconFocusBG").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrLexiconFocusBG");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrLexiconFocusBG");' +
+								'}' +
+							'});' +
+							'color = step.settings.get("clrRelatedWordBg");' +
+							'$("#clrRelatedWordBg").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrRelatedWordBg").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrRelatedWordBg");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrRelatedWordBg").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrRelatedWordBg");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrRelatedWordBg");' +
+								'}' +
+							'});' +
+							'if (step.colorUpdateMode) $(".adClr").show();' +
+							'else $(".adClr").hide();';
+
 		modalHTML +=	'}); ' +
 						'function showFontSizeBtns(fontName, panelNumber) {' +
 							'var currentFontSize = step.util.getFontSize(fontName, panelNumber);' +
-							'if (fontName === "defaultfont") $("#" + fontName + "Btn").show();' +
 							'if (currentFontSize > 0) {' +
 								'$("#" + fontName + "Btn").find("." + fontName).css("font-size", currentFontSize);' +
 								'$("#" + fontName + "Size").text("(" + currentFontSize + "px)");' +
@@ -1974,65 +2318,95 @@ step.util = {
 							'}' +
 						'}';
 
-		if (notIE) modalHTML +=
-						'function setColor(baseColor) {' +
+		if (colorReady) modalHTML +=
+						'function setColor(baseColor, colorName) {' +
 							'if (!((typeof baseColor === "string") && (baseColor.length == 7) && (baseColor.substr(0,1) === "#"))) baseColor = "#17758F";' +
-							'if (tinycolor(baseColor).getLuminance() > 0.3) {' +
-								'alert("Color selected is not dark enough and can be difficult to read.  Please select a darker color.");' +
-								'return;' +
-							'}' +
-							'var t = tinycolor(baseColor);' +
-							'var hsl = t.toHsl();' +
-							'var colorH = hsl["h"];' +
-							'var colorS = hsl["s"] * 100;' +
-							'var colorL = hsl["l"] * 100;' +
+                            'var darkMode = step.util.isDarkMode();' +
+							'colorVarName = colorName;' +
+							// 'if (step.colorUpdateMode) {' +
+								// 'if (darkMode) {' +
+									// 'if (tinycolor(baseColor).getLuminance() < 0.14) {' +
+										// 'alert("Color selected does not provide enough contrast and can be difficult to read.  Please select a brighter color.");' +
+										// 'return;' +
+									// '}' +
+								// '}' +
+								// 'else {' +
+									// 'if (tinycolor(baseColor).getLuminance() > 0.3) {' +
+										// 'alert("Color selected does not provide enough contrast and can be difficult to read.  Please select a darker color.");' +
+										// 'return;' +
+									// '}' +
+								// '}' +
+							// '}' +
+
 							'var rootVar = document.querySelector(":root");' +
-							'rootVar.style.setProperty("--highlight_color",baseColor);' +
-							'step.settings.save({"highlight_color":baseColor});' +
-							
-							'var desaturate = colorS - 40;' +
-							'var desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
-							'var desHsl = desColor.toHsl();' +
-							'var desColorH = desHsl["h"];' +
-							'var desColorS = desHsl["s"] * 100;' +
-							'var desColorL = desHsl["l"] * 100;' +
+							'rootVar.style.setProperty("--" + colorVarName, baseColor);' +
+				            'var obj = {};' +
+							'obj[colorVarName] = baseColor;' +
+							'step.settings.save(obj);' +
 
-							'var lighten = desColorL + 10;' +
-							'var lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
-							'var lightHex = lightColor.toHexString();' +
-							'rootVar.style.setProperty("--strong_color",lightHex);' +
-							'step.settings.save({"strong_color":lightHex});' +
+							'if ((colorVarName === "clrHighlightBg") && (!step.colorUpdateMode)) {' +
+								'rootVar.style.setProperty("--clrHighlightBg",baseColor);' +
+								'step.settings.save({"clrHighlightBg":baseColor});' +
 
-							'desaturate = colorS - 50;' +
-							'desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
-							'desHsl = desColor.toHsl();' +
-							'desColorH = desHsl["h"];' +
-							'desColorS = desHsl["s"] * 100;' +
-							'desColorL = desHsl["l"] * 100;' +
+								'var t = tinycolor(baseColor);' +
+								'var hsl = t.toHsl();' +
+								'var colorH = hsl["h"];' +
+								'var colorS = hsl["s"] * 100;' +
+								'var colorL = hsl["l"] * 100;' +
 
-							'lighten = desColorL + 50;' +
-							'lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
-							'lightHex = lightColor.toHexString();' +
-							'rootVar.style.setProperty("--lexiconFocusColour",lightHex);' +
-							'step.settings.save({"lexiconFocusColour":lightHex});' +
-							
-							'lighten = colorL + 55;' +
-							'lightColor = tinycolor("hsl(" + colorH + ", " + colorS + "%, " + lighten + "%)");' +
-							'lightHex = lightColor.toHexString();' +
-							'rootVar.style.setProperty("--relatedWordBackground",lightHex);' +
-							'step.settings.save({"relatedWordBackground":lightHex});' +
+								'var desaturate = colorS - 40;' +
+								'var desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
+								'var desHsl = desColor.toHsl();' +
+								'var desColorH = desHsl["h"];' +
+								'var desColorS = desHsl["s"] * 100;' +
+								'var desColorL = desHsl["l"] * 100;' +
+
+								'var lightHex = baseColor;' +
+								'if (!darkMode) {' +
+									'var lighten = desColorL + 10;' +
+									'var lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
+									'var lightHex = lightColor.toHexString();' +
+								'}' +
+								'rootVar.style.setProperty("--clrStrongText",lightHex);' +
+								'step.settings.save({"clrStrongText":lightHex});' +
+
+								'desaturate = colorS - 50;' +
+								'desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
+								'desHsl = desColor.toHsl();' +
+								'desColorH = desHsl["h"];' +
+								'desColorS = desHsl["s"] * 100;' +
+								'desColorL = desHsl["l"] * 100;' +
+
+								'lighten = desColorL + 50;' +
+								'lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
+								'lightHex = lightColor.toHexString();' +
+								'rootVar.style.setProperty("--clrLexiconFocusBG",lightHex);' +
+								'step.settings.save({"clrLexiconFocusBG":lightHex});' +
+
+								'lighten = colorL + 55;' +
+								'lightColor = tinycolor("hsl(" + colorH + ", " + colorS + "%, " + lighten + "%)");' +
+								'lightHex = lightColor.toHexString();' +
+								'rootVar.style.setProperty("--clrRelatedWordBg",lightHex);' +
+								'step.settings.save({"clrRelatedWordBg":lightHex});' +
+							'}' +
+							'step.util.showFontSettings();' +
 						'}';
 
 		modalHTML +=	'function closeFontSetting(baseColor) {' +
-							'if ((typeof baseColor === "string") && (baseColor.length == 7)) setColor(baseColor);' +
+							'if ((typeof baseColor === "string") && (baseColor.length == 7)) {' +
+								'if ((baseColor === "#17758F") || (baseColor === "#c58af9")) step.util.setDefaultColor("close");' +
+								'else setColor(baseColor);' +
+							'}' +
 							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
 							'step.util.closeModal("fontSettings");' +
 							'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021
 						'}' +
 					'</script>' +
 					'<div class="modal-header">' +
-						'<span><b>Update font ' + singleOrAllPanel + '</b></span>' +
-						'<button type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
+						'<span><b>' + 
+                            ((typeof panelNumber === "number") ? __s.update_font_in_current_panels : __s.update_font_in_all_panels) +
+                        '</b></span>' +
+						'<button style="background:var(--clrBackground);color:var(--clrTextColor);opacity:0.8" type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
 					'</div>' +
 					'<div class="modal-body" style="text-align:center">' +
 						'<table style="height:auto;width:95%">' +
@@ -2040,102 +2414,171 @@ step.util = {
 								'<th style="width:70%">' +
 								'<th style="width:30%">' +
 							'</tr>' +
-							'<tr id="defaultfontBtn">' +
-								'<td class="passageContent defaultfont">Default font <span id="defaultfontSize"></span></td>' +
+                            '<tr id="defaultfontBtn" style="display:none">' +
+								'<td class="passageContent defaultfont">' + __s.default_font + ' <span id="defaultfontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="hbFontBtn" style="display:none">' +
-								'<td class="passageContent hbFont">Hebrew: חֶ֫סֶד <span id="hbFontSize"></span></td>' +
+								'<td class="passageContent hbFont">' + __s.hebrew + ': חֶ֫סֶד <span id="hbFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="unicodeFontBtn" style="display:none">' +
-								'<td class="passageContent unicodeFont">Greek: Ἀγαπητοί <span id="unicodeFontSize"></span></td>' +
+								'<td class="passageContent unicodeFont">' + __s.greek + ': Ἀγαπητοί <span id="unicodeFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="arabicFontBtn" style="display:none">' +
 								'<td class="passageContent arabicFont">Arabic: أَيُّهَا الأَحِبَّاءُ، <span id="arabicFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="burmeseFontBtn" style="display:none">' +
 								'<td class="passageContent burmeseFont">(ချစ်သူတို့၊) မြန်မာ <span id="burmeseFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="chineseFontBtn" style="display:none">' +
 								'<td class="passageContent chineseFont">Chinese: 亲爱的弟兄 <span id="chineseFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="copticFontBtn" style="display:none">' +
 								'<td class="passageContent copticFont">Coptic: ϯⲡⲁⲣⲁⲕⲁⲗⲉⲓ <span id="copticFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="farsiFontBtn" style="display:none">' +
 								'<td class="passageContent farsiFont">Farsi: برادران‌ عزيز <span id="farsiFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="khmerFontBtn" style="display:none">' +
 								'<td class="passageContent khmerFont">Khmer: ​ទី​ស្រលាញ់ <span id="khmerFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="syriacFontBtn" style="display:none">' +
 								'<td class="passageContent syriacFont">Syriac: ܚܒܝܒܝ ܒܥܐ <span id="syriacFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', -1' + panelNumArg + ')"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', 1' + panelNumArg + ')"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>';
 
-		if (notIE) modalHTML +=
-							'<tr style="' + styleForColorExamples + '">' +
-								'<td>Color</td>' +
+		if ((darkModeReady) && ((typeof panelNumber !== "number")))
+			modalHTML +=
+							'<tr>' +
+								'<td class="passageContent defaultfont">' + __s.dark_mode + '</td>' +
 								'<td class="pull-right">' +
-									'<input id="inClrStrongFont" type="color" class="nInptC" value="#17758F"/>' +
+									'<button id="darkModeBtn" class="btn btn-default btn-sm' +
+                                        ((darkModeEnabled) ? ' stepPressedButton' : '') +
+                                        '" type="button" title="Dark mode" onclick="step.util.setDefaultColor(\'flip\')"><span style="font-size:10px;line-height:12px;font-weight:bold">' +
+                                        ((darkModeEnabled) ? 'Disable' : 'Enable') +
+                                        '</span></button>' +
 								'</td>' +
 							'</tr>';
+		if ((colorReady) && ((typeof panelNumber !== "number")))
+			modalHTML +=
+							'<tr>' +
+								'<td class="passageContent defaultfont">Advanced color update:</td>' +
+								'<td class="pull-right">' +
+									'<button id="colorUpdateMode" class="btn btn-default btn-sm' +
+                                        ((step.colorUpdateMode) ? ' stepPressedButton' : '') +
+                                        '" type="button" title="Color mode" onclick="step.util.switchColorMode()"><span style="font-size:10px;line-height:12px;font-weight:bold">' +
+                                        ((step.colorUpdateMode) ? 'Disable' : 'Enable') +
+                                        '</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.text_with_no_highlight + '</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrTextColor" type="color" value="#5D5D5D"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.background_color + '</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrBackground" type="color" value="#ffffff"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.highlighted_text + ' 1</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrStrongText" type="color" value="#17758f"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.highlighted_text + ' 2</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrHighlight" type="color" value="#498090"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr style="' + styleForColorExamples + '">' +
+								'<td>' + __s.highlighted_background + ' 1</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrHighlightBg" type="color" value="#498090"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.highlighted_background + ' 2</td>' +
+								'<td class="pull-right">' +
+									'<input id="clr2ndHover" type="color" value="#d3d3d3"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.highlighted_for_lexicon + '</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrLexiconFocusBG" type="color" value="#C8D8DC"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.highlighted_for_related_text + '</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrRelatedWordBg" type="color" value="#B2E5F3"/>' +
+								'</td>' +
+							'</tr>';
+
 		modalHTML +=
 						'</table>' +
 						'<br>';
-						
-		if (notIE) modalHTML +=
+
+		if (colorReady) modalHTML +=
 						'<span>' +
-							'<p style="text-align:left;font-size:18px;' + styleForColorExamples + '">Examples for the selected color</p>' +
-							'<p class="passageContent" style="color:var(--strong_color);' + styleForColorExamples + '">Text with color</p>' +
-							'<p class="passageContent primaryLightBg" style="' + styleForColorExamples + '">Highlighted text (general)</p>' +
-							'<p class="passageContent lexiconFocus" style="' + styleForColorExamples + '">Highlighted for lexicon</p>' +
-							'<p class="passageContent relatedWordEmphasisHover" style="' + styleForColorExamples + '">Highlighted for related text</p>' +
+							'<p style="text-align:left;font-size:18px;' + styleForColorExamples + '">' + __s.examples_for_the_selected_color + '</p>' +
+							'<p class="passageContent" style="' + styleForColorExamples + '">' + __s.text_with_no_highlight + '</p>' +
+							'<p class="passageContent" style="color:var(--clrStrongText);' + styleForColorExamples + '">' + __s.highlighted_text + ' 1</p>' +
+							'<p class="passageContent" style="color:var(--clrHighlight);' + styleForColorExamples + '">' + __s.highlighted_text + ' 2</p>' +
+							'<p class="passageContent primaryLightBg" style="' + styleForColorExamples + '">' + __s.highlighted_background + ' 1</p>' +
+							'<p class="passageContent secondaryBackground" style="' + styleForColorExamples + '">' + __s.highlighted_background + ' 2</p>' +
+							'<p class="passageContent lexiconFocus" style="' + styleForColorExamples + '">' + __s.highlighted_for_lexicon + '</p>' +
+							'<p class="passageContent relatedWordEmphasisHover" style="' + styleForColorExamples + '">' + __s.highlighted_for_related_text + '</p>' +
 						'</span>';
-						
+
 		modalHTML +=
 						'<div class="footer">' +
-							'<button class="stepButton pull-right" data-dismiss="modal" onclick=closeFontSetting()><label>Ok</label></button>';
-		if (notIE) modalHTML +=
-							'<button class="stepButton pull-right" style="' + styleForColorExamples + '" onclick=setColor()><label>Original color</label></button>';
+							'<button class="stepButton pull-right" data-dismiss="modal" onclick=closeFontSetting()><label>' + __s.ok + '</label></button>';
+		if (colorReady) modalHTML +=
+							'<button class="stepButton pull-right" style="' + styleForColorExamples + '" onclick=step.util.setDefaultColor()><label>' + __s.original_color + '</label></button>';
 		modalHTML +=
 						'</div>' +
 						'<br>' +
@@ -2242,7 +2685,7 @@ step.util = {
 			$('#' + modalID).modal({
 				show: false
 			});
-			element.parentNode.removeChild(element);
+			if ((element.parentNode) && (modalID !== "raiseSupport")) element.parentNode.removeChild(element);
 		}
     },
 	addTagLine: function(){
@@ -2729,6 +3172,28 @@ step.util = {
         if (strongNum.search(/([GH]\d{4,5})[abcdefg]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
         if ((typeof step.srchTxt[strongNum] === "undefined") || (step.srchTxt[strongNum].length < 7))
             step.srchTxt[strongNum] = details;
-    }
+    },
+	modalCloseBtn: function(modalElementID) {
+		// The dark mode color needs to be brighter for X.  The default opacity of 0.2 is too low.
+        var opacity = (step.util.isDarkMode()) ?
+			"opacity:0.8" : "";
+		// the close button could not pickup the stepFgBg class so it has to be added in the style
+		return '<button type="button" style="background:var(--clrBackground);color:var(--clrTextColor);' + opacity + '" class="close" ' +
+			'data-dismiss="modal" onclick=step.util.closeModal("' + modalElementID + '")>X</button>';
+	},
+	isDarkMode: function() {
+		var stepBgColor = document.querySelector(':root').style.getPropertyValue("--clrBackground");
+		// alert("1 " + stepBgColor );
+		if ((typeof stepBgColor !== "string") || ((stepBgColor.length !== 7) && (stepBgColor.length !== 15))) {
+			if ((typeof step.settings === "object") && (typeof step.settings.get === "function")) {
+				var color = step.settings.get("clrBackground");
+				// alert("2 " + color);
+				if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#")))
+					stepBgColor = color;
+			}
+		}
+		if ((stepBgColor === "#202124") || (stepBgColor === "rgb(32, 33, 36)")) return true; // old iPad would return the rgb value
+		return false;
+	}
 }
 ;

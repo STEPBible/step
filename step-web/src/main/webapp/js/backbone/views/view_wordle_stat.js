@@ -182,6 +182,8 @@ var ViewLexiconWordle = Backbone.View.extend({
             step.util.trackAnalytics('wordle', 'scope', scope);
             self.transientReference = data.passageStat.reference.name;
             self._createWordleTab(self.statsContainer, scope, data.passageStat, statType, callback, data.lexiconWords, self.isNextChapter, self.transientReference);
+        }).error(function() {
+            changeBaseURL();
         });
         this.isNextChapter = false;
     },

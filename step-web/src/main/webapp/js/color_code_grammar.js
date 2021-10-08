@@ -1385,7 +1385,7 @@ var cf = {
   // Called by other javascript (view_quick_lexicon view_sidebar) in Step.  Do not shorten the name.
   getTOSMorphologyInfo: function (morphCode) {
     var result = {};
-    if ((morphCode.startsWith('TOS:')) && (cv[C_otMorph] != null)) {
+    if ((morphCode.indexOf('TOS:') == 0) && (cv[C_otMorph] != null)) {
       var code = morphCode.substr(4);
       var languageCode = code.substr(0, 1);
       cf.getSpecificMorphologyInfo(languageCode, "language", result);
@@ -1396,7 +1396,7 @@ var cf = {
       if (result.ot_function != undefined) {
         if (code.length > 2) {
           var formPos = 2; var stemExpandedCd = '';
-          if (result.ot_function.toLowerCase().startsWith('verb')) {
+          if (result.ot_function.toLowerCase().indexOf('verb') == 0) {
             formPos = 3;
             stemExpandedCd = code.substr(2, 1) + languageCode;
             cf.getSpecificMorphologyInfo(stemExpandedCd, "stem", result);

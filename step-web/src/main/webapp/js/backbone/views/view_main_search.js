@@ -94,7 +94,7 @@ var MainSearchView = Backbone.View.extend({
             ajax: {
                 url: function (term, page) {
                     var lang = step.state.language();
-					if ((term.length >= 2) || (!step.util.isBlank(lang) && (lang.toLowerCase().startsWith("zh")))) {
+					if ((term.length >= 2) || (!step.util.isBlank(lang) && (lang.toLowerCase().indexOf("zh") == 0))) {
 						var url = SEARCH_AUTO_SUGGESTIONS + term;
 						var contextArgs = "";
 						if (self.specificContext.length != 0) {
@@ -258,7 +258,7 @@ var MainSearchView = Backbone.View.extend({
 		var classicalUI = (classicalUISetting === "true") ? true : false;
 		step.util.setClassicalUI(classicalUI);
 		
-		if (step.state.language().startsWith("zh"))
+		if (step.state.language().indexOf("zh") == 0)
 			container.data("select2").opts.minimumInputLength = 1; // Chinese Bible short names and search words can be 1 character 1 long
         container.find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
         container.find("ul.select2-choices")
@@ -415,7 +415,7 @@ var MainSearchView = Backbone.View.extend({
                 item = termSuggestion;
                 // Some of the shortname of the books in the Bible does not work in Chinese.  PT 4/21/2020
 				// Need to review this line again PT 9/7/2020.  Maybe it is working
-                // if (step.state.language().startsWith("zh")) {
+                // if (step.state.language().indexOf("zh") == 0) {
                 //    item.suggestion.shortName = item.suggestion.fullName;
                 // }
                 break;
@@ -755,7 +755,7 @@ var MainSearchView = Backbone.View.extend({
             if ((initials != "" && initials == currentInput) || (shortName != "" && shortName == currentInput)) {
                 exactInitials.push(currentVersion);
             }
-            else if (shortName.startsWith(currentInput) || initials.startsWith(currentInput)) {
+            else if ((shortName.indexOf(currentInput) == 0) || (initials.indexOf(currentInput) == 0)) {
                 if (currentVersion.item.recommended) {
                     prefixInitials.unshift(currentVersion);
                 }
@@ -763,7 +763,7 @@ var MainSearchView = Backbone.View.extend({
                     prefixInitials.push(currentVersion);
                 }
             }
-            else if (languageName.startsWith(currentInput) || originalLanguage.startsWith(currentInput)) {
+            else if ((languageName.indexOf(currentInput) == 0) || originalLanguage.indexOf(currentInput) == 0) {
                 if (currentVersion.item.recommended) {
                     recommendedByLanguage.push(currentVersion);
                 }

@@ -244,6 +244,8 @@ var AdvancedSearchView = Backbone.View.extend({
             if (!target.closest(".form-group").hasClass("open")) {
                 target.trigger("click");
             }
+        }).error(function() {
+            changeBaseURL();
         });
     },
     refreshRefDropdown: function (ref, dropdown, target) {
@@ -270,6 +272,8 @@ var AdvancedSearchView = Backbone.View.extend({
             if (!target.closest(".form-group").hasClass("open")) {
                 target.trigger("click");
             }
+        }).error(function() {
+            changeBaseURL();
         });
     },
     _autoCompleteDropdown: function (target, dropdown, callback) {

@@ -60,14 +60,5 @@ function saveVersionOrder() {
 
 function userCloseVersionOrder() {
     afterSort = beforeSort;
-    saveVersionOrder();
-}
-
-function closeVersionOrder() {
-    $('#orderVersionModal').modal('hide');
-    $('#orderVersionModal').modal({
-        show: false
-    });
-    var element = document.getElementById('orderVersionModal');
-    element.parentNode.removeChild(element);
+    step.util.closeModal("orderVersionModal");
 }

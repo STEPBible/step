@@ -60,10 +60,14 @@
 
 	<style>
 	:root {
-		--highlight_color: #17758F;
-		--strong_color: #498090;
-		--lexiconFocusColour: #c8d8dc;
-		--relatedWordBackground: #b2e5f3;
+		--clrHighlight: #17758F;
+		--clrHighlightBg: #17758F;
+		--clrStrongText: #498090;
+		--clrLexiconFocusBG: #c8d8dc;
+		--clrRelatedWordBg: #b2e5f3;
+        --clrBackground: #ffffff;
+        --clrTextColor: #5d5d5d;
+        --clr2ndHover: #d3d3d3;
 	}
 	</style>
     <%
@@ -110,7 +114,7 @@
     </script>
     <% } %>
 </head>
-<body xmlns:fb="http://ogp.me/ns/fb#">
+<body xmlns:fb="http://ogp.me/ns/fb#" style="background-color:var(--clrBackground);color:var(--clrTextColor)">
 <!-- Wrap all page content here -->
 <div id="wrap">
 

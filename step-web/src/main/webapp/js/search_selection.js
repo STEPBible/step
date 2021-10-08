@@ -244,15 +244,15 @@ step.searchSelect = {
 		}
 		var type = itemType.toLowerCase();
 		if (this.searchTypeCode.indexOf(itemType) > 2) {
-			if (type.startsWith("greek")) type = "greek";
-			else if (type.startsWith("hebrew")) type = "hebrew";
+			if (type.indexOf("greek") == 0) type = "greek";
+			else if (type.indexOf("hebrew") == 0) type = "hebrew";
 			if (typeof __s[type] !== "undefined") type = __s[type];
 			var htmlOfTerm = actPsgeDataElm.item.gloss;
 			if (actPsgeDataElm.item.stepTransliteration !== "")
 				htmlOfTerm += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
 			html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
 			listOfPreviousSearch.push(html);
-			var strongNum = actPsgeDataElm.token.toLowerCase().startsWith("strong:") ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
+			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
 			if (strongNum.search(/([GH]\d{4,5})[abcdefg]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
 			previousSearchTokensArg.push("strong=" + strongNum);
 			if (actPsgeDataElm.item.stepTransliteration !== "") step.util.putStrongDetails(strongNum, htmlOfTerm);
@@ -314,7 +314,7 @@ step.searchSelect = {
 		var copyOfRange = this.searchRange;
 		var displayRange = this.searchRange;
 		// Show the book names in the local language
-		if (((this.userLang.toLowerCase().startsWith("zh")) || (this.userLang.toLowerCase().startsWith("es"))) &&
+		if (((this.userLang.toLowerCase().indexOf("zh") == 0) || (this.userLang.toLowerCase().indexOf("es") == 0)) &&
 			(this._getTranslationType() !== "")) {
 			displayRange = "";
 			var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
@@ -341,7 +341,7 @@ step.searchSelect = {
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
-			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br><br>' + // size 16px so the mobile devices will not expand
+			'<textarea id="userTextInput" rows="1" style="font-size:16px;width:80%"></textarea><br><br>' + // size 16px so the mobile devices will not expand
 			'<div id="search_table">' +
 			'<table border="1">' +
 			'<colgroup>' +
@@ -529,7 +529,7 @@ step.searchSelect = {
 
 	_buildBookTable: function() {
 		var translationType = this._getTranslationType();
-		if ((this.userLang.toLowerCase().startsWith("en") || this.userLang.toLowerCase().startsWith("es") || this.userLang.toLowerCase().startsWith("zh")) &&
+		if (((this.userLang.toLowerCase().indexOf("en") == 0) || (this.userLang.toLowerCase().indexOf("es") == 0) || (this.userLang.toLowerCase().indexOf("zh") == 0)) &&
 			(translationType !== "")) {
 			this._buildBookHTMLTable(translationType);
 		}
@@ -538,7 +538,9 @@ step.searchSelect = {
 			$.ajaxSetup({async: false});
 			$.getJSON(url, function (data) {
 				step.searchSelect._buildBookHTMLTable(data);
-			});
+			}).fail(function() {
+                changeBaseURL();
+            });
 			$.ajaxSetup({async: true});
 		}	
 	},
@@ -602,7 +604,7 @@ step.searchSelect = {
 			else {
 				currentOsisID = data[i].suggestion.osisID;
 				longNameToDisplay = data[i].suggestion.fullName;
-				shortNameToDisplay = (this.userLang.toLowerCase().startsWith("en")) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
+				shortNameToDisplay = (this.userLang.toLowerCase().indexOf("en") == 0) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
 			}
 			var longID = currentOsisID;
 			var posOfBook = this.idx2osisChapterJsword[currentOsisID];
@@ -833,7 +835,7 @@ step.searchSelect = {
 		}
 		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 		step.searchSelect.searchUserInput = userInput;
-		if ((userInput.length > 1) || ((step.searchSelect.userLang.toLowerCase().startsWith("zh")) && (userInput.length > 0))) {
+		if ((userInput.length > 1) || ((step.searchSelect.userLang.toLowerCase().indexOf("zh") == 0) && (userInput.length > 0))) {
 			$('#updateButton').hide();
 			var url;
 			if (((typeof limitType === "undefined") || (limitType === null)) && (step.searchSelect.searchOnSpecificType == ""))
@@ -938,7 +940,9 @@ step.searchSelect = {
 					else if (searchResultsToDisplay[l].length > 0) $('.select-' + step.searchSelect.searchTypeCode[l]).show()
 					else $('.select-' + step.searchSelect.searchTypeCode[l]).hide()
 				}
-			});
+			}).fail(function() {
+                changeBaseURL();
+            });
 			$.ajaxSetup({async: true});
 		}
 		else {

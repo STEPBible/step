@@ -34,7 +34,7 @@
 var QuickLexicon = Backbone.View.extend({
     templateHeader: '<div id="quickLexicon"><div>' +
         '<div>' +
-        '<button type="button" class="close" aria-hidden="true">&times;</button>',
+        '<button type="button" class="close" aria-hidden="true">X</button>',
     templateFooter: '</div>',
     templateDef: '<%= view.templateHeader %>' +
         '<% _.each(data, function(item, data_index) { %>' +
@@ -45,7 +45,7 @@ var QuickLexicon = Backbone.View.extend({
         '<% var currentLang = step.userLanguageCode.toLowerCase(); %>' +
         // '<% var currentEnWithEsLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon"); %>' +
         // '<% if (currentEnWithEsLexiconSetting == undefined) currentEnWithEsLexiconSetting = false; %>' +
-		'<% if ((currentLang.startsWith("es")) && (item._es_Gloss != undefined)) { %><span>,&nbsp;<%= item._es_Gloss %></span> <% } %>' +
+		'<% if ((currentLang.indexOf("es") == 0) && (item._es_Gloss != undefined)) { %><span>,&nbsp;<%= item._es_Gloss %></span> <% } %>' +
         '<% if (urlLang == "zh_tw") { currentLang = "zh_tw"; } else if (urlLang == "zh") { currentLang = "zh"; } %>' +
         '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
         '<% if (currentEnWithZhLexiconSetting == undefined) currentEnWithZhLexiconSetting = false; %>' +
@@ -56,8 +56,8 @@ var QuickLexicon = Backbone.View.extend({
         '<% if ( (currentLang == "es") && (item._es_Definition != undefined) ) { %><div class="mediumDef"><%= item._es_Definition %></div><% } %>' +
         '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
         '<% if ( (currentLang == "vi") && (item._vi_Definition != undefined) ) { %><div class="mediumDef"><%= item._vi_Definition %></div> <% } %>' +
-        // '<% if ((currentEnWithZhLexiconSetting) || (currentEnWithEsLexiconSetting) || ( (!currentLang.startsWith("zh")) && (!currentLang.startsWith("es")))) { %>' +
-        '<% if ((currentEnWithZhLexiconSetting) || (!currentLang.startsWith("zh"))) { %>' +
+        // '<% if ((currentEnWithZhLexiconSetting) || (currentEnWithEsLexiconSetting) || ( (!currentLang.indexOf("zh") == 0) && (!currentLang.indexOf("es") == 0))) { %>' +
+        '<% if ((currentEnWithZhLexiconSetting) || (!currentLang.indexOf("zh") == 0)) { %>' +
             '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
             '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
         '<% } %>' +
@@ -90,7 +90,7 @@ var QuickLexicon = Backbone.View.extend({
     loadDefinition: function (time) {
         var self = this;
         lastMorphCode = '';
-        if ((this.morph != undefined) && (this.morph.startsWith('TOS:'))) {
+        if ((this.morph != undefined) && (this.morph.indexOf('TOS:') == 0)) {
             lastMorphCode = this.morph;
         }
         return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph, step.userLanguageCode], function (data) {
@@ -151,6 +151,8 @@ var QuickLexicon = Backbone.View.extend({
 					}
 				}
             }
+        }).error(function() {
+            changeBaseURL();
         });
     }, /**
      * Updates the text and shows it

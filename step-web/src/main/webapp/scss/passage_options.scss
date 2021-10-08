@@ -53,6 +53,8 @@
 
     &:hover, &:focus {
       text-decoration: none;
+      background-color: $secondaryHoverColour;
+      color: black;
     }
   }
 
@@ -144,6 +146,7 @@
 
         &:hover {
           background-color: $secondaryHoverColour;
+          color: var(--clrTextColor);
         }
       }
 
@@ -184,6 +187,7 @@
     z-index: 1;
     padding: 12px;
     background-color: white;
+    background-color: var(--clrBackground);
     border-radius: 100%;
     box-shadow: 0 0 5px;
 

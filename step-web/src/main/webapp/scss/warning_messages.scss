@@ -26,7 +26,8 @@
 
   .popover-content {
     padding:15px;
-    background-color: white;
+    background-color: var(--clrBackground);
+    color: var(--clrTextColor);
     margin-bottom: 11px;
     background-clip: padding-box;
     border: 1px solid #ccc;

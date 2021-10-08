@@ -3,12 +3,14 @@
 div.versePopup.qtip-default.qtip {
   max-width: 650px !important;
   border:1px solid #666;
+  border:1px solid var(--clrBackground);
   border-radius:5px;
   box-shadow:2px 2px 4px rgba(0,0,0,0.2);
   background-color: white;
 
   .qtip-tip canvas {
     background-color: #666;
+    background-color: var(--clrBackground);
   }
 
   .heading {

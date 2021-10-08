@@ -1,7 +1,7 @@
-// window.step = window.step || {};
 step.passageSelect = {
 	version: "ESV_th",
 	userLang: "en",
+	hasEnglishBible: false,
 	addVerseSelection: false,
 	modalMode: 'book',
 	lastOsisID: '',
@@ -76,7 +76,7 @@ step.passageSelect = {
 		["Rev", 22, [20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,21,15,27,21]]
 	],
 
-	initPassageSelect: function() {
+	initPassageSelect: function(summaryMode) {
         this.version = "ESV_th";
 		this.userLang = step.state.language() || "en-US";
 		this.addVerseSelection = false;
@@ -91,7 +91,7 @@ step.passageSelect = {
 			hideAppend = true;
 		}
 		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
-		this._displayListOfBooks();
+		this._displayListOfBooks(summaryMode);
 		$("textarea#enterYourPassage").on('input', function(e){
 			step.passageSelect._handleKeyboardEntry(e);
 		});
@@ -102,7 +102,7 @@ step.passageSelect = {
 		var returnKey = (input.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak");
 		input = input.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
 		input = input.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
-		$("td").css("background-color", "white");
+		$("td").css("background-color", "var(--clrBackground)");
 		var lastPassageEntered  = input.replace(/\s+$/g, '').split(/,|;/);
 		lastPassageEntered  = lastPassageEntered[lastPassageEntered.length -1].replace(/^\s+/g, '').replace(/\s+$/g, '');
 		var firstWord = lastPassageEntered.split(/\.|:|\s/)[0].toLowerCase();
@@ -116,7 +116,7 @@ step.passageSelect = {
 					var first2Char = checkString.substr(0, 2);
 					if ((first2Char === "1 ") || (first2Char === "2 ") || (first2Char === "3 "))
 						checkString = checkString.substr(0,1) + checkString.substr(2);
-					if (checkString.startsWith(firstWord)) {
+					if (checkString.indexOf(firstWord) == 0) {
 						firstWord = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
 						firstWord = firstWord.toLowerCase();
 						break;
@@ -132,38 +132,48 @@ step.passageSelect = {
 			((e.originalEvent.inputType === "insertText") && (e.originalEvent.data === ".")) ) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
 	},
 
-	_displayListOfBooks: function() {
-		var html = this._buildBookHeaderAndSkeleton();
+	_displayListOfBooks: function(summaryMode) {
+        $('#bookchaptermodalbody').empty();
+		translationType = this._getTranslationType();
+		var html = this._buildBookHeaderAndSkeleton(summaryMode);
 		$('#bookchaptermodalbody').append(html);
 		$('#keyboardEntry').show();
-		this._buildBookTable();
+		this._buildBookTable(summaryMode, translationType);
 		$('#pssgModalBackButton').hide();
 	},
 
-	_buildBookTable: function() {
+	_buildBookTable: function(summaryMode, translationType) {
 		$('#enterYourPassage').show();
 		$('#keyboard_icon').show();
-		var translationType = this._getTranslationType();
-		if ((this.userLang.toLowerCase().startsWith("en") || this.userLang.toLowerCase().startsWith("es") || this.userLang.toLowerCase().startsWith("zh")) &&
+		if (((this.userLang.toLowerCase().indexOf("en") == 0) || (this.userLang.toLowerCase().indexOf("es") == 0) || (this.userLang.toLowerCase().indexOf("zh") == 0)) &&
 			(translationType !== "")) {
-			this._buildBookHTMLTable(translationType);
+			this._buildBookHTMLTable(translationType, summaryMode);
 		}
 		else {
 			var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + this.version + "%7C?lang=" + this.userLang;
 			$.getJSON(url, function (data) {
-				step.passageSelect._buildBookHTMLTable(data);
-			});
+				step.passageSelect._buildBookHTMLTable(data, summaryMode);
+			}).fail(function() {
+                changeBaseURL();
+            });
 		}	
 	},
 
 	_getTranslationType: function() {
 		var versionAltName = '';
+		var atLeastOneEnglishBible = false;
 		var data = step.util.activePassage().get("searchTokens") || [];
+		var foundFirstVersion = false;
 		for (var i = 0; i < data.length; i++) {
 			if (data[i].itemType == VERSION) {
-				this.version = data[i].item.initials;
-				versionAltName = data[i].item.shortInitials;
-				break;
+				if (!foundFirstVersion) {
+					this.version = data[i].item.initials;
+					versionAltName = data[i].item.shortInitials;
+					foundFirstVersion = true;
+				}
+				if (!atLeastOneEnglishBible)
+					atLeastOneEnglishBible = ((typeof step.keyedVersions[data[i].item.initials] === "object") &&
+									  (step.keyedVersions[data[i].item.initials].languageCode === "en"));
 			}
 		}
 		var translationsWithPopularBooksChapters = " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ";
@@ -175,10 +185,11 @@ step.passageSelect = {
 		if ((translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
 		else if ((translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
 		else if ((translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
-		return translationType;		
+		this.hasEnglishBible = atLeastOneEnglishBible;
+		return translationType;
 	},
 
-	_buildBookHTMLTable: function(data) {
+	_buildBookHTMLTable: function(data, summaryMode) {
 		var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
 		var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
 		var counter = 0;
@@ -186,17 +197,31 @@ step.passageSelect = {
 		var browserWidth = $(window).width();
 		var columns = 7;
 		var maxLength = 5;
-		if (browserWidth < 1100) {
-			columns = 6;
-			maxLength = 4;
-			if (browserWidth < 735) {
-				columns = 5;
-				maxLength = 3;
-				if ((browserWidth < 370) && (this.userLang.toLowerCase().startsWith("zh")))
-					maxLength = 2;
-			}
+		var bookDescription = {};
+        if (!summaryMode) {
+            if (browserWidth < 1100) {
+                columns = 6;
+                maxLength = 4;
+                if (browserWidth < 735) {
+                    columns = 5;
+                    maxLength = 3;
+                    if ((browserWidth < 370) && (this.userLang.toLowerCase().indexOf("zh") == 0))
+                        maxLength = 2;
+                }
+            }
 		}
-		var tableHTML = this._buildBookTableHeader(columns);
+        else {
+            columns = 1;
+			bookDescription = {gen:"", exod:"", lev:"", num:"", deut:"", josh:"", judg:"", ruth:"", "1sam":"", "2sam":"", "1kgs":"", "2kgs":"", "1chr":"", "2chr":"", ezra:"", neh:"", esth:"", job:"", ps:"", prov:"", eccl:"", song:"", isa:"", jer:"", lam:"", ezek:"", dan:"", hos:"", joel:"", amos:"", obad:"", jonah:"", mic:"", nah:"", hab:"", zeph:"", hag:"", zech:"", mal:"", matt:"", mark:"", luke:"", john:"", acts:"", rom:"", "1cor":"", "2cor":"", gal:"", eph:"", phil:"", col:"", "1thess":"", "2thess":"", "1tim":"", "2tim":"", titus:"", phlm:"", heb:"", jas:"", "1pet":"", "2pet":"", "1john":"", "2john":"", "3jo":"", jude:"", rev:""};
+            $.ajaxSetup({async: false});
+            $.getJSON("/html/json/book_description.json", function(desc) {
+                for (key in desc) {
+                    bookDescription[key] = desc[key];
+                }
+            });
+            $.ajaxSetup({async: true});
+        }
+		var tableHTML = this._buildBookTableHeader(columns, summaryMode);
 		var typlicalBooksChapters = false;
 		var start = 0;
 		var end = 0;
@@ -231,7 +256,7 @@ step.passageSelect = {
 				currentOsisID = data[i].suggestion.osisID;
 				numOfChapters = 0; // don't know yet, need to find out
 				longNameToDisplay = data[i].suggestion.fullName;
-				shortNameToDisplay = (this.userLang.toLowerCase().startsWith("en")) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
+				shortNameToDisplay = (this.userLang.toLowerCase().indexOf("en") == 0) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
 			}
 			var oldTestment = false;
 			var newTestament = (nt.indexOf(currentOsisID) > -1);
@@ -241,10 +266,10 @@ step.passageSelect = {
 				counter = 0; // reset counter for NT table
 				tableHTML += '</tr></table>';
 				$('#ot_table').append(tableHTML);
-				tableHTML = this._buildBookTableHeader(columns);
+				tableHTML = this._buildBookTableHeader(columns, summaryMode);
 			}
 			var bookDisplayName = longNameToDisplay;
-			if (this.userLang.toLowerCase().startsWith("zh")) {
+			if (this.userLang.toLowerCase().indexOf("zh") == 0) {
 				if (((bookDisplayName.length == maxLength) || (bookDisplayName.length == maxLength + 1)) &&
 					(chineseSuffix1ForBooks.indexOf(bookDisplayName.substr(-1)) > -1)) // If it is one character too long. Remove the last word 書記歌书记歌 (book, record or song)
 					bookDisplayName = bookDisplayName.substr(0, bookDisplayName.length - 1);
@@ -259,12 +284,26 @@ step.passageSelect = {
 				shortNameToDisplay += '<span style="color:brown">*</span>';
 				additionalBooks = true;
 			}
+            if ((summaryMode) &&
+                (typeof bookDescription[currentOsisID.toLowerCase() + "_header"] === "string")) {
+                tableHTML += '<td style="font-size:18px;text-align:left;padding:0"><b>' +
+                    bookDescription[currentOsisID.toLowerCase() + "_header"] +
+                '</b></td></tr><tr>';
+            }
+			var curBookDescription = ""
+			if (summaryMode) {
+				if (!newTestament && !oldTestament) curBookDescription = '<span style="color:brown">*</span>';
+				if (typeof bookDescription[currentOsisID.toLowerCase()] === "string")
+					curBookDescription += " - " + bookDescription[currentOsisID.toLowerCase()];
+			}
 			tableHTML += '<td title="' + longNameToDisplay + '">' +
-				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');">' +
-				shortNameToDisplay + '</a></td>';
+				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');"' +
+                ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") + '>' +
+                ((summaryMode) ? longNameToDisplay + curBookDescription : shortNameToDisplay) +
+                '</a></td>';
 			counter++;
 			if ((counter % columns) == 0) {
-				tableHTML += '</tr><tr style="height:30px">';
+				tableHTML += '</tr><tr>';
 			}
 		}
 		tableHTML += '</tr></table>';
@@ -273,19 +312,27 @@ step.passageSelect = {
 		else $('#nt_table').append(tableHTML);
 	},
 
-	_buildBookHeaderAndSkeleton: function() {
-		 var html = '<div class="header">' +
-			'<h4>' + __s.please_select_book + '</h4>' +
+	_buildBookHeaderAndSkeleton: function(summaryMode) {
+		var html = '<div class="header" style="overflow-y:auto">' +
+			'<h4>' + __s.please_select_book + '</h4>';
+		if ((this.userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible))
+			html +=
+				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(' +
+				((summaryMode) ? 'false' : 'true') +
+				')" title="Show summary information" class="select-version stepButton' +
+				((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
+				'</button>';
+		html +=
 			'</div>' +
-			'<h5>' + __s.old_testament + '</h5>' +
+			'<span class="stepFgBg" style="font-size:18px"><b>' + __s.old_testament + '</b></span>' +
 			'<div id="ot_table"/>' +
-			'<h5>' + __s.new_testament + '</h5>' +
+			'<span class="stepFgBg" style="font-size:18px"><b>' + __s.new_testament + '</b></span>' +
 			'<div id="nt_table"/>' +
 			'</div>';
 		return html;
 	},
 
-	_buildBookTableHeader: function(columns) {
+	_buildBookTableHeader: function(columns, summaryMode) {
 		var columnPercent = Math.floor(100 / columns);
 		html = '<table>' +
 			'<colgroup>';
@@ -293,7 +340,7 @@ step.passageSelect = {
 			html += '<col span="1" style="width:' + columnPercent + '%;">';
 		}
 		html += '</colgroup>';
-		html += '<tr style="height:30px">';
+		html += '<tr>';
 		return html;
 	},
 
@@ -361,19 +408,20 @@ step.passageSelect = {
 		}
 	},
 
-	getChapters: function(bookOsisID, version, userLang, numOfChptrsOrVrs) {
-		var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C" + REFERENCE + "%3D" + bookOsisID + "%7C?lang=" + userLang;
+	getChapters: function(bookOsisID, version, userLang, numOfChptrsOrVrs, summaryMode) {
 		$('#pssgModalBackButton').show();
 		if (numOfChptrsOrVrs > 0) {
-			this._buildChptrVrsTbl(null, bookOsisID, numOfChptrsOrVrs, true);
+			this._buildChptrVrsTbl(null, bookOsisID, numOfChptrsOrVrs, true, version, userLang, summaryMode);
 		}
 		else {
+            var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C" + REFERENCE + "%3D" + bookOsisID + "%7C?lang=" + userLang;
 			$.getJSON(url, function (data) {
-				step.passageSelect._buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, true);
-			});
+				step.passageSelect._buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, true, version, userLang, summaryMode);
+			}).fail(function() {
+                changeBaseURL();
+            });
 		}
 	},
-
 	_handleEnteredPassage: function(verifyOnly, input) {
 		if (input !== null) userInput = input;
 		else {
@@ -396,10 +444,12 @@ step.passageSelect = {
 				$('textarea#enterYourPassage').focus();
 				if (!verifyOnly) $('textarea#enterYourPassage').val(userInput);
 			}
-		});
+		}).fail(function() {
+            changeBaseURL();
+        });
 	},
 
-	_buildChptrVrsTbl: function(data, bookOsisID, numOfChptrsOrVrs, isChapter) {
+	_buildChptrVrsTbl: function(data, bookOsisID, numOfChptrsOrVrs, isChapter, version, userLang, summaryMode) {
 		var headerMsg;
 		$('#enterYourPassage').hide();
 		$('#keyboard_icon').hide();
@@ -422,15 +472,54 @@ step.passageSelect = {
 				widthPercent = 14;
 			}
 		}
-
-		var html = '<h5>' + headerMsg + '</h5>' +
+        var chapterDescription = [];
+        var chapterHeader = [];
+        if (summaryMode) {
+            tableColumns = 1;
+            for (var i = 0; i <= numOfChptrsOrVrs; i++) {
+                chapterDescription.push("");
+            }
+            $.ajaxSetup({async: false});
+            $.getJSON("/html/json/" + bookOsisID.toLowerCase() + ".json", function(desc) {
+                for (key in desc) {
+                    if (key.indexOf("chapter_") == 0) {
+                        var pos = key.indexOf("_description");
+                        if (pos > -1) {
+                            var chapter = key.substr(8, pos - 8);
+                            if ((desc[key] === "*") || (desc[key] === "**"))
+                                chapterDescription[chapter] = desc["chapter_" + chapter + "_overview"];
+                            else chapterDescription[chapter] = desc[key];
+                        }
+                        else if (key.indexOf("_header") > 8)
+                            chapterDescription[key] = desc[key];
+                    }
+                }
+            });
+            $.ajaxSetup({async: true});
+        }
+        
+		var html = '<div class="header">' +
+            '<h4>' + headerMsg + '</h4>';
+        if ((isChapter) && 
+			 ((userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible)) &&
+			 (PassageDisplayView.prototype.bookIsOTorNT(bookOsisID)) )
+			html +=
+				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
+					bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +
+					((summaryMode) ? 'false' : 'true') +
+					')" title="Show summary information" class="select-version stepButton' +
+					((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
+					'</button>';
+        html +=
+            '</div>' +
+			'<div style="overflow-y:auto">' +
 			'<table>' +
 			'<colgroup>';
 		for (var c = 0; c < tableColumns; c++) {
 			html += '<col span="1" style="width:' + widthPercent + '%">';
 		}
 		html += '</colgroup>' +
-			'<tr style="height:30px">';
+			'<tr>';
 
 		var chptrOrVrsNum = 0;
 		var osisIDLink = "";
@@ -442,9 +531,22 @@ step.passageSelect = {
 			for (var i = 0; i < numOfChptrsOrVrs; i++) {
 				chptrOrVrsNum++;
 				osisIDLink = (numOfChptrsOrVrs === 1) ? bookOsisID : bookOsisID + '.' + chptrOrVrsNum;
-				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');">' + chptrOrVrsNum + '</a></td>'
+                if ((summaryMode) &&
+                    (typeof chapterDescription["chapter_" + chptrOrVrsNum + "_header"] === "string")) {
+                    html += '<td style="font-size:18px;text-align:left;padding:0"><b>' +
+                        chapterDescription["chapter_" + chptrOrVrsNum + "_header"] +
+                    '</b></td></tr><tr>';
+                }
+				var curChptrDesc = "";
+				if (typeof chapterDescription[chptrOrVrsNum] === "string")
+					curChptrDesc = " - " + chapterDescription[chptrOrVrsNum];
+				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
+                    ((summaryMode) ? ' style="text-align:left;padding:0px 0px 0px 22px;text-indent: -22px;" ' : "") +
+                    '>' + chptrOrVrsNum + 
+                    ((summaryMode) ? curChptrDesc : "") +
+                    '</a></td>'
 				if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
-					html += '</tr><tr style="height:30px">';
+					html += '</tr><tr>';
 				}
 			}
 		}
@@ -453,9 +555,16 @@ step.passageSelect = {
 				if (data[i].suggestion.sectionType == "PASSAGE") {
 					chptrOrVrsNum++;
 					osisIDLink = data[i].suggestion.osisID;
-					html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');">' + chptrOrVrsNum + '</a></td>'
+					var curChptrDesc = "";
+					if (typeof chapterDescription[chptrOrVrsNum] === "string")
+						curChptrDesc = " - " + chapterDescription[chptrOrVrsNum];
+					html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
+                        ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") +
+                        '>' + chptrOrVrsNum +
+                        ((summaryMode) ? curChptrDesc : "") +
+                        '</a></td>'
 					if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
-						html += '</tr><tr style="height:30px">';
+						html += '</tr><tr>';
 					}
 				}
 			}
@@ -469,7 +578,7 @@ step.passageSelect = {
 			return;
 		}
 		html +=
-			'</tr></table>' +
+			'</tr></table></div>' +
 			'</div>';
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append(html);

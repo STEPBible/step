@@ -10,15 +10,15 @@ var PassageMenuView = Backbone.View.extend({
         "click .openNewPanel": "openNewPanel",
         "show.bs.dropdown *": "handleDropdownMenu"
     },
-    fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group">' +
+    fontButtons: '<li><%= __s.font_sizes %><span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group">' +
         '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.font %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
-    quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
-    similarWord: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.similar_word %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSimilarWord ? "visible" : "hidden" %>;"></span></a></li>',
-    // enWithEsLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_es_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithEsLexicon ? "visible" : "hidden" %>;"></span></a></li>',
-    enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
-    secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.zh_second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
-    verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
+    quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;color:var(--clrTextColor)"></span></a></li>',
+    similarWord: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.similar_word %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSimilarWord ? "visible" : "hidden" %>;color:var(--clrTextColor)"></span></a></li>',
+    // enWithEsLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_es_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithEsLexicon ? "visible" : "hidden" %>;color:var(--clrTextColor)"></span></a></li>',
+    enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;color:var(--clrTextColor)"></span></a></li>',
+    secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.zh_second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;color:var(--clrTextColor)"></span></a></li>',
+    verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;color:var(--clrTextColor)"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
     },
@@ -294,7 +294,9 @@ var PassageMenuView = Backbone.View.extend({
 
     _initUI: function () {
         //create settings dropdown
-        var dropdownContainer = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu").attr("dir", step.state.isLtR() ? "" : "rtl");
+		var oldMenu = this.$el.find(".dropdown-menu.pull-right.stepModalFgBg"); // When a panel is added, it was probably copied so it copied over the old menu
+		if (oldMenu.length == 1) this.$el.find(".dropdown-menu.pull-right.stepModalFgBg")[0].remove();
+        var dropdownContainer = $("<div>").addClass("dropdown-menu pull-right stepModalFgBg").attr("role", "menu").attr("dir", step.state.isLtR() ? "" : "rtl");
         this.displayModeContainer = $("<div>");
         var displayMode = $("<h2>").append(__s.display_mode);
         this.displayModeContainer.append(displayMode);
@@ -410,7 +412,7 @@ var PassageMenuView = Backbone.View.extend({
             //toggle the tick
             self._setVisible(this, quickLexicon);
         }));
-        // if (step.userLanguageCode.toLowerCase().startsWith("es")) {
+        // if (step.userLanguageCode.toLowerCase().indexOf("es") == 0) {
             // var currentEnWithEsLexiconSetting = self.model.get("isEnWithEsLexicon");
             // if (currentEnWithEsLexiconSetting == null) {
                 // this.model.save({ isEnWithEsLexicon: true });
@@ -423,7 +425,7 @@ var PassageMenuView = Backbone.View.extend({
                 // self._setVisible(this, enWithEsLexicon); // toggle the tick
             // }));
         // }
-        if (step.userLanguageCode.toLowerCase().startsWith("zh")) {
+        if (step.userLanguageCode.toLowerCase().indexOf("zh") == 0) {
             var currentEnWithZhLexiconSetting = self.model.get("isEnWithZhLexicon");
             if (currentEnWithZhLexiconSetting == null) {
                 this.model.save({ isEnWithZhLexicon: false });
@@ -503,7 +505,7 @@ var PassageMenuView = Backbone.View.extend({
         var selectedOptions = this.model.get("selectedOptions") || "";
         for (var i = 0; i < items.length; i++) {
             if (items[i].group) {
-                var panel = $('<div class="panel panel-default">');
+                var panel = $('<div class="panel panel-default stepModalFgBg">');
 
                 var collapseHeader =
                     '<a data-toggle="collapse" class="menuGroup" data-parent="#displayOptions-' + this.model.get("passageId") + '" ' +

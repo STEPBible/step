@@ -35,7 +35,7 @@ var PassageDisplayView = DisplayView.extend({
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
             if ((bibleVersions.indexOf('THOT') > -1)) {
                 if (cv[C_otMorph] == null) {
-                    var notIE = !(/*@cc_on!@*/false || !!document.documentMode);
+                    var notIE = !(false || !!document.documentMode);
                     // If browser is not IE, use "cache: true".  If IE, use "cache: false"
                     // This is required because of an IE and Jquery issue.
                     jQuery.ajax({
@@ -110,20 +110,9 @@ var PassageDisplayView = DisplayView.extend({
                 }
 
                 //needs to happen after appending to DOM
-          		var rootVar = document.querySelector(':root');
-                var color = step.settings.get("highlight_color");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-					rootVar.style.setProperty('--highlight_color',color);
-                color = step.settings.get("strong_color");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-					rootVar.style.setProperty('--strong_color',color);
-                color = step.settings.get("lexiconFocusColour");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-					rootVar.style.setProperty('--lexiconFocusColour',color);
-                color = step.settings.get("relatedWordBackground");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-					rootVar.style.setProperty('--relatedWordBackground',color);					
-
+				
+                this.updateColor();
+				
                 this._doChromeHack(passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 this.scrollToTargetLocation(passageContainer);
@@ -144,6 +133,17 @@ var PassageDisplayView = DisplayView.extend({
                     cf.refreshClrGrammarCSS(ntCSSOnThisPage, otCSSOnThisPage);
                     if (cv[C_handleOfRequestedAnimation] == -1) cf.goAnimate();
                 }
+            }
+            if (((languages[0].indexOf("en") == 0) ||
+				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
+				(this.bookIsOTorNT(reference))){
+                var xgenObj = passageHtml.find('.xgen');
+                if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
+                    $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
+                        reference + '\')" title="Show summary information" class="select-version stepButton">Summary</button>');
+                // else if (passageHtml.find(".verseLink").length > 0)
+                    // $('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
+                        // reference + '\')" title="Show summary information" class="select-version stepButton">Summary</button>').insertAfter(passageHtml.find(".verseLink")[0]);
             }
         },
         scrollToTargetLocation: function (passageContainer) {
@@ -172,7 +172,7 @@ var PassageDisplayView = DisplayView.extend({
         _scrollPassageToTarget: function (passageContainer) {
             //get current column target data
             var column = passageContainer.closest(".column");
-            passageContainer.find(".secondaryBackground").removeClass("secondaryBackground");
+            passageContainer.find(".highlightBorder").removeClass("highlightBorder");
 
             var currentTarget = this.model.get("targetLocation");
             if (currentTarget) {
@@ -185,10 +185,10 @@ var PassageDisplayView = DisplayView.extend({
                     scrollTop: originalScrollTop + scroll
                 }, 500);
 
-                $(link).closest(".verse").addClass("secondaryBackground");
+                $(link).closest(".verse").addClass("highlightBorder");
 
                 //also do so if we are looking at an interlinear-ed version
-                $(link).closest(".interlinear").find("*").addClass("secondaryBackground");
+                $(link).closest(".interlinear").find("*").addClass("highlightBorder");
 
                 //reset the data attribute
                 this.model.save({targetLocation: null}, {silent: true});
@@ -309,6 +309,16 @@ var PassageDisplayView = DisplayView.extend({
             return true;
         },
 
+        bookIsOTorNT: function (reference) {
+	        var tmpArray = reference.split(".");
+			var bookID = tmpArray[0]; // get the string before the "." character
+			for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {
+				var currentOsisID = (step.passageSelect.osisChapterJsword[i].length === 4) ? step.passageSelect.osisChapterJsword[i][3] : step.passageSelect.osisChapterJsword[i][0];
+				if (bookID === currentOsisID) return true;
+			}
+            return false;
+        },
+		
         /**
          *
          * @param passageContent the content that we are processing
@@ -453,6 +463,8 @@ var PassageDisplayView = DisplayView.extend({
                                     api.set('content.title.text', data.longName);
                                     api.set('content.text', data.value);
                                     api.set('content.osisId', data.osisId)
+                                }).error(function() {
+                                    changeBaseURL();
                                 });
                             },
                             title: {text: xref, button: false}
@@ -590,6 +602,25 @@ var PassageDisplayView = DisplayView.extend({
             step.util.ui.addStrongHandlers(passageId, passageContent)
         },
 
+        updateColor: function () {
+            this.updateSpecificColor("clrHighlight", "#17758F");
+			this.updateSpecificColor("clrHighlightBg", "#17758F");
+            this.updateSpecificColor("clrTextColor", "#5d5d5d");
+            this.updateSpecificColor("clr2ndHover", "#d3d3d3");
+            this.updateSpecificColor("clrStrongText", "#498090");
+            this.updateSpecificColor("clrLexiconFocusBG", "#c8d8dc");
+            this.updateSpecificColor("clrRelatedWordBg", "#b2e5f3");
+            this.updateSpecificColor("clrBackground", "#ffffff");
+            if (step.util.isDarkMode()) $('body,html').css('color-scheme','dark');
+            else $('body,html').css('color-scheme','normal');
+        },
+
+        updateSpecificColor: function (colorName, defaultColor) {
+            var color = step.settings.get(colorName);
+            if (!(((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))))
+                color = defaultColor;
+            document.querySelector(':root').style.setProperty('--' + colorName, color);
+        },
 
         handleFontSizeChange: function () {
             this.doInterlinearVerseNumbers(

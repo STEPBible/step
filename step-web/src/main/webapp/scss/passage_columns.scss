@@ -77,9 +77,11 @@
       }
       .copyrightInfo {
         background-color: #fff;
+        background-color: var(--clrBackground);
         position: absolute;
         font-size: 11px;
         color: darkgrey;
+		color: var(--clrTextColor);
         bottom: $border-width;
         left: $border-width + $page-padding;
         right: $border-width + $page-padding;
@@ -92,7 +94,8 @@
           left: 0;
           right: 0;
           height: 25px;
-          background-image: linear-gradient(-180deg, rgba(255, 255, 255, 0.25) 0%, #FFFFFF 100%);
+		  // Not sure if the background image helps or not.  PT Oct 1, 2021
+          // background-image: linear-gradient(-180deg, rgba(255, 255, 255, 0.25) 0%, #FFFFFF 100%);
           pointer-events: none;
         }
       }

@@ -37,24 +37,24 @@ var FeedbackView = Backbone.View.extend({
     },
     template: '<div class="modal" id="raiseSupport" tabindex="-1" role="dialog" aria-labelledby="raiseSupportLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
-        '<div class="modal-content">' +
+        '<div class="modal-content stepModalFgBg">' +
         '<div class="modal-header">' +
-        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+		step.util.modalCloseBtn("raiseSupport") +
         '<h4 class="modal-title" id="raiseSupportLabel"><%= __s.help_feedback %></h4>' +
         '</div>' + //end header
         '<div class="modal-body">' +
         '<form role="form">' +
         '<div class="form-group">' +
         '<label for="feedbackEmail"><%= __s.register_email %><span class="mandatory">*</span></label>' +
-        '<input type="email" class="form-control" value="<%= email %>" id="feedbackEmail" maxlength="200" placeholder="email@email.com">' +
+        '<input type="email" class="form-control" style="color:var(--clrTextColor);background:var(--clrBackground)" value="<%= email %>" id="feedbackEmail" maxlength="200" placeholder="email@email.com">' +
         '</div>' +
         '<div class="form-group">' +
         '<label for="feedbackSummary"><%= __s.feedback_summary %><span class="mandatory">*</span></label> ' +
-        '<input type="text" class="form-control" id="feedbackSummary" maxlength="150" placeholder="<%= __s.feedback_summary %>">' +
+        '<input type="text" class="form-control" style="color:var(--clrTextColor);background:var(--clrBackground)" id="feedbackSummary" maxlength="150" placeholder="<%= __s.feedback_summary %>">' +
         '</div>' +
         '<div class="form-group">' +
         '<label for="feedbackType"><%= __s.register_type %></label>' +
-        '<select type="text" class="form-control" id="feedbackType">' +
+        '<select type="text" style="color:var(--clrTextColor);background:var(--clrBackground)" class="form-control" id="feedbackType">' +
         '<option value="Bug"><%= __s.feedback_type_bug %></option>' +
         '<option value="Improvement"><%= __s.feedback_type_improvement %></option>' +
         '<option value="New Feature"><%= __s.feedback_new_feature %></option>' +
@@ -66,15 +66,13 @@ var FeedbackView = Backbone.View.extend({
         '</div>' +
         '<div class="form-group">' +
         '<label for="feedbackDescription"><%= __s.feedback_description %><span class="mandatory">*</span></label> ' +
-        '<textarea class="form-control" placeholder="<%= __s.feedback_description %>" id="feedbackDescription" />' +
+        '<textarea class="form-control" style="color:var(--clrTextColor);background:var(--clrBackground)" placeholder="<%= __s.feedback_description %>" id="feedbackDescription" />' +
         '</div>' + 
         '<p class="help-block"><%= __s.include_screenshot %></p>' +
 		'<p class="help-block">Hebrew and Greek text cannot be sent through this form.</p>' +
         '</form>' +
         '</div>' + //end body
         '<div class="modal-footer">' +
-//        '<button type="button" class="btn btn-default stepButton" data-dismiss="modal"><%= __s.close %></button>' +
-//        '<button type="button" class="btn btn-primary sendFeedback stepButton"><%= __s.help_feedback %></button>' +
         '<button type="button" class="btn stepButton" data-dismiss="modal"><%= __s.close %></button>' +
         '<button type="button" class="btn sendFeedback stepButton"><%= __s.help_feedback %></button>' +
         '</div>' + //end footer

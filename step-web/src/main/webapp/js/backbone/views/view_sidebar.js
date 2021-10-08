@@ -61,13 +61,15 @@ var SidebarView = Backbone.View.extend({
             //load content
             var requestTime = new Date().getTime();
             lastMorphCode = '';
-            if ((this.model.get("morph") != undefined) && (this.model.get("morph").startsWith('TOS:'))) {
+            if ((this.model.get("morph") != undefined) && (this.model.get("morph").indexOf('TOS:') == 0)) {
                 lastMorphCode = this.model.get("morph");
             }
             $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
                 step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
                 self.createDefinition(data);
+            }).error(function() {
+                changeBaseURL();
             });
         }
         else if (this.model.get("mode") == 'analysis') {
@@ -294,7 +296,6 @@ var SidebarView = Backbone.View.extend({
         $.ajaxSetup({async: false});
         $.getJSON("/lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
             foundChineseJSON = true;
-            // appendLexiconSearchFunction(panel, mainWord);
             panel.append($("<h2>").append(__s.zh_lexicon_chinese_name + ':'));
             panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
             panel.append($("<h2>").append(__s.lexicon_definition_for_zh + ":"));
@@ -363,7 +364,7 @@ var SidebarView = Backbone.View.extend({
         this._appendLexiconSearch(panel, mainWord);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;
-        if (currentUserLang.startsWith("es")) {
+        if (currentUserLang.indexOf("es") == 0) {
             // displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon") ||
 									// false;
             var spanishDef = mainWord._es_Definition;
@@ -372,7 +373,7 @@ var SidebarView = Backbone.View.extend({
                 this._addLinkAndAppend(panel, spanishDef, currentWordLanguageCode, bibleVersion);
             }
         }
-        else if (currentUserLang.startsWith("zh")) {
+        else if (currentUserLang.indexOf("zh") == 0) {
             displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon") ||
 									false;
             var chineseDef;
@@ -402,7 +403,7 @@ var SidebarView = Backbone.View.extend({
             //longer definitions
             if (mainWord.lsjDefs) {
                 panel.append($("<h2>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
-                panel.append(mainWord.lsjDefs);
+                panel.append('<span class="unicodefont">' + mainWord.lsjDefs + '</span>');
             }
         }
         if (mainWord.relatedNos) {
@@ -415,13 +416,19 @@ var SidebarView = Backbone.View.extend({
                     if ((currentUserLang == "es") && (mainWord.relatedNos[i]._es_Gloss != undefined)) userLangGloss = mainWord.relatedNos[i]._es_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh") && (mainWord.relatedNos[i]._zh_Gloss != undefined)) userLangGloss =  mainWord.relatedNos[i]._zh_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) userLangGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
+					var fontClass = "";
+                    var firstChar = mainWord.relatedNos[i].strongNumber.substr(0, 1).toLowerCase();
+                    if (firstChar === "h") fontClass = "hbFontSmall";
+                    else if (firstChar === "g") fontClass = "unicodeFont";
                     var li = $("<li></li>").append($('<a sbstrong href="javascript:void(0)">')
                         .append(userLangGloss)
                         .append(mainWord.relatedNos[i].gloss)
                         .append(" (")
                         .append("<span class='transliteration'>" + mainWord.relatedNos[i].stepTransliteration + "</span>")
                         .append(" - ")
-                        .append(mainWord.relatedNos[i].matchingForm)
+                        .append("<span class='" + fontClass + "'>" +
+                            mainWord.relatedNos[i].matchingForm +
+                            '</span>')
                         .append(")")
                         .data("strongNumber", mainWord.relatedNos[i].strongNumber));
                     ul.append(li);
@@ -625,6 +632,8 @@ var SidebarView = Backbone.View.extend({
                                 api.set('content.title.text', data.longName);
                                 api.set('content.text', data.value.replace(/ strong=['"][GHabcdef\d\s]{5,30}['"]/g, "")); // Strip the strong tag
                                 api.set('content.osisId', data.osisId)
+                            }).error(function() {
+                                changeBaseURL();
                             });
                         },
                         title: { text: xref, button: false }

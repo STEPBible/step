@@ -5,7 +5,7 @@
   line-height:18px;
   overflow: hidden;
   max-width: 360px;
-
+  
   &.xrefPopup {
     width: 280px;
   }
@@ -65,7 +65,7 @@
 .qtip-default {
   .qtip-titlebar {
     background-color: $highlight-color;
-    background-color: var(--highlight_color);
+    background-color: var(--clrHighlightBg);
     color: #fff;
     cursor: move;
   }
@@ -114,6 +114,7 @@
 }
 
 .qtip-content {
+  background-color: var(--clrBackground);
   padding: 15px;
 }
 

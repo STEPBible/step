@@ -95,6 +95,8 @@ step.alternatives = {
                         }
                     });
                 });
+            }).error(function() {
+                changeBaseURL();
             });
         },
         
@@ -108,7 +110,7 @@ step.alternatives = {
             var compare = text.toLowerCase().trim();
             var esvPrefix = "";
             
-            if(compare.startsWith("esv")) {
+            if(compare.indexOf("esv") == 0) {
                 esvPrefix = "<span title=\"" + __s.alternatives_esv_source + "\">ESV: </span>";
                 compare = compare.substring(3).trim();
             }

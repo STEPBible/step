@@ -53,7 +53,7 @@ var DisplayView = Backbone.View.extend({
 				// allHaveStrong = ((allHaveStrong) && (step.keyedVersions[versionInitials].hasStrongs));
                 // allCanShowGrammar = ((allCanShowGrammar) &&
                     // (step.keyedVersions[versionInitials].hasMorphology) &&
-                    // ((step.keyedVersions[versionInitials].languageCode === "grc") || (versionInitials.toLowerCase().startsWith("kjv"))) ); // As of Sept 2021, there is no support of Hebrew grammar.  The code on the backend has not been created.
+                    // ((step.keyedVersions[versionInitials].languageCode === "grc") || (versionInitials.toLowerCase().indexOf("kjv") == 0)) ); // As of Sept 2021, there is no support of Hebrew grammar.  The code on the backend has not been created.
 				// numOfVersion ++;
 			// }
 		// }

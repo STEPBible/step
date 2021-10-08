@@ -17,7 +17,7 @@ $stepLG: 1120px;
 $brand-primary: #17758F;
 $brand-secondary: #9D0025;
 $text-color: #5D5D5D;
-$text-color: var(--clrTextColor);
+$text-color: var(--clrText);
 $border-color: #C8C8C8;
 $border-color: var(--clrHighlightBg);
 
@@ -34,7 +34,7 @@ $lexiconFocusRelatedColour: #e0e0e0;
 $header-background-color: #F2F2F2;
 $header-background-color: var(--clrBackground);
 $topHeaderLinkColour: #5E5E5E;
-$topHeaderLinkColour: var(--clrTextColor);
+$topHeaderLinkColour: var(--clrText);
 $dividerColor: $topHeaderLinkColour;
 $warningColour: orange;
 $infoColour: #a9d3ff;

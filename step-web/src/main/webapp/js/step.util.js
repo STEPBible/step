@@ -189,7 +189,7 @@ step.util = {
     getErrorPopup: function (message, level) {
         var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
 			// the close button could not pickup the stepFgBg class so it has to be added in the style
-            '<button type="button" style="background:var(--clrBackground);color:var(--clrTextColor)" class="close" data-dismiss="alert" aria-hidden="true">X</button>' +
+            '<button type="button" style="background:var(--clrBackground);color:var(--clrText)" class="close" data-dismiss="alert" aria-hidden="true">X</button>' +
             '<%= message %></div>')({ message: message, level: level}));
         return errorPopup;
     },
@@ -820,7 +820,7 @@ step.util = {
     },
     ui: {
         selectMark: function (classes) {
-            return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--clrTextColor);background:var(--clrBackground)"></span>';
+            return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--clrText);background:var(--clrBackground)"></span>';
         },
         shortenDisplayText: function (text, maxLength) {
 			if (text.length <= maxLength) return text;
@@ -1691,7 +1691,7 @@ step.util = {
 					'<script src="js/color_code_config.' + jsVersion + 'js"></script>' +
 					'<script src="libs/spectrum.js"></script>' +
 					'<div class="modal-header">' +
-						'<button type="button" style="background:var(--clrBackground);color:var(--clrTextColor)" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
+						'<button type="button" style="background:var(--clrBackground);color:var(--clrText)" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="colortabs">' +
@@ -2085,8 +2085,8 @@ step.util = {
 		else setToDarkMode = step.util.isDarkMode();
    		var rootVar = document.querySelector(':root');
         if (setToDarkMode) {
-            rootVar.style.setProperty('--clrTextColor',"#BCC0C3");
-            step.settings.save({"clrTextColor":"#BCC0C3"});
+            rootVar.style.setProperty('--clrText',"#BCC0C3");
+            step.settings.save({"clrText":"#BCC0C3"});
             rootVar.style.setProperty('--clrStrongText',"#8ab4f8");
             step.settings.save({"clrStrongText":"#8ab4f8"});
             rootVar.style.setProperty('--clrBackground',"#202124");
@@ -2101,8 +2101,8 @@ step.util = {
             newBtnText = "Disable";
         }
         else {
-            rootVar.style.setProperty('--clrTextColor',"#5d5d5d");
-            step.settings.save({"clrTextColor":"#5d5d5d"});
+            rootVar.style.setProperty('--clrText',"#5d5d5d");
+            step.settings.save({"clrText":"#5d5d5d"});
             rootVar.style.setProperty('--clrStrongText',"#498090");
             step.settings.save({"clrStrongText":"#498090"});
             rootVar.style.setProperty('--clrBackground',"#ffffff");
@@ -2180,19 +2180,19 @@ step.util = {
 							'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 							'var closeButton = $("#fontSettings").find("button.close");' +
 							'if (closeButton.length == 1) $(closeButton[0]).attr("onclick", "closeFontSetting(\'" + color + "\')");' +
-							'color = step.settings.get("clrTextColor");' +
-							'$("#clrTextColor").spectrum({' +
+							'color = step.settings.get("clrText");' +
+							'$("#clrText").spectrum({' +
 								'color: color,' +
 								'clickoutFiresChange: false,' +
 								'change: function(color) {' +
-									'var currentClrPicker = $("#clrTextColor").spectrum("get").toHexString();' +
-									'setColor(currentClrPicker, "clrTextColor");' +
+									'var currentClrPicker = $("#clrText").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrText");' +
 								'},' +
 								'show: function(color) {' +
-									'var currentClrPicker = $("#clrTextColor").spectrum("get").toHexString();' +
-									'var color = step.settings.get("clrTextColor");' +
+									'var currentClrPicker = $("#clrText").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrText");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#5D5D5D";' +
-									'if (color != currentClrPicker) setColor(currentClrPicker, "clrTextColor");' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrText");' +
 								'}' +
 							'});' +
 							'color = step.settings.get("clrBackground");' +
@@ -2406,7 +2406,7 @@ step.util = {
 						'<span><b>' + 
                             ((typeof panelNumber === "number") ? __s.update_font_in_current_panels : __s.update_font_in_all_panels) +
                         '</b></span>' +
-						'<button style="background:var(--clrBackground);color:var(--clrTextColor);opacity:0.8" type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
+						'<button style="background:var(--clrBackground);color:var(--clrText);opacity:0.8" type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
 					'</div>' +
 					'<div class="modal-body" style="text-align:center">' +
 						'<table style="height:auto;width:95%">' +
@@ -2512,7 +2512,7 @@ step.util = {
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
 								'<td>' + __s.text_with_no_highlight + '</td>' +
 								'<td class="pull-right">' +
-									'<input id="clrTextColor" type="color" value="#5D5D5D"/>' +
+									'<input id="clrText" type="color" value="#5D5D5D"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
@@ -3178,7 +3178,7 @@ step.util = {
         var opacity = (step.util.isDarkMode()) ?
 			"opacity:0.8" : "";
 		// the close button could not pickup the stepFgBg class so it has to be added in the style
-		return '<button type="button" style="background:var(--clrBackground);color:var(--clrTextColor);' + opacity + '" class="close" ' +
+		return '<button type="button" style="background:var(--clrBackground);color:var(--clrText);' + opacity + '" class="close" ' +
 			'data-dismiss="modal" onclick=step.util.closeModal("' + modalElementID + '")>X</button>';
 	},
 	isDarkMode: function() {

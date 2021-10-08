@@ -66,7 +66,7 @@
 		--clrLexiconFocusBG: #c8d8dc;
 		--clrRelatedWordBg: #b2e5f3;
         --clrBackground: #ffffff;
-        --clrTextColor: #5d5d5d;
+        --clrText: #5d5d5d;
         --clr2ndHover: #d3d3d3;
 	}
 	</style>
@@ -114,7 +114,7 @@
     </script>
     <% } %>
 </head>
-<body xmlns:fb="http://ogp.me/ns/fb#" style="background-color:var(--clrBackground);color:var(--clrTextColor)">
+<body xmlns:fb="http://ogp.me/ns/fb#" style="background-color:var(--clrBackground);color:var(--clrText)">
 <!-- Wrap all page content here -->
 <div id="wrap">
 

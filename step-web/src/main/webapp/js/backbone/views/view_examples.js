@@ -12,7 +12,7 @@ var ExamplesView = Backbone.View.extend({
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<br>' +
-					'<div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:var(--clrTextColor)"><mark><%= __s.display_classical_ui %></mark></span>' +
+					'<div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:var(--clrText)"><mark><%= __s.display_classical_ui %></mark></span>' +
 					'<br><span class="explanationText"><%= __s.advanced_interface_explain %></span>' +
 					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23, 580)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					'</div>' +
@@ -79,7 +79,7 @@ var ExamplesView = Backbone.View.extend({
   					'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<br><br><a href="javascript:step.util.showIntro(true)">' +
-					'<span id="quickTour"><span style="font-size:14px;font-weight:bold;color:var(--clrTextColor)"><%= __s.quick_tour %></span>' +
+					'<span id="quickTour"><span style="font-size:14px;font-weight:bold;color:var(--clrText)"><%= __s.quick_tour %></span>' +
 					'<br><span class="explanationText"><%= __s.quick_tour_explain %></span>' +
 					'</span>' +
 					'</a>' +
@@ -230,7 +230,7 @@ var ExamplesView = Backbone.View.extend({
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<br>' +
-					'<div><span style="font-size:14px;font-weight:bold;color:var(--clrTextColor)"><%= __s.keyboard_explain1 %></span>' +
+					'<div><span style="font-size:14px;font-weight:bold;color:var(--clrText)"><%= __s.keyboard_explain1 %></span>' +
                     '<a href="javascript:step.util.showVideoModal(\'Keyboard.gif\', 85, 1153)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					'<ul><%= __s.keyboard_explain2 %></ul>' +
 					'</div>' +

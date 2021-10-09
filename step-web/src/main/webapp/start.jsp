@@ -114,7 +114,8 @@
     </script>
     <% } %>
 </head>
-<body xmlns:fb="http://ogp.me/ns/fb#" class="background-color:var(--clrBackground);color:var(--clrText)">
+<!-- The following line has to use background and color style.  Using stepFgBg class does not work for the side panel.  -->
+<body xmlns:fb="http://ogp.me/ns/fb#" style="background-color:var(--clrBackground);color:var(--clrText)">
 <!-- Wrap all page content here -->
 <div id="wrap">
 

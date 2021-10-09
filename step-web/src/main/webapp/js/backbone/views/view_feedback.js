@@ -46,15 +46,15 @@ var FeedbackView = Backbone.View.extend({
         '<form role="form">' +
         '<div class="form-group">' +
         '<label for="feedbackEmail"><%= __s.register_email %><span class="mandatory">*</span></label>' +
-        '<input type="email" class="form-control" style="color:var(--clrText);background:var(--clrBackground)" value="<%= email %>" id="feedbackEmail" maxlength="200" placeholder="email@email.com">' +
+        '<input type="email" class="form-control" value="<%= email %>" id="feedbackEmail" maxlength="200" placeholder="email@email.com">' +
         '</div>' +
         '<div class="form-group">' +
         '<label for="feedbackSummary"><%= __s.feedback_summary %><span class="mandatory">*</span></label> ' +
-        '<input type="text" class="form-control" style="color:var(--clrText);background:var(--clrBackground)" id="feedbackSummary" maxlength="150" placeholder="<%= __s.feedback_summary %>">' +
+        '<input type="text" class="form-control" id="feedbackSummary" maxlength="150" placeholder="<%= __s.feedback_summary %>">' +
         '</div>' +
         '<div class="form-group">' +
         '<label for="feedbackType"><%= __s.register_type %></label>' +
-        '<select type="text" style="color:var(--clrText);background:var(--clrBackground)" class="form-control" id="feedbackType">' +
+        '<select type="text" class="form-control" id="feedbackType">' +
         '<option value="Bug"><%= __s.feedback_type_bug %></option>' +
         '<option value="Improvement"><%= __s.feedback_type_improvement %></option>' +
         '<option value="New Feature"><%= __s.feedback_new_feature %></option>' +
@@ -66,7 +66,7 @@ var FeedbackView = Backbone.View.extend({
         '</div>' +
         '<div class="form-group">' +
         '<label for="feedbackDescription"><%= __s.feedback_description %><span class="mandatory">*</span></label> ' +
-        '<textarea class="form-control" style="color:var(--clrText);background:var(--clrBackground)" placeholder="<%= __s.feedback_description %>" id="feedbackDescription" />' +
+        '<textarea class="form-control" placeholder="<%= __s.feedback_description %>" id="feedbackDescription" />' +
         '</div>' + 
         '<p class="help-block"><%= __s.include_screenshot %></p>' +
 		'<p class="help-block">Hebrew and Greek text cannot be sent through this form.</p>' +

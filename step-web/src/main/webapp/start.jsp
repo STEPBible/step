@@ -114,7 +114,7 @@
     </script>
     <% } %>
 </head>
-<body xmlns:fb="http://ogp.me/ns/fb#" style="background-color:var(--clrBackground);color:var(--clrText)">
+<body xmlns:fb="http://ogp.me/ns/fb#" class="stepFgBg">
 <!-- Wrap all page content here -->
 <div id="wrap">
 

@@ -14,6 +14,10 @@ h1, h2, h3, h4, h5, h6, .panel-title {
 
 body {
   overflow: hidden;
+  background-color: #ffffff;
+  background-color: var(--clrBackground);
+  color: #5d5d5d;
+  color: var(--clrText);
 }
 
 body, .dropdown-menu, #quickLexicon h1 {
@@ -152,13 +156,18 @@ li .glyphicon-ok {
 	background-color: var(--clrHighlightBg) !important;
 	color: white !important;
 	border: 1px solid black;
+
 }
 
-.stepFgBg .stepModalFgBg {
+.stepFgBg {
 	background-color: #ffffff;
 	background-color: var(--clrBackground);
 	color: #5d5d5d;
     color: var(--clrText);
+	& input, select, textarea {
+		background-color: var(--clrBackground) !important;
+		color: var(--clrText) !important;
+	}
 }
 
 .stepModalFgBg {

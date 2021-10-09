@@ -31,6 +31,8 @@
 
 .lexiconRelatedFocus {
   background-color: $lexiconFocusRelatedColour;
+  background-color: var(--clrLexiconFocusBG); // This is a light color
+  color:black; // This will give it enough contrast
 }
 
 .primaryLightBg {

@@ -226,8 +226,7 @@ var PickBibleView = Backbone.View.extend({
 						'}' +
 					'</style>' +  
 					'<div class="modal-header">' +
-						// the close button could not pickup the stepFgBg class so it has to be added in the style
-						'<button type="button"  style="background:var(--clrBackground);color:var(--clrText)" class="close" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button><br>' +
+						step.util.modalCloseBtn(null, "userCloseVersionOrder") +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="sortVersionModal"></div>' +

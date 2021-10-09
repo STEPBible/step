@@ -188,8 +188,7 @@ step.util = {
     },
     getErrorPopup: function (message, level) {
         var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
-			// the close button could not pickup the stepFgBg class so it has to be added in the style
-            '<button type="button" style="background:var(--clrBackground);color:var(--clrText)" class="close" data-dismiss="alert" aria-hidden="true">X</button>' +
+			step.util.modalCloseBtn(null, "") +
             '<%= message %></div>')({ message: message, level: level}));
         return errorPopup;
     },
@@ -1691,7 +1690,7 @@ step.util = {
 					'<script src="js/color_code_config.' + jsVersion + 'js"></script>' +
 					'<script src="libs/spectrum.js"></script>' +
 					'<div class="modal-header">' +
-						'<button type="button" style="background:var(--clrBackground);color:var(--clrText)" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
+						step.util.modalCloseBtn(null, "closeClrConfig") +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="colortabs">' +
@@ -2406,7 +2405,7 @@ step.util = {
 						'<span><b>' + 
                             ((typeof panelNumber === "number") ? __s.update_font_in_current_panels : __s.update_font_in_all_panels) +
                         '</b></span>' +
-						'<button style="background:var(--clrBackground);color:var(--clrText);opacity:0.8" type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
+						step.util.modalCloseBtn(null, "closeFontSetting") +
 					'</div>' +
 					'<div class="modal-body" style="text-align:center">' +
 						'<table style="height:auto;width:95%">' +
@@ -3173,21 +3172,23 @@ step.util = {
         if ((typeof step.srchTxt[strongNum] === "undefined") || (step.srchTxt[strongNum].length < 7))
             step.srchTxt[strongNum] = details;
     },
-	modalCloseBtn: function(modalElementID) {
+	modalCloseBtn: function(modalElementID, closeFunction) {
 		// The dark mode color needs to be brighter for X.  The default opacity of 0.2 is too low.
-        var opacity = (step.util.isDarkMode()) ?
-			"opacity:0.8" : "";
+        var opacity = (step.util.isDarkMode()) ? "opacity:0.8" : "";
+		var functionForOnClick = 'onclick=step.util.closeModal("' + modalElementID + '")';
+		if (typeof closeFunction === "string") {
+			if (closeFunction.length > 0) functionForOnClick = 'onclick=' + closeFunction + '()';
+			else functionForOnClick = '';
+		}
 		// the close button could not pickup the stepFgBg class so it has to be added in the style
 		return '<button type="button" style="background:var(--clrBackground);color:var(--clrText);' + opacity + '" class="close" ' +
-			'data-dismiss="modal" onclick=step.util.closeModal("' + modalElementID + '")>X</button>';
+			'data-dismiss="modal" ' + functionForOnClick + '>X</button>';
 	},
 	isDarkMode: function() {
 		var stepBgColor = document.querySelector(':root').style.getPropertyValue("--clrBackground");
-		// alert("1 " + stepBgColor );
 		if ((typeof stepBgColor !== "string") || ((stepBgColor.length !== 7) && (stepBgColor.length !== 15))) {
 			if ((typeof step.settings === "object") && (typeof step.settings.get === "function")) {
 				var color = step.settings.get("clrBackground");
-				// alert("2 " + color);
 				if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#")))
 					stepBgColor = color;
 			}

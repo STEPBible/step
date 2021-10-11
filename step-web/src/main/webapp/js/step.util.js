@@ -1777,11 +1777,9 @@ step.util = {
 						'});' +
 						'function addSelectVerse() {' +
 							'if (document.getElementById("selectverseonoffswitch").checked) {' +
-								'step.passageSelect.addVerseSelection = true;' +
 								'$("#select_verse_number").addClass("checked");' +
 							'}' +
 							'else {' +
-								'step.passageSelect.addVerseSelection = false;' +
 								'$("#select_verse_number").removeClass("checked");' +
 							'}' +
 						'}' +

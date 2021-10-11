@@ -2,7 +2,6 @@ step.passageSelect = {
 	version: "ESV_th",
 	userLang: "en",
 	hasEnglishBible: false,
-	addVerseSelection: false,
 	modalMode: 'book',
 	lastOsisID: '',
 	lastNumOfChapters: '',
@@ -79,7 +78,6 @@ step.passageSelect = {
 	initPassageSelect: function(summaryMode) {
         this.version = "ESV_th";
 		this.userLang = step.state.language() || "en-US";
-		this.addVerseSelection = false;
 		this.modalMode = 'book';
 		this.lastOsisID = '';
 		this.lastNumOfChapters = '';
@@ -297,7 +295,8 @@ step.passageSelect = {
 					curBookDescription += " - " + bookDescription[currentOsisID.toLowerCase()];
 			}
 			tableHTML += '<td title="' + longNameToDisplay + '">' +
-				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');"' +
+				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ',' + 
+				((summaryMode) ? 'true' : 'false') + ');"' +
                 ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") + '>' +
                 ((summaryMode) ? longNameToDisplay + curBookDescription : shortNameToDisplay) +
                 '</a></td>';
@@ -347,7 +346,8 @@ step.passageSelect = {
 	goToPassage: function(osisID, chptrOrVrsNum) {
 		var bookID = osisID.substring(0, osisID.indexOf("."));
 		if (bookID === "") bookID = osisID;
-		if ((chptrOrVrsNum != 0) && (this.addVerseSelection) && (this.modalMode === "chapter")) {
+		if ((chptrOrVrsNum != 0) && ($("#select_verse_number").hasClass("checked")) && 
+			(this.modalMode === "chapter")) {
 			var numOfVerse = 0;
 			for (var i = 0; i < this.osisChapterJsword.length; i++) {
 				var currentOsisID = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];

@@ -53,7 +53,7 @@ function saveVersionOrder() {
         }
     }
     var url = allVersions + allReferences;
-    closeVersionOrder();
+    step.util.closeModal("orderVersionModal");
     console.log("navigateSearch from order_version.html: " + url)
     step.router.navigateSearch(url, true, true);
 }

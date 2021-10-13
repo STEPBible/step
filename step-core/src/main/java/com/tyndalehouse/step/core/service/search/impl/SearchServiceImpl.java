@@ -37,15 +37,7 @@ import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
-import com.tyndalehouse.step.core.models.AbstractComplexSearch;
-import com.tyndalehouse.step.core.models.BibleVersion;
-import com.tyndalehouse.step.core.models.BookName;
-import com.tyndalehouse.step.core.models.ExactForm;
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.SearchToken;
+import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
 import com.tyndalehouse.step.core.models.search.LexicalSearchEntry;
@@ -471,7 +463,7 @@ public class SearchServiceImpl implements SearchService {
         }
         //we will prefer a word search to anything else...
         if (individualSearches.size() != 0) {
-            return this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])));
+            return this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options);
         }
         return this.bibleInfoService.getPassageText(
                 versions.get(0), references, options,
@@ -548,8 +540,12 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResult search(final SearchQuery sq) {
+    	return search(sq, "");
+    }
+
+    public SearchResult search(final SearchQuery sq, final String options) {
         try {
-            return doSearch(sq);
+            return doSearch(sq, options);
             // CHECKSTYLE:OFF
         } catch (final LuceneSearchException ex) {
             // CHECKSTYLE:ON
@@ -563,7 +559,7 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the sq
      * @return the search result
      */
-    private SearchResult doSearch(final SearchQuery sq) {
+    private SearchResult doSearch(final SearchQuery sq, final String options) {
         final long start = System.currentTimeMillis();
 
         SearchResult result;
@@ -571,7 +567,7 @@ public class SearchServiceImpl implements SearchService {
         try {
 
             if (sq.isIndividualSearch()) {
-                result = executeOneSearch(sq);
+                result = executeOneSearch(sq, options);
             } else {
                 result = executeJoiningSearches(sq);
             }
@@ -942,7 +938,7 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query results
      * @return the results from the search query
      */
-    private SearchResult executeOneSearch(final SearchQuery sq) {
+    private SearchResult executeOneSearch(final SearchQuery sq, final String options) {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         switch (currentSearch.getType()) {
             case TEXT:
@@ -960,9 +956,9 @@ public class SearchServiceImpl implements SearchService {
             case ORIGINAL_HEBREW_FORMS:
                 return runAllFormsStrongSearch(sq);
             case ORIGINAL_GREEK_RELATED:
-                return runRelatedStrongSearch(sq, SuggestionType.GREEK);
+                return runRelatedStrongSearch(sq, SuggestionType.GREEK, options);
             case ORIGINAL_HEBREW_RELATED:
-                return runRelatedStrongSearch(sq, SuggestionType.HEBREW);
+                return runRelatedStrongSearch(sq, SuggestionType.HEBREW, options);
             case EXACT_FORM:
                 return runExactOriginalTextSearch(sq);
             case ORIGINAL_MEANING:
@@ -995,7 +991,7 @@ public class SearchServiceImpl implements SearchService {
             case SUBJECT_RELATED:
             case SUBJECT_SIMPLE:
             case SUBJECT_FULL:
-                return buildCombinedVerseBasedResults(sq, results);
+                return buildCombinedVerseBasedResults(sq, results, ""); // Options from user was not passed to this method
             default:
                 throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), lastSearch
                         .getType().getLanguageKey());
@@ -1011,7 +1007,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private SearchResult runRelatedVerses(final SearchQuery sq) {
         return this.buildCombinedVerseBasedResults(sq,
-                this.relatedVerseService.getRelatedVerses(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getQuery()));
+                this.relatedVerseService.getRelatedVerses(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getQuery()), ""); // Options from user was not passed to this method
     }
 
     /**
@@ -1058,7 +1054,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         // build combined results
-        return buildCombinedVerseBasedResults(sq, this.jswordSearch.searchKeys(sq));
+        return buildCombinedVerseBasedResults(sq, this.jswordSearch.searchKeys(sq), ""); // Options from user was not passed to this method
     }
 
     /**
@@ -1070,7 +1066,7 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult runMeaningSearch(final SearchQuery sq) {
         final Set<String> strongs = adaptQueryForMeaningSearch(sq);
 
-        final SearchResult result = runStrongTextSearch(sq, strongs);
+        final SearchResult result = runStrongTextSearch(sq, strongs, ""); // Options from user was not passed to this method
         setDefinitionForResults(result, sq.getDefinitions(), SuggestionType.MEANING);
 
         // we can now use the filter and save ourselves some effort
@@ -1087,7 +1083,7 @@ public class SearchServiceImpl implements SearchService {
         final Set<String> strongs = adaptQueryForStrongSearch(sq);
 
         // and then run the search
-        return runStrongTextSearch(sq, strongs);
+        return runStrongTextSearch(sq, strongs, ""); // Options from user was not passed to this method
     }
 
     /**
@@ -1096,11 +1092,11 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query
      * @return the results
      */
-    private SearchResult runRelatedStrongSearch(final SearchQuery sq, SuggestionType suggestionType) {
+    private SearchResult runRelatedStrongSearch(final SearchQuery sq, SuggestionType suggestionType, final String options) {
         final Set<String> strongs = adaptQueryForRelatedStrongSearch(sq);
 
         // and then run the search
-        final SearchResult result = runStrongTextSearch(sq, strongs);
+        final SearchResult result = runStrongTextSearch(sq, strongs, options);
         setDefinitionForResults(result, sq.getDefinitions(), suggestionType);
         return result;
     }
@@ -1140,10 +1136,10 @@ public class SearchServiceImpl implements SearchService {
      * @param strongs the list of strongs that were searched for
      * @return the search results
      */
-    private SearchResult runStrongTextSearch(final SearchQuery sq, final Set<String> strongs) {
+    private SearchResult runStrongTextSearch(final SearchQuery sq, final Set<String> strongs, final String options) {
         Key key = runStrongTextSearchKeys(sq, strongs);
 
-        final SearchResult textResults = buildCombinedVerseBasedResults(sq, key);
+        final SearchResult textResults = buildCombinedVerseBasedResults(sq, key, options);
 
         textResults.setStrongHighlights(new ArrayList<>(strongs));
         return textResults;
@@ -1754,7 +1750,7 @@ public class SearchServiceImpl implements SearchService {
      * @param results the set of keys that have been retrieved by each search
      * @return the set of results
      */
-    private SearchResult buildCombinedVerseBasedResults(final SearchQuery sq, final Key results) {
+    private SearchResult buildCombinedVerseBasedResults(final SearchQuery sq, final Key results, final String options) {
 
         // combine the results into 1 giant keyed map
         final IndividualSearch currentSearch = sq.getCurrentSearch();
@@ -1768,7 +1764,7 @@ public class SearchServiceImpl implements SearchService {
         final Key pagedKeys = this.jswordSearch.rankAndTrimResults(sq, adaptedResults);
 
         // retrieve scripture content and set up basics
-        final SearchResult resultsForKeys = this.jswordSearch.getResultsFromTrimmedKeys(sq, currentSearch.getVersions(), total, pagedKeys);
+        final SearchResult resultsForKeys = this.jswordSearch.getResultsFromTrimmedKeys(sq, currentSearch.getVersions(), total, pagedKeys, options);
         resultsForKeys.setTotal(this.jswordSearch.getTotal(adaptedResults));
         resultsForKeys.setQuery(sq.getOriginalQuery());
         return resultsForKeys;

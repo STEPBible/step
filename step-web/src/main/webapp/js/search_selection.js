@@ -711,9 +711,6 @@ step.searchSelect = {
 		if (tableHTML.length > 0) {
 			if (htmlID === 'ob_table') $('#other_books_hdr').text('Other Books');
 			var bt = this._buildBookTableHeader(columns, htmlID);
-			console.log("htmlID " + htmlID);
-			console.log("bt " + bt);
-			console.log("th " + tableHTML);
 			$('#' + htmlID).append(this._buildBookTableHeader(columns, htmlID) + tableHTML + '</table>');
 			if (htmlID.substr(0, 2) == "nt") $("#nt_hdr").show();
 			else if (htmlID.substr(0, 2) == "ot") $("#ot_hdr").show();

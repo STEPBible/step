@@ -32,17 +32,19 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import java.awt.image.LookupOp;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
-import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.search.SearchEntry;
+import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
+import com.tyndalehouse.step.core.service.impl.IndividualSearch;
+import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import org.apache.lucene.search.IndexSearcher;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookException;
@@ -60,17 +62,11 @@ import org.crosswire.jsword.versification.VersificationsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.search.SearchEntry;
-import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
-import com.tyndalehouse.step.core.service.impl.IndividualSearch;
-import com.tyndalehouse.step.core.service.impl.SearchQuery;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 /**
  * API to search across the data
@@ -249,7 +245,33 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * @param options    the options to retrieve the passage with
      * @return the search result passages
      */
-    @Override
+
+    public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String[] versions, final int total, final Key newResults, final String optionsInString) {
+        boolean colorCode = false;
+        boolean hebrewAccents = false;
+        int numOfOptions = 0;
+        for (int ii = 0; ii < optionsInString.length(); ii++) {
+            if (optionsInString.charAt(ii) == LookupOption.COLOUR_CODE.getUiName()) {
+                colorCode = true;
+                numOfOptions ++;
+            }
+            else if (optionsInString.charAt(ii) == LookupOption.HEBREW_ACCENTS.getUiName()) {
+                hebrewAccents = true;
+                numOfOptions ++;
+            }
+        }
+        LookupOption[] lookupArray = new LookupOption[numOfOptions];
+        int j = 0;
+        if (colorCode) {
+            lookupArray[j] = LookupOption.fromUiOption(LookupOption.COLOUR_CODE.getUiName());
+            j ++;
+        }
+        if (hebrewAccents) {
+            lookupArray[j] = LookupOption.fromUiOption(LookupOption.HEBREW_ACCENTS.getUiName());
+        }
+        return getResultsFromTrimmedKeys(sq, versions, total, newResults, lookupArray);
+    }
+
     public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String[] versions, final int total, final Key newResults, final LookupOption... options) {
         final long startRefRetrieval = System.currentTimeMillis();
 
@@ -259,7 +281,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         lookupOptions.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
         lookupOptions.add(LookupOption.HEBREW_VOWELS);
         lookupOptions.add(LookupOption.GREEK_ACCENTS);
-        lookupOptions.add(LookupOption.HEBREW_ACCENTS);
+        // lookupOptions.add(LookupOption.HEBREW_ACCENTS); Removed because we want to show Hebrew accents only if the user has selected this option.
 
         final SearchResult r = new SearchResult();
         getPassagesForResults(r, versions, newResults, sq.getContext(), lookupOptions, sq.getInterlinearMode());

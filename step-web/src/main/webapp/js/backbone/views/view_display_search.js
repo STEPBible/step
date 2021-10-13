@@ -62,7 +62,48 @@ var SearchDisplayView = DisplayView.extend({
         if (total == 0) {
             results = (this.options.partRendered ? this.$el.find("> span") : $("<div>")).append(this._getErrorMessage());
         } else {
+			var options = this.model.get("selectedOptions") || [];
+            var availableOptions = this.model.get("options") || [];
+
+            // should be const instead of var, but not compatible with older browser
+            // This must match the definition in the color_code_grammar.js
+            // Do not take away the TBRMBR comment (to be removed by maven replacer
+            var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
+            var C_otMorph = 1; // TBRBMR
+            cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
+            if ((cv[C_colorCodeGrammarAvailableAndSelected]) && (typeof c4 === "undefined")) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
+            var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', hasTOS = false, hasNTMorph = false;
+            var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
+            if ((bibleVersions.indexOf('THOT') > -1)) {
+                if (cv[C_otMorph] == null) {
+                    var notIE = !(false || !!document.documentMode);
+                    // If browser is not IE, use "cache: true".  If IE, use "cache: false"
+                    // This is required because of an IE and Jquery issue.
+                    jQuery.ajax({
+                        dataType: "script",
+                        cache: notIE,
+                        url: "/js/tos_morph.js",
+                        error: function (jqXHR, exception) {
+                            console.log('load tos_morph.js Failed: ' + exception);
+                        }
+                    });
+                }
+                hasTOS = true;
+            }
+            if ((bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
+
             results = this.options.partRendered ? this.$el.find("> span") : this.renderSearch(append, this.$el.find(".searchResults"));
+
+			if (cv[C_colorCodeGrammarAvailableAndSelected]) {
+				if (hasTOS) {
+					var r = cf.addClassForTHOT(results[0].outerHTML);
+					$(results[0]).html(r[0]);
+					otCSSOnThisPage = r[1];
+				}
+				if (hasNTMorph) {
+					ntCSSOnThisPage = cf.getClassesForNT(results[0].outerHTML);
+				}
+			}
 
             this._addVerseClickHandlers(results);
 
@@ -101,6 +142,22 @@ var SearchDisplayView = DisplayView.extend({
         step.util.ui.addStrongHandlers(passageId, this.$el);
         step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"), true);
         this.doInterlinearVerseNumbers(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
+		
+		// following 10 lines were added to enhance the Colour Code Grammar  PT
+		// should be const instead of var, but not compatible with older browser
+		// This must match the definition in the color_code_grammar.js
+		// Do not take away the TBRMBR comment (to be removed by maven replacer
+		var C_handleOfRequestedAnimation = 11; // TBRMBR
+		var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRMBR
+		if ((cv[C_colorCodeGrammarAvailableAndSelected] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) &&
+			(cv[C_handleOfRequestedAnimation] !== undefined)) {
+			if (cv[C_colorCodeGrammarAvailableAndSelected]) {
+				cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
+				cf.refreshClrGrammarCSS(ntCSSOnThisPage, otCSSOnThisPage);
+				if (cv[C_handleOfRequestedAnimation] == -1) cf.goAnimate();
+			}
+		}
+		
         this._doChromeHack(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
     },
     _getErrorMessage: function () {

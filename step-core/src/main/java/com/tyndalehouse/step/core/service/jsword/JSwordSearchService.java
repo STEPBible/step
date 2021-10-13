@@ -80,6 +80,8 @@ public interface JSwordSearchService {
      * @param options    the options to set when generating the HTML
      * @return the passages
      */
+    SearchResult getResultsFromTrimmedKeys(SearchQuery sq, String[] versions, int total, Key newResults, String optionsInString);
+
     SearchResult getResultsFromTrimmedKeys(SearchQuery sq, String[] versions, int total, Key newResults, LookupOption... options);
 
     /**

@@ -64,6 +64,13 @@ var SidebarView = Backbone.View.extend({
             if ((this.model.get("morph") != undefined) && (this.model.get("morph").indexOf('TOS:') == 0)) {
                 lastMorphCode = this.model.get("morph");
             }
+			if ((typeof this.model.get("version") === "undefined") &&
+				(typeof this.model.get("ref") === "undefined") &&
+				(typeof this.model.get("morph") === "undefined") &&
+				(this.model.get("strong") === "H0001")) {
+				console.log("MODULE_GET_INFO undefined H0001");
+				return;
+			}
             $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
                 step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
@@ -418,7 +425,7 @@ var SidebarView = Backbone.View.extend({
                     else if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) userLangGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
 					var fontClass = "";
                     var firstChar = mainWord.relatedNos[i].strongNumber.substr(0, 1).toLowerCase();
-                    if (firstChar === "h") fontClass = "hbFontSmall";
+                    if (firstChar === "h") fontClass = "hbFontMini";
                     else if (firstChar === "g") fontClass = "unicodeFont";
                     var li = $("<li></li>").append($('<a sbstrong href="javascript:void(0)">')
                         .append(userLangGloss)

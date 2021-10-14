@@ -149,9 +149,9 @@
 			<p class="p">
 			  Run STEPBible from your computer when disconnected from the internet.  ESV,
 			  NIV and ancient language Bibles are included.
-
 			  <br/><br/>
-
+			  Current version for download is: <%= downloadVersion %>
+			  <br/>
 			  <label class="label" for="step_os">Operating system:</label>
 			  <select name="step_os" id="step_os">
 				<option value="windows">Windows</option>
@@ -187,6 +187,9 @@
 
 			  <br/><br/>
 
+			</p>
+			<p>Previous versions of STEP installation files are available at our 
+			 <a href="https://test.stepbible.org/downloads">test server</a>
 			</p>
 			<p>
 			  STEP is available on different platforms, thanks to the

@@ -1,3 +1,5 @@
+<%@page import="java.io.FileReader"%>
+<%@page import="java.io.BufferedReader"%>
 <%@ page import="com.google.inject.Injector" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="javax.servlet.jsp.jstl.core.Config" %>
@@ -7,7 +9,32 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%!
+    public String downloadVersion;
+%>
 <%
+	if (downloadVersion == null) {
+		downloadVersion = "";
+		try {
+			String pathOfServlet = getServletContext().getRealPath("/");
+			String[] pathOfServletSplits = pathOfServlet.split("[\\\\\\/]"); // Either \ for Windows or / characters for Linux
+			pathOfServlet = "/var/www/" + pathOfServletSplits[pathOfServletSplits.length - 1]  + "_config.txt";
+			String prefixForThisTomcatContext = "DOWNLOAD_VERSION:";
+			BufferedReader reader = new BufferedReader(new FileReader(pathOfServlet));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.indexOf(prefixForThisTomcatContext) == 0) {
+					downloadVersion = line.substring(prefixForThisTomcatContext.length());
+					break;
+				}
+			}
+			reader.close();
+		}
+		catch (Exception e) {
+			downloadVersion = "";
+		}
+	}
+
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
     Config.set(session, Config.FMT_LOCALE, locale);
@@ -255,8 +282,10 @@
 			else if (os === "linux_rpm") fileExtension = "rpm";
 			else console.log("Unknown os selected: " + os);
 			var fileName = "";
-			if (lexicon === "lexicon_english") fileName = "stepbible_2_1_23";
-			else if (lexicon === "lexicon_english_chinese") fileName = "stepbible_zh_2_1_23";
+			var version = "<%= downloadVersion %>";
+			if (version.length > 0) version = "_" + version;
+			if (lexicon === "lexicon_english") fileName = "stepbible" + version;
+			else if (lexicon === "lexicon_english_chinese") fileName = "stepbible_zh" + version;
 			else console.log("Unknown lexicon selected: " + lexicon);
 			var path = "";
 			if (region === "region_usa") path = "https://downloads.stepbible.com/file/Stepbible/";

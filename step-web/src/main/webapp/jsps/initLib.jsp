@@ -18,12 +18,15 @@
         try {
             String pathOfServlet = getServletContext().getRealPath("/");
             String[] pathOfServletSplits = pathOfServlet.split("[\\\\\\/]"); // Either \ for Windows or / characters for Linux
-            pathOfServlet = "/var/www/" + pathOfServletSplits[pathOfServletSplits.length - 1]  + "_rest_api_url.txt";
+            pathOfServlet = "/var/www/" + pathOfServletSplits[pathOfServletSplits.length - 1]  + "_config.txt";
             String prefixForThisTomcatContext = "REST_API_URL:";
             BufferedReader reader = new BufferedReader(new FileReader(pathOfServlet));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.indexOf(prefixForThisTomcatContext) == 0) restAPIURL = line.substring(prefixForThisTomcatContext.length()) + "/rest/";
+                if (line.indexOf(prefixForThisTomcatContext) == 0) {
+					restAPIURL = line.substring(prefixForThisTomcatContext.length()) + "/rest/";
+					break;
+				}
             }
             reader.close();
         }

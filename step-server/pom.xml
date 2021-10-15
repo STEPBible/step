@@ -34,7 +34,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>2.1.27d-SNAPSHOT</version>
+		<version>2.1.28-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>

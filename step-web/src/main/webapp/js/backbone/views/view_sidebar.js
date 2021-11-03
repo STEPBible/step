@@ -71,10 +71,11 @@ var SidebarView = Backbone.View.extend({
 				console.log("MODULE_GET_INFO undefined H0001");
 				return;
 			}
-            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
+			var ref = this.model.get("ref");
+            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
                 step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
-                self.createDefinition(data);
+                self.createDefinition(data, ref);
             }).error(function() {
                 changeBaseURL();
             });
@@ -137,7 +138,7 @@ var SidebarView = Backbone.View.extend({
     createHelp: function () {
         this.helpView = new ExamplesView({el: this.help});
     },
-    createDefinition: function (data) {
+    createDefinition: function (data, ref) {
         //get definition tab
         this.lexicon.detach();
         this.lexicon.empty();
@@ -187,7 +188,7 @@ var SidebarView = Backbone.View.extend({
                 if (i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 }
-                this._createWordPanel(panelBody, item, currentUserLang);
+                this._createWordPanel(panelBody, item, currentUserLang, ref);
                 if (i < data.morphInfos.length) {
                     this._createMorphInfo(panelBody, data.morphInfos[i]);
                 }
@@ -210,12 +211,19 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
             }
-            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang);
+            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang, ref);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(this.lexicon, data.morphInfos[0]);
             }
         }
         this.tabContainer.append(this.lexicon);
+		if (typeof step.wordLocations == "object") this._isItALocation(data.vocabInfos[0], ref);
+		else {
+			$.getJSON("/html/json/word_locations.json", function(location) {
+				step.wordLocations = location;
+				SidebarView.prototype._isItALocation(data.vocabInfos[0], ref);
+			});
+		}
     },
     _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
         var userLangGloss = "";
@@ -231,6 +239,7 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.stepGloss)
                 .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
+				.append('<span id="possibleMap"></span>')
         );
     },
 
@@ -362,7 +371,74 @@ var SidebarView = Backbone.View.extend({
         panel.append().append('<br />');
     },
 
-    _createWordPanel: function (panel, mainWord, currentUserLang) {
+	_lookUpGeoInfo: function(mainWord, bookName, indexToCoordArray) {
+		var geoForWord = step.wordLocations["coords"][indexToCoordArray];
+		bookName = bookName.substring(0, bookName.length - 1);
+		var possibleMapElement = $("#possibleMap");
+		if (possibleMapElement.length == 0) {
+			console.log ("cannot find possible Map ID in html");
+			// add a sleep here
+			possibleMapElement = $("#possibleMap");
+		}
+		possibleMapElement.empty().html("<a href='/html/multimap.html?coord=" + geoForWord + 
+			"&strong=" + mainWord.strongNumber + "&gloss=" + mainWord.stepGloss +
+			"&book=" + bookName +
+			"' target='_new'>" +
+			"<button type='button' class='stepButton' ><b>Map</b></button>" +
+			"</a>");
+	},
+	
+	_isItALocation: function(mainWord, ref) {
+		var passages = step.wordLocations[mainWord.strongNumber];
+		if (typeof ref === "undefined") {
+			if ((typeof step.previousSideBarLexiconRef === "object") && (mainWord.strongNumber === step.previousSideBarLexiconRef[0])) {
+				ref = step.previousSideBarLexiconRef[1];
+			}
+			else ref = "";
+		}
+		else step.previousSideBarLexiconRef = [mainWord.strongNumber, ref];
+		var posOfDot1 = ref.indexOf(".");
+		var bookName = (posOfDot1 > 2) ? ref.substr(0, posOfDot1 + 1) : ""; // Include the "." (dot)
+		if (typeof passages === "number") {
+			var indexToCoordArray = passages;
+			this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
+		}
+		else if ((typeof passages === "object") && (ref !== "")) {
+			var posOfDot2 = ref.indexOf(".", posOfDot1 + 1);
+			var chapter = ref.substring(posOfDot1 + 1, posOfDot2);
+			var verse = ref.substr(posOfDot2 + 1);
+			loop1:
+			for (var i = 0; i < passages.length; i ++) {
+				var tmpArray = passages[i].split("*"); // data before the * is a list of reference, after the * is the index to the coordinate array
+				var indexToCoordArray = tmpArray[1];
+				var passagesFromSameBook = tmpArray[0].split(";");
+				loop2:
+				for (var j = 0; j < passagesFromSameBook.length; j ++) {
+					if (passagesFromSameBook[j].indexOf(bookName) == 0) {
+						var chptrVrsToSearch = passagesFromSameBook[j].substr(bookName.length);
+						var chptrVrsArray = chptrVrsToSearch.split(",");
+						var currentChapter = 0;
+						for (var k = 0; k < chptrVrsArray.length; k ++) {
+							var currentVerse = 0;
+							var tmp = chptrVrsArray[k].split(":");
+							if (tmp.length == 2) {
+								currentChapter = tmp[0];
+								currentVerse =  tmp[1];
+							}
+							else currentVerse =  tmp[0];
+							if ((currentChapter == chapter) && (currentVerse == verse)) {
+								this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
+								break loop1;
+							}
+							else if (currentChapter > chapter) break loop2;
+						}
+					}
+				}
+			}
+		}
+	},
+	
+    _createWordPanel: function (panel, mainWord, currentUserLang, ref) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
         if (mainWord.shortDef) {
@@ -371,6 +447,7 @@ var SidebarView = Backbone.View.extend({
         this._appendLexiconSearch(panel, mainWord);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;
+
         if (currentUserLang.indexOf("es") == 0) {
             // displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon") ||
 									// false;

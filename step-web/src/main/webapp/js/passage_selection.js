@@ -1,3 +1,4 @@
+window.step = window.step || {};
 step.passageSelect = {
 	version: "ESV_th",
 	userLang: "en",
@@ -115,7 +116,7 @@ step.passageSelect = {
 					if ((first2Char === "1 ") || (first2Char === "2 ") || (first2Char === "3 "))
 						checkString = checkString.substr(0,1) + checkString.substr(2);
 					if (checkString.indexOf(firstWord) == 0) {
-						firstWord = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
+						firstWord = (this.osisChapterJsword[i].length == 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
 						firstWord = firstWord.toLowerCase();
 						break;
 					}

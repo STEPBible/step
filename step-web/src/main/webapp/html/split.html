@@ -129,17 +129,26 @@ function outFunc() {
 window.onmessage = function(e) {
     if (typeof e.data === "string") {
         var curURL = document.getElementById("f1").contentWindow.location.href;
-		if (curURL.search(/reference=[^%&|]+([%&|])/) > -1) {
-        //if (curURL.search(/reference=[A-Za-z0-9.,;-]+([%&|])/) > -1) {
-            var left = RegExp.leftContext;
-            var right = RegExp.rightContext;
-            var lastChar = RegExp.$1;
-            var newURL = left + "reference=" + e.data + lastChar + right;
-			if (newURL.indexOf("skipwelecome") == -1) newURL += "&skipwelcome";
-            document.getElementById("f1").src = newURL;
-            console.log("old: " + curURL);
-            console.log("new: " + newURL);
-        }
+		var left = "";
+		var right = "";
+		var lastChar = "";
+		if (curURL.search(/reference=[^%&|\s]+([%&|])/) > -1) {
+			left = RegExp.leftContext;
+			right = RegExp.rightContext;
+			lastChar = RegExp.$1;
+			var acceptableStrings = "20 2c 2d 2e 3a 3b"; // %20 is space , - . : ;   %20, %2c, %2d, %3e, %3a, 3b are not the end of the passage reference
+			while ((lastChar === "%") &&
+				   (acceptableStrings.indexOf(right.substr(0, 2).toLowerCase()) > -1) &&
+				   (right.substr(2).search(/[^%&|\s]+([%&|])/) > -1) ) {
+				right = RegExp.rightContext;
+				lastChar = RegExp.$1;
+			}
+		}
+        var newURL = left + "reference=" + e.data + lastChar + right;
+		if (newURL.indexOf("skipwelcome") == -1) newURL += "&skipwelcome";
+        document.getElementById("f1").src = newURL;
+        console.log("old: " + curURL);
+        console.log("new: " + newURL);
     }
 };
 

@@ -90,9 +90,14 @@ var QuickLexicon = Backbone.View.extend({
     loadDefinition: function (time) {
         var self = this;
         lastMorphCode = '';
-        if ((this.morph != undefined) && (this.morph.indexOf('TOS:') == 0)) {
+        if ((typeof this.morph !== "undefined") && (this.morph.indexOf('TOS:') == 0)) {
             lastMorphCode = this.morph;
         }
+		if ((typeof self.reference === "string") && 
+			(typeof self.strong === "string")) {
+			step.previousSideBarLexiconRef = [self.strong, self.reference];
+		}	
+	
         return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph, step.userLanguageCode], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);

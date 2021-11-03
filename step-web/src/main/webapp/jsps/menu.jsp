@@ -23,8 +23,11 @@
         <span class="icon-bar"></span>
     </button>
 	
-    <a id="panel-icon"  style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="<fmt:message key="open_in_new_panel"/>">
+    <a id="panel-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="<fmt:message key="open_in_new_panel"/>">
         <i class="glyphicon glyphicon-plus"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="new_panel"/></span>
+    </a>
+    <a id="report-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="/html/reports_by_step.html" target="_blank" title="Reports that uses STEP">
+        <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-sm">&nbsp;&nbsp;Reports</span>
     </a>
     <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats"/>">
         <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats"/></span>

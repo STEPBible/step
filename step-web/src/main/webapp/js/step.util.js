@@ -913,7 +913,7 @@ step.util = {
 			var widthAvailable = $(".passageContainer.active").width();
 			if (foundSearch) widthAvailable -= 45; // space to show the number of occurance.  eg: 105x
 			if (widthAvailable < 400) $("#thumbsup").hide(); // Not enough space to show the thumbs up icon (Facebook or Tweeter)
-			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9)) + 12;
+			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9)) + 5; // + 12; Twelve might be too much
 			if (!foundSearch) {
 				if (((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) <= (charAvailable - 9)) &&
 					(allSelectedReferences === 'Gen 1')) allSelectedReferences = __s.short_title_for_ref + ": " + allSelectedReferences;
@@ -950,7 +950,6 @@ step.util = {
 				allSelectedReferences = "";
 			}
 			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
-			charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 
 			if (outputMode === "button") {
 				if (allSelectedBibleVersions.length > 0)
@@ -2623,11 +2622,11 @@ step.util = {
 		// }
 	// },
 	showIntro: function (showAnyway) {
-		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
+		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
-		if ((introCount < 3) || (showAnyway)) {
+		if ((introCount < 1) || (showAnyway)) {
 			var introJsSteps = [
 				{
 					intro: __s.introjs_intro
@@ -2659,7 +2658,7 @@ step.util = {
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.multiVersionCount") : $.cookie('step.multiVersionCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
-		if ((window.innerWidth > 499) && (introCount < 2)) {
+		if ((window.innerWidth > 499) && (introCount < 1)) {
 			var introJsSteps = [
 				{
 					element: document.querySelector('.passageContainer.active').querySelector('.dropdown.settingsDropdown'),

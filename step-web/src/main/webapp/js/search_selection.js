@@ -1,3 +1,4 @@
+window.step = window.step || {};
 step.searchSelect = {
 	version: "ESV_th",
 	userLang: "en",
@@ -103,7 +104,8 @@ step.searchSelect = {
 	idx2BookOrder: {},
 
 	initSearchSelection: function() {
-		this.userLang = step.state.language() || "en-US";
+		if ((typeof step.state === "undefined") || (typeof step.state.language === "undefined")) this.userLang = "en-US";
+		else this.userLang = step.state.language() || "en-US";
         this.version = "ESV_th";
         this.searchOnSpecificType = "";
         this.searchModalCurrentPage = 1;
@@ -272,6 +274,7 @@ step.searchSelect = {
 			userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 			$('textarea#userTextInput').val(userInput);
 			if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true);
+			if ($("#searchResultstext").find("a").text() != userInput) step.searchSelect._handleEnteredSearchWord();
 		}
 		else {
 			$('#warningMessage').text("");
@@ -284,7 +287,7 @@ step.searchSelect = {
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
 		showPreviousSearch(); // The function will determine if it need to show previous search
-		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
+		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
 			$('#previousSearch').show();
 			if (this.searchModalCurrentPage == 1) $('#srchModalBackButton').hide();
@@ -307,7 +310,7 @@ step.searchSelect = {
 			$('#srchModalBackButton').hide();
 			this._handleEnteredSearchWord();
 		}
-		else alert('Unknown state goBackToPreviousPage');
+		else console.log('Unknown state goBackToPreviousPage');
 	},
 
 	_buildSearchHeaderAndTable: function() {
@@ -368,7 +371,8 @@ step.searchSelect = {
 		return html;
 	},
 
-	_buildRangeHeaderAndTable: function() {
+	_buildRangeHeaderAndTable: function(booksToDisplay) {
+		var onlyDisplaySpecifiedBooks = ((typeof booksToDisplay === "object") &&	(Array.isArray(booksToDisplay)) && (booksToDisplay.length > 0));
 		$('#searchSelectError').text("");
 		$('#updateFeedback').text("");
 		var html = this._buildRangeHeaderAndSkeleton();
@@ -427,14 +431,34 @@ step.searchSelect = {
 			   curGroup = this.groupsOther;
 			   idPrefix = 'ob_tableg';
 			}
+			var allGroupsDisabled = true;
 			for (var j = 0; j < curGroup.length; j++) {
+				var allBooksInGroupDisabled = true;
 				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
 					if ( (curGroup[j].bookOrderPos[k] > -1) &&
 						(!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) ) {
 					   this._userClickedBook(idPrefix + j + 'b' + k);
 					}
+					if (onlyDisplaySpecifiedBooks) {
+						curBook = this.bookOrder[curGroup[j].bookOrderPos[k]][0];
+						if (booksToDisplay.indexOf(curBook) == -1)
+							$("#" + idPrefix + j + 'b' + k).prop("disabled",true).css('opacity',0.5);
+						else {
+							allBooksInGroupDisabled = false;
+							allGroupsDisabled = false;
+						}
+					}
+				}
+				if ((onlyDisplaySpecifiedBooks) && (allBooksInGroupDisabled)) {
+					for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
+						$("#" + idPrefix + j + 'b' + k).hide(); // hide the button
+						$("#" + idPrefix + j + 'b' + k).parent().parent().hide(); // hide the tr
+					}
+					$("#" + idPrefix + j).hide(); // hide the group button (e.g.: book of Moses)
 				}
 			}
+			if ((onlyDisplaySpecifiedBooks) && (allGroupsDisabled))
+				$("#" + idPrefix.substr(0, 3) + "hdr").hide(); // hide the New Testament or Old Testament button
 		}
 		if (this.searchRange === 'Gen-Rev') $('#updateFeedback').text(__s.all_books_not_selected);
 		else $('#updateFeedback').text(__s.search_range_button_color_desc);
@@ -467,6 +491,7 @@ step.searchSelect = {
 
 	_updateRange: function() {
 		$('#searchSelectError').text("");
+		var allSelectedBooks = "";
 		for (var i = 0; i < 3; i++) {
 			var curGroup;
 			var idPrefix;
@@ -486,8 +511,10 @@ step.searchSelect = {
 				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
 					if (curGroup[j].bookOrderPos[k] > -1) {
 						if ( ($(idPrefix + j + 'b' + k).hasClass('stepPressedButton')) &&
-							 (curGroup[j].bookOrderPos[k] > -1) )
+							 (curGroup[j].bookOrderPos[k] > -1) ) {
 							this.bookOrder[curGroup[j].bookOrderPos[k]][1] = true;
+							allSelectedBooks += "," + this.bookOrder[curGroup[j].bookOrderPos[k]][0];
+						}
 						else this.bookOrder[curGroup[j].bookOrderPos[k]][1] = false;
 					}
 				}
@@ -511,7 +538,18 @@ step.searchSelect = {
 		if (result.length > 0) this.searchRange = result.replace(/,$/, '');
 		else this.searchRange = "Gen-Rev";
 		this.rangeWasUpdated = true;
-		this.goBackToPreviousPage();
+		if (typeof step.util === "undefined") {
+	        var element = document.getElementById("rangeModal");
+			if (element) {	
+				$('#rangeModal').modal('hide');
+				$('#rangeModal').modal({
+					show: false
+				});
+				if (element.parentNode) element.parentNode.removeChild(element);
+			}
+			filterByRange(allSelectedBooks);
+		}
+		else this.goBackToPreviousPage();
 	},
 
 	_createSingleRange: function(start, end) {
@@ -546,6 +584,7 @@ step.searchSelect = {
 	},
 
 	_getTranslationType: function() {
+		if (typeof step.util === "undefined") return "OTNT"; // probably called from the split.html or related doc
 		var versionAltName = '';
 		var data = step.util.activePassage().get("searchTokens") || [];
 		for (var i = 0; i < data.length; i++) {
@@ -962,6 +1001,7 @@ step.searchSelect = {
 				allVersions += 'version=' + activePassageData[i].item.shortInitials;
 			}
 		}
+		if (typeof searchWord !== "string") searchWord = "";
 		if (searchType === TEXT_SEARCH) currentSearch = '|syntax=t=' + searchWord;
 		else if (searchType === STRONG_NUMBER) {
 			if (!this.includePreviousSearches) currentSearch = '|strong=' + searchWord;
@@ -988,8 +1028,17 @@ step.searchSelect = {
 						previousSearchRelationship = " ";
 					var curSearchWord = "";
 					if (this.previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = this.previousSearchTokens[i].substr(5);
-					else if (this.previousSearchTokens[i].substr(0, 7) === "strong=")
+					else if (this.previousSearchTokens[i].substr(0, 7) === "strong=") {
+						if (searchWord.search(/([GH])\d{4,5}/) > -1) {
+							if (RegExp.$1 !== this.previousSearchTokens[i].substr(7, 1)) {
+								var msg = "You are trying to search Greek and Hebrew words together. If you do not intend to perform this type of search, just don't search Hebrew and Greek words together in a single search.  This is only supported by the \"Classical Interface\" when you have opened a Bible with Old Testament tagged with Hebrew words and another Bible with Old Testament tagged with Greek words.  To open the \"Classical Interface\" ";
+								msg += (window.innerWidth <= 767) ? "click on the three horizontal bars at the upper right, click on \"More\" and then click on \"Classical interface\"." :
+																	"click on \"More\" in the upper right and then click on \"Classical interface\".";
+								alert(msg);
+							}
+						}
 						curSearchWord = "strong:" + this.previousSearchTokens[i].substr(7);
+					}
 					if (curSearchWord !== "") {
 						numOfPreviousSyntaxSearch ++;
 						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=t=";

@@ -163,7 +163,7 @@ function goToNewSection(item, cellNum) {
         $(row.cells[0]).css("background-color","cyan")
     }
     else if (cellNum == 1) {
-		var bookName = col2.substr(0,col2.indexOf(".") - 1);
+		var bookName = col2.substr(0,col2.indexOf("."));
 		if ((typeof bookName === "string") && (bookName.length > 1)) gps += "&book=" + bookName;
         window.open("/html/multimap.html?coord=" + gps);
     }

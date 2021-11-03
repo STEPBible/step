@@ -157,14 +157,14 @@ function goToNewSection(item, cellNum) {
 	if (cellNum == 1) row = row.parentNode;
     var col2 = row.cells[1].innerText;
     var gps = $(row.cells[0]).find("span")[1].innerText;
+	var bookName = col2.substr(0,col2.indexOf("."));
+	if ((typeof bookName === "string") && (bookName.length > 1)) gps += "&book=" + bookName;
     if (cellNum == 2) {
         window.top.postMessage(col2 + "@@" + gps, '*');
 		$(".tb_col1").css("background-color", "white");
         $(row.cells[0]).css("background-color","cyan")
     }
     else if (cellNum == 1) {
-		var bookName = col2.substr(0,col2.indexOf("."));
-		if ((typeof bookName === "string") && (bookName.length > 1)) gps += "&book=" + bookName;
         window.open("/html/multimap.html?coord=" + gps);
     }
 }

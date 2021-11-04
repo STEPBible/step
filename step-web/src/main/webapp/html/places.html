@@ -39,18 +39,18 @@
 	.tb_col1 {
 		font-size: 14px;
 		border: 2px solid #17758f;
+		word-wrap: break-word;
 	}
 	.tb_col2 {
 		font-size: 14px;
 		border: 2px solid #17758f;
-	    word-break: break-all;
+		word-wrap: break-word;
         color: blue;
-        text-decoration: underline;
         cursor: pointer;
 	}
 	.mapLink {
 		font-size: 12px;
-	    word-break: break-all;
+	    word-wrap: break-word;
         color: blue;
         text-decoration: underline;
         cursor: pointer;
@@ -125,7 +125,7 @@
 			tblRowHTML += 
 				'<tr><td class="tb_col1">' + array[i][0] +
 					'&nbsp;<span class="mapLink">map<span style="display:none">' + array[i][2] + '</span></span></td>' +
-				    '<td class="tb_col2">' + array[i][1] + '</td>' +
+				    '<td class="tb_col2">' + array[i][1].replace(/;/g, " ") + '</td>' +
 					'</tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
@@ -155,12 +155,12 @@
 function goToNewSection(item, cellNum) {
     var row = item.parentNode;
 	if (cellNum == 1) row = row.parentNode;
-    var col2 = row.cells[1].innerText;
+    var passages = row.cells[1].innerText;
     var gps = $(row.cells[0]).find("span")[1].innerText;
-	var bookName = col2.substr(0,col2.indexOf("."));
+	var bookName = passages.substr(0,passages.indexOf("."));
 	if ((typeof bookName === "string") && (bookName.length > 1)) gps += "&book=" + bookName;
     if (cellNum == 2) {
-        window.top.postMessage(col2 + "@@" + gps, '*');
+        window.top.postMessage(passages.replace(/ /g, ";") + "@@" + gps, '*');
 		$(".tb_col1").css("background-color", "white");
         $(row.cells[0]).css("background-color","cyan")
     }

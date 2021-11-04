@@ -40,22 +40,13 @@
 		font-size: 14px;
 		border: 2px solid #17758f;
         color: blue;
-        text-decoration: underline;
-		word-break: break-all;
+		word-wrap: break-word;
 		cursor: pointer;
 	}
 	.tb_col2 {
 		font-size: 14px;
 		border: 2px solid #17758f;
-        color: blue;
-        text-decoration: underline;
-	    word-break: break-all;
-		cursor: pointer;
-	}
-	.tb_col3 {
-		font-size: 14px;
-		border: 2px solid #17758f;
-	    word-break: break-all;
+		word-wrap: break-word;
 	}
 	
 	:root {
@@ -78,14 +69,12 @@
 <div class="fixTableHead">
 <table>
 	<colgroup>
-		<col span="1" style="width:10%;">
-		<col span="1" style="width:15%;">
+		<col span="1" style="width:25%;">
 		<col span="1" style="width:75%;">
 	</colgroup>
   <thead>
     <tr class="tb_head">
-      <th>NT</td>
-      <th>OT</th>
+      <th><b>NT</b> and OT</th>
       <th>Passage</th>
     </tr>
   </thead>
@@ -125,9 +114,9 @@
     $.getJSON("/html/json/" + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
 			tblRowHTML += 
-				'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
-				    '<td class="tb_col2">' + array[i][1] + '</td>' +
-					'<td class="tb_col3">' + array[i][2] + '</td></tr>';
+				'<tr><td class="tb_col1"><b>' + array[i][0] + '</b> ' +
+					array[i][1].replace(/;/g, " ") + '</td>' +
+					'<td class="tb_col2">' + array[i][2] + '</td></tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
     });
@@ -155,13 +144,11 @@
 
 function goToNewSection(item) {
     var row = item.parentNode;
-    var col1 = row.cells[0].innerText;
-    var col2 = row.cells[1].innerText;
+    var passages = row.cells[0].innerText;
+	// global change from space to ;
     $(".tb_col1").css("background-color", "white");
-	$(".tb_col2").css("background-color", "white");
     $(row.cells[0]).css("background-color","cyan");
-	$(row.cells[1]).css("background-color","cyan");
-    window.top.postMessage(col1 + ";" + col2, '*');
+    window.top.postMessage(passages.replace(/ /g, ";"), '*');
 }
 
 function handleKeyboardInput(e) {
@@ -177,7 +164,7 @@ function handleKeyboardInput(e) {
 			$("#searchRangeButton").removeClass("stepPressedButton");
 			$("#tb_body").find("tr").hide();
 			var re = new RegExp(userInput, "i");
-			$("tr").filter(function () { return re.test($(this).find(".tb_col3").text());}).show();
+			$("tr").filter(function () { return re.test($(this).find(".tb_col2").text());}).show();
 		}
 }
 
@@ -190,7 +177,6 @@ function filterByRange(userSelectedBooks) {
 		if (booksArray[i].length > 1) {
 			var re = new RegExp(booksArray[i], "i");
 			$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
-			$("tr").filter(function () { return re.test($(this).find(".tb_col2").text());}).show();
 			numOfBooks ++;
 		}
 	}

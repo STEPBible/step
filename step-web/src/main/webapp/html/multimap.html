@@ -226,8 +226,9 @@
 	}
 	if ($("#" + mapFirstChoice + "_li").is(":visible"))
 		$('.nav-tabs a[href="#' + mapFirstChoice + '"]').tab('show');
-	else
+	else if ($("#" + mapSecondChoice + "_li").is(":visible"))
 		$('.nav-tabs a[href="#' + mapSecondChoice + '"]').tab('show');
+	else $("#googlemap").append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var target = $(e.target).attr("href") // activated tab
@@ -242,6 +243,7 @@
 function updateRedCircle(latArg, longArg, latMax, latMin, longMax, longMin, latRatio, longRatio, xAdd, yAdd, mapID) {
 	if ((latArg < latMin) || (latArg > latMax) || (longArg < longMin) || (longArg > longMax)) {
 		$("#" + mapID + "_li").hide();
+		$("#" + mapID).find(".redcircle").hide();
 	}
 	else if (mapID !== "palopenmaps") {
 		if ((latRatio == 0) || (longRatio == 0)) {

@@ -228,7 +228,8 @@
 		$('.nav-tabs a[href="#' + mapFirstChoice + '"]').tab('show');
 	else if ($("#" + mapSecondChoice + "_li").is(":visible"))
 		$('.nav-tabs a[href="#' + mapSecondChoice + '"]').tab('show');
-	else $("#googlemap").append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
+	else 
+		$('.nav-tabs a[href="#googlemap"]').tab('show');
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var target = $(e.target).attr("href") // activated tab

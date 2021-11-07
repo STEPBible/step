@@ -228,8 +228,10 @@
 		$('.nav-tabs a[href="#' + mapFirstChoice + '"]').tab('show');
 	else if ($("#" + mapSecondChoice + "_li").is(":visible"))
 		$('.nav-tabs a[href="#' + mapSecondChoice + '"]').tab('show');
-	else 
+	else {
 		$('.nav-tabs a[href="#googlemap"]').tab('show');
+		$("#googlemap").append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
+	}
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var target = $(e.target).attr("href") // activated tab
@@ -237,7 +239,7 @@
 			$("#palopenmapsiframe").attr('src',"https://palopenmaps.org/view/9999/@" + latArg + ',' + longArg);
 		else if (target === "#googlemap")
 			// Async script executes immediately and must be after any DOM elements used in callback.
-			$("#googlemap").append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
+			$("#googlemap").empty().append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
 	});
 })();
 

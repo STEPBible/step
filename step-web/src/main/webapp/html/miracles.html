@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Miracles in the Bible</title>
+  <link rel="shortcut icon" href="/images/step-favicon.ico"/>
+  <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
+  <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
+  <link href="/css/select2.css" rel="stylesheet" media="screen"/>
+  <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
+  <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
+  <script src="/international/en..js" type="text/javascript"></script>
+  <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+  <script src="/libs/underscore-min.js" type="text/javascript"></script>
+  <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+  <script src="/js/step_constants.js" type="text/javascript"></script>
+  <script src="/js/passage_selection.js" type="text/javascript"></script>
+  <script src="/js/search_selection.js" type="text/javascript"></script>
+
+  <style>
+  
+    .fixTableHead {
+      overflow-y: auto;
+    }
+    .fixTableHead thead th {
+      position: sticky;
+      top: 0;
+    }
+    table {
+      border-collapse: collapse;        
+      width: 100%;
+    }
+    th {
+      padding: 8px 15px;
+      border: 2px solid #17758f;
+      background: #17758f;
+	  color: white;
+    }
+	.tb_col1 {
+		font-size: 14px;
+		border: 2px solid #17758f;
+        color: blue;
+		word-wrap: break-word;
+		cursor: pointer;
+	}
+	.tb_col2 {
+		font-size: 14px;
+		border: 2px solid #17758f;
+		word-wrap: break-word;
+	}
+	
+	:root {
+		--clrHighlight: #17758F;
+		--clrHighlightBg: #17758F;
+		--clrStrongText: #498090;
+		--clrLexiconFocusBG: #c8d8dc;
+		--clrRelatedWordBg: #b2e5f3;
+        --clrBackground: #ffffff;
+        --clrText: #5d5d5d;
+        --clr2ndHover: #d3d3d3;
+	}
+	
+  </style>
+</head>
+<body style="margin:0;background-color:white"">
+<h2 id="header">Miracles in the Bible</h2>
+<span>Event:</span><textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize=none;height:24px" placeholder="Optionally enter your search word"></textarea>
+<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick="searchSelectionModal()"><b>Range:</b></button>
+<div class="fixTableHead">
+<table>
+	<colgroup>
+		<col span="1" style="width:70%;">
+		<col span="1" style="width:30%;">
+	</colgroup>
+  <thead>
+    <tr class="tb_head">
+      <th>Miracles</th>
+      <th>Passage</th>
+    </tr>
+  </thead>
+  <tbody id="tb_body">
+  </tbody>
+</table>
+</div>
+<script>
+
+(function() {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+    if (!inIFrame) {
+        window.location = window.location.origin + "/html/split.html?" +
+			window.location.origin +
+			"/?q=reference=Gen.1:1-27&skipwelcome&secondURL=" +
+			window.location.origin + window.location.pathname;
+    }
+	var fullHeight = $(window).height();
+	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.93);
+	$(".fixTableHead").css("height", remainingHeight + "px");
+	var jsonFileName = "miracles";
+    var queryString = window.location.search;
+	var pos = queryString.indexOf("jsonFN=");
+	if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
+		var tmp = queryString.substr(pos + 7);
+		pos = tmp.indexOf("&");
+		if (pos == -1) jsonFileName = tmp;
+		else if (pos > 0) jsonFileName = tmp.substr(0,pos);
+	}
+	$.ajaxSetup({async: false});
+	var tblRowHTML = ""
+    $.getJSON("/html/json/" + jsonFileName + ".json", function(array) {
+		for (var i = 0; i < array.length; i ++ ) {
+			if ((typeof array[i][1] === "string") && (array[i][1].length > 0))
+				tblRowHTML += 
+					'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
+						'<td class="tb_col2">' + array[i][1].replace(/;/g, " ") + '</td></tr>';
+			else
+				tblRowHTML += 
+					'<tr><td colspan="2" class="tb_col1">' + array[i][0] + '</td></tr>'
+		}
+		$("#tb_body").append(tblRowHTML);
+    });
+    $.ajaxSetup({async: true});
+
+    var rows = $("#tb_body").find("tr");
+	var highLightFirstRow = true;
+    for (var i = 0; i < rows.length; i ++) {
+        rows[i].i = i;
+		if (typeof rows[i].cells[1] !== "undefined") { // If cells[1] is not defined, it is the row with "MIRACLES in the OT or NT"
+			rows[i].cells[0].addEventListener("click", function() {
+				goToNewSection(this);
+			}, false);
+			rows[i].cells[1].addEventListener("click", function() {
+				goToNewSection(this);
+			}, false);
+			if (highLightFirstRow) {
+				$(rows[i].cells[0]).css("background-color", "cyan");
+				highLightFirstRow = false;
+			}
+		}
+    }
+	
+	$(function(){
+		$('textarea#userTextInput').on('input', function(e){
+			this.timer && clearTimeout(this.timer);
+			this.timer = setTimeout(handleKeyboardInput, 300, e);
+		});
+	});
+
+})();
+
+function goToNewSection(item) {
+    var row = item.parentNode;
+    var passages = row.cells[1].innerText;
+	// global change from space to ;
+    $(".tb_col1").css("background-color", "white");
+    $(row.cells[0]).css("background-color","cyan");
+    window.top.postMessage(passages.replace(/ /g, ";"), '*');
+}
+
+function handleKeyboardInput(e) {
+		var userInput =  $('textarea#userTextInput').val();
+		if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
+			userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
+			$('textarea#userTextInput').val(userInput);
+		}
+		if ((typeof userInput !== "string") || (userInput.length = 0)) {
+			$("tr").show();
+		}
+		else {
+			$("#searchRangeButton").removeClass("stepPressedButton");
+			$("#tb_body").find("tr").hide();
+			var re = new RegExp(userInput, "i");
+			$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
+		}
+}
+
+function filterByRange(userSelectedBooks) {
+	booksArray = userSelectedBooks.split(",");
+	numOfBooks = 0;
+	$('textarea#userTextInput').val("");
+	$("#tb_body").find("tr").hide();
+	for (var i = 0; i < booksArray.length; i ++) {
+		if (booksArray[i].length > 1) {
+			var re = new RegExp(booksArray[i], "i");
+			$("tr").filter(function () { return re.test($(this).find(".tb_col2").text());}).show();
+			numOfBooks ++;
+		}
+	}
+	if (numOfBooks == 0) {
+		$("tr").show();
+		$("#searchRangeButton").removeClass("stepPressedButton");
+	}
+	else $("#searchRangeButton").addClass("stepPressedButton");
+}
+
+function searchSelectionModal() {
+	var element = document.getElementById('rangeModal');
+	if (element) element.parentNode.removeChild(element);
+	var htmlString =
+	'<div id="rangeModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+		'<div class="modal-dialog">' +
+			'<div class="modal-content" style="background:white;color:black;width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
+					'<script>' +
+						'$(document).ready(function () {' +
+							'step.searchSelect._buildRangeHeaderAndTable(["1Cor","1Kgs","1Sam","2Chr","2Kgs","2Sam","Acts","Dan","Exod","Gen","John","Jonah","Josh","Jude","Lev","Luke","Mark","Matt","Num","Rev"]);' +
+						'});' +
+					'<\/script>' +
+				'<div class="modal-header">' +
+					'<span class="pull-right">' +
+						'<button type="button" class="close" data-dismiss="modal">X</button>' +
+					'</span><br>' +
+				'</div>' +
+				'<div id="searchmodalbody" class="modal-body">' +
+					'<div id="searchHdrTable">Header Table</div>' +
+				'</div>' +
+				'<div class="footer">' +
+					'<br>' +
+					'<span id="searchSelectError"></span>' +
+					'<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"' +
+					'onclick=step.searchSelect._updateRange()></button><br><br><br>' +
+				'</div>' +
+			'</div>' +
+		'</div>' +
+	'</div>';
+	$(_.template(htmlString)()).modal("show");
+}
+</script>
+</body>
+</html>

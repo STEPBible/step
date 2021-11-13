@@ -97,7 +97,9 @@ var QuickLexicon = Backbone.View.extend({
 			(typeof self.strong === "string")) {
 			step.previousSideBarLexiconRef = [self.strong, self.reference];
 		}	
-	
+		if (this.strong.search(/([GH])(\d{1,3})(![A-Za-z])$/) > -1) {
+			this.strong = RegExp.$1 + ("000" + RegExp.$2).slice(-4) + RegExp.$3;
+		}
         return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph, step.userLanguageCode], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);

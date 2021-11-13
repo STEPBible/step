@@ -255,7 +255,7 @@ step.searchSelect = {
 			html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
 			listOfPreviousSearch.push(html);
 			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
-			if (strongNum.search(/([GH]\d{4,5})[abcdefg]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
+			if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
 			previousSearchTokensArg.push("strong=" + strongNum);
 			if (actPsgeDataElm.item.stepTransliteration !== "") step.util.putStrongDetails(strongNum, htmlOfTerm);
 		}
@@ -1006,7 +1006,7 @@ step.searchSelect = {
 		else if (searchType === STRONG_NUMBER) {
 			if (!this.includePreviousSearches) currentSearch = '|strong=' + searchWord;
 			else {
-				if (searchWord.search(/([GH]\d{4,5})[abcdefg]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a, b, c, d, e, f or g
+				if (searchWord.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a, b, c, d, e, f, g, ...
 				currentSearch = '|syntax=t=strong:' + searchWord;
 			}
 			step.util.putStrongDetails(searchWord, displayText);

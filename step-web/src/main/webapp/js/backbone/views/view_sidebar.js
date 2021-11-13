@@ -72,9 +72,13 @@ var SidebarView = Backbone.View.extend({
 				return;
 			}
 			var ref = this.model.get("ref");
-            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
+			var strongCode = this.model.get("strong");
+			if (strongCode.search(/([GH])(\d{1,3})(![A-Za-z])$/) > -1) {
+				strongCode = RegExp.$1 + ("000" + RegExp.$2).slice(-4) + RegExp.$3;
+			}
+            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongCode, this.model.get("morph"), step.userLanguageCode], function (data) {
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
-                step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
+                step.util.trackAnalytics("lexicon", "strong", strongCode); // self.model.get("strong"));
                 self.createDefinition(data, ref);
             }).error(function() {
                 changeBaseURL();
@@ -714,7 +718,7 @@ var SidebarView = Backbone.View.extend({
 
                             $.getSafe(BIBLE_GET_BIBLE_TEXT + chosenVersion + "/" + encodeURIComponent(xref), function (data) {
                                 api.set('content.title.text', data.longName);
-                                api.set('content.text', data.value.replace(/ strong=['"][GHabcdef\d\s]{5,30}['"]/g, "")); // Strip the strong tag
+                                api.set('content.text', data.value.replace(/ strong=['"][GH]\d{1,5}[A-Za-z]?\s?['"]/g, "")); // Strip the strong tag
                                 api.set('content.osisId', data.osisId)
                             }).error(function() {
                                 changeBaseURL();

@@ -888,7 +888,7 @@ step.util = {
 									if ((searchRelationship === "AND") || (searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
 									else searchWords += ', ';
 								}
-                                if (syntaxWords[j].search(/\s*(\(*)\s*strong:([GH]\d{4,5}[abcdefg]?)\s*(\)*)/) > -1) {
+                                if (syntaxWords[j].search(/\s*(\(*)\s*strong:([GH]\d{1,5}[A-Za-z]?)\s*(\)*)/) > -1) {
                                     // RegExp.$1 is prefix of open parathesis, RegExp.$2 is the strong number, RegExp.$2 is the suffix of close parathesis
                                     var prefix = RegExp.$1;
                                     var strongNum = RegExp.$2;
@@ -3165,7 +3165,7 @@ step.util = {
     },
     putStrongDetails: function(strongNum, details) {
         if (typeof step.srchTxt === "undefined") step.srchTxt = {};
-        if (strongNum.search(/([GH]\d{4,5})[abcdefg]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
+        if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
         if ((typeof step.srchTxt[strongNum] === "undefined") || (step.srchTxt[strongNum].length < 7))
             step.srchTxt[strongNum] = details;
     },

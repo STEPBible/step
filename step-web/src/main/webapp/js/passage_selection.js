@@ -143,7 +143,6 @@ step.passageSelect = {
 
 	_buildBookTable: function(summaryMode, translationType) {
 		$('#enterYourPassage').show();
-		$('#keyboard_icon').show();
 		if (((this.userLang.toLowerCase().indexOf("en") == 0) || (this.userLang.toLowerCase().indexOf("es") == 0) || (this.userLang.toLowerCase().indexOf("zh") == 0)) &&
 			(translationType !== "")) {
 			this._buildBookHTMLTable(translationType, summaryMode);
@@ -434,8 +433,8 @@ step.passageSelect = {
 		$.getJSON(url, function (data) {
 			if (data.length > 0) {
 				if (data[0].suggestion.passage) {
+					console.log("Program error: unexpected result from SEARCH_AUTO_SUGGESTIONS");
 					console.log(data);
-					$('#userEnterPassageError').text("Program error: unexpend result from SEARCH_AUTO_SUGGESTIONS");
 				}
 				else if (!verifyOnly) step.passageSelect.goToPassage(data[0].suggestion.osisID, 0); // 0 is ready to go to passage
 			}
@@ -453,7 +452,6 @@ step.passageSelect = {
 	_buildChptrVrsTbl: function(data, bookOsisID, numOfChptrsOrVrs, isChapter, version, userLang, summaryMode) {
 		var headerMsg;
 		$('#enterYourPassage').hide();
-		$('#keyboard_icon').hide();
 		if (isChapter) {
 			headerMsg = __s.please_select_chapter;
 			this.modalMode = 'chapter';

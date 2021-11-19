@@ -1768,7 +1768,7 @@ step.util = {
 						' placeholder="<%= __s.select_passage_input_short_placeholder %>"></textarea>';
 		modalHTML +=
 						'<br>' +
-						'<span id="userEnterPassageError" style="color: red;"></span>' +
+						'<span id="userEnterPassageError" style="color: red"></span>' +
 					'</div>' +
 					'<script>' +
 						'$(document).ready(function () {' +

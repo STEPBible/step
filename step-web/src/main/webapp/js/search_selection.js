@@ -288,7 +288,11 @@ step.searchSelect = {
 					changeBaseURL();
 				});
 			}
-			else $("#updateRangeButton").hide();
+			else {
+				if ((userInput.length == 0) && (step.searchSelect.searchRange.length > 0) && (step.searchSelect.searchRange !== "Gen-Rev"))
+					$("#updateRangeButton").show();
+				else $("#updateRangeButton").hide();
+			}
 		}
 		else {
 			var userInput =  $('textarea#userTextInput').val();
@@ -405,6 +409,7 @@ step.searchSelect = {
 		$('#srchModalBackButton').show();
 		$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
 		this._buildBookTable();
+		var keyboardEnteredRange = false;
 		if (this.searchRange !== 'Gen-Rev') {
 			var tmpSearchRange = this.searchRange + ',';
 			var posOfComma = tmpSearchRange.indexOf(',');
@@ -415,6 +420,7 @@ step.searchSelect = {
 				if (posOfDash == -1) {
 					var posOfBook = this.idx2BookOrder[curRange];
 					if (typeof posOfBook !== "undefined") this.bookOrder[posOfBook][1] = true;
+					else keyboardEnteredRange = true;
 				}
 				else if (posOfDash > 1) {
 					var firstBook = curRange.substring(0, posOfDash);
@@ -422,12 +428,14 @@ step.searchSelect = {
 					var posOfBook1 = this.idx2BookOrder[firstBook];
 					var posOfBook2 = this.idx2BookOrder[secondBook];
 					if (typeof posOfBook1 !== "undefined") this.bookOrder[posOfBook1][1] = true;
+					else keyboardEnteredRange = true;
 					if (typeof posOfBook2 !== "undefined") {
 						this.bookOrder[posOfBook2][1] = true;
 						if ((posOfBook1 > -1) && (posOfBook1 < posOfBook2)) {
 							for (var i = posOfBook1 + 1; i < posOfBook2; i ++) this.bookOrder[i][1] = true; 
 						}
 					}
+					else keyboardEnteredRange = true;
 				}
 				var posOfComma = tmpSearchRange.indexOf(',');
 				if (posOfComma === -1) {
@@ -440,52 +448,55 @@ step.searchSelect = {
 				}
 			}
 		}
-		for (var i = 0; i < 3; i++) {
-			var curGroup;
-			var idPrefix;
-			if (i == 0) {
-			   curGroup = this.groupsOT;
-			   idPrefix = 'ot_tableg';
-			}
-			else if (i == 1) {
-			   curGroup = this.groupsNT;
-			   idPrefix = 'nt_tableg';
-			}
-			else if (i == 2) {
-			   curGroup = this.groupsOther;
-			   idPrefix = 'ob_tableg';
-			}
-			var allGroupsDisabled = true;
-			for (var j = 0; j < curGroup.length; j++) {
-				var allBooksInGroupDisabled = true;
-				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
-					if ( (curGroup[j].bookOrderPos[k] > -1) &&
-						(!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) ) {
-					   this._userClickedBook(idPrefix + j + 'b' + k);
-					}
-					if (onlyDisplaySpecifiedBooks) {
-						curBook = this.bookOrder[curGroup[j].bookOrderPos[k]][0];
-						if (booksToDisplay.indexOf(curBook) == -1)
-							$("#" + idPrefix + j + 'b' + k).prop("disabled",true).css('opacity',0.5);
-						else {
-							allBooksInGroupDisabled = false;
-							allGroupsDisabled = false;
+		if (keyboardEnteredRange) this._buildRangeKeyboard(this.searchRange);
+		else {
+			for (var i = 0; i < 3; i++) {
+				var curGroup;
+				var idPrefix;
+				if (i == 0) {
+				   curGroup = this.groupsOT;
+				   idPrefix = 'ot_tableg';
+				}
+				else if (i == 1) {
+				   curGroup = this.groupsNT;
+				   idPrefix = 'nt_tableg';
+				}
+				else if (i == 2) {
+				   curGroup = this.groupsOther;
+				   idPrefix = 'ob_tableg';
+				}
+				var allGroupsDisabled = true;
+				for (var j = 0; j < curGroup.length; j++) {
+					var allBooksInGroupDisabled = true;
+					for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
+						if ( (curGroup[j].bookOrderPos[k] > -1) &&
+							(!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) ) {
+						   this._userClickedBook(idPrefix + j + 'b' + k);
+						}
+						if (onlyDisplaySpecifiedBooks) {
+							curBook = this.bookOrder[curGroup[j].bookOrderPos[k]][0];
+							if (booksToDisplay.indexOf(curBook) == -1)
+								$("#" + idPrefix + j + 'b' + k).prop("disabled",true).css('opacity',0.5);
+							else {
+								allBooksInGroupDisabled = false;
+								allGroupsDisabled = false;
+							}
 						}
 					}
-				}
-				if ((onlyDisplaySpecifiedBooks) && (allBooksInGroupDisabled)) {
-					for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
-						$("#" + idPrefix + j + 'b' + k).hide(); // hide the button
-						$("#" + idPrefix + j + 'b' + k).parent().parent().hide(); // hide the tr
+					if ((onlyDisplaySpecifiedBooks) && (allBooksInGroupDisabled)) {
+						for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
+							$("#" + idPrefix + j + 'b' + k).hide(); // hide the button
+							$("#" + idPrefix + j + 'b' + k).parent().parent().hide(); // hide the tr
+						}
+						$("#" + idPrefix + j).hide(); // hide the group button (e.g.: book of Moses)
 					}
-					$("#" + idPrefix + j).hide(); // hide the group button (e.g.: book of Moses)
 				}
+				if ((onlyDisplaySpecifiedBooks) && (allGroupsDisabled))
+					$("#" + idPrefix.substr(0, 3) + "hdr").hide(); // hide the New Testament or Old Testament button
 			}
-			if ((onlyDisplaySpecifiedBooks) && (allGroupsDisabled))
-				$("#" + idPrefix.substr(0, 3) + "hdr").hide(); // hide the New Testament or Old Testament button
+			if (this.searchRange === 'Gen-Rev') $('#updateFeedback').text(__s.all_books_not_selected);
+			else $('#updateFeedback').text(__s.search_range_button_color_desc);
 		}
-		if (this.searchRange === 'Gen-Rev') $('#updateFeedback').text(__s.all_books_not_selected);
-		else $('#updateFeedback').text(__s.search_range_button_color_desc);
 		$('#searchSelectError').text("");
 		$('#updateRangeButton').hide();
 		$('#updateRangeButton').text(__s.update_search_range);
@@ -516,7 +527,7 @@ step.searchSelect = {
 		return html;
 	},
 
-	_buildRangeKeyboard: function() {
+	_buildRangeKeyboard: function(searchRange) {
 		$('#searchSelectError').text("");
 		$('#updateFeedback').text("");
 		$("#keyboardEntry").remove();
@@ -534,6 +545,7 @@ step.searchSelect = {
 				
 		$('#previousSearch').hide();
 		$('#searchHdrTable').empty().append(html);
+		if (typeof searchRange === "string") $("#enterRange").val(searchRange);
 		$('textarea#enterRange').focus();
 		$('#srchModalBackButton').show();
 		$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
@@ -554,6 +566,7 @@ step.searchSelect = {
 	_updateRange: function() {
 		var keyboardInput = $('textarea#enterRange').val();
 		if (typeof keyboardInput === "string") {
+			if (keyboardInput === "") keyboardInput = "Gen-Rev"
 			this.searchRange = keyboardInput;
 			this.goBackToPreviousPage();
 		}

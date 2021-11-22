@@ -112,7 +112,9 @@ $("#url2").on("keydown",function search(e) {
 });
 
 function copyURLToClipboard() {
-	var urlToCopy = window.location.origin + window.location.pathname + "?" + $("#f1")[0].src + "&secondURL=" + $("#f2")[0].src;
+	var urlToCopy = window.location.origin + window.location.pathname + "?" +
+		document.getElementById("f1").contentWindow.location.href + 
+		"&secondURL=" + $("#f2")[0].src;
 	var width = $($("#myRange")[0]).val();
 	if (width != 50) urlToCopy += "&widthPercent=" + width;
 	navigator.clipboard.writeText(urlToCopy);

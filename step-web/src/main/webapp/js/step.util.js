@@ -2626,7 +2626,7 @@ step.util = {
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
-		if ((introCount < 1) || (showAnyway)) {
+		if ((introCount <= 1) || (showAnyway)) {
 			var introJsSteps = [
 				{
 					intro: __s.introjs_intro

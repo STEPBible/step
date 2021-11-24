@@ -118,7 +118,9 @@ $("#url2").on("keydown",function search(e) {
 });
 
 function copyURLToClipboard() {
-	var urlToCopy = window.location.origin + window.location.pathname + "?" + $("#f1")[0].src + "&secondURL=" + $("#f2")[0].src;
+	var urlToCopy = window.location.origin + window.location.pathname + "?" +
+		document.getElementById("f1").contentWindow.location.href + 
+		"&secondURL=" + $("#f2")[0].src;
 	var width = $($("#myRange")[0]).val();
 	if (width != 50) urlToCopy += "&widthPercent=" + width;
 	navigator.clipboard.writeText(urlToCopy);
@@ -133,7 +135,8 @@ function outFunc() {
 }
 
 window.onmessage = function(e) {
-    if (typeof e.data === "string") {
+    if ((typeof e.data === "string") && (typeof e.origin === "string") &&
+		 (e.origin.indexOf("stepbible.org") > -1)) {
         var curURL = document.getElementById("f1").contentWindow.location.href;
 		var left = "";
 		var right = "";
@@ -142,7 +145,7 @@ window.onmessage = function(e) {
 			left = RegExp.leftContext;
 			right = RegExp.rightContext;
 			lastChar = RegExp.$1;
-			var acceptableStrings = "20 2c 2d 2e 3a 3b"; // %20 is space , - . : ; // %20 is space , - . : ;   %20, %2c, %2d, %3e, %3a, 3b are not the end of the passage reference
+			var acceptableStrings = "20 2c 2d 2e 3a 3b"; // %20 is space , - . : ;   %20, %2c, %2d, %3e, %3a, 3b are not the end of the passage reference
 			while ((lastChar === "%") &&
 				   (acceptableStrings.indexOf(right.substr(0, 2).toLowerCase()) > -1) &&
 				   (right.substr(2).search(/[^%&|\s]+([%&|])/) > -1) ) {

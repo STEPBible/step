@@ -112,8 +112,10 @@ $("#url2").on("keydown",function search(e) {
 });
 
 function copyURLToClipboard() {
+	var iFrame1URL = document.getElementById("f1").contentWindow.location.href;
+	if (iFrame1URL.indexOf("skipwelcome") == -1) iFrame1URL += "&skipwelcome";
 	var urlToCopy = window.location.origin + window.location.pathname + "?" +
-		document.getElementById("f1").contentWindow.location.href + 
+		iFrame1URL +
 		"&secondURL=" + $("#f2")[0].src;
 	var width = $($("#myRange")[0]).val();
 	if (width != 50) urlToCopy += "&widthPercent=" + width;

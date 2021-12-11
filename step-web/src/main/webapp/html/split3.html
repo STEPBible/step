@@ -138,7 +138,7 @@ function outFunc() {
 
 window.onmessage = function(e) {
     if ((typeof e.data === "string") && (typeof e.origin === "string") &&
-		 (e.origin.indexOf("stepbible.org") > -1)) {
+		 ((e.origin.indexOf("stepbible.org") > -1) || (e.origin.indexOf("localhost") > -1)) ) {
         var curURL = document.getElementById("f1").contentWindow.location.href;
 		var left = "";
 		var right = "";

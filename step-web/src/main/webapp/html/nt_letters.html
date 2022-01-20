@@ -27,35 +27,10 @@
       background: #17758f;
 	  color: white;
     }
-	.tb_col2 {
-        color: blue;
-        cursor: pointer;
+    .th_pointer {
+		cursor: pointer;
 	}
-	.tb_col3 {
-        color: blue;
-        cursor: pointer;
-	}
-	.tb_col4 {
-        color: blue;
-        cursor: pointer;
-	}
-	.tb_col5 {
-        color: blue;
-        cursor: pointer;
-	}
-	.tb_col6 {
-        color: blue;
-        cursor: pointer;
-	}
-	.tb_col7 {
-        color: blue;
-        cursor: pointer;
-	}
-	.tb_col8 {
-        color: blue;
-        cursor: pointer;
-	}
-	.tb_col9 {
+	.tb_col {
         color: blue;
         cursor: pointer;
 	}
@@ -78,17 +53,17 @@
 		<col span="1" style="width:11%;">
 	</colgroup>
 
-  <thead>
+  <thead id="tb_head">
     <tr class="tb_head">
       <th>Book</td>
-      <th>Salu&#173;tation</td>
-      <th>Thanks&#173;giving</td>
-      <th>Bless&#173;ing</td>
-      <th>Body Open&#173;ing</td>
-      <th>Body Clos&#173;ing</td>
-      <th>Greet&#173;ings</td>
-      <th>Signa&#173;ture</td>
-      <th>Closing Bene&#173;diction</td>
+      <th class="th_pointer">Salu&#173;tation</td>
+      <th class="th_pointer">Thanks&#173;giving</td>
+      <th class="th_pointer">Bless&#173;ing</td>
+      <th class="th_pointer">Body Open&#173;ing</td>
+      <th class="th_pointer">Body Clos&#173;ing</td>
+      <th class="th_pointer">Greet&#173;ings</td>
+      <th class="th_pointer">Signa&#173;ture</td>
+      <th class="th_pointer">Closing Bene&#173;diction</td>
     </tr>
   </thead>
   <tbody id="tb_body">
@@ -125,23 +100,30 @@
     $.getJSON("/html/json/" + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
 			tblRowHTML += 
-				'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
-				    '<td class="tb_col2">' + array[i][1] + '</td>' +
-					'<td class="tb_col3">' + array[i][2] + '</td>' +
-					'<td class="tb_col4">' + array[i][3] + '</td>' +
-					'<td class="tb_col5">' + array[i][4] + '</td>' +
-					'<td class="tb_col6">' + array[i][5] + '</td>' +
-					'<td class="tb_col7">' + array[i][6] + '</td>' +
-					'<td class="tb_col8">' + array[i][7] + '</td>' +
-					'<td class="tb_col9">' + array[i][8] + '</td></tr>';
+				'<tr><td>' + array[i][0] + '</td>' +
+				    '<td class="tb_col">' + array[i][1] + '</td>' +
+					'<td class="tb_col">' + array[i][2] + '</td>' +
+					'<td class="tb_col">' + array[i][3] + '</td>' +
+					'<td class="tb_col">' + array[i][4] + '</td>' +
+					'<td class="tb_col">' + array[i][5] + '</td>' +
+					'<td class="tb_col">' + array[i][6] + '</td>' +
+					'<td class="tb_col">' + array[i][7] + '</td>' +
+					'<td class="tb_col">' + array[i][8] + '</td></tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
     });
     $.ajaxSetup({async: true});
 
+    var rows = $("#tb_head").find("tr");
+    for (var j = 1; j <= 8; j ++) {
+         rows[0].cells[j].addEventListener("click", function() {
+             goToColumnSections(this);
+         }, false);
+    }
+
+
     var rows = $("#tb_body").find("tr");
     for (var i = 0; i < rows.length; i ++) {
-        rows[i].i = i;
         for (var j = 1; j <= 8; j ++) {
              rows[i].cells[j].addEventListener("click", function() {
                  goToNewSection(this);
@@ -157,26 +139,42 @@
 	});
 })();
 
+function goToColumnSections(item) {
+    var cellText = "";
+    var colNum = item.cellIndex;
+    var passages = "";
+
+    $(".tb_col").css("background-color", "white");
+
+    var rows = $("#tb_body").find("tr");
+    for (var i = 0; i < rows.length; i ++) {
+        cellText = rows[i].cells[colNum].innerText.replace(/[bc]/g, "");
+        if (cellText != "") {
+            if (passages != "") {
+                passages += "; ";
+            }
+            passages += rows[i].cells[0].innerText + cellText;
+            $(rows[i].cells[colNum]).css("background-color","cyan")
+        }
+    }
+
+    window.top.postMessage(passages, '*');
+
+}
+
 function goToNewSection(item) {
     var row = item.parentNode;
     var passage = "";
     if (item.innerText.length > 0) {
         passage += row.cells[0].innerText + item.innerText.replace(/[bc]/g, "");
-        $(".tb_col1").css("background-color", "white");
-        $(".tb_col2").css("background-color", "white");
-        $(".tb_col3").css("background-color", "white");
-        $(".tb_col4").css("background-color", "white");
-        $(".tb_col5").css("background-color", "white");
-        $(".tb_col6").css("background-color", "white");
-        $(".tb_col7").css("background-color", "white");
-        $(".tb_col8").css("background-color", "white");
-        $(".tb_col9").css("background-color", "white");
+        $(".tb_col").css("background-color", "white");
         
         $(item).css("background-color","cyan")
         window.top.postMessage(passage, '*');
     }
 
 }
+
 
 function handleKeyboardInput(e) {
 	var userInput =  $('textarea#userTextInput').val();
@@ -190,7 +188,7 @@ function handleKeyboardInput(e) {
 	else {
 		$("#tb_body").find("tr").hide();
 		var re = new RegExp(userInput, "i");
-		$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
+		$("tr").filter(function () { return re.test($(this).find(".tb_col").text());}).show();
 	}
 }
 

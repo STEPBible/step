@@ -102,7 +102,7 @@ public class SiteMapController extends HttpServlet {
     protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
             throws ServletException, IOException {
         if (this.stepBase == null) {
-            this.stepBase = String.format("http://%s/", appManagerService.getAppDomain());
+            this.stepBase = String.format("https://%s/", appManagerService.getAppDomain());
         }
 
         // response.setContentType("application/x-gzip");
@@ -182,7 +182,7 @@ public class SiteMapController extends HttpServlet {
      * @param siteMap the site map
      */
     private void initSiteMapIndex(final StringBuilder siteMap) {
-        siteMap.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
+        siteMap.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><sitemapindex xmlns=\"https://www.sitemaps.org/schemas/sitemap/0.9\">");
     }
 
     /**
@@ -222,7 +222,7 @@ public class SiteMapController extends HttpServlet {
      * @param siteMap the site map
      */
     private void initSiteMap(final StringBuilder siteMap) {
-        siteMap.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
+        siteMap.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"https://www.sitemaps.org/schemas/sitemap/0.9\">");
     }
 
     /**

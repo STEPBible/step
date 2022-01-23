@@ -1,2 +1,3 @@
 User-agent: *
-Sitemap: http://www.stepbible.org/sitemap.xml
+
+Sitemap: https://www.stepbible.org/sitemap.xml

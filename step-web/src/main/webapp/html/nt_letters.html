@@ -96,7 +96,7 @@
         inIFrame = true;
     }
     if (!inIFrame) {
-        window.location = window.location.origin + "/html/split.html?" + window.location.origin + "/?q=reference=Rom.1.1-7&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+        window.location = window.location.origin + "/html/split.html?" + window.location.origin + "/?q=reference=Rom.1.1-7;1Cor.1:1-3;2Cor.1:1-2;Gal.1:1-5;Eph.1:1-2;Phil.1:1-2;Col.1:1-2;1Thess.1:1;2Thess.1:1-2;1Tim.1:1-2;2Tim.1:1-2;Titus.1:1-4;Phlm.1-3;Jas.1:1;1Pet.1:1-2;2Pet.1:1-2;2John.1-3;3John.1-2;Jude.1-2;Rev.1:4-5&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
     }
 
 	var fullHeight = $(window).height();
@@ -132,7 +132,7 @@
 
     var rows = $("#tb_head").find("tr");
     for (var j = 1; j <= 8; j ++) {
-         rows[0].cells[j].addEventListener("click", function() {
+        rows[0].cells[j].addEventListener("click", function() {
              goToColumnSections(this);
          }, false);
     }
@@ -144,6 +144,9 @@
              rows[i].cells[j].addEventListener("click", function() {
                  goToNewSection(this);
              }, false);
+        }
+        if (rows[i].cells[1].innerText != "") {
+            $(rows[i].cells[1]).css("background-color", "cyan");
         }
     }
 

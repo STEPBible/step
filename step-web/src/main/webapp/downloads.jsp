@@ -83,7 +83,7 @@
 	  }
 	  
 	  .tr2 {
-	  height: 450px;
+	  height: 475px;
 	  }
 	  
 	  .pageContent {

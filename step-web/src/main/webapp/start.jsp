@@ -45,7 +45,7 @@
     </c:if>
     <meta property="fb:admins" content="551996214"/>
     <meta name="step.version" content="${project.version}"/>
-    <meta name="description" content="${ description }"/>
+    <meta name="description" content="Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles..."/>
     <link rel="shortcut icon" href="/images/step-favicon.ico"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 

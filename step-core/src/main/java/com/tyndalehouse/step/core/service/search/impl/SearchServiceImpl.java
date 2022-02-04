@@ -118,7 +118,7 @@ public class SearchServiceImpl implements SearchService {
     /**
      * value representing a original spelling sort
      */
-    public static final Pattern AUGMENTED_STRONG = Pattern.compile("strong:([Hh]\\d+[a-zA-Z])");
+    public static final Pattern AUGMENTED_STRONG = Pattern.compile("strong:([GgHh]\\d+[a-zA-Z])");
     public static final Pattern ALL_STRONGS = Pattern.compile("strong:[GgHh]\\d+\\w?");
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
     private static final String SYNTAX_FORMAT = "[%s...]";
@@ -1189,7 +1189,6 @@ public class SearchServiceImpl implements SearchService {
                 key.addAll(potentialAugmentedResults);
             }
         }
-
         currentSearch.setQuery(currentQuery);
         return key;
     }
@@ -1371,8 +1370,8 @@ public class SearchServiceImpl implements SearchService {
 
         setUniqueConsideredDefinitions(sq, results, relatedResults);
 
-        // append range to query
-        sq.getCurrentSearch().setQuery(fullQuery.toString().toLowerCase(), true);
+        // append range to query.  On 11/17/2021 remove lowercase() to support mix case suffix in Strong number
+        sq.getCurrentSearch().setQuery( fullQuery.toString(), true);
         return filteredStrongs;
     }
 
@@ -1709,9 +1708,9 @@ public class SearchServiceImpl implements SearchService {
         final Set<String> strongList = new HashSet<>();
         for (final String s : strongs) {
             //if non-augmented, we take the string
-            final String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
-            String paddedStrong = padStrongNumber(prefixedStrong.toUpperCase(Locale.ENGLISH), false);
-
+            String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
+            prefixedStrong = prefixedStrong.substring(0, 1).toUpperCase(Locale.ENGLISH) + prefixedStrong.substring(1);  // uppercase first letter
+            String paddedStrong = padStrongNumber(prefixedStrong, false);
             if(Character.isDigit(paddedStrong.charAt(paddedStrong.length() - 1))) {
                 Character suffix = this.strongAugmentationService.getAugmentedStrongSuffix(s);
                 if (suffix != null) {

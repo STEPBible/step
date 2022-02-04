@@ -674,6 +674,24 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>com.coderplus.maven.plugins</groupId>
+					<artifactId>copy-rename-maven-plugin</artifactId>
+					<version>1.0</version>
+					<executions>
+						<execution>
+							<id>copy-file</id>
+							<phase>integration-test</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<sourceFile>target\step-web.war</sourceFile>
+								<destinationFile>\STEP\apache-tomcat-9.0.58\webapps\ROOT.war</destinationFile>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 	</build>
 

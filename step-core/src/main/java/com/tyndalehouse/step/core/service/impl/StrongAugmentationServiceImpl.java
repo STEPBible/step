@@ -55,14 +55,15 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         //for each key, we see if there is an augment strong number
         final StringBuilder query = new StringBuilder(keys.length * 10 + 16);
         query.append("(");
+        boolean hebrew = false;
         for (int i = 0; i < keys.length; i++) {
-            //if Hebrew and not augmented
-            if (isNonAugmentedHebrew(keys[i])) {
+            if (keys[i].charAt(0) == 'H') hebrew = true;
+            if (isNonAugmented(keys[i])) {
                 //then we're looking at Hebrew, so look up the augmentedStrongs data
                 //and we're looking for the first of any strong number
                 //build the lucene query...
                 query.append(StringConversionUtils.getStrongPaddedKey(keys[i]));
-                query.append("? ");
+                query.append("~ "); // changed ? to ~ because white space analyzer
             } else {
                 //add directly to the augmented list
                 augmentedStrongs.put(keys[i], keys[i]);
@@ -83,7 +84,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 }
             }
             if (foundDigit) {
-                individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
+                if (hebrew) individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
+                else individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.REFERENCE_BOOK).getKey().getOsisID());
             }
             else { // If there are no chapter or verse number, the query does not need to list all the verses in the book.
                 individualVerses = new String[1];
@@ -126,7 +128,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             //now we need to work out which strongs were not augmented and add them to the list
             //check which strongs didn't make it
             for (String k : keys) {
-                final String keyingStrong = StringConversionUtils.getStrongPaddedKey(k).toLowerCase();
+                final String keyingStrong = StringConversionUtils.getStrongPaddedKey(k); // .toLowerCase();
                 if (!augmentedStrongs.containsKey(keyingStrong)) {
                     augmentedStrongs.put(keyingStrong, k);
                 }
@@ -138,8 +140,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return new AugmentedStrongs(augmentedStrongs.values().toArray(augmented), docs);
     }
 
-    private boolean isNonAugmentedHebrew(final String key) {
-        return key.charAt(0) == 'H' && Character.isDigit(key.charAt(key.length() - 1));
+    private boolean isNonAugmented(final String key) {
+        return (key.charAt(0) == 'H' || key.charAt(0) == 'G') && Character.isDigit(key.charAt(key.length() - 1));
     }
 
     @Override
@@ -161,7 +163,10 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         }
 
         try {
-            return PassageKeyFactory.instance().getKey(getOTBookVersification(), entityDocs[0].get(AS_REFERENCES));
+            if ((augmentedStrong.charAt(0) == 'G') || (augmentedStrong.charAt(0) == 'g'))
+                return PassageKeyFactory.instance().getKey(getESVBookVersification(), entityDocs[0].get(AS_REFERENCES));
+            else
+                return PassageKeyFactory.instance().getKey(getOTBookVersification(), entityDocs[0].get(AS_REFERENCES));
         } catch (NoSuchKeyException e) {
             throw new StepInternalException("Unable to parse references for some of the entries in the augmented strongs data", e);
         }
@@ -182,4 +187,12 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     private Versification getOTBookVersification() {
         return this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
     }
+
+    /**
+     * @return * @return the versification for ESV which should be NRSV versification
+     */
+    private Versification getESVBookVersification() {
+        return this.versificationService.getVersificationForVersion("ESV");
+    }
+
 }

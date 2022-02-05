@@ -63,7 +63,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 //and we're looking for the first of any strong number
                 //build the lucene query...
                 query.append(StringConversionUtils.getStrongPaddedKey(keys[i]));
-                query.append("~ "); // changed ? to ~ because white space analyzer
+                query.append("~ "); // changed from ? to ~ because white space analyzer
             } else {
                 //add directly to the augmented list
                 augmentedStrongs.put(keys[i], keys[i]);
@@ -122,7 +122,10 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             docs = this.augmentedStrongs.search("augmentedStrong", query.toString());
             for (EntityDoc d : docs) {
                 final String augmentedStrong = d.get("augmentedStrong");
-                augmentedStrongs.put(augmentedStrong.substring(0, augmentedStrong.length() - 1).toLowerCase(), augmentedStrong);
+                for (String k: keys) {
+                    if (k.equals(augmentedStrong.substring(0, augmentedStrong.length() - 1)))
+                        augmentedStrongs.put(augmentedStrong.substring(0, augmentedStrong.length() - 1), augmentedStrong);
+                }
             }
 
             //now we need to work out which strongs were not augmented and add them to the list

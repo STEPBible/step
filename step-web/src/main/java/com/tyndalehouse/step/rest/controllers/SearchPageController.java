@@ -366,9 +366,17 @@ public class SearchPageController extends HttpServlet {
                 LOGGER.warn("Missing resource for {}", results.getSearchType().getLanguageSearchKey(), ex);
                 keyInfo.append("Search");
             }
-
-            req.setAttribute("title", wrapTitle(keyInfo.toString(), results.getMasterVersion(), null));
+            String keyToDisplay = keyInfo.toString();
+            if (keyToDisplay.substring(0,2).equals("t=")) keyToDisplay = keyToDisplay.substring(2);
+            else keyToDisplay = keyToDisplay.replace("Subject search", " | Subject search");
+            int pos = keyToDisplay.indexOf(" | ");
+            String keyForDesc = keyToDisplay;
+            if (pos > 1) {
+                keyForDesc  = keyToDisplay.substring(pos + 3) + " of " + keyToDisplay.substring(0, pos);
+            }
+            req.setAttribute("title", wrapTitle(keyToDisplay, results.getMasterVersion(), null));
             req.setAttribute("canonicalUrl", req.getParameter("q"));
+            req.setAttribute("description", String.format("Bible verses on %s. STEPBible provides advanced searching capabilities on phrase, Greek, Hebrew and word meanings.", keyForDesc));
         } catch (Exception ex) {
             //a page with no title is better than no pages
             LOGGER.error("Unable to ascertain meta data", ex);
@@ -386,7 +394,8 @@ public class SearchPageController extends HttpServlet {
         try {
             final String preview = this.bible.getPlainTextPreview(osisWrapper.getMasterVersion(), osisWrapper.getOsisId());
             request.setAttribute("title", wrapTitle(osisWrapper.getReference(), osisWrapper.getMasterVersion(), preview));
-            request.setAttribute("description", preview);
+            //request.setAttribute("description", preview);
+            request.setAttribute("description", "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...");
             request.setAttribute("canonicalUrl", getUrlFragmentForPassage(osisWrapper.getMasterVersion(), osisWrapper.getOsisId()));
         } catch (Exception ex) {
             //a page with no title is better than no pages

@@ -366,15 +366,16 @@ public class SearchPageController extends HttpServlet {
                 LOGGER.warn("Missing resource for {}", results.getSearchType().getLanguageSearchKey(), ex);
                 keyInfo.append("Search");
             }
-            String keyToDisplay = keyInfo.toString();
-            if (keyToDisplay.substring(0,2).equals("t=")) keyToDisplay = keyToDisplay.substring(2);
-            else keyToDisplay = keyToDisplay.replace("Subject search", " | Subject search");
-            int pos = keyToDisplay.indexOf(" | ");
-            String keyForDesc = keyToDisplay;
+            String keyForTitle = keyInfo.toString();
+            if (keyForTitle.substring(0,2).equals("t=")) keyForTitle = keyForTitle.substring(2);
+            else keyForTitle = keyForTitle.replace("Subject search", " | Subject search");
+            int pos = keyForTitle.indexOf(" | ");
+            String keyForDesc = keyForTitle;
             if (pos > 1) {
-                keyForDesc  = keyToDisplay.substring(pos + 3) + " of " + keyToDisplay.substring(0, pos);
+                keyForDesc  = keyForTitle.substring(pos + 3) + " of " + keyForTitle.substring(0, pos);
             }
-            req.setAttribute("title", wrapTitle(keyToDisplay, results.getMasterVersion(), null));
+            keyForTitle = "Bible verse about " + keyForTitle;
+            req.setAttribute("title", wrapTitle(keyForTitle, results.getMasterVersion(), null));
             req.setAttribute("canonicalUrl", req.getParameter("q"));
             req.setAttribute("description", String.format("Bible verses on %s. STEPBible provides advanced searching capabilities on phrase, Greek, Hebrew and word meanings.", keyForDesc));
         } catch (Exception ex) {

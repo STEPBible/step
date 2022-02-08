@@ -85,6 +85,10 @@ src="/html/multimap.html?coord=33.545097,36.224661&book=2Kgs"></iframe>
     console.log(queryString);
     console.log(firstURL);
     console.log(secondURL);
+	if (secondURL.indexOf("places") > -1) {
+		document.title = "Maps, Geography of places, towns, rivers in the Bible";
+		document.getElementsByTagName('meta')["description"].content = "Locations, countries, towns, cities, rivers, places in the Bible, mapped, maps with Bible references. Searchable by reference or place names.";
+	}
 	var fullHeight = $(document).height();
 	var fullWidth = $(document).width();
 	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;

@@ -99,8 +99,8 @@ public class StepServletConfig extends GuiceServletContextListener {
 //                        if (Boolean.getBoolean("metrics.enabled")) {
 //                            serve("/metrics/*").with(AdminServlet.class);
 //                        }
-                        serve("/sitemap*").with(SiteMapController.class);
-                        serve("/SITEMAP*").with(SiteMapController.class);
+                        serve("/sitemap_version*").with(SiteMapController.class);
+                        serve("/SITEMAP_version*").with(SiteMapController.class);
                         // filters
                         filter("/index.jsp", "/").through(SetupRedirectFilter.class);
                         filter("*_escaped_fragment_*", "/").through(HashBangFragmentFilter.class);

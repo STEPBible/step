@@ -363,7 +363,10 @@ public class SearchPageController extends HttpServlet {
                     keyInfo.append(token);
                     keyInfo.append(infoSeparator);
                     String tmpString = token;
-                    if (token.substring(0,2).equals("t=")) tmpString = tmpString.substring(2);
+                    if (token.substring(0,2).equals("t=")) {
+                        tmpString = tmpString.substring(2);
+                        tmpString = tmpString.replaceAll(" AND ", ", ");
+                    }
                     shortSearchWord.append(tmpString);
                 }
             }

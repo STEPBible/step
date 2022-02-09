@@ -97,10 +97,6 @@
 		document.title = "OT, Old Testament Parallels: Samuel, Kings, Chronicles";
 		document.getElementsByTagName('meta')["description"].content = "OT passages of parallel or identical events, descriptions side by side from Books of Moses, Samuel, Kings, Chronicles, Isaiah, Jeremiah, Ezekiel, Psalms";
 	}
-	else if (secondURL.indexOf("places") > -1) {
-		document.title = "Maps, Geography of places, towns, rivers in the Bible";
-		document.getElementsByTagName('meta')["description"].content = "Locations, countries, towns, cities, rivers, places in the Bible, mapped, maps with Bible references. Searchable by reference or place names.";
-	}
 	else if (secondURL.indexOf("miracles") > -1) {
 		document.title = "Miracles in the Bible, Acts of God, Wonders, miraculous";
 		document.getElementsByTagName('meta')["description"].content = "All the miracles of the Bible: creation, flood, healings, raising dead, serpent, plague, fire, food, army, wine, exorcism, vision, Elijah, Elisha, Jesus.";
@@ -108,6 +104,10 @@
 	else if (secondURL.indexOf("ot_in_nt") > -1) {
 		document.title = "OT in NT, Old Testament quotations in New Testament";
 		document.getElementsByTagName('meta')["description"].content = "All Old Testament passages cited or quoted in the New Testament about Messiah, Law, prophecy fulfilled, commands. Searchable by reference or opening words.";
+	}
+	else if (secondURL.indexOf("places") > -1) {
+		document.title = "Maps, Geography of places, towns, rivers in the Bible";
+		document.getElementsByTagName('meta')["description"].content = "Locations, countries, towns, cities, rivers, places in the Bible, mapped, maps with Bible references. Searchable by reference or place names.";
 	}
 	var fullHeight = $(document).height();
 	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;

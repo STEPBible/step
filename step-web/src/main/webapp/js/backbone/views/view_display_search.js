@@ -137,7 +137,7 @@ var SearchDisplayView = DisplayView.extend({
             });
         }
 
-        this.doTitle();
+        if (numReturned > 0) this.doTitle();
         this.doSwapInterlinearLink(this.$el);
         step.util.ui.addStrongHandlers(passageId, this.$el);
         step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"), true);

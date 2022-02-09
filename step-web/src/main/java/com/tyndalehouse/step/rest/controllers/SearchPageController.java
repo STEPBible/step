@@ -298,6 +298,9 @@ public class SearchPageController extends HttpServlet {
             String scope = null;
             StringBuilder keyInfo = new StringBuilder(128);
             StringBuilder versions = new StringBuilder(32);
+            StringBuilder shortSearchWord = new StringBuilder(32);
+            StringBuilder longSearchWord = new StringBuilder(48);
+            boolean strongSearch = false;
             for (SearchToken t : searchTokens) {
                 final String tokenType = t.getTokenType();
                 final String token = t.getToken();
@@ -310,18 +313,22 @@ public class SearchPageController extends HttpServlet {
                 } else if (SearchToken.SUBJECT_SEARCH.equals(tokenType)) {
                     keyInfo.append(token);
                     versions.append(infoSeparator);
+                    shortSearchWord.append(token);
                 } else if (SearchToken.NAVE_SEARCH.equals(tokenType)) {
                     keyInfo.append(token);
                     versions.append(infoSeparator);
+                    shortSearchWord.append(token);
                 } else if (SearchToken.NAVE_SEARCH_EXTENDED.equals(tokenType)) {
                     keyInfo.append(token);
                     versions.append(infoSeparator);
+                    shortSearchWord.append(token);
                 } else if (SearchToken.TEXT_SEARCH.equals(tokenType)) {
                     keyInfo.append(token);
                     versions.append(infoSeparator);
+                    shortSearchWord.append(token);
                 } else if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
+                    strongSearch = true;
                     final LexiconSuggestion enhancedTokenInfo = (LexiconSuggestion) t.getEnhancedTokenInfo();
-
                     keyInfo.append(enhancedTokenInfo.getMatchingForm());
                     keyInfo.append(" - ");
                     keyInfo.append(enhancedTokenInfo.getGloss());
@@ -330,22 +337,37 @@ public class SearchPageController extends HttpServlet {
                     keyInfo.append(" - ");
                     keyInfo.append(enhancedTokenInfo.getStrongNumber());
                     keyInfo.append(infoSeparator);
+                    shortSearchWord.append(enhancedTokenInfo.getStepTransliteration());
+                    longSearchWord.append(enhancedTokenInfo.getStepTransliteration());
+                    longSearchWord.append(", ");
+                    longSearchWord.append(enhancedTokenInfo.getGloss());
+                    longSearchWord.append(", ");
+                    longSearchWord.append(enhancedTokenInfo.getStrongNumber());
                 } else if (SearchToken.MEANINGS.equals(tokenType)) {
                     keyInfo.append(token);
                     keyInfo.append(infoSeparator);
+                    shortSearchWord.append(token);
                 } else if (SearchToken.TOPIC_BY_REF.equals(tokenType)) {
                     keyInfo.append(token);
                     keyInfo.append(infoSeparator);
-
+                    shortSearchWord.append(token);
                 } else if (SearchToken.RELATED_VERSES.equals(tokenType)) {
                     keyInfo.append(token);
                     keyInfo.append(infoSeparator);
+                    shortSearchWord.append(token);
                 } else if (SearchToken.EXACT_FORM.equals(tokenType)) {
                     keyInfo.append(token);
                     keyInfo.append(infoSeparator);
+                    shortSearchWord.append(token);
                 } else if (SearchToken.SYNTAX.equals(tokenType)) {
                     keyInfo.append(token);
                     keyInfo.append(infoSeparator);
+                    String tmpString = token;
+                    if (token.substring(0,2).equals("t=")) {
+                        tmpString = tmpString.substring(2);
+                        tmpString = tmpString.replaceAll(" AND ", ", ");
+                    }
+                    shortSearchWord.append(tmpString);
                 }
             }
 
@@ -366,9 +388,20 @@ public class SearchPageController extends HttpServlet {
                 LOGGER.warn("Missing resource for {}", results.getSearchType().getLanguageSearchKey(), ex);
                 keyInfo.append("Search");
             }
-
-            req.setAttribute("title", wrapTitle(keyInfo.toString(), results.getMasterVersion(), null));
+            String title = "";
+            String description = "";
+            if (strongSearch) {
+                title = shortSearchWord.toString() + " in STEP Bible with Greek and Hebrew helps";
+                description = "What the Bible says about " + longSearchWord.toString() + " in Bibles with Greek & Hebrew interlinear, search, study tools.  Recommended by schools, Free.";
+            }
+            else {
+                title = shortSearchWord.toString() + " in STEP Bible, study tools, 280 languages";
+                description = "What the Bible says about " + shortSearchWord.toString() + " in Bibles with original meaning, search, study helps, maps, topics, commentaries, meaning. Reliable, Free.";
+            }
+            // keyForTitle = "Bible verse about " + keyForTitle;
+            req.setAttribute("title", wrapTitle(title, results.getMasterVersion(), null));
             req.setAttribute("canonicalUrl", req.getParameter("q"));
+            req.setAttribute("description", description);
         } catch (Exception ex) {
             //a page with no title is better than no pages
             LOGGER.error("Unable to ascertain meta data", ex);
@@ -386,7 +419,8 @@ public class SearchPageController extends HttpServlet {
         try {
             final String preview = this.bible.getPlainTextPreview(osisWrapper.getMasterVersion(), osisWrapper.getOsisId());
             request.setAttribute("title", wrapTitle(osisWrapper.getReference(), osisWrapper.getMasterVersion(), preview));
-            request.setAttribute("description", preview);
+            //request.setAttribute("description", preview);
+            request.setAttribute("description", "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...");
             request.setAttribute("canonicalUrl", getUrlFragmentForPassage(osisWrapper.getMasterVersion(), osisWrapper.getOsisId()));
         } catch (Exception ex) {
             //a page with no title is better than no pages
@@ -427,9 +461,9 @@ public class SearchPageController extends HttpServlet {
         sb.append(keyInfo);
         sb.append(" | ");
         sb.append(masterVersion);
-        sb.append(" | ");
-        sb.append("STEP");
         if (preview != null) {
+            sb.append(" | ");
+            sb.append("STEP");
             sb.append(" | ");
             sb.append(preview);
         }

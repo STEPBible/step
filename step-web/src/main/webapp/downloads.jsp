@@ -153,7 +153,8 @@
 			<p class="h" id="download_step_header">Download STEPBible to your computer</p>
 			<p class="p">
 			  Run STEPBible from your computer when disconnected from the internet.  ESV,
-			  NIV and ancient language Bibles are included.
+			  NIV and ancient language Bibles are included.  It works in 50
+			  languages and additional Bibles can be downloaded in 280 languages.
 			  <br/><br/>
 			  Current version for download is: <%= downloadVersion %>
 			  <br/>

@@ -643,11 +643,11 @@
 					<configuration>
 						<container>
 							<containerId>tomcat6x</containerId>
-							<home>/opt/bitnami/dev-step-tomcat</home>
+							<home>/var/lib/tomcat9</home>
 						</container>
 						<configuration>
 							<type>existing</type>
-							<home>/opt/bitnami/dev-step-tomcat</home>
+							<home>/var/lib/tomcat9</home>
 						</configuration>
 						<deployer>
 							<type>installed</type>

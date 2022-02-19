@@ -57,13 +57,13 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         query.append("(");
         boolean hebrew = false;
         for (int i = 0; i < keys.length; i++) {
-            if (keys[i].charAt(0) == 'H') hebrew = true;
+            if ((keys[i].charAt(0) == 'H') || (keys[i].charAt(0) == 'h')) hebrew = true;
             if (isNonAugmented(keys[i])) {
                 //then we're looking at Hebrew, so look up the augmentedStrongs data
                 //and we're looking for the first of any strong number
                 //build the lucene query...
                 query.append(StringConversionUtils.getStrongPaddedKey(keys[i]));
-                query.append("~ "); // changed from ? to ~ because white space analyzer
+                query.append("~ "); // changed from ? to ~ because white space analyzer which does not accept ?
             } else {
                 //add directly to the augmented list
                 augmentedStrongs.put(keys[i], keys[i]);
@@ -84,6 +84,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 }
             }
             if (foundDigit) {
+            // **** Need to take care of Greek in OT, eg LXX
                 if (hebrew) individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
                 else individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.REFERENCE_BOOK).getKey().getOsisID());
             }

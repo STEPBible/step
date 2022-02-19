@@ -72,6 +72,7 @@ public class VocabInfo implements Serializable {
     private String unaccentedStepTransliteration;
     private String twoLetterLookup;
     private String rawRelatedNumbers;
+	private String step_DetailLexicalTag;
     private Integer count;
 
     /**
@@ -133,9 +134,9 @@ public class VocabInfo implements Serializable {
             this.lsjDefs = d.get("lsjDefinition");
             this.strongNumber = d.get("strongNumber");
             this.twoLetterLookup = d.get("twoLetter");
-
             if (this.strongNumber != null) {
                 this.relatedNos = relatedVocabs.get(this.strongNumber);
+				this.step_DetailLexicalTag = d.get("STEP_DetailLexicalTag");
             }
         } else {
             this.rawRelatedNumbers = OriginalWordUtils.stripExtensions(d.get("relatedNumbers"));
@@ -339,6 +340,19 @@ public class VocabInfo implements Serializable {
         this.zh_Definition = zh_Definition;
     }
 
+    /**
+     * @return the STEP_DetailLexicalTag
+     */
+    public String get_step_DetailLexicalTag() {
+        return this.step_DetailLexicalTag;
+    }
+    /**
+     * @param step_DetailLexicalTag
+     */
+    public void set_step_DetailLexicalTag(final String step_DetailLexicalTag) {
+        this.step_DetailLexicalTag = step_DetailLexicalTag;
+    }
+	
     /**
      * @return the Spanish Gloss
      */

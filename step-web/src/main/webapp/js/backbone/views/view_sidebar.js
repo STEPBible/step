@@ -375,14 +375,17 @@ var SidebarView = Backbone.View.extend({
 		if (mainWord._step_DetailLexicalTag) {
 			var detailLex = JSON.parse(mainWord._step_DetailLexicalTag);
 			for (var i = 0; i < detailLex.length; i++) {
-				panel.append($("<br><span> " + detailLex[i][0] + " " + detailLex[i][2]  + " </span><span class='hbFontSmall'>" +
-					detailLex[i][3]  + "</span>"));
+				var origLangClassStyle = (detailLex[i][1][0].toUpperCase() == "H") ? "class='hbFontMini' style='unicode-bidi:bidi-override'" :
+					"class='unicodeFontMini'";
+				panel.append($("<br>&nbsp;&nbsp;&nbsp;<span>" + detailLex[i][0] + " " + detailLex[i][2]  + " </span><span " + origLangClassStyle + ">" +
+					detailLex[i][3] + "</span>"));
 				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, detailLex[i][4]) + '</span>').click(function () {
 					var strongNumber = $(this).data("strongNumber");
 					var args = "strong=" + encodeURIComponent(strongNumber);
 					step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
 					step.router.navigatePreserveVersions(args, false, true);
 				}));
+				
 			}
 		}
         panel.append().append('<br />');

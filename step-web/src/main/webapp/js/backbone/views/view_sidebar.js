@@ -370,25 +370,65 @@ var SidebarView = Backbone.View.extend({
                 var args = "strong=" + encodeURIComponent(strongNumber);
                 step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
                 step.router.navigatePreserveVersions(args, false, true);
+				return false;
             }));
         }
 		if (mainWord._step_DetailLexicalTag) {
 			var detailLex = JSON.parse(mainWord._step_DetailLexicalTag);
-			for (var i = 0; i < detailLex.length; i++) {
-				var origLangClassStyle = (detailLex[i][1][0].toUpperCase() == "H") ? "class='hbFontMini'" :
-					"class='unicodeFontMini'";
-				panel.append($("<br>&nbsp;&nbsp;&nbsp;<span>" + detailLex[i][0] + " " + detailLex[i][2]  + " </span><span " + origLangClassStyle + ">" +
-					detailLex[i][3] + "</span>"));
-				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).append('<span class="strongCount"  style="unicode-bidi:isolate-override"> ' + sprintf(__s.stats_occurs, detailLex[i][4]) + '</span>').click(function () {
-					var strongNumber = $(this).data("strongNumber");
-					var args = "strong=" + encodeURIComponent(strongNumber);
-					step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
-					step.router.navigatePreserveVersions(args, false, true);
+			if (detailLex.length > 0) {
+				panel.append("&nbsp;&nbsp;");
+				panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {
+					ev.preventDefault();
+					if (ev.target.id === "detailLexSelect") {
+						if ($(".detailLex:visible").length > 0) {
+							$(".detailLex").hide();
+							$("#detailLexSelect").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+						}
+						else {
+							$(".detailLex").show();
+							$("#detailLexSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+						}
+					}
+					return false;
 				}));
-				
+				var allStrongs = [];
+				allStrongs.push(mainWord.strongNumber);
+				var total = mainWord.count;
+				for (var i = 0; i < detailLex.length; i++) {
+					var origLangClassStyle = (detailLex[i][1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
+						"class='unicodeFontMini detailLex'";
+					panel.append($("<br>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>" + detailLex[i][0] + "</span>"));
+					panel.append("&nbsp;");
+					panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).
+						append($("<span class='detailLex' style='display:none'>" + detailLex[i][2]  + " </span><span " + origLangClassStyle + " style='display:none'>" +
+						detailLex[i][3] + "</span>")).click(function () {
+							step.util.ui.showDef($(this).data("strongNumber"));
+						}));
+					panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, detailLex[i][4]) + '</span>').click(function () {
+						var strongNumber = $(this).data("strongNumber");
+						var args = "strong=" + encodeURIComponent(strongNumber);
+						step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
+						step.router.navigatePreserveVersions(args, false, true);
+						return false;
+					}));
+					allStrongs.push(detailLex[i][1]);
+					total += detailLex[i][4];
+				}
+				panel.append($("<br>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>All of the above</span>"));
+				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, total) + '</span>').click(function () {
+					var allStrongs = $(this).data("strongNumber");
+					var args = "syntax=t=strong:" + encodeURIComponent(allStrongs[0]);
+					for (var j = 1; j < allStrongs.length; j++) {
+						args += "%20OR%20strong:" + encodeURIComponent(allStrongs[j]);
+					}
+					step.util.activePassage().save({strongHighlights: allStrongs[0]}, {silent: true});
+					step.router.navigatePreserveVersions(args, false, true);
+					return false;
+				}));				
 			}
 		}
         panel.append().append('<br />');
+		return false;
     },
 
 	_lookUpGeoInfo: function(mainWord, bookName, indexToCoordArray) {

@@ -376,9 +376,8 @@ var SidebarView = Backbone.View.extend({
 		if (mainWord._step_DetailLexicalTag) {
 			var detailLex = JSON.parse(mainWord._step_DetailLexicalTag);
 			if (detailLex.length > 0) {
-				panel.append("<br><span>Related lexical word(s)</span>");
+				panel.append("<br><span>Related lexical word(s):</span>");
 				panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {
-					ev.preventDefault();
 					if (ev.target.id === "detailLexSelect") {
 						if ($(".detailLex:visible").length > 0) {
 							$(".detailLex").hide();
@@ -397,7 +396,7 @@ var SidebarView = Backbone.View.extend({
 				for (var i = 0; i < detailLex.length; i++) {
 					var origLangClassStyle = (detailLex[i][1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
 						"class='unicodeFontMini detailLex'";
-					panel.append($("<br>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>" + detailLex[i][0] + "</span>"));
+					panel.append($("<br class='detailLex'>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>" + detailLex[i][0] + "</span>"));
 					panel.append("&nbsp;");
 					panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).
 						append($("<span class='detailLex' style='display:none'>" + detailLex[i][2]  + " </span><span " + origLangClassStyle + " style='display:none'>" +
@@ -415,7 +414,7 @@ var SidebarView = Backbone.View.extend({
 					total += detailLex[i][4];
 				}
 				
-				panel.append($("<br>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>All of the above</span>"));
+				panel.append($("<br class='detailLex'>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>All of the above</span>"));
 				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, total) + '</span>').click(function () {
 					var allStrongs = $(this).data("strongNumber");
 					var args = "strong=" + encodeURIComponent(allStrongs[0]);

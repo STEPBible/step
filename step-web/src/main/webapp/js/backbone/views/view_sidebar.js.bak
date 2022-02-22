@@ -449,18 +449,16 @@ var SidebarView = Backbone.View.extend({
 
 	_relatedNosNotDisplayed: function(relatedNos, detailLex) {
 		var relatedNosToDisplay = [];
-		if (relatedNos) {
-			for (var i = 0; i < relatedNos.length; i++) {
-				var found = false;
-				for (var j = 0; ((j < detailLex.length) && (!found)); j++) {
-					if (relatedNos[i].strongNumber === detailLex[j][1]) {
-						console.log("skipping " + detailLex[j][1]);
-						found = true;
-					}
+		for (var i = 0; i < relatedNos.length; i++) {
+			var found = false;
+			for (var j = 0; ((j < detailLex.length) && (!found)); j++) {
+				if (relatedNos[i].strongNumber === detailLex[j][1]) {
+					console.log("skipping " + detailLex[j][1]);
+					found = true;
 				}
-				if (!found) {
-					relatedNosToDisplay.push(relatedNos[i]);
-				}
+			}
+			if (!found) {
+				relatedNosToDisplay.push(relatedNos[i]);
 			}
 		}
 		return relatedNosToDisplay;

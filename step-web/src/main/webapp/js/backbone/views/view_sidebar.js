@@ -298,7 +298,7 @@ var SidebarView = Backbone.View.extend({
                 var currentStrongNumber = currentMatch;
                 if ((currentStrongNumber.substr(0,1) != "G") && (currentStrongNumber.substr(0,1) != "H"))
                     currentStrongNumber = currentWordLangCode + currentMatch;
-                if ((currentStrongNumber.length > 5) && (currentStrongNumber.substr(1,1) == "0"))
+                if ((currentStrongNumber.length == 6) && (currentStrongNumber.substr(1,1) == "0") && (!isNaN(currentStrongNumber.substr(2,5)))) // G0nnnn -> Gnnnn or H0nnnn -> Hnnnn
                     currentStrongNumber = currentStrongNumber.substr(0,1) + currentStrongNumber.substr(2);
                 panel.append(remainingText.substr(0, pos));  // text before the 4 character code
                 panel.append($('<a sbstrong href="javascript:void(0)">')
@@ -376,7 +376,7 @@ var SidebarView = Backbone.View.extend({
 		if (mainWord._step_DetailLexicalTag) {
 			var detailLex = JSON.parse(mainWord._step_DetailLexicalTag);
 			if (detailLex.length > 0) {
-				panel.append("&nbsp;&nbsp;");
+				panel.append("<br><span>Related lexical word(s)</span>");
 				panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {
 					ev.preventDefault();
 					if (ev.target.id === "detailLexSelect") {
@@ -414,14 +414,17 @@ var SidebarView = Backbone.View.extend({
 					allStrongs.push(detailLex[i][1]);
 					total += detailLex[i][4];
 				}
+				
 				panel.append($("<br>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>All of the above</span>"));
 				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, total) + '</span>').click(function () {
 					var allStrongs = $(this).data("strongNumber");
-					var args = "syntax=t=strong:" + encodeURIComponent(allStrongs[0]);
+					var args = "strong=" + encodeURIComponent(allStrongs[0]);
+					allStrongsWithComma = encodeURIComponent(allStrongs[0])
 					for (var j = 1; j < allStrongs.length; j++) {
-						args += "%20OR%20strong:" + encodeURIComponent(allStrongs[j]);
+						allStrongsWithComma += "," + encodeURIComponent(allStrongs[j]);
 					}
-					step.util.activePassage().save({strongHighlights: allStrongs[0]}, {silent: true});
+					step.util.activePassage().save({strongHighlights: allStrongsWithComma}, {silent: true});
+					console.log("arg" + args);
 					step.router.navigatePreserveVersions(args, false, true);
 					return false;
 				}));				

@@ -1025,7 +1025,16 @@ step.searchSelect = {
 									}
 								}
 								else {
-									text2Display = data[i].suggestion.gloss + ' (<i>' + data[i].suggestion.stepTransliteration +
+									var glossToShow = data[i].suggestion.gloss;
+									if ((typeof data[i].suggestion.strongNumber === "string") && (data[i].suggestion.strongNumber.length > 5)) {
+										var strongPrefix = data[i].suggestion.strongNumber[0].toUpperCase();
+										if ((strongPrefix === "H") || (strongPrefix === "G")) {
+											var strongSuffix = data[i].suggestion.strongNumber[data[i].suggestion.strongNumber.length-1];
+											if ((isNaN(strongSuffix)) && (typeof data[i].suggestion._article === "string") && (data[i].suggestion._article.length > glossToShow.length))
+												glossToShow = data[i].suggestion._article;
+										}
+									}
+									text2Display = glossToShow + ' (<i>' + data[i].suggestion.stepTransliteration +
 										'</i> - ' + data[i].suggestion.matchingForm + ')';
 									str2Search = data[i].suggestion.strongNumber;
 									searchType = 'strong';

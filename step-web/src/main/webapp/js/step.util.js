@@ -1012,8 +1012,10 @@ step.util = {
             searchToken.item = searchToken.enhancedTokenInfo;
 
             //rewrite the item type in case it's a strong number
-            if (searchToken.itemType == STRONG_NUMBER) //pretend it's a Greek meaning, or a Hebrew meaning
-                searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
+            if (searchToken.itemType == STRONG_NUMBER) { //pretend it's a Greek meaning, or a Hebrew meaning
+				if (searchToken.item)
+					searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
+			}
             else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH)
                 searchToken.itemType = SUBJECT_SEARCH;
             return '<span class="argSelect select-' + searchToken.itemType + '">' +
@@ -1066,6 +1068,7 @@ step.util = {
             return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
         },
         renderEnhancedToken: function (entry, isMasterVersion) {
+			if (!entry.item) return "";
             var result;
             var util = step.util;
             var source = this.getSource(entry.itemType, true) + " ";
@@ -1146,7 +1149,10 @@ step.util = {
 
                     break;
                 default:
-                    return entry.item.text;
+					var returnVal = "";
+					if ((entry.item) && (entry.item.text === "string"))
+						returnVal = entry.item.text;
+					return returnVal;
             }
         },
         /**

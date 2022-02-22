@@ -16,6 +16,7 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private String es_Gloss;
     private String zh_tw_Gloss;
     private String zh_Gloss;
+	private String article;
 
     /**
      * @return the stepTransliteration
@@ -61,6 +62,14 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     public String get_zh_Gloss() {
         return this.zh_Gloss;
     }
+	
+    /**
+     * @return the Step Article
+     */
+
+    public String get_article() {
+        return this.article;
+    }
 
     /**
      * @param gloss the gloss to set
@@ -82,6 +91,10 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
 
     public void set_zh_Gloss(final String chineseGloss) {
         this.zh_Gloss = chineseGloss;
+    }
+
+    public void set_article(final String stepArticle) {
+        this.article = stepArticle;
     }
 
     /**

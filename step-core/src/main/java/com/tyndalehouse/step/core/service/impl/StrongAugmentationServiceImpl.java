@@ -64,7 +64,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 //build the lucene query...
                 query.append(StringConversionUtils.getStrongPaddedKey(keys[i]));
 //                query.append("~ "); // changed from ? to ~ because white space analyzer which does not accept ?
-                query.append("? "); // changed from ? to ~ because white space analyzer which does not accept ?
+                query.append("\\? "); // changed from ? to ~ because white space analyzer which does not accept ?
             } else {
                 //add directly to the augmented list
                 augmentedStrongs.put(keys[i], keys[i]);

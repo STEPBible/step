@@ -24,7 +24,8 @@ public class AugmentedStrongsAnalyzer extends PerFieldAnalyzerWrapper {
     @Inject
     public AugmentedStrongsAnalyzer() {
         super(new StandardAnalyzer(LUCENE_30));
-        addAnalyzer("augmentedStrong", new WhitespaceAnalyzer()); // Added because of addition to upper and lower case augmented strongs
+//        addAnalyzer("augmentedStrong", new StandardAnalyzer(Version.LUCENE_30));
+        addAnalyzer("augmentedStrong", new KeywordAnalyzer()); // Added because of addition to upper and lower case augmented strongs
         addAnalyzer("references", new ReferenceAnalyzer());
     }
 }

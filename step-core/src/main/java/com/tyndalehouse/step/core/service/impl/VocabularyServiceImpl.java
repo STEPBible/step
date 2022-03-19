@@ -389,6 +389,8 @@ public class VocabularyServiceImpl implements VocabularyService {
             }
             else {
                 String[] tmpKeys = {keys[counter]};
+                boolean triedA = false;
+                boolean triedG = false;
                 while (tmpKeys[0].length() > 0) {
                     strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
                     if ((strongNumber != null) && (strongNumber.length > 0)) {
@@ -397,8 +399,21 @@ public class VocabularyServiceImpl implements VocabularyService {
                         resultArrayIndex ++;
                         tmpKeys[0] = "";
                     } else {
-                        if ((tmpKeys[0].substring(0, 1).equalsIgnoreCase("h")) && (tmpKeys[0].length() == 5) && (!tmpKeys[0].endsWith("a"))) { // check for start with H, do not append if already ends with letter "a"
-                            tmpKeys[0] = tmpKeys[0].concat("a");
+                        if (((tmpKeys[0].substring(0, 1).equalsIgnoreCase("h")) ||
+                             (tmpKeys[0].substring(0, 1).equalsIgnoreCase("g"))) &&
+                            (tmpKeys[0].length() >= 5) &&
+                            ((!triedA) || (!triedG)) ) {
+                            if (!Character.isDigit(tmpKeys[0].charAt(tmpKeys[0].length() - 1))) {
+                                tmpKeys[0] = tmpKeys[0].substring(0, tmpKeys[0].length() - 1); // remove last character which is not a digit
+                            }
+                            if (!triedA) {
+                                tmpKeys[0] = tmpKeys[0].concat("A");
+                                triedA = true;
+                            }
+                            else if (!triedG) {
+                                tmpKeys[0] = tmpKeys[0].concat("G");
+                                triedG = true;
+                            }
                         }
                         else tmpKeys[0] = "";
                     }

@@ -186,13 +186,27 @@ public class ModuleController {
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, vocabIdentifiers, userLanguage), true, userLanguage));
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equalsIgnoreCase("a")) {
-                    String modifiedVocabIdentifiers = vocabIdentifiers.concat("a");
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equals("A")) {
+                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "A");
+                    i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
+                }
+            }
+            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equals("G")) {
+                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
                 }
             }
         }
         return i;
+    }
+
+    public String appendStrongSuffix(final String originalStrongNumber, final String suffix) {
+        int strLength = originalStrongNumber.length();
+        if (Character.isDigit(originalStrongNumber.charAt(strLength - 1))) {
+            return originalStrongNumber.concat(suffix);
+        }
+        return originalStrongNumber.substring(0, strLength - 1).concat(suffix); // last character in Strong number is not numeric so remove it first.
     }
 
     /**
@@ -245,8 +259,14 @@ public class ModuleController {
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, vocabIdentifiers, userLanguage), false, userLanguage));
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equalsIgnoreCase("a")) {
-                    String modifiedVocabIdentifiers = vocabIdentifiers.concat("a");
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equals("A")) {
+                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "A");
+                    i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
+                }
+            }
+            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equals("G")) {
+                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
                 }
             }

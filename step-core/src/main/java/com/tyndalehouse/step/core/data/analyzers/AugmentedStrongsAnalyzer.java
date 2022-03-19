@@ -2,9 +2,7 @@ package com.tyndalehouse.step.core.data.analyzers;
 
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.util.Version;
 
 import javax.inject.Inject;
 
@@ -25,8 +23,7 @@ public class AugmentedStrongsAnalyzer extends PerFieldAnalyzerWrapper {
     public AugmentedStrongsAnalyzer() {
         super(new StandardAnalyzer(LUCENE_30));
 //        addAnalyzer("augmentedStrong", new StandardAnalyzer(Version.LUCENE_30));
-//        addAnalyzer("augmentedStrong", new KeywordAnalyzer()); // Added because of addition to upper and lower case augmented strongs
-        addAnalyzer("augmentedStrong", new WhitespaceAnalyzer); // Added because of addition to upper and lower case augmented strongs
+        addAnalyzer("augmentedStrong", new KeywordAnalyzer()); // Added because of addition to upper and lower case augmented strongs
         addAnalyzer("references", new ReferenceAnalyzer());
     }
 }

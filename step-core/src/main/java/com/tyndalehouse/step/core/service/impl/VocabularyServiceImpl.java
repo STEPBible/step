@@ -382,40 +382,36 @@ public class VocabularyServiceImpl implements VocabularyService {
         EntityDoc[] entityDocsResults = new EntityDoc[keys.length];
         int resultArrayIndex = 0;
         for (int counter = 0; counter < keys.length; counter ++) {
-            EntityDoc[] strongNumber = DEFINITION_CACHE.get(keys[counter]);
-            if (strongNumber != null) {
-                entityDocsResults[resultArrayIndex] = strongNumber[0];
-                resultArrayIndex ++;
-            }
-            else {
-                String[] tmpKeys = {keys[counter]};
-                boolean triedA = false;
-                boolean triedG = false;
-                while (tmpKeys[0].length() > 0) {
-                    strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
-                    if ((strongNumber != null) && (strongNumber.length > 0)) {
-                        DEFINITION_CACHE.put(keys[counter], strongNumber);
-                        entityDocsResults[counter] = strongNumber[0];
-                        resultArrayIndex ++;
-                        tmpKeys[0] = "";
-                    } else {
-                        if (((tmpKeys[0].substring(0, 1).equalsIgnoreCase("h")) ||
-                             (tmpKeys[0].substring(0, 1).equalsIgnoreCase("g"))) &&
-                            (tmpKeys[0].length() >= 5) &&
-                            ((!triedA) || (!triedG)) ) {
-                            if (!Character.isDigit(tmpKeys[0].charAt(tmpKeys[0].length() - 1))) {
-                                tmpKeys[0] = tmpKeys[0].substring(0, tmpKeys[0].length() - 1); // remove last character which is not a digit
-                            }
-                            if (!triedA) {
-                                tmpKeys[0] = tmpKeys[0].concat("A");
-                                triedA = true;
-                            }
-                            else if (!triedG) {
-                                tmpKeys[0] = tmpKeys[0].concat("G");
-                                triedG = true;
-                            }
+            if ((keys[counter].substring(0, 1).equalsIgnoreCase("h")) ||
+                (keys[counter].substring(0, 1).equalsIgnoreCase("g")) ) {
+                EntityDoc[] strongNumber = DEFINITION_CACHE.get(keys[counter]);
+                if (strongNumber != null) {
+                    entityDocsResults[resultArrayIndex] = strongNumber[0];
+                    resultArrayIndex++;
+                } else {
+                    String[] tmpKeys = {keys[counter]};
+                    boolean triedA = false;
+                    boolean triedG = false;
+                    while (tmpKeys[0].length() > 0) {
+                        strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
+                        if ((strongNumber != null) && (strongNumber.length > 0)) {
+                            DEFINITION_CACHE.put(keys[counter], strongNumber);
+                            entityDocsResults[resultArrayIndex] = strongNumber[0];
+                            resultArrayIndex++;
+                            tmpKeys[0] = "";
+                        } else {
+                            if ((tmpKeys[0].length() >= 5) && ((!triedA) || (!triedG))) {
+                                if (!Character.isDigit(tmpKeys[0].charAt(tmpKeys[0].length() - 1)))
+                                    tmpKeys[0] = tmpKeys[0].substring(0, tmpKeys[0].length() - 1); // remove last character which is not a digit
+                                if (!triedA) {
+                                    tmpKeys[0] = tmpKeys[0].concat("A");
+                                    triedA = true;
+                                } else if (!triedG) {
+                                    tmpKeys[0] = tmpKeys[0].concat("G");
+                                    triedG = true;
+                                }
+                            } else tmpKeys[0] = "";
                         }
-                        else tmpKeys[0] = "";
                     }
                 }
             }
@@ -423,14 +419,12 @@ public class VocabularyServiceImpl implements VocabularyService {
 
         if (resultArrayIndex == keys.length) return entityDocsResults;
         else if (resultArrayIndex == 0) return new EntityDoc[0];
-        else if (resultArrayIndex < keys.length) {
+        else if ((resultArrayIndex < keys.length) && (resultArrayIndex > 0)) {
             EntityDoc[] entityDocsResults2 = new EntityDoc[resultArrayIndex];
-            for (int counter = 0; counter < resultArrayIndex; counter ++) {
-                entityDocsResults2[counter] = entityDocsResults[counter];
-            }
+            System.arraycopy(entityDocsResults, 0, entityDocsResults2, 0, resultArrayIndex);
             return entityDocsResults2;
         }
-        return new EntityDoc[0]; // Something wrong (resultArrayIndex > keys.length)
+        return new EntityDoc[0]; // Something wrong (resultArrayIndex = 0 or resultArrayIndex > keys.length)
     }
 
     /**

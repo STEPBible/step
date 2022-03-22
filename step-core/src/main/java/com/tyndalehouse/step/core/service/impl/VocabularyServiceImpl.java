@@ -404,7 +404,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                                 if (!Character.isDigit(tmpKeys[0].charAt(tmpKeys[0].length() - 1)))
                                     tmpKeys[0] = tmpKeys[0].substring(0, tmpKeys[0].length() - 1); // remove last character which is not a digit
                                 if (!triedA) {
-                                    tmpKeys[0] = tmpKeys[0].concat("A");
+                                    tmpKeys[0] = tmpKeys[0].concat("a");
                                     triedA = true;
                                 } else if (!triedG) {
                                     tmpKeys[0] = tmpKeys[0].concat("G");

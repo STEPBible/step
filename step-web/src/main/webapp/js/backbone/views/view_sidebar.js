@@ -223,7 +223,7 @@ var SidebarView = Backbone.View.extend({
         this.tabContainer.append(this.lexicon);
 		if (typeof step.wordLocations == "object") this._isItALocation(data.vocabInfos[0], ref);
 		else {
-			$.getJSON("/html/json/word_locations.json", function(location) {
+			$.getJSON("html/json/word_locations.json", function(location) {
 				step.wordLocations = location;
 				SidebarView.prototype._isItALocation(data.vocabInfos[0], ref);
 			});

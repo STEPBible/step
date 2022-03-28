@@ -82,7 +82,7 @@ var SearchDisplayView = DisplayView.extend({
                     jQuery.ajax({
                         dataType: "script",
                         cache: notIE,
-                        url: "/js/tos_morph.js",
+                        url: "js/tos_morph.js",
                         error: function (jqXHR, exception) {
                             console.log('load tos_morph.js Failed: ' + exception);
                         }

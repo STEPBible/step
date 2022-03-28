@@ -69,22 +69,53 @@
 <script>
 
 (function() {
-    var queryString = window.location.search;
-    if (queryString.substr(0,1) === "?") queryString = queryString.substr(1);
-    if (queryString.length < 15) return;
-    var posOfSecondURL = queryString.indexOf("&secondURL=");
-    var firstURL = queryString.substr(0, posOfSecondURL);
+	if (typeof jQuery == 'undefined') {
+		var urlPart1 = window.location.origin;
+		var pos = window.location.href.indexOf("/html/split.html");
+		if (pos > 8) urlPart1 = window.location.href.substr(0, pos);
+		(function() {
+			// Load the script
+			var script = document.createElement("SCRIPT");
+			script.src = urlPart1 + '/libs/jquery-1.10.2.min.js';
+			script.type = 'text/javascript';
+			document.getElementsByTagName("head")[0].appendChild(script);
+			// Poll for jQuery to come into existance
+			var checkReady = function(callback) {
+				if (window.jQuery) {
+					callback(jQuery);
+				}
+				else {
+					window.setTimeout(function() { checkReady(callback); }, 20);
+				}
+			};
+			// Start polling...
+			checkReady(function($) {
+				$(function() {
+					setupIFrames();
+				});
+			});
+		})();
+	}
+	else setupIFrames();
+})();
+
+function setupIFrames() {
+	var queryString = window.location.search;
+	if (queryString.substr(0,1) === "?") queryString = queryString.substr(1);
+	if (queryString.length < 15) return;
+	var posOfSecondURL = queryString.indexOf("&secondURL=");
+	var firstURL = queryString.substr(0, posOfSecondURL);
 	posOfSecondURL += 11;
 	var posOfWidthPercent = queryString.indexOf("&widthPercent=");
 	var secondURLLength = (posOfWidthPercent == -1) ? queryString.length - posOfSecondURL : posOfWidthPercent - posOfSecondURL;
 	if ((posOfWidthPercent > -1) && (posOfWidthPercent < (posOfSecondURL + 15))) return;
-    var secondURL = queryString.substr(posOfSecondURL, secondURLLength);
+	var secondURL = queryString.substr(posOfSecondURL, secondURLLength);
 	var width = (posOfWidthPercent > -1) ? parseInt(queryString.substr(posOfWidthPercent + 14)) : 0;
-	
-    console.log(queryString);
-    console.log(firstURL);
-    console.log(secondURL);
-	
+
+	console.log(queryString);
+	console.log(firstURL);
+	console.log(secondURL);
+
 	if (secondURL.indexOf("gospel_harmony") > -1) {
 		document.title = "Harmony of the Four Gospels (Matthew, Mark, Luke, John)";
 		document.getElementsByTagName('meta')["description"].content = "Harmony of the Gospels events e.g. Jesus Christ's birth, disciples, baptism, teaching, miracles, exorcisms, crucifixion, resurrection, ascension.";
@@ -113,29 +144,31 @@
 	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;
 	$("#f1").css("height", remainingHeight + "vh");
 	$("#f2").css("height", remainingHeight + "vh");
-    if (firstURL.length > 13) document.getElementById("f1").src = firstURL;
-    if (secondURL.length > 13) document.getElementById("f2").src = secondURL;
+	if (firstURL.length > 13) document.getElementById("f1").src = firstURL;
+	if (secondURL.length > 13) document.getElementById("f2").src = secondURL;
 	if ((width >= 30) && (width <= 70)) {
 		$("#f1").css("width", width + "vw");
 		$("#f2").css("width", (98 - width) + "vw");
 		$($("#myRange")[0]).val(width)
 	}
-})();
+	
+	var slider = document.getElementById("myRange");
 
-var slider = document.getElementById("myRange");
+	slider.oninput = function() {
+		$("#f1").css("width", this.value + "vw");
+		$("#f2").css("width", (98 - this.value) + "vw");
+	}
 
-slider.oninput = function() {
-	$("#f1").css("width", this.value + "vw");
-	$("#f2").css("width", (98 - this.value) + "vw");
+	$("#url2").on("keydown",function search(e) {
+		if (e.keyCode == 13) {
+			var newUrl = $(this).val();
+			if (!newUrl.toLowerCase().startsWith("http")) newUrl = "https://" + newUrl;
+			document.getElementById("f2").src = newUrl;
+		}
+	});
+
+	
 }
-
-$("#url2").on("keydown",function search(e) {
-    if (e.keyCode == 13) {
-		var newUrl = $(this).val();
-		if (!newUrl.toLowerCase().startsWith("http")) newUrl = "https://" + newUrl;
-		document.getElementById("f2").src = newUrl;
-    }
-});
 
 function copyURLToClipboard() {
 	var iFrame1URL = document.getElementById("f1").contentWindow.location.href;

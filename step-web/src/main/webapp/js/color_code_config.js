@@ -638,7 +638,7 @@ function addOTVerbTable(createUserInputs, htmlElement) {
   var htmlTable = '';
   if (!createUserInputs) {
       var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
-	  htmlTable = '<link href="/css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>';
+	  htmlTable = '<link href="css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>';
   }
   var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs, 'OT');
   htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +

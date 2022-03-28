@@ -522,7 +522,7 @@ step.searchSelect = {
 			'<h4 id="other_books_hdr"/>' +
 			'<div id="ob_table"/>';
 			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice)) {
-				$('.footer').prepend('<a id="keyboardEntry" href="javascript:step.searchSelect._buildRangeKeyboard();"><img src="/images/keyboard.jpg" alt="Keyboard entry"></a>');
+				$('.footer').prepend('<a id="keyboardEntry" href="javascript:step.searchSelect._buildRangeKeyboard();"><img src="images/keyboard.jpg" alt="Keyboard entry"></a>');
 			}
 		return html;
 	},

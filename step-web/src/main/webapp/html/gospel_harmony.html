@@ -70,9 +70,44 @@
     } catch (e) {
         inIFrame = true;
     }
-    if (!inIFrame) {
-        window.location = window.location.origin + "/html/split.html?" + window.location.origin + "/?q=reference=Mat.1.1-17;luk.3.23-38;joh.1.1-18&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
-    }
+	var urlPart1 = window.location.origin;
+	var pos = window.location.href.indexOf("/html/gospel_harmony.html");
+	var debugOption = "";
+	if (pos > 8) {
+		urlPart1 = window.location.href.substr(0, pos);
+		if (urlPart1.indexOf("localhost:8080/") > -1) debugOption = "&debug";
+	}
+    if (!inIFrame)
+        window.location = urlPart1 + "/html/split.html?" + urlPart1 + "/?q=reference=Mat.1.1-17;luk.3.23-38;joh.1.1-18&skipwelcome" + debugOption + "&secondURL=" + window.location.origin + window.location.pathname;
+	
+	if (typeof jQuery == 'undefined') {
+		(function() {
+			// Load the script
+			var script = document.createElement("SCRIPT");
+			script.src = urlPart1 + '/libs/jquery-1.10.2.min.js';
+			script.type = 'text/javascript';
+			document.getElementsByTagName("head")[0].appendChild(script);
+			// Poll for jQuery to come into existance
+			var checkReady = function(callback) {
+				if (window.jQuery) {
+					callback(jQuery);
+				}
+				else {
+					window.setTimeout(function() { checkReady(callback); }, 20);
+				}
+			};
+			// Start polling...
+			checkReady(function($) {
+				$(function() {
+					buildTable(urlPart1);
+				});
+			});
+		})();
+	}
+	else buildTable(urlPart1);
+})();
+
+function buildTable(urlPart1) {
 	var fullHeight = $(window).height();
 	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
 	$(".fixTableHead").css("height", remainingHeight + "px");
@@ -88,7 +123,7 @@
 	}
 	$.ajaxSetup({async: false});
 	var tblRowHTML = ""
-    $.getJSON("/html/json/" + jsonFileName + ".json", function(array) {
+    $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
 			tblRowHTML += 
 				'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
@@ -115,7 +150,7 @@
 			this.timer = setTimeout(handleKeyboardInput, 300, e);
 		});
 	});
-})();
+}
 
 function goToNewSection(item) {
     var row = item.parentNode;

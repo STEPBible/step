@@ -1891,7 +1891,7 @@ step.util = {
 									'randomString = "?" + performance.now();' +  // GIF file in some browser gets stuck in the last frame after it has played once.
 								'}' +
 								'else randomString = "?" + Math.floor(Math.random() * 10000); ' +
-								'gifElement.src = "/images/" + file + randomString;' +
+								'gifElement.src = "images/" + file + randomString;' +
 								'gifElement.onload = function() {' +
 									'$("#pleasewait").remove();' +
 									'$("#videomodalbody").append(gifElement);' +
@@ -2012,7 +2012,7 @@ step.util = {
             '</div>';
 
         $.ajaxSetup({async: false});
-        $.getJSON("/html/json/" + osisID.toLowerCase() + ".json", function(summary) {
+        $.getJSON("html/json/" + osisID.toLowerCase() + ".json", function(summary) {
             var bookSummary =
                 '<br><span style="font-size:18px"><b>Book summary of ' + longBookName + '</b></span><br>' +
                 '<span style="font-size:16px">' +

@@ -237,8 +237,8 @@ var PickBibleView = Backbone.View.extend({
 						'</div>' +
 					'</div>' +
 				'</div>' +
-				'<script src="/js/order_version.' + jsVersion + 'js"></script>' +
-				'<script src="/libs/Sortable.min.js"></script>' +
+				'<script src="js/order_version.' + jsVersion + 'js"></script>' +
+				'<script src="libs/Sortable.min.js"></script>' +
 				'<script>' +
 					'$( document ).ready(function() {' +
 						'init_order_version();' +

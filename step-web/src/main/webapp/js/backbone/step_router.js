@@ -1,7 +1,8 @@
 var StepRouter = Backbone.Router.extend({
     routes: {
         "search(?:query)": "doMasterSearch",
-        "(?:query)": "doMasterSearch"
+        "(?:query)": "doMasterSearch",
+        "(step-web/?:query)": "doMasterSearch"
     },
     initialize: function () {
     },
@@ -96,7 +97,10 @@ var StepRouter = Backbone.Router.extend({
         if ($.getUrlVars().indexOf("debug") != -1) {
             urlStub = this._addArg(urlStub, "debug");
         }
-
+		if (window.location.pathname === "/step-web/") { // Running in the development environment
+			console.log("Add pathname " + window.location.pathname.substr(1) + " to " + urlStub);
+			urlStub = window.location.pathname.substr(1) + urlStub; // Development environment might have a pathname like step-web
+		}
         //we will get a null-arg as part of the replacing of the URL with the correct URL
         //call back from after the routing call to rest backend call. So need
         //to avoid writing over 'args'
@@ -299,7 +303,6 @@ var StepRouter = Backbone.Router.extend({
 
         //remove debug if present
         query = encodeURIComponent(query.replace(/&debug/ig, ""));
-        //console.log(query, options, display, pageNumber, filter, sort, context, step.userLanguageCode);
         $.getPassageSafe({
             url: SEARCH_MASTER,
             args: [query, options, display, pageNumber, filter, sort, context, step.userLanguageCode],

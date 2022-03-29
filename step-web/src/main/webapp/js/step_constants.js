@@ -31,14 +31,14 @@ TOUCH_DURATION=50; // Minimum touch duration to trigger quick lexicon and highli
 TOUCH_CANCELLATION_TIME=150; // If touch move detected with this time and before quicklexicon is rendered, it will stop quick lexicon.
 
 DS_VERSIONS = "allVersions";
-if (typeof STEP_SERVER_BASE_URL === "undefined") STEP_SERVER_BASE_URL = "/rest/";
+if (typeof STEP_SERVER_BASE_URL === "undefined") STEP_SERVER_BASE_URL = "rest/";
 else {
 	if (STEP_SERVER_BASE_URL.indexOf("https://") == 0) {
         var parts = STEP_SERVER_BASE_URL.substr(8).split(".");
         if ((parts.length >= 4) && (parts[1] === "api") && (parts[2] === "stepbible") && (parts[3].indexOf("org/rest/") == 0)) {
             $.getJSON(STEP_SERVER_BASE_URL.substring(0, STEP_SERVER_BASE_URL.length - 5) + "test/short.json", function() {
             }).fail(function() {
-                STEP_SERVER_BASE_URL = "/rest/";
+                STEP_SERVER_BASE_URL = "rest/";
                 updateVars();
             });
         }

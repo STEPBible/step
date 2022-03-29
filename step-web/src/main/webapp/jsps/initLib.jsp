@@ -14,7 +14,7 @@
 <%--     </c:choose> --%>
 <%-- </c:set> --%>
 <%	if (restAPIURL == null) {
-        restAPIURL = "/rest/";
+        restAPIURL = "rest/";
         try {
             String pathOfServlet = getServletContext().getRealPath("/");
             String[] pathOfServletSplits = pathOfServlet.split("[\\\\\\/]"); // Either \ for Windows or / characters for Linux
@@ -24,14 +24,14 @@
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.indexOf(prefixForThisTomcatContext) == 0) {
-					restAPIURL = line.substring(prefixForThisTomcatContext.length()) + "/rest/";
+					restAPIURL = line.substring(prefixForThisTomcatContext.length()) + "rest/";
 					break;
 				}
             }
             reader.close();
         }
         catch (Exception e) {
-            restAPIURL = "/rest/";
+            restAPIURL = "rest/";
         }
 	}
 %>

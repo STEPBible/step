@@ -43,9 +43,6 @@ import java.util.Properties;
 import javax.inject.Provider;
 
 import com.tyndalehouse.step.core.service.AppManagerService;
-import org.apache.lucene.search.NumericRangeQuery;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,7 +84,7 @@ public class LoaderTest {
 
     @Test
     public void testLoaderProgress() {
-        Loader l = new Loader(null, null, new Properties(), null, null, null);
+        Loader l = new Loader(null, null, new Properties(), null, null, null, null);
         assertEquals(0, l.getTotalProgress());
 
         l.setTotalProgress(1);
@@ -247,7 +244,7 @@ public class LoaderTest {
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null,
                 mock(VersionResolver.class), null), null, coreProperties, this.entityManager,
-                this.clientSessionProvider, mock(AppManagerService.class));
+                null, this.clientSessionProvider, mock(AppManagerService.class));
     }
 
     /**

@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -42,6 +44,7 @@ import javax.inject.Provider;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.AppManagerService;
+import com.tyndalehouse.step.core.service.impl.AugDStrongServiceImpl;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.WorkEvent;
@@ -61,6 +64,9 @@ import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.AugDStrongService;
+
+import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 
 /**
  * The object that will be responsible for loading all the data into Lucene and downloading key versions of
@@ -76,7 +82,6 @@ public class Loader {
     private final Properties coreProperties;
     private final JSwordModuleService jswordModule;
     private final EntityManager entityManager;
-
     private final BlockingQueue<String> progress = new LinkedBlockingQueue<String>();
     private final Set<String> appSpecificModules = new HashSet<String>();
     private boolean complete = false;
@@ -87,26 +92,28 @@ public class Loader {
     private int totalProgress = 0;
     private int totalItems = 6;
     private boolean inProgress = false;
+    private AugDStrongService augDStrong;
 
     /**
      * The loader is given a connection source to load the data.
-     *
-     * @param jsword                the jsword service
+     *  @param jsword                the jsword service
      * @param jswordModule          the service helping with installation of jsword modules
      * @param coreProperties        the step core properties
      * @param entityManager         the entity manager
+     * @param augDStrong
      * @param clientSessionProvider the client session provider
      */
     @Inject
     public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
                   @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
-                  final Provider<ClientSession> clientSessionProvider,
+                  final AugDStrongService augDStrong, final Provider<ClientSession> clientSessionProvider,
                   AppManagerService appManager
     ) {
         this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
+        this.augDStrong = augDStrong;
         this.clientSessionProvider = clientSessionProvider;
         this.runningAppVersion = coreProperties.getProperty(AppManagerService.APP_VERSION);
         this.appManager = appManager;
@@ -256,6 +263,9 @@ public class Loader {
 
     int loadAugmentedStrongs() {
         LOGGER.debug("Indexing augmented strongs");
+
+        this.augDStrong.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
+
         this.addUpdate("install_augmented_strongs");
 
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("augmentedStrongs");

@@ -65,6 +65,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
@@ -1157,6 +1158,9 @@ public class SearchServiceImpl implements SearchService {
         String currentQuery = currentSearch.getQuery();
         final Matcher matchAugmentedStrongs = AUGMENTED_STRONG.matcher(currentQuery);
         final String simpleStrongSearch = matchAugmentedStrongs.replaceAll("");
+//        final Versification curVersification;
+//        if (Character.compare(strongs.iterator().next().charAt(0), 'H') == 0) curVersification = this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
+//        else curVersification = this.versificationService.getVersificationForVersion("ESV");
 
         matchAugmentedStrongs.reset();
         while (matchAugmentedStrongs.find()) {

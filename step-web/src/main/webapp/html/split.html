@@ -73,31 +73,40 @@
 		var urlPart1 = window.location.origin;
 		var pos = window.location.href.indexOf("/html/split.html");
 		if (pos > 8) urlPart1 = window.location.href.substr(0, pos);
-		(function() {
-			// Load the script
-			var script = document.createElement("SCRIPT");
-			script.src = urlPart1 + '/libs/jquery-1.10.2.min.js';
-			script.type = 'text/javascript';
-			document.getElementsByTagName("head")[0].appendChild(script);
-			// Poll for jQuery to come into existance
-			var checkReady = function(callback) {
-				if (window.jQuery) {
-					callback(jQuery);
-				}
-				else {
-					window.setTimeout(function() { checkReady(callback); }, 20);
-				}
-			};
-			// Start polling...
-			checkReady(function($) {
-				$(function() {
-					setupIFrames();
-				});
+		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js'); // Load the script
+		// Poll for jQuery to come into existance
+		var checkReady = function(callback) {
+			if (window.jQuery) {
+				callback(jQuery);
+			}
+			else {
+				window.setTimeout(function() { checkReady(callback); }, 20);
+			}
+		};
+		// Start polling...
+		checkReady(function($) {
+			$(function() {
+				setupIFrames();
 			});
-		})();
+		});
 	}
 	else setupIFrames();
 })();
+
+function loadFile(path) {
+  if (path.endsWith(".js")) {
+    var fileref = document.createElement("script");
+    fileref.setAttribute("type", "text/javascript");
+    fileref.setAttribute("src", path);
+  } else if (path.endsWith(".css")) {
+    var fileref = document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", path);
+  }
+  else return;
+  document.getElementsByTagName("head")[0].appendChild(fileref);
+}
 
 function setupIFrames() {
 	var queryString = window.location.search;

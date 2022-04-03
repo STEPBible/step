@@ -4,6 +4,7 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.service.AugDStrongService;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -29,11 +30,12 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     private static final Logger LOGGER = LoggerFactory.getLogger(StrongAugmentationServiceImpl.class);
     private final EntityIndexReader augmentedStrongs;
     private final JSwordVersificationService versificationService;
-
+    private final AugDStrongService augDStrong;
     @Inject
-    public StrongAugmentationServiceImpl(final EntityManager manager, final JSwordVersificationService versificationService) {
+    public StrongAugmentationServiceImpl(final EntityManager manager, final JSwordVersificationService versificationService, AugDStrongService augDStrong) {
         this.versificationService = versificationService;
         this.augmentedStrongs = manager.getReader("augmentedStrongs");
+        this.augDStrong = augDStrong;
     }
 
     @Override
@@ -84,10 +86,9 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                     break;
                 }
             }
-            if (foundDigit) {
-            // **** Need to take care of Greek in OT, eg LXX
-                if (hebrew) individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
-                else individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.REFERENCE_BOOK).getKey().getOsisID());
+            if ((foundDigit) && (hebrew)) {
+                individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
+                // **** Need to take care of Greek in OT, eg LXX
             }
             else { // If there are no chapter or verse number, the query does not need to list all the verses in the book.
                 individualVerses = new String[1];

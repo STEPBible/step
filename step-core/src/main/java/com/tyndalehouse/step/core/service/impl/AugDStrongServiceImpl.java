@@ -10,7 +10,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.data.create.ModuleLoader;
 
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
-import javafx.util.Pair;
+//import javafx.util.Pair;
 import org.crosswire.jsword.passage.NoSuchVerseException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseFactory;
@@ -196,12 +196,12 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         }
     }
 
-    private Pair<Character, Integer> getSuffixAndIdx(int num) {
-        num = num & 0x7fffffff; // Turn off top bit.  We don't care if this is the first augmented Strong of the Strong number.
-        Character suffix = (char) (num >> 24);
-        int index = num & 0x00FFFFFF;
-        return new Pair<Character, Integer>(suffix, index);
-    }
+//    private Pair<Character, Integer> getSuffixAndIdx(int num) {
+//        num = num & 0x7fffffff; // Turn off top bit.  We don't care if this is the first augmented Strong of the Strong number.
+//        Character suffix = (char) (num >> 24);
+//        int index = num & 0x00FFFFFF;
+//        return new Pair<Character, Integer>(suffix, index);
+//    }
 
     public String getBibleVerse(final int reference) {
 //        final Verse s;
@@ -261,34 +261,34 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         return null;
     }
 
-    public String getAugStrongWithStrongAndVerse(String strong, String reference, final Versification versificationForOT, final Versification versificationForESV) {
-        int index1 = binarySearchOfStrong(strongs, numOfStrongGrk, strong);
-        if (index1 < 0) return "";
-        short index2 = strong2AugStrongPtr[index1];
-        if ((index2 < 0) || (index2 > numOfAugStrong)) return "";
-        // Get Versification
-        Versification curVersification;
-        if  (Character.compare(strong.charAt(0), 'H') == 0) curVersification = versificationForOT;
-        else curVersification = versificationForESV;
-        int refInt = cnvrtOSIS2int(reference, curVersification);
-        if (refInt < 0) return "";
-        int curPtr = augStrong2RefPtr[index2] & 0x7fffffff; // Turn off top bit to mark the first augStrong to reference Ptr.  This will allow it to go into the while loop below
-        Pair<Character, Integer> r = getSuffixAndIdx(curPtr);
-        char firstSuffix = r.getKey();
-        while ((curPtr & 0x80000000) == 0)  { // Top bit must be turn off to continue
-            char curSuffix = r.getKey();
-            int curIndex = r.getValue();
-            index2 ++;
-            curPtr = augStrong2RefPtr[index2];
-            r = getSuffixAndIdx(curPtr);
-            for (; curIndex < r.getValue(); curIndex ++) {
-                if (ref[curIndex] == refInt) {
-                    return strong + curSuffix;
-                }
-            }
-        }
-        return "";
-    }
+//    public String getAugStrongWithStrongAndVerse(String strong, String reference, final Versification versificationForOT, final Versification versificationForESV) {
+//        int index1 = binarySearchOfStrong(strongs, numOfStrongGrk, strong);
+//        if (index1 < 0) return "";
+//        short index2 = strong2AugStrongPtr[index1];
+//        if ((index2 < 0) || (index2 > numOfAugStrong)) return "";
+//        // Get Versification
+//        Versification curVersification;
+//        if  (Character.compare(strong.charAt(0), 'H') == 0) curVersification = versificationForOT;
+//        else curVersification = versificationForESV;
+//        int refInt = cnvrtOSIS2int(reference, curVersification);
+//        if (refInt < 0) return "";
+//        int curPtr = augStrong2RefPtr[index2] & 0x7fffffff; // Turn off top bit to mark the first augStrong to reference Ptr.  This will allow it to go into the while loop below
+//        //Pair<Character, Integer> r = getSuffixAndIdx(curPtr);
+//        char firstSuffix = r.getKey();
+//        while ((curPtr & 0x80000000) == 0)  { // Top bit must be turn off to continue
+//            char curSuffix = r.getKey();
+//            int curIndex = r.getValue();
+//            index2 ++;
+//            curPtr = augStrong2RefPtr[index2];
+//            r = getSuffixAndIdx(curPtr);
+//            for (; curIndex < r.getValue(); curIndex ++) {
+//                if (ref[curIndex] == refInt) {
+//                    return strong + curSuffix;
+//                }
+//            }
+//        }
+//        return "";
+//    }
 
 	public void readAndLoad(final String augStrongFile) {
         Reader fileReader = null;

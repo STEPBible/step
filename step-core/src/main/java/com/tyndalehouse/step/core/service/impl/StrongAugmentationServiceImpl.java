@@ -87,7 +87,9 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 }
             }
             if ((foundDigit) && (hebrew)) {
-                individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
+                Key referenceAfterConvertOfVersification = this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey();
+                individualVerses = StringUtils.split(referenceAfterConvertOfVersification.getOsisID());
+
                 // **** Need to take care of Greek in OT, eg LXX
             }
             else { // If there are no chapter or verse number, the query does not need to list all the verses in the book.
@@ -142,6 +144,13 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         } else {
             docs = new EntityDoc[0];
         }
+        // call new lookup
+//        if (referenceAfterConvertOfVersification != null) {
+//
+//        }
+//        else {
+//            ordinal = augDStrong.cnvrtOSIS2int(reference, );
+//        }
         final String[] augmented = new String[augmentedStrongs.size()];
         return new AugmentedStrongs(augmentedStrongs.values().toArray(augmented), docs);
     }

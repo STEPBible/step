@@ -1,16 +1,11 @@
 package com.tyndalehouse.step.core.service.impl;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-//import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.service.AugDStrongService;
-//import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-
-
 import com.tyndalehouse.step.core.data.create.ModuleLoader;
-
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import com.tyndalehouse.step.core.utils.StringUtils;
+//import org.apache.commons.lang3.tuple.Pair;
 import org.crosswire.jsword.passage.NoSuchVerseException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseFactory;
@@ -78,6 +73,19 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         return -1;
     }
 
+    public String[] getAugStrongNumbers(final String version, final String reference, final String[] keys) {
+        if (StringUtils.isBlank(version) || StringUtils.isBlank(reference))
+            return keys;
+        String[] result = keys.clone();
+        for (int i = 0; i < result.length; i++) {
+            int idx = binarySearchOfStrong(result[i]);
+            if (idx > -1) {
+
+            }
+        }
+        return result;
+    }
+
     private int addToAugStrong2Ref(int refIndex, String augStrong) {
         int result = augStrong.charAt(augStrong.length() - 1);
         if ((result < 65) || (result > 122)) { // 65 is A 121 is z
@@ -106,29 +114,9 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                 ref[refIndex] = refInInt;
                 if (updatedRef.length() > 0) updatedRef.append(" ");
                 updatedRef.append(arrOfRef[i]);
- //               if (hebrew) {
- //                   String altReference = "";
- //                   try {
- //                       KeyWrapper altKey = this.versificationService.convertReference(arrOfRef[i], JSwordPassageService.OT_BOOK, JSwordPassageService.REFERENCE_BOOK);
- //                       altReference = altKey.getOsisKeyId();
- //                   } catch (Exception e) {
- //                       throw new StepInternalException("Error in convert reference to ESV versification " + augStrong + " " + arrOfRef[i], e);
- //                   }
- //                   if (!altReference.equals(arrOfRef[i])) {
- //                       updatedRef.append('(').append(altReference.substring(altReference.indexOf('.') + 1)).append(')');
- //                   }
- //               }
                 refIndex++;
             }
         }
-//        try {
-//            myWriter.write("===============================\n");
-//            myWriter.write("@AugmentedStrong=\t" + augStrong + "\n");
-//            myWriter.write("@References=\t" + updatedRef + "\n");
-//        }
-//        catch (Exception e) {
-//            throw new StepInternalException("Unable to output AugStrongKJV file ", e);
-//        }
         Arrays.sort(ref, startIndex, refIndex);
         return refIndex;
     }
@@ -196,12 +184,13 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         }
     }
 
-    private ImmutablePair<Character, Integer> getSuffixAndIdx(int num) {
-        num = num & 0x7fffffff; // Turn off top bit.  We don't care if this is the first augmented Strong of the Strong number.
-        Character suffix = (char) (num >> 24);
-        int index = num & 0x00FFFFFF;
-        return new ImmutablePair<Character, Integer>(suffix, index);
-    }
+//    private Pair<Character, Integer> getSuffixAndIdx(int num) {
+//        num = num & 0x7fffffff; // Turn off top bit.  We don't care if this is the first augmented Strong of the Strong number.
+//        Character suffix = (char) (num >> 24);
+//        int index = num & 0x00FFFFFF;
+//        Pair<Character, Integer> characterIntegerPair = new Pair<Character, Integer>(suffix, index);
+//        return characterIntegerPair;
+//    }
 
     public String getBibleVerse(final int reference) {
 //        final Verse s;
@@ -223,6 +212,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             System.out.println("Verse number seems to be invalid " + verse);
             System.exit(4);
         }
+//        return result.append(bookNames2[bookIndex]).append(".").append(chapter).append(".").append(verse);
         return bookNames[bookIndex] + "." + chapter + "." + verse;
     }
 
@@ -260,8 +250,6 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         return null;
     }
 
-
-    // Resume here April 10
     public String getAugStrongWithStrongAndVerse(String strong, String reference, final Versification versificationForOT, final Versification versificationForESV) {
         int index1 = binarySearchOfStrong(strong);
         if (index1 < 0) return "";
@@ -274,19 +262,19 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         int refInt = cnvrtOSIS2int(reference, curVersification);
         if (refInt < 0) return "";
         int curPtr = augStrong2RefPtr[index2] & 0x7fffffff; // Turn off top bit to mark the first augStrong to reference Ptr.  This will allow it to go into the while loop below
-        ImmutablePair<Character, Integer> r = getSuffixAndIdx(curPtr);
-        char firstSuffix = r.getKey();
+//        Pair<Character, Integer> r = getSuffixAndIdx(curPtr);
+//        char firstSuffix = r.getKey();
         while ((curPtr & 0x80000000) == 0)  { // Top bit must be turn off to continue
-            char curSuffix = r.getKey();
-            int curIndex = r.getValue();
+//            char curSuffix = r.getKey();
+//            int curIndex = r.getValue();
             index2 ++;
             curPtr = augStrong2RefPtr[index2];
-            r = getSuffixAndIdx(curPtr);
-            for (; curIndex < r.getValue(); curIndex ++) {
-                if (ref[curIndex] == refInt) {
-                    return strong + curSuffix;
-                }
-            }
+//            r = getSuffixAndIdx(curPtr);
+//            for (; curIndex < r.getValue(); curIndex ++) {
+//                if (ref[curIndex] == refInt) {
+//                    return strong + curSuffix;
+//                }
+//            }
         }
         return "";
     }
@@ -382,7 +370,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             int strong2AugStrongIndex = 0;
             int refIndex = 0;
             int lastStrong = 32767;
-            final Versification versificationForOT = this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
+            final Versification versificationForOT = this.versificationService.getVersificationForVersion("OSMHB"); //, JSwordPassageServiceImpl.OT_BOOK);
             final Versification versificationForESV = this.versificationService.getVersificationForVersion("ESV");
             FileWriter myWriter;
             try {

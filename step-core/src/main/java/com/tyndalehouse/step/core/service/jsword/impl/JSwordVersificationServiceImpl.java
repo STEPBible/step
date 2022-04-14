@@ -142,7 +142,9 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
 
         try {
             Passage p = PassageKeyFactory.instance().getKey(source, reference);
-            return new KeyWrapper(VersificationsMapper.instance().map(p, target));
+            Passage pInTargetVersification = VersificationsMapper.instance().map(p, target);
+            //int ordinal = pInTargetVersification.getVerseAt(0).getOrdinal();
+            return new KeyWrapper(pInTargetVersification);
         } catch (NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
         }

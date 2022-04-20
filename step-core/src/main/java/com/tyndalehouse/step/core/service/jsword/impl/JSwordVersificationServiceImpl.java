@@ -38,6 +38,7 @@ import javax.inject.Singleton;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
@@ -145,6 +146,17 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
             Passage pInTargetVersification = VersificationsMapper.instance().map(p, target);
             //int ordinal = pInTargetVersification.getVerseAt(0).getOrdinal();
             return new KeyWrapper(pInTargetVersification);
+        } catch (NoSuchKeyException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+    }
+
+    public int convertReferenceGetOrdinal (final String reference, final Versification source, final Versification target) {
+        try {
+            Passage p = PassageKeyFactory.instance().getKey(source, reference);
+            Passage pInTargetVersification = VersificationsMapper.instance().map(p, target);
+            int ordinal = pInTargetVersification.getVerseAt(0).getOrdinal();
+            return ordinal;
         } catch (NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
         }

@@ -32,10 +32,11 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
+import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
 
 public interface AugDStrongService {
-	int cnvrtOSIS2int(final String OSIS, final Versification curVersification);
+	short cnvrtOSIS2Ordinal(final String OSIS, final Versification curVersification);
 	
     int binarySearchOfStrong(final String augStrong);
 
@@ -43,8 +44,9 @@ public interface AugDStrongService {
 
 	String getBibleVerse(final int reference);
 
-    String getBibleVerses(int ref[], int curAugStrongfirstIdx, final int length);
-
     void readAndLoad(final String csvResource);
 
+    String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification);
+
+    void updateWithDStrong(String strong, Key reference, String version);
 }

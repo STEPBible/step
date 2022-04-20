@@ -82,6 +82,7 @@ import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.tyndalehouse.step.core.service.AugDStrongService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -120,7 +121,7 @@ public class SearchServiceImpl implements SearchService {
      * value representing a original spelling sort
      */
     public static final Pattern AUGMENTED_STRONG = Pattern.compile("strong:([GgHh]\\d+[a-zA-Z])");
-    public static final Pattern ALL_STRONGS = Pattern.compile("strong:[GgHh]\\d+\\w?");
+    public static final Pattern ALL_STRONGS = Pattern.compile("strong:([GgHh]\\d+[a-zA-Z]?)");
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
     private static final String SYNTAX_FORMAT = "[%s...]";
     private static final String[] BASE_GREEK_VERSIONS = new String[]{"WHNU", "Byz", "LXX"};
@@ -141,6 +142,7 @@ public class SearchServiceImpl implements SearchService {
     private VersionResolver versionResolver;
     private LexiconDefinitionService lexiconDefinitionService;
     private JSwordRelatedVersesService relatedVerseService;
+    private final AugDStrongService augDStrong;
 
     /**
      * @param jswordSearch              the search service
@@ -161,7 +163,8 @@ public class SearchServiceImpl implements SearchService {
                              final VersionResolver versionResolver,
                              final LexiconDefinitionService lexiconDefinitionService,
                              final JSwordRelatedVersesService relatedVerseService,
-                             final StrongAugmentationService strongAugmentationService) {
+                             final StrongAugmentationService strongAugmentationService,
+                             final AugDStrongService augDStrong) {
         this.jswordSearch = jswordSearch;
         this.jswordMetadata = jswordMetadata;
         this.versificationService = versificationService;
@@ -175,7 +178,7 @@ public class SearchServiceImpl implements SearchService {
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
-
+        this.augDStrong = augDStrong;
     }
 
     @Override
@@ -1165,8 +1168,10 @@ public class SearchServiceImpl implements SearchService {
         matchAugmentedStrongs.reset();
         while (matchAugmentedStrongs.find()) {
             final String as = matchAugmentedStrongs.group(1);
-            augmentedStrongs.add(as);
-            strongs.add(this.strongAugmentationService.reduce(as).toUpperCase());
+            if (!augmentedStrongs.contains(as)) {
+                augmentedStrongs.add(as);
+                strongs.add(this.strongAugmentationService.reduce(as).toUpperCase());
+            }
         }
 
         //run the normal search
@@ -1174,17 +1179,21 @@ public class SearchServiceImpl implements SearchService {
         if (simpleStrongSearch.contains("strong")) {
             currentSearch.setQuery(simpleStrongSearch);
             key = this.jswordSearch.searchKeys(sq);
+            String simpleStrongNum = simpleStrongSearch.replace("strong:", "").replaceAll(" ", "");
+            this.augDStrong.updateWithDStrong(simpleStrongNum, key, currentSearch.getVersions()[0]);
         }
+
+        Key copyOfPotentialAugmentedResults = PassageKeyFactory.instance().createEmptyKeyList(this.versificationService.getVersificationForVersion(currentSearch.getVersions()[0]));
 
         //work out the original query without the normal strong numbers
         String blankQuery = ALL_STRONGS.matcher(currentQuery).replaceAll("");
         for (String as : augmentedStrongs) {
             currentSearch.setQuery(blankQuery + " strong:" + as.substring(0, as.length() - 1));
             Key potentialAugmentedResults = this.jswordSearch.searchKeys(sq);
-
             //filter results by augmented strong data set
             Key masterAugmentedFilter = this.strongAugmentationService.getVersesForAugmentedStrong(as);
             potentialAugmentedResults = intersect(potentialAugmentedResults, masterAugmentedFilter);
+//            int[] indexes2AugStrong = this.augDStrong.getIndexes2OrdinalOfAugStrong(as);
 
             //add results to current set
             if (key == null) {
@@ -1454,9 +1463,9 @@ public class SearchServiceImpl implements SearchService {
                 final String strongNumber = doc.get(STRONG_NUMBER_FIELD);
                 if (isInFilter(strongNumber, sq)) {
                     filteredStrongs.add(strongNumber);
-                    fullQuery.append(STRONG_QUERY);
-                    fullQuery.append(strongNumber);
-                    fullQuery.append(' ');
+                    final String possibleAppend = STRONG_QUERY + strongNumber + " ";
+                    if (fullQuery.indexOf(possibleAppend) == -1) // prevent duplicates
+                        fullQuery.append(possibleAppend);
                 }
             }
             return results;
@@ -1807,7 +1816,6 @@ public class SearchServiceImpl implements SearchService {
                 versifiedSearchKeys = VersificationsMapper.instance().map(KeyUtil.getPassage(searchKeys), v11nResults);
             }
         }
-
 
         // otherwise we interesect and adjust the "total"
         results.retainAll(versifiedSearchKeys);

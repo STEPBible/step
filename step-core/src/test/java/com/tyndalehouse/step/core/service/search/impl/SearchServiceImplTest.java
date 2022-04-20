@@ -127,7 +127,7 @@ public class SearchServiceImplTest {
         subjects = new SubjectSearchServiceImpl(entityManager,
                 jswordSearch, meta, module, versificationService);
         return new SearchServiceImpl(jswordSearch, meta, versificationService, subjects, new TimelineServiceImpl(entityManager, jsword), null, entityManager, TestUtils.mockVersionResolver(),
-                mock(LexiconDefinitionServiceImpl.class), null, null
+                mock(LexiconDefinitionServiceImpl.class), null, null, null
         );
     }
 }

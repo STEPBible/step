@@ -4,6 +4,7 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.service.AugDStrongService;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
@@ -11,6 +12,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.PassageKeyFactory;
@@ -20,7 +22,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Strong augmentation service to provide better context/definitions to the end user.
@@ -32,7 +36,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     private final JSwordVersificationService versificationService;
     private final AugDStrongService augDStrong;
     @Inject
-    public StrongAugmentationServiceImpl(final EntityManager manager, final JSwordVersificationService versificationService, AugDStrongService augDStrong) {
+    public StrongAugmentationServiceImpl(final EntityManager manager, final JSwordVersificationService versificationService, final AugDStrongService augDStrong) {
         this.versificationService = versificationService;
         this.augmentedStrongs = manager.getReader("augmentedStrongs");
         this.augDStrong = augDStrong;
@@ -54,10 +58,12 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             return new AugmentedStrongs(keys, new EntityDoc[0]);
         }
 
+//        final long currentTimeNanos = System.nanoTime();
         //for each key, we see if there is an augment strong number
         final StringBuilder query = new StringBuilder(keys.length * 10 + 16);
         query.append("(");
         boolean hebrew = false;
+        int ordinal = -1;
         for (int i = 0; i < keys.length; i++) {
             if ((keys[i].charAt(0) == 'H') || (keys[i].charAt(0) == 'h')) hebrew = true;
             if (isNonAugmented(keys[i])) {
@@ -74,11 +80,11 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         }
 
         final EntityDoc[] docs;
+        String[] individualVerses = null;
         if (query.length() > 1) {
 
             //add the reference in the query. We may have several due to versifications mapping, so we're going to look for documents where at least 1 of the verses is in the doc
             query.append(") AND (");
-            String[] individualVerses;
             boolean foundDigit = false;
             for (int i = reference.length() - 1; i > 1; i--) { // Check to see if there are chapter or verse number
                 if (Character.isDigit(reference.charAt(i))) {
@@ -87,10 +93,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 }
             }
             if ((foundDigit) && (hebrew)) {
-                Key referenceAfterConvertOfVersification = this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey();
-                individualVerses = StringUtils.split(referenceAfterConvertOfVersification.getOsisID());
-
-                // **** Need to take care of Greek in OT, eg LXX
+                KeyWrapper k = this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK);
+                individualVerses = StringUtils.split(k.getKey().getOsisID());
             }
             else { // If there are no chapter or verse number, the query does not need to list all the verses in the book.
                 individualVerses = new String[1];
@@ -144,13 +148,55 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         } else {
             docs = new EntityDoc[0];
         }
-        // call new lookup
-//        if (referenceAfterConvertOfVersification != null) {
-//
-//        }
-//        else {
-//            ordinal = augDStrong.cnvrtOSIS2int(reference, );
-//        }
+//        LOGGER.info("Old method took [{}] nano-seconds", System.nanoTime() - currentTimeNanos);
+//        final long currentTimeNanos2 = System.nanoTime();
+
+        final Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
+        String versificationName = sourceVersification.getName();
+        boolean useNRSVVersification = false;
+        if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) {
+            ordinal = augDStrong.cnvrtOSIS2Ordinal(reference, sourceVersification);
+            useNRSVVersification = true;
+        }
+        else if (versificationName.equals(JSwordPassageService.OT_BOOK)) {
+            ordinal = augDStrong.cnvrtOSIS2Ordinal(reference, sourceVersification);
+        }
+        else {
+            ordinal  = this.versificationService.convertReferenceGetOrdinal(reference, sourceVersification, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
+        }
+        String[] result = new String[0];
+        if (ordinal > -1) {
+            if (keys.length == 1) { // most of the calls to this method only has one key.  Create a shorter code to reduce processing time.
+                result = new String[] {keys[0]};
+                if (isNonAugmented(keys[0])) {
+                    String dStrong = augDStrong.getAugStrongWithStrongAndOrdinal(keys[0], ordinal, useNRSVVersification);
+                    result[0] = dStrong;
+                    if (!augmentedStrongs.containsValue(dStrong))
+                        System.out.println("dStrong " + dStrong + " " + augmentedStrongs + " " + reference);
+                }
+            }
+            else {
+                Set<String> deDupKeys = new HashSet<String>();
+                for (String s : keys) {
+                    deDupKeys.add(s); // This will not add duplicate keys
+                }
+                result = deDupKeys.toArray(new String[0]);
+                for (int j = 0; j < result.length; j ++ ) {
+                    if (isNonAugmented(keys[0])) {
+                        result[j] = augDStrong.getAugStrongWithStrongAndOrdinal(result[j], ordinal, useNRSVVersification);
+                        if (!augmentedStrongs.containsValue(result[j]))
+                            System.out.println("dStrong " + result[j] + " " + augmentedStrongs + " " + reference);
+                    }
+                }
+            }
+            // return result;
+        }
+        else {
+            System.out.println("null individualVerses " + version + " " + " reference " + reference + " key " + String.join(",", keys));
+        }
+//        LOGGER.info("New method took [{}] nano-seconds", System.nanoTime() - currentTimeNanos2);
+        if (result.length != augmentedStrongs.size()) System.out.println("different size of keys " + String.join(",", keys) + " & augmentedStrongs " + augmentedStrongs);
+        if (reference.split(" ").length > 1) System.out.println("More than one ref: " + reference + " key " + String.join(",", keys));
         final String[] augmented = new String[augmentedStrongs.size()];
         return new AugmentedStrongs(augmentedStrongs.values().toArray(augmented), docs);
     }

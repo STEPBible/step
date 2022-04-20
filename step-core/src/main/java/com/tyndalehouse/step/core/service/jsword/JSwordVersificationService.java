@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service.jsword;
 
 import com.tyndalehouse.step.core.models.KeyWrapper;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
@@ -121,4 +122,7 @@ public interface JSwordVersificationService {
      * @return the converted reference
      */
     KeyWrapper convertReference(String reference, String sourceVersion, String targetVersion);
+
+    int convertReferenceGetOrdinal(final String reference, final Versification source, Versification target);
+
 }

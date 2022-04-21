@@ -202,7 +202,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     }
 
     private boolean isNonAugmented(final String key) {
-        return (key.charAt(0) == 'H' || key.charAt(0) == 'G') && Character.isDigit(key.charAt(key.length() - 1));
+        return (key.charAt(0) == 'H' || key.charAt(0) == 'G' || key.charAt(0) == 'h' || key.charAt(0) == 'g') && Character.isDigit(key.charAt(key.length() - 1));
     }
 
     @Override
@@ -236,7 +236,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     @Override
     public String reduce(final String augmentedStrong) {
         final char firstChar = augmentedStrong.charAt(0);
-        if((firstChar == 'H' || firstChar == 'h') && Character.isLetter(augmentedStrong.charAt(augmentedStrong.length() -1))) {
+        if ((firstChar == 'H' || firstChar == 'h' || firstChar == 'G' || firstChar == 'g') && Character.isLetter(augmentedStrong.charAt(augmentedStrong.length() -1))) {
             return augmentedStrong.substring(0, augmentedStrong.length() - 1);
         }
         return augmentedStrong;

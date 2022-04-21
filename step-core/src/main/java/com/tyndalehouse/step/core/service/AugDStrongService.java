@@ -48,5 +48,5 @@ public interface AugDStrongService {
 
     String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification);
 
-    void updateWithDStrong(String strong, Key reference, String version);
+    void updateWithAugDStrong(String strong, Key reference);
 }

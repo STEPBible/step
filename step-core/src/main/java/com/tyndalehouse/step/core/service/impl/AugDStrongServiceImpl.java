@@ -136,7 +136,8 @@ public class AugDStrongServiceImpl implements AugDStrongService {
 
     private void verifyAugStrongPattern(final String augStrong) {
         char prefix = augStrong.charAt(0);
-        if ( ((Character.compare(prefix, 'G') != 0)) && (Character.compare(prefix, 'H') != 0)) {
+        if ( ((Character.compare(prefix, 'G') != 0)) && (Character.compare(prefix, 'H') != 0) &&
+             ((Character.compare(prefix, 'g') != 0)) && (Character.compare(prefix, 'h') != 0) ) {
             System.out.println("augmented strong does not start with H or G: " + augStrong);
             System.exit(404);
         }
@@ -200,24 +201,37 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         return bookNames[bookIndex] + "." + chapter + "." + verse;
     }
 
-    public void updateWithDStrong(String strong, Key key, String version) {
+    public void updateWithAugDStrong(String strong, Key key) {
         String trimmedStrong = strong.trim();
         boolean isAugStrong = !Character.isDigit(trimmedStrong.charAt(trimmedStrong.length() - 1)); // Last character of augmented strong should not be digit
+        final Versification sourceVersification = ((RocketPassage) key).getVersification(); //this.versificationService.getVersificationForVersion(version);
+        String versificationName = sourceVersification.getName();
+        boolean hebrew = ((Character.compare(trimmedStrong.charAt(0), 'H') == 0)) ? true : false;
+        short[] ref = (hebrew) ? refOfAugStrongOTRSV : refOfAugStrongNT;
+        Versification versificationForConversion = null;
+        if (versificationName.equals(JSwordPassageService.OT_BOOK)) ref = refOfAugStrongOTOHB;
+        else if ((!versificationName.equals("NRSV")) && (!versificationName.equals("KJV"))) {
+            versificationForConversion = this.versificationService.getVersificationForVersion("NRSV");
+        }
         int[] index = getIndexes2OrdinalOfAugStrong(trimmedStrong, isAugStrong);
         if (index == null) return;
-        final Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
-        Key updatedKey = PassageKeyFactory.instance().createEmptyKeyList(sourceVersification);
-        String versificationName = sourceVersification.getName();
-        boolean useNRSVVersification = false;
-        boolean useOHBVersification = false;
-        if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) useNRSVVersification = true;
-        else if (versificationName.equals(JSwordPassageService.OT_BOOK)) useOHBVersification = true;
-//        else ordinal = this.versificationService.convertReferenceGetOrdinal(reference, sourceVersification, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
-        int numOfKey = key.getCardinality();
-        for (int i = 0; i < numOfKey; i ++) {
-            int curOrdinal = ((Verse) key.get(i)).getOrdinal();
-
+        int index2Ref = index[0];
+        int numOfRef = index[1];
+        BitSet store = (BitSet) ((RocketPassage) key).store;
+        BitSet tmpStore = null;
+        if (isAugStrong) tmpStore = new BitSet(store.size());
+        for (int i = 0; i < numOfRef; i ++) {
+            int ordinal = ref[index2Ref + i];
+            if (versificationForConversion != null) {
+                String reference = versificationForConversion.decodeOrdinal(ordinal).getOsisRef();
+                ordinal = this.versificationService.convertReferenceGetOrdinal(reference, versificationForConversion, sourceVersification);
+            }
+            if (isAugStrong) {
+                if (store.get(ordinal)) tmpStore.set(ordinal);
+            }
+            else store.clear(ordinal);
         }
+        if (isAugStrong) ((RocketPassage) key).store = tmpStore;
         return;
     }
 
@@ -246,8 +260,8 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             augStrong2RefIdx = augStrong2RefIdxNT;
         }
         int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
-        char lastCharOfStrong = trimmedStrong.charAt(trimmedStrong.length() - 1);
         if (isAugStrong) {
+            char lastCharOfStrong = trimmedStrong.charAt(trimmedStrong.length() - 1);
             int suffixInt = (lastCharOfStrong & 0x000000ff) << 24;
             for (int i = index2 + numOfAugStrongWithSameStrong - 1; i >= index2; i--) {
                 int curPtr = augStrong2RefIdx[i] & 0x7fffffff; // Turn off top bit in case it is on
@@ -264,10 +278,9 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             }
         }
         else {
-            int result[] = new int[3];
+            int result[] = new int[2];
             result[0] = augStrong2RefIdx[index2] & 0x00ffffff; // index to list of ordinal (verse) for aug strong
             result[1] = (augStrong2RefIdx[index2 + numOfAugStrongWithSameStrong] & 0x00ffffff) - result[0]; // length
-            result[2] = numOfAugStrongWithSameStrong;
             return result;
         }
         return null;
@@ -490,7 +503,6 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                     strong2AugStrongIndexNT ++;
                     refIndexNT = addToRefArray(refIndexNT, false, entry.getValue(), versificationForOT, versificationForESV);
                 }
-                //System.out.println("key: " + entry.getKey() + ", value: " + entry.getValue() + " " + counter);
                 counter ++;
             }
             augStrong2RefIdxOT[strong2AugStrongIndexOT] = refIndexOT | 0x80000000; // Turn on top bit to mark the first augmented Strong of a Strong number.  In this case it is a marker for the end of the array

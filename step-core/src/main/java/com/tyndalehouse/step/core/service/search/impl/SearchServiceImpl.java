@@ -1161,9 +1161,6 @@ public class SearchServiceImpl implements SearchService {
         String currentQuery = currentSearch.getQuery();
         final Matcher matchAugmentedStrongs = AUGMENTED_STRONG.matcher(currentQuery);
         final String simpleStrongSearch = matchAugmentedStrongs.replaceAll("");
-//        final Versification curVersification;
-//        if (Character.compare(strongs.iterator().next().charAt(0), 'H') == 0) curVersification = this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
-//        else curVersification = this.versificationService.getVersificationForVersion("ESV");
 
         matchAugmentedStrongs.reset();
         while (matchAugmentedStrongs.find()) {
@@ -1180,26 +1177,22 @@ public class SearchServiceImpl implements SearchService {
             currentSearch.setQuery(simpleStrongSearch);
             key = this.jswordSearch.searchKeys(sq);
             String simpleStrongNum = simpleStrongSearch.replace("strong:", "").replaceAll(" ", "");
-            this.augDStrong.updateWithDStrong(simpleStrongNum, key, currentSearch.getVersions()[0]);
+            this.augDStrong.updateWithAugDStrong(simpleStrongNum, key);
         }
-
-        Key copyOfPotentialAugmentedResults = PassageKeyFactory.instance().createEmptyKeyList(this.versificationService.getVersificationForVersion(currentSearch.getVersions()[0]));
-
         //work out the original query without the normal strong numbers
         String blankQuery = ALL_STRONGS.matcher(currentQuery).replaceAll("");
         for (String as : augmentedStrongs) {
-            currentSearch.setQuery(blankQuery + " strong:" + as.substring(0, as.length() - 1));
-            Key potentialAugmentedResults = this.jswordSearch.searchKeys(sq);
+            currentSearch.setQuery(blankQuery + " strong:" + as.substring(0, as.length()-1));
+            Key augmentedResults = this.jswordSearch.searchKeys(sq);
             //filter results by augmented strong data set
-            Key masterAugmentedFilter = this.strongAugmentationService.getVersesForAugmentedStrong(as);
-            potentialAugmentedResults = intersect(potentialAugmentedResults, masterAugmentedFilter);
-//            int[] indexes2AugStrong = this.augDStrong.getIndexes2OrdinalOfAugStrong(as);
-
+            this.augDStrong.updateWithAugDStrong(as, augmentedResults);
+            //Key masterAugmentedFilter = this.strongAugmentationService.getVersesForAugmentedStrong(as);
+            //potentialAugmentedResults = intersect(potentialAugmentedResults, masterAugmentedFilter);
             //add results to current set
             if (key == null) {
-                key = potentialAugmentedResults;
+                key = augmentedResults;
             } else {
-                key.addAll(potentialAugmentedResults);
+                key.addAll(augmentedResults);
             }
         }
         currentSearch.setQuery(currentQuery);

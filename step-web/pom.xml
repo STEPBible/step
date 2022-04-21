@@ -24,7 +24,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>2.1.35-SNAPSHOT</version>
+		<version>2.1.38</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -643,11 +643,11 @@
 					<configuration>
 						<container>
 							<containerId>tomcat6x</containerId>
-							<home>/opt/bitnami/dev-step-tomcat</home>
+							<home>/var/lib/tomcat9</home>
 						</container>
 						<configuration>
 							<type>existing</type>
-							<home>/opt/bitnami/dev-step-tomcat</home>
+							<home>/var/lib/tomcat9</home>
 						</configuration>
 						<deployer>
 							<type>installed</type>
@@ -674,24 +674,6 @@
 						</execution>
 					</executions>
 				</plugin>
-				<!-- <plugin> -->
-					<!-- <groupId>com.coderplus.maven.plugins</groupId> -->
-					<!-- <artifactId>copy-rename-maven-plugin</artifactId> -->
-					<!-- <version>1.0</version> -->
-					<!-- <executions> -->
-						<!-- <execution> -->
-							<!-- <id>copy-file</id> -->
-							<!-- <phase>integration-test</phase> -->
-							<!-- <goals> -->
-								<!-- <goal>copy</goal> -->
-							<!-- </goals> -->
-							<!-- <configuration> -->
-								<!-- <sourceFile>target\step-web.war</sourceFile> -->
-								<!-- <destinationFile>\STEP\apache-tomcat-9.0.58\webapps\ROOT.war</destinationFile> -->
-							<!-- </configuration> -->
-						<!-- </execution> -->
-					<!-- </executions> -->
-				<!-- </plugin> -->
 			</plugins>
 	</build>
 

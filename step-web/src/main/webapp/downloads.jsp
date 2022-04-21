@@ -190,6 +190,8 @@
 			  <br/><br/>
 
 			  Click <a class="here" id="exeInstruction" onclick=_userDownload(this.id)>here</a> for installation instructions.
+<br/>
+			  Click <a class="here" href="https://downloads.stepbible.com/file/Stepbible/STEPBible_Modules.pdf")>here</a> for instructions to add Bibles.
 
 			  <br/><br/>
 

@@ -329,20 +329,22 @@ public class SearchPageController extends HttpServlet {
                 } else if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
                     strongSearch = true;
                     final LexiconSuggestion enhancedTokenInfo = (LexiconSuggestion) t.getEnhancedTokenInfo();
-                    keyInfo.append(enhancedTokenInfo.getMatchingForm());
-                    keyInfo.append(" - ");
-                    keyInfo.append(enhancedTokenInfo.getGloss());
-                    keyInfo.append(" - ");
-                    keyInfo.append(enhancedTokenInfo.getStepTransliteration());
-                    keyInfo.append(" - ");
-                    keyInfo.append(enhancedTokenInfo.getStrongNumber());
-                    keyInfo.append(infoSeparator);
-                    shortSearchWord.append(enhancedTokenInfo.getStepTransliteration());
-                    longSearchWord.append(enhancedTokenInfo.getStepTransliteration());
-                    longSearchWord.append(", ");
-                    longSearchWord.append(enhancedTokenInfo.getGloss());
-                    longSearchWord.append(", ");
-                    longSearchWord.append(enhancedTokenInfo.getStrongNumber());
+                    if (enhancedTokenInfo != null) {
+                        keyInfo.append(enhancedTokenInfo.getMatchingForm());
+                        keyInfo.append(" - ");
+                        keyInfo.append(enhancedTokenInfo.getGloss());
+                        keyInfo.append(" - ");
+                        keyInfo.append(enhancedTokenInfo.getStepTransliteration());
+                        keyInfo.append(" - ");
+                        keyInfo.append(enhancedTokenInfo.getStrongNumber());
+                        keyInfo.append(infoSeparator);
+                        shortSearchWord.append(enhancedTokenInfo.getStepTransliteration());
+                        longSearchWord.append(enhancedTokenInfo.getStepTransliteration());
+                        longSearchWord.append(", ");
+                        longSearchWord.append(enhancedTokenInfo.getGloss());
+                        longSearchWord.append(", ");
+                        longSearchWord.append(enhancedTokenInfo.getStrongNumber());
+                    }
                 } else if (SearchToken.MEANINGS.equals(tokenType)) {
                     keyInfo.append(token);
                     keyInfo.append(infoSeparator);

@@ -20,35 +20,11 @@ import java.util.*;
 
 import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 import static java.lang.Integer.parseInt;
+import org.slf4j.Logger;
 
 @Singleton
 public class AugDStrongServiceImpl implements AugDStrongService {
-
-    private String bookNames[] = {"1Chr", "1Cor", "1John", "1Kgs", "1Pet", "1Sam",
-            "1Thess", "1Tim", "2Chr", "2Cor", "2John", "2Kgs", "2Pet", "2Sam",
-            "2Thess", "2Tim", "3John", "Acts", "Amos", "Col", "Dan", "Deut",
-            "Eccl", "Eph", "Esth", "Exod", "Ezek", "Ezra", "Gal", "Gen",
-            "Hab", "Hag", "Heb", "Hos", "Isa", "Jas", "Jer", "Job", "Joel",
-            "John", "Jonah", "Josh", "Jude", "Judg", "Lam", "Lev", "Luke",
-            "Mal", "Mark", "Matt", "Mic", "Nah", "Neh", "Num", "Obad", "Phil",
-            "Phlm", "Prov", "Ps", "Rev", "Rom", "Ruth", "Song", "Titus", "Zech",
-            "Zeph"};
-    private short bookOrder[] = {12, 45, 61, 10, 59, 8,
-            51, 53, 13, 46, 62, 11, 60, 9,
-            52, 54, 63, 43, 29, 50, 26, 4,
-            20, 48, 16,  1, 25, 14, 47, 0,
-            34, 36, 57, 27, 22, 58, 23, 17, 28,
-            42, 31,  5, 64,  6, 24,  2, 41,
-            38, 40, 39, 32, 33, 15,  3, 30, 49,
-            56, 19, 18, 65, 44,  7, 21, 55, 37,
-            35};
-
-    private String bookNames2[] = {"Gen", "Exod", "Lev", "Num", "Deut", "Josh", "Judg", "Ruth", "1Sam", "2Sam", "1Kgs",
-            "2Kgs", "1Chr", "2Chr", "Ezra", "Neh", "Esth", "Job", "Ps", "Prov", "Eccl", "Song", "Isa", "Jer", "Lam",
-            "Ezek", "Dan", "Hos", "Joel", "Amos", "Obad", "Jonah", "Mic", "Nah", "Hab", "Zeph", "Hag", "Zech", "Mal",
-            "Matt", "Mark", "Luke", "John", "Acts", "Rom", "1Cor", "2Cor", "Gal", "Eph", "Phil", "Col", "1Thess",
-            "2Thess", "1Tim", "2Tim", "Titus", "Phlm", "Heb", "Jas", "1Pet", "2Pet", "1John", "2John", "3John", "Jude",
-            "Rev"};
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AugDStrongServiceImpl.class);
 
     private static int numOfStrongGrk;
 	private static int numOfAugStrongOT;
@@ -79,29 +55,30 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         return -1;
     }
 
-    private int addToAugStrong2Ref(int refIndex, String augStrong) {
+    private int addToAugStrong2Ref(int refIndex, String augStrong, int lenOfRef) {
         int result = augStrong.charAt(augStrong.length() - 1);
         if ((result < 65) || (result > 122)) { // 65 is A 121 is z
             System.out.println("suffix of augmented Strong " + augStrong + " is outside of range of expected characters: " + augStrong.charAt(augStrong.length() - 1) + " " + result);
             System.exit(4);
         }
-        result = (result << 24) | refIndex;
-        return result;
+        result = result << 24; // the top byte of the integer is the suffix of the augmented strong.  The other 3 byte of the integer is the index to the reference array
+        if (lenOfRef == 0) return result; // if there are no reference, then there is no index to the reference array
+        return result | refIndex;
     }
 
-    private int addToRefArray(int refIndex, boolean hebrew, String refs, final Versification versificationForOT, final Versification versificationForESV) {
+    private int addToRefArray(int refIndex, final boolean hebrew, final String refs, final Versification versificationForOT, final Versification versificationForESV) {
+        if (refs == "") return refIndex;
         String[] arrOfRef = refs.split(" ");
         int startIndex = refIndex;
         for (int i = 0; i < arrOfRef.length; i++) {
             short refOrdinal = (hebrew) ? cnvrtOSIS2Ordinal(arrOfRef[i], versificationForOT) : cnvrtOSIS2Ordinal(arrOfRef[i], versificationForESV);
-            if (refOrdinal > 0) {
+            if (refOrdinal > -1) {
                 if (hebrew) {
                     refOfAugStrongOTOHB[refIndex] = refOrdinal;
-                    refOrdinal  = (short) this.versificationService.convertReferenceGetOrdinal(arrOfRef[i], versificationForOT, versificationForESV);
-                    if (refOrdinal > 0)
+                    refOrdinal = (short) this.versificationService.convertReferenceGetOrdinal(arrOfRef[i], versificationForOT, versificationForESV);
+                    if (refOrdinal > -1)
                         refOfAugStrongOTRSV[refIndex] = refOrdinal;
-                }
-                else
+                } else
                     refOfAugStrongNT[refIndex] = refOrdinal;
                 refIndex++;
             }
@@ -109,12 +86,11 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         if (hebrew) {
             Arrays.sort(refOfAugStrongOTOHB, startIndex, refIndex);
             Arrays.sort(refOfAugStrongOTRSV, startIndex, refIndex);
-        }
-        else Arrays.sort(refOfAugStrongNT, startIndex, refIndex);
+        } else Arrays.sort(refOfAugStrongNT, startIndex, refIndex);
         return refIndex;
     }
 
-    public int binarySearchOfStrong(final String augStrong) {
+    private int binarySearchOfStrong(final String augStrong) {
         int first = 0;
         int last = strongs.length - 1;
         if ((Character.compare(augStrong.charAt(0), 'G') == 0)) {
@@ -148,17 +124,23 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         }
     }
 
-    public int cnvrtStrong2Short(final String strong) {
+    private int cnvrtStrong2Short(final String strong) {
         char prefix = strong.charAt(0);
         int startPos = 1;
-        if (Character.isDigit(prefix)) startPos = 0;
         int endPos = strong.length() - 1;
         char suffix = strong.charAt(endPos);
         if (Character.isDigit(suffix)) endPos++;
-        int num = parseInt(strong.substring(startPos, endPos));
+        int num = -1;
+        try {
+            num = parseInt(strong.substring(startPos, endPos)); // If the augmented Strong file has issue, it will run into an exception.
+        } catch (NumberFormatException e) {
+            LOGGER.error("Strong number is not numeric at the expected positions: " + strong + " Something wrong with the augmented Strong file.");
+            System.exit(4);
+        }
+        
         if (num > 32767) {
-            System.out.println("Strong number has too many digits: " + strong);
-            return -1;
+            LOGGER.error("Strong number has too many digits: " + strong + " Something wrong with the augmented Strong file.");
+            System.exit(4);
         }
         return num;
     }
@@ -172,86 +154,56 @@ public class AugDStrongServiceImpl implements AugDStrongService {
     }
 
     private ImmutablePair<Character, Integer> getSuffixAndIdx(int num) {
-        num = num & 0x7fffffff; // Turn off top bit.  We don't care if this is the first augmented Strong of the Strong number.
         Character suffix = (char) (num >> 24);
         int index = num & 0x00FFFFFF;
         return new ImmutablePair<Character, Integer>(suffix, index);
     }
 
-    public String getBibleVerse(final int reference) {
-//        final Verse s;
-//        String result = curVersification.decodeOrdinal(ordinal);
-//        return result;
-
-        int verse = reference & 0x000000FF;
-        int chapter = (reference >>> 8) & 0x000000FF;
-        int bookIndex = (reference >>> 16) & 0x000000FF;
-        if ((bookIndex < 0) || (bookIndex >= (bookNames.length))) {
-            System.out.println("Cannot find book " + bookIndex);
-            System.exit(4);
-        }
-        if ((chapter < 1) || (chapter > 150)) {
-            System.out.println("Chapter number seems to be invalid " + chapter);
-            System.exit(4);
-        }
-        if ((verse < 1) || (verse > 176)) {
-            System.out.println("Verse number seems to be invalid " + verse);
-            System.exit(4);
-        }
-        return bookNames[bookIndex] + "." + chapter + "." + verse;
-    }
-
-    public void updateWithAugDStrong(String strong, Key key) {
+    public void updatePassageKeyWithAugStrong(String strong, Key key) {
         String trimmedStrong = strong.trim();
         boolean isAugStrong = !Character.isDigit(trimmedStrong.charAt(trimmedStrong.length() - 1)); // Last character of augmented strong should not be digit
-        final Versification sourceVersification = ((RocketPassage) key).getVersification(); //this.versificationService.getVersificationForVersion(version);
+        if (!isAugStrong) return; // No need to update the key
+        final Versification sourceVersification = ((RocketPassage) key).getVersification(); 
         String versificationName = sourceVersification.getName();
-        boolean hebrew = ((Character.compare(trimmedStrong.charAt(0), 'H') == 0)) ? true : false;
+        char prefix = trimmedStrong.charAt(0);
+        boolean hebrew = ((Character.compare(prefix, 'H') == 0) || (Character.compare(prefix, 'h') == 0)) ? true : false;
         short[] ref = (hebrew) ? refOfAugStrongOTRSV : refOfAugStrongNT;
         Versification versificationForConversion = null;
         if (versificationName.equals(JSwordPassageService.OT_BOOK)) ref = refOfAugStrongOTOHB;
-        else if ((!versificationName.equals("NRSV")) && (!versificationName.equals("KJV"))) {
+        else if ((!versificationName.equals("NRSV")) && (!versificationName.equals("KJV")))
             versificationForConversion = this.versificationService.getVersificationForVersion("NRSV");
-        }
-        int[] index = getIndexes2OrdinalOfAugStrong(trimmedStrong, isAugStrong);
+        int[] index = getIndexes2OrdinalOfAugStrong(trimmedStrong);
         if (index == null) return;
-        int index2Ref = index[0];
-        int numOfRef = index[1];
+        final int index2Ref = index[0];
+        final int numOfRef = index[1];
+        final boolean emptyRef = index[2] == 0;
         BitSet store = (BitSet) ((RocketPassage) key).store;
         BitSet tmpStore = null;
-        if (isAugStrong) tmpStore = new BitSet(store.size());
+        if (!emptyRef) tmpStore = new BitSet(store.size());
         for (int i = 0; i < numOfRef; i ++) {
             int ordinal = ref[index2Ref + i];
             if (versificationForConversion != null) {
                 String reference = versificationForConversion.decodeOrdinal(ordinal).getOsisRef();
                 ordinal = this.versificationService.convertReferenceGetOrdinal(reference, versificationForConversion, sourceVersification);
+                if (ordinal < 0) continue;
             }
-            if (isAugStrong) {
+            if (!emptyRef) {
                 if (store.get(ordinal)) tmpStore.set(ordinal);
             }
             else store.clear(ordinal);
         }
-        if (isAugStrong) ((RocketPassage) key).store = tmpStore;
+        if (!emptyRef) ((RocketPassage) key).store = tmpStore;
         return;
     }
 
-    public String getBibleVerses(int ref[], int curAugStrongfirstIdx, final int length) {
-        String result = "";
-        int nextAugStrongIdx = curAugStrongfirstIdx + length;
-        for (; curAugStrongfirstIdx < nextAugStrongIdx; curAugStrongfirstIdx ++) {
-            result = result + getBibleVerse(ref[curAugStrongfirstIdx]);
-            if (curAugStrongfirstIdx < nextAugStrongIdx - 1) result = result + " ";
-        }
-        return result;
-    }
-
-    private int[] getIndexes2OrdinalOfAugStrong(String trimmedStrong, boolean isAugStrong) {
-        int index1 = binarySearchOfStrong(trimmedStrong);
+    private int[] getIndexes2OrdinalOfAugStrong(String strong) {
+        int index1 = binarySearchOfStrong(strong);
         if (index1 < 0) return null;
         short index2 = strong2AugStrongIndx[index1];
         if (index2 < 0) return null;
         int[] augStrong2RefIdx;
-        if ((Character.compare(trimmedStrong.charAt(0), 'H') == 0)) {
+        char prefix = strong.charAt(0);
+        if ((Character.compare(prefix, 'H') == 0) || (Character.compare(prefix, 'h') == 0)) {
             if (index2 > numOfAugStrongOT) return null;
             augStrong2RefIdx = augStrong2RefIdxOT;
         }
@@ -259,29 +211,29 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             if (index2 > numOfAugStrongNT) return null;
             augStrong2RefIdx = augStrong2RefIdxNT;
         }
-        int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
-        if (isAugStrong) {
-            char lastCharOfStrong = trimmedStrong.charAt(trimmedStrong.length() - 1);
-            int suffixInt = (lastCharOfStrong & 0x000000ff) << 24;
-            for (int i = index2 + numOfAugStrongWithSameStrong - 1; i >= index2; i--) {
-                int curPtr = augStrong2RefIdx[i] & 0x7fffffff; // Turn off top bit in case it is on
-                int checkSuffix = curPtr & 0x7f000000;  // Don't copy over the sign bit
-                int check = checkSuffix >> 24;
-                System.out.println("getIndex2Ord " + lastCharOfStrong + " " + check);
-                if (checkSuffix == suffixInt) {
-                    int result[] = new int[2];
-                    result[0] = curPtr & 0x00ffffff; // index to list of ordinal (verse) for aug strong
-                    curPtr = augStrong2RefIdx[i + 1];
-                    result[1] = (curPtr & 0x00ffffff) - result[0]; // length
+        final int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
+        char lastCharOfStrong = strong.charAt(strong.length() - 1);
+        int suffixInt = (lastCharOfStrong & 0x000000ff) << 24;
+        int result[] = new int[3];
+        final int orignalIndex2 = index2;
+        for (int i = index2 + numOfAugStrongWithSameStrong - 1; i >= index2; i--) {
+            int curPtr = augStrong2RefIdx[i];
+            int checkSuffix = curPtr & 0x7f000000;  // Don't copy over the sign bit
+            int check = checkSuffix >> 24;
+            System.out.println("getIndex2Ord " + lastCharOfStrong + " " + check);
+            if (checkSuffix == suffixInt) {
+                result[0] = curPtr & 0x00ffffff; // index to list of ordinal (verse) for aug strong
+                if (result[0] == 0) {
+                    result[0] = augStrong2RefIdx[orignalIndex2] & 0x00ffffff; // index to list of ordinal (verse) for aug strong
+                    result[1] = (augStrong2RefIdx[orignalIndex2 + numOfAugStrongWithSameStrong] & 0x00ffffff) - result[0]; // length
+                    result[2] = 0;
                     return result;
                 }
+                curPtr = augStrong2RefIdx[i + 1];
+                result[1] = (curPtr & 0x00ffffff) - result[0]; // length
+                result[2] = 1;
+                return result;
             }
-        }
-        else {
-            int result[] = new int[2];
-            result[0] = augStrong2RefIdx[index2] & 0x00ffffff; // index to list of ordinal (verse) for aug strong
-            result[1] = (augStrong2RefIdx[index2 + numOfAugStrongWithSameStrong] & 0x00ffffff) - result[0]; // length
-            return result;
         }
         return null;
     }
@@ -292,66 +244,54 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         if (index1 < 0) return strong;
         short index2 = strong2AugStrongIndx[index1];
         int[] augStrong2RefIdx;
-        if ((Character.compare(strong.charAt(0), 'H') == 0)) {
+        char prefix = strong.charAt(0);
+        short[] refArray = null;
+        if ((Character.compare(prefix, 'H') == 0) || (Character.compare(prefix, 'h') == 0)) {
             if ((index2 < 0) || (index2 > numOfAugStrongOT)) return "";
             augStrong2RefIdx = augStrong2RefIdxOT;
-        }
-        else {
+            refArray = (useNRSVVersification) ? refOfAugStrongOTRSV : refOfAugStrongOTOHB;
+        } else if ((Character.compare(prefix, 'G') == 0) || (Character.compare(prefix, 'g') == 0)) {
             if ((index2 < 0) || (index2 > numOfAugStrongNT)) return "";
             augStrong2RefIdx = augStrong2RefIdxNT;
-        }
+            refArray = refOfAugStrongNT;
+        } else return "";
         int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
         int indx2LastAugStrongWithSameStrong = index2 + numOfAugStrongWithSameStrong - 1;
-        int indx2FirstAugStrongWithNextStrong = augStrong2RefIdx[indx2LastAugStrongWithSameStrong+1];
-        int nextIndex = getSuffixAndIdx(indx2FirstAugStrongWithNextStrong).getRight(); // Next entry in augStrong2RefPtr
+        int augStrong2RefIdxNextIdx = indx2LastAugStrongWithSameStrong;
+        int endIndexOfCurrentAugStrongRef = 0;
+        while (endIndexOfCurrentAugStrongRef == 0) {
+            augStrong2RefIdxNextIdx ++;
+            int indx2FirstAugStrongWithNextStrong = augStrong2RefIdx[augStrong2RefIdxNextIdx];
+            endIndexOfCurrentAugStrongRef = getSuffixAndIdx(indx2FirstAugStrongWithNextStrong).getRight(); // Next entry in augStrong2RefPtr
+        }
+        char suffixWithNoRefs = ' ';
         for (int i = indx2LastAugStrongWithSameStrong; i >= index2; i--) {
-            int curPtr = augStrong2RefIdx[i] & 0x7fffffff; // Turn off top bit to mark the first augStrong to reference Ptr.  This will allow it to go into the while loop below
+            int curPtr = augStrong2RefIdx[i];
             ImmutablePair<Character, Integer> r = getSuffixAndIdx(curPtr);
             char curSuffix = r.getLeft();
             int curIndex = r.getRight();
+            if (curIndex == 0)
+                suffixWithNoRefs = curSuffix;
+            else {
 //            System.out.println("getAugStrongWithStrongAndOrdinal " + strong + " " + curSuffix);
-            for (; curIndex < nextIndex; curIndex ++) {
-                if (useNRSVVersification) {
-                    if (refOfAugStrongOTRSV[curIndex] == ordinal)
-                        return strong + curSuffix;
+                if ((endIndexOfCurrentAugStrongRef - curIndex) > 50) { // If the array of reference (in ordinal) is large, the binary search is faster.
+                    // if the binary search has any issue, remove the binary search because the performance improvement is not that big.
+                    int bSearchResult = Arrays.binarySearch(refArray, curIndex, endIndexOfCurrentAugStrongRef, (short) ordinal);
+                    if (bSearchResult > -1) return strong + curSuffix;
                 }
-                else if (refOfAugStrongOTOHB[curIndex] == ordinal) {
-                    return strong + curSuffix;
+                else { // If the array of reference (in ordinal) is small, a sequential search is faster.
+                    for (int x = curIndex; x <= endIndexOfCurrentAugStrongRef; x++) {
+                        // the array of reference (in ordinal) are sorted.  When it reaches an ordinal in the reference array which is larger, that ordinal does not exist in the reference array.
+                        // breaking out of the for loop will reduce unnecessary processing
+                        if (refArray[x] > ordinal) break;
+                        if (refArray[x] == ordinal) return strong + curSuffix;
+                    }
                 }
             }
-            nextIndex = curIndex;
+            endIndexOfCurrentAugStrongRef = curIndex - 1;
         }
+        if (suffixWithNoRefs != ' ') return strong + suffixWithNoRefs;
         return strong;
-    }
-
-    public String getAugStrongWithStrongAndVerse(String strong, String reference, final Versification versificationForOT, final Versification versificationForESV) {
-        int index1 = binarySearchOfStrong(strong);
-        if (index1 < 0) return "";
-        short index2 = strong2AugStrongIndx[index1];
-        if ((index2 < 0) || (index2 > numOfAugStrongOT)) return "";
-        // Get Versification
-        Versification curVersification;
-        if  (Character.compare(strong.charAt(0), 'H') == 0) curVersification = versificationForOT;
-        else curVersification = versificationForESV;
-        short refInt = cnvrtOSIS2Ordinal(reference, curVersification);
-        if (refInt < 0) return "";
-        int[] augStrong2RefIdx = ((Character.compare(strong.charAt(0), 'H') == 0)) ? augStrong2RefIdxOT : augStrong2RefIdxNT;
-        int curPtr = augStrong2RefIdx[index2] & 0x7fffffff; // Turn off top bit to mark the first augStrong to reference Ptr.  This will allow it to go into the while loop below
-        ImmutablePair<Character, Integer> r = getSuffixAndIdx(curPtr);
-        char firstSuffix = r.getKey();
-        while ((curPtr & 0x80000000) == 0)  { // Top bit must be turn off to continue
-            char curSuffix = r.getKey();
-            int curIndex = r.getValue();
-            index2 ++;
-            curPtr = augStrong2RefIdx[index2];
-            r = getSuffixAndIdx(curPtr);
-            for (; curIndex < r.getValue(); curIndex ++) {
-                if (refOfAugStrongOTOHB[curIndex] == refInt) {
-                    return strong + curSuffix;
-                }
-            }
-        }
-        return "";
     }
 
 	public void readAndLoad(final String augStrongFile) {
@@ -410,7 +350,8 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                             System.out.println("unexpected order at around " + curReferences);
                             System.exit(401);
                         }
-                        curReferences = data.substring(13);
+                        if (curAugStrong.charAt(curAugStrong.length() - 1) != 'A')
+                            curReferences = data.substring(13);
                         if (hebrew) {
                             if (augStrongRefOT.containsKey(curAugStrong)) {
                                 System.out.println("duplicate augmented strong " + curAugStrong);
@@ -425,9 +366,11 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                             }
                             augStrongRefNT.put(curAugStrong, curReferences);
                         }
-                        String[] arrOfRef = curReferences.split(" ");
-                        if (hebrew) numOfOTReferences += arrOfRef.length;
-                        else numOfNTReferences += arrOfRef.length;
+                        if (curReferences != "") {
+                            String[] arrOfRef = curReferences.split(" ");
+                            if (hebrew) numOfOTReferences += arrOfRef.length;
+                            else numOfNTReferences += arrOfRef.length;
+                        }
                         curAugStrong = ""; curReferences = ""; hebrew = false;
                     }
                 }
@@ -462,8 +405,8 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                 counter ++;
             }
             TreeMap<String, String> sortedAugStrong = new TreeMap<>();
-            sortedAugStrong.putAll(augStrongRefOT);
             sortedAugStrong.putAll(augStrongRefNT);
+            sortedAugStrong.putAll(augStrongRefOT);
             int strong2AugStrongIndexOT = 0;
             int strong2AugStrongIndexNT = 0;
             int refIndexOT = 0;
@@ -474,39 +417,37 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
                 String augStrong = entry.getKey();
                 verifyAugStrongPattern(augStrong);
+                String references = entry.getValue();
                 int curStrongNum = cnvrtStrong2Short(augStrong);
                 boolean hebrew = false;
-                if (Character.compare(augStrong.charAt(0), 'H') == 0) {
-                    augStrong2RefIdxOT[strong2AugStrongIndexOT] = addToAugStrong2Ref(refIndexOT, augStrong);
+                char prefix = augStrong.charAt(0);
+                if ((Character.compare(prefix, 'H') == 0) || (Character.compare(prefix, 'h') == 0)) {
+                    augStrong2RefIdxOT[strong2AugStrongIndexOT] = addToAugStrong2Ref(refIndexOT, augStrong, references.length());
                     hebrew = true;
                 }
                 else {
-                    augStrong2RefIdxNT[strong2AugStrongIndexNT] = addToAugStrong2Ref(refIndexNT, augStrong);
+                    augStrong2RefIdxNT[strong2AugStrongIndexNT] = addToAugStrong2Ref(refIndexNT, augStrong, references.length());
                 }
                 if (lastStrong != curStrongNum) {
                     int index = binarySearchOfStrong(augStrong);
-                    if (hebrew) {
-                        augStrong2RefIdxOT[strong2AugStrongIndexOT] = augStrong2RefIdxOT[strong2AugStrongIndexOT] | 0x80000000; // Turn on top bit to mark the first augmented Strong of a Strong number
-                        strong2AugStrongIndx[index] = (short) strong2AugStrongIndexOT;
+                    if (index < 0) {
+                        LOGGER.error("Error in AugStrongServiceImpl, cannot find augstrong of " + augStrong);
+                        System.exit(405);
                     }
-                    else {
-                        augStrong2RefIdxNT[strong2AugStrongIndexNT] = augStrong2RefIdxNT[strong2AugStrongIndexNT] | 0x80000000; // Turn on top bit to mark the first augmented Strong of a Strong number
-                        strong2AugStrongIndx[index] = (short) strong2AugStrongIndexNT;
-                    }
+                    strong2AugStrongIndx[index] = (hebrew) ? (short) strong2AugStrongIndexOT : (short) strong2AugStrongIndexNT;
                     lastStrong = curStrongNum;
                 }
                 if (hebrew) {
                     strong2AugStrongIndexOT ++;
-                    refIndexOT = addToRefArray(refIndexOT, true, entry.getValue(), versificationForOT, versificationForESV);
+                    refIndexOT = addToRefArray(refIndexOT, true, references, versificationForOT, versificationForESV);
                 }
                 else {
                     strong2AugStrongIndexNT ++;
-                    refIndexNT = addToRefArray(refIndexNT, false, entry.getValue(), versificationForOT, versificationForESV);
+                    refIndexNT = addToRefArray(refIndexNT, false, references, versificationForOT, versificationForESV);
                 }
-                counter ++;
             }
-            augStrong2RefIdxOT[strong2AugStrongIndexOT] = refIndexOT | 0x80000000; // Turn on top bit to mark the first augmented Strong of a Strong number.  In this case it is a marker for the end of the array
-            augStrong2RefIdxNT[strong2AugStrongIndexNT] = refIndexNT | 0x80000000; // Turn on top bit to mark the first augmented Strong of a Strong number.  In this case it is a marker for the end of the array
+            augStrong2RefIdxOT[strong2AugStrongIndexOT] = refIndexOT;
+            augStrong2RefIdxNT[strong2AugStrongIndexNT] = refIndexNT;
             strong2AugCountGrk = null;
             strong2AugCountHbr = null;
             augStrongRefOT = null;

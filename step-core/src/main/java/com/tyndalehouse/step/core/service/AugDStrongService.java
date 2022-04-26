@@ -36,17 +36,12 @@ import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
 
 public interface AugDStrongService {
-	short cnvrtOSIS2Ordinal(final String OSIS, final Versification curVersification);
-	
-    int binarySearchOfStrong(final String augStrong);
-
-    int cnvrtStrong2Short(final String strong);
-
-	String getBibleVerse(final int reference);
 
     void readAndLoad(final String csvResource);
 
+	short cnvrtOSIS2Ordinal(final String OSIS, final Versification curVersification);
+
     String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification);
 
-    void updateWithAugDStrong(String strong, Key reference);
+    void updatePassageKeyWithAugStrong(String strong, Key reference);
 }

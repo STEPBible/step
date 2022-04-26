@@ -285,7 +285,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
+        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();;
 
         if (strongList.length != 0) {
             EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);

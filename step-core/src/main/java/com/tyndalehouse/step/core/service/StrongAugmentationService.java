@@ -14,7 +14,7 @@ public interface StrongAugmentationService {
      * @param reference the reference
      * @param keys the keys  @return the list of returned / changed keyed
      */
-    AugmentedStrongs augment(final String version, String reference, String[] keys);
+    String[] augment(final String version, String reference, String[] keys);
 
     /**
      *
@@ -43,7 +43,7 @@ public interface StrongAugmentationService {
      * @param unAugmentedStrongNumbers the unaugmented strong numbers
      * @return the augmented form
      */
-    AugmentedStrongs augment(String version, String verseRef, String unAugmentedStrongNumbers);
+    String[] augment(String version, String verseRef, String unAugmentedStrongNumbers);
 
     public class AugmentedStrongs {
         private final String[] strongList;

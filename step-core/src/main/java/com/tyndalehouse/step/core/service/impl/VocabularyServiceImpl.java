@@ -162,7 +162,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public VocabResponse getDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
+        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
 
         if (strongList.length != 0) {
             final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
@@ -285,7 +285,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();;
+        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
 
         if (strongList.length != 0) {
             EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
@@ -378,7 +378,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public synchronized EntityDoc[] getLexiconDefinitions(final String vocabIdentifiers, final String version, final String reference) {
-        final String[] keys = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
+        final String[] keys = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
         if (keys.length == 0) {
             return new EntityDoc[0];
         }

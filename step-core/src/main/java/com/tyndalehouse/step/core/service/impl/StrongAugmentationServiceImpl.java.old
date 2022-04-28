@@ -43,18 +43,109 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     }
 
     @Override
-    public String[] augment(final String version, final String verseRef, final String unAugmentedStrongNumbers) {
+    public AugmentedStrongs augment(final String version, final String verseRef, final String unAugmentedStrongNumbers) {
         return augment(version, verseRef, StringUtils.split(unAugmentedStrongNumbers));
     }
 
     @Override
-    public String[] augment(final String version, final String reference, final String[] keys) {
+    public AugmentedStrongs augment(final String version, final String reference, final String[] keys) {
+        final Map<String, String> augmentedStrongs = new HashMap<>((keys.length + 4) * 2);
         if(StringUtils.isBlank(version) || StringUtils.isBlank(reference)) {
-            return keys;
+            //won't be able to resolve so just return the keys as is
+            for(String k : keys) {
+                augmentedStrongs.put(k, k);
+            }
+            return new AugmentedStrongs(keys, new EntityDoc[0]);
         }
+        //for each key, we see if there is an augment strong number
+        final StringBuilder query = new StringBuilder(keys.length * 10 + 16);
+        query.append("(");
         boolean hebrew = false;
         int ordinal = -1;
-        if ((keys[0].charAt(0) == 'H') || (keys[0].charAt(0) == 'h')) hebrew = true;
+        for (int i = 0; i < keys.length; i++) {
+            if ((keys[i].charAt(0) == 'H') || (keys[i].charAt(0) == 'h')) hebrew = true;
+            if (isNonAugmented(keys[i])) {
+                //then we're looking at Hebrew, so look up the augmentedStrongs data
+                //and we're looking for the first of any strong number
+                //build the lucene query...
+                query.append(StringConversionUtils.getStrongPaddedKey(keys[i]));
+//                query.append("~ "); // changed from ? to ~ because white space analyzer which does not accept ?
+                query.append("? "); // changed from ? to ~ because white space analyzer which does not accept ?
+            } else {
+                //add directly to the augmented list
+                augmentedStrongs.put(keys[i], keys[i]);
+            }
+        }
+
+        final EntityDoc[] docs;
+        String[] individualVerses = null;
+        if (query.length() > 1) {
+
+            //add the reference in the query. We may have several due to versifications mapping, so we're going to look for documents where at least 1 of the verses is in the doc
+            query.append(") AND (");
+            boolean foundDigit = false;
+            for (int i = reference.length() - 1; i > 1; i--) { // Check to see if there are chapter or verse number
+                if (Character.isDigit(reference.charAt(i))) {
+                    foundDigit = true;
+                    break;
+                }
+            }
+            if ((foundDigit) && (hebrew)) {
+                KeyWrapper k = this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK);
+                individualVerses = StringUtils.split(k.getKey().getOsisID());
+            }
+            else { // If there are no chapter or verse number, the query does not need to list all the verses in the book.
+                individualVerses = new String[1];
+                individualVerses[0] = reference;
+            }
+            //a single chapter can be optimized, also JSword returns the key as Gen.1 rather than expanded
+            boolean queryAppended = false;
+            if(individualVerses.length == 1) {
+                int countSeparators = 0;
+                for(int ii = 0; ii < individualVerses[0].length() && countSeparators < 2; ii++) {
+                    if(individualVerses[0].charAt(ii) == '.') {
+                        countSeparators++;
+                    }
+                }
+                if(countSeparators < 2) {
+                    query.append("references:");
+                    query.append(individualVerses[0]);
+                    query.append(".*");
+                    query.append(' ');
+                    queryAppended = true;
+                }
+            }
+
+            if(!queryAppended) {
+                for (String v : individualVerses) {
+                    query.append("references:");
+                    query.append(v);
+                    query.append(' ');
+                }
+            }
+            query.append(")");
+
+            //run the query for the hebrew words and add them to the list
+            docs = this.augmentedStrongs.search("augmentedStrong", query.toString());
+            for (EntityDoc d : docs) {
+                final String augmentedStrong = d.get("augmentedStrong");
+                for (String k: keys) {
+                    if (k.equals(augmentedStrong.substring(0, augmentedStrong.length() - 1)))
+                        augmentedStrongs.put(augmentedStrong.substring(0, augmentedStrong.length() - 1), augmentedStrong);
+                }
+            }
+
+            //now we need to work out which strongs were not augmented and add them to the list
+            //check which strongs didn't make it
+            for (String k : keys) {
+                final String keyingStrong = StringConversionUtils.getStrongPaddedKey(k); // .toLowerCase();
+                if (!augmentedStrongs.containsKey(keyingStrong)) {
+                    augmentedStrongs.put(keyingStrong, k);
+                }
+            }
+        } else {
+            docs = new EntityDoc[0];
+        }
         final Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
         String versificationName = sourceVersification.getName();
         boolean useNRSVVersification = false;
@@ -76,6 +167,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                     String dStrong = augDStrong.getAugStrongWithStrongAndOrdinal(keys[0], ordinal, useNRSVVersification);
                     System.out.println("key: " + keys[0] + " " + dStrong);
                     result[0] = dStrong;
+                    if (!augmentedStrongs.containsValue(dStrong))
+                        System.out.println("dStrong " + dStrong + " " + augmentedStrongs + " " + reference);
                 }
             }
             else {
@@ -87,12 +180,20 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 for (int j = 0; j < result.length; j ++ ) {
                     if (isNonAugmented(keys[0])) {
                         result[j] = augDStrong.getAugStrongWithStrongAndOrdinal(result[j], ordinal, useNRSVVersification);
+                        if (!augmentedStrongs.containsValue(result[j]))
+                            System.out.println("dStrong " + result[j] + " " + augmentedStrongs + " " + reference);
                     }
                 }
             }
+            // return result;
         }
+        else {
+            System.out.println("null individualVerses " + version + " " + " reference " + reference + " key " + String.join(",", keys));
+        }
+        if (result.length != augmentedStrongs.size()) System.out.println("different size of keys " + String.join(",", keys) + " & augmentedStrongs " + augmentedStrongs);
         if (reference.split(" ").length > 1) System.out.println("More than one ref: " + reference + " key " + String.join(",", keys));
-        return result;
+        final String[] augmented = new String[augmentedStrongs.size()];
+        return new AugmentedStrongs(augmentedStrongs.values().toArray(augmented), docs);
     }
 
     private boolean isNonAugmented(final String key) {

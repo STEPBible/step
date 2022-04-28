@@ -165,12 +165,13 @@ public class JSwordStrongNumberHelper {
                 }
 
                 final String strongQuery = StringConversionUtils.getStrongPaddedKey(strongsNumbers);
-                final StrongAugmentationService.AugmentedStrongs augmentedStrongs = strongAugmentationService.augment(preferredCountBook.getInitials(), verseRef, strongQuery);
-                final String augmentedStrongNumbers = StringUtils.join(augmentedStrongs.getStrongList(), ' ');
+                String[] augmentedStrongs = strongAugmentationService.augment(preferredCountBook.getInitials(), verseRef, strongQuery);
+                final String augmentedStrongNumbers = StringUtils.join(augmentedStrongs, ' ');
                 readDataFromLexicon(this.definitions, verseRef, augmentedStrongNumbers, userLanguage);
 
                 //build references that apply to each augmented strong number
-                final EntityDoc[] entityDocs = augmentedStrongs.getEntityDocs();
+//                final EntityDoc[] entityDocs = augmentedStrongs.getEntityDocs();
+                final EntityDoc[] entityDocs = null;
                 for(EntityDoc ed : entityDocs) {
                     final String augmentedStrong = ed.get("augmentedStrong");
                     augmentedReferences.put(augmentedStrong, ed);

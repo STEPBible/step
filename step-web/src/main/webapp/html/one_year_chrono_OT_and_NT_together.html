@@ -761,16 +761,16 @@
         col1_name = "Mon";
     }
 
+    today = new Date();
+    year = today.getYear() + 1900;
+    th_rows[0].cells[0].innerText = year;
+
     if (col1_day != -1) {
-        today = new Date();
-        year = today.getYear() + 1900;
-    
         dat = new Date (year + '/01/01');
         while (dat.getDay() != col1_day) {
             dat.setDate(dat.getDate() + 1);
         }
     
-        th_rows[0].cells[0].innerText = year;
         for (var i = 0; i < tb_rows.length; i ++) {
             text = dat.toDateString().replace(col1_name,"").replace(" 0", " ");
             if (year == (dat.getYear() + 1900)) {

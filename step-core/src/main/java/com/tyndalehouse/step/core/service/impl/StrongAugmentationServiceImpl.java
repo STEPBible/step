@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,18 +47,16 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     public String[] augment(final String version, final String reference, final String[] keys) {
         if(StringUtils.isBlank(version) || StringUtils.isBlank(reference))
             return keys;
-        int ordinal = -1;
-        char prefix = keys[0].charAt(0);
-        boolean hebrew = ((prefix == 'H') || (prefix == 'h'));
+        int ordinal;
         final Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
         String versificationName = sourceVersification.getName();
         boolean useNRSVVersification = false;
         if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) {
-            ordinal = augDStrong.cnvrtOSIS2Ordinal(reference, sourceVersification);
+            ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);
             useNRSVVersification = true;
         }
         else if (versificationName.equals(JSwordPassageService.OT_BOOK)) {
-            ordinal = augDStrong.cnvrtOSIS2Ordinal(reference, sourceVersification);
+            ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);
         }
         else {
             ordinal  = this.versificationService.convertReferenceGetOrdinal(reference, sourceVersification, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
@@ -70,10 +69,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                     result[0] = augDStrong.getAugStrongWithStrongAndOrdinal(keys[0], ordinal, useNRSVVersification);
             }
             else {
-                Set<String> deDupKeys = new HashSet<String>();
-                for (String s : keys) {
-                    deDupKeys.add(s); // This will not add duplicate keys
-                }
+                Set<String> deDupKeys = new HashSet<>();
+                Collections.addAll(deDupKeys, keys);
                 result = deDupKeys.toArray(new String[0]);
                 for (int j = 0; j < result.length; j ++ ) {
                     if (isNonAugmented(result[j]))
@@ -93,7 +90,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     @Override
     public Character getAugmentedStrongSuffix(final String strong) {
         char lastChar = strong.charAt(strong.length() - 1);
-        return Character.isLetter(lastChar) ? Character.valueOf(lastChar) : null;
+        return Character.isLetter(lastChar) ? lastChar : null;
     }
 
     @Override

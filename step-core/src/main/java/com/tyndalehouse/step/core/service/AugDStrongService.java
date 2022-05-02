@@ -32,7 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
 
@@ -40,7 +39,7 @@ public interface AugDStrongService {
 
     void readAndLoad(final String csvResource);
 
-	short cnvrtOSIS2Ordinal(final String OSIS, final Versification curVersification);
+	short convertOSIS2Ordinal(final String OSIS, final Versification curVersification);
 
     String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification);
 
@@ -50,7 +49,7 @@ public interface AugDStrongService {
 
     boolean isVerseInAugStrong(final String reference, final AugmentedStrongsForSearchCount arg, final Versification sourceVersification);
 
-    public class AugmentedStrongsForSearchCount {
+    class AugmentedStrongsForSearchCount {
         public final int startIndex;
         public final int endIndex;
         public final boolean defaultAugStrong;

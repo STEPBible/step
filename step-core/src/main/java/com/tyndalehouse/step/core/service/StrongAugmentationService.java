@@ -45,6 +45,8 @@ public interface StrongAugmentationService {
      */
     String[] augment(String version, String verseRef, String unAugmentedStrongNumbers);
 
+    public boolean isNonAugmented(final String key);
+
     public class AugmentedStrongs {
         private final String[] strongList;
         private final EntityDoc[] entityDocs;

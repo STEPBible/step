@@ -4,15 +4,12 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.service.AugDStrongService;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
-import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.PassageKeyFactory;
@@ -21,9 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -71,11 +66,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         if (ordinal > -1) {
             if (keys.length == 1) { // most of the calls to this method only has one key.  Create a shorter code to reduce processing time.
                 result = new String[] {keys[0]};
-                if (isNonAugmented(keys[0])) {
-                    String dStrong = augDStrong.getAugStrongWithStrongAndOrdinal(keys[0], ordinal, useNRSVVersification);
-                    System.out.println("key: " + keys[0] + " " + dStrong);
-                    result[0] = dStrong;
-                }
+                if (isNonAugmented(keys[0]))
+                    result[0] = augDStrong.getAugStrongWithStrongAndOrdinal(keys[0], ordinal, useNRSVVersification);
             }
             else {
                 Set<String> deDupKeys = new HashSet<String>();
@@ -84,16 +76,18 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 }
                 result = deDupKeys.toArray(new String[0]);
                 for (int j = 0; j < result.length; j ++ ) {
-                    result[j] = augDStrong.getAugStrongWithStrongAndOrdinal(result[j], ordinal, useNRSVVersification);
+                    if (isNonAugmented(result[j]))
+                        result[j] = augDStrong.getAugStrongWithStrongAndOrdinal(result[j], ordinal, useNRSVVersification);
                 }
             }
         }
-        //if (reference.split(" ").length > 1) System.out.println("More than one ref: " + reference + " key " + String.join(",", keys));
+        if (reference.split(" ").length > 1) System.out.println("More than one ref: " + reference + " key " + String.join(",", keys));
         return result;
     }
 
-    private boolean isNonAugmented(final String key) {
-        return (key.charAt(0) == 'H' || key.charAt(0) == 'G' || key.charAt(0) == 'h' || key.charAt(0) == 'g') && Character.isDigit(key.charAt(key.length() - 1));
+    public boolean isNonAugmented(final String key) {
+        char prefix = key.charAt(0);
+        return (prefix == 'H' || prefix == 'G' || prefix == 'h' || prefix == 'g') && Character.isDigit(key.charAt(key.length() - 1));
     }
 
     @Override

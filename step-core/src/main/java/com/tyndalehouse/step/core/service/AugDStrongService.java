@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
+import com.tyndalehouse.step.core.data.EntityDoc;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
 
@@ -44,4 +45,26 @@ public interface AugDStrongService {
     String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification);
 
     void updatePassageKeyWithAugStrong(String strong, Key reference);
+
+    AugmentedStrongsForSearchCount getRefIndexWithStrongAndVersification(final String strong, final Versification sourceVersification);
+
+    boolean isVerseInAugStrong(final String reference, final AugmentedStrongsForSearchCount arg, final Versification sourceVersification);
+
+    public class AugmentedStrongsForSearchCount {
+        public final int startIndex;
+        public final int endIndex;
+        public final boolean defaultAugStrong;
+        public final boolean convertVersification;
+        public short[] refArray;
+
+        public AugmentedStrongsForSearchCount(final int startIndex, final int endIndex, final boolean defaultAugStrong,
+                                              final boolean convertVersification, short[] refArray) {
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            this.defaultAugStrong = defaultAugStrong;
+            this.convertVersification = convertVersification;
+            this.refArray = refArray;
+        }
+    }
+
 }

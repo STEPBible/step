@@ -48,6 +48,7 @@ import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.models.stats.PassageStat;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
+import com.tyndalehouse.step.core.service.AugDStrongService;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
@@ -103,6 +104,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private final JSwordVersificationService jswordVersification;
     private final VersionResolver resolver;
     private final StrongAugmentationService strongAugmentationService;
+    private final AugDStrongService augDStrong;
 
     /**
      * The bible information service, retrieving content and meta data.
@@ -124,7 +126,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
                                        final JSwordMetadataService jswordMetadata, final JSwordSearchService jswordSearch,
                                        final EntityManager entityManager, final JSwordVersificationService jswordVersification,
                                        final StrongAugmentationService strongAugmentationService,
-                                       final VersionResolver resolver) {
+                                       final VersionResolver resolver, final AugDStrongService augDStrong) {
         this.optionsValidationService = optionsValidationService;
         this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
@@ -135,6 +137,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         this.jswordVersification = jswordVersification;
         this.strongAugmentationService = strongAugmentationService;
         this.resolver = resolver;
+        this.augDStrong = augDStrong;
     }
 
     /**
@@ -268,7 +271,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         }
 
         final StrongCountsAndSubjects verseStrongs = new JSwordStrongNumberHelper(this.entityManager,
-                key, this.jswordVersification, this.jswordSearch, this.strongAugmentationService).getVerseStrongs(userLanguage);
+                key, this.jswordVersification, this.jswordSearch, this.strongAugmentationService, this.augDStrong).getVerseStrongs(userLanguage);
         verseStrongs.setVerse(key.getName());
         verseStrongs.setMultipleVerses(true);
         return verseStrongs;
@@ -296,7 +299,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         }
 
         return new JSwordStrongNumberHelper(this.entityManager,
-                key, this.jswordVersification, this.jswordSearch, this.strongAugmentationService).calculateStrongArrayCounts(version, stat, userLanguage);
+                key, this.jswordVersification, this.jswordSearch, this.strongAugmentationService, this.augDStrong).calculateStrongArrayCounts(version, stat, userLanguage);
     }
 
     @Override

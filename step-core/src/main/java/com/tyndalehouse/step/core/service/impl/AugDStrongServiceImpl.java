@@ -91,6 +91,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
     }
 
     private int binarySearchOfStrong(final String augStrong) {
+    System.out.println("bin " + augStrong);
         int first = 0;
         int last = strongs.length - 1;
         if ((Character.compare(augStrong.charAt(0), 'G') == 0)) {
@@ -125,7 +126,6 @@ public class AugDStrongServiceImpl implements AugDStrongService {
     }
 
     private int cnvrtStrong2Short(final String strong) {
-        char prefix = strong.charAt(0);
         int startPos = 1;
         int endPos = strong.length() - 1;
         char suffix = strong.charAt(endPos);
@@ -137,7 +137,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             LOGGER.error("Strong number is not numeric at the expected positions: " + strong + " Something wrong with the augmented Strong file.");
             System.exit(4);
         }
-        
+
         if (num > 32767) {
             LOGGER.error("Strong number has too many digits: " + strong + " Something wrong with the augmented Strong file.");
             System.exit(4);
@@ -163,7 +163,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         String trimmedStrong = strong.trim();
         boolean isAugStrong = !Character.isDigit(trimmedStrong.charAt(trimmedStrong.length() - 1)); // Last character of augmented strong should not be digit
         if (!isAugStrong) return; // No need to update the key
-        final Versification sourceVersification = ((RocketPassage) key).getVersification(); 
+        final Versification sourceVersification = ((RocketPassage) key).getVersification();
         String versificationName = sourceVersification.getName();
         char prefix = trimmedStrong.charAt(0);
         boolean hebrew = ((Character.compare(prefix, 'H') == 0) || (Character.compare(prefix, 'h') == 0)) ? true : false;
@@ -238,6 +238,74 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         return null;
     }
 
+    public AugmentedStrongsForSearchCount getRefIndexWithStrongAndVersification(final String strong, final Versification sourceVersification) {
+        char prefix = strong.charAt(0);
+        boolean hebrew = ((prefix == 'H') || (prefix == 'h'));
+        String versificationName = sourceVersification.getName();
+        boolean useNRSVVersification = false;
+        boolean convertVersification = false;
+        if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) {
+            useNRSVVersification = true;
+        }
+        else if (!versificationName.equals(JSwordPassageService.OT_BOOK)) convertVersification = true;
+        int index1 = binarySearchOfStrong(strong);
+        if (index1 < 0) return null;
+        short index2 = strong2AugStrongIndx[index1];
+        int[] augStrong2RefIdx;
+        short[] refArray = null;
+        if (hebrew) {
+            if ((index2 < 0) || (index2 > numOfAugStrongOT)) return null;
+            augStrong2RefIdx = augStrong2RefIdxOT;
+            refArray = (useNRSVVersification) ? refOfAugStrongOTRSV : refOfAugStrongOTOHB;
+        } else if ((Character.compare(prefix, 'G') == 0) || (Character.compare(prefix, 'g') == 0)) {
+            if ((index2 < 0) || (index2 > numOfAugStrongNT)) return null;
+            augStrong2RefIdx = augStrong2RefIdxNT;
+            refArray = refOfAugStrongNT;
+        } else return null;
+        int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
+        char suffix = strong.charAt(strong.length()-1);
+        for (int i = 0; i < numOfAugStrongWithSameStrong; i++) {
+            ImmutablePair<Character, Integer> r = getSuffixAndIdx(augStrong2RefIdx[index2 + i]);
+            char curSuffix = r.getLeft();
+            if (curSuffix == suffix) {
+                int curIndex = r.getRight();
+                boolean defaultAugStrong = false;
+                int augStrong2RefIdxNextIdx = 0;
+                int start = 0;
+                if (curIndex == 0) {
+                    defaultAugStrong = true;
+                    start = getSuffixAndIdx(augStrong2RefIdx[index2]).getRight();
+                    augStrong2RefIdxNextIdx = index2 + numOfAugStrongWithSameStrong;
+                }
+                else {
+                    start = r.getRight();
+                    augStrong2RefIdxNextIdx = index2 + i + 1;
+                }
+                int endIndexOfCurrentAugStrongRef = 0;
+                while (endIndexOfCurrentAugStrongRef == 0) {
+                    endIndexOfCurrentAugStrongRef = getSuffixAndIdx(augStrong2RefIdx[augStrong2RefIdxNextIdx]).getRight(); // Next entry in augStrong2RefPtr
+                    augStrong2RefIdxNextIdx ++;
+                }
+                endIndexOfCurrentAugStrongRef --;
+                return new AugmentedStrongsForSearchCount(start, endIndexOfCurrentAugStrongRef, defaultAugStrong, convertVersification, refArray);
+            }
+        }
+        return null;
+    }
+
+    public boolean isVerseInAugStrong(String reference, AugmentedStrongsForSearchCount arg, final Versification sourceVersification) {
+        int ordinal;
+        if (arg.convertVersification)
+            ordinal = this.versificationService.convertReferenceGetOrdinal(reference, sourceVersification, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
+        else
+            ordinal = cnvrtOSIS2Ordinal(reference, sourceVersification);
+        for (int i = arg.startIndex; i <= arg.endIndex; i ++) {
+            if (arg.refArray[i] == ordinal)
+                return !arg.defaultAugStrong;
+        }
+        return arg.defaultAugStrong;
+    }
+
     public String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification) {
         if ((ordinal < 0) || (ordinal > 32767)) return "";
         int index1 = binarySearchOfStrong(strong);
@@ -258,16 +326,16 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
         int indx2LastAugStrongWithSameStrong = index2 + numOfAugStrongWithSameStrong - 1;
         int augStrong2RefIdxNextIdx = indx2LastAugStrongWithSameStrong;
-        int endIndexOfCurrentAugStrongRef = 0;
-        while (endIndexOfCurrentAugStrongRef == 0) {
+        int endIndexOfCurrentStrongRef = 0;
+        while (endIndexOfCurrentStrongRef == 0) {
             augStrong2RefIdxNextIdx ++;
             int indx2FirstAugStrongWithNextStrong = augStrong2RefIdx[augStrong2RefIdxNextIdx];
-            endIndexOfCurrentAugStrongRef = getSuffixAndIdx(indx2FirstAugStrongWithNextStrong).getRight(); // Next entry in augStrong2RefPtr
+            endIndexOfCurrentStrongRef = getSuffixAndIdx(indx2FirstAugStrongWithNextStrong).getRight(); // Next entry in augStrong2RefPtr
         }
+        int endIndexOfCurrentAugStrongRef = endIndexOfCurrentStrongRef - 1;
         char suffixWithNoRefs = ' ';
         for (int i = indx2LastAugStrongWithSameStrong; i >= index2; i--) {
-            int curPtr = augStrong2RefIdx[i];
-            ImmutablePair<Character, Integer> r = getSuffixAndIdx(curPtr);
+            ImmutablePair<Character, Integer> r = getSuffixAndIdx(augStrong2RefIdx[i]);
             char curSuffix = r.getLeft();
             int curIndex = r.getRight();
             if (curIndex == 0)
@@ -350,7 +418,9 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                             System.out.println("unexpected order at around " + curReferences);
                             System.exit(401);
                         }
-                        if (curAugStrong.charAt(curAugStrong.length() - 1) != 'A')
+                        if ((curAugStrong.charAt(curAugStrong.length() - 1) != 'a') && // temporary for old augmented strong file
+                            (curAugStrong.charAt(curAugStrong.length() - 1) != 'A') && // A and G are the default so we will
+                            (curAugStrong.charAt(curAugStrong.length() - 1) != 'G')) // not store the list of references
                             curReferences = data.substring(13);
                         if (hebrew) {
                             if (augStrongRefOT.containsKey(curAugStrong)) {

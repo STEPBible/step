@@ -71,10 +71,16 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             else {
                 Set<String> deDupKeys = new HashSet<>();
                 Collections.addAll(deDupKeys, keys);
-                result = deDupKeys.toArray(new String[0]);
-                for (int j = 0; j < result.length; j ++ ) {
-                    if (isNonAugmented(result[j]))
-                        result[j] = augDStrong.getAugStrongWithStrongAndOrdinal(result[j], ordinal, useNRSVVersification);
+                result = new String[deDupKeys.size()];
+                int k = 0;
+                for (int j = 0; j < keys.length; j ++ ) {
+                    if (deDupKeys.contains(keys[j])) {
+                        if (isNonAugmented(keys[j]))
+                            result[k] = augDStrong.getAugStrongWithStrongAndOrdinal(keys[j], ordinal, useNRSVVersification);
+                        else result[k] = keys[j];
+                        k ++;
+                        deDupKeys.remove(keys[j]);
+                    }
                 }
             }
         }

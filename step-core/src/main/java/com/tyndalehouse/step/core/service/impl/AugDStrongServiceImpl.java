@@ -339,7 +339,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
 //            System.out.println("getAugStrongWithStrongAndOrdinal " + strong + " " + curSuffix);
                 if ((endIndexOfCurrentAugStrongRef - curIndex) > 50) { // If the array of reference (in ordinal) is large, the binary search is faster.
                     // if the binary search has any issue, remove the binary search because the performance improvement is not that big.
-                    int bSearchResult = Arrays.binarySearch(refArray, curIndex, endIndexOfCurrentAugStrongRef, (short) ordinal);
+                    int bSearchResult = Arrays.binarySearch(refArray, curIndex, endIndexOfCurrentAugStrongRef+1, (short) ordinal);
                     if (bSearchResult > -1) return strong + curSuffix;
                 }
                 else { // If the array of reference (in ordinal) is small, a sequential search is faster.
@@ -413,10 +413,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                             System.out.println("unexpected order at around " + curReferences);
                             System.exit(401);
                         }
-                        if ((curAugStrong.charAt(curAugStrong.length() - 1) != 'a') && // temporary for old augmented strong file
-                            (curAugStrong.charAt(curAugStrong.length() - 1) != 'A') && // A and G are the default so we will
-                            (curAugStrong.charAt(curAugStrong.length() - 1) != 'G')) // not store the list of references
-                            curReferences = data.substring(13);
+                        curReferences = data.substring(13);
                         if (hebrew) {
                             if (augStrongRefOT.containsKey(curAugStrong)) {
                                 System.out.println("duplicate augmented strong " + curAugStrong);
@@ -451,9 +448,6 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             strong2AugStrongCount=new byte[numOfStrong];
             augStrong2RefIdxOT =new int[numOfAugStrongOT+1];
             augStrong2RefIdxNT =new int[numOfAugStrongNT+1];
-            refOfAugStrongOTOHB = new short[numOfOTReferences];
-            refOfAugStrongOTRSV = new short[numOfOTReferences];
-            refOfAugStrongNT = new short[numOfNTReferences];
             TreeMap<Integer, Integer> sortedStrongGrk = new TreeMap<>(strong2AugCountGrk);
             int counter = 0;
             for (Map.Entry<Integer, Integer> entry : sortedStrongGrk.entrySet()) {
@@ -477,9 +471,45 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             int lastStrong = 32767;
             final Versification versificationForOT = this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
             final Versification versificationForESV = this.versificationService.getVersificationForVersion("ESV");
+            int strongNumWithMostReferences = -1;
+            String augStrongWithMostReferences = "";
+            int mostReferencesWithinAugStrongs = 0;
             for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
                 String augStrong = entry.getKey();
-                verifyAugStrongPattern(augStrong);
+                int curStrongNum = cnvrtStrong2Short(augStrong);
+                if (strongNumWithMostReferences != curStrongNum) {
+                    if (strongNumWithMostReferences > -1) {
+                        String[] arrOfRef = sortedAugStrong.get(augStrongWithMostReferences).split(" ");
+                        sortedAugStrong.put(augStrongWithMostReferences, "");
+                        char prefix = augStrongWithMostReferences.charAt(0);
+                        if ((prefix == 'H') || (prefix == 'h'))
+                            numOfOTReferences -= arrOfRef.length;
+                        else numOfNTReferences -=  arrOfRef.length;
+                    }
+                    strongNumWithMostReferences = curStrongNum;
+                    augStrongWithMostReferences = "";
+                    mostReferencesWithinAugStrongs = 0;
+                }
+                String references = entry.getValue();
+                String[] arrOfRef = references.split(" ");
+                if (mostReferencesWithinAugStrongs < arrOfRef.length) {
+                    mostReferencesWithinAugStrongs = arrOfRef.length;
+                    augStrongWithMostReferences = augStrong;
+                }
+            }
+            if (strongNumWithMostReferences > -1) {
+                String[] arrOfRef = sortedAugStrong.get(augStrongWithMostReferences).split(" ");
+                sortedAugStrong.put(augStrongWithMostReferences, "");
+                char prefix = augStrongWithMostReferences.charAt(0);
+                if ((prefix == 'H') || (prefix == 'h')) {
+                    numOfOTReferences -= arrOfRef.length;
+                } else numOfNTReferences -=  arrOfRef.length;
+            }
+            refOfAugStrongOTOHB = new short[numOfOTReferences];
+            refOfAugStrongOTRSV = new short[numOfOTReferences];
+            refOfAugStrongNT = new short[numOfNTReferences];
+            for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
+                String augStrong = entry.getKey();
                 String references = entry.getValue();
                 int curStrongNum = cnvrtStrong2Short(augStrong);
                 boolean hebrew = false;

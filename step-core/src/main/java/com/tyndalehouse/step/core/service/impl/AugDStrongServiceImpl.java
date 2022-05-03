@@ -351,7 +351,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                     }
                 }
             }
-            endIndexOfCurrentAugStrongRef = curIndex - 1;
+            if (curIndex != 0) endIndexOfCurrentAugStrongRef = curIndex - 1; // End of the reference for the next aug strong.  If curIndex is 0, use the previous endIndexOfCurrentAugStrongRef
         }
         if (suffixWithNoRefs != ' ') return strong + suffixWithNoRefs;
         return strong;

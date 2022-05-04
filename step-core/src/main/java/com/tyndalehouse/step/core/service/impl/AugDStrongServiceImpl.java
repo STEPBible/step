@@ -193,6 +193,17 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         if (!emptyRef) ((RocketPassage) key).store = tmpStore;
     }
 
+    private int getNonZeroIndexToRefArray(final int[] augStrong2RefIdx, int numOfAugStrong, final int index) {
+        int i = index;
+        while (i <= numOfAugStrong) {
+            int index2RefArray = augStrong2RefIdx[i] & 0x00ffffff;
+            if (index2RefArray > 0) return index2RefArray;
+            i ++;
+        }
+        System.out.println("getNonZeroIndexToRefArray cannot find non zero index!");
+        return 0;
+    }
+
     private int[] getIndexes2OrdinalOfAugStrong(String strong) {
         int index1 = binarySearchOfStrong(strong);
         if (index1 < 0) return null;
@@ -200,13 +211,16 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         if (index2 < 0) return null;
         int[] augStrong2RefIdx;
         char prefix = strong.charAt(0);
+        int numOfReferences;
         if ((prefix == 'H') || (prefix == 'h')) {
             if (index2 > numOfAugStrongOT) return null;
             augStrong2RefIdx = augStrong2RefIdxOT;
+            numOfReferences = refOfAugStrongOTOHB.length;
         }
         else {
             if (index2 > numOfAugStrongNT) return null;
             augStrong2RefIdx = augStrong2RefIdxNT;
+            numOfReferences = refOfAugStrongNT.length;
         }
         final int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
         char lastCharOfStrong = strong.charAt(strong.length() - 1);
@@ -220,12 +234,11 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             if (checkSuffix == suffixInt) {
                 result[0] = curPtr & 0x00ffffff; // index to list of ordinal (verse) for aug strong
                 if (result[0] == 0) {
-                    result[0] = augStrong2RefIdx[index2] & 0x00ffffff; // index to list of ordinal (verse) for aug strong
-                    result[1] = (augStrong2RefIdx[index2 + numOfAugStrongWithSameStrong] & 0x00ffffff) - result[0]; // length
+                    result[0] = getNonZeroIndexToRefArray(augStrong2RefIdx, numOfReferences, index2); // augStrong2RefIdx[index2] & 0x00ffffff; // index to list of ordinal (verse) for aug strong
+                    result[1] = getNonZeroIndexToRefArray(augStrong2RefIdx, numOfReferences, index2 + numOfAugStrongWithSameStrong) - result[0]; // length
                     return result;
                 }
-                curPtr = augStrong2RefIdx[i + 1];
-                result[1] = (curPtr & 0x00ffffff) - result[0]; // length
+                result[1] = getNonZeroIndexToRefArray(augStrong2RefIdx, numOfReferences, i + 1) - result[0]; // length
                 result[2] = 1;
                 return result;
             }
@@ -363,8 +376,8 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         BufferedInputStream bufferedStream;
         String curAugStrong = "";
         String curReferences = "";
-        int numOfOTReferences = 0;
-        int numOfNTReferences = 0;
+        int numOfOTReferences = 1;
+        int numOfNTReferences = 1;
         HashMap<Integer, Integer> strong2AugCountGrk = new HashMap<>();
         HashMap<Integer, Integer> strong2AugCountHbr = new HashMap<>();
         HashMap<String, String> augStrongRefOT = new HashMap<>();
@@ -466,8 +479,6 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             sortedAugStrong.putAll(augStrongRefOT);
             int strong2AugStrongIndexOT = 0;
             int strong2AugStrongIndexNT = 0;
-            int refIndexOT = 0;
-            int refIndexNT = 0;
             int lastStrong = 32767;
             final Versification versificationForOT = this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
             final Versification versificationForESV = this.versificationService.getVersificationForVersion("ESV");
@@ -508,6 +519,8 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             refOfAugStrongOTOHB = new short[numOfOTReferences];
             refOfAugStrongOTRSV = new short[numOfOTReferences];
             refOfAugStrongNT = new short[numOfNTReferences];
+            int refIndexOT = 1; // don't use the first one because a zero index means it is the aug strong with the most references and the references are not stored in memory
+            int refIndexNT = 1;
             for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
                 String augStrong = entry.getKey();
                 String references = entry.getValue();

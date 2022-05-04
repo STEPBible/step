@@ -289,7 +289,8 @@ public class VocabularyServiceImpl implements VocabularyService {
 
         if (strongList.length != 0) {
             EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
-            return new VocabResponse(strongNumbers);
+            final EntityDoc[] definitions = reOrder(strongList, strongNumbers);
+            return new VocabResponse(definitions);
         }
         return new VocabResponse();
     }

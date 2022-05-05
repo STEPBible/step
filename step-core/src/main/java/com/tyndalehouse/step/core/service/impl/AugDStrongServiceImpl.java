@@ -284,14 +284,17 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         short index2 = strong2AugStrongIndex[index1];
         int[] augStrong2RefIdx;
         short[] refArray;
+        int numOfReferences;
         if (hebrew) {
             if ((index2 < 0) || (index2 > numOfAugStrongOT)) return null;
             augStrong2RefIdx = augStrong2RefIdxOT;
             refArray = (useNRSVVersification) ? refOfAugStrongOTRSV : refOfAugStrongOTOHB;
+            numOfReferences = refOfAugStrongOTOHB.length;
         } else if ((prefix == 'G') || (prefix == 'g')) {
             if ((index2 < 0) || (index2 > numOfAugStrongNT)) return null;
             augStrong2RefIdx = augStrong2RefIdxNT;
             refArray = refOfAugStrongNT;
+            numOfReferences = refOfAugStrongNT.length;
         } else return null;
         int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
         char suffix = strong.charAt(strong.length()-1);
@@ -305,18 +308,18 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                 int start;
                 if (curIndex == 0) {
                     defaultAugStrong = true;
-                    start = getSuffixAndIdx(augStrong2RefIdx[index2]).getRight();
+                    start = getNonZeroIndexToRefArray(augStrong2RefIdx, numOfReferences, index2);
                     augStrong2RefIdxNextIdx = index2 + numOfAugStrongWithSameStrong;
                 }
                 else {
                     start = r.getRight();
                     augStrong2RefIdxNextIdx = index2 + i + 1;
                 }
-                int endIndexOfCurrentAugStrongRef = 0;
-                while (endIndexOfCurrentAugStrongRef == 0) {
-                    endIndexOfCurrentAugStrongRef = getSuffixAndIdx(augStrong2RefIdx[augStrong2RefIdxNextIdx]).getRight(); // Next entry in augStrong2RefPtr
-                    augStrong2RefIdxNextIdx ++;
-                }
+                int endIndexOfCurrentAugStrongRef = getNonZeroIndexToRefArray(augStrong2RefIdx, numOfReferences, augStrong2RefIdxNextIdx);
+//                while (endIndexOfCurrentAugStrongRef == 0) {
+//                    endIndexOfCurrentAugStrongRef = getSuffixAndIdx(augStrong2RefIdx[augStrong2RefIdxNextIdx]).getRight(); // Next entry in augStrong2RefPtr
+//                    augStrong2RefIdxNextIdx ++;
+//                }
                 endIndexOfCurrentAugStrongRef --;
                 return new AugmentedStrongsForSearchCount(start, endIndexOfCurrentAugStrongRef, defaultAugStrong, convertVersification, refArray);
             }

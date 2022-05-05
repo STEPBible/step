@@ -169,7 +169,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         Versification versificationForConversion = null;
         if (versificationName.equals(JSwordPassageService.OT_BOOK)) ref = refOfAugStrongOTOHB;
         else if ((!versificationName.equals("NRSV")) && (!versificationName.equals("KJV")))
-            versificationForConversion = this.versificationService.getVersificationForVersion("NRSV");
+            versificationForConversion = this.versificationService.getVersificationForVersion("ESV");
         int[] index = getIndexes2OrdinalOfAugStrong(trimmedStrong);
         if (index == null) return;
         final int index2Ref = index[0];
@@ -229,8 +229,6 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         for (int i = index2 + numOfAugStrongWithSameStrong - 1; i >= index2; i--) {
             int curPtr = augStrong2RefIdx[i];
             int checkSuffix = curPtr & 0x7f000000;  // Don't copy over the sign bit
-            int check = checkSuffix >> 24;
-            System.out.println("getIndex2Ord " + lastCharOfStrong + " " + check);
             if (checkSuffix == suffixInt) {
                 result[0] = curPtr & 0x00ffffff; // index to list of ordinal (verse) for aug strong
                 if (result[0] == 0) {

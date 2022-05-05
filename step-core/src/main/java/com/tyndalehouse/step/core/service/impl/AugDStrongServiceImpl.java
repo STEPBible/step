@@ -66,27 +66,46 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         return result | refIndex;
     }
 
-    private int addToRefArray(int refIndex, final boolean hebrew, final String refs, final Versification versificationForOT, final Versification versificationForESV) {
+    private void sortAndMarkAugStrongWithoutRef(short[] refOfAugStrongOTOHB, int startIndex, int refIndex, Set<Integer> ordinalsInRefNotStored1) {
+        Arrays.sort(refOfAugStrongOTOHB, startIndex, refIndex);
+        for (int i = startIndex; i < refIndex; i++) {
+            if (ordinalsInRefNotStored1.contains((int) refOfAugStrongOTOHB[i]))
+                refOfAugStrongOTOHB[i] = (short) (refOfAugStrongOTOHB[i] | 0x8000);
+        }
+    }
+
+    private int addToRefArray(int refIndex, final boolean hebrew, final String augStrong, final String refs, final Versification versificationForOT,
+                              final Versification versificationForESV, final HashMap<String, String> augStrongWithMostReferencesHash) {
         if (refs.equals("")) return refIndex;
+        // Convert String Array to List
+        String[] arrOfRefNotStored = augStrongWithMostReferencesHash.get(augStrong.substring(0, augStrong.length()-1)).split(" ");
+        List<String> listRefNotStored  = Arrays.asList(arrOfRefNotStored);
         String[] arrOfRef = refs.split(" ");
         int startIndex = refIndex;
+        final Set<Integer> ordinalsInRefNotStored1 = new HashSet<Integer>(arrOfRefNotStored.length/2);
+        final Set<Integer> ordinalsInRefNotStored2 = new HashSet<Integer>(arrOfRefNotStored.length/2);
         for (String s : arrOfRef) {
+            boolean addToOrdinalNotStored = listRefNotStored.contains(s);
             short refOrdinal = (hebrew) ? convertOSIS2Ordinal(s, versificationForOT) : convertOSIS2Ordinal(s, versificationForESV);
+            if (addToOrdinalNotStored) ordinalsInRefNotStored1.add((int) refOrdinal);
             if (refOrdinal > -1) {
                 if (hebrew) {
                     refOfAugStrongOTOHB[refIndex] = refOrdinal;
                     refOrdinal = (short) this.versificationService.convertReferenceGetOrdinal(s, versificationForOT, versificationForESV);
-                    if (refOrdinal > -1)
+                    if (refOrdinal > -1) {
                         refOfAugStrongOTRSV[refIndex] = refOrdinal;
+                        if (addToOrdinalNotStored) ordinalsInRefNotStored2.add((int) refOrdinal);
+                    }
                 } else
                     refOfAugStrongNT[refIndex] = refOrdinal;
                 refIndex++;
             }
         }
         if (hebrew) {
-            Arrays.sort(refOfAugStrongOTOHB, startIndex, refIndex);
-            Arrays.sort(refOfAugStrongOTRSV, startIndex, refIndex);
-        } else Arrays.sort(refOfAugStrongNT, startIndex, refIndex);
+            sortAndMarkAugStrongWithoutRef(refOfAugStrongOTOHB, startIndex, refIndex, ordinalsInRefNotStored1);
+            sortAndMarkAugStrongWithoutRef(refOfAugStrongOTRSV, startIndex, refIndex, ordinalsInRefNotStored2);
+        } else
+            sortAndMarkAugStrongWithoutRef(refOfAugStrongNT, startIndex, refIndex, ordinalsInRefNotStored1);
         return refIndex;
     }
 
@@ -179,7 +198,13 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         BitSet tmpStore = null;
         if (!emptyRef) tmpStore = new BitSet(store.size());
         for (int i = 0; i < numOfRef; i ++) {
-            int ordinal = ref[index2Ref + i];
+            short ordinalShort = ref[index2Ref + i];
+            boolean existsInAugStrongWithRefNotStore = false;
+            if (ordinalShort < 0) {
+                existsInAugStrongWithRefNotStore = true;
+                ordinalShort = (short) (ordinalShort & 0x7FFF);
+            }
+            int ordinal = ordinalShort;
             if (versificationForConversion != null) {
                 String reference = versificationForConversion.decodeOrdinal(ordinal).getOsisRef();
                 ordinal = this.versificationService.convertReferenceGetOrdinal(reference, versificationForConversion, sourceVersification);
@@ -188,7 +213,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             if (!emptyRef) {
                 if (store.get(ordinal)) tmpStore.set(ordinal);
             }
-            else store.clear(ordinal);
+            else if (!existsInAugStrongWithRefNotStore) store.clear(ordinal);
         }
         if (!emptyRef) ((RocketPassage) key).store = tmpStore;
     }
@@ -306,8 +331,12 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         else
             ordinal = convertOSIS2Ordinal(reference, sourceVersification);
         for (int i = arg.startIndex; i <= arg.endIndex; i ++) {
-            if (arg.refArray[i] == ordinal)
-                return !arg.defaultAugStrong;
+            short curOrdinalInRefArray = arg.refArray[i];
+            short ordinalInRefArrayWithoutSignBit = (short) (curOrdinalInRefArray & 0x8000);
+            if (ordinalInRefArrayWithoutSignBit == ordinal) {
+                if ((!arg.defaultAugStrong) || (curOrdinalInRefArray < 0)) return true;
+                return false;
+            }
         }
         return arg.defaultAugStrong;
     }
@@ -348,19 +377,20 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                 suffixWithNoRefs = curSuffix;
             else {
 //            System.out.println("getAugStrongWithStrongAndOrdinal " + strong + " " + curSuffix);
-                if ((endIndexOfCurrentAugStrongRef - curIndex) > 50) { // If the array of reference (in ordinal) is large, the binary search is faster.
-                    // if the binary search has any issue, remove the binary search because the performance improvement is not that big.
-                    int bSearchResult = Arrays.binarySearch(refArray, curIndex, endIndexOfCurrentAugStrongRef+1, (short) ordinal);
-                    if (bSearchResult > -1) return strong + curSuffix;
-                }
-                else { // If the array of reference (in ordinal) is small, a sequential search is faster.
+//                if ((endIndexOfCurrentAugStrongRef - curIndex) > 50) { // If the array of reference (in ordinal) is large, the binary search is faster.
+//                    // if the binary search has any issue, remove the binary search because the performance improvement is not that big.
+//                    int bSearchResult = Arrays.binarySearch(refArray, curIndex, endIndexOfCurrentAugStrongRef+1, (short) ordinal);
+//                    if (bSearchResult > -1) return strong + curSuffix;
+//                }
+//                else { // If the array of reference (in ordinal) is small, a sequential search is faster.
                     for (int x = curIndex; x <= endIndexOfCurrentAugStrongRef; x++) {
                         // the array of reference (in ordinal) are sorted.  When it reaches an ordinal in the reference array which is larger, that ordinal does not exist in the reference array.
                         // breaking out of the for loop will reduce unnecessary processing
-                        if (refArray[x] > ordinal) break;
-                        if (refArray[x] == ordinal) return strong + curSuffix;
+                        short ordinalInRefArrayWithoutSignBit = (short) (refArray[x] & 0x8000);
+                        if (ordinalInRefArrayWithoutSignBit > ordinal) break;
+                        if (ordinalInRefArrayWithoutSignBit == ordinal) return strong + curSuffix;
                     }
-                }
+//                }
             }
             if (curIndex != 0) endIndexOfCurrentAugStrongRef = curIndex - 1; // End of the reference for the next aug strong.  If curIndex is 0, use the previous endIndexOfCurrentAugStrongRef
         }
@@ -483,17 +513,19 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             int strongNumWithMostReferences = -1;
             String augStrongWithMostReferences = "";
             int mostReferencesWithinAugStrongs = 0;
+            HashMap<String, String> augStrongWithMostReferencesHash = new HashMap<>();
             for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
                 String augStrong = entry.getKey();
                 int curStrongNum = cnvrtStrong2Short(augStrong);
                 if (strongNumWithMostReferences != curStrongNum) {
                     if (strongNumWithMostReferences > -1) {
-                        String[] arrOfRef = sortedAugStrong.get(augStrongWithMostReferences).split(" ");
+                        String refs = sortedAugStrong.get(augStrongWithMostReferences);
+                        augStrongWithMostReferencesHash.put(augStrongWithMostReferences.substring(0, augStrongWithMostReferences.length()-1), refs);
                         sortedAugStrong.put(augStrongWithMostReferences, "");
                         char prefix = augStrongWithMostReferences.charAt(0);
                         if ((prefix == 'H') || (prefix == 'h'))
-                            numOfOTReferences -= arrOfRef.length;
-                        else numOfNTReferences -=  arrOfRef.length;
+                            numOfOTReferences -= refs.split(" ").length;
+                        else numOfNTReferences -= refs.split(" ").length;
                     }
                     strongNumWithMostReferences = curStrongNum;
                     augStrongWithMostReferences = "";
@@ -507,12 +539,13 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                 }
             }
             if (strongNumWithMostReferences > -1) {
-                String[] arrOfRef = sortedAugStrong.get(augStrongWithMostReferences).split(" ");
+                String refs = sortedAugStrong.get(augStrongWithMostReferences);
+                augStrongWithMostReferencesHash.put(augStrongWithMostReferences.substring(0, augStrongWithMostReferences.length()-1), refs);
                 sortedAugStrong.put(augStrongWithMostReferences, "");
                 char prefix = augStrongWithMostReferences.charAt(0);
                 if ((prefix == 'H') || (prefix == 'h')) {
-                    numOfOTReferences -= arrOfRef.length;
-                } else numOfNTReferences -=  arrOfRef.length;
+                    numOfOTReferences -= refs.split(" ").length;
+                } else numOfNTReferences -= refs.split(" ").length;
             }
             refOfAugStrongOTOHB = new short[numOfOTReferences];
             refOfAugStrongOTRSV = new short[numOfOTReferences];
@@ -543,11 +576,11 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                 }
                 if (hebrew) {
                     strong2AugStrongIndexOT ++;
-                    refIndexOT = addToRefArray(refIndexOT, true, references, versificationForOT, versificationForESV);
+                    refIndexOT = addToRefArray(refIndexOT, true, augStrong, references, versificationForOT, versificationForESV, augStrongWithMostReferencesHash);
                 }
                 else {
                     strong2AugStrongIndexNT ++;
-                    refIndexNT = addToRefArray(refIndexNT, false, references, versificationForOT, versificationForESV);
+                    refIndexNT = addToRefArray(refIndexNT, false, augStrong, references, versificationForOT, versificationForESV, augStrongWithMostReferencesHash);
                 }
             }
             augStrong2RefIdxOT[strong2AugStrongIndexOT] = refIndexOT;

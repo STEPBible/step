@@ -331,10 +331,10 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         else
             ordinal = convertOSIS2Ordinal(reference, sourceVersification);
         for (int i = arg.startIndex; i <= arg.endIndex; i ++) {
-            short curOrdinalInRefArray = arg.refArray[i];
-            short ordinalInRefArrayWithoutSignBit = (short) (curOrdinalInRefArray & 0x8000);
+            short curOrdinalFromRefArray = arg.refArray[i];
+            int ordinalInRefArrayWithoutSignBit = (curOrdinalFromRefArray & 0x7FFF);
             if (ordinalInRefArrayWithoutSignBit == ordinal) {
-                if ((!arg.defaultAugStrong) || (curOrdinalInRefArray < 0)) return true;
+                if ((!arg.defaultAugStrong) || (curOrdinalFromRefArray < 0)) return true;
                 return false;
             }
         }
@@ -386,7 +386,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                     for (int x = curIndex; x <= endIndexOfCurrentAugStrongRef; x++) {
                         // the array of reference (in ordinal) are sorted.  When it reaches an ordinal in the reference array which is larger, that ordinal does not exist in the reference array.
                         // breaking out of the for loop will reduce unnecessary processing
-                        short ordinalInRefArrayWithoutSignBit = (short) (refArray[x] & 0x8000);
+                        short ordinalInRefArrayWithoutSignBit = (short) (refArray[x] & 0x7FFF);
                         if (ordinalInRefArrayWithoutSignBit > ordinal) break;
                         if (ordinalInRefArrayWithoutSignBit == ordinal) return strong + curSuffix;
                     }

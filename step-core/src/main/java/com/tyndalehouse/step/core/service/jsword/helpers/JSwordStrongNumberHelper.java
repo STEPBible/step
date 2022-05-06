@@ -237,10 +237,8 @@ public class JSwordStrongNumberHelper {
 
                 boolean isAugmentedStrong = !this.strongAugmentationService.isNonAugmented(strongKey);
                 AugDStrongService.AugmentedStrongsForSearchCount augDStrongArgs = null;
-                Versification sourceVersification = null;
                 if (isAugmentedStrong) {
-                    sourceVersification = ((JSwordStrongNumberHelper) this).reference.getVersification();
-                    augDStrongArgs = augDStrong.getRefIndexWithStrongAndVersification(strongKey, sourceVersification);
+                    augDStrongArgs = augDStrong.getRefIndexWithStrongAndVersification(strongKey);
                 }
                 termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, this.strongAugmentationService.reduce(strongKey)));
 
@@ -252,15 +250,13 @@ public class JSwordStrongNumberHelper {
 
                     final Document doc = is.doc(termDocs.doc());
                     final String docRef = doc.get(LuceneIndex.FIELD_KEY);
-//                    if ((references == null || augmentedVersionInVerse(docRef, references))) {
-                    if ((augDStrongArgs == null) || (augDStrong.isVerseInAugStrong(docRef, augDStrongArgs, sourceVersification))) {
+                    if ((augDStrongArgs == null) || (augDStrong.isVerseInAugStrong(docRef, strongKey, augDStrongArgs))) {
                         if (docRef != null && docRef.startsWith(bookName)) {
                             book += freq;
                         }
                         bible += freq;
                     }
                 }
-
                 final BookAndBibleCount value = strong.getValue();
                 value.setBible(bible);
                 value.setBook(book);

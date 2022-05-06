@@ -269,16 +269,9 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         return null;
     }
 
-    public AugmentedStrongsForSearchCount getRefIndexWithStrongAndVersification(final String strong, final Versification sourceVersification) {
+    public AugmentedStrongsForSearchCount getRefIndexWithStrongAndVersification(final String strong) {
         char prefix = strong.charAt(0);
         boolean hebrew = ((prefix == 'H') || (prefix == 'h'));
-        String versificationName = sourceVersification.getName();
-        boolean useNRSVVersification = false;
-        boolean convertVersification = false;
-        if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) {
-            useNRSVVersification = true;
-        }
-        else if (!versificationName.equals(JSwordPassageService.OT_BOOK)) convertVersification = true;
         int index1 = binarySearchOfStrong(strong);
         if (index1 < 0) return null;
         short index2 = strong2AugStrongIndex[index1];
@@ -288,7 +281,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         if (hebrew) {
             if ((index2 < 0) || (index2 > numOfAugStrongOT)) return null;
             augStrong2RefIdx = augStrong2RefIdxOT;
-            refArray = (useNRSVVersification) ? refOfAugStrongOTRSV : refOfAugStrongOTOHB;
+            refArray = refOfAugStrongOTOHB; // (useNRSVVersification) ? refOfAugStrongOTRSV : refOfAugStrongOTOHB;
             numOfReferences = refOfAugStrongOTOHB.length;
         } else if ((prefix == 'G') || (prefix == 'g')) {
             if ((index2 < 0) || (index2 > numOfAugStrongNT)) return null;
@@ -316,23 +309,20 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                     augStrong2RefIdxNextIdx = index2 + i + 1;
                 }
                 int endIndexOfCurrentAugStrongRef = getNonZeroIndexToRefArray(augStrong2RefIdx, numOfReferences, augStrong2RefIdxNextIdx);
-//                while (endIndexOfCurrentAugStrongRef == 0) {
-//                    endIndexOfCurrentAugStrongRef = getSuffixAndIdx(augStrong2RefIdx[augStrong2RefIdxNextIdx]).getRight(); // Next entry in augStrong2RefPtr
-//                    augStrong2RefIdxNextIdx ++;
-//                }
                 endIndexOfCurrentAugStrongRef --;
-                return new AugmentedStrongsForSearchCount(start, endIndexOfCurrentAugStrongRef, defaultAugStrong, convertVersification, refArray);
+                return new AugmentedStrongsForSearchCount(start, endIndexOfCurrentAugStrongRef, defaultAugStrong, refArray);
             }
         }
         return null;
     }
 
-    public boolean isVerseInAugStrong(String reference, AugmentedStrongsForSearchCount arg, final Versification sourceVersification) {
+    public boolean isVerseInAugStrong(final String reference, final String strong, final AugmentedStrongsForSearchCount arg) {
         int ordinal;
-        if (arg.convertVersification)
-            ordinal = this.versificationService.convertReferenceGetOrdinal(reference, sourceVersification, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
+        char prefix = strong.charAt(0);
+        if ((prefix == 'H') || prefix == 'h')
+            ordinal = convertOSIS2Ordinal(reference, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
         else
-            ordinal = convertOSIS2Ordinal(reference, sourceVersification);
+            ordinal = convertOSIS2Ordinal(reference, this.versificationService.getVersificationForVersion("ESV"));
         for (int i = arg.startIndex; i <= arg.endIndex; i ++) {
             short curOrdinalFromRefArray = arg.refArray[i];
             int ordinalInRefArrayWithoutSignBit = (curOrdinalFromRefArray & 0x7FFF);

@@ -55,7 +55,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         final Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
         String versificationName = sourceVersification.getName();
         boolean useNRSVVersification = false;
-        if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) {
+        if ((versificationName.equals("NRSV")) || (versificationName.startsWith("KJV")) || (keys[0].charAt(0) == 'G') || (keys[0].charAt(0) == 'G')) {
             ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);
             useNRSVVersification = true;
         }

@@ -118,8 +118,7 @@ public class PassageStat {
      */
     private void trimWords(final int maxWords, int trimOutOccurrences, final boolean mostOccurrences) {
         while (this.stats.size() > maxWords) {
-            System.out.println("size " + this.stats.size() + " Max " + maxWords + " trimout " + trimOutOccurrences + " " + mostOccurrences);
-            if (this.stats.size() < maxWords) {
+            if (this.stats.size() <= maxWords) {
                 return;
             }
             if ((!mostOccurrences) && (trimOutOccurrences == 1)) return;
@@ -133,7 +132,6 @@ public class PassageStat {
             }
             trimOutOccurrences = (mostOccurrences) ? trimOutOccurrences + 1 : trimOutOccurrences - 1;
         }
-        //trimWords(maxWords, nextTrimOutOccurrences, mostOccurrences);
     }
 
     /**

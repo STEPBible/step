@@ -269,7 +269,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         return null;
     }
 
-    public AugmentedStrongsForSearchCount getRefIndexWithStrongAndVersification(final String strong) {
+    public AugmentedStrongsForSearchCount getRefIndexWithStrong(final String strong) {
         char prefix = strong.charAt(0);
         boolean hebrew = ((prefix == 'H') || (prefix == 'h'));
         int index1 = binarySearchOfStrong(strong);
@@ -281,7 +281,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         if (hebrew) {
             if ((index2 < 0) || (index2 > numOfAugStrongOT)) return null;
             augStrong2RefIdx = augStrong2RefIdxOT;
-            refArray = refOfAugStrongOTOHB; // (useNRSVVersification) ? refOfAugStrongOTRSV : refOfAugStrongOTOHB;
+            refArray = refOfAugStrongOTOHB;
             numOfReferences = refOfAugStrongOTOHB.length;
         } else if ((prefix == 'G') || (prefix == 'g')) {
             if ((index2 < 0) || (index2 > numOfAugStrongNT)) return null;

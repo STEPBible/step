@@ -47,6 +47,10 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     public String[] augment(final String version, final String reference, final String[] keys) {
         if(StringUtils.isBlank(version) || StringUtils.isBlank(reference))
             return keys;
+        if (reference.indexOf("-") > -1) {
+            System.out.println("StrongAugmentationServices augment. Unexpected - character in reference");
+            return keys;
+        }
         int ordinal;
         final Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
         String versificationName = sourceVersification.getName();

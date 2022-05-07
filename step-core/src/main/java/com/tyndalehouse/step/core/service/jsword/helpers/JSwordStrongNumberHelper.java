@@ -237,9 +237,9 @@ public class JSwordStrongNumberHelper {
 
                 boolean isAugmentedStrong = !this.strongAugmentationService.isNonAugmented(strongKey);
                 AugDStrongService.AugmentedStrongsForSearchCount augDStrongArgs = null;
-                if (isAugmentedStrong) {
-                    augDStrongArgs = augDStrong.getRefIndexWithStrongAndVersification(strongKey);
-                }
+                if (isAugmentedStrong) // Prepare for the aug strong lookup.
+                    augDStrongArgs = augDStrong.getRefIndexWithStrong(strongKey);
+
                 termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, this.strongAugmentationService.reduce(strongKey)));
 
                 // we'll never need more than 200 documents as this is the cut off point
@@ -247,13 +247,11 @@ public class JSwordStrongNumberHelper {
                 int book = 0;
                 while (termDocs.next()) {
                     final int freq = termDocs.freq();
-
                     final Document doc = is.doc(termDocs.doc());
                     final String docRef = doc.get(LuceneIndex.FIELD_KEY);
                     if ((augDStrongArgs == null) || (augDStrong.isVerseInAugStrong(docRef, strongKey, augDStrongArgs))) {
-                        if (docRef != null && docRef.startsWith(bookName)) {
+                        if (docRef != null && docRef.startsWith(bookName))
                             book += freq;
-                        }
                         bible += freq;
                     }
                 }

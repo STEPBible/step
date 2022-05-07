@@ -45,7 +45,7 @@ public interface AugDStrongService {
 
     void updatePassageKeyWithAugStrong(String strong, Key reference);
 
-    AugmentedStrongsForSearchCount getRefIndexWithStrongAndVersification(final String strong);
+    AugmentedStrongsForSearchCount getRefIndexWithStrong(final String strong);
 
     boolean isVerseInAugStrong(final String reference, final String strong, final AugmentedStrongsForSearchCount arg);
 

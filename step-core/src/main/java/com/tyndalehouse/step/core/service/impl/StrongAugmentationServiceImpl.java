@@ -52,10 +52,13 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             return keys;
         }
         int ordinal;
-        final Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
+        Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
         String versificationName = sourceVersification.getName();
+        if ((versificationName.equals("NRSVA")) || (versificationName.equals("KJVA")))
+            sourceVersification = this.versificationService.getVersificationForVersion("ESV");
+        versificationName = sourceVersification.getName();
         boolean useNRSVVersification = false;
-        if ((versificationName.equals("NRSV")) || (versificationName.startsWith("KJV")) || (keys[0].charAt(0) == 'G') || (keys[0].charAt(0) == 'G')) {
+        if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) {
             ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);
             useNRSVVersification = true;
         }

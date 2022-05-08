@@ -152,12 +152,12 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             num = parseInt(strong.substring(startPos, endPos)); // If the augmented Strong file has issue, it will run into an exception.
         } catch (NumberFormatException e) {
             LOGGER.error("Strong number is not numeric at the expected positions: " + strong + " Something wrong with the augmented Strong file.");
-            System.exit(4);
+            return -1;
         }
 
         if (num > 32767) {
             LOGGER.error("Strong number has too many digits: " + strong + " Something wrong with the augmented Strong file.");
-            System.exit(4);
+            return -1;
         }
         return num;
     }

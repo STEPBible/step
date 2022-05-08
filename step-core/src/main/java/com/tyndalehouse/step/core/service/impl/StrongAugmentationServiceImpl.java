@@ -13,6 +13,7 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.PassageKeyFactory;
+import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 
     @Override
     public String[] augment(final String version, final String reference, final String[] keys) {
-        if(StringUtils.isBlank(version) || StringUtils.isBlank(reference))
+        if (StringUtils.isBlank(version) || StringUtils.isBlank(reference) || (version.startsWith("LXX")))
             return keys;
         if (reference.indexOf("-") > -1) {
             System.out.println("StrongAugmentationServices augment. Unexpected - character in reference");
@@ -61,6 +62,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) {
             ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);
             useNRSVVersification = true;
+            if (((keys[0].charAt(0) == 'G') || (keys[0].charAt(0) == 'g')) && (sourceVersification.getTestament(ordinal).equals(Testament.OLD)))
+                return keys; // There are no augmented Strong for Greek in the Old Testament
         }
         else if (versificationName.equals(JSwordPassageService.OT_BOOK)) {
             ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);

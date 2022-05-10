@@ -55,9 +55,10 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         int ordinal;
         Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
         String versificationName = sourceVersification.getName();
-        if ((versificationName.equals("NRSVA")) || (versificationName.equals("KJVA")))
+        if ((versificationName.equals("NRSVA")) || (versificationName.equals("KJVA"))) {
             sourceVersification = this.versificationService.getVersificationForVersion("ESV");
-        versificationName = sourceVersification.getName();
+            versificationName = sourceVersification.getName();
+        }
         boolean useNRSVVersification = false;
         if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) {
             ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);
@@ -65,7 +66,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             if (((keys[0].charAt(0) == 'G') || (keys[0].charAt(0) == 'g')) && (sourceVersification.getTestament(ordinal).equals(Testament.OLD)))
                 return keys; // There are no augmented Strong for Greek in the Old Testament
         }
-        else if (versificationName.equals(JSwordPassageService.OT_BOOK)) {
+        else if ((versificationName.equals(JSwordPassageService.OT_BOOK)) || (versificationName.equals("MT"))) {
             ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);
         }
         else {

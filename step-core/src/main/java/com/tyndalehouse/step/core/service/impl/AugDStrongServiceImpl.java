@@ -95,6 +95,11 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                     if (refOrdinal > -1) {
                         refOfAugStrongOTRSV[refIndex] = refOrdinal;
                         if (addToOrdinalNotStored) ordinalsInRefNotStored2.add((int) refOrdinal);
+                        // The following 3 lines are for testing to verify that there is no need to convert MT to Leningrad versification
+//                        String refInTHOT = this.versificationService.convertReference(s, "OSMHB", "THOT").getOsisKeyId();
+//                        if ((!refInTHOT.equalsIgnoreCase(s))) {
+//                            System.out.println(augStrong + " OSMHB and THOT different at " + s + " " + refInTHOT);
+//                        }
                     }
                 } else
                     refOfAugStrongNT[refIndex] = refOrdinal;
@@ -186,8 +191,8 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         boolean hebrew = (prefix == 'H') || (prefix == 'h');
         short[] ref = (hebrew) ? refOfAugStrongOTRSV : refOfAugStrongNT;
         Versification versificationForConversion = null;
-        if (versificationName.equals(JSwordPassageService.OT_BOOK)) ref = refOfAugStrongOTOHB;
-        else if ((!versificationName.equals("NRSV")) && (!versificationName.equals("KJV")))
+        if ((versificationName.equals(JSwordPassageService.OT_BOOK)) || ((versificationName.equals("MT")))) ref = refOfAugStrongOTOHB;
+        else if ((!versificationName.equals("NRSV")) && (!versificationName.equals("KJV")) && (!versificationName.equals("NRSVA")) && (!versificationName.equals("KJVA")))
             versificationForConversion = this.versificationService.getVersificationForVersion("ESV");
         int[] index = getIndexes2OrdinalOfAugStrong(trimmedStrong);
         if (index == null) return;
@@ -471,7 +476,9 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                     }
                 }
             } catch (final IOException e) {
-                throw new StepInternalException("Unable to read a line from the source file ", e);
+                LOGGER.error("Unable to read a line from the augmented strongs file");
+                //throw new StepInternalException("Unable to read a line from the augmented strongs file ", e);
+                System.exit(404);
             }
             numOfStrongGrk = strong2AugCountGrk.size();
             int numOfStrong = numOfStrongGrk + strong2AugCountHbr.size();
@@ -547,7 +554,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             int refIndexNT = 1;
             for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
                 String augStrong = entry.getKey();
-                String references = entry.getValue();
+                String references = entry.getValue().trim();
                 int curStrongNum = cnvrtStrong2Short(augStrong);
                 boolean hebrew = false;
                 char prefix = augStrong.charAt(0);

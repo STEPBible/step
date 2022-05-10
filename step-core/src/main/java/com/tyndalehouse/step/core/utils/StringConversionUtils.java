@@ -188,16 +188,6 @@ public final class StringConversionUtils {
             sb.append('0');
         }
         sb.append(strongNumber);
-        fixAugmentedSuffix(sb);
-    }
-
-    private static void fixAugmentedSuffix(StringBuilder sb) {
-        //if it's an augmented strong, we need to lower case the last letter, so
-        final int lastCharPosition = sb.length() - 1;
-        final char lastChar = sb.charAt(lastCharPosition);
-        if (Character.isAlphabetic(lastChar)) {
-            sb.setCharAt(lastCharPosition, Character.toLowerCase(lastChar));
-        }
     }
 
     /**
@@ -276,7 +266,7 @@ public final class StringConversionUtils {
         }
 
         if (suffix) {
-            sb.append(Character.toLowerCase(lastChar));
+            sb.append(lastChar);
         }
     }
 

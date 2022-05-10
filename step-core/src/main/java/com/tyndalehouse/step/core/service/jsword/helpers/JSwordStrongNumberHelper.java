@@ -148,16 +148,16 @@ public class JSwordStrongNumberHelper {
      */
     private void calculateCounts(String userLanguage) {
         try {
-            //is key OT or NT
             Verse curReference = this.reference;
-            Versification curVersification = curReference.getVersification();
             final BibleBook book = curReference.getBook();
             this.isOT = DivisionName.OLD_TESTAMENT.contains(book);
-            Versification targetVersification = isOT ? otV11n : ntV11n;
-            if (curVersification.getName().equals("MT")) { // OHB and MT have the same chapters and numbers.  Converting has inconsistency in Neh.7.68, Ps.13.5, Isa 63.19
-                curReference = new Verse(targetVersification, book, curReference.getChapter(), curReference.getVerse());
-                targetVersification = this.versification.getVersificationForVersion("OHB");
-            }
+			final Versification targetVersification;
+			if (isOT) { //is key OT or NT
+				targetVersification = otV11n;
+				if (curReference.getVersification().getName().equals("MT")) // OHB and MT have the same chapters and numbers.  Converting has inconsistency in Neh.7.68, Ps.13.5, Isa 63.19
+					curReference = new Verse(targetVersification, book, curReference.getChapter(), curReference.getVerse());
+			}
+			else targetVersification = ntV11n;
             final Key key = VersificationsMapper.instance().mapVerse(curReference, targetVersification);
             this.verseStrongs = new TreeMap<>();
             this.allStrongs = new HashMap<>(256);
@@ -192,9 +192,17 @@ public class JSwordStrongNumberHelper {
      */
     public PassageStat calculateStrongArrayCounts(final String version, PassageStat stat, final String userLanguage) {
         Map<String, Integer[]> result = new HashMap<String, Integer[]>(128);
-        this.isOT = DivisionName.OLD_TESTAMENT.contains(this.reference.getBook());
-        final Versification targetVersification = isOT ? otV11n : ntV11n;
-        final Key key = VersificationsMapper.instance().mapVerse(this.reference, targetVersification);
+		Verse curReference = this.reference;
+		final BibleBook book = curReference.getBook();
+		this.isOT = DivisionName.OLD_TESTAMENT.contains(book);
+        final Versification targetVersification;
+		if (isOT) { //is key OT or NT
+			targetVersification = otV11n;
+			if (curReference.getVersification().getName().equals("MT")) // OHB and MT have the same chapters and numbers.  Converting has inconsistency in Neh.7.68, Ps.13.5, Isa 63.19
+				curReference = new Verse(targetVersification, book, curReference.getChapter(), curReference.getVerse());
+		}
+		else targetVersification = ntV11n;
+        final Key key = VersificationsMapper.instance().mapVerse(curReference, targetVersification);
         this.allStrongs = new HashMap<>(256);
         Map<String, Integer[]> temp = stat.getStats();
         temp.forEach((strongNum, feq) -> this.allStrongs.put(strongNum, new BookAndBibleCount()));

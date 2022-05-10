@@ -148,7 +148,7 @@ public final class StringConversionUtils {
         }
 
         final StringBuilder sb = new StringBuilder(key.length());
-        final String[] split = key.toUpperCase(Locale.ENGLISH).split(" ");
+        final String[] split = key.split(" ");
         for (final String s : split) {
             final String strongNumber = getStrongLanguageSpecificKey(s);
 

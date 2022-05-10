@@ -149,11 +149,16 @@ public class JSwordStrongNumberHelper {
     private void calculateCounts(String userLanguage) {
         try {
             //is key OT or NT
-            final BibleBook book = this.reference.getBook();
+            Verse curReference = this.reference;
+            Versification curVersification = curReference.getVersification();
+            final BibleBook book = curReference.getBook();
             this.isOT = DivisionName.OLD_TESTAMENT.contains(book);
-
-            final Versification targetVersification = isOT ? otV11n : ntV11n;
-            final Key key = VersificationsMapper.instance().mapVerse(this.reference, targetVersification);
+            Versification targetVersification = isOT ? otV11n : ntV11n;
+            if (curVersification.getName().equals("MT")) { // OHB and MT have the same chapters and numbers.  Converting has inconsistency in Neh.7.68, Ps.13.5, Isa 63.19
+                curReference = new Verse(targetVersification, book, curReference.getChapter(), curReference.getVerse());
+                targetVersification = this.versification.getVersificationForVersion("OHB");
+            }
+            final Key key = VersificationsMapper.instance().mapVerse(curReference, targetVersification);
             this.verseStrongs = new TreeMap<>();
             this.allStrongs = new HashMap<>(256);
 

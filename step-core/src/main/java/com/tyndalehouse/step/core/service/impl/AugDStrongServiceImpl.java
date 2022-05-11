@@ -75,7 +75,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
     }
 
     private int addToRefArray(int refIndex, final boolean hebrew, final String augStrong, final String refs, final Versification versificationForOT,
-                              final Versification versificationForESV, final HashMap<String, String> augStrongWithMostReferencesHash) {
+                              final Versification versificationForNRSV, final HashMap<String, String> augStrongWithMostReferencesHash) {
         if (refs.equals("")) return refIndex;
         // Convert String Array to List
         String[] arrOfRefNotStored = augStrongWithMostReferencesHash.get(augStrong.substring(0, augStrong.length()-1)).split(" ");
@@ -85,13 +85,22 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         final Set<Integer> ordinalsInRefNotStored1 = new HashSet<Integer>(arrOfRefNotStored.length/2);
         final Set<Integer> ordinalsInRefNotStored2 = new HashSet<Integer>(arrOfRefNotStored.length/2);
         for (String s : arrOfRef) {
+            int start = s.indexOf('(');
+            int end = s.indexOf(')');
+            String aRef = s;
+            String NRSVRef = s;
+            if ((start > 0) && (end > 1)) {
+                aRef = s.substring(0, start);
+                NRSVRef = aRef.substring(0, aRef.indexOf('.')+1) + s.substring(start+1, end);
+            }
             boolean addToOrdinalNotStored = listRefNotStored.contains(s);
-            short refOrdinal = (hebrew) ? convertOSIS2Ordinal(s, versificationForOT) : convertOSIS2Ordinal(s, versificationForESV);
+            short refOrdinal = (hebrew) ? convertOSIS2Ordinal(aRef, versificationForOT) : convertOSIS2Ordinal(s, versificationForNRSV);
             if (addToOrdinalNotStored) ordinalsInRefNotStored1.add((int) refOrdinal);
             if (refOrdinal > -1) {
                 if (hebrew) {
                     refOfAugStrongOTOHB[refIndex] = refOrdinal;
-                    refOrdinal = (short) this.versificationService.convertReferenceGetOrdinal(s, versificationForOT, versificationForESV);
+                    refOrdinal = convertOSIS2Ordinal(NRSVRef, versificationForNRSV);
+//                    refOrdinal = (short) this.versificationService.convertReferenceGetOrdinal(NRSVRef, versificationForOT, versificationForNRSV);
                     if (refOrdinal > -1) {
                         refOfAugStrongOTRSV[refIndex] = refOrdinal;
                         if (addToOrdinalNotStored) ordinalsInRefNotStored2.add((int) refOrdinal);

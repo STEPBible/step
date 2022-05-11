@@ -109,6 +109,26 @@
 		document.title = "Maps, Geography of places, towns, rivers in the Bible";
 		document.getElementsByTagName('meta')["description"].content = "Locations, countries, towns, cities, rivers, places in the Bible, mapped, maps with Bible references. Searchable by reference or place names.";
 	}
+	else if (secondURL.indexOf("one_year_chrono_NT_related_OT") > -1) {
+		document.title = "One Year Chronological NT with Related OT";
+		document.getElementsByTagName('meta')["description"].content = "One Year reading plan of chronological events in the New Testament with related Old Testament passages.";
+	}
+	else if (secondURL.indexOf("one_year_chrono_OT_and_NT_together") > -1) {
+		document.title = "One Year Chronological NT and OT";
+		document.getElementsByTagName('meta')["description"].content = "One Year reading plan of chronological events in the New Testament and Old Testament passages.";
+	}
+	else if (secondURL.indexOf("one_year_chrono_OT_related_NT") > -1) {
+		document.title = "One Year Chronological OT with Related NT";
+		document.getElementsByTagName('meta')["description"].content = "One Year reading plan of chronological events in the Old Testament with related New Testament passages.";
+	}
+	else if (secondURL.indexOf("one_year_themes_chrono") > -1) {
+		document.title = "One Year Themes Chronological";
+		document.getElementsByTagName('meta')["description"].content = "One Year reading plan of themes chronologically.";
+	}
+	else if (secondURL.indexOf("two_year_chrono_OT_related_NT") > -1) {
+		document.title = "Two Year Chronological OT with Related NT";
+		document.getElementsByTagName('meta')["description"].content = "Two Year reading plan of chronological events in the Old Testament with related New Testament passages..";
+	}
 	var fullHeight = $(document).height();
 	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;
 	$("#f1").css("height", remainingHeight + "vh");
@@ -158,7 +178,7 @@ function outFunc() {
 
 window.onmessage = function(e) {
     if ((typeof e.data === "string") && (typeof e.origin === "string") &&
-		 ((e.origin.indexOf("stepbible.org") > -1) || (e.origin.indexOf("localhost") > -1)) ) {
+		 ((e.origin.indexOf("stepbible.org") > -1) || (e.origin.indexOf("8080") > -1) ) ) {
         var curURL = document.getElementById("f1").contentWindow.location.href;
 		var left = "";
 		var right = "";

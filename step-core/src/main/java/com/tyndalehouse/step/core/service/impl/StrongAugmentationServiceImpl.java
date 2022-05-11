@@ -66,11 +66,17 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             if (((keys[0].charAt(0) == 'G') || (keys[0].charAt(0) == 'g')) && (sourceVersification.getTestament(ordinal).equals(Testament.OLD)))
                 return keys; // There are no augmented Strong for Greek in the Old Testament
         }
-        else if ((versificationName.equals(JSwordPassageService.OT_BOOK)) || (versificationName.equals("MT"))) {
-            ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);
-        }
         else {
-            ordinal  = this.versificationService.convertReferenceGetOrdinal(reference, sourceVersification, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
+            if (versificationName.equals("MT")) {
+                sourceVersification = this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK);
+                versificationName = "Leningrad";
+            }
+            if (versificationName.equals("Leningrad")) {
+                ordinal = augDStrong.convertOSIS2Ordinal(reference, sourceVersification);
+            }
+            else {
+                ordinal  = this.versificationService.convertReferenceGetOrdinal(reference, sourceVersification, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
+            }
         }
         String[] result = new String[0];
         if (ordinal > -1) {

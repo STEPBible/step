@@ -512,7 +512,7 @@ public class Loader {
         try {
             locale = this.clientSessionProvider.get().getLocale();
         } catch (final ProvisionException ex) {
-            LOGGER.debug("Loader can't get client session");
+            // LOGGER.debug("Loader can't get client session"); This line is useless because it will always generate an exception.  Since this is legacy code and does not affect any function, I am just commenting this out.
             LOGGER.trace("Unable to provision", ex);
             locale = Locale.ENGLISH;
         }

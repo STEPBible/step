@@ -191,7 +191,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         boolean hebrew = (prefix == 'H') || (prefix == 'h');
         short[] ref = (hebrew) ? refOfAugStrongOTRSV : refOfAugStrongNT;
         Versification versificationForConversion = null;
-        if ((versificationName.equals(JSwordPassageService.OT_BOOK)) || ((versificationName.equals("MT")))) ref = refOfAugStrongOTOHB;
+        if (versificationName.equals("Leningrad")) ref = refOfAugStrongOTOHB;
         else if ((!versificationName.equals("NRSV")) && (!versificationName.equals("KJV")) && (!versificationName.equals("NRSVA")) && (!versificationName.equals("KJVA")))
             versificationForConversion = this.versificationService.getVersificationForVersion("ESV");
         int[] index = getIndexes2OrdinalOfAugStrong(trimmedStrong);

@@ -392,16 +392,17 @@ var SidebarView = Backbone.View.extend({
 			allStrongs.push(mainWord.strongNumber);
 			var total = mainWord.count;
 			for (var i = 0; i < detailLex.length; i++) {
+				var frequency = parseInt(detailLex[i][4]); // Just in case it is provided in String instead of number
 				var origLangClassStyle = (detailLex[i][1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
 					"class='unicodeFontMini detailLex'";
-				panel.append($("<br class='detailLex'>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>" + detailLex[i][0] + "</span>"));
-				panel.append("&nbsp;");
+				panel.append($("<br class='detailLex' style='display:none'><span class='detailLex' style='display:none'>&nbsp;&nbsp;&nbsp;" + detailLex[i][0] + "&nbsp;</span>"));
+				//panel.append("&nbsp;");
 				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).
 					append($("<span class='detailLex' style='display:none'>" + detailLex[i][2]  + " </span><span " + origLangClassStyle + " style='display:none'>" +
 					detailLex[i][3] + "</span>")).click(function () {
 						step.util.ui.showDef($(this).data("strongNumber"));
 					}));
-				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, detailLex[i][4]) + '</span>').click(function () {
+				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, frequency) + '</span>').click(function () {
 					var strongNumber = $(this).data("strongNumber");
 					var args = "strong=" + encodeURIComponent(strongNumber);
 					step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
@@ -409,7 +410,7 @@ var SidebarView = Backbone.View.extend({
 					return false;
 				}));
 				allStrongs.push(detailLex[i][1]);
-				total += detailLex[i][4];
+				total += frequency;
 			}
 			
 			panel.append($("<br class='detailLex'>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>All of the above</span>"));

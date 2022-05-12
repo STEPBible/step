@@ -130,7 +130,7 @@ public final class StringConversionUtils {
      * @return the key without the prefix
      */
     public static String getStrongLanguageSpecificKey(final String key) {
-        if (key.startsWith(UPPER_STRONG_PREFIX)) {
+        if (key.toUpperCase().startsWith(UPPER_STRONG_PREFIX)) {
             return key.substring(STRONG_PREFIX_LENGTH);
         }
         return key;

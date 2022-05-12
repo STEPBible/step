@@ -593,16 +593,16 @@
     var year;
     var col1_day = -1;
     var col1_name = "";
-    var sz  =  15;
+
     var settings = new SettingsModelList;
 
     settings.fetch();
     if (settings.length > 0) {
+        var sz  =  15;
         step.settings = settings.at(0);
         sz = step.settings.get("defaultfont");
+        $("table").css("font-size", sz + "px");
     }
-
-    $("table").css("font-size", sz + "px");
 
     if (th_rows[0].cells[1].innerText == "Sunday") {
         col1_day = 0;

@@ -13,9 +13,12 @@
     <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script src="/libs/underscore-min.js" type="text/javascript"></script>
     <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/libs/backbone.js" type="text/javascript"></script>
+    <script src="/libs/backbone.localStorage.js" type="text/javascript"></script>
     <script src="/js/step_constants.js" type="text/javascript"></script>
     <script src="/js/passage_selection.js" type="text/javascript"></script>
     <script src="/js/search_selection.js" type="text/javascript"></script>
+    <script src="/js/backbone/models/model_settings.js" type="text/javascript"></script>
 
     <style>
   
@@ -29,13 +32,14 @@
     table {
         border-collapse: collapse;        
         width: 100%;
+        font-family: Georgia, serif;
+        font-size: 15px;
     }
     
     td {
         padding: 4px;
         margin: 3px;
         border: 1px solid #ccc;
-	font-size: 15px;
     }
 
     th {
@@ -44,7 +48,6 @@
         border: 2px solid #17758f;
         background: #17758f;
         color: white;
-	font-size: 15px;
     }
     
     .tb_col1{
@@ -1058,6 +1061,16 @@
     var col1_day = -1;
     var col1_name = "";
 
+    var settings = new SettingsModelList;
+
+    settings.fetch();
+    if (settings.length > 0) {
+        var sz  =  15;
+        step.settings = settings.at(0);
+        sz = step.settings.get("defaultfont");
+        $("table").css("font-size", sz + "px");
+    }
+
     if (th_rows[0].cells[1].innerText == "Sunday") {
         col1_day = 0;
         col1_name = "Sun";
@@ -1094,7 +1107,6 @@
 
 
 function goToRef(passage) {
-
     window.top.postMessage(passage, '*');
 }
 

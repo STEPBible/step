@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Harmony of the Gospel</title>
-  <link rel="shortcut icon" href="/images/step-favicon.ico"/>
+    <meta charset="utf-8">
+    <title>Harmony of the Gospel</title>
+    <link rel="shortcut icon" href="/images/step-favicon.ico"/>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
     <link href="/css/select2.css" rel="stylesheet" media="screen"/>
@@ -96,16 +96,16 @@
 	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
 	$(".fixTableHead").css("height", remainingHeight + "px");
 
-    var sz  =  15;
     var settings = new SettingsModelList;
 
     settings.fetch();
     if (settings.length > 0) {
+        var sz  =  15;
         step.settings = settings.at(0);
         sz = step.settings.get("defaultfont");
+        $("table").css("font-size", sz + "px");
     }
 
-    $("table").css("font-size", sz + "px");
 	var jsonFileName = "gospel_harmony";
     var queryString = window.location.search;
 	var pos = queryString.indexOf("jsonFN=");

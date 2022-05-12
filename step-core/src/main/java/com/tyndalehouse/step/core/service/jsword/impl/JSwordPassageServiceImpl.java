@@ -837,7 +837,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     else if (numOfDigits == 1) strongNum = "000" + tmp.substring(indexStrongPrefix + 1, i);
                     tmp = tmp.substring(0, index) + prefix + strongNum + tmp.substring(i);
                 }
-                index = tmp.indexOf("strong:", indexStrongPrefix);
+                index = tmp.indexOf("strong:", index + 1);
             }
 //            tmp = tmp.replaceAll("strong:([HG])0(\\d\\d\\d\\d)", "$1" + "$2");
 //            tmp = tmp.replaceAll("strong:([HG]\\d\\d\\d\\d)", "$1");

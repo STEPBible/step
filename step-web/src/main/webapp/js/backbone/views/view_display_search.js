@@ -123,41 +123,21 @@ var SearchDisplayView = DisplayView.extend({
                     for (var i = 0; i < arrayLength; i++) {
                         var curWord = syntaxWords[i];
                         if ((curWord !== "AND") && (curWord !== "OR") && (curWord !== "NOT")) {
-                            if (curWord.indexOf("strong:") == 0) {
-                                curWord = curWord.substring(7);
-                                var strongArray = [];
-                                if (!strongHighlights) strongHighlights = [];
-                                if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
-                                if (isNaN(curWord.charAt(curWord.length - 1))) {
-                                    curWord = curWord.slice(0, -1);
-                                    if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
-                                }
-                                if (strongArray.length > 0)
-                                    this._highlightStrongs(results, strongArray);
-                            }
-                            else this._highlightResults(results, curWord);
+                            if (curWord.indexOf("strong:") == 0)
+                                this._lookForStrongInSearchString(curWord.substring(7), results, strongHighlights);
+                            else if (curWord !== query)
+                                this._highlightResults(results, curWord);
                         }
                     }
                 }
                 else if (itemType === TEXT_SEARCH) {
-                    console.log("TEXT_SEARCH: " + actPsgeDataElm.token);
                     if (actPsgeDataElm.token !== query)
                         this._highlightResults(results, actPsgeDataElm.token);
                 }
                 else if ((itemType === STRONG_NUMBER) || (itemType === GREEK_MEANINGS) ||
                     (itemType === GREEK) || (itemType === HEBREW_MEANINGS) ||
-                    (itemType === HEBREW)) {
-                    curWord = actPsgeDataElm.token;
-                    var strongArray = [];
-                    if (!strongHighlights) strongHighlights = [];
-                    if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
-                    if (isNaN(curWord.charAt(curWord.length - 1))) {
-                        curWord = curWord.slice(0, -1);
-                        if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
-                    }
-                    if (strongArray.length > 0)
-                        this._highlightStrongs(results, strongArray);
-                }
+                    (itemType === HEBREW))
+                        this._lookForStrongInSearchString(actPsgeDataElm.token, results, strongHighlights);
 //                                EXAMPLE_DATA = "examples";
 //                                MEANINGS = "meanings";
 //                                SUBJECT_SEARCH = "subject";
@@ -358,6 +338,18 @@ var SearchDisplayView = DisplayView.extend({
                 doHighlight(results.get(0), "secondaryBackground", regex);
             }
         }
+    },
+
+    _lookForStrongInSearchString: function (curWord, results, strongHighlights) {
+        var strongArray = [];
+        if (!strongHighlights) strongHighlights = [];
+        if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
+        if (isNaN(curWord.charAt(curWord.length - 1))) {
+            curWord = curWord.slice(0, -1);
+            if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
+        }
+        if (strongArray.length > 0)
+            this._highlightStrongs(results, strongArray);
     },
 
     _highlightStrongs: function (results, strongsList) {

@@ -120,8 +120,8 @@ var SearchDisplayView = DisplayView.extend({
                     var syntaxWords = actPsgeDataElm.token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
                     step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
                     var arrayLength = syntaxWords.length;
-                    for (var i = 0; i < arrayLength; i++) {
-                        var curWord = syntaxWords[i];
+                    for (var j = 0; j < arrayLength; j++) {
+                        var curWord = syntaxWords[j];
                         if ((curWord !== "AND") && (curWord !== "OR") && (curWord !== "NOT")) {
                             if (curWord.indexOf("strong:") == 0)
                                 this._lookForStrongInSearchString(curWord.substring(7), results, strongHighlights);
@@ -333,7 +333,7 @@ var SearchDisplayView = DisplayView.extend({
         var highlightTerms = this._highlightingTerms(query);
 
         for (var i = 0; i < highlightTerms.length; i++) {
-            if (!step.util.isBlank(highlightTerms[i])) {
+            if ((!step.util.isBlank(highlightTerms[i])) && (highlightTerms[i] !== "null")) {
                 var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");
                 doHighlight(results.get(0), "secondaryBackground", regex);
             }

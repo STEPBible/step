@@ -106,12 +106,63 @@ var SearchDisplayView = DisplayView.extend({
 			}
 
             this._addVerseClickHandlers(results);
-
             var strongHighlights = this.model.get("strongHighlights");
             if (strongHighlights) {
                 this._highlightStrongs(results, strongHighlights);
             } else {
                 this._highlightResults(results, query);
+            }
+            var activePassageData = this.model.get("searchTokens");
+            for (var i = 0; i < activePassageData.length; i++) {
+                var actPsgeDataElm = activePassageData[i];
+                var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
+                if (itemType === SYNTAX) {
+                    var syntaxWords = actPsgeDataElm.token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
+                    step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
+                    var arrayLength = syntaxWords.length;
+                    for (var i = 0; i < arrayLength; i++) {
+                        var curWord = syntaxWords[i];
+                        if ((curWord !== "AND") && (curWord !== "OR") && (curWord !== "NOT")) {
+                            if (curWord.indexOf("strong:") == 0) {
+                                curWord = curWord.substring(7);
+                                var strongArray = [];
+                                if (!strongHighlights) strongHighlights = [];
+                                if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
+                                if (isNaN(curWord.charAt(curWord.length - 1))) {
+                                    curWord = curWord.slice(0, -1);
+                                    if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
+                                }
+                                if (strongArray.length > 0)
+                                    this._highlightStrongs(results, strongArray);
+                            }
+                            else this._highlightResults(results, curWord);
+                        }
+                    }
+                }
+                else if (itemType === TEXT_SEARCH) {
+                    console.log("TEXT_SEARCH: " + actPsgeDataElm.token);
+                    if (actPsgeDataElm.token !== query)
+                        this._highlightResults(results, actPsgeDataElm.token);
+                }
+                else if ((itemType === STRONG_NUMBER) || (itemType === GREEK_MEANINGS) ||
+                    (itemType === GREEK) || (itemType === HEBREW_MEANINGS) ||
+                    (itemType === HEBREW)) {
+                    curWord = actPsgeDataElm.token;
+                    var strongArray = [];
+                    if (!strongHighlights) strongHighlights = [];
+                    if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
+                    if (isNaN(curWord.charAt(curWord.length - 1))) {
+                        curWord = curWord.slice(0, -1);
+                        if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
+                    }
+                    if (strongArray.length > 0)
+                        this._highlightStrongs(results, strongArray);
+                }
+//                                EXAMPLE_DATA = "examples";
+//                                MEANINGS = "meanings";
+//                                SUBJECT_SEARCH = "subject";
+//                                NAVE_SEARCH = "nave";
+//                                NAVE_SEARCH_EXTENDED = "xnave";
             }
 
             this.doFonts(append ? this.getScrollableArea() : results, "", this.model.get("interlinearMode"), this.model.get("languageCode"));

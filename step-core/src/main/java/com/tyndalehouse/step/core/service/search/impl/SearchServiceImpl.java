@@ -70,6 +70,7 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.utils.language.GreekUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -866,8 +867,12 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult executeJoiningSearches(final SearchQuery sq) {
         // we run each individual search, and get all the keys out of each
 
-        final Key results = runJoiningSearches(sq);
-        return getSearchResultFromKey(sq, results);
+        ImmutablePair<Key, Set> r = runJoiningSearches(sq);
+        final Key results = r.getLeft();
+        final Set<String> strongs = r.getRight();
+        SearchResult result = getSearchResultFromKey(sq, results);
+        result.setStrongHighlights(new ArrayList<>(strongs));
+        return result;
     }
 
     /**
@@ -890,8 +895,9 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query
      * @return the key to all the results
      */
-    private Key runJoiningSearches(final SearchQuery sq) {
+    private ImmutablePair<Key, Set> runJoiningSearches(final SearchQuery sq) {
         Key results = null;
+        Set<String> strongs = new HashSet<String>();
         do {
             switch (sq.getCurrentSearch().getType()) {
                 case TEXT:
@@ -904,11 +910,11 @@ public class SearchServiceImpl implements SearchService {
                     break;
                 case ORIGINAL_GREEK_RELATED:
                 case ORIGINAL_HEBREW_RELATED:
-                    Set<String> strongs = adaptQueryForRelatedStrongSearch(sq);
+                    strongs.addAll(adaptQueryForRelatedStrongSearch(sq));
                     results = intersect(results, this.runStrongTextSearchKeys(sq, strongs));
                     break;
                 case ORIGINAL_MEANING:
-                    adaptQueryForMeaningSearch(sq);
+                    strongs.addAll(adaptQueryForMeaningSearch(sq));
                     results = intersect(results, this.jswordSearch.searchKeys(sq));
                     break;
                 case EXACT_FORM:
@@ -933,7 +939,7 @@ public class SearchServiceImpl implements SearchService {
                             .getCurrentSearch().getType().getLanguageKey());
             }
         } while (sq.hasMoreSearches());
-        return results;
+        return new ImmutablePair<>(results, strongs);
     }
 
     /**

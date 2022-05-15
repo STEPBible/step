@@ -390,6 +390,9 @@ public class IndividualSearch {
         return this.originalFilter;
     }
 
+    public void setOriginalFilter(final String[] originalFilter) {
+        this.originalFilter = originalFilter;
+    }
 
     /**
      * @return The untampered query
@@ -398,6 +401,9 @@ public class IndividualSearch {
         return originalQuery;
     }
 
+    public void setOriginalQuery(final String originalQuery) {
+        this.originalQuery = originalQuery;
+    }
     /**
      * A secondary range, usually submitted outside of the actual query
      *

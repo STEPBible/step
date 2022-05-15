@@ -899,6 +899,32 @@ public class SearchServiceImpl implements SearchService {
         Key results = null;
         Set<String> strongs = new HashSet<String>();
         do {
+            String query = sq.getCurrentSearch().getQuery();
+            String orignalQuery = sq.getCurrentSearch().getOriginalQuery();
+            String orignalFilter[] = sq.getCurrentSearch().getOriginalFilter();
+            boolean orSearch = false;
+            boolean notSearch = false;
+            if (query.startsWith("(OR)")) {
+                sq.getCurrentSearch().setQuery(query.substring(4));
+                orSearch = true;
+                if (orignalQuery.startsWith("(OR)"))
+                    sq.getCurrentSearch().setOriginalQuery(orignalQuery.substring(4));
+                if (orignalFilter != null) {
+                    for (String s : orignalFilter) {
+                        if (s.startsWith("(OR)")) {
+                            s = s.substring(4);
+                        }
+                    }
+                }
+                //if (orignalFilter.startsWith("(OR"))
+                //    sq.getCurrentSearch().setOriginalFilter(orignalFilter.substring(4));
+            }
+            else if (query.startsWith("(NOT)")) {
+                sq.getCurrentSearch().setQuery(query.substring(5));
+                notSearch = true;
+                if (orignalQuery.startsWith("(NOT)"))
+                    sq.getCurrentSearch().setOriginalQuery(orignalQuery.substring(5));
+            }
             switch (sq.getCurrentSearch().getType()) {
                 case TEXT:
                     results = intersect(results, this.jswordSearch.searchKeys(sq));
@@ -910,8 +936,9 @@ public class SearchServiceImpl implements SearchService {
                     break;
                 case ORIGINAL_GREEK_RELATED:
                 case ORIGINAL_HEBREW_RELATED:
-                    strongs.addAll(adaptQueryForRelatedStrongSearch(sq));
-                    results = intersect(results, this.runStrongTextSearchKeys(sq, strongs));
+                    Set<String> curSetOfStrong = adaptQueryForRelatedStrongSearch(sq);
+                    results = intersect(results, this.runStrongTextSearchKeys(sq, curSetOfStrong));
+                    strongs.addAll(curSetOfStrong);
                     break;
                 case ORIGINAL_MEANING:
                     strongs.addAll(adaptQueryForMeaningSearch(sq));

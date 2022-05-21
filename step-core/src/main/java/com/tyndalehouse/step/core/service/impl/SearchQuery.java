@@ -85,16 +85,20 @@ public class SearchQuery {
     public SearchQuery(final String searchQuery, final String[] versions, final String sortOrder, final int context,
                        final int pageNumber, final int pageSize, final String restriction) {
 
+        this(searchQuery, versions, sortOrder, context, pageNumber, pageSize, restriction, "AND");
+    }
+
+    public SearchQuery(final String searchQuery, final String[] versions, final String sortOrder, final int context,
+                       final int pageNumber, final int pageSize, final String restriction, final String curSearchJoin) {
+
         this.originalQuery = searchQuery;
 
         // parse the searches
         final String[] individualSearches = searchQuery.split(JOINING_SEARCH);
         this.searches = new IndividualSearch[individualSearches.length];
         for (int ii = 0; ii < individualSearches.length; ii++) {
-            this.searches[ii] = new IndividualSearch(individualSearches[ii], versions, restriction);
-
+            this.searches[ii] = new IndividualSearch(individualSearches[ii], versions, restriction, curSearchJoin);
         }
-
 
         // set the other variables
         this.ranked = Boolean.parseBoolean(sortOrder);
@@ -113,7 +117,7 @@ public class SearchQuery {
      * @param context     how many verses either side to include
      * @param pageNumber  the page number required
      */
-    public SearchQuery(String searchQuery, String[] versions, String sortOrder, int context, int pageNumber, String references) {
+    public SearchQuery(String searchQuery, String[] versions, String sortOrder, int context, int pageNumber, String references, String curSearchJoin) {
         this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE, references);
     }
 

@@ -408,7 +408,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
 	public void readAndLoad(final String augStrongFile) {
         Reader fileReader = null;
         InputStream stream = null;
-        BufferedInputStream bufferedStream;
+        BufferedInputStream bufferedStream = null;
         String curAugStrong = "";
         String curReferences = "";
         int numOfOTReferences = 1;
@@ -602,10 +602,10 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             sortedStrongHbr = null;
             sortedAugStrong = null;
             augStrongWithMostReferencesHash = null;
-            System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
+            System.gc(); // Free memory that will not be used after the initial load.  This like is probably unnecessary but just in case.
         } finally {
             closeQuietly(fileReader);
-            // closeQuietly(bufferedStream);
+            closeQuietly(bufferedStream);
             closeQuietly(stream);
         }
 	}

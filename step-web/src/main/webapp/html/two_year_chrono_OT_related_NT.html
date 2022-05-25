@@ -1062,12 +1062,11 @@
     var col1_name = "";
 
     var settings = new SettingsModelList;
-
     settings.fetch();
     if (settings.length > 0) {
-        var sz  =  15;
         step.settings = settings.at(0);
-        sz = step.settings.get("defaultfont");
+        var sz = step.settings.get("defaultfont");
+		if (typeof sz !== "number") sz = 15;
         $("table").css("font-size", sz + "px");
     }
 

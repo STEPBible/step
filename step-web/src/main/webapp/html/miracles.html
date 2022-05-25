@@ -152,6 +152,7 @@ function loadFile(path) {
     fileref.setAttribute("href", path);
   }
   else return;
+  console.log("miracle load " + path);
   document.getElementsByTagName("head")[0].appendChild(fileref);
 }
 
@@ -161,12 +162,11 @@ function setupTable(urlPart1) {
 	$(".fixTableHead").css("height", remainingHeight + "px");
 
     var settings = new SettingsModelList;
-
     settings.fetch();
     if (settings.length > 0) {
-        var sz  =  15;
         step.settings = settings.at(0);
-        sz = step.settings.get("defaultfont");
+        var sz = step.settings.get("defaultfont");
+		if (typeof sz !== "number") sz = 15;
         $("table").css("font-size", sz + "px");
     }
 
@@ -197,6 +197,7 @@ function setupTable(urlPart1) {
 
     var rows = $("#tb_body").find("tr");
 	var highLightFirstRow = true;
+	debugger;
     for (var i = 0; i < rows.length; i ++) {
         rows[i].i = i;
 		if (typeof rows[i].cells[1] !== "undefined") { // If cells[1] is not defined, it is the row with "MIRACLES in the OT or NT"

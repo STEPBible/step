@@ -221,13 +221,14 @@ var SidebarView = Backbone.View.extend({
             }
         }
         this.tabContainer.append(this.lexicon);
-		if (typeof step.wordLocations == "object") this._isItALocation(data.vocabInfos[0], ref);
-		else {
-			$.getJSON("html/json/word_locations.json", function(location) {
-				step.wordLocations = location;
-				SidebarView.prototype._isItALocation(data.vocabInfos[0], ref);
-			});
-		}
+        this._isItALocation(data.vocabInfos[0], ref);
+		// if (typeof step.wordLocations == "object") this._isItALocation(data.vocabInfos[0], ref);
+		// else {
+		// 	$.getJSON("html/json/word_locations.json", function(location) {
+		// 		step.wordLocations = location;
+		// 		SidebarView.prototype._isItALocation(data.vocabInfos[0], ref);
+		// 	});
+		// }
     },
     _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
         var userLangGloss = "";
@@ -363,7 +364,14 @@ var SidebarView = Backbone.View.extend({
     },
 
     _appendLexiconSearch: function (panel, mainWord, detailLex) {
-        panel.append("<br />").append(__s.lexicon_search_for_this_word);
+        var occursAboutMessage = __s.lexicon_search_for_this_word;
+		if ((detailLex) && (detailLex.length > 0)) {
+            var detailLexType = detailLex[0][0];
+            var verbToDisplay = "used";
+            if ((detailLexType === "man") || (detailLexType === "woman") || (detailLexType === "place") || (detailLexType === "group")) verbToDisplay = "named";
+            occursAboutMessage = "This " + detailLexType + " is " + verbToDisplay + " about ";
+        }
+        panel.append("<br />").append(occursAboutMessage);
         if (mainWord.count) {
             panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, mainWord.count) + '</span>').click(function () {
                 var strongNumber = $(this).data("strongNumber");
@@ -374,7 +382,6 @@ var SidebarView = Backbone.View.extend({
             }));
         }
 		if ((detailLex) && (detailLex.length > 0)) {
-			panel.append("<br><span>Related lexical word(s):</span>");
 			panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {
 				if (ev.target.id === "detailLexSelect") {
 					if ($(".detailLex:visible").length > 0) {
@@ -391,12 +398,11 @@ var SidebarView = Backbone.View.extend({
 			var allStrongs = [];
 			allStrongs.push(mainWord.strongNumber);
 			var total = mainWord.count;
-			for (var i = 0; i < detailLex.length; i++) {
+			for (var i = 1; i < detailLex.length; i++) {
 				var frequency = parseInt(detailLex[i][4]); // Just in case it is provided in String instead of number
 				var origLangClassStyle = (detailLex[i][1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
 					"class='unicodeFontMini detailLex'";
 				panel.append($("<br class='detailLex' style='display:none'><span class='detailLex' style='display:none'>&nbsp;&nbsp;&nbsp;" + detailLex[i][0] + "&nbsp;</span>"));
-				//panel.append("&nbsp;");
 				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).
 					append($("<span class='detailLex' style='display:none'>" + detailLex[i][2]  + " </span><span " + origLangClassStyle + " style='display:none'>" +
 					detailLex[i][3] + "</span>")).click(function () {
@@ -431,8 +437,8 @@ var SidebarView = Backbone.View.extend({
 		return false;
     },
 
-	_lookUpGeoInfo: function(mainWord, bookName, indexToCoordArray) {
-		var geoForWord = step.wordLocations["coords"][indexToCoordArray];
+	_lookUpGeoInfo: function(mainWord, bookName, coordinate) {
+		// var geoForWord = step.wordLocations["coords"][indexToCoordArray];
 		bookName = bookName.substring(0, bookName.length - 1);
 		var possibleMapElement = $("#possibleMap");
 		if (possibleMapElement.length == 0) {
@@ -440,7 +446,7 @@ var SidebarView = Backbone.View.extend({
 			// add a sleep here
 			possibleMapElement = $("#possibleMap");
 		}
-		possibleMapElement.empty().html("<a href='/html/multimap.html?coord=" + geoForWord + 
+		possibleMapElement.empty().html("<a href='/html/multimap.html?coord=" + coordinate + 
 			"&strong=" + mainWord.strongNumber + "&gloss=" + mainWord.stepGloss +
 			"&book=" + bookName +
 			"' target='_new'>" +
@@ -455,7 +461,7 @@ var SidebarView = Backbone.View.extend({
 				var found = false;
 				for (var j = 0; ((j < detailLex.length) && (!found)); j++) {
 					if (relatedNos[i].strongNumber === detailLex[j][1]) {
-						console.log("skipping " + detailLex[j][1]);
+						//console.log("skipping " + detailLex[j][1]);
 						found = true;
 					}
 				}
@@ -468,53 +474,63 @@ var SidebarView = Backbone.View.extend({
 	},
 	
 	_isItALocation: function(mainWord, ref) {
-		var passages = step.wordLocations[mainWord.strongNumber];
+        var strongNum = mainWord.strongNumber.trim();
+        var stepLink = mainWord._step_Link;
+        if (typeof stepLink !== "string") return;
+        var stepLink = stepLink.trim();
+        if ((stepLink.length < 3) || (isNaN(stepLink.substring(0,1)))) return;
+        var posOfComma = stepLink.indexOf(",");
+        if (posOfComma == -1) return;
+
+        if ((isNaN(stepLink.substring(0, posOfComma - 1))) || (isNaN(stepLink.substring(posOfComma + 1)))) return;
+		//var passages = step.wordLocations[strongNum];
 		if (typeof ref === "undefined") {
-			if ((typeof step.previousSideBarLexiconRef === "object") && (mainWord.strongNumber === step.previousSideBarLexiconRef[0])) {
+			if ((typeof step.previousSideBarLexiconRef === "object") && (strongNum === step.previousSideBarLexiconRef[0])) {
 				ref = step.previousSideBarLexiconRef[1];
 			}
 			else ref = "";
 		}
-		else step.previousSideBarLexiconRef = [mainWord.strongNumber, ref];
+		else step.previousSideBarLexiconRef = [strongNum, ref];
 		var posOfDot1 = ref.indexOf(".");
 		var bookName = (posOfDot1 > 2) ? ref.substr(0, posOfDot1 + 1) : ""; // Include the "." (dot)
-		if (typeof passages === "number") {
-			var indexToCoordArray = passages;
-			this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
-		}
-		else if ((typeof passages === "object") && (ref !== "")) {
-			var posOfDot2 = ref.indexOf(".", posOfDot1 + 1);
-			var chapter = ref.substring(posOfDot1 + 1, posOfDot2);
-			var verse = ref.substr(posOfDot2 + 1);
-			loop1:
-			for (var i = 0; i < passages.length; i ++) {
-				var tmpArray = passages[i].split("*"); // data before the * is a list of reference, after the * is the index to the coordinate array
-				var indexToCoordArray = tmpArray[1];
-				var passagesFromSameBook = tmpArray[0].split(";");
-				loop2:
-				for (var j = 0; j < passagesFromSameBook.length; j ++) {
-					if (passagesFromSameBook[j].indexOf(bookName) == 0) {
-						var chptrVrsToSearch = passagesFromSameBook[j].substr(bookName.length);
-						var chptrVrsArray = chptrVrsToSearch.split(",");
-						var currentChapter = 0;
-						for (var k = 0; k < chptrVrsArray.length; k ++) {
-							var currentVerse = 0;
-							var tmp = chptrVrsArray[k].split(":");
-							if (tmp.length == 2) {
-								currentChapter = tmp[0];
-								currentVerse =  tmp[1];
-							}
-							else currentVerse =  tmp[0];
-							if ((currentChapter == chapter) && (currentVerse == verse)) {
-								this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
-								break loop1;
-							}
-							else if (currentChapter > chapter) break loop2;
-						}
-					}
-				}
-			}
-		}
+        this._lookUpGeoInfo(mainWord, bookName, stepLink);
+		// if (typeof passages === "number") {
+		// 	var indexToCoordArray = passages;
+		// 	this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
+		// }
+		// else if ((typeof passages === "object") && (ref !== "")) {
+		// 	var posOfDot2 = ref.indexOf(".", posOfDot1 + 1);
+		// 	var chapter = ref.substring(posOfDot1 + 1, posOfDot2);
+		// 	var verse = ref.substr(posOfDot2 + 1);
+		// 	loop1:
+		// 	for (var i = 0; i < passages.length; i ++) {
+		// 		var tmpArray = passages[i].split("*"); // data before the * is a list of reference, after the * is the index to the coordinate array
+		// 		var indexToCoordArray = tmpArray[1];
+		// 		var passagesFromSameBook = tmpArray[0].split(";");
+		// 		loop2:
+		// 		for (var j = 0; j < passagesFromSameBook.length; j ++) {
+		// 			if (passagesFromSameBook[j].indexOf(bookName) == 0) {
+		// 				var chptrVrsToSearch = passagesFromSameBook[j].substr(bookName.length);
+		// 				var chptrVrsArray = chptrVrsToSearch.split(",");
+		// 				var currentChapter = 0;
+		// 				for (var k = 0; k < chptrVrsArray.length; k ++) {
+		// 					var currentVerse = 0;
+		// 					var tmp = chptrVrsArray[k].split(":");
+		// 					if (tmp.length == 2) {
+		// 						currentChapter = tmp[0];
+		// 						currentVerse =  tmp[1];
+		// 					}
+		// 					else currentVerse =  tmp[0];
+		// 					if ((currentChapter == chapter) && (currentVerse == verse)) {
+		// 						this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
+		// 						break loop1;
+		// 					}
+		// 					else if (currentChapter > chapter) break loop2;
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
 	},
 	
     _createWordPanel: function (panel, mainWord, currentUserLang, ref) {
@@ -527,6 +543,11 @@ var SidebarView = Backbone.View.extend({
 		if (mainWord._step_DetailLexicalTag) {
 			detailLex = JSON.parse(mainWord._step_DetailLexicalTag);
 		}
+        var stepLink = "";
+        if (mainWord._step_Link) {
+			stepLink = mainWord._step_Link;
+		}
+        console.log("stepLink " + stepLink);
         this._appendLexiconSearch(panel, mainWord, detailLex);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;

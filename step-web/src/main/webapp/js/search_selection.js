@@ -149,7 +149,19 @@ step.searchSelect = {
 			var activePassageData = step.util.activePassage().get("searchTokens") || [];
 			var existingReferences = "";
 			$('#previousSearch').empty();
-			var listOfPreviousSearch = [];
+			var previousSearches = [];
+			var previousJoins = [];
+			for (var j = 0; j < activePassageData.length; j++) {
+				var actPsgeDataElm = activePassageData[j];
+				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
+				if (itemType == "searchJoins") {
+					previousJoins = actPsgeDataElm.token.split(",");
+					for (var k = 0; k < previousJoins.length; k++) {
+						if ((previousJoins[k] !== "AND") && (previousJoins[k] !== "OR") && (previousJoins[k] !== "NOT"))
+							previousJoins[k] = "AND";
+					}
+				}
+			}
 			for (var i = 0; i < activePassageData.length; i++) {
 				var actPsgeDataElm = activePassageData[i];
 				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
@@ -180,14 +192,19 @@ step.searchSelect = {
 								itemType = TEXT_SEARCH;
 								currWord = {token: syntaxWords[j], item: {} };
 							}
-							this.numOfPreviousSearchTokens = this.createPreviousSearchList(itemType, currWord, listOfPreviousSearch, this.previousSearchTokens, this.numOfPreviousSearchTokens, searchRelationship);
+							this.numOfPreviousSearchTokens = this.createPreviousSearchList(itemType, currWord, previousSearches, this.previousSearchTokens, this.numOfPreviousSearchTokens, searchRelationship);
 							searchRelationship = "";
 						}
 					}
-					else this.numOfPreviousSearchTokens = this.createPreviousSearchList(itemType, actPsgeDataElm, listOfPreviousSearch, this.previousSearchTokens, this.numOfPreviousSearchTokens);
+					else {
+						var searchRelationship = "AND";
+						if (this.numOfPreviousSearchTokens == 0) searchRelationship = "";
+						else if (this.numOfPreviousSearchTokens <= previousJoins.length) searchRelationship = previousJoins[this.numOfPreviousSearchTokens - 1];
+						this.numOfPreviousSearchTokens = this.createPreviousSearchList(itemType, actPsgeDataElm, previousSearches, this.previousSearchTokens, this.numOfPreviousSearchTokens, searchRelationship);
+					}
 				}
 			}
-			if (listOfPreviousSearch.length > 0) {
+			if (previousSearches.length > 0) {
 				var previousSearchHTML =
 				'<div id="modalonoffswitch">' +
 					'<span class="pull-left" style="font-size:18px" id="search_with_previous">' + __s.search_with_previous + '&nbsp;&nbsp;</span>' +
@@ -208,8 +225,8 @@ step.searchSelect = {
 				'</div>' +
 				'<br><br><br><br>' +
 				'<ul id="listofprevioussearchs" style="display:none">';
-				for (var j = 0; j < listOfPreviousSearch.length; j++) {
-					previousSearchHTML += "<li id='lOPS_" + j + "'>" + listOfPreviousSearch[j] + 
+				for (var j = 0; j < previousSearches.length; j++) {
+					previousSearchHTML += "<li id='lOPS_" + j + "'>" + previousSearches[j] + 
 					"<span class='closeMark' onclick=step.searchSelect.removePreviousSearch(" + j + ")>X</span></li>";
 				}
 				previousSearchHTML += "</ul>";
@@ -231,7 +248,9 @@ step.searchSelect = {
 		});
 	},
 
-	createPreviousSearchList: function(itemType, actPsgeDataElm, listOfPreviousSearch, previousSearchTokensArg, numOfPreviousSearchTokensArg, previousSearchRelationship) {
+	createPreviousSearchList: function(itemType, actPsgeDataElm, previousSearches, previousSearchTokensArg, numOfPreviousSearchTokensArg, previousSearchRelationship) {
+		var type = itemType.toLowerCase();
+		if (type === "searchjoins") return numOfPreviousSearchTokensArg; // searchjoins is not a search
 		if (typeof previousSearchRelationship === "undefined") previousSearchRelationship = "";
 		else if (previousSearchRelationship !== "") {
 			var andSelected = (previousSearchRelationship === "AND") ? " selected" : "";
@@ -244,7 +263,6 @@ step.searchSelect = {
 					'<option id="not_search" value="NOT"' + notSelected + '>' + __s.not + '</option>' +
 				'</select> ';
 		}
-		var type = itemType.toLowerCase();
 		if (this.searchTypeCode.indexOf(itemType) > 2) {
 			if (type.indexOf("greek") == 0) type = "greek";
 			else if (type.indexOf("hebrew") == 0) type = "hebrew";
@@ -253,15 +271,15 @@ step.searchSelect = {
 			if (actPsgeDataElm.item.stepTransliteration !== "")
 				htmlOfTerm += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
 			html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
-			listOfPreviousSearch.push(html);
+			previousSearches.push(html);
 			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
-			if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
+//			if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
 			previousSearchTokensArg.push("strong=" + strongNum);
 			if (actPsgeDataElm.item.stepTransliteration !== "") step.util.putStrongDetails(strongNum, htmlOfTerm);
 		}
 		else {
 			if (typeof __s[type] !== "undefined") type = __s[type];
-			listOfPreviousSearch.push("<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + actPsgeDataElm.token);
+			previousSearches.push("<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + actPsgeDataElm.token);
 			previousSearchTokensArg.push(itemType + "=" + actPsgeDataElm.token);
 		}
 		return numOfPreviousSearchTokensArg + 1;
@@ -1080,6 +1098,35 @@ step.searchSelect = {
 		}
 	},
 
+	verifySearchJoin: function(join) {
+		if ( (typeof join !== "string") ||
+		     ((join !== "AND") && (join !== "OR") && (join !== "NOT")) )
+			return "AND";
+		else
+			return join;
+	},
+
+	buildJoinString: function(currentJoin, previousJoins, searchType) {
+		var allAndJoins = true;
+		var previousJoinString = "";
+		if (typeof searchType === "undefined") currentJoin = "";
+		else if ((typeof currentJoin === "string") && (currentJoin !== "AND")) allAndJoins = false;
+		for (var i = 0; i < previousJoins.length; i++) {
+			if (previousJoins[i] !== "AND") allAndJoins = false;
+			if (previousJoinString.length > 1) previousJoinString += ',';
+			previousJoinString += previousJoins[i];
+		}
+		if (allAndJoins) return ""; // No need for searchJoins query string if all joins are AND
+		var newJoinString = "";
+		if (currentJoin !== "") {
+			if (previousJoinString !== "") newJoinString = previousJoinString + "," + currentJoin;
+			else newJoinString = currentJoin;
+		}
+		else if (previousJoinString !== "") newJoinString = previousJoinString;
+		if (newJoinString !== "") newJoinString = "|searchJoins=" + newJoinString;
+		return newJoinString;
+	},
+
 	goSearch: function(searchType, searchWord, displayText) {
 		var activePassageData = step.util.activePassage().get("searchTokens") || [];
 		var allVersions = "";
@@ -1093,66 +1140,63 @@ step.searchSelect = {
 			}
 		}
 		if (typeof searchWord !== "string") searchWord = "";
-		if (searchType === TEXT_SEARCH) currentSearch = '|syntax=t=' + searchWord;
+		if (searchType === TEXT_SEARCH) currentSearch = '|text=' + searchWord;
 		else if (searchType === STRONG_NUMBER) {
-			if (!this.includePreviousSearches) currentSearch = '|strong=' + searchWord;
-			else {
-				if (searchWord.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a, b, c, d, e, f, g, ...
-				currentSearch = '|syntax=t=strong:' + searchWord;
-			}
+			currentSearch = '|strong=' + searchWord;
 			step.util.putStrongDetails(searchWord, displayText);
 		}
 		else if (typeof searchType !== "undefined") currentSearch = '|' + searchType + '=' + searchWord;
 		var previousSearch = "";
+		var currentJoin ;
+		var previousJoins = [];
 		if (this.includePreviousSearches) {
-			var searchAndOrNot = $("#searchAndOrNot option:selected").val();
-			var existingSyntaxSearch = (currentSearch.substr(0, 8) === "|syntax=") ? currentSearch.substr(8) : "";
-			if (existingSyntaxSearch.substr(0, 2) === "t=") existingSyntaxSearch = existingSyntaxSearch.substr(2);
-			var previousSyntaxSearch = "";
-			var numOfPreviousSyntaxSearch = 0;
+			currentJoin = this.verifySearchJoin($("#searchAndOrNot option:selected").val());
+//			var existingSyntaxSearch = (currentSearch.substring(0, 8) === "|syntax=") ? currentSearch.substring(8) : "";
+//			if (existingSyntaxSearch.substring(0, 2) === "t=") existingSyntaxSearch = existingSyntaxSearch.substring(2);
+			//var previousSyntaxSearch = "";
+			//var numOfPreviousSyntaxSearch = 0;
 			for (var i = 0; i < this.previousSearchTokens.length; i++) {
 				if (this.previousSearchTokens[i] !== "") {
-					var previousSearchRelationship = $("#searchAndOrNot" + i + " option:selected").val();
-					if (typeof previousSearchRelationship !== "undefined")
-						previousSearchRelationship = " " + previousSearchRelationship + " ";
-					else
-						previousSearchRelationship = " ";
-					var curSearchWord = "";
-					if (this.previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = this.previousSearchTokens[i].substr(5);
-					else if (this.previousSearchTokens[i].substr(0, 7) === "strong=") {
-						if (searchWord.search(/([GH])\d{4,5}/) > -1) {
-							if (RegExp.$1 !== this.previousSearchTokens[i].substr(7, 1)) {
-								var msg = "You are trying to search Greek and Hebrew words together. If you do not intend to perform this type of search, just don't search Hebrew and Greek words together in a single search.  This is only supported by the \"Classical Interface\" when you have opened a Bible with Old Testament tagged with Hebrew words and another Bible with Old Testament tagged with Greek words.  To open the \"Classical Interface\" ";
-								msg += (window.innerWidth <= 767) ? "click on the three horizontal bars at the upper right, click on \"More\" and then click on \"Classical interface\"." :
-																	"click on \"More\" in the upper right and then click on \"Classical interface\".";
-								alert(msg);
-							}
-						}
-						curSearchWord = "strong:" + this.previousSearchTokens[i].substr(7);
-					}
-					if (curSearchWord !== "") {
-						numOfPreviousSyntaxSearch ++;
-						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=t=";
-						else {
-							if (numOfPreviousSyntaxSearch > 2)
-								previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
-							previousSyntaxSearch += previousSearchRelationship;
-						}
-						previousSyntaxSearch += curSearchWord;
-					}
-					else previousSearch += '|' + this.previousSearchTokens[i];
+					if (i > 0)
+						previousJoins.push(this.verifySearchJoin($("#searchAndOrNot" + i + " option:selected").val()));
+					// var curSearchWord = "";
+					// if (this.previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = this.previousSearchTokens[i].substr(5);
+					// else 
+						// if ((this.previousSearchTokens[i].substring(0, 7) === "strong=") &&
+						// 	(searchWord.substring(0,1) !== this.previousSearchTokens[i].substring(7, 8))) {}
+						// 		var msg = "You are trying to search Greek and Hebrew words together. If you do not intend to perform this type of search, just don't search Hebrew and Greek words together in a single search.  This is only supported by the \"Classical Interface\" when you have opened a Bible with Old Testament tagged with Hebrew words and another Bible with Old Testament tagged with Greek words.  To open the \"Classical Interface\" ";
+						// 		msg += (window.innerWidth <= 767) ? "click on the three horizontal bars at the upper right, click on \"More\" and then click on \"Classical interface\"." :
+						// 											"click on \"More\" in the upper right and then click on \"Classical interface\".";
+						// 		alert(msg);
+						// 	}
+						// }
+					//	curSearchWord = "strong=" + this.previousSearchTokens[i].substr(7);
+					//}
+					// if (curSearchWord !== "") {
+					// 	numOfPreviousSyntaxSearch ++;
+					// 	if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=t=";
+					// 	else {
+					// 		if (numOfPreviousSyntaxSearch > 2)
+					// 			previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
+					// 		previousSyntaxSearch += previousSearchRelationship;
+					// 	}
+					// 	previousSyntaxSearch += curSearchWord;
+					// }
+					// else 
+					previousSearch += '|' + this.previousSearchTokens[i];
 				}
 			}
-			if (previousSyntaxSearch.length > 0) {
-				if (existingSyntaxSearch.length > 0) {
-					if (numOfPreviousSyntaxSearch >= 2) 
-						previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
-					currentSearch = previousSyntaxSearch + " " + searchAndOrNot + " " + existingSyntaxSearch;
-				}
-				else currentSearch = previousSyntaxSearch + currentSearch;
-			}
+			// if (previousSyntaxSearch.length > 0) {
+			// 	if (existingSyntaxSearch.length > 0) {
+			// 		if (numOfPreviousSyntaxSearch >= 2) 
+			// 			previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
+			// 		currentSearch = previousSyntaxSearch + " " + searchAndOrNot + " " + existingSyntaxSearch;
+			// 	}
+			// 	else currentSearch = previousSyntaxSearch + currentSearch;
+			// }
 		}
-		var url = allVersions + range + previousSearch + currentSearch;
+		var joins = this.buildJoinString(currentJoin, previousJoins, searchType);
+		var url = allVersions + range + joins + previousSearch + currentSearch;
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
 		step.util.closeModal('searchSelectionModal');
 		if (selectedDisplayLoc === "new") step.util.createNewColumn();

@@ -263,8 +263,13 @@ public class Loader {
 
     void loadAugmentedStrongs() {
         LOGGER.debug("Indexing augmented strongs");
-
+//        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
+//        System.out.println("Total: " + (double) Runtime.getRuntime().totalMemory() / 1024);
+//        System.out.println("KB0: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
         this.augDStrong.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
+//        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
+//
+//        System.out.println("KB1: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
 //        this.addUpdate("install_augmented_strongs");
 //
 //        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("augmentedStrongs");
@@ -276,7 +281,10 @@ public class Loader {
 //        final int close = writer.close();
 //
 //        this.addUpdate("install_augmented_strongs_complete", close);
-//        return close;
+//        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
+//
+//        System.out.println("KB2: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
+        //return close;
     }
 
     /**

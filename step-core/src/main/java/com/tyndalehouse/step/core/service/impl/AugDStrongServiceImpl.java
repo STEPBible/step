@@ -601,6 +601,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             sortedStrongGrk = null;
             sortedStrongHbr = null;
             sortedAugStrong = null;
+            augStrongWithMostReferencesHash = null;
             System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
         } finally {
             closeQuietly(fileReader);

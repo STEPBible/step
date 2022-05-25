@@ -73,6 +73,7 @@ public class VocabInfo implements Serializable {
     private String twoLetterLookup;
     private String rawRelatedNumbers;
 	private String step_DetailLexicalTag;
+	private String step_Link;
     private Integer count;
 
     /**
@@ -137,6 +138,7 @@ public class VocabInfo implements Serializable {
             if (this.strongNumber != null) {
                 this.relatedNos = relatedVocabs.get(this.strongNumber);
 				this.step_DetailLexicalTag = d.get("STEP_DetailLexicalTag");
+				this.step_Link = d.get("STEP_Link");
             }
         } else {
             this.rawRelatedNumbers = OriginalWordUtils.stripExtensions(d.get("relatedNumbers"));
@@ -340,6 +342,19 @@ public class VocabInfo implements Serializable {
         this.zh_Definition = zh_Definition;
     }
 
+    /**
+     * @return the STEP_Link
+     */
+    public String get_step_Link() {
+        return this.step_Link;
+    }
+    /**
+     * @param step_Link
+     */
+    public void set_step_Link(final String step_Link) {
+        this.step_Link = step_Link;
+    }
+	
     /**
      * @return the STEP_DetailLexicalTag
      */

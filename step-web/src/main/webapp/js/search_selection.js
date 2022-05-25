@@ -209,7 +209,8 @@ step.searchSelect = {
 				'<div id="modalonoffswitch">' +
 					'<span class="pull-left" style="font-size:18px" id="search_with_previous">' + __s.search_with_previous + '&nbsp;&nbsp;</span>' +
 					'<span class="pull-left">' +
-						'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text" onchange="javascript:step.searchSelect.handlePreviousSearchAndOrNot()">' +
+						//'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text" onchange="javascript:step.searchSelect.handlePreviousSearchAndOrNot()">' +
+						'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text">' +
 							'<option id="and_search" value="AND">' + __s.search_previous_and + '</option>' +
 							'<option id="or_search" value="OR">' + __s.search_previous_or + '</option>' +
 							'<option id="not_search" value="NOT">' + __s.search_previous_not + '</option>' +
@@ -1244,9 +1245,10 @@ step.searchSelect = {
 	handleAndOrNot: function() {
 		this.andOrNotUpdated = true;
 		$('#updateButton').show();
-	},
+	}
+	//},
 
-	handlePreviousSearchAndOrNot: function() {
+//	handlePreviousSearchAndOrNot: function() {
 //		var searchAndOrNot = $("#searchAndOrNot option:selected").val();
 //		if (searchAndOrNot === "AND") {
 //			$("#searchResultssubject").show();
@@ -1261,5 +1263,5 @@ step.searchSelect = {
 //			$("#searchResultsmeaningsWarn").show();
 //   
 //		}
-	}
+//	}
 };

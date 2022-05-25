@@ -823,9 +823,12 @@ step.util = {
         },
         shortenDisplayText: function (text, maxLength) {
 			if (text.length <= maxLength) return text;
-            var lastComma = text.substr(0, maxLength).lastIndexOf(",");
-            if (lastComma < 5) lastComma = maxLength;
-            return text.substr(0, lastComma) + '...';
+            var lastSeparator = text.substr(0, maxLength).lastIndexOf(",");
+			lastSeparator = Math.max(lastSeparator, text.substr(0, maxLength).lastIndexOf(" AND "));
+			lastSeparator = Math.max(lastSeparator, text.substr(0, maxLength).lastIndexOf(" OR "));
+			lastSeparator = Math.max(lastSeparator, text.substr(0, maxLength).lastIndexOf(" NOT "));
+            if (lastSeparator < 5) lastSeparator = maxLength;
+            return text.substr(0, lastSeparator) + '...';
 		},
         renderArgs: function (searchTokens, container, outputMode) {
 			if ((outputMode !== "button") && (outputMode !== "span")) {
@@ -843,6 +846,14 @@ step.util = {
             var allSelectedReferences = "";
 			var foundSearch = false;
 			var searchWords = "";
+			var searchJoins = [];
+            for (var i = 0; i < searchTokens.length; i++) { // get the searchJoins first
+				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType;  // This is needed for syntax search.  Don't know why.  PT 5/26/2021
+                if (searchTokens[i].itemType == "searchJoins") {
+					searchJoins = searchTokens[i].token.split(",");
+				}
+			}
+			var numOfSearchWords = 0;
             for (var i = 0; i < searchTokens.length; i++) { // process all the VERSION and REFERENCE first so that the buttons will always show up first at the top of the panel
 				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType; // This is needed for syntax search.  Don't know why.  PT 5/26/2021
 				var itemType = searchTokens[i].itemType;
@@ -872,7 +883,11 @@ step.util = {
                     foundSearch = true;
 					var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
 					if (word.length > 0) {
-						if (searchWords.length > 0) searchWords += ', ';
+						numOfSearchWords ++;
+						if ((numOfSearchWords > 1) && (searchWords.length > 0)) {
+							if (searchJoins.length >= (numOfSearchWords - 1)) searchWords += ' ' + searchJoins[numOfSearchWords - 2] + ' ';
+							else searchWords += ', ';
+						}
                         if (itemType === SYNTAX) {
                             var syntaxWords = searchTokens[i].token.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').split(" ");
                             step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
@@ -945,9 +960,14 @@ step.util = {
 					}
 				}
 			}
-			if ((foundSearch) && (allSelectedReferences.length > 0)) {
-				searchWords += " (" + allSelectedReferences + ")";
-				allSelectedReferences = "";
+			if (foundSearch) {
+				searchWords = searchWords.replace(/ AND /g, "<sub> and </sub>");
+				searchWords = searchWords.replace(/ OR /g, "<sub> or </sub>");
+				searchWords = searchWords.replace(/ NOT /g, "<sub> not </sub>");
+				if (allSelectedReferences.length > 0) {
+					searchWords += " (" + allSelectedReferences + ")";
+					allSelectedReferences = "";
+				}
 			}
 			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
 
@@ -1828,7 +1848,7 @@ step.util = {
 									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
 										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +
 								'}' +
-								'step.searchSelect.handlePreviousSearchAndOrNot();' +
+//								'step.searchSelect.handlePreviousSearchAndOrNot();' +
 							'}' +
 							'else {' +
 								'step.searchSelect.includePreviousSearches = false;' +

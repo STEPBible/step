@@ -82,7 +82,7 @@ src="/html/multimap.html?coord=33.545097,36.224661&book=2Kgs"></iframe>
 				callback(jQuery);
 			}
 			else {
-				window.setTimeout(function() { checkReady(callback); }, 20);
+				window.setTimeout(function() { checkReady(callback); }, 200);
 			}
 		};
 		// Start polling...
@@ -107,6 +107,7 @@ function loadFile(path) {
     fileref.setAttribute("href", path);
   }
   else return;
+  fileref.async = false;
   document.getElementsByTagName("head")[0].appendChild(fileref);
 }
 

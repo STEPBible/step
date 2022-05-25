@@ -576,10 +576,72 @@
     } catch (e) {
         inIFrame = true;
     }
+	
+	var debugOption = "";
+	var urlPart1 = window.location.origin;
+	var pos = window.location.href.indexOf("/html/one_year_themes_chrono.html");
+	if (pos > 8) { // probably running in development environment.
+		urlPart1 = window.location.href.substr(0, pos);
+		debugOption = "&debug";
+	}
+	
     if (!inIFrame) {
-        window.location = window.location.origin + "/html/split.html?" + window.location.origin + "/?q=reference=Gen.1&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+        window.location = urlPart1 + "/html/split.html?" + urlPart1 + "/?q=reference=Gen.1" +
+		    debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
     }
 
+	if (typeof jQuery == 'undefined') {
+  		loadFile(urlPart1 + "/css/bootstrap.css");
+		loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
+		loadFile(urlPart1 + "/css/select2.css");
+		loadFile(urlPart1 + "/css/select2-bootstrap.css");
+		loadFile(urlPart1 + "/scss/step-template.css");
+		loadFile(urlPart1 + "/international/en.js");
+		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js');
+		loadFile(urlPart1 + "/libs/underscore-min.js");
+		loadFile(urlPart1 + "/libs/bootstrap.min.js");
+		loadFile(urlPart1 + "/libs/backbone.js");
+		loadFile(urlPart1 + "/libs/backbone.localStorage.js");
+		loadFile(urlPart1 + "/js/backbone/models/model_settings.js");
+		loadFile(urlPart1 + "/js/step_constants.js");
+		loadFile(urlPart1 + "/js/passage_selection.js");
+		loadFile(urlPart1 + "/js/search_selection.js");
+		// Poll for jQuery to come into existance
+		var checkReady = function(callback) {
+			if (window.jQuery) {
+				callback(jQuery);
+			}
+			else {
+				window.setTimeout(function() { checkReady(callback); }, 200);
+			}
+		};
+		// Start polling...
+		checkReady(function($) {
+			$(function() {
+				setupTable(urlPart1);
+			});
+		});
+	}
+	else setupTable(urlPart1);
+})();
+
+function loadFile(path) {
+  if (path.endsWith(".js")) {
+    var fileref = document.createElement("script");
+    fileref.setAttribute("type", "text/javascript");
+    fileref.setAttribute("src", path);
+  } else if (path.endsWith(".css")) {
+    var fileref = document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", path);
+  }
+  else return;
+  fileref.async = false;
+  document.getElementsByTagName("head")[0].appendChild(fileref);
+}
+
+function setupTable(urlPart1) {
     var fullHeight = $(window).height();
     var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.93);
     $(".fixTableHead").css("height", remainingHeight + "px");
@@ -636,8 +698,7 @@
             dat.setDate(dat.getDate() + 7);
         }
     }
-})();
-
+}
 
 function goToRef(passage) {
     window.top.postMessage(passage, '*');

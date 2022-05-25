@@ -116,23 +116,27 @@
 		loadFile(urlPart1 + "/scss/step-template.css");
 		loadFile(urlPart1 + "/international/en.js");
 		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js');
+		loadFile(urlPart1 + "/libs/underscore-min.js");
+		loadFile(urlPart1 + "/libs/bootstrap.min.js");
+		loadFile(urlPart1 + "/libs/backbone.js");
+		loadFile(urlPart1 + "/libs/backbone.localStorage.js");
+		loadFile(urlPart1 + "/js/backbone/models/model_settings.js");
+		loadFile(urlPart1 + "/js/step_constants.js");
+		loadFile(urlPart1 + "/js/passage_selection.js");
+		loadFile(urlPart1 + "/js/search_selection.js");
 		// Poll for jQuery to come into existance
 		var checkReady = function(callback) {
 			if (window.jQuery) {
 				callback(jQuery);
 			}
 			else {
-				window.setTimeout(function() { checkReady(callback); }, 20);
+				window.setTimeout(function() { checkReady(callback); }, 200);
 			}
 		};
 		// Start polling...
 		checkReady(function($) {
 			$(function() {
-				loadFile(urlPart1 + "/libs/underscore-min.js");
-				loadFile(urlPart1 + "/libs/bootstrap.min.js");
-				loadFile(urlPart1 + "/js/step_constants.js");
-				loadFile(urlPart1 + "/js/passage_selection.js");
-				loadFile(urlPart1 + "/js/search_selection.js");
+
 				setupTable(urlPart1);
 			});
 		});
@@ -152,7 +156,7 @@ function loadFile(path) {
     fileref.setAttribute("href", path);
   }
   else return;
-  console.log("miracle load " + path);
+  fileref.async = false;
   document.getElementsByTagName("head")[0].appendChild(fileref);
 }
 

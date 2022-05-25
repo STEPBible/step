@@ -101,14 +101,29 @@
 	
 	if (typeof jQuery == 'undefined') {
 		(function() {
+			loadFile(urlPart1 + "/css/bootstrap.css");
+			loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
+			loadFile(urlPart1 + "/css/select2.css");
+			loadFile(urlPart1 + "/css/select2-bootstrap.css");
+			loadFile(urlPart1 + "/scss/step-template.css");
+			loadFile(urlPart1 + "/international/en.js");
 			loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js'); // Load the script
+			loadFile(urlPart1 + "/libs/underscore-min.js");
+			loadFile(urlPart1 + "/libs/bootstrap.min.js");
+			loadFile(urlPart1 + "/libs/backbone.js");
+			loadFile(urlPart1 + "/libs/backbone.localStorage.js");
+			loadFile(urlPart1 + "/js/backbone/models/model_settings.js");
+			loadFile(urlPart1 + "/js/step_constants.js");
+			loadFile(urlPart1 + "/js/passage_selection.js");
+			loadFile(urlPart1 + "/js/search_selection.js");
+			
 			// Poll for jQuery to come into existance
 			var checkReady = function(callback) {
 				if (window.jQuery) {
 					callback(jQuery);
 				}
 				else {
-					window.setTimeout(function() { checkReady(callback); }, 20);
+					window.setTimeout(function() { checkReady(callback); }, 200);
 				}
 			};
 			// Start polling...
@@ -134,6 +149,7 @@ function loadFile(path) {
     fileref.setAttribute("href", path);
   }
   else return;
+  fileref.async = false;
   document.getElementsByTagName("head")[0].appendChild(fileref);
 }
 
@@ -204,7 +220,6 @@ function goToNewSection(item) {
 			passage += books[i-1] + "." + row.cells[i].innerText;
 		}
 	}
-  debugger;
     $(".tb_col1").css("background-color", "white");
     $(row.cells[0]).css("background-color","cyan")
     window.top.postMessage(passage, '*');

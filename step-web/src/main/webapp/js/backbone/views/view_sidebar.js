@@ -400,12 +400,12 @@ var SidebarView = Backbone.View.extend({
 			var total = mainWord.count;
 			for (var i = 1; i < detailLex.length; i++) {
 				var frequency = parseInt(detailLex[i][4]); // Just in case it is provided in String instead of number
-				var origLangClassStyle = (detailLex[i][1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
-					"class='unicodeFontMini detailLex'";
-				panel.append($("<br class='detailLex' style='display:none'><span class='detailLex' style='display:none'>&nbsp;&nbsp;&nbsp;" + detailLex[i][0] + "&nbsp;</span>"));
+//				var origLangClassStyle = (detailLex[i][1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
+//					"class='unicodeFontMini detailLex'";
+				panel.append($("<br class='detailLex' style='display:none'><span class='detailLex' style='display:none'>&nbsp;&nbsp;&nbsp;" + detailLex[i][0] + ":&nbsp;</span>"));
 				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).
-					append($("<span class='detailLex' style='display:none'>" + detailLex[i][2]  + " </span><span " + origLangClassStyle + " style='display:none'>" +
-					detailLex[i][3] + "</span>")).click(function () {
+					append($("<span class='detailLex' style='display:none'>" + detailLex[i][2]  + " </span>")).click(function () {
+                    //<span " + origLangClassStyle + " style='display:none'>" + detailLex[i][3] + "</span>
 						step.util.ui.showDef($(this).data("strongNumber"));
 					}));
 				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, frequency) + '</span>').click(function () {

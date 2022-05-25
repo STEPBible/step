@@ -403,14 +403,15 @@ step.searchSelect = {
 			'</tr>';
 		for (var i = 0; i < this.searchTypeCode.length; i ++) {
 			var srchCode = this.searchTypeCode[i];
-			var warnMsgForOrNotSearch = ((srchCode === MEANINGS) || (srchCode === SUBJECT_SEARCH)) ?
-				'<span id="searchResults' + srchCode + 'Warn" style="display:none">' + __s.incompatible_search + '</span>' :
-				"";
+			//var warnMsgForOrNotSearch = ((srchCode === MEANINGS) || (srchCode === SUBJECT_SEARCH)) ?
+			//	'<span id="searchResults' + srchCode + 'Warn" style="display:none">' + __s.incompatible_search + '</span>' :
+			//	"";
 			html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '" title="' + 
 				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left">' + __s['search_type_desc_' + srchCode] + ':</td>' +
-				'<td style="text-align:left"><span id="searchResults' + srchCode + '"></span>' + warnMsgForOrNotSearch + '</td>' +
-				'</tr>';
+				'<td style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
+				// '<td style="text-align:left"><span id="searchResults' + srchCode + '"></span>' + warnMsgForOrNotSearch + '</td>' +
+				//'</tr>';
 		}
 		html += '</table>' +
 			'</div>';
@@ -1246,19 +1247,19 @@ step.searchSelect = {
 	},
 
 	handlePreviousSearchAndOrNot: function() {
-		var searchAndOrNot = $("#searchAndOrNot option:selected").val();
-		if (searchAndOrNot === "AND") {
-			$("#searchResultssubject").show();
-			$("#searchResultsmeanings").show();
-			$("#searchResultssubjectWarn").hide();
-			$("#searchResultsmeaningsWarn").hide();
-		}
-		else {
-			$("#searchResultssubject").hide();
-			$("#searchResultsmeanings").hide();
-			$("#searchResultssubjectWarn").show();
-			$("#searchResultsmeaningsWarn").show();
-
-		}
+//		var searchAndOrNot = $("#searchAndOrNot option:selected").val();
+//		if (searchAndOrNot === "AND") {
+//			$("#searchResultssubject").show();
+//			$("#searchResultsmeanings").show();
+//			$("#searchResultssubjectWarn").hide();
+//			$("#searchResultsmeaningsWarn").hide();
+//		}
+//		else {
+//			$("#searchResultssubject").hide();
+//			$("#searchResultsmeanings").hide();
+//			$("#searchResultssubjectWarn").show();
+//			$("#searchResultsmeaningsWarn").show();
+//   
+//		}
 	}
 };

@@ -1821,8 +1821,9 @@ step.util = {
 										'(!step.searchSelect.previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))' +
 										'onlyFoundSubjectOrMeaningsSearch = false;' +
 								'}' +
-								'if (onlyFoundSubjectOrMeaningsSearch) $("#searchAndOrNot").hide();' +
-								'else $("#searchAndOrNot").show();' +
+//								'if (onlyFoundSubjectOrMeaningsSearch) $("#searchAndOrNot").hide();' +
+//								'else $("#searchAndOrNot").show();' +
+								'$("#searchAndOrNot").show();' +
 								'if (step.searchSelect.searchUserInput.length == 0) {' +
 									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
 										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +

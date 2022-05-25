@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Harmony of the Gospel</title>
-  <link rel="shortcut icon" href="/images/step-favicon.ico"/>
-  <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <meta charset="utf-8">
+    <title>Harmony of the Gospel</title>
+    <link rel="shortcut icon" href="/images/step-favicon.ico"/>
+    <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
+    <script src="/international/en.js" type="text/javascript"></script>
+    <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/libs/underscore-min.js" type="text/javascript"></script>
+    <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/libs/backbone.js" type="text/javascript"></script>
+    <script src="/libs/backbone.localStorage.js" type="text/javascript"></script>
+    <script src="/js/step_constants.js" type="text/javascript"></script>
+    <script src="/js/passage_selection.js" type="text/javascript"></script>
+    <script src="/js/search_selection.js" type="text/javascript"></script>
+    <script src="/js/backbone/models/model_settings.js" type="text/javascript"></script>
   <style>
   
     .fixTableHead {
@@ -15,22 +29,27 @@
       top: 0;
     }
     table {
-      border-collapse: collapse;        
-      width: 100%;
+        border-collapse: collapse;        
+        width: 100%;
+        font-family: Georgia, serif;
+        font-size: 15px;
     }
-    th,
     td {
-      padding: 8px 15px;
-      border: 2px solid #17758f;
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
     }
     th {
-      background: #17758f;
-	  color: white;
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
     }
-	.tb_col1 {
-        color: blue;
+    .tb_col1 {
         cursor: pointer;
-	}
+        color: #17758f;
+    }
 
   </style>
 </head>
@@ -122,6 +141,16 @@ function buildTable(urlPart1) {
 	var fullHeight = $(window).height();
 	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
 	$(".fixTableHead").css("height", remainingHeight + "px");
+
+    var settings = new SettingsModelList;
+
+    settings.fetch();
+    if (settings.length > 0) {
+        var sz  =  15;
+        step.settings = settings.at(0);
+        sz = step.settings.get("defaultfont");
+        $("table").css("font-size", sz + "px");
+    }
 
 	var jsonFileName = "gospel_harmony";
     var queryString = window.location.search;

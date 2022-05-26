@@ -52,14 +52,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
-import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 /**
@@ -85,13 +82,13 @@ public class ModuleController {
                             final VocabularyService vocabulary,
                             final SwingService swingService) {
         notNull(moduleService,
-                "Intialising the module service in the module administration controller failed",
+                "Initialising the module service in the module administration controller failed",
                 CONTROLLER_INITIALISATION_ERROR);
         notNull(morphology,
-                "Intialising the morphology service failed in the module administration controller",
+                "Initialising the morphology service failed in the module administration controller",
                 CONTROLLER_INITIALISATION_ERROR);
         notNull(swingService,
-                "Intialising the swing service failed in the module administration controller",
+                "Initialising the swing service failed in the module administration controller",
                 CONTROLLER_INITIALISATION_ERROR);
         this.swingService = swingService;
         this.moduleService = moduleService;
@@ -140,7 +137,7 @@ public class ModuleController {
     /**
      * a method that returns all the definitions for a particular key
      *
-     * @param vocabIdentifiers the strong number
+     * @param version          Bible version
      * @param reference        the reference in which this can be found
      * @param vocabIdentifiers the strong number
      * @return the definition(s) that can be resolved from the reference provided
@@ -151,7 +148,7 @@ public class ModuleController {
     /**
      * a method that returns all the definitions for a particular key
      *
-     * @param vocabIdentifiers the strong number
+     * @param version          the Bible version
      * @param reference        the reference in which this can be found
      * @param vocabIdentifiers the strong number
      * @param morphIdentifiers the morphology code to lookup
@@ -186,13 +183,13 @@ public class ModuleController {
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, vocabIdentifiers, userLanguage), true, userLanguage));
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equals("A")) {
+                if (!vocabIdentifiers.endsWith("A")) {
                     String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "A");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
                 }
             }
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equals("G")) {
+                if (!vocabIdentifiers.endsWith("G")) {
                     String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
                 }
@@ -245,7 +242,6 @@ public class ModuleController {
      * @param morphIdentifiers the morphology code to lookup
      * @param userLanguage     the language code (e.g.: en, es, zh) selected by the user in his/her browser.
      * @return the definition(s) that can be resolved from the reference provided
-     * @parma reference the verse in which the word is found
      */
     @Timed(name = "quick-vocab", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers, final String userLanguage) {
@@ -259,13 +255,13 @@ public class ModuleController {
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, vocabIdentifiers, userLanguage), false, userLanguage));
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equals("A")) {
+                if (!vocabIdentifiers.endsWith("A")) {
                     String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "A");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
                 }
             }
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equals("G")) {
+                if (!vocabIdentifiers.endsWith("G")) {
                     String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
                 }
@@ -283,11 +279,10 @@ public class ModuleController {
      */
     private List<VocabInfo> translateToVocabInfo(final VocabResponse vocabResponse,
                                                  final boolean includeAllInfo, final String userLanguage) {
-        final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(
+        final List<VocabInfo> morphologyInfos = new ArrayList<>(
                 vocabResponse.getDefinitions().length);
         EntityDoc[] definitions = vocabResponse.getDefinitions();
-        for (int i = 0; i < definitions.length; i++) {
-            EntityDoc d = definitions[i];
+        for (EntityDoc d : definitions) {
             morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), includeAllInfo, userLanguage));
         }
         return morphologyInfos;
@@ -301,7 +296,7 @@ public class ModuleController {
      * @return the morphology information pojo
      */
     private List<MorphInfo> translateToInfo(final List<EntityDoc> morphologies, final boolean includeAllInfo) {
-        final List<MorphInfo> morphologyInfos = new ArrayList<MorphInfo>(morphologies.size());
+        final List<MorphInfo> morphologyInfos = new ArrayList<>(morphologies.size());
         for (final EntityDoc m : morphologies) {
             morphologyInfos.add(new MorphInfo(m, includeAllInfo));
         }

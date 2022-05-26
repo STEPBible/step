@@ -116,27 +116,27 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return Character.isLetter(lastChar) ? lastChar : null;
     }
 
-    @Override
-    public Key getVersesForAugmentedStrong(final String augmentedStrong) {
-        final EntityDoc[] entityDocs = this.augmentedStrongs.searchExactTermBySingleField("augmentedStrong", 1, augmentedStrong);
-        if (entityDocs.length == 0) {
-            return PassageKeyFactory.instance().createEmptyKeyList(getOTBookVersification());
-        }
-
-        //otherwise we have some
-        if (entityDocs.length > 1) {
-            LOGGER.warn("Too many augmented strongs in the index for strong: [{}]", augmentedStrong);
-        }
-
-        try {
-            if ((augmentedStrong.charAt(0) == 'G') || (augmentedStrong.charAt(0) == 'g'))
-                return PassageKeyFactory.instance().getKey(getESVBookVersification(), entityDocs[0].get(AS_REFERENCES));
-            else
-                return PassageKeyFactory.instance().getKey(getOTBookVersification(), entityDocs[0].get(AS_REFERENCES));
-        } catch (NoSuchKeyException e) {
-            throw new StepInternalException("Unable to parse references for some of the entries in the augmented strongs data", e);
-        }
-    }
+//    @Override
+//    public Key getVersesForAugmentedStrong(final String augmentedStrong) {
+//        final EntityDoc[] entityDocs = this.augmentedStrongs.searchExactTermBySingleField("augmentedStrong", 1, augmentedStrong);
+//        if (entityDocs.length == 0) {
+//            return PassageKeyFactory.instance().createEmptyKeyList(getOTBookVersification());
+//        }
+//
+//        //otherwise we have some
+//        if (entityDocs.length > 1) {
+//            LOGGER.warn("Too many augmented strongs in the index for strong: [{}]", augmentedStrong);
+//        }
+//
+//        try {
+//            if ((augmentedStrong.charAt(0) == 'G') || (augmentedStrong.charAt(0) == 'g'))
+//                return PassageKeyFactory.instance().getKey(getESVBookVersification(), entityDocs[0].get(AS_REFERENCES));
+//            else
+//                return PassageKeyFactory.instance().getKey(getOTBookVersification(), entityDocs[0].get(AS_REFERENCES));
+//        } catch (NoSuchKeyException e) {
+//            throw new StepInternalException("Unable to parse references for some of the entries in the augmented strongs data", e);
+//        }
+//    }
 
     @Override
     public String reduce(final String augmentedStrong) {

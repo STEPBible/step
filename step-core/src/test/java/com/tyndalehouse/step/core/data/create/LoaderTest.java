@@ -54,9 +54,7 @@ import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
 import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
@@ -84,7 +82,7 @@ public class LoaderTest {
 
     @Test
     public void testLoaderProgress() {
-        Loader l = new Loader(null, null, new Properties(), null, null, null, null);
+        Loader l = new Loader(null, new Properties(), null, null, null, null);
         assertEquals(0, l.getTotalProgress());
 
         l.setTotalProgress(1);
@@ -242,8 +240,7 @@ public class LoaderTest {
         final Properties coreProperties = new Properties();
         coreProperties.put(key, file);
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
-        return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null,
-                mock(VersionResolver.class), null), null, coreProperties, this.entityManager,
+        return new Loader(null, coreProperties, this.entityManager,
                 null, this.clientSessionProvider, mock(AppManagerService.class));
     }
 

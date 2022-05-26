@@ -446,6 +446,7 @@ public final class HebrewUtils {
             if (HebrewLetterType.ACCENT.equals(letters[ii].getHebrewLetterType())) {
                 if (isNotGeresh(input, ii) || previousConsonant(letters, ii) != 0) {
                     final HebrewLetter letter = getCloseVowel(letters, ii);
+                    if (letter == null) continue; // Don't let it run into an exception
                     letter.setVowelStressType(VowelStressType.STRESSED);
                     hasStress = true;
                 }

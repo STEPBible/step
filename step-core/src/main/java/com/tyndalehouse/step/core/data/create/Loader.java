@@ -32,8 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
-import java.io.*;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -44,7 +42,6 @@ import javax.inject.Provider;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.AppManagerService;
-import com.tyndalehouse.step.core.service.impl.AugDStrongServiceImpl;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.WorkEvent;
@@ -63,10 +60,7 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.AugDStrongService;
-
-import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 
 /**
  * The object that will be responsible for loading all the data into Lucene and downloading key versions of
@@ -78,38 +72,38 @@ import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
  */
 public class Loader {
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
-    private final JSwordPassageService jsword;
+//    private final JSwordPassageService jsword;
     private final Properties coreProperties;
     private final JSwordModuleService jswordModule;
     private final EntityManager entityManager;
-    private final BlockingQueue<String> progress = new LinkedBlockingQueue<String>();
-    private final Set<String> appSpecificModules = new HashSet<String>();
+    private final BlockingQueue<String> progress = new LinkedBlockingQueue<>();
+    private final Set<String> appSpecificModules = new HashSet<>();
     private boolean complete = false;
     private final Provider<ClientSession> clientSessionProvider;
-    private String runningAppVersion;
-    private AppManagerService appManager;
+    private final String runningAppVersion;
+    private final AppManagerService appManager;
     private WorkListener workListener;
     private int totalProgress = 0;
     private int totalItems = 6;
     private boolean inProgress = false;
-    private AugDStrongService augDStrong;
+    private final AugDStrongService augDStrong;
 
     /**
      * The loader is given a connection source to load the data.
-     *  @param jsword                the jsword service
      * @param jswordModule          the service helping with installation of jsword modules
      * @param coreProperties        the step core properties
      * @param entityManager         the entity manager
-     * @param augDStrong
+     * @param augDStrong            the augmentedD Strong service
      * @param clientSessionProvider the client session provider
      */
     @Inject
-    public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
+    public Loader( // final JSwordPassageService jsword,
+                  final JSwordModuleService jswordModule,
                   @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
                   final AugDStrongService augDStrong, final Provider<ClientSession> clientSessionProvider,
                   AppManagerService appManager
     ) {
-        this.jsword = jsword;
+//        this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
@@ -219,7 +213,7 @@ public class Loader {
         this.jswordModule.installBook(version);
 
         // very ugly, but as good as it's going to get for now
-        double installProgress = 0;
+//        double installProgress = 0;
         this.addUpdate("installed_version_success", version);
     }
 
@@ -290,9 +284,8 @@ public class Loader {
     /**
      * loads the alternative translation data.
      *
-     * @return the number of entries that have been loaded
      */
-    int loadAlternativeTranslations() {
+    void loadAlternativeTranslations() {
         LOGGER.debug("Indexing Alternative versions");
         this.addUpdate("install_alternative_meanings");
 
@@ -307,7 +300,6 @@ public class Loader {
         LOGGER.debug("Writing Alternative Versions index");
 
         this.addUpdate("install_alternative_meanings_complete", close);
-        return close;
     }
 
     /**
@@ -353,9 +345,8 @@ public class Loader {
     /**
      * Loads all of robinson's morphological data
      *
-     * @return the number of entries
      */
-    int loadRobinsonMorphology() {
+    void loadRobinsonMorphology() {
         this.addUpdate("install_grammar");
 
         LOGGER.debug("Loading robinson morphology");
@@ -367,16 +358,13 @@ public class Loader {
         LOGGER.debug("End of morphology");
 
         this.addUpdate("install_grammar_complete", total);
-
-        return total;
     }
 
     /**
      * Loads Tyndale's version information
      *
-     * @return the number of records loaded
      */
-    int loadVersionInformation() {
+    void loadVersionInformation() {
         this.addUpdate("install_descriptions");
 
         LOGGER.debug("Loading version information");
@@ -386,8 +374,6 @@ public class Loader {
         final int close = writer.close();
 
         this.addUpdate("install_descriptions_complete", close);
-        return close;
-
     }
 
     /**

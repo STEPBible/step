@@ -47,6 +47,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
     public short convertOSIS2Ordinal(final String OSIS, final Versification curVersification) {
         try {
             Verse key = VerseFactory.fromString(curVersification, OSIS);
+            if (key == null) return -1;
             int ordinal = key.getOrdinal();
             if ((ordinal > 0) && (ordinal <= 32767)) return (short) ordinal;
         } catch (NoSuchVerseException e) {
@@ -82,8 +83,8 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         List<String> listRefNotStored  = Arrays.asList(arrOfRefNotStored);
         String[] arrOfRef = refs.split(" ");
         int startIndex = refIndex;
-        final Set<Integer> ordinalsInRefNotStored1 = new HashSet<Integer>(arrOfRefNotStored.length/2);
-        final Set<Integer> ordinalsInRefNotStored2 = new HashSet<Integer>(arrOfRefNotStored.length/2);
+        final Set<Integer> ordinalsInRefNotStored1 = new HashSet<>(arrOfRefNotStored.length/2);
+        final Set<Integer> ordinalsInRefNotStored2 = new HashSet<>(arrOfRefNotStored.length/2);
         for (String s : arrOfRef) {
             int start = s.indexOf('(');
             int end = s.indexOf(')');
@@ -100,7 +101,6 @@ public class AugDStrongServiceImpl implements AugDStrongService {
                 if (hebrew) {
                     refOfAugStrongOTOHB[refIndex] = refOrdinal;
                     refOrdinal = convertOSIS2Ordinal(NRSVRef, versificationForNRSV);
-//                    refOrdinal = (short) this.versificationService.convertReferenceGetOrdinal(NRSVRef, versificationForOT, versificationForNRSV);
                     if (refOrdinal > -1) {
                         refOfAugStrongOTRSV[refIndex] = refOrdinal;
                         if (addToOrdinalNotStored) ordinalsInRefNotStored2.add((int) refOrdinal);
@@ -161,7 +161,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
         int endPos = strong.length() - 1;
         char suffix = strong.charAt(endPos);
         if (Character.isDigit(suffix)) endPos++;
-        int num = -1;
+        int num;
         try {
             num = parseInt(strong.substring(startPos, endPos)); // If the augmented Strong file has issue, it will run into an exception.
         } catch (NumberFormatException e) {
@@ -341,8 +341,7 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             short curOrdinalFromRefArray = arg.refArray[i];
             int ordinalInRefArrayWithoutSignBit = (curOrdinalFromRefArray & 0x7FFF);
             if (ordinalInRefArrayWithoutSignBit == ordinal) {
-                if ((!arg.defaultAugStrong) || (curOrdinalFromRefArray < 0)) return true;
-                return false;
+                return (!arg.defaultAugStrong) || (curOrdinalFromRefArray < 0);
             }
         }
         return arg.defaultAugStrong;
@@ -383,21 +382,13 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             if (curIndex == 0)
                 suffixWithNoRefs = curSuffix;
             else {
-//            System.out.println("getAugStrongWithStrongAndOrdinal " + strong + " " + curSuffix);
-//                if ((endIndexOfCurrentAugStrongRef - curIndex) > 50) { // If the array of reference (in ordinal) is large, the binary search is faster.
-//                    // if the binary search has any issue, remove the binary search because the performance improvement is not that big.
-//                    int bSearchResult = Arrays.binarySearch(refArray, curIndex, endIndexOfCurrentAugStrongRef+1, (short) ordinal);
-//                    if (bSearchResult > -1) return strong + curSuffix;
-//                }
-//                else { // If the array of reference (in ordinal) is small, a sequential search is faster.
-                    for (int x = curIndex; x <= endIndexOfCurrentAugStrongRef; x++) {
-                        // the array of reference (in ordinal) are sorted.  When it reaches an ordinal in the reference array which is larger, that ordinal does not exist in the reference array.
-                        // breaking out of the for loop will reduce unnecessary processing
-                        short ordinalInRefArrayWithoutSignBit = (short) (refArray[x] & 0x7FFF);
-                        if (ordinalInRefArrayWithoutSignBit > ordinal) break;
-                        if (ordinalInRefArrayWithoutSignBit == ordinal) return strong + curSuffix;
-                    }
-//                }
+                for (int x = curIndex; x <= endIndexOfCurrentAugStrongRef; x++) {
+                    // the array of reference (in ordinal) are sorted.  When it reaches an ordinal in the reference array which is larger, that ordinal does not exist in the reference array.
+                    // breaking out of the for loop will reduce unnecessary processing
+                    short ordinalInRefArrayWithoutSignBit = (short) (refArray[x] & 0x7FFF);
+                    if (ordinalInRefArrayWithoutSignBit > ordinal) break;
+                    if (ordinalInRefArrayWithoutSignBit == ordinal) return strong + curSuffix;
+                }
             }
             if (curIndex != 0) endIndexOfCurrentAugStrongRef = curIndex - 1; // End of the reference for the next aug strong.  If curIndex is 0, use the previous endIndexOfCurrentAugStrongRef
         }
@@ -609,5 +600,4 @@ public class AugDStrongServiceImpl implements AugDStrongService {
             closeQuietly(stream);
         }
 	}
-
 }

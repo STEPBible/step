@@ -365,15 +365,20 @@ var SidebarView = Backbone.View.extend({
 
     _addDetailLexicalWords: function (detailLex, panel, additionalLabel) {
         var frequency = parseInt(detailLex[4]); // Just in case it is provided in String instead of number
-        var origLangClassStyle = (detailLex[1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
-            "class='unicodeFontMini detailLex'";
-        panel.append($("<br class='detailLex' style='display:none'><span class='detailLex' style='display:none'>&nbsp;&nbsp;&nbsp;" + detailLex[0] + ":&nbsp;</span>"));
+        // var origLangClassStyle = (detailLex[1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
+        //     "class='unicodeFontMini detailLex'";
+        panel.append($("<br class='detailLex' style='display:none'>"));
+        var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
+        if (additionalLabel !== "") {
+            panel.append($("<span class='detailLex glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>"));
+            spaceWithoutLabel = "";
+        }
+        panel.append($("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + ":&nbsp;</span>"));
         panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
             append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[3] + "'>" + detailLex[2]  + " </span>")).click(function () {
-            //<span " + origLangClassStyle + " style='display:none'>" + detailLex[3] + "</span>
             step.util.ui.showDef($(this).data("strongNumber"));
         }));
-        panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;&nbsp;</span>'));
+        panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;~</span>'));
         panel.append($("<a title='click to show all occurences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
               append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none">' + sprintf(__s.stats_occurs, frequency) + '</span>').
               click(function () {
@@ -399,13 +404,11 @@ var SidebarView = Backbone.View.extend({
         panel.append("<br />").append(this._composeDescriptionOfOccurences(mainWord._step_Type));
         if ((detailLex) && (detailLex.length > 0)) {
 			allStrongs.push(mainWord.strongNumber);
-            var detailLexForThisWord;
 			for (var i = 1; i < detailLex.length; i++) {
                 if (detailLex[i][1] !== mainWord.strongNumber) {
 				    total += parseInt(detailLex[i][4]); // Just in case it is provided in String instead of number
                     allStrongs.push(detailLex[i][1]);
                 }
-                else detailLexForThisWord = detailLex[i];
             }
 			panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount" style="unicode-bidi:isolate-override"> ' +
                sprintf(__s.stats_occurs, total) + '</span>').click(function () {
@@ -433,9 +436,9 @@ var SidebarView = Backbone.View.extend({
 				}
 				return false;
 			}));
-            if (typeof detailLexForThisWord === "object") this._addDetailLexicalWords(detailLexForThisWord, panel, "current word");
 			for (var i = 1; i < detailLex.length; i++) {
-                if (detailLex[i][1] !== mainWord.strongNumber) this._addDetailLexicalWords(detailLex[i], panel, "");
+                var curWordLabel = (detailLex[i][1] === mainWord.strongNumber) ? "current word" : "";
+                this._addDetailLexicalWords(detailLex[i], panel, curWordLabel);
 			}
         }
         else {

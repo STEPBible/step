@@ -47,7 +47,6 @@ import java.util.Map;
  * @author chrisburrell
  */
 public class VocabInfo implements Serializable {
-    private static final int MAX_QUICK_DEF_LENGTH = 255;
     private static final long serialVersionUID = 3478149117983010944L;
     private String alternativeTranslit1;
     private String alternativeTranslit1Unaccented;
@@ -98,7 +97,7 @@ public class VocabInfo implements Serializable {
         this.stepGloss = d.get("stepGloss");
         this.stepTransliteration = d.get("stepTransliteration");
         this.mediumDef = d.get("mediumDefinition");
-        if ((userLanguage == null) || (userLanguage == "")) {
+        if ((userLanguage == null) || (userLanguage.equals(""))) {
             this.es_Gloss = d.get("es_Gloss");
             this.es_Definition = d.get("es_Definition");
             this.zh_Gloss = d.get("zh_Gloss");
@@ -351,7 +350,7 @@ public class VocabInfo implements Serializable {
         return this.step_Type;
     }
     /**
-     * @param step_Type
+     * @param step_Type to set the step_Type
      */
     public void set_step_Type(final String step_Type) {
         this.step_Type = step_Type;
@@ -363,7 +362,7 @@ public class VocabInfo implements Serializable {
         return this.step_Link;
     }
     /**
-     * @param step_Link
+     * @param step_Link to set step_Link
      */
     public void set_step_Link(final String step_Link) {
         this.step_Link = step_Link;
@@ -376,7 +375,7 @@ public class VocabInfo implements Serializable {
         return this.step_DetailLexicalTag;
     }
     /**
-     * @param step_DetailLexicalTag
+     * @param step_DetailLexicalTag to set the step_DetailLexicalTag
      */
     public void set_step_DetailLexicalTag(final String step_DetailLexicalTag) {
         this.step_DetailLexicalTag = step_DetailLexicalTag;

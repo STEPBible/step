@@ -1060,7 +1060,9 @@ step.searchSelect = {
 									searchType = 'strong';
 								}
 								if (searchResultsToDisplay[searchResultIndex] !== "") searchResultsToDisplay[searchResultIndex] += "<br>";
-								searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
+								var titleText = (((str2Search.substring(0,1) === "H") || (str2Search.substring(0,1) === "G")) && (!isNaN(str2Search.substring(1,5)))) ? 
+									' title="' + str2Search + '" ' : '';
+								searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
 									str2Search + '\',\'' + 
 									text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
 									'\')">' + text2Display + "</a>";

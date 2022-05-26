@@ -373,8 +373,9 @@ var SidebarView = Backbone.View.extend({
             //<span " + origLangClassStyle + " style='display:none'>" + detailLex[3] + "</span>
             step.util.ui.showDef($(this).data("strongNumber"));
         }));
-        panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
-              append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, frequency) + '</span>').
+        panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;&nbsp;</span>'));
+        panel.append($("<a title='click to show all occurences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
+              append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none">' + sprintf(__s.stats_occurs, frequency) + '</span>').
               click(function () {
             var strongNumber = $(this).data("strongNumber");
             var args = "strong=" + encodeURIComponent(strongNumber);
@@ -627,7 +628,7 @@ var SidebarView = Backbone.View.extend({
                     var firstChar = relatedNosToDisplay[i].strongNumber.substr(0, 1).toLowerCase();
                     if (firstChar === "h") fontClass = "hbFontMini";
                     else if (firstChar === "g") fontClass = "unicodeFont";
-                    var li = $("<li></li>").append($('<a sbstrong href="javascript:void(0)">')
+                    var li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong href="javascript:void(0)">')
                         .append(userLangGloss)
                         .append(relatedNosToDisplay[i].gloss)
                         .append(" (")

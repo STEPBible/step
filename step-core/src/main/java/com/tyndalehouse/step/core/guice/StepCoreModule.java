@@ -143,6 +143,5 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         }).annotatedWith(Names.named("offlineInstallers")).toProvider(OfflineInstallersProvider.class);
 
         bind(EntityManager.class).to(EntityManagerImpl.class).asEagerSingleton();
-		bind(AugDStrongService.class).to(AugDStrongServiceImpl.class).asEagerSingleton();
     }
 }

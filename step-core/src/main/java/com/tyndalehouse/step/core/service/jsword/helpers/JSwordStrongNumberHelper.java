@@ -40,9 +40,7 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.BookAndBibleCount;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.models.stats.PassageStat;
-import com.tyndalehouse.step.core.service.AugDStrongService;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
-import com.tyndalehouse.step.core.service.impl.AugDStrongServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -93,7 +91,6 @@ public class JSwordStrongNumberHelper {
     private final JSwordVersificationService versification;
     private final JSwordSearchService jSwordSearchService;
     private final StrongAugmentationService strongAugmentationService;
-    private final AugDStrongService augDStrong;
     private final EntityIndexReader definitions;
     private final Verse reference;
     private Map<String, List<LexiconSuggestion>> verseStrongs;
@@ -102,22 +99,21 @@ public class JSwordStrongNumberHelper {
 
     /**
      * Instantiates a new strong number provider impl.
-     *  @param manager                   the manager that helps look up references
+     * @param manager                   the manager that helps look up references
      * @param reference                 the reference in the KJV versification equivalent
      * @param versification             the versification service to lookup the versification of the reference book
+     * @param jSwordSearchService       the jSword Search service
      * @param strongAugmentationService the strong augmentation service
-     * @param augDStrong
      */
     public JSwordStrongNumberHelper(final EntityManager manager, final Verse reference,
                                     final JSwordVersificationService versification,
                                     final JSwordSearchService jSwordSearchService,
-                                    final StrongAugmentationService strongAugmentationService, AugDStrongService augDStrong) {
+                                    final StrongAugmentationService strongAugmentationService) {
         this.versification = versification;
         this.jSwordSearchService = jSwordSearchService;
         this.strongAugmentationService = strongAugmentationService;
         this.definitions = manager.getReader("definition");
         this.reference = reference;
-        this.augDStrong = augDStrong;
         initReferenceVersification();
     }
 
@@ -249,9 +245,9 @@ public class JSwordStrongNumberHelper {
                 final String strongKey = strong.getKey();
 
                 boolean isAugmentedStrong = !this.strongAugmentationService.isNonAugmented(strongKey);
-                AugDStrongService.AugmentedStrongsForSearchCount augDStrongArgs = null;
+                StrongAugmentationService.AugmentedStrongsForSearchCount augDStrongArgs = null;
                 if (isAugmentedStrong) // Prepare for the aug strong lookup.
-                    augDStrongArgs = augDStrong.getRefIndexWithStrong(strongKey);
+                    augDStrongArgs = strongAugmentationService.getRefIndexWithStrong(strongKey);
 
                 termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, this.strongAugmentationService.reduce(strongKey)));
 
@@ -262,7 +258,7 @@ public class JSwordStrongNumberHelper {
                     final int freq = termDocs.freq();
                     final Document doc = is.doc(termDocs.doc());
                     final String docRef = doc.get(LuceneIndex.FIELD_KEY);
-                    if ((augDStrongArgs == null) || (augDStrong.isVerseInAugStrong(docRef, strongKey, augDStrongArgs))) {
+                    if ((augDStrongArgs == null) || (strongAugmentationService.isVerseInAugStrong(docRef, strongKey, augDStrongArgs))) {
                         if (docRef != null && docRef.startsWith(bookName))
                             book += freq;
                         bible += freq;

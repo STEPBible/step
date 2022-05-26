@@ -41,7 +41,6 @@ import com.tyndalehouse.step.core.models.VocabResponse;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
-import com.tyndalehouse.step.core.service.AugDStrongService;
 import com.tyndalehouse.step.core.utils.SortingUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import org.codehaus.jackson.map.util.LRUMap;
@@ -72,7 +71,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
     private static final LRUMap<String, EntityDoc[]> DEFINITION_CACHE = new LRUMap<>(512, 1024);
     private final EntityIndexReader definitions;
-    private final AugDStrongService augDStrong;
+    private final StrongAugmentationService strongAugmentationService;
 
     // define a few extraction methods
     private final LexiconDataProvider transliterationProvider = new LexiconDataProvider() {
@@ -111,16 +110,13 @@ public class VocabularyServiceImpl implements VocabularyService {
             return l.get("accentedUnicode");
         }
     };
-    private final StrongAugmentationService strongAugmentationService;
 
     /**
      * @param manager the entity manager
-     * @param augDStrong
+     * @param strongAugmentationService
      */
     @Inject
-    public VocabularyServiceImpl(final EntityManager manager,
-                                 AugDStrongService augDStrong, final StrongAugmentationService strongAugmentationService) {
-        this.augDStrong = augDStrong;
+    public VocabularyServiceImpl(final EntityManager manager, final StrongAugmentationService strongAugmentationService) {
         this.strongAugmentationService = strongAugmentationService;
         this.definitions = manager.getReader("definition");
     }
@@ -145,7 +141,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             if (subStrong != null && subStrong.length() > 3) {
                 final String first4Chars = subStrong.substring(0, 4);
                 try {
-                    String suffix = subStrong.length() > 4 && Character.isAlphabetic(subStrong.charAt(4)) ? subStrong.substring(4, 5) : ""; // removed the .toLowerCase() to support mixed case STRONG code
+                    String suffix = subStrong.length() > 4 && Character.isAlphabetic(subStrong.charAt(4)) ? subStrong.substring(4, 5) : "";
                     return String.format("%c%04d%s", strongNumber.charAt(baseIndex),
                             Integer.parseInt(first4Chars), suffix);
                 } catch (final NumberFormatException ex) {

@@ -284,7 +284,6 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     @Override
     public EntityDoc[] search(final String defaultField, final String querySyntax) {
         final QueryParser parser = getQueryParser(defaultField);
-        if (defaultField == "augmentedStrong") parser.setLowercaseExpandedTerms(false);
         try {
             return this.search(parser.parse(querySyntax));
         } catch (final ParseException e) {

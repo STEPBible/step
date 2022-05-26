@@ -83,7 +83,6 @@ import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.tyndalehouse.step.core.service.AugDStrongService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -143,7 +142,6 @@ public class SearchServiceImpl implements SearchService {
     private VersionResolver versionResolver;
     private LexiconDefinitionService lexiconDefinitionService;
     private JSwordRelatedVersesService relatedVerseService;
-    private final AugDStrongService augDStrong;
 
     /**
      * @param jswordSearch              the search service
@@ -164,8 +162,7 @@ public class SearchServiceImpl implements SearchService {
                              final VersionResolver versionResolver,
                              final LexiconDefinitionService lexiconDefinitionService,
                              final JSwordRelatedVersesService relatedVerseService,
-                             final StrongAugmentationService strongAugmentationService,
-                             final AugDStrongService augDStrong) {
+                             final StrongAugmentationService strongAugmentationService) {
         this.jswordSearch = jswordSearch;
         this.jswordMetadata = jswordMetadata;
         this.versificationService = versificationService;
@@ -179,7 +176,6 @@ public class SearchServiceImpl implements SearchService {
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
-        this.augDStrong = augDStrong;
     }
 
     @Override
@@ -1215,7 +1211,7 @@ public class SearchServiceImpl implements SearchService {
             currentSearch.setQuery(simpleStrongSearch);
             key = this.jswordSearch.searchKeys(sq);
             String simpleStrongNum = simpleStrongSearch.replace("strong:", "").replaceAll(" ", "");
-            this.augDStrong.updatePassageKeyWithAugStrong(simpleStrongNum, key);
+            this.strongAugmentationService.updatePassageKeyWithAugStrong(simpleStrongNum, key);
         }
         //work out the original query without the normal strong numbers
         String blankQuery = ALL_STRONGS.matcher(currentQuery).replaceAll("");
@@ -1223,7 +1219,7 @@ public class SearchServiceImpl implements SearchService {
             currentSearch.setQuery(blankQuery + " strong:" + as.substring(0, as.length()-1));
             Key augmentedResults = this.jswordSearch.searchKeys(sq);
             //filter results by augmented strong data set
-            this.augDStrong.updatePassageKeyWithAugStrong(as, augmentedResults);
+            this.strongAugmentationService.updatePassageKeyWithAugStrong(as, augmentedResults);
             //Key masterAugmentedFilter = this.strongAugmentationService.getVersesForAugmentedStrong(as);
             //potentialAugmentedResults = intersect(potentialAugmentedResults, masterAugmentedFilter);
             //add results to current set

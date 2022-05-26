@@ -60,7 +60,7 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.AugDStrongService;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 
 /**
  * The object that will be responsible for loading all the data into Lucene and downloading key versions of
@@ -86,28 +86,28 @@ public class Loader {
     private int totalProgress = 0;
     private int totalItems = 6;
     private boolean inProgress = false;
-    private final AugDStrongService augDStrong;
+    private final StrongAugmentationService strongAugmentationService;
 
     /**
      * The loader is given a connection source to load the data.
      * @param jswordModule          the service helping with installation of jsword modules
      * @param coreProperties        the step core properties
      * @param entityManager         the entity manager
-     * @param augDStrong            the augmentedD Strong service
+     * @param strongAugmentationService            the strongAugmentationService Strong service
      * @param clientSessionProvider the client session provider
      */
     @Inject
     public Loader( // final JSwordPassageService jsword,
                   final JSwordModuleService jswordModule,
                   @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
-                  final AugDStrongService augDStrong, final Provider<ClientSession> clientSessionProvider,
+                  final StrongAugmentationService strongAugmentationService, final Provider<ClientSession> clientSessionProvider,
                   AppManagerService appManager
     ) {
 //        this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
-        this.augDStrong = augDStrong;
+        this.strongAugmentationService = strongAugmentationService;
         this.clientSessionProvider = clientSessionProvider;
         this.runningAppVersion = coreProperties.getProperty(AppManagerService.APP_VERSION);
         this.appManager = appManager;
@@ -260,7 +260,7 @@ public class Loader {
 //        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
 //        System.out.println("Total: " + (double) Runtime.getRuntime().totalMemory() / 1024);
 //        System.out.println("KB0: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
-        this.augDStrong.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
+        this.strongAugmentationService.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
 //        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
 //
 //        System.out.println("KB1: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);

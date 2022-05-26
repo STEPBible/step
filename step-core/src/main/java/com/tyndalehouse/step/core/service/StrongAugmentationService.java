@@ -1,7 +1,7 @@
 package com.tyndalehouse.step.core.service;
 
-//import com.tyndalehouse.step.core.data.EntityDoc;
-//import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.versification.Versification;
 
 /**
  * Given a strong number, we find the augmented version in order to provide more accurate definitions and context
@@ -23,11 +23,6 @@ public interface StrongAugmentationService {
      */
     Character getAugmentedStrongSuffix(String strong);
 
-//    /**
-//     * Given a set of results, we retrieve the expected results and return those that are in both sets of keys
-//     * @param augmentedStrong the augmented strong of interest
-//     */
-//    Key getVersesForAugmentedStrong(String augmentedStrong);
 
     /**
      * To convert an augmented strong number to a standardised strong number
@@ -41,27 +36,36 @@ public interface StrongAugmentationService {
      * @param version version
      * @param verseRef the reference
      * @param unAugmentedStrongNumbers the unaugmented strong numbers
-     * @return the augmented form
+     * @return array of String
      */
     String[] augment(String version, String verseRef, String unAugmentedStrongNumbers);
 
     boolean isNonAugmented(final String key);
 
-//    public class AugmentedStrongs {
-//        private final String[] strongList;
-//        private final EntityDoc[] entityDocs;
-//
-//        public AugmentedStrongs(final String[] strongList, final EntityDoc[] entityDocs) {
-//            this.strongList = strongList;
-//            this.entityDocs = entityDocs;
-//        }
-//
-//        public EntityDoc[] getEntityDocs() {
-//            return entityDocs;
-//        }
-//
-//        public String[] getStrongList() {
-//            return strongList;
-//        }
-//    }
+    void readAndLoad(final String csvResource);
+
+    short convertOSIS2Ordinal(final String OSIS, final Versification curVersification);
+
+    String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification);
+
+    void updatePassageKeyWithAugStrong(String strong, Key reference);
+
+    AugmentedStrongsForSearchCount getRefIndexWithStrong(final String strong);
+
+    boolean isVerseInAugStrong(final String reference, final String strong, final AugmentedStrongsForSearchCount arg);
+
+    class AugmentedStrongsForSearchCount {
+        public final int startIndex;
+        public final int endIndex;
+        public final boolean defaultAugStrong;
+        public short[] refArray;
+
+        public AugmentedStrongsForSearchCount(final int startIndex, final int endIndex, final boolean defaultAugStrong,
+                                              short[] refArray) {
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            this.defaultAugStrong = defaultAugStrong;
+            this.refArray = refArray;
+        }
+    }
 }

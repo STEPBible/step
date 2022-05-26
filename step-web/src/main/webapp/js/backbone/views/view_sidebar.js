@@ -363,26 +363,63 @@ var SidebarView = Backbone.View.extend({
         return foundChineseJSON;
     },
 
+    _addDetailLexicalWords: function (detailLex, panel, additionalLabel) {
+        var frequency = parseInt(detailLex[4]); // Just in case it is provided in String instead of number
+        var origLangClassStyle = (detailLex[1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
+            "class='unicodeFontMini detailLex'";
+        panel.append($("<br class='detailLex' style='display:none'><span class='detailLex' style='display:none'>&nbsp;&nbsp;&nbsp;" + detailLex[0] + ":&nbsp;</span>"));
+        panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
+            append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[3] + "'>" + detailLex[2]  + " </span>")).click(function () {
+            //<span " + origLangClassStyle + " style='display:none'>" + detailLex[3] + "</span>
+            step.util.ui.showDef($(this).data("strongNumber"));
+        }));
+        panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
+              append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, frequency) + '</span>').
+              click(function () {
+            var strongNumber = $(this).data("strongNumber");
+            var args = "strong=" + encodeURIComponent(strongNumber);
+            step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
+            step.router.navigatePreserveVersions(args, false, true);
+            return false;
+        }));
+        if (additionalLabel !== "") panel.append($("<span class='detailLex' style='display:none'> ("+ additionalLabel + ")</span>"))
+    },
+
+    _composeDescriptionOfOccurences: function(stepType) {
+        if ((typeof stepType !== "string") || (stepType === "")) return __s.lexicon_search_for_this_word;
+        var verbToDisplay = "used";
+        if ((stepType === "man") || (stepType === "woman") || (stepType === "place") || (stepType === "group")) verbToDisplay = "named";
+        return "This " + stepType + " is " + verbToDisplay + " about ";
+    },
+
     _appendLexiconSearch: function (panel, mainWord, detailLex) {
-        var occursAboutMessage = __s.lexicon_search_for_this_word;
-		if ((detailLex) && (detailLex.length > 0)) {
-            var detailLexType = detailLex[0][0];
-            var verbToDisplay = "used";
-            if ((detailLexType === "man") || (detailLexType === "woman") || (detailLexType === "place") || (detailLexType === "group")) verbToDisplay = "named";
-            occursAboutMessage = "This " + detailLexType + " is " + verbToDisplay + " about ";
-        }
-        panel.append("<br />").append(occursAboutMessage);
-        if (mainWord.count) {
-            panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, mainWord.count) + '</span>').click(function () {
-                var strongNumber = $(this).data("strongNumber");
-                var args = "strong=" + encodeURIComponent(strongNumber);
-                step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
-                step.router.navigatePreserveVersions(args, false, true);
+        var total = mainWord.count;
+        var allStrongs = [];
+        panel.append("<br />").append(this._composeDescriptionOfOccurences(mainWord._step_Type));
+        if ((detailLex) && (detailLex.length > 0)) {
+			allStrongs.push(mainWord.strongNumber);
+            var detailLexForThisWord;
+			for (var i = 1; i < detailLex.length; i++) {
+                if (detailLex[i][1] !== mainWord.strongNumber) {
+				    total += parseInt(detailLex[i][4]); // Just in case it is provided in String instead of number
+                    allStrongs.push(detailLex[i][1]);
+                }
+                else detailLexForThisWord = detailLex[i];
+            }
+			panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount" style="unicode-bidi:isolate-override"> ' +
+               sprintf(__s.stats_occurs, total) + '</span>').click(function () {
+				var allStrongs = $(this).data("strongNumber");
+				var args = "strong=" + encodeURIComponent(allStrongs[0]);
+				allStrongsWithComma = encodeURIComponent(allStrongs[0])
+				for (var j = 1; j < allStrongs.length; j++) {
+					allStrongsWithComma += "," + encodeURIComponent(allStrongs[j]);
+				}
+				step.util.activePassage().save({strongHighlights: allStrongsWithComma}, {silent: true});
+				console.log("arg" + args);
+				step.router.navigatePreserveVersions(args, false, true);
 				return false;
-            }));
-        }
-		if ((detailLex) && (detailLex.length > 0)) {
-			panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {
+			}));
+            panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {
 				if (ev.target.id === "detailLexSelect") {
 					if ($(".detailLex:visible").length > 0) {
 						$(".detailLex").hide();
@@ -395,43 +432,23 @@ var SidebarView = Backbone.View.extend({
 				}
 				return false;
 			}));
-			var allStrongs = [];
-			allStrongs.push(mainWord.strongNumber);
-			var total = mainWord.count;
+            if (typeof detailLexForThisWord === "object") this._addDetailLexicalWords(detailLexForThisWord, panel, "current word");
 			for (var i = 1; i < detailLex.length; i++) {
-				var frequency = parseInt(detailLex[i][4]); // Just in case it is provided in String instead of number
-//				var origLangClassStyle = (detailLex[i][1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
-//					"class='unicodeFontMini detailLex'";
-				panel.append($("<br class='detailLex' style='display:none'><span class='detailLex' style='display:none'>&nbsp;&nbsp;&nbsp;" + detailLex[i][0] + ":&nbsp;</span>"));
-				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).
-					append($("<span class='detailLex' style='display:none'>" + detailLex[i][2]  + " </span>")).click(function () {
-                    //<span " + origLangClassStyle + " style='display:none'>" + detailLex[i][3] + "</span>
-						step.util.ui.showDef($(this).data("strongNumber"));
-					}));
-				panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[i][1]).append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, frequency) + '</span>').click(function () {
-					var strongNumber = $(this).data("strongNumber");
-					var args = "strong=" + encodeURIComponent(strongNumber);
-					step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
-					step.router.navigatePreserveVersions(args, false, true);
-					return false;
-				}));
-				allStrongs.push(detailLex[i][1]);
-				total += frequency;
+                if (detailLex[i][1] !== mainWord.strongNumber) this._addDetailLexicalWords(detailLex[i], panel, "");
 			}
-			
-			panel.append($("<br class='detailLex'>&nbsp;&nbsp;&nbsp;<span class='detailLex' style='display:none'>All of the above</span>"));
-			panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none"> ' + sprintf(__s.stats_occurs, total) + '</span>').click(function () {
-				var allStrongs = $(this).data("strongNumber");
-				var args = "strong=" + encodeURIComponent(allStrongs[0]);
-				allStrongsWithComma = encodeURIComponent(allStrongs[0])
-				for (var j = 1; j < allStrongs.length; j++) {
-					allStrongsWithComma += "," + encodeURIComponent(allStrongs[j]);
-				}
-				step.util.activePassage().save({strongHighlights: allStrongsWithComma}, {silent: true});
-				console.log("arg" + args);
-				step.router.navigatePreserveVersions(args, false, true);
-				return false;
-			}));
+        }
+        else {
+            if (total) {
+                panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, total) + '</span>').click(function () {
+                    var strongNumber = $(this).data("strongNumber");
+                    var args = "strong=" + encodeURIComponent(strongNumber);
+                    step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
+                    step.router.navigatePreserveVersions(args, false, true);
+			    	return false;
+                }));
+            }
+        }
+		if ((detailLex) && (detailLex.length > 0)) {
 		}
         panel.append().append('<br />');
 		return false;

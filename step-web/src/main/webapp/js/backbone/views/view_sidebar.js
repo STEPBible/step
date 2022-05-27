@@ -367,13 +367,11 @@ var SidebarView = Backbone.View.extend({
         return foundChineseJSON;
     },
 
-    _addDetailLexicalWords: function (detailLex, panel, additionalLabel) {
+    _addDetailLexicalWords: function (detailLex, panel, isCurrentWord) {
         var frequency = parseInt(detailLex[4]); // Just in case it is provided in String instead of number
-        // var origLangClassStyle = (detailLex[1][0].toUpperCase() == "H") ? "class='hbFontMini detailLex'" :
-        //     "class='unicodeFontMini detailLex'";
         panel.append($("<br class='detailLex' style='display:none'>"));
         var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
-        if (additionalLabel !== "") {
+        if (isCurrentWord) {
             panel.append($("<span class='detailLex glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>"));
             spaceWithoutLabel = "";
         }
@@ -392,7 +390,6 @@ var SidebarView = Backbone.View.extend({
             step.router.navigatePreserveVersions(args, false, true);
             return false;
         }));
-        if (additionalLabel !== "") panel.append($("<span class='detailLex' style='display:none'> ("+ additionalLabel + ")</span>"))
     },
 
     _composeDescriptionOfOccurences: function(stepType) {
@@ -441,8 +438,7 @@ var SidebarView = Backbone.View.extend({
 				return false;
 			}));
 			for (var i = 1; i < detailLex.length; i++) {
-                var curWordLabel = (detailLex[i][1] === mainWord.strongNumber) ? "current word" : "";
-                this._addDetailLexicalWords(detailLex[i], panel, curWordLabel);
+                this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber));
 			}
         }
         else {

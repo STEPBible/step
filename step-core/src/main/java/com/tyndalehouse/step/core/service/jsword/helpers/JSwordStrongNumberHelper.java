@@ -187,7 +187,7 @@ public class JSwordStrongNumberHelper {
      * Calculate counts for an array of Strong number.
      */
     public PassageStat calculateStrongArrayCounts(final String version, PassageStat stat, final String userLanguage) {
-        Map<String, Integer[]> result = new HashMap<String, Integer[]>(128);
+        Map<String, Integer[]> result = new HashMap<>(128);
 		Verse curReference = this.reference;
 		final BibleBook book = curReference.getBook();
 		this.isOT = DivisionName.OLD_TESTAMENT.contains(book);
@@ -233,7 +233,6 @@ public class JSwordStrongNumberHelper {
      * Applies the search counts for every strong number.
      *
      * @param bookName the book name
-     * @param augmentedByStrong the augmented strongs found in the original augmentation querys
      */
     private void applySearchCounts(final String bookName) {
 
@@ -271,16 +270,6 @@ public class JSwordStrongNumberHelper {
         } catch (final IOException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
-    }
-
-    /**
-     * A simple 'contains' but that takes count of the bounds, rather than doing a regular expression
-     * @param docRef
-     * @param references
-     * @return
-     */
-    private boolean augmentedVersionInVerse(final String docRef, final String references) {
-        return references.endsWith(docRef) || references.contains(docRef + ' ');
     }
 
     /**

@@ -153,7 +153,7 @@ public class IndividualSearch {
         }
         LOGGER.debug(
                 "The following search has been constructed: type [{}]\nquery [{}]\n subRange [{}], mainRange [{}]",
-                new Object[]{this.type, query, this.subRange, this.mainRange});
+                this.type, query, this.subRange, this.mainRange);
     }
 
     /**
@@ -277,10 +277,8 @@ public class IndividualSearch {
                 break;
         }
 
-        final String trimmedQuery = parsedSubject.substring(index);
-
         // fill in the query and versions
-        this.query = trimmedQuery;
+        this.query = parsedSubject.substring(index);
 
         if (this.type == SearchType.SUBJECT_SIMPLE) {
             // amend the query
@@ -374,13 +372,6 @@ public class IndividualSearch {
     }
 
     /**
-     * @return the amendedQuery
-     */
-    public boolean isAmendedQuery() {
-        return this.amendedQuery;
-    }
-
-    /**
      * @return the subRange
      */
     public String getSubRange() {
@@ -395,23 +386,10 @@ public class IndividualSearch {
     }
 
     /**
-     * allows to set the main range
-     *
-     * @param mainRange the main range
-     */
-    public void setMainRange(String mainRange) {
-        this.mainRange = mainRange;
-    }
-
-    /**
      * @return the originalFilter
      */
     public String[] getOriginalFilter() {
         return this.originalFilter;
-    }
-
-    public void setOriginalFilter(final String[] originalFilter) {
-        this.originalFilter = originalFilter;
     }
 
     /**
@@ -421,9 +399,6 @@ public class IndividualSearch {
         return originalQuery;
     }
 
-    public void setOriginalQuery(final String originalQuery) {
-        this.originalQuery = originalQuery;
-    }
     /**
      * A secondary range, usually submitted outside of the actual query
      *

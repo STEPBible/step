@@ -37,7 +37,6 @@ import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
@@ -70,10 +69,10 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
         this.versionResolver = versionResolver;
     }
 
-    @Override
-    public String getVerseRange(final int startVerseId, final int endVerseId) {
-        return getVerseRange(startVerseId, endVerseId, JSwordPassageService.REFERENCE_BOOK);
-    }
+//    @Override
+//    public String getVerseRange(final int startVerseId, final int endVerseId) {
+//        return getVerseRange(startVerseId, endVerseId, JSwordPassageService.REFERENCE_BOOK);
+//    }
 
     @Override
     public String getVerseRange(final int startVerseId, final int endVerseId, final String version) {

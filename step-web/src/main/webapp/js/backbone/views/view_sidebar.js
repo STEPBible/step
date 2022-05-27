@@ -143,6 +143,7 @@ var SidebarView = Backbone.View.extend({
         this.helpView = new ExamplesView({el: this.help});
     },
     createDefinition: function (data, ref) {
+        var displayLexicalRelatedWords = $(".detailLex:visible").length > 0;
         //get definition tab
         this.lexicon.detach();
         this.lexicon.empty();
@@ -160,7 +161,6 @@ var SidebarView = Backbone.View.extend({
         var currentUserLang = step.userLanguageCode.toLowerCase();
         if (urlLang == "zh_tw") currentUserLang = "zh_tw";
         else if (urlLang == "zh") currentUserLang = "zh";
-
         if (data.vocabInfos.length > 1) {
             //multiple entries
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
@@ -192,7 +192,7 @@ var SidebarView = Backbone.View.extend({
                 if (i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 }
-                this._createWordPanel(panelBody, item, currentUserLang, ref);
+                this._createWordPanel(panelBody, item, currentUserLang);
                 if (i < data.morphInfos.length) {
                     this._createMorphInfo(panelBody, data.morphInfos[i]);
                 }
@@ -215,12 +215,16 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
             }
-            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang, ref);
+            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(this.lexicon, data.morphInfos[0]);
             }
         }
         this.tabContainer.append(this.lexicon);
+        if (displayLexicalRelatedWords) {
+            $(".detailLex").show();
+            $("#detailLexSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+        }
         this._isItALocation(data.vocabInfos[0], ref);
 		// if (typeof step.wordLocations == "object") this._isItALocation(data.vocabInfos[0], ref);
 		// else {
@@ -452,8 +456,6 @@ var SidebarView = Backbone.View.extend({
                 }));
             }
         }
-		if ((detailLex) && (detailLex.length > 0)) {
-		}
         panel.append().append('<br />');
 		return false;
     },
@@ -554,7 +556,7 @@ var SidebarView = Backbone.View.extend({
 		// }
 	},
 	
-    _createWordPanel: function (panel, mainWord, currentUserLang, ref) {
+    _createWordPanel: function (panel, mainWord, currentUserLang) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
         if (mainWord.shortDef) {

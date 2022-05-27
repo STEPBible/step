@@ -33,7 +33,6 @@
 package com.tyndalehouse.step.core.service.jsword;
 
 import com.tyndalehouse.step.core.models.KeyWrapper;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
@@ -45,15 +44,6 @@ import org.crosswire.jsword.versification.Versification;
  * @author chrisburrell
  */
 public interface JSwordVersificationService {
-
-    /**
-     * Uses the default versification to return the verse range name
-     * 
-     * @param startVerseId the starting verse ordinal
-     * @param endVerseId the ending verse ordinal
-     * @return the reference in human readable form
-     */
-    String getVerseRange(int startVerseId, int endVerseId);
 
     /**
      * Uses the version of the given book and calculates the verse range name

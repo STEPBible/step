@@ -483,6 +483,7 @@ public class SearchServiceImpl implements SearchService {
                 //add a number of searches from the query syntax given...
                 final IndividualSearch[] searches = new SearchQuery(st.getToken(), versions.toArray(new String[versions.size()]), null,
                         context, pageNumber, references, curSearchJoin).getSearches();
+                searchJoinCount ++;
                 for (IndividualSearch is : searches) {
                     individualSearches.add(is);
                     searchJoinCount ++;

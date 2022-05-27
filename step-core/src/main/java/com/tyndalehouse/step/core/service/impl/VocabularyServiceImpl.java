@@ -113,7 +113,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * @param manager the entity manager
-     * @param strongAugmentationService
+     * @param strongAugmentationService service to look up and process Strong augmentation
      */
     @Inject
     public VocabularyServiceImpl(final EntityManager manager, final StrongAugmentationService strongAugmentationService) {
@@ -163,7 +163,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         if (strongList.length != 0) {
             final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
             for (int i = 0; i < strongDefs.length; i ++) {
-                if ((userLanguage != null) && (userLanguage != "")) {
+                if ((userLanguage != null) && (!userLanguage.equals(""))) {
                     if (!userLanguage.equalsIgnoreCase("es")) {
                         strongDefs[0].removeField("es_Gloss");
                         strongDefs[0].removeField("es_Definition");
@@ -198,7 +198,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      */
     private Map<String, List<LexiconSuggestion>> readRelatedWords(final EntityDoc[] defs, final String userLanguage) {
         // this map keys the original word strong number to all the related codes
-        final Map<String, SortedSet<LexiconSuggestion>> relatedWords = new HashMap<String, SortedSet<LexiconSuggestion>>(
+        final Map<String, SortedSet<LexiconSuggestion>> relatedWords = new HashMap<>(
                 defs.length * 2);
 
         // to avoid doing lookups twice, we key each short definition by its code as well
@@ -248,7 +248,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             final Map<String, SortedSet<LexiconSuggestion>> relatedWords) {
         final Map<String, List<LexiconSuggestion>> results = new HashMap<>();
         for (final Entry<String, SortedSet<LexiconSuggestion>> relatedWordSet : relatedWords.entrySet()) {
-            results.put(relatedWordSet.getKey(), new ArrayList<LexiconSuggestion>(relatedWordSet.getValue()));
+            results.put(relatedWordSet.getKey(), new ArrayList<>(relatedWordSet.getValue()));
         }
         return results;
     }
@@ -306,7 +306,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         String result = input;
         if (result.length() > 10) {
             String prefixTmp = result.substring(0, 7);
-            if ((!prefixTmp.equals("strong:")) && (prefixTmp.toLowerCase().equals("strong:")))
+            if ((!prefixTmp.equals("strong:")) && (prefixTmp.equalsIgnoreCase("strong:")))
                 result = "strong:" + result.substring(7);
         }
         return result;
@@ -382,21 +382,21 @@ public class VocabularyServiceImpl implements VocabularyService {
 
         EntityDoc[] entityDocsResults = new EntityDoc[keys.length];
         int resultArrayIndex = 0;
-        for (int counter = 0; counter < keys.length; counter ++) {
-            if ((keys[counter].substring(0, 1).equalsIgnoreCase("h")) ||
-                (keys[counter].substring(0, 1).equalsIgnoreCase("g")) ) {
-                EntityDoc[] strongNumber = DEFINITION_CACHE.get(keys[counter]);
+        for (String key : keys) {
+            if ((key.substring(0, 1).equalsIgnoreCase("h")) ||
+                    (key.substring(0, 1).equalsIgnoreCase("g"))) {
+                EntityDoc[] strongNumber = DEFINITION_CACHE.get(key);
                 if (strongNumber != null) {
                     entityDocsResults[resultArrayIndex] = strongNumber[0];
                     resultArrayIndex++;
                 } else {
-                    String[] tmpKeys = {keys[counter]};
+                    String[] tmpKeys = {key};
                     boolean triedA = false;
                     boolean triedG = false;
                     while (tmpKeys[0].length() > 0) {
                         strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
                         if ((strongNumber != null) && (strongNumber.length > 0)) {
-                            DEFINITION_CACHE.put(keys[counter], strongNumber);
+                            DEFINITION_CACHE.put(key, strongNumber);
                             entityDocsResults[resultArrayIndex] = strongNumber[0];
                             resultArrayIndex++;
                             tmpKeys[0] = "";
@@ -405,11 +405,11 @@ public class VocabularyServiceImpl implements VocabularyService {
                                 if (!Character.isDigit(tmpKeys[0].charAt(tmpKeys[0].length() - 1)))
                                     tmpKeys[0] = tmpKeys[0].substring(0, tmpKeys[0].length() - 1); // remove last character which is not a digit
                                 if (!triedA) {
-                                    tmpKeys[0] = tmpKeys[0].concat("a");
                                     triedA = true;
+                                    tmpKeys[0] = tmpKeys[0].concat("A");
                                 } else if (!triedG) {
-                                    tmpKeys[0] = tmpKeys[0].concat("G");
                                     triedG = true;
+                                    tmpKeys[0] = tmpKeys[0].concat("G");
                                 }
                             } else tmpKeys[0] = "";
                         }
@@ -426,18 +426,6 @@ public class VocabularyServiceImpl implements VocabularyService {
             return entityDocsResults2;
         }
         return new EntityDoc[0]; // Something wrong (resultArrayIndex = 0 or resultArrayIndex > keys.length)
-    }
-
-    /**
-     * Simple cache key that concatenates all the variables passed in
-     *
-     * @param version          the version
-     * @param reference        the reference
-     * @param vocabIdentifiers the vocabulary identifiers
-     * @return the cache key
-     */
-    private String getCacheKey(final String version, final String reference, final String vocabIdentifiers) {
-        return new StringBuilder(32).append(version).append('-').append(reference).append('-').append(vocabIdentifiers).toString();
     }
 
     /**

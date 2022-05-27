@@ -1,8 +1,5 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
@@ -10,8 +7,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.PassageKeyFactory;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
@@ -27,22 +22,18 @@ import com.tyndalehouse.step.core.data.create.ModuleLoader;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.crosswire.jsword.passage.*;
 
-import javax.inject.Singleton;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 import static java.lang.Integer.parseInt;
-import org.slf4j.Logger;
 
 /**
  * Strong augmentation service to provide better context/definitions to the end user.
  */
 public class StrongAugmentationServiceImpl implements StrongAugmentationService {
-    public static final String AS_REFERENCES = "references";
     private static final Logger LOGGER = LoggerFactory.getLogger(StrongAugmentationServiceImpl.class);
-    private final EntityIndexReader augmentedStrongs;
     private final JSwordVersificationService versificationService;
     private static int numOfStrongGrk;
     private static int numOfAugStrongOT;
@@ -57,9 +48,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     public static short[] refOfAugStrongNT;
 
     @Inject
-    public StrongAugmentationServiceImpl(final EntityManager manager, final JSwordVersificationService versificationService) {
+    public StrongAugmentationServiceImpl(final JSwordVersificationService versificationService) {
         this.versificationService = versificationService;
-        this.augmentedStrongs = manager.getReader("augmentedStrongs");
     }
 
     @Override
@@ -71,7 +61,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     public String[] augment(final String version, final String reference, final String[] keys) {
         if (StringUtils.isBlank(version) || StringUtils.isBlank(reference) || (version.startsWith("LXX")))
             return keys;
-        if (reference.indexOf("-") > -1) {
+        if (reference.contains("-")) {
             System.out.println("StrongAugmentationServices augment. Unexpected - character in reference");
             return keys;
         }
@@ -113,13 +103,13 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 Collections.addAll(deDupKeys, keys);
                 result = new String[deDupKeys.size()];
                 int k = 0;
-                for (int j = 0; j < keys.length; j ++ ) {
-                    if (deDupKeys.contains(keys[j])) {
-                        if (isNonAugmented(keys[j]))
-                            result[k] = getAugStrongWithStrongAndOrdinal(keys[j], ordinal, useNRSVVersification);
-                        else result[k] = keys[j];
-                        k ++;
-                        deDupKeys.remove(keys[j]);
+                for (String key : keys) {
+                    if (deDupKeys.contains(key)) {
+                        if (isNonAugmented(key))
+                            result[k] = getAugStrongWithStrongAndOrdinal(key, ordinal, useNRSVVersification);
+                        else result[k] = key;
+                        k++;
+                        deDupKeys.remove(key);
                     }
                 }
             }
@@ -139,28 +129,6 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return Character.isLetter(lastChar) ? lastChar : null;
     }
 
-//    @Override
-//    public Key getVersesForAugmentedStrong(final String augmentedStrong) {
-//        final EntityDoc[] entityDocs = this.augmentedStrongs.searchExactTermBySingleField("augmentedStrong", 1, augmentedStrong);
-//        if (entityDocs.length == 0) {
-//            return PassageKeyFactory.instance().createEmptyKeyList(getOTBookVersification());
-//        }
-//
-//        //otherwise we have some
-//        if (entityDocs.length > 1) {
-//            LOGGER.warn("Too many augmented strongs in the index for strong: [{}]", augmentedStrong);
-//        }
-//
-//        try {
-//            if ((augmentedStrong.charAt(0) == 'G') || (augmentedStrong.charAt(0) == 'g'))
-//                return PassageKeyFactory.instance().getKey(getESVBookVersification(), entityDocs[0].get(AS_REFERENCES));
-//            else
-//                return PassageKeyFactory.instance().getKey(getOTBookVersification(), entityDocs[0].get(AS_REFERENCES));
-//        } catch (NoSuchKeyException e) {
-//            throw new StepInternalException("Unable to parse references for some of the entries in the augmented strongs data", e);
-//        }
-//    }
-
     @Override
     public String reduce(final String augmentedStrong) {
         final char firstChar = augmentedStrong.charAt(0);
@@ -168,20 +136,6 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             return augmentedStrong.substring(0, augmentedStrong.length() - 1);
         }
         return augmentedStrong;
-    }
-
-    /**
-     * @return * @return the versification for the OT OSMHB book
-     */
-    private Versification getOTBookVersification() {
-        return this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
-    }
-
-    /**
-     * @return * @return the versification for ESV which should be NRSV versification
-     */
-    private Versification getESVBookVersification() {
-        return this.versificationService.getVersificationForVersion("ESV");
     }
 
     public short convertOSIS2Ordinal(final String OSIS, final Versification curVersification) {

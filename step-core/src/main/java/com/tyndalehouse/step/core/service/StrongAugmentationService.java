@@ -44,7 +44,7 @@ public interface StrongAugmentationService {
 
     void readAndLoad(final String csvResource);
 
-    short convertOSIS2Ordinal(final String OSIS, final Versification curVersification);
+    int convertOSIS2Ordinal(final String OSIS, final Versification curVersification);
 
     String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification);
 

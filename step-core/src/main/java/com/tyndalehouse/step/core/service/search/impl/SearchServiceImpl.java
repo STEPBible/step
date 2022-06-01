@@ -1635,7 +1635,7 @@ public class SearchServiceImpl implements SearchService {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         final String searchStrong = currentSearch.getQuery();
 
-        LOGGER.debug("Searching for strongs [{}]", searchStrong);
+        //LOGGER.debug("Searching for strongs [{}]", searchStrong);
         return splitToStrongs(searchStrong, sq.getCurrentSearch().getType());
     }
 

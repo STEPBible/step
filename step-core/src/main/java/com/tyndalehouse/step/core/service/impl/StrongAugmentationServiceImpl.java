@@ -138,12 +138,12 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return augmentedStrong;
     }
 
-    public short convertOSIS2Ordinal(final String OSIS, final Versification curVersification) {
+    public int convertOSIS2Ordinal(final String OSIS, final Versification curVersification) {
         try {
             Verse key = VerseFactory.fromString(curVersification, OSIS);
             if (key == null) return -1;
             int ordinal = key.getOrdinal();
-            if ((ordinal > 0) && (ordinal <= 32767)) return (short) ordinal;
+            if (ordinal > 0) return ordinal;
         } catch (NoSuchVerseException e) {
             throw new StepInternalException("\"Unable to look up strongs for \" + OSIS ", e);
         }
@@ -189,12 +189,12 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 NRSVRef = aRef.substring(0, aRef.indexOf('.')+1) + s.substring(start+1, end);
             }
             boolean addToOrdinalNotStored = listRefNotStored.contains(s);
-            short refOrdinal = (hebrew) ? convertOSIS2Ordinal(aRef, versificationForOT) : convertOSIS2Ordinal(s, versificationForNRSV);
+            short refOrdinal = (hebrew) ? (short) convertOSIS2Ordinal(aRef, versificationForOT) : (short) convertOSIS2Ordinal(s, versificationForNRSV);
             if (addToOrdinalNotStored) ordinalsInRefNotStored1.add((int) refOrdinal);
             if (refOrdinal > -1) {
                 if (hebrew) {
                     refOfAugStrongOTOHB[refIndex] = refOrdinal;
-                    refOrdinal = convertOSIS2Ordinal(NRSVRef, versificationForNRSV);
+                    refOrdinal = (short) convertOSIS2Ordinal(NRSVRef, versificationForNRSV);
                     if (refOrdinal > -1) {
                         refOfAugStrongOTRSV[refIndex] = refOrdinal;
                         if (addToOrdinalNotStored) ordinalsInRefNotStored2.add((int) refOrdinal);
@@ -295,7 +295,11 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         short[] ref = (hebrew) ? refOfAugStrongOTRSV : refOfAugStrongNT;
         Versification versificationForConversion = null;
         if (versificationName.equals("Leningrad")) ref = refOfAugStrongOTOHB;
-        else if ((!versificationName.equals("NRSV")) && (!versificationName.equals("KJV")) && (!versificationName.equals("NRSVA")) && (!versificationName.equals("KJVA")))
+        else if (versificationName.equals("MT")) {
+            ref = refOfAugStrongOTOHB;
+            versificationForConversion = this.versificationService.getVersificationForVersion("OHB");
+        }
+        else if ((!versificationName.equals("NRSV"))) // && (!versificationName.equals("NRSVA")) && (!versificationName.equals("KJV"))  && (!versificationName.equals("KJVA")))
             versificationForConversion = this.versificationService.getVersificationForVersion("ESV");
         int[] index = getIndexes2OrdinalOfAugStrong(trimmedStrong);
         if (index == null) return;
@@ -315,8 +319,20 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             int ordinal = ordinalShort;
             if (versificationForConversion != null) {
                 String reference = versificationForConversion.decodeOrdinal(ordinal).getOsisRef();
-                ordinal = this.versificationService.convertReferenceGetOrdinal(reference, versificationForConversion, sourceVersification);
+                ordinal = convertOSIS2Ordinal(reference, sourceVersification);
+                //ordinal = this.versificationService.convertReferenceGetOrdinal(reference, versificationForConversion, sourceVersification);
                 if (ordinal < 0) continue;
+                String checkReference = sourceVersification.decodeOrdinal(ordinal).getOsisRef();
+                if (!reference.equals(checkReference)) {
+                    if ((checkReference.endsWith(".0")) && (reference.endsWith(".1"))) {
+                        if (!emptyRef) {
+                            if (store.get(ordinal)) tmpStore.set(ordinal);
+                        }
+                        else if (!existsInAugStrongWithRefNotStore) store.clear(ordinal);
+                        ordinal ++;
+                    }
+                    else System.out.println("unequal reference" + versificationName + " " + reference + " " + checkReference);
+                }
             }
             if (!emptyRef) {
                 if (store.get(ordinal)) tmpStore.set(ordinal);

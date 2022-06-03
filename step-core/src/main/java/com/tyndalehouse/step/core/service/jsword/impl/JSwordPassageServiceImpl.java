@@ -815,38 +815,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             final TransformingSAXEventProvider htmlsep = executeStyleSheet(versification, options, interlinearVersion,
                     bookData, osissep, displayMode, "en");
-//            String tmp = writeToString(htmlsep); // patch to fix strong:Hnnnnn to Hnnnn
-//            int index = tmp.indexOf("strong:", 0);
-//            while (index > -1) {
-//                int indexStrongPrefix = index + 7;
-//                char prefix = tmp.charAt(indexStrongPrefix);
-//                if ((prefix == 'H') || (prefix == 'G')) {
-//                    int i;
-//                    for (i = indexStrongPrefix+1; i < indexStrongPrefix+6; i ++) {
-//                        if (!isDigit(tmp.charAt(i))) {
-//                            break;
-//                        }
-//                    }
-//                    int numOfDigits = i - indexStrongPrefix - 1;
-//                    String strongNum = "";
-//                    if (numOfDigits == 5) {
-//                        if (tmp.charAt(indexStrongPrefix+1) == '0')
-//                            strongNum = tmp.substring(indexStrongPrefix + 2, i);
-//                        else strongNum = tmp.substring(indexStrongPrefix + 1, i);
-//                    }
-//                    else if (numOfDigits == 4) strongNum = tmp.substring(indexStrongPrefix + 1, i);
-//                    else if (numOfDigits == 3) strongNum = '0' + tmp.substring(indexStrongPrefix + 1, i);
-//                    else if (numOfDigits == 2) strongNum = "00" + tmp.substring(indexStrongPrefix + 1, i);
-//                    else if (numOfDigits == 1) strongNum = "000" + tmp.substring(indexStrongPrefix + 1, i);
-//                    tmp = tmp.substring(0, index) + prefix + strongNum + tmp.substring(i);
-//                }
-//                index = tmp.indexOf("strong:", index + 1);
-//            }
-//            tmp = tmp.replaceAll("strong:([HG])0(\\d\\d\\d\\d)", "$1" + "$2");
-//            tmp = tmp.replaceAll("strong:([HG]\\d\\d\\d\\d)", "$1");
-//            tmp = tmp.replaceAll("strong:([HG])(\\d\\d\\d)", "$1" + "0" + "$2");
-//            tmp = tmp.replaceAll("strong:([HG])(\\d\\d)", "$1" + "00" + "$2");
-//            tmp = tmp.replaceAll("strong:([HG])(\\d)", "$1" + "000" + "$2");
+
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key,
                     getLanguages(book, displayMode, htmlsep, options), versification,
                     resolver.getShortName(bookData.getFirstBook().getInitials()), displayMode,

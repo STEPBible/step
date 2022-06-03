@@ -407,7 +407,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                                 if (!triedA) {
                                     triedA = true;
                                     tmpKeys[0] = tmpKeys[0].concat("A");
-                                } else if (!triedG) {
+                                } else if (!triedG) { // Java compiler warns that this is always 'true'.  Compiler is not correct.
                                     triedG = true;
                                     tmpKeys[0] = tmpKeys[0].concat("G");
                                 }

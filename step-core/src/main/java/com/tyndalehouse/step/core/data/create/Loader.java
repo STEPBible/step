@@ -97,13 +97,11 @@ public class Loader {
      * @param clientSessionProvider the client session provider
      */
     @Inject
-    public Loader( // final JSwordPassageService jsword,
-                  final JSwordModuleService jswordModule,
+    public Loader(final JSwordModuleService jswordModule,
                   @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
                   final StrongAugmentationService strongAugmentationService, final Provider<ClientSession> clientSessionProvider,
                   AppManagerService appManager
     ) {
-//        this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
@@ -157,6 +155,7 @@ public class Loader {
             loadData();
             this.complete = true;
             appManager.setAndSaveAppVersion(runningAppVersion);
+
         } catch (Exception ex) {
             //wrap it into an internal exception so that we get some logging.
             throw new StepInternalException(ex.getMessage(), ex);
@@ -251,34 +250,14 @@ public class Loader {
 //pt20201119        loadOpenBibleGeography();
 //pt20201119        loadHotSpots();
 //pt20201119        loadTimeline();
-        loadAugmentedStrongs();
+        loadAugmentedStrongs(true);
         LOGGER.info("Finished loading...");
     }
 
-    void loadAugmentedStrongs() {
+    public void loadAugmentedStrongs(boolean loadAugmentedFile) {
         LOGGER.debug("Indexing augmented strongs");
-//        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
-//        System.out.println("Total: " + (double) Runtime.getRuntime().totalMemory() / 1024);
-//        System.out.println("KB0: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
-        this.strongAugmentationService.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
-//        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
-//
-//        System.out.println("KB1: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
-//        this.addUpdate("install_augmented_strongs");
-//
-//        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("augmentedStrongs");
-//
-//        final HeadwordLineBasedLoader loader = new HeadwordLineBasedLoader(writer,
-//                this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
-//        loader.init(this);
-//
-//        final int close = writer.close();
-//
-//        this.addUpdate("install_augmented_strongs_complete", close);
-//        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
-//
-//        System.out.println("KB2: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
-        //return close;
+        if (loadAugmentedFile) this.strongAugmentationService.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"), appManager.getStepInstallFile().toString());
+        else this.strongAugmentationService.loadFromSerialization(appManager.getStepInstallFile().toString());
     }
 
     /**

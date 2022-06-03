@@ -176,7 +176,7 @@ public class LoaderTest {
      */
     @Test
     public void testAugmentedStrongs() {
-        getLoader("test.data.path.augmentedstrongs", "augmented_strongs.txt").loadAugmentedStrongs();
+        getLoader("test.data.path.augmentedstrongs", "augmented_strongs.txt").loadAugmentedStrongs(true);
 // Commented out on Nov 2021 because the change in the augmentation file caused an issue.  Cannot figure how this
 // test was working.  PT
 //        assertExists(2, "augmentedStrongs", "augmentedStrong", "H0001?");

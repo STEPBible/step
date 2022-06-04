@@ -392,7 +392,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                 } else {
                     String[] tmpKeys = {key};
                     boolean triedA = false;
-                    boolean triedG = false;
+//                    boolean triedG = false;
                     while (tmpKeys[0].length() > 0) {
                         strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
                         if ((strongNumber != null) && (strongNumber.length > 0)) {
@@ -401,16 +401,17 @@ public class VocabularyServiceImpl implements VocabularyService {
                             resultArrayIndex++;
                             tmpKeys[0] = "";
                         } else {
-                            if ((tmpKeys[0].length() >= 5) && ((!triedA) || (!triedG))) {
+                            if ((tmpKeys[0].length() >= 5) && ((!triedA))) { // || (!triedG))) {
                                 if (!Character.isDigit(tmpKeys[0].charAt(tmpKeys[0].length() - 1)))
                                     tmpKeys[0] = tmpKeys[0].substring(0, tmpKeys[0].length() - 1); // remove last character which is not a digit
                                 if (!triedA) {
                                     triedA = true;
-                                    tmpKeys[0] = tmpKeys[0].concat("A");
-                                } else if (!triedG) { // Java compiler warns that this is always 'true'.  Compiler is not correct.
-                                    triedG = true;
-                                    tmpKeys[0] = tmpKeys[0].concat("G");
-                                }
+                                    tmpKeys[0] = tmpKeys[0].concat("a");
+                                } 
+//								else if (!triedG) { // Java compiler warns that this is always 'true'.  Compiler is not correct.
+//                                    triedG = true;
+//                                    tmpKeys[0] = tmpKeys[0].concat("G");
+//                                }
                             } else tmpKeys[0] = "";
                         }
                     }

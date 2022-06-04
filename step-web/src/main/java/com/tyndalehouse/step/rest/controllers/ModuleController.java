@@ -183,17 +183,17 @@ public class ModuleController {
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, vocabIdentifiers, userLanguage), true, userLanguage));
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.endsWith("A")) {
-                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "A");
+                if (!vocabIdentifiers.endsWith("a")) {
+                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "a");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
                 }
             }
-            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.endsWith("G")) {
-                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
-                    i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
-                }
-            }
+//            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
+//                if (!vocabIdentifiers.endsWith("G")) {
+//                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
+//                    i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
+//                }
+//            }
         }
         return i;
     }
@@ -255,17 +255,17 @@ public class ModuleController {
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, vocabIdentifiers, userLanguage), false, userLanguage));
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.endsWith("A")) {
-                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "A");
+                if (!vocabIdentifiers.endsWith("a")) {
+                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "a");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
                 }
             }
-            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.endsWith("G")) {
-                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
-                    i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
-                }
-            }
+//            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
+//                if (!vocabIdentifiers.endsWith("G")) {
+//                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
+//                    i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
+//                }
+//            }
         }
         return i;
     }

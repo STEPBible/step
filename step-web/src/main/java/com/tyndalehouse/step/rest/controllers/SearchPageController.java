@@ -480,7 +480,10 @@ public class SearchPageController extends HttpServlet {
                     req.getParameter("context"),
                     userLanguage);
         } catch (Exception ex) {
-            LOGGER.warn(ex.getMessage(), ex);
+            if (ex.toString().indexOf("invalid_reference_in_book") == -1)
+                LOGGER.warn(ex.getMessage(), ex);
+            else // There are too many invalid reference in book exception.  No need to dump the stack in the log.
+                LOGGER.debug(ex.getMessage());
             text = getDefaultPassage();
         }
         return text;

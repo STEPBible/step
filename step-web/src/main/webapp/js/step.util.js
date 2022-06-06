@@ -1423,6 +1423,11 @@ step.util = {
             var morph = $(hoverContext).attr('morph');
             var reference = step.util.ui.getVerseNumber(hoverContext);
             var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
+			if (!step.keyedVersions[version].hasStrongs) {
+				possibleVersion = $($(hoverContext).parent().parent()[0]).find(".smallResultKey").attr('data-version');
+				if ((typeof possibleVersion === "string") && (step.keyedVersions[possibleVersion].hasStrongs))
+					version = possibleVersion;
+			}
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
 			var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {

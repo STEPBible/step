@@ -72,7 +72,8 @@ public abstract class AbstractAjaxController extends HttpServlet {
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
             LOGGER.warn(e.getMessage());
-            LOGGER.trace(e.getMessage(), e);
+            if (e.getMessage().indexOf("Unable to find a controller for") == -1)
+                    LOGGER.trace(e.getMessage(), e);
             returnVal = convertExceptionToJson(e);
         }
         return returnVal;
@@ -171,7 +172,7 @@ public abstract class AbstractAjaxController extends HttpServlet {
      * @return the exception message
      */
     private String getExceptionMessageAndLog(final Throwable e) {
-        LOGGER.trace("Tracing exception: ", e);
+        //LOGGER.debug("Debugging exception: ", e);
 
         final Locale locale = this.clientSessionProvider.get().getLocale();
         final ResourceBundle bundle = ResourceBundle.getBundle("ErrorBundle", locale);
@@ -222,7 +223,7 @@ public abstract class AbstractAjaxController extends HttpServlet {
         if (e == null) {
             LOGGER.error("An unknown internal error has occurred");
         } else {
-            LOGGER.error(e.getMessage(), e);
+            if (e.getMessage().indexOf("Unable to find a controller for") == -1) LOGGER.error(e.getMessage(), e);
         }
         return bundle.getString("error_internal");
     }

@@ -67,7 +67,6 @@ public class SearchPageController extends HttpServlet {
         this.appManagerService = appManagerService;
         this.objectMapper = objectMapper;
         this.clientSessionProvider = clientSessionProvider;
-        loadFirstPageCacheInfo();
     }
 
     @Override
@@ -142,15 +141,6 @@ public class SearchPageController extends HttpServlet {
                         }
                     }
                 }
-            }
-            else if (qString.equalsIgnoreCase("firstpagecacheinfo")) {
-                String result = loadFirstPageCacheInfo();
-                response.setContentType("text/html");
-                PrintWriter out = response.getWriter();
-                out.println("<html><body><h1>First page cache and cookie countries</h1><p>");
-                out.println(result);
-                out.println("</p></body></html>");
-                return;
             }
             request.getRequestDispatcher("/start.jsp").include(request, response);
         }
@@ -483,7 +473,7 @@ public class SearchPageController extends HttpServlet {
             if (ex.toString().indexOf("invalid_reference_in_book") == -1)
                 LOGGER.warn(ex.getMessage(), ex);
             else // There are too many invalid reference in book exception.  No need to dump the stack in the log.
-                LOGGER.debug(ex.getMessage());
+                LOGGER.info(ex.getMessage());
             text = getDefaultPassage();
         }
         return text;
@@ -503,26 +493,5 @@ public class SearchPageController extends HttpServlet {
             text = new OsisWrapper("", null, new String[]{"en"}, null, "ESV_th", InterlinearMode.NONE, "");
         }
         return text;
-    }
-
-    private String loadFirstPageCacheInfo() {
-        try {
-            File myFile = new File("/var/www/" + SERVLET_CONTEXT + "_firstpagecacheinfo.txt");
-            Scanner myReader = new Scanner(myFile);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine();
-                if (line.indexOf("USER_LANGUAGES=") == 0) {
-                    USER_LANGUAGES = line.substring(15);
-                } else if (line.indexOf("COOKIE_COUNTRIES=") == 0) COOKIE_COUNTRIES = line.substring(17);
-                else if (line.indexOf("CACHE_VERSION=") == 0) CACHE_VERSION = line.substring(14);
-            }
-            myReader.close();
-        } catch (Exception e) {
-            USER_LANGUAGES = "";
-            COOKIE_COUNTRIES = "";
-            CACHE_VERSION = "";
-        }
-        return "Cache version: " + CACHE_VERSION + "<br>COOKIE_COUNTRIES: " + COOKIE_COUNTRIES + "<br>USER_LANGUAGES: " +
-                USER_LANGUAGES;
     }
 }

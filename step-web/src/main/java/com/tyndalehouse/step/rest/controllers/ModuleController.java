@@ -198,7 +198,7 @@ public class ModuleController {
         return i;
     }
 
-    public String appendStrongSuffix(final String originalStrongNumber, final String suffix) {
+    private String appendStrongSuffix(final String originalStrongNumber, final String suffix) {
         int strLength = originalStrongNumber.length();
         if (Character.isDigit(originalStrongNumber.charAt(strLength - 1))) {
             return originalStrongNumber.concat(suffix);

@@ -83,7 +83,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 
     @Override
     public String[] augment(final String version, final String reference, final String[] keys) {
-        if (StringUtils.isBlank(version) || StringUtils.isBlank(reference) || (version.startsWith("LXX")))
+        if (StringUtils.isBlank(version) || StringUtils.isBlank(reference) || (version.startsWith("LXX")) ||
+                (keys.length == 0))
             return keys;
         if (reference.contains("-")) {
             System.out.println("StrongAugmentationServices augment. Unexpected - character in reference");

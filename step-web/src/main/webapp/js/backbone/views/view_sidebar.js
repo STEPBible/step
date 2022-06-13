@@ -404,7 +404,7 @@ var SidebarView = Backbone.View.extend({
         panel.append("<br />").append(this._composeDescriptionOfOccurences(mainWord._step_Type));
         if ((detailLex) && (detailLex.length > 0)) {
 			allStrongs.push(mainWord.strongNumber);
-			for (var i = 1; i < detailLex.length; i++) {
+			for (var i = 0; i < detailLex.length; i++) {
                 if (detailLex[i][1] !== mainWord.strongNumber) {
 				    total += parseInt(detailLex[i][4]); // Just in case it is provided in String instead of number
                     allStrongs.push(detailLex[i][1]);
@@ -436,7 +436,7 @@ var SidebarView = Backbone.View.extend({
 				}
 				return false;
 			}));
-			for (var i = 1; i < detailLex.length; i++) {
+			for (var i = 0; i < detailLex.length; i++) {
                 this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber));
 			}
         }
@@ -551,10 +551,6 @@ var SidebarView = Backbone.View.extend({
 		if (mainWord._step_DetailLexicalTag) {
 			detailLex = JSON.parse(mainWord._step_DetailLexicalTag);
 		}
-        var stepLink = "";
-        if (mainWord._step_Link) {
-			stepLink = mainWord._step_Link;
-		}
         this._appendLexiconSearch(panel, mainWord, detailLex);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;
@@ -613,21 +609,33 @@ var SidebarView = Backbone.View.extend({
                     if ((currentUserLang == "es") && (relatedNosToDisplay[i]._es_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._es_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._zh_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._zh_tw_Gloss + "&nbsp;";
-					var fontClass = "";
-                    var firstChar = relatedNosToDisplay[i].strongNumber.substr(0, 1).toLowerCase();
-                    if (firstChar === "h") fontClass = "hbFontMini";
-                    else if (firstChar === "g") fontClass = "unicodeFont";
-                    var li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong href="javascript:void(0)">')
-                        .append(userLangGloss)
-                        .append(relatedNosToDisplay[i].gloss)
-                        .append(" (")
-                        .append("<span class='transliteration'>" + relatedNosToDisplay[i].stepTransliteration + "</span>")
-                        .append(" - ")
-                        .append("<span class='" + fontClass + "'>" +
-                            relatedNosToDisplay[i].matchingForm +
-                            '</span>')
-                        .append(")")
-                        .data("strongNumber", relatedNosToDisplay[i].strongNumber));
+                    var li = "";
+                    if ((!relatedNosToDisplay[i]._article) || (relatedNosToDisplay[i]._article === "")) {
+                        var fontClass = "";
+                        var firstChar = relatedNosToDisplay[i].strongNumber.substr(0, 1).toLowerCase();
+                        if (firstChar === "h") fontClass = "hbFontMini";
+                        else if (firstChar === "g") fontClass = "unicodeFont";
+                        li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong href="javascript:void(0)">')
+                            .append(userLangGloss)
+                            .append(relatedNosToDisplay[i].gloss)
+                            .append(" (")
+                            .append("<span class='transliteration'>" + relatedNosToDisplay[i].stepTransliteration + "</span>")
+                            .append(" - ")
+                            .append("<span class='" + fontClass + "'>" +
+                                relatedNosToDisplay[i].matchingForm +
+                                '</span>')
+                            .append(")")
+                            .data("strongNumber", relatedNosToDisplay[i].strongNumber));
+                    }
+                    else {
+                        li = $("<li title='" + relatedNosToDisplay[i].strongNumber + " " +
+                                relatedNosToDisplay[i].stepTransliteration + " " +
+                                relatedNosToDisplay[i].matchingForm +
+                                "'></li>").append($('<a sbstrong href="javascript:void(0)">')
+                            .append(userLangGloss)
+                            .append(step.util.formatArticle(relatedNosToDisplay[i]._article))
+                            .data("strongNumber", relatedNosToDisplay[i].strongNumber));                        
+                    }
                     ul.append(li);
 
                     matchingExpression += relatedNosToDisplay[i].strongNumber + " ";

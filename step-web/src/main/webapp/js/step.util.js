@@ -3224,6 +3224,18 @@ step.util = {
 		}
 		if ((stepBgColor === "#202124") || (stepBgColor === "rgb(32, 33, 36)")) return true; // old iPad would return the rgb value
 		return false;
+	},
+   	formatArticle: function(article) {
+        var pos1 = article.indexOf("@");
+        if (pos1 > -1) {
+            var pos2 = article.indexOf("-", pos1+1);
+            if (pos2 > -1) {
+                return article.substring(0,pos1) + " from " + article.substring(pos1 + 1, pos2) + " - " + article.substring(pos2 + 1);
+            }
+            else return article.substring(0,pos1) + " only at " + article.substring(pos1 + 1);
+        }
+        return article;
 	}
+
 }
 ;

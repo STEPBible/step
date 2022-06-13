@@ -1051,11 +1051,12 @@ step.searchSelect = {
 										if ((strongPrefix === "H") || (strongPrefix === "G")) {
 											var strongSuffix = data[i].suggestion.strongNumber[data[i].suggestion.strongNumber.length-1];
 											if ((isNaN(strongSuffix)) && (typeof data[i].suggestion._article === "string") && (data[i].suggestion._article.length > glossToShow.length))
-												glossToShow = data[i].suggestion._article;
+												text2Display = step.util.formatArticle(data[i].suggestion._article);
 										}
 									}
-									text2Display = glossToShow + ' (<i>' + data[i].suggestion.stepTransliteration +
-										'</i> - ' + data[i].suggestion.matchingForm + ')';
+                                    if (text2Display === "")
+                                        text2Display = glossToShow + ' (<i>' + data[i].suggestion.stepTransliteration +
+                                            '</i> - ' + data[i].suggestion.matchingForm + ')';
 									str2Search = data[i].suggestion.strongNumber;
 									searchType = 'strong';
 								}

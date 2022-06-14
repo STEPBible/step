@@ -406,7 +406,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                                     tmpKeys[0] = tmpKeys[0].substring(0, tmpKeys[0].length() - 1); // remove last character which is not a digit
                                 if (!triedA) {
                                     triedA = true;
-                                    tmpKeys[0] = tmpKeys[0].concat("a");
+                                    tmpKeys[0] = tmpKeys[0].concat("A");
                                 } 
 								else if (!triedG) { // Java compiler warns that this is always 'true'.  Compiler is not correct.
                                     triedG = true;

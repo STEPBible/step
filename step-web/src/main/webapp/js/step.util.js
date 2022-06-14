@@ -3236,6 +3236,5 @@ step.util = {
         }
         return article;
 	}
-
 }
 ;

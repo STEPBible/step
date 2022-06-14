@@ -101,19 +101,31 @@ public class StepRequest {
         LOGGER.debug("Parsing {}", this.requestURI);
 
         final int requestStart = getPathLength(request) + 1;
-        final int endOfControllerName = this.requestURI.indexOf('/', requestStart);
-        final int startOfMethodName = endOfControllerName + 1;
+        final int endPosOfControllerName = this.requestURI.indexOf('/', requestStart);
+        if ( endPosOfControllerName == -1 )
+            throw new StepInternalException("Unable to find a controller for " + requestURI);
+        final int startOfMethodName = endPosOfControllerName + 1;
         final int endOfMethodNameSlash = this.requestURI.indexOf('/', startOfMethodName);
 
         // now we can set the controllerName and methodNme
-        this.controllerName = this.requestURI.substring(requestStart, endOfControllerName);
+        this.controllerName = this.requestURI.substring(requestStart, endPosOfControllerName);
+        if (!" module bible analysis search alternativeTranslations geography image index internationalJson notes searchPage setup setupPage siteMap support timeline user ".contains(" " + this.controllerName + " "))
+            throw new StepInternalException("Unable to find a controller for " + requestURI);
         this.methodName = this.requestURI.substring(startOfMethodName,
                 endOfMethodNameSlash == -1 ? this.requestURI.length() : endOfMethodNameSlash);
-
+        String methodNameForSearch = " " + this.methodName + " ";
+        if ((this.controllerName.equals("module")) && (!" getInfo getQuickInfo getAllModules getAllInstallableModules addDirectoryInstaller ".contains(methodNameForSearch)))
+            throw new StepInternalException("Unable to find a controller for " + requestURI);
+        if ((this.controllerName.equals("search")) && (!" suggest masterSearch getSubjectVerses getExactForms ".contains(methodNameForSearch)))
+            throw new StepInternalException("Unable to find a controller for " + requestURI);
+        if ((this.controllerName.equals("bible")) && (!" getModules getBibleText getStrongNumbersAndSubjects getPlainTextPreview getBibleByVerseNumber getFeatures getAllFeatures getBibleBookNames getNextChapter getPreviousChapter convertReferenceForBook expandKeyToChapter getKeyInfo ".contains(methodNameForSearch)))
+            throw new StepInternalException("Unable to find a controller for " + requestURI);
         LOGGER.debug("Request parsed as controller: [{}], method [{}]", this.controllerName, this.methodName);
         final int endOfMethodName = startOfMethodName + this.methodName.length();
-        final String[] calculatedArguments = parseArguments(endOfMethodName + 1, encoding);
-        this.args = calculatedArguments == null ? new String[] {} : calculatedArguments;
+        this.args = parseArguments(endOfMethodName + 1, encoding);
+        // Above line replaced the following two lines.  If this works, remove this line and the next two lines.
+//        final String[] calculatedArguments = parseArguments(endOfMethodName + 1, encoding);
+//        this.args = calculatedArguments == null ? new String[]{} : calculatedArguments;
     }
 
     /**
@@ -124,7 +136,7 @@ public class StepRequest {
      * @return a list of arguments
      */
     private String[] parseArguments(final int parameterStart, final String encoding) {
-        final List<String> arguments = new ArrayList<String>();
+        final List<String> arguments = new ArrayList<>();
         int argStart = parameterStart;
         int nextArgStop = this.requestURI.indexOf('/', argStart);
         try {

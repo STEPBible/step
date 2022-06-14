@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="STEPBible reports on Places (Maps)">
   <title>STEP with another frame</title>
-  <meta name="description" content="STEPBible reports on Gospel Harmony, Places (Maps), OT Parallels, NT Letter Structure, OT used in NT, Miracles...">
   <link rel="shortcut icon" href="/images/step-favicon.ico"/>
   <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
   <style>
@@ -60,7 +60,7 @@
     style="display:block;background: #000;border: none;height: 48vh;width: 49vw;"
     align="left">
 </iframe>
-<iframe id="f2" src="https://www.stepbible.org/html/gospel_harmony.html"
+<iframe id="f2" src="https://www.stepbible.org/html/places.html"
     frameborder="1" scrolling="yes"  
     style="display:block;background: #000;border: none;height: 48vh;width: 48vw;"
     align="right">
@@ -71,6 +71,47 @@ src="/html/multimap.html?coord=33.545097,36.224661&book=2Kgs"></iframe>
 <script>
 
 (function() {
+	if (typeof jQuery == 'undefined') {
+		var urlPart1 = window.location.origin;
+		var pos = window.location.href.indexOf("/html/split3.html");
+		if (pos > 8) urlPart1 = window.location.href.substr(0, pos);
+		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js'); // Load the script
+		// Poll for jQuery to come into existance
+		var checkReady = function(callback) {
+			if (window.jQuery) {
+				callback(jQuery);
+			}
+			else {
+				window.setTimeout(function() { checkReady(callback); }, 200);
+			}
+		};
+		// Start polling...
+		checkReady(function($) {
+			$(function() {
+				setupIFrames();
+			});
+		});
+	}
+	else setupIFrames();
+})();
+
+function loadFile(path) {
+  if (path.endsWith(".js")) {
+    var fileref = document.createElement("script");
+    fileref.setAttribute("type", "text/javascript");
+    fileref.setAttribute("src", path);
+  } else if (path.endsWith(".css")) {
+    var fileref = document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", path);
+  }
+  else return;
+  fileref.async = false;
+  document.getElementsByTagName("head")[0].appendChild(fileref);
+}
+
+function setupIFrames() {
     var queryString = window.location.search;
     if (queryString.substr(0,1) === "?") queryString = queryString.substr(1);
     if (queryString.length < 15) return;
@@ -105,22 +146,21 @@ src="/html/multimap.html?coord=33.545097,36.224661&book=2Kgs"></iframe>
 		$("#f2").css("width", (98 - width) + "vw");
 		$($("#myRange")[0]).val(width)
 	}
-})();
+	var slider = document.getElementById("myRange");
 
-var slider = document.getElementById("myRange");
+	slider.oninput = function() {
+		$("#f1").css("width", this.value + "vw");
+		$("#f2").css("width", (98 - this.value) + "vw");
+	}
 
-slider.oninput = function() {
-	$("#f1").css("width", this.value + "vw");
-	$("#f2").css("width", (98 - this.value) + "vw");
+	$("#url2").on("keydown",function search(e) {
+		if (e.keyCode == 13) {
+			var newUrl = $(this).val();
+			if (!newUrl.toLowerCase().startsWith("http")) newUrl = "https://" + newUrl;
+			document.getElementById("f2").src = newUrl;
+		}
+	});
 }
-
-$("#url2").on("keydown",function search(e) {
-    if (e.keyCode == 13) {
-		var newUrl = $(this).val();
-		if (!newUrl.toLowerCase().startsWith("http")) newUrl = "https://" + newUrl;
-		document.getElementById("f2").src = newUrl;
-    }
-});
 
 function copyURLToClipboard() {
 	var iFrame1URL = document.getElementById("f1").contentWindow.location.href;
@@ -169,6 +209,7 @@ window.onmessage = function(e) {
 				console.log("old: " + curURL);
 				console.log("new: " + newURL);
 				var googleURL = "/html/multimap.html?coord=" + gpsInfo;
+				if (window.location.href.indexOf("step-web/html") > -1)  googleURL = googleURL.substr(6);
 				document.getElementById("f3").src = googleURL;
 			}
         }

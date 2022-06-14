@@ -108,6 +108,7 @@ import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
+import static java.lang.Character.isDigit;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.crosswire.common.xml.XMLUtil.writeToString;
@@ -559,12 +560,15 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             int pos2 = curOsisId.indexOf(".");
             if (pos2 > 0) {
                 String OsisBookName = " " + curOsisId.substring(0, pos2).toLowerCase() + " ";
-                String otherBooks = " 1esd 2esd tob jdt addesth wis sir bar prazar sus bel prman 1macc 2macc esthgr addps 3macc 4macc ";
-                if (otherBooks.indexOf(OsisBookName) > -1) {
+                String otherBooks = " 1esd 2esd tob jdt addesth wis sir bar prazar sus bel prman 1macc 2macc esthgr addps 3macc 4macc mal num ";
+                String typlicalBooks = " gen exod lev num deut josh judg ruth 1sam 2sam 1kgs 2kgs 1chr 2chr ezra neh esth job ps prov eccl song isa jer lam ezek dan hos joel amos obad jonah mic nah hab zeph hag zech mal matt mark luke john acts rom 1cor 2cor gal eph phil col 1thess 2thess 1tim 2tim titus phlm heb jas 1pet 2pet 1john 2john 3john jude rev\n ";
+                if ((typlicalBooks.indexOf(OsisBookName) > -1) ||
+                    (otherBooks.indexOf(OsisBookName) > -1)) {
                     pos1 += 26;
                     passageText.setValue(tmp.substring(0, pos1) +
                                          curOsisId +
                                          tmp.substring(pos1));
+                    LOGGER.debug("Retrieving text for ({}, {})", masterVersion, curOsisId);
                 }
             }
         }

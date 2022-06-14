@@ -24,7 +24,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>2.1.39</version>
+		<version>2.1.40a</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -297,7 +297,7 @@
 									<jsSourceFile>js/backbone/views/view_display_text.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_display_subject.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_display_word.js</jsSourceFile>
-									<jsSourceFile>js/passages/step.alternatives.js</jsSourceFile>
+									<jsSourceFile>js/passage/step.alternatives.js</jsSourceFile>
 								</jsSourceFiles>
 								<jsFinalFile>step.search-${project.version}.js</jsFinalFile>
 							</configuration>

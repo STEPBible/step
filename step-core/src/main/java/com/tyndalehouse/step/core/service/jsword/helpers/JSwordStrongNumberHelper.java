@@ -99,10 +99,10 @@ public class JSwordStrongNumberHelper {
 
     /**
      * Instantiates a new strong number provider impl.
-     *
      * @param manager                   the manager that helps look up references
      * @param reference                 the reference in the KJV versification equivalent
      * @param versification             the versification service to lookup the versification of the reference book
+     * @param jSwordSearchService       the jSword Search service
      * @param strongAugmentationService the strong augmentation service
      */
     public JSwordStrongNumberHelper(final EntityManager manager, final Verse reference,
@@ -144,18 +144,23 @@ public class JSwordStrongNumberHelper {
      */
     private void calculateCounts(String userLanguage) {
         try {
-            //is key OT or NT
-            final BibleBook book = this.reference.getBook();
+            Verse curReference = this.reference;
+            final BibleBook book = curReference.getBook();
             this.isOT = DivisionName.OLD_TESTAMENT.contains(book);
-
-            final Versification targetVersification = isOT ? otV11n : ntV11n;
-            final Key key = VersificationsMapper.instance().mapVerse(this.reference, targetVersification);
+			final Versification targetVersification;
+			if (isOT) { //is key OT or NT
+				targetVersification = otV11n;
+				if (curReference.getVersification().getName().equals("MT")) // OHB and MT have the same chapters and numbers.  Converting has inconsistency in Neh.7.68, Ps.13.5, Isa 63.19
+					curReference = new Verse(targetVersification, book, curReference.getChapter(), curReference.getVerse());
+			}
+			else targetVersification = ntV11n;
+            final Key key = VersificationsMapper.instance().mapVerse(curReference, targetVersification);
             this.verseStrongs = new TreeMap<>();
             this.allStrongs = new HashMap<>(256);
 
             final Book preferredCountBook = getPreferredCountBook(this.isOT);
             final List<Element> elements = JSwordUtils.getOsisElements(new BookData(preferredCountBook, key));
-            Map<String, EntityDoc> augmentedReferences = new HashMap<>(16);
+
             for (final Element e : elements) {
                 final String verseRef = e.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID);
                 final String strongsNumbers = OSISUtil.getStrongsNumbers(e);
@@ -163,22 +168,14 @@ public class JSwordStrongNumberHelper {
                     LOG.warn("Attempting to search for 'no strongs' in verse [{}]", verseRef);
                     return;
                 }
-
                 final String strongQuery = StringConversionUtils.getStrongPaddedKey(strongsNumbers);
-                final StrongAugmentationService.AugmentedStrongs augmentedStrongs = strongAugmentationService.augment(preferredCountBook.getInitials(), verseRef, strongQuery);
-                final String augmentedStrongNumbers = StringUtils.join(augmentedStrongs.getStrongList(), ' ');
+                String[] augmentedStrongs = strongAugmentationService.augment(preferredCountBook.getInitials(), verseRef, strongQuery);
+                final String augmentedStrongNumbers = StringUtils.join(augmentedStrongs, ' ');
                 readDataFromLexicon(this.definitions, verseRef, augmentedStrongNumbers, userLanguage);
-
-                //build references that apply to each augmented strong number
-                final EntityDoc[] entityDocs = augmentedStrongs.getEntityDocs();
-                for(EntityDoc ed : entityDocs) {
-                    final String augmentedStrong = ed.get("augmentedStrong");
-                    augmentedReferences.put(augmentedStrong, ed);
-                }
             }
 
             // now get counts in the relevant portion of text
-            applySearchCounts(getBookFromKey(key), augmentedReferences);
+            applySearchCounts(getBookFromKey(key));
         } catch (final NoSuchKeyException ex) {
             LOG.warn("Unable to enhance verse numbers.", ex);
         } catch (final BookException ex) {
@@ -190,16 +187,23 @@ public class JSwordStrongNumberHelper {
      * Calculate counts for an array of Strong number.
      */
     public PassageStat calculateStrongArrayCounts(final String version, PassageStat stat, final String userLanguage) {
-        Map<String, Integer[]> result = new HashMap<String, Integer[]>(128);
-        this.isOT = DivisionName.OLD_TESTAMENT.contains(this.reference.getBook());
-        final Versification targetVersification = isOT ? otV11n : ntV11n;
-        final Key key = VersificationsMapper.instance().mapVerse(this.reference, targetVersification);
+        Map<String, Integer[]> result = new HashMap<>(128);
+		Verse curReference = this.reference;
+		final BibleBook book = curReference.getBook();
+		this.isOT = DivisionName.OLD_TESTAMENT.contains(book);
+        final Versification targetVersification;
+		if (isOT) { //is key OT or NT
+			targetVersification = otV11n;
+			if (curReference.getVersification().getName().equals("MT")) // OHB and MT have the same chapters and numbers.  Converting has inconsistency in Neh.7.68, Ps.13.5, Isa 63.19
+				curReference = new Verse(targetVersification, book, curReference.getChapter(), curReference.getVerse());
+		}
+		else targetVersification = ntV11n;
+        final Key key = VersificationsMapper.instance().mapVerse(curReference, targetVersification);
         this.allStrongs = new HashMap<>(256);
         Map<String, Integer[]> temp = stat.getStats();
         temp.forEach((strongNum, feq) -> this.allStrongs.put(strongNum, new BookAndBibleCount()));
-        Map<String, EntityDoc> augmentedReferences = new HashMap<>(0);
         // now get counts in the relevant portion of text
-        applySearchCounts(getBookFromKey(key), augmentedReferences);
+        applySearchCounts(getBookFromKey(key));
         temp.forEach((strongNum, freq) -> {
             BookAndBibleCount bBCount = this.allStrongs.get(strongNum);
             result.put(strongNum, new Integer[]{freq[0], bBCount.getBook(), bBCount.getBible()});
@@ -229,9 +233,8 @@ public class JSwordStrongNumberHelper {
      * Applies the search counts for every strong number.
      *
      * @param bookName the book name
-     * @param augmentedByStrong the augmented strongs found in the original augmentation querys
      */
-    private void applySearchCounts(final String bookName, final Map<String, EntityDoc> augmentedByStrong) {
+    private void applySearchCounts(final String bookName) {
 
         try {
             final IndexSearcher is = jSwordSearchService.getIndexSearcher(
@@ -239,26 +242,27 @@ public class JSwordStrongNumberHelper {
             final TermDocs termDocs = is.getIndexReader().termDocs();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {
                 final String strongKey = strong.getKey();
+
+                boolean isAugmentedStrong = !this.strongAugmentationService.isNonAugmented(strongKey);
+                StrongAugmentationService.AugmentedStrongsForSearchCount augDStrongArgs = null;
+                if (isAugmentedStrong) // Prepare for the aug strong lookup.
+                    augDStrongArgs = strongAugmentationService.getRefIndexWithStrong(strongKey);
+
                 termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, this.strongAugmentationService.reduce(strongKey)));
-                final EntityDoc entityDoc = augmentedByStrong.get(strongKey);
-                final String references = entityDoc != null ? entityDoc.get("references") : null;
 
                 // we'll never need more than 200 documents as this is the cut off point
                 int bible = 0;
                 int book = 0;
                 while (termDocs.next()) {
                     final int freq = termDocs.freq();
-
                     final Document doc = is.doc(termDocs.doc());
                     final String docRef = doc.get(LuceneIndex.FIELD_KEY);
-                    if ((references == null || augmentedVersionInVerse(docRef, references))) {
-                        if (docRef != null && docRef.startsWith(bookName)) {
+                    if ((augDStrongArgs == null) || (strongAugmentationService.isVerseInAugStrong(docRef, strongKey, augDStrongArgs))) {
+                        if (docRef != null && docRef.startsWith(bookName))
                             book += freq;
-                        }
                         bible += freq;
                     }
                 }
-
                 final BookAndBibleCount value = strong.getValue();
                 value.setBible(bible);
                 value.setBook(book);
@@ -266,16 +270,6 @@ public class JSwordStrongNumberHelper {
         } catch (final IOException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
-    }
-
-    /**
-     * A simple 'contains' but that takes count of the bounds, rather than doing a regular expression
-     * @param docRef
-     * @param references
-     * @return
-     */
-    private boolean augmentedVersionInVerse(final String docRef, final String references) {
-        return references.endsWith(docRef) || references.contains(docRef + ' ');
     }
 
     /**

@@ -1,6 +1,4 @@
 ﻿====== Augmented Heb + Refs in Hebrew OT =====
-@AugmentedStrong=	H0122b
-@References=	Gen.25.30 
 ===============================
 @AugmentedStrong=	H0122a
 @References=	2Kgs.3.22 Isa.63.2 Num.19.2 Song.5.10 Zech.1.8 Zech.6.2 

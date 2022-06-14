@@ -47,7 +47,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.language.GreekUtils.removeGreekTranslitMarkUpForIndexing;
 import static com.tyndalehouse.step.core.utils.language.HebrewUtils.removeHebrewTranslitMarkUpForIndexing;
@@ -63,7 +62,7 @@ public final class StringConversionUtils {
     private static final String STRONG_PREFIX = "strong:";
     private static final String UPPER_STRONG_PREFIX = "STRONG:";
     private static final int STRONG_PREFIX_LENGTH = STRONG_PREFIX.length();
-    private static final int LANGUAGE_INDICATOR = STRONG_PREFIX_LENGTH;
+//    private static final int LANGUAGE_INDICATOR = STRONG_PREFIX_LENGTH;
     private static final int MAX_TRANSLITERATIONS = 512;
 
     /**
@@ -73,45 +72,33 @@ public final class StringConversionUtils {
         // hiding implementation
     }
 
-    /**
-     * @param strongNumber the strong number to consider, whether to display or not
-     * @return true if not G3588 and not null/blank. To be extended later to include other words
-     */
-    public boolean isDisplayableStrongNumber(final String strongNumber) {
-        if (isBlank(strongNumber)) {
-            return false;
-        }
-
-        return !"G3588".equalsIgnoreCase(strongNumber);
-    }
-
-    /**
-     * Not all bibles encode strong numbers as strong:[HG]\d+ unfortunately, so instead we cope for strong: and
-     * strong:H.
-     * <p/>
-     * In essence we chop off any of the following prefixes: strong:G, strong:H, strong:, H, G. We don't use a regular
-     * expression, since this will be much quicker
-     *
-     * @param strong strong key
-     * @return the key containing just the digits
-     */
-    public static String getStrongKey(final String strong) {
-        if (strong.startsWith(STRONG_PREFIX)) {
-            final char c = strong.charAt(LANGUAGE_INDICATOR);
-            if (c == 'H' || c == 'G') {
-                return strong.substring(LANGUAGE_INDICATOR + 1);
-            }
-            return strong.substring(LANGUAGE_INDICATOR);
-        }
-
-        final char c = strong.charAt(0);
-        if (c == 'H' || c == 'G') {
-            return strong.substring(1);
-        }
-
-        // perhaps some passages encode just the number
-        return strong;
-    }
+//    /**
+//     * Not all bibles encode strong numbers as strong:[HG]\d+ unfortunately, so instead we cope for strong: and
+//     * strong:H.
+//     * <p/>
+//     * In essence we chop off any of the following prefixes: strong:G, strong:H, strong:, H, G. We don't use a regular
+//     * expression, since this will be much quicker
+//     *
+//     * @param strong strong key
+//     * @return the key containing just the digits
+//     */
+//    public static String getStrongKey(final String strong) {
+//        if (strong.startsWith(STRONG_PREFIX)) {
+//            final char c = strong.charAt(LANGUAGE_INDICATOR);
+//            if (c == 'H' || c == 'G') {
+//                return strong.substring(LANGUAGE_INDICATOR + 1);
+//            }
+//            return strong.substring(LANGUAGE_INDICATOR);
+//        }
+//
+//        final char c = strong.charAt(0);
+//        if (c == 'H' || c == 'G') {
+//            return strong.substring(1);
+//        }
+//
+//        // perhaps some passages encode just the number
+//        return strong;
+//    }
 
     /**
      * in this case, we assume that a key starts shortly after the last ':' with a number
@@ -130,7 +117,7 @@ public final class StringConversionUtils {
      * @return the key without the prefix
      */
     public static String getStrongLanguageSpecificKey(final String key) {
-        if (key.startsWith(UPPER_STRONG_PREFIX)) {
+        if (key.toUpperCase().startsWith(UPPER_STRONG_PREFIX)) {
             return key.substring(STRONG_PREFIX_LENGTH);
         }
         return key;
@@ -148,13 +135,13 @@ public final class StringConversionUtils {
         }
 
         final StringBuilder sb = new StringBuilder(key.length());
-        final String[] split = key.toUpperCase(Locale.ENGLISH).split(" ");
+        final String[] split = key.split(" ");
         for (final String s : split) {
             final String strongNumber = getStrongLanguageSpecificKey(s);
 
-            if (strongNumber == null) {
-                continue;
-            }
+//            if (strongNumber == null) {
+//                continue;
+//            }
 
             final int length = strongNumber.length();
             if (sb.length() > 0) {
@@ -188,16 +175,6 @@ public final class StringConversionUtils {
             sb.append('0');
         }
         sb.append(strongNumber);
-        fixAugmentedSuffix(sb);
-    }
-
-    private static void fixAugmentedSuffix(StringBuilder sb) {
-        //if it's an augmented strong, we need to lower case the last letter, so
-        final int lastCharPosition = sb.length() - 1;
-        final char lastChar = sb.charAt(lastCharPosition);
-        if (Character.isAlphabetic(lastChar)) {
-            sb.setCharAt(lastCharPosition, Character.toLowerCase(lastChar));
-        }
     }
 
     /**
@@ -215,14 +192,14 @@ public final class StringConversionUtils {
      *
      * @param sb                   the string to build up
      * @param suffixedStrongNumber the strong number
-     * @param length               the length of the string
+     * @param suffixedLength       the length of the string
      * @param firstChar            the first character, i.e. either G or H
      */
     private static void padPrefixedStrongNumber(final StringBuilder sb, final String suffixedStrongNumber,
                                                 final int suffixedLength, final char firstChar) {
         String strongNumber;
         boolean suffix = false;
-        int length = 0;
+        int length;
         final char lastChar = suffixedStrongNumber.charAt(suffixedStrongNumber.length() - 1);
         if (Character.isAlphabetic(lastChar)) {
             strongNumber = suffixedStrongNumber.substring(0, suffixedStrongNumber.length() - 1);
@@ -276,7 +253,7 @@ public final class StringConversionUtils {
         }
 
         if (suffix) {
-            sb.append(Character.toLowerCase(lastChar));
+            sb.append(lastChar);
         }
     }
 
@@ -425,7 +402,7 @@ public final class StringConversionUtils {
         // run a rule, and that gives me, a new set of prefixes, keep on running rules iterating through
         final StringBuilder base = new StringBuilder();
 
-        List<TransliterationOption> options = new ArrayList<TransliterationOption>();
+        List<TransliterationOption> options = new ArrayList<>();
         options.add(new TransliterationOption(0, base));
 
         final char[] baseChars = baseString.toCharArray();

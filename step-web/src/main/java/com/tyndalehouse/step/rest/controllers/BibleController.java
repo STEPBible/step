@@ -54,7 +54,6 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.servlet.RequestScoped;
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.ClientSession;

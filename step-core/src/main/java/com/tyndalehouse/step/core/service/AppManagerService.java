@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.service;
 
+import java.io.File;
+
 /**
  * @author chrisburrell
  */
@@ -20,6 +22,8 @@ public interface AppManagerService {
      * @param newVersion the new version of STEP, set during an upgrade
      */
     void setAndSaveAppVersion(String newVersion);
+
+    File getStepInstallFile();
 
     /**
      * The domain on which the app is currently running

@@ -58,7 +58,7 @@ public class SearchServiceImplTest {
     @Test
     public void testMultiVersionSearch() {
         final List<SearchEntry> results = this.searchServiceUnderTest.search(
-                new SearchQuery("t=elijah", new String[]{"ESV_th", "KJV", "ASV"}, "false", 0, 1, 1, null)).getResults();
+                new SearchQuery("t=elijah", new String[]{"ESV_th", "KJV", "ASV"}, "false", 0, 1, 1, null, "AND")).getResults();
         assertFalse(results.isEmpty());
     }
 
@@ -69,7 +69,7 @@ public class SearchServiceImplTest {
     public void testSubjectSearch() {
 
         final SearchResult searchSubject = this.searchServiceUnderTest.search(
-                new SearchQuery("sh=elijah", new String[]{"ESV_th"}, "false", 0, 1, 1, null));
+                new SearchQuery("sh=elijah", new String[]{"ESV_th"}, "false", 0, 1, 1, null, "AND"));
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();

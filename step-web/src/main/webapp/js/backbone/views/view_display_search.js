@@ -82,7 +82,7 @@ var SearchDisplayView = DisplayView.extend({
                     jQuery.ajax({
                         dataType: "script",
                         cache: notIE,
-                        url: "/js/tos_morph.js",
+                        url: "js/tos_morph.js",
                         error: function (jqXHR, exception) {
                             console.log('load tos_morph.js Failed: ' + exception);
                         }
@@ -106,12 +106,43 @@ var SearchDisplayView = DisplayView.extend({
 			}
 
             this._addVerseClickHandlers(results);
-
             var strongHighlights = this.model.get("strongHighlights");
             if (strongHighlights) {
                 this._highlightStrongs(results, strongHighlights);
             } else {
                 this._highlightResults(results, query);
+            }
+            var activePassageData = this.model.get("searchTokens");
+            for (var i = 0; i < activePassageData.length; i++) {
+                var actPsgeDataElm = activePassageData[i];
+                var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
+                if (itemType === SYNTAX) {
+                    var syntaxWords = actPsgeDataElm.token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
+                    step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
+                    var arrayLength = syntaxWords.length;
+                    for (var j = 0; j < arrayLength; j++) {
+                        var curWord = syntaxWords[j];
+                        if ((curWord !== "AND") && (curWord !== "OR") && (curWord !== "NOT")) {
+                            if (curWord.indexOf("strong:") == 0)
+                                this._lookForStrongInSearchString(curWord.substring(7), results, strongHighlights);
+                            else if (curWord !== query)
+                                this._highlightResults(results, curWord);
+                        }
+                    }
+                }
+                else if (itemType === TEXT_SEARCH) {
+                    if (actPsgeDataElm.token !== query)
+                        this._highlightResults(results, actPsgeDataElm.token);
+                }
+                else if ((itemType === STRONG_NUMBER) || (itemType === GREEK_MEANINGS) ||
+                    (itemType === GREEK) || (itemType === HEBREW_MEANINGS) ||
+                    (itemType === HEBREW))
+                        this._lookForStrongInSearchString(actPsgeDataElm.token, results, strongHighlights);
+//                                EXAMPLE_DATA = "examples";
+//                                MEANINGS = "meanings";
+//                                SUBJECT_SEARCH = "subject";
+//                                NAVE_SEARCH = "nave";
+//                                NAVE_SEARCH_EXTENDED = "xnave";
             }
 
             this.doFonts(append ? this.getScrollableArea() : results, "", this.model.get("interlinearMode"), this.model.get("languageCode"));
@@ -302,22 +333,31 @@ var SearchDisplayView = DisplayView.extend({
         var highlightTerms = this._highlightingTerms(query);
 
         for (var i = 0; i < highlightTerms.length; i++) {
-            if (!step.util.isBlank(highlightTerms[i])) {
+            if ((!step.util.isBlank(highlightTerms[i])) && (highlightTerms[i] !== "null")) {
                 var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");
                 doHighlight(results.get(0), "secondaryBackground", regex);
             }
         }
     },
 
+    _lookForStrongInSearchString: function (curWord, results, strongHighlights) {
+        var strongArray = [];
+        if (!strongHighlights) strongHighlights = [];
+        if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
+        if (isNaN(curWord.charAt(curWord.length - 1))) {
+            curWord = curWord.slice(0, -1);
+            if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
+        }
+        if (strongArray.length > 0)
+            this._highlightStrongs(results, strongArray);
+    },
+
     _highlightStrongs: function (results, strongsList) {
         if (strongsList == undefined) {
             return;
         }
-
         //now let's iterate through the list of strongs, find all the elements that match, and add the highlight class
-
         for (var i = 0; i < strongsList.length; i++) {
-
             $("span[strong~='" + step.util.unaugmentStrong(strongsList[i]) + "']", results).addClass("secondaryBackground");
         }
     },

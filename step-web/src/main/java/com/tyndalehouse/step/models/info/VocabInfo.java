@@ -47,7 +47,6 @@ import java.util.Map;
  * @author chrisburrell
  */
 public class VocabInfo implements Serializable {
-    private static final int MAX_QUICK_DEF_LENGTH = 255;
     private static final long serialVersionUID = 3478149117983010944L;
     private String alternativeTranslit1;
     private String alternativeTranslit1Unaccented;
@@ -72,6 +71,9 @@ public class VocabInfo implements Serializable {
     private String unaccentedStepTransliteration;
     private String twoLetterLookup;
     private String rawRelatedNumbers;
+	private String step_DetailLexicalTag;
+	private String step_Link;
+	private String step_Type;
     private Integer count;
 
     /**
@@ -95,7 +97,7 @@ public class VocabInfo implements Serializable {
         this.stepGloss = d.get("stepGloss");
         this.stepTransliteration = d.get("stepTransliteration");
         this.mediumDef = d.get("mediumDefinition");
-        if ((userLanguage == null) || (userLanguage == "")) {
+        if ((userLanguage == null) || (userLanguage.equals(""))) {
             this.es_Gloss = d.get("es_Gloss");
             this.es_Definition = d.get("es_Definition");
             this.zh_Gloss = d.get("zh_Gloss");
@@ -133,9 +135,11 @@ public class VocabInfo implements Serializable {
             this.lsjDefs = d.get("lsjDefinition");
             this.strongNumber = d.get("strongNumber");
             this.twoLetterLookup = d.get("twoLetter");
-
             if (this.strongNumber != null) {
                 this.relatedNos = relatedVocabs.get(this.strongNumber);
+				this.step_DetailLexicalTag = d.get("STEP_DetailLexicalTag");
+				this.step_Link = d.get("STEP_Link");
+				this.step_Type = d.get("STEP_Type");
             }
         } else {
             this.rawRelatedNumbers = OriginalWordUtils.stripExtensions(d.get("relatedNumbers"));
@@ -339,6 +343,44 @@ public class VocabInfo implements Serializable {
         this.zh_Definition = zh_Definition;
     }
 
+    /**
+     * @return the STEP_Type
+     */
+    public String get_step_Type() {
+        return this.step_Type;
+    }
+    /**
+     * @param step_Type to set the step_Type
+     */
+    public void set_step_Type(final String step_Type) {
+        this.step_Type = step_Type;
+    }
+    /**
+     * @return the STEP_Link
+     */
+    public String get_step_Link() {
+        return this.step_Link;
+    }
+    /**
+     * @param step_Link to set step_Link
+     */
+    public void set_step_Link(final String step_Link) {
+        this.step_Link = step_Link;
+    }
+	
+    /**
+     * @return the STEP_DetailLexicalTag
+     */
+    public String get_step_DetailLexicalTag() {
+        return this.step_DetailLexicalTag;
+    }
+    /**
+     * @param step_DetailLexicalTag to set the step_DetailLexicalTag
+     */
+    public void set_step_DetailLexicalTag(final String step_DetailLexicalTag) {
+        this.step_DetailLexicalTag = step_DetailLexicalTag;
+    }
+	
     /**
      * @return the Spanish Gloss
      */

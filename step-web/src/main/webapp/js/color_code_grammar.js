@@ -1698,7 +1698,7 @@ var cf = {
     var htmlTable = '';
     if (!createUserInputs) {
 		var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
-		htmlTable += '<link href="/css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>' +
+		htmlTable += '<link href="css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>' +
 					 '<h2>Color table for Greek verbs</h2>';
 	}
     var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs);

@@ -67,23 +67,11 @@ public class SearchQuery {
      *                    in special sorts
      * @param context     how many verses either side to include
      * @param pageNumber  the page number required
-     */
-    public SearchQuery(final String searchQuery, final String[] versions,
-                       final String sortOrder, final int context,
-                       final int pageNumber) {
-        this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE, null);
-    }
-
-    /**
-     * @param searchQuery the query to be run
-     * @param sortOrder   "true" to indicate the search results should be ranked, also can used text to be used
-     *                    in special sorts
-     * @param context     how many verses either side to include
-     * @param pageNumber  the page number required
      * @param pageSize    the size of the page to be returned
      */
+
     public SearchQuery(final String searchQuery, final String[] versions, final String sortOrder, final int context,
-                       final int pageNumber, final int pageSize, final String restriction) {
+                       final int pageNumber, final int pageSize, final String restriction, final String curSearchJoin) {
 
         this.originalQuery = searchQuery;
 
@@ -91,10 +79,8 @@ public class SearchQuery {
         final String[] individualSearches = searchQuery.split(JOINING_SEARCH);
         this.searches = new IndividualSearch[individualSearches.length];
         for (int ii = 0; ii < individualSearches.length; ii++) {
-            this.searches[ii] = new IndividualSearch(individualSearches[ii], versions, restriction);
-
+            this.searches[ii] = new IndividualSearch(individualSearches[ii], versions, restriction, curSearchJoin);
         }
-
 
         // set the other variables
         this.ranked = Boolean.parseBoolean(sortOrder);
@@ -113,8 +99,8 @@ public class SearchQuery {
      * @param context     how many verses either side to include
      * @param pageNumber  the page number required
      */
-    public SearchQuery(String searchQuery, String[] versions, String sortOrder, int context, int pageNumber, String references) {
-        this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE, references);
+    public SearchQuery(String searchQuery, String[] versions, String sortOrder, int context, int pageNumber, String references, String curSearchJoin) {
+        this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE, references, curSearchJoin);
     }
 
     private void prepareAllKeys(final String sortOrder) {
@@ -303,7 +289,7 @@ public class SearchQuery {
      * @param definitions the list of definitions.
      */
     public void setDefinitions(final EntityDoc[] definitions) {
-        final List<EntityDoc> list = new ArrayList<EntityDoc>(definitions.length);
+        final List<EntityDoc> list = new ArrayList<>(definitions.length);
         for (final EntityDoc d : definitions) {
             list.add(d);
         }

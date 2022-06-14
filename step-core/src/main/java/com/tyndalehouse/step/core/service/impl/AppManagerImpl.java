@@ -56,7 +56,7 @@ public class AppManagerImpl implements AppManagerService {
     /**
      * @return the location of the file storing relevant app info
      */
-    private File getStepInstallFile() {
+    public File getStepInstallFile() {
         try {
             File stepHome = new File(CWProject.instance().getWriteableProjectSubdir(appHome, true));
             return new File(stepHome, STEP_INSTALL_PROPERTIES);

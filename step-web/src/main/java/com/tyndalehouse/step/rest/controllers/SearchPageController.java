@@ -31,14 +31,12 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 /**
  * @author chrisburrell
  */
 @Singleton
 public class SearchPageController extends HttpServlet {
-    private static final Pattern COMMA_SEPARATORS = Pattern.compile(",");
     public static String DEV_TOKEN = "UA-36285759-2";
     public static String LIVE_TOKEN = "UA-36285759-1";
     private static String USER_LANGUAGES = "";
@@ -69,7 +67,6 @@ public class SearchPageController extends HttpServlet {
         this.appManagerService = appManagerService;
         this.objectMapper = objectMapper;
         this.clientSessionProvider = clientSessionProvider;
-        loadFirstPageCacheInfo();
     }
 
     @Override
@@ -137,22 +134,13 @@ public class SearchPageController extends HttpServlet {
                             if ((userCountry != null) && ((userCountry.length() != 2) ||
                                     (COOKIE_COUNTRIES.length() < 2) || (!COOKIE_COUNTRIES.contains(userCountry.toUpperCase()))))
                                 cookieWarningRequired = "";
-                            String redirectURL = new String("html/" + ul + "-" + CACHE_VERSION + cookieWarningRequired + ".html");
+                            String redirectURL = "html/" + ul + "-" + CACHE_VERSION + cookieWarningRequired + ".html";
                             response.setStatus(response.SC_MOVED_TEMPORARILY);
                             response.setHeader("Location", redirectURL);
                             return;
                         }
                     }
                 }
-            }
-            else if (qString.toLowerCase().equals("firstpagecacheinfo")) {
-                String result = loadFirstPageCacheInfo();
-                response.setContentType("text/html");
-                PrintWriter out = response.getWriter();
-                out.println("<html><body><h1>First page cache and cookie countries</h1><p>");
-                out.println(result);
-                out.println("</p></body></html>");
-                return;
             }
             request.getRequestDispatcher("/start.jsp").include(request, response);
         }
@@ -173,7 +161,6 @@ public class SearchPageController extends HttpServlet {
             response.setHeader("Connection", "close");
         } catch (Exception ex) {
             LOGGER.error("Failed to operate redirect", ex);
-            return;
         }
     }
 
@@ -184,7 +171,6 @@ public class SearchPageController extends HttpServlet {
             response.setHeader("Connection", "close");
         } catch (Exception ex) {
             LOGGER.error("Failed to operate redirect", ex);
-            return;
         }
     }
 
@@ -329,20 +315,22 @@ public class SearchPageController extends HttpServlet {
                 } else if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
                     strongSearch = true;
                     final LexiconSuggestion enhancedTokenInfo = (LexiconSuggestion) t.getEnhancedTokenInfo();
-                    keyInfo.append(enhancedTokenInfo.getMatchingForm());
-                    keyInfo.append(" - ");
-                    keyInfo.append(enhancedTokenInfo.getGloss());
-                    keyInfo.append(" - ");
-                    keyInfo.append(enhancedTokenInfo.getStepTransliteration());
-                    keyInfo.append(" - ");
-                    keyInfo.append(enhancedTokenInfo.getStrongNumber());
-                    keyInfo.append(infoSeparator);
-                    shortSearchWord.append(enhancedTokenInfo.getStepTransliteration());
-                    longSearchWord.append(enhancedTokenInfo.getStepTransliteration());
-                    longSearchWord.append(", ");
-                    longSearchWord.append(enhancedTokenInfo.getGloss());
-                    longSearchWord.append(", ");
-                    longSearchWord.append(enhancedTokenInfo.getStrongNumber());
+                    if (enhancedTokenInfo != null) {
+                        keyInfo.append(enhancedTokenInfo.getMatchingForm());
+                        keyInfo.append(" - ");
+                        keyInfo.append(enhancedTokenInfo.getGloss());
+                        keyInfo.append(" - ");
+                        keyInfo.append(enhancedTokenInfo.getStepTransliteration());
+                        keyInfo.append(" - ");
+                        keyInfo.append(enhancedTokenInfo.getStrongNumber());
+                        keyInfo.append(infoSeparator);
+                        shortSearchWord.append(enhancedTokenInfo.getStepTransliteration());
+                        longSearchWord.append(enhancedTokenInfo.getStepTransliteration());
+                        longSearchWord.append(", ");
+                        longSearchWord.append(enhancedTokenInfo.getGloss());
+                        longSearchWord.append(", ");
+                        longSearchWord.append(enhancedTokenInfo.getStrongNumber());
+                    }
                 } else if (SearchToken.MEANINGS.equals(tokenType)) {
                     keyInfo.append(token);
                     keyInfo.append(infoSeparator);
@@ -363,7 +351,7 @@ public class SearchPageController extends HttpServlet {
                     keyInfo.append(token);
                     keyInfo.append(infoSeparator);
                     String tmpString = token;
-                    if (token.substring(0,2).equals("t=")) {
+                    if (token.startsWith("t=")) {
                         tmpString = tmpString.substring(2);
                         tmpString = tmpString.replaceAll(" AND ", ", ");
                     }
@@ -388,15 +376,15 @@ public class SearchPageController extends HttpServlet {
                 LOGGER.warn("Missing resource for {}", results.getSearchType().getLanguageSearchKey(), ex);
                 keyInfo.append("Search");
             }
-            String title = "";
-            String description = "";
+            String title;
+            String description;
             if (strongSearch) {
-                title = shortSearchWord.toString() + " in STEP Bible with Greek and Hebrew helps";
-                description = "What the Bible says about " + longSearchWord.toString() + " in Bibles with Greek & Hebrew interlinear, search, study tools.  Recommended by schools, Free.";
+                title = shortSearchWord + " in STEP Bible with Greek and Hebrew helps";
+                description = "What the Bible says about " + longSearchWord + " in Bibles with Greek & Hebrew interlinear, search, study tools.  Recommended by schools, Free.";
             }
             else {
-                title = shortSearchWord.toString() + " in STEP Bible, study tools, 280 languages";
-                description = "What the Bible says about " + shortSearchWord.toString() + " in Bibles with original meaning, search, study helps, maps, topics, commentaries, meaning. Reliable, Free.";
+                title = shortSearchWord + " in STEP Bible, study tools, 280 languages";
+                description = "What the Bible says about " + shortSearchWord + " in Bibles with original meaning, search, study helps, maps, topics, commentaries, meaning. Reliable, Free.";
             }
             // keyForTitle = "Bible verse about " + keyForTitle;
             req.setAttribute("title", wrapTitle(title, results.getMasterVersion(), null));
@@ -412,7 +400,6 @@ public class SearchPageController extends HttpServlet {
      * Returns the title of a passage
      *
      * @param osisWrapper the text already retrieved
-     * @return the title
      */
 
     private void populateMetaPassage(final HttpServletRequest request, final OsisWrapper osisWrapper) {
@@ -483,7 +470,10 @@ public class SearchPageController extends HttpServlet {
                     req.getParameter("context"),
                     userLanguage);
         } catch (Exception ex) {
-            LOGGER.warn(ex.getMessage(), ex);
+            if (ex.toString().indexOf("invalid_reference_in_book") == -1)
+                LOGGER.warn(ex.getMessage(), ex);
+            else // There are too many invalid reference in book exception.  No need to dump the stack in the log.
+                LOGGER.info(ex.getMessage());
             text = getDefaultPassage();
         }
         return text;
@@ -503,26 +493,5 @@ public class SearchPageController extends HttpServlet {
             text = new OsisWrapper("", null, new String[]{"en"}, null, "ESV_th", InterlinearMode.NONE, "");
         }
         return text;
-    }
-
-    private String loadFirstPageCacheInfo() {
-        try {
-            File myFile = new File("/var/www/" + SERVLET_CONTEXT + "_firstpagecacheinfo.txt");
-            Scanner myReader = new Scanner(myFile);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine();
-                if (line.indexOf("USER_LANGUAGES=") == 0) {
-                    USER_LANGUAGES = line.substring(15);
-                } else if (line.indexOf("COOKIE_COUNTRIES=") == 0) COOKIE_COUNTRIES = line.substring(17);
-                else if (line.indexOf("CACHE_VERSION=") == 0) CACHE_VERSION = line.substring(14);
-            }
-            myReader.close();
-        } catch (Exception e) {
-            USER_LANGUAGES = "";
-            COOKIE_COUNTRIES = "";
-            CACHE_VERSION = "";
-        }
-        return "Cache version: " + CACHE_VERSION + "<br>COOKIE_COUNTRIES: " + COOKIE_COUNTRIES + "<br>USER_LANGUAGES: " +
-                USER_LANGUAGES;
     }
 }

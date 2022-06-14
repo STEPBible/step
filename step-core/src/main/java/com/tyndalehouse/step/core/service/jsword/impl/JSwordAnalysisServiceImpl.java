@@ -96,9 +96,33 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
             //change the reference to match what we need
 //            Book currentBook = this.versification.getBookFromVersion("OHB");
 //            Versification currentV11n = this.versification.getVersificationForVersion(currentBook);
-
             final BookData expandedBook = getExpandedBookData(reference, scopeType, strongsV11n, strongsBook);
-            return getStatsFromStrongArray(expandedBook.getFirstBook().getInitials(), expandedBook.getKey(), split(OSISUtil.getStrongsNumbers(expandedBook.getOsisFragment())), userLanguage);
+            int startOrdinal = ((VerseRange) expandedBook.getKey()).getStart().getOrdinal();
+            int lastOrdinal = ((VerseRange) expandedBook.getKey()).getEnd().getOrdinal();
+            BitSet referenceStore = (BitSet) ((RocketPassage) reference).store;
+            Key copyReference = reference.clone();
+            BitSet copyStore = (BitSet) ((RocketPassage) copyReference).store;
+            copyStore.clear();
+            PassageStat result = new PassageStat();
+            for (int i = startOrdinal; i <= lastOrdinal; i++) {
+                (((RocketPassage) copyReference).store).set(i);
+                BookData oneVerse = getExpandedBookData(copyReference, ScopeType.PASSAGE, strongsV11n, strongsBook);
+                PassageStat tmpStat = getStatsFromStrongArray(expandedBook.getFirstBook().getInitials(), copyReference, split(OSISUtil.getStrongsNumbers(oneVerse.getOsisFragment())), userLanguage);
+                for (Map.Entry<String, Integer[]> entry : tmpStat.getStats().entrySet()) {
+                    String k = entry.getKey();
+                    Integer[] v = entry.getValue();
+                    Integer[] valuesInResult = result.getStats().get(k);
+                    if (valuesInResult != null) {
+                        valuesInResult[0] += v[0];
+                        valuesInResult[1] += v[1];
+                        valuesInResult[2] += v[2];
+                    }
+                    else
+                        result.getStats().put(k, v);
+                }
+                (((RocketPassage) copyReference).store).clear(i);
+            }
+            return result;
         } catch (final BookException e) {
             throw new StepInternalException("Unable to read passage text", e);
         }
@@ -244,8 +268,8 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
         //slight annoyance that we are deserializing the key to re-serialise later
         final String ref = reference.getOsisRef();
         for (final String unaugmentedWord : words) {
-            StrongAugmentationService.AugmentedStrongs strongs = this.strongAugmentationService.augment(version, ref, unaugmentedWord);
-            for(String word : strongs.getStrongList()) {
+            String[] strongs = this.strongAugmentationService.augment(version, ref, unaugmentedWord);
+            for(String word : strongs) {
                 final String paddedStrongNumber = StringConversionUtils.getStrongPaddedKey(word);
                 if (!this.stopStrongs.contains(paddedStrongNumber.toUpperCase())) {
                     stat.addWord(paddedStrongNumber);

@@ -823,9 +823,12 @@ step.util = {
         },
         shortenDisplayText: function (text, maxLength) {
 			if (text.length <= maxLength) return text;
-            var lastComma = text.substr(0, maxLength).lastIndexOf(",");
-            if (lastComma < 5) lastComma = maxLength;
-            return text.substr(0, lastComma) + '...';
+            var lastSeparator = text.substr(0, maxLength).lastIndexOf(",");
+			lastSeparator = Math.max(lastSeparator, text.substr(0, maxLength).lastIndexOf(" AND "));
+			lastSeparator = Math.max(lastSeparator, text.substr(0, maxLength).lastIndexOf(" OR "));
+			lastSeparator = Math.max(lastSeparator, text.substr(0, maxLength).lastIndexOf(" NOT "));
+            if (lastSeparator < 5) lastSeparator = maxLength;
+            return text.substr(0, lastSeparator) + '...';
 		},
         renderArgs: function (searchTokens, container, outputMode) {
 			if ((outputMode !== "button") && (outputMode !== "span")) {
@@ -843,6 +846,14 @@ step.util = {
             var allSelectedReferences = "";
 			var foundSearch = false;
 			var searchWords = "";
+			var searchJoins = [];
+            for (var i = 0; i < searchTokens.length; i++) { // get the searchJoins first
+				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType;  // This is needed for syntax search.  Don't know why.  PT 5/26/2021
+                if (searchTokens[i].itemType == "searchJoins") {
+					searchJoins = searchTokens[i].token.split(",");
+				}
+			}
+			var numOfSearchWords = 0;
             for (var i = 0; i < searchTokens.length; i++) { // process all the VERSION and REFERENCE first so that the buttons will always show up first at the top of the panel
 				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType; // This is needed for syntax search.  Don't know why.  PT 5/26/2021
 				var itemType = searchTokens[i].itemType;
@@ -872,7 +883,11 @@ step.util = {
                     foundSearch = true;
 					var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
 					if (word.length > 0) {
-						if (searchWords.length > 0) searchWords += ', ';
+						numOfSearchWords ++;
+						if ((numOfSearchWords > 1) && (searchWords.length > 0)) {
+							if (searchJoins.length >= (numOfSearchWords - 1)) searchWords += ' ' + searchJoins[numOfSearchWords - 2] + ' ';
+							else searchWords += ', ';
+						}
                         if (itemType === SYNTAX) {
                             var syntaxWords = searchTokens[i].token.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').split(" ");
                             step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
@@ -945,9 +960,14 @@ step.util = {
 					}
 				}
 			}
-			if ((foundSearch) && (allSelectedReferences.length > 0)) {
-				searchWords += " (" + allSelectedReferences + ")";
-				allSelectedReferences = "";
+			if (foundSearch) {
+				searchWords = searchWords.replace(/ AND /g, "<sub> and </sub>");
+				searchWords = searchWords.replace(/ OR /g, "<sub> or </sub>");
+				searchWords = searchWords.replace(/ NOT /g, "<sub> not </sub>");
+				if (allSelectedReferences.length > 0) {
+					searchWords += " (" + allSelectedReferences + ")";
+					allSelectedReferences = "";
+				}
 			}
 			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
 
@@ -1012,8 +1032,10 @@ step.util = {
             searchToken.item = searchToken.enhancedTokenInfo;
 
             //rewrite the item type in case it's a strong number
-            if (searchToken.itemType == STRONG_NUMBER) //pretend it's a Greek meaning, or a Hebrew meaning
-                searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
+            if (searchToken.itemType == STRONG_NUMBER) { //pretend it's a Greek meaning, or a Hebrew meaning
+				if (searchToken.item)
+					searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
+			}
             else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH)
                 searchToken.itemType = SUBJECT_SEARCH;
             return '<span class="argSelect select-' + searchToken.itemType + '">' +
@@ -1066,6 +1088,7 @@ step.util = {
             return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
         },
         renderEnhancedToken: function (entry, isMasterVersion) {
+			if (!entry.item) return "";
             var result;
             var util = step.util;
             var source = this.getSource(entry.itemType, true) + " ";
@@ -1146,7 +1169,10 @@ step.util = {
 
                     break;
                 default:
-                    return entry.item.text;
+					var returnVal = "";
+					if ((entry.item) && (entry.item.text === "string"))
+						returnVal = entry.item.text;
+					return returnVal;
             }
         },
         /**
@@ -1397,6 +1423,11 @@ step.util = {
             var morph = $(hoverContext).attr('morph');
             var reference = step.util.ui.getVerseNumber(hoverContext);
             var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
+			if (!step.keyedVersions[version].hasStrongs) {
+				possibleVersion = $($(hoverContext).parent().parent()[0]).find(".smallResultKey").attr('data-version');
+				if ((typeof possibleVersion === "string") && (step.keyedVersions[possibleVersion].hasStrongs))
+					version = possibleVersion;
+			}
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
 			var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
@@ -1815,13 +1846,14 @@ step.util = {
 										'(!step.searchSelect.previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))' +
 										'onlyFoundSubjectOrMeaningsSearch = false;' +
 								'}' +
-								'if (onlyFoundSubjectOrMeaningsSearch) $("#searchAndOrNot").hide();' +
-								'else $("#searchAndOrNot").show();' +
+//								'if (onlyFoundSubjectOrMeaningsSearch) $("#searchAndOrNot").hide();' +
+//								'else $("#searchAndOrNot").show();' +
+								'$("#searchAndOrNot").show();' +
 								'if (step.searchSelect.searchUserInput.length == 0) {' +
 									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
 										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +
 								'}' +
-								'step.searchSelect.handlePreviousSearchAndOrNot();' +
+//								'step.searchSelect.handlePreviousSearchAndOrNot();' +
 							'}' +
 							'else {' +
 								'step.searchSelect.includePreviousSearches = false;' +
@@ -1885,7 +1917,7 @@ step.util = {
 									'randomString = "?" + performance.now();' +  // GIF file in some browser gets stuck in the last frame after it has played once.
 								'}' +
 								'else randomString = "?" + Math.floor(Math.random() * 10000); ' +
-								'gifElement.src = "/images/" + file + randomString;' +
+								'gifElement.src = "images/" + file + randomString;' +
 								'gifElement.onload = function() {' +
 									'$("#pleasewait").remove();' +
 									'$("#videomodalbody").append(gifElement);' +
@@ -2006,7 +2038,7 @@ step.util = {
             '</div>';
 
         $.ajaxSetup({async: false});
-        $.getJSON("/html/json/" + osisID.toLowerCase() + ".json", function(summary) {
+        $.getJSON("html/json/" + osisID.toLowerCase() + ".json", function(summary) {
             var bookSummary =
                 '<br><span style="font-size:18px"><b>Book summary of ' + longBookName + '</b></span><br>' +
                 '<span style="font-size:16px">' +

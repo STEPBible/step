@@ -51,7 +51,7 @@ public class JSwordSearchServiceImplTest {
      */
     @Test
     public void testEstimation() {
-        assertTrue(this.search.estimateSearchResults(new SearchQuery("John", new String[] {"ESV_th"}, "false", 0, 0, 0, null)) > 100);
+        assertTrue(this.search.estimateSearchResults(new SearchQuery("John", new String[] {"ESV_th"}, "false", 0, 0, 0, null, "AND")) > 100);
     }
 
     /**
@@ -60,7 +60,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testApproximateSingleSearch() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("Melchizedc~", new String[] {"ESV_th"}, "false", 0, 1, 10, null), "ESV_th").getResults();
+                new SearchQuery("Melchizedc~", new String[] {"ESV_th"}, "false", 0, 1, 10, null, "AND"), "ESV_th").getResults();
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }
@@ -73,7 +73,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testGood() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("+[Mat-Rev] good~", new String[] {"ESV_th"}, "true", 0, 1, 1000000, null), "ESV_th").getResults();
+                new SearchQuery("+[Mat-Rev] good~", new String[] {"ESV_th"}, "true", 0, 1, 1000000, null, "AND"), "ESV_th").getResults();
         for (SearchEntry result : results) {
             LOGGER.trace(((VerseSearchEntry) result).getKey());
         }
@@ -86,7 +86,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testMorphology() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM*", new String[] {"KJV"}, "true", 0, 1, 1000000, null), "ESV_th")
+                new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM*", new String[] {"KJV"}, "true", 0, 1, 1000000, null, "AND"), "ESV_th")
                 .getResults();
         for (SearchEntry result : results) {
             LOGGER.info(((VerseSearchEntry) result).getKey());

@@ -116,21 +116,22 @@ public class PassageStat {
      * @param maxWords the number of words to keep
      * @param trimOutOccurrences the number for which we won't keep
      */
-    private void trimWords(final int maxWords, final int trimOutOccurrences, final boolean mostOccurrences) {
-        if(this.stats.size() < maxWords) {
-            return;
-        }
-        if ((!mostOccurrences) && (trimOutOccurrences == 1)) return;
-
-        final Iterator<Map.Entry<String, Integer[]>> iterator = this.stats.entrySet().iterator();
-        while (iterator.hasNext()) {
-            final Map.Entry<String, Integer[]> next = iterator.next();
-            if (next.getValue()[0] == trimOutOccurrences) {
-                iterator.remove();
+    private void trimWords(final int maxWords, int trimOutOccurrences, final boolean mostOccurrences) {
+        while (this.stats.size() > maxWords) {
+            if (this.stats.size() <= maxWords) {
+                return;
             }
+            if ((!mostOccurrences) && (trimOutOccurrences == 1)) return;
+
+            final Iterator<Map.Entry<String, Integer[]>> iterator = this.stats.entrySet().iterator();
+            while (iterator.hasNext()) {
+                final Map.Entry<String, Integer[]> next = iterator.next();
+                if (next.getValue()[0] == trimOutOccurrences) {
+                    iterator.remove();
+                }
+            }
+            trimOutOccurrences = (mostOccurrences) ? trimOutOccurrences + 1 : trimOutOccurrences - 1;
         }
-        int nextTrimOutOccurrences = (mostOccurrences) ? trimOutOccurrences + 1 : trimOutOccurrences - 1;
-        trimWords(maxWords, nextTrimOutOccurrences, mostOccurrences);
     }
 
     /**

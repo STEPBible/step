@@ -109,13 +109,13 @@ public final class HebrewUtils {
     }
 
 
-    /**
-     * @param word text with pointing
-     * @return text without pointing
-     */
-    public static String unPoint(final String word) {
-        return unPoint(word, true);
-    }
+//    /**
+//     * @param word text with pointing
+//     * @return text without pointing
+//     */
+//    public static String unPoint(final String word) {
+//        return unPoint(word, true);
+//    }
     
     /**
      * @param word text with pointing
@@ -222,7 +222,7 @@ public final class HebrewUtils {
     private static synchronized void createTransliterationRules() {
         // check again if it has been initialized, as we may be coming second
         if (transliterationRules == null) {
-            final List<TransliterationRule> rules = new ArrayList<TransliterationRule>();
+            final List<TransliterationRule> rules = new ArrayList<>();
             rules.add(new StringToStringRule("b", new String[]{"v"}));
             rules.add(new StringToStringRule("v", new String[]{"b", "w"}));
             rules.add(new StringToStringRule("w", new String[]{"v" }));
@@ -446,6 +446,7 @@ public final class HebrewUtils {
             if (HebrewLetterType.ACCENT.equals(letters[ii].getHebrewLetterType())) {
                 if (isNotGeresh(input, ii) || previousConsonant(letters, ii) != 0) {
                     final HebrewLetter letter = getCloseVowel(letters, ii);
+                    if (letter == null) continue; // Don't let it run into an exception
                     letter.setVowelStressType(VowelStressType.STRESSED);
                     hasStress = true;
                 }
@@ -1016,7 +1017,7 @@ public final class HebrewUtils {
 
         while (ii >= 0 && !letters[ii].isConsonant()) {
             boolean isCorrectLength = lookingForLong ? letters[ii].isLong() : letters[ii].getVowelLengthType() == VowelLengthType.SHORT;
-            boolean isSheva = letters[ii].getC() == SHEVA;
+//            boolean isSheva = letters[ii].getC() == SHEVA;
 
             if ((letters[ii].isVowel() && isCorrectLength && !letters[ii].isStressed())) {
                 return true;
@@ -1170,8 +1171,8 @@ public final class HebrewUtils {
      * @return true if found in the list of consonants provided
      */
     private static boolean isAny(final char letter, final char... matchingLetters) {
-        for (int ii = 0; ii < matchingLetters.length; ii++) {
-            if (letter == matchingLetters[ii]) {
+        for (char matchingLetter : matchingLetters) {
+            if (letter == matchingLetter) {
                 return true;
             }
         }
@@ -1332,11 +1333,7 @@ public final class HebrewUtils {
                 return true;
             }
 
-            if (hasAllPointingIncludingVav(inputString, currentPosition, true, VAV, HOLAM)) {
-                return true;
-            }
-
-            return false;
+            return hasAllPointingIncludingVav(inputString, currentPosition, true, VAV, HOLAM);
         }
 
         if (hasAllPointing(inputString, currentPosition, true, QAMATS, HOLAM)) {
@@ -1412,8 +1409,8 @@ public final class HebrewUtils {
      * @return true if all booleans passed are true
      */
     private static boolean areAllTrue(final boolean[] foundAll) {
-        for (int ii = 0; ii < foundAll.length; ii++) {
-            if (!foundAll[ii]) {
+        for (boolean b : foundAll) {
+            if (!b) {
                 return false;
             }
         }

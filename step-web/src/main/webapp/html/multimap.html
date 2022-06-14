@@ -9,7 +9,7 @@
   <link href="/css/select2.css" rel="stylesheet" media="screen"/>
   <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
   <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
-  <script src="/international/en..js" type="text/javascript"></script>
+  <script src="/international/en.js" type="text/javascript"></script>
   <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
   <script src="/libs/underscore-min.js" type="text/javascript"></script>
   <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
@@ -146,6 +146,61 @@
 
 <script>
 (function() {
+	var urlPart1 = window.location.origin;
+	var pos = window.location.href.indexOf("/html/multimap.html");
+	if (pos > 8) { // probably running in development environment.
+		urlPart1 = window.location.href.substr(0, pos);
+	}
+	if (typeof jQuery == 'undefined') {
+  		loadFile(urlPart1 + "/css/bootstrap.css");
+		loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
+		loadFile(urlPart1 + "/css/select2.css");
+		loadFile(urlPart1 + "/css/select2-bootstrap.css");
+		loadFile(urlPart1 + "/scss/step-template.css");
+		loadFile(urlPart1 + "/international/en.js");
+		loadFile(urlPart1 + "/libs/jquery-1.10.2.min.js");
+		loadFile(urlPart1 + "/libs/underscore-min.js");
+		loadFile(urlPart1 + "/libs/bootstrap.min.js");
+		loadFile(urlPart1 + "/js/step_constants.js");
+		loadFile(urlPart1 + "/js/passage_selection.js");
+		loadFile(urlPart1 + "/js/search_selection.js");
+		// Poll for jQuery to come into existance
+		var checkReady = function(callback) {
+			if (window.jQuery) {
+				callback(jQuery);
+			}
+			else {
+				window.setTimeout(function() { checkReady(callback); }, 200);
+			}
+		};
+		// Start polling...
+		checkReady(function($) {
+			$(function() {
+				setupMap(urlPart1);
+			});
+		});
+	}
+	else setupMap(urlPart1);
+
+})();
+
+function loadFile(path) {
+  if (path.endsWith(".js")) {
+    var fileref = document.createElement("script");
+    fileref.setAttribute("type", "text/javascript");
+    fileref.setAttribute("src", path);
+  } else if (path.endsWith(".css")) {
+    var fileref = document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", path);
+  }
+  else return;
+  fileref.async = false;
+  document.getElementsByTagName("head")[0].appendChild(fileref);
+}
+
+function setupMap() {
 	var queryString = window.location.search;
 	var coord = "";
 	var pos = queryString.indexOf("coord=");
@@ -166,7 +221,7 @@
 	var strongNum = "";
 	pos = queryString.indexOf("strong=");
 	if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
-		var tmp = queryString.substr(pos + 5);
+		var tmp = queryString.substr(pos + 7);
 		pos = tmp.indexOf("&");
 		if (pos == -1) strongNum = tmp;
 		else if (pos > 0) strongNum = tmp.substr(0,pos);
@@ -224,12 +279,17 @@
 		mapFirstChoice = "prophets";
 		mapSecondChoice = "patriarchs";
 	}
-	if ($("#" + mapFirstChoice + "_li").is(":visible"))
-		$('.nav-tabs a[href="#' + mapFirstChoice + '"]').tab('show');
-	else if ($("#" + mapSecondChoice + "_li").is(":visible"))
-		$('.nav-tabs a[href="#' + mapSecondChoice + '"]').tab('show');
+	if ($("#" + mapFirstChoice + "_li").is(":visible")) {
+		if (typeof $('.nav-tabs a[href="#' + mapFirstChoice + '"]').tab === "function")
+			$('.nav-tabs a[href="#' + mapFirstChoice + '"]').tab('show');
+	}
+	else if ($("#" + mapSecondChoice + "_li").is(":visible")) {
+		if (typeof $('.nav-tabs a[href="#' + mapSecondChoice + '"]').tab === "function")
+			$('.nav-tabs a[href="#' + mapSecondChoice + '"]').tab('show');
+	}
 	else {
-		$('.nav-tabs a[href="#googlemap"]').tab('show');
+		if (typeof $('.nav-tabs a[href="#googlemap"]').tab === "function")
+			$('.nav-tabs a[href="#googlemap"]').tab('show');
 		$("#googlemap").append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
 	}
 
@@ -241,7 +301,7 @@
 			// Async script executes immediately and must be after any DOM elements used in callback.
 			$("#googlemap").empty().append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
 	});
-})();
+}
 
 function updateRedCircle(latArg, longArg, latMax, latMin, longMax, longMin, latRatio, longRatio, xAdd, yAdd, mapID) {
 	if ((latArg < latMin) || (latArg > latMax) || (longArg < longMin) || (longArg > longMax)) {

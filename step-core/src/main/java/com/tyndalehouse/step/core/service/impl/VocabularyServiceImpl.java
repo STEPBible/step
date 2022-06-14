@@ -392,7 +392,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                 } else {
                     String[] tmpKeys = {key};
                     boolean triedA = false;
-//                    boolean triedG = false;
+                    boolean triedG = false;
                     while (tmpKeys[0].length() > 0) {
                         strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
                         if ((strongNumber != null) && (strongNumber.length > 0)) {
@@ -408,10 +408,10 @@ public class VocabularyServiceImpl implements VocabularyService {
                                     triedA = true;
                                     tmpKeys[0] = tmpKeys[0].concat("a");
                                 } 
-//								else if (!triedG) { // Java compiler warns that this is always 'true'.  Compiler is not correct.
-//                                    triedG = true;
-//                                    tmpKeys[0] = tmpKeys[0].concat("G");
-//                                }
+								else if (!triedG) { // Java compiler warns that this is always 'true'.  Compiler is not correct.
+                                    triedG = true;
+                                    tmpKeys[0] = tmpKeys[0].concat("G");
+                                }
                             } else tmpKeys[0] = "";
                         }
                     }

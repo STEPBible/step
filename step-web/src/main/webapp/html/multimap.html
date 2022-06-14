@@ -221,7 +221,7 @@ function setupMap() {
 	var strongNum = "";
 	pos = queryString.indexOf("strong=");
 	if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
-		var tmp = queryString.substr(pos + 5);
+		var tmp = queryString.substr(pos + 7);
 		pos = tmp.indexOf("&");
 		if (pos == -1) strongNum = tmp;
 		else if (pos > 0) strongNum = tmp.substr(0,pos);

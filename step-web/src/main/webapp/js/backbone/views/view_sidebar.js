@@ -551,10 +551,6 @@ var SidebarView = Backbone.View.extend({
 		if (mainWord._step_DetailLexicalTag) {
 			detailLex = JSON.parse(mainWord._step_DetailLexicalTag);
 		}
-        var stepLink = "";
-        if (mainWord._step_Link) {
-			stepLink = mainWord._step_Link;
-		}
         this._appendLexiconSearch(panel, mainWord, detailLex);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;

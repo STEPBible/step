@@ -361,7 +361,10 @@ public class VocabularyServiceImpl implements VocabularyService {
             return vocabIdentifiers;
         }
         else if (lds.length == 1) {
-            return provider.getData(lds[0]);
+            String gloss = provider.getData(lds[0]);
+            int pos = gloss.indexOf(':');
+            if (pos == -1) return gloss;
+            return gloss.substring(pos+1).trim(); // if there is an ':', return the text after the ':'
         }
 
         // otherwise, we need to resort to concatenating the fields

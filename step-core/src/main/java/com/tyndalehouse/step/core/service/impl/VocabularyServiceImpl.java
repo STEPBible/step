@@ -217,8 +217,14 @@ public class VocabularyServiceImpl implements VocabularyService {
                     final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, relatedWord);
                     // assume first doc
                     if (relatedDoc.length > 0) {
-                        shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage);
-                        lookedUpWords.put(relatedWord, shortLexiconDefinition);
+                        String stopWord = relatedDoc[0].get("stopWord");
+                        if ((stopWord == null) || (!stopWord.equals("true"))) {
+                            String popularity = relatedDoc[0].get("popularity");
+                            if ((popularity == null) || (!popularity.equals("0"))) {
+                                shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage);
+                                lookedUpWords.put(relatedWord, shortLexiconDefinition);
+                            }
+                        }
                     }
                 }
 

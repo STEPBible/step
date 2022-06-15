@@ -113,8 +113,8 @@
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
-			<scope>test</scope>
-		</dependency>
+            <version>3.2.2</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.crosswire</groupId>

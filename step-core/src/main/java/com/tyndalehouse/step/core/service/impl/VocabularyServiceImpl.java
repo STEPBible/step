@@ -304,7 +304,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String getEnglishVocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.englishVocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.englishVocabProvider, true);
     }
 
     // The Spanish SpaRV1909 uses a "Strong:" tag.  Change "Strong:" or "StRoNg:" (any upper or lower case) to "strong:"
@@ -320,27 +320,33 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String get_es_Vocab(final String version, final String reference, String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.es_VocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.es_VocabProvider, false);
     }
 	
     @Override
     public String get_zh_tw_Vocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_tw_VocabProvider);
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_tw_VocabProvider, false);
     }
 
     @Override
     public String get_zh_Vocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_VocabProvider);
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_VocabProvider, false);
     }
 
     @Override
     public String getGreekVocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.greekVocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.greekVocabProvider, false);
     }
 
     @Override
     public String getDefaultTransliteration(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.transliterationProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.transliterationProvider, false);
+    }
+
+    private String getStringAfterColon(final String gloss) {
+        int pos = gloss.indexOf(':');
+        if (pos == -1) return gloss;
+        return gloss.substring(pos+1).trim(); // if there is an ':', return the text after the ':'
     }
 
     /**
@@ -352,7 +358,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @return the data in String form
      */
     private String getDataFromLexiconDefinition(final String version, final String reference, final String vocabIdentifiers,
-                                                final LexiconDataProvider provider) {
+                                                final LexiconDataProvider provider, final boolean isEnglishGloss) {
 
         // else we lookup and concatenate
         EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
@@ -361,10 +367,8 @@ public class VocabularyServiceImpl implements VocabularyService {
             return vocabIdentifiers;
         }
         else if (lds.length == 1) {
-            String gloss = provider.getData(lds[0]);
-            int pos = gloss.indexOf(':');
-            if (pos == -1) return gloss;
-            return gloss.substring(pos+1).trim(); // if there is an ':', return the text after the ':'
+            if (isEnglishGloss) return getStringAfterColon(provider.getData(lds[0]));
+            return provider.getData(lds[0]);
         }
 
         // otherwise, we need to resort to concatenating the fields
@@ -372,8 +376,8 @@ public class VocabularyServiceImpl implements VocabularyService {
         sb.append('[');
 
         for (int ii = 0; ii < lds.length; ii++) {
-            final EntityDoc l = lds[ii];
-            sb.append(provider.getData(l));
+            if (isEnglishGloss) sb.append(getStringAfterColon(provider.getData(lds[ii])));
+            else sb.append(provider.getData(lds[ii]));
             if (ii + 1 < lds.length) {
                 sb.append(MULTI_WORD_SEPARATOR);
             }

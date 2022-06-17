@@ -138,7 +138,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
         explainRemove(errors, VERSE_NUMBERS, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);
 
-        explainRemove(errors, NOTES, result, trimmingExplanations, originalModeHasChanged, interleavedMessage);
+//        explainRemove(errors, NOTES, result, trimmingExplanations, originalModeHasChanged, interleavedMessage);
 
         explainRemove(errors, ENGLISH_VOCAB, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);

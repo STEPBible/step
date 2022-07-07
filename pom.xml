@@ -41,7 +41,7 @@
         <jetty.version>9.3.27.v20190418</jetty.version>
 		<tomcat.version>8.5.47</tomcat.version>
 		<tomcat.secondary.version>8.5.2</tomcat.secondary.version>
-        <xalan.version>2.7.1</xalan.version>
+        <xalan.version>2.7.2</xalan.version>
 
         <yammer-metrics.version>2.2.0</yammer-metrics.version>
 

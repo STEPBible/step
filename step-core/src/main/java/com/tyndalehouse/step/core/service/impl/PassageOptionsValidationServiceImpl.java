@@ -92,10 +92,12 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
         // now trim further depending on modes required:
         switch (displayMode) {
             case COLUMN:
-            case COLUMN_COMPARE:
             case INTERLEAVED:
+                removeInterleavingOptions(errors, trimmingExplanations, result, !mode.equals(displayMode), false);
+                break;
+            case COLUMN_COMPARE:
             case INTERLEAVED_COMPARE:
-                removeInterleavingOptions(errors, trimmingExplanations, result, !mode.equals(displayMode));
+                removeInterleavingOptions(errors, trimmingExplanations, result, !mode.equals(displayMode), true);
                 break;
             case INTERLINEAR:
                 explainRemove(errors, NOTES, result, trimmingExplanations, !mode.equals(displayMode),
@@ -133,12 +135,13 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
     private void removeInterleavingOptions(final ResourceBundle errors,
                                            final List<TrimmedLookupOption> trimmingExplanations,
                                            final Set<LookupOption> result,
-                                           final boolean originalModeHasChanged) {
+                                           final boolean originalModeHasChanged,
+                                           final boolean compareMode) {
         final String interleavedMessage = errors.getString("option_not_available_interleaved");
         explainRemove(errors, VERSE_NUMBERS, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);
-
-//        explainRemove(errors, NOTES, result, trimmingExplanations, originalModeHasChanged, interleavedMessage);
+        if (compareMode)
+          explainRemove(errors, NOTES, result, trimmingExplanations, originalModeHasChanged, interleavedMessage);
 
         explainRemove(errors, ENGLISH_VOCAB, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);

@@ -3230,9 +3230,9 @@ step.util = {
         if (pos1 > -1) {
             var pos2 = article.indexOf("-", pos1+1);
             if (pos2 > -1) {
-                return article.substring(0,pos1) + " from " + article.substring(pos1 + 1, pos2) + " - " + article.substring(pos2 + 1);
+                return " from " + article.substring(pos1 + 1, pos2) + " - " + article.substring(pos2 + 1);
             }
-            else return article.substring(0,pos1) + " only at " + article.substring(pos1 + 1);
+            else return " only at " + article.substring(pos1 + 1);
         }
         return article;
 	}

@@ -7,6 +7,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
+	if (request.getServerName().indexOf("stepbible.") > -1) { // setup.jsp should not run on the www servers.
+		response.sendRedirect("https://www.stepbible.org"); // redirect it to the www servers
+	}
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
     Config.set(session, Config.FMT_LOCALE, locale);

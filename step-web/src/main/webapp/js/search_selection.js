@@ -1051,7 +1051,7 @@ step.searchSelect = {
 										if ((strongPrefix === "H") || (strongPrefix === "G")) {
 											var strongSuffix = data[i].suggestion.strongNumber[data[i].suggestion.strongNumber.length-1];
 											if ((isNaN(strongSuffix)) && (typeof data[i].suggestion._article === "string") && (data[i].suggestion._article.length > glossToShow.length))
-												text2Display = step.util.formatArticle(data[i].suggestion._article);
+												text2Display = glossToShow + step.util.formatArticle(data[i].suggestion._article);
 										}
 									}
                                     if (text2Display === "")

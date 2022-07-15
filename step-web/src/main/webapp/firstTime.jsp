@@ -5,6 +5,9 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
+	if (request.getServerName().indexOf("stepbible.") > -1) { // This jsp should not run on the www servers.
+		response.sendRedirect("https://www.stepbible.org"); // redirect it to the www servers
+	}
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
     request.setAttribute("locale", locale.getLanguage());

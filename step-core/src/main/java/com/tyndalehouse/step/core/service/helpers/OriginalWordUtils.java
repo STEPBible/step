@@ -11,6 +11,7 @@ import org.apache.lucene.search.PrefixFilter;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
@@ -46,13 +47,17 @@ public final class OriginalWordUtils {
      * @param def the definition
      * @return the suggestion
      */
-    public static LexiconSuggestion convertToSuggestion(final EntityDoc def, final String userLanguage) {
+    public static LexiconSuggestion convertToSuggestion(final EntityDoc def, final String userLanguage, final StrongAugmentationService strongAugmentationService) {
         final LexiconSuggestion suggestion = new LexiconSuggestion();
         suggestion.setGloss(def.get("stepGloss"));
         suggestion.setMatchingForm(def.get("accentedUnicode"));
         suggestion.setStepTransliteration(def.get("stepTransliteration"));
         suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
-		suggestion.set_article(def.get("STEP_Article"));
+        String stepType = def.get("STEP_Type");
+		suggestion.setType(stepType);
+        if (stepType.equals("man") || stepType.equals("place") || stepType.equals("place")) {
+            suggestion.setDetailLexicalTag(def.get("STEP_DetailLexicalTag"));
+        }
         if ((userLanguage == null) || (userLanguage == "")) {
 			suggestion.set_es_Gloss(def.get("es_Gloss"));
 			suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));

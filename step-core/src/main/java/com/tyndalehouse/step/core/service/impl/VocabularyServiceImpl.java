@@ -221,7 +221,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                         if ((stopWord == null) || (!stopWord.equals("true"))) {
                             String popularity = relatedDoc[0].get("popularity");
                             if ((popularity == null) || (!popularity.equals("0"))) {
-                                shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage);
+                                shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage, null);
                                 lookedUpWords.put(relatedWord, shortLexiconDefinition);
                             }
                         }

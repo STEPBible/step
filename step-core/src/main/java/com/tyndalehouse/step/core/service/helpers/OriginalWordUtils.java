@@ -52,11 +52,16 @@ public final class OriginalWordUtils {
         suggestion.setGloss(def.get("stepGloss"));
         suggestion.setMatchingForm(def.get("accentedUnicode"));
         suggestion.setStepTransliteration(def.get("stepTransliteration"));
-        suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
+        String strongNum = def.get(STRONG_NUMBER_FIELD);
+        suggestion.setStrongNumber(strongNum);
         String stepType = def.get("STEP_Type");
 		suggestion.setType(stepType);
-        if (stepType.equals("man") || stepType.equals("place") || stepType.equals("place")) {
+        if (stepType.equals("man") || stepType.equals("place") || stepType.equals("woman")) {
             suggestion.setDetailLexicalTag(def.get("STEP_DetailLexicalTag"));
+            if ((strongAugmentationService != null) && (!strongAugmentationService.isNonAugmented(strongNum))) {
+
+
+            }
         }
         if ((userLanguage == null) || (userLanguage == "")) {
 			suggestion.set_es_Gloss(def.get("es_Gloss"));

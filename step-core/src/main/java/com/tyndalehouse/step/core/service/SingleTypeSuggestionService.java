@@ -1,14 +1,7 @@
 package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TopFieldCollector;
 
 import java.util.List;
 
@@ -34,11 +27,13 @@ public interface SingleTypeSuggestionService<T, S> {
      * Converts a number of documents, strings, etc. to their PopularSuggestion equivalents. 
      * @param docs the array of documents that were retrieved as part of a first call (e.g. exact matches)
      * @param extraDocs the array of documents that were retrieved as part of the second call (non-exact matches)
+     * @param strongAugmentationService
      * @return the list of converted suggestions
      */
+    StrongAugmentationService strongAugmentationService = null;
     List<? extends PopularSuggestion> convertToSuggestions(T[] docs,
-                                                           T[] extraDocs);
-
+                                                           T[] extraDocs,
+                                                           StrongAugmentationService strongAugmentationService);
     /**
      * Creates a 'collector', whose job is to collect entities (e.g. Strings, EntityDoc, etc.) as well as the counts
      * associated with the search, such as the maximum number of hits.)

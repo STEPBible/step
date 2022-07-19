@@ -7,6 +7,7 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class MeaningSuggestionServiceImpl implements SingleTypeSuggestionService
     }
 
     @Override
-    public List<? extends PopularSuggestion> convertToSuggestions(final String[] meaningTerms, final String[] extraDocs) {
+    public List<? extends PopularSuggestion> convertToSuggestions(final String[] meaningTerms, final String[] extraDocs, final StrongAugmentationService strongAugmentationService) {
         List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
         convertTermsToSuggestions(meaningTerms, suggestions);
         convertTermsToSuggestions(extraDocs, suggestions);

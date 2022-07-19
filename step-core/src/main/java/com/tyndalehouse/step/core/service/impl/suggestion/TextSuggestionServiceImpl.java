@@ -3,6 +3,7 @@ package com.tyndalehouse.step.core.service.impl.suggestion;
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.models.search.TextSuggestion;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class TextSuggestionServiceImpl extends AbstractIgnoreMergedListSuggestio
     }
 
     @Override
-    public List<? extends PopularSuggestion> convertToSuggestions(final TextSuggestion[] docs, final TextSuggestion[] extraDocs) {
+    public List<? extends PopularSuggestion> convertToSuggestions(final TextSuggestion[] docs, final TextSuggestion[] extraDocs, StrongAugmentationService strongAugmentationService) {
         return new ArrayList<PopularSuggestion>(Arrays.asList(extraDocs));
     }
 }

@@ -830,7 +830,7 @@ public class SearchServiceImpl implements SearchService {
         Collections.sort(lexiconDefinitions, new GlossComparator());
         List<LexiconSuggestion> suggestions = new ArrayList(lexiconDefinitions.size());
         for (final EntityDoc def : lexiconDefinitions) {
-            suggestions.add(convertToSuggestion(def, null));
+            suggestions.add(convertToSuggestion(def, null, null));
         }
         result.setDefinitions(suggestions);
     }

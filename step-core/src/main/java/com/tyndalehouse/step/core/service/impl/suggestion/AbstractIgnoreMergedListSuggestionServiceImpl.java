@@ -3,6 +3,7 @@ package com.tyndalehouse.step.core.service.impl.suggestion;
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +29,7 @@ public abstract class AbstractIgnoreMergedListSuggestionServiceImpl<T extends  P
 
     @Override
     public List<? extends PopularSuggestion> convertToSuggestions(final T[] subjectSuggestions,
-                                                                  final T[] extraDocs) {
+                                                                  final T[] extraDocs, StrongAugmentationService strongAugmentationService) {
         final List<T> returnList = new ArrayList<>();
         //we ignore the first list, as we may have merged it previously
         returnList.addAll(Arrays.asList(extraDocs));

@@ -6,6 +6,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -17,10 +18,8 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopFieldCollector;
 
-import javax.swing.text.Highlighter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
@@ -78,9 +77,9 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
     @Override
     public List<? extends PopularSuggestion> convertToSuggestions(
             final EntityDoc[] docs,
-            final EntityDoc[] extraDocs) {
-        final List<LexiconSuggestion> suggestions = this.convertDefinitionDocsToSuggestion(docs);
-        suggestions.addAll(this.convertDefinitionDocsToSuggestion(extraDocs));
+            final EntityDoc[] extraDocs, StrongAugmentationService strongAugmentationService) {
+        final List<LexiconSuggestion> suggestions = this.convertDefinitionDocsToSuggestion(docs, strongAugmentationService);
+        suggestions.addAll(this.convertDefinitionDocsToSuggestion(extraDocs, strongAugmentationService));
         return suggestions;
     }
 
@@ -100,11 +99,11 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
      * @param results the results
      * @return true
      */
-    private List<LexiconSuggestion> convertDefinitionDocsToSuggestion(final EntityDoc[] results) {
+    private List<LexiconSuggestion> convertDefinitionDocsToSuggestion(final EntityDoc[] results, StrongAugmentationService strongAugmentationService) {
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
         if (results != null) {
             for (final EntityDoc def : results) {
-                suggestions.add(convertToSuggestion(def, null));
+                suggestions.add(convertToSuggestion(def, null, strongAugmentationService));
             }
         }
         return suggestions;

@@ -10,6 +10,7 @@ import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import org.apache.lucene.search.TopFieldCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import java.util.Map;
  * @author chrisburrell
  */
 public class SuggestionServiceImpl implements SuggestionService {
+    private final StrongAugmentationService strongAugmentationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(SuggestionServiceImpl.class);
 
     //show the total number of ungrouped results at any one time.
@@ -45,8 +47,9 @@ public class SuggestionServiceImpl implements SuggestionService {
                                  final MeaningSuggestionServiceImpl meaningSuggestionService,
                                  final SubjectSuggestionServiceImpl subjectSuggestionService,
                                  final ReferenceSuggestionServiceImpl referenceSuggestionService,
-                                 final TextSuggestionServiceImpl textSuggestionService
-    ) {
+                                 final TextSuggestionServiceImpl textSuggestionService,
+                                 StrongAugmentationService strongAugmentationService) {
+        this.strongAugmentationService = strongAugmentationService;
         queryProviders.put(SearchToken.REFERENCE, referenceSuggestionService);
         queryProviders.put(SearchToken.GREEK_MEANINGS, greekAncientMeaningService);
         queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);
@@ -96,7 +99,7 @@ public class SuggestionServiceImpl implements SuggestionService {
             //create collector to collect some more results, if required, but also the total hit count
             Object o = searchService.getNewCollector(leftToCollect, true);
             final Object[] extraDocs = searchService.collectNonExactMatches(o, context, docs, leftToCollect);
-            final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
+            final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs, this.strongAugmentationService);
 
             final SingleSuggestionsSummary singleTypeSummary = new SingleSuggestionsSummary();
             setSuggestionsAndExamples(singleTypeSummary, suggestions, groupTotal);
@@ -167,7 +170,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         //create collector to collect some more results, if required, but also the total hit count
         final Object collector = searchService.getNewCollector(MAX_RESULTS_NON_GROUPED - docs.length, false);
         final Object[] extraDocs = searchService.collectNonExactMatches(collector, context, docs, MAX_RESULTS_NON_GROUPED);
-        final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
+        final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs, this.strongAugmentationService);
 
         final SuggestionsSummary summary = new SuggestionsSummary();
         final List<SingleSuggestionsSummary> results = new ArrayList<SingleSuggestionsSummary>();

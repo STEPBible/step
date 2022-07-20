@@ -69,16 +69,17 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
      * @return the STEP_Type
      */
 
+
+    public String getType() {
+        return this.type;
+    }
+
     /**
      * @return the Step Article
      */
 
     public String get_article() {
         return this.article;
-    }
-
-    public String getType() {
-        return this.type;
     }
 
     /**

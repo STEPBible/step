@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.service.impl.suggestion;
 
+import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.BookName;
@@ -10,6 +11,7 @@ import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.lucene.search.TopFieldCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,11 +84,15 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         //go through each search type
         for (Map.Entry<String, SingleTypeSuggestionService> query : queryProviders.entrySet()) {
+            String curQueryKey = query.getKey();
+            int maxResult = MAX_RESULTS;
+            if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew") || curQueryKey.equals("greekMeanings")|| curQueryKey.equals("hebrewMeanings"))
+                maxResult = MAX_RESULTS_NON_GROUPED;
             final SingleTypeSuggestionService searchService = query.getValue();
 
             //run exact query against index
-            final int groupTotal = this.getGroupTotal(query.getKey(), results);
-            final int totalGroupLeftToRetrieve = MAX_RESULTS - groupTotal + PREVIEW_GROUP;
+            final int groupTotal = this.getGroupTotal(curQueryKey, results);
+            final int totalGroupLeftToRetrieve = maxResult - groupTotal + PREVIEW_GROUP;
             Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(context, totalGroupLeftToRetrieve, true) : null;
             int docLength = docs != null ? docs.length : 0;
 
@@ -99,7 +105,7 @@ public class SuggestionServiceImpl implements SuggestionService {
             final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
 
             final SingleSuggestionsSummary singleTypeSummary = new SingleSuggestionsSummary();
-            setSuggestionsAndExamples(singleTypeSummary, suggestions, groupTotal);
+            setSuggestionsAndExamples(singleTypeSummary, suggestions, groupTotal, maxResult);
             fillInTotalHits(o, extraDocs.length, singleTypeSummary);
 
             singleTypeSummary.setSearchType(query.getKey());
@@ -184,12 +190,13 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     private void setSuggestionsAndExamples(final SingleSuggestionsSummary singleTypeSummary,
                                            final List<? extends PopularSuggestion> suggestions,
-                                           final int groupTotal) {
+                                           final int groupTotal,
+                                           final int maxResults) {
         //total number of suggestions to keep as suggestions
-        final int keep = MAX_RESULTS - groupTotal;
+        final int keep = maxResults - groupTotal;
 
         //set popular suggestions
-        List<PopularSuggestion> keepSuggestions = new ArrayList<PopularSuggestion>(3);
+        List<PopularSuggestion> keepSuggestions = new ArrayList<PopularSuggestion>(maxResults);
         int ii;
         final boolean isReferenceSuggestion = suggestions.size() > 0 && suggestions.get(0) instanceof BookName;
         for (ii = 0; (ii < keep || isReferenceSuggestion) && ii < suggestions.size(); ii++) {

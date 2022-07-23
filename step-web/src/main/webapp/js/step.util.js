@@ -3197,9 +3197,10 @@ step.util = {
     },
     putStrongDetails: function(strongNum, details) {
         if (typeof step.srchTxt === "undefined") step.srchTxt = {};
-        if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
         if ((typeof step.srchTxt[strongNum] === "undefined") || (step.srchTxt[strongNum].length < 7))
             step.srchTxt[strongNum] = details;
+        if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
+        step.srchTxt[strongNum] = details;
     },
 	modalCloseBtn: function(modalElementID, closeFunction) {
 		// The dark mode color needs to be brighter for X.  The default opacity of 0.2 is too low.

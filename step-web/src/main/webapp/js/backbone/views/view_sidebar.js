@@ -406,15 +406,19 @@ var SidebarView = Backbone.View.extend({
             }
 			panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount" style="unicode-bidi:isolate-override"> ' +
                sprintf(__s.stats_occurs, total) + '</span>').click(function () {
-				var allStrongs = $(this).data("strongNumber");
-				var args = "strong=" + encodeURIComponent(allStrongs[0]);
-				allStrongsWithComma = encodeURIComponent(allStrongs[0])
-				for (var j = 1; j < allStrongs.length; j++) {
-					allStrongsWithComma += "," + encodeURIComponent(allStrongs[j]);
+				var args = $(this).data("strongNumber");
+				console.log("args " + args);
+				var currentSearch = "strong=" + encodeURIComponent(args[0]);
+
+				var searchJoins = "";
+				for (var i = 1; i < allStrongs.length; i++) {
+					currentSearch += '|strong=' + encodeURIComponent(args[i]);
+					if (i == 1) searchJoins = "searchJoins=OR";
+					else searchJoins += ",OR"
 				}
-				step.util.activePassage().save({strongHighlights: allStrongsWithComma}, {silent: true});
-				console.log("arg" + args);
-				step.router.navigatePreserveVersions(args, false, true);
+				currentSearch = searchJoins + "|" + currentSearch;
+								
+				step.router.navigatePreserveVersions(currentSearch, false, true, true);
 				return false;
 			}));
             panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {

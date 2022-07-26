@@ -602,7 +602,6 @@ var SidebarView = Backbone.View.extend({
                                 relatedNosToDisplay[i].matchingForm +
                                 "'></li>").append($('<a sbstrong href="javascript:void(0)">')
                             .append(userLangGloss)
-							.append(relatedNosToDisplay[i].gloss)
                             .append(step.util.formatArticle(relatedNosToDisplay[i]._article))
                             .data("strongNumber", relatedNosToDisplay[i].strongNumber));                        
                     }

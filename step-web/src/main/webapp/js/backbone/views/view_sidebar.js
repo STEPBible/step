@@ -361,20 +361,20 @@ var SidebarView = Backbone.View.extend({
     },
 
     _addDetailLexicalWords: function (detailLex, panel, isCurrentWord) {
-        var frequency = parseInt(detailLex[4]); // Just in case it is provided in String instead of number
+        var frequency = parseInt(detailLex[3]); // Just in case it is provided in String instead of number
         panel.append($("<br class='detailLex' style='display:none'>"));
         var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
         if (isCurrentWord) {
             panel.append($("<span class='detailLex glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>"));
             spaceWithoutLabel = "";
         }
-        panel.append($("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + ":&nbsp;</span>"));
-        panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
-            append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[3] + "'>" + detailLex[2]  + " </span>")).click(function () {
+        panel.append($("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[1] + ":&nbsp;</span>"));
+        panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[0]).
+            append($("<span class='detailLex' style='display:none' title='" + detailLex[0] + " " + detailLex[4] + "'>" + detailLex[2]  + " </span>")).click(function () {
             step.util.ui.showDef($(this).data("strongNumber"));
         }));
         panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;~</span>'));
-        panel.append($("<a title='click to show all occurences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
+        panel.append($("<a title='click to show all occurences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[0]).
               append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none">' + sprintf(__s.stats_occurs, frequency) + '</span>').
               click(function () {
             var strongNumber = $(this).data("strongNumber");
@@ -399,9 +399,9 @@ var SidebarView = Backbone.View.extend({
         if ((detailLex) && (detailLex.length > 0)) {
 			allStrongs.push(mainWord.strongNumber);
 			for (var i = 0; i < detailLex.length; i++) {
-                if (detailLex[i][1] !== mainWord.strongNumber) {
-				    total += parseInt(detailLex[i][4]); // Just in case it is provided in String instead of number
-                    allStrongs.push(detailLex[i][1]);
+                if (detailLex[i][0] !== mainWord.strongNumber) {
+				    total += parseInt(detailLex[i][3]); // Just in case it is provided in String instead of number
+                    allStrongs.push(detailLex[i][0]);
                 }
             }
 			panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount" style="unicode-bidi:isolate-override"> ' +
@@ -435,7 +435,7 @@ var SidebarView = Backbone.View.extend({
 				return false;
 			}));
 			for (var i = 0; i < detailLex.length; i++) {
-                this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber));
+                this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][0] === mainWord.strongNumber));
 			}
         }
         else {
@@ -475,8 +475,7 @@ var SidebarView = Backbone.View.extend({
 			for (var i = 0; i < relatedNos.length; i++) {
 				var found = false;
 				for (var j = 0; ((j < detailLex.length) && (!found)); j++) {
-					if (relatedNos[i].strongNumber === detailLex[j][1]) {
-						//console.log("skipping " + detailLex[j][1]);
+					if (relatedNos[i].strongNumber === detailLex[j][0]) {
 						found = true;
 					}
 				}
@@ -518,8 +517,8 @@ var SidebarView = Backbone.View.extend({
             this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode, bibleVersion);
         }
 		var detailLex = [];
-		if (mainWord._step_DetailLexicalTag) {
-			detailLex = JSON.parse(mainWord._step_DetailLexicalTag);
+		if (mainWord._expandedLexicalTag) {
+			detailLex = JSON.parse(mainWord._expandedLexicalTag);
 		}
         this._appendLexiconSearch(panel, mainWord, detailLex);
         var displayEnglishLexicon = true;

@@ -19,6 +19,7 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private String article;
 	private String type;
 	private String detailLexicalTag;
+    private String popularity;
 
     /**
      * @return the stepTransliteration
@@ -89,8 +90,11 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     public String get_detailLexicalTag() {
         return this.detailLexicalTag;
     }
-	
-	
+
+    public String getPopularity() {
+        return this.popularity;
+    }
+
     /**
      * @param gloss the gloss to set
      */
@@ -123,6 +127,10 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
 
     public void setDetailLexicalTag(final String stepDetailLexicalTag) {
         this.detailLexicalTag = stepDetailLexicalTag;
+    }
+
+    public void setPopularity(final String stepPopularity) {
+        this.popularity = stepPopularity;
     }
 
     /**

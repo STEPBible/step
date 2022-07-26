@@ -57,6 +57,7 @@ public final class OriginalWordUtils {
         suggestion.setType(stepType);
         if (stepType.equals("man") || stepType.equals("place") || stepType.equals("woman")) {
             suggestion.setDetailLexicalTag(def.get("STEP_DetailLexicalTag"));
+            suggestion.setPopularity(def.get("popularity"));
         }
         if ((userLanguage == null) || (userLanguage.equals(""))) {
 			suggestion.set_es_Gloss(def.get("es_Gloss"));

@@ -283,7 +283,8 @@ public class ModuleController {
                 vocabResponse.getDefinitions().length);
         EntityDoc[] definitions = vocabResponse.getDefinitions();
         for (EntityDoc d : definitions) {
-            morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), includeAllInfo, userLanguage));
+            morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(),
+                    vocabResponse.getExpandedDetailLexicalTag(), includeAllInfo, userLanguage));
         }
         return morphologyInfos;
     }

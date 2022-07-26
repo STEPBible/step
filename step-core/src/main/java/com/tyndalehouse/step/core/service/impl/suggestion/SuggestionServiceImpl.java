@@ -111,8 +111,6 @@ public class SuggestionServiceImpl implements SuggestionService {
             singleTypeSummary.setSearchType(query.getKey());
             results.put(query.getKey(), singleTypeSummary);
         }
-
-        //return results
         summary.setSuggestionsSummaries(new ArrayList<SingleSuggestionsSummary>(results.values()));
         return summary;
     }
@@ -206,8 +204,8 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         //set example suggestions
         List<PopularSuggestion> examples = new ArrayList<PopularSuggestion>(2);
-        for (; ii < suggestions.size(); ii++) {
-            examples.add(suggestions.get(ii));
+        for (int count = ii; (count < suggestions.size()) && (count - ii < 3); count++) {
+            examples.add(suggestions.get(count));
         }
         singleTypeSummary.setExtraExamples(examples);
     }

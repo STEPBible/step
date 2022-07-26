@@ -277,6 +277,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             if (detailLexicalTagWords.size() > 1)
                 detailLexicalTagWords.sort((a, b) -> a[0].compareTo(b[0]));
             int relatedWordsCounter = 0;
+            if ((relatedWords == null) || (relatedWords.size() == 0)) continue;
             int numOfRelatedWords = relatedWords.get(sourceStrongNumber).size();
             forLoop:
             for (String[] curLexicalTag : detailLexicalTagWords) {

@@ -87,7 +87,7 @@ public class SuggestionServiceImpl implements SuggestionService {
             String curQueryKey = query.getKey();
             int maxResult = MAX_RESULTS;
             if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew") || curQueryKey.equals("greekMeanings")|| curQueryKey.equals("hebrewMeanings"))
-                maxResult = MAX_RESULTS_NON_GROUPED;
+                maxResult = MAX_RESULTS_NON_GROUPED * 8;
             final SingleTypeSuggestionService searchService = query.getValue();
 
             //run exact query against index

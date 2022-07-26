@@ -258,6 +258,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             String resultString = "[";
             final String sourceStrongNumber = doc.get("strongNumber");
             String detailLexicalWordNumbers = doc.get("STEP_DetailLexicalTag");
+            if (detailLexicalWordNumbers == null) continue;
             final String[] allDetailLexicalWords = split(detailLexicalWordNumbers, "[,\\[\\]\"]+");
             String previousWord = "";
             for (final String currentWord : allDetailLexicalWords) {
@@ -272,7 +273,9 @@ public class VocabularyServiceImpl implements VocabularyService {
                 partsOfDetailLexicalWord[1] = previousWord;
                 detailLexicalTagWords.add(partsOfDetailLexicalWord);
             }
-            detailLexicalTagWords.sort((a, b)->a[0].compareTo(b[0]));
+            if (detailLexicalTagWords.size() == 0) continue;
+            if (detailLexicalTagWords.size() > 1)
+                detailLexicalTagWords.sort((a, b) -> a[0].compareTo(b[0]));
             int relatedWordsCounter = 0;
             int numOfRelatedWords = relatedWords.get(sourceStrongNumber).size();
             forLoop:
@@ -284,13 +287,14 @@ public class VocabularyServiceImpl implements VocabularyService {
                     String relatedStrongNum = curRelatedWord.getStrongNumber();
                     compareResult = relatedStrongNum.compareTo(curLexicalTag[0]);
                     if (compareResult == 0) {
-                        if (!resultString.equals("[")) resultString += ","; // add a comma to separate different detail lexical entries
+                        if (!resultString.equals("["))
+                            resultString += ","; // add a comma to separate different detail lexical entries
                         String popularity = curRelatedWord.getPopularity();
                         if (!StringUtils.isNumeric(popularity)) popularity = "0";
-                        resultString +=  "[\"" + curLexicalTag[0] + "\",\"" + curLexicalTag[1] + "\",\"" +
-                            curRelatedWord.getGloss() + "\"," +
-                            popularity  + ",\"" +
-                            curRelatedWord.getMatchingForm() + "\"]";
+                        resultString += "[\"" + curLexicalTag[0] + "\",\"" + curLexicalTag[1] + "\",\"" +
+                                curRelatedWord.getGloss() + "\"," +
+                                popularity + ",\"" +
+                                curRelatedWord.getMatchingForm() + "\"]";
                         relatedWordsCounter++;
                         continue forLoop;
                     } else if (compareResult < 0) {
@@ -301,10 +305,11 @@ public class VocabularyServiceImpl implements VocabularyService {
                 final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, curLexicalTag[0]);
                 // assume first doc
                 if (relatedDoc.length > 0) {
-                    if (!resultString.equals("[")) resultString += ","; // add a comma to separate different detail lexical entries
+                    if (!resultString.equals("["))
+                        resultString += ","; // add a comma to separate different detail lexical entries
                     String popularity = relatedDoc[0].get("popularity");
                     if (!StringUtils.isNumeric(popularity)) popularity = "0";
-                    resultString +=  "[\"" + curLexicalTag[0] + "\",\"" + curLexicalTag[1] + "\",\"" +
+                    resultString += "[\"" + curLexicalTag[0] + "\",\"" + curLexicalTag[1] + "\",\"" +
                             relatedDoc[0].get("stepGloss") + "\"," +
                             popularity + ",\"" +
                             relatedDoc[0].get("accentedUnicode") + "\"]";

@@ -1824,7 +1824,7 @@ public class SearchServiceImpl implements SearchService {
 
         //if the other side is empty, then we have no results
         if (searchKeys == null) {
-            return results instanceof VerseKey ? new RangedPassage(((VerseKey) results).getVersification()) : new DefaultKeyList();
+            return results instanceof VerseKey ? results : new DefaultKeyList();
         }
 
         Key versifiedSearchKeys = searchKeys;

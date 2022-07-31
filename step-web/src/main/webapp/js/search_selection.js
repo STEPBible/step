@@ -1054,26 +1054,26 @@ step.searchSelect = {
 									var gloss = data[i].suggestion.gloss;
 									str2Search = data[i].suggestion.strongNumber;
 									if ((stepType == "man") || (stepType == "place") || (stepType == "woman")) {
-										if (peopleOrPlaceAugStrong.includes(data[i].suggestion.strongNumber)) 
-											continue;
-										peopleOrPlaceAugStrong.push(data[i].suggestion.strongNumber);
-										searchResultIndexPeoplePlace = step.searchSelect.searchTypeCode.indexOf("peopleorplace");
-										if (typeof data[i].suggestion.strongNumber === "string") {
-											var strongPrefix = data[i].suggestion.strongNumber[0].toUpperCase();
-											shortTxt2Display = gloss;
-											if (((strongPrefix === "H") || (strongPrefix === "G")) &&
-												(typeof data[i].suggestion._article === "string")) {
-												text2Display = gloss + step.util.formatArticle(data[i].suggestion._article);
+										if (!peopleOrPlaceAugStrong.includes(data[i].suggestion.strongNumber)) {
+											peopleOrPlaceAugStrong.push(data[i].suggestion.strongNumber);
+											searchResultIndexPeoplePlace = step.searchSelect.searchTypeCode.indexOf("peopleorplace");
+											if (typeof data[i].suggestion.strongNumber === "string") {
+												var strongPrefix = data[i].suggestion.strongNumber[0].toUpperCase();
+												shortTxt2Display = gloss;
+												if (((strongPrefix === "H") || (strongPrefix === "G")) &&
+													(typeof data[i].suggestion._article === "string")) {
+													text2Display = gloss + step.util.formatArticle(data[i].suggestion._article);
+												}
+												else
+													text2Display = gloss + ' (<i>' + data[i].suggestion.stepTransliteration +
+														'</i> - ' + data[i].suggestion.matchingForm + ')';
 											}
-											else
-												text2Display = gloss + ' (<i>' + data[i].suggestion.stepTransliteration +
-													'</i> - ' + data[i].suggestion.matchingForm + ')';
+											str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);
+											if (peopleOrPlaceSearchStrongs.includes(str2Search))
+												continue; // Don't show the same search suggestion twice
+											peopleOrPlaceSearchStrongs.push(str2Search);
+											searchSuggestionsToDisplay[searchResultIndexPeoplePlace] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndexPeoplePlace], str2Search, "peopleorplace", "strong", text2Display, shortTxt2Display, limitType);
 										}
-										str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);
-										if (peopleOrPlaceSearchStrongs.includes(str2Search))
-											continue; // Don't show the same search suggestion twice
-										peopleOrPlaceSearchStrongs.push(str2Search);
-										searchSuggestionsToDisplay[searchResultIndexPeoplePlace] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndexPeoplePlace], str2Search, "peopleorplace", "strong", text2Display, shortTxt2Display, limitType);
 										if (suggestionType === GREEK_MEANINGS) {
 											searchType = GREEK;
 											searchResultIndex = step.searchSelect.searchTypeCode.indexOf(searchType);
@@ -1082,11 +1082,12 @@ step.searchSelect = {
 											searchType = HEBREW;
 											searchResultIndex = step.searchSelect.searchTypeCode.indexOf(searchType);
 										}
-										if (data[i].suggestion.strongNumber.length != 6) continue; // Aug strong has 6 characters
 										str2Search = data[i].suggestion.strongNumber.substring(0,5);
 										if (peopleOrPlaceBasicStrong.includes(str2Search)) continue;
 										peopleOrPlaceBasicStrong.push(str2Search);
-										searchType = 'syntax_strong';
+										if (data[i].suggestion.strongNumber.length == 6) // Aug strong has 6 characters
+											searchType = 'syntax_strong';
+										else searchType = 'strong';
 									}
 									else searchType = 'strong';
 									text2Display = gloss + ' (<i>' + data[i].suggestion.stepTransliteration + '</i> - ' + data[i].suggestion.matchingForm + ')';

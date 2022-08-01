@@ -3,7 +3,7 @@ step.searchSelect = {
 	version: "ESV_th",
 	userLang: "en",
 	searchOnSpecificType: "",
-	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW],
+	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW, "augmented_strong"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
 	searchRange: "Gen-Rev",
@@ -334,7 +334,7 @@ step.searchSelect = {
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
 		showPreviousSearch(); // The function will determine if it need to show previous search
-		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
+		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
 			$('#previousSearch').show();
 			if (this.searchModalCurrentPage == 1) $('#srchModalBackButton').hide();
@@ -343,10 +343,6 @@ step.searchSelect = {
 					this.timer && clearTimeout(this.timer);
 					this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
 				});
-				// .keyup(function(e){
-					// this.timer && clearTimeout(this.timer);
-					// this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
-				// });
 			});
 			$('textarea#userTextInput').focus();
 			this._handleEnteredSearchWord(null, this.searchUserInput);
@@ -991,6 +987,7 @@ step.searchSelect = {
 				for (var i = 0; i < step.searchSelect.searchTypeCode.length; i++) {
 					searchSuggestionsToDisplay.push("");
 				}
+				var alreadyShownStrong = [];
 				for (var i = 0; i < data.length; i++) {
 					var suggestionType = data[i].itemType;
 					var searchType = suggestionType;
@@ -1047,13 +1044,159 @@ step.searchSelect = {
 									}
 								}
 								else {
-									var gloss = data[i].suggestion.gloss;
 									str2Search = data[i].suggestion.strongNumber;
 									searchType = 'strong';
+									if (str2Search.search(/^[GH]\d{4}[A-Za-z]$/) == 0) { 
+										str2Search = str2Search.substring(0,5) + "*"; // remove the last character if it is an a-g character
+										if (alreadyShownStrong.includes(str2Search)) continue;
+										alreadyShownStrong.push(str2Search);
+									}
+									var gloss = data[i].suggestion.gloss;
 									text2Display = gloss + ' (<i>' + data[i].suggestion.stepTransliteration + '</i> - ' + data[i].suggestion.matchingForm + ')';
 									shortTxt2Display = gloss;
 								}
-								searchSuggestionsToDisplay[searchResultIndex] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType);
+								searchSuggestionsToDisplay[searchResultIndex] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+									str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType);
+							}
+							break;
+						case REFERENCE:
+							if ((data[i].suggestion.sectionType === 'PASSAGE') && (!data[i].suggestion.wholeBook)) {
+								pos = step.searchSelect.searchUserInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i);
+								if (pos > -1) {
+									if (userPressedEnterKey) step.searchSelect.goToPassage(data[0].suggestion.osisID, 0);
+									$('#warningMessage').empty();
+									$('#warningMessage').append('<a href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">You can only search for words and subjects here.  Click to learn how to select passage.<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>');
+								}
+							}
+							break;
+						default:
+							alert("Unknown result: " + suggestionType);
+							break;
+					}
+				}
+				for (l = 0; l < searchSuggestionsToDisplay.length; l++) {
+					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
+					if (limitType === "") $('.select-' + step.searchSelect.searchTypeCode[l]).show()
+					else if (step.searchSelect.searchTypeCode[l] === limitType) $('.select-' + step.searchSelect.searchTypeCode[l]).show();
+					else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
+					// else if (searchSuggestionsToDisplay[l].length > 0) $('.select-' + step.searchSelect.searchTypeCode[l]).show()
+				}
+			}).fail(function() {
+                changeBaseURL();
+            });
+			$.ajaxSetup({async: true});
+		}
+		else {
+			for (l = 0; l < step.searchSelect.searchTypeCode.length; l++) {
+				$('#searchResults' + step.searchSelect.searchTypeCode[l]).text("");
+			}
+			showPreviousSearch(); // The update previous search button might need to be displayed if user has includes previous search 
+		}
+	},
+
+	_showAugmentedStrong: function(limitType, previousInput) {
+		if ((typeof limitType === "undefined") || (limitType === null)) limitType = "";
+		var userInput = '';
+		$('#warningMessage').text('');
+		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))  userInput =  $('textarea#userTextInput').val();
+		else {
+			userInput = previousUserInput;
+			$('textarea#userTextInput').text(userInput);
+		}
+		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
+		step.searchSelect.searchUserInput = userInput;
+		if ((userInput.length > 1) || ((step.searchSelect.userLang.toLowerCase().indexOf("zh") == 0) && (userInput.length > 0))) {
+			$('#updateButton').hide();
+			var url;
+			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version + "%7C?lang=" + step.searchSelect.userLang;
+			else {
+				if (limitType === "") limitType = step.searchSelect.searchOnSpecificType;
+				else {
+					step.searchSelect.searchOnSpecificType = limitType;
+					step.searchSelect.searchModalCurrentPage = 2;
+				}
+				$('#srchModalBackButton').show();
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version +
+					"%7C" + LIMIT + "%3D" + limitType +
+					"%7C?lang=" + step.searchSelect.userLang;
+			}
+			$.ajaxSetup({async: false});
+			$.getJSON(url, function (data) {
+				var searchSuggestionsToDisplay = [];
+				for (var i = 0; i < step.searchSelect.searchTypeCode.length; i++) {
+					searchSuggestionsToDisplay.push("");
+				}
+				var alreadyShownStrong = [];
+				for (var i = 0; i < data.length; i++) {
+					var suggestionType = data[i].itemType;
+					var searchType = suggestionType;
+					var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
+					switch(suggestionType) {
+						case GREEK:
+						case GREEK_MEANINGS:
+						case HEBREW:
+						case HEBREW_MEANINGS:
+						case MEANINGS:
+						case SUBJECT_SEARCH:
+						case TEXT_SEARCH:
+							var text2Display = "";
+							if (data[i].grouped) {
+								if (typeof data[i].extraExamples !== "undefined") {
+									if ((searchSuggestionsToDisplay[searchResultIndex].match(/<br>/g) || []).length < 4) {
+										for (var k = 0; k < data[i].extraExamples.length; k++) {
+											if (k > 0) text2Display += ", ";
+											if ((suggestionType === GREEK) || (suggestionType === HEBREW))
+												text2Display += '<i>' + data[i].extraExamples[k].stepTransliteration + '</i>';
+											else if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS) || (suggestionType === MEANINGS))
+												text2Display += data[i].extraExamples[k].gloss;
+											else if (suggestionType === SUBJECT_SEARCH)
+												text2Display += data[i].extraExamples[k].value;
+										}
+										if (text2Display.length == 0) console.log('group, but no examples');
+										else {
+											text2Display += ', ' + __s.etc + '<i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i>';
+											if (searchSuggestionsToDisplay[searchResultIndex] !== "") searchSuggestionsToDisplay[searchResultIndex] += "<br>";
+											searchSuggestionsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>";
+										}
+									}
+								}
+								else {
+									if (searchSuggestionsToDisplay[searchResultIndex] !== "") searchSuggestionsToDisplay[searchResultIndex] += "<br>";
+									searchSuggestionsToDisplay[searchResultIndex] += 'There are ' + data[i].count + ' more options.  Keep typing to see them.';
+								}
+							}
+							else {
+								var str2Search = "";
+								var shortTxt2Display = "";
+								if (suggestionType === SUBJECT_SEARCH) {
+									text2Display = data[i].suggestion.value;
+									str2Search = text2Display;
+								}
+								else if (suggestionType === MEANINGS) {
+									text2Display = data[i].suggestion.gloss;
+									str2Search = text2Display;
+								}
+								else if (suggestionType === TEXT_SEARCH) {
+									if (data[i].suggestion.text.search(/^[HG]\d/i) == -1) { // Make sure it is not a STRONG number (e.g.: H0001)
+										text2Display = data[i].suggestion.text;
+										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
+									}
+								}
+								else {
+									str2Search = data[i].suggestion.strongNumber;
+									searchType = 'strong';
+									if (str2Search.search(/^[GH]\d{4}[A-Za-z]$/) == 0) { 
+										str2Search = str2Search.substring(0,5) + "*"; // remove the last character if it is an a-g character
+										if (alreadyShownStrong.includes(str2Search)) continue;
+										alreadyShownStrong.push(str2Search);
+									}
+									var gloss = data[i].suggestion.gloss;
+									text2Display = gloss + ' (<i>' + data[i].suggestion.stepTransliteration + '</i> - ' + data[i].suggestion.matchingForm + ')';
+									shortTxt2Display = gloss;
+								}
+								searchSuggestionsToDisplay[searchResultIndex] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+									str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType);
 							}
 							break;
 						case REFERENCE:
@@ -1245,22 +1388,5 @@ step.searchSelect = {
 		this.andOrNotUpdated = true;
 		$('#updateButton').show();
 	}
-	//},
 
-//	handlePreviousSearchAndOrNot: function() {
-//		var searchAndOrNot = $("#searchAndOrNot option:selected").val();
-//		if (searchAndOrNot === "AND") {
-//			$("#searchResultssubject").show();
-//			$("#searchResultsmeanings").show();
-//			$("#searchResultssubjectWarn").hide();
-//			$("#searchResultsmeaningsWarn").hide();
-//		}
-//		else {
-//			$("#searchResultssubject").hide();
-//			$("#searchResultsmeanings").hide();
-//			$("#searchResultssubjectWarn").show();
-//			$("#searchResultsmeaningsWarn").show();
-//   
-//		}
-//	}
 };

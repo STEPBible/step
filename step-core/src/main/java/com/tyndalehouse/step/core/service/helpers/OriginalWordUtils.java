@@ -1,18 +1,14 @@
 package com.tyndalehouse.step.core.service.helpers;
 
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.MultiTermQueryWrapperFilter;
-import org.apache.lucene.search.PrefixFilter;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import org.apache.lucene.search.PrefixQuery;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.TermQuery;
 

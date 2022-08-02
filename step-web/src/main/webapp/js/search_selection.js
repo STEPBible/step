@@ -1133,19 +1133,16 @@ step.searchSelect = {
 					var str2Search = strongNum;
 					searchType = 'strong';
 					var gloss = data[i].suggestion.gloss;
-					text2Display = gloss + ' (<i>' + data[i].suggestion.stepTransliteration + '</i> - ' + data[i].suggestion.matchingForm + ')';
+					var strongPrefix = strongNum[0].toUpperCase();
 					shortTxt2Display = gloss;
-					if (typeof strongNum === "string") {
-						var strongPrefix = strongNum[0].toUpperCase();
-						shortTxt2Display = gloss;
-						if (((strongPrefix === "H") || (strongPrefix === "G")) &&
-							(typeof data[i].suggestion._article === "string")) {
-							text2Display = gloss + step.util.formatArticle(data[i].suggestion._article);
-						}
-						else
-							text2Display = gloss + ' (<i>' + data[i].suggestion.stepTransliteration +
-								'</i> - ' + data[i].suggestion.matchingForm + ')';
+					text2Display = data[i].suggestion.type + ": " + gloss;
+					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
+						(typeof data[i].suggestion._article === "string")) {
+						text2Display += step.util.formatArticle(data[i].suggestion._article);
 					}
+					else
+						text2Display += ' (<i>' + data[i].suggestion.stepTransliteration +
+							'</i> - ' + data[i].suggestion.matchingForm + ')';
 					str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);
 					if (detailLexSearchStrongs.includes(str2Search)) continue; // Don't show the same search suggestion twice
 						detailLexSearchStrongs.push(str2Search);

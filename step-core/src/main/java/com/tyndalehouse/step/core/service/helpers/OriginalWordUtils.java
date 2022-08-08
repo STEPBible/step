@@ -48,7 +48,7 @@ public final class OriginalWordUtils {
         suggestion.setMatchingForm(def.get("accentedUnicode"));
         suggestion.setStepTransliteration(def.get("stepTransliteration"));
         suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
-		suggestion.set_article(def.get("STEP_Article"));
+		suggestion.set_searchResultRange(def.get("SearchResultRange"));
         String stepType = def.get("STEP_Type");
         suggestion.setType(stepType);
         if (stepType.equals("man") || stepType.equals("place") || stepType.equals("woman")) {

@@ -391,17 +391,17 @@ step.searchSelect = {
 			'<div id="search_table">' +
 			'<table border="1">' +
 			'<colgroup>' +
-			'<col span="1" style="width:39%;">' +
+			'<col id="column1width" span="1" style="width:39%;">' +
 			'<col span="1" style="width:61%;">' +
 			'</colgroup>' +
 			'<tr>' +
-			'<th scope="col">' + __s.type_of_search + '</th>' +
+			'<th scope="col" class="search-type-column">' + __s.type_of_search + '</th>' +
 			'<th scope="col">' + __s.suggested_search_words + '</th>' +
 			'</tr>';
 		for (var i = 0; i < this.searchTypeCode.length; i ++) {
 			var srchCode = this.searchTypeCode[i];
-			html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '">' +
-				'<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '" title="' + 
+			html += '<tr style="height:40px;" class="select2-result select2-result-selectable select-' + srchCode + '">' +
+				'<td class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
 				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left">' + __s['search_type_desc_' + srchCode] + ':</td>' +
 				'<td style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
 		}
@@ -959,6 +959,8 @@ step.searchSelect = {
 		var userInput = '';
 		$('textarea#userTextInput').show();
 		$("#hd4").text(__s.enter_search_word);
+		$("#column1width").width("30%");
+		$(".search-type-column").show();
 		$('#warningMessage').text('');
 		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))  userInput =  $('textarea#userTextInput').val();
 		else {
@@ -1136,16 +1138,17 @@ step.searchSelect = {
 					var strongPrefix = strongNum[0].toUpperCase();
 					shortTxt2Display = gloss;
 					text2Display = data[i].suggestion.type + ": " + gloss;
+					str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);
+					if (detailLexSearchStrongs.includes(str2Search)) continue; // Don't show the same search suggestion twice
+						detailLexSearchStrongs.push(str2Search);
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
-						(typeof data[i].suggestion._article === "string")) {
-						text2Display += step.util.formatArticle(data[i].suggestion._article);
+						(typeof data[i].suggestion._searchResultRange === "string")) {
+						var moreThanOneStrong = str2Search.indexOf(",") > -1;
+						text2Display += step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong);
 					}
 					else
 						text2Display += ' (<i>' + data[i].suggestion.stepTransliteration +
 							'</i> - ' + data[i].suggestion.matchingForm + ')';
-					str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);
-					if (detailLexSearchStrongs.includes(str2Search)) continue; // Don't show the same search suggestion twice
-						detailLexSearchStrongs.push(str2Search);
 					searchSuggestionsToDisplay[searchResultIndex] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 						str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType);
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i);
@@ -1154,9 +1157,15 @@ step.searchSelect = {
 					alert("Unknown result: " + suggestionType);
 				}
 			}
+			var strongWithoutAugment = (isNaN(strongNum.substr(-1))) ? strongNum.substring(0, strongNum.length-1) : strongNum;
+			var text2Display = "all named \"" + data[0].suggestion.gloss + "\" (" + data[0].suggestion.stepTransliteration + " " + data[0].suggestion.matchingForm + ")";
+			searchSuggestionsToDisplay[searchResultIndex] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+				strongWithoutAugment, suggestionType, "syntax_strong", text2Display, shortTxt2Display, limitType);
 			for (l = 0; l < searchSuggestionsToDisplay.length; l++) {
-				$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
-				if (step.searchSelect.searchTypeCode[l] === limitType) $('.select-' + step.searchSelect.searchTypeCode[l]).show();
+				if (step.searchSelect.searchTypeCode[l] === limitType) {
+					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
+					$('.select-' + step.searchSelect.searchTypeCode[l]).show();
+				}
 				else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
 			}
 
@@ -1165,6 +1174,8 @@ step.searchSelect = {
 		});
 		$.ajaxSetup({async: true});
 		$(".detailLexTriangle").click(step.searchSelect._handleClickOnTriangle);
+		$("#column1width").width("100%");
+		$(".search-type-column").hide();
 	},
 
 	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType) {
@@ -1231,8 +1242,9 @@ step.searchSelect = {
 				result += "<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>";
 				spaceWithoutLabel = "";
 			}
-			result += '<a class="detailLex' + count + '" style="display:none" style="padding:0px"' + item[1] + ' href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
-				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + item[0] + " " + item[2] + " " + item[1] + "</a>";
+			result += '<a class="detailLex' + count + '" style="display:none" style="padding:0px" title="' + item[1] + '"' +
+				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
+				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " (" + item[4] + ")</a>";
 		});
 		return result;
 	},

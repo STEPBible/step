@@ -184,8 +184,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             }
             final EntityDoc[] definitions = reOrder(strongList, strongDefs);
             final Map<String, List<LexiconSuggestion>> relatedWords = readRelatedWords(definitions, userLanguage);
-            final HashMap<String, String> expandedDetailLexicalTag = readDetailLexicalTagWords(definitions, relatedWords, userLanguage);
-            return new VocabResponse(definitions, relatedWords, expandedDetailLexicalTag);
+            return new VocabResponse(definitions, relatedWords);
         }
 
         return new VocabResponse();
@@ -231,94 +230,21 @@ public class VocabularyServiceImpl implements VocabularyService {
 
                 // store as a link to its source number
                 if (shortLexiconDefinition != null) {
+                    if (shortLexiconDefinition.get_detailLexicalTag() != null)
+                        shortLexiconDefinition.setDetailLexicalTag(null); // This field is not needed for related words
+                    if (shortLexiconDefinition.getPopularity() != null)
+                        shortLexiconDefinition.setPopularity(null); // This field is not needed for related words
                     SortedSet<LexiconSuggestion> associatedNumbersSoFar = relatedWords.get(sourceNumber);
                     if (associatedNumbersSoFar == null) {
                         associatedNumbersSoFar = new TreeSet<>(
                                 SortingUtils.LEXICON_SUGGESTION_COMPARATOR);
                         relatedWords.put(sourceNumber, associatedNumbersSoFar);
                     }
-
                     associatedNumbersSoFar.add(shortLexiconDefinition);
                 }
             }
         }
         return convertToListMap(relatedWords);
-    }
-
-    /**
-     * Read related words, i.e. all the words that are in the related numbers fields.
-     *
-     * @param defs the definitions that have been looked up.
-     * @return the map
-     */
-    private HashMap<String, String> readDetailLexicalTagWords(final EntityDoc[] defs, Map<String, List<LexiconSuggestion>> relatedWords, final String userLanguage) {
-        HashMap<String, String> results = new HashMap<String, String>();
-        final ArrayList<String[]> detailLexicalTagWords = new ArrayList<>();
-        for (final EntityDoc doc : defs) {
-            String resultString = "[";
-            final String sourceStrongNumber = doc.get("strongNumber");
-            String detailLexicalWordNumbers = doc.get("STEP_DetailLexicalTag");
-            if (detailLexicalWordNumbers == null) continue;
-            final String[] allDetailLexicalWords = split(detailLexicalWordNumbers, "[,\\[\\]\"]+");
-            String previousWord = "";
-            for (final String currentWord : allDetailLexicalWords) {
-                if (isBlank(currentWord)) continue;
-                if ( ((currentWord.length() != 5) && (currentWord.length() != 6)) ||
-                        (!StringUtils.isNumeric(currentWord.substring(1,5))) ) {
-                    previousWord = currentWord;
-                    continue;
-                }
-                String[] partsOfDetailLexicalWord = new String[2];
-                partsOfDetailLexicalWord[0] = currentWord;
-                partsOfDetailLexicalWord[1] = previousWord;
-                detailLexicalTagWords.add(partsOfDetailLexicalWord);
-            }
-            if (detailLexicalTagWords.size() == 0) continue;
-            if (detailLexicalTagWords.size() > 1)
-                detailLexicalTagWords.sort((a, b) -> a[0].compareTo(b[0]));
-            int relatedWordsCounter = 0;
-            int numOfRelatedWords = ((relatedWords == null) || (relatedWords.size() == 0)) ?
-                0 : relatedWords.get(sourceStrongNumber).size();
-            forLoop:
-            for (String[] curLexicalTag : detailLexicalTagWords) {
-                int compareResult = 0;
-                whileLoop:
-                while ((compareResult <= 0) && (relatedWordsCounter < numOfRelatedWords)) { // scan through the related words and use the information already available
-                    LexiconSuggestion curRelatedWord = relatedWords.get(sourceStrongNumber).get(relatedWordsCounter);
-                    String relatedStrongNum = curRelatedWord.getStrongNumber();
-                    compareResult = relatedStrongNum.compareTo(curLexicalTag[0]);
-                    if (compareResult == 0) {
-                        if (!resultString.equals("["))
-                            resultString += ","; // add a comma to separate different detail lexical entries
-                        String popularity = curRelatedWord.getPopularity();
-                        if (!StringUtils.isNumeric(popularity)) popularity = "0";
-                        resultString += "[\"" + curLexicalTag[0] + "\",\"" + curLexicalTag[1] + "\",\"" +
-                                curRelatedWord.getGloss() + "\"," +
-                                popularity + ",\"" +
-                                curRelatedWord.getMatchingForm() + "\"]";
-                        relatedWordsCounter++;
-                        continue forLoop;
-                    } else if (compareResult < 0) {
-                        relatedWordsCounter++;
-                        // continue whileLoop; // This line is not necessary now, but will eliminate errors if addition code is added below within this while loop
-                    }
-                }
-                final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, curLexicalTag[0]);
-                // assume first doc
-                if (relatedDoc.length > 0) {
-                    if (!resultString.equals("["))
-                        resultString += ","; // add a comma to separate different detail lexical entries
-                    String popularity = relatedDoc[0].get("popularity");
-                    if (!StringUtils.isNumeric(popularity)) popularity = "0";
-                    resultString += "[\"" + curLexicalTag[0] + "\",\"" + curLexicalTag[1] + "\",\"" +
-                            relatedDoc[0].get("stepGloss") + "\"," +
-                            popularity + ",\"" +
-                            relatedDoc[0].get("accentedUnicode") + "\"]";
-                }
-            }
-            results.put(sourceStrongNumber, resultString + "]");
-        }
-        return results;
     }
 
     /**

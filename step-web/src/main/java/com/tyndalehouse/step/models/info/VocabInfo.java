@@ -73,7 +73,6 @@ public class VocabInfo implements Serializable {
     private String twoLetterLookup;
     private String rawRelatedNumbers;
 	private String stepDetailLexicalTag;
-    private String expandedDetailLexicalTag;
 	private String step_Link;
 	private String step_Type;
     private Integer count;
@@ -93,7 +92,6 @@ public class VocabInfo implements Serializable {
      * @param includeAllInfo true to include all information
      */
     public VocabInfo(final EntityDoc d, final Map<String, List<LexiconSuggestion>> relatedVocabs,
-                     final HashMap<String, String> expandedDetailLexicalTag,
                      final boolean includeAllInfo, final String userLanguage) {
         this.accentedUnicode = d.get("accentedUnicode");
         this.shortDef = d.get("shortDefinition");
@@ -141,7 +139,6 @@ public class VocabInfo implements Serializable {
             if (this.strongNumber != null) {
                 this.relatedNos = relatedVocabs.get(this.strongNumber);
                 this.stepDetailLexicalTag = d.get("STEP_DetailLexicalTag");
-                this.expandedDetailLexicalTag = expandedDetailLexicalTag.get(this.strongNumber);
 				this.step_Link = d.get("STEP_Link");
 				this.step_Type = d.get("STEP_Type");
             }
@@ -383,16 +380,6 @@ public class VocabInfo implements Serializable {
      */
     public void set_stepDetailLexicalTag(final String stepDetailLexicalTag) {
         this.stepDetailLexicalTag = stepDetailLexicalTag;
-    }
-
-    public String get_expandedLexicalTag() {
-        return this.expandedDetailLexicalTag;
-    }
-    /**
-     * @param expandedDetailLexicalTag to set the expandedDetailLexicalTag
-     */
-    public void set_expandedLexicalTag(final String expandedDetailLexicalTag) {
-        this.expandedDetailLexicalTag = expandedDetailLexicalTag;
     }
 
     /**

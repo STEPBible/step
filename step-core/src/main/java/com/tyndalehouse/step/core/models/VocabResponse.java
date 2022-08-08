@@ -44,20 +44,16 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 public class VocabResponse {
     private EntityDoc[] definitions;
     private Map<String, List<LexiconSuggestion>> relatedWords;
-    private HashMap<String, String> expandedDetailLexicalTag;
 
     /**
      * Instantiates a new vocab response.
      * @param definitions the definitions
      * @param relatedWords the related words
-     * @param expandedDetailLexicalTag
      */
     public VocabResponse(final EntityDoc[] definitions,
-                         final Map<String, List<LexiconSuggestion>> relatedWords,
-                         final HashMap<String, String> expandedDetailLexicalTag) {
+                         final Map<String, List<LexiconSuggestion>> relatedWords) {
         this.definitions = definitions;
         this.relatedWords = relatedWords;
-        this.expandedDetailLexicalTag = expandedDetailLexicalTag;
     }
 
     /**
@@ -73,7 +69,7 @@ public class VocabResponse {
      * @param definitions the definitions
      */
     public VocabResponse(final EntityDoc[] definitions) {
-        this(definitions, new HashMap<String, List<LexiconSuggestion>>(), new HashMap<String, String>());
+        this(definitions, new HashMap<String, List<LexiconSuggestion>>());
     }
 
     /**
@@ -102,19 +98,5 @@ public class VocabResponse {
      */
     public void setRelatedWords(final Map<String, List<LexiconSuggestion>> relatedWords) {
         this.relatedWords = relatedWords;
-    }
-
-    /**
-     * @return the expandedDetailLexicalTag
-     */
-    public HashMap<String, String> getExpandedDetailLexicalTag() {
-        return this.expandedDetailLexicalTag;
-    }
-
-    /**
-     * @param expandedDetailLexicalTag the relatedWords to set
-     */
-    public void setExpandedDetailLexicalTag(final HashMap<String, String> expandedDetailLexicalTag) {
-        this.expandedDetailLexicalTag = expandedDetailLexicalTag;
     }
 }

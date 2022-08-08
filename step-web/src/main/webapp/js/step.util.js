@@ -3226,16 +3226,23 @@ step.util = {
 		if ((stepBgColor === "#202124") || (stepBgColor === "rgb(32, 33, 36)")) return true; // old iPad would return the rgb value
 		return false;
 	},
-   	formatArticle: function(article) {
-        var pos1 = article.indexOf("@");
+   	formatSearchResultRange: function(origSearchResultRange, moreThanOneStrongSearch) {
+		var searchResultRange = origSearchResultRange;
+        var pos1 = searchResultRange.indexOf("@");
         if (pos1 > -1) {
-            var pos2 = article.indexOf("-", pos1+1);
-            if (pos2 > -1) {
-                return " from " + article.substring(pos1 + 1, pos2) + " - " + article.substring(pos2 + 1);
-            }
-            else return " only at " + article.substring(pos1 + 1);
+			if (moreThanOneStrongSearch)
+				searchResultRange = searchResultRange.substring(pos1 + 1);
+			else
+				searchResultRange = searchResultRange.substring(0, pos1);
+		}
+        var pos2 = searchResultRange.indexOf("-");
+        if (pos2 > -1) {
+			var secondPassage = searchResultRange.substring(pos2 + 1);
+			var separator = (secondPassage.indexOf(".") == -1) ? "-" : " - ";
+            return " from " + searchResultRange.substring(0, pos2) + separator + secondPassage;
         }
-        return article;
+        else return " only at " + searchResultRange;
+        return searchResultRange;
 	}
 }
 ;

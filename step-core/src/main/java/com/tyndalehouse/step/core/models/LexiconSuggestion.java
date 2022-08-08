@@ -16,7 +16,7 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private String es_Gloss;
     private String zh_tw_Gloss;
     private String zh_Gloss;
-    private String article;
+    private String searchResultRange;
 	private String type;
 	private String detailLexicalTag;
     private String popularity;
@@ -70,17 +70,16 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
      * @return the STEP_Type
      */
 
-
     public String getType() {
         return this.type;
     }
 
     /**
-     * @return the Step Article
+     * @return the SearchResultRange
      */
 
-    public String get_article() {
-        return this.article;
+    public String get_searchResultRange() {
+        return this.searchResultRange;
     }
 
     /**
@@ -117,8 +116,8 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
         this.zh_Gloss = chineseGloss;
     }
 
-    public void set_article(final String stepArticle) {
-        this.article = stepArticle;
+    public void set_searchResultRange(final String searchResultRange) {
+        this.searchResultRange = searchResultRange;
     }
 
     public void setType(final String stepType) {

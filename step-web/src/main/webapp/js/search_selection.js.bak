@@ -3,8 +3,7 @@ step.searchSelect = {
 	version: "ESV_th",
 	userLang: "en",
 	searchOnSpecificType: "",
-	//searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW, "augmented_strong"],
-	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, HEBREW],
+	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW, "augmented_strong"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
 	searchRange: "Gen-Rev",
@@ -1050,26 +1049,21 @@ step.searchSelect = {
 								}
 								else {
 									str2Search = data[i].suggestion.strongNumber;
-									var strongWithoutAugment = str2Search;
-                                    var isAugmentedStrong = false;
-									if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
-										strongWithoutAugment = RegExp.$1;
-                                        isAugmentedStrong = true;
-                                    }
-									if (alreadyShownStrong.includes(strongWithoutAugment)) continue;
-									alreadyShownStrong.push(strongWithoutAugment);
 									searchType = 'strong';
 									var gloss = data[i].suggestion.gloss;
 									text2Display = gloss + ' (<i>' + data[i].suggestion.stepTransliteration + '</i> - ' + data[i].suggestion.matchingForm + ')';
 									shortTxt2Display = gloss;
-									if ((isAugmentedStrong) || ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== ""))) {
-										searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
-											strongWithoutAugment, suggestionType, searchType, text2Display, shortTxt2Display, limitType, true);
+									if (str2Search.search(/^[GH]\d{4}[A-Za-z]$/) == 0) { 
+										str2Search = str2Search.substring(0,5); // remove the last character if it is an a-z or A-Z character
+										if (alreadyShownStrong.includes(str2Search)) continue;
+										alreadyShownStrong.push(str2Search);
+										searchSuggestionsToDisplay[searchResultIndex] = step.searchSelect.appendAugStrongSearchToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+											str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType);
 										continue;
 									}
 								}
-								searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
-									str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false);
+								searchSuggestionsToDisplay[searchResultIndex] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+									str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType);
 							}
 							break;
 						case REFERENCE:
@@ -1123,7 +1117,6 @@ step.searchSelect = {
 		$.getJSON(url, function (data) {
 			var searchSuggestionsToDisplay = [];
 			var detailLexSearchStrongs = [];
-			var gloss = "";
 			for (var i = 0; i < step.searchSelect.searchTypeCode.length; i++) {
 				searchSuggestionsToDisplay.push("");
 			}
@@ -1141,7 +1134,7 @@ step.searchSelect = {
 					var strongNum = data[i].suggestion.strongNumber;
 					var str2Search = strongNum;
 					searchType = 'strong';
-					gloss = data[i].suggestion.gloss;
+					var gloss = data[i].suggestion.gloss;
 					var strongPrefix = strongNum[0].toUpperCase();
 					shortTxt2Display = gloss;
 					text2Display = data[i].suggestion.type + ": " + gloss;
@@ -1156,8 +1149,8 @@ step.searchSelect = {
 					else
 						text2Display += ' (<i>' + data[i].suggestion.stepTransliteration +
 							'</i> - ' + data[i].suggestion.matchingForm + ')';
-					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
-						str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false);
+					searchSuggestionsToDisplay[searchResultIndex] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+						str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType);
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i);
 				}
 				else {
@@ -1165,12 +1158,9 @@ step.searchSelect = {
 				}
 			}
 			var strongWithoutAugment = (isNaN(strongNum.substr(-1))) ? strongNum.substring(0, strongNum.length-1) : strongNum;
-			var text2Display = " \"" + data[0].suggestion.gloss + "\" (" + data[0].suggestion.stepTransliteration + " " + data[0].suggestion.matchingForm + ")";
-			searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
-				strongWithoutAugment, suggestionType, "syntax_strong", "all named" + text2Display, shortTxt2Display, limitType, false);
-			// var aramaic = step.searchSelect.getAramaicStrongFromDetailLexicalTag(strongNum, gloss, data[i].suggestion._detailLexicalTag,
-            //     searchSuggestionsToDisplay[searchResultIndex], 
-			// 	strongWithoutAugment, suggestionType, text2Display, shortTxt2Display, limitType);
+			var text2Display = "all named \"" + data[0].suggestion.gloss + "\" (" + data[0].suggestion.stepTransliteration + " " + data[0].suggestion.matchingForm + ")";
+			searchSuggestionsToDisplay[searchResultIndex] = step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+				strongWithoutAugment, suggestionType, "syntax_strong", text2Display, shortTxt2Display, limitType);
 			for (l = 0; l < searchSuggestionsToDisplay.length; l++) {
 				if (step.searchSelect.searchTypeCode[l] === limitType) {
 					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
@@ -1188,30 +1178,42 @@ step.searchSelect = {
 		$(".search-type-column").hide();
 	},
 
-	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, isAugStrong) {
+	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType) {
 		var brCount = 0;
-		var suggestionsToDisplay = 5;
-		var needLineBreak = "";
 		if (existingSuggestionsToDisplay !== "") {
 			brCount = (existingSuggestionsToDisplay.match(/<br>/g) || []).length;
-			if ((brCount < suggestionsToDisplay + 1) || (limitType !== "")) needLineBreak = "<br>";
+			if ((brCount < 4) || (limitType !== "")) existingSuggestionsToDisplay += "<br>";
 		}
-		if ((brCount < suggestionsToDisplay - 1) || (limitType !== "")) {
+		if ((brCount < 2) || (limitType !== "")) {
 			var titleText = (((str2Search.substring(0,1) === "H") || (str2Search.substring(0,1) === "G")) && (!isNaN(str2Search.substring(1,5)))) ? 
 				' title="' + str2Search + '" ' : '';
-			if (isAugStrong)
-				return needLineBreak + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search +
-					'\')">' + text2Display + "</a>";
-			else
-				return needLineBreak + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
-					str2Search + '\',\'' + 
-					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
-					'\')">' + text2Display + "</a>";
+			return existingSuggestionsToDisplay + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
+				str2Search + '\',\'' + 
+				text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
+				'\')">' + text2Display + "</a>";
 		}
-		if (brCount < suggestionsToDisplay)
-			return needLineBreak + '<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+		if (brCount < 3)
+			return existingSuggestionsToDisplay + '<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
 				+ suggestionType + '\')">' + shortTxt2Display + ', etc.<i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i></a>';
-		return "";
+		return existingSuggestionsToDisplay;
+	},
+
+	appendAugStrongSearchToDisplay: function(existingSuggestionsToDisplay, str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType) {
+		var brCount = 0;
+		if (existingSuggestionsToDisplay !== "") {
+			brCount = (existingSuggestionsToDisplay.match(/<br>/g) || []).length;
+			if ((brCount < 4) || (limitType !== "")) existingSuggestionsToDisplay += "<br>";
+		}
+		if ((brCount < 2) || (limitType !== "")) {
+			var titleText = (((str2Search.substring(0,1) === "H") || (str2Search.substring(0,1) === "G")) && (!isNaN(str2Search.substring(1,5)))) ? 
+				' title="' + str2Search + '" ' : '';
+			return existingSuggestionsToDisplay + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search +
+				'\')">' + text2Display + "</a>";
+		}
+		if (brCount < 3)
+			return existingSuggestionsToDisplay + '<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+				+ suggestionType + '\')">' + shortTxt2Display + ', etc.<i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i></a>';
+		return existingSuggestionsToDisplay;
 	},
 
 	extractStrongFromDetailLexicalTag: function(strongNumber, detailLexicalTag) {
@@ -1246,41 +1248,6 @@ step.searchSelect = {
 		});
 		return result;
 	},
-
-	// getAramaicStrongFromDetailLexicalTag: function(strongNum, gloss, detailLexicalTag, 
-    //     existingSuggestionsToDisplay, str2Search, suggestionType, text2Display, shortTxt2Display, limitType) {
-	// 	if ((typeof detailLexicalTag !== "string") || (detailLexicalTag === "")) return "";
-	// 	var detailLexicalJSON = JSON.parse(detailLexicalTag);
-	// 	var result = "";
-	// 	var isStrongAramaic = false;
-    //     var isStrongGreek = false;
-    //     var foundAramaic = "";
-    //     var foundGreek = "";
-    //     var foundOther = "";
-	// 	detailLexicalJSON.forEach(function (item, index) {
-	// 		if (item[1] === strongNum) {
-    //             if (item[0].toLowerCase().includes("aramaic")) isStrongAramaic = true;
-    //             else if ((item[0].toLowerCase().includes("greek"))  && (strongNum.substring(0,1) === "G"))
-    //                 isStrongGreek = true;
-    //         }
-    //         else if (gloss.toLowerCase() === item[2].toLowerCase()) {
-    //             if (item[0].toLowerCase().includes("aramaic")) foundAramaic = item[1];
-    //             else if ((item[0].toLowerCase().includes("greek")) && (item[1].substring(0,1) === "G"))
-    //                 foundGreek = item[1];
-    //             else foundOther = item[1];
-    //         }
-	// 	});
-    //     if ((!isStrongAramaic) && (foundAramaic !== "")) {
-    //         result = step.searchSelect.appendSearchSuggestionsToDisplay(existingSuggestionsToDisplay,
-	// 			foundAramaic, suggestionType, "syntax_strong", "all in Aramaic" + text2Display, shortTxt2Display, limitType, false);
-    //     }
-    //     if ((!isStrongGreek) && (foundGreek !== "")) {
-    //         result = step.searchSelect.appendSearchSuggestionsToDisplay(existingSuggestionsToDisplay,
-	// 			foundAramaic, suggestionType, "syntax_strong", "all in Greek" + text2Display, shortTxt2Display, limitType, false);
-    //     }
-        
-	// 	return result;
-	// },
 
 	_handleClickOnTriangle: function(ev){
 		var idName = ev.target.id;

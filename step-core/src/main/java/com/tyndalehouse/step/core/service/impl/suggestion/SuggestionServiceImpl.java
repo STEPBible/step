@@ -32,7 +32,7 @@ public class SuggestionServiceImpl implements SuggestionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SuggestionServiceImpl.class);
 
     //show the total number of ungrouped results at any one time.
-    private static final int MAX_RESULTS = 3;
+    private static final int MAX_RESULTS = 4;
     //determines how many values are shown on expanding line 'see 7 more, e.g. abc def'
     private static final int PREVIEW_GROUP = 2;
     private final Map<String, SingleTypeSuggestionService> queryProviders = new LinkedHashMap<String, SingleTypeSuggestionService>();
@@ -85,15 +85,18 @@ public class SuggestionServiceImpl implements SuggestionService {
         //go through each search type
         for (Map.Entry<String, SingleTypeSuggestionService> query : queryProviders.entrySet()) {
             String curQueryKey = query.getKey();
+            if (curQueryKey.equals("greekMeanings")|| curQueryKey.equals("hebrewMeanings")) continue;
             int maxResult = MAX_RESULTS;
-            if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew") || curQueryKey.equals("greekMeanings")|| curQueryKey.equals("hebrewMeanings"))
+//            if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew") || curQueryKey.equals("greekMeanings")|| curQueryKey.equals("hebrewMeanings"))
+            if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew"))
                 maxResult = MAX_RESULTS_NON_GROUPED * 4;
             final SingleTypeSuggestionService searchService = query.getValue();
 
             //run exact query against index
             final int groupTotal = this.getGroupTotal(curQueryKey, results);
             final int totalGroupLeftToRetrieve = maxResult - groupTotal + PREVIEW_GROUP;
-            Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(context, totalGroupLeftToRetrieve, true) : null;
+            //Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(context, totalGroupLeftToRetrieve, true) : null;
+            Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(context, totalGroupLeftToRetrieve, false) : null;
             int docLength = docs != null ? docs.length : 0;
 
             //how many do we need to collect
@@ -135,7 +138,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         for (String d : dependents) {
             final SingleSuggestionsSummary singleSuggestionsSummary = resultsSoFar.get(d);
             if (singleSuggestionsSummary == null) {
-                LOGGER.warn("Dependencies setup is incorrect");
+                // LOGGER.warn("Dependencies setup is incorrect");
                 continue;
             }
             final int totalMinusGroupExamples = singleSuggestionsSummary.getPopularSuggestions().size();

@@ -1123,7 +1123,6 @@ step.searchSelect = {
 		$.getJSON(url, function (data) {
 			var searchSuggestionsToDisplay = [];
 			var detailLexSearchStrongs = [];
-			var gloss = "";
 			for (var i = 0; i < step.searchSelect.searchTypeCode.length; i++) {
 				searchSuggestionsToDisplay.push("");
 			}
@@ -1141,7 +1140,7 @@ step.searchSelect = {
 					var strongNum = data[i].suggestion.strongNumber;
 					var str2Search = strongNum;
 					searchType = 'strong';
-					gloss = data[i].suggestion.gloss;
+					var gloss = data[i].suggestion.gloss;
 					var strongPrefix = strongNum[0].toUpperCase();
 					shortTxt2Display = gloss;
 					text2Display = data[i].suggestion.type + ": " + gloss;
@@ -1168,9 +1167,7 @@ step.searchSelect = {
 			var text2Display = " \"" + data[0].suggestion.gloss + "\" (" + data[0].suggestion.stepTransliteration + " " + data[0].suggestion.matchingForm + ")";
 			searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 				strongWithoutAugment, suggestionType, "syntax_strong", "all named" + text2Display, shortTxt2Display, limitType, false);
-			// var aramaic = step.searchSelect.getAramaicStrongFromDetailLexicalTag(strongNum, gloss, data[i].suggestion._detailLexicalTag,
-            //     searchSuggestionsToDisplay[searchResultIndex], 
-			// 	strongWithoutAugment, suggestionType, text2Display, shortTxt2Display, limitType);
+			var aramaic = step.searchSelect.getAramaicStrongFromDetailLexicalTag(data, limitType);
 			for (l = 0; l < searchSuggestionsToDisplay.length; l++) {
 				if (step.searchSelect.searchTypeCode[l] === limitType) {
 					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
@@ -1201,7 +1198,7 @@ step.searchSelect = {
 				' title="' + str2Search + '" ' : '';
 			if (isAugStrong)
 				return needLineBreak + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search +
-					'\')">' + text2Display + "</a>";
+					'\')">' + text2Display + "<span style='font-size:12px' class='glyphicon glyphicon-arrow-right'></span></a>";
 			else
 				return needLineBreak + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
 					str2Search + '\',\'' + 
@@ -1247,40 +1244,59 @@ step.searchSelect = {
 		return result;
 	},
 
-	// getAramaicStrongFromDetailLexicalTag: function(strongNum, gloss, detailLexicalTag, 
-    //     existingSuggestionsToDisplay, str2Search, suggestionType, text2Display, shortTxt2Display, limitType) {
-	// 	if ((typeof detailLexicalTag !== "string") || (detailLexicalTag === "")) return "";
-	// 	var detailLexicalJSON = JSON.parse(detailLexicalTag);
-	// 	var result = "";
-	// 	var isStrongAramaic = false;
-    //     var isStrongGreek = false;
-    //     var foundAramaic = "";
-    //     var foundGreek = "";
-    //     var foundOther = "";
-	// 	detailLexicalJSON.forEach(function (item, index) {
-	// 		if (item[1] === strongNum) {
-    //             if (item[0].toLowerCase().includes("aramaic")) isStrongAramaic = true;
-    //             else if ((item[0].toLowerCase().includes("greek"))  && (strongNum.substring(0,1) === "G"))
-    //                 isStrongGreek = true;
-    //         }
-    //         else if (gloss.toLowerCase() === item[2].toLowerCase()) {
-    //             if (item[0].toLowerCase().includes("aramaic")) foundAramaic = item[1];
-    //             else if ((item[0].toLowerCase().includes("greek")) && (item[1].substring(0,1) === "G"))
-    //                 foundGreek = item[1];
-    //             else foundOther = item[1];
-    //         }
-	// 	});
-    //     if ((!isStrongAramaic) && (foundAramaic !== "")) {
-    //         result = step.searchSelect.appendSearchSuggestionsToDisplay(existingSuggestionsToDisplay,
-	// 			foundAramaic, suggestionType, "syntax_strong", "all in Aramaic" + text2Display, shortTxt2Display, limitType, false);
-    //     }
-    //     if ((!isStrongGreek) && (foundGreek !== "")) {
-    //         result = step.searchSelect.appendSearchSuggestionsToDisplay(existingSuggestionsToDisplay,
-	// 			foundAramaic, suggestionType, "syntax_strong", "all in Greek" + text2Display, shortTxt2Display, limitType, false);
-    //     }
+	getAramaicStrongFromDetailLexicalTag: function(data, limitType) {
+		var aramaic = [];
+		var greek = [];
+		var hebrew = [];
+		var basicStrong = data[0].suggestion.strongNumber;
+		if (basicStrong.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) basicStrong = RegExp.$1; // remove the last character if it is an a-g character
+
+		for (var i = 0; i < data.length; i++) {
+			var suggestionType = data[i].itemType;
+			if (((suggestionType !== GREEK) && (suggestionType !== HEBREW)) ||
+				   (data[i].grouped)) continue; 
+			var strongNum = data[i].suggestion.strongNumber;
+ 		  if ((strongNum.substring(0,1) === "G") && (!greek.includes(strongNum))) {
+				greek.push(strongNum);
+			}
+			else if ((strongNum.substring(0,1) === "H") && (!hebrew.includes(strongNum))) {
+				hebrew.push(strongNum);
+			}
+			if ((typeof data[i].suggestion._detailLexicalTag !== "string") ||
+				(data[i].suggestion._detailLexicalTag === ""))
+				continue; 
+			var detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
+			detailLexicalJSON.forEach(function (item, index) {
+				if ((item[1].substring(0,1) === "G") && (!greek.includes(item[1]))) {
+					greek.push(item[1]);
+				}
+				else if (item[0].toLowerCase().includes("aramaic")) {
+					if (!aramaic.includes(item[1])) {
+						aramaic.push(item[1]);
+					}
+					var index = hebrew.indexOf(item[1]);
+					if (index > -1) { // only splice array when item is found
+						hebrew.splice(index, 1); // 2nd parameter means remove one item only
+					}
+				}
+				else if ((item[1].substring(0,1) === "H") && (!hebrew.includes(item[1]))) {
+					hebrew.push(item[1]);
+				}
+			});
+		}
+		console.log("Found the following strong words for: " + basicStrong + "*");
+		console.log("hebrew: " + hebrew);		console.log("aramaic: " + aramaic);		console.log("greek: " + greek);
+
+	      // if ((!isStrongAramaic) && (foundAramaic !== "")) {
+        //     result = step.searchSelect.appendSearchSuggestionsToDisplay(existingSuggestionsToDisplay,
+				// foundAramaic, suggestionType, "syntax_strong", "all in Aramaic" + text2Display, shortTxt2Display, limitType, false);
+        // }
+        // if ((!isStrongGreek) && (foundGreek !== "")) {
+        //     result = step.searchSelect.appendSearchSuggestionsToDisplay(existingSuggestionsToDisplay,
+				// foundAramaic, suggestionType, "syntax_strong", "all in Greek" + text2Display, shortTxt2Display, limitType, false);
+        // }
         
-	// 	return result;
-	// },
+	},
 
 	_handleClickOnTriangle: function(ev){
 		var idName = ev.target.id;

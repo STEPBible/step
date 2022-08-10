@@ -254,11 +254,6 @@ step.searchSelect = {
 		var type = itemType.toLowerCase();
 		if (type === "searchjoins") return numOfPreviousSearchTokensArg; // searchjoins is not a search
 		var strongNum = "";
-		if (type === SYNTAX) {
-			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
-			if (strongNum.substring(0,1) === "H") type = HEBREW;
-			else if (strongNum.substring(0,1) === "G") type = GREEK;
-		}
 		if (typeof previousSearchRelationship === "undefined") previousSearchRelationship = "";
 		else if (previousSearchRelationship !== "") {
 			var andSelected = (previousSearchRelationship === "AND") ? " selected" : "";
@@ -271,6 +266,11 @@ step.searchSelect = {
 					'<option id="not_search" value="NOT"' + notSelected + '>' + __s.not + '</option>' +
 				'</select> ';
 		}
+		if (type === SYNTAX) {
+			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
+			if (strongNum.substring(0,1) === "H") type = HEBREW;
+			else if (strongNum.substring(0,1) === "G") type = GREEK;
+		}
 		if (this.searchTypeCode.indexOf(type) > 2) {
 			// if (type.indexOf("greek") == 0) type = "greek";
 			// else if (type.indexOf("hebrew") == 0) type = "hebrew";
@@ -280,8 +280,11 @@ step.searchSelect = {
 				htmlOfTerm += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
 			html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
 			previousSearches.push(html);
-			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
-			if (itemType === SYNTAX) previousSearchTokensArg.push("syntax=t=strong:" + strongNum);
+			var strongNum = actPsgeDataElm.token;
+			if (itemType === SYNTAX) {
+				if (strongNum.toLowerCase().indexOf("strong:") == 0) strongNum = strongNum.token.substr(7);
+				previousSearchTokensArg.push("syntax=t=strong:" + strongNum);
+			}
 			else previousSearchTokensArg.push("strong=" + strongNum);
 			if (actPsgeDataElm.item.stepTransliteration !== "") step.util.putStrongDetails(strongNum, htmlOfTerm);
 		}

@@ -42,17 +42,18 @@ public final class OriginalWordUtils {
      * @param def the definition
      * @return the suggestion
      */
-    public static LexiconSuggestion convertToSuggestion(final EntityDoc def, final String userLanguage) {
+    public static LexiconSuggestion convertToSuggestion(final EntityDoc def, final String userLanguage, final boolean forRelatedWords) {
         final LexiconSuggestion suggestion = new LexiconSuggestion();
         suggestion.setGloss(def.get("stepGloss"));
         suggestion.setMatchingForm(def.get("accentedUnicode"));
         suggestion.setStepTransliteration(def.get("stepTransliteration"));
         suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
 		suggestion.set_searchResultRange(def.get("SearchResultRange"));
-        String stepType = def.get("STEP_Type");
-        suggestion.setType(stepType);
-        suggestion.setDetailLexicalTag(def.get("STEP_DetailLexicalTag"));
-        suggestion.setPopularity(def.get("popularity"));
+        if (!forRelatedWords) { // The following are not needed for related Words.  Do not include the to reduce network transmission
+            suggestion.setType(def.get("STEP_Type"));
+            suggestion.setDetailLexicalTag(def.get("STEP_DetailLexicalTag"));
+            suggestion.setPopularity(def.get("popularity"));
+        }
         if ((userLanguage == null) || (userLanguage.equals(""))) {
 			suggestion.set_es_Gloss(def.get("es_Gloss"));
 			suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));

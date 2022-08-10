@@ -221,7 +221,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                         if ((stopWord == null) || (!stopWord.equals("true"))) {
                             String popularity = relatedDoc[0].get("popularity");
                             if ((popularity == null) || (!popularity.equals("0"))) {
-                                shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage);
+                                shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage, true);
                                 lookedUpWords.put(relatedWord, shortLexiconDefinition);
                             }
                         }
@@ -230,10 +230,6 @@ public class VocabularyServiceImpl implements VocabularyService {
 
                 // store as a link to its source number
                 if (shortLexiconDefinition != null) {
-                    if (shortLexiconDefinition.get_detailLexicalTag() != null)
-                        shortLexiconDefinition.setDetailLexicalTag(null); // This field is not needed for related words
-                    if (shortLexiconDefinition.getPopularity() != null)
-                        shortLexiconDefinition.setPopularity(null); // This field is not needed for related words
                     SortedSet<LexiconSuggestion> associatedNumbersSoFar = relatedWords.get(sourceNumber);
                     if (associatedNumbersSoFar == null) {
                         associatedNumbersSoFar = new TreeSet<>(

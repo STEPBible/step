@@ -374,7 +374,7 @@ var SidebarView = Backbone.View.extend({
             step.util.ui.showDef($(this).data("strongNumber"));
         }));
         panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;~</span>'));
-        panel.append($("<a title='click to show all occurences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[0]).
+        panel.append($("<a title='click to show all occurences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
               append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none">' + sprintf(__s.stats_occurs, frequency) + '</span>').
               click(function () {
             var strongNumber = $(this).data("strongNumber");
@@ -475,7 +475,7 @@ var SidebarView = Backbone.View.extend({
 			for (var i = 0; i < relatedNos.length; i++) {
 				var found = false;
 				for (var j = 0; ((j < detailLex.length) && (!found)); j++) {
-					if (relatedNos[i].strongNumber === detailLex[j][0]) {
+					if (relatedNos[i].strongNumber === detailLex[j][1]) {
 						found = true;
 					}
 				}

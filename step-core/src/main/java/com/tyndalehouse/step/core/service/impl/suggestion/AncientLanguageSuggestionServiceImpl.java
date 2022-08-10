@@ -16,7 +16,6 @@ import org.apache.lucene.search.SortField;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.tyndalehouse.step.core.service.impl.suggestion.AncientMeaningSuggestionServiceImpl.GLOSS_SORT_FIELD;
 import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText;
 
 /**

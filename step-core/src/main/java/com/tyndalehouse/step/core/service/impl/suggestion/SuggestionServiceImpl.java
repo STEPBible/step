@@ -50,8 +50,8 @@ public class SuggestionServiceImpl implements SuggestionService {
                                  final TextSuggestionServiceImpl textSuggestionService
     ) {
         queryProviders.put(SearchToken.REFERENCE, referenceSuggestionService);
-        queryProviders.put(SearchToken.GREEK_MEANINGS, greekAncientMeaningService);
-        queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);
+//        queryProviders.put(SearchToken.GREEK_MEANINGS, greekAncientMeaningService);
+//        queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);
         queryProviders.put(SearchToken.GREEK, greekAncientLanguageService);
         queryProviders.put(SearchToken.HEBREW, hebrewAncientLanguageService);
         queryProviders.put(SearchToken.MEANINGS, meaningSuggestionService);
@@ -61,9 +61,9 @@ public class SuggestionServiceImpl implements SuggestionService {
         //the following lines mean we won't pull extra words for all data sources.
         //e.g. if we have 2 greek meanings, we will only pull 1 one more hebrew meaning 
         //this is not a full map, as processing is dependent on the order set out above
-        dependencies.put(SearchToken.HEBREW_MEANINGS, new String[]{SearchToken.GREEK_MEANINGS});
-        dependencies.put(SearchToken.GREEK, new String[]{SearchToken.GREEK_MEANINGS, SearchToken.HEBREW_MEANINGS});
-        dependencies.put(SearchToken.HEBREW, new String[]{SearchToken.GREEK, SearchToken.GREEK_MEANINGS, SearchToken.HEBREW_MEANINGS});
+//        dependencies.put(SearchToken.HEBREW_MEANINGS, new String[]{SearchToken.GREEK_MEANINGS});
+//        dependencies.put(SearchToken.GREEK, new String[]{SearchToken.GREEK_MEANINGS, SearchToken.HEBREW_MEANINGS});
+//        dependencies.put(SearchToken.HEBREW, new String[]{SearchToken.GREEK, SearchToken.GREEK_MEANINGS, SearchToken.HEBREW_MEANINGS});
 
         //spare capcacity, will fudge the group total. -1 means we will attempt to retrieve 1 less than we could
         //+1 means we will attempt to retrieve 1 more than we should. 
@@ -87,7 +87,6 @@ public class SuggestionServiceImpl implements SuggestionService {
             String curQueryKey = query.getKey();
             if (curQueryKey.equals("greekMeanings")|| curQueryKey.equals("hebrewMeanings")) continue;
             int maxResult = MAX_RESULTS;
-//            if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew") || curQueryKey.equals("greekMeanings")|| curQueryKey.equals("hebrewMeanings"))
             if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew"))
                 maxResult = MAX_RESULTS_NON_GROUPED * 4;
             final SingleTypeSuggestionService searchService = query.getValue();
@@ -138,7 +137,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         for (String d : dependents) {
             final SingleSuggestionsSummary singleSuggestionsSummary = resultsSoFar.get(d);
             if (singleSuggestionsSummary == null) {
-                // LOGGER.warn("Dependencies setup is incorrect");
+                LOGGER.warn("Dependencies setup is incorrect");
                 continue;
             }
             final int totalMinusGroupExamples = singleSuggestionsSummary.getPopularSuggestions().size();

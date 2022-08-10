@@ -27,7 +27,6 @@ public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncie
     private static final SortField TRANSLIT_SORT_FIELD = new SortField("stepTransliteration", SortField.STRING_VAL);
     private static final Sort TRANSLITERATION_SORT = new Sort(TRANSLIT_SORT_FIELD);
     private static final Sort POPULAR_TRANSLITERATION_SORT = new Sort(new SortField("popularity", SortField.INT, true), TRANSLIT_SORT_FIELD);
-    public static final Sort GLOSS_SORT = new Sort(GLOSS_SORT_FIELD);
     private final boolean greek;
 
     public AncientLanguageSuggestionServiceImpl(final boolean isGreek, final EntityManager entityManager) {
@@ -91,6 +90,5 @@ public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncie
 
     protected Sort getSort(boolean popular) {
         return popular ? POPULAR_TRANSLITERATION_SORT : TRANSLITERATION_SORT;
-        //return popular ? POPULAR_TRANSLITERATION_SORT : GLOSS_SORT;
     }
 }

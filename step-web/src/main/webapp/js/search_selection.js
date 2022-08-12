@@ -184,8 +184,8 @@ step.searchSelect = {
 							}
 							if (syntaxWords[j].substr(0, 7) === STRONG_NUMBER + ":") {
 								var strongNum = syntaxWords[j].substr(7);
-								if (strongNum.substr(0, 1).toUpperCase() === "G") itemType = GREEK;
-								else if (strongNum.substr(0, 1).toUpperCase() === "H") itemType = HEBREW;
+								// if (strongNum.substr(0, 1).toUpperCase() === "G") itemType = GREEK;
+								// else if (strongNum.substr(0, 1).toUpperCase() === "H") itemType = HEBREW;
 								var result = step.util.getDetailsOfStrong(strongNum, this.version);
 								currWord = {token: syntaxWords[j], item: {gloss: result[0], stepTransliteration: result[1], matchingForm: result[2]} };
 							}
@@ -253,6 +253,7 @@ step.searchSelect = {
 	createPreviousSearchList: function(itemType, actPsgeDataElm, previousSearches, previousSearchTokensArg, numOfPreviousSearchTokensArg, previousSearchRelationship) {
 		var type = itemType.toLowerCase();
 		if (type === "searchjoins") return numOfPreviousSearchTokensArg; // searchjoins is not a search
+		var strongNum = "";
 		if (typeof previousSearchRelationship === "undefined") previousSearchRelationship = "";
 		else if (previousSearchRelationship !== "") {
 			var andSelected = (previousSearchRelationship === "AND") ? " selected" : "";
@@ -265,18 +266,26 @@ step.searchSelect = {
 					'<option id="not_search" value="NOT"' + notSelected + '>' + __s.not + '</option>' +
 				'</select> ';
 		}
-		if (this.searchTypeCode.indexOf(itemType) > 2) {
-			if (type.indexOf("greek") == 0) type = "greek";
-			else if (type.indexOf("hebrew") == 0) type = "hebrew";
+		if (type === SYNTAX) {
+			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
+			if (strongNum.substring(0,1) === "H") type = HEBREW;
+			else if (strongNum.substring(0,1) === "G") type = GREEK;
+		}
+		if (this.searchTypeCode.indexOf(type) > 2) {
+			// if (type.indexOf("greek") == 0) type = "greek";
+			// else if (type.indexOf("hebrew") == 0) type = "hebrew";
 			if (typeof __s[type] !== "undefined") type = __s[type];
 			var htmlOfTerm = actPsgeDataElm.item.gloss;
 			if (actPsgeDataElm.item.stepTransliteration !== "")
 				htmlOfTerm += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
 			html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
 			previousSearches.push(html);
-			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
-//			if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
-			previousSearchTokensArg.push("strong=" + strongNum);
+			var strongNum = actPsgeDataElm.token;
+			if (itemType === SYNTAX) {
+				if (strongNum.toLowerCase().indexOf("strong:") == 0) strongNum = strongNum.token.substr(7);
+				previousSearchTokensArg.push("syntax=t=strong:" + strongNum);
+			}
+			else previousSearchTokensArg.push("strong=" + strongNum);
 			if (actPsgeDataElm.item.stepTransliteration !== "") step.util.putStrongDetails(strongNum, htmlOfTerm);
 		}
 		else {

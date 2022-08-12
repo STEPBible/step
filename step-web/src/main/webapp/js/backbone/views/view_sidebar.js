@@ -81,7 +81,10 @@ var SidebarView = Backbone.View.extend({
                 step.util.trackAnalytics("lexicon", "strong", strongCode); // self.model.get("strong"));
                 self.createDefinition(data, ref);
             }).error(function() {
-                changeBaseURL();
+                if (changeBaseURL())
+                    $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongCode, this.model.get("morph"), step.userLanguageCode], function (data) {
+                        self.createDefinition(data, ref);
+                    })
             });
         }
         else if (this.model.get("mode") == 'analysis') {

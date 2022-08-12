@@ -87,6 +87,64 @@ var QuickLexicon = Backbone.View.extend({
         this.render();
     },
 
+    processQuickInfo: function (data, self) {
+        $("#quickLexicon").remove();
+        var morphOnly = false;
+        if ((data.vocabInfos.length == 0) && (lastMorphCode != '') && (data.morphInfos.length == 0)) morphOnly = true;
+        if ((data.vocabInfos.length > 0) || (morphOnly)) {
+            var morph_information = [];
+            if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
+                data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
+            } 
+            for (counter = 0; counter < data.morphInfos.length; counter ++) {
+                var item = data.morphInfos[counter];
+                if (item) morph_information[counter] = self._createBriefMorphInfo(item);
+            }
+            var lexicon;
+            if (morphOnly) lexicon = $(_.template(self.templateDef2)({ brief_morph_info: morph_information,
+                view: self }));
+            else lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos,
+                brief_morph_info: morph_information,
+                fontClass: step.util.ui.getFontForStrong(self.strong),
+                view: self }));
+            if (step.touchDevice) $(lexicon).find("#clickMoreInfo").text(__s.more_info_on_touch_of_word);
+            if (self.position > 0.66) {
+                lexicon.css({"top": "37", "bottom": "auto"});
+            }
+            if (self.touchEvent) {
+                if ((step.strongOfLastQuickLexicon == self.strong) && (step.touchForQuickLexiconTime > 0)) {
+                    var timeToWait = Math.max(0, (TOUCH_CANCELLATION_TIME) - (Date.now() - step.touchForQuickLexiconTime));
+                    var previoustouchForQuickLexiconTime = step.touchForQuickLexiconTime;
+                    var timer = setTimeout( function( ) { 
+                        if ((step.strongOfLastQuickLexicon == self.strong) && // Make sure user has not touched another word after the timeout
+                            (previoustouchForQuickLexiconTime == step.touchForQuickLexiconTime)) {
+                            step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
+                            step.displayQuickLexiconTime = Date.now();
+                            step.passage.higlightStrongs({
+                                passageId: undefined,
+                                strong: self.strong,
+                                morph: self.morph,
+                                classes: "primaryLightBg"
+                            });
+                            self.displayQuickDef(lexicon);
+                            for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+                                self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+                            }
+                            if (step.lastTapStrong.substr(0,12) === "notdisplayed") step.lastTapStrong = step.lastTapStrong.substr(12);
+                        }
+                      },
+                      timeToWait);
+                }
+            }
+            else {
+                self.displayQuickDef(lexicon);
+                for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+                    self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+                }
+            }
+        }
+    },
+    
     loadDefinition: function (time) {
         var self = this;
         lastMorphCode = '';
@@ -103,61 +161,7 @@ var QuickLexicon = Backbone.View.extend({
         return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph, step.userLanguageCode], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);
-            $("#quickLexicon").remove();
-            var morphOnly = false;
-            if ((data.vocabInfos.length == 0) && (lastMorphCode != '') && (data.morphInfos.length == 0)) morphOnly = true;
-            if ((data.vocabInfos.length > 0) || (morphOnly)) {
-                var morph_information = [];
-                if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
-                    data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
-                } 
-				for (counter = 0; counter < data.morphInfos.length; counter ++) {
-					var item = data.morphInfos[counter];
-					if (item) morph_information[counter] = self._createBriefMorphInfo(item);
-                }
-                var lexicon;
-                if (morphOnly) lexicon = $(_.template(self.templateDef2)({ brief_morph_info: morph_information,
-					view: self }));
-                else lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos,
-					brief_morph_info: morph_information,
-					fontClass: step.util.ui.getFontForStrong(self.strong),
-					view: self }));
-				if (step.touchDevice) $(lexicon).find("#clickMoreInfo").text(__s.more_info_on_touch_of_word);
-                if (self.position > 0.66) {
-                    lexicon.css({"top": "37", "bottom": "auto"});
-                }
-				if (self.touchEvent) {
-					if ((step.strongOfLastQuickLexicon == self.strong) && (step.touchForQuickLexiconTime > 0)) {
-						var timeToWait = Math.max(0, (TOUCH_CANCELLATION_TIME) - (Date.now() - step.touchForQuickLexiconTime));
-						var previoustouchForQuickLexiconTime = step.touchForQuickLexiconTime;
-						var timer = setTimeout( function( ) { 
-							if ((step.strongOfLastQuickLexicon == self.strong) && // Make sure user has not touched another word after the timeout
-								(previoustouchForQuickLexiconTime == step.touchForQuickLexiconTime)) {
-								step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
-								step.displayQuickLexiconTime = Date.now();
-								step.passage.higlightStrongs({
-									passageId: undefined,
-									strong: self.strong,
-									morph: self.morph,
-									classes: "primaryLightBg"
-								});
-								self.displayQuickDef(lexicon);
-								for (var i = 0; i < (data.vocabInfos || []).length; i++) {
-									self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
-								}
-								if (step.lastTapStrong.substr(0,12) === "notdisplayed") step.lastTapStrong = step.lastTapStrong.substr(12);
-							}
-						  },
-						  timeToWait);
-					}
-				}
-				else {
-					self.displayQuickDef(lexicon);
-					for (var i = 0; i < (data.vocabInfos || []).length; i++) {
-						self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
-					}
-				}
-            }
+            self.processQuickInfo(data, self);
         }).error(function() {
             changeBaseURL();
         });

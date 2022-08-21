@@ -83,6 +83,7 @@
     <link href="css/select2.css" rel="stylesheet" media="screen"/>
     <link href="css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="scss/step-template.css" rel="stylesheet" media="screen"/>
+
     <%
     } else {
     %>
@@ -197,7 +198,7 @@
                                            title="<fmt:message key="view" />">
                                             <i class="glyphicon glyphicon-cog"></i>
                                         </a>
-                                    </span>
+                                </span>
 
                                 <%--  this button starts hidden as there is only 1 column showing --%>
                                 <a class="openNewPanel hidden-xs" title="<fmt:message key="new_panel" />">

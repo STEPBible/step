@@ -253,7 +253,7 @@ step.searchSelect = {
 	},
 	_initOptions: function(ev) {
 		var searchOptionsHTML = 
-			'<h5>Show</h5>' +
+			'<h5>Show in results</h5>' +
 			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
 		for (var i = 0; i < this.displayOptions.length; i ++) {
 			var optionName = this.displayOptions[i].toLowerCase();
@@ -1152,7 +1152,8 @@ step.searchSelect = {
 										'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
 										'<span class="srchDash"> - </span>' +
 										'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
-										'<span class="srchStrong"> ' + data[i].suggestion.strongNumber + '</span>' +
+										'<span class="srchSpaceStrong"> </span>' +
+										'<span class="srchStrong">' + data[i].suggestion.strongNumber + '</span>' +
 										'<span class="srchParathesis">)</span>';
 									shortTxt2Display = gloss;
 									if ((isAugmentedStrong) || ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== ""))) {
@@ -1252,7 +1253,8 @@ step.searchSelect = {
 							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
 							'<span class="srchDash"> - </span>' + 
 							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
-							'<span class="srchStrong"> ' + data[i].suggestion.strongNumber + '</span>' +
+							'<span class="srchSpaceStrong"> </span>' +
+							'<span class="srchStrong">' + data[i].suggestion.strongNumber + '</span>' +
 							'<span class="srchParathesis">)</span>';
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 						str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false);
@@ -1267,7 +1269,8 @@ step.searchSelect = {
 				'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + '</i>' +
 				'<span class="srchDash"> - </span>' +
 				'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + '</span>' +
-				'<span class="srchStrong"> ' + strongWithoutAugment + '*</span>' +
+				'<span class="srchSpaceStrong"> </span>' +
+				'<span class="srchStrong">' + strongWithoutAugment + '*</span>' +
 				'<span class="srchParathesis">)</span>';
 			searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 				strongWithoutAugment, suggestionType, "syntax_strong", "all named" + text2Display, shortTxt2Display, limitType, false);
@@ -1346,7 +1349,8 @@ step.searchSelect = {
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
 				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " + 
 				'<span class="srchOriginal_Language">' + item[4] + '</span>' +
-				'<span class="srchStrong"> ' + item[1] + '</span>' +
+				'<span class="srchSpaceStrong"> </span>' +
+				'<span class="srchStrong">' + item[1] + '</span>' +
 				"</a>";
 		});
 		return result;

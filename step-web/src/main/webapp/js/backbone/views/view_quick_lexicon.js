@@ -158,15 +158,15 @@ var QuickLexicon = Backbone.View.extend({
 		if (this.strong.search(/([GH])(\d{1,3})(![A-Za-z])$/) > -1) {
 			this.strong = RegExp.$1 + ("000" + RegExp.$2).slice(-4) + RegExp.$3;
 		}
-        var gotJson = false;
-        $.ajaxSetup({async: false});
-        $.getJSON("/html/json/" + this.strong + ".json", function(jsonVar) {
-            jsonVar.morphInfos = [];
-            self.processQuickInfo(jsonVar, self);
-            gotJson = true;
-        });
-        $.ajaxSetup({async: true});
-        if (gotJson) return;
+        // var gotJson = false;
+        // $.ajaxSetup({async: false});
+        // $.getJSON("/html/json/" + this.strong + ".json", function(jsonVar) {
+        //     jsonVar.morphInfos = [];
+        //     self.processQuickInfo(jsonVar, self);
+        //     gotJson = true;
+        // });
+        // $.ajaxSetup({async: true});
+        // if (gotJson) return;
         
 
         return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph, step.userLanguageCode], function (data) {

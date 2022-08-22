@@ -3,8 +3,8 @@ step.searchSelect = {
 	version: "ESV_th",
 	userLang: "en",
 	searchOnSpecificType: "",
-	//searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW, "augmented_strong"],
 	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, HEBREW],
+	displayOptions: ["Strong", "Transliteration", "Original_language", "Frequency"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
 	searchRange: "Gen-Rev",
@@ -207,26 +207,25 @@ step.searchSelect = {
 			}
 			if (previousSearches.length > 0) {
 				var previousSearchHTML =
-				'<div id="modalonoffswitch">' +
-					'<span class="pull-left" style="font-size:18px" id="search_with_previous">' + __s.search_with_previous + '&nbsp;&nbsp;</span>' +
-					'<span class="pull-left">' +
-						//'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text" onchange="javascript:step.searchSelect.handlePreviousSearchAndOrNot()">' +
-						'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text">' +
-							'<option id="and_search" value="AND">' + __s.search_previous_and + '</option>' +
-							'<option id="or_search" value="OR">' + __s.search_previous_or + '</option>' +
-							'<option id="not_search" value="NOT">' + __s.search_previous_not + '</option>' +
-						'</select>' +
-					'</span>' +
-					'<span class="onoffswitch2 pull-left">' +
-						'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="showprevioussearchonoff" onchange="showPreviousSearch()"/>' +
-						'<label class="onoffswitch2-label" for="showprevioussearchonoff">' +
-						'<span class="onoffswitch2-inner"></span>' +
-						'<span class="onoffswitch2-switch"></span>' +
-						'</label>' +
-					'</span>' +
-				'</div>' +
-				'<br><br><br><br>' +
-				'<ul id="listofprevioussearchs" style="display:none">';
+					'<div id="modalonoffswitch">' +
+						'<span class="pull-left" style="font-size:18px" id="search_with_previous">' + __s.search_with_previous + '&nbsp;&nbsp;</span>' +
+						'<span class="pull-left">' +
+							'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text">' +
+								'<option id="and_search" value="AND">' + __s.search_previous_and + '</option>' +
+								'<option id="or_search" value="OR">' + __s.search_previous_or + '</option>' +
+								'<option id="not_search" value="NOT">' + __s.search_previous_not + '</option>' +
+							'</select>' +
+						'</span>' +
+						'<span class="onoffswitch2 pull-left">' +
+							'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="showprevioussearchonoff" onchange="showPreviousSearch()"/>' +
+							'<label class="onoffswitch2-label" for="showprevioussearchonoff">' +
+							'<span class="onoffswitch2-inner"></span>' +
+							'<span class="onoffswitch2-switch"></span>' +
+							'</label>' +
+						'</span>' +
+					'</div>' +
+					'<br><br><br><br>' +
+					'<ul id="listofprevioussearchs" style="display:none">';
 				for (var j = 0; j < previousSearches.length; j++) {
 					previousSearchHTML += "<li id='lOPS_" + j + "'>" + previousSearches[j] + 
 					"<span class='closeMark' onclick=step.searchSelect.removePreviousSearch(" + j + ")>X</span></li>";
@@ -240,6 +239,9 @@ step.searchSelect = {
 			$('#modalonoffswitch').hide();
 			$('#searchAndOrNot').hide();
 		}
+
+		step.searchSelect._initOptions();
+
 		$('#searchHdrTable').append(this._buildSearchHeaderAndTable());
 		$('#srchModalBackButton').hide();
 		$(function(){
@@ -249,7 +251,77 @@ step.searchSelect = {
 			});
 		});
 	},
-
+	_initOptions: function(ev) {
+		var searchOptionsHTML = 
+			'<h5>Show</h5>' +
+			'<ul class="displayModes" style="list-style-type:none;padding-left:12px" role="presentation">';
+		for (var i = 0; i < this.displayOptions.length; i ++) {
+			var optionName = this.displayOptions[i].toLowerCase();
+			searchOptionsHTML += '<li class="passage">' +
+				'<a data-value="STRONG" data-selected="true" class="searchOptions" id="srchOptns' + optionName +'">'+
+					this.displayOptions[i] +
+				'</a>' +
+				'<span id="srchOptnsCheck' + optionName + '" ' +
+				'class="glyphicon glyphicon-ok pull-right" style="color:var(--clrText);background:var(--clrBackground)"></span">' +
+				'</li>';
+		}
+		searchOptionsHTML += '</ul>';
+		$("#srchOptions").append(searchOptionsHTML);
+		for (var i = 0; i < this.displayOptions.length; i ++) {
+			step.searchSelect._handleOptions(null, this.displayOptions[i].toLowerCase());
+		}
+		$(".searchOptions").click(step.searchSelect._handleOptions);
+	},
+	_handleOptions: function(ev, optionNameArg) {
+		var optionName = (ev !== null) ? ev.target.id.substring(9): optionNameArg;
+        var localStorageSetting = (window.localStorage) ? window.localStorage.getItem("step.srchOptn" + optionName) : $.cookie("step.srchOptn" + optionName);
+		var currentSetting = false;
+		if ((typeof localStorageSetting !== "string") &&
+			(optionName !== "strong") && (optionName !== "frequency")) {
+				currentSetting = true;
+		}
+		else
+			currentSetting = (localStorageSetting === "true");
+		if (ev === null) currentSetting = !currentSetting;
+		if (currentSetting) {
+			$("#srchOptnsCheck" + optionName).css("visibility", "hidden");
+		} 
+		else {
+			$("#srchOptnsCheck" + optionName).css("visibility", "visible");
+		}
+		if (window.localStorage) window.localStorage.setItem("step.srchOptn" + optionName, !currentSetting);
+		else $.cookie("step.srchOptn" + optionName, !currentSetting);
+		if (ev !== null) step.searchSelect._updateDisplayBasedOnOptions();
+		return false;
+	},
+	_updateDisplayBasedOnOptions: function() {
+		var wordsAroundDash = 0;
+		for (var i = 0; i < this.displayOptions.length; i ++) {
+			var optionName = this.displayOptions[i].toLowerCase();
+			var localStorageSetting = (window.localStorage) ? window.localStorage.getItem("step.srchOptn" + optionName) : $.cookie("step.srchOptn" + optionName);
+			var currentSetting = false;
+			if ((typeof localStorageSetting !== "string") &&
+				(optionName !== "strong") && (optionName !== "frequency")) {
+					currentSetting = true;
+			}
+			else
+				currentSetting = (localStorageSetting === "true");
+			if (currentSetting) {
+				$(".srch" + optionName).show();
+				if ((optionName === "transliteration") || (optionName === "original_language")) wordsAroundDash ++;
+			}
+			else $(".srch" + optionName).hide();
+		}
+		if (wordsAroundDash > 1) {
+			$(".srchDash").show();
+			$(".srchParathesis").show();
+		}
+		else {
+			$(".srchDash").hide();
+			if (wordsAroundDash == 0)
+				$(".srchParathesis").hide();
+		}
+	},
 	createPreviousSearchList: function(itemType, actPsgeDataElm, previousSearches, previousSearchTokensArg, numOfPreviousSearchTokensArg, previousSearchRelationship) {
 		var type = itemType.toLowerCase();
 		if (type === "searchjoins") return numOfPreviousSearchTokensArg; // searchjoins is not a search
@@ -277,7 +349,11 @@ step.searchSelect = {
 			if (typeof __s[type] !== "undefined") type = __s[type];
 			var htmlOfTerm = actPsgeDataElm.item.gloss;
 			if (actPsgeDataElm.item.stepTransliteration !== "")
-				htmlOfTerm += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
+				htmlOfTerm += ' <span class="srchParathesis">(</span>' +
+				'<i class="srchTransliteration">' + actPsgeDataElm.item.stepTransliteration + '</i>' +
+				'<span class="srchDash"> - </span>' +
+				'<span class="srchOriginal_Language">' + actPsgeDataElm.item.matchingForm + '</span>' +
+				'<span class="srchParathesis">)</span>';
 			html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
 			previousSearches.push(html);
 			var strongNum = actPsgeDataElm.token;
@@ -1021,7 +1097,7 @@ step.searchSelect = {
 										for (var k = 0; k < data[i].extraExamples.length; k++) {
 											if (k > 0) text2Display += ", ";
 											if ((suggestionType === GREEK) || (suggestionType === HEBREW))
-												text2Display += '<i>' + data[i].extraExamples[k].stepTransliteration + '</i>';
+												text2Display += '<i class="srchTransliteration>' + data[i].extraExamples[k].stepTransliteration + '</i>';
 											else if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS) || (suggestionType === MEANINGS))
 												text2Display += data[i].extraExamples[k].gloss;
 											else if (suggestionType === SUBJECT_SEARCH)
@@ -1069,7 +1145,12 @@ step.searchSelect = {
 									alreadyShownStrong.push(strongWithoutAugment);
 									searchType = 'strong';
 									var gloss = data[i].suggestion.gloss;
-									text2Display = gloss + ' (<i>' + data[i].suggestion.stepTransliteration + '</i> - ' + data[i].suggestion.matchingForm + ')';
+									text2Display = gloss + ' <span class="srchParathesis">(</span>' +
+										'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
+										'<span class="srchDash"> - </span>' +
+										'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
+										'<span class="srchStrong"> ' + data[i].suggestion.strongNumber + '</span>' +
+										'<span class="srchParathesis">)</span>';
 									shortTxt2Display = gloss;
 									if ((isAugmentedStrong) || ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== ""))) {
 										searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
@@ -1107,6 +1188,7 @@ step.searchSelect = {
                 changeBaseURL();
             });
 			$.ajaxSetup({async: true});
+			step.searchSelect._updateDisplayBasedOnOptions();
 		}
 		else {
 			for (l = 0; l < step.searchSelect.searchTypeCode.length; l++) {
@@ -1159,11 +1241,16 @@ step.searchSelect = {
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
-						text2Display += step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong);
+						text2Display += '<span class="srchStrong"> (' + data[i].suggestion.strongNumber + ')</span>' +
+							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong);
 					}
 					else
-						text2Display += ' (<i>' + data[i].suggestion.stepTransliteration +
-							'</i> - ' + data[i].suggestion.matchingForm + ')';
+						text2Display += ' <span class="srchParathesis">(</span>' +
+							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
+							'<span class="srchDash"> - </span>' + 
+							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
+							'<span class="srchStrong"> ' + data[i].suggestion.strongNumber + '</span>' +
+							'<span class="srchParathesis">)</span>';
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 						str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false);
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i);
@@ -1173,7 +1260,12 @@ step.searchSelect = {
 				}
 			}
 			var strongWithoutAugment = (isNaN(strongNum.substr(-1))) ? strongNum.substring(0, strongNum.length-1) : strongNum;
-			var text2Display = " \"" + data[0].suggestion.gloss + "\" (" + data[0].suggestion.stepTransliteration + " " + data[0].suggestion.matchingForm + ")";
+			var text2Display = ' "' + data[0].suggestion.gloss + '" <span class="srchParathesis">(</span>' +
+				'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + '</i>' +
+				'<span class="srchDash"> - </span>' +
+				'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + '</span>' +
+				'<span class="srchStrong"> ' + strongWithoutAugment + '*</span>' +
+				'<span class="srchParathesis">)</span>';
 			searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 				strongWithoutAugment, suggestionType, "syntax_strong", "all named" + text2Display, shortTxt2Display, limitType, false);
 			//var aramaic = step.searchSelect.getAramaicStrongFromDetailLexicalTag(data, limitType);
@@ -1192,6 +1284,7 @@ step.searchSelect = {
 		$(".detailLexTriangle").click(step.searchSelect._handleClickOnTriangle);
 		$("#column1width").width("100%");
 		$(".search-type-column").hide();
+		step.searchSelect._updateDisplayBasedOnOptions();
 	},
 
 	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, isAugStrong) {
@@ -1248,7 +1341,10 @@ step.searchSelect = {
 			}
 			result += '<a class="detailLex' + count + '" style="display:none" style="padding:0px" title="' + item[1] + '"' +
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
-				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " (" + item[4] + ")</a>";
+				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " + 
+				'<span class="srchOriginal_Language">' + item[4] + '</span>' +
+				'<span class="srchStrong"> ' + item[1] + '</span>' +
+				"</a>";
 		});
 		return result;
 	},

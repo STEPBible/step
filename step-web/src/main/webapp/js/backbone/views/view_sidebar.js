@@ -371,14 +371,14 @@ var SidebarView = Backbone.View.extend({
             panel.append($("<span class='detailLex glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>"));
             spaceWithoutLabel = "";
         }
-        panel.append($("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + ":&nbsp;</span>"));
         panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
-            append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[4] + "'>" + detailLex[2]  + " </span>")).click(function () {
+            append($("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + " </span>")).click(function () {
             step.util.ui.showDef($(this).data("strongNumber"));
         }));
-        panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;~</span>'));
+        panel.append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[4] + "'>" + detailLex[2] + "</span>"));
+        panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;</span>'));
         panel.append($("<a title='click to show all occurences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
-              append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none">' + sprintf(__s.stats_occurs, frequency) + '</span>').
+              append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none">~' + sprintf(__s.stats_occurs, frequency) + '</span>').
               click(function () {
             var strongNumber = $(this).data("strongNumber");
             var args = "strong=" + encodeURIComponent(strongNumber);

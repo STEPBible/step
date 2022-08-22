@@ -1782,7 +1782,7 @@ step.util = {
 						'<div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">' +
 							'<label for="displayLocation"><%= __s.display_passage_at %></label>' +
 							'<select class="stepFgBg" type="text" id="displayLocation">' +
-								'<option value="replace"> <%= __s.current_panel %></option>' +
+								'<option value="replace"><%= __s.current_panel %></option>' +
 								'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
 								'<option id="append_to_panel" value="append"><%= __s.append_to_panel %></option>' +
 							'</select>' +
@@ -1846,14 +1846,11 @@ step.util = {
 										'(!step.searchSelect.previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))' +
 										'onlyFoundSubjectOrMeaningsSearch = false;' +
 								'}' +
-//								'if (onlyFoundSubjectOrMeaningsSearch) $("#searchAndOrNot").hide();' +
-//								'else $("#searchAndOrNot").show();' +
 								'$("#searchAndOrNot").show();' +
 								'if (step.searchSelect.searchUserInput.length == 0) {' +
 									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
 										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +
 								'}' +
-//								'step.searchSelect.handlePreviousSearchAndOrNot();' +
 							'}' +
 							'else {' +
 								'step.searchSelect.includePreviousSearches = false;' +
@@ -1872,7 +1869,14 @@ step.util = {
 						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
 							step.util.modalCloseBtn("searchSelectionModal") +
-							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+							'<span class="dropdown settingsDropdown pull-right">' +
+								'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Options">' +
+									'<i class="glyphicon glyphicon-cog" style="font-size:16px"></i>' +
+								'</a>' +
+								'<div id="srchOptions" class="dropdown-menu pull-right stepModalFgBg" role="menu"></div>' +
+							'</span>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
 							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
 								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +
 								'<select type="text" id="displayLocation" class="stepFgBg">' +
@@ -2624,8 +2628,6 @@ step.util = {
 	setClassicalUI: function (classicalUI) {
 		if (classicalUI) {
 			$('#top_input_area').show();
-			// $('#s2id_masterSearch').show();
-			// $('.findButton').show();
 			$('span.tmp-rm-hidden-xs.title').removeClass('tmp-rm-hidden-xs').addClass('hidden-xs');
 			$('.navbarIconDesc').hide();
 			$('.quick_tutorial').show();
@@ -2639,20 +2641,6 @@ step.util = {
 			$('#classicalUICheck').hide();
 		}
 	},
-	// adjustPassageOptionHeight: function (passageContainer) {
-		// var passageContainerHeight = passageContainer.height();
-		// var passageOptionHeight = passageContainer.find(".passageOptionsGroup").height();
-		// if (passageOptionHeight === null) return;
-		// var passageContentHeight = passageContainer.find(".passageContent").height();
-		// var totalHeight = passageOptionHeight + passageContentHeight;
-		// var diff = passageContainerHeight - totalHeight;
-		// if (Math.abs(diff) > 10) {
-			// var heightForPassage = passageContainerHeight + diff;
-			// console.log("passageContent h: " + heightForPassage + " diff " + diff);
-			// var passContent = passageContainer.find(".passageContent");
-			// $(passContent).css({'height':heightForPassage + 'px'});
-		// }
-	// },
 	showIntro: function (showAnyway) {
 		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
@@ -3242,7 +3230,6 @@ step.util = {
             return " from " + searchResultRange.substring(0, pos2) + separator + secondPassage;
         }
         else return " only at " + searchResultRange;
-        return searchResultRange;
 	}
 }
 ;

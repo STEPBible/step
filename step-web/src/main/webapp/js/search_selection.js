@@ -254,16 +254,16 @@ step.searchSelect = {
 	_initOptions: function(ev) {
 		var searchOptionsHTML = 
 			'<h5>Show</h5>' +
-			'<ul class="displayModes" style="list-style-type:none;padding-left:12px" role="presentation">';
+			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
 		for (var i = 0; i < this.displayOptions.length; i ++) {
 			var optionName = this.displayOptions[i].toLowerCase();
-			searchOptionsHTML += '<li class="passage">' +
+			searchOptionsHTML += '<li class="stepModalFgBg passageOptionsGroup dropdown-menu passage" style="display:block;position:initial;opacity:1;border:0px;padding:0px;box-shadow:none">' +
 				'<a data-value="STRONG" data-selected="true" class="searchOptions" id="srchOptns' + optionName +'">'+
-					this.displayOptions[i] +
+					this.displayOptions[i].replace("_", " ") +
+					'<span id="srchOptnsCheck' + optionName + '" ' +
+						'class="glyphicon glyphicon-ok pull-right"></span">' +
 				'</a>' +
-				'<span id="srchOptnsCheck' + optionName + '" ' +
-				'class="glyphicon glyphicon-ok pull-right" style="color:var(--clrText);background:var(--clrBackground)"></span">' +
-				'</li>';
+				'</li><br>';
 		}
 		searchOptionsHTML += '</ul>';
 		$("#srchOptions").append(searchOptionsHTML);
@@ -296,6 +296,7 @@ step.searchSelect = {
 	},
 	_updateDisplayBasedOnOptions: function() {
 		var wordsAroundDash = 0;
+		var showStrong = false;
 		for (var i = 0; i < this.displayOptions.length; i ++) {
 			var optionName = this.displayOptions[i].toLowerCase();
 			var localStorageSetting = (window.localStorage) ? window.localStorage.getItem("step.srchOptn" + optionName) : $.cookie("step.srchOptn" + optionName);
@@ -309,12 +310,14 @@ step.searchSelect = {
 			if (currentSetting) {
 				$(".srch" + optionName).show();
 				if ((optionName === "transliteration") || (optionName === "original_language")) wordsAroundDash ++;
+				if (optionName === "strong") showStrong ++;
 			}
 			else $(".srch" + optionName).hide();
 		}
-		if (wordsAroundDash > 1) {
-			$(".srchDash").show();
+		if ((wordsAroundDash > 0) || (showStrong)) {
 			$(".srchParathesis").show();
+			if (wordsAroundDash > 1) $(".srchDash").show();
+			else $(".srchDash").hide();
 		}
 		else {
 			$(".srchDash").hide();
@@ -1105,7 +1108,7 @@ step.searchSelect = {
 										}
 										if (text2Display.length == 0) console.log('group, but no examples');
 										else {
-											text2Display += ', ' + __s.etc + '<i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i>';
+											text2Display += ', ' + __s.etc + ' <i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i>';
 											if (searchSuggestionsToDisplay[searchResultIndex] !== "") searchSuggestionsToDisplay[searchResultIndex] += "<br>";
 											searchSuggestionsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>";
 										}
@@ -1300,7 +1303,7 @@ step.searchSelect = {
 				' title="' + str2Search + '" ' : '';
 			if (isAugStrong)
 				return needLineBreak + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search +
-					'\')">' + text2Display + "<span style='font-size:12px' class='glyphicon glyphicon-arrow-right'></span></a>";
+					'\')">' + text2Display + " <span style='font-size:12px' class='glyphicon glyphicon-arrow-right'></span></a>";
 			else
 				return needLineBreak + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
 					str2Search + '\',\'' + 
@@ -1309,7 +1312,7 @@ step.searchSelect = {
 		}
 		if (brCount < suggestionsToDisplay)
 			return needLineBreak + '<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-				+ suggestionType + '\')">' + shortTxt2Display + ', etc.<i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i></a>';
+				+ suggestionType + '\')">' + shortTxt2Display + ', etc. <i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i></a>';
 		return "";
 	},
 
@@ -1336,7 +1339,7 @@ step.searchSelect = {
 			result += "<br class='detailLex" + count + "' style='display:none'>";
 			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
 			if (item[1] === strongNum) {
-				result += "<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>";
+				result += " <span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>";
 				spaceWithoutLabel = "";
 			}
 			result += '<a class="detailLex' + count + '" style="display:none" style="padding:0px" title="' + item[1] + '"' +

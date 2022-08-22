@@ -1872,9 +1872,9 @@ step.util = {
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
 							'<span class="dropdown settingsDropdown pull-right">' +
 								'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Options">' +
-									'<i class="glyphicon glyphicon-cog" style="font-size:16px"></i>' +
+									'<i class="glyphicon glyphicon-cog" style="font-size:14px;background-color:var(--clrBackground);color:var(--clrText)"></i>' +
 								'</a>' +
-								'<div id="srchOptions" class="dropdown-menu pull-right stepModalFgBg" role="menu"></div>' +
+								'<div id="srchOptions" class="passageOptionsGroup stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
 							'</span>' +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
 							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +

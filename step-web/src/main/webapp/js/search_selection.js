@@ -310,20 +310,16 @@ step.searchSelect = {
 			if (currentSetting) {
 				$(".srch" + optionName).show();
 				if ((optionName === "transliteration") || (optionName === "original_language")) wordsAroundDash ++;
-				if (optionName === "strong") showStrong ++;
+				if (optionName === "strong") showStrong = true;
 			}
 			else $(".srch" + optionName).hide();
 		}
-		if ((wordsAroundDash > 0) || (showStrong)) {
-			$(".srchParathesis").show();
-			if (wordsAroundDash > 1) $(".srchDash").show();
-			else $(".srchDash").hide();
-		}
-		else {
-			$(".srchDash").hide();
-			if (wordsAroundDash == 0)
-				$(".srchParathesis").hide();
-		}
+		if ((wordsAroundDash > 0) || (showStrong)) $(".srchParathesis").show();
+		else $(".srchParathesis").hide();
+		if (wordsAroundDash > 1) $(".srchDash").show();
+		else $(".srchDash").hide();
+		if ((wordsAroundDash > 0) && (showStrong)) $(".srchSpaceStrong").show();
+		else $(".srchSpaceStrong").hide();
 	},
 	createPreviousSearchList: function(itemType, actPsgeDataElm, previousSearches, previousSearchTokensArg, numOfPreviousSearchTokensArg, previousSearchRelationship) {
 		var type = itemType.toLowerCase();
@@ -1154,7 +1150,8 @@ step.searchSelect = {
 										'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 										'<span class="srchSpaceStrong"> </span>' +
 										'<span class="srchStrong">' + data[i].suggestion.strongNumber + '</span>' +
-										'<span class="srchParathesis">)</span>';
+										'<span class="srchParathesis">)</span>' +
+										'<span class="srchFrequency"> ~' + data[i].suggestion.popularity + ' x</span>';
 									shortTxt2Display = gloss;
 									if ((isAugmentedStrong) || ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== ""))) {
 										searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
@@ -1221,6 +1218,7 @@ step.searchSelect = {
 			for (var i = 0; i < step.searchSelect.searchTypeCode.length; i++) {
 				searchSuggestionsToDisplay.push("");
 			}
+			var frequencyTotal = 0;
 			for (var i = 0; i < data.length; i++) {
 				var suggestionType = data[i].itemType;
 				var searchType = suggestionType;
@@ -1230,6 +1228,7 @@ step.searchSelect = {
 					continue;
 				}
 				if ((suggestionType === GREEK) || (suggestionType === HEBREW)) {
+					frequencyTotal += parseInt(data[i].suggestion.popularity);
 					var text2Display = "";
 					var shortTxt2Display = "";
 					var strongNum = data[i].suggestion.strongNumber;
@@ -1246,7 +1245,8 @@ step.searchSelect = {
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
 						text2Display += '<span class="srchStrong"> (' + data[i].suggestion.strongNumber + ')</span>' +
-							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong);
+							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
+							'<span class="srchFrequency"> ~' + data[i].suggestion.popularity + ' x</span>';
 					}
 					else
 						text2Display += ' <span class="srchParathesis">(</span>' +
@@ -1255,7 +1255,8 @@ step.searchSelect = {
 							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 							'<span class="srchSpaceStrong"> </span>' +
 							'<span class="srchStrong">' + data[i].suggestion.strongNumber + '</span>' +
-							'<span class="srchParathesis">)</span>';
+							'<span class="srchParathesis">)</span>' +
+							'<span class="srchFrequency"> ~' + data[i].suggestion.popularity + ' x</span>';
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 						str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false);
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i);
@@ -1271,11 +1272,12 @@ step.searchSelect = {
 				'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + '</span>' +
 				'<span class="srchSpaceStrong"> </span>' +
 				'<span class="srchStrong">' + strongWithoutAugment + '*</span>' +
-				'<span class="srchParathesis">)</span>';
+				'<span class="srchParathesis">)</span>' +
+				'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
 			searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 				strongWithoutAugment, suggestionType, "syntax_strong", "all named" + text2Display, shortTxt2Display, limitType, false);
 			//var aramaic = step.searchSelect.getAramaicStrongFromDetailLexicalTag(data, limitType);
-			for (l = 0; l < searchSuggestionsToDisplay.length; l++) {
+			for (var l = 0; l < searchSuggestionsToDisplay.length; l++) {
 				if (step.searchSelect.searchTypeCode[l] === limitType) {
 					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
 					$('.select-' + step.searchSelect.searchTypeCode[l]).show();
@@ -1334,23 +1336,27 @@ step.searchSelect = {
 	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalTag, count) {
 		if ((typeof detailLexicalTag !== "string") || (detailLexicalTag === "")) return ""; 
 		var detailLexicalJSON = JSON.parse(detailLexicalTag);
-		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-right'></a>";
+		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-right'></a><br>";
 		var allStrongs = [];
 		detailLexicalJSON.forEach(function (item, index) {
 			if (allStrongs.includes(item[1])) return;
 			allStrongs.push(item[1]);
-			result += "<br class='detailLex" + count + "' style='display:none'>";
+			if (index > 0)
+				result += "<br class='detailLex" + count + "' style='display:none'>";
 			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
 			if (item[1] === strongNum) {
-				result += " <span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>";
+				result += " <span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px;display:none'></span>";
 				spaceWithoutLabel = "";
 			}
 			result += '<a class="detailLex' + count + '" style="display:none" style="padding:0px" title="' + item[1] + '"' +
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
-				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " + 
+				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " +
+				'<span class="srchParathesis">(</span>' + 
 				'<span class="srchOriginal_Language">' + item[4] + '</span>' +
 				'<span class="srchSpaceStrong"> </span>' +
 				'<span class="srchStrong">' + item[1] + '</span>' +
+				'<span class="srchParathesis">)</span>' +
+				'<span class="srchFrequency"> ~' + item[3] + ' x</span>';
 				"</a>";
 		});
 		return result;

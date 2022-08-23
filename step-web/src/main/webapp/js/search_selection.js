@@ -357,7 +357,7 @@ step.searchSelect = {
 			previousSearches.push(html);
 			var strongNum = actPsgeDataElm.token;
 			if (itemType === SYNTAX) {
-				if (strongNum.toLowerCase().indexOf("strong:") == 0) strongNum = strongNum.token.substr(7);
+				if (strongNum.toLowerCase().indexOf("strong:") == 0) strongNum = strongNum.substring(7);
 				previousSearchTokensArg.push("syntax=t=strong:" + strongNum);
 			}
 			else previousSearchTokensArg.push("strong=" + strongNum);

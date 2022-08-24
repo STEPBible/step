@@ -1379,7 +1379,9 @@ step.searchSelect = {
 			result += '<a class="detailLex' + count + '" style="display:none" style="padding:0px" title="' + item[1] + '"' +
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
 				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " +
-				'<span class="srchParathesis">(</span>' + 
+				'<span class="srchParathesis">(</span>' +
+				'<i class="srchTransliteration">' + item[5] + '</i>' +
+				'<span class="srchDash"> - </span>' +
 				'<span class="srchOriginal_Language">' + item[4] + '</span>' +
 				'<span class="srchSpaceStrong"> </span>' +
 				'<span class="srchStrong">' + item[1] + '</span>' +

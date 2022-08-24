@@ -1135,10 +1135,19 @@ step.searchSelect = {
 								else {
 									str2Search = data[i].suggestion.strongNumber;
 									var strongWithoutAugment = str2Search;
+									var strongShownToUser = str2Search;
                                     var isAugmentedStrong = false;
+									var frequency =  data[i].suggestion.popularity;
 									if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
 										strongWithoutAugment = RegExp.$1;
+										strongShownToUser = strongWithoutAugment + "*";
                                         isAugmentedStrong = true;
+										frequency = 0;
+										for (var k = 0; k < data.length; k++) {
+											if ((typeof data[k].suggestion.strongNumber === "string") && (data[k].suggestion.strongNumber.slice(0, -1) === strongWithoutAugment)) {
+												frequency += parseInt(data[k].suggestion.popularity); 
+											}
+										}
                                     }
 									if (alreadyShownStrong.includes(strongWithoutAugment)) continue;
 									alreadyShownStrong.push(strongWithoutAugment);
@@ -1149,9 +1158,9 @@ step.searchSelect = {
 										'<span class="srchDash"> - </span>' +
 										'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 										'<span class="srchSpaceStrong"> </span>' +
-										'<span class="srchStrong">' + data[i].suggestion.strongNumber + '</span>' +
+										'<span class="srchStrong">' + strongShownToUser + '</span>' +
 										'<span class="srchParathesis">)</span>' +
-										'<span class="srchFrequency"> ~' + data[i].suggestion.popularity + ' x</span>';
+										'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 									shortTxt2Display = gloss;
 									if ((isAugmentedStrong) || ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== ""))) {
 										searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
@@ -1240,43 +1249,53 @@ step.searchSelect = {
 					text2Display = data[i].suggestion.type + ": " + gloss;
 					str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);
 					if (detailLexSearchStrongs.includes(str2Search)) continue; // Don't show the same search suggestion twice
-						detailLexSearchStrongs.push(str2Search);
+					detailLexSearchStrongs.push(str2Search);
+					var detailLexicalJSON = null;
+					var frequency = data[i].suggestion.popularity;
+					if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
+						detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
+						frequency = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, detailLexicalJSON);
+					}
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
 						text2Display += '<span class="srchStrong"> (' + data[i].suggestion.strongNumber + ')</span>' +
 							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
-							'<span class="srchFrequency"> ~' + data[i].suggestion.popularity + ' x</span>';
+							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					}
-					else
-						text2Display += ' <span class="srchParathesis">(</span>' +
+					else text2Display += ' <span class="srchParathesis">(</span>' +
 							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
 							'<span class="srchDash"> - </span>' + 
 							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 							'<span class="srchSpaceStrong"> </span>' +
 							'<span class="srchStrong">' + data[i].suggestion.strongNumber + '</span>' +
 							'<span class="srchParathesis">)</span>' +
-							'<span class="srchFrequency"> ~' + data[i].suggestion.popularity + ' x</span>';
+							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 						str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false);
-					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i);
+					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, detailLexicalJSON, i);
 				}
 				else {
 					alert("Unknown result: " + suggestionType);
 				}
 			}
 			var strongWithoutAugment = (isNaN(strongNum.substr(-1))) ? strongNum.substring(0, strongNum.length-1) : strongNum;
-			var text2Display = ' "' + data[0].suggestion.gloss + '" <span class="srchParathesis">(</span>' +
-				'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + '</i>' +
-				'<span class="srchDash"> - </span>' +
-				'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + '</span>' +
-				'<span class="srchSpaceStrong"> </span>' +
-				'<span class="srchStrong">' + strongWithoutAugment + '*</span>' +
-				'<span class="srchParathesis">)</span>' +
+			var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (' +
+//				'" <span class="srchParathesis">(</span>' +
+				'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
+				'<span class="srchDash">- </span>' +
+				'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
+//				'<span class="srchSpaceStrong"> </span>' +
+//				'<span class="srchStrong">' + strongWithoutAugment + '*)</span>' +
+//				'<span class="srchParathesis">)</span>' +
+				'<span>' + strongWithoutAugment + '*)</span>' +
 				'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
 			searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
-				strongWithoutAugment, suggestionType, "syntax_strong", "all named" + text2Display, shortTxt2Display, limitType, false);
+				strongWithoutAugment, suggestionType, "syntax_strong", "all" + text2Display, shortTxt2Display, limitType, false);
 			//var aramaic = step.searchSelect.getAramaicStrongFromDetailLexicalTag(data, limitType);
+			$("#hd4").text('Please select one of the following "' + data[0].suggestion.gloss + '"' +
+				"(" + data[0].suggestion.stepTransliteration + " - " + data[0].suggestion.matchingForm + ' ' + 
+				strongWithoutAugment +"*):");
 			for (var l = 0; l < searchSuggestionsToDisplay.length; l++) {
 				if (step.searchSelect.searchTypeCode[l] === limitType) {
 					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
@@ -1333,9 +1352,18 @@ step.searchSelect = {
 		return allStrongs.join(",");
 	},
 
-	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalTag, count) {
-		if ((typeof detailLexicalTag !== "string") || (detailLexicalTag === "")) return ""; 
-		var detailLexicalJSON = JSON.parse(detailLexicalTag);
+	getFrequencyFromDetailLexicalTag: function(strongNum, frequency,  detailLexicalJSON) {
+		total = parseInt(frequency);
+		detailLexicalJSON.forEach(function (item, index) {
+			if (item[1] !== strongNum) {
+				total += parseInt(item[3]);
+			}
+		});
+		return total;
+	},
+
+	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalJSON, count) {
+		if (detailLexicalJSON === null) return "";
 		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-right'></a><br>";
 		var allStrongs = [];
 		detailLexicalJSON.forEach(function (item, index) {

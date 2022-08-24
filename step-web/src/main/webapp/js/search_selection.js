@@ -1275,14 +1275,16 @@ step.searchSelect = {
 					detailLexSearchStrongs.push(str2Search);
 					var detailLexicalJSON = null;
 					var frequency = data[i].suggestion.popularity;
+					var curStrong = data[i].suggestion.strongNumber;
 					if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
 						detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
 						frequency = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, detailLexicalJSON);
+						curStrong += ", ...";
 					}
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
-						text2Display += '<span class="srchStrong"> (' + data[i].suggestion.strongNumber + ')</span>' +
+						text2Display += '<span class="srchStrong"> (' + curStrong + ')</span>' +
 							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					}

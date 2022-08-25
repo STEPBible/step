@@ -4,7 +4,7 @@ step.searchSelect = {
 	userLang: "en",
 	searchOnSpecificType: "",
 	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, HEBREW],
-	displayOptions: ["Strong", "Transliteration", "Original_language", "Frequency"],
+	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
 	searchRange: "Gen-Rev",
@@ -184,8 +184,6 @@ step.searchSelect = {
 							}
 							if (syntaxWords[j].substr(0, 7) === STRONG_NUMBER + ":") {
 								var strongNum = syntaxWords[j].substr(7);
-								// if (strongNum.substr(0, 1).toUpperCase() === "G") itemType = GREEK;
-								// else if (strongNum.substr(0, 1).toUpperCase() === "H") itemType = HEBREW;
 								var result = step.util.getDetailsOfStrong(strongNum, this.version);
 								currWord = {token: syntaxWords[j], item: {gloss: result[0], stepTransliteration: result[1], matchingForm: result[2]} };
 							}
@@ -277,7 +275,7 @@ step.searchSelect = {
         var localStorageSetting = (window.localStorage) ? window.localStorage.getItem("step.srchOptn" + optionName) : $.cookie("step.srchOptn" + optionName);
 		var currentSetting = false;
 		if ((typeof localStorageSetting !== "string") &&
-			(optionName !== "strong") && (optionName !== "frequency")) {
+			(optionName !== "strong_number") && (optionName !== "frequency")) {
 				currentSetting = true;
 		}
 		else
@@ -302,7 +300,7 @@ step.searchSelect = {
 			var localStorageSetting = (window.localStorage) ? window.localStorage.getItem("step.srchOptn" + optionName) : $.cookie("step.srchOptn" + optionName);
 			var currentSetting = false;
 			if ((typeof localStorageSetting !== "string") &&
-				(optionName !== "strong") && (optionName !== "frequency")) {
+				(optionName !== "strong_number") && (optionName !== "frequency")) {
 					currentSetting = true;
 			}
 			else
@@ -310,7 +308,7 @@ step.searchSelect = {
 			if (currentSetting) {
 				$(".srch" + optionName).show();
 				if ((optionName === "transliteration") || (optionName === "original_language")) wordsAroundDash ++;
-				if (optionName === "strong") showStrong = true;
+				if (optionName === "strong_number") showStrong = true;
 			}
 			else $(".srch" + optionName).hide();
 		}
@@ -1160,7 +1158,7 @@ step.searchSelect = {
 										'<span class="srchDash"> - </span>' +
 										'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 										'<span class="srchSpaceStrong"> </span>' +
-										'<span class="srchStrong">' + strongShownToUser + '</span>' +
+										'<span class="srchStrong_number">' + strongShownToUser + '</span>' +
 										'<span class="srchParathesis">)</span>' +
 										'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 									shortTxt2Display = gloss;
@@ -1245,7 +1243,7 @@ step.searchSelect = {
 					'<span class="srchDash">- </span>' +
 					'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
 	//				'<span class="srchSpaceStrong"> </span>' +
-	//				'<span class="srchStrong">' + strongWithoutAugment + '*)</span>' +
+	//				'<span class="srchStrong_number">' + strongWithoutAugment + '*)</span>' +
 	//				'<span class="srchParathesis">)</span>' +
 					'<span>' + strongWithoutAugment + '*)</span>' +
 					'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
@@ -1285,7 +1283,7 @@ step.searchSelect = {
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
-						text2Display += '<span class="srchStrong"> (' + curStrong + ')</span>' +
+						text2Display += '<span class="srchStrong_number"> (' + curStrong + ')</span>' +
 							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					}
@@ -1294,7 +1292,7 @@ step.searchSelect = {
 							'<span class="srchDash"> - </span>' + 
 							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 							'<span class="srchSpaceStrong"> </span>' +
-							'<span class="srchStrong">' + curStrong + '</span>' +
+							'<span class="srchStrong_number">' + curStrong + '</span>' +
 							'<span class="srchParathesis">)</span>' +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
@@ -1394,7 +1392,7 @@ step.searchSelect = {
 				'<span class="srchDash"> - </span>' +
 				'<span class="srchOriginal_Language">' + item[4] + '</span>' +
 				'<span class="srchSpaceStrong"> </span>' +
-				'<span class="srchStrong">' + item[1] + '</span>' +
+				'<span class="srchStrong_number">' + item[1] + '</span>' +
 				'<span class="srchParathesis">)</span>' +
 				'<span class="srchFrequency"> ~' + item[3] + ' x</span>' +
 				"</a>";

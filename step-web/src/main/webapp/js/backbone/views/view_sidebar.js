@@ -371,7 +371,7 @@ var SidebarView = Backbone.View.extend({
             panel.append($("<span class='detailLex glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>"));
             spaceWithoutLabel = "";
         }
-        panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
+        panel.append($("<a title='" + detailLex[1] + " " + detailLex[4] + "'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
             append($("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + " </span>")).click(function () {
             step.util.ui.showDef($(this).data("strongNumber"));
         }));

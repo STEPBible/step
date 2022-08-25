@@ -1381,10 +1381,10 @@ step.searchSelect = {
 			if (allStrongs.includes(item[1])) return;
 			allStrongs.push(item[1]);
 			result += "<br class='detailLex" + count + "' style='display:none'>";
-			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 			if (item[1] === strongNum) {
 				result += "&nbsp;&nbsp;&nbsp;<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px;display:none'></span>";
-				spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
+				spaceWithoutLabel = "&nbsp;&nbsp;";
 			}
 			result += '<a class="detailLex' + count + '" style="display:none" style="padding:0px" title="' + item[1] + '"' +
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 

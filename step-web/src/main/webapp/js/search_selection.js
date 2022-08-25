@@ -1229,29 +1229,30 @@ step.searchSelect = {
 			for (var i = 0; i < step.searchSelect.searchTypeCode.length; i++) {
 				searchSuggestionsToDisplay.push("");
 			}
-			var frequencyTotal = 0;
-			for (var i = 0; i < data.length; i++) {
-				if ((data[i].itemType === GREEK) || (data[i].itemType === HEBREW))
-					frequencyTotal += parseInt(data[i].suggestion.popularity);
+			if (data.length > 1) {
+				var frequencyTotal = 0;
+				for (var i = 0; i < data.length; i++) {
+					if ((data[i].itemType === GREEK) || (data[i].itemType === HEBREW))
+						frequencyTotal += parseInt(data[i].suggestion.popularity);
+				}
+				var firstStrongNum = data[0].suggestion.strongNumber;
+				var strongWithoutAugment = (isNaN(firstStrongNum.substr(-1))) ? firstStrongNum.substring(0, firstStrongNum.length-1) : firstStrongNum;
+				var suggestionType = data[0].itemType;
+				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
+				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (' +
+	//				'" <span class="srchParathesis">(</span>' +
+					'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
+					'<span class="srchDash">- </span>' +
+					'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
+	//				'<span class="srchSpaceStrong"> </span>' +
+	//				'<span class="srchStrong">' + strongWithoutAugment + '*)</span>' +
+	//				'<span class="srchParathesis">)</span>' +
+					'<span>' + strongWithoutAugment + '*)</span>' +
+					'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
+				searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+					strongWithoutAugment, suggestionType, "syntax_strong", text2Display, shortTxt2Display, limitType, false, false);
+				searchSuggestionsToDisplay[searchResultIndex] += '<span class="glyphicon glyphicon-arrow-down stepFgBg"></span>'
 			}
-			var firstStrongNum = data[0].suggestion.strongNumber;
-			var strongWithoutAugment = (isNaN(firstStrongNum.substr(-1))) ? firstStrongNum.substring(0, firstStrongNum.length-1) : firstStrongNum;
-			var suggestionType = data[0].itemType;
-			var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
-			var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (' +
-//				'" <span class="srchParathesis">(</span>' +
-				'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
-				'<span class="srchDash">- </span>' +
-				'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
-//				'<span class="srchSpaceStrong"> </span>' +
-//				'<span class="srchStrong">' + strongWithoutAugment + '*)</span>' +
-//				'<span class="srchParathesis">)</span>' +
-				'<span>' + strongWithoutAugment + '*)</span>' +
-				'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
-			searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
-				strongWithoutAugment, suggestionType, "syntax_strong", "all" + text2Display, shortTxt2Display, limitType, false, false);
-			searchSuggestionsToDisplay[searchResultIndex] += '<span class="glyphicon glyphicon-arrow-down stepFgBg"></span>'
-
 			for (var i = 0; i < data.length; i++) {
 				var suggestionType = data[i].itemType;
 				var searchType = suggestionType;
@@ -1293,7 +1294,7 @@ step.searchSelect = {
 							'<span class="srchDash"> - </span>' + 
 							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 							'<span class="srchSpaceStrong"> </span>' +
-							'<span class="srchStrong">' + data[i].suggestion.strongNumber + '</span>' +
+							'<span class="srchStrong">' + curStrong + '</span>' +
 							'<span class="srchParathesis">)</span>' +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 

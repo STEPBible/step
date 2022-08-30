@@ -395,9 +395,9 @@ var SidebarView = Backbone.View.extend({
 
     _composeDescriptionOfOccurences: function(stepType) {
         if ((typeof stepType !== "string") || (stepType === "")) return __s.lexicon_search_for_this_word;
-        var verbToDisplay = "used";
-        if ((stepType === "man") || (stepType === "woman") || (stepType === "place") || (stepType === "group")) verbToDisplay = "named";
-        return "This " + stepType + " is " + verbToDisplay + " about ";
+        var verbToDisplay = "occurs";
+        if ((stepType === "man") || (stepType === "woman") || (stepType === "place") || (stepType === "group")) verbToDisplay = "is named";
+        return "This " + stepType + " " + verbToDisplay + " about ";
     },
 
     _appendLexiconSearch: function (panel, mainWord, detailLex) {

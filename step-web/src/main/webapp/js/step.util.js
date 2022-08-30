@@ -3230,6 +3230,137 @@ step.util = {
             return " from " + searchResultRange.substring(0, pos2) + separator + secondPassage;
         }
         else return " only at " + searchResultRange;
+	},
+	getVocabMorphInfoFromJson: function (strong, morph, reference, version) {
+        var strongArray = strong.split(" ");
+        var processedStrong = [];
+        var resultJson = {vocabInfos: [], morphInfos: []};
+        $.ajaxSetup({async: false});
+        for (var j = 0; j < strongArray.length; j++) {
+            var strongWithoutAugment = strongArray[j];
+            if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
+                strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
+            }                                                                     // remove the last character if it is a letter
+			strongWithoutAugment = strongWithoutAugment.split(".")[0];
+			strongWithoutAugment = strongWithoutAugment.split("!")[0];
+            if (processedStrong.indexOf(strongWithoutAugment) == -1) {
+                processedStrong.push(strongWithoutAugment);
+				var strongFirstChar = strong.substring(0, 1).toLowerCase();
+				var rsvVersification = (((version !== "OHB") && (version !== "THOT")) &&
+					(strongFirstChar === "h"));
+                $.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(jsonVar) {
+					var augStrongIndex = 0;
+					if (jsonVar.augmentedStrong) {
+						var refParts = reference.split(".");
+						var book = refParts[0];
+						var isNewTestament = step.searchSelect.idx2osisChapterJsword[book] > 38;
+						if (! ( (version === "LXX") ||
+							    ((strongFirstChar === "h") && (isNewTestament)) ||
+							    ((strongFirstChar === "g") && (!isNewTestament)) ||
+								(reference === "") ) ) {
+							for (var i = 0; i < jsonVar.augmentedStrong.length; i ++) {
+								if (jsonVar.augmentedStrong[i].references === "*") {
+									augStrongIndex = i;
+									break;
+								}
+							}
+							var chapterVerse = refParts[1];
+							if (refParts.length == 3)
+								chapterVerse += "\\." + refParts[2];
+							var regString1 = book + "\\." + chapterVerse;
+							if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
+							else regString1 += "[\\s\\(]"; // must have a sapce or a ( character after the reference
+							var regString2 = book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
+							for (var i = jsonVar.augmentedStrong.length -1 ; i > -1; i --) {
+								if (jsonVar.augmentedStrong[i].references !== "*") {
+									var referencesToSearch = jsonVar.augmentedStrong[i].references + " ";
+									var searchPos = referencesToSearch.search(regString1);
+									if ((searchPos == -1) &&
+										(rsvVersification))
+										searchPos = jsonVar.augmentedStrong[i].references.search(regString2);
+									if (searchPos > -1) {
+										augStrongIndex = i;
+										break;
+									}
+								}
+							}
+							if (augStrongIndex > 0) {
+								for (var key in jsonVar.vocabInfos[augStrongIndex]) {
+									if (jsonVar.vocabInfos[augStrongIndex][key] === "=")
+									jsonVar.vocabInfos[augStrongIndex][key] = jsonVar.vocabInfos[0][key];
+								}
+							}
+						}
+					}
+					resultJson.vocabInfos.push(jsonVar.vocabInfos[augStrongIndex]);
+                });
+            }
+        }
+		if (morph) {
+			var morphArray = morph.split(" ");
+			for (var k = 0; k < morphArray.length; k++) {
+				var morph = morphArray[k];
+				var morphLowerCase = morph.toLowerCase();
+				if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1)) continue;
+				var pos = morph.search("robinson:");
+				if (pos > -1) morph = morphArray[k].substring(pos+9);
+				$.getJSON("/html/lexicon/" + morph + ".json", function(jsonVar) {
+					resultJson.morphInfos.push(jsonVar.morphInfos[0]);
+				});
+			}
+		}
+        $.ajaxSetup({async: true});
+		return resultJson;
+	},
+	test: function(strong, morph, ref, version) {
+		$.ajaxSetup({async: false});
+        var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strong, morph, ref, version);
+        $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, ""], function (data) {
+			if (data.vocabInfos.length !== vocabMorphFromJson.vocabInfos.length) {
+				console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+				debugger;
+			}
+			for (var i = 0; i < data.vocabInfos.length; i ++) {
+				for (var key in data.vocabInfos[i]) {
+					if ((typeof vocabMorphFromJson === "undefined") || (vocabMorphFromJson == null)) {
+						console.log("vocabinfo not exist:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+						debugger;
+					}
+					if (key === "relatedNos") {
+						if (typeof vocabMorphFromJson.vocabInfos[i]["relatedNos"] === "string")
+							vocabMorphFromJson.vocabInfos[i]["relatedNos"] = JSON.parse(vocabMorphFromJson.vocabInfos[i]["relatedNos"].replaceAll("'", '"'));
+						if (! _.isEqual(data.vocabInfos[i]["relatedNos"], vocabMorphFromJson.vocabInfos[i]["relatedNos"])) {
+							console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+							debugger;
+						}
+					}
+					else if (data.vocabInfos[i][key] !== vocabMorphFromJson.vocabInfos[i][key]) {
+						console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+						debugger;
+					}
+				}	
+			}
+			if (data.morphInfos.length !== vocabMorphFromJson.morphInfos.length) {
+				console.log("length does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+				debugger;
+			}
+			for (var i = 0; i < data.morphInfos.length; i ++) {
+				for (var key in data.morphInfos[i]) {
+					if (data.morphInfos[i][key] !== vocabMorphFromJson.morphInfos[i][key]) {
+						console.log("does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+						debugger;
+					}
+				}
+			}
+        }).error(function() {
+            console.log("getsafe failed strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
+			debugger;
+        });
+    },
+	test1: function() {
+
+
+		
 	}
 }
 ;

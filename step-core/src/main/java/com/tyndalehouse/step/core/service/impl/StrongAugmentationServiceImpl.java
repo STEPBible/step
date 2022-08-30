@@ -93,12 +93,12 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         int ordinal;
         Versification sourceVersification = this.versificationService.getVersificationForVersion(version);
         String versificationName = sourceVersification.getName();
-        if ((versificationName.equals("NRSVA")) || (versificationName.equals("KJVA"))) {
+        if ((versificationName.equals("NRSVA")) || (versificationName.equals("KJVA")) || (versificationName.equals("KJV"))) {
             sourceVersification = this.versificationService.getVersificationForVersion("ESV");
             versificationName = sourceVersification.getName();
         }
         boolean useNRSVVersification = false;
-        if ((versificationName.equals("NRSV")) || (versificationName.equals("KJV"))) {
+        if (versificationName.equals("NRSV")) {
             ordinal = convertOSIS2Ordinal(reference, sourceVersification);
             useNRSVVersification = true;
             if (((keys[0].charAt(0) == 'G') || (keys[0].charAt(0) == 'g')) && (sourceVersification.getTestament(ordinal).equals(Testament.OLD)))

@@ -3318,43 +3318,36 @@ step.util = {
         $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, ""], function (data) {
 			if (data.vocabInfos.length !== vocabMorphFromJson.vocabInfos.length) {
 				console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-				debugger;
 			}
 			for (var i = 0; i < data.vocabInfos.length; i ++) {
 				for (var key in data.vocabInfos[i]) {
 					if ((typeof vocabMorphFromJson === "undefined") || (vocabMorphFromJson == null)) {
 						console.log("vocabinfo not exist:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-						debugger;
 					}
 					if (key === "relatedNos") {
 						if (typeof vocabMorphFromJson.vocabInfos[i]["relatedNos"] === "string")
 							vocabMorphFromJson.vocabInfos[i]["relatedNos"] = JSON.parse(vocabMorphFromJson.vocabInfos[i]["relatedNos"].replaceAll("'", '"'));
 						if (! _.isEqual(data.vocabInfos[i]["relatedNos"], vocabMorphFromJson.vocabInfos[i]["relatedNos"])) {
 							console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-							debugger;
 						}
 					}
 					else if (data.vocabInfos[i][key] !== vocabMorphFromJson.vocabInfos[i][key]) {
 						console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-						debugger;
 					}
 				}	
 			}
 			if (data.morphInfos.length !== vocabMorphFromJson.morphInfos.length) {
 				console.log("length does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-				debugger;
 			}
 			for (var i = 0; i < data.morphInfos.length; i ++) {
 				for (var key in data.morphInfos[i]) {
 					if (data.morphInfos[i][key] !== vocabMorphFromJson.morphInfos[i][key]) {
 						console.log("does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-						debugger;
 					}
 				}
 			}
         }).error(function() {
             console.log("getsafe failed strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
-			debugger;
         });
     },
 	test1: function() {

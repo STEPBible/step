@@ -320,7 +320,11 @@ var SidebarView = Backbone.View.extend({
         var currentWordLangCode = mainWord.strongNumber.substr(0, 1);
         var foundChineseJSON = false;
         $.ajaxSetup({async: false});
-        $.getJSON("/lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
+        var strongWithoutAugment = mainWord.strongNumber;
+        if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
+            strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
+        }                                                                     // remove the last alpha character 
+        $.getJSON("/lexicon/" + currentUserLang + "/" + strongWithoutAugment + ".json", function(chineseVars) {
             foundChineseJSON = true;
             panel.append($("<h2>").append(__s.zh_lexicon_chinese_name + ':'));
             panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
@@ -350,7 +354,7 @@ var SidebarView = Backbone.View.extend({
                             (100 + (j * 100)) + "\">(" + displayGroupText + ")</span>";
                     }
                     li.append($("<a sbstrong></a>").attr("href", "javascript:void(0)")
-                        .data("strongNumber", mainWord.strongNumber)
+                        .data("strongNumber", strongWithoutAugment)
                         .data("refURLStr", refURLString)
                         .append(displayTextOnUsage).click(function () {
                             var strongNumber = $(this).data("strongNumber");

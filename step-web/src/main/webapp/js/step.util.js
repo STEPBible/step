@@ -3267,17 +3267,17 @@ step.util = {
 							var chapterVerse = refParts[1];
 							if (refParts.length == 3)
 								chapterVerse += "\\." + refParts[2];
-							var regString1 = book + "\\." + chapterVerse;
+							var regString1 = "\\s" + book + "\\." + chapterVerse;
 							if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
 							else regString1 += "[\\s\\(]"; // must have a sapce or a ( character after the reference
-							var regString2 = book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
+							var regString2 = "\\s" + book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
 							for (var i = jsonVar.augmentedStrong.length -1 ; i > -1; i --) {
 								if (jsonVar.augmentedStrong[i].references !== "*") {
-									var referencesToSearch = jsonVar.augmentedStrong[i].references + " ";
+									var referencesToSearch = " " + jsonVar.augmentedStrong[i].references + " ";
 									var searchPos = referencesToSearch.search(regString1);
 									if ((searchPos == -1) &&
 										(rsvVersification))
-										searchPos = jsonVar.augmentedStrong[i].references.search(regString2);
+										searchPos = referencesToSearch.search(regString2);
 									if (searchPos > -1) {
 										augStrongIndex = i;
 										break;
@@ -3312,9 +3312,12 @@ step.util = {
         $.ajaxSetup({async: true});
 		return resultJson;
 	},
-	test: function(strong, morph, ref, version) {
+	test: function(strong, morph, ref, version, expectStrongNum) {
 		$.ajaxSetup({async: false});
         var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strong, morph, ref, version);
+		if ((expectStrongNum) && (vocabMorphFromJson.vocabInfos[0].strongNumber !== expectStrongNum)) {
+			console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " expected: " + expectStrongNum + " found: " + vocabMorphFromJson.vocabInfos[0].strongNumber);			
+		}
         $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, ""], function (data) {
 			if (data.vocabInfos.length !== vocabMorphFromJson.vocabInfos.length) {
 				console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
@@ -3350,10 +3353,25 @@ step.util = {
             console.log("getsafe failed strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
         });
     },
-	test1: function() {
+	test1: function(fileName, version, start) {
 
-
-		
+		$.getJSON("/html/lexicon/" + fileName + ".json", function(jsonVar) {
+			var end = jsonVar.length;
+			if (end > start + 10000) end = start + 10000;
+			for (var i = start; i < end; i ++) {
+				var words = jsonVar[i].split(",");
+				var temp = words[1].split(/[()]/);
+				if (temp.length > 1) {
+					if ((version !== "OHB")	&& (version !== "THOT")) words[1] = words[1].split(".")[0] + "." + temp[1];
+					else words[1] = temp[0];
+				}
+				var strongWithoutAugment = words[0];
+				if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
+					strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
+				}                                                                     // remove the last character if it is a letter
+				step.util.test(strongWithoutAugment, "", words[1], version, words[0]);	
+			}
+		});
 	}
 }
 ;

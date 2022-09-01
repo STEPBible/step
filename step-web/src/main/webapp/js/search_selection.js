@@ -1133,9 +1133,9 @@ step.searchSelect = {
 											if (strings2Search.length > 1) {
 												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 													str2Search, suggestionType, searchType, 
-													strings2Search.join(" AND "),
+													strings2Search.join(" <sub>and</sub> "),
 													shortTxt2Display, limitType, false, false);
-												text2Display = strings2Search.join(" OR ");
+												text2Display = strings2Search.join(" <sub>or</sub> ");
 											}
 										}
 									}
@@ -1511,7 +1511,7 @@ step.searchSelect = {
 		}
 		if (typeof searchWord !== "string") searchWord = "";
 		if (searchType === TEXT_SEARCH) {
-			var andSearchStrings = displayText.split(" AND ");
+			var andSearchStrings = displayText.split(" <sub>and</sub> ");
 			if (andSearchStrings.length > 1) {
 				currentSearch = "";
 				for (var i = 0; i < andSearchStrings.length; i++) {

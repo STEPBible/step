@@ -1129,7 +1129,7 @@ step.searchSelect = {
 										text2Display = data[i].suggestion.text;
 										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
 										if (str2Search.indexOf("%22") == -1) {
-											var strings2Search = str2Search.split(" ").filter(element => element !== "");
+											var strings2Search = str2Search.split(" ");
 											if (strings2Search.length > 1) {
 												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 													str2Search, suggestionType, searchType, 
@@ -1511,7 +1511,7 @@ step.searchSelect = {
 		}
 		if (typeof searchWord !== "string") searchWord = "";
 		if (searchType === TEXT_SEARCH) {
-			var andSearchStrings = displayText.split(" AND ").filter(element => element !== "");
+			var andSearchStrings = displayText.split(" AND ");
 			if (andSearchStrings.length > 1) {
 				currentSearch = "";
 				for (var i = 0; i < andSearchStrings.length; i++) {

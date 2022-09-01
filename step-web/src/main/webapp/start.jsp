@@ -83,7 +83,6 @@
     <link href="css/select2.css" rel="stylesheet" media="screen"/>
     <link href="css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="scss/step-template.css" rel="stylesheet" media="screen"/>
-
     <%
     } else {
     %>

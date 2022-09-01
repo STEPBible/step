@@ -142,6 +142,7 @@ step.searchSelect = {
         this.idx2BookOrder = {};
         
 		var ua = navigator.userAgent.toLowerCase();
+		console.log("ua: " + ua);
 		$("#searchmodalbody").addClass("scrollPart");
 		if ((this.userLang.indexOf('en') != 0) && (this.groupsOT[0].groupName === "Books of Moses") && (this.groupsOT[0].groupName !== "Pentateuch"))
 			this.groupsOT[0].groupName = __s.the_pentateuch;

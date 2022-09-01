@@ -1128,6 +1128,16 @@ step.searchSelect = {
 									if (data[i].suggestion.text.search(/^[HG]\d/i) == -1) { // Make sure it is not a STRONG number (e.g.: H0001)
 										text2Display = data[i].suggestion.text;
 										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
+										if (str2Search.indexOf("%22") == -1) {
+											var strings2Search = str2Search.split(" ").filter(element => element !== "");
+											if (strings2Search.length > 1) {
+												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+													str2Search, suggestionType, searchType, 
+													strings2Search.join(" AND "),
+													shortTxt2Display, limitType, false, false);
+												text2Display = strings2Search.join(" OR ");
+											}
+										}
 									}
 								}
 								else {
@@ -1500,7 +1510,16 @@ step.searchSelect = {
 			}
 		}
 		if (typeof searchWord !== "string") searchWord = "";
-		if (searchType === TEXT_SEARCH) currentSearch = '|text=' + searchWord;
+		if (searchType === TEXT_SEARCH) {
+			var andSearchStrings = displayText.split(" AND ").filter(element => element !== "");
+			if (andSearchStrings.length > 1) {
+				currentSearch = "";
+				for (var i = 0; i < andSearchStrings.length; i++) {
+					currentSearch += '|text=' + andSearchStrings[i];	
+				}
+			}
+			else currentSearch = '|text=' + searchWord;
+		}
 		else if (searchType === STRONG_NUMBER) {
 			var searchWords = searchWord.split(",");
 			currentSearch = '|strong=' + searchWords[0];

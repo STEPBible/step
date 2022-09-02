@@ -3235,7 +3235,7 @@ step.util = {
         var strongArray = strong.split(" ");
         var processedStrong = [];
         var resultJson = {vocabInfos: [], morphInfos: []};
-		console.log("Strong: " + strong + " ref: " + reference);
+		if (!reference) reference = "";
         $.ajaxSetup({async: false});
         for (var j = 0; j < strongArray.length; j++) {
             var strongWithoutAugment = strongArray[j];
@@ -3252,44 +3252,54 @@ step.util = {
                 $.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(jsonVar) {
 					var augStrongIndex = 0;
 					if (jsonVar.augmentedStrong) {
-						var refParts = reference.split(".");
-						var book = refParts[0];
-						var isNewTestament = step.searchSelect.idx2osisChapterJsword[book] > 38;
-						if (! ( (version === "LXX") ||
-							    ((strongFirstChar === "h") && (isNewTestament)) ||
-							    ((strongFirstChar === "g") && (!isNewTestament)) ||
-								(reference === "") ) ) {
-							for (var i = 0; i < jsonVar.augmentedStrong.length; i ++) {
-								if (jsonVar.augmentedStrong[i].references === "*") {
-									augStrongIndex = i;
-									break;
-								}
-							}
-							var chapterVerse = refParts[1];
-							if (refParts.length == 3)
-								chapterVerse += "\\." + refParts[2];
-							var regString1 = "\\s" + book + "\\." + chapterVerse;
-							if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
-							else regString1 += "[\\s\\(]"; // must have a sapce or a ( character after the reference
-							var regString2 = "\\s" + book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
-							for (var i = jsonVar.augmentedStrong.length -1 ; i > -1; i --) {
-								if (jsonVar.augmentedStrong[i].references !== "*") {
-									var referencesToSearch = " " + jsonVar.augmentedStrong[i].references + " ";
-									var searchPos = referencesToSearch.search(regString1);
-									if ((searchPos == -1) &&
-										(rsvVersification))
-										searchPos = referencesToSearch.search(regString2);
-									if (searchPos > -1) {
+						if (reference !== "") {
+							var refParts = reference.split(".");
+							var book = refParts[0];
+							var isNewTestament = step.searchSelect.idx2osisChapterJsword[book] > 38;
+							if (! ( (version === "LXX") ||
+									((strongFirstChar === "h") && (isNewTestament)) ||
+									((strongFirstChar === "g") && (!isNewTestament)) ||
+									(reference === "") ) ) {
+								for (var i = 0; i < jsonVar.augmentedStrong.length; i++) {
+									if (jsonVar.augmentedStrong[i].references === "*") {
 										augStrongIndex = i;
 										break;
 									}
 								}
-							}
-							if (augStrongIndex > 0) {
-								for (var key in jsonVar.vocabInfos[augStrongIndex]) {
-									if (jsonVar.vocabInfos[augStrongIndex][key] === "=")
-									jsonVar.vocabInfos[augStrongIndex][key] = jsonVar.vocabInfos[0][key];
+								var chapterVerse = refParts[1];
+								if (refParts.length == 3)
+									chapterVerse += "\\." + refParts[2];
+								var regString1 = "\\s" + book + "\\." + chapterVerse;
+								if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
+								else regString1 += "[\\s\\(]"; // must have a space or a ( character after the reference
+								var regString2 = "\\s" + book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
+								for (var i = jsonVar.augmentedStrong.length -1 ; i > -1; i --) {
+									if (jsonVar.augmentedStrong[i].references !== "*") {
+										var referencesToSearch = " " + jsonVar.augmentedStrong[i].references + " ";
+										var searchPos = referencesToSearch.search(regString1);
+										if ((searchPos == -1) &&
+											(rsvVersification))
+											searchPos = referencesToSearch.search(regString2);
+										if (searchPos > -1) {
+											augStrongIndex = i;
+											break;
+										}
+									}
 								}
+							}
+						}
+						else if (strongArray[j] !== strongWithoutAugment) {
+							for (var i = 0; i < jsonVar.augmentedStrong.length; i++) {
+								if (strongArray[j] === jsonVar.augmentedStrong[i].augmentedStrong) {
+									augStrongIndex = i;
+									break;
+								}
+							}
+						}
+						if (augStrongIndex > 0) {
+							for (var key in jsonVar.vocabInfos[augStrongIndex]) {
+								if (jsonVar.vocabInfos[augStrongIndex][key] === "=")
+								jsonVar.vocabInfos[augStrongIndex][key] = jsonVar.vocabInfos[0][key];
 							}
 						}
 					}

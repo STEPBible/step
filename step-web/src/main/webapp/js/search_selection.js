@@ -1136,7 +1136,12 @@ step.searchSelect = {
 													str2Search, suggestionType, searchType, 
 													strings2Search.join(" <sub>and</sub> "),
 													shortTxt2Display, limitType, false, false);
-												text2Display = strings2Search.join(" <sub>or</sub> ");
+												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+													str2Search, suggestionType, searchType, 
+													strings2Search.join(" <sub>or</sub> "),
+													shortTxt2Display, limitType, false, false);
+												text2Display = '"' + str2Search + '"';
+												str2Search = '%22' + str2Search + '%22';
 											}
 										}
 									}

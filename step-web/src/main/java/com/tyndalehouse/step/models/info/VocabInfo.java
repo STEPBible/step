@@ -142,9 +142,8 @@ public class VocabInfo implements Serializable {
 				this.step_Link = d.get("STEP_Link");
 				this.step_Type = d.get("STEP_Type");
             }
-        } else {
-            this.rawRelatedNumbers = OriginalWordUtils.stripExtensions(d.get("relatedNumbers"));
         }
+        this.rawRelatedNumbers = OriginalWordUtils.stripExtensions(d.get("relatedNumbers"));
     }
 
 

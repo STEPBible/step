@@ -753,6 +753,7 @@ var SidebarView = Backbone.View.extend({
     closeSidebar: function () {
         this.sidebarButtonIcon.removeClass("active");
         this.$el.closest('.row-offcanvas').removeClass('active');
+		$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
     },
     /**
      * Creates a QTIP for a particular xref

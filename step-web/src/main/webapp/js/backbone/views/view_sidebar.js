@@ -399,9 +399,11 @@ var SidebarView = Backbone.View.extend({
 
     _composeDescriptionOfOccurences: function(stepType) {
         if ((typeof stepType !== "string") || (stepType === "") ||
-            (__s.lexicon_search_for_this_person === "This person occurs about") || // The user language is using the English message so use the original message which is
-            (__s.lexicon_search_for_this_place === "This place occurs about") ||   // lexicon_search_for_this_word.  That has been translated for many years.
-            (stepType === "word") || (stepType === "verb") || (stepType === "name")) return __s.lexicon_search_for_this_word;
+            (stepType === "word") || (stepType === "verb") || (stepType === "name") ||
+            ((step.userLanguage !== "English") &                                     // If user language is not English, but it is using the English message,
+             ((__s.lexicon_search_for_this_person === "This person occurs about") || // there is no translation for these two new messages.  Therefore use the original message which is
+              (__s.lexicon_search_for_this_place === "This place occurs about"))) )   // lexicon_search_for_this_word.  That has been translated for many years.
+             return __s.lexicon_search_for_this_word;
         if (stepType === "place") return __s.lexicon_search_for_this_place;
         return __s.lexicon_search_for_this_person;
     },

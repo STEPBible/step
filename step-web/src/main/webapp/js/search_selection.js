@@ -1228,7 +1228,7 @@ step.searchSelect = {
 		$('#warningMessage').text('');
 		$('textarea#userTextInput').hide();
 		$('#updateButton').hide();
-		$("#hd4").text("Please select one of the following:");
+		$("#hd4").text(__s.please_select_following);
 		step.searchSelect.searchModalCurrentPage = 3;
 		
 		$('#srchModalBackButton').show();
@@ -1254,13 +1254,9 @@ step.searchSelect = {
 				var suggestionType = data[0].itemType;
 				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
 				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (' +
-	//				'" <span class="srchParathesis">(</span>' +
 					'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
 					'<span class="srchDash">- </span>' +
 					'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
-	//				'<span class="srchSpaceStrong"> </span>' +
-	//				'<span class="srchStrong_number">' + strongWithoutAugment + '*)</span>' +
-	//				'<span class="srchParathesis">)</span>' +
 					'<span>' + strongWithoutAugment + '*)</span>' +
 					'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
 				searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 

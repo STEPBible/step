@@ -22,7 +22,7 @@ var StepRouter = Backbone.Router.extend({
         this.navigate(url, { trigger: false, replace: true});
     },
 
-    navigatePreserveVersions: function (partial, stripCommentaries, skipPage) {
+    navigatePreserveVersions: function (partial, stripCommentaries, skipPage, skipQFilter) {
         //get versions of current active passage
         //add versions from current active passage
         var activePassage = step.util.activePassage();
@@ -31,20 +31,21 @@ var StepRouter = Backbone.Router.extend({
         var mainVersion = activePassage.get("masterVersion");
         if (mainVersion != "") {
             if (!stripCommentaries || step.keyedVersions[mainVersion].category == 'BIBLE') {
-                extra += "|version=" + mainVersion;
+                extra = "version=" + mainVersion + "|" + extra;
             }
 
             var extraVersions = (activePassage.get("extraVersions") || "").split(",");
             for (var i = 0; i < extraVersions.length; i++) {
                 if ((extraVersions[i] || "") != "") {
                     if (!stripCommentaries || step.keyedVersions[extraVersions[i]].category == 'BIBLE') {
-                        extra += "|version=" + extraVersions[i];
+                        extra = "version=" + extraVersions[i] + "|" + extra;
                     }
                 }
             }
         }
 		skipPage = (skipPage) ? true : false;
-        this.navigateSearch(extra, false, skipPage);
+		skipQFilter = (skipQFilter) ? true : false;
+        this.navigateSearch(extra, skipQFilter, skipPage);
     },
     navigateSearch: function (args, skipQFilter, skipPage) {
         var activePassageId = step.util.activePassageId();

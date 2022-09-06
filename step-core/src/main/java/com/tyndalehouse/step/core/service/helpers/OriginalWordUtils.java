@@ -1,18 +1,14 @@
 package com.tyndalehouse.step.core.service.helpers;
 
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.MultiTermQueryWrapperFilter;
-import org.apache.lucene.search.PrefixFilter;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import org.apache.lucene.search.PrefixQuery;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.TermQuery;
 
@@ -46,14 +42,19 @@ public final class OriginalWordUtils {
      * @param def the definition
      * @return the suggestion
      */
-    public static LexiconSuggestion convertToSuggestion(final EntityDoc def, final String userLanguage) {
+    public static LexiconSuggestion convertToSuggestion(final EntityDoc def, final String userLanguage, final boolean forRelatedWords) {
         final LexiconSuggestion suggestion = new LexiconSuggestion();
         suggestion.setGloss(def.get("stepGloss"));
         suggestion.setMatchingForm(def.get("accentedUnicode"));
         suggestion.setStepTransliteration(def.get("stepTransliteration"));
         suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
-		suggestion.set_article(def.get("STEP_Article"));
-        if ((userLanguage == null) || (userLanguage == "")) {
+		suggestion.set_searchResultRange(def.get("SearchResultRange"));
+        if (!forRelatedWords) { // The following are not needed for related Words.  Do not include the to reduce network transmission
+            suggestion.setType(def.get("STEP_Type"));
+            suggestion.setDetailLexicalTag(def.get("STEP_DetailLexicalTag"));
+            suggestion.setPopularity(def.get("popularity"));
+        }
+        if ((userLanguage == null) || (userLanguage.equals(""))) {
 			suggestion.set_es_Gloss(def.get("es_Gloss"));
 			suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
 			suggestion.set_zh_Gloss(def.get("zh_Gloss"));

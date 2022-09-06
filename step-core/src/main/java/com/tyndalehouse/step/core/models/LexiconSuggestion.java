@@ -16,7 +16,10 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private String es_Gloss;
     private String zh_tw_Gloss;
     private String zh_Gloss;
-	private String article;
+    private String searchResultRange;
+	private String type;
+	private String detailLexicalTag;
+    private String popularity;
 
     /**
      * @return the stepTransliteration
@@ -64,11 +67,31 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     }
 	
     /**
-     * @return the Step Article
+     * @return the STEP_Type
      */
 
-    public String get_article() {
-        return this.article;
+    public String getType() {
+        return this.type;
+    }
+
+    /**
+     * @return the SearchResultRange
+     */
+
+    public String get_searchResultRange() {
+        return this.searchResultRange;
+    }
+
+    /**
+     * @return the STEP_detailLexicalTag
+     */
+
+    public String get_detailLexicalTag() {
+        return this.detailLexicalTag;
+    }
+
+    public String getPopularity() {
+        return this.popularity;
     }
 
     /**
@@ -93,8 +116,20 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
         this.zh_Gloss = chineseGloss;
     }
 
-    public void set_article(final String stepArticle) {
-        this.article = stepArticle;
+    public void set_searchResultRange(final String searchResultRange) {
+        this.searchResultRange = searchResultRange;
+    }
+
+    public void setType(final String stepType) {
+        this.type = stepType;
+    }
+
+    public void setDetailLexicalTag(final String stepDetailLexicalTag) {
+        this.detailLexicalTag = stepDetailLexicalTag;
+    }
+
+    public void setPopularity(final String stepPopularity) {
+        this.popularity = stepPopularity;
     }
 
     /**

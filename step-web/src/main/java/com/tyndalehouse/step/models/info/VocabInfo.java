@@ -38,6 +38,7 @@ import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class VocabInfo implements Serializable {
     private String unaccentedStepTransliteration;
     private String twoLetterLookup;
     private String rawRelatedNumbers;
-	private String step_DetailLexicalTag;
+	private String stepDetailLexicalTag;
 	private String step_Link;
 	private String step_Type;
     private Integer count;
@@ -137,13 +138,12 @@ public class VocabInfo implements Serializable {
             this.twoLetterLookup = d.get("twoLetter");
             if (this.strongNumber != null) {
                 this.relatedNos = relatedVocabs.get(this.strongNumber);
-				this.step_DetailLexicalTag = d.get("STEP_DetailLexicalTag");
+                this.stepDetailLexicalTag = d.get("STEP_DetailLexicalTag");
 				this.step_Link = d.get("STEP_Link");
 				this.step_Type = d.get("STEP_Type");
             }
-        } else {
-            this.rawRelatedNumbers = OriginalWordUtils.stripExtensions(d.get("relatedNumbers"));
         }
+        this.rawRelatedNumbers = OriginalWordUtils.stripExtensions(d.get("relatedNumbers"));
     }
 
 
@@ -369,18 +369,18 @@ public class VocabInfo implements Serializable {
     }
 	
     /**
-     * @return the STEP_DetailLexicalTag
+     * @return the STEPDetailLexicalTag
      */
-    public String get_step_DetailLexicalTag() {
-        return this.step_DetailLexicalTag;
+    public String get_stepDetailLexicalTag() {
+        return this.stepDetailLexicalTag;
     }
     /**
-     * @param step_DetailLexicalTag to set the step_DetailLexicalTag
+     * @param stepDetailLexicalTag to set the stepDetailLexicalTag
      */
-    public void set_step_DetailLexicalTag(final String step_DetailLexicalTag) {
-        this.step_DetailLexicalTag = step_DetailLexicalTag;
+    public void set_stepDetailLexicalTag(final String stepDetailLexicalTag) {
+        this.stepDetailLexicalTag = stepDetailLexicalTag;
     }
-	
+
     /**
      * @return the Spanish Gloss
      */

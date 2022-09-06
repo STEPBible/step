@@ -76,12 +76,20 @@ var SidebarView = Backbone.View.extend({
 			if (strongCode.search(/([GH])(\d{1,3})(![A-Za-z])$/) > -1) {
 				strongCode = RegExp.$1 + ("000" + RegExp.$2).slice(-4) + RegExp.$3;
 			}
+//            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongCode, this.model.get("morph"), ref, this.model.get("version"));
+//            if (vocabMorphFromJson.vocabInfos.length > 0) {
+//                self.createDefinition(vocabMorphFromJson, ref);
+//                return;
+//            }
             $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongCode, this.model.get("morph"), step.userLanguageCode], function (data) {
-                step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
-                step.util.trackAnalytics("lexicon", "strong", strongCode); // self.model.get("strong"));
+                //step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
+                //step.util.trackAnalytics("lexicon", "strong", strongCode); // self.model.get("strong"));
                 self.createDefinition(data, ref);
             }).error(function() {
-                changeBaseURL();
+                if (changeBaseURL())
+                    $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongCode, this.model.get("morph"), step.userLanguageCode], function (data) {
+                        self.createDefinition(data, ref);
+                    })
             });
         }
         else if (this.model.get("mode") == 'analysis') {
@@ -225,13 +233,7 @@ var SidebarView = Backbone.View.extend({
             $(".detailLex").show();
             $("#detailLexSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
         }
-		if (typeof step.wordLocations == "object") this._isItALocation(data.vocabInfos[0], ref);
-		else {
-			$.getJSON("html/json/word_locations.json", function(location) {
-				step.wordLocations = location;
-				SidebarView.prototype._isItALocation(data.vocabInfos[0], ref);
-			});
-		}
+		this._isItALocation(data.vocabInfos[0], ref);
     },
     _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
         var userLangGloss = "";
@@ -318,7 +320,11 @@ var SidebarView = Backbone.View.extend({
         var currentWordLangCode = mainWord.strongNumber.substr(0, 1);
         var foundChineseJSON = false;
         $.ajaxSetup({async: false});
-        $.getJSON("/lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
+        var strongWithoutAugment = mainWord.strongNumber;
+        if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
+            strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
+        }                                                                     // remove the last alpha character 
+        $.getJSON("/lexicon/" + currentUserLang + "/" + strongWithoutAugment + ".json", function(chineseVars) {
             foundChineseJSON = true;
             panel.append($("<h2>").append(__s.zh_lexicon_chinese_name + ':'));
             panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
@@ -348,7 +354,7 @@ var SidebarView = Backbone.View.extend({
                             (100 + (j * 100)) + "\">(" + displayGroupText + ")</span>";
                     }
                     li.append($("<a sbstrong></a>").attr("href", "javascript:void(0)")
-                        .data("strongNumber", mainWord.strongNumber)
+                        .data("strongNumber", strongWithoutAugment)
                         .data("refURLStr", refURLString)
                         .append(displayTextOnUsage).click(function () {
                             var strongNumber = $(this).data("strongNumber");
@@ -367,21 +373,21 @@ var SidebarView = Backbone.View.extend({
     },
 
     _addDetailLexicalWords: function (detailLex, panel, isCurrentWord) {
-        var frequency = parseInt(detailLex[4]); // Just in case it is provided in String instead of number
+        var frequency = parseInt(detailLex[3]); // Just in case it is provided in String instead of number
         panel.append($("<br class='detailLex' style='display:none'>"));
         var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
         if (isCurrentWord) {
             panel.append($("<span class='detailLex glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>"));
             spaceWithoutLabel = "";
         }
-        panel.append($("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + ":&nbsp;</span>"));
-        panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
-            append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[3] + "'>" + detailLex[2]  + " </span>")).click(function () {
+        panel.append($("<a title='" + detailLex[1] + " " + detailLex[4] + "'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
+            append($("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + " </span>")).click(function () {
             step.util.ui.showDef($(this).data("strongNumber"));
         }));
-        panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;~</span>'));
+        panel.append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[4] + "'>" + detailLex[2] + "</span>"));
+        panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;</span>'));
         panel.append($("<a title='click to show all occurences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
-              append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none">' + sprintf(__s.stats_occurs, frequency) + '</span>').
+              append('<span class="strongCount detailLex" style="unicode-bidi:isolate-override;display:none">~' + sprintf(__s.stats_occurs, frequency) + '</span>').
               click(function () {
             var strongNumber = $(this).data("strongNumber");
             var args = "strong=" + encodeURIComponent(strongNumber);
@@ -393,9 +399,10 @@ var SidebarView = Backbone.View.extend({
 
     _composeDescriptionOfOccurences: function(stepType) {
         if ((typeof stepType !== "string") || (stepType === "")) return __s.lexicon_search_for_this_word;
-        var verbToDisplay = "used";
-        if ((stepType === "man") || (stepType === "woman") || (stepType === "place") || (stepType === "group")) verbToDisplay = "named";
-        return "This " + stepType + " is " + verbToDisplay + " about ";
+        var nounToDisplay = "person";
+        if (stepType === "place") nounToDisplay = "place";
+        else if ((stepType === "word") || (stepType === "verb") || (stepType === "name")) nounToDisplay = "word";
+        return "This " + nounToDisplay + " occurs about ";
     },
 
     _appendLexiconSearch: function (panel, mainWord, detailLex) {
@@ -404,23 +411,27 @@ var SidebarView = Backbone.View.extend({
         panel.append("<br />").append(this._composeDescriptionOfOccurences(mainWord._step_Type));
         if ((detailLex) && (detailLex.length > 0)) {
 			allStrongs.push(mainWord.strongNumber);
-			for (var i = 1; i < detailLex.length; i++) {
+			for (var i = 0; i < detailLex.length; i++) {
                 if (detailLex[i][1] !== mainWord.strongNumber) {
-				    total += parseInt(detailLex[i][4]); // Just in case it is provided in String instead of number
+				    total += parseInt(detailLex[i][3]); // Just in case it is provided in String instead of number
                     allStrongs.push(detailLex[i][1]);
                 }
             }
 			panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount" style="unicode-bidi:isolate-override"> ' +
                sprintf(__s.stats_occurs, total) + '</span>').click(function () {
-				var allStrongs = $(this).data("strongNumber");
-				var args = "strong=" + encodeURIComponent(allStrongs[0]);
-				allStrongsWithComma = encodeURIComponent(allStrongs[0])
-				for (var j = 1; j < allStrongs.length; j++) {
-					allStrongsWithComma += "," + encodeURIComponent(allStrongs[j]);
+				var args = $(this).data("strongNumber");
+				console.log("args " + args);
+				var currentSearch = "strong=" + encodeURIComponent(args[0]);
+
+				var searchJoins = "";
+				for (var i = 1; i < allStrongs.length; i++) {
+					currentSearch += '|strong=' + encodeURIComponent(args[i]);
+					if (i == 1) searchJoins = "searchJoins=OR";
+					else searchJoins += ",OR"
 				}
-				step.util.activePassage().save({strongHighlights: allStrongsWithComma}, {silent: true});
-				console.log("arg" + args);
-				step.router.navigatePreserveVersions(args, false, true);
+				currentSearch = searchJoins + "|" + currentSearch;
+								
+				step.router.navigatePreserveVersions(currentSearch, false, true, true);
 				return false;
 			}));
             panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {
@@ -436,7 +447,7 @@ var SidebarView = Backbone.View.extend({
 				}
 				return false;
 			}));
-			for (var i = 1; i < detailLex.length; i++) {
+			for (var i = 0; i < detailLex.length; i++) {
                 this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber));
 			}
         }
@@ -455,8 +466,7 @@ var SidebarView = Backbone.View.extend({
 		return false;
     },
 
-	_lookUpGeoInfo: function(mainWord, bookName, indexToCoordArray) {
-		var geoForWord = step.wordLocations["coords"][indexToCoordArray];
+	_lookUpGeoInfo: function(mainWord, bookName, coordinates) {
 		bookName = bookName.substring(0, bookName.length - 1);
 		var possibleMapElement = $("#possibleMap");
 		if (possibleMapElement.length == 0) {
@@ -464,7 +474,7 @@ var SidebarView = Backbone.View.extend({
 			// add a sleep here
 			possibleMapElement = $("#possibleMap");
 		}
-		possibleMapElement.empty().html("<a href='/html/multimap.html?coord=" + geoForWord + 
+		possibleMapElement.empty().html("<a href='/html/multimap.html?coord=" + coordinates + 
 			"&strong=" + mainWord.strongNumber + "&gloss=" + mainWord.stepGloss +
 			"&book=" + bookName +
 			"' target='_new'>" +
@@ -473,13 +483,14 @@ var SidebarView = Backbone.View.extend({
 	},
 
 	_relatedNosNotDisplayed: function(relatedNos, detailLex) {
+        if (typeof relatedNos === "string")
+            relatedNos=JSON.parse(relatedNos.replaceAll("'", '"'));
 		var relatedNosToDisplay = [];
 		if (relatedNos) {
 			for (var i = 0; i < relatedNos.length; i++) {
 				var found = false;
 				for (var j = 0; ((j < detailLex.length) && (!found)); j++) {
 					if (relatedNos[i].strongNumber === detailLex[j][1]) {
-						//console.log("skipping " + detailLex[j][1]);
 						found = true;
 					}
 				}
@@ -492,53 +503,26 @@ var SidebarView = Backbone.View.extend({
 	},
 	
 	_isItALocation: function(mainWord, ref) {
-		var passages = step.wordLocations[mainWord.strongNumber];
+		var strongNum = mainWord.strongNumber.trim();
+        var stepLink = mainWord._step_Link;
+        if (typeof stepLink !== "string") return;
+        var stepLink = stepLink.trim();
+        if ((stepLink.length < 3) || (isNaN(stepLink.substring(0,1)))) return;
+        var posOfComma = stepLink.indexOf(",");
+        if (posOfComma == -1) return;
+        if ((isNaN(stepLink.substring(0, posOfComma - 1))) || (isNaN(stepLink.substring(posOfComma + 1)))) return;
 		if (typeof ref === "undefined") {
-			if ((typeof step.previousSideBarLexiconRef === "object") && (mainWord.strongNumber === step.previousSideBarLexiconRef[0])) {
+			if ((typeof step.previousSideBarLexiconRef === "object") && 
+					((strongNum === step.previousSideBarLexiconRef[0]) ||
+					 (strongNum.substring(0,strongNum.length-1) === step.previousSideBarLexiconRef[0]))) {
 				ref = step.previousSideBarLexiconRef[1];
 			}
 			else ref = "";
 		}
-		else step.previousSideBarLexiconRef = [mainWord.strongNumber, ref];
+		else step.previousSideBarLexiconRef = [strongNum, ref];
 		var posOfDot1 = ref.indexOf(".");
 		var bookName = (posOfDot1 > 2) ? ref.substr(0, posOfDot1 + 1) : ""; // Include the "." (dot)
-		if (typeof passages === "number") {
-			var indexToCoordArray = passages;
-			this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
-		}
-		else if ((typeof passages === "object") && (ref !== "")) {
-			var posOfDot2 = ref.indexOf(".", posOfDot1 + 1);
-			var chapter = ref.substring(posOfDot1 + 1, posOfDot2);
-			var verse = ref.substr(posOfDot2 + 1);
-			loop1:
-			for (var i = 0; i < passages.length; i ++) {
-				var tmpArray = passages[i].split("*"); // data before the * is a list of reference, after the * is the index to the coordinate array
-				var indexToCoordArray = tmpArray[1];
-				var passagesFromSameBook = tmpArray[0].split(";");
-				loop2:
-				for (var j = 0; j < passagesFromSameBook.length; j ++) {
-					if (passagesFromSameBook[j].indexOf(bookName) == 0) {
-						var chptrVrsToSearch = passagesFromSameBook[j].substr(bookName.length);
-						var chptrVrsArray = chptrVrsToSearch.split(",");
-						var currentChapter = 0;
-						for (var k = 0; k < chptrVrsArray.length; k ++) {
-							var currentVerse = 0;
-							var tmp = chptrVrsArray[k].split(":");
-							if (tmp.length == 2) {
-								currentChapter = tmp[0];
-								currentVerse =  tmp[1];
-							}
-							else currentVerse =  tmp[0];
-							if ((currentChapter == chapter) && (currentVerse == verse)) {
-								this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
-								break loop1;
-							}
-							else if (currentChapter > chapter) break loop2;
-						}
-					}
-				}
-			}
-		}
+		this._lookUpGeoInfo(mainWord, bookName, stepLink);
 	},
 	
     _createWordPanel: function (panel, mainWord, currentUserLang) {
@@ -548,8 +532,8 @@ var SidebarView = Backbone.View.extend({
             this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode, bibleVersion);
         }
 		var detailLex = [];
-		if (mainWord._step_DetailLexicalTag) {
-			detailLex = JSON.parse(mainWord._step_DetailLexicalTag);
+		if (mainWord._stepDetailLexicalTag) {
+			detailLex = JSON.parse(mainWord._stepDetailLexicalTag);
 		}
         this._appendLexiconSearch(panel, mainWord, detailLex);
         var displayEnglishLexicon = true;
@@ -609,21 +593,34 @@ var SidebarView = Backbone.View.extend({
                     if ((currentUserLang == "es") && (relatedNosToDisplay[i]._es_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._es_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._zh_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._zh_tw_Gloss + "&nbsp;";
-					var fontClass = "";
-                    var firstChar = relatedNosToDisplay[i].strongNumber.substr(0, 1).toLowerCase();
-                    if (firstChar === "h") fontClass = "hbFontMini";
-                    else if (firstChar === "g") fontClass = "unicodeFont";
-                    var li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong href="javascript:void(0)">')
-                        .append(userLangGloss)
-                        .append(relatedNosToDisplay[i].gloss)
-                        .append(" (")
-                        .append("<span class='transliteration'>" + relatedNosToDisplay[i].stepTransliteration + "</span>")
-                        .append(" - ")
-                        .append("<span class='" + fontClass + "'>" +
-                            relatedNosToDisplay[i].matchingForm +
-                            '</span>')
-                        .append(")")
-                        .data("strongNumber", relatedNosToDisplay[i].strongNumber));
+                    var li = "";
+                    if ((!relatedNosToDisplay[i]._searchResultRange) || (relatedNosToDisplay[i]._searchResultRange === "")) {
+                        var fontClass = "";
+                        var firstChar = relatedNosToDisplay[i].strongNumber.substr(0, 1).toLowerCase();
+                        if (firstChar === "h") fontClass = "hbFontMini";
+                        else if (firstChar === "g") fontClass = "unicodeFont";
+                        li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong href="javascript:void(0)">')
+                            .append(userLangGloss)
+                            .append(relatedNosToDisplay[i].gloss)
+                            .append(" (")
+                            .append("<span class='transliteration'>" + relatedNosToDisplay[i].stepTransliteration + "</span>")
+                            .append(" - ")
+                            .append("<span class='" + fontClass + "'>" +
+                                relatedNosToDisplay[i].matchingForm +
+                                '</span>')
+                            .append(")")
+                            .data("strongNumber", relatedNosToDisplay[i].strongNumber));
+                    }
+                    else {
+                        li = $("<li title='" + relatedNosToDisplay[i].strongNumber + " " +
+                                relatedNosToDisplay[i].stepTransliteration + " " +
+                                relatedNosToDisplay[i].matchingForm +
+                                "'></li>").append($('<a sbstrong href="javascript:void(0)">')
+                            .append(userLangGloss)
+							.append(relatedNosToDisplay[i].gloss)
+                            .append(step.util.formatSearchResultRange(relatedNosToDisplay[i]._searchResultRange, false))
+                            .data("strongNumber", relatedNosToDisplay[i].strongNumber));                        
+                    }
                     ul.append(li);
 
                     matchingExpression += relatedNosToDisplay[i].strongNumber + " ";
@@ -756,6 +753,7 @@ var SidebarView = Backbone.View.extend({
     closeSidebar: function () {
         this.sidebarButtonIcon.removeClass("active");
         this.$el.closest('.row-offcanvas').removeClass('active');
+		$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
     },
     /**
      * Creates a QTIP for a particular xref

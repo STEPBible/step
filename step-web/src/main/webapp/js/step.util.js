@@ -1782,7 +1782,7 @@ step.util = {
 						'<div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">' +
 							'<label for="displayLocation"><%= __s.display_passage_at %></label>' +
 							'<select class="stepFgBg" type="text" id="displayLocation">' +
-								'<option value="replace"> <%= __s.current_panel %></option>' +
+								'<option value="replace"><%= __s.current_panel %></option>' +
 								'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
 								'<option id="append_to_panel" value="append"><%= __s.append_to_panel %></option>' +
 							'</select>' +
@@ -1846,14 +1846,11 @@ step.util = {
 										'(!step.searchSelect.previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))' +
 										'onlyFoundSubjectOrMeaningsSearch = false;' +
 								'}' +
-//								'if (onlyFoundSubjectOrMeaningsSearch) $("#searchAndOrNot").hide();' +
-//								'else $("#searchAndOrNot").show();' +
 								'$("#searchAndOrNot").show();' +
 								'if (step.searchSelect.searchUserInput.length == 0) {' +
 									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
 										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +
 								'}' +
-//								'step.searchSelect.handlePreviousSearchAndOrNot();' +
 							'}' +
 							'else {' +
 								'step.searchSelect.includePreviousSearches = false;' +
@@ -1872,7 +1869,14 @@ step.util = {
 						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
 							step.util.modalCloseBtn("searchSelectionModal") +
-							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+							'<span class="dropdown settingsDropdown pull-right">' +
+								'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Options">' +
+									'<i class="glyphicon glyphicon-cog" style="font-size:14px;background-color:var(--clrBackground);color:var(--clrText)"></i>' +
+								'</a>' +
+								'<div id="srchOptions" class="passageOptionsGroup stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
+							'</span>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
 							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
 								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +
 								'<select type="text" id="displayLocation" class="stepFgBg">' +
@@ -2624,8 +2628,6 @@ step.util = {
 	setClassicalUI: function (classicalUI) {
 		if (classicalUI) {
 			$('#top_input_area').show();
-			// $('#s2id_masterSearch').show();
-			// $('.findButton').show();
 			$('span.tmp-rm-hidden-xs.title').removeClass('tmp-rm-hidden-xs').addClass('hidden-xs');
 			$('.navbarIconDesc').hide();
 			$('.quick_tutorial').show();
@@ -2639,20 +2641,6 @@ step.util = {
 			$('#classicalUICheck').hide();
 		}
 	},
-	// adjustPassageOptionHeight: function (passageContainer) {
-		// var passageContainerHeight = passageContainer.height();
-		// var passageOptionHeight = passageContainer.find(".passageOptionsGroup").height();
-		// if (passageOptionHeight === null) return;
-		// var passageContentHeight = passageContainer.find(".passageContent").height();
-		// var totalHeight = passageOptionHeight + passageContentHeight;
-		// var diff = passageContainerHeight - totalHeight;
-		// if (Math.abs(diff) > 10) {
-			// var heightForPassage = passageContainerHeight + diff;
-			// console.log("passageContent h: " + heightForPassage + " diff " + diff);
-			// var passContent = passageContainer.find(".passageContent");
-			// $(passContent).css({'height':heightForPassage + 'px'});
-		// }
-	// },
 	showIntro: function (showAnyway) {
 		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
@@ -3197,9 +3185,10 @@ step.util = {
     },
     putStrongDetails: function(strongNum, details) {
         if (typeof step.srchTxt === "undefined") step.srchTxt = {};
-        if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
         if ((typeof step.srchTxt[strongNum] === "undefined") || (step.srchTxt[strongNum].length < 7))
             step.srchTxt[strongNum] = details;
+        if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
+        step.srchTxt[strongNum] = details;
     },
 	modalCloseBtn: function(modalElementID, closeFunction) {
 		// The dark mode color needs to be brighter for X.  The default opacity of 0.2 is too low.
@@ -3224,6 +3213,176 @@ step.util = {
 		}
 		if ((stepBgColor === "#202124") || (stepBgColor === "rgb(32, 33, 36)")) return true; // old iPad would return the rgb value
 		return false;
+	},
+   	formatSearchResultRange: function(origSearchResultRange, moreThanOneStrongSearch) {
+		var searchResultRange = origSearchResultRange;
+        var pos1 = searchResultRange.indexOf("@");
+        if (pos1 > -1) {
+			if (moreThanOneStrongSearch)
+				searchResultRange = searchResultRange.substring(pos1 + 1);
+			else
+				searchResultRange = searchResultRange.substring(0, pos1);
+		}
+        var pos2 = searchResultRange.indexOf("-");
+        if (pos2 > -1) {
+			var secondPassage = searchResultRange.substring(pos2 + 1);
+			var separator = (secondPassage.indexOf(".") == -1) ? "-" : " - ";
+            return " from " + searchResultRange.substring(0, pos2) + separator + secondPassage;
+        }
+        else return " only at " + searchResultRange;
+	},
+	getVocabMorphInfoFromJson: function (strong, morph, reference, version) {
+        var strongArray = strong.split(" ");
+        var processedStrong = [];
+        var resultJson = {vocabInfos: [], morphInfos: []};
+		if (!reference) reference = "";
+        $.ajaxSetup({async: false});
+        for (var j = 0; j < strongArray.length; j++) {
+            var strongWithoutAugment = strongArray[j];
+            if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
+                strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
+            }                                                                     // remove the last character if it is a letter
+			strongWithoutAugment = strongWithoutAugment.split(".")[0];
+			strongWithoutAugment = strongWithoutAugment.split("!")[0];
+            if (processedStrong.indexOf(strongWithoutAugment) == -1) {
+                processedStrong.push(strongWithoutAugment);
+				var strongFirstChar = strong.substring(0, 1).toLowerCase();
+				var rsvVersification = (((version !== "OHB") && (version !== "THOT")) &&
+					(strongFirstChar === "h"));
+                $.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(jsonVar) {
+					var augStrongIndex = 0;
+					if (jsonVar.augmentedStrong) {
+						if (reference !== "") {
+							var refParts = reference.split(".");
+							var book = refParts[0];
+							var isNewTestament = step.searchSelect.idx2osisChapterJsword[book] > 38;
+							if (! ( (version === "LXX") ||
+									((strongFirstChar === "h") && (isNewTestament)) ||
+									((strongFirstChar === "g") && (!isNewTestament)) ||
+									(reference === "") ) ) {
+								for (var i = 0; i < jsonVar.augmentedStrong.length; i++) {
+									if (jsonVar.augmentedStrong[i].references === "*") {
+										augStrongIndex = i;
+										break;
+									}
+								}
+								var chapterVerse = refParts[1];
+								if (refParts.length == 3)
+									chapterVerse += "\\." + refParts[2];
+								var regString1 = "\\s" + book + "\\." + chapterVerse;
+								if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
+								else regString1 += "[\\s\\(]"; // must have a space or a ( character after the reference
+								var regString2 = "\\s" + book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
+								for (var i = jsonVar.augmentedStrong.length -1 ; i > -1; i --) {
+									if (jsonVar.augmentedStrong[i].references !== "*") {
+										var referencesToSearch = " " + jsonVar.augmentedStrong[i].references + " ";
+										var searchPos = referencesToSearch.search(regString1);
+										if ((searchPos == -1) &&
+											(rsvVersification))
+											searchPos = referencesToSearch.search(regString2);
+										if (searchPos > -1) {
+											augStrongIndex = i;
+											break;
+										}
+									}
+								}
+							}
+						}
+						else if (strongArray[j] !== strongWithoutAugment) {
+							for (var i = 0; i < jsonVar.augmentedStrong.length; i++) {
+								if (strongArray[j] === jsonVar.augmentedStrong[i].augmentedStrong) {
+									augStrongIndex = i;
+									break;
+								}
+							}
+						}
+						if (augStrongIndex > 0) {
+							for (var key in jsonVar.vocabInfos[augStrongIndex]) {
+								if (jsonVar.vocabInfos[augStrongIndex][key] === "=")
+								jsonVar.vocabInfos[augStrongIndex][key] = jsonVar.vocabInfos[0][key];
+							}
+						}
+					}
+					resultJson.vocabInfos.push(jsonVar.vocabInfos[augStrongIndex]);
+                });
+            }
+        }
+		if (morph) {
+			var morphArray = morph.split(" ");
+			for (var k = 0; k < morphArray.length; k++) {
+				var morph = morphArray[k];
+				var morphLowerCase = morph.toLowerCase();
+				if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1)) continue;
+				var pos = morph.search("robinson:");
+				if (pos > -1) morph = morphArray[k].substring(pos+9);
+				$.getJSON("/html/lexicon/" + morph + ".json", function(jsonVar) {
+					resultJson.morphInfos.push(jsonVar.morphInfos[0]);
+				});
+			}
+		}
+        $.ajaxSetup({async: true});
+		return resultJson;
 	}
+	// test: function(strong, morph, ref, version, expectStrongNum) {
+	// 	$.ajaxSetup({async: false});
+    //     var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strong, morph, ref, version);
+	// 	if ((expectStrongNum) && (vocabMorphFromJson.vocabInfos[0].strongNumber !== expectStrongNum)) {
+	// 		console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " expected: " + expectStrongNum + " found: " + vocabMorphFromJson.vocabInfos[0].strongNumber);			
+	// 	}
+    //     $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, ""], function (data) {
+	// 		if (data.vocabInfos.length !== vocabMorphFromJson.vocabInfos.length) {
+	// 			console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+	// 		}
+	// 		for (var i = 0; i < data.vocabInfos.length; i ++) {
+	// 			for (var key in data.vocabInfos[i]) {
+	// 				if ((typeof vocabMorphFromJson === "undefined") || (vocabMorphFromJson == null)) {
+	// 					console.log("vocabinfo not exist:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+	// 				}
+	// 				if (key === "relatedNos") {
+	// 					if (typeof vocabMorphFromJson.vocabInfos[i]["relatedNos"] === "string")
+	// 						vocabMorphFromJson.vocabInfos[i]["relatedNos"] = JSON.parse(vocabMorphFromJson.vocabInfos[i]["relatedNos"].replaceAll("'", '"'));
+	// 					if (! _.isEqual(data.vocabInfos[i]["relatedNos"], vocabMorphFromJson.vocabInfos[i]["relatedNos"])) {
+	// 						console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+	// 					}
+	// 				}
+	// 				else if (data.vocabInfos[i][key] !== vocabMorphFromJson.vocabInfos[i][key]) {
+	// 					console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+	// 				}
+	// 			}	
+	// 		}
+	// 		if (data.morphInfos.length !== vocabMorphFromJson.morphInfos.length) {
+	// 			console.log("length does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+	// 		}
+	// 		for (var i = 0; i < data.morphInfos.length; i ++) {
+	// 			for (var key in data.morphInfos[i]) {
+	// 				if (data.morphInfos[i][key] !== vocabMorphFromJson.morphInfos[i][key]) {
+	// 					console.log("does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+	// 				}
+	// 			}
+	// 		}
+    //     }).error(function() {
+    //         console.log("getsafe failed strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
+    //     });
+    // },
+	// test1: function(fileName, version, start) {
+
+	// 	$.getJSON("/html/lexicon/" + fileName + ".json", function(jsonVar) {
+	// 		var end = jsonVar.length;
+	// 		if (end > start + 10000) end = start + 10000;
+	// 		for (var i = start; i < end; i ++) {
+	// 			var words = jsonVar[i].split(",");
+	// 			var temp = words[1].split(/[()]/);
+	// 			if (temp.length > 1) {
+	// 				if ((version !== "OHB")	&& (version !== "THOT")) words[1] = words[1].split(".")[0] + "." + temp[1];
+	// 				else words[1] = temp[0];
+	// 			}
+	// 			var strongWithoutAugment = words[0];
+	// 			if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
+	// 				strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
+	// 			}                                                                     // remove the last character if it is a letter
+	// 			step.util.test(strongWithoutAugment, "", words[1], version, words[0]);	
+	// 		}
+	// 	});
+	// }
 }
 ;

@@ -830,7 +830,7 @@ public class SearchServiceImpl implements SearchService {
         Collections.sort(lexiconDefinitions, new GlossComparator());
         List<LexiconSuggestion> suggestions = new ArrayList(lexiconDefinitions.size());
         for (final EntityDoc def : lexiconDefinitions) {
-            suggestions.add(convertToSuggestion(def, null));
+            suggestions.add(convertToSuggestion(def, null, false));
         }
         result.setDefinitions(suggestions);
     }
@@ -1824,7 +1824,7 @@ public class SearchServiceImpl implements SearchService {
 
         //if the other side is empty, then we have no results
         if (searchKeys == null) {
-            return results instanceof VerseKey ? new RangedPassage(((VerseKey) results).getVersification()) : new DefaultKeyList();
+            return results instanceof VerseKey ? results : new DefaultKeyList();
         }
 
         Key versifiedSearchKeys = searchKeys;

@@ -43,6 +43,7 @@ import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 import com.tyndalehouse.step.core.utils.SortingUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.util.LRUMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,7 +190,6 @@ public class VocabularyServiceImpl implements VocabularyService {
         return new VocabResponse();
     }
 
-
     /**
      * Read related words, i.e. all the words that are in the related numbers fields.
      *
@@ -217,8 +217,14 @@ public class VocabularyServiceImpl implements VocabularyService {
                     final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, relatedWord);
                     // assume first doc
                     if (relatedDoc.length > 0) {
-                        shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage);
-                        lookedUpWords.put(relatedWord, shortLexiconDefinition);
+                        String stopWord = relatedDoc[0].get("stopWord");
+                        if ((stopWord == null) || (!stopWord.equals("true"))) {
+                            String popularity = relatedDoc[0].get("popularity");
+                            if ((popularity == null) || (!popularity.equals("0"))) {
+                                shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage, true);
+                                lookedUpWords.put(relatedWord, shortLexiconDefinition);
+                            }
+                        }
                     }
                 }
 
@@ -230,7 +236,6 @@ public class VocabularyServiceImpl implements VocabularyService {
                                 SortingUtils.LEXICON_SUGGESTION_COMPARATOR);
                         relatedWords.put(sourceNumber, associatedNumbersSoFar);
                     }
-
                     associatedNumbersSoFar.add(shortLexiconDefinition);
                 }
             }
@@ -298,7 +303,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String getEnglishVocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.englishVocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.englishVocabProvider, true);
     }
 
     // The Spanish SpaRV1909 uses a "Strong:" tag.  Change "Strong:" or "StRoNg:" (any upper or lower case) to "strong:"
@@ -314,27 +319,33 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String get_es_Vocab(final String version, final String reference, String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.es_VocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.es_VocabProvider, false);
     }
 	
     @Override
     public String get_zh_tw_Vocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_tw_VocabProvider);
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_tw_VocabProvider, false);
     }
 
     @Override
     public String get_zh_Vocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_VocabProvider);
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_VocabProvider, false);
     }
 
     @Override
     public String getGreekVocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.greekVocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.greekVocabProvider, false);
     }
 
     @Override
     public String getDefaultTransliteration(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.transliterationProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.transliterationProvider, false);
+    }
+
+    private String getStringAfterColon(final String gloss) {
+        int pos = gloss.indexOf(':');
+        if (pos == -1) return gloss;
+        return gloss.substring(pos+1).trim(); // if there is an ':', return the text after the ':'
     }
 
     /**
@@ -346,7 +357,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @return the data in String form
      */
     private String getDataFromLexiconDefinition(final String version, final String reference, final String vocabIdentifiers,
-                                                final LexiconDataProvider provider) {
+                                                final LexiconDataProvider provider, final boolean isEnglishGloss) {
 
         // else we lookup and concatenate
         EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
@@ -355,6 +366,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             return vocabIdentifiers;
         }
         else if (lds.length == 1) {
+            if (isEnglishGloss) return getStringAfterColon(provider.getData(lds[0]));
             return provider.getData(lds[0]);
         }
 
@@ -363,8 +375,8 @@ public class VocabularyServiceImpl implements VocabularyService {
         sb.append('[');
 
         for (int ii = 0; ii < lds.length; ii++) {
-            final EntityDoc l = lds[ii];
-            sb.append(provider.getData(l));
+            if (isEnglishGloss) sb.append(getStringAfterColon(provider.getData(lds[ii])));
+            else sb.append(provider.getData(lds[ii]));
             if (ii + 1 < lds.length) {
                 sb.append(MULTI_WORD_SEPARATOR);
             }
@@ -392,7 +404,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                 } else {
                     String[] tmpKeys = {key};
                     boolean triedA = false;
-//                    boolean triedG = false;
+                    boolean triedG = false;
                     while (tmpKeys[0].length() > 0) {
                         strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
                         if ((strongNumber != null) && (strongNumber.length > 0)) {
@@ -401,17 +413,17 @@ public class VocabularyServiceImpl implements VocabularyService {
                             resultArrayIndex++;
                             tmpKeys[0] = "";
                         } else {
-                            if ((tmpKeys[0].length() >= 5) && ((!triedA))) { // || (!triedG))) {
+                            if ((tmpKeys[0].length() >= 5) && ((!triedA) || (!triedG))) {
                                 if (!Character.isDigit(tmpKeys[0].charAt(tmpKeys[0].length() - 1)))
                                     tmpKeys[0] = tmpKeys[0].substring(0, tmpKeys[0].length() - 1); // remove last character which is not a digit
                                 if (!triedA) {
                                     triedA = true;
-                                    tmpKeys[0] = tmpKeys[0].concat("a");
+                                    tmpKeys[0] = tmpKeys[0].concat("A");
                                 } 
-//								else if (!triedG) { // Java compiler warns that this is always 'true'.  Compiler is not correct.
-//                                    triedG = true;
-//                                    tmpKeys[0] = tmpKeys[0].concat("G");
-//                                }
+								else if (!triedG) { // Java compiler warns that this is always 'true'.  Compiler is not correct.
+                                    triedG = true;
+                                    tmpKeys[0] = tmpKeys[0].concat("G");
+                                }
                             } else tmpKeys[0] = "";
                         }
                     }

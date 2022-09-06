@@ -3,7 +3,8 @@ step.searchSelect = {
 	version: "ESV_th",
 	userLang: "en",
 	searchOnSpecificType: "",
-	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW],
+	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, HEBREW],
+	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
 	searchRange: "Gen-Rev",
@@ -141,6 +142,7 @@ step.searchSelect = {
         this.idx2BookOrder = {};
         
 		var ua = navigator.userAgent.toLowerCase();
+		console.log("ua: " + ua);
 		$("#searchmodalbody").addClass("scrollPart");
 		if ((this.userLang.indexOf('en') != 0) && (this.groupsOT[0].groupName === "Books of Moses") && (this.groupsOT[0].groupName !== "Pentateuch"))
 			this.groupsOT[0].groupName = __s.the_pentateuch;
@@ -183,8 +185,6 @@ step.searchSelect = {
 							}
 							if (syntaxWords[j].substr(0, 7) === STRONG_NUMBER + ":") {
 								var strongNum = syntaxWords[j].substr(7);
-								if (strongNum.substr(0, 1).toUpperCase() === "G") itemType = GREEK;
-								else if (strongNum.substr(0, 1).toUpperCase() === "H") itemType = HEBREW;
 								var result = step.util.getDetailsOfStrong(strongNum, this.version);
 								currWord = {token: syntaxWords[j], item: {gloss: result[0], stepTransliteration: result[1], matchingForm: result[2]} };
 							}
@@ -206,26 +206,25 @@ step.searchSelect = {
 			}
 			if (previousSearches.length > 0) {
 				var previousSearchHTML =
-				'<div id="modalonoffswitch">' +
-					'<span class="pull-left" style="font-size:18px" id="search_with_previous">' + __s.search_with_previous + '&nbsp;&nbsp;</span>' +
-					'<span class="pull-left">' +
-						//'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text" onchange="javascript:step.searchSelect.handlePreviousSearchAndOrNot()">' +
-						'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text">' +
-							'<option id="and_search" value="AND">' + __s.search_previous_and + '</option>' +
-							'<option id="or_search" value="OR">' + __s.search_previous_or + '</option>' +
-							'<option id="not_search" value="NOT">' + __s.search_previous_not + '</option>' +
-						'</select>' +
-					'</span>' +
-					'<span class="onoffswitch2 pull-left">' +
-						'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="showprevioussearchonoff" onchange="showPreviousSearch()"/>' +
-						'<label class="onoffswitch2-label" for="showprevioussearchonoff">' +
-						'<span class="onoffswitch2-inner"></span>' +
-						'<span class="onoffswitch2-switch"></span>' +
-						'</label>' +
-					'</span>' +
-				'</div>' +
-				'<br><br><br><br>' +
-				'<ul id="listofprevioussearchs" style="display:none">';
+					'<div id="modalonoffswitch">' +
+						'<span class="pull-left" style="font-size:18px" id="search_with_previous">' + __s.search_with_previous + '&nbsp;&nbsp;</span>' +
+						'<span class="pull-left">' +
+							'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text">' +
+								'<option id="and_search" value="AND">' + __s.search_previous_and + '</option>' +
+								'<option id="or_search" value="OR">' + __s.search_previous_or + '</option>' +
+								'<option id="not_search" value="NOT">' + __s.search_previous_not + '</option>' +
+							'</select>' +
+						'</span>' +
+						'<span class="onoffswitch2 pull-left">' +
+							'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="showprevioussearchonoff" onchange="showPreviousSearch()"/>' +
+							'<label class="onoffswitch2-label" for="showprevioussearchonoff">' +
+							'<span class="onoffswitch2-inner"></span>' +
+							'<span class="onoffswitch2-switch"></span>' +
+							'</label>' +
+						'</span>' +
+					'</div>' +
+					'<br><br><br><br>' +
+					'<ul id="listofprevioussearchs" style="display:none">';
 				for (var j = 0; j < previousSearches.length; j++) {
 					previousSearchHTML += "<li id='lOPS_" + j + "'>" + previousSearches[j] + 
 					"<span class='closeMark' onclick=step.searchSelect.removePreviousSearch(" + j + ")>X</span></li>";
@@ -239,6 +238,9 @@ step.searchSelect = {
 			$('#modalonoffswitch').hide();
 			$('#searchAndOrNot').hide();
 		}
+
+		step.searchSelect._initOptions();
+
 		$('#searchHdrTable').append(this._buildSearchHeaderAndTable());
 		$('#srchModalBackButton').hide();
 		$(function(){
@@ -248,10 +250,80 @@ step.searchSelect = {
 			});
 		});
 	},
-
+	_initOptions: function(ev) {
+		var searchOptionsHTML = 
+			'<h5>Show in results</h5>' +
+			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
+		for (var i = 0; i < this.displayOptions.length; i ++) {
+			var optionName = this.displayOptions[i].toLowerCase();
+			searchOptionsHTML += '<li class="stepModalFgBg passageOptionsGroup dropdown-menu passage" style="display:block;position:initial;opacity:1;border:0px;padding:0px;box-shadow:none">' +
+				'<a data-value="STRONG" data-selected="true" class="searchOptions" id="srchOptns' + optionName +'">'+
+					this.displayOptions[i].replace("_", " ") +
+					'<span id="srchOptnsCheck' + optionName + '" ' +
+						'class="glyphicon glyphicon-ok pull-right"></span">' +
+				'</a>' +
+				'</li><br>';
+		}
+		searchOptionsHTML += '</ul>';
+		$("#srchOptions").append(searchOptionsHTML);
+		for (var i = 0; i < this.displayOptions.length; i ++) {
+			step.searchSelect._handleOptions(null, this.displayOptions[i].toLowerCase());
+		}
+		$(".searchOptions").click(step.searchSelect._handleOptions);
+	},
+	_handleOptions: function(ev, optionNameArg) {
+		var optionName = (ev !== null) ? ev.target.id.substring(9): optionNameArg;
+        var localStorageSetting = (window.localStorage) ? window.localStorage.getItem("step.srchOptn" + optionName) : $.cookie("step.srchOptn" + optionName);
+		var currentSetting = false;
+		if ((typeof localStorageSetting !== "string") &&
+			(optionName !== "strong_number") && (optionName !== "frequency")) {
+				currentSetting = true;
+		}
+		else
+			currentSetting = (localStorageSetting === "true");
+		if (ev === null) currentSetting = !currentSetting;
+		if (currentSetting) {
+			$("#srchOptnsCheck" + optionName).css("visibility", "hidden");
+		} 
+		else {
+			$("#srchOptnsCheck" + optionName).css("visibility", "visible");
+		}
+		if (window.localStorage) window.localStorage.setItem("step.srchOptn" + optionName, !currentSetting);
+		else $.cookie("step.srchOptn" + optionName, !currentSetting);
+		if (ev !== null) step.searchSelect._updateDisplayBasedOnOptions();
+		return false;
+	},
+	_updateDisplayBasedOnOptions: function() {
+		var wordsAroundDash = 0;
+		var showStrong = false;
+		for (var i = 0; i < this.displayOptions.length; i ++) {
+			var optionName = this.displayOptions[i].toLowerCase();
+			var localStorageSetting = (window.localStorage) ? window.localStorage.getItem("step.srchOptn" + optionName) : $.cookie("step.srchOptn" + optionName);
+			var currentSetting = false;
+			if ((typeof localStorageSetting !== "string") &&
+				(optionName !== "strong_number") && (optionName !== "frequency")) {
+					currentSetting = true;
+			}
+			else
+				currentSetting = (localStorageSetting === "true");
+			if (currentSetting) {
+				$(".srch" + optionName).show();
+				if ((optionName === "transliteration") || (optionName === "original_language")) wordsAroundDash ++;
+				if (optionName === "strong_number") showStrong = true;
+			}
+			else $(".srch" + optionName).hide();
+		}
+		if ((wordsAroundDash > 0) || (showStrong)) $(".srchParathesis").show();
+		else $(".srchParathesis").hide();
+		if (wordsAroundDash > 1) $(".srchDash").show();
+		else $(".srchDash").hide();
+		if ((wordsAroundDash > 0) && (showStrong)) $(".srchSpaceStrong").show();
+		else $(".srchSpaceStrong").hide();
+	},
 	createPreviousSearchList: function(itemType, actPsgeDataElm, previousSearches, previousSearchTokensArg, numOfPreviousSearchTokensArg, previousSearchRelationship) {
 		var type = itemType.toLowerCase();
 		if (type === "searchjoins") return numOfPreviousSearchTokensArg; // searchjoins is not a search
+		var strongNum = "";
 		if (typeof previousSearchRelationship === "undefined") previousSearchRelationship = "";
 		else if (previousSearchRelationship !== "") {
 			var andSelected = (previousSearchRelationship === "AND") ? " selected" : "";
@@ -264,18 +336,30 @@ step.searchSelect = {
 					'<option id="not_search" value="NOT"' + notSelected + '>' + __s.not + '</option>' +
 				'</select> ';
 		}
-		if (this.searchTypeCode.indexOf(itemType) > 2) {
-			if (type.indexOf("greek") == 0) type = "greek";
-			else if (type.indexOf("hebrew") == 0) type = "hebrew";
+		if (type === SYNTAX) {
+			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
+			if (strongNum.substring(0,1) === "H") type = HEBREW;
+			else if (strongNum.substring(0,1) === "G") type = GREEK;
+		}
+		if (this.searchTypeCode.indexOf(type) > 2) {
+			// if (type.indexOf("greek") == 0) type = "greek";
+			// else if (type.indexOf("hebrew") == 0) type = "hebrew";
 			if (typeof __s[type] !== "undefined") type = __s[type];
 			var htmlOfTerm = actPsgeDataElm.item.gloss;
 			if (actPsgeDataElm.item.stepTransliteration !== "")
-				htmlOfTerm += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
+				htmlOfTerm += ' <span class="srchParathesis">(</span>' +
+				'<i class="srchTransliteration">' + actPsgeDataElm.item.stepTransliteration + '</i>' +
+				'<span class="srchDash"> - </span>' +
+				'<span class="srchOriginal_Language">' + actPsgeDataElm.item.matchingForm + '</span>' +
+				'<span class="srchParathesis">)</span>';
 			html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
 			previousSearches.push(html);
-			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
-//			if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
-			previousSearchTokensArg.push("strong=" + strongNum);
+			var strongNum = actPsgeDataElm.token;
+			if (itemType === SYNTAX) {
+				if (strongNum.toLowerCase().indexOf("strong:") == 0) strongNum = strongNum.substring(7);
+				previousSearchTokensArg.push("syntax=t=strong:" + strongNum);
+			}
+			else previousSearchTokensArg.push("strong=" + strongNum);
 			if (actPsgeDataElm.item.stepTransliteration !== "") step.util.putStrongDetails(strongNum, htmlOfTerm);
 		}
 		else {
@@ -334,7 +418,7 @@ step.searchSelect = {
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
 		showPreviousSearch(); // The function will determine if it need to show previous search
-		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
+		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
 			$('#previousSearch').show();
 			if (this.searchModalCurrentPage == 1) $('#srchModalBackButton').hide();
@@ -343,15 +427,11 @@ step.searchSelect = {
 					this.timer && clearTimeout(this.timer);
 					this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
 				});
-				// .keyup(function(e){
-					// this.timer && clearTimeout(this.timer);
-					// this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
-				// });
 			});
 			$('textarea#userTextInput').focus();
 			this._handleEnteredSearchWord(null, this.searchUserInput);
 		}
-		else if (this.searchModalCurrentPage == 2) {
+		else if ((this.searchModalCurrentPage == 2) || (this.searchModalCurrentPage == 3)) {
 			this.searchOnSpecificType = "";
 			this.searchModalCurrentPage = 1;
 			$('#srchModalBackButton').hide();
@@ -387,7 +467,7 @@ step.searchSelect = {
 		}
 
 		var html = '<div class="header">' +
-			'<h4>' + __s.enter_search_word + '</h4>' +
+			'<h4 id="hd4">' + __s.enter_search_word + '</h4>' +
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
@@ -395,24 +475,19 @@ step.searchSelect = {
 			'<div id="search_table">' +
 			'<table border="1">' +
 			'<colgroup>' +
-			'<col span="1" style="width:39%;">' +
+			'<col id="column1width" span="1" style="width:39%;">' +
 			'<col span="1" style="width:61%;">' +
 			'</colgroup>' +
 			'<tr>' +
-			'<th scope="col">' + __s.type_of_search + '</th>' +
+			'<th scope="col" class="search-type-column">' + __s.type_of_search + '</th>' +
 			'<th scope="col">' + __s.suggested_search_words + '</th>' +
 			'</tr>';
 		for (var i = 0; i < this.searchTypeCode.length; i ++) {
 			var srchCode = this.searchTypeCode[i];
-			//var warnMsgForOrNotSearch = ((srchCode === MEANINGS) || (srchCode === SUBJECT_SEARCH)) ?
-			//	'<span id="searchResults' + srchCode + 'Warn" style="display:none">' + __s.incompatible_search + '</span>' :
-			//	"";
-			html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '">' +
-				'<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '" title="' + 
+			html += '<tr style="height:40px;" class="select2-result select2-result-selectable select-' + srchCode + '">' +
+				'<td class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
 				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left">' + __s['search_type_desc_' + srchCode] + ':</td>' +
 				'<td style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
-				// '<td style="text-align:left"><span id="searchResults' + srchCode + '"></span>' + warnMsgForOrNotSearch + '</td>' +
-				//'</tr>';
 		}
 		html += '</table>' +
 			'</div>';
@@ -964,7 +1039,12 @@ step.searchSelect = {
 	},
 
 	_handleEnteredSearchWord: function(limitType, previousUserInput, userPressedEnterKey) {
+		if ((typeof limitType === "undefined") || (limitType === null)) limitType = "";
 		var userInput = '';
+		$('textarea#userTextInput').show();
+		$("#hd4").text(__s.enter_search_word);
+		$("#column1width").width("30%");
+		$(".search-type-column").show();
 		$('#warningMessage').text('');
 		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))  userInput =  $('textarea#userTextInput').val();
 		else {
@@ -976,27 +1056,31 @@ step.searchSelect = {
 		if ((userInput.length > 1) || ((step.searchSelect.userLang.toLowerCase().indexOf("zh") == 0) && (userInput.length > 0))) {
 			$('#updateButton').hide();
 			var url;
-			if (((typeof limitType === "undefined") || (limitType === null)) && (step.searchSelect.searchOnSpecificType == ""))
+			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version + "%7C?lang=" + step.searchSelect.userLang;
 			else {
-				if ((typeof limitType === "undefined") || (limitType === null)) limitType = step.searchSelect.searchOnSpecificType;
+				if (limitType === "") limitType = step.searchSelect.searchOnSpecificType;
 				else {
 					step.searchSelect.searchOnSpecificType = limitType;
 					step.searchSelect.searchModalCurrentPage = 2;
 				}
 				$('#srchModalBackButton').show();
-				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version + "%7C" + LIMIT + "%3D" + limitType + "%7C?lang=" + step.searchSelect.userLang;
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version +
+					"%7C" + LIMIT + "%3D" + limitType +
+					"%7C?lang=" + step.searchSelect.userLang;
 			}
 			$.ajaxSetup({async: false});
 			$.getJSON(url, function (data) {
-				var searchResultsToDisplay = [];
+				var searchSuggestionsToDisplay = [];
 				for (var i = 0; i < step.searchSelect.searchTypeCode.length; i++) {
-					searchResultsToDisplay.push("");
+					searchSuggestionsToDisplay.push("");
 				}
+				var alreadyShownStrong = [];
 				for (var i = 0; i < data.length; i++) {
-					var searchType = data[i].itemType;
-					var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(searchType);
-					switch(searchType) {
+					var suggestionType = data[i].itemType;
+					var searchType = suggestionType;
+					var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
+					switch(suggestionType) {
 						case GREEK:
 						case GREEK_MEANINGS:
 						case HEBREW:
@@ -1007,65 +1091,101 @@ step.searchSelect = {
 							var text2Display = "";
 							if (data[i].grouped) {
 								if (typeof data[i].extraExamples !== "undefined") {
-									for (var k = 0; k < data[i].extraExamples.length; k++) {
-										if (k > 0) text2Display += ", ";
-										if ((searchType === GREEK) || (searchType === HEBREW))
-											text2Display += '<i>' + data[i].extraExamples[k].stepTransliteration + '</i>';
-										else if ((searchType === GREEK_MEANINGS) || (searchType === HEBREW_MEANINGS) || (searchType === MEANINGS))
-											text2Display += data[i].extraExamples[k].gloss;
-										else if (searchType === SUBJECT_SEARCH)
-											text2Display += data[i].extraExamples[k].value;
-									}
-									if (text2Display.length == 0) console.log('group, but no examples');
-									else {
-										text2Display += ', ' + __s.etc + '<i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i>';
-										if (searchResultsToDisplay[searchResultIndex] !== "") searchResultsToDisplay[searchResultIndex] += "<br>";
-										searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + searchType + '\')">' + text2Display + "</a>";
+									if ((searchSuggestionsToDisplay[searchResultIndex].match(/<br>/g) || []).length < 4) {
+										for (var k = 0; k < data[i].extraExamples.length; k++) {
+											if (k > 0) text2Display += ", ";
+											if ((suggestionType === GREEK) || (suggestionType === HEBREW))
+												text2Display += '<i class="srchTransliteration>' + data[i].extraExamples[k].stepTransliteration + '</i>';
+											else if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS) || (suggestionType === MEANINGS))
+												text2Display += data[i].extraExamples[k].gloss;
+											else if (suggestionType === SUBJECT_SEARCH)
+												text2Display += data[i].extraExamples[k].value;
+										}
+										if (text2Display.length == 0) console.log('group, but no examples');
+										else {
+											text2Display += ', ' + __s.etc + ' <i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i>';
+											if (searchSuggestionsToDisplay[searchResultIndex] !== "") searchSuggestionsToDisplay[searchResultIndex] += "<br>";
+											searchSuggestionsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>";
+										}
 									}
 								}
 								else {
-									if (searchResultsToDisplay[searchResultIndex] !== "") searchResultsToDisplay[searchResultIndex] += "<br>";
-									searchResultsToDisplay[searchResultIndex] += 'There are ' + data[i].count + ' more options.  Keep typing to see them.';
+									if (searchSuggestionsToDisplay[searchResultIndex] !== "") searchSuggestionsToDisplay[searchResultIndex] += "<br>";
+									searchSuggestionsToDisplay[searchResultIndex] += 'There are ' + data[i].count + ' more options.  Keep typing to see them.';
 								}
 							}
 							else {
 								var str2Search = "";
-								if (searchType === SUBJECT_SEARCH) {
+								var shortTxt2Display = "";
+								if (suggestionType === SUBJECT_SEARCH) {
 									text2Display = data[i].suggestion.value;
 									str2Search = text2Display;
 								}
-								else if (searchType === MEANINGS) {
+								else if (suggestionType === MEANINGS) {
 									text2Display = data[i].suggestion.gloss;
 									str2Search = text2Display;
 								}
-								else if (searchType === TEXT_SEARCH) {
+								else if (suggestionType === TEXT_SEARCH) {
 									if (data[i].suggestion.text.search(/^[HG]\d/i) == -1) { // Make sure it is not a STRONG number (e.g.: H0001)
 										text2Display = data[i].suggestion.text;
 										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
+										if (str2Search.indexOf("%22") == -1) {
+											var strings2Search = str2Search.split(" ");
+											if (strings2Search.length > 1) {
+												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+													str2Search, suggestionType, searchType, 
+													strings2Search.join(" <sub>and</sub> "),
+													shortTxt2Display, limitType, false, false);
+												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+													str2Search, suggestionType, searchType, 
+													strings2Search.join(" <sub>or</sub> "),
+													shortTxt2Display, limitType, false, false);
+												text2Display = '"' + str2Search + '"';
+												str2Search = '%22' + str2Search + '%22';
+											}
+										}
 									}
 								}
 								else {
-									var glossToShow = data[i].suggestion.gloss;
-									if ((typeof data[i].suggestion.strongNumber === "string") && (data[i].suggestion.strongNumber.length > 5)) {
-										var strongPrefix = data[i].suggestion.strongNumber[0].toUpperCase();
-										if ((strongPrefix === "H") || (strongPrefix === "G")) {
-											var strongSuffix = data[i].suggestion.strongNumber[data[i].suggestion.strongNumber.length-1];
-											if ((isNaN(strongSuffix)) && (typeof data[i].suggestion._article === "string") && (data[i].suggestion._article.length > glossToShow.length))
-												glossToShow = data[i].suggestion._article;
-										}
-									}
-									text2Display = glossToShow + ' (<i>' + data[i].suggestion.stepTransliteration +
-										'</i> - ' + data[i].suggestion.matchingForm + ')';
 									str2Search = data[i].suggestion.strongNumber;
+									var strongWithoutAugment = str2Search;
+									var strongShownToUser = str2Search;
+                                    var isAugmentedStrong = false;
+									var frequency =  data[i].suggestion.popularity;
+									if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
+										strongWithoutAugment = RegExp.$1;
+										strongShownToUser = strongWithoutAugment + "*";
+                                        isAugmentedStrong = true;
+										frequency = 0;
+										for (var k = 0; k < data.length; k++) {
+											if ((typeof data[k].suggestion === "object") &&
+												(typeof data[k].suggestion.strongNumber === "string") &&
+												(data[k].suggestion.strongNumber.slice(0, -1) === strongWithoutAugment)) {
+												frequency += parseInt(data[k].suggestion.popularity); 
+											}
+										}
+                                    }
+									if (alreadyShownStrong.includes(strongWithoutAugment)) continue;
+									alreadyShownStrong.push(strongWithoutAugment);
 									searchType = 'strong';
+									var gloss = data[i].suggestion.gloss;
+									text2Display = gloss + ' <span class="srchParathesis">(</span>' +
+										'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
+										'<span class="srchDash"> - </span>' +
+										'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
+										'<span class="srchSpaceStrong"> </span>' +
+										'<span class="srchStrong_number">' + strongShownToUser + '</span>' +
+										'<span class="srchParathesis">)</span>' +
+										'<span class="srchFrequency"> ~' + frequency + ' x</span>';
+									shortTxt2Display = gloss;
+									if ((isAugmentedStrong) || ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== ""))) {
+										searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+											strongWithoutAugment, suggestionType, searchType, text2Display, shortTxt2Display, limitType, true, false);
+										continue;
+									}
 								}
-								if (searchResultsToDisplay[searchResultIndex] !== "") searchResultsToDisplay[searchResultIndex] += "<br>";
-								var titleText = (((str2Search.substring(0,1) === "H") || (str2Search.substring(0,1) === "G")) && (!isNaN(str2Search.substring(1,5)))) ? 
-									' title="' + str2Search + '" ' : '';
-								searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
-									str2Search + '\',\'' + 
-									text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
-									'\')">' + text2Display + "</a>";
+								searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+									str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false, false);
 							}
 							break;
 						case REFERENCE:
@@ -1079,26 +1199,278 @@ step.searchSelect = {
 							}
 							break;
 						default:
-							alert("Unknown result: " + searchType);
+							alert("Unknown result: " + suggestionType);
 							break;
 					}
 				}
-				for (l = 0; l < searchResultsToDisplay.length; l++) {
-					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchResultsToDisplay[l]);
-					if ((typeof limitType === "undefined") || (limitType === null)) $('.select-' + step.searchSelect.searchTypeCode[l]).show()
-					else if (searchResultsToDisplay[l].length > 0) $('.select-' + step.searchSelect.searchTypeCode[l]).show()
-					else $('.select-' + step.searchSelect.searchTypeCode[l]).hide()
+				for (l = 0; l < searchSuggestionsToDisplay.length; l++) {
+					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
+					if (limitType === "") $('.select-' + step.searchSelect.searchTypeCode[l]).show()
+					else if (step.searchSelect.searchTypeCode[l] === limitType) $('.select-' + step.searchSelect.searchTypeCode[l]).show();
+					else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
+					// else if (searchSuggestionsToDisplay[l].length > 0) $('.select-' + step.searchSelect.searchTypeCode[l]).show()
 				}
 			}).fail(function() {
                 changeBaseURL();
             });
 			$.ajaxSetup({async: true});
+			step.searchSelect._updateDisplayBasedOnOptions();
 		}
 		else {
 			for (l = 0; l < step.searchSelect.searchTypeCode.length; l++) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[l]).text("");
 			}
 			showPreviousSearch(); // The update previous search button might need to be displayed if user has includes previous search 
+		}
+	},
+
+	_showAugmentedStrong: function(strongNum, previousLimitType, previousInput) {
+		$('#warningMessage').text('');
+		$('textarea#userTextInput').hide();
+		$('#updateButton').hide();
+		$("#hd4").text("Please select one of the following:");
+		step.searchSelect.searchModalCurrentPage = 3;
+		
+		$('#srchModalBackButton').show();
+		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
+		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
+				"%7C" + LIMIT + "%3D" + limitType +
+				"%7C?lang=" + step.searchSelect.userLang;
+		$.ajaxSetup({async: false});
+		$.getJSON(url, function (data) {
+			var searchSuggestionsToDisplay = [];
+			var detailLexSearchStrongs = [];
+			for (var i = 0; i < step.searchSelect.searchTypeCode.length; i++) {
+				searchSuggestionsToDisplay.push("");
+			}
+			if (data.length > 1) {
+				var frequencyTotal = 0;
+				for (var i = 0; i < data.length; i++) {
+					if ((data[i].itemType === GREEK) || (data[i].itemType === HEBREW))
+						frequencyTotal += parseInt(data[i].suggestion.popularity);
+				}
+				var firstStrongNum = data[0].suggestion.strongNumber;
+				var strongWithoutAugment = (isNaN(firstStrongNum.substr(-1))) ? firstStrongNum.substring(0, firstStrongNum.length-1) : firstStrongNum;
+				var suggestionType = data[0].itemType;
+				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
+				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (' +
+	//				'" <span class="srchParathesis">(</span>' +
+					'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
+					'<span class="srchDash">- </span>' +
+					'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
+	//				'<span class="srchSpaceStrong"> </span>' +
+	//				'<span class="srchStrong_number">' + strongWithoutAugment + '*)</span>' +
+	//				'<span class="srchParathesis">)</span>' +
+					'<span>' + strongWithoutAugment + '*)</span>' +
+					'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
+				searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+					strongWithoutAugment, suggestionType, "syntax_strong", text2Display, shortTxt2Display, limitType, false, false);
+				searchSuggestionsToDisplay[searchResultIndex] += '<span class="glyphicon glyphicon-arrow-down stepFgBg"></span>'
+			}
+			for (var i = 0; i < data.length; i++) {
+				var suggestionType = data[i].itemType;
+				var searchType = suggestionType;
+				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
+				if (data[i].grouped) {
+					alert("There should be not group here");
+					continue;
+				}
+				if ((suggestionType === GREEK) || (suggestionType === HEBREW)) {
+					var text2Display = "";
+					var shortTxt2Display = "";
+					var strongNum = data[i].suggestion.strongNumber;
+					var str2Search = strongNum;
+					searchType = 'strong';
+					var gloss = data[i].suggestion.gloss;
+					var strongPrefix = strongNum[0].toUpperCase();
+					shortTxt2Display = gloss;
+					text2Display = data[i].suggestion.type + ": " + gloss;
+					str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);
+					if (detailLexSearchStrongs.includes(str2Search)) continue; // Don't show the same search suggestion twice
+					detailLexSearchStrongs.push(str2Search);
+					var detailLexicalJSON = null;
+					var frequency = data[i].suggestion.popularity;
+					var curStrong = data[i].suggestion.strongNumber;
+					if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
+						detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
+						frequency = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, detailLexicalJSON);
+						curStrong += ", ...";
+					}
+					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
+						(typeof data[i].suggestion._searchResultRange === "string")) {
+						var moreThanOneStrong = str2Search.indexOf(",") > -1;
+						text2Display += '<span class="srchStrong_number"> (' + curStrong + ')</span>' +
+							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
+							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
+					}
+					else text2Display += ' <span class="srchParathesis">(</span>' +
+							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
+							'<span class="srchDash"> - </span>' + 
+							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
+							'<span class="srchSpaceStrong"> </span>' +
+							'<span class="srchStrong_number">' + curStrong + '</span>' +
+							'<span class="srchParathesis">)</span>' +
+							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
+					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+						str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false, true);
+					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, detailLexicalJSON, i);
+				}
+				else {
+					alert("Unknown result: " + suggestionType);
+				}
+			}
+			//var aramaic = step.searchSelect.getAramaicStrongFromDetailLexicalTag(data, limitType);
+			for (var l = 0; l < searchSuggestionsToDisplay.length; l++) {
+				if (step.searchSelect.searchTypeCode[l] === limitType) {
+					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
+					$('.select-' + step.searchSelect.searchTypeCode[l]).show();
+				}
+				else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
+			}
+
+		}).fail(function() {
+			changeBaseURL();
+		});
+		$.ajaxSetup({async: true});
+		$(".detailLexTriangle").click(step.searchSelect._handleClickOnTriangle);
+		$("#column1width").width("100%");
+		$(".search-type-column").hide();
+		step.searchSelect._updateDisplayBasedOnOptions();
+	},
+
+	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, isAugStrong, needIndent) {
+		var brCount = 0;
+		var suggestionsToDisplay = 5;
+		var needLineBreak = "";
+		if (existingSuggestionsToDisplay !== "") {
+			brCount = (existingSuggestionsToDisplay.match(/<br>/g) || []).length;
+			if ((brCount < suggestionsToDisplay + 1) || (limitType !== "")) needLineBreak = "<br>";
+		}
+		if (needIndent) needLineBreak += "&nbsp;&nbsp;&nbsp;";
+		if ((brCount < suggestionsToDisplay - 1) || (limitType !== "")) {
+			var titleText = (((str2Search.substring(0,1) === "H") || (str2Search.substring(0,1) === "G")) && (!isNaN(str2Search.substring(1,5)))) ? 
+				' title="' + str2Search + '" ' : '';
+			if (isAugStrong)
+				return needLineBreak + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search +
+					'\')">' + text2Display + " <span style='font-size:12px' class='glyphicon glyphicon-arrow-right'></span></a>";
+			else
+				return needLineBreak + '<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
+					str2Search + '\',\'' + 
+					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
+					'\')">' + text2Display + "</a>";
+		}
+		if (brCount < suggestionsToDisplay)
+			return needLineBreak + '<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+				+ suggestionType + '\')">' + shortTxt2Display + ', etc. <i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i></a>';
+		return "";
+	},
+
+	extractStrongFromDetailLexicalTag: function(strongNumber, detailLexicalTag) {
+		if ((typeof detailLexicalTag !== "string") || (detailLexicalTag === "")) return strongNumber; 
+		var detailLexicalJSON = JSON.parse(detailLexicalTag);
+		var allStrongs = [strongNumber];
+		detailLexicalJSON.forEach(function (item, index) {
+			if (allStrongs.includes(item[1])) return;
+			allStrongs.push(item[1]);
+		});
+		allStrongs.sort();
+		return allStrongs.join(",");
+	},
+
+	getFrequencyFromDetailLexicalTag: function(strongNum, frequency,  detailLexicalJSON) {
+		total = parseInt(frequency);
+		detailLexicalJSON.forEach(function (item, index) {
+			if (item[1] !== strongNum) {
+				total += parseInt(item[3]);
+			}
+		});
+		return total;
+	},
+
+	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalJSON, count) {
+		if (detailLexicalJSON === null) return "";
+		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-right'></a>";
+		var allStrongs = [];
+		detailLexicalJSON.forEach(function (item, index) {
+			if (allStrongs.includes(item[1])) return;
+			allStrongs.push(item[1]);
+			result += "<br class='detailLex" + count + "' style='display:none'>";
+			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			if (item[1] === strongNum) {
+				result += "&nbsp;&nbsp;&nbsp;<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px;display:none'></span>";
+				spaceWithoutLabel = "&nbsp;&nbsp;";
+			}
+			result += '<a class="detailLex' + count + '" style="display:none" style="padding:0px" title="' + item[1] + '"' +
+				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
+				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " +
+				'<span class="srchParathesis">(</span>' +
+				'<i class="srchTransliteration">' + item[5] + '</i>' +
+				'<span class="srchDash"> - </span>' +
+				'<span class="srchOriginal_Language">' + item[4] + '</span>' +
+				'<span class="srchSpaceStrong"> </span>' +
+				'<span class="srchStrong_number">' + item[1] + '</span>' +
+				'<span class="srchParathesis">)</span>' +
+				'<span class="srchFrequency"> ~' + item[3] + ' x</span>' +
+				"</a>";
+		});
+		return result;
+	},
+
+	// getAramaicStrongFromDetailLexicalTag: function(data, limitType) {
+	// 	var aramaic = [];
+	// 	var greek = [];
+	// 	var hebrew = [];
+	// 	var basicStrong = data[0].suggestion.strongNumber;
+	// 	if (basicStrong.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) basicStrong = RegExp.$1; // remove the last character if it is an a-g character
+
+	// 	for (var i = 0; i < data.length; i++) {
+	// 		var suggestionType = data[i].itemType;
+	// 		if (((suggestionType !== GREEK) && (suggestionType !== HEBREW)) ||
+	// 			   (data[i].grouped)) continue; 
+	// 		var strongNum = data[i].suggestion.strongNumber;
+ 	// 	  if ((strongNum.substring(0,1) === "G") && (!greek.includes(strongNum))) {
+	// 			greek.push(strongNum);
+	// 		}
+	// 		else if ((strongNum.substring(0,1) === "H") && (!hebrew.includes(strongNum))) {
+	// 			hebrew.push(strongNum);
+	// 		}
+	// 		if ((typeof data[i].suggestion._detailLexicalTag !== "string") ||
+	// 			(data[i].suggestion._detailLexicalTag === ""))
+	// 			continue; 
+	// 		var detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
+	// 		detailLexicalJSON.forEach(function (item, index) {
+	// 			if ((item[1].substring(0,1) === "G") && (!greek.includes(item[1]))) {
+	// 				greek.push(item[1]);
+	// 			}
+	// 			else if (item[0].toLowerCase().includes("aramaic")) {
+	// 				if (!aramaic.includes(item[1])) {
+	// 					aramaic.push(item[1]);
+	// 				}
+	// 				var index = hebrew.indexOf(item[1]);
+	// 				if (index > -1) { // only splice array when item is found
+	// 					hebrew.splice(index, 1); // 2nd parameter means remove one item only
+	// 				}
+	// 			}
+	// 			else if ((item[1].substring(0,1) === "H") && (!hebrew.includes(item[1]))) {
+	// 				hebrew.push(item[1]);
+	// 			}
+	// 		});
+	// 	}
+	// 	console.log("Found the following strong words for: " + basicStrong + "*");
+	// 	console.log("hebrew: " + hebrew);		console.log("aramaic: " + aramaic);		console.log("greek: " + greek);
+   
+	// },
+
+	_handleClickOnTriangle: function(ev){
+		var idName = ev.target.id;
+		var num = idName.substr(15);
+		if (ev.target.classList.contains("glyphicon-triangle-right")) {
+			$(".detailLex" + num).show();
+			$("#" + idName).removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+		}
+		else {
+			$(".detailLex" + num).hide();
+			$("#" + idName).removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
 		}
 	},
 
@@ -1144,10 +1516,31 @@ step.searchSelect = {
 			}
 		}
 		if (typeof searchWord !== "string") searchWord = "";
-		if (searchType === TEXT_SEARCH) currentSearch = '|text=' + searchWord;
+		if (searchType === TEXT_SEARCH) {
+			var andSearchStrings = displayText.split(" <sub>and</sub> ");
+			if (andSearchStrings.length > 1) {
+				currentSearch = "";
+				for (var i = 0; i < andSearchStrings.length; i++) {
+					currentSearch += '|text=' + andSearchStrings[i];	
+				}
+			}
+			else currentSearch = '|text=' + searchWord;
+		}
 		else if (searchType === STRONG_NUMBER) {
-			currentSearch = '|strong=' + searchWord;
-			step.util.putStrongDetails(searchWord, displayText);
+			var searchWords = searchWord.split(",");
+			currentSearch = '|strong=' + searchWords[0];
+			step.util.putStrongDetails(searchWord[0], displayText);
+			var searchJoins = "";
+			for (var i = 1; i < searchWords.length; i++) {
+				currentSearch += '|strong=' + searchWords[i];
+				if (i == 1) searchJoins = "|searchJoins=OR";
+				else searchJoins += ",OR"
+				step.util.putStrongDetails(searchWord[i], displayText);
+			}
+			currentSearch = searchJoins + currentSearch;
+		}
+		else if (searchType === "syntax_strong") {
+			currentSearch = '|syntax=t=strong:' + searchWord;
 		}
 		else if (typeof searchType !== "undefined") currentSearch = '|' + searchType + '=' + searchWord;
 		var previousSearch = "";
@@ -1155,49 +1548,13 @@ step.searchSelect = {
 		var previousJoins = [];
 		if (this.includePreviousSearches) {
 			currentJoin = this.verifySearchJoin($("#searchAndOrNot option:selected").val());
-//			var existingSyntaxSearch = (currentSearch.substring(0, 8) === "|syntax=") ? currentSearch.substring(8) : "";
-//			if (existingSyntaxSearch.substring(0, 2) === "t=") existingSyntaxSearch = existingSyntaxSearch.substring(2);
-			//var previousSyntaxSearch = "";
-			//var numOfPreviousSyntaxSearch = 0;
 			for (var i = 0; i < this.previousSearchTokens.length; i++) {
 				if (this.previousSearchTokens[i] !== "") {
 					if (i > 0)
 						previousJoins.push(this.verifySearchJoin($("#searchAndOrNot" + i + " option:selected").val()));
-					// var curSearchWord = "";
-					// if (this.previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = this.previousSearchTokens[i].substr(5);
-					// else 
-						// if ((this.previousSearchTokens[i].substring(0, 7) === "strong=") &&
-						// 	(searchWord.substring(0,1) !== this.previousSearchTokens[i].substring(7, 8))) {}
-						// 		var msg = "You are trying to search Greek and Hebrew words together. If you do not intend to perform this type of search, just don't search Hebrew and Greek words together in a single search.  This is only supported by the \"Classical Interface\" when you have opened a Bible with Old Testament tagged with Hebrew words and another Bible with Old Testament tagged with Greek words.  To open the \"Classical Interface\" ";
-						// 		msg += (window.innerWidth <= 767) ? "click on the three horizontal bars at the upper right, click on \"More\" and then click on \"Classical interface\"." :
-						// 											"click on \"More\" in the upper right and then click on \"Classical interface\".";
-						// 		alert(msg);
-						// 	}
-						// }
-					//	curSearchWord = "strong=" + this.previousSearchTokens[i].substr(7);
-					//}
-					// if (curSearchWord !== "") {
-					// 	numOfPreviousSyntaxSearch ++;
-					// 	if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=t=";
-					// 	else {
-					// 		if (numOfPreviousSyntaxSearch > 2)
-					// 			previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
-					// 		previousSyntaxSearch += previousSearchRelationship;
-					// 	}
-					// 	previousSyntaxSearch += curSearchWord;
-					// }
-					// else 
 					previousSearch += '|' + this.previousSearchTokens[i];
 				}
 			}
-			// if (previousSyntaxSearch.length > 0) {
-			// 	if (existingSyntaxSearch.length > 0) {
-			// 		if (numOfPreviousSyntaxSearch >= 2) 
-			// 			previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
-			// 		currentSearch = previousSyntaxSearch + " " + searchAndOrNot + " " + existingSyntaxSearch;
-			// 	}
-			// 	else currentSearch = previousSyntaxSearch + currentSearch;
-			// }
 		}
 		var joins = this.buildJoinString(currentJoin, previousJoins, searchType);
 		var url = allVersions + range + joins + previousSearch + currentSearch;
@@ -1248,22 +1605,5 @@ step.searchSelect = {
 		this.andOrNotUpdated = true;
 		$('#updateButton').show();
 	}
-	//},
 
-//	handlePreviousSearchAndOrNot: function() {
-//		var searchAndOrNot = $("#searchAndOrNot option:selected").val();
-//		if (searchAndOrNot === "AND") {
-//			$("#searchResultssubject").show();
-//			$("#searchResultsmeanings").show();
-//			$("#searchResultssubjectWarn").hide();
-//			$("#searchResultsmeaningsWarn").hide();
-//		}
-//		else {
-//			$("#searchResultssubject").hide();
-//			$("#searchResultsmeanings").hide();
-//			$("#searchResultssubjectWarn").show();
-//			$("#searchResultsmeaningsWarn").show();
-//   
-//		}
-//	}
 };

@@ -155,11 +155,11 @@ var QuickLexicon = Backbone.View.extend({
 			(typeof self.strong === "string")) {
 			step.previousSideBarLexiconRef = [self.strong, self.reference];
 		}
-        var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(this.strong, this.morph, this.reference, this.version);
-        if (vocabMorphFromJson.vocabInfos.length > 0) {
-            self.processQuickInfo(vocabMorphFromJson, self);
-            return;
-        }
+//        var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(this.strong, this.morph, this.reference, this.version);
+//        if (vocabMorphFromJson.vocabInfos.length > 0) {
+//            self.processQuickInfo(vocabMorphFromJson, self);
+//            return;
+//        }
         return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph, step.userLanguageCode], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);

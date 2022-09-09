@@ -197,7 +197,10 @@ var QuickLexicon = Backbone.View.extend({
     },
     displayQuickDef: function(lexicon) {
         var self = this;
-        this.passageContainer.append(lexicon);
+        if (lexicon.text().length > 2000) {
+            alert("Showing this in a pop up because it can be too long\n"+lexicon.text());
+        }
+        else this.passageContainer.append(lexicon);
         if (this.touchEvent) {
             lexicon.click(function () {
                 step.util.ui.showDef({ strong: self.strong, morph: self.morph });

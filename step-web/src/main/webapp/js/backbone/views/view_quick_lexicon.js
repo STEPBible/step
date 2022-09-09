@@ -198,26 +198,28 @@ var QuickLexicon = Backbone.View.extend({
     displayQuickDef: function(lexicon) {
         var self = this;
         if (lexicon.text().length > 2000) {
-            alert("Showing this in a pop up because it can be too long\n"+lexicon.text());
+            step.util.showLongAlert(lexicon);
         }
-        else this.passageContainer.append(lexicon);
-        if (this.touchEvent) {
-            lexicon.click(function () {
-                step.util.ui.showDef({ strong: self.strong, morph: self.morph });
+        else {
+            this.passageContainer.append(lexicon);
+            if (this.touchEvent) {
+                lexicon.click(function () {
+                    step.util.ui.showDef({ strong: self.strong, morph: self.morph });
+                    lexicon.remove();
+                });
+            }
+
+            lexicon.find(".close").click(function () {
                 lexicon.remove();
+                step.util.keepQuickLexiconOpen = false;
             });
+
+            this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span").one('scroll', function() {
+                lexicon.remove();
+            })
+            step.touchForQuickLexiconTime = 0;
+            step.strongOfLastQuickLexicon = "";
         }
-
-        lexicon.find(".close").click(function () {
-            lexicon.remove();
-            step.util.keepQuickLexiconOpen = false;
-        });
-
-        this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span").one('scroll', function() {
-            lexicon.remove();
-        })
-		step.touchForQuickLexiconTime = 0;
-		step.strongOfLastQuickLexicon = "";
     },
 
     /**

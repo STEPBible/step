@@ -2108,6 +2108,34 @@ step.util = {
         });
         $.ajaxSetup({async: true});
     },
+    showLongAlert: function (message) {
+        element = document.getElementById('showLongAlertModal');
+        if (element) element.parentNode.removeChild(element);
+        $(".modal-backdrop.in").remove();
+		$(message).find(".close").hide().html()
+		$(_.template(
+			'<div id="showLongAlertModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content stepModalFgBg"">' +
+						'<script>' +
+						'$(document).keydown(function(event) {' +
+							'if (event.keyCode == 27) {' +
+							'step.util.closeModal("showLongAlertModal");' +
+							'}' +
+						'});' +
+						'</script>' +
+						'<div class="modal-header">Long messages are shown in pop-up' +
+							step.util.modalCloseBtn("showLongAlertModal") + '<br>' +
+						'</div>' +
+						'<div class="modal-body" style="text-align:left font-size:16px">' +
+							message.html()  +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
+		)()).modal("show");
+    },
+
     setDefaultColor: function(option) {
         var newBtnText;
 		var setToDarkMode = false;

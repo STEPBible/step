@@ -3231,10 +3231,56 @@ step.util = {
         }
         else return " only at " + searchResultRange;
 	},
+	unpackJson: function (origJsonVar, index) {
+		var vocabKeys = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
+		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
+		"shortDef", "mediumDef", "lsjDefs",
+		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
+		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
+		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
+		"augmentedStrongReferences"];
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange"];
+		var duplicateStrings = origJsonVar.d;
+		var relatedNumbers = origJsonVar.r;
+		var vocabInfo = origJsonVar.v[index];
+		var vocabInfoEntry = {};
+		for (var j = 0; j < vocabKeys.length - 1; j ++) {
+			if (vocabInfo[j] === "") continue;
+			if (vocabKeys[j] === "relatedNos") {
+				var allRelatedNumbersResult = [];
+				relatedNumbersArray = vocabInfo[j];
+				if (Array.isArray(relatedNumbersArray)) {
+					for (var k = 0; k < relatedNumbersArray.length; k ++) {
+						var relatedNumEntry = relatedNumbers[vocabInfo[j][k]];
+						var relatedNumResult = {};
+						for (var l = 0; l < relatedKeys.length; l ++) {
+							if (relatedNumEntry[l] !== "") {
+								if (Number.isInteger(relatedNumEntry[l]))
+									relatedNumResult[relatedKeys[l]] = duplicateStrings[relatedNumEntry[l]];
+								else relatedNumResult[relatedKeys[l]] = relatedNumEntry[l];
+							}
+						}
+						allRelatedNumbersResult.push(relatedNumResult);
+					}
+					vocabInfoEntry[vocabKeys[j]] = allRelatedNumbersResult;
+				}
+			}
+			else vocabInfoEntry[vocabKeys[j]] = ((Number.isInteger(vocabInfo[j])) && (vocabKeys[j] !== "count")) ?
+					duplicateStrings[vocabInfo[j]] : vocabInfo[j];
+		}
+		return vocabInfoEntry;
+	},
 	getVocabMorphInfoFromJson: function (strong, morph, reference, version) {
         var strongArray = strong.split(" ");
         var processedStrong = [];
         var resultJson = {vocabInfos: [], morphInfos: []};
+		var indexToAugStrongRef = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
+		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
+		"shortDef", "mediumDef", "lsjDefs",
+		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
+		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
+		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
+		"augmentedStrongReferences"].length - 1;
 		if (!reference) reference = "";
         $.ajaxSetup({async: false});
         for (var j = 0; j < strongArray.length; j++) {
@@ -3249,62 +3295,58 @@ step.util = {
 				var strongFirstChar = strong.substring(0, 1).toLowerCase();
 				var rsvVersification = (((version !== "OHB") && (version !== "THOT")) &&
 					(strongFirstChar === "h"));
-                $.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(jsonVar) {
+                $.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(origJsonVar) {
 					var augStrongIndex = 0;
-					if (jsonVar.augmentedStrong) {
-						if (reference !== "") {
-							var refParts = reference.split(".");
-							var book = refParts[0];
-							var isNewTestament = step.searchSelect.idx2osisChapterJsword[book] > 38;
-							if (! ( (version === "LXX") ||
-									((strongFirstChar === "h") && (isNewTestament)) ||
-									((strongFirstChar === "g") && (!isNewTestament)) ||
-									(reference === "") ) ) {
-								for (var i = 0; i < jsonVar.augmentedStrong.length; i++) {
-									if (jsonVar.augmentedStrong[i].references === "*") {
-										augStrongIndex = i;
-										break;
-									}
-								}
-								var chapterVerse = refParts[1];
-								if (refParts.length == 3)
-									chapterVerse += "\\." + refParts[2];
-								var regString1 = "\\s" + book + "\\." + chapterVerse;
-								if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
-								else regString1 += "[\\s\\(]"; // must have a space or a ( character after the reference
-								var regString2 = "\\s" + book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
-								for (var i = jsonVar.augmentedStrong.length -1 ; i > -1; i --) {
-									if (jsonVar.augmentedStrong[i].references !== "*") {
-										var referencesToSearch = " " + jsonVar.augmentedStrong[i].references + " ";
-										var searchPos = referencesToSearch.search(regString1);
-										if ((searchPos == -1) &&
-											(rsvVersification))
-											searchPos = referencesToSearch.search(regString2);
-										if (searchPos > -1) {
-											augStrongIndex = i;
-											break;
-										}
-									}
-								}
-							}
-						}
-						else if (strongArray[j] !== strongWithoutAugment) {
-							for (var i = 0; i < jsonVar.augmentedStrong.length; i++) {
-								if (strongArray[j] === jsonVar.augmentedStrong[i].augmentedStrong) {
+					if (reference !== "") {
+						var refParts = reference.split(".");
+						var book = refParts[0];
+						var isNewTestament = step.searchSelect.idx2osisChapterJsword[book] > 38;
+						if (! ( (version === "LXX") ||
+								((strongFirstChar === "h") && (isNewTestament)) ||
+								((strongFirstChar === "g") && (!isNewTestament)) ||
+								(reference === "") ) ) {
+							for (var i = 0; i < origJsonVar.v.length; i++) {
+								if (origJsonVar.v[i][indexToAugStrongRef] === "*") {
 									augStrongIndex = i;
 									break;
 								}
 							}
-						}
-						if (augStrongIndex > 0) {
-							for (var key in jsonVar.vocabInfos[augStrongIndex]) {
-								if (jsonVar.vocabInfos[augStrongIndex][key] === "=")
-								jsonVar.vocabInfos[augStrongIndex][key] = jsonVar.vocabInfos[0][key];
+							var chapterVerse = refParts[1];
+							if (refParts.length == 3)
+								chapterVerse += "\\." + refParts[2];
+							var regString1 = "\\s" + book + "\\." + chapterVerse;
+							if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
+							else regString1 += "[\\s\\(]"; // must have a space or a ( character after the reference
+							var regString2 = "\\s" + book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
+							for (var i = origJsonVar.v.length -1 ; i > -1; i --) {
+								if (origJsonVar.v[i][indexToAugStrongRef] !== "*") {
+									var referencesToSearch = " " + origJsonVar.v[i][indexToAugStrongRef] + " ";
+									var searchPos = referencesToSearch.search(regString1);
+									if ((searchPos == -1) &&
+										(rsvVersification))
+										searchPos = referencesToSearch.search(regString2);
+									if (searchPos > -1) {
+										augStrongIndex = i;
+										break;
+									}
+								}
 							}
 						}
 					}
-					resultJson.vocabInfos.push(jsonVar.vocabInfos[augStrongIndex]);
-                });
+					else if (strongArray[j] !== strongWithoutAugment) {
+						for (var i = 0; i < origJsonVar.v.length; i++) {
+							if (strongArray[j] === origJsonVar.v[i][indexToAugStrongRef] ) {
+								augStrongIndex = i;
+								break;
+							}
+						}
+					}
+					var jsonVar = step.util.unpackJson(origJsonVar, augStrongIndex);
+					resultJson.vocabInfos.push(jsonVar);
+                }).error(function() {
+					console.log("getJSon failed strong:"+ strong + " morph: " + morph + " ref: " + reference + " version: " + version);
+					return resultJson;
+				});
             }
         }
 		if (morph) {
@@ -3317,72 +3359,98 @@ step.util = {
 				if (pos > -1) morph = morphArray[k].substring(pos+9);
 				$.getJSON("/html/lexicon/" + morph + ".json", function(jsonVar) {
 					resultJson.morphInfos.push(jsonVar.morphInfos[0]);
-				});
+                });
 			}
 		}
         $.ajaxSetup({async: true});
 		return resultJson;
-	}
-	// test: function(strong, morph, ref, version, expectStrongNum) {
-	// 	$.ajaxSetup({async: false});
-    //     var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strong, morph, ref, version);
-	// 	if ((expectStrongNum) && (vocabMorphFromJson.vocabInfos[0].strongNumber !== expectStrongNum)) {
-	// 		console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " expected: " + expectStrongNum + " found: " + vocabMorphFromJson.vocabInfos[0].strongNumber);			
-	// 	}
-    //     $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, ""], function (data) {
-	// 		if (data.vocabInfos.length !== vocabMorphFromJson.vocabInfos.length) {
-	// 			console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 		}
-	// 		for (var i = 0; i < data.vocabInfos.length; i ++) {
-	// 			for (var key in data.vocabInfos[i]) {
-	// 				if ((typeof vocabMorphFromJson === "undefined") || (vocabMorphFromJson == null)) {
-	// 					console.log("vocabinfo not exist:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 				}
-	// 				if (key === "relatedNos") {
-	// 					if (typeof vocabMorphFromJson.vocabInfos[i]["relatedNos"] === "string")
-	// 						vocabMorphFromJson.vocabInfos[i]["relatedNos"] = JSON.parse(vocabMorphFromJson.vocabInfos[i]["relatedNos"].replaceAll("'", '"'));
-	// 					if (! _.isEqual(data.vocabInfos[i]["relatedNos"], vocabMorphFromJson.vocabInfos[i]["relatedNos"])) {
-	// 						console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 					}
-	// 				}
-	// 				else if (data.vocabInfos[i][key] !== vocabMorphFromJson.vocabInfos[i][key]) {
-	// 					console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 				}
-	// 			}	
-	// 		}
-	// 		if (data.morphInfos.length !== vocabMorphFromJson.morphInfos.length) {
-	// 			console.log("length does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 		}
-	// 		for (var i = 0; i < data.morphInfos.length; i ++) {
-	// 			for (var key in data.morphInfos[i]) {
-	// 				if (data.morphInfos[i][key] !== vocabMorphFromJson.morphInfos[i][key]) {
-	// 					console.log("does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 				}
-	// 			}
-	// 		}
-    //     }).error(function() {
-    //         console.log("getsafe failed strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
-    //     });
-    // },
-	// test1: function(fileName, version, start) {
+	},
+	test: function(strong, morph, ref, version, expectStrongNum) {
+		if (" ESV ABEn KJV NASB2020 NIV ABGk LXX SBLG CCB CUn CUns ChiNCVs ChiNCVt OHB THOT SpaRV1909 ".indexOf(version) == -1)
+			version = "ESV";
+        var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strong, morph, ref, version);
+		$.ajaxSetup({async: false});
+		if ((expectStrongNum) && (expectStrongNum !== "") && (vocabMorphFromJson.vocabInfos[0].strongNumber !== expectStrongNum)) {
+			console.log("unexpected Strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " expected: " + expectStrongNum + " found: " + vocabMorphFromJson.vocabInfos[0].strongNumber);			
+		}
+		if (typeof vocabMorphFromJson.vocabInfos.length !== "number") {
+			console.log("vocabMorphFromJson.vocabInfo length is not there strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
+			return;
+		}
+        $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, ""], function (data) {
+			if ((!data.vocabInfos) || (typeof data.vocabInfos.length !== "number")) {
+				console.log("data.vocabInfo length is not there strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
+				return;
+			}
+			if ((data.vocabInfos.length != vocabMorphFromJson.vocabInfos.length) &&
+				(data.vocabInfos.length > 0)) {
+				console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+			}
+			for (var i = 0; i < data.vocabInfos.length; i ++) {
+				for (var key in data.vocabInfos[i]) {
+					if ((typeof vocabMorphFromJson === "undefined") || (vocabMorphFromJson == null)) {
+						console.log("vocabinfo not exist:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+					}
+					if (key === "relatedNos") {
+						if (typeof vocabMorphFromJson.vocabInfos[i]["relatedNos"] === "string")
+							vocabMorphFromJson.vocabInfos[i]["relatedNos"] = JSON.parse(vocabMorphFromJson.vocabInfos[i]["relatedNos"].replaceAll("'", '"'));
+						if (! _.isEqual(data.vocabInfos[i]["relatedNos"], vocabMorphFromJson.vocabInfos[i]["relatedNos"])) {
+							console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+						}
+					}
+					else if (key === "_stepDetailLexicalTag") {
+						var tmp = data.vocabInfos[i][key];
+						if (typeof tmp === "string") {
+							tmp = JSON.parse(tmp);
+						}
+						if (! _.isEqual(tmp, vocabMorphFromJson.vocabInfos[i][key])) {
+							console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+						}
+					}
+					else if ((data.vocabInfos[i][key] !== vocabMorphFromJson.vocabInfos[i][key]) &&
+						(data.vocabInfos[i][key] !== "")) {
+						console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+					}
+				}	
+			}
+			if (data.morphInfos.length !== vocabMorphFromJson.morphInfos.length) {
+				console.log("length does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+			}
+			for (var i = 0; i < data.morphInfos.length; i ++) {
+				for (var key in data.morphInfos[i]) {
+					if (data.morphInfos[i][key] !== vocabMorphFromJson.morphInfos[i][key]) {
+						console.log("does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+					}
+				}
+			}
+        }).error(function() {
+            console.log("getsafe failed strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
+        });
+    },
+	test1: function(fileName, version, start) {
 
-	// 	$.getJSON("/html/lexicon/" + fileName + ".json", function(jsonVar) {
-	// 		var end = jsonVar.length;
-	// 		if (end > start + 10000) end = start + 10000;
-	// 		for (var i = start; i < end; i ++) {
-	// 			var words = jsonVar[i].split(",");
-	// 			var temp = words[1].split(/[()]/);
-	// 			if (temp.length > 1) {
-	// 				if ((version !== "OHB")	&& (version !== "THOT")) words[1] = words[1].split(".")[0] + "." + temp[1];
-	// 				else words[1] = temp[0];
-	// 			}
-	// 			var strongWithoutAugment = words[0];
-	// 			if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
-	// 				strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
-	// 			}                                                                     // remove the last character if it is a letter
-	// 			step.util.test(strongWithoutAugment, "", words[1], version, words[0]);	
-	// 		}
-	// 	});
-	// }
+		$.getJSON("/html/lexicon/" + fileName + ".json", function(jsonVar) {
+			var end = jsonVar.length;
+			if (end > start + 5000) end = start + 5000;
+			for (var i = start; i < end; i ++) {
+				var words = jsonVar[i].split(",");
+				if (words[0] === "") continue;
+				var temp = words[1].split(/[()]/);
+				if (temp.length > 1) {
+					if ((version !== "OHB")	&& (version !== "THOT")) words[1] = words[1].split(".")[0] + "." + temp[1];
+					else words[1] = temp[0];
+				}
+				var strongWithoutAugment = words[0];
+				if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
+					strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
+				}                                                                     // remove the last character if it is a letter
+				
+				var expectStrongNum = (words.length == 2) ? words[0] : "";
+				var morph = (words.length > 2) ? morph = words[2] : "";
+				if (words.length == 4) version = words[3];
+				step.util.test(strongWithoutAugment, morph, words[1], version, expectStrongNum);
+			}
+		});
+	}
 }
 ;

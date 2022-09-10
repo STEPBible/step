@@ -127,7 +127,7 @@ var QuickLexicon = Backbone.View.extend({
                                 morph: self.morph,
                                 classes: "primaryLightBg"
                             });
-                            self.displayQuickDef(lexicon);
+                            self.displayQuickDef(lexicon, false);
                             for (var i = 0; i < (data.vocabInfos || []).length; i++) {
                                 self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
                             }
@@ -138,7 +138,7 @@ var QuickLexicon = Backbone.View.extend({
                 }
             }
             else {
-                self.displayQuickDef(lexicon);
+                self.displayQuickDef(lexicon, false);
                 for (var i = 0; i < (data.vocabInfos || []).length; i++) {
                     self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
                 }
@@ -180,7 +180,7 @@ var QuickLexicon = Backbone.View.extend({
         if(this.text) {
             var note = $(this.templateHeader + this.text.html() + this.templateFooter);
 			$("#quickLexicon").remove();
-            this.displayQuickDef(note);
+            this.displayQuickDef(note, true);
         } else {
             //remove all quick lexicons
             //make request to server
@@ -195,9 +195,9 @@ var QuickLexicon = Backbone.View.extend({
             cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
         return this;
     },
-    displayQuickDef: function(lexicon) {
+    displayQuickDef: function(lexicon, isNotes) {
         var self = this;
-        if (lexicon.text().length > 2000) {
+        if ((isNotes) && (lexicon.text().length > 2000)) {
             step.util.showLongAlert(lexicon);
         }
         else {

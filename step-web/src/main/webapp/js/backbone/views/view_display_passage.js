@@ -359,7 +359,8 @@ var PassageDisplayView = DisplayView.extend({
                     strong: null,
                     morph: null,
                     target: target,
-                    position: ev.pageY / $(window).height(),
+                    position: ev.pageY,
+                    height: $(window).height(),
                     touchEvent: false
                 });
             });

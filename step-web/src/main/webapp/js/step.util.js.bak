@@ -1434,8 +1434,7 @@ step.util = {
                 new QuickLexicon({
                     strong: strong, morph: morph,
                     version: version, reference: reference,
-                    target: hoverContext, position: pageY, touchEvent: touchEvent,
-                    height: $(window).height(), 
+                    target: hoverContext, position: pageY / $(window).height(), touchEvent: touchEvent,
                     passageId: passageId
                 });
             }

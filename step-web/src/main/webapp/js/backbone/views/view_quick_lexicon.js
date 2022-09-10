@@ -80,6 +80,7 @@ var QuickLexicon = Backbone.View.extend({
         this.strong = opts.strong;
         this.morph = opts.morph;
         this.position = opts.position;
+        this.height = opts.height;
         this.touchEvent = opts.touchEvent || false;
         this.passageContainer = step.util.getPassageContainer(opts.target);
         if(this.passageContainer.length == 0) {
@@ -109,7 +110,7 @@ var QuickLexicon = Backbone.View.extend({
                 fontClass: step.util.ui.getFontForStrong(self.strong),
                 view: self }));
             if (step.touchDevice) $(lexicon).find("#clickMoreInfo").text(__s.more_info_on_touch_of_word);
-            if (self.position > 0.66) {
+            if ((self.position / self.height) > 0.66) {
                 lexicon.css({"top": "37", "bottom": "auto"});
             }
             if (self.touchEvent) {
@@ -197,29 +198,39 @@ var QuickLexicon = Backbone.View.extend({
     },
     displayQuickDef: function(lexicon, isNotes) {
         var self = this;
-        if ((isNotes) && (lexicon.text().length > 2000)) {
-            step.util.showLongAlert(lexicon);
+        var quickDefPositionAtTop = (self.position / self.height) > 0.66; 
+        if (quickDefPositionAtTop) {
+            lexicon.css({"top": "37", "bottom": "auto"});
         }
-        else {
-            this.passageContainer.append(lexicon);
-            if (this.touchEvent) {
-                lexicon.click(function () {
-                    step.util.ui.showDef({ strong: self.strong, morph: self.morph });
-                    lexicon.remove();
-                });
+        this.passageContainer.append(lexicon);
+        var top = $("#quickLexicon").position().top;
+        var bottom = $("quickLexicon").outerHeight(true);
+        if (((quickDefPositionAtTop) && (bottom >= self.position)) ||
+            ((!quickDefPositionAtTop) && (top <= self.position))) {
+            if (isNotes) {
+                lexicon.remove();
+                step.util.showLongAlert(lexicon);
+                return;
             }
-
-            lexicon.find(".close").click(function () {
-                lexicon.remove();
-                step.util.keepQuickLexiconOpen = false;
-            });
-
-            this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span").one('scroll', function() {
-                lexicon.remove();
-            })
-            step.touchForQuickLexiconTime = 0;
-            step.strongOfLastQuickLexicon = "";
         }
+
+        if (this.touchEvent) {
+            lexicon.click(function () {
+                step.util.ui.showDef({ strong: self.strong, morph: self.morph });
+                lexicon.remove();
+            });
+        }
+
+        lexicon.find(".close").click(function () {
+            lexicon.remove();
+            step.util.keepQuickLexiconOpen = false;
+        });
+
+        this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span").one('scroll', function() {
+            lexicon.remove();
+        })
+        step.touchForQuickLexiconTime = 0;
+        step.strongOfLastQuickLexicon = "";
     },
 
     /**

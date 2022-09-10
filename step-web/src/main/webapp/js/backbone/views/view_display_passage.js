@@ -353,13 +353,15 @@ var PassageDisplayView = DisplayView.extend({
         doInlineNoteQuickLexicon: function (target, link, ev) {
             require(['quick_lexicon'], function () {
                 var text = link.closest(".note").find(".inlineNote");
+                var currentPageY = ((typeof ev.pageY !== "number") && (typeof ev.originalEvent.touches[0].pageY === "number")) ?
+                    ev.originalEvent.touches[0].pageY : ev.pageY; // pageY is available at different variable if it is a touch event.
                 //do the quick note
                 new QuickLexicon({
                     text: text,
                     strong: null,
                     morph: null,
                     target: target,
-                    position: ev.pageY,
+                    position: currentPageY,
                     height: $(window).height(),
                     touchEvent: false
                 });

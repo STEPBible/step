@@ -1328,10 +1328,10 @@ step.util = {
 					});
                 }
 			}).on("touchstart", function (ev) {
-				if ((typeof ev.originalEvent == "object") &&
-					(typeof ev.originalEvent.touches == "object") &&
-					(typeof ev.originalEvent.touches[0] == "object") &&
-					(typeof ev.originalEvent.touches[0].pageY == "number")) 
+				if ((typeof ev.originalEvent === "object") &&
+					(typeof ev.originalEvent.touches === "object") &&
+					(typeof ev.originalEvent.touches[0] === "object") &&
+					(typeof ev.originalEvent.touches[0].pageY === "number")) 
 					that.pageY = ev.originalEvent.touches[0].pageY;
 				step.touchForQuickLexiconTime = Date.now();
 				var strongStringAndPrevHTML = step.util.ui._getStrongStringAndPrevHTML(this); // Try to get something unique on the word touch by the user to compare if it is the 2nd touch
@@ -2109,11 +2109,12 @@ step.util = {
         });
         $.ajaxSetup({async: true});
     },
-    showLongAlert: function (message) {
+    showLongAlert: function (message, isNotes) {
         element = document.getElementById('showLongAlertModal');
         if (element) element.parentNode.removeChild(element);
         $(".modal-backdrop.in").remove();
-		$(message).find(".close").hide().html()
+		$(message).find(".close").hide().html();
+		var headerText = (isNotes) ? "Notes" : "Quick lexicon";
 		$(_.template(
 			'<div id="showLongAlertModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 				'<div class="modal-dialog">' +
@@ -2125,7 +2126,7 @@ step.util = {
 							'}' +
 						'});' +
 						'</script>' +
-						'<div class="modal-header">Long messages are shown in pop-up' +
+						'<div class="modal-header">' + headerText +
 							step.util.modalCloseBtn("showLongAlertModal") + '<br>' +
 						'</div>' +
 						'<div class="modal-body" style="text-align:left font-size:16px">' +

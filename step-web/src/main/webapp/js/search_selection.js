@@ -1228,7 +1228,7 @@ step.searchSelect = {
 		$('#warningMessage').text('');
 		$('textarea#userTextInput').hide();
 		$('#updateButton').hide();
-		$("#hd4").text("Please select one of the following:");
+		$("#hd4").text(__s.please_select_following);
 		step.searchSelect.searchModalCurrentPage = 3;
 		
 		$('#srchModalBackButton').show();
@@ -1254,13 +1254,9 @@ step.searchSelect = {
 				var suggestionType = data[0].itemType;
 				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
 				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (' +
-	//				'" <span class="srchParathesis">(</span>' +
 					'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
 					'<span class="srchDash">- </span>' +
 					'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
-	//				'<span class="srchSpaceStrong"> </span>' +
-	//				'<span class="srchStrong_number">' + strongWithoutAugment + '*)</span>' +
-	//				'<span class="srchParathesis">)</span>' +
 					'<span>' + strongWithoutAugment + '*)</span>' +
 					'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
 				searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
@@ -1415,52 +1411,6 @@ step.searchSelect = {
 		});
 		return result;
 	},
-
-	// getAramaicStrongFromDetailLexicalTag: function(data, limitType) {
-	// 	var aramaic = [];
-	// 	var greek = [];
-	// 	var hebrew = [];
-	// 	var basicStrong = data[0].suggestion.strongNumber;
-	// 	if (basicStrong.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) basicStrong = RegExp.$1; // remove the last character if it is an a-g character
-
-	// 	for (var i = 0; i < data.length; i++) {
-	// 		var suggestionType = data[i].itemType;
-	// 		if (((suggestionType !== GREEK) && (suggestionType !== HEBREW)) ||
-	// 			   (data[i].grouped)) continue; 
-	// 		var strongNum = data[i].suggestion.strongNumber;
- 	// 	  if ((strongNum.substring(0,1) === "G") && (!greek.includes(strongNum))) {
-	// 			greek.push(strongNum);
-	// 		}
-	// 		else if ((strongNum.substring(0,1) === "H") && (!hebrew.includes(strongNum))) {
-	// 			hebrew.push(strongNum);
-	// 		}
-	// 		if ((typeof data[i].suggestion._detailLexicalTag !== "string") ||
-	// 			(data[i].suggestion._detailLexicalTag === ""))
-	// 			continue; 
-	// 		var detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
-	// 		detailLexicalJSON.forEach(function (item, index) {
-	// 			if ((item[1].substring(0,1) === "G") && (!greek.includes(item[1]))) {
-	// 				greek.push(item[1]);
-	// 			}
-	// 			else if (item[0].toLowerCase().includes("aramaic")) {
-	// 				if (!aramaic.includes(item[1])) {
-	// 					aramaic.push(item[1]);
-	// 				}
-	// 				var index = hebrew.indexOf(item[1]);
-	// 				if (index > -1) { // only splice array when item is found
-	// 					hebrew.splice(index, 1); // 2nd parameter means remove one item only
-	// 				}
-	// 			}
-	// 			else if ((item[1].substring(0,1) === "H") && (!hebrew.includes(item[1]))) {
-	// 				hebrew.push(item[1]);
-	// 			}
-	// 		});
-	// 	}
-	// 	console.log("Found the following strong words for: " + basicStrong + "*");
-	// 	console.log("hebrew: " + hebrew);		console.log("aramaic: " + aramaic);		console.log("greek: " + greek);
-   
-	// },
-
 	_handleClickOnTriangle: function(ev){
 		var idName = ev.target.id;
 		var num = idName.substr(15);

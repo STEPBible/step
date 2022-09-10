@@ -198,24 +198,34 @@ var QuickLexicon = Backbone.View.extend({
     },
     displayQuickDef: function(lexicon, isNotes) {
         var self = this;
-        var quickDefPositionAtTop = (self.position / self.height) > 0.66; 
+        var quickDefPositionAtTop = (self.position / self.height) > 0.6;
         if (quickDefPositionAtTop) {
             lexicon.css({"top": "37", "bottom": "auto"});
         }
         this.passageContainer.append(lexicon);
         var top = $("#quickLexicon").position().top;
+        if (top > 0) top + (self.height * .1); // add 10%
         var bottom = $("#quickLexicon").outerHeight(true);
-        if (((quickDefPositionAtTop) && (bottom >= self.position)) ||
-            ((!quickDefPositionAtTop) && (top <= self.position))) {
-            if (!isNotes) {
-                $(lexicon).find('h1').replaceWith(function() {
-                    return '<br><h4>' + $(this).text() + '</h4>';
-                });
-                $(lexicon).find(".clickMoreInfo").hide();
-            }
-            lexicon.remove();
-            step.util.showLongAlert(lexicon, isNotes);
-            return;
+        if (((quickDefPositionAtTop) && (bottom > self.position)) ||
+            ((!quickDefPositionAtTop) && (top < self.position))) {
+//        ((!quickDefPositionAtTop) && ((top < 0) || ((self.position - top) < (self.height * -0.1))))) {
+            // var needToUseModal = true;
+            // if ((!quickDefPositionAtTop) && ((self.position / self.height) > 0.4)) { // move to top to see if it will not overlap the element which is hovered over or touched
+            //     lexicon.css({"top": "37", "bottom": "auto"});
+            //     bottom = $("#quickLexicon").outerHeight(true);
+            //     if (bottom < self.position) needToUseModal = false;
+            // }
+            // if (needToUseModal) {
+                if (!isNotes) {
+                    $(lexicon).find('h1').replaceWith(function() {
+                        return '<br><h4>' + $(this).text() + '</h4>';
+                    });
+                    $(lexicon).find(".clickMoreInfo").hide();
+                }
+                lexicon.remove();
+                step.util.showLongAlert(lexicon, isNotes);
+                return;
+            // }
         }
 
         if (this.touchEvent) {

@@ -198,18 +198,19 @@ var QuickLexicon = Backbone.View.extend({
     },
     displayQuickDef: function(lexicon, isNotes) {
         var self = this;
-        var quickDefPositionAtTop = (self.position / self.height) > 0.6;
+        var pointerPosition = self.position - 90;
+        var quickDefPositionAtTop = ((pointerPosition / (self.height - 90)) > 0.5);
         if (quickDefPositionAtTop) {
             lexicon.css({"top": "37", "bottom": "auto"});
         }
         this.passageContainer.append(lexicon);
         var top = $("#quickLexicon").position().top;
-        var bottom = $("#quickLexicon").outerHeight(true);
+        var bottom = $("#quickLexicon").outerHeight(true) + top;
         var posOfCloseButton = $('#quickLexicon').find('button').offset();
-        if (    (posOfCloseButton < 50) || (posOfCloseButton > (self.height - 7)) || // Close button too high, cannot be seen
+        if (    (posOfCloseButton < 50) || (posOfCloseButton > (self.height - 7)) || // Close button too high or too low, cannot be seen
                 (bottom > self.height) || // bottom of quickLexicon is beyond the bottom of display
-                ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > self.position)) || // Overlap with mouse pointer
-                ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < (self.position * 1.1))) ) {  // Overlap with mouse pointer
+                ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > pointerPosition)) || // Overlap with mouse pointer
+                ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < pointerPosition)) ) {  // Overlap with mouse pointer
             lexicon.remove();
             if (isNotes) {
                 if ($(lexicon).find('strong').text() === '▼')

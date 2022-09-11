@@ -199,15 +199,16 @@ var QuickLexicon = Backbone.View.extend({
     displayQuickDef: function(lexicon, isNotes) {
         var self = this;
         var pointerPosition = self.position - 90;
-        var quickDefPositionAtTop = ((pointerPosition / (self.height - 90)) > 0.5);
+        var heightOfWindow = self.height - 90;
+        var quickDefPositionAtTop = ((pointerPosition / heightOfWindow) > 0.5);
         if (quickDefPositionAtTop) {
             lexicon.css({"top": "37", "bottom": "auto"});
         }
         this.passageContainer.append(lexicon);
-        var top = $("#quickLexicon").position().top;
+        var top = $("#quickLexicon").position().top - 37;
         var bottom = $("#quickLexicon").outerHeight(true) + top;
-        var posOfCloseButton = $('#quickLexicon').find('button').offset();
-        if (    (posOfCloseButton < 50) || (posOfCloseButton > (self.height - 7)) || // Close button too high or too low, cannot be seen
+        var posOfCloseButton = $('#quickLexicon').find('button').position().top;
+        if (    (posOfCloseButton < 50) || (posOfCloseButton > heightOfWindow) || // Close button too high or too low, cannot be seen
                 (bottom > self.height) || // bottom of quickLexicon is beyond the bottom of display
                 ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > pointerPosition)) || // Overlap with mouse pointer
                 ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < pointerPosition)) ) {  // Overlap with mouse pointer

@@ -203,19 +203,20 @@ var QuickLexicon = Backbone.View.extend({
             lexicon.css({"top": "37", "bottom": "auto"});
         }
         this.passageContainer.append(lexicon);
-        var top = $("#quickLexicon").position().top;
-        if (top > 0) top + (self.height * .1); // add 10%
-        var bottom = $("#quickLexicon").outerHeight(true);
-        if (((quickDefPositionAtTop) && (bottom > self.position)) ||
-            ((!quickDefPositionAtTop) && (top < self.position))) {
-//        ((!quickDefPositionAtTop) && ((top < 0) || ((self.position - top) < (self.height * -0.1))))) {
-            // var needToUseModal = true;
-            // if ((!quickDefPositionAtTop) && ((self.position / self.height) > 0.4)) { // move to top to see if it will not overlap the element which is hovered over or touched
-            //     lexicon.css({"top": "37", "bottom": "auto"});
-            //     bottom = $("#quickLexicon").outerHeight(true);
-            //     if (bottom < self.position) needToUseModal = false;
-            // }
-            // if (needToUseModal) {
+        if (step.touchDevice) {
+            var pos = $('#quickLexicon').find('button').offset();
+            if ((pos < 50) || (pos > (self.height - 7))) { // too high or too low to be visible
+                lexicon.remove();
+                step.util.showLongAlert(lexicon, true);
+                return;
+            }
+        }
+        else {
+            var top = $("#quickLexicon").position().top;
+            if (top > 0) top + (self.height * .1); // add 10% to give it more room
+            var bottom = $("#quickLexicon").outerHeight(true);
+            if (((quickDefPositionAtTop) && (bottom > self.position)) ||
+                ((!quickDefPositionAtTop) && (top < self.position))) {
                 if (!isNotes) {
                     $(lexicon).find('h1').replaceWith(function() {
                         return '<br><h4>' + $(this).text() + '</h4>';
@@ -225,7 +226,7 @@ var QuickLexicon = Backbone.View.extend({
                 lexicon.remove();
                 step.util.showLongAlert(lexicon, isNotes);
                 return;
-            // }
+            }
         }
 
         if (this.touchEvent) {

@@ -207,9 +207,8 @@ var QuickLexicon = Backbone.View.extend({
         this.passageContainer.append(lexicon);
         var top = $("#quickLexicon").position().top - 37;
         var bottom = $("#quickLexicon").outerHeight(true) + top;
-        var posOfCloseButton = $('#quickLexicon').find('button').position().top;
-        if (    (posOfCloseButton < 50) || (posOfCloseButton > heightOfWindow) || // Close button too high or too low, cannot be seen
-                (bottom > self.height) || // bottom of quickLexicon is beyond the bottom of display
+        if (    (isNotes && step.touchDevice) ||
+                (top < 50) || (bottom > heightOfWindow) || // The quickLexicon div's top or bottom is not visible
                 ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > pointerPosition)) || // Overlap with mouse pointer
                 ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < pointerPosition)) ) {  // Overlap with mouse pointer
             lexicon.remove();
@@ -223,7 +222,7 @@ var QuickLexicon = Backbone.View.extend({
                 });
                 $(lexicon).find(".clickMoreInfo").hide();
             }
-            step.util.showLongAlert(lexicon, true);
+            step.util.showLongAlert(lexicon, isNotes);
             return;
         }
 

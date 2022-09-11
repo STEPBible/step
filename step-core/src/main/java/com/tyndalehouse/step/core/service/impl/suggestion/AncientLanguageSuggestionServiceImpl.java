@@ -45,7 +45,7 @@ public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncie
         } else {
             final String unmarkedUpTranslit = StringConversionUtils.adaptForTransliterationForIndexing(form,
                     greek);
-            addAncientMatchClauses(exact, masterQuery, unmarkedUpTranslit);
+            addAncientMatchClauses(exact, masterQuery, unmarkedUpTranslit, form);
 
             try {
                 // assume transliteration - at this point suggestionType is not going to be MEANING
@@ -59,11 +59,11 @@ public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncie
         return masterQuery;
     }
 
-    private void addAncientMatchClauses(final boolean exact, final BooleanQuery masterQuery, final String form) {
-        addSearchClause("betaAccented", exact, masterQuery, form);
-        addSearchClause("stepTransliteration", exact, masterQuery, form);
-        addSearchClause("twoLetter", exact, masterQuery, form);
-        addSearchClause("otherTransliteration", exact, masterQuery, form);
+    private void addAncientMatchClauses(final boolean exact, final BooleanQuery masterQuery, final String unmarkedUpTranslit, final String form) {
+        addSearchClause("betaAccented", exact, masterQuery, unmarkedUpTranslit);
+        addSearchClause("stepTransliteration", exact, masterQuery, unmarkedUpTranslit);
+        addSearchClause("twoLetter", exact, masterQuery, unmarkedUpTranslit);
+        addSearchClause("otherTransliteration", exact, masterQuery, unmarkedUpTranslit);
         addSearchClause("stepGloss", exact, masterQuery, form);
         addSearchClause("translations", exact, masterQuery, form);
     }

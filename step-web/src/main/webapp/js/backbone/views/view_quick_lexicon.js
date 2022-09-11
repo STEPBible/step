@@ -73,7 +73,6 @@ var QuickLexicon = Backbone.View.extend({
         '<%= view.templatedFooter %>',
     lastMorphCode: '',
     initialize: function (opts) {
-        console.log(opts);
         this.text = opts.text;
         this.reference = opts.reference;
         this.version = opts.version;

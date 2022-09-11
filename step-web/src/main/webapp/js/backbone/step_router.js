@@ -27,25 +27,28 @@ var StepRouter = Backbone.Router.extend({
         //add versions from current active passage
         var activePassage = step.util.activePassage();
 
-        var extra = partial;
+        var searchParameters = partial;
         var mainVersion = activePassage.get("masterVersion");
+        var allVersions = "";
         if (mainVersion != "") {
             if (!stripCommentaries || step.keyedVersions[mainVersion].category == 'BIBLE') {
-                extra = "version=" + mainVersion + "|" + extra;
+                allVersions = "version=" + mainVersion;
             }
 
             var extraVersions = (activePassage.get("extraVersions") || "").split(",");
             for (var i = 0; i < extraVersions.length; i++) {
                 if ((extraVersions[i] || "") != "") {
                     if (!stripCommentaries || step.keyedVersions[extraVersions[i]].category == 'BIBLE') {
-                        extra = "version=" + extraVersions[i] + "|" + extra;
+                        if (allVersions !== "") allVersions += "|";
+                        allVersions += "version=" + extraVersions[i];
                     }
                 }
             }
         }
 		skipPage = (skipPage) ? true : false;
 		skipQFilter = (skipQFilter) ? true : false;
-        this.navigateSearch(extra, skipQFilter, skipPage);
+        if ((allVersions !== "") && (searchParameters !== "")) searchParameters = allVersions + "|" + searchParameters;
+        this.navigateSearch(searchParameters, skipQFilter, skipPage);
     },
     navigateSearch: function (args, skipQFilter, skipPage) {
         var activePassageId = step.util.activePassageId();

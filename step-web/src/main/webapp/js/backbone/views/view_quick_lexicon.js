@@ -208,7 +208,7 @@ var QuickLexicon = Backbone.View.extend({
         var top = $("#quickLexicon").position().top - 37;
         var bottom = $("#quickLexicon").outerHeight(true) + top;
         if (    (isNotes && step.touchDevice) ||
-                (top < 50) || (bottom > heightOfWindow) || // The quickLexicon div's top or bottom is not visible
+                (top < -8) || (bottom > heightOfWindow + 8) || // The quickLexicon div's top or bottom is not visible
                 ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > pointerPosition)) || // Overlap with mouse pointer
                 ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < pointerPosition)) ) {  // Overlap with mouse pointer
             lexicon.remove();

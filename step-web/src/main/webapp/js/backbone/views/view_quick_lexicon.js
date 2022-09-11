@@ -112,7 +112,7 @@ var QuickLexicon = Backbone.View.extend({
             if ((self.position / self.height) > 0.66) {
                 lexicon.css({"top": "37", "bottom": "auto"});
             }
-            if (self.touchEvent) {
+            if (self.touchDevice) {
                 if ((step.strongOfLastQuickLexicon == self.strong) && (step.touchForQuickLexiconTime > 0)) {
                     var timeToWait = Math.max(0, (TOUCH_CANCELLATION_TIME) - (Date.now() - step.touchForQuickLexiconTime));
                     var previoustouchForQuickLexiconTime = step.touchForQuickLexiconTime;
@@ -206,7 +206,7 @@ var QuickLexicon = Backbone.View.extend({
         this.passageContainer.append(lexicon);
         var top = $("#quickLexicon").position().top - 37;
         var bottom = $("#quickLexicon").outerHeight(true) + top;
-        if (    (this.touchEvent) ||
+        if (    (this.touchDevice) ||
                 (top < -8) || (bottom > heightOfWindow + 8) || // The quickLexicon div's top or bottom is not visible
                 ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > pointerPosition)) || // Overlap with mouse pointer
                 ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < pointerPosition)) ) {  // Overlap with mouse pointer

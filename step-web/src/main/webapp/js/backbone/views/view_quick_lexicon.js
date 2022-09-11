@@ -203,30 +203,22 @@ var QuickLexicon = Backbone.View.extend({
             lexicon.css({"top": "37", "bottom": "auto"});
         }
         this.passageContainer.append(lexicon);
-        if (step.touchDevice) {
-            var pos = $('#quickLexicon').find('button').offset();
-            if ((pos < 50) || (pos > (self.height - 7))) { // too high or too low to be visible
-                lexicon.remove();
-                step.util.showLongAlert(lexicon, true);
-                return;
+        var top = $("#quickLexicon").position().top;
+        var bottom = $("#quickLexicon").outerHeight(true);
+        var posOfCloseButton = $('#quickLexicon').find('button').offset();
+        if (    (posOfCloseButton < 50) || (posOfCloseButton > (self.height - 7)) || // Close button too high, cannot be seen
+                (bottom > self.height) || // bottom of quickLexicon is beyond the bottom of display
+                ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > self.position)) || // Overlap with mouse pointer
+                ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < (self.position * 1.1))) ) {  // Overlap with mouse pointer
+            lexicon.remove();
+            if (!isNotes) {
+                $(lexicon).find('h1').replaceWith(function() {
+                    return '<br><h4>' + $(this).text() + '</h4>';
+                });
+                $(lexicon).find(".clickMoreInfo").hide();
             }
-        }
-        else {
-            var top = $("#quickLexicon").position().top;
-            if (top > 0) top + (self.height * .1); // add 10% to give it more room
-            var bottom = $("#quickLexicon").outerHeight(true);
-            if (((quickDefPositionAtTop) && (bottom > self.position)) ||
-                ((!quickDefPositionAtTop) && (top < self.position))) {
-                if (!isNotes) {
-                    $(lexicon).find('h1').replaceWith(function() {
-                        return '<br><h4>' + $(this).text() + '</h4>';
-                    });
-                    $(lexicon).find(".clickMoreInfo").hide();
-                }
-                lexicon.remove();
-                step.util.showLongAlert(lexicon, isNotes);
-                return;
-            }
+            step.util.showLongAlert(lexicon, true);
+            return;
         }
 
         if (this.touchEvent) {

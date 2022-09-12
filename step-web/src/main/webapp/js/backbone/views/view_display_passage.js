@@ -136,7 +136,7 @@ var PassageDisplayView = DisplayView.extend({
             }
             if (((languages[0].indexOf("en") == 0) ||
 				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
-				(this.bookIsOTorNT(reference))){
+				(this.bookOrderInOTorNT(reference) > -1)) {
                 var xgenObj = passageHtml.find('.xgen');
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
@@ -302,6 +302,23 @@ var PassageDisplayView = DisplayView.extend({
         _isPassageValid: function (passageHtml, reference) {
             if (passageHtml.find(":not(.xgen):first").length == 0) {
                 var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
+				var bookOrder = this.bookOrderInOTorNT(reference.split(".")[0]);
+				if (bookOrder > -1) {
+					var masterVersion = step.util.activePassage().get("masterVersion").toLowerCase();
+					var isNT = (bookOrder > 38) ? true : false;
+					if ((isNT) &&
+						((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersion) > -1) ||
+						 (" ohb thot alep wlc mapm ".indexOf(masterVersion) > -1))) {
+						message += "<br><br>You selected a New Testament passage, but the Bible translation selected (" + masterVersion + ") only has the Old Testament." +
+                            "<br><br>You can either:<ol><li>Select an Old Testament passage or<li>Select another Bible which has New Testament.</ol>";
+					}
+					else if ((!isNT) &&
+						((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersion) > -1) ||
+						 (" sblgnt ".indexOf(masterVersion) > -1))) {
+						message += "<br><br>You selected an Old Testament passage, but the Bible translation selected (" + masterVersion + ") only has the New Testament." +
+                            "<br><br>You can either:<ol><li>Select a New Testament passage or<li>Select another Bible which has Old Testament.</ol>";
+                    }
+				}
                 var errorMessage = $("<span>").addClass("notApplicable").html(message);
                 this.$el.html(errorMessage);
                 return false;
@@ -309,14 +326,14 @@ var PassageDisplayView = DisplayView.extend({
             return true;
         },
 
-        bookIsOTorNT: function (reference) {
+        bookOrderInOTorNT: function (reference) {
 	        var tmpArray = reference.split(".");
 			var bookID = tmpArray[0]; // get the string before the "." character
 			for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {
 				var currentOsisID = (step.passageSelect.osisChapterJsword[i].length === 4) ? step.passageSelect.osisChapterJsword[i][3] : step.passageSelect.osisChapterJsword[i][0];
-				if (bookID === currentOsisID) return true;
+				if (bookID === currentOsisID) return i;
 			}
-            return false;
+            return -1;
         },
 		
         /**

@@ -304,17 +304,18 @@ var PassageDisplayView = DisplayView.extend({
                 var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
 				var bookOrder = this.bookOrderInOTorNT(reference.split(".")[0]);
 				if (bookOrder > -1) {
-					var masterVersion = step.util.activePassage().get("masterVersion").toLowerCase();
+					var masterVersion = step.util.activePassage().get("masterVersion");
+                    var masterVersionLowerCase = masterVersion.toLowerCase();
 					var isNT = (bookOrder > 38) ? true : false;
 					if ((isNT) &&
-						((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersion) > -1) ||
-						 (" ohb thot alep wlc mapm ".indexOf(masterVersion) > -1))) {
+						((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
+						 (" ohb thot alep wlc mapm ".indexOf(masterVersionLowerCase) > -1))) {
 						message += "<br><br>You selected a New Testament passage, but the Bible translation selected (" + masterVersion + ") only has the Old Testament." +
                             "<br><br>You can either:<ol><li>Select an Old Testament passage or<li>Select another Bible which has New Testament.</ol>";
 					}
 					else if ((!isNT) &&
-						((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersion) > -1) ||
-						 (" sblgnt ".indexOf(masterVersion) > -1))) {
+						((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
+						 (" sblgnt ".indexOf(masterVersionLowerCase) > -1))) {
 						message += "<br><br>You selected an Old Testament passage, but the Bible translation selected (" + masterVersion + ") only has the New Testament." +
                             "<br><br>You can either:<ol><li>Select a New Testament passage or<li>Select another Bible which has Old Testament.</ol>";
                     }

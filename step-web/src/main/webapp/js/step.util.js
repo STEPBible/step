@@ -3365,7 +3365,7 @@ step.util = {
 					}
 					else if (strongArray[j] !== strongWithoutAugment) {
 						for (var i = 0; i < origJsonVar.v.length; i++) {
-							if (strongArray[j] === origJsonVar.v[i][indexToAugStrongRef] ) {
+							if (strongArray[j] === origJsonVar.v[i][0] ) {
 								augStrongIndex = i;
 								break;
 							}

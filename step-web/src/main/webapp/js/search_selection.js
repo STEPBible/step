@@ -1131,11 +1131,13 @@ step.searchSelect = {
 										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
 										if (str2Search.indexOf("%22") == -1) {
 											var strings2Search = str2Search.split(" ");
-											if ((strings2Search.length == 1) && (str2Search.slice(-1) !== "*")) {
-												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
-													str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false, false);
-												str2Search += "*";
-												text2Display += "*";
+											if (strings2Search.length == 1) {
+												if (str2Search.slice(-1) !== "*") {
+													searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+														str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false, false);
+													str2Search += "*";
+													text2Display += "*";
+												}
 											}
 											else {
 												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 

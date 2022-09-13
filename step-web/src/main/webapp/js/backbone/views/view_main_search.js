@@ -544,14 +544,15 @@ var MainSearchView = Backbone.View.extend({
         var args = "";
         var refArgs = "";
         var searchArgs = "";
-        var searchFound = false;
-        var moreThanOneVersion = 0;
+        var numOfBibleVersions = 0;
+        var firstVersionSelected = "";
         for (var ii = 0; ii < options.length; ii++) {
               switch (options[ii].itemType) {
                 case VERSION:
                     args += "|" + options[ii].itemType + "=";
                     args += encodeURIComponent(options[ii].item.shortInitials);
-                    moreThanOneVersion ++;
+                    if (numOfBibleVersions == 0) firstVersionSelected += encodeURIComponent(options[ii].item.shortInitials);
+                    numOfBibleVersions ++;
                     break;
                 case REFERENCE:
                     refArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.osisID);
@@ -628,8 +629,9 @@ var MainSearchView = Backbone.View.extend({
             args += refArgs;
         }
         console.log("navigateSearch from view_main_search: ", args);
+        PassageDisplayView.prototype.warnIfBibleDoesNotHaveTestament(refArgs.replace('reference=', ''), true, firstVersionSelected, numOfBibleVersions);
         step.router.navigateSearch(args);
-        if (moreThanOneVersion > 1) step.util.showIntroOfMultiVersion();
+        if (numOfBibleVersions > 1) step.util.showIntroOfMultiVersion();
     },
     getCurrentInput: function () {
         return this.masterSearch.select2("container").find(".select2-input").val();

@@ -302,31 +302,52 @@ var PassageDisplayView = DisplayView.extend({
         _isPassageValid: function (passageHtml, reference) {
             if (passageHtml.find(":not(.xgen):first").length == 0) {
                 var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
-				var bookOrder = this.bookOrderInOTorNT(reference.split(".")[0]);
-				if (bookOrder > -1) {
-					var masterVersion = step.util.activePassage().get("masterVersion");
-                    var masterVersionLowerCase = masterVersion.toLowerCase();
-					var isNT = (bookOrder > 38) ? true : false;
-					if ((isNT) &&
-						((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
-						 (" ohb thot alep wlc mapm ".indexOf(masterVersionLowerCase) > -1))) {
-						message += "<br><br>You selected a New Testament passage, but the Bible translation selected (" + masterVersion + ") only has the Old Testament." +
-                            "<br><br>You can either:<ol><li>Select an Old Testament passage or<li>Select another Bible which has New Testament.</ol>";
-					}
-					else if ((!isNT) &&
-						((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
-						 (" sblgnt ".indexOf(masterVersionLowerCase) > -1))) {
-						message += "<br><br>You selected an Old Testament passage, but the Bible translation selected (" + masterVersion + ") only has the New Testament." +
-                            "<br><br>You can either:<ol><li>Select a New Testament passage or<li>Select another Bible which has Old Testament.</ol>";
-                    }
-				}
+                message += this.warnIfBibleDoesNotHaveTestament(reference, false);
                 var errorMessage = $("<span>").addClass("notApplicable").html(message);
                 this.$el.html(errorMessage);
                 return false;
             }
             return true;
         },
-
+        warnIfBibleDoesNotHaveTestament: function (reference, showAlert, firstBibleVersion, numOfBibleVersions) {
+            var bookOrder = this.bookOrderInOTorNT(reference.split(".")[0]);
+            if (bookOrder > -1) {
+                var masterVersion = (firstBibleVersion) ?  firstBibleVersion : step.util.activePassage().get("masterVersion");
+                var masterVersionLowerCase = masterVersion.toLowerCase();
+                var extraVersionsMsg = ""
+                if (numOfBibleVersions) {
+                    if (numOfBibleVersions > 1) extraVersionsMsg = " as the first Bible";
+                }
+                else {
+                    var extraVersions = step.util.activePassage().get("extraVersions");
+                    var extraVersionsMsg = (extraVersions === "") ? "" : " as the first Bible";
+                }
+                var isNT = (bookOrder > 38) ? true : false;
+                if ((isNT) &&
+                    ((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
+                     (" ohb thot alep wlc mapm ".indexOf(masterVersionLowerCase) > -1))) {
+                    if (showAlert) {
+                        var alertMessage = "You selected a New Testament passage, but the Bible translation selected (" + masterVersion + ") only has the Old Testament. " +
+                            "You can either: 1. Select an Old Testament passage or 2. Select another Bible which has New Testament" + extraVersionsMsg + ".";
+                        alert(alertMessage);
+                    }
+                    return "<br><br>You selected a New Testament passage, but the Bible translation selected (" + masterVersion + ") only has the Old Testament. " +
+                        "<br><br>You can either:<ol><li>Select an Old Testament passage or<li>Select another Bible which has New Testament" + extraVersionsMsg + ".</ol>";
+                }
+                else if ((!isNT) &&
+                    ((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
+                     (" sblgnt ".indexOf(masterVersionLowerCase) > -1))) {
+                    if (showAlert) {
+                        var alertMessage = "You selected an Old Testament passage, but the Bible translation selected (" + masterVersion + ") only has the New Testament. " +
+                            "You can either: 1. Select a New Testament passage or 2. Select another Bible which has Old Testament" + extraVersionsMsg + ".";
+                        alert(alertMessage);
+                    }
+                    return "<br><br>You selected an Old Testament passage, but the Bible translation selected (" + masterVersion + ") only has the New Testament. " +
+                    "<br><br>You can either:<ol><li>Select a New Testament passage or<li>Select another Bible which has Old Testament" + extraVersionsMsg + ".</ol>";
+                }
+            }
+            return "";
+        },
         bookOrderInOTorNT: function (reference) {
 	        var tmpArray = reference.split(".");
 			var bookID = tmpArray[0]; // get the string before the "." character

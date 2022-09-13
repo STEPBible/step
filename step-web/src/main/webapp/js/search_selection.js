@@ -398,7 +398,7 @@ step.searchSelect = {
 			}
 		}
 		else {
-			var userInput =  $('textarea#userTextInput').val();
+			var userInput = $('textarea#userTextInput').val();
 			if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
 				$('#warningMessage').text(__s.click_to_select_search);
 				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
@@ -471,7 +471,7 @@ step.searchSelect = {
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
-			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%"></textarea><br><br>' + // size 16px so the mobile devices will not expand
+			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="Enter search word (use * for unended word or ? for mssing letters"></textarea><br><br>' + // size 16px so the mobile devices will not expand
 			'<div id="search_table">' +
 			'<table border="1">' +
 			'<colgroup>' +
@@ -1131,15 +1131,7 @@ step.searchSelect = {
 										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
 										if (str2Search.indexOf("%22") == -1) {
 											var strings2Search = str2Search.split(" ");
-											if (strings2Search.length == 1) {
-												if (str2Search.slice(-1) !== "*") {
-													searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
-														str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false, false);
-													str2Search += "*";
-													text2Display += "*";
-												}
-											}
-											else {
+											if (strings2Search.length > 1) {
 												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 													str2Search, suggestionType, searchType, 
 													strings2Search.join(" <sub>and</sub> "),

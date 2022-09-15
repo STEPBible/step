@@ -112,7 +112,7 @@ var QuickLexicon = Backbone.View.extend({
             if ((self.position / self.height) > 0.66) {
                 lexicon.css({"top": "37", "bottom": "auto"});
             }
-            if (self.touchDevice) {
+            if (step.touchDevice) {
                 if ((step.strongOfLastQuickLexicon == self.strong) && (step.touchForQuickLexiconTime > 0)) {
                     var timeToWait = Math.max(0, (TOUCH_CANCELLATION_TIME) - (Date.now() - step.touchForQuickLexiconTime));
                     var previoustouchForQuickLexiconTime = step.touchForQuickLexiconTime;
@@ -127,7 +127,8 @@ var QuickLexicon = Backbone.View.extend({
                                 morph: self.morph,
                                 classes: "primaryLightBg"
                             });
-                            self.displayQuickDef(lexicon, false);
+							var augStrongNum = ((data.vocabInfos[0].strongNumber) && (self.strong !== data.vocabInfos[0].strongNumber)) ? data.vocabInfos[0].strongNumber : "";
+                            self.displayQuickDef(lexicon, false, augStrongNum);
                             for (var i = 0; i < (data.vocabInfos || []).length; i++) {
                                 self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
                             }
@@ -195,8 +196,9 @@ var QuickLexicon = Backbone.View.extend({
             cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
         return this;
     },
-    displayQuickDef: function(lexicon, isNotes) {
+    displayQuickDef: function(lexicon, isNotes, augStrongNum) {
         var self = this;
+		if ((typeof augStrongNum === "string") && (augStrongNum !== "")) self.augStrong = augStrongNum;
         var pointerPosition = self.position - 90;
         var heightOfWindow = self.height - 90;
         var quickDefPositionAtTop = ((pointerPosition / heightOfWindow) > 0.5);
@@ -226,7 +228,8 @@ var QuickLexicon = Backbone.View.extend({
 
         if (this.touchEvent) {
             lexicon.click(function () {
-                step.util.ui.showDef({ strong: self.strong, morph: self.morph });
+				var strongToUse = (typeof self.augStrong === "string") ? self.augStrong : self.strong;
+                step.util.ui.showDef({ strong: strongToUse, morph: self.morph });
                 lexicon.remove();
             });
         }

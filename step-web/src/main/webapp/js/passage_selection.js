@@ -244,7 +244,6 @@ step.passageSelect = {
 			var shortNameToDisplay;
 			var longNameToDisplay;
 			var numOfChapters;
-			var jSwordName;
 			if (typlicalBooksChapters) {
 				currentOsisID = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
 				numOfChapters = this.osisChapterJsword[i][1];
@@ -257,7 +256,6 @@ step.passageSelect = {
 				longNameToDisplay = data[i].suggestion.fullName;
 				shortNameToDisplay = (this.userLang.toLowerCase().indexOf("en") == 0) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
 			}
-			var oldTestment = false;
 			var newTestament = (nt.indexOf(currentOsisID) > -1);
 			if (!newTestament) oldTestament = (ot.indexOf(currentOsisID) > -1);
 			if ((newTestament) && (notSeenNT)) {

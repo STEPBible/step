@@ -320,7 +320,7 @@ var PassageDisplayView = DisplayView.extend({
                     (step.util.activePassage().get("extraVersions") !== "")) {
                     extraVersionsMsg = " as the first Bible";
                     messageOnOrder = " first";
-                    thirdOption = "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(3)\">Change the display order of the Bibles you selected.</a>"
+                    thirdOption = "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(3)\">Change the display order of the Bibles you selected, or</a>"
                 }
                 var testamentOfPassageSelected = "Old";
                 var theOtherTestament = "New";
@@ -342,11 +342,12 @@ var PassageDisplayView = DisplayView.extend({
                 if (somethingIsWrong) {
                     var alertMessage = "<br>The" + messageOnOrder + " Bible selected, " + masterVersion + ", only has the " +
                         theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected. " +
-                        "<br><br>You can either:<ol><li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1) \">Select a " + theOtherTestament + " Testament passage or</a>" +
+                        "<br><br>You can either:<ul>" +
+                        thirdOption +
+                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1) \">Select a " + theOtherTestament + " Testament passage, or</a>" +
                         "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(2)\">Select another Bible which has " + testamentOfPassageSelected + " Testament" + 
                         extraVersionsMsg + ".</a>" +
-                        thirdOption +
-                        "</ol>";
+                        "</ul>";
                     if (showAlert) step.util.showLongAlert(alertMessage, "Warning");
                     return alertMessage;
                 }

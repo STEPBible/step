@@ -341,9 +341,9 @@ step.searchSelect = {
 			if (strongNum.substring(0,1) === "H") type = HEBREW;
 			else if (strongNum.substring(0,1) === "G") type = GREEK;
 		}
+		if (type.indexOf("greek") == 0) type = "greek";
+		else if (type.indexOf("hebrew") == 0) type = "hebrew";
 		if (this.searchTypeCode.indexOf(type) > 2) {
-			// if (type.indexOf("greek") == 0) type = "greek";
-			// else if (type.indexOf("hebrew") == 0) type = "hebrew";
 			if (typeof __s[type] !== "undefined") type = __s[type];
 			var htmlOfTerm = actPsgeDataElm.item.gloss;
 			if (actPsgeDataElm.item.stepTransliteration !== "")

@@ -1754,6 +1754,22 @@ step.util = {
 			'</script>' +
 		'</div>').modal("show");
     },
+	correctNoPassageInSelectedBible: function (userChoice) {
+		step.util.modalCloseBtn("showLongAlertModal");
+		if (userChoice == 1) {
+			step.util.passageSelectionModal( step.util.activePassageId() );
+		}
+		else if (userChoice >= 2) {
+			step.util.startPickBible();
+			if (userChoice == 3) {
+				setTimeout(
+					function() {
+						$("#order_button_bible_modal").click();
+					},
+				500);
+			}
+		}
+	},
     passageSelectionModal: function (activePassageNumber) {
         var element = document.getElementById('passageSelectionModal');
         if (element) element.parentNode.removeChild(element);
@@ -2109,12 +2125,10 @@ step.util = {
         });
         $.ajaxSetup({async: true});
     },
-    showLongAlert: function (message, isNotes) {
+    showLongAlert: function (message, headerText) {
         element = document.getElementById('showLongAlertModal');
         if (element) element.parentNode.removeChild(element);
         $(".modal-backdrop.in").remove();
-		$(message).find(".close").hide().html();
-		var headerText = (isNotes) ? "Notes" : "Quick lexicon";
 		$(_.template(
 			'<div id="showLongAlertModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 				'<div class="modal-dialog">' +
@@ -2130,7 +2144,7 @@ step.util = {
 							step.util.modalCloseBtn("showLongAlertModal") + '<br>' +
 						'</div>' +
 						'<div class="modal-body" style="text-align:left font-size:16px">' +
-							message.html()  +
+							message +
 						'</div>' +
 					'</div>' +
 				'</div>' +

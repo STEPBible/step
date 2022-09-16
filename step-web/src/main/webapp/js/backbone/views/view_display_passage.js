@@ -236,7 +236,6 @@ var PassageDisplayView = DisplayView.extend({
             if (interlinearMode != "INTERLINEAR") {
                 return;
             }
-
             var warning = step.settings.get("warnInterlinearFirstTime") || false;
             step.util.raiseInfo(__s.warn_interlinear_view_selected, null, this.model.get("passageId"), null, warning);
             step.settings.save({
@@ -302,7 +301,7 @@ var PassageDisplayView = DisplayView.extend({
         _isPassageValid: function (passageHtml, reference) {
             if (passageHtml.find(":not(.xgen):first").length == 0) {
                 var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
-                message += this.warnIfBibleDoesNotHaveTestament(reference, false);
+                message += "<br>" + this.warnIfBibleDoesNotHaveTestament(reference, false);
                 var errorMessage = $("<span>").addClass("notApplicable").html(message);
                 this.$el.html(errorMessage);
                 return false;
@@ -314,36 +313,42 @@ var PassageDisplayView = DisplayView.extend({
             if (bookOrder > -1) {
                 var masterVersion = (firstBibleVersion) ?  firstBibleVersion : step.util.activePassage().get("masterVersion");
                 var masterVersionLowerCase = masterVersion.toLowerCase();
-                var extraVersionsMsg = ""
-                if (numOfBibleVersions) {
-                    if (numOfBibleVersions > 1) extraVersionsMsg = " as the first Bible";
+                var extraVersionsMsg = "";
+                var messageOnOrder = "";
+                var thirdOption = ""
+                if (((numOfBibleVersions) && (numOfBibleVersions > 1)) ||
+                    (step.util.activePassage().get("extraVersions") !== "")) {
+                    extraVersionsMsg = " as the first Bible";
+                    messageOnOrder = " first";
+                    thirdOption = "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(3)\">Change the display order of the Bibles you selected.</a>"
                 }
-                else {
-                    var extraVersions = step.util.activePassage().get("extraVersions");
-                    var extraVersionsMsg = (extraVersions === "") ? "" : " as the first Bible";
+                var testamentOfPassageSelected = "Old";
+                var theOtherTestament = "New";
+                if (bookOrder > 38) {
+                    testamentOfPassageSelected = "New";
+                    theOtherTestament = "Old";
                 }
-                var isNT = (bookOrder > 38) ? true : false;
-                if ((isNT) &&
+                var somethingIsWrong = false;
+                if ((testamentOfPassageSelected === "New") &&
                     ((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
                      (" ohb thot alep wlc mapm ".indexOf(masterVersionLowerCase) > -1))) {
-                    if (showAlert) {
-                        var alertMessage = "You selected a New Testament passage, but the Bible translation selected (" + masterVersion + ") only has the Old Testament. " +
-                            "You can either: 1. Select an Old Testament passage or 2. Select another Bible which has New Testament" + extraVersionsMsg + ".";
-                        alert(alertMessage);
-                    }
-                    return "<br><br>You selected a New Testament passage, but the Bible translation selected (" + masterVersion + ") only has the Old Testament. " +
-                        "<br><br>You can either:<ol><li>Select an Old Testament passage or<li>Select another Bible which has New Testament" + extraVersionsMsg + ".</ol>";
+                    somethingIsWrong = true;
                 }
-                else if ((!isNT) &&
+                else if ((testamentOfPassageSelected === "Old") &&
                     ((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
                      (" sblgnt ".indexOf(masterVersionLowerCase) > -1))) {
-                    if (showAlert) {
-                        var alertMessage = "You selected an Old Testament passage, but the Bible translation selected (" + masterVersion + ") only has the New Testament. " +
-                            "You can either: 1. Select a New Testament passage or 2. Select another Bible which has Old Testament" + extraVersionsMsg + ".";
-                        alert(alertMessage);
-                    }
-                    return "<br><br>You selected an Old Testament passage, but the Bible translation selected (" + masterVersion + ") only has the New Testament. " +
-                    "<br><br>You can either:<ol><li>Select a New Testament passage or<li>Select another Bible which has Old Testament" + extraVersionsMsg + ".</ol>";
+                    somethingIsWrong = true;
+                }
+                if (somethingIsWrong) {
+                    var alertMessage = "<br>The" + messageOnOrder + " Bible selected, " + masterVersion + ", only has the " +
+                        theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected. " +
+                        "<br><br>You can either:<ol><li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1) \">Select a " + theOtherTestament + " Testament passage or</a>" +
+                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(2)\">Select another Bible which has " + testamentOfPassageSelected + " Testament" + 
+                        extraVersionsMsg + ".</a>" +
+                        thirdOption +
+                        "</ol>";
+                    if (showAlert) step.util.showLongAlert(alertMessage, "Warning");
+                    return alertMessage;
                 }
             }
             return "";

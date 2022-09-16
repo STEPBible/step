@@ -341,9 +341,9 @@ step.searchSelect = {
 			if (strongNum.substring(0,1) === "H") type = HEBREW;
 			else if (strongNum.substring(0,1) === "G") type = GREEK;
 		}
+		if (type.indexOf("greek") == 0) type = "greek";
+		else if (type.indexOf("hebrew") == 0) type = "hebrew";
 		if (this.searchTypeCode.indexOf(type) > 2) {
-			// if (type.indexOf("greek") == 0) type = "greek";
-			// else if (type.indexOf("hebrew") == 0) type = "hebrew";
 			if (typeof __s[type] !== "undefined") type = __s[type];
 			var htmlOfTerm = actPsgeDataElm.item.gloss;
 			if (actPsgeDataElm.item.stepTransliteration !== "")
@@ -473,7 +473,7 @@ step.searchSelect = {
 			'<span id="warningMessage" style="color: red;"></span>' +
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="Enter search word"></textarea><br><br>' + // size 16px so the mobile devices will not expand
 			'<div id="search_table">' +
-			'<table border="1">' +
+			'<table border="1" style="background-color:#f5f5f5">' +
 			'<colgroup>' +
 			'<col id="column1width" span="1" style="width:39%;">' +
 			'<col span="1" style="width:61%;">' +
@@ -1142,6 +1142,14 @@ step.searchSelect = {
 													shortTxt2Display, limitType, false, false);
 												text2Display = '"' + str2Search + '"';
 												str2Search = '%22' + str2Search + '%22';
+											}
+											else if (str2Search.slice(-1) !== "*") {
+												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+													str2Search, suggestionType, searchType, 
+													text2Display,
+													shortTxt2Display, limitType, false, false);
+												text2Display = str2Search + "* (words that start with " + str2Search + ")";
+												str2Search += "*";
 											}
 										}
 									}

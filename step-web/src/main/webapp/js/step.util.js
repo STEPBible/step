@@ -1328,10 +1328,10 @@ step.util = {
 					});
                 }
 			}).on("touchstart", function (ev) {
-				if ((typeof ev.originalEvent == "object") &&
-					(typeof ev.originalEvent.touches == "object") &&
-					(typeof ev.originalEvent.touches[0] == "object") &&
-					(typeof ev.originalEvent.touches[0].pageY == "number")) 
+				if ((typeof ev.originalEvent === "object") &&
+					(typeof ev.originalEvent.touches === "object") &&
+					(typeof ev.originalEvent.touches[0] === "object") &&
+					(typeof ev.originalEvent.touches[0].pageY === "number")) 
 					that.pageY = ev.originalEvent.touches[0].pageY;
 				step.touchForQuickLexiconTime = Date.now();
 				var strongStringAndPrevHTML = step.util.ui._getStrongStringAndPrevHTML(this); // Try to get something unique on the word touch by the user to compare if it is the 2nd touch

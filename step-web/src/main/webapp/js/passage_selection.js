@@ -79,7 +79,6 @@ step.passageSelect = {
 	translationsWithPopularNTBooksChapters: ' 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblg sblgntapp spavnt swahili swaulb thgnt tisch tnt tr ukrkulish uma varapp weym whnu wors ',
 	translationsWithPopularOTBooksChapters: ' ab gertextbibel kd wlc lees lxx rusmakarij ',
 
-
 	initPassageSelect: function(summaryMode) {
         this.version = "ESV_th";
 		this.userLang = step.state.language() || "en-US";
@@ -211,7 +210,7 @@ step.passageSelect = {
 		}
         else {
             columns = 1;
-			bookDescription = {gen:"", exod:"", lev:"", num:"", deut:"", josh:"", judg:"", ruth:"", "1sam":"", "2sam":"", "1kgs":"", "2kgs":"", "1chr":"", "2chr":"", ezra:"", neh:"", esth:"", job:"", ps:"", prov:"", eccl:"", song:"", isa:"", jer:"", lam:"", ezek:"", dan:"", hos:"", joel:"", amos:"", obad:"", jonah:"", mic:"", nah:"", hab:"", zeph:"", hag:"", zech:"", mal:"", matt:"", mark:"", luke:"", john:"", acts:"", rom:"", "1cor":"", "2cor":"", gal:"", eph:"", phil:"", col:"", "1thess":"", "2thess":"", "1tim":"", "2tim":"", titus:"", phlm:"", heb:"", jas:"", "1pet":"", "2pet":"", "1john":"", "2john":"", "3jo":"", jude:"", rev:""};
+						bookDescription = {gen:"", exod:"", lev:"", num:"", deut:"", josh:"", judg:"", ruth:"", "1sam":"", "2sam":"", "1kgs":"", "2kgs":"", "1chr":"", "2chr":"", ezra:"", neh:"", esth:"", job:"", ps:"", prov:"", eccl:"", song:"", isa:"", jer:"", lam:"", ezek:"", dan:"", hos:"", joel:"", amos:"", obad:"", jonah:"", mic:"", nah:"", hab:"", zeph:"", hag:"", zech:"", mal:"", matt:"", mark:"", luke:"", john:"", acts:"", rom:"", "1cor":"", "2cor":"", gal:"", eph:"", phil:"", col:"", "1thess":"", "2thess":"", "1tim":"", "2tim":"", titus:"", phlm:"", heb:"", jas:"", "1pet":"", "2pet":"", "1john":"", "2john":"", "3jo":"", jude:"", rev:""};
             $.ajaxSetup({async: false});
             $.getJSON("html/json/book_description.json", function(desc) {
                 for (key in desc) {
@@ -224,12 +223,17 @@ step.passageSelect = {
 		var typlicalBooksChapters = false;
 		var start = 0;
 		var end = 0;
+		var bookOnlyHasOneTestament = "";
 		if (typeof data === "string") {
 			if (data == "OTNT") end = 66;
-			else if (data == "OT") end = 39;
-			else if (data == "NT") {
+			else if (data === "OT") {
+				end = 39;
+				bookOnlyHasOneTestament = "OT";
+			}
+			else if (data === "NT") {
 				start = 39;
 				end = 66;
+				bookOnlyHasOneTestament = "NT";
 			}
 			typlicalBooksChapters = true;
 		}
@@ -308,8 +312,16 @@ step.passageSelect = {
 		if (additionalBooks) tableHTML += '<p style="color:brown">* Deuterocanonical or other books</p>';
 		if (notSeenNT) $('#ot_table').append(tableHTML);
 		else $('#nt_table').append(tableHTML);
+		this.checkForBiblesWithoutOneTestament(this.version);
 	},
-
+	checkForBiblesWithoutOneTestament: function(version) {
+		if ((typeof step.keyedVersions[version] === "object") && (typeof step.keyedVersions[version].shortInitials === "string"))
+			version = step.keyedVersions[version].shortInitials;
+		if ($("#nt_table").text() === "")
+			$("#nt_header").html('<b>' + __s.nt_short + '</b> ' + __s.is_not_available_in + ' ' + version);
+		else if ($("#ot_table").text() === "")
+			$("#ot_header").html('<b>' + __s.ot_short + '</b> ' + __s.is_not_available_in + ' ' + version);
+	},
 	_buildBookHeaderAndSkeleton: function(summaryMode) {
 		var html = '<div class="header" style="overflow-y:auto">' +
 			'<h4>' + __s.please_select_book + '</h4>';
@@ -322,9 +334,9 @@ step.passageSelect = {
 				'</button>';
 		html +=
 			'</div>' +
-			'<span class="stepFgBg" style="font-size:18px"><b>' + __s.old_testament + '</b></span>' +
+			'<span id="ot_header" class="stepFgBg" style="font-size:18px"><b>' + __s.old_testament + '</b></span>' +
 			'<div id="ot_table"/>' +
-			'<span class="stepFgBg" style="font-size:18px"><b>' + __s.new_testament + '</b></span>' +
+			'<span id="nt_header" class="stepFgBg" style="font-size:18px"><b>' + __s.new_testament + '</b></span>' +
 			'<div id="nt_table"/>' +
 			'</div>';
 		return html;

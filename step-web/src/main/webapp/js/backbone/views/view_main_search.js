@@ -625,11 +625,12 @@ var MainSearchView = Backbone.View.extend({
 			args += searchArgs;
 		}
         if (refArgs.length > 0) {
+            var newRef = PassageDisplayView.prototype.warnIfBibleDoesNotHaveTestament(refArgs.replace('reference=', ''), true, firstVersionSelected, numOfBibleVersions);
+            if (newRef !== "") refArgs = "reference=" + newRef;
             args += (args.length > 0) ? "|" : "";
             args += refArgs;
         }
         console.log("navigateSearch from view_main_search: ", args);
-        PassageDisplayView.prototype.warnIfBibleDoesNotHaveTestament(refArgs.replace('reference=', ''), true, firstVersionSelected, numOfBibleVersions);
         step.router.navigateSearch(args);
         if (numOfBibleVersions > 1) step.util.showIntroOfMultiVersion();
     },

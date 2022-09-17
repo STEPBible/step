@@ -318,9 +318,11 @@ var PassageDisplayView = DisplayView.extend({
                 var reOrderOption = ""
                 var testamentOfPassageSelected = "Old";
                 var theOtherTestament = "New";
+                var defaultPassage = "Matt.1";
                 if (bookOrder > 38) {
                     testamentOfPassageSelected = "New";
                     theOtherTestament = "Old";
+                    defaultPassage = "Gen.1";
                 }
                 if (((numOfBibleVersions) && (numOfBibleVersions > 1)) ||
                     (step.util.activePassage().get("extraVersions") !== "")) {
@@ -342,9 +344,15 @@ var PassageDisplayView = DisplayView.extend({
                         reOrderOption +
                         "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(2)\">Add another Bible which has " + testamentOfPassageSelected + " Testament" + 
                         extraVersionsMsg + ".</a>" +
-                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1) \">Select a " + theOtherTestament + " Testament passage.</a>" +
+                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1)\">Select a " + theOtherTestament + " Testament passage.</a>" +
                         "</ul>";
-                    if (showAlert) step.util.showLongAlert(alertMessage, "Warning");
+                    if (showAlert) {
+                        if ((firstBibleVersion) && (numOfBibleVersions)) alertMessage = "<br>The" + messageOnOrder + " Bible selected, " + masterVersion + ", only has the " +
+                            theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected. " +
+                            "To avoid further issues, " + defaultPassage + " will be displayed instead.<br><br><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1)\">Please re-select your passage.</a>";
+                        step.util.showLongAlert(alertMessage, "Warning");
+                        if ((firstBibleVersion) && (numOfBibleVersions)) return defaultPassage;
+                    }
                     return alertMessage;
                 }
             }

@@ -92,13 +92,7 @@ import javax.inject.Singleton;
 import javax.xml.transform.TransformerException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.tyndalehouse.step.core.models.InterlinearMode.COLUMN_COMPARE;
 import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLEAVED;
@@ -638,7 +632,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                                    final InterlinearMode displayMode) {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
-        final BookData bookData = getBookData(version, reference);
+        BookData bookData = getBookData(version, reference);
+        if (((RocketPassage) bookData.getKey()).store.isEmpty())
+            bookData = getBookData(version, "Gen.1");
+
         return getTextForBookData(options, interlinearVersion, bookData, displayMode);
     }
 

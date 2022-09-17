@@ -1755,7 +1755,7 @@ step.util = {
 		'</div>').modal("show");
     },
 	correctNoPassageInSelectedBible: function (userChoice) {
-		step.util.modalCloseBtn("showLongAlertModal");
+		$("#showLongAlertModal").click();
 		if (userChoice == 1) {
 			step.util.passageSelectionModal( step.util.activePassageId() );
 		}
@@ -1770,10 +1770,10 @@ step.util = {
 			}
 		}
 	},
-    passageSelectionModal: function (activePassageNumber) {
-        var element = document.getElementById('passageSelectionModal');
-        if (element) element.parentNode.removeChild(element);
-        $("div.modal-backdrop.in").remove();
+  passageSelectionModal: function (activePassageNumber) {
+    var element = document.getElementById('passageSelectionModal');
+    if (element) element.parentNode.removeChild(element);
+    $("div.modal-backdrop.in").remove();
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
 		var modalHTML = '<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +

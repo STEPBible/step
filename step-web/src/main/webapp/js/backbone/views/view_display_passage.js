@@ -315,38 +315,34 @@ var PassageDisplayView = DisplayView.extend({
                 var masterVersionLowerCase = masterVersion.toLowerCase();
                 var extraVersionsMsg = "";
                 var messageOnOrder = "";
-                var thirdOption = ""
-                if (((numOfBibleVersions) && (numOfBibleVersions > 1)) ||
-                    (step.util.activePassage().get("extraVersions") !== "")) {
-                    extraVersionsMsg = " as the first Bible";
-                    messageOnOrder = " first";
-                    thirdOption = "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(3)\">Change the display order of the Bibles you selected, or</a>"
-                }
+                var reOrderOption = ""
                 var testamentOfPassageSelected = "Old";
                 var theOtherTestament = "New";
                 if (bookOrder > 38) {
                     testamentOfPassageSelected = "New";
                     theOtherTestament = "Old";
                 }
-                var somethingIsWrong = false;
-                if ((testamentOfPassageSelected === "New") &&
-                    ((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
-                     (" ohb thot alep wlc mapm ".indexOf(masterVersionLowerCase) > -1))) {
-                    somethingIsWrong = true;
+                if (((numOfBibleVersions) && (numOfBibleVersions > 1)) ||
+                    (step.util.activePassage().get("extraVersions") !== "")) {
+                    extraVersionsMsg = " and make it first";
+                    messageOnOrder = " first";
+                    reOrderOption = "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(3)\">Change the order so a Bibles with " + testamentOfPassageSelected + " Testament is first, or</a>"
                 }
-                else if ((testamentOfPassageSelected === "Old") &&
-                    ((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
-                     (" sblgnt ".indexOf(masterVersionLowerCase) > -1))) {
-                    somethingIsWrong = true;
-                }
-                if (somethingIsWrong) {
+                if ( 
+                    ((testamentOfPassageSelected === "New") &&
+                     ((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
+                      (" ohb thot alep wlc mapm ".indexOf(masterVersionLowerCase) > -1))) ||
+
+                    ((testamentOfPassageSelected === "Old") &&
+                     ((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
+                      (" sblgnt ".indexOf(masterVersionLowerCase) > -1))) ) {
                     var alertMessage = "<br>The" + messageOnOrder + " Bible selected, " + masterVersion + ", only has the " +
-                        theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected. " +
+                        theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected." +
                         "<br><br>You can either:<ul>" +
-                        thirdOption +
-                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1) \">Select a " + theOtherTestament + " Testament passage, or</a>" +
-                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(2)\">Select another Bible which has " + testamentOfPassageSelected + " Testament" + 
+                        reOrderOption +
+                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(2)\">Add another Bible which has " + testamentOfPassageSelected + " Testament" + 
                         extraVersionsMsg + ".</a>" +
+                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1) \">Select a " + theOtherTestament + " Testament passage.</a>" +
                         "</ul>";
                     if (showAlert) step.util.showLongAlert(alertMessage, "Warning");
                     return alertMessage;

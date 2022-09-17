@@ -633,8 +633,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
         BookData bookData = getBookData(version, reference);
-        if (((RocketPassage) bookData.getKey()).store.isEmpty())
-            bookData = getBookData(version, "Gen.1");
+//        if (((RocketPassage) bookData.getKey()).store.isEmpty())
+//            bookData = getBookData(version, "Gen.1");
 
         return getTextForBookData(options, interlinearVersion, bookData, displayMode);
     }

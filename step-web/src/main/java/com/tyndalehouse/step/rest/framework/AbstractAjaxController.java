@@ -72,8 +72,7 @@ public abstract class AbstractAjaxController extends HttpServlet {
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
             LOGGER.warn(e.getMessage());
-            if (e.getMessage().indexOf("Unable to find a controller for") == -1)
-                    LOGGER.trace(e.getMessage(), e);
+            LOGGER.trace(e.getMessage(), e);
             returnVal = convertExceptionToJson(e);
         }
         return returnVal;

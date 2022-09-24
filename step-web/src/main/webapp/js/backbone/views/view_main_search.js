@@ -545,17 +545,23 @@ var MainSearchView = Backbone.View.extend({
         var refArgs = "";
         var searchArgs = "";
         var numOfBibleVersions = 0;
-        var firstVersionSelected = "";
+        var newMasterVersion = "";
+        var otherVersions = [];
+        var osisIds = [];
         for (var ii = 0; ii < options.length; ii++) {
               switch (options[ii].itemType) {
                 case VERSION:
                     args += "|" + options[ii].itemType + "=";
-                    args += encodeURIComponent(options[ii].item.shortInitials);
-                    if (numOfBibleVersions == 0) firstVersionSelected += encodeURIComponent(options[ii].item.shortInitials);
+                    var currentVersionInArg = options[ii].item.shortInitials;
+                    args += encodeURIComponent(currentVersionInArg);
+                    if (numOfBibleVersions == 0) newMasterVersion = currentVersionInArg;
+                    else if (otherVersions.indexOf() == -1) otherVersions.push(currentVersionInArg);
                     numOfBibleVersions ++;
                     break;
                 case REFERENCE:
-                    refArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.osisID);
+                    var currentReferenceInArg = options[ii].item.osisID;
+                    refArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(currentReferenceInArg);
+                    osisIds.push(currentReferenceInArg);
                     break;
                 case GREEK:
                 case GREEK_MEANINGS:
@@ -614,7 +620,7 @@ var MainSearchView = Backbone.View.extend({
                     break;
             }
         }
-
+        if (!step.util.checkFirstBibleHasPassage(newMasterVersion, null, osisIds)) return;
         //reset defaults:
         step.util.activePassage().save({pageNumber: 1, filter: null, strongHighlights: null}, {silent: true});
 		args = args.replace(/^\|/g, '');
@@ -625,8 +631,6 @@ var MainSearchView = Backbone.View.extend({
 			args += searchArgs;
 		}
         if (refArgs.length > 0) {
-            var newRef = PassageDisplayView.prototype.warnIfBibleDoesNotHaveTestament(refArgs.replace('reference=', ''), true, firstVersionSelected, numOfBibleVersions);
-            if (newRef !== "") refArgs = "reference=" + newRef;
             args += (args.length > 0) ? "|" : "";
             args += refArgs;
         }

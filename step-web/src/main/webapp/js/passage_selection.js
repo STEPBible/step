@@ -210,7 +210,7 @@ step.passageSelect = {
 		}
         else {
             columns = 1;
-						bookDescription = {gen:"", exod:"", lev:"", num:"", deut:"", josh:"", judg:"", ruth:"", "1sam":"", "2sam":"", "1kgs":"", "2kgs":"", "1chr":"", "2chr":"", ezra:"", neh:"", esth:"", job:"", ps:"", prov:"", eccl:"", song:"", isa:"", jer:"", lam:"", ezek:"", dan:"", hos:"", joel:"", amos:"", obad:"", jonah:"", mic:"", nah:"", hab:"", zeph:"", hag:"", zech:"", mal:"", matt:"", mark:"", luke:"", john:"", acts:"", rom:"", "1cor":"", "2cor":"", gal:"", eph:"", phil:"", col:"", "1thess":"", "2thess":"", "1tim":"", "2tim":"", titus:"", phlm:"", heb:"", jas:"", "1pet":"", "2pet":"", "1john":"", "2john":"", "3jo":"", jude:"", rev:""};
+			bookDescription = {gen:"", exod:"", lev:"", num:"", deut:"", josh:"", judg:"", ruth:"", "1sam":"", "2sam":"", "1kgs":"", "2kgs":"", "1chr":"", "2chr":"", ezra:"", neh:"", esth:"", job:"", ps:"", prov:"", eccl:"", song:"", isa:"", jer:"", lam:"", ezek:"", dan:"", hos:"", joel:"", amos:"", obad:"", jonah:"", mic:"", nah:"", hab:"", zeph:"", hag:"", zech:"", mal:"", matt:"", mark:"", luke:"", john:"", acts:"", rom:"", "1cor":"", "2cor":"", gal:"", eph:"", phil:"", col:"", "1thess":"", "2thess":"", "1tim":"", "2tim":"", titus:"", phlm:"", heb:"", jas:"", "1pet":"", "2pet":"", "1john":"", "2john":"", "3jo":"", jude:"", rev:""};
             $.ajaxSetup({async: false});
             $.getJSON("html/json/book_description.json", function(desc) {
                 for (key in desc) {
@@ -223,17 +223,14 @@ step.passageSelect = {
 		var typlicalBooksChapters = false;
 		var start = 0;
 		var end = 0;
-		var bookOnlyHasOneTestament = "";
 		if (typeof data === "string") {
 			if (data == "OTNT") end = 66;
 			else if (data === "OT") {
 				end = 39;
-				bookOnlyHasOneTestament = "OT";
 			}
 			else if (data === "NT") {
 				start = 39;
 				end = 66;
-				bookOnlyHasOneTestament = "NT";
 			}
 			typlicalBooksChapters = true;
 		}
@@ -512,7 +509,7 @@ step.passageSelect = {
             '<h4>' + headerMsg + '</h4>';
         if ((isChapter) && 
 			 ((userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible)) &&
-			 (step.util.bookOrderInOTorNT(bookOsisID) > -1) )
+			 (step.util.bookOrderInBible(bookOsisID) > -1) )
 			html +=
 				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
 					bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +

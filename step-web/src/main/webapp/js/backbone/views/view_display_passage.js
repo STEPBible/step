@@ -136,7 +136,7 @@ var PassageDisplayView = DisplayView.extend({
             }
             if (((languages[0].indexOf("en") == 0) ||
 				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
-				(step.util.bookOrderInOTorNT(reference) > -1)) {
+				(step.util.bookOrderInBible(reference) > -1)) {
                 var xgenObj = passageHtml.find('.xgen');
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
@@ -301,58 +301,39 @@ var PassageDisplayView = DisplayView.extend({
         _isPassageValid: function (passageHtml, reference) {
             if (passageHtml.find(":not(.xgen):first").length == 0) {
                 var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
-                message += "<br>" + this.warnIfBibleDoesNotHaveTestament(reference, false);
+                message += "<br>" + this.warnIfBibleDoesNotHaveTestament(reference);
                 var errorMessage = $("<span>").addClass("notApplicable").html(message);
                 this.$el.html(errorMessage);
                 return false;
             }
             return true;
         },
-        warnIfBibleDoesNotHaveTestament: function (reference, showAlert, firstBibleVersion, numOfBibleVersions) {
-            var bookOrder = step.util.bookOrderInOTorNT(reference.split(".")[0]);
+        warnIfBibleDoesNotHaveTestament: function (reference) {
+            var bookOrder = step.util.bookOrderInBible(reference);
             if (bookOrder > -1) {
-                var masterVersion = (firstBibleVersion) ?  firstBibleVersion : step.util.activePassage().get("masterVersion");
+                var masterVersion = step.util.activePassage().get("masterVersion");
                 var masterVersionLowerCase = masterVersion.toLowerCase();
                 var extraVersionsMsg = "";
-                var messageOnOrder = "";
-                var reOrderOption = ""
                 var testamentOfPassageSelected = "Old";
                 var theOtherTestament = "New";
-                var defaultPassage = "Matt.1";
                 if (bookOrder > 38) {
                     testamentOfPassageSelected = "New";
                     theOtherTestament = "Old";
-                    defaultPassage = "Gen.1";
-                }
-                if (((numOfBibleVersions) && (numOfBibleVersions > 1)) ||
-                    (step.util.activePassage().get("extraVersions") !== "")) {
-                    extraVersionsMsg = " and make it first";
-                    messageOnOrder = " first";
-                    reOrderOption = "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(3)\">Change the order so a Bibles with " + testamentOfPassageSelected + " Testament is first, or</a>"
                 }
                 if ( 
                     ((testamentOfPassageSelected === "New") &&
                      ((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
                       (" ohb thot alep wlc mapm ".indexOf(masterVersionLowerCase) > -1))) ||
-
                     ((testamentOfPassageSelected === "Old") &&
                      ((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
                       (" sblgnt ".indexOf(masterVersionLowerCase) > -1))) ) {
-                    var alertMessage = "<br>The" + messageOnOrder + " Bible selected, " + masterVersion + ", only has the " +
+                    var alertMessage = "<br>The Bible selected, " + masterVersion + ", only has the " +
                         theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected." +
                         "<br><br>You can either:<ul>" +
-                        reOrderOption +
                         "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(2)\">Add another Bible which has " + testamentOfPassageSelected + " Testament" + 
                         extraVersionsMsg + ".</a>" +
                         "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1)\">Select a " + theOtherTestament + " Testament passage.</a>" +
                         "</ul>";
-                    if (showAlert) {
-                        if ((firstBibleVersion) && (numOfBibleVersions)) alertMessage = "<br>The" + messageOnOrder + " Bible selected, " + masterVersion + ", only has the " +
-                            theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected. " +
-                            "To avoid further issues, " + defaultPassage + " will be displayed instead.<br><br><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1)\">Please re-select your passage.</a>";
-                        step.util.showLongAlert(alertMessage, "Warning");
-                        if ((firstBibleVersion) && (numOfBibleVersions)) return defaultPassage;
-                    }
                     return alertMessage;
                 }
             }

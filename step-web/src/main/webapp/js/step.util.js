@@ -47,35 +47,6 @@
          *            userFunction to call on success of the query
          */
         getSafe: function (url, args, userFunction, passageId, level, errorHandler) {
-			if (url === "rest/search/masterSearch/") {
-				console.log("Args: " + args[0]);
-				var splitArgs = args[0].split("%7C");
-				console.log("SArgs: " + splitArgs);
-				var versions = [];
-				var references = [];
-				var unexpectPattern = false;
-				for (var i = 0; i < splitArgs.length; i ++) {
-					parts = splitArgs[i].split("%3D");
-					if (parts.length !== 2) {
-						console.log("getsafe found unknown args with out the expected %3D (=) " + splitArgs[i]);
-						unexpectPattern = true;
-						continue;
-					}
-					if (parts[0] === "version") versions.push(parts[1]);
-					else if (parts[0] === "reference") {
-						var searchRegExp = /%20/g;
-						var referenceWithSpaceChar = parts[1].replace(searchRegExp, " ");
-						var referencesWithinReference = referenceWithSpaceChar.split(/[ ,;]/);
-						for (var j = 0; j < referencesWithinReference.length; j ++) {
-							references.push(referencesWithinReference[j]);
-						}
-					}
-					else unexpectPattern = true;
-				}
-				if (!unexpectPattern) {
-					
-				}
-			}
             //args is optional, so we test whether it is a function
             if ($.isFunction(args)) {
                 userFunction = args;
@@ -826,6 +797,7 @@ step.util = {
         return term.replace(/"/g, '\\\"');
     },
     swapMasterVersion: function (newMasterVersion, passageModel, silent) {
+		if (!step.util.checkFirstBibleHasPassage(newMasterVersion, passageModel)) return;
         var replacePattern = new RegExp("version=" + newMasterVersion, "ig");
         var originalArgs = passageModel.get("args");
         var newArgs = originalArgs.replace(replacePattern, "");
@@ -1789,13 +1761,13 @@ step.util = {
 		}
 		else if (userChoice >= 2) {
 			step.util.startPickBible();
-			if (userChoice == 3) {
-				setTimeout(
-					function() {
-						$("#order_button_bible_modal").click();
-					},
-				500);
-			}
+			//if (userChoice == 3) {
+			//	setTimeout(
+			//		function() {
+			//			$("#order_button_bible_modal").click();
+			//		},
+			//	500);
+			//}
 		}
 	},
   passageSelectionModal: function (activePassageNumber) {
@@ -1992,7 +1964,7 @@ step.util = {
         var tmpArray = reference.split(".");
         var osisID = tmpArray[0]; // get the string before the "." character
         var longBookName = osisID;
-		var posOfBook = step.searchSelect.idx2osisChapterJsword[osisID];
+		var posOfBook = step.util.bookOrderInBible(osisID);
         var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
 		if ((posOfBook > -1) &&
 			(typeof arrayOfTyplicalBooksChapters !== "undefined"))
@@ -2111,10 +2083,12 @@ step.util = {
                     '<a class="previousChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum - 1) + '\')">' +
                         '<i class="glyphicon glyphicon-arrow-left"></i>' +
                     '</a>';
-            if (chapterNum < step.passageSelect.osisChapterJsword[posOfBook][1]) chptSummary +=
-                    '<a class="nextChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum + 1) + '\')">' +
+            if ((posOfBook > -1) &&
+				(chapterNum < step.passageSelect.osisChapterJsword[posOfBook][1]))
+					chptSummary +=
+						'<a class="nextChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum + 1) + '\')">' +
                         '<i class="glyphicon glyphicon-arrow-right"></i>' +
-                    '</a>';
+						'</a>';
             chptSummary += 
                 '</span>';
 
@@ -3372,7 +3346,7 @@ step.util = {
 					if (reference !== "") {
 						var refParts = reference.split(".");
 						var book = refParts[0];
-						var isNewTestament = step.searchSelect.idx2osisChapterJsword[book] > 38;
+						var isNewTestament = step.util.bookOrderInBible(book) > 38;
 						if (! ( (version === "LXX") ||
 								((strongFirstChar === "h") && (isNewTestament)) ||
 								((strongFirstChar === "g") && (!isNewTestament)) ||
@@ -3438,101 +3412,144 @@ step.util = {
         $.ajaxSetup({async: true});
 		return resultJson;
 	},
-	bookOrderInOTorNT: function (reference) {
+	bookOrderInBible: function (reference) {
+		var idx2osisChapterJsword = {
+			"gen": 0,
+			"exo": 1, "exod": 1,
+			"lev": 2,
+			"num": 3,
+			"deu": 4, "deut": 4,
+			"jos": 5, "josh": 5,
+			"judg": 6,
+			"rut": 7, "ruth": 7,
+			"1sa": 8, "1sam": 8,
+			"2sa": 9, "2sam": 9,
+			"1ki": 10, "1kgs": 10,
+			"2ki": 11, "2kgs": 11,
+			"1ch": 12, "1chr": 12,
+			"2ch": 13, "2chr": 13,
+			"ezr": 14, "ezra": 14,
+			"neh": 15,
+			"est": 16, "esth": 16,
+			"job": 17,
+			"psa": 18, "ps": 18,
+			"pro": 19, "prov": 19,
+			"ecc": 20, "eccl": 20,
+			"song": 21,
+			"isa": 22,
+			"jer": 23,
+			"lam": 24,
+			"eze": 25, "ezek": 25,
+			"dan": 26,
+			"hos": 27,
+			"joe": 28, "joel": 28,
+			"amo": 29, "amos": 29,
+			"obd": 30, "obad": 30,
+			"jon": 31, "jonah": 31,
+			"mic": 32,
+			"nah": 33,
+			"hab": 34,
+			"zep": 35, "zeph": 35,
+			"hag": 36,
+			"zec": 37, "zech": 37,
+			"mal": 38,
+			"mat": 39, "matt": 39,
+			"mar": 40, "mark": 40,
+			"luk": 41, "luke": 41,
+			"joh": 42, "john": 42,
+			"act": 43, "acts": 43,
+			"rom": 44,
+			"1cor": 45,
+			"2cor": 46,
+			"gal": 47,
+			"eph": 48,
+			"phili": 49, "phil": 49,
+			"col": 50,
+			"1th": 51, "1thess": 51,
+			"2th": 52, "2thess": 52,
+			"1ti": 53, "1tim": 53,
+			"2ti": 54, "2tim": 54,
+			"tit": 55, "titus": 55,
+			"phile": 56, "phlm": 56,
+			"heb": 57,
+			"jam": 58, "jas": 58,
+			"1pe": 59, "1pet": 59,
+			"2pe": 60, "2pet": 60,
+			"1jo": 61, "1john": 61,
+			"2jo": 62, "2john": 62,
+			"3jo": 63, "3john": 63,
+			"jude": 64,
+			"rev": 65
+		};
 		var tmpArray = reference.split(".");
-		var bookID = tmpArray[0]; // get the string before the "." character
-		for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {
-			var currentOsisID = (step.passageSelect.osisChapterJsword[i].length === 4) ? step.passageSelect.osisChapterJsword[i][3] : step.passageSelect.osisChapterJsword[i][0];
-			if (bookID === currentOsisID) return i;
-		}
+		if (typeof tmpArray[0] !== "string") return -1;
+		var bookName = tmpArray[0].toLowerCase(); // get the string before the "." character
+		var bookPosition = idx2osisChapterJsword[bookName];
+		if (typeof bookPosition === "number") return bookPosition;
 		return -1;
 	},
-	test: function(strong, morph, ref, version, expectStrongNum) {
-		if (" ESV ABEn KJV NASB2020 NIV ABGk LXX SBLG CCB CUn CUns ChiNCVs ChiNCVt OHB THOT SpaRV1909 ".indexOf(version) == -1)
-			version = "ESV";
-        var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strong, morph, ref, version);
-		$.ajaxSetup({async: false});
-		if ((expectStrongNum) && (expectStrongNum !== "") && (vocabMorphFromJson.vocabInfos[0].strongNumber !== expectStrongNum)) {
-			console.log("unexpected Strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " expected: " + expectStrongNum + " found: " + vocabMorphFromJson.vocabInfos[0].strongNumber);			
+	getTestamentAndPassagesOfTheReferences: function(osisIds) {
+		var hasNT = false;
+		var hasOT = false;
+		var ntPassages = [];
+		var otPassages = [];
+		for (var i = 0; i < osisIds.length; i ++) {
+			var bookOrder = step.util.bookOrderInBible(osisIds[i]);
+			if (bookOrder > 38) {
+				ntPassages.push(osisIds[i]);
+				hasNT = true;
+			}
+			else if (bookOrder > -1) {
+				otPassages.push(osisIds[i]);
+				hasOT = true;
+			}
 		}
-		if (typeof vocabMorphFromJson.vocabInfos.length !== "number") {
-			console.log("vocabMorphFromJson.vocabInfo length is not there strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
-			return;
+		return [hasNT, hasOT, ntPassages, otPassages];
+	},
+	checkBibleHasTheTestament: function(versionToCheck, hasNTPassage, hasOTPassage) {
+		versionToCheck = versionToCheck.toLowerCase();
+		if ((hasNTPassage) && 
+			((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionToCheck) > -1) ||
+			(" ohb thot alep wlc mapm ".indexOf(versionToCheck) > -1))) {
+			return false;
 		}
-        $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, ""], function (data) {
-			if ((!data.vocabInfos) || (typeof data.vocabInfos.length !== "number")) {
-				console.log("data.vocabInfo length is not there strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
-				return;
+		else if ((hasOTPassage) && 
+			((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(versionToCheck) > -1) ||
+			(" sblgnt ".indexOf(versionToCheck) > -1))) {
+			return false;
+		}
+		return true;
+	},
+	checkFirstBibleHasPassage: function(newMasterVersion, callerPassagesModel, osisIDs) {
+		if (callerPassagesModel != null)
+			osisIDs = callerPassagesModel.attributes.osisId.split(/[ ,]/);
+		var passageInfomation = step.util.getTestamentAndPassagesOfTheReferences(osisIDs);
+		var hasNTinReference = passageInfomation[0];
+		var hasOTinReference = passageInfomation[1];
+		var ntPassages = passageInfomation[2];
+		var otPassages = passageInfomation[3];
+		if (!step.util.checkBibleHasTheTestament(newMasterVersion, hasNTinReference, hasOTinReference)) {
+			var testamentAvailable = "";
+			var missingTestament = "";
+			var passagesNotAvailable = "";
+			if (hasNTinReference) {
+				testamentAvailable = "Old ";
+				missingTestament = "New "
+				passagesNotAvailable = ntPassages.join(", ");
 			}
-			if ((data.vocabInfos.length != vocabMorphFromJson.vocabInfos.length) &&
-				(data.vocabInfos.length > 0)) {
-				console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
+			if (hasOTinReference) {
+				testamentAvailable += "New ";
+				missingTestament += "Old "
+				passagesNotAvailable = otPassages.join(", ");
 			}
-			for (var i = 0; i < data.vocabInfos.length; i ++) {
-				for (var key in data.vocabInfos[i]) {
-					if ((typeof vocabMorphFromJson === "undefined") || (vocabMorphFromJson == null)) {
-						console.log("vocabinfo not exist:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-					}
-					if (key === "relatedNos") {
-						if (typeof vocabMorphFromJson.vocabInfos[i]["relatedNos"] === "string")
-							vocabMorphFromJson.vocabInfos[i]["relatedNos"] = JSON.parse(vocabMorphFromJson.vocabInfos[i]["relatedNos"].replaceAll("'", '"'));
-						if (! _.isEqual(data.vocabInfos[i]["relatedNos"], vocabMorphFromJson.vocabInfos[i]["relatedNos"])) {
-							console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-						}
-					}
-					else if (key === "_stepDetailLexicalTag") {
-						var tmp = data.vocabInfos[i][key];
-						if (typeof tmp === "string") {
-							tmp = JSON.parse(tmp);
-						}
-						if (! _.isEqual(tmp, vocabMorphFromJson.vocabInfos[i][key])) {
-							console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-						}
-					}
-					else if ((data.vocabInfos[i][key] !== vocabMorphFromJson.vocabInfos[i][key]) &&
-						(data.vocabInfos[i][key] !== "")) {
-						console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-					}
-				}	
-			}
-			if (data.morphInfos.length !== vocabMorphFromJson.morphInfos.length) {
-				console.log("length does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-			}
-			for (var i = 0; i < data.morphInfos.length; i ++) {
-				for (var key in data.morphInfos[i]) {
-					if (data.morphInfos[i][key] !== vocabMorphFromJson.morphInfos[i][key]) {
-						console.log("does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-					}
-				}
-			}
-        }).error(function() {
-            console.log("getsafe failed strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
-        });
-    },
-	test1: function(fileName, version, start) {
-
-		$.getJSON("/html/lexicon/" + fileName + ".json", function(jsonVar) {
-			var end = jsonVar.length;
-			if (end > start + 5000) end = start + 5000;
-			for (var i = start; i < end; i ++) {
-				var words = jsonVar[i].split(",");
-				if (words[0] === "") continue;
-				var temp = words[1].split(/[()]/);
-				if (temp.length > 1) {
-					if ((version !== "OHB")	&& (version !== "THOT")) words[1] = words[1].split(".")[0] + "." + temp[1];
-					else words[1] = temp[0];
-				}
-				var strongWithoutAugment = words[0];
-				if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
-					strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
-				}                                                                     // remove the last character if it is a letter
-				
-				var expectStrongNum = (words.length == 2) ? words[0] : "";
-				var morph = (words.length > 2) ? morph = words[2] : "";
-				if (words.length == 4) version = words[3];
-				step.util.test(strongWithoutAugment, morph, words[1], version, expectStrongNum);
-			}
-		});
+			var alertMessage = "<br>We cannot process your request to display " + newMasterVersion + " as the first Bible.<br>" +
+				"<br>The " + newMasterVersion + " Bible only has the " + testamentAvailable + "Testament, " +
+				"it does not have the passage (" + passagesNotAvailable + ") which is in the " + missingTestament + " Testment. " + 
+				"<br><br>If you need both New and Old Testament passages, please select a Bible (e.g.: ESV) with both testaments as the first Bible.";
+			step.util.showLongAlert(alertMessage, "Warning");
+			return false;
+		}
+		return true;
 	}
 }
 ;

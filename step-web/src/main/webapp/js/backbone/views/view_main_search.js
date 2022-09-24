@@ -620,7 +620,7 @@ var MainSearchView = Backbone.View.extend({
                     break;
             }
         }
-        if (!step.util.checkFirstBibleHasPassage(newMasterVersion, null, osisIds)) return;
+        if (!step.util.checkFirstBibleHasPassage(newMasterVersion, osisIds, otherVersions)) return;
         //reset defaults:
         step.util.activePassage().save({pageNumber: 1, filter: null, strongHighlights: null}, {silent: true});
 		args = args.replace(/^\|/g, '');

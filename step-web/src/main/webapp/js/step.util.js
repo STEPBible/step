@@ -797,7 +797,6 @@ step.util = {
         return term.replace(/"/g, '\\\"');
     },
     swapMasterVersion: function (newMasterVersion, passageModel, silent) {
-		if (!step.util.checkFirstBibleHasPassage(newMasterVersion, passageModel)) return;
         var replacePattern = new RegExp("version=" + newMasterVersion, "ig");
         var originalArgs = passageModel.get("args");
         var newArgs = originalArgs.replace(replacePattern, "");
@@ -814,7 +813,7 @@ step.util = {
 
         var masterVersion = allVersions[0];
         var otherVersions = allVersions.slice(1).join(",");
-
+		if (!step.util.checkFirstBibleHasPassageBeforeSwap(newMasterVersion, passageModel, otherVersions)) return;
         passageModel.save({ args: newArgs, masterVersion: masterVersion, otherVersions: otherVersions }, { silent: silent });
     },
     ui: {
@@ -3520,9 +3519,12 @@ step.util = {
 		}
 		return true;
 	},
-	checkFirstBibleHasPassage: function(newMasterVersion, callerPassagesModel, osisIDs) {
-		if (callerPassagesModel != null)
-			osisIDs = callerPassagesModel.attributes.osisId.split(/[ ,]/);
+	checkFirstBibleHasPassageBeforeSwap: function(newMasterVersion, callerPassagesModel, otherVersions) {
+		if (callerPassagesModel == null) return true; // cannot verify
+		osisIDs = callerPassagesModel.attributes.osisId.split(/[ ,]/);
+		return checkFirstBibleHasPassage(newMasterVersion, osisIDs, otherVersions);
+	},
+	checkFirstBibleHasPassage: function(newMasterVersion, osisIDs, otherVersions) {
 		var passageInfomation = step.util.getTestamentAndPassagesOfTheReferences(osisIDs);
 		var hasNTinReference = passageInfomation[0];
 		var hasOTinReference = passageInfomation[1];

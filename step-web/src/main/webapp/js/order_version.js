@@ -36,7 +36,7 @@ function saveVersionOrder() {
     if (typeof afterSort === "undefined") afterSort = beforeSort;
     var allVersions = "version=";
     var newMasterVersion = "";
-    // var otherVersions = [];
+    var otherVersions = [];
     var osisIds = [];
     for (var i = 0; i < afterSort.length; i++) {
         if (i > 0) allVersions += '|version=';
@@ -45,7 +45,7 @@ function saveVersionOrder() {
         if (pos > 1) curVersion = curVersion.substr(0, pos);
         allVersions += curVersion;
         if (i == 0) newMasterVersion = curVersion;
-        // else if (otherVersions.indexOf() == -1) otherVersions.push(curVersion);
+        else if (otherVersions.indexOf() == -1) otherVersions.push(curVersion);
     }
     var activePassageData = step.util.activePassage().get("searchTokens") || [];
     var allReferences = '|reference=';
@@ -60,7 +60,7 @@ function saveVersionOrder() {
     }
     var url = allVersions + allReferences;
     step.util.closeModal("orderVersionModal");
-    if (!step.util.checkFirstBibleHasPassage(newMasterVersion, null, osisIds)) return;
+    if (!step.util.checkFirstBibleHasPassage(newMasterVersion, osisIds, otherVersions)) return;
     console.log("navigateSearch from order_version.html: " + url)
     step.router.navigateSearch(url, true, true);
 }

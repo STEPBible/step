@@ -632,10 +632,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                                    final InterlinearMode displayMode) {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
-        BookData bookData = getBookData(version, reference);
-//        if (((RocketPassage) bookData.getKey()).store.isEmpty())
-//            bookData = getBookData(version, "Gen.1");
-
+        final BookData bookData = getBookData(version, reference);
         return getTextForBookData(options, interlinearVersion, bookData, displayMode);
     }
 

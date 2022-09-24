@@ -212,7 +212,7 @@ var QuickLexicon = Backbone.View.extend({
                 ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > pointerPosition)) || // Overlap with mouse pointer
                 ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < pointerPosition)) ) {  // Overlap with mouse pointer
             lexicon.remove();
-            if (isNotes) {
+            if (headerText === "Notes") {
                 if ($(lexicon).find('strong').text() === '▼')
                     $(lexicon).find('strong').text("");
             }

@@ -47,7 +47,35 @@
          *            userFunction to call on success of the query
          */
         getSafe: function (url, args, userFunction, passageId, level, errorHandler) {
-
+			if (url === "rest/search/masterSearch/") {
+				console.log("Args: " + args[0]);
+				var splitArgs = args[0].split("%7C");
+				console.log("SArgs: " + splitArgs);
+				var versions = [];
+				var references = [];
+				var unexpectPattern = false;
+				for (var i = 0; i < splitArgs.length; i ++) {
+					parts = splitArgs[i].split("%3D");
+					if (parts.length !== 2) {
+						console.log("getsafe found unknown args with out the expected %3D (=) " + splitArgs[i]);
+						unexpectPattern = true;
+						continue;
+					}
+					if (parts[0] === "version") versions.push(parts[1]);
+					else if (parts[0] === "reference") {
+						var searchRegExp = /%20/g;
+						var referenceWithSpaceChar = parts[1].replace(searchRegExp, " ");
+						var referencesWithinReference = referenceWithSpaceChar.split(/[ ,;]/);
+						for (var j = 0; j < referencesWithinReference.length; j ++) {
+							references.push(referencesWithinReference[j]);
+						}
+					}
+					else unexpectPattern = true;
+				}
+				if (!unexpectPattern) {
+					
+				}
+			}
             //args is optional, so we test whether it is a function
             if ($.isFunction(args)) {
                 userFunction = args;
@@ -3409,6 +3437,15 @@ step.util = {
 		}
         $.ajaxSetup({async: true});
 		return resultJson;
+	},
+	bookOrderInOTorNT: function (reference) {
+		var tmpArray = reference.split(".");
+		var bookID = tmpArray[0]; // get the string before the "." character
+		for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {
+			var currentOsisID = (step.passageSelect.osisChapterJsword[i].length === 4) ? step.passageSelect.osisChapterJsword[i][3] : step.passageSelect.osisChapterJsword[i][0];
+			if (bookID === currentOsisID) return i;
+		}
+		return -1;
 	},
 	test: function(strong, morph, ref, version, expectStrongNum) {
 		if (" ESV ABEn KJV NASB2020 NIV ABGk LXX SBLG CCB CUn CUns ChiNCVs ChiNCVt OHB THOT SpaRV1909 ".indexOf(version) == -1)

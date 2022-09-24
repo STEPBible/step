@@ -512,7 +512,7 @@ step.passageSelect = {
             '<h4>' + headerMsg + '</h4>';
         if ((isChapter) && 
 			 ((userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible)) &&
-			 (PassageDisplayView.prototype.bookOrderInOTorNT(bookOsisID) > -1) )
+			 (step.util.bookOrderInOTorNT(bookOsisID) > -1) )
 			html +=
 				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
 					bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +

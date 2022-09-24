@@ -136,7 +136,7 @@ var PassageDisplayView = DisplayView.extend({
             }
             if (((languages[0].indexOf("en") == 0) ||
 				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
-				(this.bookOrderInOTorNT(reference) > -1)) {
+				(step.util.bookOrderInOTorNT(reference) > -1)) {
                 var xgenObj = passageHtml.find('.xgen');
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
@@ -309,7 +309,7 @@ var PassageDisplayView = DisplayView.extend({
             return true;
         },
         warnIfBibleDoesNotHaveTestament: function (reference, showAlert, firstBibleVersion, numOfBibleVersions) {
-            var bookOrder = this.bookOrderInOTorNT(reference.split(".")[0]);
+            var bookOrder = step.util.bookOrderInOTorNT(reference.split(".")[0]);
             if (bookOrder > -1) {
                 var masterVersion = (firstBibleVersion) ?  firstBibleVersion : step.util.activePassage().get("masterVersion");
                 var masterVersionLowerCase = masterVersion.toLowerCase();
@@ -358,16 +358,6 @@ var PassageDisplayView = DisplayView.extend({
             }
             return "";
         },
-        bookOrderInOTorNT: function (reference) {
-	        var tmpArray = reference.split(".");
-			var bookID = tmpArray[0]; // get the string before the "." character
-			for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {
-				var currentOsisID = (step.passageSelect.osisChapterJsword[i].length === 4) ? step.passageSelect.osisChapterJsword[i][3] : step.passageSelect.osisChapterJsword[i][0];
-				if (bookID === currentOsisID) return i;
-			}
-            return -1;
-        },
-		
         /**
          *
          * @param passageContent the content that we are processing

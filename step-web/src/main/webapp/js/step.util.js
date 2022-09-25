@@ -1783,7 +1783,7 @@ step.util = {
 										if (step.readyToShowPassageSelect) {
 											step.readyToShowPassageSelect = false; // Stop it from triggering more clicks
 											console.log("click on select reference");
-											$(".select-reference").click();
+											$(".passageContainer.active").find(".select-reference").click();
 										}
 									},
 								150);

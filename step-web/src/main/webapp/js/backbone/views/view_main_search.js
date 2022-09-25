@@ -523,10 +523,9 @@ var MainSearchView = Backbone.View.extend({
     _removeVersion: function (data) {
         //find the element
         var versions = this.masterSearch.select2("data");
-        for (var i = 0; i < versions.length; i++) {
+        for (var i = versions.length - 1; i > -1; i--) {
             if (versions[i].item.initials == data.value.initials || versions.shortInitials == data.value.initials) {
                 versions.splice(i, 1);
-                i--;
             }
         }
         this._setData(versions);
@@ -726,11 +725,9 @@ var MainSearchView = Backbone.View.extend({
             itemType = [itemType];
         }
 
-        for (var i = 0; i < this.specificContext.length; i++) {
+        for (var i = this.specificContext.length - 1; i > -1; i--) {
             if (itemType.indexOf(this.specificContext[i].itemType) != -1) {
                 this.specificContext.splice(i, 1);
-                //i will be incremented, so keep it in sync with for loop increment
-                i--;
             }
         }
     },

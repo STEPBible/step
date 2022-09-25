@@ -307,19 +307,27 @@ var PickBibleView = Backbone.View.extend({
 					currentBiblesOpened.push(currentTokens[i].item.shortInitials);
 			}
 		}
-        for (i = 0; i < versionsSelected.length; i ++) {
-            if ((versionsSelected[i] !== undefined) && 
-				((!calledFromInitialize) || (currentBiblesOpened.indexOf(versionsSelected[i]) > -1))) {
-				numberOfVersionsSelected ++;
-			}
-			else { // Not a Bible which is open. Maybe user selected a Bible without clicking OK and then left the modal (e.g.: without clicking on the close button).
-				if ((versionsSelected[i] !== undefined) && (calledFromInitialize)) {
-					console.log("Remove " + versionsSelected[i] + " because it is not open");
-					Backbone.Events.trigger("search:remove", { value: step.keyedVersions[versionsSelected[i]], itemType: VERSION});
-				}
-				versionsSelected.splice(i, 1);
-				i --;
-			}
+        for (i = versionsSelected.length - 1; i > -1 ; i --) {
+            if (versionsSelected[i] !== undefined) {
+                if (((!calledFromInitialize) || (currentBiblesOpened.indexOf(versionsSelected[i]) > -1))) {
+                    numberOfVersionsSelected ++;
+                }
+                else { // Not a Bible which is open. Maybe user selected a Bible without clicking OK and then left the modal (e.g.: without clicking on the close button).
+                    if (calledFromInitialize) {
+                        Backbone.Events.trigger("search:remove", { value: step.keyedVersions[versionsSelected[i]], itemType: VERSION});
+                        console.log("Removed " + versionsSelected[i] + " because it is not open");
+                    }
+                    versionsSelected.splice(i, 1);
+                }
+            }
+        }
+        for (i = 0; i < currentBiblesOpened.length; i ++) {
+            if (versionsSelected.indexOf(currentBiblesOpened[i]) == -1) {
+                versionsSelected.push(currentBiblesOpened[i]);
+                numberOfVersionsSelected ++;
+                Backbone.Events.trigger("search:add", { value: step.keyedVersions[currentBiblesOpened[i]], itemType: VERSION});
+                console.log("Added " + currentBiblesOpened[i] + " because it is open");
+            }
         }
 		var addedToSelectedGroup = [];
         if (filter == 'BIBLE') {

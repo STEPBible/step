@@ -115,6 +115,7 @@
                     if (userFunction) {
                         userFunction(data);
                     }
+					step.readyToShowPassageSelect = true;
                 }
             }).error(function() {
                 changeBaseURL();
@@ -812,7 +813,7 @@ step.util = {
         }
 
         var masterVersion = allVersions[0];
-        var otherVersions = allVersions.slice(1).join(",");
+        var otherVersions = allVersions.slice(1);
 		if (!step.util.checkFirstBibleHasPassageBeforeSwap(newMasterVersion, passageModel, otherVersions)) return;
         passageModel.save({ args: newArgs, masterVersion: masterVersion, otherVersions: otherVersions }, { silent: silent });
     },
@@ -1753,12 +1754,12 @@ step.util = {
 			'</script>' +
 		'</div>').modal("show");
     },
-	correctNoPassageInSelectedBible: function (userChoice) {
+	correctNoPassageInSelectedBible: function (userChoice, queryString) {
 		$("#showLongAlertModal").click();
 		if (userChoice == 1) {
 			step.util.passageSelectionModal( step.util.activePassageId() );
 		}
-		else if (userChoice >= 2) {
+		else if (userChoice === 2) {
 			step.util.startPickBible();
 			//if (userChoice == 3) {
 			//	setTimeout(
@@ -1767,6 +1768,32 @@ step.util = {
 			//		},
 			//	500);
 			//}
+		}
+		else if (userChoice === 4) {
+			step.router.navigateSearch(queryString, true, true);
+			step.readyToShowPassageSelect = false;
+			for (var i = 0; i < 30; i++) {
+				if (!step.readyToShowPassageSelect) {
+					setTimeout(
+						function() {
+							if (step.readyToShowPassageSelect) {
+								i = 999; // Stop the loop
+								setTimeout(
+									function() {
+										if (step.readyToShowPassageSelect) {
+											step.readyToShowPassageSelect = false; // Stop it from triggering more clicks
+											console.log("click on select reference");
+											$(".select-reference").click();
+										}
+									},
+								150);
+							}
+							else console.log("not ready");
+						},
+					350);
+				}
+			}
+			step.readyToShowPassageSelect = false;
 		}
 	},
   passageSelectionModal: function (activePassageNumber) {
@@ -3522,7 +3549,7 @@ step.util = {
 	checkFirstBibleHasPassageBeforeSwap: function(newMasterVersion, callerPassagesModel, otherVersions) {
 		if (callerPassagesModel == null) return true; // cannot verify
 		osisIDs = callerPassagesModel.attributes.osisId.split(/[ ,]/);
-		return checkFirstBibleHasPassage(newMasterVersion, osisIDs, otherVersions);
+		return step.util.checkFirstBibleHasPassage(newMasterVersion, osisIDs, otherVersions);
 	},
 	checkFirstBibleHasPassage: function(newMasterVersion, osisIDs, otherVersions) {
 		var passageInfomation = step.util.getTestamentAndPassagesOfTheReferences(osisIDs);
@@ -3534,20 +3561,33 @@ step.util = {
 			var testamentAvailable = "";
 			var missingTestament = "";
 			var passagesNotAvailable = "";
+			var firstPassageInBible = "";
 			if (hasNTinReference) {
 				testamentAvailable = "Old ";
 				missingTestament = "New "
 				passagesNotAvailable = ntPassages.join(", ");
+				firstPassageInBible = "Gen.1";
 			}
 			if (hasOTinReference) {
 				testamentAvailable += "New ";
 				missingTestament += "Old "
 				passagesNotAvailable = otPassages.join(", ");
+				firstPassageInBible = "Matt.1";
 			}
+			var queryStringForFirstBookInAvailableTestament = "version=" + newMasterVersion;
+			for (var i = 0; i < otherVersions.length; i++) {
+				queryStringForFirstBookInAvailableTestament += "|version=" + otherVersions[i];
+			}
+			queryStringForFirstBookInAvailableTestament += "|reference=" + firstPassageInBible;
 			var alertMessage = "<br>We cannot process your request to display " + newMasterVersion + " as the first Bible.<br>" +
 				"<br>The " + newMasterVersion + " Bible only has the " + testamentAvailable + "Testament, " +
 				"it does not have the passage (" + passagesNotAvailable + ") which is in the " + missingTestament + " Testment. " + 
-				"<br><br>If you need both New and Old Testament passages, please select a Bible (e.g.: ESV) with both testaments as the first Bible.";
+				"<br><br>If you need both New and Old Testament passages, please select a Bible (e.g.: ESV) with both testaments as the first Bible.<br>" +
+				"<br>Below are some possible options:<br><ul>" +
+				"<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(4,'" +
+				 queryStringForFirstBookInAvailableTestament +
+				 "')\">Go to " + firstPassageInBible + " in " + newMasterVersion + " and then select my passage.</a>" +
+				 "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(5,'')\">Close this window to stay with your current passage(s) and Bible(s).</a>";
 			step.util.showLongAlert(alertMessage, "Warning");
 			return false;
 		}

@@ -1232,15 +1232,14 @@ step.searchSelect = {
 						detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
 						frequency = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, detailLexicalJSON);
 						curStrong += ", ...";
-						searchExplaination += detailLexicalJSON.length;
 						if ((data[i].suggestion.type === "man") || (data[i].suggestion.type === "woman") || 
 							(data[i].suggestion.type === "king") || (data[i].suggestion.type === "queen") ||
 							(data[i].suggestion.type === "judge") || (data[i].suggestion.type === "place") ||
 							(data[i].suggestion.type === "group")) {
-							searchExplaination += " names of the same " + data[i].suggestion.type;
+							searchExplaination += data[i].suggestion.type + " with " + detailLexicalJSON.length + " names";
 						}
 						else {
-							searchExplaination += " words with the same meaning";
+							searchExplaination += data[i].suggestion.type + " with " + detailLexicalJSON.length + " synonyms"
 						}
 						text2Display = searchExplaination + ": " + gloss + " ";
 					}
@@ -1297,6 +1296,7 @@ step.searchSelect = {
 		var needLineBreak = "";
 		if (existingSuggestionsToDisplay !== "") {
 			brCount = (existingSuggestionsToDisplay.match(/<br>/g) || []).length;
+			brCount += (existingSuggestionsToDisplay.match(/<ol>/g) || []).length;
 			if ((brCount < suggestionsToDisplay + 1) || (limitType !== "")) needLineBreak = "<br>";
 		}
 		if (needIndent) needLineBreak += "&nbsp;&nbsp;&nbsp;";
@@ -1343,12 +1343,14 @@ step.searchSelect = {
 	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalJSON, count) {
 		if (detailLexicalJSON === null) return "";
 		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>";
+		result += "<ol>";
 		var allStrongs = [];
 		detailLexicalJSON.forEach(function (item, index) {
 			if (allStrongs.includes(item[1])) return;
 			allStrongs.push(item[1]);
-			result += "<br class='detailLex" + count + "'>";
+//			result += "<br class='detailLex" + count + "'>";
 			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			result += "<li>";
 			if (item[1] === strongNum) {
 				result += "&nbsp;&nbsp;&nbsp;<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px'></span>";
 				spaceWithoutLabel = "&nbsp;&nbsp;";
@@ -1366,6 +1368,7 @@ step.searchSelect = {
 				'<span class="srchFrequency"> ~' + item[3] + ' x</span>' +
 				"</a>";
 		});
+		result += "</ol>";
 		return result;
 	},
 	_handleClickOnTriangle: function(ev){

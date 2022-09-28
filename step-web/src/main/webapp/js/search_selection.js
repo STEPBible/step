@@ -1190,7 +1190,10 @@ step.searchSelect = {
 				var strongWithoutAugment = (isNaN(firstStrongNum.substr(-1))) ? firstStrongNum.substring(0, firstStrongNum.length-1) : firstStrongNum;
 				var suggestionType = data[0].itemType;
 				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
-				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (all forms)' +
+				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (all forms of ' +
+					'<i>' + data[0].suggestion.stepTransliteration + ' </i>' +
+					'<span class="srchOriginal_Language"> - ' + data[0].suggestion.matchingForm + ' </span>' +
+					'<span>' + strongWithoutAugment + '*)</span>' +
 					//'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
 					//'<span class="srchDash">- </span>' +
 					//'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
@@ -1224,10 +1227,22 @@ step.searchSelect = {
 					var detailLexicalJSON = null;
 					var frequency = data[i].suggestion.popularity;
 					var curStrong = data[i].suggestion.strongNumber;
+					var searchExplaination = "";
 					if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
 						detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
 						frequency = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, detailLexicalJSON);
 						curStrong += ", ...";
+						searchExplaination += detailLexicalJSON.length;
+						if ((data[i].suggestion.type === "man") || (data[i].suggestion.type === "woman") || 
+							(data[i].suggestion.type === "king") || (data[i].suggestion.type === "queen") ||
+							(data[i].suggestion.type === "judge") || (data[i].suggestion.type === "place") ||
+							(data[i].suggestion.type === "group")) {
+							searchExplaination += " names of the same " + data[i].suggestion.type;
+						}
+						else {
+							searchExplaination += " words with the same meaning";
+						}
+						text2Display = searchExplaination + ": " + gloss + " ";
 					}
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
@@ -1236,12 +1251,17 @@ step.searchSelect = {
 							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					}
-					else text2Display += ' <span class="srchParathesis">(all forms)</span>' +
-							//'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
+					else text2Display += //'<i>' + data[i].suggestion.stepTransliteration + '</i>' +
 							//'<span class="srchDash"> - </span>' + 
 							//'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 							//'<span class="srchSpaceStrong"> </span>' +
-							//'<span class="srchStrong_number">' + curStrong + '</span>' +
+//							'<span> ' + curStrong + '</span>' +
+							//'<span class="srchParathesis">)</span>' +
+							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
+							'<span class="srchDash"> - </span>' + 
+							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
+							'<span class="srchSpaceStrong"> </span>' +
+							'<span class="srchStrong_number">' + curStrong + '</span>' +
 							//'<span class="srchParathesis">)</span>' +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 

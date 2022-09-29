@@ -731,7 +731,6 @@ step.searchSelect = {
 			arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
 		}
 		else end = data.length;
-		var additionalBooks = false;
 		this.groupsOther = [{groupName: 'Other', show: false, books: [], bookOrderPos: []}];
 		this.bookOrder = [];
 		this.idx2BookOrder = {};
@@ -1247,7 +1246,14 @@ step.searchSelect = {
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
-						text2Display += '<span class="srchStrong_number"> (' + curStrong + ')</span>' +
+						text2Display += 
+							'<span class="srchParathesis">(</span>' +
+							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
+//						'<span class="srchDash"> - </span>' + 
+//						'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
+							'<span class="srchSpaceStrong"> </span>' +
+							'<span class="srchStrong_number">' + curStrong + '</span>' +
+							'<span class="srchParathesis">)</span>' +
 							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					}
@@ -1348,20 +1354,21 @@ step.searchSelect = {
 
 	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalJSON, count) {
 		if (detailLexicalJSON === null) return "";
-		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>";
-		result += "<ol class='detailLex" + count + "' style='margin-bottom:0px;line-height:14px'>";
+		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>" +
+			"<ol class='detailLex" + count + "' style='margin-bottom:0px;line-height:14px'>";
 		var allStrongs = [];
+		var resultFirstLine = "";
+		var resultSubsequentLines = "";
 		detailLexicalJSON.forEach(function (item, index) {
 			if (allStrongs.includes(item[1])) return;
 			allStrongs.push(item[1]);
-//			result += "<br class='detailLex" + count + "'>";
-			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-			result += "<li>";
+			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
+			var tmpResult =  "<li>";
 			if (item[1] === strongNum) {
-				result += "&nbsp;&nbsp;&nbsp;<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px'></span>";
+				tmpResult += "<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px'></span>";
 				spaceWithoutLabel = "";
 			}
-			result += '<a class="detailLex' + count + '" style="padding:0px" title="' + item[1] + '"' +
+			tmpResult += '<a class="detailLex' + count + '" style="padding:0px" title="' + item[1] + '"' +
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
 				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " +
 				'<span class="srchParathesis">(</span>' +
@@ -1373,8 +1380,10 @@ step.searchSelect = {
 				'<span class="srchParathesis">)</span>' +
 				'<span class="srchFrequency"> ~' + item[3] + ' x</span>' +
 				"</a>";
+			if (item[1] === strongNum) resultFirstLine = tmpResult;
+			else resultSubsequentLines += tmpResult;
 		});
-		result += "</ol><br style='line-height:1px'";
+		result += resultFirstLine + resultSubsequentLines + "</ol><br style='line-height:1px'";
 		return result;
 	},
 	_handleClickOnTriangle: function(ev){

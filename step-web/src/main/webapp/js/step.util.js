@@ -3299,7 +3299,7 @@ step.util = {
         if (pos2 > -1) {
 			var secondPassage = searchResultRange.substring(pos2 + 1);
 			var separator = (secondPassage.indexOf(".") == -1) ? "-" : " - ";
-            return " from " + searchResultRange.substring(0, pos2) + separator + secondPassage;
+            return " at " + searchResultRange.substring(0, pos2) + separator + secondPassage;
         }
         else return " only at " + searchResultRange;
 	},

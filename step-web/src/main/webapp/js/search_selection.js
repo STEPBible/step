@@ -1190,15 +1190,17 @@ step.searchSelect = {
 				var strongWithoutAugment = (isNaN(firstStrongNum.substr(-1))) ? firstStrongNum.substring(0, firstStrongNum.length-1) : firstStrongNum;
 				var suggestionType = data[0].itemType;
 				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
-				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (all forms of ' +
-					'<i>' + data[0].suggestion.stepTransliteration + ' </i>' +
-					'<span class="srchOriginal_Language"> - ' + data[0].suggestion.matchingForm + ' </span>' +
-					'<span>' + strongWithoutAugment + '*)</span>' +
-					//'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
-					//'<span class="srchDash">- </span>' +
-					//'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
+				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (all forms' +
+					'<span class="srchParathesis"> of </span>' +
+					//'<i>' + data[0].suggestion.stepTransliteration + ' </i>' +
+					//'<span class="srchOriginal_Language"> - ' + data[0].suggestion.matchingForm + ' </span>' +
 					//'<span>' + strongWithoutAugment + '*)</span>' +
-					'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
+					'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
+					'<span class="srchDash">- </span>' +
+					'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + '</span>' +
+					'<span class="srchSpaceStrong"> </span>' +
+					'<span class="srchStrong_number">' + strongWithoutAugment + '*</span>' +
+					'<span class="srchFrequency">) ~' + frequencyTotal + ' x</span>';
 				searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 					strongWithoutAugment, suggestionType, "syntax_strong", text2Display, shortTxt2Display, limitType, false, false);
 				searchSuggestionsToDisplay[searchResultIndex] += '<span class="glyphicon glyphicon-arrow-down stepFgBg"></span>'
@@ -1231,11 +1233,10 @@ step.searchSelect = {
 					if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
 						detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
 						frequency = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, detailLexicalJSON);
-						curStrong += ", ...";
 						if ((data[i].suggestion.type === "man") || (data[i].suggestion.type === "woman") || 
 							(data[i].suggestion.type === "king") || (data[i].suggestion.type === "queen") ||
 							(data[i].suggestion.type === "judge") || (data[i].suggestion.type === "place") ||
-							(data[i].suggestion.type === "group")) {
+							(data[i].suggestion.type === "group") || (data[i].suggestion.type === "prophet")) {
 							searchExplaination += data[i].suggestion.type + " with " + detailLexicalJSON.length + " names";
 						}
 						else {
@@ -1255,13 +1256,13 @@ step.searchSelect = {
 							//'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 							//'<span class="srchSpaceStrong"> </span>' +
 //							'<span> ' + curStrong + '</span>' +
-							//'<span class="srchParathesis">)</span>' +
+							'<span class="srchParathesis">(</span>' +
 							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
 							'<span class="srchDash"> - </span>' + 
 							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 							'<span class="srchSpaceStrong"> </span>' +
 							'<span class="srchStrong_number">' + curStrong + '</span>' +
-							//'<span class="srchParathesis">)</span>' +
+							'<span class="srchParathesis">)</span>' +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 						str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, false, true);
@@ -1296,8 +1297,13 @@ step.searchSelect = {
 		var needLineBreak = "";
 		if (existingSuggestionsToDisplay !== "") {
 			brCount = (existingSuggestionsToDisplay.match(/<br>/g) || []).length;
-			brCount += (existingSuggestionsToDisplay.match(/<ol>/g) || []).length;
-			if ((brCount < suggestionsToDisplay + 1) || (limitType !== "")) needLineBreak = "<br>";
+			brCount += (existingSuggestionsToDisplay.match(/<\/ol>/g) || []).length;
+			if (((brCount < suggestionsToDisplay + 1) || (limitType !== ""))) {
+					if (existingSuggestionsToDisplay.slice(-5) !== "</ol>") {
+						needLineBreak = "<br>";
+					}
+					if (needIndent) needLineBreak +=  "<br style='line-height:2px'>";
+			}
 		}
 		if (needIndent) needLineBreak += "&nbsp;&nbsp;&nbsp;";
 		if ((brCount < suggestionsToDisplay - 1) || (limitType !== "")) {
@@ -1343,17 +1349,17 @@ step.searchSelect = {
 	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalJSON, count) {
 		if (detailLexicalJSON === null) return "";
 		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>";
-		result += "<ol>";
+		result += "<ol class='detailLex" + count + "' style='margin-bottom:0px;line-height:14px'>";
 		var allStrongs = [];
 		detailLexicalJSON.forEach(function (item, index) {
 			if (allStrongs.includes(item[1])) return;
 			allStrongs.push(item[1]);
 //			result += "<br class='detailLex" + count + "'>";
-			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 			result += "<li>";
 			if (item[1] === strongNum) {
 				result += "&nbsp;&nbsp;&nbsp;<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px'></span>";
-				spaceWithoutLabel = "&nbsp;&nbsp;";
+				spaceWithoutLabel = "";
 			}
 			result += '<a class="detailLex' + count + '" style="padding:0px" title="' + item[1] + '"' +
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
@@ -1368,7 +1374,7 @@ step.searchSelect = {
 				'<span class="srchFrequency"> ~' + item[3] + ' x</span>' +
 				"</a>";
 		});
-		result += "</ol>";
+		result += "</ol><br style='line-height:1px'";
 		return result;
 	},
 	_handleClickOnTriangle: function(ev){

@@ -3551,7 +3551,7 @@ step.util = {
 		osisIDs = callerPassagesModel.attributes.osisId.split(/[ ,]/);
 		return step.util.checkFirstBibleHasPassage(newMasterVersion, osisIDs, otherVersions);
 	},
-	checkFirstBibleHasPassage: function(newMasterVersion, osisIDs, otherVersions) {
+	checkFirstBibleHasPassage: function(newMasterVersion, osisIDs, otherVersions, dontShowAlert) {
 		var passageInfomation = step.util.getTestamentAndPassagesOfTheReferences(osisIDs);
 		var hasNTinReference = passageInfomation[0];
 		var hasOTinReference = passageInfomation[1];
@@ -3588,7 +3588,7 @@ step.util = {
 				 queryStringForFirstBookInAvailableTestament +
 				 "')\">Go to " + firstPassageInBible + " in " + newMasterVersion + " and then select my passage.</a>" +
 				 "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(5,'')\">Close this window to stay with your current passage(s) and Bible(s).</a>";
-			step.util.showLongAlert(alertMessage, "Warning");
+			if (!dontShowAlert) step.util.showLongAlert(alertMessage, "Warning");
 			return false;
 		}
 		return true;

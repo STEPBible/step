@@ -1247,7 +1247,7 @@ step.searchSelect = {
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
 						text2Display += 
-							'<span class="srchParathesis">(</span>' +
+							'<span class="srchParathesis"> (</span>' +
 							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
 //						'<span class="srchDash"> - </span>' + 
 //						'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +

@@ -1870,7 +1870,7 @@ step.util = {
 	searchSelectionModal: function () {
 		var docWidth = $(document).width();
 		var widthCSS = "";
-		if ((docWidth > 700) && (!step.touchDevice)) { // Touch device can rotate screen so probably better to not adjust the width
+		if ((docWidth > 850) && (!step.touchDevice)) { // Touch device can rotate screen so probably better to not adjust the width
 			widthCSS = ' style="width:' + Math.floor(Math.min($(document).width() *.9, 680)) + 'px"';
 		}
         var element = document.getElementById('searchSelectionModal');

@@ -1292,7 +1292,6 @@ step.searchSelect = {
 		$(".search-type-column").hide();
 		step.searchSelect._updateDisplayBasedOnOptions();
 	},
-
 	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, str2Search, suggestionType, searchType, text2Display, 
 		shortTxt2Display, limitType, isAugStrong, needIndent) {
 		var brCount = 0;
@@ -1354,18 +1353,16 @@ step.searchSelect = {
 		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>" +
 			"<ol class='detailLex" + count + "' style='margin-bottom:0px;line-height:14px'>";
 		var allStrongs = [];
-		var resultFirstLine = "";
-		var resultSubsequentLines = "";
 		detailLexicalJSON.forEach(function (item, index) {
 			if (allStrongs.includes(item[1])) return;
 			allStrongs.push(item[1]);
 			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
-			var tmpResult =  "<li>";
+			result +=  "<li>";
 			if (item[1] === strongNum) {
-				tmpResult += "<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px'></span>";
+				result += "<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px'></span>";
 				spaceWithoutLabel = "";
 			}
-			tmpResult += '<a class="detailLex' + count + '" style="padding:0px" title="' + item[1] + '"' +
+			result += '<a class="detailLex' + count + '" style="padding:0px" title="' + item[1] + '"' +
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
 				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " +
 				'<span class="srchParathesis">(</span>' +
@@ -1377,10 +1374,8 @@ step.searchSelect = {
 				'<span class="srchParathesis">)</span>' +
 				'<span class="srchFrequency"> ~' + item[3] + ' x</span>' +
 				"</a>";
-			if (item[1] === strongNum) resultFirstLine = tmpResult;
-			else resultSubsequentLines += tmpResult;
 		});
-		result += resultFirstLine + resultSubsequentLines + "</ol><br style='line-height:1px'";
+		result += "</ol><br style='line-height:1px'";
 		return result;
 	},
 	_handleClickOnTriangle: function(ev){

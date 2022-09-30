@@ -1199,7 +1199,8 @@ step.searchSelect = {
 					'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + '</span>' +
 					'<span class="srchSpaceStrong"> </span>' +
 					'<span class="srchStrong_number">' + strongWithoutAugment + '*</span>' +
-					'<span class="srchFrequency">) ~' + frequencyTotal + ' x</span>';
+					'<span>)</span>' +
+					'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
 				searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 					strongWithoutAugment, suggestionType, "syntax_strong", text2Display, shortTxt2Display, limitType, false, false);
 				searchSuggestionsToDisplay[searchResultIndex] += '<span class="glyphicon glyphicon-arrow-down stepFgBg"></span>'
@@ -1246,22 +1247,18 @@ step.searchSelect = {
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
-						text2Display += 
+						text2Display +=
 							'<span class="srchParathesis"> (</span>' +
 							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
-//						'<span class="srchDash"> - </span>' + 
-//						'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
+							'<span class="srchDash"> - </span>' +
+							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
 							'<span class="srchSpaceStrong"> </span>' +
 							'<span class="srchStrong_number">' + curStrong + '</span>' +
 							'<span class="srchParathesis">)</span>' +
 							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					}
-					else text2Display += //'<i>' + data[i].suggestion.stepTransliteration + '</i>' +
-							//'<span class="srchDash"> - </span>' + 
-							//'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
-							//'<span class="srchSpaceStrong"> </span>' +
-//							'<span> ' + curStrong + '</span>' +
+					else text2Display +=
 							'<span class="srchParathesis">(</span>' +
 							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
 							'<span class="srchDash"> - </span>' + 

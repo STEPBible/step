@@ -1306,7 +1306,7 @@ step.searchSelect = {
 					}
 					if (needIndent) {
 						needLineBreak +=  "<br style='line-height:" +
-						((step.touchDevice) ? "2" : "4") +
+						((step.touchDevice) ? "2" : "5") +
 						"px'>";
 					}
 			}

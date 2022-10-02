@@ -1304,7 +1304,11 @@ step.searchSelect = {
 					if (existingSuggestionsToDisplay.slice(-5) !== "</ol>") {
 						needLineBreak = "<br>";
 					}
-					if (needIndent) needLineBreak +=  "<br style='line-height:2px'>";
+					if (needIndent) {
+						needLineBreak +=  "<br style='line-height:" +
+						((step.touchDevice) ? "2" : "4") +
+						"px'>";
+					}
 			}
 		}
 		if (needIndent) needLineBreak += "&nbsp;&nbsp;&nbsp;";
@@ -1375,7 +1379,7 @@ step.searchSelect = {
 				'<span class="srchFrequency"> ~' + item[3] + ' x</span>' +
 				"</a>";
 		});
-		result += "</ol><br style='line-height:1px'";
+		result += "</ol>";
 		return result;
 	},
 	_handleClickOnTriangle: function(ev){

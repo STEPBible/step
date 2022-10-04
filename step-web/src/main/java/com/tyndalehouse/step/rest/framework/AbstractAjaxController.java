@@ -223,7 +223,8 @@ public abstract class AbstractAjaxController extends HttpServlet {
         if (e == null) {
             LOGGER.error("An unknown internal error has occurred");
         } else {
-            if ((e.getMessage() != null) && (e.getMessage().indexOf("Unable to find a controller for") == -1)) LOGGER.error(e.getMessage(), e);
+           // if ((e.getMessage() != null) && (e.getMessage().indexOf("Unable to find a controller for") == -1)) LOGGER.error(e.getMessage(), e);
+           LOGGER.error(e.getMessage(), e);
         }
         return bundle.getString("error_internal");
     }

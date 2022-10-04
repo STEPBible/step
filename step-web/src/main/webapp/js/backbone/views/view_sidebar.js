@@ -76,11 +76,11 @@ var SidebarView = Backbone.View.extend({
 			if (strongCode.search(/([GH])(\d{1,3})(![A-Za-z])$/) > -1) {
 				strongCode = RegExp.$1 + ("000" + RegExp.$2).slice(-4) + RegExp.$3;
 			}
-//            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongCode, this.model.get("morph"), ref, this.model.get("version"));
-//            if (vocabMorphFromJson.vocabInfos.length > 0) {
-//                self.createDefinition(vocabMorphFromJson, ref);
-//                return;
-//            }
+            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongCode, this.model.get("morph"), ref, this.model.get("version"));
+            if (vocabMorphFromJson.vocabInfos.length > 0) {
+                self.createDefinition(vocabMorphFromJson, ref);
+                return;
+            }
             $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongCode, this.model.get("morph"), step.userLanguageCode], function (data) {
                 //step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
                 //step.util.trackAnalytics("lexicon", "strong", strongCode); // self.model.get("strong"));
@@ -536,7 +536,8 @@ var SidebarView = Backbone.View.extend({
         }
 		var detailLex = [];
 		if (mainWord._stepDetailLexicalTag) {
-			detailLex = JSON.parse(mainWord._stepDetailLexicalTag);
+			detailLex = (typeof mainWord._stepDetailLexicalTag === "string") ? 
+                JSON.parse(mainWord._stepDetailLexicalTag) : mainWord._stepDetailLexicalTag;
 		}
         this._appendLexiconSearch(panel, mainWord, detailLex);
         var displayEnglishLexicon = true;

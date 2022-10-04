@@ -132,9 +132,9 @@ public class VocabInfo implements Serializable {
             else this.count = 0;
         }
 
+        this.strongNumber = d.get("strongNumber");
         if (includeAllInfo) {
             this.lsjDefs = d.get("lsjDefinition");
-            this.strongNumber = d.get("strongNumber");
             this.twoLetterLookup = d.get("twoLetter");
             if (this.strongNumber != null) {
                 this.relatedNos = relatedVocabs.get(this.strongNumber);

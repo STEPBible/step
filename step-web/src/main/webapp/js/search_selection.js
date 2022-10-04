@@ -14,74 +14,6 @@ step.searchSelect = {
 	rangeWasUpdated: false,
 	andOrNotUpdated: false,
 	timer: undefined,
-	idx2osisChapterJsword: {
-		"Gen": 0,
-		"Exo": 1, "Exod": 1,
-		"Lev": 2,
-		"Num": 3,
-		"Deu": 4, "Deut": 4,
-		"Jos": 5, "Josh": 5,
-		"Judg": 6,
-		"Rut": 7, "Ruth": 7,
-		"1Sa": 8, "1Sam": 8,
-		"2Sa": 9, "2Sam": 9,
-		"1Ki": 10, "1Kgs": 10,
-		"2Ki": 11, "2Kgs": 11,
-		"1Ch": 12, "1Chr": 12,
-		"2Ch": 13, "2Chr": 13,
-		"Ezr": 14, "Ezra": 14,
-		"Neh": 15,
-		"Est": 16, "Esth": 16,
-		"Job": 17,
-		"Psa": 18, "Ps": 18,
-		"Pro": 19, "Prov": 19,
-		"Ecc": 20, "Eccl": 20,
-		"Song": 21,
-		"Isa": 22,
-		"Jer": 23,
-		"Lam": 24,
-		"Eze": 25, "Ezek": 25,
-		"Dan": 26,
-		"Hos": 27,
-		"Joe": 28, "Joel": 28,
-		"Amo": 29, "Amos": 29,
-		"Obd": 30, "Obad": 30,
-		"Jon": 31, "Jonah": 31,
-		"Mic": 32,
-		"Nah": 33,
-		"Hab": 34,
-		"Zep": 35, "Zeph": 35,
-		"Hag": 36,
-		"Zec": 37, "Zech": 37,
-		"Mal": 38,
-		"Mat": 39, "Matt": 39,
-		"Mar": 40, "Mark": 40,
-		"Luk": 41, "Luke": 41,
-		"Joh": 42, "John": 42,
-		"Act": 43, "Acts": 43,
-		"Rom": 44,
-		"1Cor": 45,
-		"2Cor": 46,
-		"Gal": 47,
-		"Eph": 48,
-		"Phili": 49, "Phil": 49,
-		"Col": 50,
-		"1Th": 51, "1Thess": 51,
-		"2Th": 52, "2Thess": 52,
-		"1Ti": 53, "1Tim": 53,
-		"2Ti": 54, "2Tim": 54,
-		"Tit": 55, "Titus": 55,
-		"Phile": 56, "Phlm": 56,
-		"Heb": 57,
-		"Jam": 58, "Jas": 58,
-		"1Pe": 59, "1Pet": 59,
-		"2Pe": 60, "2Pet": 60,
-		"1Jo": 61, "1John": 61,
-		"2Jo": 62, "2John": 62,
-		"3Jo": 63, "3John": 63,
-		"Jude": 64,
-		"Rev": 65
-	},
 	groupsOT: [
 		{groupName: __s.book_of_moses, show: false, books: [0, 1, 2, 3, 4], bookOrderPos: [-1, -1, -1, -1, -1]},
 		{groupName: __s.history_books, show: false, books: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
@@ -398,7 +330,7 @@ step.searchSelect = {
 			}
 		}
 		else {
-			var userInput =  $('textarea#userTextInput').val();
+			var userInput = $('textarea#userTextInput').val();
 			if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
 				$('#warningMessage').text(__s.click_to_select_search);
 				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
@@ -454,7 +386,7 @@ step.searchSelect = {
 				if (pos > -1) separatorChar = copyOfRange.substr(pos, 1);
 				else pos = copyOfRange.length;
 				var currentOsisID = copyOfRange.substr(0, pos);
-				var posOfBook = this.idx2osisChapterJsword[currentOsisID];
+				var posOfBook = step.util.bookOrderInBible(currentOsisID);
 				if ((posOfBook > -1) &&
 					(typeof arrayOfTyplicalBooksChapters !== "undefined") &&
 					(arrayOfTyplicalBooksChapters[posOfBook].length === 2)) {
@@ -465,15 +397,15 @@ step.searchSelect = {
 				copyOfRange = copyOfRange.substr(pos + 1);
 			}
 		}
-
+		var backgroundColor = (step.util.isDarkMode()) ? "var(--clrBackground)" : "#f5f5f5";
 		var html = '<div class="header">' +
 			'<h4 id="hd4">' + __s.enter_search_word + '</h4>' +
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
-			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%"></textarea><br><br>' + // size 16px so the mobile devices will not expand
+			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="Enter search word"></textarea><br><br>' + // size 16px so the mobile devices will not expand
 			'<div id="search_table">' +
-			'<table border="1">' +
+			'<table border="1" style="background-color:' + backgroundColor + '">' +
 			'<colgroup>' +
 			'<col id="column1width" span="1" style="width:39%;">' +
 			'<col span="1" style="width:61%;">' +
@@ -771,15 +703,12 @@ step.searchSelect = {
 				break;
 			}
 		}
-		var translationsWithPopularBooksChapters = " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ";
-		var translationsWithPopularNTBooksChapters = ' 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag ee elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblg sblgntapp spavnt swahili swaulb thgnt tisch tnt tr ukrkulish uma varapp weym whnu wors ';
-		var translationsWithPopularOTBooksChapters = ' ab gertextbibel kd wlc lees lxx rusmakarij ';
 		var lowerCaseVersion = ' ' + this.version.toLowerCase() + ' ';
 		versionAltName = ' ' + versionAltName.toLowerCase() + ' ';
 		var translationType = "";
-		if ((translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
-		else if ((translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
-		else if ((translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
+		if ((step.passageSelect.translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (step.passageSelect.translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
+		else if ((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
+		else if ((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
 		return translationType;		
 	},
 
@@ -802,7 +731,6 @@ step.searchSelect = {
 			arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
 		}
 		else end = data.length;
-		var additionalBooks = false;
 		this.groupsOther = [{groupName: 'Other', show: false, books: [], bookOrderPos: []}];
 		this.bookOrder = [];
 		this.idx2BookOrder = {};
@@ -823,7 +751,7 @@ step.searchSelect = {
 				shortNameToDisplay = (this.userLang.toLowerCase().indexOf("en") == 0) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
 			}
 			var longID = currentOsisID;
-			var posOfBook = this.idx2osisChapterJsword[currentOsisID];
+			var posOfBook = step.util.bookOrderInBible(currentOsisID);
 			if (posOfBook > -1) {
 				if (typeof step.passageSelect.osisChapterJsword[posOfBook][3] !== "undefined") longID = step.passageSelect.osisChapterJsword[posOfBook][3];
 				if (typeof arrayOfTyplicalBooksChapters !== "undefined") {
@@ -1143,6 +1071,14 @@ step.searchSelect = {
 												text2Display = '"' + str2Search + '"';
 												str2Search = '%22' + str2Search + '%22';
 											}
+											else if (str2Search.slice(-1) !== "*") {
+												searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
+													str2Search, suggestionType, searchType, 
+													text2Display,
+													shortTxt2Display, limitType, false, false);
+												text2Display = str2Search + "* (words that start with " + str2Search + ")";
+												str2Search += "*";
+											}
 										}
 									}
 								}
@@ -1253,11 +1189,17 @@ step.searchSelect = {
 				var strongWithoutAugment = (isNaN(firstStrongNum.substr(-1))) ? firstStrongNum.substring(0, firstStrongNum.length-1) : firstStrongNum;
 				var suggestionType = data[0].itemType;
 				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
-				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (' +
+				var text2Display = ' "' + data[0].suggestion.gloss.split(":",1)[0] + '" (all forms' +
+					'<span class="srchParathesis"> of </span>' +
+					//'<i>' + data[0].suggestion.stepTransliteration + ' </i>' +
+					//'<span class="srchOriginal_Language"> - ' + data[0].suggestion.matchingForm + ' </span>' +
+					//'<span>' + strongWithoutAugment + '*)</span>' +
 					'<i class="srchTransliteration">' + data[0].suggestion.stepTransliteration + ' </i>' +
 					'<span class="srchDash">- </span>' +
-					'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + ' </span>' +
-					'<span>' + strongWithoutAugment + '*)</span>' +
+					'<span class="srchOriginal_Language">' + data[0].suggestion.matchingForm + '</span>' +
+					'<span class="srchSpaceStrong"> </span>' +
+					'<span class="srchStrong_number">' + strongWithoutAugment + '*</span>' +
+					'<span>)</span>' +
 					'<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
 				searchSuggestionsToDisplay[searchResultIndex] += step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay[searchResultIndex], 
 					strongWithoutAugment, suggestionType, "syntax_strong", text2Display, shortTxt2Display, limitType, false, false);
@@ -1287,19 +1229,37 @@ step.searchSelect = {
 					var detailLexicalJSON = null;
 					var frequency = data[i].suggestion.popularity;
 					var curStrong = data[i].suggestion.strongNumber;
+					var searchExplaination = "";
 					if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
 						detailLexicalJSON = JSON.parse(data[i].suggestion._detailLexicalTag);
 						frequency = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, detailLexicalJSON);
-						curStrong += ", ...";
+						if ((data[i].suggestion.type === "man") || (data[i].suggestion.type === "woman") || 
+							(data[i].suggestion.type === "king") || (data[i].suggestion.type === "queen") ||
+							(data[i].suggestion.type === "judge") || (data[i].suggestion.type === "place") ||
+							(data[i].suggestion.type === "group") || (data[i].suggestion.type === "prophet")) {
+							searchExplaination += data[i].suggestion.type + " with " + detailLexicalJSON.length + " names";
+						}
+						else {
+							searchExplaination += data[i].suggestion.type + " with " + detailLexicalJSON.length + " synonyms"
+						}
+						text2Display = searchExplaination + ": " + gloss + " ";
 					}
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
-						text2Display += '<span class="srchStrong_number"> (' + curStrong + ')</span>' +
+						text2Display +=
+							'<span class="srchParathesis"> (</span>' +
+							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
+							'<span class="srchDash"> - </span>' +
+							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
+							'<span class="srchSpaceStrong"> </span>' +
+							'<span class="srchStrong_number">' + curStrong + '</span>' +
+							'<span class="srchParathesis">)</span>' +
 							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 					}
-					else text2Display += ' <span class="srchParathesis">(</span>' +
+					else text2Display +=
+							'<span class="srchParathesis">(</span>' +
 							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
 							'<span class="srchDash"> - </span>' + 
 							'<span class="srchOriginal_Language">' + data[i].suggestion.matchingForm + '</span>' +
@@ -1315,7 +1275,6 @@ step.searchSelect = {
 					alert("Unknown result: " + suggestionType);
 				}
 			}
-			//var aramaic = step.searchSelect.getAramaicStrongFromDetailLexicalTag(data, limitType);
 			for (var l = 0; l < searchSuggestionsToDisplay.length; l++) {
 				if (step.searchSelect.searchTypeCode[l] === limitType) {
 					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
@@ -1333,14 +1292,24 @@ step.searchSelect = {
 		$(".search-type-column").hide();
 		step.searchSelect._updateDisplayBasedOnOptions();
 	},
-
-	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, str2Search, suggestionType, searchType, text2Display, shortTxt2Display, limitType, isAugStrong, needIndent) {
+	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, str2Search, suggestionType, searchType, text2Display, 
+		shortTxt2Display, limitType, isAugStrong, needIndent) {
 		var brCount = 0;
 		var suggestionsToDisplay = 5;
 		var needLineBreak = "";
 		if (existingSuggestionsToDisplay !== "") {
 			brCount = (existingSuggestionsToDisplay.match(/<br>/g) || []).length;
-			if ((brCount < suggestionsToDisplay + 1) || (limitType !== "")) needLineBreak = "<br>";
+			brCount += (existingSuggestionsToDisplay.match(/<\/ol>/g) || []).length;
+			if (((brCount < suggestionsToDisplay + 1) || (limitType !== ""))) {
+					if (existingSuggestionsToDisplay.slice(-5) !== "</ol>") {
+						needLineBreak = "<br>";
+					}
+					if (needIndent) {
+						needLineBreak +=  "<br style='line-height:" +
+						((step.touchDevice) ? "2" : "5") +
+						"px'>";
+					}
+			}
 		}
 		if (needIndent) needLineBreak += "&nbsp;&nbsp;&nbsp;";
 		if ((brCount < suggestionsToDisplay - 1) || (limitType !== "")) {
@@ -1385,18 +1354,19 @@ step.searchSelect = {
 
 	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalJSON, count) {
 		if (detailLexicalJSON === null) return "";
-		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-right'></a>";
+		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>" +
+			"<ol class='detailLex" + count + "' style='margin-bottom:0px;line-height:14px'>";
 		var allStrongs = [];
 		detailLexicalJSON.forEach(function (item, index) {
 			if (allStrongs.includes(item[1])) return;
 			allStrongs.push(item[1]);
-			result += "<br class='detailLex" + count + "' style='display:none'>";
-			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
+			result +=  "<li>";
 			if (item[1] === strongNum) {
-				result += "&nbsp;&nbsp;&nbsp;<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px;display:none'></span>";
-				spaceWithoutLabel = "&nbsp;&nbsp;";
+				result += "<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px'></span>";
+				spaceWithoutLabel = "";
 			}
-			result += '<a class="detailLex' + count + '" style="display:none" style="padding:0px" title="' + item[1] + '"' +
+			result += '<a class="detailLex' + count + '" style="padding:0px;color:var(--clrStrongText)" title="' + item[1] + '"' +
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
 				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " +
 				'<span class="srchParathesis">(</span>' +
@@ -1409,6 +1379,7 @@ step.searchSelect = {
 				'<span class="srchFrequency"> ~' + item[3] + ' x</span>' +
 				"</a>";
 		});
+		result += "</ol>";
 		return result;
 	},
 	_handleClickOnTriangle: function(ev){

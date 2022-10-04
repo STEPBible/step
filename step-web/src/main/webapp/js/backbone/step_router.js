@@ -8,7 +8,7 @@ var StepRouter = Backbone.Router.extend({
     _addArg: function (url, argName, argValue) {
         if (url == "") {
             url += '?';
-        } else if (url[url.length - 1] != '?') {
+        } else if (url[url.length - 1] !== '?') {
             url += '&';
         }
         url += argName;
@@ -30,14 +30,14 @@ var StepRouter = Backbone.Router.extend({
         var searchParameters = partial;
         var mainVersion = activePassage.get("masterVersion");
         var allVersions = "";
-        if (mainVersion != "") {
+        if (mainVersion !== "") {
             if (!stripCommentaries || step.keyedVersions[mainVersion].category == 'BIBLE') {
                 allVersions = "version=" + mainVersion;
             }
 
             var extraVersions = (activePassage.get("extraVersions") || "").split(",");
             for (var i = 0; i < extraVersions.length; i++) {
-                if ((extraVersions[i] || "") != "") {
+                if ((extraVersions[i] || "") !== "") {
                     if (!stripCommentaries || step.keyedVersions[extraVersions[i]].category == 'BIBLE') {
                         if (allVersions !== "") allVersions += "|";
                         allVersions += "version=" + extraVersions[i];

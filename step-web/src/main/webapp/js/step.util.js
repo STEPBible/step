@@ -47,7 +47,6 @@
          *            userFunction to call on success of the query
          */
         getSafe: function (url, args, userFunction, passageId, level, errorHandler) {
-
             //args is optional, so we test whether it is a function
             if ($.isFunction(args)) {
                 userFunction = args;
@@ -116,6 +115,7 @@
                     if (userFunction) {
                         userFunction(data);
                     }
+					step.readyToShowPassageSelect = true;
                 }
             }).error(function() {
                 changeBaseURL();
@@ -813,8 +813,8 @@ step.util = {
         }
 
         var masterVersion = allVersions[0];
-        var otherVersions = allVersions.slice(1).join(",");
-
+        var otherVersions = allVersions.slice(1);
+		if (!step.util.checkFirstBibleHasPassageBeforeSwap(newMasterVersion, passageModel, otherVersions)) return;
         passageModel.save({ args: newArgs, masterVersion: masterVersion, otherVersions: otherVersions }, { silent: silent });
     },
     ui: {
@@ -1434,7 +1434,8 @@ step.util = {
                 new QuickLexicon({
                     strong: strong, morph: morph,
                     version: version, reference: reference,
-                    target: hoverContext, position: pageY / $(window).height(), touchEvent: touchEvent,
+                    target: hoverContext, position: pageY, touchEvent: touchEvent,
+                    height: $(window).height(), 
                     passageId: passageId
                 });
             }
@@ -1753,10 +1754,52 @@ step.util = {
 			'</script>' +
 		'</div>').modal("show");
     },
-    passageSelectionModal: function (activePassageNumber) {
-        var element = document.getElementById('passageSelectionModal');
-        if (element) element.parentNode.removeChild(element);
-        $("div.modal-backdrop.in").remove();
+	correctNoPassageInSelectedBible: function (userChoice, queryString) {
+		$("#showLongAlertModal").click();
+		if (userChoice == 1) {
+			step.util.passageSelectionModal( step.util.activePassageId() );
+		}
+		else if (userChoice === 2) {
+			step.util.startPickBible();
+			//if (userChoice == 3) {
+			//	setTimeout(
+			//		function() {
+			//			$("#order_button_bible_modal").click();
+			//		},
+			//	500);
+			//}
+		}
+		else if (userChoice === 4) {
+			step.router.navigateSearch(queryString, true, true);
+			step.readyToShowPassageSelect = false;
+			for (var i = 0; i < 30; i++) {
+				if (!step.readyToShowPassageSelect) {
+					setTimeout(
+						function() {
+							if (step.readyToShowPassageSelect) {
+								i = 999; // Stop the loop
+								setTimeout(
+									function() {
+										if (step.readyToShowPassageSelect) {
+											step.readyToShowPassageSelect = false; // Stop it from triggering more clicks
+											console.log("click on select reference");
+											$(".passageContainer.active").find(".select-reference").click();
+										}
+									},
+								150);
+							}
+							else console.log("not ready");
+						},
+					350);
+				}
+			}
+			step.readyToShowPassageSelect = false;
+		}
+	},
+  passageSelectionModal: function (activePassageNumber) {
+    var element = document.getElementById('passageSelectionModal');
+    if (element) element.parentNode.removeChild(element);
+    $("div.modal-backdrop.in").remove();
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
 		var modalHTML = '<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
@@ -1825,10 +1868,15 @@ step.util = {
     },
 
 	searchSelectionModal: function () {
+		var docWidth = $(document).width();
+		var widthCSS = "";
+		if ((docWidth > 700) && (!step.touchDevice)) { // Touch device can rotate screen so probably better to not adjust the width
+			widthCSS = ' style="width:' + Math.floor(Math.min($(document).width() *.9, 680)) + 'px"';
+		}
         var element = document.getElementById('searchSelectionModal');
         if (element) element.parentNode.removeChild(element);
         $(_.template('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-            '<div class="modal-dialog">' +
+            '<div class="modal-dialog"' + widthCSS + '>' +
 				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<script>' +
 						'$(document).ready(function () {' +
@@ -1947,7 +1995,7 @@ step.util = {
         var tmpArray = reference.split(".");
         var osisID = tmpArray[0]; // get the string before the "." character
         var longBookName = osisID;
-		var posOfBook = step.searchSelect.idx2osisChapterJsword[osisID];
+		var posOfBook = step.util.bookOrderInBible(osisID);
         var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
 		if ((posOfBook > -1) &&
 			(typeof arrayOfTyplicalBooksChapters !== "undefined"))
@@ -2066,10 +2114,12 @@ step.util = {
                     '<a class="previousChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum - 1) + '\')">' +
                         '<i class="glyphicon glyphicon-arrow-left"></i>' +
                     '</a>';
-            if (chapterNum < step.passageSelect.osisChapterJsword[posOfBook][1]) chptSummary +=
-                    '<a class="nextChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum + 1) + '\')">' +
+            if ((posOfBook > -1) &&
+				(chapterNum < step.passageSelect.osisChapterJsword[posOfBook][1]))
+					chptSummary +=
+						'<a class="nextChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum + 1) + '\')">' +
                         '<i class="glyphicon glyphicon-arrow-right"></i>' +
-                    '</a>';
+						'</a>';
             chptSummary += 
                 '</span>';
 
@@ -2108,6 +2158,33 @@ step.util = {
         });
         $.ajaxSetup({async: true});
     },
+    showLongAlert: function (message, headerText) {
+        element = document.getElementById('showLongAlertModal');
+        if (element) element.parentNode.removeChild(element);
+        $(".modal-backdrop.in").remove();
+		$(_.template(
+			'<div id="showLongAlertModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content stepModalFgBg"">' +
+						'<script>' +
+						'$(document).keydown(function(event) {' +
+							'if (event.keyCode == 27) {' +
+							'step.util.closeModal("showLongAlertModal");' +
+							'}' +
+						'});' +
+						'</script>' +
+						'<div class="modal-header">' + headerText +
+							step.util.modalCloseBtn("showLongAlertModal") + '<br>' +
+						'</div>' +
+						'<div class="modal-body" style="text-align:left font-size:16px">' +
+							message +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
+		)()).modal("show");
+    },
+
     setDefaultColor: function(option) {
         var newBtnText;
 		var setToDarkMode = false;
@@ -3227,14 +3304,60 @@ step.util = {
         if (pos2 > -1) {
 			var secondPassage = searchResultRange.substring(pos2 + 1);
 			var separator = (secondPassage.indexOf(".") == -1) ? "-" : " - ";
-            return " from " + searchResultRange.substring(0, pos2) + separator + secondPassage;
+            return " at " + searchResultRange.substring(0, pos2) + separator + secondPassage;
         }
         else return " only at " + searchResultRange;
+	},
+	unpackJson: function (origJsonVar, index) {
+		var vocabKeys = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
+		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
+		"shortDef", "mediumDef", "lsjDefs",
+		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
+		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
+		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
+		"augmentedStrongReferences"];
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange"];
+		var duplicateStrings = origJsonVar.d;
+		var relatedNumbers = origJsonVar.r;
+		var vocabInfo = origJsonVar.v[index];
+		var vocabInfoEntry = {};
+		for (var j = 0; j < vocabKeys.length - 1; j ++) {
+			if (vocabInfo[j] === "") continue;
+			if (vocabKeys[j] === "relatedNos") {
+				var allRelatedNumbersResult = [];
+				relatedNumbersArray = vocabInfo[j];
+				if (Array.isArray(relatedNumbersArray)) {
+					for (var k = 0; k < relatedNumbersArray.length; k ++) {
+						var relatedNumEntry = relatedNumbers[vocabInfo[j][k]];
+						var relatedNumResult = {};
+						for (var l = 0; l < relatedKeys.length; l ++) {
+							if (relatedNumEntry[l] !== "") {
+								if (Number.isInteger(relatedNumEntry[l]))
+									relatedNumResult[relatedKeys[l]] = duplicateStrings[relatedNumEntry[l]];
+								else relatedNumResult[relatedKeys[l]] = relatedNumEntry[l];
+							}
+						}
+						allRelatedNumbersResult.push(relatedNumResult);
+					}
+					vocabInfoEntry[vocabKeys[j]] = allRelatedNumbersResult;
+				}
+			}
+			else vocabInfoEntry[vocabKeys[j]] = ((Number.isInteger(vocabInfo[j])) && (vocabKeys[j] !== "count")) ?
+					duplicateStrings[vocabInfo[j]] : vocabInfo[j];
+		}
+		return vocabInfoEntry;
 	},
 	getVocabMorphInfoFromJson: function (strong, morph, reference, version) {
         var strongArray = strong.split(" ");
         var processedStrong = [];
         var resultJson = {vocabInfos: [], morphInfos: []};
+		var indexToAugStrongRef = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
+		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
+		"shortDef", "mediumDef", "lsjDefs",
+		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
+		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
+		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
+		"augmentedStrongReferences"].length - 1;
 		if (!reference) reference = "";
         $.ajaxSetup({async: false});
         for (var j = 0; j < strongArray.length; j++) {
@@ -3249,62 +3372,59 @@ step.util = {
 				var strongFirstChar = strong.substring(0, 1).toLowerCase();
 				var rsvVersification = (((version !== "OHB") && (version !== "THOT")) &&
 					(strongFirstChar === "h"));
-                $.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(jsonVar) {
+                $.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(origJsonVar) {
 					var augStrongIndex = 0;
-					if (jsonVar.augmentedStrong) {
-						if (reference !== "") {
-							var refParts = reference.split(".");
-							var book = refParts[0];
-							var isNewTestament = step.searchSelect.idx2osisChapterJsword[book] > 38;
-							if (! ( (version === "LXX") ||
-									((strongFirstChar === "h") && (isNewTestament)) ||
-									((strongFirstChar === "g") && (!isNewTestament)) ||
-									(reference === "") ) ) {
-								for (var i = 0; i < jsonVar.augmentedStrong.length; i++) {
-									if (jsonVar.augmentedStrong[i].references === "*") {
-										augStrongIndex = i;
-										break;
-									}
-								}
-								var chapterVerse = refParts[1];
-								if (refParts.length == 3)
-									chapterVerse += "\\." + refParts[2];
-								var regString1 = "\\s" + book + "\\." + chapterVerse;
-								if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
-								else regString1 += "[\\s\\(]"; // must have a space or a ( character after the reference
-								var regString2 = "\\s" + book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
-								for (var i = jsonVar.augmentedStrong.length -1 ; i > -1; i --) {
-									if (jsonVar.augmentedStrong[i].references !== "*") {
-										var referencesToSearch = " " + jsonVar.augmentedStrong[i].references + " ";
-										var searchPos = referencesToSearch.search(regString1);
-										if ((searchPos == -1) &&
-											(rsvVersification))
-											searchPos = referencesToSearch.search(regString2);
-										if (searchPos > -1) {
-											augStrongIndex = i;
-											break;
-										}
-									}
-								}
-							}
-						}
-						else if (strongArray[j] !== strongWithoutAugment) {
-							for (var i = 0; i < jsonVar.augmentedStrong.length; i++) {
-								if (strongArray[j] === jsonVar.augmentedStrong[i].augmentedStrong) {
+					if (reference !== "") {
+						var refParts = reference.split(".");
+						var book = refParts[0];
+						var isNewTestament = step.util.bookOrderInBible(book) > 38;
+						if (! ( (version === "LXX") ||
+								((strongFirstChar === "h") && (isNewTestament)) ||
+								((strongFirstChar === "g") && (!isNewTestament)) ||
+								(reference === "") ) ) {
+							for (var i = 0; i < origJsonVar.v.length; i++) {
+								if (origJsonVar.v[i][indexToAugStrongRef] === "*") {
 									augStrongIndex = i;
 									break;
 								}
 							}
-						}
-						if (augStrongIndex > 0) {
-							for (var key in jsonVar.vocabInfos[augStrongIndex]) {
-								if (jsonVar.vocabInfos[augStrongIndex][key] === "=")
-								jsonVar.vocabInfos[augStrongIndex][key] = jsonVar.vocabInfos[0][key];
+							var chapterVerse = refParts[1];
+							if (refParts.length == 3)
+								chapterVerse += "\\." + refParts[2];
+							var regString1 = "\\s" + book + "\\." + chapterVerse;
+							if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
+							else regString1 += "[\\s\\(]"; // must have a space or a ( character after the reference
+							var regString2 = "\\s" + book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
+							for (var i = origJsonVar.v.length -1 ; i > -1; i --) {
+								if (origJsonVar.v[i][indexToAugStrongRef] !== "*") {
+									var referencesToSearch = " " + origJsonVar.v[i][indexToAugStrongRef] + " ";
+									var searchPos = referencesToSearch.search(regString1);
+									if ((searchPos == -1) &&
+										(rsvVersification))
+										searchPos = referencesToSearch.search(regString2);
+									if (searchPos > -1) {
+										augStrongIndex = i;
+										break;
+									}
+								}
 							}
 						}
 					}
-					resultJson.vocabInfos.push(jsonVar.vocabInfos[augStrongIndex]);
-                });
+					else if (strongArray[j] !== strongWithoutAugment) {
+						for (var i = 0; i < origJsonVar.v.length; i++) {
+							var strongNumToCheck = (typeof origJsonVar.v[i][0] === "number") ? origJsonVar.d[origJsonVar.v[i][0]] : origJsonVar.v[i][0];
+							if (strongArray[j] === strongNumToCheck ) {
+								augStrongIndex = i;
+								break;
+							}
+						}
+					}
+					var jsonVar = step.util.unpackJson(origJsonVar, augStrongIndex);
+					resultJson.vocabInfos.push(jsonVar);
+                }).error(function() {
+					console.log("getJSon failed strong:"+ strong + " morph: " + morph + " ref: " + reference + " version: " + version);
+					return resultJson;
+				});
             }
         }
 		if (morph) {
@@ -3317,72 +3437,166 @@ step.util = {
 				if (pos > -1) morph = morphArray[k].substring(pos+9);
 				$.getJSON("/html/lexicon/" + morph + ".json", function(jsonVar) {
 					resultJson.morphInfos.push(jsonVar.morphInfos[0]);
-				});
+                });
 			}
 		}
         $.ajaxSetup({async: true});
 		return resultJson;
+	},
+	bookOrderInBible: function (reference) {
+		var idx2osisChapterJsword = {
+			"gen": 0,
+			"exo": 1, "exod": 1,
+			"lev": 2,
+			"num": 3,
+			"deu": 4, "deut": 4,
+			"jos": 5, "josh": 5,
+			"judg": 6,
+			"rut": 7, "ruth": 7,
+			"1sa": 8, "1sam": 8,
+			"2sa": 9, "2sam": 9,
+			"1ki": 10, "1kgs": 10,
+			"2ki": 11, "2kgs": 11,
+			"1ch": 12, "1chr": 12,
+			"2ch": 13, "2chr": 13,
+			"ezr": 14, "ezra": 14,
+			"neh": 15,
+			"est": 16, "esth": 16,
+			"job": 17,
+			"psa": 18, "ps": 18,
+			"pro": 19, "prov": 19,
+			"ecc": 20, "eccl": 20,
+			"song": 21,
+			"isa": 22,
+			"jer": 23,
+			"lam": 24,
+			"eze": 25, "ezek": 25,
+			"dan": 26,
+			"hos": 27,
+			"joe": 28, "joel": 28,
+			"amo": 29, "amos": 29,
+			"obd": 30, "obad": 30,
+			"jon": 31, "jonah": 31,
+			"mic": 32,
+			"nah": 33,
+			"hab": 34,
+			"zep": 35, "zeph": 35,
+			"hag": 36,
+			"zec": 37, "zech": 37,
+			"mal": 38,
+			"mat": 39, "matt": 39,
+			"mar": 40, "mark": 40,
+			"luk": 41, "luke": 41,
+			"joh": 42, "john": 42,
+			"act": 43, "acts": 43,
+			"rom": 44,
+			"1cor": 45,
+			"2cor": 46,
+			"gal": 47,
+			"eph": 48,
+			"phili": 49, "phil": 49,
+			"col": 50,
+			"1th": 51, "1thess": 51,
+			"2th": 52, "2thess": 52,
+			"1ti": 53, "1tim": 53,
+			"2ti": 54, "2tim": 54,
+			"tit": 55, "titus": 55,
+			"phile": 56, "phlm": 56,
+			"heb": 57,
+			"jam": 58, "jas": 58,
+			"1pe": 59, "1pet": 59,
+			"2pe": 60, "2pet": 60,
+			"1jo": 61, "1john": 61,
+			"2jo": 62, "2john": 62,
+			"3jo": 63, "3john": 63,
+			"jude": 64,
+			"rev": 65
+		};
+		var tmpArray = reference.split(".");
+		if (typeof tmpArray[0] !== "string") return -1;
+		var bookName = tmpArray[0].toLowerCase(); // get the string before the "." character
+		var bookPosition = idx2osisChapterJsword[bookName];
+		if (typeof bookPosition === "number") return bookPosition;
+		return -1;
+	},
+	getTestamentAndPassagesOfTheReferences: function(osisIds) {
+		var hasNT = false;
+		var hasOT = false;
+		var ntPassages = [];
+		var otPassages = [];
+		for (var i = 0; i < osisIds.length; i ++) {
+			var bookOrder = step.util.bookOrderInBible(osisIds[i]);
+			if (bookOrder > 38) {
+				ntPassages.push(osisIds[i]);
+				hasNT = true;
+			}
+			else if (bookOrder > -1) {
+				otPassages.push(osisIds[i]);
+				hasOT = true;
+			}
+		}
+		return [hasNT, hasOT, ntPassages, otPassages];
+	},
+	checkBibleHasTheTestament: function(versionToCheck, hasNTPassage, hasOTPassage) {
+		versionToCheck = versionToCheck.toLowerCase();
+		if ((hasNTPassage) && 
+			((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionToCheck) > -1) ||
+			(" ohb thot alep wlc mapm ".indexOf(versionToCheck) > -1))) {
+			return false;
+		}
+		else if ((hasOTPassage) && 
+			((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(versionToCheck) > -1) ||
+			(" sblgnt ".indexOf(versionToCheck) > -1))) {
+			return false;
+		}
+		return true;
+	},
+	checkFirstBibleHasPassageBeforeSwap: function(newMasterVersion, callerPassagesModel, otherVersions) {
+		if (callerPassagesModel == null) return true; // cannot verify
+		osisIDs = callerPassagesModel.attributes.osisId.split(/[ ,]/);
+		return step.util.checkFirstBibleHasPassage(newMasterVersion, osisIDs, otherVersions);
+	},
+	checkFirstBibleHasPassage: function(newMasterVersion, osisIDs, otherVersions, dontShowAlert) {
+		var passageInfomation = step.util.getTestamentAndPassagesOfTheReferences(osisIDs);
+		var hasNTinReference = passageInfomation[0];
+		var hasOTinReference = passageInfomation[1];
+		var ntPassages = passageInfomation[2];
+		var otPassages = passageInfomation[3];
+		if (!step.util.checkBibleHasTheTestament(newMasterVersion, hasNTinReference, hasOTinReference)) {
+			var testamentAvailable = "";
+			var missingTestament = "";
+			var passagesNotAvailable = "";
+			var firstPassageInBible = "";
+			if (hasNTinReference) {
+				testamentAvailable = "Old ";
+				missingTestament = "New "
+				passagesNotAvailable = ntPassages.join(", ");
+				firstPassageInBible = "Gen.1";
+			}
+			if (hasOTinReference) {
+				testamentAvailable += "New ";
+				missingTestament += "Old "
+				passagesNotAvailable = otPassages.join(", ");
+				firstPassageInBible = "Matt.1";
+			}
+			var queryStringForFirstBookInAvailableTestament = "version=" + newMasterVersion;
+			for (var i = 0; i < otherVersions.length; i++) {
+				queryStringForFirstBookInAvailableTestament += "|version=" + otherVersions[i];
+			}
+			queryStringForFirstBookInAvailableTestament += "|reference=" + firstPassageInBible;
+			var alertMessage = "<br>We cannot process your request to display " + newMasterVersion + " as the first Bible.<br>" +
+				"<br>The " + newMasterVersion + " Bible only has the " + testamentAvailable + "Testament, " +
+				"it does not have the passage (" + passagesNotAvailable + ") which is in the " + missingTestament + " Testment. " + 
+				"<br><br>If you need both New and Old Testament passages, please select a Bible (e.g.: ESV) with both testaments as the first Bible.<br>" +
+				"<br>Below are some possible options:<br><ul>" +
+				"<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(4,'" +
+				 queryStringForFirstBookInAvailableTestament +
+				 "')\">Go to " + firstPassageInBible + " in " + newMasterVersion + " and then select my passage.</a>" +
+				 "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(5,'')\">Close this window to stay with your current passage(s) and Bible(s).</a>";
+			if (!dontShowAlert) step.util.showLongAlert(alertMessage, "Warning");
+			return false;
+		}
+		return true;
 	}
-	// test: function(strong, morph, ref, version, expectStrongNum) {
-	// 	$.ajaxSetup({async: false});
-    //     var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strong, morph, ref, version);
-	// 	if ((expectStrongNum) && (vocabMorphFromJson.vocabInfos[0].strongNumber !== expectStrongNum)) {
-	// 		console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " expected: " + expectStrongNum + " found: " + vocabMorphFromJson.vocabInfos[0].strongNumber);			
-	// 	}
-    //     $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, ""], function (data) {
-	// 		if (data.vocabInfos.length !== vocabMorphFromJson.vocabInfos.length) {
-	// 			console.log("length does not compare vocab strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 		}
-	// 		for (var i = 0; i < data.vocabInfos.length; i ++) {
-	// 			for (var key in data.vocabInfos[i]) {
-	// 				if ((typeof vocabMorphFromJson === "undefined") || (vocabMorphFromJson == null)) {
-	// 					console.log("vocabinfo not exist:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 				}
-	// 				if (key === "relatedNos") {
-	// 					if (typeof vocabMorphFromJson.vocabInfos[i]["relatedNos"] === "string")
-	// 						vocabMorphFromJson.vocabInfos[i]["relatedNos"] = JSON.parse(vocabMorphFromJson.vocabInfos[i]["relatedNos"].replaceAll("'", '"'));
-	// 					if (! _.isEqual(data.vocabInfos[i]["relatedNos"], vocabMorphFromJson.vocabInfos[i]["relatedNos"])) {
-	// 						console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 					}
-	// 				}
-	// 				else if (data.vocabInfos[i][key] !== vocabMorphFromJson.vocabInfos[i][key]) {
-	// 					console.log("does not compare strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 				}
-	// 			}	
-	// 		}
-	// 		if (data.morphInfos.length !== vocabMorphFromJson.morphInfos.length) {
-	// 			console.log("length does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 		}
-	// 		for (var i = 0; i < data.morphInfos.length; i ++) {
-	// 			for (var key in data.morphInfos[i]) {
-	// 				if (data.morphInfos[i][key] !== vocabMorphFromJson.morphInfos[i][key]) {
-	// 					console.log("does not compare morph strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version + " i: " + i + " key: " + key);
-	// 				}
-	// 			}
-	// 		}
-    //     }).error(function() {
-    //         console.log("getsafe failed strong:"+ strong + " morph: " + morph + " ref: " + ref + " version: " + version);
-    //     });
-    // },
-	// test1: function(fileName, version, start) {
-
-	// 	$.getJSON("/html/lexicon/" + fileName + ".json", function(jsonVar) {
-	// 		var end = jsonVar.length;
-	// 		if (end > start + 10000) end = start + 10000;
-	// 		for (var i = start; i < end; i ++) {
-	// 			var words = jsonVar[i].split(",");
-	// 			var temp = words[1].split(/[()]/);
-	// 			if (temp.length > 1) {
-	// 				if ((version !== "OHB")	&& (version !== "THOT")) words[1] = words[1].split(".")[0] + "." + temp[1];
-	// 				else words[1] = temp[0];
-	// 			}
-	// 			var strongWithoutAugment = words[0];
-	// 			if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
-	// 				strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
-	// 			}                                                                     // remove the last character if it is a letter
-	// 			step.util.test(strongWithoutAugment, "", words[1], version, words[0]);	
-	// 		}
-	// 	});
-	// }
 }
 ;

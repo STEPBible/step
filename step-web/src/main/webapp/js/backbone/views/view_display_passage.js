@@ -136,7 +136,7 @@ var PassageDisplayView = DisplayView.extend({
             }
             if (((languages[0].indexOf("en") == 0) ||
 				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
-				(this.bookIsOTorNT(reference))){
+				(step.util.bookOrderInBible(reference) > -1)) {
                 var xgenObj = passageHtml.find('.xgen');
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
@@ -236,7 +236,6 @@ var PassageDisplayView = DisplayView.extend({
             if (interlinearMode != "INTERLINEAR") {
                 return;
             }
-
             var warning = step.settings.get("warnInterlinearFirstTime") || false;
             step.util.raiseInfo(__s.warn_interlinear_view_selected, null, this.model.get("passageId"), null, warning);
             step.settings.save({
@@ -302,23 +301,44 @@ var PassageDisplayView = DisplayView.extend({
         _isPassageValid: function (passageHtml, reference) {
             if (passageHtml.find(":not(.xgen):first").length == 0) {
                 var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
+                message += "<br>" + this.warnIfBibleDoesNotHaveTestament(reference);
                 var errorMessage = $("<span>").addClass("notApplicable").html(message);
                 this.$el.html(errorMessage);
                 return false;
             }
             return true;
         },
-
-        bookIsOTorNT: function (reference) {
-	        var tmpArray = reference.split(".");
-			var bookID = tmpArray[0]; // get the string before the "." character
-			for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {
-				var currentOsisID = (step.passageSelect.osisChapterJsword[i].length === 4) ? step.passageSelect.osisChapterJsword[i][3] : step.passageSelect.osisChapterJsword[i][0];
-				if (bookID === currentOsisID) return true;
-			}
-            return false;
+        warnIfBibleDoesNotHaveTestament: function (reference) {
+            var bookOrder = step.util.bookOrderInBible(reference);
+            if (bookOrder > -1) {
+                var masterVersion = step.util.activePassage().get("masterVersion");
+                var masterVersionLowerCase = masterVersion.toLowerCase();
+                var extraVersionsMsg = "";
+                var testamentOfPassageSelected = "Old";
+                var theOtherTestament = "New";
+                if (bookOrder > 38) {
+                    testamentOfPassageSelected = "New";
+                    theOtherTestament = "Old";
+                }
+                if ( 
+                    ((testamentOfPassageSelected === "New") &&
+                     ((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
+                      (" ohb thot alep wlc mapm ".indexOf(masterVersionLowerCase) > -1))) ||
+                    ((testamentOfPassageSelected === "Old") &&
+                     ((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
+                      (" sblgnt ".indexOf(masterVersionLowerCase) > -1))) ) {
+                    var alertMessage = "<br>The Bible selected, " + masterVersion + ", only has the " +
+                        theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected." +
+                        "<br><br>You can either:<ul>" +
+                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(2)\">Add another Bible which has " + testamentOfPassageSelected + " Testament" + 
+                        extraVersionsMsg + ".</a>" +
+                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1)\">Select a " + theOtherTestament + " Testament passage.</a>" +
+                        "</ul>";
+                    return alertMessage;
+                }
+            }
+            return "";
         },
-		
         /**
          *
          * @param passageContent the content that we are processing
@@ -353,13 +373,16 @@ var PassageDisplayView = DisplayView.extend({
         doInlineNoteQuickLexicon: function (target, link, ev) {
             require(['quick_lexicon'], function () {
                 var text = link.closest(".note").find(".inlineNote");
+                var currentPageY = ((typeof ev.pageY !== "number") && (typeof ev.originalEvent.touches[0].pageY === "number")) ?
+                    ev.originalEvent.touches[0].pageY : ev.pageY; // pageY is available at different variable if it is a touch event.
                 //do the quick note
                 new QuickLexicon({
                     text: text,
                     strong: null,
                     morph: null,
                     target: target,
-                    position: ev.pageY / $(window).height(),
+                    position: currentPageY,
+                    height: $(window).height(),
                     touchEvent: false
                 });
             });
@@ -438,6 +461,7 @@ var PassageDisplayView = DisplayView.extend({
         },
         _makeSideNoteQtipHandler: function (item, xref, myPosition, atPosition, version, touch) {
             var self = this;
+            if (!step.util.checkFirstBibleHasPassage(version, [xref.split(" ")[0]], [], true)) version = "ESV";
             if (!$.data(item, "initialised")) {
                 require(["qtip", "drag"], function () {
                     item.qtip({

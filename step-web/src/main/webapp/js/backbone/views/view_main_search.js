@@ -523,10 +523,9 @@ var MainSearchView = Backbone.View.extend({
     _removeVersion: function (data) {
         //find the element
         var versions = this.masterSearch.select2("data");
-        for (var i = 0; i < versions.length; i++) {
+        for (var i = versions.length - 1; i > -1; i--) {
             if (versions[i].item.initials == data.value.initials || versions.shortInitials == data.value.initials) {
                 versions.splice(i, 1);
-                i--;
             }
         }
         this._setData(versions);
@@ -544,17 +543,24 @@ var MainSearchView = Backbone.View.extend({
         var args = "";
         var refArgs = "";
         var searchArgs = "";
-        var searchFound = false;
-        var moreThanOneVersion = 0;
+        var numOfBibleVersions = 0;
+        var newMasterVersion = "";
+        var otherVersions = [];
+        var osisIds = [];
         for (var ii = 0; ii < options.length; ii++) {
               switch (options[ii].itemType) {
                 case VERSION:
                     args += "|" + options[ii].itemType + "=";
-                    args += encodeURIComponent(options[ii].item.shortInitials);
-                    moreThanOneVersion ++;
+                    var currentVersionInArg = options[ii].item.shortInitials;
+                    args += encodeURIComponent(currentVersionInArg);
+                    if (numOfBibleVersions == 0) newMasterVersion = currentVersionInArg;
+                    else if (otherVersions.indexOf() == -1) otherVersions.push(currentVersionInArg);
+                    numOfBibleVersions ++;
                     break;
                 case REFERENCE:
-                    refArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.osisID);
+                    var currentReferenceInArg = options[ii].item.osisID;
+                    refArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(currentReferenceInArg);
+                    osisIds.push(currentReferenceInArg);
                     break;
                 case GREEK:
                 case GREEK_MEANINGS:
@@ -613,7 +619,7 @@ var MainSearchView = Backbone.View.extend({
                     break;
             }
         }
-
+        if (!step.util.checkFirstBibleHasPassage(newMasterVersion, osisIds, otherVersions)) return;
         //reset defaults:
         step.util.activePassage().save({pageNumber: 1, filter: null, strongHighlights: null}, {silent: true});
 		args = args.replace(/^\|/g, '');
@@ -629,7 +635,7 @@ var MainSearchView = Backbone.View.extend({
         }
         console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
-        if (moreThanOneVersion > 1) step.util.showIntroOfMultiVersion();
+        if (numOfBibleVersions > 1) step.util.showIntroOfMultiVersion();
     },
     getCurrentInput: function () {
         return this.masterSearch.select2("container").find(".select2-input").val();
@@ -719,11 +725,9 @@ var MainSearchView = Backbone.View.extend({
             itemType = [itemType];
         }
 
-        for (var i = 0; i < this.specificContext.length; i++) {
+        for (var i = this.specificContext.length - 1; i > -1; i--) {
             if (itemType.indexOf(this.specificContext[i].itemType) != -1) {
                 this.specificContext.splice(i, 1);
-                //i will be incremented, so keep it in sync with for loop increment
-                i--;
             }
         }
     },

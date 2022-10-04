@@ -75,6 +75,9 @@ step.passageSelect = {
 		["Jude", 1, [25]],
 		["Rev", 22, [20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,21,15,27,21]]
 	],
+	translationsWithPopularBooksChapters: " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv ee esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ",
+	translationsWithPopularNTBooksChapters: ' 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblg sblgntapp spavnt swahili swaulb thgnt tisch tnt tr ukrkulish uma varapp weym whnu wors ',
+	translationsWithPopularOTBooksChapters: ' ab gertextbibel kd wlc lees lxx rusmakarij ',
 
 	initPassageSelect: function(summaryMode) {
         this.version = "ESV_th";
@@ -174,15 +177,12 @@ step.passageSelect = {
 									  (step.keyedVersions[data[i].item.initials].languageCode === "en"));
 			}
 		}
-		var translationsWithPopularBooksChapters = " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv ee esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ";
-		var translationsWithPopularNTBooksChapters = ' 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblg sblgntapp spavnt swahili swaulb thgnt tisch tnt tr ukrkulish uma varapp weym whnu wors ';
-		var translationsWithPopularOTBooksChapters = ' ab gertextbibel kd wlc lees lxx rusmakarij ';
 		var lowerCaseVersion = ' ' + this.version.toLowerCase() + ' ';
 		versionAltName = ' ' + versionAltName.toLowerCase() + ' ';
 		var translationType = "";
-		if ((translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
-		else if ((translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
-		else if ((translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
+		if ((this.translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (this.translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
+		else if ((this.translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (this.translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
+		else if ((this.translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (this.translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
 		this.hasEnglishBible = atLeastOneEnglishBible;
 		return translationType;
 	},
@@ -225,8 +225,10 @@ step.passageSelect = {
 		var end = 0;
 		if (typeof data === "string") {
 			if (data == "OTNT") end = 66;
-			else if (data == "OT") end = 39;
-			else if (data == "NT") {
+			else if (data === "OT") {
+				end = 39;
+			}
+			else if (data === "NT") {
 				start = 39;
 				end = 66;
 			}
@@ -243,7 +245,6 @@ step.passageSelect = {
 			var shortNameToDisplay;
 			var longNameToDisplay;
 			var numOfChapters;
-			var jSwordName;
 			if (typlicalBooksChapters) {
 				currentOsisID = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
 				numOfChapters = this.osisChapterJsword[i][1];
@@ -256,7 +257,6 @@ step.passageSelect = {
 				longNameToDisplay = data[i].suggestion.fullName;
 				shortNameToDisplay = (this.userLang.toLowerCase().indexOf("en") == 0) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
 			}
-			var oldTestment = false;
 			var newTestament = (nt.indexOf(currentOsisID) > -1);
 			if (!newTestament) oldTestament = (ot.indexOf(currentOsisID) > -1);
 			if ((newTestament) && (notSeenNT)) {
@@ -309,8 +309,16 @@ step.passageSelect = {
 		if (additionalBooks) tableHTML += '<p style="color:brown">* Deuterocanonical or other books</p>';
 		if (notSeenNT) $('#ot_table').append(tableHTML);
 		else $('#nt_table').append(tableHTML);
+		this.checkForBiblesWithoutOneTestament(this.version);
 	},
-
+	checkForBiblesWithoutOneTestament: function(version) {
+		if ((typeof step.keyedVersions[version] === "object") && (typeof step.keyedVersions[version].shortInitials === "string"))
+			version = step.keyedVersions[version].shortInitials;
+		if ($("#nt_table").text() === "")
+			$("#nt_header").html('<b>' + __s.nt_short + '</b> ' + __s.is_not_available_in + ' ' + version);
+		else if ($("#ot_table").text() === "")
+			$("#ot_header").html('<b>' + __s.ot_short + '</b> ' + __s.is_not_available_in + ' ' + version);
+	},
 	_buildBookHeaderAndSkeleton: function(summaryMode) {
 		var html = '<div class="header" style="overflow-y:auto">' +
 			'<h4>' + __s.please_select_book + '</h4>';
@@ -323,9 +331,9 @@ step.passageSelect = {
 				'</button>';
 		html +=
 			'</div>' +
-			'<span class="stepFgBg" style="font-size:18px"><b>' + __s.old_testament + '</b></span>' +
+			'<span id="ot_header" class="stepFgBg" style="font-size:18px"><b>' + __s.old_testament + '</b></span>' +
 			'<div id="ot_table"/>' +
-			'<span class="stepFgBg" style="font-size:18px"><b>' + __s.new_testament + '</b></span>' +
+			'<span id="nt_header" class="stepFgBg" style="font-size:18px"><b>' + __s.new_testament + '</b></span>' +
 			'<div id="nt_table"/>' +
 			'</div>';
 		return html;
@@ -501,7 +509,7 @@ step.passageSelect = {
             '<h4>' + headerMsg + '</h4>';
         if ((isChapter) && 
 			 ((userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible)) &&
-			 (PassageDisplayView.prototype.bookIsOTorNT(bookOsisID)) )
+			 (step.util.bookOrderInBible(bookOsisID) > -1) )
 			html +=
 				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
 					bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +

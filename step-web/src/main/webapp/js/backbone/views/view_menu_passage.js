@@ -439,8 +439,8 @@ var PassageMenuView = Backbone.View.extend({
             }));
             var currentSecondZhLexiconSetting = self.model.get("isSecondZhLexicon");
             if (currentSecondZhLexiconSetting === null) {
-                this.model.save({ isSecondZhLexicon: true });
-                currentSecondZhLexiconSetting = true;
+                this.model.save({ isSecondZhLexicon: false });
+                currentSecondZhLexiconSetting = false;
             }
             dropdown.append($(_.template(this.secondZhLexicon)({ isSecondZhLexicon: currentSecondZhLexiconSetting })).click(function (e) {
                 e.stopPropagation(); //prevent the bubbling up

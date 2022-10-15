@@ -3,13 +3,14 @@
   font-family: 'Cardo';
   font-style: normal;
   font-size: 18px;
-  src: local("Times New Roman");
+    src: url('../fonts/NotoSerif-Regular.woff') format('woff');
+
 }
 @font-face {
     font-family: 'Cardo';
     font-style: normal;
     font-size: 18px;
-    src: url('../fonts/SBL_grk.woff') format('woff');
+    src: url('../fonts/NotoSerif-Regular.woff') format('woff');
     unicode-range: U+2E00-2E17;
 }
 

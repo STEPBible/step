@@ -47,7 +47,7 @@ public class VocabResponse {
 
     /**
      * Instantiates a new vocab response.
-     *  @param definitions the definitions
+     * @param definitions the definitions
      * @param relatedWords the related words
      */
     public VocabResponse(final EntityDoc[] definitions,

@@ -1173,7 +1173,7 @@ var cf = {
   },
 
   getC4: function() {
-    var tmp = window.localStorage.getItem('colorCode-CurrentSettings');
+    var tmp = step.util.localStorageGetItem('colorCode-CurrentSettings');
     if (tmp) {
       var tmpC4 = c4 = JSON.parse(tmp);
       if (tmpC4[C_c4Version] == '20190905') c4 = tmpC4;
@@ -1186,7 +1186,7 @@ var cf = {
   },
 
   updtLocalStorage: function() {
-    window.localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
+    step.util.localStorageSetItem('colorCode-CurrentSettings', JSON.stringify(c4));
   },
 
   getVariablesForVerbTable: function() {
@@ -1356,10 +1356,10 @@ var cf = {
     if (configName.indexOf("function:") == 0){
       var functionName = configName.substr(9);
       if (functionName == "openStats")
-        window.localStorage.setItem('colorCode-openStatus', JSON.stringify(true));
+        step.util.localStorageSetItem('colorCode-openStatus', JSON.stringify(true));
     }
     else cf.openUserSelectedConfig(configName);
-    window.localStorage.setItem('colorCode-InfoMsg', JSON.stringify(infoMsg));
+    step.util.localStorageSetItem('colorCode-InfoMsg', JSON.stringify(infoMsg));
     window.location.assign(url);
   },
 
@@ -1993,11 +1993,11 @@ var cf = {
     else if (selectedConfig === 'verb, without reference to time') c4 = cf.c4VerbMoodTense2();
     else {
       var found = false;
-      var tmp = window.localStorage.getItem('colorCode-UserClrConfigNames');
+      var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
       if (tmp) {
         var foundCfg = JSON.parse(tmp).filter(function(cfgName) { return cfgName.toLowerCase() == selectedConfig; });
         if (foundCfg.length > 0) {
-          var tmp2 = window.localStorage.getItem('colorCode-UserClrConfigName-' + foundCfg[0]);
+          var tmp2 = step.util.localStorageGetItem('colorCode-UserClrConfigName-' + foundCfg[0]);
           if (tmp2) {
             found = true;
             var tmpC4 = c4 = JSON.parse(tmp2);

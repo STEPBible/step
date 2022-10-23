@@ -254,7 +254,7 @@ var MainSearchView = Backbone.View.extend({
             }
         });
         var container = this.masterSearch.select2("container");
-        var classicalUISetting = (window.localStorage) ? window.localStorage.getItem("step.classicalUI") : $.cookie('step.classicalUI');
+        var classicalUISetting = step.util.localStorageGetItem("step.classicalUI");
 		var classicalUI = (classicalUISetting === "true") ? true : false;
 		step.util.setClassicalUI(classicalUI);
 		

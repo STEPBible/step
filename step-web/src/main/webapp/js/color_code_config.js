@@ -19,7 +19,7 @@ function initializeClrCodeHtmlModalPage() {
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
     (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
-  window.localStorage.setItem('colorCode-PreviousSettings', JSON.stringify(c4));
+  step.util.localStorageSetItem('colorCode-PreviousSettings', JSON.stringify(c4));
 }
   
 function openClrConfig() {
@@ -39,7 +39,7 @@ function initOpenClrCodeModal() {
   s.append($('<option/>').html('Verb, imperative mood'));
   s.append($('<option/>').html('Verb, main vs supporting verbs'));
   s.append($('<option/>').html('Gender and Number'));
-  var tmp = window.localStorage.getItem('colorCode-UserClrConfigNames');
+  var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
   if (tmp) {
     var UserClrConfigNames = JSON.parse(tmp);
     for (var i in UserClrConfigNames) {
@@ -456,7 +456,7 @@ function saveClrConfig() {
 }
 
 function initSaveClrCodeModal() {
-  var tmp = window.localStorage.getItem('colorCode-UserClrConfigNames');
+  var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
   if (tmp) {
     $('#saveClrModalPromptForDropdownList').show();
     var s = $('<select id="saveClrConfigDropdown"/>');
@@ -474,7 +474,7 @@ function saveUserClrConfig() {
   var inTxt = document.getElementById('saveClrModalInputArea').value.trim();
   var selectedConfig = document.getElementById('saveClrConfigDropdown');
   if (selectedConfig) selectedConfig = selectedConfig.value.trim();
-  var tmp = window.localStorage.getItem('colorCode-UserClrConfigNames');
+  var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
   if (inTxt === '') {
     if (!tmp) {
       alert('Please enter a name for your color configuration before using the "Save" button.');
@@ -492,9 +492,9 @@ function saveUserClrConfig() {
       }
     }
     userClrConfigNames.push(inTxt);
-    window.localStorage.setItem('colorCode-UserClrConfigNames', JSON.stringify(userClrConfigNames));
+    step.util.localStorageSetItem('colorCode-UserClrConfigNames', JSON.stringify(userClrConfigNames));
   }
-  window.localStorage.setItem('colorCode-UserClrConfigName-' + inTxt, JSON.stringify(c4));
+  step.util.localStorageSetItem('colorCode-UserClrConfigName-' + inTxt, JSON.stringify(c4));
   step.util.closeModal("saveClrModal");
   // $('#saveClrModal .close').click();
   // var element = document.getElementById('saveClrModal');
@@ -1582,7 +1582,7 @@ function hideOrShowHtmlForPassiveBkgrdClr(passiveBkgrdName, otPrefix) {
 
 function cancelClrChanges() {
   var previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
-  var tmp = window.localStorage.getItem('colorCode-PreviousSettings');
+  var tmp = step.util.localStorageGetItem('colorCode-PreviousSettings');
   if (tmp) c4 = JSON.parse(tmp);
   else c4 = cf.createC4();
   cf.updtLocalStorage();

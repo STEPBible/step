@@ -265,7 +265,7 @@ var ExamplesView = Backbone.View.extend({
             var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
             if ((options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1)) cf.initCanvasAndCssForClrCodeGrammar();
 		}
-        var classicalUISetting = (window.localStorage) ? window.localStorage.getItem("step.classicalUI") : $.cookie('step.classicalUI');
+        var classicalUISetting = step.util.localStorageGetItem("step.classicalUI");
 		if (classicalUISetting === "true") $('#classicalUIVideo').hide();
 		else $('#classicalUIVideo').show();
         if (step.touchDevice) $("#keyboard_shortcut").hide();
@@ -275,12 +275,12 @@ var ExamplesView = Backbone.View.extend({
         var count = this.$el.find(".accordion-row").length - 1; // Don't need to highlight keyboard shortcut
         var hasStoredState = false;
         var timesDisplayedKey = "accordionTimesDisplayed";
-		var timesDisplayed = localStorage.getItem(timesDisplayedKey);
+		var timesDisplayed = step.util.localStorageGetItem(timesDisplayedKey);
 		if (timesDisplayed == null) timesDisplayed = 1;
 		else timesDisplayed ++;
 		
         for (var i = 0; i < count; i++) {
-            if (localStorage.getItem("displayQuickTryoutAccordion" + i) === "true") {
+            if (step.util.localStorageGetItem("displayQuickTryoutAccordion" + i) === "true") {
                 hasStoredState = true;
 				var index = i;
 				if (timesDisplayed > 4) {
@@ -291,7 +291,7 @@ var ExamplesView = Backbone.View.extend({
             }
         }
         if (!hasStoredState) this.toggleAccordion(0, count);
-		localStorage.setItem(timesDisplayedKey, timesDisplayed);
+		step.util.localStorageSetItem(timesDisplayedKey, timesDisplayed);
     },
     toggleAccordion: function (index, accordionCount) {
         var query = ".accordion-row[data-row=" + index + "]";
@@ -302,20 +302,20 @@ var ExamplesView = Backbone.View.extend({
 		if (typeof accordionCount === "number") {
 			displayFlag = true;
 			for (var i = 0; i < accordionCount; i++) {
-				localStorage.setItem("displayQuickTryoutAccordion" + i, "false") ;
+				step.util.localStorageSetItem("displayQuickTryoutAccordion" + i, "false") ;
 			}
 		}
         if ( (!$accordionBody.is(":visible")) || (displayFlag) ) {
             $accordionRow.find(".accordion-body").slideDown();
 			$accordionRow.find(".accordion-heading").addClass('stepPressedButton');
             $accordionRow.find(".plusminus").text("-");
-            localStorage.setItem(storageKey, "true");
+            step.util.localStorageSetItem(storageKey, "true");
         }
         else {
             $accordionRow.find(".accordion-body").slideUp();
 			$accordionRow.find(".accordion-heading").removeClass('stepPressedButton');
             $accordionRow.find(".plusminus").text("+");
-            localStorage.setItem(storageKey, "false");
+            step.util.localStorageSetItem(storageKey, "false");
         }
     },
     onClickHeading: function (event) {

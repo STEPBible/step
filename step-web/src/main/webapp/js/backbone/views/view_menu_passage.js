@@ -566,7 +566,12 @@ var PassageMenuView = Backbone.View.extend({
                 self._setVisible(el, true);
             }
             else {
-                self._setVisible(el, el.find('.glyphicon').css("visibility") == 'hidden');
+                var newVisibility = el.find('.glyphicon').css("visibility") === "hidden"; // new visibility
+                // if ($(el[0]).attr("data-value") === "V") {
+                //     if (newVisibility) $("#copy-icon").show();
+                //     else $("#copy-icon").hide();
+                // }
+                self._setVisible(el, newVisibility);
             }
 
             if (handler) {
@@ -690,7 +695,6 @@ var PassageMenuView = Backbone.View.extend({
             if (args[args.length - 1] !== '|') args += '|';
         }
         args += "reference=" + reference;
-        console.log("navigateSearch from goToSiblingChapter: " + args);
         step.router.navigateSearch(args);
     },
     removeSearchArgs: function(args) {

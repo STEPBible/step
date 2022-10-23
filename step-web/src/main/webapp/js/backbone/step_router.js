@@ -30,21 +30,24 @@ var StepRouter = Backbone.Router.extend({
         var searchParameters = partial;
         var mainVersion = activePassage.get("masterVersion");
         var allVersions = "";
+        var otherVersions = [];
         if (mainVersion !== "") {
             if (!stripCommentaries || step.keyedVersions[mainVersion].category == 'BIBLE') {
                 allVersions = "version=" + mainVersion;
             }
-
             var extraVersions = (activePassage.get("extraVersions") || "").split(",");
             for (var i = 0; i < extraVersions.length; i++) {
                 if ((extraVersions[i] || "") !== "") {
                     if (!stripCommentaries || step.keyedVersions[extraVersions[i]].category == 'BIBLE') {
                         if (allVersions !== "") allVersions += "|";
                         allVersions += "version=" + extraVersions[i];
+                        otherVersions.push(extraVersions[i]);
                     }
                 }
             }
         }
+        var osisIDs = partial.substring( partial.indexOf("reference=") + 10).split(" ");
+        if (!step.util.checkFirstBibleHasPassage(mainVersion, osisIDs, otherVersions, false, true)) return;
 		skipPage = (skipPage) ? true : false;
 		skipQFilter = (skipQFilter) ? true : false;
         if ((allVersions !== "") && (searchParameters !== "")) searchParameters = allVersions + "|" + searchParameters;

@@ -22,9 +22,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
     </button>
+
+	<a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy_text"/>">
+        <i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="copy_text"/></span>
+    </a>
 	
     <a id="panel-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="<fmt:message key="open_in_new_panel"/>">
-        <i class="glyphicon glyphicon-plus"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="new_panel"/></span>
+        <i class="glyphicon glyphicon-plus"></i><span class="navbarIconDesc hidden-sm">&nbsp;<fmt:message key="new_panel"/></span>
     </a>
     <a id="report-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="html/reports_by_step.html" target="_blank" title="Reports that uses STEP">
         <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-sm">&nbsp;&nbsp;Reports</span>

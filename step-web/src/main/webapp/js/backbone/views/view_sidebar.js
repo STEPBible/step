@@ -429,11 +429,10 @@ var SidebarView = Backbone.View.extend({
 				var searchJoins = "";
 				for (var i = 1; i < allStrongs.length; i++) {
 					currentSearch += '|strong=' + encodeURIComponent(args[i]);
-					if (i == 1) searchJoins = "searchJoins=OR";
-					else searchJoins += ",OR"
+					if (i == 1) searchJoins = "srchJoin=(1o2";
+					else searchJoins += "o" + (i+1);
 				}
-				currentSearch = searchJoins + "|" + currentSearch;
-								
+                if (allStrongs.length > 1) currentSearch = searchJoins + ")|" + currentSearch;
 				step.router.navigatePreserveVersions(currentSearch, false, true, true);
 				return false;
 			}));

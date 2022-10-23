@@ -1319,7 +1319,7 @@
     </xsl:template>
 
     <xsl:template match="divineName">
-        <span class="small-caps">&#160;<xsl:apply-templates/>
+        <span class="small-caps"><xsl:apply-templates/>
         </span>
     </xsl:template>
 

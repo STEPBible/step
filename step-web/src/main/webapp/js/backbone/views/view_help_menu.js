@@ -77,9 +77,17 @@ var ViewHelpMenuOptions = Backbone.View.extend({
         step.util.ui.showTutorial();
     },
 	classicalUI : function() {
-        var classicalUISetting = (window.localStorage) ? window.localStorage.getItem("step.classicalUI") : $.cookie('step.classicalUI');
-		var classicalUI = (classicalUISetting === "true") ? false : true; // reserse the setting
+        var classicalUISetting = step.util.localStorageGetItem('step.classicalUI');
+		var classicalUI;
+		if (classicalUISetting === "true") { // reserse the setting
+			classicalUI = false;
+			classicalUISetting = "false";
+		}
+		else {
+			classicalUI = true;
+			classicalUISetting = "true";
+		}
 		step.util.setClassicalUI(classicalUI);
-		if (window.localStorage) window.localStorage.setItem("step.classicalUI", classicalUI);
-		else $.cookie('step.classicalUI', classicalUI);    }
+		step.util.localStorageSetItem("step.classicalUI", classicalUISetting);
+	}
 });

@@ -461,7 +461,7 @@ var PassageDisplayView = DisplayView.extend({
         },
         _makeSideNoteQtipHandler: function (item, xref, myPosition, atPosition, version, touch) {
             var self = this;
-            if (!step.util.checkFirstBibleHasPassage(version, [xref.split(" ")[0]], [], true)) version = "ESV";
+            if (!step.util.checkFirstBibleHasPassage(version, [xref.split(" ")[0]], [], true, true)) version = "ESV";
             if (!$.data(item, "initialised")) {
                 require(["qtip", "drag"], function () {
                     item.qtip({

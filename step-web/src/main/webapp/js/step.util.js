@@ -393,28 +393,30 @@ step.util = {
 		$("#help").height(heightToSet);
     },
     findSearchTermsInQuotesAndRemovePrefix: function(syntaxWords) {
-        var indxNeedConcatenate = -1;
-        var quoteChar = "";
-        for (var j = 0; j < syntaxWords.length; j++) {
-            if (indxNeedConcatenate == -1) {
-				if (syntaxWords[j].substr(0, 2) === "t=") syntaxWords[j] = syntaxWords[j].substr(2);
-                if ((syntaxWords[j].substr(0, 1) === '"') ||
-                    (syntaxWords[j].substr(0, 1) === "'")) {
-                    indxNeedConcatenate = j;
-                    quoteChar = syntaxWords[j].substr(0, 1);
-                }
-            }
-            else {
-                if (syntaxWords[j].substr(-1) == quoteChar) {
-                    for (var k = indxNeedConcatenate + 1; k <= j; k++) {
-                        syntaxWords[indxNeedConcatenate] += " " + syntaxWords[k];
-                        syntaxWords[k] = "";
-                    }
-                    indxNeedConcatenate = -1;
-                    quoteChar = "";
-                }
-            }
-        }
+		if (syntaxWords.length != 1) alert("unexpected syntaxWords");
+		if (syntaxWords[0].substr(0, 2) === "t=") syntaxWords[0] = syntaxWords[0].substr(2);
+    //     var indxNeedConcatenate = -1;
+    //     var quoteChar = "";
+    //     for (var j = 0; j < syntaxWords.length; j++) {
+    //         if (indxNeedConcatenate == -1) {
+	// 			if (syntaxWords[j].substr(0, 2) === "t=") syntaxWords[j] = syntaxWords[j].substr(2);
+    //             if ((syntaxWords[j].substr(0, 1) === '"') ||
+    //                 (syntaxWords[j].substr(0, 1) === "'")) {
+    //                 indxNeedConcatenate = j;
+    //                 quoteChar = syntaxWords[j].substr(0, 1);
+    //             }
+    //         }
+    //         else {
+    //             if (syntaxWords[j].substr(-1) == quoteChar) {
+    //                 for (var k = indxNeedConcatenate + 1; k <= j; k++) {
+    //                     syntaxWords[indxNeedConcatenate] += " " + syntaxWords[k];
+    //                     syntaxWords[k] = "";
+    //                 }
+    //                 indxNeedConcatenate = -1;
+    //                 quoteChar = "";
+    //             }
+    //         }
+    //     }
     },
     /**
      * Renumbers the models from 0, so that we can track where things are.
@@ -507,7 +509,6 @@ step.util = {
         var activeColumn = columns.has(".passageContainer.active");
         var newColumn = activeColumn.clone();
 
-        var passageId;
         var newPassageId;
         if (!model) {
             //create new
@@ -890,31 +891,42 @@ step.util = {
 						}
                         if (itemType === SYNTAX) {
                             var syntaxWords = searchTokens[i].token.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').split(" ");
-                            step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
-   							var searchRelationship = "";
-                            for (var j = 0; j < syntaxWords.length; j++) {
-                                if (syntaxWords[j] == "") continue;
-								if ((j > 0) && (searchRelationship === "") &&
-									((syntaxWords[j] === "AND") || (syntaxWords[j] === "OR") || (syntaxWords[j] === "NOT"))) {
-									searchRelationship = syntaxWords[j];
-									continue;
-								}
-                                if ((j > 0) && (searchWords.length > 0)) {
-									if ((searchRelationship === "AND") || (searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
-									else searchWords += ', ';
-								}
-                                if (syntaxWords[j].search(/\s*(\(*)\s*strong:([GH]\d{1,5}[A-Za-z]?)\s*(\)*)/) > -1) {
-                                    // RegExp.$1 is prefix of open parathesis, RegExp.$2 is the strong number, RegExp.$2 is the suffix of close parathesis
-                                    var prefix = RegExp.$1;
-                                    var strongNum = RegExp.$2;
-                                    var suffix = RegExp.$3;
-                                    var stepTransliteration = step.util.getDetailsOfStrong(strongNum, firstVersion)[1];
-                                    if (stepTransliteration === "") stepTransliteration = strongNum;
-                                    searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
-                                }
-                                else searchWords += syntaxWords[j];
-								searchRelationship = "";
-                            }
+							step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
+							if ((syntaxWords.length == 1) && (syntaxWords[0].search(/\s*(\(*)\s*strong:([GH]\d{1,5}[A-Za-z]?)\s*(\)*)/) > -1)) {
+								// RegExp.$1 is prefix of open parathesis, RegExp.$2 is the strong number, RegExp.$2 is the suffix of close parathesis
+								var prefix = RegExp.$1;
+								var strongNum = RegExp.$2;
+								var suffix = RegExp.$3;
+								var stepTransliteration = step.util.getDetailsOfStrong(strongNum, firstVersion)[1];
+								if (stepTransliteration === "") stepTransliteration = strongNum;
+								searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
+							}
+							else alert("unknown syntax search 1: " + systaxWords);
+							//step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
+   							// var searchRelationship = "";
+                            // for (var j = 0; j < syntaxWords.length; j++) {
+                            //     if (syntaxWords[j] == "") continue;
+							// 	if ((j > 0) && (searchRelationship === "") &&
+							// 		((syntaxWords[j] === "AND") || (syntaxWords[j] === "OR") || (syntaxWords[j] === "NOT"))) {
+							// 		searchRelationship = syntaxWords[j];
+							// 		continue;
+							// 	}
+                            //     if ((j > 0) && (searchWords.length > 0)) {
+							// 		if ((searchRelationship === "AND") || (searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
+							// 		else searchWords += ', ';
+							// 	}
+                            //     if (syntaxWords[j].search(/\s*(\(*)\s*strong:([GH]\d{1,5}[A-Za-z]?)\s*(\)*)/) > -1) {
+                            //         // RegExp.$1 is prefix of open parathesis, RegExp.$2 is the strong number, RegExp.$2 is the suffix of close parathesis
+                            //         var prefix = RegExp.$1;
+                            //         var strongNum = RegExp.$2;
+                            //         var suffix = RegExp.$3;
+                            //         var stepTransliteration = step.util.getDetailsOfStrong(strongNum, firstVersion)[1];
+                            //         if (stepTransliteration === "") stepTransliteration = strongNum;
+                            //         searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
+                            //     }
+                            //     else searchWords += syntaxWords[j];
+							// 	searchRelationship = "";
+                            // }
                         }
                         else if ((itemType === GREEK_MEANINGS) ||
 							(itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
@@ -1754,22 +1766,18 @@ step.util = {
 			'</script>' +
 		'</div>').modal("show");
     },
-	correctNoPassageInSelectedBible: function (userChoice, queryString) {
+	correctPassageNotInBible: function (userChoice, queryString) {
 		$("#showLongAlertModal").click();
-		if (userChoice == 1) {
-			step.util.passageSelectionModal( step.util.activePassageId() );
+		// if (userChoice == 1) {
+		// 	step.util.passageSelectionModal( step.util.activePassageId() );
+		// }
+		// else if (userChoice === 2) {
+		// 	step.util.startPickBible();
+		// }		
+		if (userChoice === 1) {
+			step.router.navigateSearch(queryString, true, true);
 		}
 		else if (userChoice === 2) {
-			step.util.startPickBible();
-			//if (userChoice == 3) {
-			//	setTimeout(
-			//		function() {
-			//			$("#order_button_bible_modal").click();
-			//		},
-			//	500);
-			//}
-		}
-		else if (userChoice === 4) {
 			step.router.navigateSearch(queryString, true, true);
 			step.readyToShowPassageSelect = false;
 			for (var i = 0; i < 30; i++) {
@@ -1782,13 +1790,11 @@ step.util = {
 									function() {
 										if (step.readyToShowPassageSelect) {
 											step.readyToShowPassageSelect = false; // Stop it from triggering more clicks
-											console.log("click on select reference");
 											$(".passageContainer.active").find(".select-reference").click();
 										}
 									},
 								150);
 							}
-							else console.log("not ready");
 						},
 					350);
 				}
@@ -1865,7 +1871,47 @@ step.util = {
 			$('textarea#enterYourPassage').focus().val(step.tempKeyInput);
 			step.tempKeyInput = "";
 		}
-    },
+  },
+
+  copyModal: function () {
+    var element = document.getElementById('copyModal');
+    if (element) element.parentNode.removeChild(element);
+    $("div.modal-backdrop.in").remove();
+		var modalHTML = '<div id="copyModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
+					'<div class="modal-header">' +
+						'<span class="pull-right">' +
+							step.util.modalCloseBtn("copyModal") +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+						'</span>'+
+					'</div>';
+		modalHTML +=
+					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
+					'<br>';
+
+		modalHTML +=
+					'<div class="footer" id="copyModalFooter">' +
+						'<div id="includeNotes" style="display:none">' +
+							'<span>&nbsp;&nbsp;<b>Include notes</b>&nbsp;</span>' +
+							'<input type="checkbox" id="selectnotes"/>' +
+						'</div>' +
+						'<div id="includeXRefs" style="display:none">' +
+							'<span>&nbsp;&nbsp;<b>Include cross references</b>&nbsp;</span>' +
+							'<input type="checkbox" id="selectxref"/>' +
+						'</div>' +
+						'<br>' +
+					'</div>' +
+					'<script>' +
+						'$(document).ready(function () {' +
+							'step.copyText.initVerseSelect();' +
+						'});' +
+					'</script>' +
+				'</div>' +
+			'</div>' +
+		'</div>';
+		$(_.template(modalHTML)()).modal("show");
+	},
 
 	searchSelectionModal: function () {
 		var docWidth = $(document).width();
@@ -1887,17 +1933,10 @@ step.util = {
 							'if ((element) && (element.checked)) {' +
 								'step.searchSelect.includePreviousSearches = true;' +
 								'$("#listofprevioussearchs").show();' +
-								'var onlyFoundSubjectOrMeaningsSearch = true;' +
-								'for (var i = 0; i < step.searchSelect.previousSearchTokens.length; i++) {' +
-									'if ((step.searchSelect.previousSearchTokens[i] !== "") &&' +
-										'(!step.searchSelect.previousSearchTokens[i].startsWith(MEANINGS)) &&' +
-										'(!step.searchSelect.previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))' +
-										'onlyFoundSubjectOrMeaningsSearch = false;' +
-								'}' +
 								'$("#searchAndOrNot").show();' +
 								'if (step.searchSelect.searchUserInput.length == 0) {' +
 									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
-										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +
+										'(step.searchSelect.previousSearchTokens.indexOf("") > -1)) $("#updateButton").show();' + // An empty string in previousSearchTokens mean the user has deselected it.  If there is any update to previous search, the updateButton will be showned to the user.
 								'}' +
 							'}' +
 							'else {' +
@@ -1905,8 +1944,8 @@ step.util = {
 								'$("#listofprevioussearchs").hide();' +
 								'$("#searchAndOrNot").hide();' +
 								'$("#updateButton").hide();' +
-								'$("#searchResultssubject").show();' +
-								'$("#searchResultsmeanings").show();' +
+//								'$("#searchResultssubject").show();' +
+//								'$("#searchResultsmeanings").show();' +
 								'$("#searchResultssubjectWarn").hide();' +
 								'$("#searchResultsmeaningsWarn").hide();' +
 							'}' +
@@ -2720,7 +2759,7 @@ step.util = {
 	},
 	showIntro: function (showAnyway) {
 		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
-	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
+	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
 		if ((introCount <= 1) || (showAnyway)) {
@@ -2749,10 +2788,29 @@ step.util = {
 				steps: introJsSteps, nextLabel: " > ", prevLabel: " < ", doneLabel: __s.done
 			}).start();
 		}
+		else {
+		    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
+			var introCount = parseInt(introCountFromStorageOrCookie, 10);
+			if (isNaN(introCount)) introCount = 0;
+			if ((introCount < 2) && (window.innerWidth > 499)) {
+				var introJsSteps = [
+				{
+					element: document.querySelector('#copy-icon'),
+					intro: "NEW: Copy from STEPBible to your documents.",
+					position: 'left'
+				}
+         	   ];
+				introJs().setOptions({
+					steps: introJsSteps
+				}).start();
+				introCount ++;
+				step.util.localStorageSetItem("step.copyIntro", introCount);
+			}
+		}
 	},
     showIntroOfMultiVersion: function () {
 		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
-	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.multiVersionCount") : $.cookie('step.multiVersionCount');
+	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.multiVersionCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
 		if ((window.innerWidth > 499) && (introCount < 1)) {
@@ -2767,8 +2825,7 @@ step.util = {
 				steps: introJsSteps
 			}).start();
        		introCount ++;
-            if (window.localStorage) window.localStorage.setItem("step.multiVersionCount", introCount);
-            else $.cookie('step.multiVersionCount', introCount);
+            step.util.localStorageSetItem("step.multiVersionCount", introCount);
 		}
 	},
 	closeModal: function (modalID) {
@@ -3538,7 +3595,7 @@ step.util = {
 		return [hasNT, hasOT, ntPassages, otPassages];
 	},
 	checkBibleHasTheTestament: function(versionToCheck, hasNTPassage, hasOTPassage) {
-		versionToCheck = versionToCheck.toLowerCase();
+		versionToCheck = " " + versionToCheck.toLowerCase() + " ";
 		if ((hasNTPassage) && 
 			((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionToCheck) > -1) ||
 			(" ohb thot alep wlc mapm ".indexOf(versionToCheck) > -1))) {
@@ -3551,12 +3608,41 @@ step.util = {
 		}
 		return true;
 	},
+	whichBibleIsTheBest: function(otherVersions, hasNTPassage, hasOTPassage) {
+		var bestPosition = 9999;
+		var indexOfSelectedVersion = -1;
+		for (var i = 0; i < otherVersions.length; i ++) {
+			var versionToCheck = " " + otherVersions[i].toLowerCase() + " ";
+			var pos =	step.passageSelect.translationsWithPopularBooksChapters.indexOf(versionToCheck);
+			if (pos == -1) pos = " kjva ".indexOf(versionToCheck);
+			if (pos > -1)  pos += 20;
+			if (pos == -1) {
+				if (hasNTPassage && hasOTPassage) continue;
+				if (hasNTPassage) {
+					pos = step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(versionToCheck);
+					if (pos == -1) pos = " sblgnt ".indexOf(versionToCheck);
+					pos += 1000;
+				}
+				else if (hasOTPassage) {
+					pos = step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionToCheck);
+					if (pos == -1) pos = " ohb thot alep wlc mapm ".indexOf(versionToCheck);
+					else pos += 9; // This will give ohb and thot a lower position 
+					pos += 1000;
+				}
+			}
+			if ((pos > -1) && (pos < bestPosition)) {
+				bestPosition = pos;
+				indexOfSelectedVersion = i;
+			}
+		}
+		return indexOfSelectedVersion;
+	},
 	checkFirstBibleHasPassageBeforeSwap: function(newMasterVersion, callerPassagesModel, otherVersions) {
 		if (callerPassagesModel == null) return true; // cannot verify
 		osisIDs = callerPassagesModel.attributes.osisId.split(/[ ,]/);
 		return step.util.checkFirstBibleHasPassage(newMasterVersion, osisIDs, otherVersions);
 	},
-	checkFirstBibleHasPassage: function(newMasterVersion, osisIDs, otherVersions, dontShowAlert) {
+	checkFirstBibleHasPassage: function(newMasterVersion, osisIDs, otherVersions, dontShowAlert, dontGoToFirstBook) {
 		var passageInfomation = step.util.getTestamentAndPassagesOfTheReferences(osisIDs);
 		var hasNTinReference = passageInfomation[0];
 		var hasOTinReference = passageInfomation[1];
@@ -3584,19 +3670,70 @@ step.util = {
 				queryStringForFirstBookInAvailableTestament += "|version=" + otherVersions[i];
 			}
 			queryStringForFirstBookInAvailableTestament += "|reference=" + firstPassageInBible;
-			var alertMessage = "<br>We cannot process your request to display " + newMasterVersion + " as the first Bible.<br>" +
+			var recommendedVersionIndex = this.whichBibleIsTheBest(otherVersions, hasNTinReference, hasOTinReference);
+			var queryStringForAnotherBible = "";
+			if (recommendedVersionIndex > -1) {
+				queryStringForAnotherBible = "version=" + otherVersions[recommendedVersionIndex] + "|version=" + newMasterVersion;
+				for (var i = 0; i < otherVersions.length; i++) {
+					if (i != recommendedVersionIndex)	queryStringForAnotherBible += "|version=" + otherVersions[i];
+				}
+				for (var j = 0; j < osisIDs.length; j++) {
+					if (j == 0) queryStringForAnotherBible += "|reference=";
+					else queryStringForAnotherBible += ","
+					queryStringForAnotherBible += osisIDs[j];
+				}
+			}
+			var alertMessage = "<br>" + sprintf(__s.error_bible_doesn_t_have_passage, passagesNotAvailable) +
+				"<br><br>We cannot process your request to display " + newMasterVersion + " as the first Bible.<br>" +
 				"<br>The " + newMasterVersion + " Bible only has the " + testamentAvailable + "Testament, " +
 				"it does not have the passage (" + passagesNotAvailable + ") which is in the " + missingTestament + " Testment. " + 
 				"<br><br>If you need both New and Old Testament passages, please select a Bible (e.g.: ESV) with both testaments as the first Bible.<br>" +
-				"<br>Below are some possible options:<br><ul>" +
-				"<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(4,'" +
-				 queryStringForFirstBookInAvailableTestament +
-				 "')\">Go to " + firstPassageInBible + " in " + newMasterVersion + " and then select my passage.</a>" +
-				 "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(5,'')\">Close this window to stay with your current passage(s) and Bible(s).</a>";
+				"<br>Below are some possible options:<br><ul>";
+			if ((queryStringForAnotherBible !== "") && (step.util.activePassage().get("masterVersion") !== otherVersions[recommendedVersionIndex]))
+				alertMessage += "<li><a href=\"javascript:step.util.correctPassageNotInBible(1,'" +
+					queryStringForAnotherBible +
+					"')\">" +
+					sprintf(__s.switch_another_as_first_bible, otherVersions[recommendedVersionIndex]) +
+					".</a>";
+			if (!dontGoToFirstBook)	
+				alertMessage += "<li><a href=\"javascript:step.util.correctPassageNotInBible(2,'" +
+					queryStringForFirstBookInAvailableTestament + "')\">" +
+					sprintf(__s.go_to_first_passage_in_bible, firstPassageInBible, newMasterVersion) +
+					"</a>";
+				alertMessage += "<li><a href=\"javascript:step.util.correctPassageNotInBible(0,'')\">" +
+					__s.close_window_stay_current_passage +
+					"</a>";
 			if (!dontShowAlert) step.util.showLongAlert(alertMessage, "Warning");
 			return false;
 		}
 		return true;
+	},
+	localStorageGetItem: function(key) {
+		try {
+			if (window.localStorage) {
+				return localStorage.getItem(key);
+			}
+		} catch(e) {
+			console.log("local storage error: ", e);
+			if (e.code == 22) {
+				console.log("local storage error, storage full"); // Storage full, maybe notify user or do some clean-up
+			}
+		}
+		return $.cookie(key);
+	},
+	localStorageSetItem: function(key, value) {
+		try {
+			if (window.localStorage) {
+				window.localStorage.setItem(key, value);
+				return;
+			}
+		} catch(e) {
+			console.log("local storage error: ", e);
+			if (e.code == 22) {
+				console.log("local storage error, storage full"); // Storage full, maybe notify user or do some clean-up
+			}
+		}
+		$.cookie(key, value);
 	}
 }
 ;

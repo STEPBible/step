@@ -197,7 +197,7 @@
                                            title="<fmt:message key="view" />">
                                             <i class="glyphicon glyphicon-cog"></i>
                                         </a>
-                                    </span>
+                                </span>
 
                                 <%--  this button starts hidden as there is only 1 column showing --%>
                                 <a class="openNewPanel hidden-xs" title="<fmt:message key="new_panel" />">
@@ -442,6 +442,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <script src="js/step.util.js" type="text/javascript"></script>
 <script src="js/passage_selection.js" type="text/javascript"></script>
 <script src="js/search_selection.js" type="text/javascript"></script>
+<script src="js/copy_text.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_main_search.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_restore.js" type="text/javascript"></script>
 

@@ -85,16 +85,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -430,14 +421,19 @@ public class SearchServiceImpl implements SearchService {
             filters = StringUtils.split(filter, "[ ,]+");
         }
         String[] searchJoins = new String[0];
+        String srchJoin = "";
         for (SearchToken st : searchTokens) {
             final String tokenType = st.getTokenType();
-            if (tokenType.equals("searchJoins")) {
+            if (tokenType.equals("srchJoin")) {
+                srchJoin = st.getToken();
+                break;
+            }
+            else if (tokenType.equals("searchJoins")) {
                 searchJoins = st.getToken().split(",");
                 for (int i = 0; i < searchJoins.length; i++) {
                     // If it is not AND, OR or NOT, use AND
                     if ((!searchJoins[i].equals("AND")) && (!searchJoins[i].equals("OR")) &&
-                        (!searchJoins[i].equals("NOT")))
+                            (!searchJoins[i].equals("NOT")))
                         searchJoins[i] = "AND";
                 }
                 break;
@@ -482,7 +478,7 @@ public class SearchServiceImpl implements SearchService {
                 //add a number of searches from the query syntax given...
                 final IndividualSearch[] searches = new SearchQuery(st.getToken(), versions.toArray(new String[versions.size()]), null,
                         context, pageNumber, references, curSearchJoin).getSearches();
-                searchJoinCount ++;
+                // searchJoinCount ++; Probably at the wrong place
                 for (IndividualSearch is : searches) {
                     individualSearches.add(is);
                     searchJoinCount ++;
@@ -494,7 +490,7 @@ public class SearchServiceImpl implements SearchService {
         }
         //we will prefer a word search to anything else...
         if (individualSearches.size() != 0) {
-            return this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options);
+            return this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options, srchJoin);
         }
         return this.bibleInfoService.getPassageText(
                 versions.get(0), references, options,
@@ -571,12 +567,12 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResult search(final SearchQuery sq) {
-    	return search(sq, "");
+    	return search(sq, "", "");
     }
 
-    public SearchResult search(final SearchQuery sq, final String options) {
+    public SearchResult search(final SearchQuery sq, final String options, final String srchJoin) {
         try {
-            return doSearch(sq, options);
+            return doSearch(sq, options, srchJoin);
             // CHECKSTYLE:OFF
         } catch (final LuceneSearchException ex) {
             // CHECKSTYLE:ON
@@ -590,7 +586,7 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the sq
      * @return the search result
      */
-    private SearchResult doSearch(final SearchQuery sq, final String options) {
+    private SearchResult doSearch(final SearchQuery sq, final String options, final String srchJoin) {
         final long start = System.currentTimeMillis();
 
         SearchResult result;
@@ -600,7 +596,7 @@ public class SearchServiceImpl implements SearchService {
             if (sq.isIndividualSearch()) {
                 result = executeOneSearch(sq, options);
             } else {
-                result = executeJoiningSearches(sq);
+                result = executeJoiningSearches(sq, srchJoin);
             }
         } catch (final AbortQueryException ex) {
             result = new SearchResult();
@@ -890,15 +886,107 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query object
      * @return the list of search results
      */
-    private SearchResult executeJoiningSearches(final SearchQuery sq) {
+    private SearchResult executeJoiningSearches(final SearchQuery sq, final String srchJoin) {
         // we run each individual search, and get all the keys out of each
-
-        ImmutablePair<Key, Set> r = runJoiningSearches(sq);
+        ImmutablePair<Key, Set> r = (srchJoin != "") ? executeSearchWithSrchJoin(sq, srchJoin) : runJoiningSearches(sq);
         final Key results = r.getLeft();
         final Set<String> strongs = r.getRight();
         SearchResult result = getSearchResultFromKey(sq, results);
         result.setStrongHighlights(new ArrayList<>(strongs));
         return result;
+    }
+
+    /**
+     * Runs searches with the newer srchJoin paramenter
+     *
+     * @param sq the search query object
+     * @return the list of search results
+     */
+    private ImmutablePair<Key, Set> executeSearchWithSrchJoin(final SearchQuery sq, final String srchJoin) {
+        // review and process the srchJoin (searchJoin)
+        String s = srchJoin;
+        Stack<Integer> positionStack = new Stack();
+        int group = 0;
+        char[] sJArray = srchJoin.toCharArray();
+        for (char c : sJArray) { // Verify searchJoin String has balanced paranthesis
+            if (c == '(') {
+                positionStack.push(1);
+            }
+            else if (c == ')' && !positionStack.isEmpty()) {
+                positionStack.pop();
+                group ++;
+            }
+        }
+        if (!positionStack.isEmpty())
+            throw new TranslatedException("search_invalid");
+    	if (group > 25) throw new TranslatedException("search_invalid"); // Maximum of 26 groups because we are using A-Z to represent the group;
+		Key[] resultsArray = new Key[group+1]; // The last element in the array will have the final result
+        Set<String>[] strongsArray = new Set[group+1];  // The last element in the array will have the final result
+        group = 0;
+        int pos = 0;
+        for (char c : sJArray) {
+            if (c == '(') {
+                positionStack.push(pos);
+            }
+            else if (c == ')' && !positionStack.isEmpty()) {
+                int endPos = pos;
+                int begPos = positionStack.pop() + 1;
+                String s2 = s.substring(0, begPos-1) + processJoinSearch(s.substring(begPos, endPos), group, sq, resultsArray, strongsArray);
+                for (int j = 0; j <= endPos - begPos; j ++) {
+                    s2 += " ";
+                }
+                s2 += s.substring(endPos+1);
+                s = s2;
+                group ++;
+            }
+            pos ++;
+        }
+        processJoinSearch(s, group, sq, resultsArray, strongsArray);
+        return new ImmutablePair<>(resultsArray[group], strongsArray[group]);
+    }
+
+    private char processJoinSearch(String arg, int group, SearchQuery sq, Key[] resultsArray, Set<String>[] strongsArray) {
+    	if (group > 25) throw new TranslatedException("search_invalid"); // Maximum of 26 groups because we are using A-Z to represent the group;
+        String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        arg = arg.replaceAll("\\s", "");
+        String[] parts = arg.split("(?=[aon])"); // and or not
+        Pattern patternNum = Pattern.compile("^\\d+$");
+        Pattern patternCapAlpha = Pattern.compile("^[A-Z]$");
+        for (int i = 0; i < parts.length; i ++) {
+            String joinType = "OR"; // type is OR
+            if (i > 0) {
+                if (parts[i].length() > 1) {
+                    String original = parts[i];
+                    char firstChar = parts[i].charAt(0);
+                    parts[i] = parts[i].substring(1);
+                    if (firstChar == 'a') joinType = "AND";
+                    else if (firstChar == 'o') joinType = "OR";
+                    else if (firstChar == 'n') joinType = "NOT";
+                    else parts[i] = original;
+                }
+            }
+            if (patternNum.matcher(parts[i]).find()) {
+                int index = Integer.parseInt(parts[i]) - 1;
+                ImmutablePair<Key, Set> r = runOneOfMultipleSearches(sq, index);
+                resultsArray[group] = intersect(resultsArray[group], r.getLeft(), joinType);
+                if (joinType != "NOT") {
+                    if (strongsArray[group] == null) strongsArray[group] = r.getRight();
+                    else strongsArray[group].addAll(r.getRight());
+                }
+                System.out.println("I num: " + i + " found: " + parts[i] + " type " + joinType);
+            }
+            else if (patternCapAlpha.matcher(parts[i]).find()) {
+                int index = alpha.indexOf(parts[i]);
+                resultsArray[group] = intersect(resultsArray[group], resultsArray[index], joinType);
+                if (joinType != "NOT") {
+                    if (strongsArray[group] == null) strongsArray[group] = strongsArray[index];
+                    else strongsArray[group].addAll(strongsArray[index]);
+                }
+				System.out.println("I cap: " + i + " found: " + parts[i] + " type " + joinType);
+            }
+            else System.out.println("unexpected input"+ parts[i]);
+        }
+        return alpha.charAt(group);
     }
 
     /**
@@ -913,6 +1001,65 @@ public class SearchServiceImpl implements SearchService {
         // so first of all, we set the allKeys flag to false
         sq.setAllKeys(false);
         return extractSearchResults(sq, results);
+    }
+
+    /**
+     * Runs each individual search and gives us a key that can be used to retrieve every passage
+     *
+     * @param sq the search query
+     * @return the key to all the results
+     */
+    private ImmutablePair<Key, Set> runOneOfMultipleSearches(final SearchQuery sq, int searchIndex) {
+        Key results = null;
+        Set<String> strongs = new HashSet<String>();
+        sq.setCurrentSearchAsFirstSearch();
+        for (int i = 0; i < searchIndex; i++) {
+            if (!sq.hasMoreSearches()) {
+                throw new TranslatedException("search_invalid");
+            }
+        }
+        IndividualSearch curSearch = sq.getCurrentSearch();
+        switch (curSearch.getType()) {
+            case TEXT:
+                results = this.jswordSearch.searchKeys(sq);
+                break;
+            case ORIGINAL_GREEK_FORMS:
+            case ORIGINAL_HEBREW_FORMS:
+                adaptQueryForStrongSearch(sq);
+                results = this.jswordSearch.searchKeys(sq);
+                break;
+            case ORIGINAL_GREEK_RELATED:
+            case ORIGINAL_HEBREW_RELATED:
+                Set<String> curSetOfStrong = adaptQueryForRelatedStrongSearch(sq);
+                results = this.runStrongTextSearchKeys(sq, curSetOfStrong);
+                strongs.addAll(curSetOfStrong);
+                break;
+            case ORIGINAL_MEANING:
+                strongs.addAll(adaptQueryForMeaningSearch(sq));
+                results = this.jswordSearch.searchKeys(sq);
+                break;
+            case EXACT_FORM:
+                results = getKeysFromOriginalText(sq);
+                break;
+            case SUBJECT_SIMPLE:
+            case SUBJECT_EXTENDED:
+            case SUBJECT_FULL:
+                curSearch.setType(SearchType.SUBJECT_FULL);
+                curSearch.setQuery(curSearch.getOriginalQuery());
+                results = this.subjects.getKeys(sq);
+                break;
+            case SUBJECT_RELATED:
+                //no override for related topic searches
+                results = this.subjects.getKeys(sq);
+                break;
+            case RELATED_VERSES:
+                results = this.relatedVerseService.getRelatedVerses(curSearch.getVersions()[0], curSearch.getQuery());
+                break;
+            default:
+                throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), sq
+                        .getCurrentSearch().getType().getLanguageKey());
+        }
+        return new ImmutablePair<>(results, strongs);
     }
 
     /**

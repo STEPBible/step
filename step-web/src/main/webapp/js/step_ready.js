@@ -143,6 +143,13 @@
                             }
                         }
 					}
+                    else if (code == 67) {
+                        var tmp = $(".passageContainer").clone();
+                        $(tmp).find(".notesPane").remove();
+                        $(tmp).find(".note").remove();
+                        console.log ($(tmp).text());
+                        window.navigator.clipboard.writeText($(tmp).text());
+                    }
 				}
 			});
 		}
@@ -259,7 +266,7 @@
 
         // new ExamplesView({ el: $(".examplesColumn") });
 		
-	    var stepUsageCountStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
+	    var stepUsageCountStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
 		var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
 		if (isNaN(stepUsageCount)) stepUsageCount = 0;
 		if ($.getUrlVars().indexOf("skipwelcome") > -1) step.util.showOrHideTutorial('true'); // URL has skipwelcome
@@ -269,8 +276,7 @@
 		}
 		
 		stepUsageCount ++;
-		if (window.localStorage) window.localStorage.setItem("step.usageCount", stepUsageCount);
-		else $.cookie('step.usageCount', stepUsageCount);
+		step.util.localStorageSetItem("step.usageCount", stepUsageCount);
 
         $("#stepDisclaimer").popover();
     }
@@ -321,12 +327,12 @@
         //do cookie notification
         var countriesRequiringCookie = "UNKNOWN GB DE FR IT ES PL RO NL BE GR SE PT AT BG CY CZ DK EE FI HR HU IE LT LU LV MT SI SK";
         if (countriesRequiringCookie.indexOf(step.userCountryCode) > -1) step.util.raiseOneTimeOnly("cookie_notification", 'info');
-        var tmp = localStorage.getItem('colorCode-openStatus');
+        var tmp = step.util.localStorageGetItem('colorCode-openStatus');
         if (tmp) {
             localStorage.removeItem('colorCode-openStatus');
             step.util.ui.openStats();
         }
-        var tmp = localStorage.getItem('colorCode-InfoMsg');
+        var tmp = step.util.localStorageGetItem('colorCode-InfoMsg');
         if (tmp) {
             localStorage.removeItem('colorCode-InfoMsg');
             if (tmp != '""') step.util.raiseOneTimeOnly(JSON.parse(tmp), 'info');
@@ -336,12 +342,12 @@
         }
         step.util.trackAnalytics('interface', 'language', step.state.language(1));
         if (window.localStorage) {
-            var storedVersion = window.localStorage.getItem("step.version");
+            var storedVersion = step.util.localStorageGetItem("step.version");
             var downloadedVersion = step.state.getCurrentVersion();
             if (storedVersion != downloadedVersion) {
                 //we're upgrading to the new version
                 console.log("Upgrading versions: ", storedVersion, downloadedVersion);
-                window.localStorage.setItem("step.version", downloadedVersion);
+                step.util.localStorageSetItem("step.version", downloadedVersion);
             }
         }
 
@@ -357,6 +363,8 @@
 		var ua = navigator.userAgent.toLowerCase();
 		if (ua.indexOf('firefox') > -1) $("#panel-icon").hide(); // Firefox has some issues with this.
 		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));
+        if ((typeof navigator.clipboard !== "object") || (typeof navigator.clipboard.writeText !== "function"))
+            $("#copy-icon").hide();
 		if ( ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os [345678]_/) > -1)) || // older versions of iOS shows a light grey color.  Probably similiar issue as Internet Explorer
 			(false || !!document.documentMode) ) { // Internet Explorer use the wrong css based on the <a> tag, so change it to black
 			$("#panel-icon").css("color", "black");

@@ -1022,6 +1022,19 @@ public class SearchServiceImpl implements SearchService {
         switch (curSearch.getType()) {
             case TEXT:
                 results = this.jswordSearch.searchKeys(sq);
+                final String secondaryRange = curSearch.getSecondaryRange();
+                if (!StringUtils.isBlank(secondaryRange)) {
+                    final String[] versions = curSearch.getVersions();
+                    final String masterVersion = versions[0];
+                    final Book bookFromVersion = this.versificationService.getBookFromVersion(masterVersion);
+                    Key k;
+                    try {
+                        k = bookFromVersion.getKey(secondaryRange);
+                    } catch (NoSuchKeyException e) {
+                        throw new TranslatedException(e, "invalid_reference_in_book", secondaryRange, bookFromVersion.getInitials());
+                    }
+                    results = intersect(k, results, "");
+                }
                 break;
             case ORIGINAL_GREEK_FORMS:
             case ORIGINAL_HEBREW_FORMS:

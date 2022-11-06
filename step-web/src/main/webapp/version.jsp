@@ -22,10 +22,12 @@
 }
 %>
 <% request.setCharacterEncoding("utf-8"); %>
-<jsp:include page="jsps/header.jsp">
+
+<jsp:include page="jsps/header_version.jsp">
     <jsp:param value="<%= stepRequest.getBook().getName() %>" name="title"/>
     <jsp:param value="<%= stepRequest.getBook().getName() %>" name="description"/>
     <jsp:param value="<%= stepRequest.getBook().getName() %>" name="keywords"/>
+    <jsp:param value="<%= stepRequest.getBook().getInitials().trim() %>" name="initial"/>
 </jsp:include>
 
 

@@ -1206,7 +1206,7 @@
                 <xsl:apply-templates/>
             </xsl:when>
             <xsl:otherwise>
-                <a href="?q=version={$defaultVersion}&#124;reference={$encodedPassageKeyForLink}" title="{$passageKey}"
+                <a href="?q=version={$baseVersion}&#124;reference={$encodedPassageKeyForLink}" title="{$passageKey}"
                    class="linkRef" xref="{$passageKey}">
                     <xsl:apply-templates/>
                 </a>

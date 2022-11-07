@@ -3405,9 +3405,10 @@ step.util = {
 		return vocabInfoEntry;
 	},
 	getVocabMorphInfoFromJson: function (strong, morph, reference, version) {
+        var resultJson = {vocabInfos: [], morphInfos: []};
+		if (step.state.isLocal()) return resultJson;
         var strongArray = strong.split(" ");
         var processedStrong = [];
-        var resultJson = {vocabInfos: [], morphInfos: []};
 		var indexToAugStrongRef = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
 		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
 		"shortDef", "mediumDef", "lsjDefs",

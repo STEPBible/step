@@ -415,43 +415,6 @@ public class SearchPageController extends HttpServlet {
 
             request.setAttribute("canonicalUrl", getUrlFragmentForPassage(osisWrapper.getMasterVersion(), osisWrapper.getOsisId()));
 
-            final String structureData =
-            "{" +
-                "\"@context\": \"https://schema.org/\"," +
-                "\"@type\": \"CreativeWork - WebSite\"," +
-                "\"name\": \"" + title + "\"," +
-                "\"url\": \"https:\\www.STEPBible.org\"," +
-                "\"sameas\": \"https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible\"," +
-                "\"description\": \"" + description + "\"," +
-                "\"author\": {" +
-                    "\"@type\": \"Person\"," +
-                    "\"name\": \"David Instone-Brewer\"," +
-                    "\"jobTitle\": \"Research Fellow\"," +
-                        "url": "https://cambridge.academia.edu/DInstoneBrewer",
-                        "affiliation": {
-                    "@type": "Organization",
-                            "name": "Tyndale House",
-                            "url": "https://www.TyndaleHouse.com",
-                },
-                " memberOf": {
-                    "@type": "Organization",
-                            "name": "Studiorum Novi Testamenti Societas",
-                            "url": "https://snts.online",
-                },
-                " memberOf": {
-                    "@type": "Organization",
-                            "name": "British and Irish Association for Jewish Studies",
-                            "url": "https://britishjewishstudies.org",
-                },
-                " memberOf": {
-                    "@type": "Organization",
-                            "name": "Committee on Bible Translation",
-                            "url": "https://www.biblica.com/niv-bible/niv-bible-translators",
-                },
-            },
-            }
-
-
         } catch (Exception ex) {
             //a page with no title is better than no pages
             LOGGER.error("Unable to ascertain meta data", ex);

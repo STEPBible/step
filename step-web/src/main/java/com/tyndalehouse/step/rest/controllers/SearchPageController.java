@@ -390,6 +390,7 @@ public class SearchPageController extends HttpServlet {
             req.setAttribute("title", wrapTitle(title, results.getMasterVersion(), null));
             req.setAttribute("canonicalUrl", req.getParameter("q"));
             req.setAttribute("description", description);
+            req.setAttribute("keywords", "free, bible, study, app, software, bible study, bible app, bible download, free bible, free bible download, free bible study, windows, christian, christian software, online, online bible, download, dictionary, esv, kjv, Christ, Jesus, Lord, God, search, sunday, school, sunday school, lesson, new, old, testament, sermon, notes, cross, reference, church, library, greek, lexicon, tool, resource, research, book, NT, OT, scripture, preach, teach, exegesis, theology, word");
         } catch (Exception ex) {
             //a page with no title is better than no pages
             LOGGER.error("Unable to ascertain meta data", ex);
@@ -405,10 +406,52 @@ public class SearchPageController extends HttpServlet {
     private void populateMetaPassage(final HttpServletRequest request, final OsisWrapper osisWrapper) {
         try {
             final String preview = this.bible.getPlainTextPreview(osisWrapper.getMasterVersion(), osisWrapper.getOsisId());
-            request.setAttribute("title", wrapTitle(osisWrapper.getReference(), osisWrapper.getMasterVersion(), preview));
-            //request.setAttribute("description", preview);
-            request.setAttribute("description", "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...");
+            final String masterVersion = osisWrapper.getMasterVersion();
+            final String title = wrapTitle(osisWrapper.getReference(), masterVersion, preview);
+            final String description = "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...";
+            request.setAttribute("title", title);
+            request.setAttribute("description", description);
+            request.setAttribute("keywords", "free, bible, study, app, software, bible study, bible app, bible download, free bible, free bible download, free bible study, windows, christian, christian software, online, online bible, download, dictionary, esv, kjv, Christ, Jesus, Lord, God, search, sunday, school, sunday school, lesson, new, old, testament, sermon, notes, cross, reference, church, library, greek, lexicon, tool, resource, research, book, NT, OT, scripture, preach, teach, exegesis, theology, word");
+
             request.setAttribute("canonicalUrl", getUrlFragmentForPassage(osisWrapper.getMasterVersion(), osisWrapper.getOsisId()));
+
+            final String structureData =
+            "{" +
+                "\"@context\": \"https://schema.org/\"," +
+                "\"@type\": \"CreativeWork - WebSite\"," +
+                "\"name\": \"" + title + "\"," +
+                "\"url\": \"https:\\www.STEPBible.org\"," +
+                "\"sameas\": \"https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible\"," +
+                "\"description\": \"" + description + "\"," +
+                "\"author\": {" +
+                    "\"@type\": \"Person\"," +
+                    "\"name\": \"David Instone-Brewer\"," +
+                    "\"jobTitle\": \"Research Fellow\"," +
+                        "url": "https://cambridge.academia.edu/DInstoneBrewer",
+                        "affiliation": {
+                    "@type": "Organization",
+                            "name": "Tyndale House",
+                            "url": "https://www.TyndaleHouse.com",
+                },
+                " memberOf": {
+                    "@type": "Organization",
+                            "name": "Studiorum Novi Testamenti Societas",
+                            "url": "https://snts.online",
+                },
+                " memberOf": {
+                    "@type": "Organization",
+                            "name": "British and Irish Association for Jewish Studies",
+                            "url": "https://britishjewishstudies.org",
+                },
+                " memberOf": {
+                    "@type": "Organization",
+                            "name": "Committee on Bible Translation",
+                            "url": "https://www.biblica.com/niv-bible/niv-bible-translators",
+                },
+            },
+            }
+
+
         } catch (Exception ex) {
             //a page with no title is better than no pages
             LOGGER.error("Unable to ascertain meta data", ex);

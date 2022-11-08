@@ -168,14 +168,6 @@
 
 			  <br/>
 
-			  <label class="label" for="lexicon">With lexicon(s):</label>
-			  <select name="lexicon" id="lexicon">
-				<option value="lexicon_english">English</option>
-				<option value="lexicon_english_chinese">English + Chinese</option>
-			  </select>
-
-			  <br/>
-
 			  <label class="label" for="region">Download region:</label>
 			  <select name="region" id="region">
 				<option value="region_usa">USA</option>
@@ -307,7 +299,6 @@
 	function _userDownload(clickItemID) {
 		if (clickItemID === "exeDownload") {
 			var os =  $( "#step_os option:selected" ).val();
-			var lexicon = $('#lexicon option:selected').val();
 			var region = $('#region option:selected').val();
 			var fileExtension = "";
 			if (os === "windows") fileExtension = "exe";
@@ -318,9 +309,7 @@
 			var fileName = "";
 			var version = "<%= downloadVersion %>";
 			if (version.length > 0) version = "_" + version;
-			if (lexicon === "lexicon_english") fileName = "stepbible" + version;
-			else if (lexicon === "lexicon_english_chinese") fileName = "stepbible_zh" + version;
-			else console.log("Unknown lexicon selected: " + lexicon);
+			fileName = "stepbible" + version;
 			var path = "";
 			if (region === "region_usa") path = "https://downloads.stepbible.com/file/Stepbible/";
 			else if (region === "region_europe") path = "https://stepbible-eu.s3.eu-north-1.amazonaws.com/";

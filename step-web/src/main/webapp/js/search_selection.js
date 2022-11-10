@@ -14,6 +14,74 @@ step.searchSelect = {
 	rangeWasUpdated: false,
 	andOrNotUpdated: false,
 	timer: undefined,
+	idx2osisChapterJsword: {
+		"Gen": 0,
+		"Exo": 1, "Exod": 1,
+		"Lev": 2,
+		"Num": 3,
+		"Deu": 4, "Deut": 4,
+		"Jos": 5, "Josh": 5,
+		"Judg": 6,
+		"Rut": 7, "Ruth": 7,
+		"1Sa": 8, "1Sam": 8,
+		"2Sa": 9, "2Sam": 9,
+		"1Ki": 10, "1Kgs": 10,
+		"2Ki": 11, "2Kgs": 11,
+		"1Ch": 12, "1Chr": 12,
+		"2Ch": 13, "2Chr": 13,
+		"Ezr": 14, "Ezra": 14,
+		"Neh": 15,
+		"Est": 16, "Esth": 16,
+		"Job": 17,
+		"Psa": 18, "Ps": 18,
+		"Pro": 19, "Prov": 19,
+		"Ecc": 20, "Eccl": 20,
+		"Song": 21,
+		"Isa": 22,
+		"Jer": 23,
+		"Lam": 24,
+		"Eze": 25, "Ezek": 25,
+		"Dan": 26,
+		"Hos": 27,
+		"Joe": 28, "Joel": 28,
+		"Amo": 29, "Amos": 29,
+		"Obd": 30, "Obad": 30,
+		"Jon": 31, "Jonah": 31,
+		"Mic": 32,
+		"Nah": 33,
+		"Hab": 34,
+		"Zep": 35, "Zeph": 35,
+		"Hag": 36,
+		"Zec": 37, "Zech": 37,
+		"Mal": 38,
+		"Mat": 39, "Matt": 39,
+		"Mar": 40, "Mark": 40,
+		"Luk": 41, "Luke": 41,
+		"Joh": 42, "John": 42,
+		"Act": 43, "Acts": 43,
+		"Rom": 44,
+		"1Cor": 45,
+		"2Cor": 46,
+		"Gal": 47,
+		"Eph": 48,
+		"Phili": 49, "Phil": 49,
+		"Col": 50,
+		"1Th": 51, "1Thess": 51,
+		"2Th": 52, "2Thess": 52,
+		"1Ti": 53, "1Tim": 53,
+		"2Ti": 54, "2Tim": 54,
+		"Tit": 55, "Titus": 55,
+		"Phile": 56, "Phlm": 56,
+		"Heb": 57,
+		"Jam": 58, "Jas": 58,
+		"1Pe": 59, "1Pet": 59,
+		"2Pe": 60, "2Pet": 60,
+		"1Jo": 61, "1John": 61,
+		"2Jo": 62, "2John": 62,
+		"3Jo": 63, "3John": 63,
+		"Jude": 64,
+		"Rev": 65
+	},
 	groupsOT: [
 		{groupName: __s.book_of_moses, show: false, books: [0, 1, 2, 3, 4], bookOrderPos: [-1, -1, -1, -1, -1]},
 		{groupName: __s.history_books, show: false, books: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
@@ -433,7 +501,8 @@ step.searchSelect = {
 				if (pos > -1) separatorChar = copyOfRange.substr(pos, 1);
 				else pos = copyOfRange.length;
 				var currentOsisID = copyOfRange.substr(0, pos);
-				var posOfBook = step.util.bookOrderInBible(currentOsisID);
+//				var posOfBook = step.util.bookOrderInBible(currentOsisID);
+				var posOfBook = this.idx2osisChapterJsword[currentOsisID];
 				if ((posOfBook > -1) &&
 					(typeof arrayOfTyplicalBooksChapters !== "undefined") &&
 					(arrayOfTyplicalBooksChapters[posOfBook].length === 2)) {
@@ -798,7 +867,8 @@ step.searchSelect = {
 				shortNameToDisplay = (this.userLang.toLowerCase().indexOf("en") == 0) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
 			}
 			var longID = currentOsisID;
-			var posOfBook = step.util.bookOrderInBible(currentOsisID);
+			//var posOfBook = step.util.bookOrderInBible(currentOsisID);
+			var posOfBook = this.idx2osisChapterJsword[currentOsisID];
 			if (posOfBook > -1) {
 				if (typeof step.passageSelect.osisChapterJsword[posOfBook][3] !== "undefined") longID = step.passageSelect.osisChapterJsword[posOfBook][3];
 				if (typeof arrayOfTyplicalBooksChapters !== "undefined") {

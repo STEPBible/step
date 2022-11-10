@@ -501,7 +501,7 @@ step.searchSelect = {
 				if (pos > -1) separatorChar = copyOfRange.substr(pos, 1);
 				else pos = copyOfRange.length;
 				var currentOsisID = copyOfRange.substr(0, pos);
-//				var posOfBook = step.util.bookOrderInBible(currentOsisID);
+//				var posOfBook = step.util.bookOrderInBible(currentOsisID); // when this is running inside the html files for iFrames, this is no reachable.
 				var posOfBook = this.idx2osisChapterJsword[currentOsisID];
 				if ((posOfBook > -1) &&
 					(typeof arrayOfTyplicalBooksChapters !== "undefined") &&
@@ -867,7 +867,7 @@ step.searchSelect = {
 				shortNameToDisplay = (this.userLang.toLowerCase().indexOf("en") == 0) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
 			}
 			var longID = currentOsisID;
-			//var posOfBook = step.util.bookOrderInBible(currentOsisID);
+			//var posOfBook = step.util.bookOrderInBible(currentOsisID); // when this is running inside the html files for iFrames, this is no reachable.  
 			var posOfBook = this.idx2osisChapterJsword[currentOsisID];
 			if (posOfBook > -1) {
 				if (typeof step.passageSelect.osisChapterJsword[posOfBook][3] !== "undefined") longID = step.passageSelect.osisChapterJsword[posOfBook][3];

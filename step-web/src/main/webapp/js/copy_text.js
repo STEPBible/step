@@ -1,4 +1,4 @@
-//window.step = window.step || {};
+window.step = window.step || {};
 step.copyText = {
 	initVerseSelect: function() {
 		var verses = $('.versenumber');

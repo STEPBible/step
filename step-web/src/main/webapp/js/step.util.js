@@ -156,10 +156,13 @@ window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
     timers: {},
-    unaugmentStrong : function(strong) {
-        var result = (strong || "");
-        if (!result.search(/\![a-zA-Z]$/)) result.replace(/[a-zA-Z]$/, "");
-        return result;
+    highlightStrong : function(strong, htmlTag, htmlObject, cssClass) {
+        strong = (strong || "");
+		$(htmlTag + "*='" + strong + "']", htmlObject).addClass(cssClass);
+        var updatedStrong = strong.replace(/[a-zA-Z]$/, "").replace(/\!$/, "");
+		if (updatedStrong !== strong) {
+			$(htmlTag + "*='" + strong + "']", htmlObject).addClass(cssClass);
+		}
     },
     refreshWaitStatus: function () {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
@@ -3404,6 +3407,19 @@ step.util = {
 		}
 		return vocabInfoEntry;
 	},
+	fixStrongNumForVocabInfo: function (strongs) { // Remove the augment character.  NASB is like H0000A. THOT is like H0000!a
+		var strongsArray = strongs.split(" ");
+		var result = "";
+		for (var j = 0; j < strongsArray.length; j++) {
+			var strongWithoutAugment = strongsArray[j].split(".")[0].split("!")[0];
+			if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
+				strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4);	// if strong is not 4 digit, make it 4 digit
+			}						                                      			// remove the last character if it is a letter
+			if (result !== "") result += " ";
+			result += strongWithoutAugment;
+		}
+		return result;
+	},
 	getVocabMorphInfoFromJson: function (strong, morph, reference, version) {
         var resultJson = {vocabInfos: [], morphInfos: []};
 		if (step.state.isLocal()) return resultJson;
@@ -3420,11 +3436,6 @@ step.util = {
         $.ajaxSetup({async: false});
         for (var j = 0; j < strongArray.length; j++) {
             var strongWithoutAugment = strongArray[j];
-            if (strongWithoutAugment.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
-                strongWithoutAugment = RegExp.$1 + ("000" + RegExp.$2).slice(-4); // if strong is not 4 digit, make it 4 digit
-            }                                                                     // remove the last character if it is a letter
-			strongWithoutAugment = strongWithoutAugment.split(".")[0];
-			strongWithoutAugment = strongWithoutAugment.split("!")[0];
             if (processedStrong.indexOf(strongWithoutAugment) == -1) {
                 processedStrong.push(strongWithoutAugment);
 				var strongFirstChar = strong.substring(0, 1).toLowerCase();

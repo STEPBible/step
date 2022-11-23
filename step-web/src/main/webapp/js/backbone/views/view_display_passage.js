@@ -140,7 +140,7 @@ var PassageDisplayView = DisplayView.extend({
                 var xgenObj = passageHtml.find('.xgen');
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
-                        reference + '\')" title="Show summary information" class="select-version stepButton">Summary</button>');
+                        reference + '\')" title="Show summary information" class="select-version stepButton">' + __s.book_summary + '</button>');
                 // else if (passageHtml.find(".verseLink").length > 0)
                     // $('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
                         // reference + '\')" title="Show summary information" class="select-version stepButton">Summary</button>').insertAfter(passageHtml.find(".verseLink")[0]);

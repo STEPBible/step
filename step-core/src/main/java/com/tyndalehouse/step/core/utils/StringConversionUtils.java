@@ -133,7 +133,6 @@ public final class StringConversionUtils {
         if (StringUtils.isBlank(key)) {
             return "";
         }
-
         final StringBuilder sb = new StringBuilder(key.length());
         final String[] split = key.split(" ");
         for (final String s : split) {
@@ -157,7 +156,6 @@ public final class StringConversionUtils {
                 padNonPrefixedStrongNumber(sb, strongNumber, length);
             }
         }
-
         return sb.toString().trim();
     }
 
@@ -253,7 +251,6 @@ public final class StringConversionUtils {
                     sb.append(strongNumber.charAt(5));
                     break;
                 }
-
                 sb.append(strongNumber);
                 break;
             default:

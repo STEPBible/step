@@ -200,7 +200,7 @@ var ExamplesView = Backbone.View.extend({
 						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
 						'</a>' +
 					'</div>' +
-					'<div class="explanationText">Look at Greek New Testament with color code grammar, Greek root word and English vocabulary</div>' +
+					'<div class="explanationText"><%= __s. sblg_verb_color_explanation %></div>' +
 
 					'<div style="overflow:hidden">' +
 						'<a href="javascript:cf.setNextPageURL(\'/?q=version=THOT|reference=Gen.1&options=HVLUNC\', \'verb, gender and number\', \'\')" title="<%= __s.click_to_try_this %>">' +
@@ -209,7 +209,7 @@ var ExamplesView = Backbone.View.extend({
 						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
 						'</a>' +
 					'</div>' +
-					'<div class="explanationText">Look at Hebrew Testament with color code grammar and morphology information in the lexicon</div>' +
+					'<div class="explanationText"><%= __s. ot_color_explanation %></div>' +
 					
 					'<div style="overflow:hidden">' +
 						'<a href="javascript:cf.setNextPageURL(\'/?q=version=CUn|reference=Col.1&options=HVGUNC\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
@@ -218,7 +218,7 @@ var ExamplesView = Backbone.View.extend({
 						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
 						'</a>' +
 					'</div>' +
-					'<div class="explanationText">Look at Chinese Union New Testament with color highlighted verbs</div>' +
+					'<div class="explanationText"><%= __s. cun_verb_color_explanation %></div>' +
 					
 					'<div style="overflow:hidden">' +
 						'<a href="javascript:cf.setNextPageURL(\'/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +

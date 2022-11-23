@@ -80,7 +80,7 @@ var PickBibleView = Backbone.View.extend({
         '</div>' + //end dialog
         '</div>' +
         '</div>'),
-    suggestedEnglish: ['ESV', 'NIV', 'NASB_th', 'KJVA', 'NETfull', 'HCSB', 'BSB', 'ASV-TH', 'DRC', 'CPDV'],
+    suggestedEnglish: ['ESV', 'NIV', 'NASB2020', 'KJVA', 'NETfull', 'HCSB', 'BSB', 'ASV-TH', 'DRC', 'CPDV'],
     ancientBlackList: ["HebModern"],
     ancientOrder: [
         [__s.widely_used, ['THOT', 'LXX', 'THGNT', 'Byz', 'TR', 'SBLG']],

@@ -79,10 +79,12 @@ step.passage = {
         for(var i = 0; i < strongs.length; i++) {
             // check for black listed strongs
             if ($.inArray(strongs[i], this.blacklistedStrongs) == -1) {
-                //un-augmented here is potentially unecessary until we have resources that have such numbers in them.
-                $(".heading [strong~='" + step.util.unaugmentStrong(strongs[i]) + "']", container).addClass(classes);
-                $(".verse [strong~='" + step.util.unaugmentStrong(strongs[i]) + "']", container).addClass(classes);
-                $("span.w[strong~='" + step.util.unaugmentStrong(strongs[i]) + "'] span", container).addClass(classes);
+				step.util.highlightStrong(strongs[i], '.heading [strong', container, classes);
+				step.util.highlightStrong(strongs[i], '.verse [strong', container, classes);
+				step.util.highlightStrong(strongs[i], 'span.w[strong', container, classes);
+//                $(".heading [strong~='" + step.util.unaugmentStrong(strongs[i]) + "']", container).addClass(classes);
+//                $(".verse [strong~='" + step.util.unaugmentStrong(strongs[i]) + "']", container).addClass(classes);
+//                $("span.w[strong~='" + step.util.unaugmentStrong(strongs[i]) + "'] span", container).addClass(classes);
             }
         }
     },

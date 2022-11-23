@@ -358,7 +358,8 @@ var SearchDisplayView = DisplayView.extend({
         }
         //now let's iterate through the list of strongs, find all the elements that match, and add the highlight class
         for (var i = 0; i < strongsList.length; i++) {
-            $("span[strong~='" + step.util.unaugmentStrong(strongsList[i]) + "']", results).addClass("secondaryBackground");
+			step.util.highlightStrong(strongsList[i], 'span[strong', results, "secondaryBackground");
+//            $("span[strong~='" + step.util.unaugmentStrong(strongsList[i]) + "']", results).addClass("secondaryBackground");
         }
     },
 

@@ -43,7 +43,7 @@ var ExamplesView = Backbone.View.extend({
 					'</div>' +
 
 					'<div style="overflow:hidden">' +
-						'<a href="/?q=version=NIV|version=ESV|text=land|strong=H2617a&options=VGUVNH&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
+						'<a href="/?q=version=NIV|version=ESV|text=land|strong=H2617A&options=VGUVNH&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
 						'<span>' +
 						'<span class="stepButton">NIV, ESV</span><span class="stepButton"><span class="glyphicon glyphicon-search" style="font-size:12px"></span><span> land,&nbsp;</span><span class="transliteration" style="line-height:13px">he.sed</span></span></span>' +
 						'</a>' +

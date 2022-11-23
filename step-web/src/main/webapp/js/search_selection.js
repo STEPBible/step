@@ -1446,7 +1446,7 @@ step.searchSelect = {
 		}
 		if (brCount < suggestionsToDisplay)
 			return needLineBreak + '<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-				+ suggestionType + '\')">' + shortTxt2Display + ', etc. <i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i></a>';
+				+ suggestionType + '\')">' + shortTxt2Display + ',  etc...  <i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i></a>';
 		return "";
 	},
 

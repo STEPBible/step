@@ -3329,7 +3329,7 @@ step.util = {
     },
 	modalCloseBtn: function(modalElementID, closeFunction) {
 		// The dark mode color needs to be brighter for X.  The default opacity of 0.2 is too low.
-        var opacity = (step.util.isDarkMode()) ? "opacity:0.8" : "";
+        var opacity = (step.util.isDarkMode()) ? "opacity:0.8" : "opacity:0.9";
 		var functionForOnClick = 'onclick=step.util.closeModal("' + modalElementID + '")';
 		if (typeof closeFunction === "string") {
 			if (closeFunction.length > 0) functionForOnClick = 'onclick=' + closeFunction + '()';

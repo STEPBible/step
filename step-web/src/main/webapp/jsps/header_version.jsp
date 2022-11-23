@@ -6,72 +6,77 @@
     <TITLE><%= request.getParameter("title") %></TITLE>
     <% String reqInitial = request.getParameter("initial");
     if (reqInitial != null) {
-        reqInitial = reqInitial.trim();
-        if (reqInitial.equals("NIV")) { %>
-            <script type="application/ld+json">
-                {
-                    "@context": "https://schema.org/",
-                    "@type": "CreativeWork",
-                    "name": " NIV - New International Version",
-                    "url": "https://www.STEPBible.org",
-                    "sameas": "https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible",
-                    "description": "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
-                    "author": {
-                        "@type": "Person",
-                        "name": "Douglas Moo",
-                        "jobTitle": "Wessner Chair of Biblical Studies, Wheaton College",
-                        "url": "https://en.wikipedia.org/wiki/Douglas_J._Moo",
-                        "affiliation": {
-                            "@type": "Organization",
-                            "name": "Wheaton College",
-                            "url": "https://www.wheaton.edu/"
-                            },
-                        "memberOf": {
-                            "@type": "Organization",
-                            "name": "Committee on Bible Translation",
-                            "url": "https://www.biblica.com/niv-bible/niv-bible-translators"
-                        }
-                    }
-                }
-            </script>
-        <% }
-        else if (reqInitial.equals("ESV") || reqInitial.equals("ESV_th")) { %>
-            <script type="application/ld+json">
-                {
-                    "@context": "https://schema.org/",
-                    "@type": "CreativeWork",
-                    "name": " ESV - English Standard Version",
-                    "url": "https://www.STEPBible.org",
-                    "sameas": "https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible",
-                    "description": "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
-                    "author": {
-                        "@type": "Person",
-                        "name": "J. I. Packer",
-                        "jobTitle": "Board of Governors' Professor of Theology",
-                        "url": "https://en.wikipedia.org/wiki/J._I._Packer",
-                        "affiliation": {
-                            "@type": "Organization",
-                            "name": "Regent College",
-                            "url": "https://regent-college.edu"
-                            },
-                        "memberOf": {
-                            "@type": "Organization",
-                            "name": "Translation Oversight Committee - The English Standard Version",
-                            "url": "https://www.esv.org"
-                        }
-                    }
-                }
-            </script>
-    <%  }
-    else { %>
+        reqInitial = reqInitial.trim(); %>
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org/",
                 "@type": "CreativeWork",
-                "name": " STEPBible",
                 "url": "https://www.STEPBible.org",
                 "sameas": "https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible",
                 "description": "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
+                "name": "STEPBible - <%= reqInitial %> ",
+        <% if (reqInitial.equals("NIV")) { %>
+                "author": {
+                    "@type": "Person",
+                    "name": "Douglas Moo",
+                    "jobTitle": "Wessner Chair of Biblical Studies, Wheaton College",
+                    "url": "https://en.wikipedia.org/wiki/Douglas_J._Moo",
+                    "affiliation": {
+                        "@type": "Organization",
+                        "name": "Wheaton College",
+                        "url": "https://www.wheaton.edu/"
+                    },
+                    "memberOf": {
+                        "@type": "Organization",
+                        "name": "Committee on Bible Translation",
+                        "url": "https://www.biblica.com/niv-bible/niv-bible-translators"
+                    }
+                }
+        <% }
+        else if (reqInitial.startsWith("ESV")) { %>
+                "author": {
+                    "@type": "Person",
+                    "name": "J. I. Packer",
+                    "jobTitle": "Board of Governors' Professor of Theology",
+                    "url": "https://en.wikipedia.org/wiki/J._I._Packer",
+                    "affiliation": {
+                        "@type": "Organization",
+                        "name": "Regent College",
+                        "url": "https://regent-college.edu"
+                    },
+                    "memberOf": {
+                        "@type": "Organization",
+                        "name": "Translation Oversight Committee - The English Standard Version",
+                        "url": "https://www.esv.org"
+                    }
+                }
+        <%  }
+        else if (reqInitial.startsWith("SBLG")) { %>
+                "author": {
+                    "@type": "Person",
+                    "name": "Michael W. Holmes",
+                    "jobTitle": "Chair of the Department of Biblical and Theological Studies",
+                    "url": "https://en.wikipedia.org/wiki/Michael_W._Holmes",
+                    "affiliation": {
+                        "@type": "Organization",
+                        "name": "Bethel University",
+                        "url": "https://www.bethel.edu/"
+                    },
+                    "memberOf": {
+                        "@type": "Organization",
+                        "name": "The International Greek New Testament Project",
+                        "url": "http://www.igntp.org/"
+                    }
+                }
+        <%  }
+        else if (reqInitial.startsWith("NASB")) { %>
+                "author": {
+                    "@type": "Organization",
+                    "name": "The Lockman Foundation",
+                    "url": "https://en.wikipedia.org/wiki/Lockman_Foundation"
+                }
+        <%  }
+        else { %>
                 "author": {
                     "@type": "Person",
                     "name": "David Instone-Brewer",
@@ -81,7 +86,7 @@
                         "@type": "Organization",
                         "name": "Tyndale House",
                         "url": "https://www.TyndaleHouse.com"
-                        },
+                    },
                     "memberOf": [
                         {
                             "@type": "Organization",
@@ -100,10 +105,10 @@
                         }
                     ]
                 }
+        <% } %>
             }
         </script>
-    <% }
-    } %>
+    <% } %>
 
     <META http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />

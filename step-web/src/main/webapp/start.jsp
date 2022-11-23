@@ -33,8 +33,119 @@
     <%
         }
     %>
-
     <title>${ title }</title>
+        <% Object masterversionObj = request.getAttribute("masterversion");
+        if (masterversionObj != null) {
+            String reqInitial = request.getAttribute("masterversion").toString();
+            if (reqInitial != null) {
+                reqInitial = reqInitial.trim(); %>
+                <script type="application/ld+json">
+                    {
+                    "@context": "https://schema.org/",
+                    "@type": "CreativeWork",
+                    "url": "https://www.STEPBible.org",
+                    "sameas": "https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible",
+                    "description": "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
+                <% if (reqInitial.equals("NIV")) { %>
+                    "name": "NIV - New International Version",
+                    "author": {
+                        "@type": "Person",
+                        "name": "Douglas Moo",
+                        "jobTitle": "Wessner Chair of Biblical Studies, Wheaton College",
+                        "url": "https://en.wikipedia.org/wiki/Douglas_J._Moo",
+                        "affiliation": {
+                            "@type": "Organization",
+                            "name": "Wheaton College",
+                            "url": "https://www.wheaton.edu/"
+                        },
+                        "memberOf": {
+                            "@type": "Organization",
+                            "name": "Committee on Bible Translation",
+                            "url": "https://www.biblica.com/niv-bible/niv-bible-translators"
+                        }
+                    }
+                <% }
+                else if (reqInitial.startsWith("ESV")) { %>
+                    "name": "ESV - English Standard Version",
+                    "author": {
+                        "@type": "Person",
+                        "name": "J. I. Packer",
+                        "jobTitle": "Board of Governors' Professor of Theology",
+                        "url": "https://en.wikipedia.org/wiki/J._I._Packer",
+                        "affiliation": {
+                            "@type": "Organization",
+                            "name": "Regent College",
+                            "url": "https://regent-college.edu"
+                        },
+                        "memberOf": {
+                            "@type": "Organization",
+                            "name": "Translation Oversight Committee - The English Standard Version",
+                            "url": "https://www.esv.org"
+                        }
+                    }
+                <%  }
+                else if (reqInitial.startsWith("SBLG")) { %>
+                    "name": "SBLG - Greek New Testament",
+                    "author": {
+                        "@type": "Person",
+                        "name": "Michael W. Holmes",
+                        "jobTitle": "Chair of the Department of Biblical and Theological Studies",
+                        "url": "https://en.wikipedia.org/wiki/Michael_W._Holmes",
+                        "affiliation": {
+                            "@type": "Organization",
+                            "name": "Bethel University",
+                            "url": "https://www.bethel.edu/"
+                        },
+                        "memberOf": {
+                            "@type": "Organization",
+                            "name": "The International Greek New Testament Project",
+                            "url": "http://www.igntp.org/"
+                        }
+                    }
+                <%  }
+                else if (reqInitial.startsWith("NASB")) { %>
+                    "name": "NASB - New American Standard Bible",
+                    "author": {
+                        "@type": "Organization",
+                        "name": "The Lockman Foundation",
+                        "url": "https://en.wikipedia.org/wiki/Lockman_Foundation"
+                    }
+                <%  }
+                else { %>
+                    "name": "STEPBible - <%= reqInitial %> ",
+                    "author": {
+                        "@type": "Person",
+                        "name": "David Instone-Brewer",
+                        "jobTitle": "Research Fellow",
+                        "url": "https://cambridge.academia.edu/DInstoneBrewer",
+                        "affiliation": {
+                            "@type": "Organization",
+                            "name": "Tyndale House",
+                            "url": "https://www.TyndaleHouse.com"
+                        },
+                        "memberOf": [
+                            {
+                                "@type": "Organization",
+                                "name": "Studiorum Novi Testamenti Societas",
+                                "url": "https://snts.online"
+                            },
+                            {
+                                "@type": "Organization",
+                                "name": "British and Irish Association for Jewish Studies",
+                                "url": "https://britishjewishstudies.org"
+                            },
+                            {
+                                "@type": "Organization",
+                                "name": "Committee on Bible Translation",
+                                "url": "https://www.biblica.com/niv-bible/niv-bible-translators"
+                            }
+                        ]
+                    }
+                <% } %>
+                }
+                </script>
+            <% }
+        } %>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <meta step-local content="<%= appManager.isLocal() %>"/>
@@ -382,7 +493,7 @@
             <div class="hidden-xs col-sm-6 column examplesColumn" dir="${ ltr ? "ltr" : "rtl" }">
             </div>
         </div>
-        <div class="sidebar-offcanvas" id="sidebar" style="overflow-y:hidden" role="navigation"></div>
+        <div class="sidebar-offcanvas" dir="${ ltr ? "ltr" : "rtl" }" id="sidebar" style="overflow-y:hidden" role="navigation"></div>
     </div>
 </div>
 

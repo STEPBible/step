@@ -412,9 +412,8 @@ public class SearchPageController extends HttpServlet {
             request.setAttribute("title", title);
             request.setAttribute("description", description);
             request.setAttribute("keywords", "free, bible, study, app, software, bible study, bible app, bible download, free bible, free bible download, free bible study, windows, christian, christian software, online, online bible, download, dictionary, esv, kjv, Christ, Jesus, Lord, God, search, sunday, school, sunday school, lesson, new, old, testament, sermon, notes, cross, reference, church, library, greek, lexicon, tool, resource, research, book, NT, OT, scripture, preach, teach, exegesis, theology, word");
-
+            request.setAttribute("masterversion", masterVersion);
             request.setAttribute("canonicalUrl", getUrlFragmentForPassage(osisWrapper.getMasterVersion(), osisWrapper.getOsisId()));
-
         } catch (Exception ex) {
             //a page with no title is better than no pages
             LOGGER.error("Unable to ascertain meta data", ex);

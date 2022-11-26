@@ -133,7 +133,6 @@ public final class StringConversionUtils {
         if (StringUtils.isBlank(key)) {
             return "";
         }
-
         final StringBuilder sb = new StringBuilder(key.length());
         final String[] split = key.split(" ");
         for (final String s : split) {
@@ -157,7 +156,6 @@ public final class StringConversionUtils {
                 padNonPrefixedStrongNumber(sb, strongNumber, length);
             }
         }
-
         return sb.toString().trim();
     }
 
@@ -236,7 +234,16 @@ public final class StringConversionUtils {
                 sb.append(strongNumber.charAt(3));
                 break;
             case 6:
-                if (strongNumber.charAt(1) == '0') {
+                if (strongNumber.charAt(5) == '!') { // THOT has a ! between the Strong number and the augmented Strong
+                    sb.append(firstChar);            // For example THOT has H0834!a
+                    sb.append(strongNumber.charAt(1));
+                    sb.append(strongNumber.charAt(2));
+                    sb.append(strongNumber.charAt(3));
+                    sb.append(strongNumber.charAt(4));
+                    sb.append(strongNumber.charAt(5));
+                    break;
+                }
+                else if (strongNumber.charAt(1) == '0') {
                     sb.append(firstChar);
                     sb.append(strongNumber.charAt(2));
                     sb.append(strongNumber.charAt(3));
@@ -244,7 +251,6 @@ public final class StringConversionUtils {
                     sb.append(strongNumber.charAt(5));
                     break;
                 }
-
                 sb.append(strongNumber);
                 break;
             default:

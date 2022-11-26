@@ -51,7 +51,7 @@
             <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version"
                                   option2="ESV" option2type="version" option3="land" option3type="text"
                                   option4="he.sed" option4type="hebrewMeanings"
-                                  sampleURL="/?q=version=NIV|version=ESV|text=land|strong=H2617a&options=VGUVNH&display=INTERLEAVED"/>
+                                  sampleURL="/?q=version=NIV|version=ESV|text=land|strong=H2617A&options=VGUVNH&display=INTERLEAVED"/>
             <search:sample_search explanation="chained_searches_explanation_subject" option1="ESV"
                                   option1type="version" option2="throne" option2type="meanings" option3="David"
                                   option3type="subject" option4="Isa-Rev" option4type="reference"

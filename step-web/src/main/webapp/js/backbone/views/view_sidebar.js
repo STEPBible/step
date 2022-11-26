@@ -72,22 +72,17 @@ var SidebarView = Backbone.View.extend({
 				return;
 			}
 			var ref = this.model.get("ref");
-			var strongCode = this.model.get("strong");
-			if (strongCode.search(/([GH])(\d{1,3})(![A-Za-z])$/) > -1) {
-				strongCode = RegExp.$1 + ("000" + RegExp.$2).slice(-4) + RegExp.$3;
-			}
-            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongCode, this.model.get("morph"), ref, this.model.get("version"));
+			var strongsWithoutAugment = step.util.fixStrongNumForVocabInfo(this.model.get("strong"));
+            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongsWithoutAugment, this.model.get("morph"), ref, this.model.get("version"));
             if (vocabMorphFromJson.vocabInfos.length > 0) {
                 self.createDefinition(vocabMorphFromJson, ref);
                 return;
             }
-            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongCode, this.model.get("morph"), step.userLanguageCode], function (data) {
-                //step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
-                //step.util.trackAnalytics("lexicon", "strong", strongCode); // self.model.get("strong"));
+            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongsWithoutAugment, this.model.get("morph"), step.userLanguageCode], function (data) {
                 self.createDefinition(data, ref);
             }).error(function() {
                 if (changeBaseURL())
-                    $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongCode, this.model.get("morph"), step.userLanguageCode], function (data) {
+                    $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongsWithoutAugment, this.model.get("morph"), step.userLanguageCode], function (data) {
                         self.createDefinition(data, ref);
                     })
             });
@@ -562,7 +557,7 @@ var SidebarView = Backbone.View.extend({
                 this._addLinkAndAppend(panel, chineseDef, currentWordLanguageCode, bibleVersion);
             }
             var useSecondZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSecondZhLexicon");
-            if ((useSecondZhLexicon == null) || (useSecondZhLexicon))
+            if (useSecondZhLexicon)
                 foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, bibleVersion, this._addLinkAndAppend);
         }
 		else if (currentUserLang == "vi") {

@@ -143,13 +143,6 @@
                             }
                         }
 					}
-                    else if (code == 67) {
-                        var tmp = $(".passageContainer").clone();
-                        $(tmp).find(".notesPane").remove();
-                        $(tmp).find(".note").remove();
-                        console.log ($(tmp).text());
-                        window.navigator.clipboard.writeText($(tmp).text());
-                    }
 				}
 			});
 		}

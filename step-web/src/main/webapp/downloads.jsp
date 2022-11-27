@@ -46,13 +46,50 @@
 <HTML>
 <HEAD>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="description" content="Forever free Bible Study Software for your Windows, Mac, Linux, iPhone, iPad and Android. Bible study tools include search and Greek, Hebrew lexicons." />
+	<meta name="description" content="Forever free Bible Study Software for your Windows, Mac, Linux, iPhone, iPad and Android. Bible study tools include search and Greek, Hebrew lexicons." />
     <title>Free Bible study software for Windows, Mac, iPhone, Android and Linux</title>
     <%@include file="/jsps/offlinePage.jsp" %>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
     <link rel="stylesheet" type="text/css" href="static/static.css"/>
     <link rel="shortcut icon" href="images/step-favicon.ico"/>
+	<script type="application/ld+json"> {
+		"@context": "https://schema.org/",
+		"@type": "CreativeWork",
+		"url": "https://www.STEPBible.org",
+		"sameas": "https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible",
+		"description": "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
+		"name": "STEPBible - Download free Bible study software",
+		"author": {
+			"@type": "Person",
+			"name": "David Instone-Brewer",
+			"jobTitle": "Research Fellow",
+			"url": "https://cambridge.academia.edu/DInstoneBrewer",
+			"affiliation": {
+				"@type": "Organization",
+				"name": "Tyndale House",
+				"url": "https://www.TyndaleHouse.com"
+			},
+			"memberOf": [
+				{
+					"@type": "Organization",
+					"name": "Studiorum Novi Testamenti Societas",
+					"url": "https://snts.online"
+				},
+				{
+					"@type": "Organization",
+					"name": "British and Irish Association for Jewish Studies",
+					"url": "https://britishjewishstudies.org"
+				},
+				{
+					"@type": "Organization",
+					"name": "Committee on Bible Translation",
+					"url": "https://www.biblica.com/niv-bible/niv-bible-translators"
+				}
+			]
+		}
+	}
+	</script>
     <script src="/international/interactive.js" type="text/javascript"></script>
     <script src="/libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
     <script src="/js/step_constants.js" type="text/javascript"></script>

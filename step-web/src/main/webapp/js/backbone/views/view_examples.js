@@ -132,9 +132,9 @@ var ExamplesView = Backbone.View.extend({
 					'</div>' +
 
 					'<div style="overflow:hidden">' +
-						'<a href="?q=version=LXX|version=AB|version=ABGk|version=ABEn|reference=Exod.31&options=VLGUHVNAT&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
+						'<a href="?q=version=LXX|version=EngLXX|version=ABGk|version=ABEn|reference=Exod.31&options=VLGUHVNAT&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
 						'<span>' +
-						'<span class="stepButton">LXX, AB, ABGk, ABEn</span><span class="stepButton">Exo 31</span>' +
+						'<span class="stepButton">LXX, EngLXX, ABGk, ABEn</span><span class="stepButton">Exo 31</span>' +
 						'</a>' +
 					'</div>' +
 					'<div class="explanationText"><%= __s.lxx_ab %></div>' +

@@ -156,12 +156,13 @@ window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
     timers: {},
-    highlightStrong : function(strong, htmlTag, htmlObject, cssClass) {
+    highlightStrong : function(strong, htmlTag1, htmlTag2, htmlObject, cssClass) {
         strong = (strong || "");
-		$(htmlTag + "*='" + strong + "']", htmlObject).addClass(cssClass);
+		if (htmlTag2 !== "") htmlTag2 = " " + htmlTag2;
+		$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
         var updatedStrong = strong.replace(/[a-zA-Z]$/, "").replace(/\!$/, "");
 		if (updatedStrong !== strong) {
-			$(htmlTag + "*='" + strong + "']", htmlObject).addClass(cssClass);
+			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
 		}
     },
     refreshWaitStatus: function () {

@@ -93,6 +93,7 @@ step.passage = {
         var classes = classes || "emphasisePassagePhrase relatedWordEmphasis";
 
         var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
-        $(".verse span, span.w span, .heading span", container).removeClass(classes);
+        //$(".verse span, span.w span, .heading span", container).removeClass(classes);
+        $(".verse span, span.w, .heading span", container).removeClass(classes);
     }
 };

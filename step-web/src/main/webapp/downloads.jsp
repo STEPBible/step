@@ -55,7 +55,7 @@
     <link rel="shortcut icon" href="images/step-favicon.ico"/>
 	<script type="application/ld+json"> {
 		"@context": "https://schema.org/",
-		"@type": "CreativeWork",
+		"@type": "SoftwareApplication",
 		"url": "https://www.STEPBible.org",
 		"sameas": "https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible",
 		"description": "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",

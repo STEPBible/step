@@ -451,7 +451,13 @@ step.searchSelect = {
 				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 				$('textarea#userTextInput').val(userInput);
 				if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true);
-				if ($("#searchResultstext").find("a").text() != userInput) step.searchSelect._handleEnteredSearchWord();
+				//if ($("#searchResultstext").find("a").text() != userInput) step.searchSelect._handleEnteredSearchWord();
+				var textSearchResult = $("#searchResultstext").find("a");
+				if ((textSearchResult.length > 0) &&
+					(userInput !== textSearchResult[0].text) &&
+					(userInput !== textSearchResult[textSearchResult.length - 1].text.replaceAll('"', ''))) {
+					step.searchSelect._handleEnteredSearchWord();	
+				}
 			}
 			else {
 				$('#warningMessage').text("");

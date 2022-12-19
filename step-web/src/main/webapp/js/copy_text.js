@@ -148,6 +148,10 @@ step.copyText = {
 		$(copyOfPassage).find("p").replaceWith("\n");
 		$(copyOfPassage).find("br").replaceWith("\n");
 		$(copyOfPassage).find("div").prepend("\n");
+		var elementsWithSmallCapsClases = $(copyOfPassage).find(".small-caps");
+		for (var n = 0; n < elementsWithSmallCapsClases.length; n ++) {
+			$(elementsWithSmallCapsClases[n]).text($(elementsWithSmallCapsClases[n]).text().toUpperCase());
+		}
 		var versionsString = step.util.activePassage().get("masterVersion");
 		var extraVersions = step.util.activePassage().get("extraVersions");
 		if (extraVersions !== "") versionsString += "," + extraVersions;
@@ -171,13 +175,13 @@ step.copyText = {
 		for (var m = 0; m < copyOfPassage.length; m++) {
 			// Iterate over the HTML, changing to uppercase all characters from the
 			// small-caps class until the / character (assumed to be in the </span> tag).
-			var smallcapsStart = $(copyOfPassage[m]).html().search(/class=\"small-caps\">[^\/]*/);
-			while (smallcapsStart > -1) {
-				var smallCapsText = $(copyOfPassage[m]).html().substr(smallcapsStart);
-				var smallcapsEnd = smallCapsText.search("/");
-				$(copyOfPassage[m]).html($(copyOfPassage[m]).html().replace(/class=\"small-caps\">[^\/]*/g, smallCapsText.substr(0, smallcapsEnd).toUpperCase()));
-				smallcapsStart = $(copyOfPassage[m]).html().search(/class=\"small-caps\">[^\/]*/);
-			}
+			// var smallcapsStart = $(copyOfPassage[m]).html().search(/class=\"small-caps\">[^\/]*/);
+			// while (smallcapsStart > -1) {
+			// 	var smallCapsText = $(copyOfPassage[m]).html().substr(smallcapsStart);
+			// 	var smallcapsEnd = smallCapsText.search("/");
+			// 	$(copyOfPassage[m]).html($(copyOfPassage[m]).html().replace(/class=\"small-caps\">[^\/]*/g, smallCapsText.substr(0, smallcapsEnd).toUpperCase()));
+			// 	smallcapsStart = $(copyOfPassage[m]).html().search(/class=\"small-caps\">[^\/]*/);
+			// }
 			//$(copyOfPassage[m]).html().replace(/<br\s*[\/]?>/gi, "\n");
 			var posSearch = $(copyOfPassage[m]).html().search(/<br\s*[\/]?>/);
 			if (posSearch> -1) {

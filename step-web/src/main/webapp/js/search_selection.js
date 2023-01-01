@@ -447,11 +447,10 @@ step.searchSelect = {
 		else {
 			var userInput = $('textarea#userTextInput').val();
 			if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
-				$('#warningMessage').text(__s.click_to_select_search);
 				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 				$('textarea#userTextInput').val(userInput);
+				step.searchSelect.goSearch('text', userInput, userInput)
 				if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true);
-				//if ($("#searchResultstext").find("a").text() != userInput) step.searchSelect._handleEnteredSearchWord();
 				var textSearchResult = $("#searchResultstext").find("a");
 				if ((textSearchResult.length > 0) &&
 					(userInput !== textSearchResult[0].text) &&

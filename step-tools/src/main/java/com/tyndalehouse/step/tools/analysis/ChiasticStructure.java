@@ -16,9 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * @author chrisburrell
- */
 public class ChiasticStructure {
     private static Logger LOGGER = LoggerFactory.getLogger(ChiasticStructure.class);
     private Map<String, String> entries = new HashMap<String, String>(256);

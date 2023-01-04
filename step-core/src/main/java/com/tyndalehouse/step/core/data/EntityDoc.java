@@ -10,11 +10,6 @@ import org.apache.lucene.document.Fieldable;
 import org.codehaus.jackson.annotate.JsonAnyGetter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-/**
- * 
- * @author chrisburrell
- * 
- */
 public class EntityDoc implements Serializable {
     private static final long serialVersionUID = -8509022678959062751L;
     private final Document doc;

@@ -2,9 +2,6 @@ package com.tyndalehouse.step.models;
 
 import java.util.List;
 
-/**
- * @author chrisburrell
- */
 public class Note {
     private String id;
     private String title;

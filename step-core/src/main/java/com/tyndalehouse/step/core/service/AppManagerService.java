@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.service;
 
 import java.io.File;
 
-/**
- * @author chrisburrell
- */
 public interface AppManagerService {
     /**
      * The app.version property

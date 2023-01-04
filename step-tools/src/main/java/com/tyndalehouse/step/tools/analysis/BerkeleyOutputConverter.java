@@ -27,9 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Date;
 
-/**
- * @author chrisburrell
- */
 
 public class BerkeleyOutputConverter {
     private static final Map<String, String> entries = new HashMap<String, String>(12000);

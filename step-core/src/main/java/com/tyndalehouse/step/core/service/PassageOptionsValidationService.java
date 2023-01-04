@@ -9,9 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author chrisburrell
- */
 public interface PassageOptionsValidationService {
     /**
      * Translates the options provided over the HTTP interface to something palatable by the service layer

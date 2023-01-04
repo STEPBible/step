@@ -1,8 +1,5 @@
 package com.tyndalehouse.step.core.models.search;
 
-/**
- * @author chrisburrell
- */
 public class SyntaxSuggestion extends TextSuggestion implements PopularSuggestion {
     private String value;
 

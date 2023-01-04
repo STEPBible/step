@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.service;
 
 import org.crosswire.jsword.passage.Key;
 
-/**
- * @author chrisburrell
- */
 public interface JSwordRelatedVersesService {
     /**
      * Finds all related verses from a particular key

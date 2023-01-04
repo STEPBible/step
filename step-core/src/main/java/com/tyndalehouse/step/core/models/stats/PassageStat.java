@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * @author chrisburrell
- */
 public class PassageStat {
     private Map<String, Integer[]> stats = new HashMap<String, Integer[]>(128);
     private KeyWrapper reference;

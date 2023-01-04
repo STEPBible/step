@@ -13,9 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * @author chrisburrell
- */
 public class UnicodeFileReaderToProperties {
     public static void main(String[] args) throws IOException {
         Properties p = new Properties();

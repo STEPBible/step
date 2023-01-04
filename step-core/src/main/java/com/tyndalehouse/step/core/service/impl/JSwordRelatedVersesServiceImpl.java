@@ -37,9 +37,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author chrisburrell
- */
 public class JSwordRelatedVersesServiceImpl implements JSwordRelatedVersesService {
     private static final Logger LOG = LoggerFactory.getLogger(JSwordRelatedVersesServiceImpl.class);
     private static final int SIGNIFICANT_CUT_OFF = 200;

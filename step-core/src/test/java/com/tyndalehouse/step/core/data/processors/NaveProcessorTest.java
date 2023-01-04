@@ -4,9 +4,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author chrisburrell
- */
 public class NaveProcessorTest {
     @Test
     public void testStripAlternatives()  {

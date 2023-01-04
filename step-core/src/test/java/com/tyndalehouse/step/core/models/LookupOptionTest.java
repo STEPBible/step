@@ -8,9 +8,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * @author chrisburrell
- */
 public class LookupOptionTest {
     /**
      * Tests that options are unique by UI Name

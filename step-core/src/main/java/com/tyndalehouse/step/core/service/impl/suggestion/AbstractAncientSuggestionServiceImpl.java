@@ -25,9 +25,6 @@ import java.util.List;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
 
-/**
- * @author chrisburrell
- */
 public abstract class AbstractAncientSuggestionServiceImpl implements SingleTypeSuggestionService<EntityDoc, TopFieldCollector> {
     private final EntityIndexReader reader;
     private final Sort popularSort;

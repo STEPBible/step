@@ -13,9 +13,6 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.LexiconDefinitionService;
 
-/**
- * @author chrisburrell
- */
 public class LexiconDefinitionServiceImpl implements LexiconDefinitionService {
     private final EntityIndexReader definitions;
 

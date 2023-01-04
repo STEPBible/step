@@ -18,9 +18,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * @author chrisburrell
- */
 public class SubjectSuggestionServiceImpl extends AbstractIgnoreMergedListSuggestionServiceImpl<SubjectSuggestion> {
     private final EntityIndexReader naves;
     private final JSwordSearchService jSwordSearchService;

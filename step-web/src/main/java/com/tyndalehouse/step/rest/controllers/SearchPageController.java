@@ -32,9 +32,6 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author chrisburrell
- */
 @Singleton
 public class SearchPageController extends HttpServlet {
     public static String DEV_TOKEN = "UA-36285759-2";

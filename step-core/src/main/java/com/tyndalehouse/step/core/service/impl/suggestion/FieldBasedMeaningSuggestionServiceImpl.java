@@ -10,9 +10,6 @@ import org.apache.lucene.search.Sort;
 
 import java.util.List;
 
-/**
- * @author chrisburrell
- */
 public abstract class FieldBasedMeaningSuggestionServiceImpl extends AbstractAncientSuggestionServiceImpl {
     public FieldBasedMeaningSuggestionServiceImpl(final EntityIndexReader reader, final Filter filter,
                                                   final Sort sort, final Sort popularSort) {

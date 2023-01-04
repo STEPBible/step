@@ -1,8 +1,5 @@
 package com.tyndalehouse.step.core.models.search;
 
-/**
- * @author chrisburrell
- */
 public class TextSuggestion implements PopularSuggestion {
     private String text;
 

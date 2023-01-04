@@ -2,10 +2,6 @@ package com.tyndalehouse.step.core.models;
 
 import java.util.List;
 
-/**
- * 
- * @author chrisburrell
- */
 public class SuggestionsSummary {
     private List<SingleSuggestionsSummary> suggestionsSummaries;
 

@@ -14,10 +14,6 @@ import org.apache.lucene.util.Version;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
-/**
- * 
- * @author chrisburrell
- */
 public class AnalyzedPrefixSearchQueryParser extends MultiFieldQueryParser {
     /**
      * delegates to super constructor

@@ -12,9 +12,6 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author chrisburrell
- */
 @Singleton
 public class SupportController {
     private final SupportRequestService supportRequestService;

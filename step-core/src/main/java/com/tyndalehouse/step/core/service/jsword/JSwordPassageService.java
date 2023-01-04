@@ -9,9 +9,6 @@ import org.crosswire.jsword.passage.Passage;
 
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service
- * 
- * @author chrisburrell
- * 
  */
 public interface JSwordPassageService {
     String REFERENCE_BOOK = "ESV_th";

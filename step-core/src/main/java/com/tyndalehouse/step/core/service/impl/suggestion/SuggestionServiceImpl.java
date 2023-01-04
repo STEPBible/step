@@ -25,8 +25,6 @@ import java.util.Map;
 
 /**
  * Suggestion service, helping the auto suggestion search dropdown.
- *
- * @author chrisburrell
  */
 public class SuggestionServiceImpl implements SuggestionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SuggestionServiceImpl.class);

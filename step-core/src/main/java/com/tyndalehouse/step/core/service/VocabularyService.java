@@ -5,9 +5,6 @@ import com.tyndalehouse.step.core.models.VocabResponse;
 
 /**
  * The service providing morphology information
- * 
- * @author chrisburrell
- * 
  */
 public interface VocabularyService {
     /**

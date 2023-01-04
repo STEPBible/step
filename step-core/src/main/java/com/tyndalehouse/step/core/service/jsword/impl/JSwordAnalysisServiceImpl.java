@@ -26,8 +26,6 @@ import java.util.*;
 
 /**
  * The Class JSwordAnalysisServiceImpl.
- *
- * @author chrisburrell
  */
 public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     static final String WORD_SPLIT = "[,./<>?!;:'\\[\\]\\{\\}!\"\\-\u2013 ()]+";

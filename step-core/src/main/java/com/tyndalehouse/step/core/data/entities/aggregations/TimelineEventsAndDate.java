@@ -8,9 +8,6 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * A simple wrapper around a timeline set of events and a central date
- * 
- * @author chrisburrell
- * 
  */
 public class TimelineEventsAndDate implements Serializable {
     private static final long serialVersionUID = -7079914843690188557L;

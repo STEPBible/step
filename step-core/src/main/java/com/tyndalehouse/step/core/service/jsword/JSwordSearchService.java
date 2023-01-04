@@ -9,8 +9,6 @@ import com.tyndalehouse.step.core.service.impl.SearchQuery;
 
 /**
  * Searches across jsword modules
- *
- * @author chrisburrell
  */
 public interface JSwordSearchService {
 

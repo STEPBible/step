@@ -11,9 +11,6 @@ import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
  * etc.
  * 
  * The timeline data is currently loaded from a CSV file and stored in the database
- * 
- * @author chrisburrell
- * 
  */
 public interface TimelineService {
     /**

@@ -27,9 +27,6 @@ import com.tyndalehouse.step.core.utils.IOUtils;
 
 /**
  * A configuration of the entity, include the list of fields, etc.
- * 
- * @author chrisburrell
- * 
  */
 public class EntityConfiguration {
     private static final String UNABLE_TO_PARSE_CONFIGURATION_FILE = "Unable to parse configuration file";

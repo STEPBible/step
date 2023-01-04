@@ -9,8 +9,6 @@ import java.util.List;
 
 /**
  * Search query object. Defines all parameters required to execute a search
- *
- * @author chrisburrell
  */
 public class SearchQuery {
     private static final String JOINING_SEARCH = "=>";

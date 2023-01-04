@@ -6,9 +6,6 @@ import com.google.inject.name.Named;
 
 /**
  * A POJO to hold properties
- * 
- * @author chrisburrell
- * 
  */
 @Singleton
 public class UiDefaults {

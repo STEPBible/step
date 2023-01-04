@@ -4,9 +4,6 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * A place
- * 
- * @author chrisburrell
- * 
  */
 public class Place {
     private Double latitude;

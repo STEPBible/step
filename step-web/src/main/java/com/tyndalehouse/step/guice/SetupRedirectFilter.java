@@ -10,8 +10,6 @@ import java.io.IOException;
 
 /**
  * Intercepts and works out whether STEP has finished the installation process
- *
- * @author chrisburrell
  */
 @Singleton
 public class SetupRedirectFilter implements Filter {

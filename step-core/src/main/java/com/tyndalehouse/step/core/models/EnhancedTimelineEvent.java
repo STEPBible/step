@@ -8,9 +8,6 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Adds some key non-persisted fields to the event
- * 
- * @author chrisburrell
- * 
  */
 public class EnhancedTimelineEvent implements Serializable {
     private static final long serialVersionUID = -1338450485439161040L;

@@ -13,8 +13,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the utility method for converting strings
- *
- * @author chrisburrell
  */
 public class StringConversionUtilsTest {
     private static final Logger LOG = LoggerFactory.getLogger(StringConversionUtilsTest.class);

@@ -6,9 +6,6 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * The service providing morphology information
- * 
- * @author chrisburrell
- * 
  */
 public interface MorphologyService {
 

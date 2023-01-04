@@ -17,8 +17,6 @@ import com.google.common.base.Predicate;
 
 /**
  * Helper for menu operations
- *
- * @author chrisburrell
  */
 public final class MenuOperations {
     /**

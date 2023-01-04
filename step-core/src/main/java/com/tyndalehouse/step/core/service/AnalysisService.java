@@ -6,8 +6,6 @@ import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 
 /**
  * Defines an interface for obtaining various stats on a passage.
- *
- * @author chrisburrell
  */
 public interface AnalysisService {
 

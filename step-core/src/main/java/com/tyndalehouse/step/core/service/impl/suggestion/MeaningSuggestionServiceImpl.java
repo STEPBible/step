@@ -15,9 +15,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author chrisburrell
- */
 public class MeaningSuggestionServiceImpl implements SingleTypeSuggestionService<String, TermsAndMaxCount<String>> {
     private static final String[] ANCIENT_MEANING_FIELDS = new String[]{"stepGloss", "translations"};
     private final EntityIndexReader definitions;

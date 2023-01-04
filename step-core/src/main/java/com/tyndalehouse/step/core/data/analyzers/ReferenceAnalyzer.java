@@ -7,9 +7,6 @@ import org.apache.lucene.analysis.WhitespaceTokenizer;
 
 import java.io.Reader;
 
-/**
- * @author chrisburrell
- */
 public class ReferenceAnalyzer extends Analyzer {
     @Override
     public TokenStream tokenStream(final String fieldName, final Reader reader) {

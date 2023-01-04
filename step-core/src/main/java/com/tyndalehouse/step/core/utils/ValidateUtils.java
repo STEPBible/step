@@ -9,9 +9,6 @@ import java.util.Locale;
 
 /**
  * Checks various assertions and throws the exception: {@link ValidationException}
- * 
- * @author chrisburrell
- * 
  */
 public final class ValidateUtils {
     /** can't instantiate */

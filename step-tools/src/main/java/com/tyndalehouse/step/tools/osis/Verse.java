@@ -2,9 +2,6 @@ package com.tyndalehouse.step.tools.osis;
 
 /**
  * Verse image info
- * 
- * @author chrisburrell
- * 
  */
 public class Verse {
     private final String ref;

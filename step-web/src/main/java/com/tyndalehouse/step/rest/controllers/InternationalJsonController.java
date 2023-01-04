@@ -20,8 +20,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 /**
  * Serves the images by downloading them from a remote source if they do not already exist.
- *
- * @author chrisburrell
  */
 @Singleton
 public class InternationalJsonController extends HttpServlet {

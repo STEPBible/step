@@ -38,8 +38,6 @@ import java.util.regex.Pattern;
 
 /**
  * API to search across the data
- *
- * @author chrisburrell
  */
 @Singleton
 public class JSwordSearchServiceImpl implements JSwordSearchService {

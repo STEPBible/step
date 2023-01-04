@@ -20,9 +20,6 @@ import org.jdom2.input.SAXBuilder;
 
 /**
  * transforming the nave's file
- * 
- * @author chrisburrell
- * 
  */
 
 @SuppressWarnings({ "unchecked", "rawtypes" })

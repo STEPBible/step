@@ -26,7 +26,6 @@ import com.tyndalehouse.step.core.utils.TestUtils;
 /**
  * Tests the various searches
  * 
- * @author chrisburrell
  */
 @SuppressWarnings("unchecked")
 public class JSwordSearchServiceImplTest {

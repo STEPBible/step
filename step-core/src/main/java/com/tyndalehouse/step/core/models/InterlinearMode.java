@@ -3,9 +3,6 @@ package com.tyndalehouse.step.core.models;
 /**
  * Indicates the output required by the user, interleaving, column view or interlinear. Interleaving and
  * column views also support difference checking
- * 
- * @author chrisburrell
- * 
  */
 public enum InterlinearMode {
     /**

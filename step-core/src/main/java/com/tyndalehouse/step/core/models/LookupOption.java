@@ -13,8 +13,6 @@ import java.util.Map;
  * Outlines a list of options available in lookup
  * <p/>
  * Used letters at last update: ACDEHLMNPRTVU_
- *
- * @author chrisburrell
  */
 public enum LookupOption {
     /**

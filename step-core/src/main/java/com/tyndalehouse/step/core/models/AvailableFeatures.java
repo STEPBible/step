@@ -4,9 +4,6 @@ import java.util.List;
 
 /**
  * Features that are available to a particular version/displayMode with explanations of why others aren't
- * 
- * @author chrisburrell
- * 
  */
 public class AvailableFeatures {
     private List<LookupOption> options;

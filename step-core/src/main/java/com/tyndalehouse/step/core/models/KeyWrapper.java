@@ -5,9 +5,6 @@ import org.crosswire.jsword.passage.Key;
 
 /**
  * Wraps around an OSIS Key
- * 
- * @author chrisburrell
- * 
  */
 public class KeyWrapper {
     private String osisKeyId;

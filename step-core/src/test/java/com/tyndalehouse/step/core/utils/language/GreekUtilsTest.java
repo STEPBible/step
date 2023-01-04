@@ -14,9 +14,6 @@ import org.junit.Test;
 
 /**
  * Greek utils tests
- * 
- * @author chrisburrell
- * 
  */
 public class GreekUtilsTest {
     /** test the regex parses and removes the appropriate characters */

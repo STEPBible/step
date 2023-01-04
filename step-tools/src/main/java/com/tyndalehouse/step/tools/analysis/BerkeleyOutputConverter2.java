@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.lang.String;
 
-/**
- * @author chrisburrell
- */
 public class BerkeleyOutputConverter2 {
     private static final Map<String, String> entries = new HashMap<String, String>(12000);
     private static final Map<String, String> greekEntries = new HashMap<String, String>(12000);

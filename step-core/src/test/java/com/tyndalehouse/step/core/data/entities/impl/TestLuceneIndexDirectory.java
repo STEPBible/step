@@ -9,9 +9,6 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * A singleton to help locate the lucene indexes in testing
- * 
- * @author chrisburrell
- * 
  */
 public final class TestLuceneIndexDirectory {
     private static Map<String, Directory> directories = new HashMap<String, Directory>();

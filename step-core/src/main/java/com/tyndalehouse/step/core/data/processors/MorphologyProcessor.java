@@ -11,9 +11,6 @@ import com.tyndalehouse.step.core.data.create.PostProcessor;
 
 /**
  * Cleanses strings in descriptions
- * 
- * @author chrisburrell
- * 
  */
 @SuppressWarnings("PMD")
 public class MorphologyProcessor implements PostProcessor {

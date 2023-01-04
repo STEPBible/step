@@ -27,8 +27,6 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 /**
  * defines all vocab related queries
- *
- * @author chrisburrell
  */
 @Singleton
 public class VocabularyServiceImpl implements VocabularyService {

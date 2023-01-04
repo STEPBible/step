@@ -15,9 +15,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
  * Loads an Easton Dictionary
- * 
- * @author chrisburrell
- * 
  */
 public class HeadwordLineBasedLoader extends AbstractClasspathBasedModuleLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(HeadwordLineBasedLoader.class);

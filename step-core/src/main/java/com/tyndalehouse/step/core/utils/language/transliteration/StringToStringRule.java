@@ -5,9 +5,6 @@ import java.util.List;
 
 /**
  * Replaces a single character with a set of options
- * 
- * @author chrisburrell
- * 
  */
 public class StringToStringRule implements TransliterationRule {
     private final char[] s;

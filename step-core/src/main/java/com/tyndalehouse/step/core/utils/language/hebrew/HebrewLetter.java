@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.utils.language.hebrew;
 
 /**
  * A collection of enums to identify properties of the letter
- * 
- * @author chrisburrell
- * 
  */
 public class HebrewLetter {
     private HebrewLetterType hebrewLetterType = null;

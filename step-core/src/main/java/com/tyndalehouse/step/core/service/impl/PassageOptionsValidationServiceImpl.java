@@ -34,9 +34,6 @@ import static com.tyndalehouse.step.core.models.LookupOption.TRANSLITERATION;
 import static com.tyndalehouse.step.core.models.LookupOption.VERSE_NUMBERS;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
-/**
- * @author chrisburrell
- */
 @Singleton
 public class PassageOptionsValidationServiceImpl implements PassageOptionsValidationService {
     private final Provider<ClientSession> clientSessionProvider;

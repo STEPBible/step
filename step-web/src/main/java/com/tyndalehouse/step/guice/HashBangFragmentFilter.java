@@ -16,9 +16,6 @@ import javax.servlet.ServletResponse;
 
 /**
  * Intercepts and works out whether JSword has been installed with modules...
- * 
- * @author chrisburrell
- * 
  */
 @Singleton
 public class HashBangFragmentFilter implements Filter {

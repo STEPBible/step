@@ -8,8 +8,6 @@ import java.io.Serializable;
 
 /**
  * Gives info on a book name (short and long names)
- *
- * @author chrisburrell
  */
 public class BookName implements Serializable, PopularSuggestion {
     private static final long serialVersionUID = 2406197083965523605L;

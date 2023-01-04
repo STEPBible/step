@@ -13,9 +13,6 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 
 /**
  * provides a way of
- * 
- * @author chrisburrell
- * 
  */
 public class SimileTimelineTranslatorImpl implements TimelineTranslator {
     private static final String SIMILE_DEFAULT_TIME_FORMAT = "iso8601";

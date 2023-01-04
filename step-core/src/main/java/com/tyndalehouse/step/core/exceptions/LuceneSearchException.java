@@ -1,8 +1,5 @@
 package com.tyndalehouse.step.core.exceptions;
 
-/**
- * @author chrisburrell
- */
 public class LuceneSearchException extends StepInternalException {
     /**
      * @see {@link com.tyndalehouse.step.core.exceptions.StepInternalException }

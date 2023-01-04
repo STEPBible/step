@@ -13,9 +13,6 @@ import java.io.*;
 import java.util.Properties;
 import java.util.concurrent.*;
 
-/**
- * @author chrisburrell
- */
 public class ConvertXmlToOSISModule {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConvertXmlToOSISModule.class);
     private static File SOURCE_DIRECTORY = new File("c:\\dev\\projects\\ebible\\downloads");

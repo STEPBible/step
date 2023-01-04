@@ -12,8 +12,6 @@ import java.util.Map;
 
 /**
  * Captures information related to morphology
- *
- * @author chrisburrell
  */
 public class VocabInfo implements Serializable {
     private static final long serialVersionUID = 3478149117983010944L;

@@ -1,8 +1,5 @@
 package com.tyndalehouse.step.core.models.search;
 
-/**
- * @author chrisburrell
- */
 public class LexicalSearchEntry implements SearchEntry {
     private String stepGloss;
     private String stepTransliteration;

@@ -9,10 +9,6 @@ import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.service.impl.SearchType;
 
-/**
- * 
- * @author chrisburrell
- */
 public class SearchResult extends AbstractComplexSearch implements Serializable {
     private static final long serialVersionUID = 5408141957094432935L;
     private String query;

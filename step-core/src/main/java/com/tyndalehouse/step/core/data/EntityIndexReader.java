@@ -18,8 +18,6 @@ import org.apache.lucene.search.TopFieldCollector;
 
 /**
  * Interface to read an index
- *
- * @author chrisburrell
  */
 public interface EntityIndexReader extends Closeable {
 

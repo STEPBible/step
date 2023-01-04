@@ -17,8 +17,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 /**
  * Represents an individual search
- *
- * @author chrisburrell
  */
 public class IndividualSearch {
     public static final Pattern MAIN_RANGE = Pattern.compile("(\\+\\[([^\\]]+)\\])");

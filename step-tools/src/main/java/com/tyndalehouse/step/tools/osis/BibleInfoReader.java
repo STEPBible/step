@@ -22,9 +22,6 @@ import java.util.List;
 
 /**
  * Reads an osis ref in a module
- * 
- * @author chrisburrell
- * 
  */
 public class BibleInfoReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleInfoReader.class);

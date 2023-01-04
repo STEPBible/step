@@ -4,9 +4,6 @@ import com.tyndalehouse.step.core.models.BookName;
 
 import java.util.List;
 
-/**
- * @author chrisburrell
- */
 public interface InternationalRangeService {
     /**
      * For a particular user locale, provided by the client session, returns all

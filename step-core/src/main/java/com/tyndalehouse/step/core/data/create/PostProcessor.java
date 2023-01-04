@@ -6,9 +6,6 @@ import com.tyndalehouse.step.core.data.EntityConfiguration;
 
 /**
  * Post-processes a document before it is added to the index
- * 
- * @author chrisburrell
- * 
  */
 public interface PostProcessor {
     /**

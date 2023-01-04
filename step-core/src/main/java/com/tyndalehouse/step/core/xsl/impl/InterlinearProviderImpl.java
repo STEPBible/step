@@ -30,8 +30,6 @@ import static java.lang.String.format;
  * This object is not purposed to be used as a singleton. It builds up textual information on initialisation, and is
  * specific to requests. On initialisation, the OSIS XML is retrieved and iterated through to find all strong/morph
  * candidates
- *
- * @author chrisburrell
  */
 public class InterlinearProviderImpl implements InterlinearProvider {
 

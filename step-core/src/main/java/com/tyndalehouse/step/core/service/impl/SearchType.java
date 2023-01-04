@@ -3,7 +3,6 @@ package com.tyndalehouse.step.core.service.impl;
 /**
  * Indicates the type of search that is executed.
  * 
- * @author chrisburrell
  */
 public enum SearchType {
     PASSAGE(""),

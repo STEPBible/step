@@ -11,9 +11,6 @@ import org.crosswire.jsword.book.sword.ConfigValueInterceptor;
 
 /**
  * Indexes a single module modules
- * 
- * @author chrisburrell
- *
  */
 public class IndexModule {
     /**

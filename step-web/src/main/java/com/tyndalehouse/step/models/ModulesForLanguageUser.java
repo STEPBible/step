@@ -6,9 +6,6 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 
 /**
  * A list of modules returned to the user, with internationalized information
- * 
- * @author chrisburrell
- * 
  */
 public class ModulesForLanguageUser {
     private List<BibleVersion> versions;

@@ -24,9 +24,6 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
  *     ]
  *     }
  * </pre>
- * 
- * @author chrisburrell
- * 
  */
 @Singleton
 public class SimileTimelineImpl implements DigestableTimeline {

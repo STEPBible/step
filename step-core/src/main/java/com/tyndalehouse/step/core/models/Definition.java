@@ -3,7 +3,6 @@ package com.tyndalehouse.step.core.models;
 /**
  * Represents a definition, has a key and a value
  * 
- * @author chrisburrell
  */
 public class Definition {
     private final String key;

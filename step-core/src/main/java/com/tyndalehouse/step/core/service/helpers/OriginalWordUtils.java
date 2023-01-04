@@ -14,9 +14,6 @@ import org.apache.lucene.search.TermQuery;
 
 /**
  * Static helper methods used by various services
- * 
- * @author chrisburrell
- * 
  */
 public final class OriginalWordUtils {
     /** strong number field */

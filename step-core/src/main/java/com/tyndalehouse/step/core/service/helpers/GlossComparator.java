@@ -8,9 +8,6 @@ import org.apache.lucene.analysis.StopAnalyzer;
 
 /**
  * Compares a definition by gloss
- * 
- * @author chrisburrell
- * 
  */
 public class GlossComparator implements Comparator<EntityDoc> {
 

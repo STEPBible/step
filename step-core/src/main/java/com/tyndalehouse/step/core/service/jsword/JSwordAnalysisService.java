@@ -6,9 +6,6 @@ import org.crosswire.jsword.passage.Key;
 
 /**
  * Defines an interface for obtaining various stats on a passage.
- * 
- * @author chrisburrell
- * 
  */
 public interface JSwordAnalysisService {
     /**

@@ -24,9 +24,6 @@ import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 
 /**
  * a set of utility methods to manipulate the JSword objects coming out
- * 
- * @author chrisburrell
- * 
  */
 public final class JSwordUtils {
     private static final String BOOK_CHAPTER_OSIS_FORMAT = "%s.%d";

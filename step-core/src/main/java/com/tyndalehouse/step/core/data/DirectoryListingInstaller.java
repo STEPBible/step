@@ -28,8 +28,6 @@ import java.util.zip.ZipInputStream;
 
 /**
  * Bases the list of books based on the directory listing of a particular folder, as opposed to a zip file of some kind.
- *
- * @author chrisburrell
  */
 public class DirectoryListingInstaller extends DirectoryInstaller {
     public static String DIRECTORY_LISTING_INSTALLER = "directory-listing-installer";

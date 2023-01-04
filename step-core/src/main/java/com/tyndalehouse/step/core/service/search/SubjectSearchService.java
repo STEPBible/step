@@ -10,9 +10,6 @@ import java.util.List;
 
 /**
  * Searches for a specific subject
- * 
- * @author chrisburrell
- * 
  */
 public interface SubjectSearchService {
     /**

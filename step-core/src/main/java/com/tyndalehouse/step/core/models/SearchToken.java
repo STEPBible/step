@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.models;
 
 import java.io.Serializable;
 
-/**
- * @author chrisburrell
- */
 public class SearchToken implements Serializable {
     public static final String VERSION = "version";
     public static final String REFERENCE = "reference";

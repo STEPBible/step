@@ -17,7 +17,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * <p />
  * .
  * 
- * @author chrisburrell
  */
 public class StepRequest {
 

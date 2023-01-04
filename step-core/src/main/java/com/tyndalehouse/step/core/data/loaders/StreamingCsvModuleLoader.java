@@ -17,8 +17,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
  * Loads modules straight from a CSV file to a database form
- *
- * @author chrisburrell
  */
 public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader {
     private static final Logger LOG = LoggerFactory.getLogger(StreamingCsvModuleLoader.class);

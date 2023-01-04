@@ -30,9 +30,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
  * Provides a set of installers for installing Bibles, modules, etc e.g. from Crosswire
- * 
- * @author chrisburrell
- * 
  */
 @Singleton
 public class DefaultInstallersProvider implements Provider<List<Installer>> {

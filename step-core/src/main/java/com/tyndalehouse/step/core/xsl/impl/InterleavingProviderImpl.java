@@ -8,9 +8,6 @@ import com.tyndalehouse.step.core.xsl.InterleavingProvider;
 
 /**
  * Provides the headings for any interleaved passage
- *
- * @author chrisburrell
- *
  */
 public class InterleavingProviderImpl implements InterleavingProvider {
     private String[] versions;

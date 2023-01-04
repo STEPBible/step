@@ -16,9 +16,6 @@ import org.junit.Test;
 
 /**
  * Tests that cache keys are constructed correctly
- * 
- * @author chrisburrell
- * 
  */
 public class StepRequestTest {
     private static final String UTF_8_ENCODING = "UTF-8";

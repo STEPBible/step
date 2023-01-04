@@ -48,8 +48,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.getNonNullString;
 
 /**
  * Accesses JIRA to raise a support request.
- *
- * @author chrisburrell
  */
 @Singleton
 public class SupportRequestServiceImpl implements SupportRequestService {

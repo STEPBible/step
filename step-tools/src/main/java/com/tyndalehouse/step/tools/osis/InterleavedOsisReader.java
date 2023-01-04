@@ -22,9 +22,6 @@ import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Reads an osis ref in a module
- * 
- * @author chrisburrell
- * 
  */
 public class InterleavedOsisReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(InterleavedOsisReader.class);

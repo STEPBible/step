@@ -10,8 +10,6 @@ import org.crosswire.jsword.book.Book;
 
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service
- *
- * @author chrisburrell
  */
 public interface JSwordMetadataService {
     /**

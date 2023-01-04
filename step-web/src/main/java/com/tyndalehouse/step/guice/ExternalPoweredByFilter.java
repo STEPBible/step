@@ -13,7 +13,6 @@ import javax.servlet.ServletResponse;
 /**
  * Adds a filter, and restricts the types of calls allowed.
  * 
- * @author chrisburrell
  */
 @Singleton
 public class ExternalPoweredByFilter implements Filter {

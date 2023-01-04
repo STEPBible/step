@@ -40,8 +40,6 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
 
 /**
  * tests the front controller parsing process
- *
- * @author chrisburrell
  */
 @SuppressWarnings("PMD.TooManyMethods")
 @RunWith(MockitoJUnitRunner.class)

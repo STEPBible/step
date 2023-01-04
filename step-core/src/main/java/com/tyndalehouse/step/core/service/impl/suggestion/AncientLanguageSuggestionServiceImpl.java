@@ -18,9 +18,6 @@ import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText;
 
-/**
- * @author chrisburrell
- */
 public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncientSuggestionServiceImpl {
     private static final Pattern PART_STRONG = Pattern.compile("(g|h)\\d\\d+");
     private static final SortField TRANSLIT_SORT_FIELD = new SortField("stepTransliteration", SortField.STRING_VAL);

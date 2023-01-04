@@ -35,8 +35,6 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 /**
  * Caters for searching across the data base
- *
- * @author chrisburrell
  */
 @Singleton
 public class SearchController {

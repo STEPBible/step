@@ -15,8 +15,6 @@ import java.util.regex.Pattern;
 
 /**
  * Adds generated fields to the entity document - affects both "definition" and "specificForm"
- *
- * @author chrisburrell
  */
 public class NaveProcessor implements PostProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(NaveProcessor.class);

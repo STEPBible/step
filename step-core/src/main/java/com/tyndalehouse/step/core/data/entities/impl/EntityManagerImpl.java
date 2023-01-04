@@ -13,10 +13,6 @@ import com.tyndalehouse.step.core.data.EntityConfiguration;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 
-/**
- * @author chrisburrell
- * 
- */
 @Singleton
 public class EntityManagerImpl implements Closeable, EntityManager {
     private final Map<String, EntityConfiguration> configs = new HashMap<String, EntityConfiguration>();

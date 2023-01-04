@@ -13,9 +13,6 @@ import com.tyndalehouse.step.core.service.UserService;
 
 /**
  * Checking user is registered
- * 
- * @author chrisburrell
- * 
  */
 @RequestScoped
 public class UserController {

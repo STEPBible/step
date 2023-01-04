@@ -2,11 +2,6 @@ package com.tyndalehouse.step.core.utils.language.transliteration;
 
 import java.util.List;
 
-/**
- * 
- * @author chrisburrell
- * 
- */
 public interface TransliterationRule {
     /**
      * @param prefixes a list of existing prefixes to append to

@@ -6,8 +6,6 @@ import java.util.Locale;
 
 /**
  * At the moment, the "Client Session" object just wraps around an id.
- *
- * @author chrisburrell
  */
 public interface ClientSession {
     /**

@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.models;
 
 /**
  * A very short lexicon definition
- * 
- * @author chrisburrell
- * 
  */
 public class ShortLexiconDefinition {
     private String code;

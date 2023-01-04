@@ -4,9 +4,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-/**
- * @author chrisburrell
- */
 public class ExtractHeaderInformationSax extends DefaultHandler {
     private boolean titleFlag, descriptionFlag, copyrightFlag, versificationFlag, languageFlag, licenseFlag, 
             headerFlag, aboutFlag, revisionFlag;

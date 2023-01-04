@@ -7,7 +7,6 @@ import java.util.Set;
 
 /**
  * Defines the contract for getting lexicon definitions out of Lucene
- * @author chrisburrell
  */
 public interface LexiconDefinitionService {
     /**

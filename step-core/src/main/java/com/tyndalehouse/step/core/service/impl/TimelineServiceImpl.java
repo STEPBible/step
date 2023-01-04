@@ -32,7 +32,6 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 /**
  * The implementation of the timeline service, based on JDBC and ORM Lite to access the database.
  * 
- * @author chrisburrell
  */
 @Singleton
 public class TimelineServiceImpl implements TimelineService {

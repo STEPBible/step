@@ -25,9 +25,6 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * The controller that will deal with any requests changing the behaviour of the application
- * 
- * @author chrisburrell
- * 
  */
 @RequestScoped
 public class SetupController {

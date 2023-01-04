@@ -7,7 +7,6 @@ import org.apache.lucene.search.SortField;
 
 /**
  * Sets up the popular and gloss sorts
- * @author chrisburrell
  */
 public abstract class AncientMeaningSuggestionServiceImpl extends FieldBasedMeaningSuggestionServiceImpl {
     public static final SortField GLOSS_SORT_FIELD = new SortField("stepGloss", SortField.STRING_VAL);

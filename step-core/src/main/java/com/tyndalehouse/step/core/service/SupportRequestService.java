@@ -1,8 +1,5 @@
 package com.tyndalehouse.step.core.service;
 
-/**
- * @author chrisburrell
- */
 public interface SupportRequestService {
     /**
      * @param summary     summary of issue

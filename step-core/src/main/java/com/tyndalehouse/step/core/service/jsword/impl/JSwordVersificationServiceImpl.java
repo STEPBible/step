@@ -19,9 +19,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
  * Deals with the versification
- * 
- * @author chrisburrell
- * 
  */
 @Singleton
 public class JSwordVersificationServiceImpl implements JSwordVersificationService {

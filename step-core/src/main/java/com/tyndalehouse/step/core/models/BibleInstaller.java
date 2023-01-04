@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.models;
 
 import java.io.Serializable;
 
-/**
- * @author chrisburrell
- */
 public class BibleInstaller implements Serializable {
     private static final long serialVersionUID = -1;
     private int index;

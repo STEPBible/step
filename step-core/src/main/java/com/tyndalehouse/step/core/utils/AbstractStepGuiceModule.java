@@ -11,7 +11,6 @@ import com.google.inject.name.Names;
 /**
  * A colletion of utilities to read property files
  * 
- * @author chrisburrell
  */
 public abstract class AbstractStepGuiceModule extends AbstractModule {
     private final String propertyFileUrl;

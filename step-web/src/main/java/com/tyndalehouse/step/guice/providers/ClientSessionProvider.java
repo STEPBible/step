@@ -19,9 +19,6 @@ import com.tyndalehouse.step.models.WebSessionImpl;
 /**
  * This object is request-scoped, meaning it is new for every request. It is a way to return the jsessionId at
  * runtime
- * 
- * @author chrisburrell
- * 
  */
 @RequestScoped
 public class ClientSessionProvider implements Provider<ClientSession> {

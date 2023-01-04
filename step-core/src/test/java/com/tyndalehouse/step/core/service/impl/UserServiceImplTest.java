@@ -12,9 +12,6 @@ import org.junit.Test;
 
 /**
  * Checks a user is valid
- * 
- * @author chrisburrell
- * 
  */
 public class UserServiceImplTest {
     /**

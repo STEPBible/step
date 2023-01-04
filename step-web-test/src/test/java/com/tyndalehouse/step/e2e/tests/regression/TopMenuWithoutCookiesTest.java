@@ -8,9 +8,6 @@ import com.tyndalehouse.step.e2e.fragments.MenuOperations;
 import com.tyndalehouse.step.e2e.fragments.PageOperations;
 import com.tyndalehouse.step.e2e.framework.WebDriverTest;
 
-/**
- * @author chrisburrell
- */
 public class TopMenuWithoutCookiesTest extends WebDriverTest {
     @Test
     public void testOnlyOneTickInLevelMenu() {

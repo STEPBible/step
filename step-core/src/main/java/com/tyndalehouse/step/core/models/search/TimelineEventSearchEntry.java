@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.models.search;
 
 /**
  * Carries timeline events
- * 
- * @author chrisburrell
- * 
  */
 public class TimelineEventSearchEntry implements SearchEntry {
     private static final long serialVersionUID = -1271009882198165554L;

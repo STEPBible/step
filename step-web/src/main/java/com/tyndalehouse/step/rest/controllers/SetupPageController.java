@@ -33,9 +33,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-/**
- * @author chrisburrell
- */
 @Singleton
 public class SetupPageController extends HttpServlet {
     private static final Pattern COMMA_SEPARATORS = Pattern.compile(",");

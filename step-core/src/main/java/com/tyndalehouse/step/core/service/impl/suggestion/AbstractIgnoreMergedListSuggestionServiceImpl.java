@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * A abstract implementation that assumes the first list (exact matches) have been merged
  * already, so we will only ever return the second list.
- * @author chrisburrell
  */
 public abstract class AbstractIgnoreMergedListSuggestionServiceImpl<T extends  PopularSuggestion> implements SingleTypeSuggestionService<T, TermsAndMaxCount<T>> {
     /**

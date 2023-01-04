@@ -6,9 +6,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-/**
- * @author chrisburrell
- */
 @Singleton
 public class ObjectMapperProvider implements Provider<ObjectMapper> {
     private static ObjectMapper objectMapper;

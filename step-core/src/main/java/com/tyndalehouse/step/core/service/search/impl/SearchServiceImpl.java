@@ -66,8 +66,6 @@ import static java.lang.Character.isDigit;
 
 /**
  * A federated search service implementation. see {@link SearchService}
- *
- * @author chrisburrell
  */
 @Singleton
 public class SearchServiceImpl implements SearchService {

@@ -14,9 +14,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
  * Records how a field is stored in Lucene
- * 
- * @author chrisburrell
- * 
  */
 public class FieldConfig {
     private static final String MINUTE = "minute";

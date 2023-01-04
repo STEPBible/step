@@ -6,7 +6,6 @@ import java.util.List;
 
 /**
  * Parent class sharing to share some common properties between lookups for passages and searches
- * @author chrisburrell
  */
 public abstract class AbstractComplexSearch {
     private String title;

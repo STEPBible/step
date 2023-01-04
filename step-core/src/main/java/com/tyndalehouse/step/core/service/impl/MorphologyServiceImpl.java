@@ -18,9 +18,6 @@ import com.tyndalehouse.step.core.service.MorphologyService;
 
 /**
  * Provides quick access to the morphology from a code found in the xsl transformation
- * 
- * @author chrisburrell
- * 
  */
 @Singleton
 public class MorphologyServiceImpl implements MorphologyService {

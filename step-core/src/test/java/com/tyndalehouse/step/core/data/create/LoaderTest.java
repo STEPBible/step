@@ -27,9 +27,6 @@ import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Tests the loading of the all loaders
- * 
- * @author chrisburrell
- * 
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LoaderTest {

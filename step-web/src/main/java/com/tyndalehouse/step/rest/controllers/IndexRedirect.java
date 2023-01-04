@@ -13,9 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author chrisburrell
- */
 @Singleton
 public class IndexRedirect extends HttpServlet {
     private static Logger LOGGER = LoggerFactory.getLogger(SearchPageController.class);

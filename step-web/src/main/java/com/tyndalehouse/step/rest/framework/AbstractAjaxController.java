@@ -23,9 +23,6 @@ import java.util.ResourceBundle;
 
 import static java.lang.String.format;
 
-/**
- * @author chrisburrell
- */
 @MultipartConfig
 public abstract class AbstractAjaxController extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAjaxController.class);

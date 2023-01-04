@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
-/**
- * @author chrisburrell
- */
 public class ModuleToStrong {
     private static final Pattern PUNCTUATION = Pattern.compile("[—,.;*:'\\[\\]!\"`?’‘()-]+");
 

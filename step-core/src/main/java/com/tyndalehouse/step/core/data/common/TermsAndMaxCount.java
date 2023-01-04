@@ -5,7 +5,6 @@ import java.util.Set;
 /**
  * Holds a set of matching terms, with the total potential count of all terms
  * @param <T> the type of term that is held here.
- * @author chrisburrell
  */
 public class TermsAndMaxCount<T> {
     private Set<T> terms;

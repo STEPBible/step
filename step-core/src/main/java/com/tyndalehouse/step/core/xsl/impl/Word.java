@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.xsl.impl;
 
 /**
  * An interlinear word can be partial if tagged with an H00, which then causes two words to be looked up...
- * 
- * @author chrisburrell
- * 
  */
 public class Word {
     private final String text;

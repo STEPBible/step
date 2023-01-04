@@ -23,7 +23,6 @@ import java.util.Collection;
 
 /**
  * Strips out the '/' character from the original source.
- * @author chrisburrell
  */
 public class OHBParser {
     /**

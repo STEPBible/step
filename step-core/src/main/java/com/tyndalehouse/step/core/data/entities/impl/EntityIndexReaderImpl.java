@@ -38,8 +38,6 @@ import com.tyndalehouse.step.core.utils.IOUtils;
 
 /**
  * Reads an entity
- *
- * @author chrisburrell
  */
 public class EntityIndexReaderImpl implements EntityIndexReader {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(EntityIndexReaderImpl.class);

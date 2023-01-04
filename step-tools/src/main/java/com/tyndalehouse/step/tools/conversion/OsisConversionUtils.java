@@ -22,9 +22,6 @@ import java.io.StringWriter;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * @author chrisburrell
- */
 public class OsisConversionUtils {
     private static final String ERROR = "<!-- ERROR -->";
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(OsisConversionUtils.class);

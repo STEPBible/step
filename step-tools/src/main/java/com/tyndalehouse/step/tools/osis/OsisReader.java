@@ -28,9 +28,6 @@ import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Reads an osis ref in a module
- * 
- * @author chrisburrell
- * 
  */
 public class OsisReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(OsisReader.class);

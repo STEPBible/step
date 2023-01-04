@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Lengthens the name of a header
- *
- * @author chrisburrell
  */
 public final class HeadingsUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(HeadingsUtil.class);

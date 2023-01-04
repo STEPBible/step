@@ -5,9 +5,6 @@ import com.tyndalehouse.step.core.service.impl.SearchType;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author chrisburrell
- */
 public class SubjectSuggestion implements PopularSuggestion {
     private String value;
     private List<SearchType> searchTypes;

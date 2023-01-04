@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.models.search;
 
 import java.util.List;
 
-/**
- * @author chrisburrell
- */
 public class AutoSuggestion {
     private String itemType;
     private Object suggestion;

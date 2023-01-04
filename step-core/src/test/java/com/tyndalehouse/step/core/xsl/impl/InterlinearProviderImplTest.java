@@ -21,9 +21,6 @@ import org.junit.Test;
 
 /**
  * A simple test class to test to the provider
- * 
- * @author chrisburrell
- * 
  */
 public class InterlinearProviderImplTest {
     /**

@@ -12,9 +12,6 @@ import org.apache.lucene.document.Field;
 
 /**
  * Adds generated fields to the entity document - affects both "definition" and "specificForm"
- * 
- * @author chrisburrell
- * 
  */
 public class TransliteratorProcessor implements PostProcessor {
     private static final String STEP_SIMPLIFIED_TRANSLITERATION = "simplifiedStepTransliteration";

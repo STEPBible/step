@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 /**
  * Keyed content, e.g. by version
- * 
- * @author chrisburrell
- * 
  */
 public class KeyedVerseContent implements Serializable {
     private static final long serialVersionUID = -1522196279945422299L;

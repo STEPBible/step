@@ -10,7 +10,6 @@ import org.joda.time.LocalDateTime;
 /**
  * Utilities to convert from one form to another
  * 
- * @author chrisburrell
  */
 public final class ConversionUtils {
     private static final long MILLISECONDS_IN_MINUTE = 60000;

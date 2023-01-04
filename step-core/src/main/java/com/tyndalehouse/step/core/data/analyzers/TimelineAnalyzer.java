@@ -8,9 +8,6 @@ import org.apache.lucene.util.Version;
 
 /**
  * Geography analyzer
- * 
- * @author chrisburrell
- * 
  */
 public class TimelineAnalyzer extends PerFieldAnalyzerWrapper {
     /**

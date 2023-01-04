@@ -1,9 +1,5 @@
 package com.tyndalehouse.step.tools.esv;
 
-/**
- * @author chrisburrell
- * 
- */
 public class Tagging {
     private String ref;
     private String originalTaggedText;

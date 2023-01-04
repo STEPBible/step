@@ -29,8 +29,6 @@ import com.tyndalehouse.step.core.service.BibleInformationService;
 /**
  * A service able to retrieve various kinds of statistics, delegates to {@link JSwordAnalysisServiceImpl} for
  * some operations.
- *
- * @author chrisburrell
  */
 public class AnalysisServiceImpl implements AnalysisService {
     public static final String OSIS_CHAPTER_STARTS_WITH = ".* ";

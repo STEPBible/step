@@ -7,8 +7,6 @@ import java.util.Locale;
 
 /**
  * a set of utility methods to sort various collections
- *
- * @author chrisburrell
  */
 public final class SortingUtils {
 

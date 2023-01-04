@@ -14,9 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author chrisburrell
- */
 public class BerkeleyOutputToTaggingFormat {
     private static final Map<String, String> entries = new HashMap<String, String>(12000);
 

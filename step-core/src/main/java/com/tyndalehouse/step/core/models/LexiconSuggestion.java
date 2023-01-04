@@ -4,9 +4,6 @@ import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 
 import java.io.Serializable;
 
-/**
- * @author chrisburrell
- */
 public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private static final long serialVersionUID = 2330563074130087347L;
     private String strongNumber;

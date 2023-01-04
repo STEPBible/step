@@ -10,9 +10,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
  * A test version
- * 
- * @author chrisburrell
- * 
  */
 public class TestEntityIndexWriterImpl extends EntityIndexWriterImpl {
 

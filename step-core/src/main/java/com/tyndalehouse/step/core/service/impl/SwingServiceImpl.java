@@ -16,8 +16,6 @@ import java.util.ResourceBundle;
 
 /**
  * This class wraps around the Swing interface!
- *
- * @author chrisburrell
  */
 public class SwingServiceImpl implements SwingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SwingServiceImpl.class);

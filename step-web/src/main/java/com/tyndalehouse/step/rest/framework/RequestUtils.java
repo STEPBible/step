@@ -16,9 +16,6 @@ import com.tyndalehouse.step.core.models.ClientSession;
 
 /**
  * A set of utilities to deal with requests
- * 
- * @author chrisburrell
- * 
  */
 public final class RequestUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestUtils.class);

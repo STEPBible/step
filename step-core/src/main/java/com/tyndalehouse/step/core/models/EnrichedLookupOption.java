@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.models;
 
 /**
  * Outlines a list of options available in lookup
- * 
- * @author chrisburrell 
- * 
  */
 public class EnrichedLookupOption {
     private final String displayName;

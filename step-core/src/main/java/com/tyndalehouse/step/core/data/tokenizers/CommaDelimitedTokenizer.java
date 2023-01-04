@@ -4,7 +4,6 @@ import java.io.Reader;
 
 import org.apache.lucene.analysis.WhitespaceTokenizer;
 
-
 public class CommaDelimitedTokenizer extends WhitespaceTokenizer {
     /**
      * delegates to super constructor

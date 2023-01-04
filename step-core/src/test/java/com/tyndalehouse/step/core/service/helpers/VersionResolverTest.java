@@ -12,7 +12,6 @@ import org.crosswire.jsword.book.Books;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class VersionResolverTest {
 
     private VersionResolver resolver;

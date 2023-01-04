@@ -5,7 +5,6 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 /**
  * Provides an abstraction around this to get one piece of data out
  * @param <K> the type that will be extracted
- * @author chrisburrell
  * 
  */
 public interface LexiconDataProvider {

@@ -10,9 +10,6 @@ import com.tyndalehouse.step.core.service.BibleInformationService;
 
 /**
  * Indexes all modules
- * 
- * @author chrisburrell
- *
  */
 public class IndexAll {
     /**

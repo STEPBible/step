@@ -8,9 +8,6 @@ import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 
 /**
  * Cleans up transliterations by removing any extra character
- * 
- * @author chrisburrell
- * 
  */
 public class BetaTransliterationCleaningFilter extends TokenFilter {
     private final TermAttribute termAtt;

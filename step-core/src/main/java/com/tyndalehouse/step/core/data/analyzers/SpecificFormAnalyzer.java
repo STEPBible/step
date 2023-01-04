@@ -7,9 +7,6 @@ import org.apache.lucene.util.Version;
 
 /**
  * Analyzer for specific forms
- * 
- * @author chrisburrell
- * 
  */
 public class SpecificFormAnalyzer extends PerFieldAnalyzerWrapper {
     /**

@@ -15,8 +15,6 @@ import java.util.Set;
 
 /**
  * Utilities to help with index reading
- *
- * @author chrisburrell
  */
 public final class LuceneUtils {
     private static final int MAX_TRACK = 55;

@@ -9,8 +9,6 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 /**
  * Interface to the service that gives information about the books of the bible, the different types of bible,
  * etc. This service will mainly use JSword but may also rely on other data sources to display text.
- *
- * @author chrisburrell
  */
 public interface ModuleService {
     /**

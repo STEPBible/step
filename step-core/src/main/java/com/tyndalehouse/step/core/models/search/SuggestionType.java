@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.models.search;
 
 /**
  * A type of lexical suggestion
- * 
- * @author chrisburrell
- * 
  */
 public enum SuggestionType {
     /**

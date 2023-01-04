@@ -17,9 +17,6 @@ import com.tyndalehouse.step.e2e.framework.WebDriverTest;
 
 /**
  * Tests basic pasage functionality
- * 
- * @author chrisburrell
- * 
  */
 @RunWith(Parameterized.class)
 public class StepDisplayOptionsTest extends WebDriverTest {

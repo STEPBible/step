@@ -11,9 +11,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * a test entity manager, which gives us indexes in memory
- * 
- * @author chrisburrell
- * 
  */
 public class TestEntityManager extends EntityManagerImpl {
     private final Map<String, EntityIndexReader> indexReaders;

@@ -4,9 +4,6 @@ import java.util.Locale;
 
 /**
  * Utilities for doing Hebrew transliteration
- * 
- * @author chrisburrell
- * 
  */
 public final class ContemporaryLanguageUtils {
     /** prevent instantiation */

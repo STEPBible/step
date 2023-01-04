@@ -13,8 +13,6 @@ import java.util.UUID;
 
 /**
  * Caters for persisting notes in the system
- *
- * @author chrisburrell
  */
 @Singleton
 public class NotesController {

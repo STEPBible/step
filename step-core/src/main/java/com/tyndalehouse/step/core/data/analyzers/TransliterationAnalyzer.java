@@ -11,9 +11,6 @@ import com.tyndalehouse.step.core.data.filters.TransliterationCleaningFilter;
 
 /**
  * An analyzer for transliterations
- * 
- * @author chrisburrell
- * 
  */
 public class TransliterationAnalyzer extends Analyzer {
     @Override

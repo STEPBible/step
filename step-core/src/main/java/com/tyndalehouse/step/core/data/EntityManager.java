@@ -4,9 +4,6 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 
 /**
  * Interface for entity managers
- * 
- * @author chrisburrell
- * 
  */
 public interface EntityManager {
 

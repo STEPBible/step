@@ -7,7 +7,6 @@ import javax.inject.Inject;
 /**
  * Provides terms for Greek and Hebrew glosses
  * 
- * @author chrisburrell
  */
 public class HebrewAncientMeaningServiceImpl extends AncientMeaningSuggestionServiceImpl {
     @Inject

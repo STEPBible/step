@@ -9,8 +9,6 @@ import com.tyndalehouse.step.core.service.impl.SearchType;
  * The suggestion service will provide two sets of results.
  * 1- we may want the top 3 results from many different sources
  * 2- we may want the first 50 results from one source
- *
- * @author chrisburrell
  */
 public interface SuggestionService {
     int MAX_RESULTS_NON_GROUPED = 50;

@@ -4,9 +4,6 @@ import java.util.List;
 
 /**
  * A set of information from various sources
- * 
- * @author chrisburrell
- * 
  */
 public class Info {
     private List<MorphInfo> morphInfos;

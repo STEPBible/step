@@ -38,8 +38,6 @@ import java.util.Properties;
 
 /**
  * The module configuration that configures the application via guice
- *
- * @author chrisburrell
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class StepCoreModule extends AbstractStepGuiceModule {

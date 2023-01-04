@@ -32,7 +32,6 @@ import com.tyndalehouse.step.core.utils.IOUtils;
  * A user service implementation, that checks whether a user is allowed in. Then given a number of parameters,
  * either registers the user automatically, or denies access...
  * 
- * @author chrisburrell
  */
 @Singleton
 public class UserServiceImpl implements UserService {

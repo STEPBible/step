@@ -9,9 +9,6 @@ import com.tyndalehouse.step.core.data.tokenizers.CommaDelimitedTokenizer;
 
 /**
  * Just uses whitespaces to separate tokens
- * 
- * @author chrisburrell
- * 
  */
 public class CommaDelimitedAnalyzer extends Analyzer {
 

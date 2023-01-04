@@ -8,8 +8,6 @@ import java.util.List;
 
 /**
  * A helper utils for outputting search entries
- *
- * @author chrisburrell
  */
 public class PassageSearchRequest {
     private final SearchController search;

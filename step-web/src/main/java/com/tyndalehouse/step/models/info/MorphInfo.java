@@ -6,9 +6,6 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Captures information related to morphology
- * 
- * @author chrisburrell
- * 
  */
 
 public class MorphInfo implements Serializable {

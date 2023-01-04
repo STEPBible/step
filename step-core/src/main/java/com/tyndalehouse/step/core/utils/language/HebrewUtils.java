@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * Utilities for doing Hebrew transliteration
- *
- * @author chrisburrell
  */
 public final class HebrewUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HebrewUtils.class);

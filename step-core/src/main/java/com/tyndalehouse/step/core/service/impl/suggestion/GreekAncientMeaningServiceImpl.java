@@ -7,7 +7,6 @@ import javax.inject.Inject;
 /**
  * Provides terms for Greek unicode or transliterations
  * 
- * @author chrisburrell
  */
 public class GreekAncientMeaningServiceImpl extends AncientMeaningSuggestionServiceImpl {
     @Inject

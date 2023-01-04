@@ -6,9 +6,6 @@ import org.junit.Test;
 
 /**
  * Tests the {@link StringUtils} class
- * 
- * @author chrisburrell
- * 
  */
 public class StringUtilsTest {
     /** test normal split condition */

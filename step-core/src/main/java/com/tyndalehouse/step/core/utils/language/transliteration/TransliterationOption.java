@@ -3,9 +3,6 @@ package com.tyndalehouse.step.core.utils.language.transliteration;
 /**
  * An option in a transliteration is a String that is built up, plus the current position tracked to the
  * original word
- * 
- * @author chrisburrell
- * 
  */
 public class TransliterationOption {
     private int nextValidPosition;

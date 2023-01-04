@@ -9,8 +9,6 @@ import java.util.regex.Pattern;
 /**
  * To avoid having large libraries, we provide here a small set of methods that can be used to perform various
  * string operations
- *
- * @author chrisburrell
  */
 public final class StringUtils {
     private static final Map<String, Pattern> PATTERNS = new HashMap<String, Pattern>();

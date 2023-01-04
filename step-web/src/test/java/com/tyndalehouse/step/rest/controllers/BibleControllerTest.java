@@ -27,9 +27,6 @@ import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 
 /**
  * tests the bible controller
- * 
- * @author chrisburrell
- * 
  */
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)

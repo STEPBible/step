@@ -39,8 +39,6 @@ import java.util.Set;
 
 /**
  * Retrieves the entries from a subject search
- *
- * @author chrisburrell
  */
 @Singleton
 public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl implements SubjectEntrySearchService {

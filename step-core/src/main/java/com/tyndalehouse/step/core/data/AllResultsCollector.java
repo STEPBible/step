@@ -10,9 +10,6 @@ import org.apache.lucene.search.Scorer;
 
 /**
  * Simply accepts all results into a list
- * 
- * @author chrisburrell
- * 
  */
 public class AllResultsCollector extends Collector {
     private final List<Integer> docIds = new ArrayList<Integer>(32);

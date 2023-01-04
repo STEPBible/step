@@ -10,8 +10,6 @@ import java.util.List;
 
 /**
  * Runs various searches across the underlying database
- *
- * @author chrisburrell
  */
 public interface SearchService {
     /**

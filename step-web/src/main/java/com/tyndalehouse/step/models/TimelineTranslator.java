@@ -9,7 +9,6 @@ import com.tyndalehouse.step.models.timeline.simile.SimileEvent;
 /**
  * A translator is able to convert timeline data into a form that is acceptable by the client
  * 
- * @author chrisburrell
  */
 public interface TimelineTranslator {
 

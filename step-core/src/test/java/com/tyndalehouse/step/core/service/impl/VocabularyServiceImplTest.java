@@ -10,9 +10,6 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 
 /**
  * Tests {@link VocabularyServiceImpl}
- * 
- * @author chrisburrell
- * 
  */
 public class VocabularyServiceImplTest {
     /**

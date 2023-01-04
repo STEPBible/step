@@ -39,8 +39,6 @@ import java.util.Locale;
 
 /**
  * Configures the listener for the web app to return the injector used to configure the whole of the application.
- *
- * @author chrisburrell
  */
 
 public class StepServletConfig extends GuiceServletContextListener {

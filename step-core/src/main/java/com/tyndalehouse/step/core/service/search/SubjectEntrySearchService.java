@@ -6,9 +6,6 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
 
 /**
  * Searches for a specific subject
- * 
- * @author chrisburrell
- * 
  */
 public interface SubjectEntrySearchService {
 

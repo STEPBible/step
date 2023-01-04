@@ -22,8 +22,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 /**
  * This implementation will support multiple versions, so each of the methods is keyed by version requested.
- *
- * @author chrisburrell
  */
 public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
     /**

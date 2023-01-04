@@ -31,9 +31,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A tool to anaylise frequencies of each word in the bible
- * 
- * @author chrisburrell
- * 
  */
 @SuppressWarnings("unchecked")
 public class BibleAnalysis {

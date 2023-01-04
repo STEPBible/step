@@ -19,8 +19,6 @@ import java.util.Properties;
 
 /**
  * Allows querying of app-specific properties, such as the installation properties
- *
- * @author chrisburrell
  */
 @Singleton
 public class AppManagerImpl implements AppManagerService {

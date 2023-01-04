@@ -10,9 +10,6 @@ import com.tyndalehouse.step.models.ClientOperation;
 
 /**
  * Resolves errors based on the type of exception thrown
- * 
- * @author chrisburrell
- * 
  */
 @Singleton
 public class ClientErrorResolver {

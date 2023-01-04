@@ -24,8 +24,6 @@ import static java.lang.String.format;
  * The FrontController acts like a minimal REST server. The paths are resolved as follows:
  * <p/>
  * /step-web/rest/controllerName/methodName/arg1/arg2/arg3
- *
- * @author chrisburrell
  */
 @MultipartConfig
 @Singleton

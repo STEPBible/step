@@ -11,9 +11,6 @@ import com.tyndalehouse.step.core.data.filters.NormalizerFilter;
 
 /**
  * Analyzer to remove the accents and other marks that make it difficult for a user to search
- * 
- * @author chrisburrell
- * 
  */
 public class AncientLanguageAnalyzer extends Analyzer {
 

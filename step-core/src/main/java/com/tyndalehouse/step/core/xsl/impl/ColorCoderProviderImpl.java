@@ -41,7 +41,6 @@ import com.tyndalehouse.step.core.data.EntityManager;
  * ie anything ending GSM GSN GSF GPM GPN or GPF or DSM DSN DSF DPM DPN or DPF
  * 
  * 
- * @author chrisburrell
  */
 public class ColorCoderProviderImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(ColorCoderProviderImpl.class);

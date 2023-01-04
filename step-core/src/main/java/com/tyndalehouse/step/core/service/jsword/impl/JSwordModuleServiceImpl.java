@@ -39,8 +39,6 @@ import static java.lang.String.format;
 
 /**
  * Service to manipulate modules
- *
- * @author chrisburrell
  */
 @Singleton
 public class JSwordModuleServiceImpl implements JSwordModuleService {

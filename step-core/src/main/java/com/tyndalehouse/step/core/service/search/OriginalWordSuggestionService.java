@@ -7,9 +7,6 @@ import com.tyndalehouse.step.core.models.search.SuggestionType;
 
 /**
  * Interface to search for relevant suggestions for a given input, whether unicode or transliterations
- * 
- * @author chrisburrell
- * 
  */
 public interface OriginalWordSuggestionService {
     /**

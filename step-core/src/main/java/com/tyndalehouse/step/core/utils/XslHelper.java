@@ -6,9 +6,6 @@ import static java.lang.String.format;
 
 /**
  * A helper class for use during XSL transformations
- * 
- * @author chrisburrell
- * 
  */
 public final class XslHelper {
     private static final int APPROX_ANCHOR_LENGTH = 56;

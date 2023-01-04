@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.service;
 
 /**
  * Checks the identify of a user
- * 
- * @author chrisburrell
- * 
  */
 public interface UserService {
     /**

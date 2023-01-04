@@ -15,7 +15,6 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
 /**
  * Allows look up of passages.
  * 
- * @author chrisburrell
  */
 @Singleton
 public class V1Controller {

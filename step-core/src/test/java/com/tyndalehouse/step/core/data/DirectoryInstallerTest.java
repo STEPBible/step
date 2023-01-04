@@ -25,9 +25,6 @@ import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Test installations from a directory
- * 
- * @author chrisburrell
- * 
  */
 public class DirectoryInstallerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(DirectoryInstallerTest.class);

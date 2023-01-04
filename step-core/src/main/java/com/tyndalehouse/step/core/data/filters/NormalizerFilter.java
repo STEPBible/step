@@ -10,9 +10,6 @@ import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 
 /**
  * Normalizes the String and removes any accents
- * 
- * @author chrisburrell
- * 
  */
 public class NormalizerFilter extends TokenFilter {
     private final TermAttribute termAtt;

@@ -25,9 +25,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Strong number reports against each verse
- * 
- * @author chrisburrell
- * 
  */
 public class EsvStrongNumberReport {
     private static final Logger LOGGER = LoggerFactory.getLogger(EsvStrongNumberReport.class);

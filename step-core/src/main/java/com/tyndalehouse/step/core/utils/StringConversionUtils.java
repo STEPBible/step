@@ -20,8 +20,6 @@ import static com.tyndalehouse.step.core.utils.language.HebrewUtils.removeHebrew
 
 /**
  * A collection of utility methods enabling us to convert Strings, references one way or another.
- *
- * @author chrisburrell
  */
 public final class StringConversionUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(StringConversionUtils.class);

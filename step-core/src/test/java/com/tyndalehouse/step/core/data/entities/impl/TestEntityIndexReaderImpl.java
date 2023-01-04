@@ -11,9 +11,6 @@ import com.tyndalehouse.step.core.data.EntityConfiguration;
 
 /**
  * Memory only lucene indexes...
- * 
- * @author chrisburrell
- * 
  */
 public class TestEntityIndexReaderImpl extends EntityIndexReaderImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestEntityIndexReaderImpl.class);

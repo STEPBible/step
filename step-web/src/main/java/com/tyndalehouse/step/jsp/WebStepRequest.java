@@ -23,8 +23,6 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page
- *
- * @author chrisburrell
  */
 // CHECKSTYLE:OFF
 public class WebStepRequest {

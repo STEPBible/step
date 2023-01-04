@@ -16,9 +16,6 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * transforming the nave's file
- * 
- * @author chrisburrell
- * 
  */
 @SuppressWarnings("unused")
 public class NaveTransforming {

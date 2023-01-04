@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 
 /**
  * Perhaps in the future, we will tie this into an English dictionary. In the interim, we simply return the text as-is
- *
- * @author chrisburrell
  */
 public class TextSuggestionServiceImpl extends AbstractIgnoreMergedListSuggestionServiceImpl<TextSuggestion> {
     private static final Pattern INVALID_TEXT = Pattern.compile("[.:]\\d+");

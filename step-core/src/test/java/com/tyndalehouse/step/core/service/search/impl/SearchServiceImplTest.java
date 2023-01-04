@@ -37,8 +37,6 @@ import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Search service testing
- *
- * @author chrisburrell
  */
 public class SearchServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImplTest.class);

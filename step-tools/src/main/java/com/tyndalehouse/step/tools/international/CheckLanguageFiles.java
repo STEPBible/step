@@ -23,8 +23,6 @@ import java.util.regex.Pattern;
 
 /**
  * Checks language files all contain the right number of markers
- *
- * @author chrisburrell
  */
 public class CheckLanguageFiles {
     public static final Map<String, Set<String>> MARKERS = new LinkedHashMap<String, Set<String>>();

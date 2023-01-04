@@ -15,9 +15,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
  * A simple test class to test to the provider
- * 
- * @author chrisburrell
- * 
  */
 public class InterleavingProviderImplTest {
 

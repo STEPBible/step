@@ -9,7 +9,6 @@ import org.crosswire.jsword.versification.Versification;
 /**
  * Some generally useful methods for dealing with versification.
  * 
- * @author chrisburrell
  */
 public interface JSwordVersificationService {
 

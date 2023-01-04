@@ -20,9 +20,6 @@ import org.crosswire.jsword.book.install.sword.AbstractSwordInstaller;
 
 /**
  * Installs packages from a directory
- * 
- * @author chrisburrell
- * 
  */
 public class DirectoryInstaller extends AbstractSwordInstaller {
     /**

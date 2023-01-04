@@ -3,8 +3,6 @@ package com.tyndalehouse.step.core.service.helpers;
 /**
  * Holds various information about the context into which a user is typing.
  * For example, a selected version could influence the results of the key/book/ref retrieval
- *
- * @author chrisburrell
  */
 public class SuggestionContext {
     private String masterBook;

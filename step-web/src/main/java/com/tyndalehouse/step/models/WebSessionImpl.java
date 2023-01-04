@@ -13,9 +13,6 @@ import javax.servlet.http.Part;
 
 /**
  * A web session which wraps around the jsession id...
- * 
- * @author chrisburrell
- * 
  */
 public class WebSessionImpl implements ClientSession {
     private String sessionId;

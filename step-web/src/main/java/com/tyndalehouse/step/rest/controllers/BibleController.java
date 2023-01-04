@@ -36,8 +36,6 @@ import com.yammer.metrics.annotation.Timed;
 
 /**
  * The controller for retrieving information on the bible or texts from the bible.
- *
- * @author chrisburrell
  */
 @Singleton
 public class BibleController {

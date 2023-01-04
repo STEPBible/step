@@ -28,8 +28,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
  * Provides metadata for JSword modules
- *
- * @author chrisburrell
  */
 public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     private static final String BOOK_CHAPTER_FORMAT = "%s %d";

@@ -2,8 +2,6 @@ package com.tyndalehouse.step.core.models.search;
 
 /**
  * Represents a result that was a match to the original query
- *
- * @author chrisburrell
  */
 public class VerseSearchEntry extends LexicalSearchEntry {
     private static final long serialVersionUID = 5620645768146160462L;

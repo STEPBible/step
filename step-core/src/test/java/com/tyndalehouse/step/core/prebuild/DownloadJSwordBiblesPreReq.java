@@ -19,9 +19,6 @@ import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Downloads the jsword bible versions
- * 
- * @author chrisburrell
- * 
  */
 public class DownloadJSwordBiblesPreReq {
     private static final Logger LOGGER = LoggerFactory.getLogger(DownloadJSwordBiblesPreReq.class);

@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
  * Reads in an xml file and tries to track progress with a tagging sheet, enriching where it can
  *
  * @deprecated
- * @author chrisburrell
  */
 @Deprecated
 public class EsvOsisEnricher {

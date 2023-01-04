@@ -15,8 +15,6 @@ import javax.inject.Singleton;
 /**
  * This module serves to inject data that is specific to the servlet layer. The purpose of it is therefore to abstract
  * away the identity of it being a java web servlet serving the page.
- *
- * @author chrisburrell
  */
 public class StepWebModule extends AbstractStepGuiceModule {
     private static final String GUICE_PROPERTIES = "/step.web.properties";

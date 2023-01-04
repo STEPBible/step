@@ -7,9 +7,6 @@ import org.apache.lucene.util.Version;
 
 /**
  * Class to analyze various definition fields
- * 
- * @author chrisburrell
- * 
  */
 public class DefinitionAnalyzer extends PerFieldAnalyzerWrapper {
 

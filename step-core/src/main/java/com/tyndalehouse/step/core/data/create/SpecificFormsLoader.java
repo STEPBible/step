@@ -14,9 +14,6 @@ import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoade
 
 /**
  * Loads up all lexical forms
- * 
- * @author chrisburrell
- * 
  */
 public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(HeadwordLineBasedLoader.class);

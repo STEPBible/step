@@ -28,8 +28,6 @@ import java.util.*;
  * The getNonExactTerms method will attempt to match against BibleBook names first, and then will use
  * parsed key if available and suggest a few chapters that
  * would make sense.
- *
- * @author chrisburrell
  */
 public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSuggestionServiceImpl<BookName> {
     private static final String BOOK_CHAPTER_FORMAT = "%s %d";

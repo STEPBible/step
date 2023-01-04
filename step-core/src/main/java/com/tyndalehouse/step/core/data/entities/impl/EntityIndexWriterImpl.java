@@ -27,9 +27,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
  * Reads a file and creates the equivalent Lucene index for it. This class is not thread safe.
- * 
- * @author chrisburrell
- * 
  */
 public class EntityIndexWriterImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityIndexWriterImpl.class);

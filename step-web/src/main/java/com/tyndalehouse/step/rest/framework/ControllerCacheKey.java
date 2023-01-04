@@ -3,7 +3,6 @@ package com.tyndalehouse.step.rest.framework;
 /**
  * This is a holder object for multiple variants of a cache key
  * 
- * @author chrisburrell
  */
 public class ControllerCacheKey {
     private final String methodKey;

@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * @param <T> the type of intermediate result returned. Generally, either a String or an EntityDoc
  * @param <S> the type of collector to collect the results with the remaining count
- * @author chrisburrell
  */
 public interface SingleTypeSuggestionService<T, S> {
     T[] getExactTerms(SuggestionContext context, int max, final boolean popularSort);

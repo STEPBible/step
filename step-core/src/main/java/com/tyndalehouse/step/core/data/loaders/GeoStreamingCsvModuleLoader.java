@@ -12,9 +12,6 @@
 
 /**
  * Used for Geography
- * 
- * @author chrisburrell
- * 
  */
 //pt20201119public class GeoStreamingCsvModuleLoader extends StreamingCsvModuleLoader {
 //pt20201119    private static final String PRECISION_EXACT = "exact";

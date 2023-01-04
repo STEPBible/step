@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.models;
 
 /**
  * An option that was removed because it was incompatible with how a passage was being looked up
- * 
- * @author chrisburrell
- * 
  */
 public class TrimmedLookupOption {
     private String explanation;

@@ -22,8 +22,6 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 /**
  * The timeline controller retrieves information about past events
- *
- * @author chrisburrell
  */
 @Singleton
 public class TimelineController {

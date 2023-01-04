@@ -10,9 +10,6 @@
 
 /**
  * Loads all historical data
- * 
- * @author chrisburrell
- * 
  */
 //pt20201119public class TimelineStreamingCsvModuleLoader extends StreamingCsvModuleLoader {
 //pt20201119    private final JSwordPassageService jsword;

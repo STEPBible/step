@@ -8,9 +8,6 @@ import org.junit.Test;
 
 /**
  * Tests the version splitters
- * 
- * @author chrisburrell
- * 
  */
 public class MultiInterlinearProviderImplTest {
     /**

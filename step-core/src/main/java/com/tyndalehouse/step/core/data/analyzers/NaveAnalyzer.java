@@ -11,9 +11,6 @@ import javax.inject.Inject;
 
 /**
  * analyzes Nave modules
- * 
- * @author chrisburrell
- * 
  */
 public class NaveAnalyzer extends PerFieldAnalyzerWrapper {
 

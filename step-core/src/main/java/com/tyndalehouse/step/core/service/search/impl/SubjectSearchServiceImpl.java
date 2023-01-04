@@ -55,8 +55,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
  * Searches for a subject
- *
- * @author chrisburrell
  */
 @Singleton
 public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl implements SubjectSearchService {

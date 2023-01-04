@@ -16,8 +16,6 @@ import java.util.Random;
  *         'link': 'http://www.allposters.com/-sp/Barfusserkirche-1924-Posters_i1116895_.htm'
  *         },
  * </pre>
- *
- * @author chrisburrell
  */
 public class SimileEvent implements DigestableTimeline, Serializable {
     private static final long serialVersionUID = -7725905171349065886L;

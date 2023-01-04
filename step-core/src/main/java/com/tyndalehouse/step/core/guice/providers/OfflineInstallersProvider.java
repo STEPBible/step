@@ -11,9 +11,6 @@ import com.tyndalehouse.step.core.data.DirectoryInstaller;
 
 /**
  * Provides only offline installers
- * 
- * @author chrisburrell
- * 
  */
 public class OfflineInstallersProvider extends DefaultInstallersProvider {
     /**

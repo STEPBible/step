@@ -13,9 +13,6 @@ import com.tyndalehouse.step.core.utils.HeadingsUtil;
 
 /**
  * A simple wrapper around a string for returning as a JSON-mapped object
- * 
- * @author chrisburrell
- * 
  */
 public class OsisWrapper extends AbstractComplexSearch implements Serializable {
     private static final long serialVersionUID = -5651330317995494895L;

@@ -10,9 +10,6 @@ import com.google.inject.Provides;
 
 /**
  * Provides a list of default versions that should be installed for the application
- * 
- * @author chrisburrell
- * 
  */
 @Singleton
 public class DefaultVersionsProvider implements Provider<List<String>> {

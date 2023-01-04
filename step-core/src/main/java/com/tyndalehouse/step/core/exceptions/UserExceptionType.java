@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.exceptions;
 
 /**
  * Contains a list of errors and their corresponding error messages, a step towards localisation
- * 
- * @author chrisburrell
- * 
  */
 public enum UserExceptionType {
     /**

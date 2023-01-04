@@ -6,9 +6,6 @@ import org.junit.Test;
 
 /**
  * tests for {@link IndividualSearch}
- * 
- * @author chrisburrell
- * 
  */
 public class IndividualSearchTest {
     /**

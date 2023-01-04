@@ -35,8 +35,6 @@ import com.tyndalehouse.step.core.service.StrongAugmentationService;
  * the Bible.
  * <p/>
  * Note, this object is not thread-safe.
- *
- * @author chrisburrell
  */
 public class Loader {
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);

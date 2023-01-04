@@ -10,9 +10,6 @@ import com.tyndalehouse.step.core.utils.language.transliteration.Transliteration
 
 /**
  * Utilities for doing Hebrew transliteration
- * 
- * @author chrisburrell
- * 
  */
 public final class GreekUtils {
     private static final int PERISPOMENI = 0x0342;

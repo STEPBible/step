@@ -28,8 +28,6 @@ import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText
 
 /**
  * Runs all original word searches
- *
- * @author chrisburrell
  */
 @Singleton
 public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestionService {

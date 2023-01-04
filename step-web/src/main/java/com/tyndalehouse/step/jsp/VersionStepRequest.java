@@ -22,9 +22,6 @@ import java.util.ResourceBundle;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page
- * 
- * @author chrisburrell
- * 
  */
 // CHECKSTYLE:OFF
 public class VersionStepRequest {

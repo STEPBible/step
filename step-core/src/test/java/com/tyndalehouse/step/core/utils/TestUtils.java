@@ -15,9 +15,6 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationService
 
 /**
  * static utilities for testing, creating entities, etc.
- * 
- * @author chrisburrell
- * 
  */
 public final class TestUtils {
     /**

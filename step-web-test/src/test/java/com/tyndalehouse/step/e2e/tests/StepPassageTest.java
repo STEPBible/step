@@ -8,9 +8,6 @@ import com.tyndalehouse.step.e2e.framework.WebDriverTest;
 
 /**
  * Tests basic pasage functionality
- * 
- * @author chrisburrell
- * 
  */
 public class StepPassageTest extends WebDriverTest {
 

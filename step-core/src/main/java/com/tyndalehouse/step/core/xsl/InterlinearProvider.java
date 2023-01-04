@@ -3,9 +3,6 @@ package com.tyndalehouse.step.core.xsl;
 /**
  * An individual interlinear provider that cross-references text passed in using verse, strong, and morphology
  * information
- * 
- * @author chrisburrell
- * 
  */
 public interface InterlinearProvider {
     /**

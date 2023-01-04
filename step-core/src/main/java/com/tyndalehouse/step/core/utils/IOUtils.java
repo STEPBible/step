@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Some IO Utils for use in the STEP application.
  * 
- * @author chrisburrell
  */
 public final class IOUtils {
     private static final Logger LOG = LoggerFactory.getLogger(IOUtils.class);

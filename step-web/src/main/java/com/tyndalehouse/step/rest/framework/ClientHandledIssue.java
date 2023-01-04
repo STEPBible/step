@@ -6,9 +6,6 @@ import com.tyndalehouse.step.models.ClientOperation;
 
 /**
  * A client error, contains a message and an optional redirection operation
- * 
- * @author chrisburrell
- * 
  */
 public class ClientHandledIssue implements Serializable {
     private static final long serialVersionUID = -4354861806290828883L;

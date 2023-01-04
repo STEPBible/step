@@ -30,8 +30,6 @@ import java.util.*;
 
 /**
  * Joins all the Biblica XML files together
- *
- * @author chrisburrell
  */
 public class XmlToOSIS {
     private final String otPath;

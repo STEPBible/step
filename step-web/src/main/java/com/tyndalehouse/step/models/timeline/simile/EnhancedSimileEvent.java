@@ -7,9 +7,6 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
 
 /**
  * An content-rich version of {@link SimileEvent}
- * 
- * @author chrisburrell
- * 
  */
 public class EnhancedSimileEvent implements Serializable {
     private static final long serialVersionUID = -3803861355000880742L;

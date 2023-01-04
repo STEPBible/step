@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.data.common;
 
 /**
  * Precision type indicating how trustworthy a date is when passed through the system
- * 
- * @author chrisburrell
- * 
  */
 public enum PrecisionType {
     /**

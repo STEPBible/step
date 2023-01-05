@@ -62,9 +62,6 @@ public class StepServletConfig extends GuiceServletContextListener {
                         serve("/international/interactive.js").with(InternationalJsonController.class);
                         serve("/international/*").with(InternationalJsonController.class);
                         serve("/config.jsp").with(SetupPageController.class);
-//                        if (Boolean.getBoolean("metrics.enabled")) {
-//                            serve("/metrics/*").with(AdminServlet.class);
-//                        }
                         serve("/sitemap_version*").with(SiteMapController.class);
                         serve("/SITEMAP_version*").with(SiteMapController.class);
                         // filters
@@ -73,14 +70,8 @@ public class StepServletConfig extends GuiceServletContextListener {
                         filter("/external/*").through(ExternalPoweredByFilter.class);
                     }
                 };
-
-//                if (Boolean.getBoolean("metrics.enabled")) {
-//                    this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
-//                            new InstrumentationModule(), servletModule);
-//                } else {
                 this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
                         servletModule);
-//                }
             }
         }
         return this.injector;

@@ -26,8 +26,6 @@ public class EnricherState {
     private final String debugVerse = null;
     private boolean openStrongTag = false;
 
-    // private final String debugVerse = "Gen.3.16";
-
     public EnricherState(final Map<String, Deque<Word>> verseContent) {
         this.verseContent = verseContent;
     }
@@ -42,12 +40,6 @@ public class EnricherState {
             if (isBlank(this.currentVerse)) {
                 return text;
             }
-
-            // if (tWords.length == 0) {
-            // // no words, so exit
-            // LOGGER.info("Given element with no words to match");
-            // return text;
-            // }
 
             final StringBuilder output = new StringBuilder(text.length() * 2);
 
@@ -137,16 +129,6 @@ public class EnricherState {
     }
 
     private void ensureOpenTagIfRequired(final StringBuilder output) {
-        // // let's assume w is not null, for now
-        // if (this.q == null) {
-        // return;
-        // }
-        //
-        // final Word peek = this.q.peek();
-        // if (ADD_TAG && !this.openStrongTag && peek != null && isNotBlank(peek.getS())) {
-        // // add a strong tag opening
-        // openStrongTag(output, peek.getS());
-        // }
     }
 
     private void openStrongTag(final StringBuilder output, final String codes) {
@@ -290,8 +272,6 @@ public class EnricherState {
 
         if (ADD_TAG && isNotBlank(this.w.getS())) {
             output.append("#<#/w#>#");
-            // output.append(this.w.getS());
-            // output.append("###");
             this.openStrongTag = false;
         }
     }

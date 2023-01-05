@@ -197,18 +197,6 @@ public class NaveXmlDataProcessor {
 
         final List childrenOfP = element.getContent();
         final String text = ((Text) childrenOfP.get(0)).getText();
-        // if (text.trim().equals("See")) {
-        // if (element.getChildren().size() == 1) {
-        //
-        // final Content cPOf = (Content) element.getChildren().get(0);
-        // if (cPOf instanceof Element && ((Element) cPOf).getName().equals("ref")
-        // && ((Element) cPOf).getAttribute("target") != null) {
-        // // skip
-        // return null;
-        // }
-        // }
-        // //
-        // }
 
         final Tree<String> childTree = t.addChild(text);
 

@@ -66,7 +66,6 @@ public class PassageStat {
      */
     public void trim(int maxWords, boolean mostOccurrences) {
         int startOccurrences = 1;
-//        mostOccurrences = false; // Temporary set to true.  Waiting for David's response PT 09/14/2020
         if (!mostOccurrences) {
             final Iterator<Map.Entry<String, Integer[]>> iterator = this.stats.entrySet().iterator();
             while (iterator.hasNext()) {

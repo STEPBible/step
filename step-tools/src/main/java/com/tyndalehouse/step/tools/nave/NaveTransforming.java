@@ -140,22 +140,10 @@ public class NaveTransforming {
             // final print trees
             final Set<Entry<String, Tree<String>>> printSet = trees.entrySet();
             for (final Entry<String, Tree<String>> tree : printSet) {
-                // System.out.println(tree.getKey());
                 tree.getValue().print();
             }
 
             this.trees = trees;
-
-            // // create a map of the first and last entry
-            // final Map<String, Map<String, List<Tree<String>>>> firstAndLast = new LinkedHashMap<String,
-            // Map<String, List<Tree<String>>>>();
-            // final Set<Entry<String, Tree<String>>> entrySet = trees.entrySet();
-            // for (final Entry<String, Tree<String>> tree : entrySet) {
-            // addLastChildren(firstAndLast, tree.getValue(), tree.getKey().toLowerCase());
-            // }
-
-            // now we can try and match it against the output file
-            // matchFiles(firstAndLast);
         } finally {
             IOUtils.closeQuietly(br);
 

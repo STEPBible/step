@@ -63,18 +63,11 @@ public class InterleavedOsisReader {
                 TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver(), null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
-//        options.add(LookupOption.HEADINGS_ONLY);
-//        options.add(LookupOption.HEADINGS);
-//        options.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
         
         final String osisText = jsi.getInterleavedVersions(versions, ref, options,
                 interlinearMode, "en").getValue();
         LOGGER.debug(osisText);
         final SAXBuilder sb = new SAXBuilder();
-//        final Document d = sb.build(new StringReader(osisText));
-
-//        final String output = xmlOutputter.outputString(d);
-//        LOGGER.debug("Transformed is:\n {}", output);
 
         if (unicodeBreakDown) {
             outputUnicode(osisText);

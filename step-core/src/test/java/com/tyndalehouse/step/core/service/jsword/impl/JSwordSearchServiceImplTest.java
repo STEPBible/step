@@ -92,48 +92,4 @@ public class JSwordSearchServiceImplTest {
         }
         assertFalse(results.isEmpty());
     }
-
-    // @Test
-    // public void testRebuildIndex() {
-    // final IndexManager indexManager = IndexManagerFactory.getIndexManager();
-    // try {
-    // indexManager.scheduleIndexCreation(Books.installed().getBook("WLC"));
-    //
-    // Thread.sleep(60 * 20);
-    // } catch (final InterruptedException e) {
-    // e.printStackTrace();
-    // }
-    // }
-
-    // @Test
-    // public void testRebuildIndex() throws InterruptedException {
-    // final List<Book> books = Books.installed().getBooks();
-    // for (final Book b : books) {
-    // try {
-    // final IndexManager indexManager = IndexManagerFactory.getIndexManager();
-    //
-    // indexManager.scheduleIndexCreation(b);
-    // Thread.sleep(5000);
-    // } catch (final InterruptedException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // }
-    //
-    // Thread.sleep(60 * 10);
-    // }
-
-    // @Test
-    // public void testJesusAndJoseph() {
-    // final SearchResult r = this.search.search("KJV", "+Jesus +Joseph");
-    // final List<SearchEntry> results = r.getResults();
-    // int i = 50;
-    // for (final SearchEntry e : results) {
-    // // System.out.println(((VerseSearchEntry) e).getPreview());
-    // i--;
-    // if (i < 0) {
-    // break;
-    // }
-    // }
-    // }
 }

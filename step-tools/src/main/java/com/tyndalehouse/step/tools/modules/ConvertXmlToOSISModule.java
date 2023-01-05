@@ -82,12 +82,6 @@ public class ConvertXmlToOSISModule {
         File outputDirectory = new File(BASE_OUTPUT, sanitizedModuleName);
         outputDirectory.mkdirs();
         BASE_ERRORS.mkdirs();
-//        
-//        LOGGER.debug("Converting [{}] to OSIS Module", sanitizedModuleName);
-//        Process p = Runtime.getRuntime().exec(String.format("osis2mod %s %s -z -v %s", outputDirectory.getAbsolutePath(), osisSource.getAbsolutePath(), header.getVersification()));
-//        LOGGER.debug("Conversion of [{}] finished.", sanitizedModuleName);
-//        outputErrors(p, moduleName);
-//        p.waitFor();
 
         outputConfFile(header, sanitizedModuleName, FileUtils.sizeOfDirectory(outputDirectory));
 

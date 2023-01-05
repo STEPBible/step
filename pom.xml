@@ -577,12 +577,6 @@
                 <version>${selenium.version}</version>
                 <scope>test</scope>
             </dependency>
-            <!-- <dependency> -->
-            <!--    <groupId>com.saucelabs</groupId> -->
-            <!--    <artifactId>sauce_junit</artifactId> -->
-            <!--    <version>${sauce.version}</version> -->
-            <!--    <scope>test</scope> -->
-            <!-- </dependency> -->
         </dependencies>
     </dependencyManagement>
 

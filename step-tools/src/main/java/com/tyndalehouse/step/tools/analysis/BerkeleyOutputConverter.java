@@ -85,13 +85,9 @@ public class BerkeleyOutputConverter {
 
 
         final File path = new File(strJSwordPath);
-//        final File path = new File("C:\\Users\\David IB\\AppData\\Roaming\\JSword\\step\\entities\\definition");
-//        final File path = new File("C:\\Users\\chbradsh\\AppData\\Roaming\\JSword\\step\\entities\\definition");
         FSDirectory directory = FSDirectory.open(path);
         final IndexSearcher indexSearcher = new IndexSearcher(directory);
         final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(strOutputFileName), "UTF8"));
-//        final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\David IB\\Dropbox\\STEP-Tagging\\autoTag\\BibleSample\\ChrisExperiments\\NT.tagging+Gk.txt"), "UTF8"));
-//        final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\chbradsh\\Documents\\GitHub\\dev\\BibleSample\\outfilename.txt"), "UTF8"));
 
 
         String resultTagging = parseResults(resultSentences, strongSentences, otherSentences, indexSearcher, keyList, out);

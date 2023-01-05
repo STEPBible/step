@@ -96,7 +96,6 @@ public class EsvStrongNumberReport {
         BookName.setFullBookName(false);
         statsByVersion("ESV_th", this.esvStrongsInVerses);
         statsByVersion(OT, this.originalsStrongsInVerses);
-//        statsByVersion(NT, this.originalsStrongsInVerses);
 
         checkAndReport();
     }

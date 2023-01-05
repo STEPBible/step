@@ -130,10 +130,6 @@ public class EsvXmlEnhancer {
         if ("verse".equals(esv.getNodeName())) {
             this.currentVerse = esv.getAttribute("osisID");
             this.error = false;
-            // limit processing up until
-            // if ("Gen.22.15".equals(this.currentVerse)) {
-            // throw new AbortTagException();
-            // }
 
             this.verseTagging = indexTagging.get(this.currentVerse);
             processVerse(esv, indexTagging);
@@ -264,8 +260,6 @@ public class EsvXmlEnhancer {
 
     private Remainder processTag(Remainder remainder, final Tagging firstTag, final Text item)
             throws AbortTagException {
-        // final String nonTaggedText = firstTag.getNonTaggedText();
-        // Remainder remainder = new Remainder(wordsFromESV, nonTaggedText);
         remainder = matchEsvToTagging(remainder, null, item);
         firstTag.setNonTaggedText(remainder.taggingText);
 
@@ -409,12 +403,6 @@ public class EsvXmlEnhancer {
                 grabMatchingNodes(matchingNodes, wordInDoc, tagData,
                         getLeftOverText(wordInDoc.getTextContent(), tagData.getTaggedText()));
                 remainder.advance += tagData.getTaggedText().split(" ").length;
-
-                // we're looking for text content
-                // TODO remove after testing
-                // this.error = true;
-//                this.runCode = -1;
-                // throw new AbortTagException();
 
             }
 
@@ -740,9 +728,6 @@ public class EsvXmlEnhancer {
     }
 
     boolean equalsIngorePunctuationAndCase(final String taggedText, final String domText) {
-//        if (text1.length() != text2.length()) {
-//            return false;
-//        }
         int nonAlpha = 0;
 
         // same length, compare char by char

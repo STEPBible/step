@@ -218,31 +218,6 @@ public class BibleAnalysis {
             return analyzedWord;
         }
         return null;
-
-        // computeMatchToFewerVerses(analyzedWord.verses, wordsInAllTargetVerses, analyzedWord);
-
-        // // get most frequent
-        // int max = -1;
-        // List<String> maxEntries = new ArrayList<String>();
-        // for (final Entry<String, Integer> e : wordsInAllTargetVerses.entrySet()) {
-        // this.LOGGER.trace("Word [{}] occurs [{}] in the scanned text.", e.getKey(), e.getValue());
-        // if (e.getValue() > max) {
-        // maxEntries = new ArrayList<String>();
-        // maxEntries.add(e.getKey());
-        // max = e.getValue();
-        // } else if (e.getValue() == max) {
-        // maxEntries.add(e.getKey());
-        // }
-        // }
-        //
-        // this.LOGGER.trace(
-        // "The following entries are likely matches with an ocurrence in all matching verses of: [{}]",
-        // max);
-        // if (this.LOGGER.isTraceEnabled()) {
-        // for (final String s : maxEntries) {
-        // this.LOGGER.trace("\t[{}]", s);
-        // }
-        // }
     }
 
     /**
@@ -297,12 +272,6 @@ public class BibleAnalysis {
 
             if (targetWordsInVerses == null) {
 
-                // TODO
-                // TODO
-                // TODO
-                // TODO
-                // TODO can still try and make an exact match of what's left.
-
                 this.LOGGER.info("Skipping lookup for verse [{}] as not found in target text", verseId);
                 continue;
             }
@@ -351,19 +320,6 @@ public class BibleAnalysis {
 
         // output stats
         return analyze(currentWords);
-        // final TreeSet<WordCount> sortedKeys = sort(currentWords, currentWordsCounts);
-
-        // this.LOGGER.trace("=======================================================");
-        // this.LOGGER.trace(initials);
-        // this.LOGGER.trace("=======================================================");
-        // if (this.LOGGER.isTraceEnabled()) {
-        // for (final WordCount wordCount : sortedKeys) {
-        // final List<Word> words = currentWords.get(wordCount.key);
-        // this.LOGGER.trace(String.format("%4d ocurrences of %s", words.size(), wordCount.key));
-        // }
-        // }
-
-        // return sortedKeys;
     }
 
     class Analysis {

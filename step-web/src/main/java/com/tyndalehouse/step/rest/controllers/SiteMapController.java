@@ -73,68 +73,14 @@ public class SiteMapController extends HttpServlet {
             this.stepBase = String.format("https://%s/", appManagerService.getAppDomain());
         }
 
-        // response.setContentType("application/x-gzip");
         final String filePath = req.getRequestURL().toString();
 
-//        if (filePath.endsWith("sitemap.xml")) {
-//            response.getWriter().write(getSiteMapIndex());
-//            response.getWriter().close();
-//        } else {
             // get the last bit of the path
             final String siteNameWithExtension = filePath.substring(filePath.lastIndexOf('/') + 1);
-//            final String indexName = siteNameWithExtension.replace(".xml", "");
-
-//            SiteMapType mapType = SiteMapType.SITEMAP_BIBLE;
-//            final char specifier = indexName.charAt(indexName.length() - 1);
-//            if (indexName.contains("SITEMAP_BIBLE")) {
-//                mapType = SiteMapType.SITEMAP_BIBLE;
-//            } else if (indexName.contains("SITEMAP_COMMENTARY")) {
-//                mapType = SiteMapType.SITEMAP_COMMENTARY;
-//            }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + siteNameWithExtension);
-//            response.getOutputStream().write(getSiteMap(mapType, specifier));
             response.getOutputStream().write(getSiteMap());
-//        }
     }
-
-    /**
-     * Gets the site map index.
-     * 
-     * @return the site map index
-     */
-//    private String getSiteMapIndex() {
-//        final StringBuilder siteMap = new StringBuilder(5 * 1024 * 1024);
-//        initSiteMapIndex(siteMap);
-//        addSubMaps(siteMap);
-//        closeSiteMapIndex(siteMap);
-//        return siteMap.toString();
-//    }
-
-    /**
-     * Adds the sub maps.
-     * 
-     * @param siteMap the site map
-     */
-//    private void addSubMaps(final StringBuilder siteMap) {
-//        for (final SiteMapType smt : SiteMapType.values()) {
-//            for (int ii = 0; ii < 26; ii++) {
-//                siteMap.append("<sitemap><loc>");
-//                siteMap.append(this.stepBase);
-//                siteMap.append(smt.name());
-//                siteMap.append('_');
-//                siteMap.append((char) ('A' + ii));
-//                siteMap.append(".xml");
-//                siteMap.append("</loc></sitemap>");
-//            }
-//        }
-//
-//        // add lexicon map
-//        siteMap.append("<sitemap><loc>");
-//        siteMap.append(this.stepBase);
-//        siteMap.append("SITEMAP_LEXICON.xml");
-//        siteMap.append("</loc></sitemap>");
-//    }
 
     /**
      * Close site map index.
@@ -161,25 +107,12 @@ public class SiteMapController extends HttpServlet {
      * @param specifier the specifier that says which initial should be generated
      * @return the site map
      */
-//    public byte[] getSiteMap(final SiteMapType mapType, final char specifier) {
     public byte[] getSiteMap() {
 
         final StringBuilder siteMap = new StringBuilder(10 * 1024 * 1024);
         initSiteMap(siteMap);
 
         addVersions(siteMap);
-//        addVersions(siteMap, BookCategory.COMMENTARY, specifier);
-//        switch (mapType) {
-//            case SITEMAP_COMMENTARY:
-//                addVersions(siteMap, BookCategory.COMMENTARY, specifier);
-//                break;
-//            case SITEMAP_BIBLE:
-//                addUrl(siteMap, null, null, null, "/versions.jsp");
-//                addVersions(siteMap, BookCategory.BIBLE, specifier);
-//                break;
-//            default:
-//                break;
-//        }
 
         closeSiteMap(siteMap);
         try {
@@ -214,38 +147,13 @@ public class SiteMapController extends HttpServlet {
      * @param category the category
      * @param specifier the letter that should be included
      */
-//    private void addVersions(final StringBuilder siteMap, final BookCategory category, final char specifier) {
     private void addVersions(final StringBuilder siteMap) {
         final List<BibleVersion> allModules = this.modules.getAllModules();
 
-//        if (specifier == 'A') {
-//            addUrl(siteMap, null, null, null, "/versions.jsp");
-//        }
         for (final BibleVersion version : allModules) {
-//            if (!isInScope(category, version, specifier)) {
-//                continue;
-//            }
             addVersion(siteMap, version);
         }
     }
-
-    /**
-     * Checks if is not in scope.
-     * 
-     * @param category the category
-     * @param version the version
-     * @param letterSpecifier the up to letter which decides how far to include book
-     * @return true, if is not in scope
-     */
-//    private boolean isInScope(final BookCategory category, final BibleVersion version,
-//            final char letterSpecifier) {
-//        if (!version.getCategory().equalsIgnoreCase(category.name())) {
-//            // no we do not have the kind of book we're interested in
-//            return false;
-//        }
-//
-//        return version.getInitials().charAt(0) == letterSpecifier;
-//    }
 
     /**
      * Adds the version of the Bible
@@ -283,15 +191,6 @@ public class SiteMapController extends HttpServlet {
                 addUrl(siteMap, null, null, null, "version.jsp?version=", version.getInitials());
                 mainFile = true;
             }
-
-            // append a new URL
-//            final int lastChapter = versificationForVersion.getLastChapter(bb);
-//
-//            for (int ii = 1; ii <= lastChapter; ii++) {
-//                addUrl(siteMap, null, null, null, "?q=version=", book.getInitials(),
-//                        "%7Creference=", versificationForVersion.getShortName(bb), ".",
-//                        Integer.toString(ii));
-//            }
         }
     }
 

@@ -27,7 +27,6 @@ public class ParseVersionFile {
                 "C:\\Users\\Chris\\Downloads\\Gen 1-10.prepared for reviewer.doc"));
         final HWPFDocument doc = new HWPFDocument(fs);
 
-        // System.out.println("Word Document has " + paragraphs.length + " paragraphs");
         final Range range = doc.getRange();
 
         boolean prefix = false;

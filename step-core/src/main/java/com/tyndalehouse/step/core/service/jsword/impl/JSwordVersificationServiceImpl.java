@@ -34,11 +34,6 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
         this.versionResolver = versionResolver;
     }
 
-//    @Override
-//    public String getVerseRange(final int startVerseId, final int endVerseId) {
-//        return getVerseRange(startVerseId, endVerseId, JSwordPassageService.REFERENCE_BOOK);
-//    }
-
     @Override
     public String getVerseRange(final int startVerseId, final int endVerseId, final String version) {
         final Versification versification = getVersificationForVersion(version);

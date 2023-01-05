@@ -213,7 +213,6 @@ public class ModuleController {
      */
     @Timed(name = "quick-vocab", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers, final String userLanguage) {
-        // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
         LOGGER.debug("Getting quick information for [{}], [{}]",
                 new Object[]{this.vocab, morphIdentifiers});
 

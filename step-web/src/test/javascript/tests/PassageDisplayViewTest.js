@@ -4,15 +4,9 @@ var __s;
 module("STEP Passage View Module", {
     setup: function () {
         step = {
-//            util : {ui : { autocompleteSearch : function() { } } },
-//            defaults : { passage : {
-//                interNamedOptions: ["A", "B", "C", "INTERLINEAR"],
-//                interOptions: ["x", "y", "z", "Interlinear"],
-//                interOptionsNoInterlinear : ["x", "y", "z"]}}
         };
 
         __s = { error_bible_doesn_t_have_passage : "NO PASSAGE" };
-//        $.widget("custom.versions", { options : {}});
     }
 });
 

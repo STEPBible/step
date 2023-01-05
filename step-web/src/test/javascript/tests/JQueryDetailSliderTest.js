@@ -5,14 +5,6 @@ var DETAIL_LEVELS;
 module("STEP JQuery Detail Slider widget", {
     setup: function () {
         DETAIL_LEVELS = ["Basic", "Intermediate", "Advanced"];
-//        step = {
-//            util : {ui : { autocompleteSearch : function() { } } },
-//            defaults : { passage : {}}
-//        },
-//            __s = {};
-//        $.widget("custom.versions", { options : {}});
-//        $.widget("custom.detailSlider", { options : {}});
-//
     }
 });
 

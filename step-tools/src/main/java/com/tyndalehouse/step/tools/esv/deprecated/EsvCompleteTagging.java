@@ -77,7 +77,6 @@ public class EsvCompleteTagging {
 
     private void walkNode(final Node theNode) {
         final NodeList children = theNode.getChildNodes();
-        // printNode(theNode);
 
         for (int ii = 0; ii < children.getLength(); ii++) {
             final Node currentNode = children.item(ii);
@@ -103,7 +102,6 @@ public class EsvCompleteTagging {
                 walkNode(currentNode);
             } else {
                 // do nothing with leaf nodes
-                // printNode(currentNode);
             }
         }
     }

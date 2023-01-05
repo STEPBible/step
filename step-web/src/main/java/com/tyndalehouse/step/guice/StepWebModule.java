@@ -33,6 +33,5 @@ public class StepWebModule extends AbstractStepGuiceModule {
         bind(ClientSession.class).toProvider(ClientSessionProvider.class).in(ServletScopes.REQUEST);
         bind(UiDefaults.class).asEagerSingleton();
         bind(TimelineTranslator.class).to(SimileTimelineTranslatorImpl.class);
-//        bind(AdminServlet.class).in(Singleton.class);
     }
 }

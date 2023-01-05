@@ -32,7 +32,6 @@ public class BerkeleyOutputConverter2 {
 
         // David'
         final String root = "C:\\Users\\David IB\\Dropbox\\STEP-Tagging(DIB)\\autoTag\\BibleSample\\ChrisExperiments\\";
-//        final String root = "C:\\Users\\chbradsh\\Documents\\GitHub\\dev\\BibleSample\\";
         final String strongs = FileUtils.readFileToString(new File(root + "NT.s"));        // strongs #
         final String other = FileUtils.readFileToString(new File(root + "NT.u"));          // stems only
         final String results = FileUtils.readFileToString(new File(root + "NT.training.align")); // alignment from Berkeley
@@ -44,11 +43,9 @@ public class BerkeleyOutputConverter2 {
         List<String[]> keyList = splitByWord(keyFile);
 
         final File path = new File("C:\\Users\\David IB\\AppData\\Roaming\\JSword\\step\\entities\\definition");
-//        final File path = new File("C:\\Users\\chbradsh\\AppData\\Roaming\\JSword\\step\\entities\\definition");
         FSDirectory directory = FSDirectory.open(path);
         final IndexSearcher indexSearcher = new IndexSearcher(directory);
         final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\David IB\\Dropbox\\STEP-Tagging(DIB)\\autoTag\\BibleSample\\ChrisExperiments\\NT.tagging+Gk.txt"), "UTF8"));
-//        final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\chbradsh\\Documents\\GitHub\\dev\\BibleSample\\outfilename.txt"), "UTF8"));
 
         String resultTagging = parseResults(resultSentences, strongSentences, otherSentences, indexSearcher, keyList, out);
         out.close();

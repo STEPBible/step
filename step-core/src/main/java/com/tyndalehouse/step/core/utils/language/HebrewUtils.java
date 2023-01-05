@@ -105,15 +105,6 @@ public final class HebrewUtils {
         return (firstCharacter > 0x590 && firstCharacter < 0x600)
                 || (firstCharacter > 0xFB10 && firstCharacter < 0xFB50);
     }
-
-
-//    /**
-//     * @param word text with pointing
-//     * @return text without pointing
-//     */
-//    public static String unPoint(final String word) {
-//        return unPoint(word, true);
-//    }
     
     /**
      * @param word text with pointing
@@ -541,10 +532,6 @@ public final class HebrewUtils {
         final HebrewLetter currentLetter = letter[current];
         final char c = currentLetter.getC();
 
-//        if (currentLetter.isStressed()) {
-//            output.append('*');
-//        }
-
         // hyphenating vowels
         hyphenateSyllables(letter, current, output, hasStress);
 
@@ -570,7 +557,6 @@ public final class HebrewUtils {
         switch (c) {
             // consonants
             case ALEPH:
-//                output.append(CLOSED_QUOTE);
                 break;
             case BET:
                 if (currentLetter.hasNoDagesh() && current != 0) {
@@ -634,7 +620,6 @@ public final class HebrewUtils {
                 output.append('s');
                 break;
             case AYIN:
-//                output.append(OPEN_QUOTE);
                 break;
             case FINAL_PE:
             case PE:
@@ -1015,7 +1000,6 @@ public final class HebrewUtils {
 
         while (ii >= 0 && !letters[ii].isConsonant()) {
             boolean isCorrectLength = lookingForLong ? letters[ii].isLong() : letters[ii].getVowelLengthType() == VowelLengthType.SHORT;
-//            boolean isSheva = letters[ii].getC() == SHEVA;
 
             if ((letters[ii].isVowel() && isCorrectLength && !letters[ii].isStressed())) {
                 return true;

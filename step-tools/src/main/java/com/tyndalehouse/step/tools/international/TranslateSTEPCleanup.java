@@ -32,13 +32,7 @@ public class TranslateSTEPCleanup {
 
                 String after = TranslateSTEP.cleanupText(value);
                 System.out.println(" after: " + value);
-
-//                break;
             }
-
-//            final FileOutputStream fileOutputStream = new FileOutputStream(new File("c:\\dev\\projects\\step\\step-core\\src\\main\\resources\\" + s + "_" + sourceLanguage + ".properties"));
-//            target.store(fileOutputStream, "");
-//            fileOutputStream.close();
         }
     }
 

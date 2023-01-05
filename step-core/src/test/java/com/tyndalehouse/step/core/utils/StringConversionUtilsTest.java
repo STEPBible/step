@@ -17,22 +17,6 @@ import static org.junit.Assert.assertTrue;
 public class StringConversionUtilsTest {
     private static final Logger LOG = LoggerFactory.getLogger(StringConversionUtilsTest.class);
 
-//    @Test
-//    public void testReadWholeIndex() throws IOException {
-//            final File path = new File("C:\\Users\\Chris\\AppData\\Roaming\\JSword\\step\\entities\\definition");
-//            FSDirectory directory = FSDirectory.open(path);
-//        final IndexSearcher indexSearcher = new IndexSearcher(directory);
-//        final TopDocs search = indexSearcher.search(new MatchAllDocsQuery(), Integer.MAX_VALUE);
-//
-//        StringBuilder sb = new StringBuilder();
-//        for(int i = 0; i < search.totalHits; i++) {
-//            sb.append(indexSearcher.doc(search.scoreDocs[i].doc).get("accentedUnicode"));
-//            sb.append("\r\n");
-//        }
-//
-//        System.out.println(sb.toString());
-//    }
-
     /**
      * testing the hebrew rules for searching a transliteration
      */
@@ -153,54 +137,6 @@ public class StringConversionUtilsTest {
 
         assertEquals("exērammenēn", outputAndTestTransliterate("ἐξηραμμένην"));
     }
-
-//    @Test
-//    public void testTransliterateHebrewFromFile() throws IOException {
-//    final Pattern p = Pattern.compile("[*.]*");
-//
-//    final FileReader reader = new FileReader(new File("c:\\temp\\hebrew_lexical_forms.txt"));
-//    final BufferedReader br = new BufferedReader(reader);
-//    final FileWriter writer = new FileWriter(new File("c:\\temp\\hebrew-out.txt"));
-//    final BufferedWriter bw = new BufferedWriter(writer, 4 * 1024 * 1024);
-//
-//    final long start = System.currentTimeMillis();
-//    int lineNumber = 0;
-//    String line;
-//
-//    while ((line = br.readLine()) != null) {
-//    final String[] split = line.split(",");
-//    bw.write(Integer.toString(lineNumber));
-//    bw.write('\t');
-//    // bw.write(split[0]);
-//    // bw.write('\t');
-//    bw.write(split[0]);
-//    bw.write('\t');
-//
-//    try {
-//    final String translit = transliterate(split[0]);
-//    bw.write(p.matcher(translit).replaceAll(""));
-//    bw.write('\t');
-//    bw.write(translit);
-//
-//    } catch (final Exception e) {
-//    // error
-//    bw.write("ERROR: ");
-//    bw.write(e.toString());
-//    }
-//
-//    bw.newLine();
-//    lineNumber++;
-//
-//    if ((lineNumber % 2000) == 0) {
-//    reportProgress(start, lineNumber);
-//    }
-//    }
-//
-//    br.close();
-//    bw.close();
-//
-//    reportProgress(start, lineNumber);
-//    }
 
     /**
      * outputs the time taken so far and the number of items processed

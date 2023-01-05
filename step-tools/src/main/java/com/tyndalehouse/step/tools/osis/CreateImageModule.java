@@ -26,10 +26,8 @@ public class CreateImageModule {
     private static final String END_CHAPTER_DECLARATION = "\">";
     private static final String END_FIGURE_DECLARATION = "\" />";
 
-    // e.g. aWord[400242]= "Mat.24.28"
     private static final Pattern verseMatcher = Pattern
             .compile(".*aWord\\[(\\d+)\\].*=[^\"]\"(\\d*\\w+\\.\\d+\\.\\d+)\".*");
-    // e.g. i++; ChapNoBeg[i] = 400010; ChapNoEnd[i] = 400016; BookNo[i]=40; ChapNo[i]="Ch 2"
     private static final Pattern chapterMatcher = Pattern.compile(".*ChapNoBeg[^0-9]*(\\d+).*"
             + "ChapNoEnd[^0-9]*(\\d+).*" + "BookNo[^0-9]*(\\d+).*" + "ChapNo[^0-9]*Ch.*(\\d+).*");
     private String moduleName;
@@ -114,10 +112,6 @@ public class CreateImageModule {
             return -1;
         }
         verse = verses.get(examinedVerse);
-        // if (verse.getStarts() <= currentChapter.getStart()) {
-        // // verse doesn't belong here, so passing on this and will attempt the next verse
-        // return currentVerse + 1;
-        // }
         boolean stop = false;
         while (verse.getStarts() <= currentChapter.getStop()) {
 
@@ -159,15 +153,11 @@ public class CreateImageModule {
         CreateImageModule.chapters.add(new Chapter(Integer.parseInt(matcher.group(4)), Integer
                 .parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher
                 .group(3))));
-
-        // System.out.println("Chapter " + matcher.group(4) + " of book " + matcher.group(3) + " starts "
-        // + matcher.group(1) + " and ends " + matcher.group(2));
     }
 
     private void processVerse(final Matcher matcher) {
         final Verse v = new Verse(matcher.group(2), Integer.parseInt(matcher.group(1)));
         CreateImageModule.verses.add(v);
-        // System.out.println(matcher.group(1) + " " + matcher.group(2));
     }
 
     public static void main(final String[] args) {

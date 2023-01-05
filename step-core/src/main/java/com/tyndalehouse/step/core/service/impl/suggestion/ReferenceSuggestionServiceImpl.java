@@ -55,7 +55,6 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                 // check this book actually contains this key, based on the scope...
                 if (!JSwordUtils.containsAny(master, k)) {
                     return new BookName[0];
-//                    return getExactRange(input);
                 }
 
                 BookName bk;
@@ -76,7 +75,6 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         } catch (NoSuchKeyException ex) {
             //silently fail
         }
-//        return getExactRange(input);
         return new BookName[0];
     }
 
@@ -116,10 +114,6 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
      *
      * @return the list of matching ranges
      */
-//    private BookName[] getExactRange(final String input) {
-//        final List<BookName> ranges = internationalRangeService.getRanges(input, true);
-//        return ranges.toArray(new BookName[ranges.size()]);
-//    }
     @Override
     public BookName[] collectNonExactMatches(final TermsAndMaxCount<BookName> collector,
                                              final SuggestionContext context, final BookName[] alreadyRetrieved,
@@ -183,9 +177,6 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
             bookNames.addAll(extras);
         }
 
-//        if(spaceLeft > 0) {
-//            bookNames.addAll(this.internationalRangeService.getRanges(input, false));
-//        }
         return bookNames.toArray(new BookName[bookNames.size()]);
     }
 

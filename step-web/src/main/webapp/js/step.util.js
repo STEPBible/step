@@ -874,31 +874,6 @@ step.util = {
 								searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
 							}
 							else alert("unknown syntax search 1: " + systaxWords);
-							//step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
-   							// var searchRelationship = "";
-                            // for (var j = 0; j < syntaxWords.length; j++) {
-                            //     if (syntaxWords[j] == "") continue;
-							// 	if ((j > 0) && (searchRelationship === "") &&
-							// 		((syntaxWords[j] === "AND") || (syntaxWords[j] === "OR") || (syntaxWords[j] === "NOT"))) {
-							// 		searchRelationship = syntaxWords[j];
-							// 		continue;
-							// 	}
-                            //     if ((j > 0) && (searchWords.length > 0)) {
-							// 		if ((searchRelationship === "AND") || (searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
-							// 		else searchWords += ', ';
-							// 	}
-                            //     if (syntaxWords[j].search(/\s*(\(*)\s*strong:([GH]\d{1,5}[A-Za-z]?)\s*(\)*)/) > -1) {
-                            //         // RegExp.$1 is prefix of open parathesis, RegExp.$2 is the strong number, RegExp.$2 is the suffix of close parathesis
-                            //         var prefix = RegExp.$1;
-                            //         var strongNum = RegExp.$2;
-                            //         var suffix = RegExp.$3;
-                            //         var stepTransliteration = step.util.getDetailsOfStrong(strongNum, firstVersion)[1];
-                            //         if (stepTransliteration === "") stepTransliteration = strongNum;
-                            //         searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
-                            //     }
-                            //     else searchWords += syntaxWords[j];
-							// 	searchRelationship = "";
-                            // }
                         }
                         else if ((itemType === GREEK_MEANINGS) ||
 							(itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";

@@ -61,7 +61,6 @@ public class XmlToOSIS {
 
         //now need to read in all files
         File[] files = fileList.toArray(new File[0]);
-//        File f = File.createTempFile("cjb-", "xml");
         File f = new File(outputPath);
 
         System.out.println("Merging...");
@@ -125,7 +124,6 @@ public class XmlToOSIS {
 
     private static void moveNodes(Node node) {
         // do something with the current node instead of System.out
-//        System.out.println(node.getNodeName());
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -223,12 +221,6 @@ public class XmlToOSIS {
 
     private void readFiles(final List<File> files, final String path) {
         files.addAll(FileUtils.listFiles(new File(path), new String[]{getExtension()}, false));
-//        for (Iterator<File> iterator = files.iterator(); iterator.hasNext(); ) {
-//            final File f = iterator.next();
-//            if (!f.getName().contains("PSA")) {
-//                iterator.remove();
-//            }
-//        }
     }
 
     private String getExtension() {

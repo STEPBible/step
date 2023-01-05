@@ -37,34 +37,6 @@ public final class StringConversionUtils {
         // hiding implementation
     }
 
-//    /**
-//     * Not all bibles encode strong numbers as strong:[HG]\d+ unfortunately, so instead we cope for strong: and
-//     * strong:H.
-//     * <p/>
-//     * In essence we chop off any of the following prefixes: strong:G, strong:H, strong:, H, G. We don't use a regular
-//     * expression, since this will be much quicker
-//     *
-//     * @param strong strong key
-//     * @return the key containing just the digits
-//     */
-//    public static String getStrongKey(final String strong) {
-//        if (strong.startsWith(STRONG_PREFIX)) {
-//            final char c = strong.charAt(LANGUAGE_INDICATOR);
-//            if (c == 'H' || c == 'G') {
-//                return strong.substring(LANGUAGE_INDICATOR + 1);
-//            }
-//            return strong.substring(LANGUAGE_INDICATOR);
-//        }
-//
-//        final char c = strong.charAt(0);
-//        if (c == 'H' || c == 'G') {
-//            return strong.substring(1);
-//        }
-//
-//        // perhaps some passages encode just the number
-//        return strong;
-//    }
-
     /**
      * in this case, we assume that a key starts shortly after the last ':' with a number
      *
@@ -102,10 +74,6 @@ public final class StringConversionUtils {
         final String[] split = key.split(" ");
         for (final String s : split) {
             final String strongNumber = getStrongLanguageSpecificKey(s);
-
-//            if (strongNumber == null) {
-//                continue;
-//            }
 
             final int length = strongNumber.length();
             if (sb.length() > 0) {

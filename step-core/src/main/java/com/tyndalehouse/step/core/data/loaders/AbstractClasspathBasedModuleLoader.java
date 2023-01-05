@@ -100,7 +100,6 @@ public abstract class AbstractClasspathBasedModuleLoader implements ModuleLoader
             parseFile(fileReader, skipLines);
         } finally {
             closeQuietly(fileReader);
-            // closeQuietly(bufferedStream);
             closeQuietly(stream);
         }
     }

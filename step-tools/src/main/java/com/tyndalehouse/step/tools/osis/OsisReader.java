@@ -56,7 +56,6 @@ public class OsisReader {
                 TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver(), null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
-//        options.add(LookupOption.DIVIDE_HEBREW);
         options.add(LookupOption.NOTES);
         options.add(LookupOption.HEADINGS);
         options.add(LookupOption.GREEK_ACCENTS);
@@ -72,7 +71,6 @@ public class OsisReader {
         } catch (final JDOMParseException e) {
             LOGGER.debug("Transformed is:\n [{}]", osisText);
         }
-//        InterleavedOsisReader.outputUnicode(osisText);
         LOGGER.debug("Double whitespace: {}", osisText.contains("  "));
     }
 }

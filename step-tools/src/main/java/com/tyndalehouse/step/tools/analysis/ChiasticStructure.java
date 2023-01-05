@@ -102,7 +102,6 @@ public class ChiasticStructure {
                                         Match currentMatch, boolean lastChance) {
         List<Match> chiasticVerses = detectChiasm(distance, matchesByVerse, currentMatch, lastChance);
         if (chiasticVerses.size() != 0) {
-//            LOGGER.debug("Recursive matches have been found for distance {} in verses: {}.", distance, verseKey);
 
             StringBuilder tabs = new StringBuilder();
             for (int ii = 0; ii < matchesSoFar.size(); ii++) {

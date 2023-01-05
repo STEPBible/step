@@ -26,15 +26,6 @@ public class BerkeleyOutputToTaggingFormat {
         final String other = FileUtils.readFileToString(new File(root + "bible.o"));
         final String results = FileUtils.readFileToString(new File(root + "training.align"));
         final String keyFile = FileUtils.readFileToString(new File(root + "keyList.txt"));
-/**
- * Chris'
-        final String root = "C:\\temp\\berkeley\\berkeleyBibles\\output\\";
-        final String strongs = FileUtils.readFileToString(new File(root + "bible.s"));
-        final String other = FileUtils.readFileToString(new File(root + "bible.o"));
-        final String results = FileUtils.readFileToString(new File(root + "training.align"));
-        final String keyFile = FileUtils.readFileToString(new File(root + "keyList-nt.txt"));
- */
-
 
         List<String[]> strongSentences = splitByWord(strongs);
         List<String[]> otherSentences = splitByWord(other);
@@ -42,7 +33,6 @@ public class BerkeleyOutputToTaggingFormat {
         List<String[]> keyList = splitByWord(keyFile);
 
         final File path = new File("C:\\Users\\David IB\\AppData\\Roaming\\JSword\\step\\entities\\definition");
-//      final File path = new File("C:\\Users\\Chris\\AppData\\Roaming\\JSword\\step\\entities\\definition");
         FSDirectory directory = FSDirectory.open(path);
         final IndexSearcher indexSearcher = new IndexSearcher(directory);
 
@@ -88,7 +78,6 @@ public class BerkeleyOutputToTaggingFormat {
             String[] words = otherSentences.get(ii);
             int wordNumber = 0;
             final String verseRef = keyList.get(ii)[0];
-//            resultingTagging.append("$");
             outputVerseRef(resultingTagging, verseRef, wordNumber);
 
             final Map<Integer, String> sentenceStrongs = verseToResults.get(verseRef);
@@ -97,7 +86,6 @@ public class BerkeleyOutputToTaggingFormat {
             for (int jj = 0; jj < words.length; jj++) {
                 wordNumber = jj;
                 String strongNumber = sentenceStrongs.get(jj);
-//                if (lastStrongNumber != null && !lastStrongNumber.equals(strongNumber)) {    // to avoid repeating same Strongs number twice. But sometimes supposed to repeat! eg Matt.1.2
                 if (lastStrongNumber != null) {
                     outputStrongNumber(resultingTagging, verseRef, lastStrongNumber, indexSearcher);
                     outputVerseRef(resultingTagging, verseRef, wordNumber);
@@ -105,23 +93,12 @@ public class BerkeleyOutputToTaggingFormat {
 
                 if (strongNumber == null) {
                     resultingTagging.append(words[jj]);
-//                    if (wasStrongNumber) {
-//                        resultingTagging.append('\n');
-//                    } else {
-                        resultingTagging.append(' ');
-//                    }
+                    resultingTagging.append(' ');
                     wasStrongNumber = false;
                     lastStrongNumber = null;
                 } else {
-/*
-                    if (wasStrongNumber && lastStrongNumber.equals(strongNumber)) {
-                        resultingTagging.append(' ');
-                    } else {
-*/
-                        resultingTagging.append('\t');
-//                    }
+                    resultingTagging.append('\t');
                     resultingTagging.append(words[jj]);
-//                    resultingTagging.append('\t');
                     wasStrongNumber = true;
                     lastStrongNumber = strongNumber;
                 }
@@ -139,7 +116,6 @@ public class BerkeleyOutputToTaggingFormat {
     }
 
     private static void outputVerseRef(final StringBuilder resultingTagging, final String verseRef, final int wordNumber) {
-//        resultingTagging.append("¦");
         resultingTagging.append(verseRef);
         resultingTagging.append('-');
         resultingTagging.append(String.format("%03d", wordNumber));

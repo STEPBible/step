@@ -402,13 +402,6 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testNumberLookup() {
-// The following 6 lines are commented out because they don't work.   Don't know why.  PT Nov 2021		
-//       assertTrue(this.jsi
-//               .getOsisTextByVerseNumbers("ASV", "ESV_th", 4, 4, new ArrayList<LookupOption>(), null, null,
-//                      false).getValue().contains("In the beginning"));
-//	assertTrue(this.jsi
-//				.getOsisTextByVerseNumbers("ASV", "ESV_th", 60000, 60000, new ArrayList<LookupOption>(), null,
-//                    null, false).getValue().contains("The grace of the Lord Jesus"));
         assertTrue(this.jsi
                 .getOsisTextByVerseNumbers("FreSegond", "ESV_th", 60000, 60000, new ArrayList<LookupOption>(),
                         null, null, false).getValue()

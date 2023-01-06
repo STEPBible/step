@@ -1,5 +1,5 @@
 function init_order_version() {
-  var s = '<p class="col-12">' + __s.order_of_bible_displayed +
+  var s = '<p class="col-12"dir="' + (step.state.isLtR() ? "ltr" : "rtl") + '">' + __s.order_of_bible_displayed +
     '<div id="nestedVersion" class="list-group col nested-sortable">';
   var intialsOfAllVersions = window.searchView._getCurrentInitials();
   beforeSort = [];

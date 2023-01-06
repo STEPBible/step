@@ -41,7 +41,7 @@ var PickBibleView = Backbone.View.extend({
 		'&nbsp;&nbsp;&nbsp;' +
 		step.util.modalCloseBtn("bibleVersions") +
         '</form>'),
-    modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" dir="<%= step.state.isLtR() ? "ltr" : "rtl" %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
         '<div class="modal-content stepModalFgBg">' +
         '<div class="modal-body">' +

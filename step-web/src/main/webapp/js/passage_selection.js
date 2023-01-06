@@ -456,6 +456,21 @@ step.passageSelect = {
             changeBaseURL();
         });
 	},
+	// SM for Arabic/Farsi numeral display
+	changeNumberForm: function(chptrOrVrsNum) {
+	    var anums = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+	    var fnums = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+	    if (this.userLang=="ar"){
+	        return chptrOrVrsNum.toString().replace(/[0-9]/g, function(n){return anums[+n];});
+	    }
+	    else if (this.userLang=="fa")
+	    {
+	        return chptrOrVrsNum.toString().replace(/[0-9]/g, function(n){return fnums[+n];});
+	    }
+	    else{
+	        return chptrOrVrsNum;
+	    }
+	},
 
 	_buildChptrVrsTbl: function(data, bookOsisID, numOfChptrsOrVrs, isChapter, version, userLang, summaryMode) {
 		var headerMsg;
@@ -549,7 +564,7 @@ step.passageSelect = {
 					curChptrDesc = " - " + chapterDescription[chptrOrVrsNum];
 				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
                     ((summaryMode) ? ' style="text-align:left;padding:0px 0px 0px 22px;text-indent: -22px;" ' : "") +
-                    '>' + chptrOrVrsNum + 
+                    '>' + this.changeNumberForm(chptrOrVrsNum) +
                     ((summaryMode) ? curChptrDesc : "") +
                     '</a></td>'
 				if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
@@ -567,7 +582,7 @@ step.passageSelect = {
 						curChptrDesc = " - " + chapterDescription[chptrOrVrsNum];
 					html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
                         ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") +
-                        '>' + chptrOrVrsNum +
+                        '>' + this.changeNumberForm(chptrOrVrsNum) +
                         ((summaryMode) ? curChptrDesc : "") +
                         '</a></td>'
 					if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {

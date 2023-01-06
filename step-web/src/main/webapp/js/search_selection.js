@@ -533,14 +533,14 @@ step.searchSelect = {
 			'<col span="1" style="width:61%;">' +
 			'</colgroup>' +
 			'<tr>' +
-			'<th scope="col" class="search-type-column">' + __s.type_of_search + '</th>' +
-			'<th scope="col">' + __s.suggested_search_words + '</th>' +
+			'<th scope="col" class="search-type-column"' + (step.state.isLtR()? '>' : ' style="text-align: right;">') + __s.type_of_search + '</th>' +
+			'<th scope="col"' + (step.state.isLtR()? '>' : ' style="text-align: right;">')  + __s.suggested_search_words + '</th>' +
 			'</tr>';
 		for (var i = 0; i < this.searchTypeCode.length; i ++) {
 			var srchCode = this.searchTypeCode[i];
 			html += '<tr style="height:40px;" class="select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
-				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left">' + __s['search_type_desc_' + srchCode] + ':</td>' +
+				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td>' +
 				'<td style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
 		}
 		html += '</table>' +

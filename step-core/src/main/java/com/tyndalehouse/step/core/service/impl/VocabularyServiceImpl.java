@@ -11,7 +11,6 @@ import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 import com.tyndalehouse.step.core.utils.SortingUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.util.LRUMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,13 +1,12 @@
 package com.tyndalehouse.step.core.data.processors;
 
-import java.util.List;
-import java.util.Locale;
-
+import com.tyndalehouse.step.core.data.EntityConfiguration;
+import com.tyndalehouse.step.core.data.create.PostProcessor;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Fieldable;
 
-import com.tyndalehouse.step.core.data.EntityConfiguration;
-import com.tyndalehouse.step.core.data.create.PostProcessor;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Cleanses strings in descriptions

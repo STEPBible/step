@@ -1,15 +1,14 @@
 package com.tyndalehouse.step.core.models;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-
 import com.tyndalehouse.step.core.service.impl.SearchType;
+import com.tyndalehouse.step.core.utils.HeadingsUtil;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
 
-import com.tyndalehouse.step.core.utils.HeadingsUtil;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple wrapper around a string for returning as a JSON-mapped object

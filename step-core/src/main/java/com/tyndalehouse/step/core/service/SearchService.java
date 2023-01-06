@@ -1,7 +1,6 @@
 package com.tyndalehouse.step.core.service;
 
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
-import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;

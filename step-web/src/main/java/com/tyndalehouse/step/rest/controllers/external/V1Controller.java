@@ -1,16 +1,11 @@
 package com.tyndalehouse.step.rest.controllers.external;
 
-import java.util.List;
+import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.models.*;
+import com.tyndalehouse.step.rest.controllers.BibleController;
 
 import javax.inject.Inject;
-
-import com.google.inject.Singleton;
-import com.tyndalehouse.step.core.models.AvailableFeatures;
-import com.tyndalehouse.step.core.models.BookName;
-import com.tyndalehouse.step.core.models.EnrichedLookupOption;
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.rest.controllers.BibleController;
+import java.util.List;
 
 /**
  * Allows look up of passages.

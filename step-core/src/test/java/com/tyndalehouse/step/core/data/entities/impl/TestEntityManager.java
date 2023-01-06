@@ -1,13 +1,13 @@
 package com.tyndalehouse.step.core.data.entities.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Module;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * a test entity manager, which gives us indexes in memory

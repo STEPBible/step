@@ -1,17 +1,9 @@
 package com.tyndalehouse.step.core.data.entities.impl;
 
-import static org.apache.lucene.util.Version.LUCENE_30;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.tyndalehouse.step.core.data.*;
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.utils.IOUtils;
 import com.tyndalehouse.step.core.utils.LuceneUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -28,13 +20,16 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
 import org.slf4j.Logger;
 
-import com.tyndalehouse.step.core.data.AllResultsCollector;
-import com.tyndalehouse.step.core.data.AnalyzedPrefixSearchQueryParser;
-import com.tyndalehouse.step.core.data.EntityConfiguration;
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.utils.IOUtils;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.lucene.util.Version.LUCENE_30;
 
 /**
  * Reads an entity

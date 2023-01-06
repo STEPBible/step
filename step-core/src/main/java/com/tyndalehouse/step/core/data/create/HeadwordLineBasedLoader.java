@@ -1,17 +1,16 @@
 package com.tyndalehouse.step.core.data.create;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
-import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
  * Loads an Easton Dictionary

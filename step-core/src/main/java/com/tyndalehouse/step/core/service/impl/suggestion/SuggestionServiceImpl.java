@@ -1,6 +1,5 @@
 package com.tyndalehouse.step.core.service.impl.suggestion;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.BookName;
@@ -11,17 +10,12 @@ import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.lucene.search.TopFieldCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Suggestion service, helping the auto suggestion search dropdown.

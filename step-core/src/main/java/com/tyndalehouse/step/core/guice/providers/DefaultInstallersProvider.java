@@ -1,32 +1,26 @@
 package com.tyndalehouse.step.core.guice.providers;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.commaSeparate;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static java.net.Proxy.NO_PROXY;
+import com.tyndalehouse.step.core.data.StepHttpSwordInstaller;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import org.crosswire.jsword.book.install.Installer;
+import org.crosswire.jsword.book.install.sword.HttpSwordInstaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.URI;
-import java.net.URISyntaxException;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-
-import com.tyndalehouse.step.core.data.StepHttpSwordInstaller;
-import org.crosswire.jsword.book.install.Installer;
-import org.crosswire.jsword.book.install.sword.HttpSwordInstaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import static com.tyndalehouse.step.core.utils.StringUtils.commaSeparate;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static java.net.Proxy.NO_PROXY;
 
 /**
  * Provides a set of installers for installing Bibles, modules, etc e.g. from Crosswire

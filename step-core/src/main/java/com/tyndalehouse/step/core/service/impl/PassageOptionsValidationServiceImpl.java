@@ -1,10 +1,6 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import com.tyndalehouse.step.core.models.AvailableFeatures;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.models.TrimmedLookupOption;
+import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
@@ -12,26 +8,11 @@ import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
 import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
-import static com.tyndalehouse.step.core.models.LookupOption.ENGLISH_VOCAB;
-import static com.tyndalehouse.step.core.models.LookupOption.ES_VOCAB;
-import static com.tyndalehouse.step.core.models.LookupOption.ZH_TW_VOCAB;
-import static com.tyndalehouse.step.core.models.LookupOption.ZH_VOCAB;
-import static com.tyndalehouse.step.core.models.LookupOption.GREEK_VOCAB;
-import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS;
-import static com.tyndalehouse.step.core.models.LookupOption.MORPHOLOGY;
-import static com.tyndalehouse.step.core.models.LookupOption.NOTES;
-import static com.tyndalehouse.step.core.models.LookupOption.TRANSLITERATION;
-import static com.tyndalehouse.step.core.models.LookupOption.VERSE_NUMBERS;
+import static com.tyndalehouse.step.core.models.LookupOption.*;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 @Singleton

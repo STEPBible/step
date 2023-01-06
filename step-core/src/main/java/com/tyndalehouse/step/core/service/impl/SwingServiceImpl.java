@@ -5,7 +5,6 @@ import com.tyndalehouse.step.core.models.BibleInstaller;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.SwingService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import org.apache.http.conn.ssl.SSLInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

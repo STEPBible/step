@@ -1,25 +1,23 @@
 package com.tyndalehouse.step.jsp;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
-
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.inject.Injector;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.models.stats.ScopeType;
 import com.tyndalehouse.step.core.models.stats.StatType;
-import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.service.AnalysisService;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.models.UiDefaults;
+import com.tyndalehouse.step.rest.controllers.BibleController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Injector;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.models.UiDefaults;
-import com.tyndalehouse.step.rest.controllers.BibleController;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page

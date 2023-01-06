@@ -1,15 +1,14 @@
 package com.tyndalehouse.step.core.data.create;
 
-import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-
+import com.google.inject.ProvisionException;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.AppManagerService;
+import com.tyndalehouse.step.core.service.StrongAugmentationService;
+import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.WorkEvent;
@@ -19,13 +18,12 @@ import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.ProvisionException;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
-import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.StrongAugmentationService;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * The object that will be responsible for loading all the data into Lucene and downloading key versions of

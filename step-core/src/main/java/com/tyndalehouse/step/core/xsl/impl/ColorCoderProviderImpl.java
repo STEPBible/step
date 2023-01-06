@@ -1,15 +1,14 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
  * A utility to provide colors to an xsl spreadsheet. This is a non-static utility since later on we may wish

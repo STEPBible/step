@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.core.data.tokenizers;
 
-import java.io.Reader;
-
 import org.apache.lucene.analysis.WhitespaceTokenizer;
+
+import java.io.Reader;
 
 public class CommaDelimitedTokenizer extends WhitespaceTokenizer {
     /**

@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.core.service;
 
-import java.util.List;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
+
+import java.util.List;
 
 /**
  * The service providing morphology information

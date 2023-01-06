@@ -1,14 +1,7 @@
 package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TopFieldCollector;
 
 import java.util.List;
 

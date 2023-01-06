@@ -1,20 +1,18 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.service.MorphologyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 /**
  * Provides quick access to the morphology from a code found in the xsl transformation

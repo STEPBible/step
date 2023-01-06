@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.core.service;
 
+import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.models.stats.ScopeType;
 import com.tyndalehouse.step.core.models.stats.StatType;
-import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 
 /**
  * Defines an interface for obtaining various stats on a passage.

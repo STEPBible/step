@@ -1,8 +1,6 @@
 package com.tyndalehouse.step.core.data;
 
-import static com.tyndalehouse.step.core.utils.ConversionUtils.localDateTimeToEpochMinutes;
-import static com.tyndalehouse.step.core.utils.ConversionUtils.stringToEpochMinutes;
-
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
@@ -10,7 +8,8 @@ import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.NumericField;
 import org.joda.time.LocalDateTime;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import static com.tyndalehouse.step.core.utils.ConversionUtils.localDateTimeToEpochMinutes;
+import static com.tyndalehouse.step.core.utils.ConversionUtils.stringToEpochMinutes;
 
 /**
  * Records how a field is stored in Lucene

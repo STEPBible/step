@@ -1,13 +1,13 @@
 package com.tyndalehouse.step.core.data.analyzers;
 
-import static org.apache.lucene.util.Version.LUCENE_30;
-
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.util.Version;
 
 import javax.inject.Inject;
+
+import static org.apache.lucene.util.Version.LUCENE_30;
 
 /**
  * analyzes Nave modules

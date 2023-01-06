@@ -3,14 +3,14 @@
  */
 package com.tyndalehouse.step.core.service.helpers;
 
-import static org.junit.Assert.assertEquals;
+import org.crosswire.jsword.book.Books;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import org.crosswire.jsword.book.Books;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class VersionResolverTest {
 

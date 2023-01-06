@@ -1,27 +1,25 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import com.google.inject.Inject;
+import com.google.inject.servlet.RequestScoped;
+import com.tyndalehouse.step.core.data.create.Loader;
+import com.tyndalehouse.step.core.models.BibleInstaller;
+import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.utils.StringUtils;
+import com.tyndalehouse.step.models.setup.InstallationProgress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 import static com.tyndalehouse.step.rest.framework.RequestUtils.validateSession;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Provider;
-
-import com.tyndalehouse.step.core.models.BibleInstaller;
-import com.tyndalehouse.step.models.setup.InstallationProgress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.google.inject.servlet.RequestScoped;
-import com.tyndalehouse.step.core.data.create.Loader;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * The controller that will deal with any requests changing the behaviour of the application

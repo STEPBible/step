@@ -1,12 +1,12 @@
 package com.tyndalehouse.step.core.service.jsword;
 
-import java.util.List;
-import java.util.Set;
-
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 import org.crosswire.jsword.book.Book;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service

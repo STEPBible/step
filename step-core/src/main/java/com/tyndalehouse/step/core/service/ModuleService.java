@@ -1,10 +1,9 @@
 package com.tyndalehouse.step.core.service;
 
-import java.util.List;
-
+import com.tyndalehouse.step.core.models.BibleVersion;
 import org.crosswire.jsword.book.BookCategory;
 
-import com.tyndalehouse.step.core.models.BibleVersion;
+import java.util.List;
 
 /**
  * Interface to the service that gives information about the books of the bible, the different types of bible,

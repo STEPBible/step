@@ -1,11 +1,10 @@
 package com.tyndalehouse.step.core.data.analyzers;
 
-import java.io.Reader;
-
+import com.tyndalehouse.step.core.data.tokenizers.CommaDelimitedTokenizer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 
-import com.tyndalehouse.step.core.data.tokenizers.CommaDelimitedTokenizer;
+import java.io.Reader;
 
 /**
  * Just uses whitespaces to separate tokens

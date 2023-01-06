@@ -1,15 +1,15 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
-import static com.tyndalehouse.step.rest.framework.RequestUtils.validateSession;
-
-import javax.inject.Provider;
-
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.UserService;
+
+import javax.inject.Provider;
+
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
+import static com.tyndalehouse.step.rest.framework.RequestUtils.validateSession;
 
 /**
  * Checking user is registered

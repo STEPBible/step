@@ -1,17 +1,16 @@
 package com.tyndalehouse.step.core.utils;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * static utilities for testing, creating entities, etc.

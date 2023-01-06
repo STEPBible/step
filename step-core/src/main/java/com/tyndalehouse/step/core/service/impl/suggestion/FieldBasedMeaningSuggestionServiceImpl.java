@@ -2,11 +2,7 @@ package com.tyndalehouse.step.core.service.impl.suggestion;
 
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.*;
 
 import java.util.List;
 

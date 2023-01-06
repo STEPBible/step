@@ -1,29 +1,27 @@
 package com.tyndalehouse.step.core.data.create;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.Locale;
-import java.util.Properties;
-
-import javax.inject.Provider;
-
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.AppManagerService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.utils.TestUtils;
+import javax.inject.Provider;
+import java.util.Locale;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the loading of the all loaders

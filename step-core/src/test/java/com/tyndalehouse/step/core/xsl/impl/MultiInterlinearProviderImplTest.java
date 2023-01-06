@@ -1,10 +1,10 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
+import org.junit.Test;
+
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl.VERSION_SEPARATOR;
 import static org.junit.Assert.assertArrayEquals;
-
-import org.junit.Test;
 
 /**
  * Tests the version splitters

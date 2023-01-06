@@ -1,11 +1,10 @@
 package com.tyndalehouse.step.core.data.entities.impl;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A singleton to help locate the lucene indexes in testing

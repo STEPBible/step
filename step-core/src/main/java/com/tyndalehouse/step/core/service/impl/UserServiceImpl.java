@@ -1,14 +1,16 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import com.tyndalehouse.step.core.service.UserService;
+import com.tyndalehouse.step.core.utils.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Writer;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -16,17 +18,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.exceptions.TranslatedException;
-import com.tyndalehouse.step.core.service.UserService;
-import com.tyndalehouse.step.core.utils.IOUtils;
+import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 
 /**
  * A user service implementation, that checks whether a user is allowed in. Then given a number of parameters,

@@ -1,12 +1,8 @@
 package com.tyndalehouse.step.core.service.search;
 
 import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
-import com.tyndalehouse.step.core.service.impl.SearchType;
 import org.crosswire.jsword.passage.Key;
-
-import java.util.List;
 
 /**
  * Searches for a specific subject

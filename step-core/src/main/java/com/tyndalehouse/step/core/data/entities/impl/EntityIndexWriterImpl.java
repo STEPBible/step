@@ -1,12 +1,10 @@
 package com.tyndalehouse.step.core.data.entities.impl;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-
+import com.tyndalehouse.step.core.data.EntityConfiguration;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.FieldConfig;
+import com.tyndalehouse.step.core.data.create.PostProcessor;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
@@ -14,16 +12,16 @@ import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
-import org.crosswire.common.util.CollectionUtil;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityConfiguration;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.FieldConfig;
-import com.tyndalehouse.step.core.data.create.PostProcessor;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
  * Reads a file and creates the equivalent Lucene index for it. This class is not thread safe.

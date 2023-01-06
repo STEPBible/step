@@ -1,23 +1,20 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import com.tyndalehouse.step.core.service.VocabularyService;
 import org.crosswire.common.util.Language;
 import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.passage.KeyFactory;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.PassageKeyFactory;
 import org.crosswire.jsword.passage.VerseFactory;
 import org.crosswire.jsword.versification.Versification;
-import org.crosswire.jsword.versification.system.SystemKJV;
 import org.crosswire.jsword.versification.system.Versifications;
 import org.junit.Test;
+
+import java.lang.reflect.InvocationTargetException;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * A simple test class to test to the provider

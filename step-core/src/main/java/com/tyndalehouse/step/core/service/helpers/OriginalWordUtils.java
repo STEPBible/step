@@ -1,16 +1,9 @@
 package com.tyndalehouse.step.core.service.helpers;
 
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.Filter;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import org.apache.lucene.search.PrefixQuery;
-import org.apache.lucene.search.QueryWrapperFilter;
-import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.*;
 
 /**
  * Static helper methods used by various services

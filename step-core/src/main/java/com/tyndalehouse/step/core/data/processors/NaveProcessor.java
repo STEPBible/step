@@ -1,16 +1,14 @@
 package com.tyndalehouse.step.core.data.processors;
 
-import javax.inject.Inject;
-
-import org.apache.lucene.document.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.tyndalehouse.step.core.data.EntityConfiguration;
 import com.tyndalehouse.step.core.data.create.PostProcessor;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import org.apache.lucene.document.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.regex.Pattern;
 
 /**

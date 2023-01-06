@@ -19,11 +19,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
 import org.apache.lucene.search.IndexSearcher;
-import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookData;
-import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.Books;
-import org.crosswire.jsword.book.OSISUtil;
+import org.crosswire.jsword.book.*;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
@@ -36,12 +32,8 @@ import org.jdom2.Element;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 /**
  * Provides each strong number given a verse.

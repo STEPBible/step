@@ -1,25 +1,17 @@
 package com.tyndalehouse.step.core.service.helpers;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.utils.StringUtils;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
  * The Version resolver resolved from a short initial version to the proper crosswire initials

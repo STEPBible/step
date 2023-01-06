@@ -1,20 +1,19 @@
 package com.tyndalehouse.step.guice.providers;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-
-import java.util.Locale;
-import java.util.MissingResourceException;
-
-import javax.inject.Provider;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.tyndalehouse.step.models.WebSessionImpl;
+
+import javax.inject.Provider;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Locale;
+import java.util.MissingResourceException;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 /**
  * This object is request-scoped, meaning it is new for every request. It is a way to return the jsessionId at

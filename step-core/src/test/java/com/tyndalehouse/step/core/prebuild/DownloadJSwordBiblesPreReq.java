@@ -1,11 +1,7 @@
 package com.tyndalehouse.step.core.prebuild;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static junit.framework.Assert.assertNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
+import com.tyndalehouse.step.core.utils.TestUtils;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
@@ -14,8 +10,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
-import com.tyndalehouse.step.core.utils.TestUtils;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static junit.framework.Assert.assertNotNull;
 
 /**
  * Downloads the jsword bible versions

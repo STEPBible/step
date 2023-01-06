@@ -1,10 +1,8 @@
 package com.tyndalehouse.step.core.service.helpers;
 
-import java.util.Comparator;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.utils.StringUtils;
-import org.apache.lucene.analysis.StopAnalyzer;
+
+import java.util.Comparator;
 
 /**
  * Compares a definition by gloss

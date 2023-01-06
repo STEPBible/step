@@ -1,10 +1,10 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.xsl.InterleavingProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides the headings for any interleaved passage

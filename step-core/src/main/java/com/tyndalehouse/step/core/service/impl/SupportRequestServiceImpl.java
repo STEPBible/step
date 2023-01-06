@@ -7,17 +7,8 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.AppManagerService;
 import com.tyndalehouse.step.core.service.SupportRequestService;
 import com.tyndalehouse.step.core.utils.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScheme;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthState;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.*;
+import org.apache.http.auth.*;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -34,14 +25,7 @@ import org.apache.http.util.EntityUtils;
 
 import javax.inject.Named;
 import javax.inject.Provider;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.getNonNullString;
 

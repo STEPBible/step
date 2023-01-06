@@ -1,12 +1,11 @@
 package com.tyndalehouse.step.core.data.entities.impl;
 
-import java.util.List;
-
 import com.tyndalehouse.step.core.models.*;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import java.util.List;
 
 /**
  * This is a mock class and as a result has very few implemented methods

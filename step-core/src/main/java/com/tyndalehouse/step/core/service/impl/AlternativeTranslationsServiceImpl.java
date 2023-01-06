@@ -1,14 +1,5 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static java.lang.String.format;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
@@ -18,6 +9,14 @@ import com.tyndalehouse.step.core.models.meanings.VersionVerses;
 import com.tyndalehouse.step.core.models.meanings.VersionsData;
 import com.tyndalehouse.step.core.service.AlternativeVersionsService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.lang.String.format;
 
 /**
  * Gives access to the underlying index

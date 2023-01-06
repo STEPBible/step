@@ -1,39 +1,34 @@
 package com.tyndalehouse.step.core.service.search.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-
+import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.search.SearchEntry;
+import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
+import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.service.impl.LexiconDefinitionServiceImpl;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
+import com.tyndalehouse.step.core.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
-import com.tyndalehouse.step.core.models.search.SearchEntry;
-import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
-import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
-import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
-import com.tyndalehouse.step.core.service.helpers.VersionResolver;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
-import com.tyndalehouse.step.core.utils.TestUtils;
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Search service testing

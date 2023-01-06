@@ -1,16 +1,12 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
-import static org.crosswire.jsword.book.BookCategory.BIBLE;
-
-import java.util.*;
-
-import javax.inject.Inject;
-
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
@@ -21,10 +17,12 @@ import org.crosswire.jsword.versification.DivisionName;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 
-import com.tyndalehouse.step.core.models.BookName;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import javax.inject.Inject;
+import java.util.*;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
+import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
 /**
  * Provides metadata for JSword modules

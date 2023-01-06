@@ -1,15 +1,14 @@
 package com.tyndalehouse.step.models.timeline.simile;
 
-import static com.tyndalehouse.step.core.utils.ConversionUtils.epochMinutesStringToLocalDateTime;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.models.TimelineTranslator;
+import com.tyndalehouse.step.models.timeline.DigestableTimeline;
+import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalDateTime;
-
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.models.TimelineTranslator;
-import com.tyndalehouse.step.models.timeline.DigestableTimeline;
+import static com.tyndalehouse.step.core.utils.ConversionUtils.epochMinutesStringToLocalDateTime;
 
 /**
  * provides a way of

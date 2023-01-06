@@ -1,11 +1,6 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import com.tyndalehouse.step.core.models.AbstractComplexSearch;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.SearchToken;
+import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.AppManagerService;
 import com.tyndalehouse.step.core.service.LanguageService;
@@ -26,10 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 @Singleton

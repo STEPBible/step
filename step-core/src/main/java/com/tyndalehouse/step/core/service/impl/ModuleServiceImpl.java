@@ -1,23 +1,24 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
-
-import java.util.*;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-
-import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookCategory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.BookCategory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
 
 /**
  * Looks up module information, for example lexicon definitions for particular references

@@ -9,20 +9,11 @@ import org.crosswire.jsword.JSMsg;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookDriver;
 import org.crosswire.jsword.book.install.InstallException;
-import org.crosswire.jsword.book.sword.ConfigEntry;
-import org.crosswire.jsword.book.sword.NullBackend;
-import org.crosswire.jsword.book.sword.SwordBook;
-import org.crosswire.jsword.book.sword.SwordBookDriver;
-import org.crosswire.jsword.book.sword.SwordBookMetaData;
-import org.crosswire.jsword.book.sword.SwordConstants;
+import org.crosswire.jsword.book.sword.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 

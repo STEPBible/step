@@ -1,6 +1,5 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.sword.ConfigEntryType;
@@ -12,12 +11,8 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Config value interceptor, to decrypt STEP cipher keys

@@ -1,13 +1,11 @@
 package com.tyndalehouse.step.core.models.search;
 
+import com.tyndalehouse.step.core.models.AbstractComplexSearch;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedSet;
-
-import com.tyndalehouse.step.core.models.AbstractComplexSearch;
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.service.impl.SearchType;
 
 public class SearchResult extends AbstractComplexSearch implements Serializable {
     private static final long serialVersionUID = 5408141957094432935L;

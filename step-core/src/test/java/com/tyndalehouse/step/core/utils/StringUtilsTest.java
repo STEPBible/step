@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.core.utils;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the {@link StringUtils} class

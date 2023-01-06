@@ -1,10 +1,17 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.service.AppManagerService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.JSwordUtils;
+import com.yammer.metrics.annotation.Timed;
+import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.Versification;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,23 +19,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.tyndalehouse.step.core.service.AppManagerService;
-import com.yammer.metrics.annotation.Timed;
-import org.apache.lucene.search.MatchAllDocsQuery;
-import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookCategory;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.Versification;
-
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.models.BibleVersion;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.utils.JSwordUtils;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Gets the sitemap for STEP.

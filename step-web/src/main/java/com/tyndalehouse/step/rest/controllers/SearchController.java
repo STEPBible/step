@@ -1,14 +1,9 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import com.tyndalehouse.step.core.models.AbstractComplexSearch;
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.SearchToken;
-import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
-import com.tyndalehouse.step.core.models.SuggestionsSummary;
+import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.models.search.AutoSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.models.search.SubjectEntries;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.SuggestionService;
@@ -30,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 /**

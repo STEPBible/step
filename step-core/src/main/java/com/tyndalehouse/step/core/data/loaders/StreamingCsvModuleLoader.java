@@ -1,19 +1,15 @@
 package com.tyndalehouse.step.core.data.loaders;
 
-import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-
+import au.com.bytecode.opencsv.CSVReader;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import au.com.bytecode.opencsv.CSVReader;
+import java.io.IOException;
+import java.io.Reader;
 
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 
 /**
  * Loads modules straight from a CSV file to a database form

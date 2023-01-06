@@ -1,8 +1,6 @@
 package com.tyndalehouse.step.core.data;
 
-import java.io.IOException;
-import java.io.StringReader;
-
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
@@ -12,7 +10,8 @@ import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.util.Version;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import java.io.IOException;
+import java.io.StringReader;
 
 public class AnalyzedPrefixSearchQueryParser extends MultiFieldQueryParser {
     /**

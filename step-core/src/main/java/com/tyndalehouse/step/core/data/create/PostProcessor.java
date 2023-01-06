@@ -1,8 +1,7 @@
 package com.tyndalehouse.step.core.data.create;
 
-import org.apache.lucene.document.Document;
-
 import com.tyndalehouse.step.core.data.EntityConfiguration;
+import org.apache.lucene.document.Document;
 
 /**
  * Post-processes a document before it is added to the index

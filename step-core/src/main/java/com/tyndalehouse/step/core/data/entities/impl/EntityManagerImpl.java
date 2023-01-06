@@ -1,17 +1,16 @@
 package com.tyndalehouse.step.core.data.entities.impl;
 
-import java.io.Closeable;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.data.EntityConfiguration;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.io.Closeable;
+import java.util.HashMap;
+import java.util.Map;
 
 @Singleton
 public class EntityManagerImpl implements Closeable, EntityManager {

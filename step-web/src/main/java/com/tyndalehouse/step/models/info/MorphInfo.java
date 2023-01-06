@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.models.info;
 
-import java.io.Serializable;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
+
+import java.io.Serializable;
 
 /**
  * Captures information related to morphology

@@ -1,38 +1,29 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
-import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
+import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.models.*;
+import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
+import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
+import com.tyndalehouse.step.core.utils.StringUtils;
+import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
+import com.tyndalehouse.step.models.ModulesForLanguageUser;
+import com.yammer.metrics.annotation.Timed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
-import com.google.inject.Singleton;
-import com.tyndalehouse.step.core.models.BibleVersion;
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
-import com.tyndalehouse.step.core.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.models.AvailableFeatures;
-import com.tyndalehouse.step.core.models.BookName;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.models.EnrichedLookupOption;
-import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
-import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
-import com.tyndalehouse.step.models.ModulesForLanguageUser;
-import com.yammer.metrics.annotation.Timed;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
 /**
  * The controller for retrieving information on the bible or texts from the bible.

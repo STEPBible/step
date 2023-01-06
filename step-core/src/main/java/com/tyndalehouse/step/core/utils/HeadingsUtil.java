@@ -1,10 +1,6 @@
 package com.tyndalehouse.step.core.utils;
 
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.KeyUtil;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.PassageKeyFactory;
-import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.BookName;
 import org.crosswire.jsword.versification.Versification;

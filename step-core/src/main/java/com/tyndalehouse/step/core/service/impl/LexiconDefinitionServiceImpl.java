@@ -1,17 +1,15 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.inject.Inject;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.LexiconDefinitionService;
+
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class LexiconDefinitionServiceImpl implements LexiconDefinitionService {
     private final EntityIndexReader definitions;

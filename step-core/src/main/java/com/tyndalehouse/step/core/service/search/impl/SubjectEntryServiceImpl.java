@@ -15,15 +15,7 @@ import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.QueryParser;
 import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.KeyUtil;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.Passage;
-import org.crosswire.jsword.passage.RangedPassage;
-import org.crosswire.jsword.passage.RestrictionType;
-import org.crosswire.jsword.passage.Verse;
-import org.crosswire.jsword.passage.VerseKey;
-import org.crosswire.jsword.passage.VerseRange;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
 import org.slf4j.Logger;
@@ -31,11 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Retrieves the entries from a subject search

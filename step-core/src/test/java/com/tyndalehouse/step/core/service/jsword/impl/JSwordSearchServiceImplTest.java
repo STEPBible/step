@@ -1,27 +1,25 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.models.search.SearchEntry;
+import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
+import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.models.search.SearchEntry;
-import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
-import com.tyndalehouse.step.core.service.helpers.VersionResolver;
-import com.tyndalehouse.step.core.service.impl.SearchQuery;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.utils.TestUtils;
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the various searches

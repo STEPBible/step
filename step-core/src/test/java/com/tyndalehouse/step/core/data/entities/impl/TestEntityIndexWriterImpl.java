@@ -1,12 +1,11 @@
 package com.tyndalehouse.step.core.data.entities.impl;
 
-import java.io.IOException;
-
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import java.io.IOException;
 
 /**
  * A test version

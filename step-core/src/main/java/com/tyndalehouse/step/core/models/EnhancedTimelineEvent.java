@@ -1,10 +1,10 @@
 package com.tyndalehouse.step.core.models;
 
+import com.tyndalehouse.step.core.data.EntityDoc;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Adds some key non-persisted fields to the event

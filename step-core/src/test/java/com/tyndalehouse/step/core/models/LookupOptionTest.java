@@ -1,6 +1,5 @@
 package com.tyndalehouse.step.core.models;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashSet;

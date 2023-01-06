@@ -4,7 +4,6 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 /**
  * A holder for counts of strongs in the bibles and the actual Strongs data

@@ -1,8 +1,15 @@
 package com.tyndalehouse.step.core.data;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
-import static org.apache.lucene.util.Version.LUCENE_30;
+import com.google.inject.Injector;
+import com.tyndalehouse.step.core.data.create.PostProcessor;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.utils.IOUtils;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.util.Version;
+import org.crosswire.common.util.CWProject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,17 +20,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Fieldable;
-import org.apache.lucene.util.Version;
-import org.crosswire.common.util.CWProject;
-
-import com.google.inject.Injector;
-import com.tyndalehouse.step.core.data.create.PostProcessor;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.utils.IOUtils;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
+import static org.apache.lucene.util.Version.LUCENE_30;
 
 /**
  * A configuration of the entity, include the list of fields, etc.

@@ -1,9 +1,9 @@
 package com.tyndalehouse.step.models.timeline.simile;
 
+import com.tyndalehouse.step.core.models.OsisWrapper;
+
 import java.io.Serializable;
 import java.util.List;
-
-import com.tyndalehouse.step.core.models.OsisWrapper;
 
 /**
  * An content-rich version of {@link SimileEvent}

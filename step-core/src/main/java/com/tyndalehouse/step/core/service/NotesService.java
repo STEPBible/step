@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.core.service;
 
-import java.util.List;
-
 import com.tyndalehouse.step.core.models.Note;
+
+import java.util.List;
 
 /**
  * Allows access to personal notes

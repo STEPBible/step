@@ -1,15 +1,14 @@
 package com.tyndalehouse.step.models;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Locale;
-
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.ClientSession;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
 
 /**
  * A web session which wraps around the jsession id...

@@ -1,22 +1,20 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Locale;
-
-import javax.inject.Provider;
-
+import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.models.Language;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.models.Language;
+import javax.inject.Provider;
+import java.util.List;
+import java.util.Locale;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests {@link LanguageServiceImpl}

@@ -1,14 +1,13 @@
 package com.tyndalehouse.step.jsp;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.inject.Injector;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.IOUtils;
 import org.crosswire.jsword.book.Book;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Injector;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.utils.IOUtils;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page

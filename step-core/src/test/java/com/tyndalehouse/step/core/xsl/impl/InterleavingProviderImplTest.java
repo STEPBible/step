@@ -1,17 +1,16 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * A simple test class to test to the provider

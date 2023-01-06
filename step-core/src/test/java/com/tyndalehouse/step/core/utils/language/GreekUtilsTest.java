@@ -1,9 +1,5 @@
 package com.tyndalehouse.step.core.utils.language;
 
-import static com.tyndalehouse.step.core.utils.language.GreekUtils.unAccent;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.Books;
@@ -11,6 +7,10 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.junit.Test;
+
+import static com.tyndalehouse.step.core.utils.language.GreekUtils.unAccent;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Greek utils tests

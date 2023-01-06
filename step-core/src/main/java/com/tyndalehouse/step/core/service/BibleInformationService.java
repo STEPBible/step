@@ -1,11 +1,11 @@
 package com.tyndalehouse.step.core.service;
 
-import java.util.List;
-import java.util.Locale;
-
 import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.models.stats.PassageStat;
+
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Interface to the service that gives information about the books of the bible, the different types of bible,

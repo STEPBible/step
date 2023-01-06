@@ -1,12 +1,12 @@
 package com.tyndalehouse.step.core.utils.language;
 
+import com.tyndalehouse.step.core.utils.language.transliteration.StringToStringRule;
+import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationRule;
+
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import com.tyndalehouse.step.core.utils.language.transliteration.StringToStringRule;
-import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationRule;
 
 /**
  * Utilities for doing Hebrew transliteration

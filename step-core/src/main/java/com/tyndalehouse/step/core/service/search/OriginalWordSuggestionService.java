@@ -1,9 +1,8 @@
 package com.tyndalehouse.step.core.service.search;
 
-import java.util.List;
-
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
+
+import java.util.List;
 
 /**
  * Interface to search for relevant suggestions for a given input, whether unicode or transliterations

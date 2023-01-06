@@ -1,13 +1,12 @@
 package com.tyndalehouse.step.core.data.analyzers;
 
-import java.io.Reader;
-
+import com.tyndalehouse.step.core.data.filters.NormalizerFilter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.WhitespaceTokenizer;
 
-import com.tyndalehouse.step.core.data.filters.NormalizerFilter;
+import java.io.Reader;
 
 /**
  * Analyzer to remove the accents and other marks that make it difficult for a user to search

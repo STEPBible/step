@@ -1,13 +1,11 @@
 package com.tyndalehouse.step.core.guice.providers;
 
-import java.util.Properties;
+import com.tyndalehouse.step.core.data.DirectoryInstaller;
+import org.crosswire.jsword.book.install.Installer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.crosswire.jsword.book.install.Installer;
-
-import com.tyndalehouse.step.core.data.DirectoryInstaller;
+import java.util.Properties;
 
 /**
  * Provides only offline installers

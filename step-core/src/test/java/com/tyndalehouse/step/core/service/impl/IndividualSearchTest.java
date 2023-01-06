@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * tests for {@link IndividualSearch}

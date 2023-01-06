@@ -1,11 +1,10 @@
 package com.tyndalehouse.step.jsp;
 
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.models.ClientSession;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ResourceBundle;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page.

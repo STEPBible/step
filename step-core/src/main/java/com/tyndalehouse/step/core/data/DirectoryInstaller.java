@@ -1,22 +1,14 @@
 package com.tyndalehouse.step.core.data;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-
 import org.crosswire.common.progress.Progress;
 import org.crosswire.common.util.IOUtil;
 import org.crosswire.common.util.NetUtil;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.sword.AbstractSwordInstaller;
+
+import java.io.*;
+import java.net.URI;
 
 /**
  * Installs packages from a directory

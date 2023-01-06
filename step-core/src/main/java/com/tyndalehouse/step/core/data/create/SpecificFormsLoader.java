@@ -1,16 +1,15 @@
 package com.tyndalehouse.step.core.data.create;
 
-import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
-import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
+import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 
 /**
  * Loads up all lexical forms

@@ -1,9 +1,9 @@
 package com.tyndalehouse.step.models.timeline.simile;
 
-import java.util.List;
-
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
+
+import java.util.List;
 
 /**
  * This is a wrapper around the input expected by the simile timeline

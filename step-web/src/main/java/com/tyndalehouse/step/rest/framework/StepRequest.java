@@ -1,16 +1,14 @@
 package com.tyndalehouse.step.rest.framework;
 
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
  * A simple class that hold request information, provides various cache keys

@@ -2,17 +2,11 @@ package com.tyndalehouse.step.guice;
 
 import com.tyndalehouse.step.core.utils.StringUtils;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-
+import javax.inject.Singleton;
+import javax.servlet.*;
 import java.io.IOException;
 
-import javax.inject.Singleton;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
  * Intercepts and works out whether JSword has been installed with modules...

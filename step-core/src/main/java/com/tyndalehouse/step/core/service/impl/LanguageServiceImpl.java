@@ -1,29 +1,18 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils.capitaliseFirstLetter;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.Language;
 import com.tyndalehouse.step.core.service.LanguageService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.util.*;
+
+import static com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils.capitaliseFirstLetter;
 
 /**
  * A simple service that returns all the languages that are available

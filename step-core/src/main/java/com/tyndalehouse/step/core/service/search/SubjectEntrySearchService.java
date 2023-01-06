@@ -1,9 +1,5 @@
 package com.tyndalehouse.step.core.service.search;
 
-import java.util.List;
-
-import com.tyndalehouse.step.core.models.OsisWrapper;
-
 /**
  * Searches for a specific subject
  */

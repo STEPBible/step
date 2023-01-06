@@ -1,21 +1,17 @@
 package com.tyndalehouse.step.core.service.impl;
-import java.util.*;
-import java.util.regex.Pattern;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.stats.ScopeType;
-import com.tyndalehouse.step.core.models.stats.StatType;
 import com.tyndalehouse.step.core.models.search.ExpandableSubjectHeadingEntry;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.models.stats.PassageStat;
+import com.tyndalehouse.step.core.models.stats.ScopeType;
+import com.tyndalehouse.step.core.models.stats.StatType;
 import com.tyndalehouse.step.core.service.AnalysisService;
+import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.LexiconDefinitionService;
 import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
@@ -24,7 +20,11 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.Verse;
-import com.tyndalehouse.step.core.service.BibleInformationService;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * A service able to retrieve various kinds of statistics, delegates to {@link JSwordAnalysisServiceImpl} for

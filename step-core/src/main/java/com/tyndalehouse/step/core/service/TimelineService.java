@@ -1,10 +1,9 @@
 package com.tyndalehouse.step.core.service;
 
-import org.joda.time.LocalDateTime;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
+import org.joda.time.LocalDateTime;
 
 /**
  * The timeline service gives access to all the data relating to the timeline the events, the configuration,

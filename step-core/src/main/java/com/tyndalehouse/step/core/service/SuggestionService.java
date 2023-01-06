@@ -1,9 +1,7 @@
 package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
 import com.tyndalehouse.step.core.models.SuggestionsSummary;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
-import com.tyndalehouse.step.core.service.impl.SearchType;
 
 /**
  * The suggestion service will provide two sets of results.

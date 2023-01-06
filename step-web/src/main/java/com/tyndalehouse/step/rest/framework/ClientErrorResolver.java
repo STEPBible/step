@@ -1,12 +1,12 @@
 package com.tyndalehouse.step.rest.framework;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.exceptions.RequiresLoginException;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.models.ClientOperation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Resolves errors based on the type of exception thrown

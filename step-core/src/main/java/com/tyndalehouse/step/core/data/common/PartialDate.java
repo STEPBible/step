@@ -1,12 +1,11 @@
 package com.tyndalehouse.step.core.data.common;
 
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import org.joda.time.LocalDateTime;
+
 import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static java.lang.Integer.parseInt;
-
-import org.joda.time.LocalDateTime;
-
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
  * This class is the way dates are represented in the databased and they should be parsed back into this

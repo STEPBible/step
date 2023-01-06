@@ -1,29 +1,25 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
+import com.tyndalehouse.step.core.exceptions.ValidationException;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
+import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.tyndalehouse.step.core.exceptions.ValidationException;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * tests the bible controller

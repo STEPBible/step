@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.rest.framework;
 
-import java.util.*;
-
 import org.codehaus.jackson.annotate.JsonAnyGetter;
+
+import java.util.*;
 
 /**
  * This wraps around a ResourceBundle, to be able to serialize as JSON

@@ -1,14 +1,7 @@
 package com.tyndalehouse.step.core.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
+import com.tyndalehouse.step.core.utils.TestUtils;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
@@ -20,8 +13,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
-import com.tyndalehouse.step.core.utils.TestUtils;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Test installations from a directory

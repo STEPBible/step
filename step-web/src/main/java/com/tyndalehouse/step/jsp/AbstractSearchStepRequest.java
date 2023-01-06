@@ -1,13 +1,12 @@
 package com.tyndalehouse.step.jsp;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.utils.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * The Class AbstractSearchStepRequest.

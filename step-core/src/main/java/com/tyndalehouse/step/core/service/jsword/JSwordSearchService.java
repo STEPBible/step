@@ -1,11 +1,10 @@
 package com.tyndalehouse.step.core.service.jsword;
 
-import org.apache.lucene.search.IndexSearcher;
-import org.crosswire.jsword.passage.Key;
-
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.crosswire.jsword.passage.Key;
 
 /**
  * Searches across jsword modules

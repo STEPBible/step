@@ -1,12 +1,12 @@
 package com.tyndalehouse.step.core.utils;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map.Entry;
 import java.util.Properties;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
 
 /**
  * A colletion of utilities to read property files

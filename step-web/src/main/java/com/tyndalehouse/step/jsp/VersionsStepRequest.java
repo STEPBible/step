@@ -1,22 +1,15 @@
 package com.tyndalehouse.step.jsp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
+import com.google.inject.Injector;
+import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.common.util.Language;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.Books;
 
-import com.google.inject.Injector;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.service.helpers.VersionResolver;
-import com.tyndalehouse.step.core.utils.StringUtils;
+import java.util.*;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page

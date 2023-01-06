@@ -15,10 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.StringUtils.*;
 
 /**
  * This implementation will support multiple versions, so each of the methods is keyed by version requested.

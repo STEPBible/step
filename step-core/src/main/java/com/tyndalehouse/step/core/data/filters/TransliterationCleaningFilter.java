@@ -1,10 +1,10 @@
 package com.tyndalehouse.step.core.data.filters;
 
-import java.io.IOException;
-
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
+
+import java.io.IOException;
 
 /**
  * Cleans up transliterations by removing any extra character

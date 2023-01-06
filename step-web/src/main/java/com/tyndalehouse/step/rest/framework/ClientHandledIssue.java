@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.rest.framework;
 
-import java.io.Serializable;
-
 import com.tyndalehouse.step.models.ClientOperation;
+
+import java.io.Serializable;
 
 /**
  * A client error, contains a message and an optional redirection operation

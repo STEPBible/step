@@ -1,11 +1,12 @@
 package com.tyndalehouse.step.core.utils;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
-
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.exceptions.ValidationException;
+
 import java.util.Locale;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 
 /**
  * Checks various assertions and throws the exception: {@link ValidationException}

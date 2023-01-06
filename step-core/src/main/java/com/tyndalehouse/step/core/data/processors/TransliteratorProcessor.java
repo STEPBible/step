@@ -1,14 +1,12 @@
 package com.tyndalehouse.step.core.data.processors;
 
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptForTransliterationForIndexing;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.transliterate;
-
-import org.apache.lucene.document.Document;
-
 import com.tyndalehouse.step.core.data.EntityConfiguration;
 import com.tyndalehouse.step.core.data.create.PostProcessor;
 import com.tyndalehouse.step.core.utils.language.HebrewUtils;
-import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Document;
+
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptForTransliterationForIndexing;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.transliterate;
 
 /**
  * Adds generated fields to the entity document - affects both "definition" and "specificForm"

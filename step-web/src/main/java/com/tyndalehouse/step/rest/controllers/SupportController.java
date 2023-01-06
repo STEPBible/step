@@ -4,8 +4,6 @@ package com.tyndalehouse.step.rest.controllers;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.SupportRequestService;
 import com.yammer.metrics.annotation.Timed;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

@@ -10,14 +10,8 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.guice.StepCoreModule;
 import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.rest.controllers.ImageController;
-import com.tyndalehouse.step.rest.controllers.IndexRedirect;
-import com.tyndalehouse.step.rest.controllers.InternationalJsonController;
-import com.tyndalehouse.step.rest.controllers.SearchPageController;
-import com.tyndalehouse.step.rest.controllers.SetupPageController;
-import com.tyndalehouse.step.rest.controllers.SiteMapController;
+import com.tyndalehouse.step.rest.controllers.*;
 import com.tyndalehouse.step.rest.framework.FrontController;
-
 import org.crosswire.common.util.CWProject;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;

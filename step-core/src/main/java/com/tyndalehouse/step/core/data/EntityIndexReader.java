@@ -1,20 +1,14 @@
 package com.tyndalehouse.step.core.data;
 
-import java.io.Closeable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.queryParser.QueryParser.Operator;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TopFieldCollector;
+import org.apache.lucene.search.*;
+
+import java.io.Closeable;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Interface to read an index

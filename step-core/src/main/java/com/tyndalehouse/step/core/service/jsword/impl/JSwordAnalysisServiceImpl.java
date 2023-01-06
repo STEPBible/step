@@ -1,12 +1,10 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.stats.PassageStat;
 import com.tyndalehouse.step.core.models.stats.ScopeType;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
+import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
@@ -16,13 +14,13 @@ import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.passage.*;
-
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.models.stats.PassageStat;
-import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
 import org.crosswire.jsword.versification.Versification;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.*;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 /**
  * The Class JSwordAnalysisServiceImpl.

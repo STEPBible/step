@@ -1,7 +1,6 @@
 package com.tyndalehouse.step.core.models;
 
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
 package com.tyndalehouse.step.core.utils;
 
+import org.joda.time.LocalDateTime;
+
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static java.lang.Long.parseLong;
 import static org.joda.time.DateTime.parse;
 import static org.joda.time.DateTimeUtils.getInstantMillis;
-
-import org.joda.time.LocalDateTime;
 
 /**
  * Utilities to convert from one form to another

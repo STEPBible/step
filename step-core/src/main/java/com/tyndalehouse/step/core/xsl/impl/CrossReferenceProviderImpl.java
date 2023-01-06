@@ -1,13 +1,12 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.inject.Inject;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
+
+import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Provides extra cross-references to be displayed next to the passage

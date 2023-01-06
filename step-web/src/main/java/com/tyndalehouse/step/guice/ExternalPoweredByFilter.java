@@ -1,14 +1,8 @@
 package com.tyndalehouse.step.guice;
 
-import java.io.IOException;
-
 import javax.inject.Singleton;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
+import java.io.IOException;
 
 /**
  * Adds a filter, and restricts the types of calls allowed.

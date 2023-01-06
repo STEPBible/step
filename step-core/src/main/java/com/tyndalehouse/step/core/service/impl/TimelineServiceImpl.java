@@ -1,16 +1,13 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.utils.ConversionUtils.epochMinutesStringToLocalDateTime;
-import static com.tyndalehouse.step.core.utils.ConversionUtils.localDateTimeToEpochMinutes;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static org.apache.lucene.search.NumericRangeQuery.newLongRange;
-
-import java.util.Arrays;
-import java.util.Comparator;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
+import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
+import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.MatchAllDocsQuery;
@@ -19,15 +16,15 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
-import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.service.TimelineService;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.utils.StringUtils;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.Comparator;
+
+import static com.tyndalehouse.step.core.utils.ConversionUtils.epochMinutesStringToLocalDateTime;
+import static com.tyndalehouse.step.core.utils.ConversionUtils.localDateTimeToEpochMinutes;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static org.apache.lucene.search.NumericRangeQuery.newLongRange;
 
 /**
  * The implementation of the timeline service, based on JDBC and ORM Lite to access the database.

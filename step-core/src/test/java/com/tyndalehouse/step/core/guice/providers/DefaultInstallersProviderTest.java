@@ -1,10 +1,10 @@
 package com.tyndalehouse.step.core.guice.providers;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.util.Properties;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test properties are loaded properly and construct a installer capable of downloading books off the internet

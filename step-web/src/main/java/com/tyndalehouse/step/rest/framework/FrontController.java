@@ -18,8 +18,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.String.format;
-
 /**
  * The FrontController acts like a minimal REST server. The paths are resolved as follows:
  * <p/>

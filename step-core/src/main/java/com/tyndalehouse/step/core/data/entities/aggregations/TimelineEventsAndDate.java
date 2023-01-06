@@ -1,10 +1,9 @@
 package com.tyndalehouse.step.core.data.entities.aggregations;
 
-import java.io.Serializable;
-
+import com.tyndalehouse.step.core.data.EntityDoc;
 import org.joda.time.LocalDateTime;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
+import java.io.Serializable;
 
 /**
  * A simple wrapper around a timeline set of events and a central date

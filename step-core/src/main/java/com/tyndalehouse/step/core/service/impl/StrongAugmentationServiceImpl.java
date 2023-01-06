@@ -1,11 +1,14 @@
 package com.tyndalehouse.step.core.service.impl;
 
+import com.tyndalehouse.step.core.data.create.ModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.utils.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
@@ -13,14 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.tyndalehouse.step.core.data.create.ModuleLoader;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.crosswire.jsword.passage.*;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;

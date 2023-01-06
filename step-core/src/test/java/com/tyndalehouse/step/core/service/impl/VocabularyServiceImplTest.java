@@ -1,12 +1,11 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-
+import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import org.junit.Test;
 
-import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests {@link VocabularyServiceImpl}

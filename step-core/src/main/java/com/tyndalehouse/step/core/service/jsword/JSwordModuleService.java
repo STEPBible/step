@@ -1,11 +1,11 @@
 package com.tyndalehouse.step.core.service.jsword;
 
-import java.util.List;
-
 import com.tyndalehouse.step.core.models.BibleInstaller;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.install.Installer;
+
+import java.util.List;
 
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service

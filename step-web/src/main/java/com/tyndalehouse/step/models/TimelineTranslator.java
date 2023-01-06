@@ -1,10 +1,9 @@
 package com.tyndalehouse.step.models;
 
-import org.joda.time.LocalDateTime;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 import com.tyndalehouse.step.models.timeline.simile.SimileEvent;
+import org.joda.time.LocalDateTime;
 
 /**
  * A translator is able to convert timeline data into a form that is acceptable by the client

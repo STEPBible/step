@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.models;
 
-import java.util.List;
-
 import com.tyndalehouse.step.core.models.BibleVersion;
+
+import java.util.List;
 
 /**
  * A list of modules returned to the user, with internationalized information

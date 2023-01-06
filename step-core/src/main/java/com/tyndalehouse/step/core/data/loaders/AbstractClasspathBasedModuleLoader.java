@@ -1,17 +1,16 @@
 package com.tyndalehouse.step.core.data.loaders;
 
-import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
-
-import java.io.*;
-import java.nio.charset.Charset;
-
+import com.tyndalehouse.step.core.data.create.Loader;
+import com.tyndalehouse.step.core.data.create.ModuleLoader;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.create.Loader;
-import com.tyndalehouse.step.core.data.create.ModuleLoader;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import java.io.*;
+import java.nio.charset.Charset;
+
+import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 
 /**
  * Loads modules straight from a CSV file to a database form

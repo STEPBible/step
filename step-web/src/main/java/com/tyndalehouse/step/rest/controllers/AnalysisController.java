@@ -1,13 +1,12 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import javax.inject.Inject;
-
+import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.models.stats.ScopeType;
 import com.tyndalehouse.step.core.models.stats.StatType;
-import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.service.AnalysisService;
 import com.yammer.metrics.annotation.Timed;
 
+import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 
 /**

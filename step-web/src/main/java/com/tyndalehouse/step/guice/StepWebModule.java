@@ -10,8 +10,6 @@ import com.tyndalehouse.step.models.timeline.simile.SimileTimelineTranslatorImpl
 import com.tyndalehouse.step.rest.framework.ObjectMapperProvider;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import javax.inject.Singleton;
-
 /**
  * This module serves to inject data that is specific to the servlet layer. The purpose of it is therefore to abstract
  * away the identity of it being a java web servlet serving the page.

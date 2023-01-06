@@ -1,11 +1,10 @@
 package com.tyndalehouse.step.core.service.jsword;
 
-import java.util.List;
-
 import com.tyndalehouse.step.core.models.*;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.Passage;
+
+import java.util.List;
 
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service

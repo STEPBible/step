@@ -1,12 +1,11 @@
 package com.tyndalehouse.step.core.data.common;
 
-import static org.junit.Assert.assertEquals;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import org.junit.Test;
 
 import java.util.GregorianCalendar;
 
-import org.junit.Test;
-
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Checks different types of parsing functionality for parsing dates

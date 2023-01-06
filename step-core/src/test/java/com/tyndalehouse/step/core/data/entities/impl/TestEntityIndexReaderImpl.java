@@ -1,13 +1,12 @@
 package com.tyndalehouse.step.core.data.entities.impl;
 
-import java.io.IOException;
-
+import com.tyndalehouse.step.core.data.EntityConfiguration;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityConfiguration;
+import java.io.IOException;
 
 /**
  * Memory only lucene indexes...

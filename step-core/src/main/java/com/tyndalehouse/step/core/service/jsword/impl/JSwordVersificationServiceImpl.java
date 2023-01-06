@@ -1,10 +1,10 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
@@ -13,9 +13,8 @@ import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
 import org.crosswire.jsword.versification.system.Versifications;
 
-import com.tyndalehouse.step.core.exceptions.TranslatedException;
-import com.tyndalehouse.step.core.service.helpers.VersionResolver;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Deals with the versification

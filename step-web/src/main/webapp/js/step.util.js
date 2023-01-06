@@ -1755,7 +1755,8 @@ step.util = {
     $("div.modal-backdrop.in").remove();
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
-		var modalHTML = '<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    var modalHTML =
+      '<div id="passageSelectionModal" dir="' + (step.state.isLtR() ? "ltr" : "rtl") + '" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
 				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<div class="modal-header">' +
@@ -1868,7 +1869,7 @@ step.util = {
 		}
         var element = document.getElementById('searchSelectionModal');
         if (element) element.parentNode.removeChild(element);
-        $(_.template('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+        $(_.template('<div id="searchSelectionModal" dir="' + (step.state.isLtR() ? "ltr" : "rtl") + '" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog"' + widthCSS + '>' +
 				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<script>' +
@@ -2249,7 +2250,8 @@ step.util = {
 		}
         var darkModeEnabled = step.util.isDarkMode();
 
-		var modalHTML = '<div id="fontSettings" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    	var modalHTML =
+      		'<div id="fontSettings" class="modal selectModal" dir="' + (step.state.isLtR() ? "ltr" : "rtl") + '" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog" style="width:350px">' +
 				'<div class="modal-content stepModalFgBg">';
 		if (colorReady) modalHTML +=

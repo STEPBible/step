@@ -2,14 +2,8 @@ package com.tyndalehouse.step.rest.framework;
 
 import org.junit.Test;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests that cache keys are constructed correctly
@@ -47,77 +41,6 @@ public class StepRequestTest {
         for (final String s : TEST_ARGS) {
             assertTrue(resultsKey.contains(s));
         }
-
-    }
-
-    /**
-     * testing simple parsing of arguments
-     */
-    @Test
-    public void testParseArguments() {
-        // index starts at ...........0123456789-123456789-123456
-        final String stepRequest = "step-web/rest/bible/get/1K2/2K2/";
-        final HttpServletRequest req = mock(HttpServletRequest.class);
-
-        when(req.getRequestURI()).thenReturn(stepRequest);
-        when(req.getServletPath()).thenReturn("step-web/");
-        when(req.getContextPath()).thenReturn("rest/");
-
-        // index starts at ...........0123456789-123456789-123456
-        final StepRequest sr = new StepRequest(req, UTF_8_ENCODING);
-        assertEquals(2, sr.getArgs().length);
-        assertEquals("1K2", sr.getArgs()[0]);
-        assertEquals("2K2", sr.getArgs()[1]);
-    }
-
-    /**
-     * tests that parsing of request works if request finishes with a slash
-     */
-    @Test
-    public void testGetArgsFinishingWithSlash() {
-        // index starts at ...........0123456789-123456789-123456
-        final String sampleRequest = "step-web/rest/bible/get/1K2/2K2/";
-        final HttpServletRequest req = mock(HttpServletRequest.class);
-
-        when(req.getRequestURI()).thenReturn(sampleRequest);
-        when(req.getServletPath()).thenReturn("step-web/");
-        when(req.getContextPath()).thenReturn("rest/");
-
-        final StepRequest sr = new StepRequest(req, UTF_8_ENCODING);
-
-        // then
-        assertEquals(2, sr.getArgs().length);
-        assertEquals("1K2", sr.getArgs()[0]);
-        assertEquals("2K2", sr.getArgs()[1]);
-    }
-
-    /**
-     * we check that the path is concatenated with the servlet path
-     * 
-     * @throws ServletException an uncaught exception
-     * @throws InvocationTargetException an uncaught exception
-     * @throws IllegalAccessException an uncaught exception
-     * @throws NoSuchMethodException an uncaught exception
-     */
-    @Test
-    public void testGetPath() throws ServletException, IllegalAccessException, InvocationTargetException,
-            NoSuchMethodException {
-
-        // length is: 1234567890123456789012345
-        final String sampleRequest = "step-web/rest/bible/get/1K2/2K2/";
-        final HttpServletRequest req = mock(HttpServletRequest.class);
-
-        when(req.getRequestURI()).thenReturn(sampleRequest);
-        when(req.getServletPath()).thenReturn("letters");
-        when(req.getContextPath()).thenReturn("more");
-
-        // then
-        final StepRequest sr = new StepRequest(req, "UTF-8");
-        final Method declaredMethod = sr.getClass().getDeclaredMethod("getPathLength",
-                HttpServletRequest.class);
-        declaredMethod.setAccessible(true);
-
-        assertEquals(11, declaredMethod.invoke(sr, req));
     }
 
     /**

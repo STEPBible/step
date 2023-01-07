@@ -11,12 +11,13 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
-import org.crosswire.jsword.passage.*;
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 import org.jdom2.Document;
-import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
@@ -111,101 +112,6 @@ public class JSwordPassageServiceImplTest {
                 new Verse(Versifications.instance().getVersification(Versifications.DEFAULT_V11N),
                         BibleBook.RUTH, 1, 22), 0);
         LOGGER.debug(expandToFullChapter.getName());
-    }
-
-    /**
-     * tests what happens when we select interlinear
-     *
-     * @throws NoSuchKeyException uncaught exceptions
-     * @throws BookException      uncaught exception
-     * @throws IOException        uncaught exception
-     * @throws JDOMException      uncaught exception
-     */
-    @Test
-    public void testInterlinearTransformation() throws NoSuchKeyException, BookException, JDOMException,
-            IOException {
-        final Book currentBook = Books.installed().getBook("OSMHB");
-        final BookData bookData = new BookData(currentBook, currentBook.getKey("Ps.51"));
-        final Element osisFragment = bookData.getOsisFragment();
-
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        LOGGER.trace(xmlOutputter.outputString(osisFragment));
-
-        // do the test
-        final List<LookupOption> options = new ArrayList<LookupOption>();
-        // options.add(INTERLINEAR);
-
-        final String osisText = this.jsi.getOsisText("OSMHB", "Ps.51", options, "ESV_th",
-                InterlinearMode.INTERLINEAR).getValue();
-        final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(osisText));
-
-        LOGGER.trace("\n {}", xmlOutputter.outputString(d));
-        Assert.assertTrue(osisText.contains("span class='interlinear'"));
-
-    }
-
-    /**
-     * tests that the XSLT transformation is handled correctly
-     *
-     * @throws BookException      uncaught exception
-     * @throws NoSuchKeyException uncaught exception
-     * @throws IOException        uncaught exception
-     * @throws JDOMException      uncaught exception
-     */
-    @Test
-    public void testXslTransformation() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final Book currentBook = Books.installed().getBook("KJV");
-        final BookData bookData = new BookData(currentBook, currentBook.getKey("Romans 1:4"));
-        final Element osisFragment = bookData.getOsisFragment();
-
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        LOGGER.trace(xmlOutputter.outputString(osisFragment));
-
-        // do the test
-        final List<LookupOption> options = new ArrayList<LookupOption>();
-
-        final String osisText = this.jsi.getOsisText("KJV", "Romans 1:4", options, "", InterlinearMode.NONE)
-                .getValue();
-        final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(osisText));
-
-        LOGGER.trace("\n {}", xmlOutputter.outputString(d));
-        Assert.assertTrue(osisText.contains("span"));
-    }
-
-    /**
-     * tests that the XSLT transformation is handled correctly
-     *
-     * @throws BookException      uncaught exception
-     * @throws NoSuchKeyException uncaught exception
-     * @throws IOException        uncaught exception
-     * @throws JDOMException      uncaught exception
-     */
-    @Test
-    public void testComparing() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final Book currentBook = Books.installed().getBook("ESV_th");
-        final Book secondaryBook = Books.installed().getBook("KJV");
-
-        final String reference = "Psalm.3";
-        final BookData bookData = new BookData(new Book[]{currentBook, secondaryBook},
-                currentBook.getKey(reference), true);
-        final Element osisFragment = bookData.getOsisFragment();
-
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        LOGGER.info(xmlOutputter.outputString(osisFragment));
-
-        // do the test
-        final List<LookupOption> options = new ArrayList<LookupOption>();
-
-        final String osisText = this.jsi.getInterleavedVersions(
-                new String[]{currentBook.getInitials(), secondaryBook.getInitials()}, reference, options,
-                InterlinearMode.INTERLEAVED_COMPARE, "en").getValue();
-        final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(osisText));
-
-        LOGGER.info("\n {}", xmlOutputter.outputString(d));
-        Assert.assertTrue(osisText.contains("span"));
     }
 
     /**

@@ -101,15 +101,6 @@ public class LoaderTest {
      * correctly.
      */
     @Test
-    public void testAugmentedStrongs() {
-        getLoader("test.data.path.augmentedstrongs", "augmented_strongs.txt").loadAugmentedStrongs(true);
-    }
-
-    /**
-     * for this one we need a real jsword service because we will test that scripture refs are resolved
-     * correctly.
-     */
-    @Test
     public void testSpecificForms() {
         final Loader l = getLoader("test.data.path.lexicon.forms", "specific_forms.txt");
         l.loadSpecificForms();

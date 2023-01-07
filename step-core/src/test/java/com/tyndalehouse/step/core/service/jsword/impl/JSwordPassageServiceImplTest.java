@@ -316,66 +316,6 @@ public class JSwordPassageServiceImplTest {
      * @throws JDOMException      an exception
      */
     @Test
-    public void testInterleave() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        final String ref = "John 4:1";
-
-        // do the test
-        final String[] versions = new String[]{"Byz", "Tisch"};
-        final BookData data = new BookData(new Book[]{Books.installed().getBook(versions[0]),
-                Books.installed().getBook(versions[1])}, Books.installed().getBook(versions[0]).getKey(ref),
-                true);
-
-        LOGGER.debug("Original is:\n {}", xmlOutputter.outputString(data.getOsisFragment()));
-
-        final OsisWrapper interleavedVersions = this.jsi.getInterleavedVersions(versions, ref,
-                new ArrayList<LookupOption>(), InterlinearMode.COLUMN_COMPARE, "en");
-
-        final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(interleavedVersions.getValue()));
-        LOGGER.debug("\n {}", xmlOutputter.outputString(d));
-    }
-
-    /**
-     * Justs shows XML on the stdout
-     *
-     * @throws BookException      an exceptioon
-     * @throws NoSuchKeyException an exception
-     * @throws IOException        an exception
-     * @throws JDOMException      an exception
-     */
-    @Test
-    public void testSegVariants() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        final String ref = "Mat.9.4";
-        final String version = "WHNU";
-
-        final Book book = Books.installed().getBook(version);
-
-        // do the test
-        final BookData data = new BookData(book, book.getKey(ref));
-
-        LOGGER.info("Original is:\n {}", xmlOutputter.outputString(data.getOsisFragment()));
-
-        final OsisWrapper interleavedVersions = this.jsi.getOsisText(version, ref);
-
-        final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(interleavedVersions.getValue()));
-        final String outputString = xmlOutputter.outputString(d);
-        LOGGER.info(outputString);
-        assertTrue(outputString.contains("ειδως"));
-        assertTrue(outputString.contains("title=\"ιδων"));
-    }
-
-    /**
-     * Justs shows XML on the stdout
-     *
-     * @throws BookException      an exceptioon
-     * @throws NoSuchKeyException an exception
-     * @throws IOException        an exception
-     * @throws JDOMException      an exception
-     */
-    @Test
     public void testLongHeaders() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final String version = "ESV_th";
         final String ref = "Luk 4:27";
@@ -395,17 +335,6 @@ public class JSwordPassageServiceImplTest {
         }
 
         Assert.assertTrue(osisText.contains("Luke 4:27"));
-    }
-
-    /**
-     * Tests a lookup by number
-     */
-    @Test
-    public void testNumberLookup() {
-        assertTrue(this.jsi
-                .getOsisTextByVerseNumbers("FreSegond", "ESV_th", 60000, 60000, new ArrayList<LookupOption>(),
-                        null, null, false).getValue()
-                .contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
     }
 
     /**

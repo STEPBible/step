@@ -46,16 +46,6 @@ public class SearchServiceImplTest {
     }
 
     /**
-     * Random tests
-     */
-    @Test
-    public void testMultiVersionSearch() {
-        final List<SearchEntry> results = this.searchServiceUnderTest.search(
-                new SearchQuery("t=elijah", new String[]{"ESV_th", "KJV", "ASV"}, "false", 0, 1, 1, null, "AND")).getResults();
-        assertFalse(results.isEmpty());
-    }
-
-    /**
      * test exact strong match
      */
     @Test

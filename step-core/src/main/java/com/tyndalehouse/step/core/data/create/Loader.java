@@ -211,7 +211,9 @@ public class Loader {
 
     public void loadAugmentedStrongs(boolean loadAugmentedFile) {
         LOGGER.debug("Indexing augmented strongs");
-        if (loadAugmentedFile) this.strongAugmentationService.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"), appManager.getStepInstallFile().toString());
+        String strongsFile = this.coreProperties.getProperty("test.data.path.augmentedstrongs");
+        String installFile = appManager.getStepInstallFile().toString();
+        if (loadAugmentedFile) this.strongAugmentationService.readAndLoad(strongsFile, installFile);
         else this.strongAugmentationService.loadFromSerialization(appManager.getStepInstallFile().toString());
     }
 

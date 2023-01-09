@@ -1607,25 +1607,30 @@ step.searchSelect = {
 			}
 			else currentSearch = '|text=' + searchWord;
 		}
-		else if (searchType === STRONG_NUMBER) {
-			var searchWords = searchWord.split(",");
-			currentSearch = '|strong=' + searchWords[0];
-			step.util.putStrongDetails(searchWord[0], displayText);
-			if (searchWords.length > 1) {
-				searchJoinsForMultipleStrongs = "("  + numOfSearches;
-				for (var i = 1; i < searchWords.length; i++) {
-					numOfSearches ++;
-					currentSearch += '|strong=' + searchWords[i];
-					searchJoinsForMultipleStrongs += "o" + numOfSearches;
-					step.util.putStrongDetails(searchWord[i], displayText);
+		else {
+			if (searchType === STRONG_NUMBER) {
+				var searchWords = searchWord.split(",");
+				currentSearch = '|strong=' + searchWords[0];
+				step.util.putStrongDetails(searchWord[0], displayText);
+				if (searchWords.length > 1) {
+					searchJoinsForMultipleStrongs = "("  + numOfSearches;
+					for (var i = 1; i < searchWords.length; i++) {
+						numOfSearches ++;
+						currentSearch += '|strong=' + searchWords[i];
+						searchJoinsForMultipleStrongs += "o" + numOfSearches;
+						step.util.putStrongDetails(searchWord[i], displayText);
+					}
+					searchJoinsForMultipleStrongs += ")";
 				}
-				searchJoinsForMultipleStrongs += ")";
 			}
+			else if (searchType === "syntax_strong") {
+				currentSearch = '|syntax=t=strong:' + searchWord;
+			}
+			else if (typeof searchType !== "undefined") {
+				currentSearch = '|' + searchType + '=' + searchWord;
+			}
+			step.util.localStorageSetItem("advanced_search", true);
 		}
-		else if (searchType === "syntax_strong") {
-			currentSearch = '|syntax=t=strong:' + searchWord;
-		}
-		else if (typeof searchType !== "undefined") currentSearch = '|' + searchType + '=' + searchWord;
 		var joins = "";
 		if (previousJoinString !== "") {
 			joins = "|srchJoin="

@@ -381,7 +381,7 @@ var SidebarView = Backbone.View.extend({
         }));
         panel.append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[4] + "'>" + detailLex[2] + "</span>"));
         panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;</span>'));
-        panel.append($("<a title='click to show all occurences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
+        panel.append($("<a title='click to show all occurrences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
               append('<span class="strongCount detailLex" style="unicode-bidi:normal;display:none">~' + sprintf(__s.stats_occurs, frequency) + '</span>').
               click(function () {
             var strongNumber = $(this).data("strongNumber");
@@ -392,7 +392,7 @@ var SidebarView = Backbone.View.extend({
         }));
     },
 
-    _composeDescriptionOfOccurences: function(stepType) {
+    _composeDescriptionOfOccurrences: function(stepType) {
         if ((typeof stepType !== "string") || (stepType === "") ||
             (stepType === "word") || (stepType === "verb") || (stepType === "name") ||
             ((step.userLanguage !== "English") &                                     // If user language is not English, but it is using the English message,
@@ -406,7 +406,7 @@ var SidebarView = Backbone.View.extend({
     _appendLexiconSearch: function (panel, mainWord, detailLex) {
         var total = mainWord.count;
         var allStrongs = [];
-        panel.append("<br />").append(this._composeDescriptionOfOccurences(mainWord._step_Type));
+        panel.append("<br />").append(this._composeDescriptionOfOccurrences(mainWord._step_Type));
         if ((detailLex) && (detailLex.length > 0)) {
 			allStrongs.push(mainWord.strongNumber);
 			for (var i = 0; i < detailLex.length; i++) {

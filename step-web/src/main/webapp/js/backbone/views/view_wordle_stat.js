@@ -169,13 +169,13 @@ var ViewLexiconWordle = Backbone.View.extend({
             scope = scopeTypes[0];
         }
 
-        var mostOccurences = (sortType == "SORT_BY_REVERSED_FREQUENCY") ? false : true;
+        var mostOccurrences = (sortType == "SORT_BY_REVERSED_FREQUENCY") ? false : true;
         this.statsContainer.empty();
 
         var lastTime = new Date().getTime();
         //console.log(new Date().getTime(), reference, "Wordle server call");
         var currentUserLang = (step.userLanguageCode) ? step.userLanguageCode.toLowerCase() : "en";
-        $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, (this.isNextChapter), currentUserLang, mostOccurences], function (data) {
+        $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, (this.isNextChapter), currentUserLang, mostOccurrences], function (data) {
             //console.log(new Date().getTime(), "Wordle server data received");
             step.util.trackAnalyticsTime('wordle', 'loaded', new Date().getTime() - new Date().getTime());
             step.util.trackAnalytics('wordle', 'type', statType);

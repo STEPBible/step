@@ -473,7 +473,7 @@ public class VocabInfo implements Serializable {
     }
 
     /**
-     * @return The number of occurences of a particular strong number
+     * @return The number of occurrences of a particular strong number
      */
     public Integer getCount() {
         return count;

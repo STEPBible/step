@@ -37,7 +37,7 @@ public class AnalysisController {
      * @return the combined passage stats
      */
     @Timed(name = "word-cloud", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public CombinedPassageStats analyseStats(final String version, final String reference, final String statType, final String scope, final String considerNextChapter, final String userLanguage, final String mostOccurences) {
-        return this.analysis.getStatsForPassage(version, reference, StatType.valueOf(statType), ScopeType.valueOf(scope), Boolean.parseBoolean(considerNextChapter), userLanguage, Boolean.parseBoolean(mostOccurences));
+    public CombinedPassageStats analyseStats(final String version, final String reference, final String statType, final String scope, final String considerNextChapter, final String userLanguage, final String mostOccurrences) {
+        return this.analysis.getStatsForPassage(version, reference, StatType.valueOf(statType), ScopeType.valueOf(scope), Boolean.parseBoolean(considerNextChapter), userLanguage, Boolean.parseBoolean(mostOccurrences));
     }
 }

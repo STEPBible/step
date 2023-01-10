@@ -12,7 +12,7 @@ public class AnalyzedWord {
     String word;
     Set<String> verses = new HashSet<String>();
     int totalCount;
-    int occurencesInDifferentVerses = 0;
+    int occurrencesInDifferentVerses = 0;
     Map<String, List<Integer>> versesToPositions = new HashMap<String, List<Integer>>();
     Map<String, List<String>> versesToStrongNumbers = new HashMap<String, List<String>>();
 
@@ -29,7 +29,7 @@ public class AnalyzedWord {
     public String toString() {
         return "AnalyzedWord [markedStrongNumber= " + this.markedStrongNumber + ", word=" + this.word
                 + ", verses=" + this.verses.size() + ", totalCount=" + this.totalCount
-                + ", occurencesInDifferentVerses=" + this.occurencesInDifferentVerses + "]";
+                + ", occurrencesInDifferentVerses=" + this.occurrencesInDifferentVerses + "]";
     }
 
 }

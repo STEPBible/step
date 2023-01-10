@@ -166,8 +166,8 @@ public class BibleAnalysis {
         Collections.sort(analyzedStrongs, new Comparator<AnalyzedWord>() {
             @Override
             public int compare(final AnalyzedWord o1, final AnalyzedWord o2) {
-                return o1.occurencesInDifferentVerses < o2.occurencesInDifferentVerses ? -1
-                        : o1.occurencesInDifferentVerses == o2.occurencesInDifferentVerses ? 0 : 1;
+                return o1.occurrencesInDifferentVerses < o2.occurrencesInDifferentVerses ? -1
+                        : o1.occurrencesInDifferentVerses == o2.occurrencesInDifferentVerses ? 0 : 1;
             }
         });
 
@@ -194,7 +194,7 @@ public class BibleAnalysis {
 
         }
         list.add(w.position);
-        analyzedWord.occurencesInDifferentVerses = analyzedWord.verses.size();
+        analyzedWord.occurrencesInDifferentVerses = analyzedWord.verses.size();
     }
 
     private AnalyzedWord processAnalyzedStrong() {
@@ -228,7 +228,7 @@ public class BibleAnalysis {
         // find all words with the exact match, i.e. the same
         boolean found = false;
         for (final AnalyzedWord w : wordsInAllTargetVerses) {
-            if (w.occurencesInDifferentVerses == verses.size()) {
+            if (w.occurrencesInDifferentVerses == verses.size()) {
                 found = true;
 
                 // check if they are the same two verses, if so we have a match of very high confidence
@@ -252,9 +252,9 @@ public class BibleAnalysis {
             e.explanation = explanation;
             e.strongNumber = strong.markedStrongNumber;
             e.sourceWord = strong.word;
-            e.numberVersesMatch = w.occurencesInDifferentVerses;
+            e.numberVersesMatch = w.occurrencesInDifferentVerses;
             e.numExtraVerses = 0;
-            e.numVersesForStrong = w.occurencesInDifferentVerses;
+            e.numVersesForStrong = w.occurrencesInDifferentVerses;
             tv.exactMatches.add(e);
         }
     }
@@ -354,7 +354,7 @@ public class BibleAnalysis {
                 positions.add(w.position);
             }
 
-            a.occurencesInDifferentVerses = a.verses.size();
+            a.occurrencesInDifferentVerses = a.verses.size();
             analysis.analyzedWords.add(a);
             analysis.directLinks.put(a.word, a);
 
@@ -365,8 +365,8 @@ public class BibleAnalysis {
 
             @Override
             public int compare(final AnalyzedWord o1, final AnalyzedWord o2) {
-                return o1.occurencesInDifferentVerses < o2.occurencesInDifferentVerses ? -1
-                        : o1.occurencesInDifferentVerses == o2.occurencesInDifferentVerses ? 0 : 1;
+                return o1.occurrencesInDifferentVerses < o2.occurrencesInDifferentVerses ? -1
+                        : o1.occurrencesInDifferentVerses == o2.occurrencesInDifferentVerses ? 0 : 1;
             }
         });
 

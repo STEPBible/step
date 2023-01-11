@@ -20,7 +20,7 @@ The following tools, technologies, frameworks and libraries are used by the proj
 **Backend:**
 - Apache Tomcat® (Web Server)
 - Apache Tomcat® Embedded (for STEP Desktop)
-- Apache Lucene (for indexing and search)
+- Apache Lucene™ (for indexing and search)
 - Google Guice (for dependency injection)
 - jackson *codehaus* (for processing JSON)
 - junit (for uint test)

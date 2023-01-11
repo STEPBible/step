@@ -39,9 +39,9 @@
         <opencsv.version>2.3</opencsv.version>
 
         <jetty.version>9.3.27.v20190418</jetty.version>
-		<tomcat.version>8.5.47</tomcat.version>
+		<tomcat.version>8.5.61</tomcat.version>
 		<tomcat.secondary.version>8.5.2</tomcat.secondary.version>
-        <xalan.version>2.7.1</xalan.version>
+        <xalan.version>2.7.2</xalan.version>
 
         <yammer-metrics.version>2.2.0</yammer-metrics.version>
 
@@ -51,7 +51,7 @@
 
         <!-- Commons -->
         <commons-beanutils.version>1.8.3</commons-beanutils.version>
-        <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-configuration.version>1.8</commons-configuration.version>
         <commons-httpclient.version>4.3.6</commons-httpclient.version>

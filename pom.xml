@@ -20,7 +20,7 @@
         <junit.parallel>method</junit.parallel>
         <junit.threads>4</junit.threads>
 
-        <junit.version>4.11</junit.version>
+        <junit.version>4.13.1</junit.version>
 
         <!-- jsword dependencies -->
         <jsword.version>1.6.3-SNAPSHOT</jsword.version>
@@ -38,7 +38,7 @@
         <guice-servlet.version>3.0</guice-servlet.version>
         <opencsv.version>2.3</opencsv.version>
 
-        <jetty.version>9.3.27.v20190418</jetty.version>
+        <jetty.version>9.4.34.v20201102</jetty.version>
 		<tomcat.version>8.5.61</tomcat.version>
 		<tomcat.secondary.version>8.5.2</tomcat.secondary.version>
         <xalan.version>2.7.2</xalan.version>
@@ -52,7 +52,7 @@
         <!-- Commons -->
         <commons-beanutils.version>1.8.3</commons-beanutils.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <commons-io.version>2.4</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-configuration.version>1.8</commons-configuration.version>
         <commons-httpclient.version>4.3.6</commons-httpclient.version>
         <httpcomponents-httpclient.version>4.3.2</httpcomponents-httpclient.version>

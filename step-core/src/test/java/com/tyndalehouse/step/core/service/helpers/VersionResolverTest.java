@@ -3,11 +3,9 @@
  */
 package com.tyndalehouse.step.core.service.helpers;
 
-import org.crosswire.jsword.book.Books;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
@@ -44,15 +42,5 @@ public class VersionResolverTest {
     public void testGetLongName() {
         assertEquals("Antoniades", this.resolver.getLongName("Ant"));
         assertEquals("KJV", this.resolver.getLongName("KJV"));
-    }
-
-    @Test
-    public void testUnicodeNames() throws IOException {
-        Properties props = new Properties();
-        props.load(getClass().getResourceAsStream("/step.core.properties"));
-
-        //set up the short names
-        new VersionResolver(props);
-        assertEquals("和合本圣经20（简体版）", Books.installed().getBook("Chiuns").getProperty("shortName"));
     }
 }

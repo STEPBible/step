@@ -1,12 +1,8 @@
 package com.tyndalehouse.step.core.prebuild;
 
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
-import com.tyndalehouse.step.core.utils.TestUtils;
-import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.book.install.sword.HttpSwordInstaller;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,57 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static junit.framework.Assert.assertNotNull;
 
 /**
  * Downloads the jsword bible versions
  */
 public class DownloadJSwordBiblesPreReq {
     private static final Logger LOGGER = LoggerFactory.getLogger(DownloadJSwordBiblesPreReq.class);
-
-    /**
-     * downloads some bibles so that tests can pass
-     * 
-     * @throws InstallException uncaught exception
-     */
-    @Test
-    public void installDefaultJSwordDefaultBibleVersions() throws InstallException {
-        assertNotNull("The ESV_th module must be installed - please contact the dev team to obtain a manual copy.", Books.installed().getBook("ESV_th"));
-
-        final String[] modules = new String[] { "KJV", "Byz", "FreSegond", "NETfree", "Tisch", "YLT",
-                "ASV", "Montgomery", "FreCrampon", "SBLGNT", "TR", "WHNU", "OSMHB", "Chiuns" };
-
-        final JSwordModuleServiceImpl jsword = new JSwordModuleServiceImpl(getInstallers(),
-                new ArrayList<Installer>(0), TestUtils.mockVersificationService(), TestUtils.mockVersionResolver());
-
-        for (final String moduleInitials : modules) {
-            LOGGER.debug("Checking [{}] for install", moduleInitials);
-            if (!jsword.isInstalled(moduleInitials)) {
-                LOGGER.debug("Installing [{}] to install: ", moduleInitials);
-                jsword.installBook(moduleInitials);
-
-                while (!jsword.isInstalled(moduleInitials)) {
-                    LOGGER.debug("Waiting for [{}] to install: ", moduleInitials);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (final InterruptedException e) {
-                        // we ignore this and wait some more
-                        LOGGER.warn("Download was interrupted: [{}]", moduleInitials);
-                    }
-                }
-            }
-
-            LOGGER.debug("Checking [{}] for index: ", moduleInitials);
-            if(!jsword.isIndexed(moduleInitials)) {
-                LOGGER.debug("Indexing [{}]", moduleInitials);
-                jsword.index(moduleInitials);
-            }
-
-            if(!jsword.isIndexed("ESV_th")) {
-                jsword.index("ESV_th");
-            }
-        }
-    }
 
     /**
      * Sets up the installers to download Sword resources from

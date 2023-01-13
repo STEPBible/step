@@ -173,16 +173,6 @@ step.copyText = {
 		}
 		var textToCopy = ""
 		for (var m = 0; m < copyOfPassage.length; m++) {
-			// Iterate over the HTML, changing to uppercase all characters from the
-			// small-caps class until the / character (assumed to be in the </span> tag).
-			// var smallcapsStart = $(copyOfPassage[m]).html().search(/class=\"small-caps\">[^\/]*/);
-			// while (smallcapsStart > -1) {
-			// 	var smallCapsText = $(copyOfPassage[m]).html().substr(smallcapsStart);
-			// 	var smallcapsEnd = smallCapsText.search("/");
-			// 	$(copyOfPassage[m]).html($(copyOfPassage[m]).html().replace(/class=\"small-caps\">[^\/]*/g, smallCapsText.substr(0, smallcapsEnd).toUpperCase()));
-			// 	smallcapsStart = $(copyOfPassage[m]).html().search(/class=\"small-caps\">[^\/]*/);
-			// }
-			//$(copyOfPassage[m]).html().replace(/<br\s*[\/]?>/gi, "\n");
 			var posSearch = $(copyOfPassage[m]).html().search(/<br\s*[\/]?>/);
 			if (posSearch> -1) {
 				console.log("pos: " + posSearch + " " + $(copyOfPassage[m]).html());

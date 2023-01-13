@@ -48,7 +48,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
  
 				'<p>STEPBible provides an alternative to expensive, highly-resourced software, without compromising on accuracy. The website and software carry no advertising and include no content that is charged for. The data is verified and augmented by academically trained scholars and made available for inspection and use under a CC-BY licence at https://stepbible.github.io/STEPBible-Data/.' +
  
-				'<p>STEPBible.org is a UK Charitable Incorporated Organisation #1193952.  See the <a href="https://docs.google.com/document/d/1uwR2u0swmF3w1VG9Q81MCvRSt4yswhxZ/preview" target="_new">Constitution here</a>, and the <a href="https://docs.google.com/document/d/1DqyVGvsWdjV6NLlAnMeP-h3BYufec9ChR2DPl9_qT5g/preview" target="_new">Aims & Structure here</a>.' +
+				'<p>STEPBible.org is a UK Charitable Incorporated Organisation #1193950.  See the <a href="https://docs.google.com/document/d/1uwR2u0swmF3w1VG9Q81MCvRSt4yswhxZ/preview" target="_new">Constitution here</a>, and the <a href="https://docs.google.com/document/d/1DqyVGvsWdjV6NLlAnMeP-h3BYufec9ChR2DPl9_qT5g/preview" target="_new">Aims & Structure here</a>.' +
 				
 				'<h4>Acknowledgements</h4>' +
 				

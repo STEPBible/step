@@ -30,7 +30,7 @@ The following tools, technologies, frameworks and libraries are used by the proj
 - SLF4J (for logging)
 
 # Documentation
-[Developer's Guide](https://stepweb.atlassian.net/wiki/spaces/TYNSTEP/pages)
+[Developer's Guide](https://stepweb.atlassian.net/wiki/spaces/TYNSTEP/pages)<br>
 **STEP Code Documentation**
 - [step.core code documentation](https://github.com/sabdelmalik/STEP-Links/tree/STEP-Link-Pages/step-core-docs/)
 - [step.tools code documentation](https://github.com/sabdelmalik/STEP-Links/tree/STEP-Link-Pages/step-tools-docs/)

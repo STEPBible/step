@@ -29,7 +29,11 @@ The following tools, technologies, frameworks and libraries are used by the proj
 - yammer metrics (for application metrics)
 - SLF4J (for logging)
 
-# [Detailed Documentation](https://stepweb.atlassian.net/wiki/spaces/TYNSTEP/pages)
+# Documentation
+[Developer's Guide](https://stepweb.atlassian.net/wiki/spaces/TYNSTEP/pages)
+**STEP Code Documentation**
+- [step.core code documentation](https://github.com/sabdelmalik/STEP-Links/tree/STEP-Link-Pages/step-core-docs/)
+- [step.tools code documentation](https://github.com/sabdelmalik/STEP-Links/tree/STEP-Link-Pages/step-tools-docs/)
 
 # [Licences](https://www.stepbible.org/ug/copyrights-licences.html)
 

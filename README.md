@@ -32,8 +32,8 @@ The following tools, technologies, frameworks and libraries are used by the proj
 # Documentation
 [**Developer's Guide**](https://stepweb.atlassian.net/wiki/spaces/TYNSTEP/pages)<br><br>
 **STEP Code Documentation**
-- [step.core code documentation](https://github.com/sabdelmalik/STEP-Links/tree/STEP-Link-Pages/step-core-docs/)
-- [step.tools code documentation](https://github.com/sabdelmalik/STEP-Links/tree/STEP-Link-Pages/step-tools-docs/)
+- [step.core code documentation](./docs/step-core-docs/)
+- [step.tools code documentation](./docs/step-tools-docs/)
 
 # [Licences](https://www.stepbible.org/ug/copyrights-licences.html)
 

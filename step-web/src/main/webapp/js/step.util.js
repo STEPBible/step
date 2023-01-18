@@ -399,10 +399,13 @@ step.util = {
      */
     createNewLinkedColumn: function (passageId) {
 		if ($(window).width() < 768) {
-			var msg = "Your screen is not wide enough to open another panel.";
+			if (step.util.localStorageGetItem("already_warned_screen_not_wide_enough") !== "true") {
+				var msg = __s.screen_not_wide_enought;
 			if ((step.touchDevice) && ($(window).height() > 768))
-				msg += " Rotate your screen to horizontal mode if available.";
+					msg += " " + __s.rotate_screen_to_landscape_mode;
 			alert(msg);
+				step.util.localStorageSetItem("already_warned_screen_not_wide_enough", true);
+			}
 		}
         this.activePassageId(passageId);
         this.createNewColumn(true);

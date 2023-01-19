@@ -367,28 +367,6 @@ step.util = {
     findSearchTermsInQuotesAndRemovePrefix: function(syntaxWords) {
 		if (syntaxWords.length != 1) alert("unexpected syntaxWords");
 		if (syntaxWords[0].substr(0, 2) === "t=") syntaxWords[0] = syntaxWords[0].substr(2);
-    //     var indxNeedConcatenate = -1;
-    //     var quoteChar = "";
-    //     for (var j = 0; j < syntaxWords.length; j++) {
-    //         if (indxNeedConcatenate == -1) {
-	// 			if (syntaxWords[j].substr(0, 2) === "t=") syntaxWords[j] = syntaxWords[j].substr(2);
-    //             if ((syntaxWords[j].substr(0, 1) === '"') ||
-    //                 (syntaxWords[j].substr(0, 1) === "'")) {
-    //                 indxNeedConcatenate = j;
-    //                 quoteChar = syntaxWords[j].substr(0, 1);
-    //             }
-    //         }
-    //         else {
-    //             if (syntaxWords[j].substr(-1) == quoteChar) {
-    //                 for (var k = indxNeedConcatenate + 1; k <= j; k++) {
-    //                     syntaxWords[indxNeedConcatenate] += " " + syntaxWords[k];
-    //                     syntaxWords[k] = "";
-    //                 }
-    //                 indxNeedConcatenate = -1;
-    //                 quoteChar = "";
-    //             }
-    //         }
-    //     }
     },
     /**
      * Renumbers the models from 0, so that we can track where things are.
@@ -421,10 +399,13 @@ step.util = {
      */
     createNewLinkedColumn: function (passageId) {
 		if ($(window).width() < 768) {
-			var msg = "Your screen is not wide enough to open another panel.";
+			if (step.util.localStorageGetItem("already_warned_screen_not_wide_enough") !== "true") {
+				var msg = __s.screen_not_wide_enought;
 			if ((step.touchDevice) && ($(window).height() > 768))
-				msg += " Rotate your screen to horizontal mode if available.";
+					msg += " " + __s.rotate_screen_to_landscape_mode;
 			alert(msg);
+				step.util.localStorageSetItem("already_warned_screen_not_wide_enough", true);
+			}
 		}
         this.activePassageId(passageId);
         this.createNewColumn(true);
@@ -827,6 +808,7 @@ step.util = {
 				}
 			}
 			var numOfSearchWords = 0;
+			var skipLastWord = false;
             for (var i = 0; i < searchTokens.length; i++) { // process all the VERSION and REFERENCE first so that the buttons will always show up first at the top of the panel
 				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType; // This is needed for syntax search.  Don't know why.  PT 5/26/2021
 				var itemType = searchTokens[i].itemType;
@@ -859,7 +841,8 @@ step.util = {
 						numOfSearchWords ++;
 						if ((numOfSearchWords > 1) && (searchWords.length > 0)) {
 							if (searchJoins.length >= (numOfSearchWords - 1)) searchWords += ' ' + searchJoins[numOfSearchWords - 2] + ' ';
-							else searchWords += ', ';
+							else if (!skipLastWord) searchWords += ', ';
+							skipLastWord = false;
 						}
                         if (itemType === SYNTAX) {
                             var syntaxWords = searchTokens[i].token.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').split(" ");
@@ -873,10 +856,13 @@ step.util = {
 								if (stepTransliteration === "") stepTransliteration = strongNum;
 								searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
 							}
-							else alert("unknown syntax search 1: " + systaxWords);
+							else alert("unknown syntax search 1: " + syntaxWords);
                         }
-                        else if ((itemType === GREEK_MEANINGS) ||
-							(itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
+                        else if ((itemType === GREEK_MEANINGS) || (itemType === HEBREW_MEANINGS)) {
+							var word2Add = "<i>" + word + "</i>";
+							if (searchWords.indexOf(word2Add) == -1) searchWords += word2Add;
+							else skipLastWord = true;
+						}
 						else if (itemType === SUBJECT_SEARCH) searchWords += word.toUpperCase();
 						else if (itemType === MEANINGS) searchWords += "~" + word;
 						else searchWords += word;
@@ -1715,12 +1701,6 @@ step.util = {
     },
 	correctPassageNotInBible: function (userChoice, queryString) {
 		$("#showLongAlertModal").click();
-		// if (userChoice == 1) {
-		// 	step.util.passageSelectionModal( step.util.activePassageId() );
-		// }
-		// else if (userChoice === 2) {
-		// 	step.util.startPickBible();
-		// }		
 		if (userChoice === 1) {
 			step.router.navigateSearch(queryString, true, true);
 		}
@@ -1764,7 +1744,7 @@ step.util = {
 						'<span class="pull-right">' +
 							step.util.modalCloseBtn("passageSelectionModal") +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
-							'<div id="modalonoffswitch" class="pull-right">' +
+							'<div id="modalonoffswitch" class="pull-right modalonoffswitch">' +
 								'<span id="select_verse_number">&nbsp;<b><%= __s.select_verse_number %></b></span>' +
 								'<div class="onoffswitch2 append pull-right">' +
 									'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectverseonoffswitch" onchange="addSelectVerse()"/>' +
@@ -1892,10 +1872,20 @@ step.util = {
 								'$("#listofprevioussearchs").hide();' +
 								'$("#searchAndOrNot").hide();' +
 								'$("#updateButton").hide();' +
-//								'$("#searchResultssubject").show();' +
-//								'$("#searchResultsmeanings").show();' +
 								'$("#searchResultssubjectWarn").hide();' +
 								'$("#searchResultsmeaningsWarn").hide();' +
+							'}' +
+						'}' +
+						'function advanceMode() {' +
+							'if (document.getElementById("advancesearchonoffswitch").checked) {' +
+								'$("#select_advanced_search").addClass("checked");' +
+								'$(".advanced_search_elements").show();' +
+								'step.util.localStorageSetItem("advanced_search", true);' +
+							'}' +
+							'else {' +
+								'$("#select_advanced_search").removeClass("checked");' +
+								'$(".advanced_search_elements").hide();' +
+								'step.util.localStorageSetItem("advanced_search", false);' +
 							'}' +
 						'}' +
 					'</script>' +
@@ -1904,15 +1894,27 @@ step.util = {
 						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
 							step.util.modalCloseBtn("searchSelectionModal") +
-							'<span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
-							'<span class="dropdown settingsDropdown pull-right">' +
+							'<span class="pull-right advanced_search_elements">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+							'<span class="dropdown settingsDropdown pull-right advanced_search_elements">' +
 								'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Options">' +
 									'<i class="glyphicon glyphicon-cog" style="font-size:14px;background-color:var(--clrBackground);color:var(--clrText)"></i>' +
 								'</a>' +
 								'<div id="srchOptions" class="passageOptionsGroup stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
 							'</span>' +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
-							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
+							'<div id="advancedsearchonoff" class="pull-right modalonoffswitch">' +
+								'<span id="select_advanced_search" style="font-size:16px">&nbsp;<b><%= __s.search_advanced %></b></span>' +
+								'<div class="onoffswitch2 append pull-right">' +
+									'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="advancesearchonoffswitch" onchange="advanceMode()"/>' +
+									'<label class="onoffswitch2-label" for="advancesearchonoffswitch">' +
+									'<span class="onoffswitch2-inner"></span>' +
+									'<span class="onoffswitch2-switch"></span>' +
+									'</label>' +
+								'</div>' +
+							'</div>' +
+
+							'<span class="pull-right advanced_search_elements">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+							'<span id="displayLocForm" class="form-group pull-right hidden-xs advanced_search_elements" style="font-size:16px">' +
 								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +
 								'<select type="text" id="displayLocation" class="stepFgBg">' +
 									'<option value="replace"><%= __s.current_panel %></option>' +
@@ -1924,7 +1926,7 @@ step.util = {
 					'<div id="searchmodalbody" class="modal-body">' +
 						'<div id="searchHdrTable"></div>' +
 						'<br>' +
-						'<div id="previousSearch"></div>' +
+						'<div id="previousSearch" class="advanced_search_elements"></div>' +
 					'</div>' +
 					'<div class="footer">' +
 						'<br>' +
@@ -2420,21 +2422,6 @@ step.util = {
 							'if (!((typeof baseColor === "string") && (baseColor.length == 7) && (baseColor.substr(0,1) === "#"))) baseColor = "#17758F";' +
                             'var darkMode = step.util.isDarkMode();' +
 							'colorVarName = colorName;' +
-							// 'if (step.colorUpdateMode) {' +
-								// 'if (darkMode) {' +
-									// 'if (tinycolor(baseColor).getLuminance() < 0.14) {' +
-										// 'alert("Color selected does not provide enough contrast and can be difficult to read.  Please select a brighter color.");' +
-										// 'return;' +
-									// '}' +
-								// '}' +
-								// 'else {' +
-									// 'if (tinycolor(baseColor).getLuminance() > 0.3) {' +
-										// 'alert("Color selected does not provide enough contrast and can be difficult to read.  Please select a darker color.");' +
-										// 'return;' +
-									// '}' +
-								// '}' +
-							// '}' +
-
 							'var rootVar = document.querySelector(":root");' +
 							'rootVar.style.setProperty("--" + colorVarName, baseColor);' +
 				            'var obj = {};' +

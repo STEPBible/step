@@ -15,7 +15,7 @@ public abstract class AncientMeaningSuggestionServiceImpl extends FieldBasedMean
     private static final String[] ANCIENT_MEANING_FIELDS = new String[]{"stepGloss", "translations"};
 
     public AncientMeaningSuggestionServiceImpl(final boolean isGreek, final EntityManager entityManager) {
-        super(entityManager.getReader("definition"), OriginalWordUtils.getFilter(isGreek), GLOSS_SORT, POPULAR_SORT);
+        super(entityManager.getReader("definition"), OriginalWordUtils.getFilter(isGreek), POPULAR_SORT, GLOSS_SORT);
     }
 
     @Override

@@ -61,8 +61,6 @@ public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncie
         addSearchClause("stepTransliteration", exact, masterQuery, unmarkedUpTranslit);
         addSearchClause("twoLetter", exact, masterQuery, unmarkedUpTranslit);
         addSearchClause("otherTransliteration", exact, masterQuery, unmarkedUpTranslit);
-        addSearchClause("stepGloss", exact, masterQuery, form);
-        addSearchClause("translations", exact, masterQuery, form);
     }
 
     private void addSearchClause(final String fieldName, final boolean exact, final BooleanQuery masterQuery, final String form) {

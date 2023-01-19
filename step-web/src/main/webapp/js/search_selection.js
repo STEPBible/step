@@ -580,7 +580,7 @@ step.searchSelect = {
 			'</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
-			'<span id="previousSearchDropDown" class="dropdown">' +
+			'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +
 				'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
 					'<i class="glyphicon glyphicon-triangle-bottom" style="font-size:14px;background-color:var(--clrBackground);color:var(--clrStrongText)"></i>' +
 				'</a>' +

@@ -254,6 +254,7 @@ step.searchSelect = {
 			});
 		});
 		step.searchSelect.updateAdvancedSearchElements();
+		step.searchSelect._previousSearchesEnteredByUser();
 	},
 	updateAdvancedSearchElements: function() {
 		var advancedSearchInStorage = step.util.localStorageGetItem("advanced_search");
@@ -268,8 +269,7 @@ step.searchSelect = {
 			$("#advancesearchonoffswitch").prop( "checked", false );
 		}
 	},
-
-	_initOptions: function(ev) {
+	_initOptions: function() {
 		var searchOptionsHTML = 
 			'<h5>Show in results</h5>' +
 			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
@@ -309,6 +309,38 @@ step.searchSelect = {
 		}
 		step.util.localStorageSetItem("step.srchOptn" + optionName, ((currentSetting) ? "false" : "true"));
 		if (ev !== null) step.searchSelect._updateDisplayBasedOnOptions();
+		return false;
+	},
+	_previousSearchesEnteredByUser: function() {
+		var previousSearches = step.util.localStorageGetItem("step.previousSearches");
+		if (previousSearches == null) {
+			$("#previousSearchDropDown").hide();
+			return;
+		}
+		var searchWordsHTML = 
+			'<h4 style="font-size:14px">Previous searches</h4>' +
+			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
+		previousSearches = previousSearches.split(";");
+		for (var i = 0; i < previousSearches.length; i ++) {
+			searchWordsHTML += '<li class="stepModalFgBg dropdown-menu passageOptionsGroup" style="display:block;position:initial;opacity:1;border:0px;padding:0px;box-shadow:none">' +
+				'<a class="searchWords" id="searchWords' + i +'">' +
+				previousSearches[i] +
+				'</a>' +
+				'</li><br>';
+		}
+		searchWordsHTML += '</ul>';
+		$("#previousSearchWords").append(searchWordsHTML);
+		$(".searchWords").click(step.searchSelect._displayPreviousSearchWord);
+	},
+	_displayPreviousSearchWord: function(ev) {
+		if ((ev == null) || (typeof ev.target.id !== "string") ||
+			(ev.target.id.substring(0, 11) !== "searchWords")) return;
+		var wordIndex = ev.target.id.substring(11);
+        var previousSearches = step.util.localStorageGetItem("step.previousSearches");
+		previousSearches = previousSearches.split(";");
+		$("textarea#userTextInput").text(previousSearches[wordIndex]);
+		$("#previousSearchDropDown").removeClass("open");
+		step.searchSelect.handleKeyboardInput(ev);
 		return false;
 	},
 	_updateDisplayBasedOnOptions: function() {
@@ -547,7 +579,14 @@ step.searchSelect = {
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
-			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="' + __s.enter_search_word + '"></textarea><br><br>' + // size 16px so the mobile devices will not expand
+			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
+			'<span id="previousSearchDropDown" class="dropdown">' +
+				'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
+					'<i class="glyphicon glyphicon-triangle-bottom" style="font-size:14px;background-color:var(--clrBackground);color:var(--clrStrongText)"></i>' +
+				'</a>' +
+				'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
+			'</span>' +
+			'<br><br>' +
 			'<div id="search_table" class="advanced_search_elements">' +
 			'<table border="1" style="background-color:' + backgroundColor + '">' +
 			'<colgroup>' +
@@ -1127,7 +1166,7 @@ step.searchSelect = {
 		$("#column1width").width("30%");
 		$(".search-type-column").show();
 		$('#warningMessage').text('');
-		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))  userInput =  $('textarea#userTextInput').val();
+		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))  userInput = $('textarea#userTextInput').val();
 		else {
 			userInput = previousUserInput;
 			$('textarea#userTextInput').text(userInput);
@@ -1874,7 +1913,20 @@ step.searchSelect = {
 		return newJoinString;
 	},
 
+	addSearchWords: function(searchWord) {
+		var current = step.util.localStorageGetItem("step.previousSearches");
+		var newSearchLists = searchWord;
+		if (current != null) {
+			current = current.split(";");
+			for (var i = 0; ((i < current.length) && (i < 9)); i++) {
+				newSearchLists += ";" + current[i];
+			}
+		}
+		step.util.localStorageSetItem("step.previousSearches", newSearchLists);
+	},
+
 	goSearch: function(searchType, searchWord, displayText) {
+		step.searchSelect.addSearchWords(step.searchSelect.searchUserInput);
 		var activePassageData = step.util.activePassage().get("searchTokens") || [];
 		var allVersions = "";
 		var range = (this.searchRange === "Gen-Rev") ? "" : "|reference=" + this.searchRange;

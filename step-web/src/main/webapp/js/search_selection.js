@@ -318,7 +318,7 @@ step.searchSelect = {
 			return;
 		}
 		var searchWordsHTML = 
-//			'<h4 style="font-size:14px">Previous searches</h4>' +
+			'<h4 style="font-size:14px">Previous searches</h4>' +
 			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
 		previousSearches = previousSearches.split(";");
 		for (var i = 0; i < previousSearches.length; i ++) {
@@ -490,7 +490,11 @@ step.searchSelect = {
 				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 				$('textarea#userTextInput').val(userInput);
 				if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true); // probably a passage
-				step.searchSelect._handleEnteredSearchWord();
+				var sleep = 50;
+				if (step.searchSelect.searchUserInput !== userInput) {
+					step.searchSelect._handleEnteredSearchWord();
+					sleep = 250;
+				}
 				setTimeout(function() { // Need to give time for the input to the sent to the server and also time for the response to come back to the browser.
 					var textSearchResult = $("#searchResultstext").find("a");
 					if (textSearchResult.length > 0) {
@@ -510,7 +514,7 @@ step.searchSelect = {
 					else {
 						$('#warningMessage').text(__s.enter_search_word);
 					}
-				}, 500);
+				}, sleep);
 			}
 			else {
 				$('#warningMessage').text("");
@@ -1172,7 +1176,6 @@ step.searchSelect = {
 			$('textarea#userTextInput').text(userInput);
 		}
 		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
-		step.searchSelect.searchUserInput = userInput;
 		if ((userInput.length > 1) || ((step.searchSelect.userLang.toLowerCase().indexOf("zh") == 0) && (userInput.length > 0))) {
 			$('#updateButton').hide();
 			var url;
@@ -1369,6 +1372,7 @@ step.searchSelect = {
                 changeBaseURL();
             });
 			$.ajaxSetup({async: true});
+			step.searchSelect.searchUserInput = userInput;
 			step.searchSelect._updateDisplayBasedOnOptions();
 		}
 		else {

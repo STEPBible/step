@@ -226,9 +226,9 @@ step.searchSelect = {
 						'</span>' +
 					'</div>' +
 					'<br><br><br><br>' +
-					'<ul id="listofprevioussearchs" style="display:none">';
+					'<ul id="listofprevioussearchs" class="listOPSul" style="display:none">';
 				for (var j = 0; j < previousSearches.length; j++) {
-					previousSearchHTML += "<li id='lOPS_" + j + "'>" + previousSearches[j];
+					previousSearchHTML += "<li id='lOPS_" + j + "' class='listOPSli'>" + previousSearches[j];
 					previousSearchHTML += ((this.previousSearchTokens[j].indexOf("(") > -1) || (this.previousSearchTokens[j].indexOf(")") > -1)) ?
 						"" : "<span class='closeMark' onclick=step.searchSelect.removePreviousSearch(" + j + ")>X</span>";
 					previousSearchHTML += "</li>";

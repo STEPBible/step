@@ -334,6 +334,8 @@ var StepRouter = Backbone.Router.extend({
                 if (passageModel == null) {
                     console.error("No passages defined for ", activePassageId);
                 }
+                //if (typeof text.definitions === "undefined")
+                //    text.definitions = [];
 
                 passageModel.save(text, { silent: true });
                 self._addBookmark({ args: query, searchTokens: text.searchTokens });

@@ -1622,10 +1622,14 @@ step.searchSelect = {
 							'<span class="srchParathesis">)</span>' +
 							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
 				}
+				//definitions.push({ gloss: data[i].suggestion.gloss, matchingForm: data[i].suggestion.matchingForm,
+				//	popularity: frequency, stepTransliteration: data[i].suggestion.stepTransliteration, strongNumber: curStrong,
+				//	type: "word" });
 				step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
 					str2Search, suggestionType, text2Display, searchExplaination, gloss, "", limitType, null, false, true);
 				var detailLex = step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i);
 				searchSuggestionsToDisplay[searchResultIndex] += detailLex[0];
+	//				definitions = definitions.concat(detailLex[1]);
 			}
 			else
 				console.log("Unknown result: " + suggestionType);

@@ -65,9 +65,9 @@
 			var timer;
 			$(document).keyup(function(e) {
 				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0) &&
+                    ($('textarea#userTextInput:visible').length == 0) && // input area of the search modal
 					(!e.altKey) && (!e.ctrlKey)) {
 					var code = (e.keyCode ? e.keyCode : e.which);
-					console.log("key " + code + " shift key: " + e.shiftKey);
                     if ((code == 188) || (code == 190)) {
                         var pC = $(".passageContainer");
                         if (pC.length > 1) {

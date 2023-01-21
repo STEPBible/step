@@ -56,23 +56,6 @@
     }
   }
   
-  ul {
-	  list-style-type: none;
-	  padding: 0;
-	  margin: 0;
-	}
-	ul li {
-	  border: 1px solid rgb(221, 221, 221);
-	  background-color: #498098;
-	  color: white;
-	  padding: 4px 6px 4px 8px;
-	  font-size: 14px;
-	  display: block;
-	  position: relative;
-	}
-	ul li:hover {
-	  background-color: #366072;
-	}
 	tr th,
 	tr td {
 	  padding: 4px 6px 4px 8px;
@@ -90,6 +73,25 @@
 	.closeMark:hover {
 	  background: red;
 	}
+
+}
+
+.listOPSul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.listOPSli {
+    border: 1px solid rgb(221, 221, 221);
+    background-color: #498098;
+    color: white;
+    padding: 4px 6px 4px 8px;
+    font-size: 14px;
+    display: block;
+    position: relative;
+  hover {
+    background-color: #366072;
+  }  
 }
 
 @media screen and (min-height: 400px) {

@@ -1881,6 +1881,7 @@ step.util = {
 								'$("#select_advanced_search").addClass("checked");' +
 								'$(".advanced_search_elements").show();' +
 								'step.util.localStorageSetItem("advanced_search", true);' +
+								'step.searchSelect._previousSearchesEnteredByUser();' +
 							'}' +
 							'else {' +
 								'$("#select_advanced_search").removeClass("checked");' +
@@ -1895,7 +1896,7 @@ step.util = {
 						'<span class="pull-right">' +
 							step.util.modalCloseBtn("searchSelectionModal") +
 							'<span class="pull-right advanced_search_elements">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
-							'<span class="dropdown settingsDropdown pull-right advanced_search_elements">' +
+							'<span class="dropdown pull-right advanced_search_elements">' +
 								'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Options">' +
 									'<i class="glyphicon glyphicon-cog" style="font-size:14px;background-color:var(--clrBackground);color:var(--clrText)"></i>' +
 								'</a>' +

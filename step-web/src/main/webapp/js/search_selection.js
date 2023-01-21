@@ -226,9 +226,9 @@ step.searchSelect = {
 						'</span>' +
 					'</div>' +
 					'<br><br><br><br>' +
-					'<ul id="listofprevioussearchs" style="display:none">';
+					'<ul id="listofprevioussearchs" class="listOPSul" style="display:none">';
 				for (var j = 0; j < previousSearches.length; j++) {
-					previousSearchHTML += "<li id='lOPS_" + j + "'>" + previousSearches[j];
+					previousSearchHTML += "<li id='lOPS_" + j + "' class='listOPSli'>" + previousSearches[j];
 					previousSearchHTML += ((this.previousSearchTokens[j].indexOf("(") > -1) || (this.previousSearchTokens[j].indexOf(")") > -1)) ?
 						"" : "<span class='closeMark' onclick=step.searchSelect.removePreviousSearch(" + j + ")>X</span>";
 					previousSearchHTML += "</li>";
@@ -254,6 +254,7 @@ step.searchSelect = {
 			});
 		});
 		step.searchSelect.updateAdvancedSearchElements();
+		step.searchSelect._previousSearchesEnteredByUser();
 	},
 	updateAdvancedSearchElements: function() {
 		var advancedSearchInStorage = step.util.localStorageGetItem("advanced_search");
@@ -261,6 +262,7 @@ step.searchSelect = {
 			$(".advanced_search_elements").show();
 			$("#select_advanced_search").addClass("checked");
 			$("#advancesearchonoffswitch").prop( "checked", true );
+			step.searchSelect._previousSearchesEnteredByUser();
 		}
 		else {
 			$(".advanced_search_elements").hide();
@@ -269,7 +271,7 @@ step.searchSelect = {
 		}
 	},
 
-	_initOptions: function(ev) {
+	_initOptions: function() {
 		var searchOptionsHTML = 
 			'<h5>Show in results</h5>' +
 			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
@@ -309,6 +311,38 @@ step.searchSelect = {
 		}
 		step.util.localStorageSetItem("step.srchOptn" + optionName, ((currentSetting) ? "false" : "true"));
 		if (ev !== null) step.searchSelect._updateDisplayBasedOnOptions();
+		return false;
+	},
+	_previousSearchesEnteredByUser: function() {
+		var previousSearches = step.util.localStorageGetItem("step.previousSearches");
+		if (previousSearches == null) {
+			$("#previousSearchDropDown").hide();
+			return;
+		}
+		var searchWordsHTML = 
+			'<h4 style="font-size:14px">Previous searches</h4>' +
+			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
+		previousSearches = previousSearches.split(";");
+		for (var i = 0; i < previousSearches.length; i ++) {
+			searchWordsHTML += '<li class="stepModalFgBg dropdown-menu passageOptionsGroup" style="display:block;position:initial;opacity:1;border:0px;padding:0px;box-shadow:none">' +
+				'<a class="searchWords" id="searchWords' + i +'">' +
+				previousSearches[i] +
+				'</a>' +
+				'</li><br>';
+		}
+		searchWordsHTML += '</ul>';
+		$("#previousSearchWords").append(searchWordsHTML);
+		$(".searchWords").click(step.searchSelect._displayPreviousSearchWord);
+	},
+	_displayPreviousSearchWord: function(ev) {
+		if ((ev == null) || (typeof ev.target.id !== "string") ||
+			(ev.target.id.substring(0, 11) !== "searchWords")) return;
+		var wordIndex = ev.target.id.substring(11);
+        var previousSearches = step.util.localStorageGetItem("step.previousSearches");
+		previousSearches = previousSearches.split(";");
+		$("textarea#userTextInput").text(previousSearches[wordIndex]);
+		$("#previousSearchDropDown").removeClass("open");
+		step.searchSelect.handleKeyboardInput(ev);
 		return false;
 	},
 	_updateDisplayBasedOnOptions: function() {
@@ -458,7 +492,11 @@ step.searchSelect = {
 				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 				$('textarea#userTextInput').val(userInput);
 				if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true); // probably a passage
+				var sleep = 50;
+				if (step.searchSelect.searchUserInput !== userInput) {
 				step.searchSelect._handleEnteredSearchWord();
+					sleep = 250;
+				}
 				setTimeout(function() { // Need to give time for the input to the sent to the server and also time for the response to come back to the browser.
 					var textSearchResult = $("#searchResultstext").find("a");
 					if (textSearchResult.length > 0) {
@@ -478,7 +516,7 @@ step.searchSelect = {
 					else {
 						$('#warningMessage').text(__s.enter_search_word);
 					}
-				}, 500);
+				}, sleep);
 			}
 			else {
 				$('#warningMessage').text("");
@@ -547,7 +585,14 @@ step.searchSelect = {
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
-			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="' + __s.enter_search_word + '"></textarea><br><br>' + // size 16px so the mobile devices will not expand
+			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
+			'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +
+				'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
+					'&nbsp;&nbsp;<i class="glyphicon glyphicon-triangle-bottom" style="font-size:18px;background-color:var(--clrBackground);color:var(--clrStrongText)"></i>' +
+				'</a>' +
+				'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
+			'</span>' +
+			'<br><br>' +
 			'<div id="search_table" class="advanced_search_elements">' +
 			'<table border="1" style="background-color:' + backgroundColor + '">' +
 			'<colgroup>' +
@@ -1133,7 +1178,6 @@ step.searchSelect = {
 			$('textarea#userTextInput').text(userInput);
 		}
 		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
-		step.searchSelect.searchUserInput = userInput;
 		if ((userInput.length > 1) || ((step.searchSelect.userLang.toLowerCase().indexOf("zh") == 0) && (userInput.length > 0))) {
 			$('#updateButton').hide();
 			var url;
@@ -1330,6 +1374,7 @@ step.searchSelect = {
                 changeBaseURL();
             });
 			$.ajaxSetup({async: true});
+			step.searchSelect.searchUserInput = userInput;
 			step.searchSelect._updateDisplayBasedOnOptions();
 		}
 		else {
@@ -1874,7 +1919,20 @@ step.searchSelect = {
 		return newJoinString;
 	},
 
+	addSearchWords: function(searchWord) {
+		var current = step.util.localStorageGetItem("step.previousSearches");
+		var newSearchLists = searchWord;
+		if (current != null) {
+			current = current.split(";");
+			for (var i = 0; ((i < current.length) && (i < 9)); i++) {
+				newSearchLists += ";" + current[i];
+			}
+		}
+		step.util.localStorageSetItem("step.previousSearches", newSearchLists);
+	},
+
 	goSearch: function(searchType, searchWord, displayText) {
+		step.searchSelect.addSearchWords(step.searchSelect.searchUserInput);
 		var activePassageData = step.util.activePassage().get("searchTokens") || [];
 		var allVersions = "";
 		var range = (this.searchRange === "Gen-Rev") ? "" : "|reference=" + this.searchRange;

@@ -330,7 +330,7 @@ step.searchSelect = {
 				'</li><br>';
 		}
 		searchWordsHTML += '</ul>';
-		$("#previousSearchWords").append(searchWordsHTML);
+		$("#previousSearchWords").empty().append(searchWordsHTML);
 		$(".searchWords").click(step.searchSelect._displayPreviousSearchWord);
 	},
 	_displayPreviousSearchWord: function(ev) {
@@ -1678,6 +1678,7 @@ step.searchSelect = {
 		$('textarea#userTextInput').hide();
 		$('#updateButton').hide();
 		$("#advancedsearchonoff").hide();
+		$("#previousSearchDropDown").hide();
 		$("#hd4").text(__s.please_select_following);
 		step.searchSelect.searchModalCurrentPage = 3;	
 		$('#srchModalBackButton').show();

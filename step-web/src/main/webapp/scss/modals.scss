@@ -18,26 +18,6 @@
   }
 }
 
-#search_table {
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  ul li {
-    border: 1px solid rgb(221, 221, 221);
-    background-color: #498098;
-    color: white;
-    padding: 4px 6px 4px 8px;
-    font-size: 14px;
-    display: block;
-    position: relative;
-  }
-  ul li:hover {
-    background-color: #366072;
-  }
-}
-
 #searchmodalbody,
 #bookchaptermodalbody {
   h4 {

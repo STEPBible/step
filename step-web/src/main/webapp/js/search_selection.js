@@ -195,7 +195,7 @@ step.searchSelect = {
 								if ((previousSearchTokensIndex > 0) && (previousSearchTokensIndex <= previousJoins.length)) searchRelationship = previousJoins[previousSearchTokensIndex - 1];
 								previousSearchTokensIndex = this.createPreviousSearchList(itemType, currWord, previousSearches, this.previousSearchTokens, previousSearchTokensIndex, searchRelationship, leftParanthesis, rightParanthesis);
 							}
-							else alert("Something wrong with syntax search "+ syntaxWords);
+							else alert("Something wrong with syntax search " + syntaxWords);
 					}
 					else {
 						var searchRelationship = "a";
@@ -262,6 +262,7 @@ step.searchSelect = {
 			$(".advanced_search_elements").show();
 			$("#select_advanced_search").addClass("checked");
 			$("#advancesearchonoffswitch").prop( "checked", true );
+			step.searchSelect._previousSearchesEnteredByUser();
 		}
 		else {
 			$(".advanced_search_elements").hide();
@@ -586,7 +587,7 @@ step.searchSelect = {
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
 			'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +
 				'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
-					'<i class="glyphicon glyphicon-triangle-bottom" style="font-size:14px;background-color:var(--clrBackground);color:var(--clrStrongText)"></i>' +
+					'&nbsp;&nbsp;<i class="glyphicon glyphicon-triangle-bottom" style="font-size:18px;background-color:var(--clrBackground);color:var(--clrStrongText)"></i>' +
 				'</a>' +
 				'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
 			'</span>' +
@@ -1826,7 +1827,7 @@ step.searchSelect = {
 				if (allStrongs.includes(item[1])) return;
 				allStrongs.push(item[1]);
 			});
-			allStrongs.sort();
+			//allStrongs.sort();
 			return allStrongs.join(",");
 		}
 		return strongNumber;

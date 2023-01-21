@@ -1881,6 +1881,7 @@ step.util = {
 								'$("#select_advanced_search").addClass("checked");' +
 								'$(".advanced_search_elements").show();' +
 								'step.util.localStorageSetItem("advanced_search", true);' +
+								'step.searchSelect._previousSearchesEnteredByUser();' +
 							'}' +
 							'else {' +
 								'$("#select_advanced_search").removeClass("checked");' +

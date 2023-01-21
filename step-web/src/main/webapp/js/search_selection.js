@@ -324,7 +324,7 @@ step.searchSelect = {
 		previousSearches = previousSearches.split(";");
 		for (var i = 0; i < previousSearches.length; i ++) {
 			searchWordsHTML += '<li class="stepModalFgBg dropdown-menu passageOptionsGroup" style="display:block;position:initial;opacity:1;border:0px;padding:0px;box-shadow:none">' +
-				'<a class="searchWords" id="searchWords' + i +'">' +
+				'<a class="searchWords" id="searchWords' + i +'" style="display:inline-block;width:100%">' +
 				previousSearches[i] +
 				'</a>' +
 				'</li><br>';

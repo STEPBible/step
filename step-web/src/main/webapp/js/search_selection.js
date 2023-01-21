@@ -254,7 +254,6 @@ step.searchSelect = {
 			});
 		});
 		step.searchSelect.updateAdvancedSearchElements();
-		step.searchSelect._previousSearchesEnteredByUser();
 	},
 	updateAdvancedSearchElements: function() {
 		var advancedSearchInStorage = step.util.localStorageGetItem("advanced_search");
@@ -1922,10 +1921,14 @@ step.searchSelect = {
 	addSearchWords: function(searchWord) {
 		var current = step.util.localStorageGetItem("step.previousSearches");
 		var newSearchLists = searchWord;
+		var alreadyAdded = [ searchWord ];
 		if (current != null) {
 			current = current.split(";");
 			for (var i = 0; ((i < current.length) && (i < 9)); i++) {
-				newSearchLists += ";" + current[i];
+				if (!alreadyAdded.includes(current[i])) {
+					newSearchLists += ";" + current[i];
+					alreadyAdded.push(current[i]);
+				}
 			}
 		}
 		step.util.localStorageSetItem("step.previousSearches", newSearchLists);

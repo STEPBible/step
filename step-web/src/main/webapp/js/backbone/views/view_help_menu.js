@@ -56,8 +56,8 @@ var ViewHelpMenuOptions = Backbone.View.extend({
 				'<ul>' +
 				'<li><a href="http://tyndale.cam.ac.uk/" target="_new">Tyndale House</a>, the founder of STEPBible, for its support from 2009 until 2021.</li>' +
 				'<li><a href="http://www.crosswire.org" target="_new">CrossWire</a>, for making available amazing software as well as hundreds of Bible translations.</li>' +
-				'<li><a href="http://www.crossway.org" target="_new">Crossway</a>, for making available the ESV Bible text available to all our users.</li>' +
-				'<li><a href="http://www.biblica.org" target="_new">Biblica</a>, for making available the NIV, NVI, Chinese Contemporary and many other translations available to all our users.</li>' +
+				'<li><a href="http://www.crossway.org" target="_new">Crossway</a>, for making the ESV Bible text available to all our users.</li>' +
+				'<li><a href="http://www.biblica.org" target="_new">Biblica</a>, for making the NIV, NVI, Chinese Contemporary and many other translations available to all our users.</li>' +
 				'<li>Many other contributors of licensed data and texts, listed <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_new">here</a></li>' +
 				'</ul>' +
                 '<p />' +

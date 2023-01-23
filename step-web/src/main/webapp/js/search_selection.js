@@ -319,7 +319,7 @@ step.searchSelect = {
 			return;
 		}
 		var searchWordsHTML = 
-			'<h4 style="font-size:14px">Previous searches</h4>' +
+			'<h4 style="font-size:14px;margin-bottom:0px">Previous searches</h4>' +
 			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
 		previousSearches = previousSearches.split(";");
 		for (var i = 0; i < previousSearches.length; i ++) {

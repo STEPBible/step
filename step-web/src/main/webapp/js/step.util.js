@@ -1271,6 +1271,7 @@ step.util = {
 						morph: $(this).attr('morph'),
 						classes: "lexiconFocus"
 					});
+					return false; // This will prevent trigering two times.
                 }
 			}).on("touchstart", function (ev) {
 				if ((typeof ev.originalEvent === "object") &&

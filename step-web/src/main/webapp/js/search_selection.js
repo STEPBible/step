@@ -327,7 +327,7 @@ step.searchSelect = {
 				'<a class="searchWords" id="searchWords' + i +'" style="display:inline-block;width:100%;line-height:20px">' +
 				previousSearches[i] +
 				'</a>' +
-				'</li><br>';
+				'</li>';
 		}
 		searchWordsHTML += '</ul>';
 		$("#previousSearchWords").empty().append(searchWordsHTML);

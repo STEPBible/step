@@ -1922,11 +1922,11 @@ step.searchSelect = {
 	addSearchWords: function(searchWord) {
 		var current = step.util.localStorageGetItem("step.previousSearches");
 		var newSearchLists = searchWord;
-		var alreadyAdded = [ searchWord ];
+		var alreadyAdded = [ searchWord.toLocaleLowerCase('en-US') ];
 		if (current != null) {
 			current = current.split(";");
 			for (var i = 0; ((i < current.length) && (i < 9)); i++) {
-				if (!alreadyAdded.includes(current[i])) {
+				if (!alreadyAdded.includes(current[i].toLocaleLowerCase('en-US'))) {
 					newSearchLists += ";" + current[i];
 					alreadyAdded.push(current[i]);
 				}

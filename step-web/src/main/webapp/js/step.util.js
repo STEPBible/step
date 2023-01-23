@@ -1253,93 +1253,92 @@ step.util = {
 
         },
         addStrongHandlers: function (passageId, passageContent) {
-            var that = this;
-            var allStrongElements = $("[strong]", passageContent);
-			step.touchForQuickLexiconTime = 0; // only use for touch screen
-			step.displayQuickLexiconTime = 0;  // only use for touch screen
-			step.strongOfLastQuickLexicon = "";  // only use for touch screen
-			step.lastTapStrong = ""  // only use for touch screen
-			that.pageY = 0;
-            allStrongElements.click(function () {
-                if (!step.touchDevice) {
-                    $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
-                    $(this).addClass("lexiconFocus");
-                    step.util.ui.showDef(this);
-					step.passage.higlightStrongs({
-						passageId: undefined,
-						strong: $(this).attr('strong'),
-						morph: $(this).attr('morph'),
-						classes: "lexiconFocus"
-					});
-					return false; // This will prevent trigering two times.
-                }
-			}).on("touchstart", function (ev) {
-				if ((typeof ev.originalEvent === "object") &&
-					(typeof ev.originalEvent.touches === "object") &&
-					(typeof ev.originalEvent.touches[0] === "object") &&
-					(typeof ev.originalEvent.touches[0].pageY === "number")) 
-					that.pageY = ev.originalEvent.touches[0].pageY;
-				step.touchForQuickLexiconTime = Date.now();
-				var strongStringAndPrevHTML = step.util.ui._getStrongStringAndPrevHTML(this); // Try to get something unique on the word touch by the user to compare if it is the 2nd touch
-				var userTouchedSameWord = (strongStringAndPrevHTML == step.lastTapStrong);
-				step.lastTapStrong = "notdisplayed" + strongStringAndPrevHTML;
-				step.util.ui._processTouchOnStrong(this, passageId, userTouchedSameWord, that.pageY); 
-			}).on("touchend", function (ev) {
-				var diff = Date.now() - step.touchForQuickLexiconTime;
-				if (diff < TOUCH_DURATION) {
-					step.touchForQuickLexiconTime = 0; // If the quick lexicon has not been rendered, the quick lexicon code will see the change in this variable and not proceed
-					step.strongOfLastQuickLexicon = "";
-				}
-			}).on("touchcancel", function (ev) {
-				step.touchForQuickLexiconTime = 0; // If the quick lexicon has not been rendered, the quick lexicon code will see the change in this variable and not proceed
-				step.strongOfLastQuickLexicon = "";
-			}).on("touchmove", function (ev) {
-				step.touchForQuickLexiconTime = 0;
-				step.strongOfLastQuickLexicon = "";
-				var diff = Date.now() - step.displayQuickLexiconTime;
-				if ((diff) < 900) { // Cancel the quick lexicon and highlight of words because touch move detected less than 900 ms later.  The user probably want to scroll instead of quick lexicon.
-					$("#quickLexicon").remove();
-					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-					step.lastTapStrong = "";
-				}
-			}).hover(function (ev) { // mouse pointer starts hover (enter)
-				if (!step.touchDevice) {
-					step.passage.higlightStrongs({
-						passageId: undefined,
-						strong: $(this).attr('strong'),
-						morph: $(this).attr('morph'),
-						classes: "primaryLightBg"
-					});
-					var hoverContext = this;
-					require(['quick_lexicon'], function () {
-						step.util.delay(function () {
-							// do the quick lexicon
-							step.util.ui._displayNewQuickLexicon(hoverContext, passageId, false, ev.pageY);
-							step.util.keepQuickLexiconOpen = false;
-						}, MOUSE_PAUSE, 'show-quick-lexicon');
-					});
-				}
-            }, function () { // mouse pointer ends hover (leave)
-				if (!step.touchDevice) {
-					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-					step.util.delay(undefined, 0, 'show-quick-lexicon');
-					if (!step.util.keepQuickLexiconOpen) {
-						$("#quickLexicon").remove();
-					}
-				}
-            });
-        },
-        _getStrongStringAndPrevHTML: function (touchedObject) {
+						var that = this;
+						var allStrongElements = $("[strong]", passageContent);
+						step.touchForQuickLexiconTime = 0; // only use for touch screen
+						step.displayQuickLexiconTime = 0;  // only use for touch screen
+						step.strongOfLastQuickLexicon = "";  // only use for touch screen
+						step.lastTapStrong = ""  // only use for touch screen
+						that.pageY = 0;
+						allStrongElements.click(function () {
+							if (!step.touchDevice) {
+								$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
+								$(this).addClass("lexiconFocus");
+								step.util.ui.showDef(this);
+								step.passage.higlightStrongs({
+									passageId: undefined,
+									strong: $(this).attr('strong'),
+									morph: $(this).attr('morph'),
+									classes: "lexiconFocus"
+								});
+								return false; // This will prevent trigering two times.
+							}
+						}).on("touchstart", function (ev) {
+							if ((typeof ev.originalEvent === "object") &&
+								(typeof ev.originalEvent.touches === "object") &&
+								(typeof ev.originalEvent.touches[0] === "object") &&
+								(typeof ev.originalEvent.touches[0].pageY === "number")) that.pageY = ev.originalEvent.touches[0].pageY;
+							step.touchForQuickLexiconTime = Date.now();
+							var strongStringAndPrevHTML = step.util.ui._getStrongStringAndPrevHTML(this); // Try to get something unique on the word touch by the user to compare if it is the 2nd touch
+							var userTouchedSameWord = (strongStringAndPrevHTML == step.lastTapStrong);
+							step.lastTapStrong = "notdisplayed" + strongStringAndPrevHTML;
+							step.util.ui._processTouchOnStrong(this, passageId, userTouchedSameWord, that.pageY); 
+						}).on("touchend", function (ev) {
+							var diff = Date.now() - step.touchForQuickLexiconTime;
+							if (diff < TOUCH_DURATION) {
+								step.touchForQuickLexiconTime = 0; // If the quick lexicon has not been rendered, the quick lexicon code will see the change in this variable and not proceed
+								step.strongOfLastQuickLexicon = "";
+							}
+						}).on("touchcancel", function (ev) {
+							step.touchForQuickLexiconTime = 0; // If the quick lexicon has not been rendered, the quick lexicon code will see the change in this variable and not proceed
+							step.strongOfLastQuickLexicon = "";
+						}).on("touchmove", function (ev) {
+							step.touchForQuickLexiconTime = 0;
+							step.strongOfLastQuickLexicon = "";
+							var diff = Date.now() - step.displayQuickLexiconTime;
+							if ((diff) < 900) { // Cancel the quick lexicon and highlight of words because touch move detected less than 900 ms later.  The user probably want to scroll instead of quick lexicon.
+								$("#quickLexicon").remove();
+								step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+								step.lastTapStrong = "";
+							}
+						}).hover(function (ev) { // mouse pointer starts hover (enter)
+							if (!step.touchDevice) {
+								step.passage.higlightStrongs({
+									passageId: undefined,
+									strong: $(this).attr('strong'),
+									morph: $(this).attr('morph'),
+									classes: "primaryLightBg"
+								});
+								var hoverContext = this;
+								require(['quick_lexicon'], function () {
+									step.util.delay(function () {
+										// do the quick lexicon
+										step.util.ui._displayNewQuickLexicon(hoverContext, passageId, false, ev.pageY);
+										step.util.keepQuickLexiconOpen = false;
+									}, MOUSE_PAUSE, 'show-quick-lexicon');
+								});
+							}
+									}, function () { // mouse pointer ends hover (leave)
+							if (!step.touchDevice) {
+								step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+								step.util.delay(undefined, 0, 'show-quick-lexicon');
+								if (!step.util.keepQuickLexiconOpen) {
+									$("#quickLexicon").remove();
+								}
+							}
+						});
+				},
+				_getStrongStringAndPrevHTML: function (touchedObject) {
 			var result = "";
 			if (typeof $(touchedObject).attr("strong") === "string") {
 				result = $(touchedObject).attr("strong");
 				if ((typeof $(touchedObject).prev()[0] === "object") &&
 					(typeof $(touchedObject).prev()[0].outerHTML === "string"))
 					result += $(touchedObject).prev()[0].outerHTML.replace(/\s?primaryLightBg\s?/g, "")
-														   .replace(/\s?relatedWordEmphasisHover\s?/g, "")
-														   .replace(/\s?lexiconFocus\s?/g, "")
-														   .replace(/\s?lexiconRelatedFocus\s?/g, "")
-														   .replace(/\s?secondaryBackground\s?/g, "");
+															.replace(/\s?relatedWordEmphasisHover\s?/g, "")
+															.replace(/\s?lexiconFocus\s?/g, "")
+															.replace(/\s?lexiconRelatedFocus\s?/g, "")
+															.replace(/\s?secondaryBackground\s?/g, "");
 			}
 			return result;
 		},

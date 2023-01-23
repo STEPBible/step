@@ -146,7 +146,7 @@ var SidebarView = Backbone.View.extend({
         this.helpView = new ExamplesView({el: this.help});
     },
     createDefinition: function (data, ref) {
-        var displayLexicalRelatedWords = $(".detailLex:visible").length > 0;
+        var displayLexicalRelatedWords = (($(".detailLex:visible").length > 0) || (step.util.localStorageGetItem("sidebar.detailLex") === "true"));
         //get definition tab
         this.lexicon.detach();
         this.lexicon.empty();
@@ -436,10 +436,12 @@ var SidebarView = Backbone.View.extend({
 					if ($(".detailLex:visible").length > 0) {
 						$(".detailLex").hide();
 						$("#detailLexSelect").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+                        step.util.localStorageSetItem("sidebar.detailLex", "false");
 					}
 					else {
 						$(".detailLex").show();
 						$("#detailLexSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+                        step.util.localStorageSetItem("sidebar.detailLex", "true");
 					}
 				}
 				return false;

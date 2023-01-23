@@ -249,7 +249,7 @@ var SidebarView = Backbone.View.extend({
     },
 
     _addLinkAndAppend: function (panel, textToAdd, currentWordLangCode, bibleVersion) {
-        // Find all ref tang and change
+        // Find all ref tag and change
         //        panel.append('<a sbRef=" PASSAGE1 " class="linkRef" href="?q=version= VERSION &amp;reference= PASSAGE1 "> PASSAGE2 </a>');
         //        '<ref=\'' . PASSAGE1 . '\'>' . PASSAGE2 . '</ref>';
         var remainingText = textToAdd;

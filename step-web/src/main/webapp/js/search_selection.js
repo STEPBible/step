@@ -1414,7 +1414,8 @@ step.searchSelect = {
 					for (var j = 0; j < data[i].suggestion._detailLexicalTag.length; j ++) {
 						if (data[i].suggestion._detailLexicalTag[j][1].indexOf(strongNum) != 0) {
 							if (!allOtherStrongNums.includes(data[i].suggestion._detailLexicalTag[j][1])) {
-								if ((suggestionType == HEBREW) || 
+								var isGreekWord = data[i].suggestion._detailLexicalTag[j][1].substring(0, 1) === "G";
+								if ((suggestionType == HEBREW) || (isGreekWord) ||
 									((suggestionType == GREEK) && includeHebrewForGreekWords)) {
 									allOtherStrongNums.push(data[i].suggestion._detailLexicalTag[j][1]);
 									frequency += parseInt(data[i].suggestion._detailLexicalTag[j][3]);
@@ -1522,11 +1523,12 @@ step.searchSelect = {
 					allDStrongNums.push(data[i].suggestion.strongNumber);
 				if ((strongsToInclude.length == 0) ||
 					(strongsToInclude.includes(data[i].suggestion.strongNumber))) {
-					frequencyTotal += parseInt(data[i].suggestion.popularity);
 					augStrongToShow[i] = parseInt(data[i].suggestion.popularity);
 					augStrongToShow[i] = step.searchSelect.getFrequencyFromDetailLexicalTag(data[i].suggestion.strongNumber, augStrongToShow[i], data[i].suggestion._detailLexicalTag);
-					if (!allStrongNumsPlusLexicalGroup.includes(data[i].suggestion.strongNumber))
+					if (!allStrongNumsPlusLexicalGroup.includes(data[i].suggestion.strongNumber)) {
 						allStrongNumsPlusLexicalGroup.push(data[i].suggestion.strongNumber);
+						frequencyTotal += augStrongToShow[i];
+					}
 					var otherStrong2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag).split(",");
 					for (var count = 0; count < otherStrong2Search.length; count ++) {
 						if (!allStrongNumsPlusLexicalGroup.includes(otherStrong2Search[count]))

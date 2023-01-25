@@ -250,7 +250,8 @@ step.searchSelect = {
 		$(function(){
 			$('textarea#userTextInput').on('input', function(e){
 				this.timer && clearTimeout(this.timer);
-				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
+				var timeoutPeriod = (step.touchDevice) ? 600 : 300;
+				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, timeoutPeriod, e);
 			});
 		});
 		step.searchSelect.updateAdvancedSearchElements();
@@ -537,7 +538,8 @@ step.searchSelect = {
 			$(function(){
 				$('textarea#userTextInput').on('input', function(e){
 					this.timer && clearTimeout(this.timer);
-					this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
+					var timeoutPeriod = (step.touchDevice) ? 600 : 300;
+					this.timer = setTimeout(step.searchSelect.handleKeyboardInput, timeoutPeriod, e);
 				});
 			});
 			$('textarea#userTextInput').focus();
@@ -773,7 +775,8 @@ step.searchSelect = {
 		$(function(){
 			$('textarea#enterRange').on('input', function(e){
 				this.timer && clearTimeout(this.timer);
-				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
+				var timeoutPeriod = (step.touchDevice) ? 600 : 300;
+				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, timeoutPeriod, e);
 			});
 		});
 	},

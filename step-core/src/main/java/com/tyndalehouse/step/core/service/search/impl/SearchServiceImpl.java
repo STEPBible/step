@@ -1167,7 +1167,15 @@ public class SearchServiceImpl implements SearchService {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         final String secondaryRange = currentSearch.getSecondaryRange();
         if (StringUtils.isBlank(secondaryRange)) {
-            return runJSwordTextSearch(sq);
+            SearchResult result = runJSwordTextSearch(sq);
+            if (result.getTotal() == 0) {
+                String curQuery = sq.getCurrentSearch().getOriginalQuery();
+                if (curQuery.substring(curQuery.length()-1).equals("*")) {
+                    sq.originalQuery =  curQuery.substring(0, curQuery.length() - 1);
+                    result = runJSwordTextSearch(sq);
+                }
+            }
+            return result;
         }
 
         final String[] versions = currentSearch.getVersions();

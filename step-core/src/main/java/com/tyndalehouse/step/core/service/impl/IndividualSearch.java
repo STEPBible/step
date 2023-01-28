@@ -52,13 +52,11 @@ public class IndividualSearch {
      * @param query    the query to be run
      */
     public IndividualSearch(final SearchType type, final List<String> versions,
-                            final String query, final String range, final String[] filter,
-                            final String searchJoinType) {
+                            final String query, final String range, final String[] filter) {
         this.type = type;
         this.mainRange = range;
         this.versions = versions.toArray(new String[versions.size()]);
         this.originalFilter = filter;
-        this.searchJoinType = searchJoinType;
 
         if (this.type == SearchType.SUBJECT_SIMPLE) {
             this.originalQuery = query;
@@ -72,7 +70,6 @@ public class IndividualSearch {
         }
     }
 
-
     /**
      * Initialises the search from the query string.
      *
@@ -80,19 +77,8 @@ public class IndividualSearch {
      * @param restriction a restriction, other than the one specified in the syntax
      */
     public IndividualSearch(final String query, final String[] versions, final String restriction) {
-        this(query, versions, restriction, "AND");
-    }
-
-    /**
-     * Initialises the search from the query string.
-     *
-     * @param query       the query that is being sent to the app to search for
-     * @param restriction a restriction, other than the one specified in the syntax
-     */
-    public IndividualSearch(final String query, final String[] versions, final String restriction, final String searchJoinType) {
         this.secondaryRange = restriction;
         this.versions = versions;
-        this.searchJoinType = searchJoinType;
         if (query.startsWith(TEXT)) {
             this.query = transformToTextQuery(query.substring(TEXT.length()));
             this.type = SearchType.TEXT;

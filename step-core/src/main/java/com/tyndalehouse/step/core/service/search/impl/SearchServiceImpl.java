@@ -412,7 +412,15 @@ public class SearchServiceImpl implements SearchService {
         }
         //we will prefer a word search to anything else...
         if (individualSearches.size() != 0) {
-            return this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options, srchJoin);
+            AbstractComplexSearch result = this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options, srchJoin);
+            if ((((SearchResult) result).getTotal() == 0) && (individualSearches.size() == 1) && (individualSearches.get(0).getType().toString().equals("TEXT"))) {
+                String curQuery = individualSearches.get(0).getOriginalQuery();
+                if (curQuery.substring(curQuery.length()-1).equals("*")) {
+                    individualSearches.get(0).setQuery(curQuery.substring(0, curQuery.length() - 1) );
+                    result = this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options, srchJoin);
+        }
+            }
+            return result;
         }
         return this.bibleInfoService.getPassageText(
                 versions.get(0), references, options,

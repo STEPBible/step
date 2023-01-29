@@ -818,7 +818,10 @@ public class SearchServiceImpl implements SearchService {
      */
     private SearchResult executeJoiningSearches(final SearchQuery sq, final String srchJoin) {
         // we run each individual search, and get all the keys out of each
-        ImmutablePair<Key, Set> r = (srchJoin != "") ? executeSearchWithSrchJoin(sq, srchJoin) : runJoiningSearches(sq);
+        if (srchJoin == "") {
+            System.out.println("No srchJoin\nNo srchJoin\nNo srchJoin\nNo srchJoin\n");
+        }
+        ImmutablePair<Key, Set> r = executeSearchWithSrchJoin(sq, srchJoin);
         final Key results = r.getLeft();
         final Set<String> strongs = r.getRight();
         SearchResult result = getSearchResultFromKey(sq, results);
@@ -1002,61 +1005,6 @@ public class SearchServiceImpl implements SearchService {
                 throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), sq
                         .getCurrentSearch().getType().getLanguageKey());
         }
-        return new ImmutablePair<>(results, strongs);
-    }
-
-    /**
-     * Runs each individual search and gives us a key that can be used to retrieve every passage
-     *
-     * @param sq the search query
-     * @return the key to all the results
-     */
-    private ImmutablePair<Key, Set> runJoiningSearches(final SearchQuery sq) {
-        Key results = null;
-        Set<String> strongs = new HashSet<String>();
-        do {
-            IndividualSearch curSearch = sq.getCurrentSearch();
-            switch (curSearch.getType()) {
-                case TEXT:
-                    results = intersect(results, this.jswordSearch.searchKeys(sq), curSearch.getSearchJoinType());
-                    break;
-                case ORIGINAL_GREEK_FORMS:
-                case ORIGINAL_HEBREW_FORMS:
-                    adaptQueryForStrongSearch(sq);
-                    results = intersect(results, this.jswordSearch.searchKeys(sq), curSearch.getSearchJoinType());
-                    break;
-                case ORIGINAL_GREEK_RELATED:
-                case ORIGINAL_HEBREW_RELATED:
-                    Set<String> curSetOfStrong = adaptQueryForRelatedStrongSearch(sq);
-                    results = intersect(results, this.runStrongTextSearchKeys(sq, curSetOfStrong), curSearch.getSearchJoinType());
-                    strongs.addAll(curSetOfStrong);
-                    break;
-                case ORIGINAL_MEANING:
-                    strongs.addAll(adaptQueryForMeaningSearch(sq));
-                    results = intersect(results, this.jswordSearch.searchKeys(sq), curSearch.getSearchJoinType());
-                    break;
-                case EXACT_FORM:
-                    results = intersect(results, getKeysFromOriginalText(sq), curSearch.getSearchJoinType());
-                    break;
-                case SUBJECT_SIMPLE:
-                case SUBJECT_EXTENDED:
-                case SUBJECT_FULL:
-                    curSearch.setType(SearchType.SUBJECT_FULL);
-                    curSearch.setQuery(curSearch.getOriginalQuery());
-                    results = intersect(results, this.subjects.getKeys(sq), curSearch.getSearchJoinType());
-                    break;
-                case SUBJECT_RELATED:
-                    //no override for related topic searches
-                    results = intersect(results, this.subjects.getKeys(sq), curSearch.getSearchJoinType());
-                    break;
-                case RELATED_VERSES:
-                    results = intersect(results, this.relatedVerseService.getRelatedVerses(curSearch.getVersions()[0], curSearch.getQuery()), curSearch.getSearchJoinType());
-                    break;
-                default:
-                    throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), sq
-                            .getCurrentSearch().getType().getLanguageKey());
-            }
-        } while (sq.hasMoreSearches());
         return new ImmutablePair<>(results, strongs);
     }
 

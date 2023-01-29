@@ -37,12 +37,10 @@ public class IndividualSearch {
     private SearchType type;
     private String query;
     private String[] versions;
-    private boolean amendedQuery;
     private String subRange;
     private String mainRange;
     private String[] originalFilter;
     private String originalQuery;
-    private String searchJoinType;
 
     /**
      * Instantiates a single search to be executed.
@@ -258,13 +256,6 @@ public class IndividualSearch {
     }
 
     /**
-     * @return the searchJoinType
-     */
-    public String getSearchJoinType() {
-        return this.searchJoinType;
-    }
-
-    /**
      * @return the type
      */
     public SearchType getType() {
@@ -292,7 +283,6 @@ public class IndividualSearch {
      */
     public void setQuery(final String query) {
         // record the fact the query has been amended
-        this.amendedQuery = true;
         this.query = query;
     }
 

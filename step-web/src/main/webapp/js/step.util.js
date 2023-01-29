@@ -3369,7 +3369,7 @@ step.util = {
 		if (!reference) reference = "";
         $.ajaxSetup({async: false});
         for (var j = 0; j < strongArray.length; j++) {
-            var strongWithoutAugment = strongArray[j];
+			var strongWithoutAugment = step.util.fixStrongNumForVocabInfo(strongArray[j]);
             if (processedStrong.indexOf(strongWithoutAugment) == -1) {
                 processedStrong.push(strongWithoutAugment);
 				var strongFirstChar = strong.substring(0, 1).toLowerCase();

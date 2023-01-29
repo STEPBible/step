@@ -72,17 +72,16 @@ var SidebarView = Backbone.View.extend({
 				return;
 			}
 			var ref = this.model.get("ref");
-			var strongsWithoutAugment = step.util.fixStrongNumForVocabInfo(this.model.get("strong"));
-            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongsWithoutAugment, this.model.get("morph"), ref, this.model.get("version"));
+            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(this.model.get("strong"), this.model.get("morph"), ref, this.model.get("version"));
             if (vocabMorphFromJson.vocabInfos.length > 0) {
                 self.createDefinition(vocabMorphFromJson, ref);
                 return;
             }
-            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongsWithoutAugment, this.model.get("morph"), step.userLanguageCode], function (data) {
+            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
                 self.createDefinition(data, ref);
             }).error(function() {
                 if (changeBaseURL())
-                    $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, strongsWithoutAugment, this.model.get("morph"), step.userLanguageCode], function (data) {
+                    $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
                         self.createDefinition(data, ref);
                     })
             });

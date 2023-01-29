@@ -72,7 +72,6 @@ var SidebarView = Backbone.View.extend({
 				return;
 			}
 			var ref = this.model.get("ref");
-//			var strongsWithoutAugment = step.util.fixStrongNumForVocabInfo(this.model.get("strong"));
             var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(this.model.get("strong"), this.model.get("morph"), ref, this.model.get("version"));
             if (vocabMorphFromJson.vocabInfos.length > 0) {
                 self.createDefinition(vocabMorphFromJson, ref);

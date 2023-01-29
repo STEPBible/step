@@ -821,7 +821,7 @@ public class SearchServiceImpl implements SearchService {
         if (srchJoin == "") {
             System.out.println("No srchJoin\nNo srchJoin\nNo srchJoin\nNo srchJoin\n");
         }
-        ImmutablePair<Key, Set> r = executeSearchWithSrchJoin(sq, srchJoin); // : runJoiningSearches(sq);
+        ImmutablePair<Key, Set> r = executeSearchWithSrchJoin(sq, srchJoin);
         final Key results = r.getLeft();
         final Set<String> strongs = r.getRight();
         SearchResult result = getSearchResultFromKey(sq, results);

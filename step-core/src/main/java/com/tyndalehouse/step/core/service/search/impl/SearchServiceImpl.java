@@ -418,7 +418,7 @@ public class SearchServiceImpl implements SearchService {
                 if (curQuery.substring(curQuery.length()-1).equals("*")) {
                     individualSearches.get(0).setQuery(curQuery.substring(0, curQuery.length() - 1) );
                     result = this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options, srchJoin);
-        }
+                }
             }
             return result;
         }
@@ -1854,6 +1854,7 @@ public class SearchServiceImpl implements SearchService {
      * @param searchKeys the search keys of the current search
      * @return the intersection of both Keys, or searchKeys if results is null
      */
+
     private Key intersect(final Key results, final Key searchKeys, final String searchJoinType) {
         //haven't started interesecting yet? just use the other side
         if (results == null) {

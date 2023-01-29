@@ -37,7 +37,7 @@ public class SearchQuery {
      */
 
     public SearchQuery(final String searchQuery, final String[] versions, final String sortOrder, final int context,
-                       final int pageNumber, final int pageSize, final String restriction, final String curSearchJoin) {
+                       final int pageNumber, final int pageSize, final String restriction) {
 
         this.originalQuery = searchQuery;
 
@@ -45,7 +45,7 @@ public class SearchQuery {
         final String[] individualSearches = searchQuery.split(JOINING_SEARCH);
         this.searches = new IndividualSearch[individualSearches.length];
         for (int ii = 0; ii < individualSearches.length; ii++) {
-            this.searches[ii] = new IndividualSearch(individualSearches[ii], versions, restriction, curSearchJoin);
+            this.searches[ii] = new IndividualSearch(individualSearches[ii], versions, restriction);
         }
 
         // set the other variables
@@ -65,8 +65,8 @@ public class SearchQuery {
      * @param context     how many verses either side to include
      * @param pageNumber  the page number required
      */
-    public SearchQuery(String searchQuery, String[] versions, String sortOrder, int context, int pageNumber, String references, String curSearchJoin) {
-        this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE, references, curSearchJoin);
+    public SearchQuery(String searchQuery, String[] versions, String sortOrder, int context, int pageNumber, String references) {
+        this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE, references);
     }
 
     private void prepareAllKeys(final String sortOrder) {

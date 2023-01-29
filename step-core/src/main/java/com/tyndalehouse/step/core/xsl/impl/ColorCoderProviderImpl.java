@@ -125,6 +125,15 @@ public class ColorCoderProviderImpl {
 						classes = classes + " v" + getShortCodeTense(tense) + voice + getShortCodeMood(mood);
 					}
                 }
+				try {
+					String caseOfWord = results[0].get("case").toLowerCase();
+					if (!isBlank(caseOfWord)) {
+						classes = classes + " n-" + caseOfWord.substring(0, 3);
+					}
+				}
+				catch (NullPointerException e) {
+					e.printStackTrace();
+				}
             }
             /* Added this section for the Chinese Bible which has the morphology on verbs */
             else if (code.length() > 4) {

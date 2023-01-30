@@ -226,7 +226,36 @@ window.onmessage = function(e) {
 		var left = "";
 		var right = "";
 		var lastChar = "";
-		if (curURL.search(/reference=[^%&|\s]+([%&|])/) > -1) {
+        var versions = "";
+
+        // the current (old) url needs to be checked for search strings before reference=,
+        // as a search string may contain reference=
+		if (curURL.search(/srchJoin=[^&]+/) > -1
+                 || curURL.search(/strong=[^&]+/) > -1
+                 || curURL.search(/text=[^&]+/) > -1) {
+            var text = RegExp.lastMatch;
+            var pattern = "version=[^|&]*[|&]";
+            var pos = 0;
+
+			left  = RegExp.leftContext;
+			right = RegExp.rightContext;
+
+            // check where any version= strings were contained within
+            // the old (current) url's search criteria, and if so, get these
+            // to use in the new url string.
+            pos = text.search(pattern);
+            while (pos > -1) {
+                versions += RegExp.lastMatch;
+                text = text.replace(/version=[^|&]*[|&]/, "");
+                pos = text.search(pattern);
+            }
+
+            // if there's a range for the search, remove it so that it isn't applied to
+            // future passages or searches
+            left = left.replace(/reference=[^|&]*[|&]/, "");
+
+		}
+		else if (curURL.search(/reference=[^%&|\s]+([%&|])/) > -1) {
 			left = RegExp.leftContext;
 			right = RegExp.rightContext;
 			lastChar = RegExp.$1;
@@ -238,7 +267,17 @@ window.onmessage = function(e) {
 				lastChar = RegExp.$1;
 			}
 		}
-        var newURL = left + "reference=" + e.data + lastChar + right;
+
+        var newURL = left;
+
+		if (e.data.indexOf("strong=") > -1 || e.data.indexOf("srchJoin=") > -1
+            || e.data.indexOf("text=") > -1) {
+			newURL += versions + e.data;
+		}
+		else {
+			newURL += versions + "reference=" + e.data;
+		}
+        newURL += lastChar + right;
 		if (newURL.indexOf("skipwelcome") == -1) newURL += "&skipwelcome";
         document.getElementById("f1").src = newURL;
         console.log("old: " + curURL);

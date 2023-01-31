@@ -75,7 +75,7 @@
     <tr class="tb_head">
       <th>Name</th>
       <th>Notes and examples</th>
-      <th class="col_center"><span title="The number of times the word or phrase occurs, not the number of verses; may vary from translation to translation.">Occurs*</span></th>
+      <th class="col_center"><span title="The number of times the word or phrase occurs, not the number of verses.  This may vary in different translations.">Occurs*</span></th>
     </tr>
   </thead>
   <tbody id="tb_body">
@@ -210,9 +210,6 @@ function setupTable(urlPart1) {
             pos2 = notes.search(pattern);
             while (pos2 > -1) {
                 clickText = "";
-                if (pos2 > 0) {
-                    clickText = " -&nbsp";
-                }
                 passage = RegExp.lastMatch;
                 passage = passage.replace(/{/, '').replace(/}/, '');
                 clickText += clickText1 + passage.replace(/ /g, '')

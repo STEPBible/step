@@ -132,7 +132,7 @@ public class ColorCoderProviderImpl {
 					}
 				}
 				catch (NullPointerException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
             }
             /* Added this section for the Chinese Bible which has the morphology on verbs */

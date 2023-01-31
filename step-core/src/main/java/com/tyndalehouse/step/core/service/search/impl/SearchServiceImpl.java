@@ -818,9 +818,6 @@ public class SearchServiceImpl implements SearchService {
      */
     private SearchResult executeJoiningSearches(final SearchQuery sq, final String srchJoin) {
         // we run each individual search, and get all the keys out of each
-        if (srchJoin == "") {
-            System.out.println("No srchJoin\nNo srchJoin\nNo srchJoin\nNo srchJoin\n");
-        }
         ImmutablePair<Key, Set> r = executeSearchWithSrchJoin(sq, srchJoin);
         final Key results = r.getLeft();
         final Set<String> strongs = r.getRight();
@@ -882,6 +879,12 @@ public class SearchServiceImpl implements SearchService {
     	if (group > 25) throw new TranslatedException("search_invalid"); // Maximum of 26 groups because we are using A-Z to represent the group;
         String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         arg = arg.replaceAll("\\s", "");
+        if ((arg.equals("")) && (sq.getSearches().length > 1)) { // No search parameter so create  arg string for AND search
+            arg = "1";
+            for (Integer j = 2; j <= sq.getSearches().length; j++) {
+                arg += "a" + j.toString();
+            }
+        }
         String[] parts = arg.split("(?=[aon])"); // and or not
         Pattern patternNum = Pattern.compile("^\\d+$");
         Pattern patternCapAlpha = Pattern.compile("^[A-Z]$");
@@ -906,7 +909,6 @@ public class SearchServiceImpl implements SearchService {
                     if (strongsArray[group] == null) strongsArray[group] = r.getRight();
                     else strongsArray[group].addAll(r.getRight());
                 }
-                System.out.println("I num: " + i + " found: " + parts[i] + " type " + joinType);
             }
             else if (patternCapAlpha.matcher(parts[i]).find()) {
                 int index = alpha.indexOf(parts[i]);
@@ -915,7 +917,6 @@ public class SearchServiceImpl implements SearchService {
                     if (strongsArray[group] == null) strongsArray[group] = strongsArray[index];
                     else strongsArray[group].addAll(strongsArray[index]);
                 }
-				System.out.println("I cap: " + i + " found: " + parts[i] + " type " + joinType);
             }
             else System.out.println("unexpected input"+ parts[i]);
         }

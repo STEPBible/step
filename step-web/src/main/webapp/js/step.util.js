@@ -2729,7 +2729,7 @@ step.util = {
 		    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
-			if ((introCount < 2) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
+			if ((introCount < 1) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
 				var introJsSteps = [
 				{
 					element: document.querySelector('#copy-icon'),

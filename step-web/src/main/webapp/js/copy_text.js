@@ -21,7 +21,7 @@ step.copyText = {
 
 	_buildHeaderAndSkeleton: function(summaryMode) {
 		var html = '<div class="header" style="overflow-y:auto">' +
-			'<h4>Please select the first version to copy</h4>';
+			'<h4>' + __s.please_select_first_version_to_copy + '</h4>';
 		return html;
 	},
 
@@ -257,7 +257,7 @@ step.copyText = {
 		else if (previousTimes.length > 0) sleepTime = 600;
 		navigator.clipboard.writeText(textToCopy);
 		$('#bookchaptermodalbody').empty();
-		$('#bookchaptermodalbody').append("<h2>The text is copied, ready to be pasted.");
+		$('#bookchaptermodalbody').append("<h2>" + __s.text_is_copied);
 		$('#copyModalFooter').empty();
 		setTimeout( function() { step.util.closeModal("copyModal")}, sleepTime);
 	},
@@ -295,8 +295,8 @@ step.copyText = {
 			}
 		}
 
-		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy<br><br><br>" : 
-			"Copy will start from verse: " + verses[firstSelection] + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
+		var headerMsg = (firstSelection == -1) ? __s.select_the_first_verse_to_copy + "<br><br><br>" : 
+			__s.copy_will_start_from_verse + ": " + verses[firstSelection] + "<br>" + __s.select_last_verse_to_copy;
 		this.modalMode = 'verse';
 		var tableColumns = 10;
 		var widthPercent = 10;

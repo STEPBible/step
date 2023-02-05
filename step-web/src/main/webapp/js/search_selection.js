@@ -1260,12 +1260,43 @@ step.searchSelect = {
 										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
 										if (str2Search.indexOf("%22") == -1) {
 											var strings2Search = str2Search.split(" ");
+											var foundOr = false;
 											if (strings2Search.length > 1) {
+												var tmp = [];
+												for (var j = 0; j < strings2Search.length; j ++) {
+													var trimString = strings2Search[j].trim();
+													if (trimString.length > 0) {
+														if (trimString.toLowerCase() === "and") {
+														}
+														else if (trimString.toLowerCase() === "or") {
+															foundOr = true;
+														}
+														else tmp.push(trimString);
+													}
+												}
+												strings2Search = tmp;
+												str2Search = strings2Search.join(" ");
+												text2Display = str2Search;
+											}
+											if (strings2Search.length > 1) {
+												var defaultSearchString = "";
+												var defaultMouseOverTitle = "";
+												if (!foundOr) {
+													defaultSearchString = "<b>" + __s.default_search + "</b>";
+													defaultMouseOverTitle = __s.default_search_mouse_over_title;
+												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
-													str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", "<b>" + __s.default_search + "</b>", __s.default_search_mouse_over_title,
+													str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
 													limitType, null, false, false);
+												
+												defaultSearchString = "";
+												defaultMouseOverTitle = "";
+												if (foundOr) {
+													defaultSearchString = "<b>" + __s.default_search + "</b>";
+													defaultMouseOverTitle = __s.default_search_mouse_over_title;
+												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
-													str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", "", "",
+													str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", defaultSearchString, defaultMouseOverTitle,
 													limitType, null, false, false);
 												text2Display = '"' + str2Search + '"';
 												str2Search = '%22' + str2Search + '%22';

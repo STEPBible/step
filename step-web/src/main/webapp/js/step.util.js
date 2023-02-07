@@ -1303,7 +1303,7 @@ step.util = {
 								step.lastTapStrong = "";
 							}
 						}).hover(function (ev) { // mouse pointer starts hover (enter)
-							if (!step.touchDevice) {
+							if ((!step.touchDevice) && (!step.util.keepQuickLexiconOpen)) {
 								step.passage.higlightStrongs({
 									passageId: undefined,
 									strong: $(this).attr('strong'),
@@ -1318,7 +1318,7 @@ step.util = {
 									}, MOUSE_PAUSE, 'show-quick-lexicon');
 								});
 							}
-									}, function () { // mouse pointer ends hover (leave)
+						}, function () { // mouse pointer ends hover (leave)
 							if (!step.touchDevice) {
 								step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
 								step.util.delay(undefined, 0, 'show-quick-lexicon');

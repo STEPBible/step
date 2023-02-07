@@ -1261,6 +1261,7 @@ step.util = {
 						step.lastTapStrong = ""  // only use for touch screen
 						that.pageY = 0;
 						allStrongElements.click(function () {
+							step.util.keepQuickLexiconOpen = false;
 							if (!step.touchDevice) {
 								$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
 								$(this).addClass("lexiconFocus");
@@ -1314,7 +1315,6 @@ step.util = {
 									step.util.delay(function () {
 										// do the quick lexicon
 										step.util.ui._displayNewQuickLexicon(hoverContext, passageId, false, ev.pageY);
-										step.util.keepQuickLexiconOpen = false;
 									}, MOUSE_PAUSE, 'show-quick-lexicon');
 								});
 							}

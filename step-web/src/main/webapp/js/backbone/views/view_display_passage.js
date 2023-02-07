@@ -368,10 +368,10 @@ var PassageDisplayView = DisplayView.extend({
                 }).click(function (ev) {
                     if (step.util.keepQuickLexiconOpen) {
                         step.util.keepQuickLexiconOpen = false;
+                        self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
                     }
                     else {
                         step.util.keepQuickLexiconOpen = true;
-                        self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
                     }
                 });
             }

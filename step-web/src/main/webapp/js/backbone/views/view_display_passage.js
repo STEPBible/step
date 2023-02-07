@@ -366,7 +366,7 @@ var PassageDisplayView = DisplayView.extend({
                         $("#quickLexicon").remove();
                     }
                 }).click(function (ev) {
-                    step.util.keepQuickLexiconOpen = true;
+                    step.util.keepQuickLexiconOpen = (step.util.keepQuickLexiconOpen) ? false : true;
                 });
             }
         },

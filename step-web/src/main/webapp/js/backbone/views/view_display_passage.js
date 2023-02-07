@@ -366,7 +366,13 @@ var PassageDisplayView = DisplayView.extend({
                         $("#quickLexicon").remove();
                     }
                 }).click(function (ev) {
-                    step.util.keepQuickLexiconOpen = (step.util.keepQuickLexiconOpen) ? false : true;
+                    if (step.util.keepQuickLexiconOpen) {
+                        step.util.keepQuickLexiconOpen = false;
+                    }
+                    else {
+                        step.util.keepQuickLexiconOpen = true;
+                        self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
+                    }
                 });
             }
         },

@@ -351,7 +351,6 @@ var PassageDisplayView = DisplayView.extend({
             for (var i = 0; i < notes.length; i++) {
                 var item = notes.get(i);
                 var link = $("a", item);
-                var note = $(".inlineNote", item);
 
                 link.on("touchstart", function (ev) {
                     self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
@@ -371,8 +370,11 @@ var PassageDisplayView = DisplayView.extend({
                         self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
                     }
                     else {
-                        step.util.keepQuickLexiconOpen = true;
-                        $("#quickLexicon").find(".close").css("color","red");
+                        if ($("#quickLexicon").find("a.linkref").length > 0) {
+                            step.util.keepQuickLexiconOpen = true;
+                            $("#quickLexicon").find(".close").css("color","red");
+                            setTimeout("alert('hi');", 30000);
+                        }
                     }
                 });
             }

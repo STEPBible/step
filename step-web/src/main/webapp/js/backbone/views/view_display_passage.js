@@ -373,15 +373,19 @@ var PassageDisplayView = DisplayView.extend({
                         if ($("#quickLexicon").find("a.linkref").length > 0) {
                             step.util.keepQuickLexiconOpen = true;
                             $("#quickLexicon").find(".close").css("color","yellow");
+                            $("#quickLexicon").find("a.sideNote").find("strong").parent().addClass("glyphicon glyphicon-lock")
                             var func = function() {
-                                if (step.util.keepQuickLexiconOpen) {
+                                if (step.util.keepQuickLexiconOpen)
                                     step.util.keepQuickLexiconOpen = false;
-                                }
                                 $('#quickLexicon').find('.close').css('color','white');
+                                $("#quickLexicon").find("a.sideNote").find("strong").parent().removeClass("glyphicon glyphicon-lock")
                                 step.util.timeoutID = null;
                             }
                             if (step.util.timeoutID) clearTimeout(step.util.timeoutID);
                             step.util.timeoutID = setTimeout(func, 30000);
+                        }
+                        else {
+                            step.util.keepQuickLexiconOpen = false;
                         }
                     }
                 });

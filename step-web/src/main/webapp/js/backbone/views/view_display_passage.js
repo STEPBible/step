@@ -372,8 +372,16 @@ var PassageDisplayView = DisplayView.extend({
                     else {
                         if ($("#quickLexicon").find("a.linkref").length > 0) {
                             step.util.keepQuickLexiconOpen = true;
-                            $("#quickLexicon").find(".close").css("color","red");
-                            setTimeout("if (step.util.keepQuickLexiconOpen) { $('#quickLexicon').find('.close').css('color','black'); step.util.keepQuickLexiconOpen = false; }", 30000);
+                            $("#quickLexicon").find(".close").css("color","yellow");
+                            var func = function() {
+                                if (step.util.keepQuickLexiconOpen) {
+                                    step.util.keepQuickLexiconOpen = false;
+                                }
+                                $('#quickLexicon').find('.close').css('color','white');
+                                step.util.timeoutID = null;
+                            }
+                            if (step.util.timeoutID) clearTimeout(step.util.timeoutID);
+                            step.util.timeoutID = setTimeout(func, 30000);
                         }
                     }
                 });

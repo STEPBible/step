@@ -373,7 +373,7 @@ var PassageDisplayView = DisplayView.extend({
                         if ($("#quickLexicon").find("a.linkref").length > 0) {
                             step.util.keepQuickLexiconOpen = true;
                             $("#quickLexicon").find(".close").css("color","red");
-                            setTimeout("alert('hi');", 30000);
+                            setTimeout("if (step.util.keepQuickLexiconOpen) { $('#quickLexicon').find('.close').css('color','black'); step.util.keepQuickLexiconOpen = false; }", 30000);
                         }
                     }
                 });

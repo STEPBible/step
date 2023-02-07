@@ -382,7 +382,7 @@ var PassageDisplayView = DisplayView.extend({
                                 step.util.timeoutID = null;
                             }
                             if (step.util.timeoutID) clearTimeout(step.util.timeoutID);
-                            step.util.timeoutID = setTimeout(func, 30000);
+                            step.util.timeoutID = setTimeout(func, 15000);
                         }
                         else {
                             step.util.keepQuickLexiconOpen = false;

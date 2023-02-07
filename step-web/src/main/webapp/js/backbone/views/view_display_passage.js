@@ -372,6 +372,7 @@ var PassageDisplayView = DisplayView.extend({
                     }
                     else {
                         step.util.keepQuickLexiconOpen = true;
+                        $("#quickLexicon").find(".close").css("color","red");
                     }
                 });
             }

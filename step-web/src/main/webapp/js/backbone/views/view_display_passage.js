@@ -373,21 +373,23 @@ var PassageDisplayView = DisplayView.extend({
                         step.util.keepQuickLexiconOpen = false;
                         self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
                     }
-                    if ($("#quickLexicon").find("a.linkref").length > 0) {
-                        step.util.keepQuickLexiconOpen = true;
-                        $("#quickLexicon").find(".close").css("color","yellow");
-                        $("#quickLexicon").find("a.sideNote").find("strong").parent().addClass("glyphicon glyphicon-lock")
-                        var unlockNotes = function() {
-                            if (step.util.keepQuickLexiconOpen)
-                                step.util.keepQuickLexiconOpen = false;
-                            $('#quickLexicon').find('.close').css('color','white');
-                            $("#quickLexicon").find("a.sideNote").find("strong").parent().removeClass("glyphicon glyphicon-lock")
-                            step.util.timeoutID = null;
+                    else {
+                        if ($("#quickLexicon").find("a.linkref").length > 0) {
+                            step.util.keepQuickLexiconOpen = true;
+                            $("#quickLexicon").find(".close").css("color","yellow");
+                            $("#quickLexicon").find("a.sideNote").find("strong").parent().addClass("glyphicon glyphicon-lock")
+                            var unlockNotes = function() {
+                                if (step.util.keepQuickLexiconOpen)
+                                    step.util.keepQuickLexiconOpen = false;
+                                $('#quickLexicon').find('.close').css('color','white');
+                                $("#quickLexicon").find("a.sideNote").find("strong").parent().removeClass("glyphicon glyphicon-lock")
+                                step.util.timeoutID = null;
+                            }
+                            step.util.timeoutID = setTimeout(unlockNotes, 15000);
                         }
-                        step.util.timeoutID = setTimeout(unlockNotes, 15000);
+                        else
+                            step.util.keepQuickLexiconOpen = false;
                     }
-                    else
-                        step.util.keepQuickLexiconOpen = false;
                 });
             }
         },

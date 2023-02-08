@@ -365,6 +365,10 @@ var PassageDisplayView = DisplayView.extend({
                         $("#quickLexicon").remove();
                     }
                 }).click(function (ev) {
+                    if (step.util.timeoutID) {
+                        clearTimeout(step.util.timeoutID);
+                        step.util.timeoutID = null;
+                    }
                     if (step.util.keepQuickLexiconOpen) {
                         step.util.keepQuickLexiconOpen = false;
                         self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
@@ -380,7 +384,6 @@ var PassageDisplayView = DisplayView.extend({
                             $("#quickLexicon").find("a.sideNote").find("strong").parent().removeClass("glyphicon glyphicon-lock")
                             step.util.timeoutID = null;
                         }
-                        if (step.util.timeoutID) clearTimeout(step.util.timeoutID);
                         step.util.timeoutID = setTimeout(unlockNotes, 15000);
                     }
                     else

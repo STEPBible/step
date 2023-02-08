@@ -373,7 +373,7 @@ var PassageDisplayView = DisplayView.extend({
                         step.util.keepQuickLexiconOpen = true;
                         $("#quickLexicon").find(".close").css("color","yellow");
                         $("#quickLexicon").find("a.sideNote").find("strong").parent().addClass("glyphicon glyphicon-lock")
-                        var func = function() {
+                        var unlockNotes = function() {
                             if (step.util.keepQuickLexiconOpen)
                                 step.util.keepQuickLexiconOpen = false;
                             $('#quickLexicon').find('.close').css('color','white');
@@ -381,7 +381,7 @@ var PassageDisplayView = DisplayView.extend({
                             step.util.timeoutID = null;
                         }
                         if (step.util.timeoutID) clearTimeout(step.util.timeoutID);
-                        step.util.timeoutID = setTimeout(func, 15000);
+                        step.util.timeoutID = setTimeout(unlockNotes, 15000);
                     }
                     else
                         step.util.keepQuickLexiconOpen = false;

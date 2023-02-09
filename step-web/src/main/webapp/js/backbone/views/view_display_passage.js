@@ -374,7 +374,7 @@ var PassageDisplayView = DisplayView.extend({
                         self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
                     }
                     else {
-                        if ($("#quickLexicon").find("a.linkref").length > 0) {
+                        //if ($("#quickLexicon").find("a.linkref").length > 0) {
                             step.util.keepQuickLexiconOpen = true;
                             $("#quickLexicon").find(".close").css("color","yellow");
                             $("#quickLexicon").find("a.sideNote").find("strong").parent().addClass("glyphicon glyphicon-lock")
@@ -386,9 +386,9 @@ var PassageDisplayView = DisplayView.extend({
                                 step.util.timeoutID = null;
                             }
                             step.util.timeoutID = setTimeout(unlockNotes, 15000);
-                        }
-                        else
-                            step.util.keepQuickLexiconOpen = false;
+                        //}
+                        //else
+                        //    step.util.keepQuickLexiconOpen = false;
                     }
                 });
             }

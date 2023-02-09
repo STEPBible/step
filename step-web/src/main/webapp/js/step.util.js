@@ -296,7 +296,8 @@ step.util = {
                 }
             }
         };
-        xhr.sendAsBinary(dataToBeSent.join('\r\n'));
+        // xhr.sendAsBinary is obsolete and causes Unicode issues
+        xhr.send(dataToBeSent.join('\r\n'));
     },
     refreshColumnSize: function (columns) {
         if (!columns) {

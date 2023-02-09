@@ -26,6 +26,7 @@ import org.apache.http.util.EntityUtils;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.getNonNullString;
 
@@ -59,7 +60,16 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     @Override
     public void createRequest(final String summary, final String description, final String url,
                               final String issueType, final String email) {
-        final String id = createJiraRequest(summary, description, url, issueType, email);
+
+        // Strings returned from tomcat when session .getParam() returns ISO_8859_1 text.
+        // However, the submitted "summary" and/or "description" can be in Unicode
+        // we need to to convert them back to Unicode.
+        byte[] byteArrray = summary.getBytes(StandardCharsets.ISO_8859_1);
+        String summary_u = new String(byteArrray, StandardCharsets.UTF_8);
+        byteArrray = description.getBytes(StandardCharsets.ISO_8859_1);
+        String description_u = new String(byteArrray, StandardCharsets.UTF_8);
+
+        final String id = createJiraRequest(summary_u, description_u, url, issueType, email);
         attachImage(id);
     }
 

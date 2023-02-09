@@ -385,6 +385,7 @@ var PassageDisplayView = DisplayView.extend({
                                 $("#quickLexicon").find("a.sideNote").find("strong").parent().removeClass("glyphicon glyphicon-lock")
                                 step.util.timeoutID = null;
                             }
+                            $("#quickLexicon").find("a.sideNote").find("strong").parent().click(unlockNotes);
                             step.util.timeoutID = setTimeout(unlockNotes, 15000);
                         //}
                         //else

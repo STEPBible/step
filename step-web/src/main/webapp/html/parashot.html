@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Names of God</title>
+    <title>Parashot Readings</title>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
     <link href="/css/cardo.css" rel="stylesheet" media="screen"/>
@@ -46,9 +46,6 @@
         background: #17758f;
         color: white;
     }
-    .col_center{
-        text-align: center;
-    }
 
     .clickable{
         color: #17758f;
@@ -62,20 +59,47 @@
   </style>
 </head>
 <body style="margin:0;background-color:white"">
-<h2 id="header">Names of God</h2>
+
+<table style="font-family: Helvetica; border: none">
+<colgroup>
+    <col span="1" style="width:50%;">
+    <col span="1" style="width:48%;">
+    <col span="1" style="width:2%;">
+</colgroup>
+<tr>
+    <td style="font-size: 30px; font-weight: bold; border: none">Parashot Readings</td>
+    <td style="font-size: 15px; border: none; text-align: right">
+        <label for="format">Format:</label>
+        <select name="format" id="format">
+            <option value=0 selected="selected">Weekly</option>
+            <option value=1>Daily</option>
+        </select>
+        <label for="versification">Versification:</label>
+        <select name="versification" id="versification">
+            <option value=0 selected="selected">Hebrew</option>
+            <option value=1>English</option>
+        </select>
+    </td>
+    <td style="border: none"/>
+</tr>
+</table>
+
+
 <div class="fixTableHead">
-<table>
+<table id="tb_parashot">
 	<colgroup>
-		<col span="1" style="width:25%;">
-		<col span="1" style="width:60%;">
-		<col span="1" style="width:15%;">
+		<col span="1" style="width:17%;">
+		<col span="1" style="width:29%;">
+		<col span="1" style="width:27%;">
+		<col span="1" style="width:27%;">
 	</colgroup>
 
   <thead>
     <tr class="tb_head">
-      <th>Name</th>
-      <th>Notes and examples</th>
-      <th class="col_center"><span title="The number of times the word or phrase occurs, not the number of verses.  This may vary in different translations.">Occurs*</span></th>
+      <th>Week</th>
+      <th>Title</th>
+      <th>Torah reading</th>
+      <th>Haftorah reading</th>
     </tr>
   </thead>
   <tbody id="tb_body">
@@ -96,14 +120,14 @@
     }
 	var debugOption = "";
 	var urlPart1 = window.location.origin;
-	var pos = window.location.href.indexOf("/html/names.html");
+	var pos = window.location.href.indexOf("/html/parashot.html");
 	if (pos > 8) { // probably running in development environment.
 		urlPart1 = window.location.href.substr(0, pos);
 		debugOption = "&debug";
 	}
     if (!inIFrame)
         window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
-			"/?q=reference=Gen.16:13" + 
+			"/?q=reference=Gen.1:1-6:8" + 
 			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
 	if (typeof jQuery == 'undefined') {
   		loadFile(urlPart1 + "/css/bootstrap.css");
@@ -161,8 +185,6 @@ function setupTable(urlPart1) {
 	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.93);
 	$(".fixTableHead").css("height", remainingHeight + "px");
 
-    var grSize = 15 + "px";
-    var hbSize = 20 + "px";
     var settings = new SettingsModelList;
     settings.fetch();
     if (settings.length > 0) {
@@ -170,15 +192,8 @@ function setupTable(urlPart1) {
         var sz = step.settings.get("defaultfont");
 		if (typeof sz !== "number") sz = 15;
         $("table").css("font-size", sz + "px");
-        sz = step.settings.get("unicodeFont");
-		if (typeof sz !== "number") sz = 15;
-        grSize = sz + "px";
-        sz = step.settings.get("hbFont");
-		if (typeof sz !== "number") sz = 20;
-        hbSize = sz + "px";
     }
 
-	var jsonFileName = "names";
     var queryString = window.location.search;
 	var pos = queryString.indexOf("jsonFN=");
 	if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
@@ -188,54 +203,136 @@ function setupTable(urlPart1) {
 		else if (pos > 0) jsonFileName = tmp.substr(0,pos);
 	}
 	$.ajaxSetup({async: false});
+
+    // Remove old table rows (i.e., redisplaying for different versification).
+    // Note that row 1 is the header, and we won't delete that.
+    var rows = $("#tb_body").find("tr");
+    for (var i = 0; i < rows.length; i ++) {
+        document.getElementById("tb_parashot").deleteRow(1);
+    }
+
+	var jsonFileName1 = "parashot_first_sabbaths";
+	var jsonFileName2 = "parashot_readings";
+	var jsonFileName3 = "parashot_weeks";
+
 	var tblRowHTML = "";
     var pattern = "{[^}]+}";
     var clickText1 = '<span class="clickable" onclick=displayPassages(this,"';
     var clickText2 = '")>';
     var clickText3 = '</span>';
 
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
+    var versification = document.getElementById("versification").value;
+    var format = document.getElementById("format").value;
+    var first_sabbath_of_year;
+    var first_sabbath_of_next_year;
+
+    // set 'date' to be the first Sabbath of the current year
+    $.getJSON(urlPart1 + "/html/json/" + jsonFileName1 + ".json", function(array) {
+        var i = 0;
+        var nextYear = new Date (array[i]);
+        var today = new Date();
+
+        while (i < array.length && today > nextYear) {
+            i++;
+            nextYear = new Date (array[i]);
+		}
+        first_sabbath_of_year = array[i-1];
+        first_sabbath_of_next_year = array[i];
+    });
+
+    var reading_title = new Array();
+    var torah_reading = new Array();
+    var torahDaily_reading = new Array();
+    var haftorah_reading = new Array();
+    var torahEng_reading = new Array();
+    var torahDailyEng_reading = new Array();
+    var haftorahEng_reading = new Array();
+
+    // read the list of readings into arrays
+    $.getJSON(urlPart1 + "/html/json/" + jsonFileName2 + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
-            var clickText = "";
-            var notes = "";
-            var passage = "";
-            var pos2 = -1;
-            var search = "";
+            reading_title[i] = array[i][1];
+            torah_reading[i] = array[i][2];
+            torahDaily_reading[i] = array[i][3];
+            haftorah_reading[i] = array[i][4];
+            torahEng_reading[i] = array[i][5];
+            torahDailyEng_reading[i] = array[i][6];
+            haftorahEng_reading[i] = array[i][7];
+        }
+    });
 
-            // build the notes field, embedding passage links that are designated
-            // between { }.
+    $.getJSON(urlPart1 + "/html/json/" + jsonFileName3 + ".json", function(array) {
+		for (var i = 0; i < array.length; i ++ ) {
+            if (array[i][0] >= first_sabbath_of_year && array[i][0] < first_sabbath_of_next_year)
+            {
+                var dt = new Date(array[i][0]+"T12:00:00Z");
+                var year = dt.getFullYear();
+                var display_dt = dt.toDateString().replace("Sat ","").replace(" "+year, ", "+year);
+                var reading_number = array[i][1];
 
-            notes = array[i][1];
-            pos2 = notes.search(pattern);
-            while (pos2 > -1) {
-                clickText = "";
-                passage = RegExp.lastMatch;
-                passage = passage.replace(/{/, '').replace(/}/, '');
-                clickText += clickText1 + passage.replace(/ /g, '')
-                    + clickText2 + passage + clickText3;
-                notes = notes.replace(/{[^}]+}/, clickText);
-                pos2 = notes.search(pattern);
+                if (format > 0)
+                {
+                    if (versification > 0)
+                    {
+                        torah = torahDailyEng_reading[reading_number];
+                        haftorah = haftorahEng_reading[reading_number];
+                    }
+                    else
+                    {
+                        torah = torahDaily_reading[reading_number];
+                        haftorah = haftorah_reading[reading_number];
+                    }
+                }
+                else
+                {
+                    if (versification > 0)
+                    {
+                        torah = torahEng_reading[reading_number];
+                        haftorah = haftorahEng_reading[reading_number];
+                    }
+                    else
+                    {
+                        torah = torah_reading[reading_number];
+                        haftorah = haftorah_reading[reading_number];
+                    }
+                }
+
+                // Add links to the passages, designated between { }.
+
+                pos2 = torah.search(pattern);
+                while (pos2 > -1) {
+                    clickText = "";
+                    passage = RegExp.lastMatch;
+                    passage = passage.replace(/{/, '').replace(/}/, '');
+                    clickText += clickText1 + passage.replace(/ /g, '')
+                        + clickText2 + passage + clickText3;
+                    torah = torah.replace(/{[^}]+}/, clickText);
+                    pos2 = torah.search(pattern);
+                }
+    
+                pos2 = haftorah.search(pattern);
+                while (pos2 > -1) {
+                    clickText = "";
+                    passage = RegExp.lastMatch;
+                    passage = passage.replace(/{/, '').replace(/}/, '');
+                    clickText += clickText1 + passage.replace(/ /g, '')
+                        + clickText2 + passage + clickText3;
+                    haftorah = haftorah.replace(/{[^}]+}/, clickText);
+                    pos2 = haftorah.search(pattern);
+                }
+    
+    			tblRowHTML = 
+    				'<tr><td class="tb_col">' + display_dt + '</td>' +
+    				    '<td class="tb_col">' + reading_title[reading_number] + '</td>' +
+    				    '<td class="tb_col">' + torah + '</td>' +
+    					'<td class="tb_col">' + haftorah + '</td></tr>';
+    	        $("#tb_body").append(tblRowHTML);
             }
-
-            if (array[i][3] !== "") {
-                search = '<span class="clickable" onclick=displayPassages(this,"'
-                            + array[i][3] + '")>'
-                            + array[i][2] + '</span>';
-            }
-            else {
-                search = array[i][2];
-            }
-
-			tblRowHTML = 
-				'<tr><td>' + array[i][0] + '</td>' +
-				    '<td>' + notes + '</td>' +
-					'<td class="col_center">' + search + '</td></tr>';
-	        $("#tb_body").append(tblRowHTML);
 		}
 
-        $(".Cardo").css("font-size", grSize);
-        $(".hbFont").css("font-size", hbSize);
     });
+    document.getElementById("format").onchange=function() {setupTable(urlPart1)};
+    document.getElementById("versification").onchange=function() {setupTable(urlPart1)};
     $.ajaxSetup({async: true});
 
 	$(function(){

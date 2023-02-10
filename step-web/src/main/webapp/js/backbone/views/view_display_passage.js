@@ -374,22 +374,18 @@ var PassageDisplayView = DisplayView.extend({
                         self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
                     }
                     else {
-                        //if ($("#quickLexicon").find("a.linkref").length > 0) {
-                            step.util.keepQuickLexiconOpen = true;
-                            $("#quickLexicon").find(".close").css("color","yellow");
-                            $("#quickLexicon").find("a.sideNote").find("strong").parent().addClass("glyphicon glyphicon-lock")
-                            var unlockNotes = function() {
-                                if (step.util.keepQuickLexiconOpen)
-                                    step.util.keepQuickLexiconOpen = false;
-                                $('#quickLexicon').find('.close').css('color','white');
-                                $("#quickLexicon").find("a.sideNote").find("strong").parent().removeClass("glyphicon glyphicon-lock")
-                                step.util.timeoutID = null;
-                            }
-                            $("#quickLexicon").find("a.sideNote").find("strong").parent().click(unlockNotes);
-                            step.util.timeoutID = setTimeout(unlockNotes, 15000);
-                        //}
-                        //else
-                        //    step.util.keepQuickLexiconOpen = false;
+                        step.util.keepQuickLexiconOpen = true;
+                        $("#quickLexicon").find(".close").css("color","yellow");
+                        $("#quickLexicon").find("a.sideNote").find("strong").parent().addClass("glyphicon glyphicon-lock")
+                        var unlockNotes = function() {
+                           if (step.util.keepQuickLexiconOpen)
+                               step.util.keepQuickLexiconOpen = false;
+                            $('#quickLexicon').find('.close').css('color','white');
+                            $("#quickLexicon").find("a.sideNote").find("strong").parent().removeClass("glyphicon glyphicon-lock")
+                            step.util.timeoutID = null;
+                        }
+                        $("#quickLexicon").find("a.sideNote").find("strong").parent().click(unlockNotes);
+                        step.util.timeoutID = setTimeout(unlockNotes, 15000);
                     }
                 });
             }

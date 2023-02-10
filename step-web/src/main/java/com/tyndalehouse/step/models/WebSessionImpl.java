@@ -2,13 +2,17 @@ package com.tyndalehouse.step.models;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.ClientSession;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
+
+import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 /**
  * A web session which wraps around the jsession id...
@@ -93,7 +97,19 @@ public class WebSessionImpl implements ClientSession {
     public InputStream getAttachment(final String filePart) {
         try {
             final Part part = this.request.getPart(filePart);
-            return part.getInputStream();
+            InputStream received = part.getInputStream();
+            // If the attachment is base64 encoded, we need to decode it
+            int size = received.available();
+            byte[] encoded = new byte[size];
+            size = received.read(encoded);
+            if(Base64.isArrayByteBase64(encoded)) {
+                byte[] decoded = decodeBase64(encoded);
+                return new ByteArrayInputStream(decoded);
+            }
+            else
+            {
+                return received;
+            }
         } catch (ServletException e) {
             throw new StepInternalException("Unable to obtain part", e);
         } catch (IOException e) {

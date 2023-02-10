@@ -283,7 +283,7 @@ step.util = {
         dataToBeSent.push(startTokenBoundary);
         dataToBeSent.push('Content-Disposition: form-data; name="' + name + '"; filename="' + fn + '"');
         dataToBeSent.push('');
-        dataToBeSent.push(atob(data));
+        dataToBeSent.push(data);    // send the image as is (base64 encoded). The server will decode
         dataToBeSent.push(startTokenBoundary + '--');
         dataToBeSent.push('');
 
@@ -296,7 +296,6 @@ step.util = {
                 }
             }
         };
-        // xhr.sendAsBinary is obsolete and causes Unicode issues
         xhr.send(dataToBeSent.join('\r\n'));
     },
     refreshColumnSize: function (columns) {

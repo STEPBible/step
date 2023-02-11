@@ -122,7 +122,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
             bos = new BufferedOutputStream(outputStream);
             bis = new BufferedInputStream(imageData);
             int b;
-            while ((b = bis.read()) != -1) {
+            while ((b = (byte)bis.read()) != -1) {
                 bos.write(b);
             }
             bos.flush();

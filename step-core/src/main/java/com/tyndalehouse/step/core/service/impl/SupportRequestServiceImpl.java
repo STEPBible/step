@@ -86,7 +86,9 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         HttpResponse response = null;
         try {
             imageData = clientSessionProvider.get().getAttachment("screenshot-part");
-            byte[] imageAsBytes = readImage(imageData);
+            //byte[] imageAsBytes = readImage(imageData);
+            byte[] imageAsBytes = new byte[imageData.available()];
+            imageData.read(imageAsBytes);
             if (imageAsBytes == null || imageAsBytes.length == 0) {
                 return;
             }

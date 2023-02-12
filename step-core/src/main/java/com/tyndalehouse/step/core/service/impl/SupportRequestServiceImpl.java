@@ -61,15 +61,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     public void createRequest(final String summary, final String description, final String url,
                               final String issueType, final String email) {
 
-        // Strings returned from tomcat when session .getParam() returns ISO_8859_1 text.
-        // However, the submitted "summary" and/or "description" can be in Unicode
-        // we need to to convert them back to Unicode.
-        byte[] byteArrray = summary.getBytes(StandardCharsets.ISO_8859_1);
-        String summary_u = new String(byteArrray, StandardCharsets.UTF_8);
-        byteArrray = description.getBytes(StandardCharsets.ISO_8859_1);
-        String description_u = new String(byteArrray, StandardCharsets.UTF_8);
-
-        final String id = createJiraRequest(summary_u, description_u, url, issueType, email);
+        final String id = createJiraRequest(summary, description, url, issueType, email);
         attachImage(id);
     }
 
@@ -86,9 +78,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         HttpResponse response = null;
         try {
             imageData = clientSessionProvider.get().getAttachment("screenshot-part");
-            //byte[] imageAsBytes = readImage(imageData);
-            byte[] imageAsBytes = new byte[imageData.available()];
-            imageData.read(imageAsBytes);
+            byte[] imageAsBytes = readImage(imageData);
             if (imageAsBytes == null || imageAsBytes.length == 0) {
                 return;
             }
@@ -124,7 +114,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
             bos = new BufferedOutputStream(outputStream);
             bis = new BufferedInputStream(imageData);
             int b;
-            while ((b = (byte)bis.read()) != -1) {
+            while ((b = bis.read()) != -1) {
                 bos.write(b);
             }
             bos.flush();

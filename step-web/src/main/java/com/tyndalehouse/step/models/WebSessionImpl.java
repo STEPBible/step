@@ -102,16 +102,14 @@ public class WebSessionImpl implements ClientSession {
             int size = received.available();
             byte[] encoded = new byte[size];
             size = received.read(encoded);
-            //if(Base64.isArrayByteBase64(encoded)) {
-            byte[] decoded = java.util.Base64.getDecoder().decode(encoded);
+            if(Base64.isArrayByteBase64(encoded)) {
+                byte[] decoded = decodeBase64(encoded);
             return (new ByteArrayInputStream(decoded));
-//                byte[] decoded = decodeBase64(encoded);
-//                return new ByteArrayInputStream(decoded);
-//            }
-//            else
-//            {
-//                return received;
-//            }
+            }
+            else
+            {
+                return received;
+            }
         } catch (ServletException e) {
             throw new StepInternalException("Unable to obtain part", e);
         } catch (IOException e) {

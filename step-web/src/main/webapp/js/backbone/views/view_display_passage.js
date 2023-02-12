@@ -351,7 +351,6 @@ var PassageDisplayView = DisplayView.extend({
             for (var i = 0; i < notes.length; i++) {
                 var item = notes.get(i);
                 var link = $("a", item);
-                var note = $(".inlineNote", item);
 
                 link.on("touchstart", function (ev) {
                     self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
@@ -366,7 +365,28 @@ var PassageDisplayView = DisplayView.extend({
                         $("#quickLexicon").remove();
                     }
                 }).click(function (ev) {
+                    if (step.util.timeoutID) {
+                        clearTimeout(step.util.timeoutID);
+                        step.util.timeoutID = null;
+                    }
+                    if (step.util.keepQuickLexiconOpen) {
+                        step.util.keepQuickLexiconOpen = false;
+                        self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
+                    }
+                    else {
                     step.util.keepQuickLexiconOpen = true;
+                        $("#quickLexicon").find(".close").css("color","yellow");
+                        $("#quickLexicon").find("a.sideNote").find("strong").parent().addClass("glyphicon glyphicon-lock")
+                        var unlockNotes = function() {
+                           if (step.util.keepQuickLexiconOpen)
+                               step.util.keepQuickLexiconOpen = false;
+                            $('#quickLexicon').find('.close').css('color','white');
+                            $("#quickLexicon").find("a.sideNote").find("strong").parent().removeClass("glyphicon glyphicon-lock")
+                            step.util.timeoutID = null;
+                        }
+                        $("#quickLexicon").find("a.sideNote").find("strong").parent().click(unlockNotes);
+                        step.util.timeoutID = setTimeout(unlockNotes, 15000);
+                    }
                 });
             }
         },

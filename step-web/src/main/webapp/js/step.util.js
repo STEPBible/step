@@ -271,7 +271,7 @@ step.util = {
         xhr.open('POST', url, true);
         var boundary = '--step-form-data123456';
         var startTokenBoundary = '--' + boundary;
-        xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
+        xhr.setRequestHeader('Content-Type', 'multipart/form-data; charset=UTF-8; boundary=' + boundary);
         var dataToBeSent = [];
         for (var i = 0; i < formData.length; i++) {
             dataToBeSent.push(startTokenBoundary);

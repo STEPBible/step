@@ -104,7 +104,7 @@ public class WebSessionImpl implements ClientSession {
             size = received.read(encoded);
             if(Base64.isArrayByteBase64(encoded)) {
                 byte[] decoded = decodeBase64(encoded);
-                return new ByteArrayInputStream(decoded);
+                return (new ByteArrayInputStream(decoded));
             }
             else
             {

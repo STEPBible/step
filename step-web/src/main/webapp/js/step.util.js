@@ -1261,11 +1261,6 @@ step.util = {
 						step.lastTapStrong = ""  // only use for touch screen
 						that.pageY = 0;
 						allStrongElements.click(function () {
-							step.util.keepQuickLexiconOpen = false;
-							if (step.util.timeoutID) {
-								clearTimeout(step.util.timeoutID)
-								step.util.timeoutID = null;
-							}
 							if (!step.touchDevice) {
 								$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
 								$(this).addClass("lexiconFocus");

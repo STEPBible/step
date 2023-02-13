@@ -1302,7 +1302,7 @@ step.util = {
 								step.lastTapStrong = "";
 							}
 						}).hover(function (ev) { // mouse pointer starts hover (enter)
-							if (!step.touchDevice) {
+							if ((!step.touchDevice) && (!step.util.keepQuickLexiconOpen)) {
 								step.passage.higlightStrongs({
 									passageId: undefined,
 									strong: $(this).attr('strong'),

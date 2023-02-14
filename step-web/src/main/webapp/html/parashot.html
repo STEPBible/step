@@ -6,11 +6,13 @@
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
     <link href="/css/cardo.css" rel="stylesheet" media="screen"/>
+    <link href="/css/introjs.min.css" rel="stylesheet" media="screen"/>
     <link href="/css/select2.css" rel="stylesheet" media="screen"/>
     <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
     <script src="/international/en.js" type="text/javascript"></script>
     <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/libs/introjs.min.js" type="text/javascript"></script>
     <script src="/libs/underscore-min.js" type="text/javascript"></script>
     <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
     <script src="/libs/backbone.js" type="text/javascript"></script>
@@ -56,6 +58,7 @@
         font-variant-caps: small-caps;
     }
 
+    
   </style>
 </head>
 <body style="margin:0;background-color:white"">
@@ -76,8 +79,8 @@
         </select>
         <label for="versification">Versification:</label>
         <select name="versification" id="versification">
-            <option value=0 selected="selected">Hebrew</option>
-            <option value=1>English</option>
+            <option value=0 selected="selected">English</option>
+            <option value=1>Hebrew</option>
         </select>
     </td>
     <td style="border: none"/>
@@ -137,6 +140,7 @@
 		loadFile(urlPart1 + "/scss/step-template.css");
 		loadFile(urlPart1 + "/international/en.js");
 		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js');
+        loadFile(urlPart1 + '/libs/introjs.min.js');
 		loadFile(urlPart1 + "/libs/underscore-min.js");
 		loadFile(urlPart1 + "/libs/bootstrap.min.js");
 		loadFile(urlPart1 + "/libs/backbone.js");
@@ -202,6 +206,7 @@ function setupTable(urlPart1) {
 		if (pos == -1) jsonFileName = tmp;
 		else if (pos > 0) jsonFileName = tmp.substr(0,pos);
 	}
+
 	$.ajaxSetup({async: false});
 
     // Remove old table rows (i.e., redisplaying for different versification).
@@ -221,8 +226,24 @@ function setupTable(urlPart1) {
     var clickText2 = '")>';
     var clickText3 = '</span>';
 
+    // get the versification last used from local storage
     var versification = document.getElementById("versification").value;
+    var pVersification = Number(localStorageGetItem("parashotVersification"));
+    if (pVersification != versification) {
+        versification = pVersification;
+        $('#versification').val(pVersification);
+        $('#versification').change();
+    }
+
+    // get the versification last used from local storage
     var format = document.getElementById("format").value;
+    var pFormat = Number(localStorageGetItem("parashotFormat"));
+    if (pFormat != format) {
+        format = pFormat;
+        $('#format').val(pFormat);
+        $('#format').change();
+    }
+
     var first_sabbath_of_year;
     var first_sabbath_of_next_year;
 
@@ -274,26 +295,26 @@ function setupTable(urlPart1) {
                 {
                     if (versification > 0)
                     {
-                        torah = torahDailyEng_reading[reading_number];
-                        haftorah = haftorahEng_reading[reading_number];
+                        torah = torahDaily_reading[reading_number];
+                        haftorah = haftorah_reading[reading_number];
                     }
                     else
                     {
-                        torah = torahDaily_reading[reading_number];
-                        haftorah = haftorah_reading[reading_number];
+                        torah = torahDailyEng_reading[reading_number];
+                        haftorah = haftorahEng_reading[reading_number];
                     }
                 }
                 else
                 {
                     if (versification > 0)
                     {
-                        torah = torahEng_reading[reading_number];
-                        haftorah = haftorahEng_reading[reading_number];
+                        torah = torah_reading[reading_number];
+                        haftorah = haftorah_reading[reading_number];
                     }
                     else
                     {
-                        torah = torah_reading[reading_number];
-                        haftorah = haftorah_reading[reading_number];
+                        torah = torahEng_reading[reading_number];
+                        haftorah = haftorahEng_reading[reading_number];
                     }
                 }
 
@@ -305,7 +326,7 @@ function setupTable(urlPart1) {
                     passage = RegExp.lastMatch;
                     passage = passage.replace(/{/, '').replace(/}/, '');
                     clickText += clickText1 + passage.replace(/ /g, '')
-                        + clickText2 + passage + clickText3;
+                        + clickText2 + passage.replace(/;/g, '; ')  + clickText3;
                     torah = torah.replace(/{[^}]+}/, clickText);
                     pos2 = torah.search(pattern);
                 }
@@ -316,7 +337,7 @@ function setupTable(urlPart1) {
                     passage = RegExp.lastMatch;
                     passage = passage.replace(/{/, '').replace(/}/, '');
                     clickText += clickText1 + passage.replace(/ /g, '')
-                        + clickText2 + passage + clickText3;
+                        + clickText2 + passage.replace(/;/g, '; ') + clickText3;
                     haftorah = haftorah.replace(/{[^}]+}/, clickText);
                     pos2 = haftorah.search(pattern);
                 }
@@ -331,8 +352,46 @@ function setupTable(urlPart1) {
 		}
 
     });
-    document.getElementById("format").onchange=function() {setupTable(urlPart1)};
-    document.getElementById("versification").onchange=function() {setupTable(urlPart1)};
+    document.getElementById("format").onchange=function() {
+        var newFormat = document.getElementById("format").value;
+        var oldFormat = Number(localStorageGetItem("parashotFormat"));
+        // save in local storage so that is used as the default in the future
+        if (newFormat != oldFormat)
+        {
+            localStorageSetItem("parashotFormat", newFormat);
+            setupTable(urlPart1)
+        }
+    };
+
+    document.getElementById("versification").onchange=function() {
+        var newVersification = document.getElementById("versification").value;
+        var oldVersification = Number(localStorageGetItem("parashotVersification"));
+        // save in local storage so that is used as the default in the future
+        if (newVersification != oldVersification)
+        {
+            localStorageSetItem("parashotVersification", newVersification);
+            setupTable(urlPart1)
+        }
+    };
+
+
+    // Only show the intro if the user hasn't seen it before.
+
+    var pcount = Number(localStorageGetItem("parashotCount"));
+    if (pcount < 2) {
+        var introJsSteps = [{
+            element: document.querySelector('#versification'),
+    		intro: "English versification work with ESV, NIV, KJV, etc.  Select Hebrew for THOT, OHB or other texts that use the MT (Masoretic Text) versification."
+        }];
+        introJs().setOptions({
+            steps: introJsSteps
+        }).start();
+
+        pcount += 1;
+        localStorageSetItem("parashotCount", pcount);
+    }
+
+
     $.ajaxSetup({async: true});
 
 	$(function(){
@@ -341,6 +400,7 @@ function setupTable(urlPart1) {
 			this.timer = setTimeout(handleKeyboardInput, 300, e);
 		});
 	});
+
 }
 
 
@@ -350,6 +410,42 @@ function displayPassages(item, string) {
 		window.top.postMessage(string, '*');
 	}
 }
+
+
+
+function localStorageGetItem(key) {
+	try {
+		if (window.localStorage) {
+			return localStorage.getItem(key);
+		}
+	} catch(e) {
+		console.log("local storage error: ", e);
+		if (e.code == 22) {
+			console.log("local storage error, storage full"); // Storage full, maybe notify user or do some clean-up
+		}
+	}
+	return $.cookie(key);
+}
+
+
+
+function localStorageSetItem(key, value) {
+	try {
+		if (window.localStorage) {
+			window.localStorage.setItem(key, value);
+			return;
+		}
+	} catch(e) {
+		console.log("local storage error: ", e);
+		if (e.code == 22) {
+			console.log("local storage error, storage full"); // Storage full, maybe notify user or do some clean-up
+		}
+	}
+	$.cookie(key, value);
+}
+
+
+
 
 function handleKeyboardInput(e) {
 	var userInput =  $('textarea#userTextInput').val();

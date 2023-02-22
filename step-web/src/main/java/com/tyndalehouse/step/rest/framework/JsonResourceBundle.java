@@ -1,6 +1,6 @@
 package com.tyndalehouse.step.rest.framework;
 
-import org.codehaus.jackson.annotate.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 
 import java.util.*;
 

@@ -1,7 +1,7 @@
 package com.tyndalehouse.step.core.models;
 
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.crosswire.jsword.versification.BibleBook;
 
 import java.io.Serializable;

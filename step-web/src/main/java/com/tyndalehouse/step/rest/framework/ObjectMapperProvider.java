@@ -11,13 +11,12 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
     private static ObjectMapper objectMapper;
     
     @Override
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public ObjectMapper get() {
         if(objectMapper == null) {
             synchronized(ObjectMapperProvider.class) {
                 if(objectMapper == null) {
                     objectMapper = new ObjectMapper();
-//                    objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+                    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
                 }
             }
         }

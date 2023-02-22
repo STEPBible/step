@@ -1,7 +1,7 @@
 package com.tyndalehouse.step.core.models;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.crosswire.jsword.passage.Key;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Wraps around an OSIS Key

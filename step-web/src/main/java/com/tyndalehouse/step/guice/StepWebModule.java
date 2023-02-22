@@ -8,7 +8,7 @@ import com.tyndalehouse.step.models.TimelineTranslator;
 import com.tyndalehouse.step.models.UiDefaults;
 import com.tyndalehouse.step.models.timeline.simile.SimileTimelineTranslatorImpl;
 import com.tyndalehouse.step.rest.framework.ObjectMapperProvider;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * This module serves to inject data that is specific to the servlet layer. The purpose of it is therefore to abstract

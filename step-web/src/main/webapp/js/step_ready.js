@@ -259,15 +259,24 @@
 
         // new ExamplesView({ el: $(".examplesColumn") });
 		
-	    var stepUsageCountStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
-		var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
-		if (isNaN(stepUsageCount)) stepUsageCount = 0;
-		if ($.getUrlVars().indexOf("skipwelcome") > -1) step.util.showOrHideTutorial('true'); // URL has skipwelcome
+        var stepUsageCountStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
+        var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
+        if (isNaN(stepUsageCount)) stepUsageCount = 0;
+        var urlVars = $.getUrlVars();
+        if ((urlVars.indexOf("skipwelcome") > -1) || (urlVars.indexOf("clickvocab") > -1) || (urlVars.indexOf("clickstrong") > -1)) {
+            step.util.showOrHideTutorial('true'); // URL has skipwelcome
+            if ((urlVars.indexOf("clickvocab") > -1) || (urlVars.indexOf("clickstrong") > -1)) {
+                var pos = urlVars.q.indexOf("strong=");
+                if (pos > -1) {
+                    strongNum = urlVars.q.substring(pos+7, pos + 12);
+                    step.util.ui.showDef(strongNum);
+                }
+            }
+        }
 		else {
 			if ((stepUsageCount > 12) && (window.innerWidth > 767)) step.util.ui.showTutorial();
 			else new ExamplesView({ el: $(".examplesColumn") });
 		}
-		
 		stepUsageCount ++;
 		step.util.localStorageSetItem("step.usageCount", stepUsageCount);
 

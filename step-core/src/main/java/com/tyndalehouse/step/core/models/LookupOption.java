@@ -3,7 +3,7 @@ package com.tyndalehouse.step.core.models;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
-import org.codehaus.jackson.annotate.JsonValue;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.crosswire.jsword.book.FeatureType;
 
 import java.util.HashMap;

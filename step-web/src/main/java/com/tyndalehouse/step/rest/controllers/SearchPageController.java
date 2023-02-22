@@ -7,7 +7,7 @@ import com.tyndalehouse.step.core.service.LanguageService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.yammer.metrics.annotation.Timed;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

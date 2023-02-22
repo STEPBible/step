@@ -2,7 +2,7 @@ package com.tyndalehouse.step.core.models;
 
 import com.tyndalehouse.step.core.service.impl.SearchType;
 import com.tyndalehouse.step.core.utils.HeadingsUtil;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
 

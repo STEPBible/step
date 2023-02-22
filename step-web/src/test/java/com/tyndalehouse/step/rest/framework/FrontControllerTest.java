@@ -6,7 +6,7 @@ import com.tyndalehouse.step.core.service.AppManagerService;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 import com.tyndalehouse.step.rest.controllers.BibleController;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

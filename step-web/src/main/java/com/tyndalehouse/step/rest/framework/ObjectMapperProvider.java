@@ -1,7 +1,7 @@
 package com.tyndalehouse.step.rest.framework;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -11,12 +11,13 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
     private static ObjectMapper objectMapper;
     
     @Override
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public ObjectMapper get() {
         if(objectMapper == null) {
             synchronized(ObjectMapperProvider.class) {
                 if(objectMapper == null) {
                     objectMapper = new ObjectMapper();
-                    objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+//                    objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
                 }
             }
         }

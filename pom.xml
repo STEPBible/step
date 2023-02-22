@@ -38,7 +38,6 @@
         <guice-servlet.version>3.0</guice-servlet.version>
         <opencsv.version>2.3</opencsv.version>
 
-        <jetty.version>9.4.35.v20201120</jetty.version>
 		<tomcat.version>8.5.63</tomcat.version>
 		<tomcat.secondary.version>8.5.2</tomcat.secondary.version>
         <xalan.version>2.7.2</xalan.version>
@@ -211,11 +210,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>1.1.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>maven-jetty-plugin</artifactId>
-                    <version>6.1.22</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -511,21 +505,6 @@
                 <version>${opencsv.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-webapp</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jsp</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-core</artifactId>

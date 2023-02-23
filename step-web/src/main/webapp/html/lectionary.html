@@ -65,12 +65,12 @@ table-layout: fixed;
 
 <table style="border: none">
 <colgroup>
-    <col span="1" style="width:50%;">
-    <col span="1" style="width:50%;">
+    <col span="1" style="width:55%;">
+    <col span="1" style="width:45%;">
 </colgroup>
 <tr>
-    <td style="font-family: Helvetica; font-size: 30px; font-weight: bold; border: none">Lectionary Readings</td>
-    <td style="font-size: 20px; border: none;" id="reading_year"></td>
+    <td style="font-family: Helvetica; font-size: 28px; font-weight: bold; border: none">Revised Common Lectionary</td>
+    <td style="font-size: 16px; border: none;text-align:right;" id="reading_year"></td>
 </tr>
 </table>
 
@@ -207,9 +207,10 @@ function setupTable(urlPart1) {
 	var tblRowHTML = "";
     var pattern = "{[^}]+}";
     var pattern2 = /([0-9])[abcd]/g;
-    var clickText1 = '<span class="clickable" onclick=displayPassages(this,"';
+    var clickText1 = 'class="clickable" onclick=displayPassages(this,"';
     var clickText2 = '")>';
     var clickText3 = '</span>';
+    var deuterocanonical = ' title="This passage requires a Bible with deuterocanonical books, such as KJVA or CPDV."';
 
     var first_advent_of_year;
     var first_advent_of_next_year;
@@ -280,44 +281,60 @@ function setupTable(urlPart1) {
 
                 pos2 = first.search(pattern);
                 while (pos2 > -1) {
-                    clickText = "";
+                    clickText = "<span ";
                     passage = RegExp.lastMatch;
                     passage = passage.replace(/{/, '').replace(/}/, '');
-                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1')
-                        + clickText2 + passage.replace(/;/g, '; ')  + clickText3;
+                    if (passage.search(/\*/) > -1)
+                    {
+                        clickText += deuterocanonical;
+                    }
+                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '')
+                        + clickText2 + passage.replace(/;/g, '; ') + clickText3;
                     first = first.replace(/{[^}]+}/, clickText);
                     pos2 = first.search(pattern);
                 }
     
                 pos2 = psalm.search(pattern);
                 while (pos2 > -1) {
-                    clickText = "";
+                    clickText = "<span ";
                     passage = RegExp.lastMatch;
                     passage = passage.replace(/{/, '').replace(/}/, '');
-                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1')
-                        + clickText2 + passage.replace(/;/g, '; ')  + clickText3;
+                    if (passage.search(/\*/) > -1)
+                    {
+                        clickText += deuterocanonical;
+                    }
+                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '')
+                        + clickText2 + passage.replace(/;/g, '; ') + clickText3;
                     psalm = psalm.replace(/{[^}]+}/, clickText);
                     pos2 = psalm.search(pattern);
                 }
     
                 pos2 = second.search(pattern);
                 while (pos2 > -1) {
-                    clickText = "";
+                    clickText = "<span ";
                     passage = RegExp.lastMatch;
                     passage = passage.replace(/{/, '').replace(/}/, '');
-                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1')
-                        + clickText2 + passage.replace(/;/g, '; ')  + clickText3;
+                    if (passage.search(/\*/) > -1)
+                    {
+                        clickText += deuterocanonical;
+                    }
+                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '')
+                        + clickText2 + passage.replace(/;/g, '; ') + clickText3;
                     second = second.replace(/{[^}]+}/, clickText);
                     pos2 = second.search(pattern);
                 }
     
                 pos2 = gospel.search(pattern);
                 while (pos2 > -1) {
-                    clickText = "";
+                    clickText = "<span ";
                     passage = RegExp.lastMatch;
                     passage = passage.replace(/{/, '').replace(/}/, '');
-                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1')
-                        + clickText2 + passage.replace(/;/g, '; ')  + clickText3;
+                    if (passage.search(/\*/) > -1)
+                    {
+                        clickText += deuterocanonical;
+                    }
+                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '')
+                        + clickText2 + passage.replace(/;/g, '; ') + clickText3;
                     gospel = gospel.replace(/{[^}]+}/, clickText);
                     pos2 = gospel.search(pattern);
                 }

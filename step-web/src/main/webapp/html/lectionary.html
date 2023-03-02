@@ -193,7 +193,7 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th>Date</th>\n' +
+            '      <th><span title="Click on the date to open the day\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
             '      <th>Title</th>\n' +
             '      <th>First Reading</th>\n' +
             '      <th>Psalm</th>\n' +
@@ -213,7 +213,7 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th>Date</th>\n' +
+            '      <th><span title="Click on the date to open the day\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
             '      <th>Title</th>\n' +
             '      <th>Readings</th>\n' +
             '    </tr>\n' +
@@ -255,7 +255,7 @@ function setupTable(urlPart1) {
     var clickText1 = 'class="clickable" onclick=displayPassages(this,"';
     var clickText2 = '")>';
     var clickText3 = '</span>';
-    var deuterocanonical = ' title="This requires that the [first] Bible contains deuterocanonical books, such as KJVA or CPDV."';
+    var deuterocanonical = ' title="This requires that the [first] Bible contains deuterocanonical books, such as CPDV or KJVA."';
 
     var first_advent_of_year;
     var first_advent_of_next_year;
@@ -384,6 +384,59 @@ function setupTable(urlPart1) {
                     pos2 = gospel.search(pattern);
                 }
     
+                // build a list of all daily readings to be linked to the date (up to 4
+                // of the optional readings in each category).  Exclude deuterocanonicals.
+                var daily = "";
+                var reading = "";
+                var altCount;
+
+                reading = first_reading[reading_number];
+                reading = reading.replace(/{\*[^}]*}/, '');
+                altCount = 1;
+                pos2 = reading.search(pattern)
+                while (pos2 > -1 && altCount <= 2) {
+                    daily += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern)
+                    ++altCount;
+                }
+
+                reading = psalm_reading[reading_number];
+                reading = reading.replace(/{\*[^}]*}/, '');
+                altCount = 1;
+                pos2 = reading.search(pattern)
+                while (pos2 > -1 && altCount <= 2) {
+                    daily += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern)
+                    ++altCount;
+                }
+
+                reading = second_reading[reading_number];
+                reading = reading.replace(/{\*[^}]*}/, '');
+                altCount = 1;
+                pos2 = reading.search(pattern)
+                while (pos2 > -1 && altCount <= 2) {
+                    daily += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern)
+                    ++altCount;
+                }
+
+                reading = gospel_reading[reading_number];
+                reading = reading.replace(/{\*[^}]*}/, '');
+                altCount = 1;
+                pos2 = reading.search(pattern)
+                while (pos2 > -1 && altCount <= 2) {
+                    daily += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern)
+                    ++altCount;
+                }
+                daily = daily.replace(/};{/g, ';').replace(/ /g, '').replace(pattern2, '$1').replace(/{/, '').replace(/}/, '').replace(/;$/, '');
+                display_dt = "<span " + clickText1 + daily
+                        + clickText2 + display_dt + clickText3;
+
                 if (inIFrame) {
         			tblRowHTML = 
         				'<tr><td class="tb_col">' + display_dt + '</td>' +
@@ -433,10 +486,10 @@ function displayPassages(item, string) {
     }
 
 	var urlPart1 = window.location.origin;
-    // provide a default of KJVA for Deuterocanonical books
+    // provide a default of CPDV for Deuterocanonical books
     var version = "";
     if (string.indexOf("Sir.") > -1 || string.indexOf("Bar.") > -1 || string.indexOf("Wis.") > -1) {
-        version = "|version=KJVA"
+        version = "|version=CPDV"
     }
 
     if (!inIFrame) {

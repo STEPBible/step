@@ -221,12 +221,13 @@ function outFunc() {
 
 window.onmessage = function(e) {
     if ((typeof e.data === "string") && (typeof e.origin === "string") &&
-		 ((e.origin.indexOf("stepbible.org") > -1) || (e.origin.indexOf("localhost") > -1)) ) {
+		((e.origin.indexOf("stepbible.org") > -1) || (e.origin.indexOf("localhost") > -1)) ) {
         var curURL = document.getElementById("f1").contentWindow.location.href;
 		var left = "";
 		var right = "";
 		var lastChar = "";
         var versions = "";
+        var pattern = "version=[^|&]*[|&]";
 
         // the current (old) url needs to be checked for search strings before reference=,
         // as a search string may contain reference=
@@ -234,7 +235,6 @@ window.onmessage = function(e) {
                  || curURL.search(/strong=[^&]+/) > -1
                  || curURL.search(/text=[^&]+/) > -1) {
             var text = RegExp.lastMatch;
-            var pattern = "version=[^|&]*[|&]";
             var pos = 0;
 
 			left  = RegExp.leftContext;
@@ -269,16 +269,29 @@ window.onmessage = function(e) {
 		}
 
         var newURL = left;
-
+        var reference = e.data;
+        
+        // we can ignore the version in e.data if it's been explicitly set by the user (i.e., in the left side)
+        if (newURL.indexOf("version=") > -1 || versions.indexOf("version=") > -1) {
+            reference = reference.replace(/\|version=[A-Za-z0-9]*/, "");;
+        }
+            
 		if (e.data.indexOf("strong=") > -1 || e.data.indexOf("srchJoin=") > -1
             || e.data.indexOf("text=") > -1) {
-			newURL += versions + e.data;
+			newURL += versions + reference;
 		}
 		else {
-			newURL += versions + "reference=" + e.data;
+			newURL += versions + "reference=" + reference;
 		}
+
+        // remove the version, if any, from right, as it would be holdover from previous calls,
+        // and either repeated in the e.data or overridden in the left
+        right = right.replace(/version=[A-Za-z0-9]*/, "");
         newURL += lastChar + right;
+
 		if (newURL.indexOf("skipwelcome") == -1) newURL += "&skipwelcome";
+        newURL = newURL.replace("\|\&", "&");
+
         document.getElementById("f1").src = newURL;
         console.log("old: " + curURL);
         console.log("new: " + newURL);

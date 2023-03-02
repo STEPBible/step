@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Names of God</title>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
@@ -101,10 +102,12 @@
 		urlPart1 = window.location.href.substr(0, pos);
 		debugOption = "&debug";
 	}
-    if (!inIFrame)
-        window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
-			"/?q=reference=Gen.16:13" + 
-			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+    if (window.innerWidth > 960) {
+        if (!inIFrame)
+           window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
+    			"/?q=reference=Gen.16:13" + 
+    			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+    }
 	if (typeof jQuery == 'undefined') {
   		loadFile(urlPart1 + "/css/bootstrap.css");
 		loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
@@ -248,11 +251,40 @@ function setupTable(urlPart1) {
 
 
 function displayPassages(item, string) {
-	if (string !== "") {
-        string = string.replace(/ /g, ";");
-		window.top.postMessage(string, '*');
-	}
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+	var urlPart1 = window.location.origin;
+
+    if (!inIFrame) {
+        var tabURL = urlPart1 + "/?skipwelcome&q=";
+    	if (string !== "") {
+            string = string.replace(/ /g, ";");
+    		if (string.indexOf("strong=") > -1 || string.indexOf("srchJoin=") > -1
+                || string.indexOf("text=") > -1) {
+    			tabURL += string;
+    		}
+    		else {
+    			tabURL += "reference=" + string;
+    		}
+
+            window.open(tabURL, "_blank");
+    	}
+
+    }
+    else
+    {
+    	if (string !== "") {
+            string = string.replace(/ /g, ";");
+    		window.top.postMessage(string, '*');
+    	}
+    }
 }
+
 
 function handleKeyboardInput(e) {
 	var userInput =  $('textarea#userTextInput').val();

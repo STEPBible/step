@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>OT parallels</title>
     <link rel="shortcut icon" href="/images/step-favicon.ico"/>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
@@ -111,10 +112,13 @@
 		urlPart1 = window.location.href.substr(0, pos);
 		debugOption = "&debug";
 	}
-    if (!inIFrame)
-        window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
-			"/?q=reference=Gen.10:2-29;1Ch.1:5-23" + 
-			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+    if (window.innerWidth > 960) {
+        if (!inIFrame)
+            window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
+    			"/?q=reference=Gen.10:2-29;1Ch.1:5-23" + 
+    			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+    }
+
 	if (typeof jQuery == 'undefined') {
   		loadFile(urlPart1 + "/css/bootstrap.css");
 		loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
@@ -220,12 +224,33 @@ function setupTable(urlPart1) {
 }
 
 function goToNewSection(item, cellNum) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+	var urlPart1 = window.location.origin;
+
     var row = item.parentNode;
     var col2 = row.cells[1].innerText;
     var col3 = row.cells[2].innerText;
+    var passages = col2 + ";" + col3;
+
     $(".tb_col1").css("background-color", "white");
     $(row.cells[0]).css("background-color","cyan")
-    window.top.postMessage(col2 + ";" + col3, '*');
+
+
+    if (!inIFrame) {
+        var tabURL = urlPart1 + "/?skipwelcome&q=";
+    	tabURL += "reference=" + passages;
+        window.open(tabURL, "_blank");
+    }
+    else
+    {
+        window.top.postMessage(passages, '*');
+    }
 }
 
 function handleKeyboardInput(e) {

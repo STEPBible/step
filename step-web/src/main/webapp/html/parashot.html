@@ -207,7 +207,7 @@ function setupTable(urlPart1) {
                 '	</colgroup>\n' +
                 '  <thead id="parashot_headings">\n' +
                 '    <tr class="tb_head">\n' +
-                '      <th>Week</th>\n' +
+                '      <th><span title="Click on the date to open the date\'s readings.">Date*</span></th>\n' +
                 '      <th>Title</th>\n' +
                 '      <th>Torah reading</th>\n' +
                 '      <th>Haftorah reading</th>\n' +
@@ -225,7 +225,7 @@ function setupTable(urlPart1) {
                 '	</colgroup>\n' +
                 '  <thead id="parashot_headings">\n' +
                 '    <tr class="tb_head">\n' +
-                '      <th>Date</th>\n' +
+                '      <th><span title="Click on the date to open the date\'s readings.">Date*</span></th>\n' +
                 '      <th>Title</th>\n' +
                 '      <th>Readings</th>\n' +
                 '    </tr>\n' +
@@ -367,6 +367,32 @@ function setupTable(urlPart1) {
                         haftorah = haftorahEng_reading[reading_number];
                     }
                 }
+
+                // build a list of all line's readings to be linked to the date 
+                var lines_readings = "";
+                var reading = "";
+
+                reading = torah;
+                reading = reading.replace(/{\*[^}]*}/, '');
+                pos2 = reading.search(pattern)
+                while (pos2 > -1) {
+                    lines_readings += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern)
+                }
+
+                reading = haftorah;
+                reading = reading.replace(/{\*[^}]*}/, '');
+                pos2 = reading.search(pattern)
+                while (pos2 > -1) {
+                    lines_readings += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern)
+                }
+
+                lines_readings = lines_readings.replace(/};{/g, ';').replace(/ /g, '').replace(/{/, '').replace(/}/, '').replace(/;$/, '');
+                display_dt = "<span " + clickText1 + lines_readings
+                        + clickText2 + display_dt + clickText3;
 
                 // Add links to the passages, designated between { }.
 

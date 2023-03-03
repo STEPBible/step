@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Harmony of the Gospel</title>
     <link rel="shortcut icon" href="/images/step-favicon.ico"/>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
@@ -96,8 +97,10 @@
 		urlPart1 = window.location.href.substr(0, pos);
 		debugOption = "&debug";
 	}
-    if (!inIFrame)
-        window.location = urlPart1 + "/html/split.html?" + urlPart1 + "/?q=reference=Mat.1.1-17;luk.3.23-38;joh.1.1-18&skipwelcome" + debugOption + "&secondURL=" + window.location.origin + window.location.pathname;
+    if (window.innerWidth > 960) {
+        if (!inIFrame)
+            window.location = urlPart1 + "/html/split.html?" + urlPart1 + "/?q=reference=Mat.1.1-17;luk.3.23-38;joh.1.1-18&skipwelcome" + debugOption + "&secondURL=" + window.location.origin + window.location.pathname;
+    }
 	
 	if (typeof jQuery == 'undefined') {
 		(function() {
@@ -207,22 +210,41 @@ function buildTable(urlPart1) {
 }
 
 function goToNewSection(item) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+	var urlPart1 = window.location.origin;
+
     var row = item.parentNode;
     var matt = row.cells[1].innerText;
     var mark = row.cells[2].innerText;
 	var luke = row.cells[3].innerText;
 	var john = row.cells[4].innerText;
 	books = ["mat", "mar", "luk", "joh"];
-	var passage = "";
+	var passages = "";
 	for (var i = 1; i <= 4; i ++ ) {
 		if (row.cells[i].innerText.length > 0) {
-			if (passage.length > 0) passage += ";";
-			passage += books[i-1] + "." + row.cells[i].innerText;
+			if (passages.length > 0) passages += ";";
+			passages += books[i-1] + "." + row.cells[i].innerText;
 		}
 	}
     $(".tb_col1").css("background-color", "white");
     $(row.cells[0]).css("background-color","cyan")
-    window.top.postMessage(passage, '*');
+    passages = passages.replace(/ /g, ";");
+
+    if (!inIFrame) {
+        var tabURL = urlPart1 + "/?skipwelcome&q=";
+    	tabURL += "reference=" + passages;
+        window.open(tabURL, "_blank");
+    }
+    else
+    {
+        window.top.postMessage(passages, '*');
+    }
 }
 
 function handleKeyboardInput(e) {

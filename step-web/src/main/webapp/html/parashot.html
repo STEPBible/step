@@ -75,6 +75,7 @@
 </head>
 <body style="margin:0;background-color:white"">
 
+<div id="header">
 <table class="headerTable" style="border: none">
 <colgroup>
     <col span="1" style="width:40%;">
@@ -99,7 +100,7 @@
 </tr>
 </table>
 
-
+</div>
 <div class="fixTableHead">
 <table id="tb_parashot">
   <tbody id="tb_body">
@@ -243,7 +244,7 @@ function setupTable(urlPart1) {
     }
 
 	var fullHeight = $(window).height();
-	var remainingHeight = Math.floor((fullHeight - $(".headerTable").height()) );
+	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
 	$(".fixTableHead").css("height", remainingHeight + "px");
 
     var settings = new SettingsModelList;

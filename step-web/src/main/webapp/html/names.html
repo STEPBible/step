@@ -63,22 +63,11 @@
   </style>
 </head>
 <body style="margin:0;background-color:white"">
-<h2 id="header">Names of God</h2>
+<div id="header">
+<h2>Names of God</h2>
+</div>
 <div class="fixTableHead">
-<table>
-	<colgroup>
-		<col span="1" style="width:25%;">
-		<col span="1" style="width:60%;">
-		<col span="1" style="width:15%;">
-	</colgroup>
-
-  <thead>
-    <tr class="tb_head">
-      <th>Name</th>
-      <th>Notes and examples</th>
-      <th class="col_center"><span title="The number of times the word or phrase occurs, not the number of verses.  This may vary in different translations.">Occurs*</span></th>
-    </tr>
-  </thead>
+<table id="tb_names">
   <tbody id="tb_body">
 
   </tbody>
@@ -160,8 +149,43 @@ function loadFile(path) {
 }
 
 function setupTable(urlPart1) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+    if (inIFrame) {
+        var tblHeadingHTLM = '	<colgroup>\n' + 
+            '		<col span="1" style="width:25%;">\n' +
+            '		<col span="1" style="width:60%;">\n' +
+            '		<col span="1" style="width:15%;">\n' +
+            '	</colgroup>\n' +
+            '  <thead>\n' +
+            '    <tr class="tb_head">\n' +
+            '      <th>Name</th>\n' +
+            '      <th>Notes and examples</th>\n' +
+            '      <th class="col_center"><span title="The number of times the word or phrase occurs, not the number of verses.  This may vary in different translations.">Occurs*</span></th>\n' +
+            '    </tr>\n' +
+            '  </thead>\n';
+    }
+    else {
+        var tblHeadingHTLM = '	<colgroup>\n' + 
+            '		<col span="1" style="width:25%;">\n' +
+            '		<col span="1" style="width:75%;">\n' +
+            '	</colgroup>\n' +
+            '  <thead>\n' +
+            '    <tr class="tb_head">\n' +
+            '      <th>Name</th>\n' +
+            '      <th>Notes and examples</th>\n' +
+            '    </tr>\n' +
+            '  </thead>\n';
+    }
+    $("#tb_names").append(tblHeadingHTLM);
+
 	var fullHeight = $(window).height();
-	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.93);
+	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
 	$(".fixTableHead").css("height", remainingHeight + "px");
 
     var grSize = 15 + "px";
@@ -197,6 +221,13 @@ function setupTable(urlPart1) {
     var clickText2 = '")>';
     var clickText3 = '</span>';
 
+    var searchPrefix = '';
+    var searchSuffix = '';
+    if (!inIFrame) {
+        searchPrefix = '<br>';
+        searchSuffix = 'x';
+    }
+
     $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
             var clickText = "";
@@ -220,20 +251,29 @@ function setupTable(urlPart1) {
                 pos2 = notes.search(pattern);
             }
 
-            if (array[i][3] !== "") {
-                search = '<span class="clickable" onclick=displayPassages(this,"'
+            if (array[i][2] !== "") {
+                search = searchPrefix + '<span class="clickable" onclick=displayPassages(this,"'
                             + array[i][3] + '")>'
-                            + array[i][2] + '</span>';
+                            + (array[i][2]).replace(/\+/,'') 
+                            + searchSuffix + '</span>';
             }
             else {
-                search = array[i][2];
+                search = '';
             }
 
-			tblRowHTML = 
-				'<tr><td>' + array[i][0] + '</td>' +
-				    '<td>' + notes + '</td>' +
-					'<td class="col_center">' + search + '</td></tr>';
-	        $("#tb_body").append(tblRowHTML);
+            if (inIFrame) {
+    			tblRowHTML = 
+    				'<tr><td>' + array[i][0] + '</td>' +
+    				    '<td>' + notes + '</td>' +
+    					'<td class="col_center">' + search + '</td></tr>';
+            }
+            else {
+    			tblRowHTML = 
+    				'<tr><td>' + array[i][0] + search + '</td>' +
+    				    '<td>' + notes + '</td>';
+            }
+  	        $("#tb_body").append(tblRowHTML);
+
 		}
 
         $(".Cardo").css("font-size", grSize);

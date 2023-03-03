@@ -33,7 +33,7 @@
 ["Son of God", "Another title for Jesus. -&nbspe.g.&nbsp{Luke.1:35}", "43", "text=%22Son%20of%20God%22"],
 ["Son of Man", "A title Jesus used to refer to Himself in the Gospels. The title was used in {Dan.7:13}. -&nbspe.g.&nbsp{Matt.8:20}", "78", "reference=Matt-John|text=%22Son%20of%20Man%22"],
 ["Last Adam", "The title ‘Last Adam’ refers to Jesus as the new man, like Adam of Genesis, and yet without sin. -&nbspe.g.&nbsp{Rom.5:12-21; 1Cor.15:45}", "1", "1Cor.15:45"],
-["Alpha and Omega", "The first and last Greek letters, indicating Jesus’ eternal being. -&nbspe.g.&nbsp{Rev.1:8}", "3", "strong=G0001"],
+["Alpha and Omega", "The first and last Greek letters, indicating Jesus’ eternal being. -&nbspe.g.&nbsp{Rev.1:8}", "3", "text=%22alpha%22"],
 ["Bright Morning Star", "Jesus is the Light of the World, the Bright Morning Star. -&nbspe.g.&nbsp{Rev.22:16}", "1", "Rev.22:16"],
 ["Cornerstone", "Jesus is the cornerstone, the most important stone in a building’s foundation, of the Christian faith; a reference to {Ps.118:22-23}. -&nbspe.g.&nbsp{Matt.21:42}", "11", "text=%22Cornerstone%22"],
 ["Lamb of God", "Jesus is the sacrificial Lamb, referring to the Passover lamb and {Isa.53:7}, who takes away the sins of the world. -&nbspe.g.&nbsp{John.1:29}", "2", "text=%22lamb%20of%20God%22"],

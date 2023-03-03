@@ -47,7 +47,7 @@
         background: #17758f;
         color: white;
     }
-    .tb_col1 {
+    .tb_col {
         cursor: pointer;
         color: #17758f;
     }
@@ -55,8 +55,10 @@
   </style>
 </head>
 <body style="margin:0;background-color:white">
-<h2 id="header">Harmony of the Gospels</h2>
-<span>Search:</span><textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize:none;height:24px" placeholder="Optionally enter search word"></textarea>
+<div id="header">
+<h2>Harmony of the Gospels</h2>
+<span>Search:</span><textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize:none;height:24px" placeholder="Search this table"></textarea>
+</div>
 <div class="fixTableHead">
 <table>
 	<colgroup>
@@ -67,7 +69,7 @@
 		<col span="1" style="width:15%;">
 	</colgroup>
 
-  <thead>
+  <thead id="tb_heading">
     <tr class="tb_head">
       <th>Event</td>
       <th>Matthew</td>
@@ -183,11 +185,11 @@ function buildTable(urlPart1) {
     $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
 			tblRowHTML += 
-				'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
-				    '<td class="tb_col2">' + array[i][1] + '</td>' +
-					'<td class="tb_col3">' + array[i][2] + '</td>' +
-					'<td class="tb_col4">' + array[i][3] + '</td>' +
-					'<td class="tb_col5">' + array[i][4] + '</td></tr>';
+				'<tr><td class="tb_col">' + array[i][0] + '</td>' +
+				    '<td class="tb_col">' + array[i][1] + '</td>' +
+					'<td class="tb_col">' + array[i][2] + '</td>' +
+					'<td class="tb_col">' + array[i][3] + '</td>' +
+					'<td class="tb_col">' + array[i][4] + '</td></tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
     });
@@ -197,8 +199,13 @@ function buildTable(urlPart1) {
     for (var i = 0; i < rows.length; i ++) {
         rows[i].i = i;
         rows[i].cells[0].addEventListener("click", function() {
-            goToNewSection(this);
+            goToNewRowSection(this);
         }, false);
+        for (var j = 1; j <= 4; j ++) {
+             rows[i].cells[j].addEventListener("click", function() {
+                 goToNewSection(this);
+             }, false);
+        }
     }
 
 	$(function(){
@@ -209,7 +216,7 @@ function buildTable(urlPart1) {
 	});
 }
 
-function goToNewSection(item) {
+function goToNewRowSection(item) {
     var inIFrame = false;
     try {
         inIFrame = window.self !== window.top;
@@ -232,7 +239,7 @@ function goToNewSection(item) {
 			passages += books[i-1] + "." + row.cells[i].innerText;
 		}
 	}
-    $(".tb_col1").css("background-color", "white");
+    $(".tb_col").css("background-color", "white");
     $(row.cells[0]).css("background-color","cyan")
     passages = passages.replace(/ /g, ";");
 
@@ -247,6 +254,38 @@ function goToNewSection(item) {
     }
 }
 
+function goToNewSection(item) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+	var urlPart1 = window.location.origin;
+
+    var colNum = item.cellIndex;
+    var rows = $("#tb_heading").find("tr");
+    var passages = "";
+    if (item.innerText.length > 0) {
+        passages += rows[0].cells[colNum].innerText + item.innerText.replace(/[bc]/g, "");
+        $(".tb_col").css("background-color", "white");
+        $(item).css("background-color","cyan")
+
+        passages = passages.replace(/ /g, ";");
+        if (!inIFrame) {
+            var tabURL = urlPart1 + "/?skipwelcome&q=";
+        	tabURL += "reference=" + passages;
+            window.open(tabURL, "_blank");
+        }
+        else
+        {
+            window.top.postMessage(passages, '*');
+        }
+    }
+
+}
+
 function handleKeyboardInput(e) {
 	var userInput =  $('textarea#userTextInput').val();
 	if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
@@ -259,7 +298,7 @@ function handleKeyboardInput(e) {
 	else {
 		$("#tb_body").find("tr").hide();
 		var re = new RegExp(userInput, "i");
-		$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
+		$("tr").filter(function () { return re.test($(this).find(".tb_col").text());}).show();
 	}
 }
 

@@ -170,6 +170,14 @@ function setupIFrames() {
 		document.title = "Two Year Chronological OT with Related NT";
 		document.getElementsByTagName('meta')["description"].content = "Two Year reading plan of chronological events in the Old Testament with related New Testament passages..";
 	}
+	else if (secondURL.indexOf("lectionary") > -1) {
+		document.title = "Lectionary";
+		document.getElementsByTagName('meta')["description"].content = "Revised Common Lectionary three year reading plan of the Bible..";
+	}
+	else if (secondURL.indexOf("parashot") > -1) {
+		document.title = "Jewish Parashot";
+		document.getElementsByTagName('meta')["description"].content = "Jewish Parashot readings of the Torah and Haftorah..";
+	}
 	var fullHeight = $(document).height();
 	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;
 	$("#f1").css("height", remainingHeight + "vh");

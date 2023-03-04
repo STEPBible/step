@@ -54,11 +54,11 @@
     }
     .tb_col2 {
         word-wrap: break-word;
-    }
+    }	
     .tb_col3 {
         word-wrap: break-word;
     }
-	
+
     :root {
         --clrHighlight: #17758F;
         --clrHighlightBg: #17758F;
@@ -75,7 +75,7 @@
 <body style="margin:0;background-color:white"">
 <div id="header">
 <h2>Old Testament parallels</h2>
-<span>Event:</span><textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize=none;height:24px" placeholder="Search this table"></textarea>
+&nbsp;<textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize=none;height:24px" placeholder="Search this table"></textarea>
 <button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick="searchSelectionModal()"><b>Range:</b></button>
 </div>
 <div class="fixTableHead">
@@ -202,8 +202,8 @@ function setupTable(urlPart1) {
 		for (var i = 0; i < array.length; i ++ ) {
 			tblRowHTML += 
 				'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
-				    '<td class="tb_col2">' + array[i][1] + '</td>' +
-					'<td class="tb_col3">' + array[i][2] + '</td></tr>';
+				    '<td class="tb_col2">' + (array[i][1]).replace(/;/, '; ') + '</td>' +
+					'<td class="tb_col3">' + (array[i][2]).replace(/;/, '; ') + '</td></tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
     });
@@ -269,6 +269,8 @@ function handleKeyboardInput(e) {
 			$("#tb_body").find("tr").hide();
 			var re = new RegExp(userInput, "i");
 			$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
+			$("tr").filter(function () { return re.test($(this).find(".tb_col2").text());}).show();
+			$("tr").filter(function () { return re.test($(this).find(".tb_col3").text());}).show();
 		}
 }
 

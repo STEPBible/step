@@ -72,22 +72,36 @@
         border: none;
         text-align:right;
     }
-    
+    .navigation {
+        background-color: white;
+        box-shadow: 0 0 3px;
+        border-color: --clrBackground;
+        padding: 8px;
+        color: #5d5d5d;
+        border-radius: 100%;
+        cursor: pointer;
+    }
+
+    :root {
+        --clrHighlight: #17758F;
+        --clrHighlightBg: #17758F;
+        --clrStrongText: #498090;
+        --clrLexiconFocusBG: #c8d8dc;
+        --clrRelatedWordBg: #b2e5f3;
+        --clrBackground: #ffffff;
+        --clrText: #5d5d5d;
+        --clr2ndHover: #d3d3d3;
+    }
+
   </style>
 </head>
 <body style="margin:0;background-color:white"">
 
 <div id="header">
-<table class="headerTable" style="border: none">
-<colgroup>
-    <col span="1" style="width:55%;">
-    <col span="1" style="width:45%;">
-</colgroup>
-<tr>
-    <td class="hTitle">Revised Common Lectionary</td>
-    <td class="hInfo" id="reading_year"></td>
-</tr>
-</table>
+<span class="hTitle">Revised Common Lectionary</span>
+<br>
+&nbsp;<span id="prev_year" class="navigation glyphicon glyphicon-arrow-left"></span><span class="hInfo" id="reading_year"></span><span id="next_year" class="navigation glyphicon glyphicon-arrow-right"></span>
+<br><br>
 </div>
 <div class="fixTableHead">
 <table id="tb_lectionary">
@@ -151,11 +165,11 @@
 		// Start polling...
 		checkReady(function($) {
 			$(function() {
-				setupTable(urlPart1);
+				setupTable(urlPart1, '');
 			});
 		});
 	}
-	else setupTable(urlPart1);
+	else setupTable(urlPart1, '');
 })();
 
 function loadFile(path) {
@@ -174,7 +188,7 @@ function loadFile(path) {
   document.getElementsByTagName("head")[0].appendChild(fileref);
 }
 
-function setupTable(urlPart1) {
+function setupTable(urlPart1, aDate) {
     var inIFrame = false;
     try {
         inIFrame = window.self !== window.top;
@@ -182,44 +196,54 @@ function setupTable(urlPart1) {
         inIFrame = true;
     }
 
-    if (inIFrame) {
-        var tblHeadingHTLM = '	<colgroup>\n' + 
-            '		<col span="1" style="width:12%;">\n' +
-            '		<col span="1" style="width:20%;">\n' +
-            '		<col span="1" style="width:17%;">\n' +
-            '		<col span="1" style="width:17%;">\n' +
-            '		<col span="1" style="width:17%;">\n' +
-            '		<col span="1" style="width:17%;">\n' +
-            '	</colgroup>\n' +
-            '  <thead>\n' +
-            '    <tr class="tb_head">\n' +
-            '      <th><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
-            '      <th>Title</th>\n' +
-            '      <th>First Reading</th>\n' +
-            '      <th>Psalm</th>\n' +
-            '      <th>Second Reading</th>\n' +
-            '      <th>Gospel</th>\n' +
-            '    </tr>\n' +
-            '  </thead>\n';
+    // only add the header row the only first time (i.e., not when display different years
+    var rows = $("#lectionary_headings").find("tr");
+    if (rows.length == 0){
+        if (inIFrame) {
+            var tblHeadingHTLM = '	<colgroup>\n' + 
+                '		<col span="1" style="width:12%;">\n' +
+                '		<col span="1" style="width:20%;">\n' +
+                '		<col span="1" style="width:17%;">\n' +
+                '		<col span="1" style="width:17%;">\n' +
+                '		<col span="1" style="width:17%;">\n' +
+                '		<col span="1" style="width:17%;">\n' +
+                '	</colgroup>\n' +
+                '  <thead id="lectionary_headings">\n' +
+                '    <tr class="tb_head">\n' +
+                '      <th><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
+                '      <th>Title</th>\n' +
+                '      <th>First Reading</th>\n' +
+                '      <th>Psalm</th>\n' +
+                '      <th>Second Reading</th>\n' +
+                '      <th>Gospel</th>\n' +
+                '    </tr>\n' +
+                '  </thead>\n';
+        }
+        else {
+            $(".hTitle").css("font-size", "20px");
+            $(".hInfo").css("font-size", "15px");
+            // set up table columns and headings
+            var tblHeadingHTLM = '	<colgroup>\n' + 
+                '		<col span="1" style="width:20%;">\n' + 
+                '		<col span="1" style="width:20%;">\n' +
+                '		<col span="1" style="width:60%;">\n' +
+                '	</colgroup>\n' +
+                '  <thead id="lectionary_headings">\n' +
+                '    <tr class="tb_head">\n' +
+                '      <th><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
+                '      <th>Title</th>\n' +
+                '      <th>Readings</th>\n' +
+                '    </tr>\n' +
+                '  </thead>\n';
+        }
+        $("#tb_lectionary").append(tblHeadingHTLM);
     }
-    else {
-        $(".hTitle").css("font-size", "20px");
-        $(".hInfo").css("font-size", "14px");
-        // set up table columns and headings
-        var tblHeadingHTLM = '	<colgroup>\n' + 
-            '		<col span="1" style="width:20%;">\n' + 
-            '		<col span="1" style="width:20%;">\n' +
-            '		<col span="1" style="width:60%;">\n' +
-            '	</colgroup>\n' +
-            '  <thead>\n' +
-            '    <tr class="tb_head">\n' +
-            '      <th><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
-            '      <th>Title</th>\n' +
-            '      <th>Readings</th>\n' +
-            '    </tr>\n' +
-            '  </thead>\n';
+    // Remove old table rows (i.e., redisplaying for different year).
+    // Note that row 1 is the header, and we won't delete that.
+    var rows = $("#tb_body").find("tr");
+    for (var i = 0; i < rows.length; i ++) {
+        document.getElementById("tb_body").deleteRow(0);
     }
-    $("#tb_lectionary").append(tblHeadingHTLM);
 
 	var fullHeight = $(window).height();
 	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
@@ -260,20 +284,28 @@ function setupTable(urlPart1) {
     var first_advent_of_year;
     var first_advent_of_next_year;
     var year_letter;
+    // use today as a reference date for the year, unless a specific one was passed into the function
+    var refDate = new Date();
+    if (aDate != "") {
+        refDate = new Date(aDate);
+    }
+    var earliest_date;
+    var latest_date;
 
-    // set 'date' to be the first Advent of the current year
+    // set 'date' to be the first Advent of the current year (or of the reference year if looking ahead/back)
     $.getJSON(urlPart1 + "/html/json/" + jsonFileName1 + ".json", function(array) {
         var i = 0;
         var nextYear = new Date (array[i][0]);
-        var today = new Date();
-
-        while (i < array.length && today > nextYear) {
+        while (i < array.length && refDate > nextYear) {
             i++;
             nextYear = new Date (array[i][0]);
 		}
         first_advent_of_year = array[i-1][0];
         first_advent_of_next_year = array[i][0];
         year_letter = array[i-1][1];
+
+        earliest_date = new Date(array[0][0]);
+        latest_date = new Date(array[array.length-1][0]);
     });
 
     var reading_title = new Array();
@@ -460,10 +492,40 @@ function setupTable(urlPart1) {
             }
 		}
         if (dt1 != "") {
-            document.getElementById("reading_year").innerText = dt1 + " - " + dt2 + " (Year\u00A0" + year_letter + ")";
+            document.getElementById("reading_year").innerText = "\u00A0\u00A0" + dt1 + " - " + dt2 + " (Year\u00A0" + year_letter + ")\u00A0\u00A0";
         }
-    });
 
+        var prev_dt = new Date(dt1);
+        prev_dt.setDate(prev_dt.getDate() - 8);
+        prev_element = document.getElementById("prev_year");
+        if (prev_dt > earliest_date) {
+            prev_element.style.color = "#5d5d5d";
+            prev_element.style.cursor = "pointer";
+            prev_element.onclick=function() {
+                    setupTable(urlPart1, prev_dt.getFullYear() + '-' + (prev_dt.getMonth()+1) + '-' + prev_dt.getDate());
+            };
+        }
+        else {
+            prev_element.style.color = "#dee1e6";
+            prev_element.style.cursor = "default";
+        }
+
+        var next_dt = new Date(dt2);
+        next_dt.setDate(next_dt.getDate() + 8);
+        next_element = document.getElementById("next_year");
+        if (next_dt < latest_date) {
+            next_element.style.color = "#5d5d5d";
+            next_element.style.cursor = "pointer";
+            next_element.onclick=function() {
+                setupTable(urlPart1, next_dt.getFullYear() + '-' + (next_dt.getMonth()+1) + '-' + next_dt.getDate());
+            };
+        }
+        else {
+            next_element.style.color = "#dee1e6";
+            next_element.style.cursor = "default";
+        }
+
+    });
 
 
     $.ajaxSetup({async: true});

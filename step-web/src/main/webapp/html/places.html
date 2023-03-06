@@ -32,7 +32,6 @@
     table {
         border-collapse: collapse;
         width: 100%;
-        table-layout: fixed;
         font-family: Georgia, serif;
         font-size: 15px;
     }
@@ -79,9 +78,11 @@
   </style>
 </head>
 <body style="margin:0;background-color:white"">
-<h2 id="header">Biblical locations</h2>
-&nbsp;<textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize=none;height:24px" placeholder="Search this table"></textarea>
+<div id="header">
+<h2>Biblical locations</h2>
+&nbsp;<textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize:none;height:24px" placeholder="Search this table"></textarea>
 <button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick="searchSelectionModal()"><b>Range:</b></button>
+</div>
 <div class="fixTableHead">
 <table id="tb_locations">
   <tbody id="tb_body">
@@ -303,6 +304,7 @@ function handleKeyboardInput(e) {
 		$("#tb_body").find("tr").hide();
 		var re = new RegExp(userInput, "i");
 		$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
+		$("tr").filter(function () { return re.test($(this).find(".tb_col2").text());}).show();
 	}
 }
 

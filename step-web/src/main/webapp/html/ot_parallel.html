@@ -35,17 +35,17 @@
         font-family: Georgia, serif;
         font-size: 15px;
     }
-    td {
-        padding: 4px;
-        margin: 3px;
-        border: 1px solid #ccc;
-    }
-    th {
+    .tb_head {
         padding: 4px;
         margin: 3px;
         border: 2px solid #17758f;
         background: #17758f;
         color: white;
+    }
+    .tb_col {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
     }
     .tb_col1 {
         color: #17758f;
@@ -201,9 +201,9 @@ function setupTable(urlPart1) {
     $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
 			tblRowHTML += 
-				'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
-				    '<td class="tb_col2">' + (array[i][1]).replace(/;/, '; ') + '</td>' +
-					'<td class="tb_col3">' + (array[i][2]).replace(/;/, '; ') + '</td></tr>';
+				'<tr><td class="tb_col tb_col1">' + array[i][0] + '</td>' +
+				    '<td class="tb_col tb_col2">' + (array[i][1]).replace(/;/, '; ') + '</td>' +
+					'<td class="tb_col tb_col3">' + (array[i][2]).replace(/;/, '; ') + '</td></tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
     });

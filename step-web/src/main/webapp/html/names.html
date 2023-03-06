@@ -35,17 +35,17 @@
         font-family: Georgia, serif;
         font-size: 15px;
     }
-    td {
-        padding: 4px;
-        margin: 3px;
-        border: 1px solid #ccc;
-    }
-    th {
+    .tb_head {
         padding: 4px;
         margin: 3px;
         border: 2px solid #17758f;
         background: #17758f;
         color: white;
+    }
+    .tb_col {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
     }
     .col_center{
         text-align: center;
@@ -274,14 +274,14 @@ function setupTable(urlPart1) {
 
             if (inIFrame) {
     			tblRowHTML = 
-    				'<tr><td>' + array[i][0] + '</td>' +
-    				    '<td>' + notes + '</td>' +
-    					'<td class="col_center">' + search + '</td></tr>';
+    				'<tr><td class="tb_col">' + array[i][0] + '</td>' +
+    				    '<td class="tb_col">' + notes + '</td>' +
+    					'<td class="tb_col col_center">' + search + '</td></tr>';
             }
             else {
     			tblRowHTML = 
-    				'<tr><td>' + array[i][0] + search + '</td>' +
-    				    '<td>' + notes + '</td>';
+    				'<tr><td class="tb_col">' + array[i][0] + search + '</td>' +
+    				    '<td class="tb_col">' + notes + '</td>';
             }
   	        $("#tb_body").append(tblRowHTML);
 

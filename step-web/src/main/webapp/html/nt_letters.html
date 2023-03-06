@@ -34,12 +34,7 @@
         font-family: Georgia, serif;
         font-size: 15px;
     }
-    td {
-        padding: 4px;
-        margin: 3px;
-        border: 1px solid #ccc;
-    }
-    th {
+    .tb_head {
         padding: 4px;
         margin: 3px;
         border: 2px solid #17758f;
@@ -52,8 +47,15 @@
         text-decoration-line: underline;
     }
     .tb_col {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
         color: #17758f;
         cursor: pointer;
+    }
+    .tb_col1 {
+        color: #5d5d5d;
+        cursor: default;
     }
 
     :root {
@@ -209,7 +211,7 @@ function setupTable(urlPart1) {
     $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
 			tblRowHTML += 
-				'<tr><td>' + array[i][0] + '</td>' +
+				'<tr><td class="tb_col tb_col1">' + array[i][0] + '</td>' +
 				    '<td class="tb_col">' + array[i][1] + '</td>' +
 					'<td class="tb_col">' + array[i][2] + '</td>' +
 					'<td class="tb_col">' + array[i][3] + '</td>' +

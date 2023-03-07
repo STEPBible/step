@@ -36,9 +36,14 @@
         font-family: Georgia, serif;
         font-size: 15px;
     }
-    
-
     .tb_head {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
+    }
+    .th_col {
         padding: 4px;
         margin: 3px;
         border: 2px solid #17758f;
@@ -50,17 +55,14 @@
         margin: 3px;
         border: 1px solid #ccc;
     }
-    
     .clickable{
         color: #17758f;
         cursor: pointer;
     }
-    
     .ind10{
         text-indent: -10px;
         padding-left: 10px;
     }
-    
     .hTitle{
         font-family: Helvetica;
         font-size: 30px;
@@ -193,13 +195,13 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th class="tb_head"></th>\n' +
-            '      <th class="tb_head">Monday</th>\n' +
-            '      <th class="tb_head">Tuesday</th>\n' +
-            '      <th class="tb_head">Wednesday</th>\n' +
-            '      <th class="tb_head">Thursday</th>\n' +
-            '      <th class="tb_head">Friday</th>\n' +
-            '      <th class="tb_head">Saturday</th>\n' +
+            '      <th class="th_col"></th>\n' +
+            '      <th class="th_col">Monday</th>\n' +
+            '      <th class="th_col">Tuesday</th>\n' +
+            '      <th class="th_col">Wednesday</th>\n' +
+            '      <th class="th_col">Thursday</th>\n' +
+            '      <th class="th_col">Friday</th>\n' +
+            '      <th class="th_col">Saturday</th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }
@@ -211,8 +213,8 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th class="tb_head"></th>\n' +
-            '      <th class="tb_head">Readings</th>\n' +
+            '      <th class="th_col"></th>\n' +
+            '      <th class="th_col">Readings</th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }

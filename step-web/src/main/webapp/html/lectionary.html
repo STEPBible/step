@@ -43,12 +43,18 @@
         background: #17758f;
         color: white;
     }
+    .th_col {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
+    }
     .tb_col {
         padding: 4px;
         margin: 3px;
         border: 1px solid #ccc;
     }
-
     .clickable{
         color: #17758f;
         cursor: pointer;
@@ -210,12 +216,12 @@ function setupTable(urlPart1, aDate) {
                 '	</colgroup>\n' +
                 '  <thead id="lectionary_headings">\n' +
                 '    <tr class="tb_head">\n' +
-                '      <th class="tb_head"><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
-                '      <th class="tb_head">Title</th>\n' +
-                '      <th class="tb_head">First Reading</th>\n' +
-                '      <th class="tb_head">Psalm</th>\n' +
-                '      <th class="tb_head">Second Reading</th>\n' +
-                '      <th class="tb_head">Gospel</th>\n' +
+                '      <th class="th_col"><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
+                '      <th class="th_col">Title</th>\n' +
+                '      <th class="th_col">First Reading</th>\n' +
+                '      <th class="th_col">Psalm</th>\n' +
+                '      <th class="th_col">Second Reading</th>\n' +
+                '      <th class="th_col">Gospel</th>\n' +
                 '    </tr>\n' +
                 '  </thead>\n';
         }
@@ -230,9 +236,9 @@ function setupTable(urlPart1, aDate) {
                 '	</colgroup>\n' +
                 '  <thead id="lectionary_headings">\n' +
                 '    <tr class="tb_head">\n' +
-                '      <th class="tb_head"><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
-                '      <th class="tb_head">Title</th>\n' +
-                '      <th class="tb_head">Readings</th>\n' +
+                '      <th class="th_col"><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
+                '      <th class="th_col">Title</th>\n' +
+                '      <th class="th_col">Readings</th>\n' +
                 '    </tr>\n' +
                 '  </thead>\n';
         }

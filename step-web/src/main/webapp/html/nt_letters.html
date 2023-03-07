@@ -42,9 +42,21 @@
         color: white;
     }
     .th_col {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
         cursor: pointer;
         text-align: center;
         text-decoration-line: underline;
+    }
+    .th_col1 {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
     }
     .tb_col {
         padding: 4px;
@@ -90,17 +102,17 @@
 		<col span="1" style="width:11%;">
 	</colgroup>
 
-  <thead id="tb_head">
+  <thead id="tb_heading">
     <tr class="tb_head">
-      <th class="tb_head">Book</td>
-      <th class="tb_head th_col">Salutation</td>
-      <th class="tb_head th_col">Thanks&#173;giving</td>
-      <th class="tb_head th_col">Blessing</td>
-      <th class="tb_head th_col">Body Opening</td>
-      <th class="tb_head th_col">Body Closing</td>
-      <th class="tb_head th_col">Greetings</td>
-      <th class="tb_head th_col">Signature</td>
-      <th class="tb_head th_col">Closing Bene&#173;diction</td>
+      <th class="th_col1">Book</td>
+      <th class="th_col">Salutation</td>
+      <th class="th_col">Thanks&#173;giving</td>
+      <th class="th_col">Blessing</td>
+      <th class="th_col">Body Opening</td>
+      <th class="th_col">Body Closing</td>
+      <th class="th_col">Greetings</td>
+      <th class="th_col">Signature</td>
+      <th class="th_col">Closing Bene&#173;diction</td>
     </tr>
   </thead>
   <tbody id="tb_body">
@@ -225,7 +237,7 @@ function setupTable(urlPart1) {
     });
     $.ajaxSetup({async: true});
 
-    var rows = $("#tb_head").find("tr");
+    var rows = $("#tb_heading").find("tr");
     for (var j = 1; j <= 8; j ++) {
         rows[0].cells[j].addEventListener("click", function() {
              goToColumnSections(this);

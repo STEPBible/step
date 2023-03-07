@@ -42,6 +42,13 @@
         background: #17758f;
         color: white;
     }
+    .th_col {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
+    }
     .tb_col {
         padding: 4px;
         margin: 3px;
@@ -50,7 +57,6 @@
     .col_center{
         text-align: center;
     }
-
     .clickable{
         color: #17758f;
         cursor: pointer;
@@ -175,9 +181,9 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th class="tb_head">Name</th>\n' +
-            '      <th class="tb_head">Notes and examples</th>\n' +
-            '      <th class="tb_head col_center"><span title="The number of times the word or phrase occurs, not the number of verses.  This may vary in different translations.">Occurs*</span></th>\n' +
+            '      <th class="th_col">Name</th>\n' +
+            '      <th class="th_col">Notes and examples</th>\n' +
+            '      <th class="th_col col_center"><span title="The number of times the word or phrase occurs, not the number of verses.  This may vary in different translations.">Occurs*</span></th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }
@@ -188,8 +194,8 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th class="tb_head">Name</th>\n' +
-            '      <th class="tb_head">Notes and examples</th>\n' +
+            '      <th class="th_col">Name</th>\n' +
+            '      <th class="th_col">Notes and examples</th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }

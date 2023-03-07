@@ -44,12 +44,18 @@
         background: #17758f;
         color: white;
     }
+    .th_col {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
+    }
     .tb_col {
         padding: 4px;
         margin: 3px;
         border: 1px solid #ccc;
     }
-
     .clickable{
         color: #17758f;
         cursor: pointer;
@@ -58,7 +64,6 @@
         font-size: 110%;
         font-variant-caps: small-caps;
     }
-
     .hTitle{
         font-family: Helvetica;
         font-size: 30px;
@@ -219,10 +224,10 @@ function setupTable(urlPart1) {
                 '	</colgroup>\n' +
                 '  <thead id="parashot_headings">\n' +
                 '    <tr class="tb_head">\n' +
-                '      <th class="tb_head"><span title="Click on the date to open the date\'s readings.">Date*</span></th>\n' +
-                '      <th class="tb_head">Title (from 1st verse)</th>\n' +
-                '      <th class="tb_head">Torah reading</th>\n' +
-                '      <th class="tb_head">Haftorah reading</th>\n' +
+                '      <th class="th_col"><span title="Click on the date to open the date\'s readings.">Date*</span></th>\n' +
+                '      <th class="th_col">Title (from 1st verse)</th>\n' +
+                '      <th class="th_col">Torah reading</th>\n' +
+                '      <th class="th_col">Haftorah reading</th>\n' +
                 '    </tr>\n' +
                 '  </thead>\n';
         }
@@ -237,9 +242,9 @@ function setupTable(urlPart1) {
                 '	</colgroup>\n' +
                 '  <thead id="parashot_headings">\n' +
                 '    <tr class="tb_head">\n' +
-                '      <th class="tb_head"><span title="Click on the date to open the date\'s readings.">Date*</span></th>\n' +
-                '      <th class="tb_head">Title (from 1st verse)</th>\n' +
-                '      <th class="tb_head">Readings</th>\n' +
+                '      <th class="th_col"><span title="Click on the date to open the date\'s readings.">Date*</span></th>\n' +
+                '      <th class="th_col">Title (from 1st verse)</th>\n' +
+                '      <th class="th_col">Readings</th>\n' +
                 '    </tr>\n' +
                 '  </thead>\n';
         }

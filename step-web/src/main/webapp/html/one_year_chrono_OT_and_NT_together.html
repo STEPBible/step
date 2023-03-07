@@ -36,9 +36,14 @@
         font-family: Georgia, serif;
         font-size: 15px;
     }
-    
-
     .tb_head {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
+    }
+    .th_col {
         padding: 4px;
         margin: 3px;
         border: 2px solid #17758f;
@@ -50,12 +55,10 @@
         margin: 3px;
         border: 1px solid #ccc;
     }
-
     .clickable{
         color: #17758f;
         cursor: pointer;
     }
-    
     .hTitle{
         font-family: Helvetica;
         font-size: 30px;
@@ -186,9 +189,9 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th class="tb_head"></th>\n' +
-            '        <th class="tb_head" colspan="3" style="border-right:0.5pt solid black">Old Testament</th>\n' +
-            '        <th class="tb_head">New Testament</th>\n' +
+            '      <th class="th_col"></th>\n' +
+            '      <th class="th_col" colspan="3" style="border-right:0.5pt solid black">Old Testament</th>\n' +
+            '      <th class="th_col">New Testament</th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }
@@ -200,8 +203,8 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th class="tb_head"></th>\n' +
-            '      <th class="tb_head">Readings</th>\n' +
+            '      <th class="th_col"></th>\n' +
+            '      <th class="th_col">Readings</th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }

@@ -25,7 +25,7 @@
     .fixTableHead {
       overflow-y: auto;
     }
-    .fixTableHead thead th {
+    .fixTableHead .tb_head {
       position: sticky;
       top: 0;
     }
@@ -175,9 +175,9 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th>Name</th>\n' +
-            '      <th>Notes and examples</th>\n' +
-            '      <th class="col_center"><span title="The number of times the word or phrase occurs, not the number of verses.  This may vary in different translations.">Occurs*</span></th>\n' +
+            '      <th class="tb_head">Name</th>\n' +
+            '      <th class="tb_head">Notes and examples</th>\n' +
+            '      <th class="tb_head col_center"><span title="The number of times the word or phrase occurs, not the number of verses.  This may vary in different translations.">Occurs*</span></th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }
@@ -188,8 +188,8 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th>Name</th>\n' +
-            '      <th>Notes and examples</th>\n' +
+            '      <th class="tb_head">Name</th>\n' +
+            '      <th class="tb_head">Notes and examples</th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }

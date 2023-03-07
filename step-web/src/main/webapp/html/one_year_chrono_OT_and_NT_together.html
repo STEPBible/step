@@ -26,7 +26,7 @@
     .fixTableHead {
         overflow-y: auto;
     }
-    .fixTableHead thead th {
+    .fixTableHead .tb_head {
         position: sticky;
         top: 0;
     }
@@ -186,9 +186,9 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th></th>\n' +
-            '        <th colspan="3" style="border-right:0.5pt solid black">Old Testament</th>\n' +
-            '        <th>New Testament</th>\n' +
+            '      <th class="tb_head"></th>\n' +
+            '        <th class="tb_head" colspan="3" style="border-right:0.5pt solid black">Old Testament</th>\n' +
+            '        <th class="tb_head">New Testament</th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }
@@ -200,8 +200,8 @@ function setupTable(urlPart1) {
             '	</colgroup>\n' +
             '  <thead>\n' +
             '    <tr class="tb_head">\n' +
-            '      <th></th>\n' +
-            '      <th>Readings</th>\n' +
+            '      <th class="tb_head"></th>\n' +
+            '      <th class="tb_head">Readings</th>\n' +
             '    </tr>\n' +
             '  </thead>\n';
     }

@@ -1416,9 +1416,9 @@ step.util = {
 					}
 				}
 				if ((foundPosition > 0) && (count > 1)) {
-					if (foundPosition <= 8)
+							if (foundPosition <= 9)
 						return 'ABCDEFGHI'.substring(foundPosition -1, foundPosition);
-					console.log('word order should not be higher than 8');
+							console.log('word order should not be higher than 9');
 				}
 			}
 			return "";

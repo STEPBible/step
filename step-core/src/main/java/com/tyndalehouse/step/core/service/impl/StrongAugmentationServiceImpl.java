@@ -352,8 +352,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             }
         }
         if (hebrew) {
-            int updatedNum = sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTOHB, startIndex, refIndex, ordinalsInRefNotStored1, refArray);
-            refIndex = sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTRSV, startIndex, refIndex, ordinalsInRefNotStored2, refArrayOHB);
+            int updatedNum = sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTOHB, startIndex, refIndex, ordinalsInRefNotStored1, refArrayOHB);
+            refIndex = sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTRSV, startIndex, refIndex, ordinalsInRefNotStored2, refArray);
         } else
             refIndex = sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongNT, startIndex, refIndex, ordinalsInRefNotStored1, refArray);
         return refIndex;

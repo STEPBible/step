@@ -27,7 +27,20 @@ import static java.lang.Integer.parseInt;
  * Strong augmentation service to provide better context/definitions to the end user.
  */
 public class StrongAugmentationServiceImpl implements StrongAugmentationService {
+
+    private class ordinalAndOccurencesInVerse implements Comparable<ordinalAndOccurencesInVerse> {
+        short ordinal;
+        short occurencesInVerse;
+        public int compareTo(ordinalAndOccurencesInVerse ordAndOccur) {
+            int comparison = this.ordinal - ordAndOccur.ordinal;
+            if (comparison == 0)
+                return this.occurencesInVerse - ordAndOccur.occurencesInVerse;
+            return comparison;
+        }
+    };
+
     private static final Logger LOGGER = LoggerFactory.getLogger(StrongAugmentationServiceImpl.class);
+    private static final short NT_OFFSET = 24116; //First ordinal of NT (Matthew)
     private final JSwordVersificationService versificationService;
     private static AugmentedStrongsData augStrongData = new AugmentedStrongsData();
     private static class AugmentedStrongsData implements Serializable {
@@ -50,7 +63,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         private short[] strong2AugStrongIndex;
         private byte[] strong2AugStrongCount;
 
-        // The following two arrays (one for OT and another for NT) has the index to the references (passages) for an augmented
+        // The following two arrays (one for OT and another for NT) have the index to the references (passages) for an augmented
         // strong.  The first byte contains the last character of an augmented Strong (e.g.: G, A, B, ...)
         // The second to forth bytes has the index to access the references (passages) for an augmented strong.
         // The top bit is on if it is first augmented strong for a strong number.  For example, if we have H0001G and H0001H,
@@ -77,10 +90,16 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     }
 
     @Override
-    public String[] augment(final String version, final String reference, final String[] keys) {
+    public String[] augment(final String version, String reference, final String[] keys) {
         if (StringUtils.isBlank(version) || StringUtils.isBlank(reference) || (version.startsWith("LXX")) ||
                 (keys.length == 0))
             return keys;
+        short wordPositionOfMultiOccurrencesInOneVerse = 0;
+        char lastCharOfRef = reference.toUpperCase().charAt(reference.length() - 1);
+        if ((lastCharOfRef >= 65) && (lastCharOfRef <= 73)) { // 65 is A, 73 is I, only has 15 bits to store the information
+            reference = reference.substring(0, reference.length() - 1);
+            wordPositionOfMultiOccurrencesInOneVerse |= 1 << (lastCharOfRef - 65);
+        }
         if (reference.contains("-")) {
             System.out.println("StrongAugmentationServices augment. Unexpected - character in reference");
             return keys;
@@ -93,10 +112,11 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             versificationName = sourceVersification.getName();
         }
         boolean useNRSVVersification = false;
+        boolean hebrew = (keys[0].charAt(0) == 'H') || (keys[0].charAt(0) == 'h');
         if (versificationName.equals("NRSV")) {
             ordinal = convertOSIS2Ordinal(reference, sourceVersification);
             useNRSVVersification = true;
-            if (((keys[0].charAt(0) == 'G') || (keys[0].charAt(0) == 'g')) && (sourceVersification.getTestament(ordinal).equals(Testament.OLD)))
+            if ((!hebrew) && (sourceVersification.getTestament(ordinal).equals(Testament.OLD)))
                 return keys; // There are no augmented Strong for Greek in the Old Testament
         }
         else {
@@ -108,7 +128,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 ordinal = convertOSIS2Ordinal(reference, sourceVersification);
             }
             else {
-                ordinal  = this.versificationService.convertReferenceGetOrdinal(reference, sourceVersification, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
+                if (!hebrew) System.out.println("Something wrong, OT with greek?" + keys);
+                ordinal = this.versificationService.convertReferenceGetOrdinal(reference, sourceVersification, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
             }
         }
         String[] result = new String[0];
@@ -116,20 +137,60 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             if (keys.length == 1) { // most of the calls to this method only has one key.  Create a shorter code to reduce processing time.
                 result = new String[] {keys[0]};
                 if (isNonAugmented(keys[0]))
-                    result[0] = getAugStrongWithStrongAndOrdinal(keys[0], ordinal, useNRSVVersification);
+                    result[0] = getAugStrongWithStrongAndOrdinal(keys[0], ordinal, wordPositionOfMultiOccurrencesInOneVerse, useNRSVVersification);
+                    result[0] = result[0].substring(0, result[0].length() - 1); // remove the last character.
             }
             else {
                 Set<String> deDupKeys = new HashSet<>();
-                Collections.addAll(deDupKeys, keys);
-                result = new String[deDupKeys.size()];
+//                Collections.addAll(deDupKeys, keys);
+                short[] wordPositions = new short[keys.length];
+                for (int firstLoopCounter = 0; firstLoopCounter < keys.length; firstLoopCounter++) {
+                    boolean flagForDuplicate = deDupKeys.add(keys[firstLoopCounter]);
+                    if ((!flagForDuplicate) && (isNonAugmented(keys[firstLoopCounter]))) {
+                        int count = 0;
+                        for (int secondLoopCounter = 0; secondLoopCounter < keys.length; secondLoopCounter++) {
+                            if (keys[firstLoopCounter].equals(keys[secondLoopCounter])) {
+                                if (wordPositions[secondLoopCounter] != 0) // already processed this strong number
+                                    break;
+                                wordPositions[secondLoopCounter] = (short) (1 << count);;
+                                count ++;
+                                if (count > 8) // The maximum of multiple occurrence words that is in the augmented strong file only has 8.
+                                    break;
+                            }
+                        }
+                    }
+                }
                 int k = 0;
-                for (String key : keys) {
-                    if (deDupKeys.contains(key)) {
-                        if (isNonAugmented(key))
-                            result[k] = getAugStrongWithStrongAndOrdinal(key, ordinal, useNRSVVersification);
-                        else result[k] = key;
-                        k++;
-                        deDupKeys.remove(key);
+                result = new String[keys.length];
+                for (int i = 0; i < keys.length; i++) {
+                    if (deDupKeys.contains(keys[i])) {
+                        if (isNonAugmented(keys[i])) {
+                            String resultFromgetAugStrong = getAugStrongWithStrongAndOrdinal(keys[i], ordinal, wordPositions[i], useNRSVVersification);
+                            if (resultFromgetAugStrong.charAt(resultFromgetAugStrong.length() -1) == '*') {
+                                resultFromgetAugStrong = resultFromgetAugStrong.substring(0, resultFromgetAugStrong.length() - 1);
+                                boolean alreadyIncludedInResult = false;
+                                for (int count = 0; count < k; count++) {
+                                    if (result[count].equals(resultFromgetAugStrong)) {
+                                        alreadyIncludedInResult = true;
+                                        break;
+                                    }
+                                }
+                                if (!alreadyIncludedInResult) {
+                                    result[k] = resultFromgetAugStrong;
+                                    k++;
+                                }
+                            }
+                            else {
+                                deDupKeys.remove(keys[i]); // Multiple occurrences of this word is not recorded in the augmented_strong.txt
+                                result[k] = resultFromgetAugStrong.substring(0, resultFromgetAugStrong.length() - 1);
+                                k++;
+                            }
+                        }
+                        else {
+                            deDupKeys.remove(keys[i]);
+                            result[k] = keys[i];
+                            k++;
+                        }
                     }
                 }
             }
@@ -163,7 +224,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             Verse key = VerseFactory.fromString(curVersification, OSIS);
             if (key == null) return -1;
             int ordinal = key.getOrdinal();
-            if (ordinal > 0) return ordinal;
+            if (ordinal > 0)
+                return ordinal;
         } catch (NoSuchVerseException e) {
             throw new StepInternalException("\"Unable to look up strongs for \" + OSIS ", e);
         }
@@ -172,7 +234,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 
     private int addToAugStrong2Ref(int refIndex, String augStrong, int lenOfRef) {
         int result = augStrong.charAt(augStrong.length() - 1);
-        if ((result < 65) || (result > 122)) { // 65 is A 121 is z
+        if ((result < 65) || ((result > 90) && (result < 97)) || (result > 122)) { // Not A-Z or a-z
             System.out.println("suffix of augmented Strong " + augStrong + " is outside of range of expected characters: " + augStrong.charAt(augStrong.length() - 1) + " " + result);
             System.exit(4);
         }
@@ -181,12 +243,43 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return result | refIndex;
     }
 
-    private void sortAndMarkAugStrongWithoutRef(short[] refOfAugStrongOTOHB, int startIndex, int refIndex, Set<Integer> ordinalsInRefNotStored1) {
-        Arrays.sort(refOfAugStrongOTOHB, startIndex, refIndex);
-        for (int i = startIndex; i < refIndex; i++) {
-            if (ordinalsInRefNotStored1.contains((int) refOfAugStrongOTOHB[i]))
-                refOfAugStrongOTOHB[i] = (short) (refOfAugStrongOTOHB[i] | 0x8000);
+    private int sortAndMarkAugStrongWithoutRef(short[] refOfAugStrong, int startIndex, int refIndex, Set<Integer> ordinalsInRefNotStored, ordinalAndOccurencesInVerse[] refArray) {
+        Arrays.sort(refArray); //, startIndex, refIndex);
+        short previousOrdinal = 0;
+        for (int i = startIndex, j = 0; i < refIndex; i++, j++) {
+            if (previousOrdinal != refArray[j].ordinal) {
+                refOfAugStrong[i] = refArray[j].ordinal;
+                previousOrdinal = refArray[j].ordinal;
+                if (ordinalsInRefNotStored.contains((int) refOfAugStrong[i]))
+                    refOfAugStrong[i] = (short) (refOfAugStrong[i] | 0x8000);
+                if (refArray[j].occurencesInVerse != 0) {
+                    i++;
+                    refIndex++;
+                    refOfAugStrong[i] = (short) (refArray[j].occurencesInVerse | 0xE000); // The top (16th) to 14th bits are on for an entry a word position with multiple occurrences in a verse
+                    // ordinal for OT is from 0 to 24114 (ESV) or 0 to 24182 (OHB).  When the 15th bit is on, the 14th bit is not on.
+                    // ordinal for NT is subtracted by 24116 (first ordinal for the book of Matthew).
+                    // ordinal for Revelation 22:21 is 32361
+                    // Therefore the NT range is from 0 to about 8245.  In that number range, 15th bit will never be on for an NT ordinal.
+                    // OT has some that will turn on 15th bit, but not 14th bit.
+                    // There are no numbers in that NT or OT range that will turn on both 14th and 15th bits.
+                    // When this scheme no longer works, expand the array of ordinals from short to int.
+                    // An entry in the refArray with the 16, 15 and 14 bit turn on is an entry for a word position with multiple occurences in a verse.
+                }
+            }
+            else {
+                i--;
+                refIndex--;
+                if (refArray[j].occurencesInVerse > 0) {
+                    if ((refOfAugStrong[i] & 0xE000) == 0xE000) // 16th to 14th bits are on so it is an entry of a word position with multiple occurrences in a verse
+                        refOfAugStrong[i] |= refArray[j].occurencesInVerse;
+                    else {
+                        System.out.println("Unexpected duplicate of references in the augmented strong file.  The duplicate has one without and one with multiple occurrences of a word in a verse.");
+                        System.exit(412);
+                    }
+                }
+            }
         }
+        return refIndex; // will need to add some entries for the multi-verse in the near future
     }
 
     private int addToRefArray(int refIndex, final boolean hebrew, final String augStrong, final String refs, final Versification versificationForOT,
@@ -199,6 +292,11 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         int startIndex = refIndex;
         final Set<Integer> ordinalsInRefNotStored1 = new HashSet<>(arrOfRefNotStored.length/2);
         final Set<Integer> ordinalsInRefNotStored2 = new HashSet<>(arrOfRefNotStored.length/2);
+        ordinalAndOccurencesInVerse[] refArray = new ordinalAndOccurencesInVerse[arrOfRef.length];
+        ordinalAndOccurencesInVerse[] refArrayOHB = new ordinalAndOccurencesInVerse[0];
+        if (hebrew)
+            refArrayOHB = new ordinalAndOccurencesInVerse[arrOfRef.length];
+        int index = 0;
         for (String s : arrOfRef) {
             int start = s.indexOf('(');
             int end = s.indexOf(')');
@@ -208,32 +306,56 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 aRef = s.substring(0, start);
                 NRSVRef = aRef.substring(0, aRef.indexOf('.')+1) + s.substring(start+1, end);
             }
-            boolean addToOrdinalNotStored = listRefNotStored.contains(s);
-            short refOrdinal = (hebrew) ? (short) convertOSIS2Ordinal(aRef, versificationForOT) : (short) convertOSIS2Ordinal(s, versificationForNRSV);
+
+            int lastCharIndex = 1;
+            refArray[index] = new ordinalAndOccurencesInVerse();
+            refArray[index].occurencesInVerse = 0;
+            char lastCharOfRef = aRef.toUpperCase().charAt(aRef.length() - lastCharIndex);
+            while ((lastCharOfRef >= 65) && (lastCharOfRef <= 73)) { // 65 is A, 73 is I, only has 15 bits to store the information
+                refArray[index].occurencesInVerse |= 1 << (lastCharOfRef - 65);
+                lastCharIndex ++;
+                lastCharOfRef = aRef.toUpperCase().charAt(aRef.length() - lastCharIndex);
+            }
+            if (lastCharIndex > 1) {
+                if (lastCharOfRef != 45)
+                    lastCharIndex --;
+                else // If there is a minus sign, it means it is NOT any of the word positions listed after the minus sign.
+                    refArray[index].occurencesInVerse = (short) ~refArray[index].occurencesInVerse; // flip bits 0 to 1 and 1 to 0
+
+                aRef = aRef.substring(0, aRef.length() - lastCharIndex);
+                NRSVRef = NRSVRef.substring(0, NRSVRef.length() - lastCharIndex);
+            }
+            boolean addToOrdinalNotStored = listRefNotStored.contains(aRef);
+            short refOrdinal = (hebrew) ? (short) convertOSIS2Ordinal(aRef, versificationForOT) : (short) (convertOSIS2Ordinal(NRSVRef, versificationForNRSV) - NT_OFFSET);
             if (addToOrdinalNotStored) ordinalsInRefNotStored1.add((int) refOrdinal);
             if (refOrdinal > -1) {
                 if (hebrew) {
-                    augStrongData.refOfAugStrongOTOHB[refIndex] = refOrdinal;
+//                    augStrongData.refOfAugStrongOTOHB[refIndex] = refOrdinal;
+                    refArrayOHB[index] = new ordinalAndOccurencesInVerse();
+                    refArrayOHB[index].ordinal = refOrdinal;
                     refOrdinal = (short) convertOSIS2Ordinal(NRSVRef, versificationForNRSV);
                     if (refOrdinal > -1) {
-                        augStrongData.refOfAugStrongOTRSV[refIndex] = refOrdinal;
+//                        augStrongData.refOfAugStrongOTRSV[refIndex] = refOrdinal;
+                        refArray[index].ordinal = refOrdinal;
                         if (addToOrdinalNotStored) ordinalsInRefNotStored2.add((int) refOrdinal);
                         // The following 3 lines are for testing to verify that there is no need to convert MT to Leningrad versification
 //                        String refInTHOT = this.versificationService.convertReference(s, "OSMHB", "THOT").getOsisKeyId();
-//                        if ((!refInTHOT.equalsIgnoreCase(s))) {
+//                        if ((!refInTHOT.equalsIgnoreCase(s)))
 //                            System.out.println(augStrong + " OSMHB and THOT different at " + s + " " + refInTHOT);
-//                        }
                     }
-                } else
-                    augStrongData.refOfAugStrongNT[refIndex] = refOrdinal;
+                } else {
+//                    augStrongData.refOfAugStrongNT[refIndex] = refOrdinal;
+                    refArray[index].ordinal = refOrdinal;
+                }
+                index ++;
                 refIndex++;
             }
         }
         if (hebrew) {
-            sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTOHB, startIndex, refIndex, ordinalsInRefNotStored1);
-            sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTRSV, startIndex, refIndex, ordinalsInRefNotStored2);
+            int updatedNum = sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTOHB, startIndex, refIndex, ordinalsInRefNotStored1, refArray);
+            refIndex = sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTRSV, startIndex, refIndex, ordinalsInRefNotStored2, refArrayOHB);
         } else
-            sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongNT, startIndex, refIndex, ordinalsInRefNotStored1);
+            refIndex = sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongNT, startIndex, refIndex, ordinalsInRefNotStored1, refArray);
         return refIndex;
     }
 
@@ -331,17 +453,21 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         if (!emptyRef) tmpStore = new BitSet(store.size());
         for (int i = 0; i < numOfRef; i ++) {
             short ordinalShort = ref[index2Ref + i];
+            if ((ordinalShort & 0xE000) == 0xE000) // It is an entry for words which occurs more than one time in a verse, not an ordinal.
+                continue;
             boolean existsInAugStrongWithRefNotStore = false;
             if (ordinalShort < 0) {
                 existsInAugStrongWithRefNotStore = true;
                 ordinalShort = (short) (ordinalShort & 0x7FFF);
             }
             int ordinal = ordinalShort;
-            if (versificationForConversion != null) {
+            if (!hebrew)
+                ordinal += NT_OFFSET;
+            if (versificationForConversion != null) { // Need to change versification
                 String reference = versificationForConversion.decodeOrdinal(ordinal).getOsisRef();
                 ordinal = convertOSIS2Ordinal(reference, sourceVersification);
-                //ordinal = this.versificationService.convertReferenceGetOrdinal(reference, versificationForConversion, sourceVersification);
-                if (ordinal < 0) continue;
+                if (ordinal < 0)
+                    continue;
                 String checkReference = sourceVersification.decodeOrdinal(ordinal).getOsisRef();
                 if (!reference.equals(checkReference)) {
                     if ((checkReference.endsWith(".0")) && (reference.endsWith(".1"))) {
@@ -466,7 +592,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         if ((prefix == 'H') || prefix == 'h')
             ordinal = convertOSIS2Ordinal(reference, this.versificationService.getVersificationForVersion(JSwordPassageService.OT_BOOK));
         else
-            ordinal = convertOSIS2Ordinal(reference, this.versificationService.getVersificationForVersion("ESV"));
+            ordinal = convertOSIS2Ordinal(reference, this.versificationService.getVersificationForVersion("ESV")) - NT_OFFSET;
         for (int i = arg.startIndex; i <= arg.endIndex; i ++) {
             short curOrdinalFromRefArray = arg.refArray[i];
             int ordinalInRefArrayWithoutSignBit = (curOrdinalFromRefArray & 0x7FFF);
@@ -477,23 +603,24 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return arg.defaultAugStrong;
     }
 
-    private String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification) {
-        if ((ordinal < 0) || (ordinal > 32767)) return "";
+    private String getAugStrongWithStrongAndOrdinal(final String strong, int ordinal, short wordPositionOfMultiOccurrencesInOneVerse, final boolean useNRSVVersification) {
+        if ((ordinal < 0) || (ordinal > 32767)) return " ";
         int index1 = binarySearchOfStrong(strong);
-        if (index1 < 0) return strong;
+        if (index1 < 0) return strong + " ";
         short index2 = augStrongData.strong2AugStrongIndex[index1];
         int[] augStrong2RefIdx;
         char prefix = strong.charAt(0);
         short[] refArray;
         if ((prefix == 'H') || (prefix == 'h')) {
-            if ((index2 < 0) || (index2 > augStrongData.numOfAugStrongInOT)) return "";
+            if ((index2 < 0) || (index2 > augStrongData.numOfAugStrongInOT)) return " ";
             augStrong2RefIdx = augStrongData.augStrong2RefIndexOT;
             refArray = (useNRSVVersification) ? augStrongData.refOfAugStrongOTRSV : augStrongData.refOfAugStrongOTOHB;
         } else if ((prefix == 'G') || (prefix == 'g')) {
-            if ((index2 < 0) || (index2 > augStrongData.numOfAugStrongInNT)) return "";
+            if ((index2 < 0) || (index2 > augStrongData.numOfAugStrongInNT)) return " ";
             augStrong2RefIdx = augStrongData.augStrong2RefIndexNT;
             refArray = augStrongData.refOfAugStrongNT;
-        } else return "";
+            ordinal -= NT_OFFSET;
+        } else return " ";
         int numOfAugStrongWithSameStrong = augStrongData.strong2AugStrongCount[index1];
         int index2LastAugStrongWithSameStrong = index2 + numOfAugStrongWithSameStrong - 1;
         int augStrong2RefIdxNextIdx = index2LastAugStrongWithSameStrong;
@@ -505,6 +632,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         }
         int endIndexOfCurrentAugStrongRef = endIndexOfCurrentStrongRef - 1;
         char suffixWithNoRefs = ' ';
+        boolean foundRecordOfMultiVerse = false;
         for (int i = index2LastAugStrongWithSameStrong; i >= index2; i--) {
             ImmutablePair<Character, Integer> r = getSuffixAndIdx(augStrong2RefIdx[i]);
             char curSuffix = r.getLeft();
@@ -515,15 +643,33 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 for (int x = curIndex; x <= endIndexOfCurrentAugStrongRef; x++) {
                     // the array of reference (in ordinal) are sorted.  When it reaches an ordinal in the reference array which is larger, that ordinal does not exist in the reference array.
                     // breaking out of the for loop will reduce unnecessary processing
+                    if ((refArray[x] & 0xE000) == 0xE000) // it is an entry for position of words with multi occurrences in a verse
+                        continue;
                     short ordinalInRefArrayWithoutSignBit = (short) (refArray[x] & 0x7FFF);
-                    if (ordinalInRefArrayWithoutSignBit > ordinal) break;
-                    if (ordinalInRefArrayWithoutSignBit == ordinal) return strong + curSuffix;
+                    if (ordinalInRefArrayWithoutSignBit > ordinal) break; // array is sorted os if it is greater than the one being searched, it is not in this array.
+                    if (ordinalInRefArrayWithoutSignBit == ordinal) {
+                        if (wordPositionOfMultiOccurrencesInOneVerse == 0)
+                            return strong + curSuffix + " ";
+                        if ((refArray[x+1] & 0xE000) == 0xE000) {
+                            // The maximum number of occurrences of a word in a verse is 9. 9 bits are required so an
+                            // 0x1F mask is used.
+                            foundRecordOfMultiVerse = true;
+                            if ((refArray[x+1] & 0x001F & wordPositionOfMultiOccurrencesInOneVerse) > 0)
+                                return strong + curSuffix + "*";
+                            x++;
+                        }
+                        else return strong + curSuffix + " "; // The augmented strong file does not have multiple occurences for this word.
+                    }
                 }
             }
             if (curIndex != 0) endIndexOfCurrentAugStrongRef = curIndex - 1; // End of the reference for the next aug strong.  If curIndex is 0, use the previous endIndexOfCurrentAugStrongRef
         }
-        if (suffixWithNoRefs != ' ') return strong + suffixWithNoRefs;
-        return strong;
+        if (suffixWithNoRefs != ' ') {
+            if ((wordPositionOfMultiOccurrencesInOneVerse > 0) && (foundRecordOfMultiVerse))
+                return strong + suffixWithNoRefs + "*";
+            return strong + suffixWithNoRefs + " ";
+        }
+        return strong + " ";
     }
 
     public void loadFromSerialization(final String installFilePath) {
@@ -626,8 +772,14 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                         }
                         if (!curReferences.equals("")) {
                             String[] arrOfRef = curReferences.split(" ");
-                            if (hebrew) numOfOTReferences += arrOfRef.length;
-                            else numOfNTReferences += arrOfRef.length;
+                            int wordsOccurMoreThanOnceInAVerse = 0;
+                            for (int i = 0; i < arrOfRef.length; i ++) {
+                                char last = arrOfRef[i].charAt(arrOfRef[i].length() - 1);
+                                if( (last >= 'A' && last <= 'Z') || (last >= 'a' && last <= 'z'))
+                                    wordsOccurMoreThanOnceInAVerse ++;
+                            }
+                            if (hebrew) numOfOTReferences += arrOfRef.length + wordsOccurMoreThanOnceInAVerse;
+                            else numOfNTReferences += arrOfRef.length + wordsOccurMoreThanOnceInAVerse;
                         }
                         curAugStrong = ""; curReferences = ""; hebrew = false;
                     }
@@ -676,7 +828,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 int curStrongNum = cnvrtStrong2Short(augStrong);
                 if (strongNumWithMostReferences != curStrongNum) {
                     if (strongNumWithMostReferences > -1) {
-                        String refs = sortedAugStrong.get(augStrongWithMostReferences);
+                        String refs = sortedAugStrong.get(augStrongWithMostReferences).replaceAll("(\\d)[A-Ia-i\\-]+($|\\s)", "$1 ");
                         augStrongWithMostReferencesHash.put(augStrongWithMostReferences.substring(0, augStrongWithMostReferences.length()-1), refs);
                         sortedAugStrong.put(augStrongWithMostReferences, "");
                         char prefix = augStrongWithMostReferences.charAt(0);
@@ -709,6 +861,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             augStrongData.refOfAugStrongNT = new short[numOfNTReferences];
             int refIndexOT = 1; // don't use the first one because a zero index means it is the aug strong with the most references and the references are not stored in memory
             int refIndexNT = 1;
+            try {
             for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
                 String augStrong = entry.getKey();
                 String references = entry.getValue().trim();
@@ -718,8 +871,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 if ((prefix == 'H') || (prefix == 'h')) {
                     augStrongData.augStrong2RefIndexOT[strong2AugStrongIndexOT] = addToAugStrong2Ref(refIndexOT, augStrong, references.length());
                     hebrew = true;
-                }
-                else {
+                    } else {
                     augStrongData.augStrong2RefIndexNT[strong2AugStrongIndexNT] = addToAugStrong2Ref(refIndexNT, augStrong, references.length());
                 }
                 if (lastStrong != curStrongNum) {
@@ -733,13 +885,17 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 }
                 if (hebrew) {
                     strong2AugStrongIndexOT ++;
-                    refIndexOT = addToRefArray(refIndexOT, true, augStrong, references, versificationForOT, versificationForESV, augStrongWithMostReferencesHash);
-                }
-                else {
+                        refIndexOT = addToRefArray(refIndexOT, true, augStrong, references, versificationForOT, versificationForESV, augStrongWithMostReferencesHash);
+                    } else {
                     strong2AugStrongIndexNT ++;
-                    refIndexNT = addToRefArray(refIndexNT, false, augStrong, references, versificationForOT, versificationForESV, augStrongWithMostReferencesHash);
+                        refIndexNT = addToRefArray(refIndexNT, false, augStrong, references, versificationForOT, versificationForESV, augStrongWithMostReferencesHash);
                 }
             }
+            } catch (Exception i) {
+                LOGGER.error("Something wrong");
+                i.printStackTrace();
+            }
+
             augStrongData.augStrong2RefIndexOT[strong2AugStrongIndexOT] = refIndexOT;
             augStrongData.augStrong2RefIndexNT[strong2AugStrongIndexNT] = refIndexNT;
             strong2AugCountGrk = null;

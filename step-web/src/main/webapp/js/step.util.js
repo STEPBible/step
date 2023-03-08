@@ -1190,7 +1190,8 @@ step.util = {
                 var s = $(source);
                 strong = s.attr("strong");
                 morph = s.attr("morph");
-                ref = step.util.ui.getVerseNumber(s);
+                ref = step.util.ui.getVerseNumber(s) +
+									step.util.ui.getWordOrderSuffix(s, strong);
                 version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
             }
 
@@ -1365,7 +1366,8 @@ step.util = {
         _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
-            var reference = step.util.ui.getVerseNumber(hoverContext);
+            var reference = step.util.ui.getVerseNumber(hoverContext) +
+							step.util.ui.getWordOrderSuffix(hoverContext, strong);
             var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 			if (!step.keyedVersions[version].hasStrongs) {
 				possibleVersion = $($(hoverContext).parent().parent()[0]).find(".smallResultKey").attr('data-version');
@@ -1393,6 +1395,34 @@ step.util = {
             return $(el).closest(".verseGrouping").find(".heading .verseLink").attr("name") ||
                 $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
         },
+		getWordOrderSuffix: function (el, strong) {
+			var verseClass = $(el).closest('.verse');
+			if (verseClass.length == 0)
+				verseClass = $(el).closest('.interlinear');
+			if (verseClass.length > 0) {
+				var spanInVerse = $(verseClass).find('span');
+				var count = 0;
+				var foundPosition = 0;
+				for (var i = 0; i < spanInVerse.length ; i++) {
+					var strongInCurrentWord = spanInVerse[i].attributes['strong'];
+					if (strongInCurrentWord) {
+						if (strongInCurrentWord.value == strong) {
+							count ++;
+							if ($(el).is(spanInVerse[i]))
+								foundPosition = count;
+							else if ((foundPosition > 0) && (count > 1)) // found the position and there is more than 1 occurrence
+								break;
+						}
+					}
+				}
+				if ((foundPosition > 0) && (count > 1)) {
+					if (foundPosition <= 8)
+						return 'ABCDEFGHI'.substring(foundPosition -1, foundPosition);
+					console.log('word order should not be higher than 8');
+				}
+			}
+			return "";
+		},
         emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();
 //            passageContent.detach();

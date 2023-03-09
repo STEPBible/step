@@ -94,11 +94,17 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         if (StringUtils.isBlank(version) || StringUtils.isBlank(reference) || (version.startsWith("LXX")) ||
                 (keys.length == 0))
             return keys;
-        short wordPositionOfMultiOccurrencesInOneVerse = 0;
-        char lastCharOfRef = reference.toUpperCase().charAt(reference.length() - 1);
-        if ((lastCharOfRef >= 65) && (lastCharOfRef <= 73)) { // 65 is A, 73 is I, only has 15 bits to store the information
-            reference = reference.substring(0, reference.length() - 1);
-            wordPositionOfMultiOccurrencesInOneVerse |= 1 << (lastCharOfRef - 65);
+        short[] wordPositionsOfMultiOccurrencesInOneVerse = new short[1];
+        String[] wordPositionsFromBrowser = reference.split(";");
+        if (wordPositionsFromBrowser.length > 1) {
+            reference = wordPositionsFromBrowser[0];
+            wordPositionsOfMultiOccurrencesInOneVerse = new short[wordPositionsFromBrowser.length - 1];
+            final String validAlphaForPositions = "ABCDEFGHI";
+            for (int i = 1; i < wordPositionsFromBrowser.length; i++) {
+                int pos = validAlphaForPositions.indexOf(wordPositionsFromBrowser[i]);
+                if (pos > -1)
+                    wordPositionsOfMultiOccurrencesInOneVerse[i-1] = (short) (1 << pos);
+            }
         }
         if (reference.contains("-")) {
             System.out.println("StrongAugmentationServices augment. Unexpected - character in reference");
@@ -137,16 +143,17 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             if (keys.length == 1) { // most of the calls to this method only has one key.  Create a shorter code to reduce processing time.
                 result = new String[] {keys[0]};
                 if (isNonAugmented(keys[0]))
-                    result[0] = getAugStrongWithStrongAndOrdinal(keys[0], ordinal, wordPositionOfMultiOccurrencesInOneVerse, useNRSVVersification);
+                    result[0] = getAugStrongWithStrongAndOrdinal(keys[0], ordinal, wordPositionsOfMultiOccurrencesInOneVerse[0], useNRSVVersification);
                     result[0] = result[0].substring(0, result[0].length() - 1); // remove the last character.
             }
             else {
                 Set<String> deDupKeys = new HashSet<>();
-//                Collections.addAll(deDupKeys, keys);
                 short[] wordPositions = new short[keys.length];
                 for (int firstLoopCounter = 0; firstLoopCounter < keys.length; firstLoopCounter++) {
                     boolean flagForDuplicate = deDupKeys.add(keys[firstLoopCounter]);
-                    if ((!flagForDuplicate) && (isNonAugmented(keys[firstLoopCounter]))) {
+                    if (wordPositionsOfMultiOccurrencesInOneVerse.length <= 1) {
+                        if (!flagForDuplicate) {
+                            if (isNonAugmented(keys[firstLoopCounter])) {
                         int count = 0;
                         for (int secondLoopCounter = 0; secondLoopCounter < keys.length; secondLoopCounter++) {
                             if (keys[firstLoopCounter].equals(keys[secondLoopCounter])) {
@@ -158,6 +165,12 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                                     break;
                             }
                         }
+                    }
+                        }
+                    }
+                    else {
+                        if (firstLoopCounter < wordPositionsOfMultiOccurrencesInOneVerse.length)
+                            wordPositions[firstLoopCounter] = wordPositionsOfMultiOccurrencesInOneVerse[firstLoopCounter];
                     }
                 }
                 int k = 0;
@@ -244,7 +257,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     }
 
     private int sortAndMarkAugStrongWithoutRef(short[] refOfAugStrong, int startIndex, int refIndex, Set<Integer> ordinalsInRefNotStored, ordinalAndOccurencesInVerse[] refArray) {
-        Arrays.sort(refArray); //, startIndex, refIndex);
+        Arrays.sort(refArray);
         short previousOrdinal = 0;
         for (int i = startIndex, j = 0; i < refIndex; i++, j++) {
             if (previousOrdinal != refArray[j].ordinal) {
@@ -279,7 +292,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 }
             }
         }
-        return refIndex; // will need to add some entries for the multi-verse in the near future
+        return refIndex;
     }
 
     private int addToRefArray(int refIndex, final boolean hebrew, final String augStrong, final String refs, final Versification versificationForOT,
@@ -321,7 +334,6 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                     lastCharIndex --;
                 else // If there is a minus sign, it means it is NOT any of the word positions listed after the minus sign.
                     refArray[index].occurencesInVerse = (short) ~refArray[index].occurencesInVerse; // flip bits 0 to 1 and 1 to 0
-
                 aRef = aRef.substring(0, aRef.length() - lastCharIndex);
                 NRSVRef = NRSVRef.substring(0, NRSVRef.length() - lastCharIndex);
             }
@@ -333,6 +345,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 //                    augStrongData.refOfAugStrongOTOHB[refIndex] = refOrdinal;
                     refArrayOHB[index] = new ordinalAndOccurencesInVerse();
                     refArrayOHB[index].ordinal = refOrdinal;
+                    refArrayOHB[index].occurencesInVerse = refArray[index].occurencesInVerse;
                     refOrdinal = (short) convertOSIS2Ordinal(NRSVRef, versificationForNRSV);
                     if (refOrdinal > -1) {
 //                        augStrongData.refOfAugStrongOTRSV[refIndex] = refOrdinal;
@@ -654,7 +667,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                             // The maximum number of occurrences of a word in a verse is 9. 9 bits are required so an
                             // 0x1F mask is used.
                             foundRecordOfMultiVerse = true;
-                            if ((refArray[x+1] & 0x001F & wordPositionOfMultiOccurrencesInOneVerse) > 0)
+                            if ((refArray[x+1] & 0x01FF & wordPositionOfMultiOccurrencesInOneVerse) > 0)
                                 return strong + curSuffix + "*";
                             x++;
                         }

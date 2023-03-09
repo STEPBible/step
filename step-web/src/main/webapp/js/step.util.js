@@ -1192,6 +1192,7 @@ step.util = {
                 morph = s.attr("morph");
                 ref = step.util.ui.getVerseNumber(s) +
 									step.util.ui.getWordOrderSuffix(s, strong);
+								console.log("ref is" + ref + " strong: " + strong);
                 version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
             }
 
@@ -1368,6 +1369,7 @@ step.util = {
             var morph = $(hoverContext).attr('morph');
             var reference = step.util.ui.getVerseNumber(hoverContext) +
 							step.util.ui.getWordOrderSuffix(hoverContext, strong);
+						console.log("ref is " + reference + " strong: " + strong);
             var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 			if (!step.keyedVersions[version].hasStrongs) {
 				possibleVersion = $($(hoverContext).parent().parent()[0]).find(".smallResultKey").attr('data-version');
@@ -1395,33 +1397,44 @@ step.util = {
             return $(el).closest(".verseGrouping").find(".heading .verseLink").attr("name") ||
                 $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
         },
-		getWordOrderSuffix: function (el, strong) {
+				getWordOrderSuffix: function (el, strongsSelectedByUser) {
 			var verseClass = $(el).closest('.verse');
 			if (verseClass.length == 0)
 				verseClass = $(el).closest('.interlinear');
-			if (verseClass.length > 0) {
-				var spanInVerse = $(verseClass).find('span');
+					if (verseClass.length == 0)
+						return '';
+					var spansInVerse = $(verseClass).find('span');
+					var strongsSelectedByUserArray = strongsSelectedByUser.split(" "); // The word clicked or hovered over by the user can have more than one STRONG number tagged to it.
+					var result = [];
+					foundWordOrderToReport = false;
+					for (var h = 0; h < strongsSelectedByUserArray.length; h++) {
+						var aStrongSelectedByUser = strongsSelectedByUserArray[h];
 				var count = 0;
 				var foundPosition = 0;
-				for (var i = 0; i < spanInVerse.length ; i++) {
-					var strongInCurrentWord = spanInVerse[i].attributes['strong'];
-					if (strongInCurrentWord) {
-						if (strongInCurrentWord.value == strong) {
+						for (var i = 0; ((i < spansInVerse.length) && ((foundPosition == 0) || (foundPosition > 0) && (count < 2))); i++) {
+							var strongsInCurrentWord = spansInVerse[i].attributes['strong'];
+							if (strongsInCurrentWord) {
+								var strongsInAWordOfVerse = strongsInCurrentWord.value.split(" "); // Some words are tagged with more than one STRONG number.
+								for (var j = 0; j < strongsInAWordOfVerse.length; j++) {
+									if (strongsInAWordOfVerse[j] == aStrongSelectedByUser) {
 							count ++;
-							if ($(el).is(spanInVerse[i]))
+										if ($(el).is(spansInVerse[i])) {
 								foundPosition = count;
-							else if ((foundPosition > 0) && (count > 1)) // found the position and there is more than 1 occurrence
 								break;
 						}
 					}
 				}
-				if ((foundPosition > 0) && (count > 1)) {
-							if (foundPosition <= 9)
-						return 'ABCDEFGHI'.substring(foundPosition -1, foundPosition);
-							console.log('word order should not be higher than 9');
 				}
 			}
-			return "";
+						if ((foundPosition > 0) && (foundPosition <= 9) && (count > 1)) {
+							result.push( 'ABCDEFGHI'.substring(foundPosition -1, foundPosition) );
+							foundWordOrderToReport = true;
+						}
+						else result.push('');
+					}
+					if (foundWordOrderToReport)
+						return ';' + result.join(';');
+					return '';
 		},
         emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();

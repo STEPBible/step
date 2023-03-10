@@ -369,44 +369,44 @@ function setupTable(urlPart1, aDate) {
                 reading = first;
                 reading = reading.replace(/{\*[^}]*}/, '');
                 altCount = 1;
-                pos2 = reading.search(pattern)
+                pos2 = reading.search(pattern);
                 while (pos2 > -1 && altCount <= 2) {
                     lines_readings += RegExp.lastMatch + ';';
                     reading = reading.replace(/{[^}]+}/, '');
-                    pos2 = reading.search(pattern)
+                    pos2 = reading.search(pattern);
                     ++altCount;
                 }
 
                 reading = psalm;
                 reading = reading.replace(/{\*[^}]*}/, '');
                 altCount = 1;
-                pos2 = reading.search(pattern)
+                pos2 = reading.search(pattern);
                 while (pos2 > -1 && altCount <= 2) {
                     lines_readings += RegExp.lastMatch + ';';
                     reading = reading.replace(/{[^}]+}/, '');
-                    pos2 = reading.search(pattern)
+                    pos2 = reading.search(pattern);
                     ++altCount;
                 }
 
                 reading = second;
                 reading = reading.replace(/{\*[^}]*}/, '');
                 altCount = 1;
-                pos2 = reading.search(pattern)
+                pos2 = reading.search(pattern);
                 while (pos2 > -1 && altCount <= 2) {
                     lines_readings += RegExp.lastMatch + ';';
                     reading = reading.replace(/{[^}]+}/, '');
-                    pos2 = reading.search(pattern)
+                    pos2 = reading.search(pattern);
                     ++altCount;
                 }
 
                 reading = gospel;
                 reading = reading.replace(/{\*[^}]*}/, '');
                 altCount = 1;
-                pos2 = reading.search(pattern)
+                pos2 = reading.search(pattern);
                 while (pos2 > -1 && altCount <= 2) {
                     lines_readings += RegExp.lastMatch + ';';
                     reading = reading.replace(/{[^}]+}/, '');
-                    pos2 = reading.search(pattern)
+                    pos2 = reading.search(pattern);
                     ++altCount;
                 }
 

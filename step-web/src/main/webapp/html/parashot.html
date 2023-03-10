@@ -391,20 +391,20 @@ function setupTable(urlPart1) {
 
                 reading = torah;
                 reading = reading.replace(/{\*[^}]*}/, '');
-                pos2 = reading.search(pattern)
+                pos2 = reading.search(pattern);
                 while (pos2 > -1) {
                     lines_readings += RegExp.lastMatch + ';';
                     reading = reading.replace(/{[^}]+}/, '');
-                    pos2 = reading.search(pattern)
+                    pos2 = reading.search(pattern);
                 }
 
                 reading = haftorah;
                 reading = reading.replace(/{\*[^}]*}/, '');
-                pos2 = reading.search(pattern)
+                pos2 = reading.search(pattern);
                 while (pos2 > -1) {
                     lines_readings += RegExp.lastMatch + ';';
                     reading = reading.replace(/{[^}]+}/, '');
-                    pos2 = reading.search(pattern)
+                    pos2 = reading.search(pattern);
                 }
 
                 lines_readings = lines_readings.replace(/};{/g, ';').replace(/ /g, '').replace(/{/, '').replace(/}/, '').replace(/;$/, '');

@@ -508,7 +508,7 @@ function setupTable(urlPart1, aDate) {
             prev_element.style.color = "#5d5d5d";
             prev_element.style.cursor = "pointer";
             prev_element.onclick=function() {
-                    setupTable(urlPart1, prev_dt.getFullYear() + '-' + (prev_dt.getMonth()+1) + '-' + prev_dt.getDate());
+                    setupTable(urlPart1, prev_dt.getFullYear() + '-01-01');
             };
         }
         else {
@@ -523,7 +523,7 @@ function setupTable(urlPart1, aDate) {
             next_element.style.color = "#5d5d5d";
             next_element.style.cursor = "pointer";
             next_element.onclick=function() {
-                setupTable(urlPart1, next_dt.getFullYear() + '-' + (next_dt.getMonth()+1) + '-' + next_dt.getDate());
+                setupTable(urlPart1, (next_dt.getFullYear()+1) + '-01-01');
             };
         }
         else {

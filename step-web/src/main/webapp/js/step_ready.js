@@ -268,7 +268,7 @@
             if ((urlVars.indexOf("clickvocab") > -1) || (urlVars.indexOf("clickstrong") > -1)) {
                 var pos = urlVars.q.indexOf("strong=");
                 if (pos > -1) {
-                    strongNum = urlVars.q.substring(pos+7, pos + 12);
+                    var strongNum = urlVars.q.substring(pos+7).split('|')[0].split('&')[0];
                     step.util.ui.showDef(strongNum);
                 }
             }

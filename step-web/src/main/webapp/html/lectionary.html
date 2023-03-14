@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lectionary Readings</title>
+    <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
+    <link href="/css/cardo.css" rel="stylesheet" media="screen"/>
+    <link href="/css/introjs.min.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
+    <script src="/international/en.js" type="text/javascript"></script>
+    <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/libs/introjs.min.js" type="text/javascript"></script>
+    <script src="/libs/underscore-min.js" type="text/javascript"></script>
+    <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/libs/backbone.js" type="text/javascript"></script>
+    <script src="/libs/backbone.localStorage.js" type="text/javascript"></script>
+    <script src="/js/step_constants.js" type="text/javascript"></script>
+    <script src="/js/passage_selection.js" type="text/javascript"></script>
+    <script src="/js/search_selection.js" type="text/javascript"></script>
+    <script src="/js/backbone/models/model_settings.js" type="text/javascript"></script>
+  <style>
+  
+    .fixTableHead {
+      overflow-y: auto;
+    }
+    .fixTableHead .tb_head {
+      position: sticky;
+      top: 0;
+    }
+    table {
+        border-collapse: collapse;        
+        font-family: Georgia, serif;
+        font-size: 15px;
+    }
+    .tb_head {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
+    }
+    .th_col {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
+    }
+    .tb_col {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
+    }
+    .clickable{
+        color: #17758f;
+        cursor: pointer;
+    }
+    .smallcaps{
+        font-size: 110%;
+        font-variant-caps: small-caps;
+    }
+    .ind10{
+        text-indent: -10px;
+        padding-left: 10px;
+    }
+    .hTitle{
+        font-family: Helvetica;
+        font-size: 28px;
+        font-weight: bold;
+        border: none;
+    }
+    .hInfo{
+        font-size: 16px;
+        border: none;
+        text-align:right;
+    }
+    .navigation {
+        background-color: white;
+        box-shadow: 0 0 3px;
+        border-color: --clrBackground;
+        padding: 8px;
+        color: #5d5d5d;
+        border-radius: 100%;
+        cursor: pointer;
+    }
+
+    :root {
+        --clrHighlight: #17758F;
+        --clrHighlightBg: #17758F;
+        --clrStrongText: #498090;
+        --clrLexiconFocusBG: #c8d8dc;
+        --clrRelatedWordBg: #b2e5f3;
+        --clrBackground: #ffffff;
+        --clrText: #5d5d5d;
+        --clr2ndHover: #d3d3d3;
+    }
+
+  </style>
+</head>
+<body style="margin:0;background-color:white"">
+
+<div id="header">
+<span class="hTitle">Revised Common Lectionary</span>
+<br>
+&nbsp;<span id="prev_year" class="navigation glyphicon glyphicon-arrow-left"></span><span class="hInfo" id="reading_year"></span><span id="next_year" class="navigation glyphicon glyphicon-arrow-right"></span>
+<br><br>
+</div>
+<div class="fixTableHead">
+<table id="tb_lectionary">
+  <tbody id="tb_body">
+
+  </tbody>
+</table>
+</div>
+<p>
+
+<script>
+
+(function() {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+	var debugOption = "";
+	var urlPart1 = window.location.origin;
+	var pos = window.location.href.indexOf("/html/lectionary.html");
+	if (pos > 8) { // probably running in development environment.
+		urlPart1 = window.location.href.substr(0, pos);
+		debugOption = "&debug";
+	}
+
+    if (window.innerWidth > 960) {
+        if (!inIFrame)
+            window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
+    			"/?q=reference=Gen.1" + 
+    			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+    }
+
+	if (typeof jQuery == 'undefined') {
+  		loadFile(urlPart1 + "/css/bootstrap.css");
+		loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
+		loadFile(urlPart1 + "/css/select2.css");
+		loadFile(urlPart1 + "/css/select2-bootstrap.css");
+		loadFile(urlPart1 + "/scss/step-template.css");
+		loadFile(urlPart1 + "/international/en.js");
+		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js');
+        loadFile(urlPart1 + '/libs/introjs.min.js');
+		loadFile(urlPart1 + "/libs/underscore-min.js");
+		loadFile(urlPart1 + "/libs/bootstrap.min.js");
+		loadFile(urlPart1 + "/libs/backbone.js");
+		loadFile(urlPart1 + "/libs/backbone.localStorage.js");
+		loadFile(urlPart1 + "/js/backbone/models/model_settings.js");
+		loadFile(urlPart1 + "/js/step_constants.js");
+		loadFile(urlPart1 + "/js/passage_selection.js");
+		loadFile(urlPart1 + "/js/search_selection.js");
+		// Poll for jQuery to come into existance
+		var checkReady = function(callback) {
+			if (window.jQuery) {
+				callback(jQuery);
+			}
+			else {
+				window.setTimeout(function() { checkReady(callback); }, 200);
+			}
+		};
+		// Start polling...
+		checkReady(function($) {
+			$(function() {
+				setupTable(urlPart1, '');
+			});
+		});
+	}
+	else setupTable(urlPart1, '');
+})();
+
+function loadFile(path) {
+  if (path.endsWith(".js")) {
+    var fileref = document.createElement("script");
+    fileref.setAttribute("type", "text/javascript");
+    fileref.setAttribute("src", path);
+  } else if (path.endsWith(".css")) {
+    var fileref = document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", path);
+  }
+  else return;
+  fileref.async = false;
+  document.getElementsByTagName("head")[0].appendChild(fileref);
+}
+
+function setupTable(urlPart1, aDate) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+    // only add the header row the only first time (i.e., not when display different years
+    var rows = $("#lectionary_headings").find("tr");
+    if (rows.length == 0){
+        if (inIFrame) {
+            var tblHeadingHTLM = '	<colgroup>\n' + 
+                '		<col span="1" style="width:12%;">\n' +
+                '		<col span="1" style="width:20%;">\n' +
+                '		<col span="1" style="width:17%;">\n' +
+                '		<col span="1" style="width:17%;">\n' +
+                '		<col span="1" style="width:17%;">\n' +
+                '		<col span="1" style="width:17%;">\n' +
+                '	</colgroup>\n' +
+                '  <thead id="lectionary_headings">\n' +
+                '    <tr class="tb_head">\n' +
+                '      <th class="th_col"><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
+                '      <th class="th_col">Title</th>\n' +
+                '      <th class="th_col">First Reading</th>\n' +
+                '      <th class="th_col">Psalm</th>\n' +
+                '      <th class="th_col">Second Reading</th>\n' +
+                '      <th class="th_col">Gospel</th>\n' +
+                '    </tr>\n' +
+                '  </thead>\n';
+        }
+        else {
+            $(".hTitle").css("font-size", "20px");
+            $(".hInfo").css("font-size", "15px");
+            // set up table columns and headings
+            var tblHeadingHTLM = '	<colgroup>\n' + 
+                '		<col span="1" style="width:20%;">\n' + 
+                '		<col span="1" style="width:20%;">\n' +
+                '		<col span="1" style="width:60%;">\n' +
+                '	</colgroup>\n' +
+                '  <thead id="lectionary_headings">\n' +
+                '    <tr class="tb_head">\n' +
+                '      <th class="th_col"><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
+                '      <th class="th_col">Title</th>\n' +
+                '      <th class="th_col">Readings</th>\n' +
+                '    </tr>\n' +
+                '  </thead>\n';
+        }
+        $("#tb_lectionary").append(tblHeadingHTLM);
+    }
+    // Remove old table rows (i.e., redisplaying for different year).
+    // Note that row 1 is the header, and we won't delete that.
+    var rows = $("#tb_body").find("tr");
+    for (var i = 0; i < rows.length; i ++) {
+        document.getElementById("tb_body").deleteRow(0);
+    }
+
+	var fullHeight = $(window).height();
+	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
+	$(".fixTableHead").css("height", remainingHeight + "px");
+
+    var settings = new SettingsModelList;
+    settings.fetch();
+    if (settings.length > 0) {
+        step.settings = settings.at(0);
+        var sz = step.settings.get("defaultfont");
+		if (typeof sz !== "number") sz = 15;
+        $("table").css("font-size", sz + "px");
+    }
+
+    var queryString = window.location.search;
+	var pos = queryString.indexOf("jsonFN=");
+	if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
+		var tmp = queryString.substr(pos + 7);
+		pos = tmp.indexOf("&");
+		if (pos == -1) jsonFileName = tmp;
+		else if (pos > 0) jsonFileName = tmp.substr(0,pos);
+	}
+
+	$.ajaxSetup({async: false});
+
+	var jsonFileName1 = "lectionary_advents";
+	var jsonFileName2 = "lectionary_readings";
+	var jsonFileName3 = "lectionary_weeks";
+
+	var tblRowHTML = "";
+    var pattern = "{[^}]+}";
+    var pattern2 = /([0-9])[abcd]/g;
+    var clickText1 = 'class="clickable" onclick=displayPassages(this,"';
+    var clickText2 = '")>';
+    var clickText3 = '</span>';
+    var deuterocanonical = ' title="This requires that the [first] Bible contains deuterocanonical books, such as CPDV or KJVA."';
+
+    var first_advent_of_year;
+    var first_advent_of_next_year;
+    var year_letter;
+    // use today as a reference date for the year, unless a specific one was passed into the function
+    var refDate = new Date();
+    if (aDate != "") {
+        refDate = new Date(aDate);
+    }
+    var earliest_date;
+    var latest_date;
+
+    // set 'date' to be the first Advent of the current year (or of the reference year if looking ahead/back)
+    $.getJSON(urlPart1 + "/html/json/" + jsonFileName1 + ".json", function(array) {
+        var i = 0;
+        var nextYear = new Date (array[i][0]);
+        while (i < array.length && refDate > nextYear) {
+            i++;
+            nextYear = new Date (array[i][0]);
+		}
+        first_advent_of_year = array[i-1][0];
+        first_advent_of_next_year = array[i][0];
+        year_letter = array[i-1][1];
+
+        earliest_date = new Date(array[0][0]);
+        latest_date = new Date(array[array.length-1][0]);
+    });
+
+    var reading_title = new Array();
+    var first_reading = new Array();
+    var psalm_reading = new Array();
+    var second_reading = new Array();
+    var gospel_reading = new Array();
+
+    // read the list of readings into arrays
+    $.getJSON(urlPart1 + "/html/json/" + jsonFileName2 + ".json", function(array) {
+		for (var i = 0; i < array.length; i ++ ) {
+            reading_title[i] = array[i][1];
+            first_reading[i] = array[i][2];
+            psalm_reading[i] = array[i][3];
+            second_reading[i] = array[i][4];
+            gospel_reading[i] = array[i][5];
+        }
+    });
+
+    $.getJSON(urlPart1 + "/html/json/" + jsonFileName3 + ".json", function(array) {
+        var dt1 = "";
+        var dt2 = "";
+        var implicit_yr = "";
+		for (var i = 0; i < array.length; i ++ ) {
+            if (array[i][0] >= first_advent_of_year && array[i][0] < first_advent_of_next_year)
+            {
+                var dt = new Date(array[i][0]+"T12:00:00Z");
+                var year = dt.getFullYear();
+                var display_dt = dt.toDateString().replace(/^[A-Za-z]+ /,"").replace(" "+year, ", "+year).replace(" 0", " ");
+                if (dt1 == "")
+                {
+                    dt1 = display_dt;
+                }
+                dt2 = display_dt;
+                var display_yr = display_dt.replace(/^.*, /, "");
+                var reading_number = array[i][1];
+
+                if (display_yr == implicit_yr) 
+                {
+                    display_dt = display_dt.replace(", "+display_yr, "");
+                }
+                implicit_yr = display_yr;
+
+                first = first_reading[reading_number];
+                psalm = psalm_reading[reading_number];
+                second = second_reading[reading_number];
+                gospel = gospel_reading[reading_number];
+
+                // build a list of all line's readings to be linked to the date (up to 2
+                // of the optional readings in each category).  Exclude deuterocanonicals.
+                var lines_readings = "";
+                var reading = "";
+                var altCount;
+
+                reading = first;
+                reading = reading.replace(/{\*[^}]*}/, '');
+                altCount = 1;
+                pos2 = reading.search(pattern);
+                while (pos2 > -1 && altCount <= 2) {
+                    lines_readings += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern);
+                    ++altCount;
+                }
+
+                reading = psalm;
+                reading = reading.replace(/{\*[^}]*}/, '');
+                altCount = 1;
+                pos2 = reading.search(pattern);
+                while (pos2 > -1 && altCount <= 2) {
+                    lines_readings += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern);
+                    ++altCount;
+                }
+
+                reading = second;
+                reading = reading.replace(/{\*[^}]*}/, '');
+                altCount = 1;
+                pos2 = reading.search(pattern);
+                while (pos2 > -1 && altCount <= 2) {
+                    lines_readings += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern);
+                    ++altCount;
+                }
+
+                reading = gospel;
+                reading = reading.replace(/{\*[^}]*}/, '');
+                altCount = 1;
+                pos2 = reading.search(pattern);
+                while (pos2 > -1 && altCount <= 2) {
+                    lines_readings += RegExp.lastMatch + ';';
+                    reading = reading.replace(/{[^}]+}/, '');
+                    pos2 = reading.search(pattern);
+                    ++altCount;
+                }
+
+                lines_readings = lines_readings.replace(/};{/g, ';').replace(/ /g, '').replace(pattern2, '$1').replace(/{/, '').replace(/}/, '').replace(/;$/, '');
+                display_dt = "<span " + clickText1 + lines_readings
+                        + clickText2 + display_dt + clickText3;
+
+                // Add links to the passages, designated between { }.
+
+                pos2 = first.search(pattern);
+                while (pos2 > -1) {
+                    clickText = "<span ";
+                    passage = RegExp.lastMatch;
+                    passage = passage.replace(/{/, '').replace(/}/, '');
+                    if (passage.search(/\*/) > -1)
+                    {
+                        clickText += deuterocanonical;
+                    }
+                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '')
+                        + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                    first = first.replace(/{[^}]+}/, clickText);
+                    pos2 = first.search(pattern);
+                }
+    
+                pos2 = psalm.search(pattern);
+                while (pos2 > -1) {
+                    clickText = "<span ";
+                    passage = RegExp.lastMatch;
+                    passage = passage.replace(/{/, '').replace(/}/, '');
+                    if (passage.search(/\*/) > -1)
+                    {
+                        clickText += deuterocanonical;
+                    }
+                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '')
+                        + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                    psalm = psalm.replace(/{[^}]+}/, clickText);
+                    pos2 = psalm.search(pattern);
+                }
+    
+                pos2 = second.search(pattern);
+                while (pos2 > -1) {
+                    clickText = "<span ";
+                    passage = RegExp.lastMatch;
+                    passage = passage.replace(/{/, '').replace(/}/, '');
+                    if (passage.search(/\*/) > -1)
+                    {
+                        clickText += deuterocanonical;
+                    }
+                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '')
+                        + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                    second = second.replace(/{[^}]+}/, clickText);
+                    pos2 = second.search(pattern);
+                }
+    
+                pos2 = gospel.search(pattern);
+                while (pos2 > -1) {
+                    clickText = "<span ";
+                    passage = RegExp.lastMatch;
+                    passage = passage.replace(/{/, '').replace(/}/, '');
+                    if (passage.search(/\*/) > -1)
+                    {
+                        clickText += deuterocanonical;
+                    }
+                    clickText += clickText1 + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '')
+                        + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                    gospel = gospel.replace(/{[^}]+}/, clickText);
+                    pos2 = gospel.search(pattern);
+                }
+    
+                if (inIFrame) {
+        			tblRowHTML = 
+        				'<tr><td class="tb_col">' + display_dt + '</td>' +
+        				    '<td class="tb_col">' + reading_title[reading_number] + '</td>' +
+        				    '<td class="tb_col">' + first + '</td>' +
+        				    '<td class="tb_col">' + psalm + '</td>' +
+        				    '<td class="tb_col">' + second + '</td>' +
+        					'<td class="tb_col">' + gospel + '</td></tr>';
+                }
+                else {
+        			tblRowHTML = 
+        				'<tr><td class="tb_col">' + display_dt + '</td>' +
+        				    '<td class="tb_col">' + reading_title[reading_number] + '</td>' +
+        				    '<td class="tb_col">' + '<div class="ind10">First: ' + first + '</div>'
+                                + '<div class="ind10">Psalm: ' + psalm + '</div>'
+                                + '<div class="ind10">Second: ' + second + '</div>'
+                                + '<div class="ind10">Gospel: ' + gospel + '</div>' + '</td></tr>';
+                }
+    	        $("#tb_body").append(tblRowHTML);
+            }
+		}
+        if (dt1 != "") {
+            document.getElementById("reading_year").innerText = "\u00A0\u00A0" + dt1 + " - " + dt2 + " (Year\u00A0" + year_letter + ")\u00A0\u00A0";
+        }
+
+        var prev_dt = new Date(dt1);
+        prev_dt.setDate(prev_dt.getDate() - 8);
+        prev_element = document.getElementById("prev_year");
+        if (prev_dt > earliest_date) {
+            prev_element.style.color = "#5d5d5d";
+            prev_element.style.cursor = "pointer";
+            prev_element.onclick=function() {
+                    setupTable(urlPart1, prev_dt.getFullYear() + '-01-01');
+            };
+        }
+        else {
+            prev_element.style.color = "#dee1e6";
+            prev_element.style.cursor = "default";
+        }
+
+        var next_dt = new Date(dt2);
+        next_dt.setDate(next_dt.getDate() + 8);
+        next_element = document.getElementById("next_year");
+        if (next_dt < latest_date) {
+            next_element.style.color = "#5d5d5d";
+            next_element.style.cursor = "pointer";
+            next_element.onclick=function() {
+                setupTable(urlPart1, (next_dt.getFullYear()+1) + '-01-01');
+            };
+        }
+        else {
+            next_element.style.color = "#dee1e6";
+            next_element.style.cursor = "default";
+        }
+
+    });
+
+
+    $.ajaxSetup({async: true});
+
+	$(function(){
+		$('textarea#userTextInput').on('input', function(e){
+			this.timer && clearTimeout(this.timer);
+			this.timer = setTimeout(handleKeyboardInput, 300, e);
+		});
+	});
+
+}
+
+
+function displayPassages(item, string) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+	var urlPart1 = window.location.origin;
+    // provide a default of CPDV for Deuterocanonical books
+    var version = "";
+    if (string.indexOf("Sir.") > -1 || string.indexOf("Bar.") > -1 || string.indexOf("Wis.") > -1) {
+        version = "|version=CPDV"
+    }
+
+    if (!inIFrame) {
+    	if (string !== "") {
+            var tabURL = urlPart1 + "/?skipwelcome&q=";
+            string = string.replace(/ /g, ";");
+    		if (string.indexOf("strong=") > -1 || string.indexOf("srchJoin=") > -1
+                || string.indexOf("text=") > -1) {
+    			tabURL += string;
+    		}
+    		else {
+    			tabURL += "reference=" + string;
+    		}
+
+            window.open(tabURL + version, "_blank");
+    	}
+
+    }
+    else
+    {
+    	if (string !== "") {
+            string = string.replace(/ /g, ";");
+    		window.top.postMessage(string + version, '*');
+    	}
+    }
+}
+
+
+function handleKeyboardInput(e) {
+	var userInput =  $('textarea#userTextInput').val();
+	if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
+		userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
+		$('textarea#userTextInput').val(userInput);
+	}
+	if ((typeof userInput !== "string") || (userInput.length = 0)) {
+		$("tr").show();
+	}
+	else {
+		$("#tb_body").find("tr").hide();
+		var re = new RegExp(userInput, "i");
+		$("tr").filter(function () { return re.test($(this).find(".tb_col").text());}).show();
+	}
+}
+
+</script>
+</body>
+</html>

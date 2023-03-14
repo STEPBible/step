@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>OT parallels</title>
     <link rel="shortcut icon" href="/images/step-favicon.ico"/>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
@@ -24,7 +25,7 @@
     .fixTableHead {
       overflow-y: auto;
     }
-    .fixTableHead thead th {
+    .fixTableHead .tb_head {
       position: sticky;
       top: 0;
     }
@@ -34,17 +35,24 @@
         font-family: Georgia, serif;
         font-size: 15px;
     }
-    td {
-        padding: 4px;
-        margin: 3px;
-        border: 1px solid #ccc;
-    }
-    th {
+    .tb_head {
         padding: 4px;
         margin: 3px;
         border: 2px solid #17758f;
         background: #17758f;
         color: white;
+    }
+    .th_col {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
+    }
+    .tb_col {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
     }
     .tb_col1 {
         color: #17758f;
@@ -53,11 +61,11 @@
     }
     .tb_col2 {
         word-wrap: break-word;
-    }
+    }	
     .tb_col3 {
         word-wrap: break-word;
     }
-	
+
     :root {
         --clrHighlight: #17758F;
         --clrHighlightBg: #17758F;
@@ -72,9 +80,11 @@
   </style>
 </head>
 <body style="margin:0;background-color:white"">
-<h2 id="header">Old Testament parallels</h2>
-<span>Event:</span><textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize=none;height:24px" placeholder="Optionally enter your search word"></textarea>
+<div id="header">
+<h2>Old Testament parallels</h2>
+&nbsp;<textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize=none;height:24px" placeholder="Search this table"></textarea>
 <button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick="searchSelectionModal()"><b>Range:</b></button>
+</div>
 <div class="fixTableHead">
 <table>
 	<colgroup>
@@ -85,9 +95,9 @@
 
   <thead>
     <tr class="tb_head">
-      <th>Event</td>
-      <th>Passage 1</th>
-      <th>Passage 2</th>
+      <th class="th_col">Event</td>
+      <th class="th_col">Passage 1</th>
+      <th class="th_col">Passage 2</th>
     </tr>
   </thead>
   <tbody id="tb_body">
@@ -111,10 +121,13 @@
 		urlPart1 = window.location.href.substr(0, pos);
 		debugOption = "&debug";
 	}
-    if (!inIFrame)
-        window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
-			"/?q=reference=Gen.10:2-29;1Ch.1:5-23" + 
-			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+    if (window.innerWidth > 960) {
+        if (!inIFrame)
+            window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
+    			"/?q=reference=Gen.10:2-29;1Ch.1:5-23" + 
+    			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+    }
+
 	if (typeof jQuery == 'undefined') {
   		loadFile(urlPart1 + "/css/bootstrap.css");
 		loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
@@ -195,9 +208,9 @@ function setupTable(urlPart1) {
     $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
 			tblRowHTML += 
-				'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
-				    '<td class="tb_col2">' + array[i][1] + '</td>' +
-					'<td class="tb_col3">' + array[i][2] + '</td></tr>';
+				'<tr><td class="tb_col tb_col1">' + array[i][0] + '</td>' +
+				    '<td class="tb_col tb_col2">' + (array[i][1]).replace(/;/, '; ') + '</td>' +
+					'<td class="tb_col tb_col3">' + (array[i][2]).replace(/;/, '; ') + '</td></tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
     });
@@ -220,12 +233,33 @@ function setupTable(urlPart1) {
 }
 
 function goToNewSection(item, cellNum) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+	var urlPart1 = window.location.origin;
+
     var row = item.parentNode;
     var col2 = row.cells[1].innerText;
     var col3 = row.cells[2].innerText;
+    var passages = col2 + ";" + col3;
+
     $(".tb_col1").css("background-color", "white");
     $(row.cells[0]).css("background-color","cyan")
-    window.top.postMessage(col2 + ";" + col3, '*');
+
+
+    if (!inIFrame) {
+        var tabURL = urlPart1 + "/?skipwelcome&q=";
+    	tabURL += "reference=" + passages;
+        window.open(tabURL, "_blank");
+    }
+    else
+    {
+        window.top.postMessage(passages, '*');
+    }
 }
 
 function handleKeyboardInput(e) {
@@ -242,6 +276,8 @@ function handleKeyboardInput(e) {
 			$("#tb_body").find("tr").hide();
 			var re = new RegExp(userInput, "i");
 			$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
+			$("tr").filter(function () { return re.test($(this).find(".tb_col2").text());}).show();
+			$("tr").filter(function () { return re.test($(this).find(".tb_col3").text());}).show();
 		}
 }
 

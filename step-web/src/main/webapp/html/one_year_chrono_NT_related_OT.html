@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>One Year Chronological NT with Related OT</title>
     <link rel="shortcut icon" href="/images/step-favicon.ico"/>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
@@ -25,7 +26,7 @@
     .fixTableHead {
         overflow-y: auto;
     }
-    .fixTableHead thead th {
+    .fixTableHead .tb_head {
         position: sticky;
         top: 0;
     }
@@ -35,25 +36,40 @@
         font-family: Georgia, serif;
         font-size: 15px;
     }
-    
-    td {
-        padding: 4px;
-        margin: 3px;
-        border: 1px solid #ccc;
-    }
-
-    th {
+    .tb_head {
         padding: 4px;
         margin: 3px;
         border: 2px solid #17758f;
         background: #17758f;
         color: white;
     }
-    
-    .tb_col1{
-        white-space: nowrap;
+    .th_col {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
     }
-    
+    .tb_col {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
+    }
+    .clickable{
+        color: #17758f;
+        cursor: pointer;
+    }
+    .ind10{
+        text-indent: -10px;
+        padding-left: 10px;
+    }
+    .hTitle{
+        font-family: Helvetica;
+        font-size: 30px;
+        font-weight: bold;
+        border: none;
+    }
+
     :root {
         --clrHighlight: #17758F;
         --clrHighlightBg: #17758F;
@@ -68,501 +84,16 @@
     </style>
 </head>
 <body style="margin:0;background-color:white">
-<h2 id="header">One Year Chronological NT with Related OT</h2>
+<div id="header">
+<h2 class="hTitle">One Year Chronological NT with Related OT</h2>
 
 <p>Based on the reading plans of Katherine Fedor at <a target="_blank" href="https://treasureinthebible.com">treasureinthebible.com</a>.  Used with permission.
 
+</div>
 <div class="fixTableHead">
 <table id="plan">
-<thead>
-    <tr class="tb_head">
-        <th>2018</th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-        <th>Saturday</th>
-    </tr>
-</thead>
-<tbody>
-<tr>
-    <td class="tb_col1">Jan 1</td>
-    <td><a href="javascript:;" onclick="goToRef('Luke1:1-13');">Luke&nbsp;1:1-13</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles24');">1&nbsp;Chr&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles8,2Chronicles29');">2&nbsp;Chr&nbsp;8, 29</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke1:14-38');">Luke&nbsp;1:14-38</a>;<br><a href="javascript:;" onclick="goToRef('Malachi4');">Mal&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus10');">Lev&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah33');">Jer&nbsp;33</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke1:39-80');">Luke&nbsp;1:39-80</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel2');">1&nbsp;Sam&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel24,Ezekiel29');">Ezek&nbsp;24, 29</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John1:1-14');">John&nbsp;1:1-14</a>;<br><a href="javascript:;" onclick="goToRef('Psalm36');">Psalm&nbsp;36</a>;<br><a href="javascript:;" onclick="goToRef('Job29');">Job&nbsp;29</a>;<br><a href="javascript:;" onclick="goToRef('Exodus40');">Exod&nbsp;40</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew1:1-4');">Matt&nbsp;1:1-4</a>;<br><a href="javascript:;" onclick="goToRef('Genesis38,Genesis46');">Gen&nbsp;38, 46</a>;<br><a href="javascript:;" onclick="goToRef('Numbers7');">Num&nbsp;7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew1:5-6');">Matt&nbsp;1:5-6</a>;<br><a href="javascript:;" onclick="goToRef('Ruth');">Ruth [1-4]</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Jan  8</td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew1:6-17');">Matt&nbsp;1:6-17</a>;<br><a href="javascript:;" onclick="goToRef('2Kings3,2Kings18,2Kings19');">2&nbsp;Kgs&nbsp;3, 18, 19</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles3');">1&nbsp;Chr&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew1:18-25');">Matt&nbsp;1:18-25</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah7');">Isa&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Psalm130');">Psalm&nbsp;130</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy22');">Deut&nbsp;22</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke2:1-38');">Luke&nbsp;2:1-38</a>;<br><a href="javascript:;" onclick="goToRef('Exodus13');">Exod&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus12');">Lev&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles7');">2&nbsp;Chr&nbsp;7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew2');">Matt&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Micah5');">Mic&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Hosea11');">Hos&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Numbers24');">Num&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('Joshua20');">Josh&nbsp;20</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke2:39-52');">Luke&nbsp;2:39-52</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy16');">Deut&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Psalm48,Psalm84');">Psalm&nbsp;48, 84</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew3');">Matt&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah4,Isaiah40');">Isa&nbsp;4, 40</a>;<br><a href="javascript:;" onclick="goToRef('Psalm92');">Psalm&nbsp;92</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Jan 15</td>
-    <td><a href="javascript:;" onclick="goToRef('Mark1');">Mark&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus13');">Lev&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah44,Isaiah61');">Isa&nbsp;44, 61</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke3');">Luke&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Genesis10-11');">Gen&nbsp;10-11</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles1-2');">1&nbsp;Chr&nbsp;1-2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew4');">Matt&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Psalm91');">Psalm&nbsp;91</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah9');">Isa&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles21');">1&nbsp;Chr&nbsp;21</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke4');">Luke&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy8');">Deut&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Numbers15');">Num&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('2Kings5');">2&nbsp;Kgs&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke5');">Luke&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus14');">Lev&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Psalm150');">Psalm&nbsp;150</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah43');">Isa&nbsp;43</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John1:15-51');">John&nbsp;1:15-51</a>;<br><a href="javascript:;" onclick="goToRef('Genesis28,Genesis31-32,Genesis35');">Gen&nbsp;28, 31-32, 35</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Jan 22</td>
-    <td><a href="javascript:;" onclick="goToRef('John2');">John&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Genesis41');">Gen&nbsp;41</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus1');">Lev&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy14');">Deut&nbsp;14</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John3');">John&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Numbers21');">Num&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs30');">Prov&nbsp;30</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John4');">John&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Genesis33');">Gen&nbsp;33</a>;<br><a href="javascript:;" onclick="goToRef('Joshua8,Joshua24');">Josh&nbsp;8, 24</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah12');">Isa&nbsp;12</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark2');">Mark&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy23');">Deut&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel21-22');">1&nbsp;Sam&nbsp;21-22</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John5');">John&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah17');">Jer&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah3,Nehemiah12');">Neh&nbsp;3, 12</a>;<br><a href="javascript:;" onclick="goToRef('Job10');">Job&nbsp;10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew12:1-21');">Matt&nbsp;12:1-21</a>;<br><a href="javascript:;" onclick="goToRef('Micah6');">Mic&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Psalm71');">Psalm&nbsp;71</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles3-4');">2&nbsp;Chr&nbsp;3-4</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Jan 29</td>
-    <td><a href="javascript:;" onclick="goToRef('Mark3');">Mark&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Exodus35');">Exod&nbsp;35</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah52');">Jer&nbsp;52</a>;<br><a href="javascript:;" onclick="goToRef('Job33');">Job&nbsp;33</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke6');">Luke&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs21');">Prov&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Psalm79');">Psalm&nbsp;79</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah15-16');">Isa&nbsp;15-16</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew5');">Matt&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Numbers30');">Num&nbsp;30</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel4');">2&nbsp;Sam&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles36');">2&nbsp;Chr&nbsp;36</a>;<br><a href="javascript:;" onclick="goToRef('Job25');">Job&nbsp;25</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew6');">Matt&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('2Kings20');">2&nbsp;Kgs&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Job38');">Job&nbsp;38</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs23');">Prov&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah7');">Zech&nbsp;7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew7');">Matt&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles28');">1&nbsp;Chr&nbsp;28</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel22,Ezekiel35');">Ezek&nbsp;22, 35</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew8:1-13');">Matt&nbsp;8:1-13</a>;<br><a href="javascript:;" onclick="goToRef('Psalm107');">Psalm&nbsp;107</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah30');">Jer&nbsp;30</a>;<br><a href="javascript:;" onclick="goToRef('Malachi1');">Mal&nbsp;1</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Feb 5</td>
-    <td><a href="javascript:;" onclick="goToRef('Luke7');">Luke&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Psalm113');">Psalm&nbsp;113</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes9');">Eccl&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Malachi3');">Mal&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew11');">Matt&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles22');">1&nbsp;Chr&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah35');">Isa&nbsp;35</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah6');">Jer&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Amos1');">Amos&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew12:22-50');">Matt&nbsp;12:22-50</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles9');">2&nbsp;Chr&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('1Kings10');">1&nbsp;Kgs&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Jonah1-2');">Jonah&nbsp;1-2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke11');">Luke&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy26');">Deut&nbsp;26</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles24');">2&nbsp;Chr&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs8');">Prov&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Jonah3');">Jonah&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew13');">Matt&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Psalm78');">Psalm&nbsp;78</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah37');">Isa&nbsp;37</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah5');">Jer&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke8');">Luke&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah6');">Isa&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Matthew8:14-34');">Matt&nbsp;8:14-34</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah53');">Isa&nbsp;53</a>;<br><a href="javascript:;" onclick="goToRef('Psalm75');">Psalm&nbsp;75</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Feb 12</td>
-    <td><a href="javascript:;" onclick="goToRef('Mark4');">Mark&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah16');">Jer&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Psalm147');">Psalm&nbsp;147</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel31');">Ezek&nbsp;31</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark5');">Mark&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus15');">Lev&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Psalm142');">Psalm&nbsp;142</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew9');">Matt&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Hosea6');">Hos&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Numbers27');">Num&nbsp;27</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles35');">2&nbsp;Chr&nbsp;35</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew10');">Matt&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Micah7');">Mic&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah50');">Jer&nbsp;50</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel14');">1&nbsp;Sam&nbsp;14</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew14');">Matt&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus18');">Lev&nbsp;18</a>;<br><a href="javascript:;" onclick="goToRef('Genesis40');">Gen&nbsp;40</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles10');">1&nbsp;Chr&nbsp;10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark6:1-21');">Mark&nbsp;6:1-21</a>;<br><a href="javascript:;" onclick="goToRef('Esther1-3');">Esth&nbsp;1-3</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Feb 19</td>
-    <td><a href="javascript:;" onclick="goToRef('Mark6:22-23');">Mark&nbsp;6:22-23</a>;<br><a href="javascript:;" onclick="goToRef('Esther4-6');">Esth&nbsp;4-6</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark6:24-56');">Mark&nbsp;6:24-56</a>;<br><a href="javascript:;" onclick="goToRef('Esther7-10');">Esth&nbsp;7-10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke9:1-27');">Luke&nbsp;9:1-27</a>;<br><a href="javascript:;" onclick="goToRef('2Kings4');">2&nbsp;Kgs&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel10');">Ezek&nbsp;10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John6');">John&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah9-10');">Neh&nbsp;9-10</a>;<br><a href="javascript:;" onclick="goToRef('Job9');">Job&nbsp;9</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew15');">Matt&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Exodus21');">Exod&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Lamentations2,Lamentations4');">Lam&nbsp;2, 4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark7');">Mark&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus20');">Lev&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles21');">2&nbsp;Chr&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel25');">Ezek&nbsp;25</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Feb 26</td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew16');">Matt&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles6');">2&nbsp;Chr&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Psalm42');">Psalm&nbsp;42</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark8');">Mark&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus8');">Lev&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles23');">1&nbsp;Chr&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Psalm105');">Psalm&nbsp;105</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew17');">Matt&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Exodus14,Exodus30');">Exod&nbsp;14, 30</a>;<br><a href="javascript:;" onclick="goToRef('Ezra1');">Ezra&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark9');">Mark&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah66');">Isa&nbsp;66</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus2');">Lev&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Numbers11');">Num&nbsp;11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke9:28-62');">Luke&nbsp;9:28-62</a>;<br><a href="javascript:;" onclick="goToRef('2Kings1');">2&nbsp;Kgs&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Job37');">Job&nbsp;37</a>;<br><a href="javascript:;" onclick="goToRef('Psalm29');">Psalm&nbsp;29</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew18');">Matt&nbsp;18</a>;<br><a href="javascript:;" onclick="goToRef('Numbers35');">Num&nbsp;35</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah45');">Jer&nbsp;45</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Mar 5</td>
-    <td><a href="javascript:;" onclick="goToRef('John7');">John&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel16');">1&nbsp;Sam&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Psalm114,Psalm129');">Psalm&nbsp;114, 129</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John8');">John&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Exodus5-6');">Exod&nbsp;5-6</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy17');">Deut&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles18');">2&nbsp;Chr&nbsp;18</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John9');">John&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('2Kings14');">2&nbsp;Kgs&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Job21');">Job&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Psalm66');">Psalm&nbsp;66</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs15');">Prov&nbsp;15</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John10:1-21');">John&nbsp;10:1-21</a>;<br><a href="javascript:;" onclick="goToRef('Exodus4');">Exod&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles11');">1&nbsp;Chr&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Psalm23,Psalm65');">Psalm&nbsp;23, 65</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke10');">Luke&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy6');">Deut&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus21');">Lev&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Job40');">Job&nbsp;40</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John10:22-42');">John&nbsp;10:22-42</a>;<br><a href="javascript:;" onclick="goToRef('Psalm82');">Psalm&nbsp;82</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus24');">Lev&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('1Kings7');">1&nbsp;Kgs&nbsp;7</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Mar 12</td>
-    <td><a href="javascript:;" onclick="goToRef('Luke12');">Luke&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Psalm49');">Psalm&nbsp;49</a>;<br><a href="javascript:;" onclick="goToRef('Job20,Job27');">Job&nbsp;20, 27</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke13');">Luke&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Psalm118,Psalm122');">Psalm&nbsp;118, 122</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah22');">Jer&nbsp;22</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke14');">Luke&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles12');">2&nbsp;Chr&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah25');">Isa&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel17');">Ezek&nbsp;17</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke15');">Luke&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Genesis45');">Gen&nbsp;45</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs29');">Prov&nbsp;29</a>;<br><a href="javascript:;" onclick="goToRef('Jonah4');">Jonah&nbsp;4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke16-17:10');">Luke&nbsp;16-17:10</a>;<br><a href="javascript:;" onclick="goToRef('Ezra10');">Ezra&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes6');">Eccl&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel16');">Ezek&nbsp;16</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John11');">John&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles30');">2&nbsp;Chr&nbsp;30</a>;<br><a href="javascript:;" onclick="goToRef('Job2');">Job&nbsp;2</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Mar 19</td>
-    <td><a href="javascript:;" onclick="goToRef('Luke17:11-37');">Luke&nbsp;17:11-37</a>;<br><a href="javascript:;" onclick="goToRef('Genesis6-7,Genesis19');">Gen&nbsp;6-7, 19</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke18:1-14');">Luke&nbsp;18:1-14</a>;<br><a href="javascript:;" onclick="goToRef('Psalm58,Psalm88');">Psalm&nbsp;58, 88</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah58');">Isa&nbsp;58</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew19');">Matt&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Genesis1');">Gen&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Psalm127');">Psalm&nbsp;127</a>;<br><a href="javascript:;" onclick="goToRef('SongofSolomon1-2');">Song&nbsp;1-2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark10');">Mark&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy24');">Deut&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel11');">2&nbsp;Sam&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('SongofSolomon3-4');">Song&nbsp;3-4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew20');">Matt&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('1Kings12');">1&nbsp;Kgs&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah51');">Isa&nbsp;51</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah49');">Jer&nbsp;49</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew21');">Matt&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah9');">Zech&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Psalm80');">Psalm&nbsp;80</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah62');">Isa&nbsp;62</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Mar 26</td>
-    <td><a href="javascript:;" onclick="goToRef('Luke18:15-43');">Luke&nbsp;18:15-43</a>;<br><a href="javascript:;" onclick="goToRef('Exodus20');">Exod&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Psalm123');">Psalm&nbsp;123</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah5');">Zech&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke19');">Luke&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Numbers5');">Num&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel12');">2&nbsp;Sam&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles27');">1&nbsp;Chr&nbsp;27</a>;<br><a href="javascript:;" onclick="goToRef('Psalm137');">Psalm&nbsp;137</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark11');">Mark&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah56');">Isa&nbsp;56</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah7');">Jer&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles23');">2&nbsp;Chr&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Ezra3');">Ezra&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John12');">John&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy15');">Deut&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('1Kings1');">1&nbsp;Kgs&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah39');">Isa&nbsp;39</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew22');">Matt&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Exodus3');">Exod&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm64');">Psalm&nbsp;64</a>;<br><a href="javascript:;" onclick="goToRef('1Kings5');">1&nbsp;Kgs&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark12');">Mark&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel15');">1&nbsp;Sam&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('2Kings12');">2&nbsp;Kgs&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah7');">Neh&nbsp;7</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Apr 2</td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew23:1-36');">Matt&nbsp;23:1-36</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel21');">Ezek&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Ezra7');">Ezra&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Psalm26');">Psalm&nbsp;26</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew23:37-39');">Matt&nbsp;23:37-39</a>;<br><a href="javascript:;" onclick="goToRef('1Kings9');">1&nbsp;Kgs&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Psalm57,Psalm61');">Psalm&nbsp;57, 61</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah31');">Isa&nbsp;31</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke20');">Luke&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah5');">Isa&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah21');">Jer&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel19');">Ezek&nbsp;19</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke21');">Luke&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles15');">2&nbsp;Chr&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah19');">Isa&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Hosea9');">Hos&nbsp;9</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark13');">Mark&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah13');">Isa&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Daniel9,Daniel11');">Dan&nbsp;9, 11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew24');">Matt&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah34');">Isa&nbsp;34</a>;<br><a href="javascript:;" onclick="goToRef('Daniel12');">Dan&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel5');">Ezek&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Joshua9');">Josh&nbsp;9</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Apr 9</td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew25');">Matt&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Job31');">Job&nbsp;31</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs14');">Prov&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah46');">Jer&nbsp;46</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew26');">Matt&nbsp;26</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus5');">Lev&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Job17');">Job&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Psalm27');">Psalm&nbsp;27</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark14');">Mark&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah13');">Zech&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel41-42');">Ezek&nbsp;41-42</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke22');">Luke&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus23');">Lev&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('2Kings23');">2&nbsp;Kgs&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Job1');">Job&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John13');">John&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Psalm41,Psalm119:1-40');">Psalm&nbsp;41, 119:1-40</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John14');">John&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('1Kings6');">1&nbsp;Kgs&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Psalm77,Psalm85');">Psalm&nbsp;77, 85</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Apr 16</td>
-    <td><a href="javascript:;" onclick="goToRef('John15:1-12');">John&nbsp;15:1-12</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel18-20');">1&nbsp;Sam&nbsp;18-20</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel15');">Ezek&nbsp;15</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John15:13-27');">John&nbsp;15:13-27</a>;<br><a href="javascript:;" onclick="goToRef('Genesis44');">Gen&nbsp;44</a>;<br><a href="javascript:;" onclick="goToRef('Psalm35');">Psalm&nbsp;35</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs18');">Prov&nbsp;18</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John16');">John&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah8');">Neh&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Psalm25');">Psalm&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Lamentations5');">Lam&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John17');">John&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Ezra8');">Ezra&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Psalm133');">Psalm&nbsp;133</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes3');">Eccl&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke23');">Luke&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Psalm31');">Psalm&nbsp;31</a>;<br><a href="javascript:;" onclick="goToRef('Hosea10');">Hos&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Exodus26');">Exod&nbsp;26</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark15');">Mark&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Psalm22,Psalm38');">Psalm&nbsp;22, 38</a>;<br><a href="javascript:;" onclick="goToRef('Amos8');">Amos&nbsp;8</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Apr 23</td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew27:1-10');">Matt&nbsp;27:1-10</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel31');">1&nbsp;Sam&nbsp;31</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah19,Jeremiah32');">Jer&nbsp;19, 32</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah11');">Zech&nbsp;11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew27:11-66');">Matt&nbsp;27:11-66</a>;<br><a href="javascript:;" onclick="goToRef('Genesis20');">Gen&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah6');">Zech&nbsp;6</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John18');">John&nbsp;18</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel15,2Samuel19');">2&nbsp;Sam&nbsp;15, 19</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles11');">2&nbsp;Chr&nbsp;11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('John19');">John&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Exodus12');">Exod&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Numbers9');">Num&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah12');">Zech&nbsp;12</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew28');">Matt&nbsp;28</a>;<br><a href="javascript:;" onclick="goToRef('Daniel10');">Dan&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Micah2');">Mic&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Haggai1');">Hag&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Mark16');">Mark&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Psalm108');">Psalm&nbsp;108</a>;<br><a href="javascript:;" onclick="goToRef('Luke24');">Luke&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('Psalm39,Psalm72');">Psalm&nbsp;39, 72</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Apr 30</td>
-    <td><a href="javascript:;" onclick="goToRef('John20');">John&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Psalm124');">Psalm&nbsp;124</a>;<br><a href="javascript:;" onclick="goToRef('John21');">John&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel5');">2&nbsp;Sam&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel34');">Ezek&nbsp;34</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts1');">Acts&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Psalm69,Psalm109');">Psalm&nbsp;69, 109</a>;<br><a href="javascript:;" onclick="goToRef('Micah1');">Mic&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts2');">Acts&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Joel2');">Joel&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Psalm16');">Psalm&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('1Kings2');">1&nbsp;Kgs&nbsp;2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts3');">Acts&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Genesis26');">Gen&nbsp;26</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy18');">Deut&nbsp;18</a>;<br><a href="javascript:;" onclick="goToRef('2Kings13');">2&nbsp;Kgs&nbsp;13</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts4');">Acts&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Psalm2');">Psalm&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel2');">2&nbsp;Sam&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Job32');">Job&nbsp;32</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah10');">Zech&nbsp;10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts5');">Acts&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus6');">Lev&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles13');">2&nbsp;Chr&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah46');">Isa&nbsp;46</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">May 7</td>
-    <td><a href="javascript:;" onclick="goToRef('Acts6');">Acts&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Exodus18');">Exod&nbsp;18</a>;<br><a href="javascript:;" onclick="goToRef('Numbers8');">Num&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah13');">Neh&nbsp;13</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts7:1-8');">Acts&nbsp;7:1-8</a>;<br><a href="javascript:;" onclick="goToRef('Genesis12,Genesis29-30');">Gen&nbsp;12, 29-30</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts7:9-16');">Acts&nbsp;7:9-16</a>;<br><a href="javascript:;" onclick="goToRef('Genesis39,Genesis42,Genesis47');">Gen&nbsp;39, 42, 47</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts7:17-29');">Acts&nbsp;7:17-29</a>;<br><a href="javascript:;" onclick="goToRef('Exodus1-2');">Exod&nbsp;1-2</a>;<br><a href="javascript:;" onclick="goToRef('1Kings4');">1&nbsp;Kgs&nbsp;4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts7:30-43');">Acts&nbsp;7:30-43</a>;<br><a href="javascript:;" onclick="goToRef('Amos5');">Amos&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Exodus11');">Exod&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus27');">Lev&nbsp;27</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts7:44-45');">Acts&nbsp;7:44-45</a>;<br><a href="javascript:;" onclick="goToRef('Joshua3,Joshua12-13');">Josh&nbsp;3, 12-13</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">May 14</td>
-    <td><a href="javascript:;" onclick="goToRef('Acts7:46-60');">Acts&nbsp;7:46-60</a>;<br><a href="javascript:;" onclick="goToRef('Joshua14-15,Joshua23');">Josh&nbsp;14-15, 23</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles2');">2&nbsp;Chr&nbsp;2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts8');">Acts&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('1Kings8,1Kings13,1Kings18');">1&nbsp;Kgs&nbsp;8, 13, 18</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts9');">Acts&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('2Kings8');">2&nbsp;Kgs&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah17');">Isa&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah40-41');">Jer&nbsp;40-41</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts10');">Acts&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles19');">2&nbsp;Chr&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Job34');">Job&nbsp;34</a>;<br><a href="javascript:;" onclick="goToRef('Psalm20');">Psalm&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel4');">Ezek&nbsp;4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts11');">Acts&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Psalm51');">Psalm&nbsp;51</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah18');">Isa&nbsp;18</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts12');">Acts&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel25');">1&nbsp;Sam&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Daniel3,Daniel6');">Dan&nbsp;3, 6</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">May 21</td>
-    <td><a href="javascript:;" onclick="goToRef('Acts13:1-19');">Acts&nbsp;13:1-19</a>;<br><a href="javascript:;" onclick="goToRef('Numbers32-34');">Num&nbsp;32-34</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts13:19');">Acts&nbsp;13:19</a>;<br><a href="javascript:;" onclick="goToRef('Joshua16-19');">Josh&nbsp;16-19</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts13:19-20');">Acts&nbsp;13:19-20</a>;<br><a href="javascript:;" onclick="goToRef('Judges1-3,Judges10');">Judg&nbsp;1-3, 10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts13:20-21');">Acts&nbsp;13:20-21</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel3,1Samuel7-8');">1&nbsp;Sam&nbsp;3, 7-8</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles8');">1&nbsp;Chr&nbsp;8</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts13:21-22');">Acts&nbsp;13:21-22</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel9-11,1Samuel13');">1&nbsp;Sam&nbsp;9-11, 13</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts13:22-52');">Acts&nbsp;13:22-52</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel23-24');">1&nbsp;Sam&nbsp;23-24</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah55');">Isa&nbsp;55</a>;<br><a href="javascript:;" onclick="goToRef('Habakkuk1');">Hab&nbsp;1</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">May 28</td>
-    <td><a href="javascript:;" onclick="goToRef('Acts14');">Acts&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy11');">Deut&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Psalm81');">Psalm&nbsp;81</a>;<br><a href="javascript:;" onclick="goToRef('Micah4');">Mic&nbsp;4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('James1');">Jas&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs2');">Prov&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Daniel1');">Dan&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Job15');">Job&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Psalm7');">Psalm&nbsp;7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('James2');">Jas&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Genesis15');">Gen&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles20');">2&nbsp;Chr&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah41');">Isa&nbsp;41</a></td>
-    <td><a href="javascript:;" onclick="goToRef('James3');">Jas&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm140');">Psalm&nbsp;140</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs16');">Prov&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah32');">Isa&nbsp;32</a></td>
-    <td><a href="javascript:;" onclick="goToRef('James4:1-8');">Jas&nbsp;4:1-8</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah3');">Jer&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Hosea3');">Hos&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah1');">Zech&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('James4:9-17');">Jas&nbsp;4:9-17</a>;<br><a href="javascript:;" onclick="goToRef('2Kings22');">2&nbsp;Kgs&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah33');">Isa&nbsp;33</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">June 4</td>
-    <td><a href="javascript:;" onclick="goToRef('James5');">Jas&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Job13,Job42');">Job&nbsp;13, 42</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah50');">Isa&nbsp;50</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts15');">Acts&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Amos9');">Amos&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus3,Leviticus7');">Lev&nbsp;3, 7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts16');">Acts&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel28');">1&nbsp;Sam&nbsp;28</a>;<br><a href="javascript:;" onclick="goToRef('Psalm119:49-64');">Psalm&nbsp;119:49-64</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah20');">Jer&nbsp;20</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Galatians1');">Gal&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles22');">2&nbsp;Chr&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Job18,Job22');">Job&nbsp;18, 22</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Galatians2');">Gal&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Psalm67');">Psalm&nbsp;67</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah42');">Isa&nbsp;42</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Galatians3');">Gal&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Genesis13,Genesis24');">Gen&nbsp;13, 24</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy21,Deuteronomy27');">Deut&nbsp;21, 27</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">June 11</td>
-    <td><a href="javascript:;" onclick="goToRef('Galatians4');">Gal&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Genesis16,Genesis21');">Gen&nbsp;16, 21</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah54');">Isa&nbsp;54</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Galatians5');">Gal&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus19');">Lev&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel9');">2&nbsp;Sam&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles10');">2&nbsp;Chr&nbsp;10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Galatians6');">Gal&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Psalm126');">Psalm&nbsp;126</a>;<br><a href="javascript:;" onclick="goToRef('Job4');">Job&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah34');">Jer&nbsp;34</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts17');">Acts&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('2Kings16');">2&nbsp;Kgs&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Psalm50,Psalm96');">Psalm&nbsp;50, 96</a>;<br><a href="javascript:;" onclick="goToRef('Daniel5');">Dan&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts18:1-18');">Acts&nbsp;18:1-18</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel1');">2&nbsp;Sam&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('1Thessalonians1');">1&nbsp;Thess&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('2Kings11');">2&nbsp;Kgs&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel8');">Ezek&nbsp;8</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Thessalonians2');">1&nbsp;Thess&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah4,Nehemiah6');">Neh&nbsp;4, 6</a>;<br><a href="javascript:;" onclick="goToRef('Psalm60');">Psalm&nbsp;60</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">June 18</td>
-    <td><a href="javascript:;" onclick="goToRef('1Thessalonians3');">1&nbsp;Thess&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles31');">2&nbsp;Chr&nbsp;31</a>;<br><a href="javascript:;" onclick="goToRef('Ezra4');">Ezra&nbsp;4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Thessalonians4');">1&nbsp;Thess&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel36');">Ezek&nbsp;36</a>;<br><a href="javascript:;" onclick="goToRef('Hosea4-5');">Hos&nbsp;4-5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Thessalonians5');">1&nbsp;Thess&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Numbers23');">Num&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles14');">2&nbsp;Chr&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Psalm97');">Psalm&nbsp;97</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel13');">Ezek&nbsp;13</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Thessalonians1');">2&nbsp;Thess&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Psalm143');">Psalm&nbsp;143</a>;<br><a href="javascript:;" onclick="goToRef('2Kings17');">2&nbsp;Kgs&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah24');">Isa&nbsp;24</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Thessalonians2');">2&nbsp;Thess&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah14');">Isa&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel28');">Ezek&nbsp;28</a>;<br><a href="javascript:;" onclick="goToRef('Daniel8');">Dan&nbsp;8</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Thessalonians3');">2&nbsp;Thess&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm59');">Psalm&nbsp;59</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes2');">Eccl&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah36');">Isa&nbsp;36</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">June 25</td>
-    <td><a href="javascript:;" onclick="goToRef('Acts18:19-28');">Acts&nbsp;18:19-28</a>;<br><a href="javascript:;" onclick="goToRef('Acts19');">Acts&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah10');">Jer&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('2Kings21');">2&nbsp;Kgs&nbsp;21</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians1');">1&nbsp;Cor&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah29');">Isa&nbsp;29</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy7');">Deut&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah8');">Jer&nbsp;8</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians2');">1&nbsp;Cor&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah64');">Isa&nbsp;64</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles27');">2&nbsp;Chr&nbsp;27</a>;<br><a href="javascript:;" onclick="goToRef('Psalm146');">Psalm&nbsp;146</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians3');">1&nbsp;Cor&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Job5');">Job&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Psalm94');">Psalm&nbsp;94</a>;<br><a href="javascript:;" onclick="goToRef('Numbers31');">Num&nbsp;31</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians4');">1&nbsp;Cor&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Psalm90');">Psalm&nbsp;90</a>;<br><a href="javascript:;" onclick="goToRef('Job12,Job24');">Job&nbsp;12, 24</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians5');">1&nbsp;Cor&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Genesis34');">Gen&nbsp;34</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel13,2Samuel16');">2&nbsp;Sam&nbsp;13, 16</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">July 2</td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians6');">1&nbsp;Cor&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Genesis2');">Gen&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel23');">Ezek&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Psalm74');">Psalm&nbsp;74</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians7');">1&nbsp;Cor&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('SongofSolomon5-6');">Song&nbsp;5-6</a>;<br><a href="javascript:;" onclick="goToRef('Numbers36');">Num&nbsp;36</a>;<br><a href="javascript:;" onclick="goToRef('Malachi2');">Mal&nbsp;2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians8');">1&nbsp;Cor&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles28');">2&nbsp;Chr&nbsp;28</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah44');">Jer&nbsp;44</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel30');">Ezek&nbsp;30</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians9');">1&nbsp;Cor&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy20,Deuteronomy25');">Deut&nbsp;20, 25</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel27');">1&nbsp;Sam&nbsp;27</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs12');">Prov&nbsp;12</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians10:1-13');">1&nbsp;Cor&nbsp;10:1-13</a>;<br><a href="javascript:;" onclick="goToRef('Exodus17,Exodus32');">Exod&nbsp;17, 32</a>;<br><a href="javascript:;" onclick="goToRef('Numbers20,Numbers25');">Num&nbsp;20, 25</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians10:14-33');">1&nbsp;Cor&nbsp;10:14-33</a>;<br><a href="javascript:;" onclick="goToRef('1Kings14');">1&nbsp;Kgs&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Psalm24');">Psalm&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('1Corinthians11');">1&nbsp;Cor&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Genesis9');">Gen&nbsp;9</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">July 9</td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians12');">1&nbsp;Cor&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Psalm115');">Psalm&nbsp;115</a>;<br><a href="javascript:;" onclick="goToRef('Judges17-18');">Judg&nbsp;17-18</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians13');">1&nbsp;Cor&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Job14,Job19,Job26,Job36');">Job&nbsp;14, 19, 26, 36</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians14');">1&nbsp;Cor&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah28');">Isa&nbsp;28</a>;<br><a href="javascript:;" onclick="goToRef('Amos7');">Amos&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Numbers10');">Num&nbsp;10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians15:1-55');">1&nbsp;Cor&nbsp;15:1-55</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah22');">Isa&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Hosea13');">Hos&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel45-46');">Ezek&nbsp;45-46</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians15:54-58');">1&nbsp;Cor&nbsp;15:54-58</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles18-20');">1&nbsp;Chr&nbsp;18-20</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Corinthians16');">1&nbsp;Cor&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Joshua1');">Josh&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah2');">Neh&nbsp;2</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">July 16</td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians1');">2&nbsp;Cor&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Judges4');">Judg&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles16-17');">2&nbsp;Chr&nbsp;16-17</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel9');">Ezek&nbsp;9</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians2');">2&nbsp;Cor&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Exodus29');">Exod&nbsp;29</a>;<br><a href="javascript:;" onclick="goToRef('Job6');">Job&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Lamentations1');">Lam&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians3');">2&nbsp;Cor&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Exodus31,Exodus34');">Exod&nbsp;31, 34</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs7');">Prov&nbsp;7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians4');">2&nbsp;Cor&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Psalm30,Psalm37,Psalm116');">Psalm&nbsp;30, 37, 116</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians5');">2&nbsp;Cor&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles32');">2&nbsp;Chr&nbsp;32</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes1');">Eccl&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah27');">Isa&nbsp;27</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians6');">2&nbsp;Cor&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus26');">Lev&nbsp;26</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel7');">2&nbsp;Sam&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel37');">Ezek&nbsp;37</a>;<br><a href="javascript:;" onclick="goToRef('1Kings11');">1&nbsp;Kgs&nbsp;11</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">July 23</td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians7');">2&nbsp;Cor&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles33');">2&nbsp;Chr&nbsp;33</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes4');">Eccl&nbsp;4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians8');">2&nbsp;Cor&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Exodus16');">Exod&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Ezra2');">Ezra&nbsp;2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians9');">2&nbsp;Cor&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Psalm112');">Psalm&nbsp;112</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah5');">Neh&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians10');">2&nbsp;Cor&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah9');">Jer&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles12,1Chronicles14');">1&nbsp;Chr&nbsp;12, 14</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians11');">2&nbsp;Cor&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Genesis3');">Gen&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes10');">Eccl&nbsp;10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians12');">2&nbsp;Cor&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs19');">Prov&nbsp;19</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">July 30</td>
-    <td><a href="javascript:;" onclick="goToRef('2Corinthians13');">2&nbsp;Cor&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy19');">Deut&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Lamentations3');">Lam&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans1:1-25');">Rom&nbsp;1:1-25</a>;<br><a href="javascript:;" onclick="goToRef('Habakkuk2');">Hab&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Psalm106');">Psalm&nbsp;106</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah13');">Jer&nbsp;13</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans1:26-32');">Rom&nbsp;1:26-32</a>;<br><a href="javascript:;" onclick="goToRef('Judges19-21');">Judg&nbsp;19-21</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans2');">Rom&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Psalm62');">Psalm&nbsp;62</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah52');">Isa&nbsp;52</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah4');">Jer&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Joshua5');">Josh&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans3');">Rom&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm5,Psalm10,Psalm14,Psalm53');">Psalm&nbsp;5, 10, 14, 53</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans4');">Rom&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Genesis17-18');">Gen&nbsp;17-18</a>;<br><a href="javascript:;" onclick="goToRef('Psalm32');">Psalm&nbsp;32</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel30');">1&nbsp;Sam&nbsp;30</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Aug 6</td>
-    <td><a href="javascript:;" onclick="goToRef('Romans5');">Rom&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Nahum2');">Nah&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel14,2Samuel18');">2&nbsp;Sam&nbsp;14, 18</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans6');">Rom&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Psalm119:129-136');">Psalm&nbsp;119:129-136</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs10');">Prov&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel18');">Ezek&nbsp;18</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans7');">Rom&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy5');">Deut&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Psalm1');">Psalm&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('1Kings21');">1&nbsp;Kgs&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('2Kings10');">2&nbsp;Kgs&nbsp;10</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans8');">Rom&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Psalm44');">Psalm&nbsp;44</a>;<br><a href="javascript:;" onclick="goToRef('Genesis50');">Gen&nbsp;50</a>;<br><a href="javascript:;" onclick="goToRef('Job16');">Job&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah38');">Isa&nbsp;38</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans9:1-21');">Rom&nbsp;9:1-21</a>;<br><a href="javascript:;" onclick="goToRef('Genesis25');">Gen&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Exodus9,Exodus33');">Exod&nbsp;9, 33</a>;<br><a href="javascript:;" onclick="goToRef('Joshua11');">Josh&nbsp;11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans9:22-33');">Rom&nbsp;9:22-33</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah1,Isaiah10');">Isa&nbsp;1, 10</a>;<br><a href="javascript:;" onclick="goToRef('Hosea1-2');">Hos&nbsp;1-2</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Aug 13</td>
-    <td><a href="javascript:;" onclick="goToRef('Romans10');">Rom&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy30');">Deut&nbsp;30</a>;<br><a href="javascript:;" onclick="goToRef('Psalm19');">Psalm&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel20');">Ezek&nbsp;20</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans11:1-27');">Rom&nbsp;11:1-27</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy29');">Deut&nbsp;29</a>;<br><a href="javascript:;" onclick="goToRef('1Kings19');">1&nbsp;Kgs&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Job11');">Job&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah11');">Jer&nbsp;11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans11:26-36');">Rom&nbsp;11:26-36</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah59');">Isa&nbsp;59</a>;<br><a href="javascript:;" onclick="goToRef('Job35,Job41');">Job&nbsp;35, 41</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes8');">Eccl&nbsp;8</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans12:1-16');">Rom&nbsp;12:1-16</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel17');">2&nbsp;Sam&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Job30');">Job&nbsp;30</a>;<br><a href="javascript:;" onclick="goToRef('Psalm131');">Psalm&nbsp;131</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans12:17-21');">Rom&nbsp;12:17-21</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy32');">Deut&nbsp;32</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs25');">Prov&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel26');">1&nbsp;Sam&nbsp;26</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans13');">Rom&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel21');">2&nbsp;Sam&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Daniel2,Daniel4');">Dan&nbsp;2, 4</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs24');">Prov&nbsp;24</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Aug 20</td>
-    <td><a href="javascript:;" onclick="goToRef('Romans14');">Rom&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah45');">Isa&nbsp;45</a>;<br><a href="javascript:;" onclick="goToRef('Obadiah');">Obad</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans15');">Rom&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel22');">2&nbsp;Sam&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Psalm18,Psalm117');">Psalm&nbsp;18, 117</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah11');">Isa&nbsp;11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Romans16');">Rom&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Psalm12');">Psalm&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah48');">Isa&nbsp;48</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts20');">Acts&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('1Kings17');">1&nbsp;Kgs&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Psalm6');">Psalm&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah42');">Jer&nbsp;42</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts21-22');">Acts&nbsp;21-22</a>;<br><a href="javascript:;" onclick="goToRef('Numbers6');">Num&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah26');">Jer&nbsp;26</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts23');">Acts&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Exodus22');">Exod&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Psalm54,Psalm70');">Psalm&nbsp;54, 70</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Aug 27</td>
-    <td><a href="javascript:;" onclick="goToRef('Acts24');">Acts&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel20');">2&nbsp;Sam&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Micah3');">Mic&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Acts25');">Acts&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah38');">Jer&nbsp;38</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts26');">Acts&nbsp;26</a>;<br><a href="javascript:;" onclick="goToRef('Psalm119:41-48');">Psalm&nbsp;119:41-48</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah1,Jeremiah18,Jeremiah35');">Jer&nbsp;1, 18, 35</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Acts27');">Acts&nbsp;27</a>;<br><a href="javascript:;" onclick="goToRef('Numbers29');">Num&nbsp;29</a>;<br><a href="javascript:;" onclick="goToRef('Acts28');">Acts&nbsp;28</a>;<br><a href="javascript:;" onclick="goToRef('Psalm15,Psalm119:65-96');">Psalm&nbsp;15, 119:65-96</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Colossians1');">Col&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Psalm43,Psalm89');">Psalm&nbsp;43, 89</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles1');">2&nbsp;Chr&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Job39');">Job&nbsp;39</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Colossians2');">Col&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus22');">Lev&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Psalm100');">Psalm&nbsp;100</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs1');">Prov&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Colossians3');">Col&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm47');">Psalm&nbsp;47</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles15-16');">1&nbsp;Chr&nbsp;15-16</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles26');">1&nbsp;Chr&nbsp;26</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Sep 3</td>
-    <td><a href="javascript:;" onclick="goToRef('Colossians4');">Col&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus25');">Lev&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah1');">Neh&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Philemon');">Phlm</a>;<br><a href="javascript:;" onclick="goToRef('Genesis43');">Gen&nbsp;43</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Ephesians1');">Eph&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('1Kings20');">1&nbsp;Kgs&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles25');">2&nbsp;Chr&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Psalm99');">Psalm&nbsp;99</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Ephesians2');">Eph&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy9');">Deut&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel24');">2&nbsp;Sam&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('Psalm148');">Psalm&nbsp;148</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah57');">Isa&nbsp;57</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Ephesians3');">Eph&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('1Kings3');">1&nbsp;Kgs&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm103');">Psalm&nbsp;103</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel47');">Ezek&nbsp;47</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Ephesians4');">Eph&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Psalm4,Psalm68');">Psalm&nbsp;4, 68</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah8');">Zech&nbsp;8</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Ephesians5');">Eph&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel6');">2&nbsp;Sam&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles13');">1&nbsp;Chr&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs20');">Prov&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah60');">Isa&nbsp;60</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Sep 10</td>
-    <td><a href="javascript:;" onclick="goToRef('Ephesians6');">Eph&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs6');">Prov&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel10');">2&nbsp;Sam&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Psalm132');">Psalm&nbsp;132</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Philippians1-2');">Phil&nbsp;1-2</a>;<br><a href="javascript:;" onclick="goToRef('Psalm138');">Psalm&nbsp;138</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel29');">1&nbsp;Sam&nbsp;29</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Philippians3-4');">Phil&nbsp;3-4</a>;<br><a href="javascript:;" onclick="goToRef('Psalm21,Psalm73');">Psalm&nbsp;21, 73</a>;<br><a href="javascript:;" onclick="goToRef('Habakkuk3');">Hab&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Timothy1');">1&nbsp;Tim&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('2Kings15');">2&nbsp;Kgs&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Psalm83');">Psalm&nbsp;83</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes11');">Eccl&nbsp;11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Timothy2');">1&nbsp;Tim&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Psalm63');">Psalm&nbsp;63</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs31');">Prov&nbsp;31</a>;<br><a href="javascript:;" onclick="goToRef('Ezra5-6');">Ezra&nbsp;5-6</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Timothy3');">1&nbsp;Tim&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm9');">Psalm&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('1Timothy4');">1&nbsp;Tim&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs22');">Prov&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles26');">2&nbsp;Chr&nbsp;26</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Sep 17</td>
-    <td><a href="javascript:;" onclick="goToRef('1Timothy5');">1&nbsp;Tim&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy13');">Deut&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('SongofSolomon7-8');">Song&nbsp;7-8</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Timothy6');">1&nbsp;Tim&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Joshua7');">Josh&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Psalm136');">Psalm&nbsp;136</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes5');">Eccl&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Titus1');">Titus&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah12');">Jer&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Hosea8');">Hos&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Amos6');">Amos&nbsp;6</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Titus2');">Titus&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Psalm135');">Psalm&nbsp;135</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes7');">Eccl&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Hosea7');">Hos&nbsp;7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Titus3');">Titus&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm101,Psalm120,Psalm125');">Psalm&nbsp;101, 120, 125</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Peter1');">1&nbsp;Pet&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus11');">Lev&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Job23');">Job&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs17');">Prov&nbsp;17</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Sep 24</td>
-    <td><a href="javascript:;" onclick="goToRef('1Peter2');">1&nbsp;Pet&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah8');">Isa&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Joshua4');">Josh&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel12');">1&nbsp;Sam&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs9');">Prov&nbsp;9</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Peter3');">1&nbsp;Pet&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm34');">Psalm&nbsp;34</a>;<br><a href="javascript:;" onclick="goToRef('Genesis8');">Gen&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('1Kings15');">1&nbsp;Kgs&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah3');">Isa&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Peter4');">1&nbsp;Pet&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs11');">Prov&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah25');">Jer&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Amos3');">Amos&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1Peter5');">1&nbsp;Pet&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs3');">Prov&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm13,Psalm55');">Psalm&nbsp;13, 55</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews1');">Heb&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles17');">1&nbsp;Chr&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Psalm45,Psalm102,Psalm104');">Psalm&nbsp;45, 102, 104</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews2');">Heb&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Psalm8,Psalm144');">Psalm&nbsp;8, 144</a>;<br><a href="javascript:;" onclick="goToRef('Job7');">Job&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles25');">1&nbsp;Chr&nbsp;25</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Oct 1</td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews3');">Heb&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Numbers12-14');">Num&nbsp;12-14</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy1');">Deut&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews4:1-11');">Heb&nbsp;4:1-11</a>;<br><a href="javascript:;" onclick="goToRef('Psalm95');">Psalm&nbsp;95</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy3');">Deut&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Joshua21-22');">Josh&nbsp;21-22</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews4:12-16');">Heb&nbsp;4:12-16</a>;<br><a href="javascript:;" onclick="goToRef('Psalm33');">Psalm&nbsp;33</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs5');">Prov&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Ecclesiastes12');">Eccl&nbsp;12</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews5');">Heb&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Psalm110');">Psalm&nbsp;110</a>;<br><a href="javascript:;" onclick="goToRef('Exodus27-28');">Exod&nbsp;27-28</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus9');">Lev&nbsp;9</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews6');">Heb&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Genesis22');">Gen&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus16');">Lev&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah48');">Jer&nbsp;48</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews7');">Heb&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Genesis14');">Gen&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Exodus39');">Exod&nbsp;39</a>;<br><a href="javascript:;" onclick="goToRef('Numbers18');">Num&nbsp;18</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Oct 8</td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews8:1-4');">Heb&nbsp;8:1-4</a>;<br><a href="javascript:;" onclick="goToRef('Numbers1-3');">Num&nbsp;1-3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews8:5-13');">Heb&nbsp;8:5-13</a>;<br><a href="javascript:;" onclick="goToRef('Exodus25');">Exod&nbsp;25</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah31');">Jer&nbsp;31</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel11');">Ezek&nbsp;11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews9:1-5');">Heb&nbsp;9:1-5</a>;<br><a href="javascript:;" onclick="goToRef('Exodus36-37');">Exod&nbsp;36-37</a>;<br><a href="javascript:;" onclick="goToRef('Numbers4');">Num&nbsp;4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews9:4-5');">Heb&nbsp;9:4-5</a>;<br><a href="javascript:;" onclick="goToRef('Numbers17');">Num&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel4-6');">1&nbsp;Sam&nbsp;4-6</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews9:6-28');">Heb&nbsp;9:6-28</a>;<br><a href="javascript:;" onclick="goToRef('Exodus24');">Exod&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus17');">Lev&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Numbers19');">Num&nbsp;19</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews10');">Heb&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Psalm40');">Psalm&nbsp;40</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah26');">Isa&nbsp;26</a>;<br><a href="javascript:;" onclick="goToRef('Joshua10');">Josh&nbsp;10</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Oct 15</td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews11:1-19');">Heb&nbsp;11:1-19</a>;<br><a href="javascript:;" onclick="goToRef('Genesis5,Genesis23');">Gen&nbsp;5, 23</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel14');">Ezek&nbsp;14</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews11:20-31');">Heb&nbsp;11:20-31</a>;<br><a href="javascript:;" onclick="goToRef('Genesis48');">Gen&nbsp;48</a>;<br><a href="javascript:;" onclick="goToRef('Joshua2,Joshua6');">Josh&nbsp;2, 6</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews11:32-33');">Heb&nbsp;11:32-33</a>;<br><a href="javascript:;" onclick="goToRef('Judges5-8');">Judg&nbsp;5-8</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews11:32-34');">Heb&nbsp;11:32-34</a>;<br><a href="javascript:;" onclick="goToRef('Judges11-13');">Judg&nbsp;11-13</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews11:32-34');">Heb&nbsp;11:32-34</a>;<br><a href="javascript:;" onclick="goToRef('Judges14-16');">Judg&nbsp;14-16</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews11:32-40');">Heb&nbsp;11:32-40</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel1');">1&nbsp;Sam&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel8');">2&nbsp;Sam&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah37');">Jer&nbsp;37</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Oct 22</td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews12:1-17');">Heb&nbsp;12:1-17</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs4');">Prov&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Genesis27,Genesis36');">Gen&nbsp;27, 36</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews12:18-29');">Heb&nbsp;12:18-29</a>;<br><a href="javascript:;" onclick="goToRef('Exodus19');">Exod&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy4');">Deut&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Haggai2');">Hag&nbsp;2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Hebrews13');">Heb&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy31');">Deut&nbsp;31</a>;<br><a href="javascript:;" onclick="goToRef('Leviticus4');">Lev&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Hosea14');">Hos&nbsp;14</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Timothy1-2');">2&nbsp;Tim&nbsp;1-2</a>;<br><a href="javascript:;" onclick="goToRef('Numbers16');">Num&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles9');">1&nbsp;Chr&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Job8');">Job&nbsp;8</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Timothy3');">2&nbsp;Tim&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Exodus7-8');">Exod&nbsp;7-8</a>;<br><a href="javascript:;" onclick="goToRef('Psalm119:97-104');">Psalm&nbsp;119:97-104</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles34');">2&nbsp;Chr&nbsp;34</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Timothy4');">2&nbsp;Tim&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Numbers28');">Num&nbsp;28</a>;<br><a href="javascript:;" onclick="goToRef('1Samuel17');">1&nbsp;Sam&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Psalm28,Psalm121');">Psalm&nbsp;28, 121</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Oct 29</td>
-    <td><a href="javascript:;" onclick="goToRef('2Peter1');">2&nbsp;Pet&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel23');">2&nbsp;Sam&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Psalm145');">Psalm&nbsp;145</a>;<br><a href="javascript:;" onclick="goToRef('Psalm119:105-128');">Psalm&nbsp;119:105-128</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Peter2');">2&nbsp;Pet&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs26');">Prov&nbsp;26</a>;<br><a href="javascript:;" onclick="goToRef('Numbers22,Numbers26');">Num&nbsp;22, 26</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2Peter3');">2&nbsp;Pet&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm56');">Psalm&nbsp;56</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah23');">Jer&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel12');">Ezek&nbsp;12</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Jude');">Jude</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy2,Deuteronomy34');">Deut&nbsp;2, 34</a>;<br><a href="javascript:;" onclick="goToRef('Amos4');">Amos&nbsp;4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1John1');">1&nbsp;John&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah2');">Isa&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah2');">Jer&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs28');">Prov&nbsp;28</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1John2');">1&nbsp;John&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs27');">Prov&nbsp;27</a>;<br><a href="javascript:;" onclick="goToRef('Psalm119:137-176');">Psalm&nbsp;119:137-176</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel6');">Ezek&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Amos2');">Amos&nbsp;2</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Nov 5</td>
-    <td><a href="javascript:;" onclick="goToRef('1John3');">1&nbsp;John&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Psalm17');">Psalm&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Genesis4');">Gen&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Judges9');">Judg&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel33');">Ezek&nbsp;33</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1John4');">1&nbsp;John&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('2Kings6-7');">2&nbsp;Kgs&nbsp;6-7</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah29');">Jer&nbsp;29</a></td>
-    <td><a href="javascript:;" onclick="goToRef('1John5');">1&nbsp;John&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Exodus23');">Exod&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Psalm128');">Psalm&nbsp;128</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah14');">Jer&nbsp;14</a></td>
-    <td><a href="javascript:;" onclick="goToRef('2John');">2&nbsp;John</a>;<br><a href="javascript:;" onclick="goToRef('3Jn');">3&nbsp;John</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy10');">Deut&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Psalm52');">Psalm&nbsp;52</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation1');">Rev&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Daniel7');">Dan&nbsp;7</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah36');">Jer&nbsp;36</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel43');">Ezek&nbsp;43</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation2');">Rev&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('1Kings16');">1&nbsp;Kgs&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('2Kings9');">2&nbsp;Kgs&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Psalm139');">Psalm&nbsp;139</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah30');">Isa&nbsp;30</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Nov 12</td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation3');">Rev&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Proverbs13');">Prov&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel48');">Ezek&nbsp;48</a>;<br><a href="javascript:;" onclick="goToRef('Hosea12');">Hos&nbsp;12</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation4');">Rev&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy33');">Deut&nbsp;33</a>;<br><a href="javascript:;" onclick="goToRef('1Kings22');">1&nbsp;Kgs&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel1');">Ezek&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation5');">Rev&nbsp;5</a>;<br><a href="javascript:;" onclick="goToRef('Genesis49');">Gen&nbsp;49</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles29');">1&nbsp;Chr&nbsp;29</a>;<br><a href="javascript:;" onclick="goToRef('Psalm141,Psalm149');">Psalm&nbsp;141, 149</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation6');">Rev&nbsp;6</a>;<br><a href="javascript:;" onclick="goToRef('Zephaniah1');">Zeph&nbsp;1</a>;<br><a href="javascript:;" onclick="goToRef('Psalm76');">Psalm&nbsp;76</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah24');">Jer&nbsp;24</a>;<br><a href="javascript:;" onclick="goToRef('Nahum1');">Nah&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation7:1-8');">Rev&nbsp;7:1-8</a>;<br><a href="javascript:;" onclick="goToRef('1Chronicles4-7');">1&nbsp;Chr&nbsp;4-7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation7:9-17');">Rev&nbsp;7:9-17</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah49');">Isa&nbsp;49</a>;<br><a href="javascript:;" onclick="goToRef('Psalm3');">Psalm&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('2Kings24');">2&nbsp;Kgs&nbsp;24</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Nov 19</td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation8');">Rev&nbsp;8</a>;<br><a href="javascript:;" onclick="goToRef('Exodus10');">Exod&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel32,Ezekiel38');">Ezek&nbsp;32, 38</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation9');">Rev&nbsp;9</a>;<br><a href="javascript:;" onclick="goToRef('Psalm11');">Psalm&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Job3,Job28');">Job&nbsp;3, 28</a>;<br><a href="javascript:;" onclick="goToRef('Joel1');">Joel&nbsp;1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation10');">Rev&nbsp;10</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel2-3');">Ezek&nbsp;2-3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation11');">Rev&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah4');">Zech&nbsp;4</a>;<br><a href="javascript:;" onclick="goToRef('2Samuel3');">2&nbsp;Sam&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('2Kings2');">2&nbsp;Kgs&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('2Chronicles5');">2&nbsp;Chr&nbsp;5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation12');">Rev&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah3');">Zech&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Genesis37');">Gen&nbsp;37</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation13');">Rev&nbsp;13</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah15,Jeremiah43');">Jer&nbsp;15, 43</a>;<br><a href="javascript:;" onclick="goToRef('Exodus15');">Exod&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('2Kings25');">2&nbsp;Kgs&nbsp;25</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Nov 26</td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation14');">Rev&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Joel3');">Joel&nbsp;3</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah20-21,Isaiah63');">Isa&nbsp;20-21, 63</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation15');">Rev&nbsp;15</a>;<br><a href="javascript:;" onclick="goToRef('Exodus38');">Exod&nbsp;38</a>;<br><a href="javascript:;" onclick="goToRef('Psalm86,Psalm98,Psalm111');">Psalm&nbsp;86, 98, 111</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation16');">Rev&nbsp;16</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy28');">Deut&nbsp;28</a>;<br><a href="javascript:;" onclick="goToRef('Zephaniah3');">Zeph&nbsp;3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation17');">Rev&nbsp;17</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah27-28,Jeremiah39,Jeremiah47');">Jer&nbsp;27-28, 39, 47</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation18:1-20');">Rev&nbsp;18:1-20</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah47');">Isa&nbsp;47</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel27');">Ezek&nbsp;27</a>;<br><a href="javascript:;" onclick="goToRef('Zephaniah2');">Zeph&nbsp;2</a>;<br><a href="javascript:;" onclick="goToRef('Ezra9');">Ezra&nbsp;9</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation18:21-24');">Rev&nbsp;18:21-24</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah51');">Jer&nbsp;51</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah23');">Isa&nbsp;23</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel26');">Ezek&nbsp;26</a>;<br><a href="javascript:;" onclick="goToRef('Nahum3');">Nah&nbsp;3</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Dec 3</td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation19');">Rev&nbsp;19</a>;<br><a href="javascript:;" onclick="goToRef('Psalm93,Psalm134');">Psalm&nbsp;93, 134</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel44');">Ezek&nbsp;44</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation20');">Rev&nbsp;20</a>;<br><a href="javascript:;" onclick="goToRef('Psalm87');">Psalm&nbsp;87</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel7,Ezekiel39');">Ezek&nbsp;7, 39</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation21');">Rev&nbsp;21</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah65');">Isa&nbsp;65</a>;<br><a href="javascript:;" onclick="goToRef('Nehemiah11');">Neh&nbsp;11</a>;<br><a href="javascript:;" onclick="goToRef('Ezekiel40');">Ezek&nbsp;40</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah2');">Zech&nbsp;2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Revelation22');">Rev&nbsp;22</a>;<br><a href="javascript:;" onclick="goToRef('Deuteronomy12');">Deut&nbsp;12</a>;<br><a href="javascript:;" onclick="goToRef('Zechariah14');">Zech&nbsp;14</a>;<br><a href="javascript:;" onclick="goToRef('Psalm46');">Psalm&nbsp;46</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke1:26-38');">Luke&nbsp;1:26-38</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke1:39-45');">Luke&nbsp;1:39-45</a>;<br><a href="javascript:;" onclick="goToRef('Malachi3:1');">Mal&nbsp;3:1</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Dec 10</td>
-    <td><a href="javascript:;" onclick="goToRef('Luke1:46-56');">Luke&nbsp;1:46-56</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew1:18-25');">Matt&nbsp;1:18-25</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah7:10-14');">Isa&nbsp;7:10-14</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke2:1-7');">Luke&nbsp;2:1-7</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah9:2-7');">Isa&nbsp;9:2-7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke2:8-20');">Luke&nbsp;2:8-20</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke2:21-35');">Luke&nbsp;2:21-35</a>;<br><a href="javascript:;" onclick="goToRef('Isaiah49:1-7');">Isa&nbsp;49:1-7</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Luke2:36-40');">Luke&nbsp;2:36-40</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Dec 17</td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew2:1-6');">Matt&nbsp;2:1-6</a>;<br><a href="javascript:;" onclick="goToRef('Micah5:2');">Mic&nbsp;5:2</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew2:7-12');">Matt&nbsp;2:7-12</a>;<br><a href="javascript:;" onclick="goToRef('Hosea11:1');">Hos&nbsp;11:1</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Matthew2:13-18');">Matt&nbsp;2:13-18</a>;<br><a href="javascript:;" onclick="goToRef('Jeremiah31:15');">Jer&nbsp;31:15</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Isaiah11:1-5');">Isa&nbsp;11:1-5</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Isaiah42:1-4');">Isa&nbsp;42:1-4</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Isaiah53:1-12');">Isa&nbsp;53:1-12</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Dec 24</td>
-    <td><a href="javascript:;" onclick="goToRef('Jeremiah23:5-6');">Jer&nbsp;23:5-6</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Isaiah40:9-11');">Isa&nbsp;40:9-11</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Isaiah61:1-3');">Isa&nbsp;61:1-3</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Colossians1:15-23');">Col&nbsp;1:15-23</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Proverbs23:17-18');">Prov&nbsp;23:17-18</a></td>
-    <td><a href="javascript:;" onclick="goToRef('Proverbs24:13-14');">Prov&nbsp;24:13-14</a></td>
-</tr>
-<tr>
-    <td class="tb_col1">Dec 31</td>
-    <td><a href="javascript:;" onclick="goToRef('Romans8:31-39');">Rom&nbsp;8:31-39</a></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-</tr>
+<tbody id="tb_body">
+
 </tbody>
 </table>
 <br>
@@ -578,15 +109,18 @@
     }
 	var debugOption = "";
 	var urlPart1 = window.location.origin;
-	var pos = window.location.href.indexOf("/html/one_year_chrono_NT_related_OT.html");
+	var pos = window.location.href.indexOf("/html/one_year_chrono_NT_related_OT");
 	if (pos > 8) { // probably running in development environment.
 		urlPart1 = window.location.href.substr(0, pos);
 		debugOption = "&debug";
 	}
-	
-    if (!inIFrame) {
-        window.location = urlPart1 + "/html/split.html?" + urlPart1 + "/?q=reference=Gen.1" +
-			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+
+    if (window.innerWidth > 960) {
+        if (!inIFrame)
+            window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
+    			"/?q=reference=Gen.1" + 
+    			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+
     }
 
 	if (typeof jQuery == 'undefined') {
@@ -597,6 +131,7 @@
 		loadFile(urlPart1 + "/scss/step-template.css");
 		loadFile(urlPart1 + "/international/en.js");
 		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js');
+        loadFile(urlPart1 + '/libs/introjs.min.js');
 		loadFile(urlPart1 + "/libs/underscore-min.js");
 		loadFile(urlPart1 + "/libs/bootstrap.min.js");
 		loadFile(urlPart1 + "/libs/backbone.js");
@@ -641,50 +176,98 @@ function loadFile(path) {
 }
 
 function setupTable(urlPart1) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+    if (inIFrame) {
+        var tblHeadingHTLM = '	<colgroup>\n' + 
+            '		<col span="1" style="width:10%;">\n' +
+            '		<col span="1" style="width:15%;">\n' +
+            '		<col span="1" style="width:15%;">\n' +
+            '		<col span="1" style="width:15%;">\n' +
+            '		<col span="1" style="width:15%;">\n' +
+            '		<col span="1" style="width:15%;">\n' +
+            '		<col span="1" style="width:15%;">\n' +
+            '	</colgroup>\n' +
+            '  <thead>\n' +
+            '    <tr class="tb_head">\n' +
+            '      <th class="th_col"></th>\n' +
+            '      <th class="th_col">Monday</th>\n' +
+            '      <th class="th_col">Tuesday</th>\n' +
+            '      <th class="th_col">Wednesday</th>\n' +
+            '      <th class="th_col">Thursday</th>\n' +
+            '      <th class="th_col">Friday</th>\n' +
+            '      <th class="th_col">Saturday</th>\n' +
+            '    </tr>\n' +
+            '  </thead>\n';
+    }
+    else {
+        $(".hTitle").css("font-size", "24px");
+        var tblHeadingHTLM = '	<colgroup>\n' + 
+            '		<col span="1" style="width:20%;">\n' +
+            '		<col span="1" style="width:80%;">\n' +
+            '	</colgroup>\n' +
+            '  <thead>\n' +
+            '    <tr class="tb_head">\n' +
+            '      <th class="th_col"></th>\n' +
+            '      <th class="th_col">Readings</th>\n' +
+            '    </tr>\n' +
+            '  </thead>\n';
+    }
+    $("#plan").append(tblHeadingHTLM);
+
     var fullHeight = $(window).height();
-    var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.93);
+    var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
     $(".fixTableHead").css("height", remainingHeight + "px");
 
-    var table = document.getElementById("plan");
-    var thead = table.getElementsByTagName("thead")[0];
-    var th_rows = thead.getElementsByTagName("tr");
-    var tbody = table.getElementsByTagName("tbody")[0];
-    var tb_rows = tbody.getElementsByTagName("tr");
-    var text = "";
-    var year;
-    var col1_day = -1;
-    var col1_name = "";
-
     var settings = new SettingsModelList;
-
     settings.fetch();
     if (settings.length > 0) {
+        var sz  =  15;
         step.settings = settings.at(0);
-        var sz = step.settings.get("defaultfont");
-		if (typeof sz !== "number") sz = 15;
+        sz = step.settings.get("defaultfont");
         $("table").css("font-size", sz + "px");
     }
 
-    if (th_rows[0].cells[1].innerText == "Sunday") {
-        col1_day = 0;
-        col1_name = "Sun";
-    }
-    else if (th_rows[0].cells[1].innerText == "Monday") {
-        col1_day = 1;
-        col1_name = "Mon";
-    }
+    // set the year in the heading
+    var table = document.getElementById("plan");
+    var thead = table.getElementsByTagName("thead")[0];
+    var th_rows = thead.getElementsByTagName("tr");
+    var text = "";
+    var year;
+    var col1_day = 1;  // this reading list starts on a Monday
+    var col1_name = "Mon";
 
     today = new Date();
     year = today.getYear() + 1900;
     th_rows[0].cells[0].innerText = year;
+    dat = new Date (year + '/01/01');
+    while (dat.getDay() != col1_day) {
+        dat.setDate(dat.getDate() + 1);
+    }
 
-    if (col1_day != -1) {
-        dat = new Date (year + '/01/01');
-        while (dat.getDay() != col1_day) {
-            dat.setDate(dat.getDate() + 1);
-        }
-    
-        for (var i = 0; i < tb_rows.length; i ++) {
+	var jsonFileName = "readings_1yr_NT";
+
+	var tblRowHTML = "";
+    var pattern = "{[^}]+}";
+    var pattern2 = /([0-9])[abcd]/g;
+    var clickText1 = 'class="clickable" onclick=displayPassages(this,"';
+    var clickText2 = '")>';
+    var clickText3 = '</span>';
+
+    $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
+		for (var i = 0; i < array.length; i ++ ) {
+            var col1 = array[i][0];
+            var col2 = array[i][1];
+            var col3 = array[i][2];
+            var col4 = array[i][3];
+            var col5 = array[i][4];
+            var col6 = array[i][5];
+
             text = dat.toDateString().replace(col1_name,"").replace(" 0", " ");
             if (year == (dat.getYear() + 1900)) {
                 text = text.replace(" " + year, "");
@@ -693,14 +276,161 @@ function setupTable(urlPart1) {
                 year = dat.getYear() + 1900;
                 text = text.replace(" " + year, ",\n" + year);
             }
-            tb_rows[i].cells[0].innerText = text;
             dat.setDate(dat.getDate() + 7);
-        }
+
+            // Add links to the passages, designated between { }.
+
+            pos = col1.search(pattern);
+            while (pos > -1) {
+                clickText = "<span ";
+                passage = RegExp.lastMatch;
+                passage = passage.replace(/{/, '').replace(/}/, '');
+                clickText += clickText1
+                    + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '').replace(/\[1-[0-9]\]/, "")
+                    + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                col1 = col1.replace(/{[^}]+}/, clickText);
+                pos = col1.search(pattern);
+            }
+            
+            pos = col2.search(pattern);
+            while (pos > -1) {
+                clickText = "<span ";
+                passage = RegExp.lastMatch;
+                passage = passage.replace(/{/, '').replace(/}/, '');
+                clickText += clickText1
+                    + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '').replace(/\[1-[0-9]\]/, "")
+                    + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                col2 = col2.replace(/{[^}]+}/, clickText);
+                pos = col2.search(pattern);
+            }
+            
+            pos = col3.search(pattern);
+            while (pos > -1) {
+                clickText = "<span ";
+                passage = RegExp.lastMatch;
+                passage = passage.replace(/{/, '').replace(/}/, '');
+                clickText += clickText1
+                    + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '').replace(/\[1-[0-9]\]/, "")
+                    + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                col3 = col3.replace(/{[^}]+}/, clickText);
+                pos = col3.search(pattern);
+            }
+            
+            pos = col4.search(pattern);
+            while (pos > -1) {
+                clickText = "<span ";
+                passage = RegExp.lastMatch;
+                passage = passage.replace(/{/, '').replace(/}/, '');
+                clickText += clickText1
+                    + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '').replace(/\[1-[0-9]\]/, "")
+                    + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                col4 = col4.replace(/{[^}]+}/, clickText);
+                pos = col4.search(pattern);
+            }
+            
+            pos = col5.search(pattern);
+            while (pos > -1) {
+                clickText = "<span ";
+                passage = RegExp.lastMatch;
+                passage = passage.replace(/{/, '').replace(/}/, '');
+                clickText += clickText1
+                    + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '').replace(/\[1-[0-9]\]/, "")
+                    + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                col5 = col5.replace(/{[^}]+}/, clickText);
+                pos = col5.search(pattern);
+            }
+            
+            pos = col6.search(pattern);
+            while (pos > -1) {
+                clickText = "<span ";
+                passage = RegExp.lastMatch;
+                passage = passage.replace(/{/, '').replace(/}/, '');
+                clickText += clickText1
+                    + passage.replace(/ /g, '').replace(pattern2, '$1').replace(/\*/, '').replace(/\[1-[0-9]\]/, "")
+                    + clickText2 + passage.replace(/;/g, '; ') + clickText3;
+                col6 = col6.replace(/{[^}]+}/, clickText);
+                pos = col6.search(pattern);
+            }
+            
+            if (inIFrame) {
+            	tblRowHTML = 
+            		'<tr><td class="tb_col">' + text + '</td>' +
+            		'<td class="tb_col">' + col1 + '</td>' +
+            		'<td class="tb_col">' + col2 + '</td>' +
+            		'<td class="tb_col">' + col3 + '</td>' +
+            		'<td class="tb_col">' + col4 + '</td>' +
+            		'<td class="tb_col">' + col5 + '</td>' +
+            		'<td class="tb_col">' + col6 + '</td></tr>';
+            }
+            else {
+            	tblRowHTML = 
+            		'<tr><td class="tb_col">' + text + '</td>' +
+            		'<td class="tb_col">' +
+                        '<div class="ind10">Mon:  ' + col1 + '</div>' +
+                        '<div class="ind10">Tue:  ' + col2 + '</div>' +
+                        '<div class="ind10">Wed:  ' + col3 + '</div>' +
+                        '<div class="ind10">Thu:  ' + col4 + '</div>' +
+                        '<div class="ind10">Fri:  ' + col5 + '</div>' +
+                        '<div class="ind10">Sat:  ' + col6 + '</div>' +
+                    '</td></tr>';
+            }
+    	    $("#tb_body").append(tblRowHTML);
+		}
+    });
+
+}
+
+
+function displayPassages(item, string) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+	var urlPart1 = window.location.origin;
+
+    if (!inIFrame) {
+        var tabURL = urlPart1 + "/?skipwelcome&q=";
+    	if (string !== "") {
+            string = string.replace(/ /g, ";");
+    		if (string.indexOf("strong=") > -1 || string.indexOf("srchJoin=") > -1
+                || string.indexOf("text=") > -1) {
+    			tabURL += string;
+    		}
+    		else {
+    			tabURL += "reference=" + string;
+    		}
+
+            window.open(tabURL, "_blank");
+    	}
+
+    }
+    else
+    {
+    	if (string !== "") {
+            string = string.replace(/ /g, ";");
+    		window.top.postMessage(string, '*');
+    	}
     }
 }
 
-function goToRef(passage) {
-    window.top.postMessage(passage, '*');
+
+function handleKeyboardInput(e) {
+	var userInput =  $('textarea#userTextInput').val();
+	if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
+		userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
+		$('textarea#userTextInput').val(userInput);
+	}
+	if ((typeof userInput !== "string") || (userInput.length = 0)) {
+		$("tr").show();
+	}
+	else {
+		$("#tb_body").find("tr").hide();
+		var re = new RegExp(userInput, "i");
+		$("tr").filter(function () { return re.test($(this).find(".tb_col").text());}).show();
+	}
 }
 
 </script>

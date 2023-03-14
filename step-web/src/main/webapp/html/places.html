@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Biblical locations</title>
     <link rel="shortcut icon" href="/images/step-favicon.ico"/>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
@@ -24,32 +25,36 @@
     .fixTableHead {
         overflow-y: auto;
     }
-    .fixTableHead thead th {
+    .fixTableHead .tb_head {
         position: sticky;
         top: 0;
     }
     table {
         border-collapse: collapse;
         width: 100%;
-        table-layout: fixed;
         font-family: Georgia, serif;
         font-size: 15px;
     }
-    td {
-        padding: 4px;
-        margin: 3px;
-        border: 1px solid #ccc;
-    }
-    th {
+    .tb_head {
         padding: 4px;
         margin: 3px;
         border: 2px solid #17758f;
         background: #17758f;
         color: white;
     }
+    .th_col {
+        padding: 4px;
+        margin: 3px;
+        border: 2px solid #17758f;
+        background: #17758f;
+        color: white;
+    }
+    .tb_col {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
+    }
     .tb_col1 {
-        cursor: pointer;
-        color: #17758f;
         word-wrap: break-word;
     }
     .tb_col2 {
@@ -57,8 +62,12 @@
     }
     .mapLink {
         font-size: 12px;
-        color: blue;
+        cursor: pointer;
+        color: #17758f;
         text-decoration: underline;
+    }
+    .clickable{
+        color: #17758f;
         cursor: pointer;
     }
 	
@@ -76,21 +85,13 @@
   </style>
 </head>
 <body style="margin:0;background-color:white"">
-<h2 id="header">Biblical locations</h2>
-<span>Location:</span><textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize=none;height:24px" placeholder="Optionally enter search word"></textarea>
+<div id="header">
+<h2>Biblical locations</h2>
+&nbsp;<textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize:none;height:24px" placeholder="Search this table"></textarea>
 <button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick="searchSelectionModal()"><b>Range:</b></button>
+</div>
 <div class="fixTableHead">
-<table>
-  <colgroup>
-	<col span="1" style="width:20%;">
-	<col span="1" style="width:80%;">
-  </colgroup>
-  <thead>
-    <tr class="tb_head">
-      <th>Location&nbsp;<span style="font-size:9px">click below to open map in another tab</span></th>
-      <th>Passage&nbsp;<span style="font-size:9px">click below to update passage on left and map on bottom</span></th>
-    </tr>
-  </thead>
+<table id="tb_locations" style="table-layout: fixed;">
   <tbody id="tb_body">
   </tbody>
 </table>
@@ -111,10 +112,12 @@
 		urlPart1 = window.location.href.substr(0, pos);
 		debugOption = "&debug";
 	}
-    if (!inIFrame)
-        window.location = urlPart1 + "/html/split3.html?" + urlPart1 + 
-			"/?q=reference=2Ki.5.12" + 
-			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+    if (window.innerWidth > 960) {
+        if (!inIFrame)
+            window.location = urlPart1 + "/html/split3.html?" + urlPart1 + 
+    			"/?q=reference=2Ki.5.12" + 
+    			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+    }
 		if (typeof jQuery == 'undefined') {
 			loadFile(urlPart1 + "/css/bootstrap.css");
 			loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
@@ -167,6 +170,39 @@ function loadFile(path) {
 }
 
 function setupTable(urlPart1) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+    if (inIFrame) {
+        var tblHeadingHTLM = '	<colgroup>\n' + 
+            '	<col span="1" style="width:25%;">\n' +
+            '	<col span="1" style="width:75%;">\n' +
+            '  </colgroup>\n' +
+            '  <thead>\n' +
+            '    <tr class="tb_head">\n' +
+            '      <th class="th_col">Location<br><span style="font-size:9px">(opens map in new tab)</span></th>\n' +
+            '      <th class="th_col">Passage(s)<br><span style="font-size:9px">(updates passage on left and map below)</span></th>\n' +
+            '    </tr>\n' +
+            '  </thead>\n';
+    }
+    else {
+        var tblHeadingHTLM = '	<colgroup>\n' + 
+            '	<col span="1" style="width:35%;">\n' +
+            '	<col span="1" style="width:65%;">\n' +
+            '  </colgroup>\n' +
+            '  <thead>\n' +
+            '    <tr class="tb_head">\n' +
+            '      <th class="th_col">Location<br><span style="font-size:9px">(opens map in new tab)</span></th>\n' +
+            '      <th class="th_col">Passage(s)<br><span style="font-size:9px">(opens passage in new tab)</span></th>\n' +
+            '    </tr>\n' +
+            '  </thead>\n';
+    }
+    $("#tb_locations").append(tblHeadingHTLM);
+
 	var fullHeight = $(window).height();
 	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.9);
 	$(".fixTableHead").css("height", remainingHeight + "px");
@@ -196,9 +232,9 @@ function setupTable(urlPart1) {
 			var geoAbbr = "";
 			geoNum = array[i][2].split(',');
 			tblRowHTML += 
-				'<tr><td class="tb_col1">' + array[i][0] +
+				'<tr><td class="tb_col tb_col1">' + array[i][0] +
 					'&nbsp;<span class="mapLink">map<span style="display:none">' + array[i][2] + '</span></span></td>' +
-				    '<td class="tb_col2">' + array[i][1].replace(/;/g, " ") + '</td>' +
+				    '<td class="tb_col tb_col2 clickable">' + array[i][1].replace(/;/g, "; ").replace(/; $/, "") + '</td>' +
 					'</tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
@@ -226,16 +262,35 @@ function setupTable(urlPart1) {
 }
 
 function goToNewSection(item, cellNum) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+	var urlPart1 = window.location.origin;
+
     var row = item.parentNode;
 	if (cellNum == 1) row = row.parentNode;
     var passages = row.cells[1].innerText;
     var gpsAndBook = $(row.cells[0]).find("span")[1].innerText;
 	var bookName = passages.substr(0,passages.indexOf("."));
 	if ((typeof bookName === "string") && (bookName.length > 1)) gpsAndBook += "&book=" + bookName;
+
     if (cellNum == 2) {
-        window.top.postMessage(passages.replace(/ /g, ";") + "@@" + gpsAndBook, '*');
-		$(".tb_col1").css("background-color", "white");
+        $(".tb_col1").css("background-color", "white");
         $(row.cells[0]).css("background-color","cyan")
+
+        passages = passages.replace(/ /g, ";");
+
+        if (!inIFrame) {
+            var tabURL = urlPart1 + "/?skipwelcome&q=" + "reference=" + passages;
+            window.open(tabURL, "_blank");
+        }
+        else {
+            window.top.postMessage(passages + "@@" + gpsAndBook, '*');
+        }
     }
     else if (cellNum == 1) {
         window.open("/html/multimap.html?coord=" + gpsAndBook);
@@ -256,6 +311,7 @@ function handleKeyboardInput(e) {
 		$("#tb_body").find("tr").hide();
 		var re = new RegExp(userInput, "i");
 		$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
+		$("tr").filter(function () { return re.test($(this).find(".tb_col2").text());}).show();
 	}
 }
 

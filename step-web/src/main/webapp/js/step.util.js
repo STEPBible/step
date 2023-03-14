@@ -1191,10 +1191,9 @@ step.util = {
                 strong = s.attr("strong");
                 morph = s.attr("morph");
                 [ref, version] = step.util.ui.getVerseNumberAndVersion(s);
-								if (ref)
+								if (ref !== '')
 									ref += step.util.ui.getWordOrderSuffix(s, strong);
-								else ref = '';
-								if (!version)
+								if (version === '')
 	                version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
 								console.log("ref is" + ref + " strong: " + strong + " version: " + version);
             }
@@ -1373,11 +1372,9 @@ step.util = {
             var reference;
 						var version;
 						[reference, version] = step.util.ui.getVerseNumberAndVersion(hoverContext);
-						if (reference)
+						if (reference !== '')
 							reference += step.util.ui.getWordOrderSuffix(hoverContext, strong);
-						else
-							reference = '';
-						if (!version)
+						if (version === '')
 	            version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 						console.log("ref is " + reference + " strong: " + strong + " version: "+ version);
 						if (!step.keyedVersions[version].hasStrongs) {
@@ -1399,21 +1396,23 @@ step.util = {
         },
 
 				getVerseNumberAndVersion: function (el) {
+					var verse = $($(el).closest("div.verse").find('a.verseLink')[0]).attr('name') ||
+							$(el).closest(".verseGrouping").find(".heading .verseLink").attr("name") ||
+							$(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
+					if (!verse)
+						verse = '';
 					var version = $(el).closest("div.verse").parent().find('span.smallResultKey').attr('data-version') ||
 						$(el).closest(".singleVerse").find('span.smallResultKey').attr('data-version');
 					if (!version) {
 						var compareVersionHeader = $('th.comparingVersionName');
 						if (compareVersionHeader.length > 0) {
 							var index = $(el).closest('td').index();
-							version = $(compareVersionHeader[index-1]).text();
+							if (typeof index === 'number')
+								version = $(compareVersionHeader[index-1]).text();
 						}
 					}
-					var verse = $($(el).closest("div.verse").find('a.verseLink')[0]).attr('name');
-					if (!verse) {
-						verse = $(el).closest(".verseGrouping").find(".heading .verseLink").attr("name") ||
-							$(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
-					}
-					console.log("version: " + version + " verse: " + verse);
+					if ((!version) || (typeof step.keyedVersions[version] !== "object"))
+						version = '';
 					return [verse, version];
 				},
 

@@ -1190,10 +1190,12 @@ step.util = {
                 var s = $(source);
                 strong = s.attr("strong");
                 morph = s.attr("morph");
-                [ref, version] = step.util.ui.getVerseNumberAndVersion(s);
-								if (ref !== '')
-									ref += step.util.ui.getWordOrderSuffix(s, strong);
-								if (version === '')
+				var verseAndVersion = step.util.ui.getVerseNumberAndVersion(s);
+				ref = verseAndVersion[0];
+				if (ref !== '')
+					ref += step.util.ui.getWordOrderSuffix(s, strong);
+				version = verseAndVersion[1];
+				if (version === '')
 	                version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
 								console.log("ref is" + ref + " strong: " + strong + " version: " + version);
             }
@@ -1369,12 +1371,12 @@ step.util = {
         _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
-            var reference;
-						var version;
-						[reference, version] = step.util.ui.getVerseNumberAndVersion(hoverContext);
-						if (reference !== '')
-							reference += step.util.ui.getWordOrderSuffix(hoverContext, strong);
-						if (version === '')
+			var verseAndVersion = step.util.ui.getVerseNumberAndVersion(hoverContext);
+            var reference = verseAndVersion[0];
+			var version = verseAndVersion[1];
+			if (reference !== '')
+				reference += step.util.ui.getWordOrderSuffix(hoverContext, strong);
+			if (version === '')
 	            version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 						console.log("ref is " + reference + " strong: " + strong + " version: "+ version);
 						if (!step.keyedVersions[version].hasStrongs) {

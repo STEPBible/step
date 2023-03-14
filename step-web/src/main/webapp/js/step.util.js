@@ -1190,10 +1190,13 @@ step.util = {
                 var s = $(source);
                 strong = s.attr("strong");
                 morph = s.attr("morph");
-                ref = step.util.ui.getVerseNumber(s) +
-									step.util.ui.getWordOrderSuffix(s, strong);
-								console.log("ref is" + ref + " strong: " + strong);
-                version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
+                [ref, version] = step.util.ui.getVerseNumberAndVersion(s);
+								if (ref)
+									ref += step.util.ui.getWordOrderSuffix(s, strong);
+								else ref = '';
+								if (!version)
+	                version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
+								console.log("ref is" + ref + " strong: " + strong + " version: " + version);
             }
 
             step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, version: version });
@@ -1367,11 +1370,17 @@ step.util = {
         _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
-            var reference = step.util.ui.getVerseNumber(hoverContext) +
-							step.util.ui.getWordOrderSuffix(hoverContext, strong);
-						console.log("ref is " + reference + " strong: " + strong);
-            var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
-			if (!step.keyedVersions[version].hasStrongs) {
+            var reference;
+						var version;
+						[reference, version] = step.util.ui.getVerseNumberAndVersion(hoverContext);
+						if (reference)
+							reference += step.util.ui.getWordOrderSuffix(hoverContext, strong);
+						else
+							reference = '';
+						if (!version)
+	            version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
+						console.log("ref is " + reference + " strong: " + strong + " version: "+ version);
+						if (!step.keyedVersions[version].hasStrongs) {
 				possibleVersion = $($(hoverContext).parent().parent()[0]).find(".smallResultKey").attr('data-version');
 				if ((typeof possibleVersion === "string") && (step.keyedVersions[possibleVersion].hasStrongs))
 					version = possibleVersion;
@@ -1388,15 +1397,26 @@ step.util = {
                 });
             }
         },
-        /**
-         * Sets the HTML onto the passageContent holder which contains the passage
-         * @param passageHtml the JQuery HTML content
-         * @private
-         */
-        getVerseNumber: function (el) {
-            return $(el).closest(".verseGrouping").find(".heading .verseLink").attr("name") ||
-                $(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
-        },
+
+				getVerseNumberAndVersion: function (el) {
+					var version = $(el).closest("div.verse").parent().find('span.smallResultKey').attr('data-version') ||
+						$(el).closest(".singleVerse").find('span.smallResultKey').attr('data-version');
+					if (!version) {
+						var compareVersionHeader = $('th.comparingVersionName');
+						if (compareVersionHeader.length > 0) {
+							var index = $(el).closest('td').index();
+							version = $(compareVersionHeader[index-1]).text();
+						}
+					}
+					var verse = $($(el).closest("div.verse").find('a.verseLink')[0]).attr('name');
+					if (!verse) {
+						verse = $(el).closest(".verseGrouping").find(".heading .verseLink").attr("name") ||
+							$(el).closest(".verse, .interlinear").find(".verseLink").attr("name");
+					}
+					console.log("version: " + version + " verse: " + verse);
+					return [verse, version];
+				},
+
 				getWordOrderSuffix: function (el, strongsSelectedByUser) {
 			var verseClass = $(el).closest('.verse');
 			if (verseClass.length == 0)
@@ -1436,7 +1456,14 @@ step.util = {
 						return ';' + result.join(';');
 					return '';
 		},
-        emptyOffDomAndPopulate: function (passageContent, passageHtml) {
+
+        /**
+         * Sets the HTML onto the passageContent holder which contains the passage
+         * @param passageHtml the JQuery HTML content
+         * @private
+         */
+
+		emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();
 //            passageContent.detach();
             passageContent.off("scroll");
@@ -3396,61 +3423,82 @@ step.util = {
 		}
 		return result;
 	},
-	getVocabMorphInfoFromJson: function (strong, morph, reference, version) {
-        var resultJson = {vocabInfos: [], morphInfos: []};
-		if (step.state.isLocal()) return resultJson;
-        var strongArray = strong.split(" ");
-        var processedStrong = [];
+	getVocabMorphInfoFromJson: function (strong, morph, references, version) {
+		var resultJson = {vocabInfos: [], morphInfos: []};
+		if (step.state.isLocal()) return resultJson; // There are no json files for the lexicon in the stand-alone version of STEP
+		var strongArray = strong.split(" ");
+		var processedStrong = [];
 		var indexToAugStrongRef = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
-		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
-		"shortDef", "mediumDef", "lsjDefs",
-		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
-		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
-		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-		"augmentedStrongReferences"].length - 1;
-		if (!reference) reference = "";
-        $.ajaxSetup({async: false});
-        for (var j = 0; j < strongArray.length; j++) {
+			"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
+			"shortDef", "mediumDef", "lsjDefs",
+			"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
+			"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
+			"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
+			"augmentedStrongReferences"].length - 1;
+		if (!references) references = "";
+		$.ajaxSetup({async: false});
+		var reference = references.split(';');
+		basicReferenceWithoutSufix = reference[0];
+		var refParts = basicReferenceWithoutSufix.split(".");
+		var bookName = refParts[0];
+		var isNewTestament = step.util.bookOrderInBible(bookName) > 38;
+		bookName += '.';
+		var chapterVerse = refParts[1];
+		if (refParts.length == 3)
+			chapterVerse += '.' + refParts[2];
+		for (var j = 0; j < strongArray.length; j++) {
+			var refSuffix = ((j + 1) < reference.length) ? reference[j+1].toUpperCase() : '';
 			var strongWithoutAugment = step.util.fixStrongNumForVocabInfo(strongArray[j]);
-            if (processedStrong.indexOf(strongWithoutAugment) == -1) {
-                processedStrong.push(strongWithoutAugment);
+			if (processedStrong.indexOf(strongWithoutAugment) == -1) {
+				processedStrong.push(strongWithoutAugment);
 				var strongFirstChar = strong.substring(0, 1).toLowerCase();
-				var rsvVersification = (((version !== "OHB") && (version !== "THOT")) &&
-					(strongFirstChar === "h"));
-                $.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(origJsonVar) {
+				var needToCheckRsvVersification = (((version !== "OHB") && (version !== "THOT")) && (strongFirstChar === "h"));
+				$.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(origJsonVar) {
 					var augStrongIndex = 0;
-					if (reference !== "") {
-						var refParts = reference.split(".");
-						var book = refParts[0];
-						var isNewTestament = step.util.bookOrderInBible(book) > 38;
+					if (basicReferenceWithoutSufix !== "") {
 						if (! ( (version === "LXX") ||
 								((strongFirstChar === "h") && (isNewTestament)) ||
 								((strongFirstChar === "g") && (!isNewTestament)) ||
-								(reference === "") ) ) {
+								(basicReferenceWithoutSufix === "") ) ) {
 							for (var i = 0; i < origJsonVar.v.length; i++) {
 								if (origJsonVar.v[i][indexToAugStrongRef] === "*") {
 									augStrongIndex = i;
 									break;
 								}
 							}
-							var chapterVerse = refParts[1];
-							if (refParts.length == 3)
-								chapterVerse += "\\." + refParts[2];
-							var regString1 = "\\s" + book + "\\." + chapterVerse;
-							if (rsvVersification) regString1 += "\\s"; // must have a space after the reference
-							else regString1 += "[\\s\\(]"; // must have a space or a ( character after the reference
-							var regString2 = "\\s" + book + "\\.[0-9\\.]+\\(" + chapterVerse + "\\)";
-							for (var i = origJsonVar.v.length -1 ; i > -1; i --) {
+							for_loop: for (var i = origJsonVar.v.length -1 ; i > -1; i --) {
+								var positionToSearch = 0;
 								if (origJsonVar.v[i][indexToAugStrongRef] !== "*") {
 									var referencesToSearch = " " + origJsonVar.v[i][indexToAugStrongRef] + " ";
-									var searchPos = referencesToSearch.search(regString1);
-									if ((searchPos == -1) &&
-										(rsvVersification))
-										searchPos = referencesToSearch.search(regString2);
-									if (searchPos > -1) {
-										augStrongIndex = i;
-										break;
-									}
+									var searchBookNamePos = -1;
+									do {
+										searchBookNamePos = referencesToSearch.indexOf(bookName, positionToSearch);
+										if (searchBookNamePos > -1) {
+											positionToSearch = searchBookNamePos + bookName.length;
+											var spacePos = referencesToSearch.indexOf(' ', positionToSearch);
+											if (spacePos > -1) {
+												var stringAfterBookName = referencesToSearch.substring(positionToSearch, spacePos);
+												positionToSearch = spacePos + 1;
+												var twoVersificationsResult = stringAfterBookName.match("([^(]+)\\(([^)]+)\\)");
+												if (twoVersificationsResult) // found something like Ps.108.13(108.12).  The first is a OT Hebrew and the 2nd is a RSV versification. 
+													stringAfterBookName = (needToCheckRsvVersification) ? twoVersificationsResult[2] : twoVersificationsResult[1];
+												var multiVerseResult = stringAfterBookName.match("([0-9.]+)(-?)([A-Ia-i]+)");
+												var foundChapterVerse = (multiVerseResult) ? multiVerseResult[1] : stringAfterBookName;
+												if (foundChapterVerse === chapterVerse) {
+																// Word did not occur more than once in this verse so there is no suffix in the reference
+													if (	(refSuffix === "") ||
+																// Aug strong file does not have multiple occurrence information for this word.
+																(!multiVerseResult) ||
+																// Word occur more than once in this verse, aug strong file has multiple occurrence information for this word.  A match is found
+																((multiVerseResult) && (refSuffix !== "") && (multiVerseResult[2] === '-') && (multiVerseResult[3].toUpperCase().indexOf(refSuffix) == -1)) ||
+																((multiVerseResult) && (refSuffix !== "") && (multiVerseResult[2] === '') && (multiVerseResult[3].toUpperCase().indexOf(refSuffix) > -1)) ) {
+														augStrongIndex = i;
+														break for_loop;
+													}
+												}
+											}
+										}
+									} while (searchBookNamePos > -1);
 								}
 							}
 						}
@@ -3466,12 +3514,12 @@ step.util = {
 					}
 					var jsonVar = step.util.unpackJson(origJsonVar, augStrongIndex);
 					resultJson.vocabInfos.push(jsonVar);
-                }).error(function() {
+				}).error(function() {
 					console.log("getJSon failed strong:"+ strong + " morph: " + morph + " ref: " + reference + " version: " + version);
 					return resultJson;
 				});
-            }
-        }
+			}
+		}
 		if (morph) {
 			var morphArray = morph.split(" ");
 			for (var k = 0; k < morphArray.length; k++) {
@@ -3482,12 +3530,13 @@ step.util = {
 				if (pos > -1) morph = morphArray[k].substring(pos+9);
 				$.getJSON("/html/lexicon/" + morph + ".json", function(jsonVar) {
 					resultJson.morphInfos.push(jsonVar.morphInfos[0]);
-                });
+				});
 			}
 		}
-        $.ajaxSetup({async: true});
+		$.ajaxSetup({async: true});
 		return resultJson;
 	},
+
 	bookOrderInBible: function (reference) {
 		var idx2osisChapterJsword = {
 			"gen": 0,

@@ -263,12 +263,12 @@
         var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
         if (isNaN(stepUsageCount)) stepUsageCount = 0;
         var urlVars = $.getUrlVars();
-        if ((urlVars.indexOf("skipwelcome") > -1) || (urlVars.indexOf("clickvocab") > -1) || (urlVars.indexOf("clickstrong") > -1)) {
+        if ((urlVars.indexOf("skipwelcome") > -1) || (urlVars.indexOf("clickvocab") > -1)) {
             step.util.showOrHideTutorial('true'); // URL has skipwelcome
-            if ((urlVars.indexOf("clickvocab") > -1) || (urlVars.indexOf("clickstrong") > -1)) {
+            if (urlVars.indexOf("clickvocab") > -1) {
                 var pos = urlVars.q.indexOf("strong=");
                 if (pos > -1) {
-                    strongNum = urlVars.q.substring(pos+7, pos + 12);
+                    var strongNum = urlVars.q.substring(pos+7).split('|')[0].split('&')[0];
                     step.util.ui.showDef(strongNum);
                 }
             }

@@ -1253,16 +1253,13 @@ step.util = {
                 });
             });
         },
-        doQuickLexicon: function (target) {
-
-        },
         addStrongHandlers: function (passageId, passageContent) {
 						var that = this;
 						var allStrongElements = $("[strong]", passageContent);
 						step.touchForQuickLexiconTime = 0; // only use for touch screen
 						step.displayQuickLexiconTime = 0;  // only use for touch screen
 						step.strongOfLastQuickLexicon = "";  // only use for touch screen
-						step.lastTapStrong = ""  // only use for touch screen
+						step.lastTapStrong = "";  // only use for touch screen
 						that.pageY = 0;
 						allStrongElements.click(function () {
 							if (!step.touchDevice) {
@@ -1378,12 +1375,12 @@ step.util = {
 	            version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 						console.log("ref is " + reference + " strong: " + strong + " version: "+ version);
 						if (!step.keyedVersions[version].hasStrongs) {
-				possibleVersion = $($(hoverContext).parent().parent()[0]).find(".smallResultKey").attr('data-version');
-				if ((typeof possibleVersion === "string") && (step.keyedVersions[possibleVersion].hasStrongs))
-					version = possibleVersion;
-			}
+							possibleVersion = $($(hoverContext).parent().parent()[0]).find(".smallResultKey").attr('data-version');
+							if ((typeof possibleVersion === "string") && (step.keyedVersions[possibleVersion].hasStrongs))
+							version = possibleVersion;
+						}
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
-			var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
+						var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
                     strong: strong, morph: morph,
@@ -1394,6 +1391,20 @@ step.util = {
                 });
             }
         },
+
+				_displayNewQuickLexiconForVerseVocab: function (strong, reference, version, passageId, touchEvent, pageYParam, hoverContext) {
+					var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
+					var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
+					if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
+						new QuickLexicon({
+								strong: strong,
+								version: version, reference: reference,
+								target: hoverContext, position: pageY, touchEvent: touchEvent,
+								height: $(window).height(), 
+								passageId: passageId
+						});
+					}
+				},
 
 				getVerseNumberAndVersion: function (el) {
 					var verse = $($(el).closest("div.verse").find('a.verseLink')[0]).attr('name') ||
@@ -1629,8 +1640,43 @@ step.util = {
 
                         templatedTable.find(".definition").click(function () {
                             step.util.trackAnalytics('verseVocab', 'definition');
-                            self.showDef({strong: $(this).parent().data("strong"), ref: reference, version: version });
+														var strongParameterForCall = $(this).parent().data("strong");
+														var refParameterForCall = (strongParameterForCall.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) ? "" : reference; // if it is augmented Strong, don't include the reference
+                            self.showDef({strong: strongParameterForCall, ref: refParameterForCall, version: version });
                         });
+
+
+												templatedTable.find(".definition").hover(function (ev) { // mouse pointer starts hover (enter)
+													if ((!step.touchDevice) && (!step.util.keepQuickLexiconOpen)) {
+														var strongParameterForCall = $(this).parent().data("strong");
+														var refParameterForCall = (strongParameterForCall.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) ? "" : reference; // if it is augmented Strong, don't include the reference
+														step.passage.higlightStrongs({
+															passageId: undefined,
+															strong: strongParameterForCall,
+															morph: undefined,
+															classes: "primaryLightBg"
+														});
+														var hoverContext = this;
+														require(['quick_lexicon'], function () {
+															step.util.delay(function () {
+																// do the quick lexicon
+																step.util.ui._displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, ev, ev.pageY, hoverContext);
+															}, MOUSE_PAUSE, 'show-quick-lexicon');
+														});
+													}
+												}, function () { // mouse pointer ends hover (leave)
+													if (!step.touchDevice) {
+														step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+														step.util.delay(undefined, 0, 'show-quick-lexicon');
+														if (!step.util.keepQuickLexiconOpen) {
+															$("#quickLexicon").remove();
+														}
+													}
+												});
+					
+
+
+
 
                         templatedTable.find(".bookCount").click(function () {
                             step.util.trackAnalytics('verseVocab', 'bookCount');

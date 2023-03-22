@@ -1880,11 +1880,13 @@ step.util = {
 								'$("#select_advanced_search").addClass("checked");' +
 								'$(".advanced_search_elements").show();' +
 								'step.util.localStorageSetItem("advanced_search", true);' +
+								'$("#basic_search_help_text").hide();' +
 								'step.searchSelect._previousSearchesEnteredByUser();' +
 							'}' +
 							'else {' +
 								'$("#select_advanced_search").removeClass("checked");' +
 								'$(".advanced_search_elements").hide();' +
+								'$("#basic_search_help_text").show();' +
 								'step.util.localStorageSetItem("advanced_search", false);' +
 							'}' +
 						'}' +

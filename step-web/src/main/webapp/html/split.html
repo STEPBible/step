@@ -60,7 +60,7 @@
     style="display:block;background: #000;border: none;height: 96vh;width: 49vw;"
     align="left">
 </iframe>  
-<iframe id="f2" src="https://www.stepbible.org/html/gospel_harmony.html"
+<iframe id="f2"
     frameborder="1" scrolling="yes"  
     style="display:block;background: #000;border: none;height: 96vh;width: 48vw;"
     align="right">
@@ -120,8 +120,12 @@ function setupIFrames() {
 	var secondURLLength = (posOfWidthPercent == -1) ? queryString.length - posOfSecondURL : posOfWidthPercent - posOfSecondURL;
 	if ((posOfWidthPercent > -1) && (posOfWidthPercent < (posOfSecondURL + 15))) return;
     var secondURL = queryString.substr(posOfSecondURL, secondURLLength);
+    // Add the # anchor to the second URL, if there is one; this was required for a client's blogspot guide to STEPBible
+    var hashString = window.location.hash || '';
+    secondURL += hashString;
+
 	var width = (posOfWidthPercent > -1) ? parseInt(queryString.substr(posOfWidthPercent + 14)) : 0;
-	
+
     console.log(queryString);
     console.log(firstURL);
     console.log(secondURL);

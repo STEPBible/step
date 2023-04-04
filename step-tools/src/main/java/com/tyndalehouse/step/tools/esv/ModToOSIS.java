@@ -3,10 +3,12 @@ package com.tyndalehouse.step.tools.esv;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.tyndalehouse.step.core.service.jsword.impl.StepConfigValueInterceptor;
 import org.apache.commons.io.FileUtils;
 import org.crosswire.common.util.CWProject;
+import org.crosswire.common.util.Language;
 import org.crosswire.jsword.book.*;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
@@ -74,7 +76,7 @@ public class ModToOSIS {
 
 
         final StringBuilder osis = new StringBuilder(128000);
-        AddHeader(osis);
+
 
         if (kek != "") {
             // let the book driver find the jsword-mods.d dir to get the module key
@@ -86,6 +88,8 @@ public class ModToOSIS {
 
         BookName.setFullBookName(false);
         final Book book = Books.installed().getBook(version);
+
+        AddHeader(osis, book.getBookMetaData());
         final Key key = book.getKey(ref);
 
         final Iterator<Key> iterator = key.iterator();
@@ -148,8 +152,19 @@ public class ModToOSIS {
         FileUtils.writeStringToFile(new File(outPath), osis.toString());
     }
 
-    private static void AddHeader(final StringBuilder sb)
+    private static void AddHeader(final StringBuilder sb, final BookMetaData md)
     {
+        String id = md.getOsisID();
+        String osisIDWork = md.toString();
+        String SourceType = (String)md.getProperty("SourceType");
+        String Versification = (String)md.getProperty("Versification");
+        Language Lang = (Language)md.getProperty("Lang");
+        String langCode = Lang.getCode();
+        String TextSource = (String)md.getProperty("TextSource");
+        String CopyrightHolder = (String)md.getProperty("CopyrightHolder");
+        String Description = (String)md.getProperty("Description");
+        String CopyrightDate = (String)md.getProperty("CopyrightDate");
+
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         sb.append("<osis xmlns=\"http://www.bibletechnologies.net/2003/OSIS/namespace\"\n");
         sb.append("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n");
@@ -157,17 +172,18 @@ public class ModToOSIS {
         sb.append("schemaLocation=\n");
         sb.append("\"http://www.bibletechnologies.net/2003/OSIS/namespace http://www.bibletechnologies.net/osisCore.2.1.1.xsd\"\n");
         sb.append(">\n");
-        sb.append("<osisText osisIDWork=\"NIV_SB\" osisRefWork=\"bible\" xml:lang=\"en\" canonical=\"true\">\n");
+        sb.append("<osisText osisIDWork=\"" + osisIDWork + "\" osisRefWork=\"bible\" xml:lang=\""+ langCode + "\" canonical=\"true\">\n");
         sb.append("<header>\n");
-        sb.append("<work osisWork=\"NIV_SB\">\n");
-        sb.append("<rights type=\"copyright\">Copyright © 2011</rights>\n");
-        sb.append("<title>NIV - New International Version, 2011 </title>\n");
-        sb.append("<publisher>Biblica</publisher>\n");
+        sb.append("<work osisWork=\"" + osisIDWork + "\">\n");
+        if(CopyrightDate != null && !CopyrightDate.isEmpty())
+            sb.append("<rights type=\"copyright\">Copyright © "+ CopyrightDate + "</rights>\n");
+        sb.append("<title>" + Description + "</title>\n");
+        sb.append("<publisher>" + TextSource + "</publisher>\n");
         sb.append("<type type=\"OSIS\">Bible</type>\n");
-        sb.append("<identifier type=\"OSIS\">Bible.en.NIV_SB.2011</identifier>\n");
-        sb.append("<source>Biblica</source>\n");
-        sb.append("<language type=\"IETF\">en</language>\n");
-        sb.append("<refSystem>Bible.KJV</refSystem>\n");
+        sb.append("<identifier type=\"OSIS\">" + id + "</identifier>\n");
+        sb.append("<source>" + TextSource + "</source>\n");
+        sb.append("<language type=\"IETF\">" + langCode + "</language>\n");
+        sb.append("<refSystem>Bible." + Versification + "</refSystem>\n");
         sb.append("</work>\n");
         sb.append("</header>\n");
     }

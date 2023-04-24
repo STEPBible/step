@@ -3,7 +3,9 @@ var HistoryModel = Backbone.Model.extend({
         return {
             args: undefined,
             favourite: false,
-            lastAccessed: undefined
+            lastAccessed: undefined,
+            options: undefined,
+            display: undefined
         }
     }
 });

@@ -39,7 +39,9 @@ var ViewHistory = Backbone.View.extend({
         var item = $(self).closest("li");
         var bookmarkId = item.data("item");
         var model = step.bookmarks.findWhere({id: bookmarkId });
-        step.router.navigateSearch(model.get("args"), true, true);
+        step.router.doMasterSearch(decodeURIComponent(model.get("args")),
+        	model.get("options") || "", // in case it is not defined, provide empty string
+        	model.get("display") || "");  // in case it is not defined, provide empty string
     }, render: function () {
         var self = this;
         if(this.list) {

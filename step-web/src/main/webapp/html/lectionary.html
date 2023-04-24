@@ -127,55 +127,55 @@
     } catch (e) {
         inIFrame = true;
     }
-	var debugOption = "";
-	var urlPart1 = window.location.origin;
-	var pos = window.location.href.indexOf("/html/lectionary.html");
-	if (pos > 8) { // probably running in development environment.
-		urlPart1 = window.location.href.substr(0, pos);
-		debugOption = "&debug";
-	}
+    var debugOption = "";
+    var urlPart1 = window.location.origin;
+    var pos = window.location.href.indexOf("/html/lectionary.html");
+    if (pos > 8) { // probably running in development environment.
+        urlPart1 = window.location.href.substr(0, pos);
+        debugOption = "&debug";
+    }
 
     if (window.innerWidth > 960) {
         if (!inIFrame)
             window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
-    			"/?q=reference=Gen.1" + 
-    			debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
+                "/?q=reference=Gen.1" + 
+                debugOption + "&skipwelcome&secondURL=" + window.location.origin + window.location.pathname;
     }
 
-	if (typeof jQuery == 'undefined') {
-  		loadFile(urlPart1 + "/css/bootstrap.css");
-		loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
-		loadFile(urlPart1 + "/css/select2.css");
-		loadFile(urlPart1 + "/css/select2-bootstrap.css");
-		loadFile(urlPart1 + "/scss/step-template.css");
-		loadFile(urlPart1 + "/international/en.js");
-		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js');
+    if (typeof jQuery == 'undefined') {
+        loadFile(urlPart1 + "/css/bootstrap.css");
+        loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
+        loadFile(urlPart1 + "/css/select2.css");
+        loadFile(urlPart1 + "/css/select2-bootstrap.css");
+        loadFile(urlPart1 + "/scss/step-template.css");
+        loadFile(urlPart1 + "/international/en.js");
+        loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js');
         loadFile(urlPart1 + '/libs/introjs.min.js');
-		loadFile(urlPart1 + "/libs/underscore-min.js");
-		loadFile(urlPart1 + "/libs/bootstrap.min.js");
-		loadFile(urlPart1 + "/libs/backbone.js");
-		loadFile(urlPart1 + "/libs/backbone.localStorage.js");
-		loadFile(urlPart1 + "/js/backbone/models/model_settings.js");
-		loadFile(urlPart1 + "/js/step_constants.js");
-		loadFile(urlPart1 + "/js/passage_selection.js");
-		loadFile(urlPart1 + "/js/search_selection.js");
-		// Poll for jQuery to come into existance
-		var checkReady = function(callback) {
-			if (window.jQuery) {
-				callback(jQuery);
-			}
-			else {
-				window.setTimeout(function() { checkReady(callback); }, 200);
-			}
-		};
-		// Start polling...
-		checkReady(function($) {
-			$(function() {
-				setupTable(urlPart1, '');
-			});
-		});
-	}
-	else setupTable(urlPart1, '');
+        loadFile(urlPart1 + "/libs/underscore-min.js");
+        loadFile(urlPart1 + "/libs/bootstrap.min.js");
+        loadFile(urlPart1 + "/libs/backbone.js");
+        loadFile(urlPart1 + "/libs/backbone.localStorage.js");
+        loadFile(urlPart1 + "/js/backbone/models/model_settings.js");
+        loadFile(urlPart1 + "/js/step_constants.js");
+        loadFile(urlPart1 + "/js/passage_selection.js");
+        loadFile(urlPart1 + "/js/search_selection.js");
+        // Poll for jQuery to come into existance
+        var checkReady = function(callback) {
+            if (window.jQuery) {
+                callback(jQuery);
+            }
+            else {
+                window.setTimeout(function() { checkReady(callback); }, 200);
+            }
+        };
+        // Start polling...
+        checkReady(function($) {
+            $(function() {
+                setupTable(urlPart1, '');
+            });
+        });
+    }
+    else setupTable(urlPart1, '');
 })();
 
 function loadFile(path) {
@@ -206,14 +206,14 @@ function setupTable(urlPart1, aDate) {
     var rows = $("#lectionary_headings").find("tr");
     if (rows.length == 0){
         if (inIFrame) {
-            var tblHeadingHTLM = '	<colgroup>\n' + 
-                '		<col span="1" style="width:12%;">\n' +
-                '		<col span="1" style="width:20%;">\n' +
-                '		<col span="1" style="width:17%;">\n' +
-                '		<col span="1" style="width:17%;">\n' +
-                '		<col span="1" style="width:17%;">\n' +
-                '		<col span="1" style="width:17%;">\n' +
-                '	</colgroup>\n' +
+            var tblHeadingHTLM = '    <colgroup>\n' + 
+                '        <col span="1" style="width:12%;">\n' +
+                '        <col span="1" style="width:20%;">\n' +
+                '        <col span="1" style="width:17%;">\n' +
+                '        <col span="1" style="width:17%;">\n' +
+                '        <col span="1" style="width:17%;">\n' +
+                '        <col span="1" style="width:17%;">\n' +
+                '    </colgroup>\n' +
                 '  <thead id="lectionary_headings">\n' +
                 '    <tr class="tb_head">\n' +
                 '      <th class="th_col"><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
@@ -229,11 +229,11 @@ function setupTable(urlPart1, aDate) {
             $(".hTitle").css("font-size", "20px");
             $(".hInfo").css("font-size", "15px");
             // set up table columns and headings
-            var tblHeadingHTLM = '	<colgroup>\n' + 
-                '		<col span="1" style="width:20%;">\n' + 
-                '		<col span="1" style="width:20%;">\n' +
-                '		<col span="1" style="width:60%;">\n' +
-                '	</colgroup>\n' +
+            var tblHeadingHTLM = '    <colgroup>\n' + 
+                '        <col span="1" style="width:20%;">\n' + 
+                '        <col span="1" style="width:20%;">\n' +
+                '        <col span="1" style="width:60%;">\n' +
+                '    </colgroup>\n' +
                 '  <thead id="lectionary_headings">\n' +
                 '    <tr class="tb_head">\n' +
                 '      <th class="th_col"><span title="Click on the date to open the date\'s readings.  Note: these will be shown in Bible book order.  Deuterocanonical books are excluded, as are some of the alternate passages due to size limitations.">Date*</span></th>\n' +
@@ -251,35 +251,35 @@ function setupTable(urlPart1, aDate) {
         document.getElementById("tb_body").deleteRow(0);
     }
 
-	var fullHeight = $(window).height();
-	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
-	$(".fixTableHead").css("height", remainingHeight + "px");
+    var fullHeight = $(window).height();
+    var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
+    $(".fixTableHead").css("height", remainingHeight + "px");
 
     var settings = new SettingsModelList;
     settings.fetch();
     if (settings.length > 0) {
         step.settings = settings.at(0);
         var sz = step.settings.get("defaultfont");
-		if (typeof sz !== "number") sz = 15;
+        if (typeof sz !== "number") sz = 15;
         $("table").css("font-size", sz + "px");
     }
 
     var queryString = window.location.search;
-	var pos = queryString.indexOf("jsonFN=");
-	if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
-		var tmp = queryString.substr(pos + 7);
-		pos = tmp.indexOf("&");
-		if (pos == -1) jsonFileName = tmp;
-		else if (pos > 0) jsonFileName = tmp.substr(0,pos);
-	}
+    var pos = queryString.indexOf("jsonFN=");
+    if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
+        var tmp = queryString.substr(pos + 7);
+        pos = tmp.indexOf("&");
+        if (pos == -1) jsonFileName = tmp;
+        else if (pos > 0) jsonFileName = tmp.substr(0,pos);
+    }
 
-	$.ajaxSetup({async: false});
+    $.ajaxSetup({async: false});
 
-	var jsonFileName1 = "lectionary_advents";
-	var jsonFileName2 = "lectionary_readings";
-	var jsonFileName3 = "lectionary_weeks";
+    var jsonFileName1 = "lectionary_advents";
+    var jsonFileName2 = "lectionary_readings";
+    var jsonFileName3 = "lectionary_weeks";
 
-	var tblRowHTML = "";
+    var tblRowHTML = "";
     var pattern = "{[^}]+}";
     var pattern2 = /([0-9])[abcd]/g;
     var clickText1 = 'class="clickable" onclick=displayPassages(this,"';
@@ -305,7 +305,7 @@ function setupTable(urlPart1, aDate) {
         while (i < array.length && refDate > nextYear) {
             i++;
             nextYear = new Date (array[i][0]);
-		}
+        }
         first_advent_of_year = array[i-1][0];
         first_advent_of_next_year = array[i][0];
         year_letter = array[i-1][1];
@@ -322,7 +322,7 @@ function setupTable(urlPart1, aDate) {
 
     // read the list of readings into arrays
     $.getJSON(urlPart1 + "/html/json/" + jsonFileName2 + ".json", function(array) {
-		for (var i = 0; i < array.length; i ++ ) {
+        for (var i = 0; i < array.length; i ++ ) {
             reading_title[i] = array[i][1];
             first_reading[i] = array[i][2];
             psalm_reading[i] = array[i][3];
@@ -335,7 +335,11 @@ function setupTable(urlPart1, aDate) {
         var dt1 = "";
         var dt2 = "";
         var implicit_yr = "";
-		for (var i = 0; i < array.length; i ++ ) {
+        var anchor = ' id="today"';
+        var row_label = "";
+        var today = new Date();
+
+        for (var i = 0; i < array.length; i ++ ) {
             if (array[i][0] >= first_advent_of_year && array[i][0] < first_advent_of_next_year)
             {
                 var dt = new Date(array[i][0]+"T12:00:00Z");
@@ -354,6 +358,11 @@ function setupTable(urlPart1, aDate) {
                     display_dt = display_dt.replace(", "+display_yr, "");
                 }
                 implicit_yr = display_yr;
+
+                if (dt >= today) {
+                    row_label = anchor;
+                    anchor = "";
+                }
 
                 first = first_reading[reading_number];
                 psalm = psalm_reading[reading_number];
@@ -477,26 +486,26 @@ function setupTable(urlPart1, aDate) {
                 }
     
                 if (inIFrame) {
-        			tblRowHTML = 
-        				'<tr><td class="tb_col">' + display_dt + '</td>' +
-        				    '<td class="tb_col">' + reading_title[reading_number] + '</td>' +
-        				    '<td class="tb_col">' + first + '</td>' +
-        				    '<td class="tb_col">' + psalm + '</td>' +
-        				    '<td class="tb_col">' + second + '</td>' +
-        					'<td class="tb_col">' + gospel + '</td></tr>';
+                    tblRowHTML = 
+                        '<tr' + row_label + '><td class="tb_col">' + display_dt + '</td>' +
+                            '<td class="tb_col">' + reading_title[reading_number] + '</td>' +
+                            '<td class="tb_col">' + first + '</td>' +
+                            '<td class="tb_col">' + psalm + '</td>' +
+                            '<td class="tb_col">' + second + '</td>' +
+                            '<td class="tb_col">' + gospel + '</td></tr>';
                 }
                 else {
-        			tblRowHTML = 
-        				'<tr><td class="tb_col">' + display_dt + '</td>' +
-        				    '<td class="tb_col">' + reading_title[reading_number] + '</td>' +
-        				    '<td class="tb_col">' + '<div class="ind10">First: ' + first + '</div>'
+                    tblRowHTML = 
+                        '<tr' + row_label + '><td class="tb_col">' + display_dt + '</td>' +
+                            '<td class="tb_col">' + reading_title[reading_number] + '</td>' +
+                            '<td class="tb_col">' + '<div class="ind10">First: ' + first + '</div>'
                                 + '<div class="ind10">Psalm: ' + psalm + '</div>'
                                 + '<div class="ind10">Second: ' + second + '</div>'
                                 + '<div class="ind10">Gospel: ' + gospel + '</div>' + '</td></tr>';
                 }
-    	        $("#tb_body").append(tblRowHTML);
+                $("#tb_body").append(tblRowHTML);
             }
-		}
+        }
         if (dt1 != "") {
             document.getElementById("reading_year").innerText = "\u00A0\u00A0" + dt1 + " - " + dt2 + " (Year\u00A0" + year_letter + ")\u00A0\u00A0";
         }
@@ -533,15 +542,17 @@ function setupTable(urlPart1, aDate) {
 
     });
 
+    var e = document.querySelector("#today");
+    if (e) e.scrollIntoView({block: "center"});
 
     $.ajaxSetup({async: true});
 
-	$(function(){
-		$('textarea#userTextInput').on('input', function(e){
-			this.timer && clearTimeout(this.timer);
-			this.timer = setTimeout(handleKeyboardInput, 300, e);
-		});
-	});
+    $(function(){
+        $('textarea#userTextInput').on('input', function(e){
+            this.timer && clearTimeout(this.timer);
+            this.timer = setTimeout(handleKeyboardInput, 300, e);
+        });
+    });
 
 }
 
@@ -554,7 +565,7 @@ function displayPassages(item, string) {
         inIFrame = true;
     }
 
-	var urlPart1 = window.location.origin;
+    var urlPart1 = window.location.origin;
     // provide a default of CPDV for Deuterocanonical books
     var version = "";
     if (string.indexOf("Sir.") > -1 || string.indexOf("Bar.") > -1 || string.indexOf("Wis.") > -1) {
@@ -562,45 +573,45 @@ function displayPassages(item, string) {
     }
 
     if (!inIFrame) {
-    	if (string !== "") {
+        if (string !== "") {
             var tabURL = urlPart1 + "/?skipwelcome&q=";
             string = string.replace(/ /g, ";");
-    		if (string.indexOf("strong=") > -1 || string.indexOf("srchJoin=") > -1
+            if (string.indexOf("strong=") > -1 || string.indexOf("srchJoin=") > -1
                 || string.indexOf("text=") > -1) {
-    			tabURL += string;
-    		}
-    		else {
-    			tabURL += "reference=" + string;
-    		}
+                tabURL += string;
+            }
+            else {
+                tabURL += "reference=" + string;
+            }
 
             window.open(tabURL + version, "_blank");
-    	}
+        }
 
     }
     else
     {
-    	if (string !== "") {
+        if (string !== "") {
             string = string.replace(/ /g, ";");
-    		window.top.postMessage(string + version, '*');
-    	}
+            window.top.postMessage(string + version, '*');
+        }
     }
 }
 
 
 function handleKeyboardInput(e) {
-	var userInput =  $('textarea#userTextInput').val();
-	if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
-		userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
-		$('textarea#userTextInput').val(userInput);
-	}
-	if ((typeof userInput !== "string") || (userInput.length = 0)) {
-		$("tr").show();
-	}
-	else {
-		$("#tb_body").find("tr").hide();
-		var re = new RegExp(userInput, "i");
-		$("tr").filter(function () { return re.test($(this).find(".tb_col").text());}).show();
-	}
+    var userInput =  $('textarea#userTextInput').val();
+    if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
+        userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
+        $('textarea#userTextInput').val(userInput);
+    }
+    if ((typeof userInput !== "string") || (userInput.length = 0)) {
+        $("tr").show();
+    }
+    else {
+        $("#tb_body").find("tr").hide();
+        var re = new RegExp(userInput, "i");
+        $("tr").filter(function () { return re.test($(this).find(".tb_col").text());}).show();
+    }
 }
 
 </script>

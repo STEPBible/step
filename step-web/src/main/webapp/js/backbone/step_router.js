@@ -336,7 +336,7 @@ var StepRouter = Backbone.Router.extend({
                 }
 
                 passageModel.save(text, { silent: true });
-                self._addBookmark({ args: query, searchTokens: text.searchTokens });
+                self._addBookmark({ args: query, searchTokens: text.searchTokens, options: options, display: display });
                 step.util.squashErrors(passageModel);
 
                 //don't trigger a full search, but replace the URL with the one that makes sense
@@ -357,7 +357,7 @@ var StepRouter = Backbone.Router.extend({
         var normalizedArgs = this._normalizeArgs(query.args);
         var existingModel = step.bookmarks.findWhere({ args: normalizedArgs });
         if (existingModel) {
-            existingModel.save({ lastAccessed: new Date().getTime() });
+            existingModel.save({ options: query.options, display: query.display, lastAccessed: new Date().getTime() });
             return;
         }
 
@@ -365,6 +365,8 @@ var StepRouter = Backbone.Router.extend({
             args: normalizedArgs,
             lastAccessed: new Date().getTime(),
             searchTokens: query.searchTokens,
+            options: query.options,
+            display: query.display,
             id: step.util.guid()
         });
         step.bookmarks.add(historyModel);

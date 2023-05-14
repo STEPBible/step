@@ -1767,7 +1767,7 @@ step.util = {
 
 											qtip.qtip("show");
 										}).error(function() {
-			.									changeBaseURL();
+												changeBaseURL();
 										});
 									}, delay, 'delay-strong-popup');
 
@@ -3557,7 +3557,7 @@ step.util = {
 		var result = "";
 		for (var j = 0; j < strongsArray.length; j++) {
 			var fixedStrongNum = strongsArray[j].split(".")[0].split("!")[0];
-			if (fixedStrongNum.search(/([GH])(\d{1,4})([A-Za-z]?)$/) > -1) {
+			if (fixedStrongNum.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
 				fixedStrongNum = RegExp.$1 + ("000" + RegExp.$2).slice(-4);	// if strong is not 4 digit, make it 4 digit
 			}						                                      			// remove the last character if it is a letter
 			if (result !== "") result += " ";

@@ -8,7 +8,6 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.BookAndBibleCount;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.models.stats.PassageStat;
-import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -50,7 +49,6 @@ public class JSwordStrongNumberHelper {
     private static volatile Versification otV11n;
     private final JSwordVersificationService versification;
     private final JSwordSearchService jSwordSearchService;
-    private final StrongAugmentationService strongAugmentationService;
     private final EntityIndexReader definitions;
     private final Verse reference;
     private Map<String, List<LexiconSuggestion>> verseStrongs;
@@ -63,15 +61,12 @@ public class JSwordStrongNumberHelper {
      * @param reference                 the reference in the KJV versification equivalent
      * @param versification             the versification service to lookup the versification of the reference book
      * @param jSwordSearchService       the jSword Search service
-     * @param strongAugmentationService the strong augmentation service
      */
     public JSwordStrongNumberHelper(final EntityManager manager, final Verse reference,
                                     final JSwordVersificationService versification,
-                                    final JSwordSearchService jSwordSearchService,
-                                    final StrongAugmentationService strongAugmentationService) {
+                                    final JSwordSearchService jSwordSearchService) {
         this.versification = versification;
         this.jSwordSearchService = jSwordSearchService;
-        this.strongAugmentationService = strongAugmentationService;
         this.definitions = manager.getReader("definition");
         this.reference = reference;
         initReferenceVersification();
@@ -120,7 +115,7 @@ public class JSwordStrongNumberHelper {
 
             final Book preferredCountBook = getPreferredCountBook(this.isOT);
             final List<Element> elements = JSwordUtils.getOsisElements(new BookData(preferredCountBook, key));
-
+            Set<String> strongAlreadyIncluded = new HashSet<String>();
             for (final Element e : elements) {
                 final String verseRef = e.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID);
                 final String strongsNumbers = OSISUtil.getStrongsNumbers(e);
@@ -128,12 +123,17 @@ public class JSwordStrongNumberHelper {
                     LOG.warn("Attempting to search for 'no strongs' in verse [{}]", verseRef);
                     return;
                 }
-                final String strongQuery = StringConversionUtils.getStrongPaddedKey(strongsNumbers);
-                String[] augmentedStrongs = strongAugmentationService.augment(preferredCountBook.getInitials(), verseRef, strongQuery);
-                final String augmentedStrongNumbers = StringUtils.join(augmentedStrongs, ' ');
-                readDataFromLexicon(this.definitions, verseRef, augmentedStrongNumbers, userLanguage);
+                ArrayList<String> uniqueStrong = new ArrayList<String>();
+                StringTokenizer st = new StringTokenizer(StringConversionUtils.getStrongPaddedKey(strongsNumbers));
+                while (st.hasMoreTokens()) { // This loop removes duplicate Strong numbers
+                    String currentStrong = st.nextToken();
+                    if (!strongAlreadyIncluded.contains(currentStrong)) {
+                        strongAlreadyIncluded.add(currentStrong);
+                        uniqueStrong.add(currentStrong);
+                    }
+                }
+                readDataFromLexicon(this.definitions, verseRef, String.join(" ", uniqueStrong), userLanguage);
             }
-
             // now get counts in the relevant portion of text
             applySearchCounts(getBookFromKey(key));
         } catch (final NoSuchKeyException ex) {
@@ -203,12 +203,7 @@ public class JSwordStrongNumberHelper {
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {
                 final String strongKey = strong.getKey();
 
-                boolean isAugmentedStrong = !this.strongAugmentationService.isNonAugmented(strongKey);
-                StrongAugmentationService.AugmentedStrongsForSearchCount augDStrongArgs = null;
-                if (isAugmentedStrong) // Prepare for the aug strong lookup.
-                    augDStrongArgs = strongAugmentationService.getRefIndexWithStrong(strongKey);
-
-                termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, this.strongAugmentationService.reduce(strongKey)));
+                termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, strongKey));
 
                 // we'll never need more than 200 documents as this is the cut off point
                 int bible = 0;
@@ -217,11 +212,9 @@ public class JSwordStrongNumberHelper {
                     final int freq = termDocs.freq();
                     final Document doc = is.doc(termDocs.doc());
                     final String docRef = doc.get(LuceneIndex.FIELD_KEY);
-                    if ((augDStrongArgs == null) || (strongAugmentationService.isVerseInAugStrong(docRef, strongKey, augDStrongArgs))) {
-                        if (docRef != null && docRef.startsWith(bookName))
-                            book += freq;
-                        bible += freq;
-                    }
+                    if (docRef != null && docRef.startsWith(bookName))
+                        book += freq;
+                    bible += freq;
                 }
                 final BookAndBibleCount value = strong.getValue();
                 value.setBible(bible);

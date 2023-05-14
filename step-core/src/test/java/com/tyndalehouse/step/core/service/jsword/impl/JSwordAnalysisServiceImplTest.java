@@ -27,7 +27,7 @@ public class JSwordAnalysisServiceImplTest {
 
     @Test
     public void testExpand() throws NoSuchKeyException {
-        JSwordAnalysisServiceImpl impl = new JSwordAnalysisServiceImpl(TestUtils.mockVersificationService(), null, null, mock(StrongAugmentationService.class));
+        JSwordAnalysisServiceImpl impl = new JSwordAnalysisServiceImpl(TestUtils.mockVersificationService(), null, null);
 
         //normal use cases
         assertEquals("Gen.3", impl.getExpandedBookData(get("Gen.3.3"), ScopeType.CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());

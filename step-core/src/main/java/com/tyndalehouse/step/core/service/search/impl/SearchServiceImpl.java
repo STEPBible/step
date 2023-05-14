@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.*;
@@ -59,8 +58,6 @@ public class SearchServiceImpl implements SearchService {
     /**
      * value representing a original spelling sort
      */
-    public static final Pattern AUGMENTED_STRONG = Pattern.compile("strong:([GgHh]\\d+[a-zA-Z])");
-    public static final Pattern ALL_STRONGS = Pattern.compile("strong:([GgHh]\\d+[a-zA-Z]?)");
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
     private static final String SYNTAX_FORMAT = "[%s...]";
     private static final String[] BASE_GREEK_VERSIONS = new String[]{"WHNU", "Byz", "LXX"};
@@ -77,7 +74,6 @@ public class SearchServiceImpl implements SearchService {
     private final JSwordVersificationService versificationService;
     private final SubjectSearchService subjects;
     private final BibleInformationService bibleInfoService;
-    private final StrongAugmentationService strongAugmentationService;
     private VersionResolver versionResolver;
     private LexiconDefinitionService lexiconDefinitionService;
     private JSwordRelatedVersesService relatedVerseService;
@@ -100,8 +96,7 @@ public class SearchServiceImpl implements SearchService {
                              final EntityManager entityManager,
                              final VersionResolver versionResolver,
                              final LexiconDefinitionService lexiconDefinitionService,
-                             final JSwordRelatedVersesService relatedVerseService,
-                             final StrongAugmentationService strongAugmentationService) {
+                             final JSwordRelatedVersesService relatedVerseService) {
         this.jswordSearch = jswordSearch;
         this.jswordMetadata = jswordMetadata;
         this.versificationService = versificationService;
@@ -111,7 +106,6 @@ public class SearchServiceImpl implements SearchService {
         this.versionResolver = versionResolver;
         this.lexiconDefinitionService = lexiconDefinitionService;
         this.relatedVerseService = relatedVerseService;
-        this.strongAugmentationService = strongAugmentationService;
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
@@ -733,7 +727,8 @@ public class SearchServiceImpl implements SearchService {
                 continue;
             }
 
-            if (verseText.contains(this.strongAugmentationService.reduce(strong))) {
+//            if (verseText.contains(this.strongAugmentationService.reduce(strong))) {
+            if (verseText.contains(strong)) {
                 List<LexicalSearchEntry> list = keyedOrder.get(strong);
                 if (list == null) {
                     list = new ArrayList<LexicalSearchEntry>(16);
@@ -1229,44 +1224,13 @@ public class SearchServiceImpl implements SearchService {
         //unfortunately, we to need run an extra search for each of the augmented strong numbers
 
         //split the search into the standard search and the other searches
-        final List<String> augmentedStrongs = new ArrayList<>(2);
         final IndividualSearch currentSearch = sq.getCurrentSearch();
-        String currentQuery = currentSearch.getQuery();
-        final Matcher matchAugmentedStrongs = AUGMENTED_STRONG.matcher(currentQuery);
-        final String simpleStrongSearch = matchAugmentedStrongs.replaceAll("");
-
-        matchAugmentedStrongs.reset();
-        while (matchAugmentedStrongs.find()) {
-            final String as = matchAugmentedStrongs.group(1);
-            if (!augmentedStrongs.contains(as)) {
-                augmentedStrongs.add(as);
-                strongs.add(this.strongAugmentationService.reduce(as).toUpperCase());
-            }
-        }
-
+        final String currentQuery = currentSearch.getQuery();
         //run the normal search
         Key key = null;
-        if (simpleStrongSearch.contains("strong")) {
-            currentSearch.setQuery(simpleStrongSearch);
+        if (currentQuery.contains("strong")) {
+            currentSearch.setQuery(currentQuery);
             key = this.jswordSearch.searchKeys(sq);
-            String simpleStrongNum = simpleStrongSearch.replace("strong:", "").replaceAll(" ", "");
-            this.strongAugmentationService.updatePassageKeyWithAugStrong(simpleStrongNum, key);
-        }
-        //work out the original query without the normal strong numbers
-        String blankQuery = ALL_STRONGS.matcher(currentQuery).replaceAll("");
-        for (String as : augmentedStrongs) {
-            currentSearch.setQuery(blankQuery + " strong:" + as.substring(0, as.length()-1));
-            Key augmentedResults = this.jswordSearch.searchKeys(sq);
-            //filter results by augmented strong data set
-            this.strongAugmentationService.updatePassageKeyWithAugStrong(as, augmentedResults);
-            //Key masterAugmentedFilter = this.strongAugmentationService.getVersesForAugmentedStrong(as);
-            //potentialAugmentedResults = intersect(potentialAugmentedResults, masterAugmentedFilter);
-            //add results to current set
-            if (key == null) {
-                key = augmentedResults;
-            } else {
-                key.addAll(augmentedResults);
-            }
         }
         currentSearch.setQuery(currentQuery);
         return key;
@@ -1755,7 +1719,7 @@ public class SearchServiceImpl implements SearchService {
             query.insert(0, mainRange);
 
         }
-        return query.toString().trim().toLowerCase();
+        return query.toString().trim(); // DStrong is both upper and lower cases.
     }
 
     /**
@@ -1790,13 +1754,6 @@ public class SearchServiceImpl implements SearchService {
             String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
             prefixedStrong = prefixedStrong.substring(0, 1).toUpperCase(Locale.ENGLISH) + prefixedStrong.substring(1);  // uppercase first letter
             String paddedStrong = padStrongNumber(prefixedStrong, false);
-            if(Character.isDigit(paddedStrong.charAt(paddedStrong.length() - 1))) {
-                Character suffix = this.strongAugmentationService.getAugmentedStrongSuffix(s);
-                if (suffix != null) {
-                    //add the suffix back
-                    paddedStrong += suffix;
-                }
-            }
             strongList.add(paddedStrong);
         }
         return strongList;

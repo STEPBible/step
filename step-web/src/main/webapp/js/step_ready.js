@@ -333,53 +333,54 @@
 
             if (query.search(/version/) == -1) {
                 query = query.replace(/%3D/g, '=').replace(/%7C/g, '|');
+
                 var history = new HistoryModelList;
                 if (typeof history === "object") {
-                    history.fetch();
-                    var histIndex = 0;
-                    var mostRecentPassage = "";
-                    while (histIndex < history.length && mostRecentPassage == "") {
-                        var histItem = history.at(histIndex);
+                history.fetch();
+                var histIndex = 0;
+                var mostRecentPassage = "";
+                while (histIndex < history.length && mostRecentPassage == "") {
+                    var histItem = history.at(histIndex);
                         if (typeof histItem === "object") {
                             var histItemArgs = histItem.get("args");
                             if ((typeof histItemArgs === "string") && (histItemArgs.search(/reference/) > -1)) {
                                 mostRecentPassage = decodeURIComponent(histItemArgs)
-                                // get the version(s) from the most recent passage in history
-                                var pos = mostRecentPassage.search(/version=[^|]+/);
-                                var version = "";
-                                while (pos > -1) {
-                                    var ver = RegExp.lastMatch;
-                                    ver = ver.replace(/version=/, '');
-                                    if (typeof step.keyedVersions[ver] === "object") {
-                                        version += 'version=' + ver + '|';
-                                    }
-                                    mostRecentPassage = mostRecentPassage.replace(/version=[^|]+/, '');
-                                    pos = mostRecentPassage.search(/version=[^|]+/);
-                                }
-                                version = version.replace(/\|$/, '');
+                                    // get the version(s) from the most recent passage in history
+                        var pos = mostRecentPassage.search(/version=[^|]+/);
+                        var version = "";
+                        while (pos > -1) {
+                            var ver = RegExp.lastMatch;
+                            ver = ver.replace(/version=/, '');
+                            if (typeof step.keyedVersions[ver] === "object") {
+                                version += 'version=' + ver + '|';
+                            }
+                            mostRecentPassage = mostRecentPassage.replace(/version=[^|]+/, '');
+                            pos = mostRecentPassage.search(/version=[^|]+/);
+                        }
+                        version = version.replace(/\|$/, '');
 
                                 if (query === "") {
-                                    // get the reference(s) from the most recent passage in history
-                                    pos = mostRecentPassage.search(/reference=[^|]+/);
-                                    while (pos > -1) {
-                                        query += RegExp.lastMatch + '|';
-                                        mostRecentPassage = mostRecentPassage.replace(/reference=[^|]+/, '');
-                                        pos = mostRecentPassage.search(/reference=[^|]+/);
-                                    }
-                                    query = query.replace(/\|$/, '');
-                                }
+                            // get the reference(s) from the most recent passage in history
+                            pos = mostRecentPassage.search(/reference=[^|]+/);
+                            while (pos > -1) {
+                                query += RegExp.lastMatch + '|';
+                                mostRecentPassage = mostRecentPassage.replace(/reference=[^|]+/, '');
+                                pos = mostRecentPassage.search(/reference=[^|]+/);
+                            }
+                            query = query.replace(/\|$/, '');
+                        }
 
                                 if (version !== "" && query !== "") {
-                                    console.log("Opening to '%s'", version + '|' + query);
+                            console.log("Opening to '%s'", version + '|' + query);
                                     //                            step.router.navigateSearch(version + '|' + query, true, true);
                                     var histItemOptions = histItem.get("options") || "";
                                     var histItemDisplay = histItem.get("display") || "";
                                     if ((typeof histItemOptions === "string") && (typeof histItemDisplay === "string"))
                                         step.router.doMasterSearch(version + '|' + query, histItemOptions, histItemDisplay);
                                 }
-                            }
                         }
-                        ++histIndex;
+                    }
+                    ++histIndex;
                     }
                 }
             }

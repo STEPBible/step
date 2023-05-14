@@ -3,7 +3,7 @@ package com.tyndalehouse.step.core.service.jsword.impl;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.stats.PassageStat;
 import com.tyndalehouse.step.core.models.stats.ScopeType;
-import com.tyndalehouse.step.core.service.StrongAugmentationService;
+//import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -34,7 +34,7 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     private final Versification strongsV11n;
     private final Book strongsBook;
     private final Properties stopWordsProperties;
-    private StrongAugmentationService strongAugmentationService;
+    //private StrongAugmentationService strongAugmentationService;
 
     /**
      * Instantiates a new jsword analysis service impl.
@@ -44,11 +44,11 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     @Inject
     public JSwordAnalysisServiceImpl(final JSwordVersificationService versification,
                                      @Named("StepCoreProperties") final Properties stopWordsProperties,
-                                     @Named("analysis.stopStrongs") final String configuredStopStrongs,
-                                     final StrongAugmentationService strongAugmentationService) {
+                                     @Named("analysis.stopStrongs") final String configuredStopStrongs) {
+//                                     final StrongAugmentationService strongAugmentationService) {
         this.versification = versification;
         this.stopWordsProperties = stopWordsProperties;
-        this.strongAugmentationService = strongAugmentationService;
+//        this.strongAugmentationService = strongAugmentationService;
         stopStrongs = StringUtils.createSet(configuredStopStrongs);
         strongsBook = this.versification.getBookFromVersion(JSwordPassageService.REFERENCE_BOOK);
         strongsV11n = this.versification.getVersificationForVersion(strongsBook);
@@ -230,15 +230,16 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     private PassageStat getStatsFromStrongArray(final String version, final Key reference, final String[] words, final String userLanguage) {
         PassageStat stat = new PassageStat();
         //slight annoyance that we are deserializing the key to re-serialise later
-        final String ref = reference.getOsisRef();
-        for (final String unaugmentedWord : words) {
-            String[] strongs = this.strongAugmentationService.augment(version, ref, unaugmentedWord);
-            for(String word : strongs) {
+//        final String ref = reference.getOsisRef();
+//        for (final String unaugmentedWord : words) {
+//            String[] strongs = this.strongAugmentationService.augment(version, ref, unaugmentedWord);
+        for (final String word : words) {
+//            for(String word : strongs) {
                 final String paddedStrongNumber = StringConversionUtils.getStrongPaddedKey(word);
                 if (!this.stopStrongs.contains(paddedStrongNumber.toUpperCase())) {
                     stat.addWord(paddedStrongNumber);
                 }
-            }
+//            }
         }
         return stat;
     }

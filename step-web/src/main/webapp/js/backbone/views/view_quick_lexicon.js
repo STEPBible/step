@@ -47,6 +47,7 @@ var QuickLexicon = Backbone.View.extend({
         this.morph = opts.morph;
         this.position = opts.position;
         this.height = opts.height;
+        this.type = opts.type;
         this.touchEvent = opts.touchEvent || false;
         this.passageContainer = step.util.getPassageContainer(opts.target);
         if(this.passageContainer.length == 0) {
@@ -124,19 +125,21 @@ var QuickLexicon = Backbone.View.extend({
 			(typeof self.strong === "string")) {
 			step.previousSideBarLexiconRef = [self.strong, self.reference];
 		}
-		var strongsWithoutAugment = step.util.fixStrongNumForVocabInfo(this.strong);
-        var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongsWithoutAugment, this.morph, this.reference, this.version);
+        var strongsToUse = this.strong;
+        if (self.reference !== "") // The verse vocabulary does not provide a reference so take the provided strong numbers.
+		    strongsToUse = step.util.fixStrongNumForVocabInfo(strongsToUse);
+        var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongsToUse, this.morph, this.version);
         if (vocabMorphFromJson.vocabInfos.length > 0) {
             self.processQuickInfo(vocabMorphFromJson, self);
             return;
         }
-        return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, strongsWithoutAugment, this.morph, step.userLanguageCode], function (data) {
+        return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);
             self.processQuickInfo(data, self);
         }).error(function() {
             if (changeBaseURL())
-                $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, strongsWithoutAugment, this.morph, step.userLanguageCode], function (data) {
+                $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode], function (data) {
                     self.processQuickInfo(data, self);
                 })
         });
@@ -149,7 +152,8 @@ var QuickLexicon = Backbone.View.extend({
         if(this.text) {
             var note = $(this.templateHeader + this.text.html() + this.templateFooter);
 			$("#quickLexicon").remove();
-            this.displayQuickDef(note, "Notes");
+            var header = (this.type === "versesWithWord") ? 'Verses with word' : 'Notes';
+            this.displayQuickDef(note, header);
         } else {
             //remove all quick lexicons
             //make request to server
@@ -176,7 +180,11 @@ var QuickLexicon = Backbone.View.extend({
         this.passageContainer.append(lexicon);
         var top = $("#quickLexicon").position().top - 37;
         var bottom = $("#quickLexicon").outerHeight(true) + top;
-        if (    (top < -8) || (bottom > heightOfWindow + 8) || // The quickLexicon div's top or bottom is not visible
+        if (headerText === "Verses with word") {
+            $('#quickLexicon').height('auto');
+            $('#quickLexicon').css({'maxHeight':'200px','overflow-y':'auto'});
+        }
+        else if (    (top < -8) || (bottom > heightOfWindow + 8) || // The quickLexicon div's top or bottom is not visible
                 ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > pointerPosition)) || // Overlap with mouse pointer
                 ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < pointerPosition)) ) {  // Overlap with mouse pointer
             lexicon.remove();

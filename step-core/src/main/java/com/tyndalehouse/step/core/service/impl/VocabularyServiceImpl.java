@@ -6,7 +6,6 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.VocabResponse;
-import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 import com.tyndalehouse.step.core.utils.SortingUtils;
@@ -37,7 +36,6 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
     private static final LRUMap<String, EntityDoc[]> DEFINITION_CACHE = new LRUMap<>(512, 1024);
     private final EntityIndexReader definitions;
-    private final StrongAugmentationService strongAugmentationService;
 
     // define a few extraction methods
     private final LexiconDataProvider transliterationProvider = new LexiconDataProvider() {
@@ -79,11 +77,9 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * @param manager the entity manager
-     * @param strongAugmentationService service to look up and process Strong augmentation
      */
     @Inject
-    public VocabularyServiceImpl(final EntityManager manager, final StrongAugmentationService strongAugmentationService) {
-        this.strongAugmentationService = strongAugmentationService;
+    public VocabularyServiceImpl(final EntityManager manager) { // , final StrongAugmentationService strongAugmentationService) {
         this.definitions = manager.getReader("definition");
     }
 
@@ -124,7 +120,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public VocabResponse getDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
+        final String[] strongList = getKeys(vocabIdentifiers); // this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
 
         if (strongList.length != 0) {
             final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
@@ -251,7 +247,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
+        final String[] strongList = getKeys(vocabIdentifiers);
 
         if (strongList.length != 0) {
             EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
@@ -352,7 +348,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public synchronized EntityDoc[] getLexiconDefinitions(final String vocabIdentifiers, final String version, final String reference) {
-        final String[] keys = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers));
+        final String[] keys = getKeys(vocabIdentifiers);
         if (keys.length == 0) {
             return new EntityDoc[0];
         }

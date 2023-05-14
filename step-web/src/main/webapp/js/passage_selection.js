@@ -325,7 +325,7 @@ step.passageSelect = {
 			'<h4>' + __s.please_select_book + '</h4>';
 		if ((this.userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible))
 			html +=
-				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(' +
+				'<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.passageSelect.initPassageSelect(' +
 				((summaryMode) ? 'false' : 'true') +
 				')" title="Show summary information" class="select-version stepButton' +
 				((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +

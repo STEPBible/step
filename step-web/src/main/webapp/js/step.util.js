@@ -3571,7 +3571,7 @@ step.util = {
 	},
 	getVocabMorphInfoFromJson: function (strong, morph, version) {
 		var resultJson = {vocabInfos: [], morphInfos: []};
-		//return resultJson;
+		return resultJson; // Don't use the vocabinfo from json for two weeks after the implementation of DStrong in mid May 2023
 		if (step.state.isLocal()) return resultJson; // There are no json files for the lexicon in the stand-alone version of STEP
 		var strongArray = strong.split(" ");
 		var processedStrong = [];

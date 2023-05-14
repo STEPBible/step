@@ -1767,7 +1767,7 @@ step.util = {
 
 											qtip.qtip("show");
 										}).error(function() {
-												changeBaseURL();
+			.									changeBaseURL();
 										});
 									}, delay, 'delay-strong-popup');
 
@@ -3558,7 +3558,7 @@ step.util = {
 		for (var j = 0; j < strongsArray.length; j++) {
 			var fixedStrongNum = strongsArray[j].split(".")[0].split("!")[0];
 			if (fixedStrongNum.search(/([GH])(\d{1,4})([A-Za-z]?)$/) > -1) {
-				fixedStrongNum = RegExp.$1 + ("000" + RegExp.$2).slice(-4) + RegExp.$3;	// if strong is not 4 digit, make it 4 digit
+				fixedStrongNum = RegExp.$1 + ("000" + RegExp.$2).slice(-4);	// if strong is not 4 digit, make it 4 digit
 			}						                                      			// remove the last character if it is a letter
 			if (result !== "") result += " ";
 			result += fixedStrongNum;
@@ -3567,6 +3567,7 @@ step.util = {
 	},
 	getVocabMorphInfoFromJson: function (strong, morph, version) {
 		var resultJson = {vocabInfos: [], morphInfos: []};
+		//return resultJson;
 		if (step.state.isLocal()) return resultJson; // There are no json files for the lexicon in the stand-alone version of STEP
 		var strongArray = strong.split(" ");
 		var processedStrong = [];

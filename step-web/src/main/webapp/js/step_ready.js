@@ -64,6 +64,21 @@
 		if (!step.touchDevice) {
 			var timer;
 			$(document).keyup(function(e) {
+                const element = document.getElementById('quickLexicon');
+                if ((element) && (typeof element.scrollTop === "number") && ($('#down-arrow').length = 1)) {
+                    if ((e.keyCode == 39) || (e.keyCode == 40) || (e.keyCode == 34) || // down arrow, right arrow, page down
+                        (e.keyCode == 40) || (e.keyCode == 190)) { // > or alt-right-arrow
+                        element.scrollTop += 150;
+                        e.preventDefault();
+                        return false;
+                    } else if ((e.keyCode == 38) || (e.keyCode == 37) || (e.keyCode == 33) || // up arrow, left arrow, page up
+                        (e.keyCode == 38) || (e.keyCode == 188)) { // > or alt-right-arrow
+                        element.scrollTop = Math.max(0, element.scrollTop - 150);
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+
 				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0) &&
                     ($('textarea#userTextInput:visible').length == 0) && // input area of the search modal
 					(!e.altKey) && (!e.ctrlKey)) {

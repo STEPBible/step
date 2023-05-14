@@ -1254,16 +1254,13 @@ step.util = {
                 });
             });
         },
-        doQuickLexicon: function (target) {
-
-        },
         addStrongHandlers: function (passageId, passageContent) {
 						var that = this;
 						var allStrongElements = $("[strong]", passageContent);
 						step.touchForQuickLexiconTime = 0; // only use for touch screen
 						step.displayQuickLexiconTime = 0;  // only use for touch screen
 						step.strongOfLastQuickLexicon = "";  // only use for touch screen
-						step.lastTapStrong = ""  // only use for touch screen
+						step.lastTapStrong = "";  // only use for touch screen
 						that.pageY = 0;
 						allStrongElements.click(function () {
 							if (!step.touchDevice) {

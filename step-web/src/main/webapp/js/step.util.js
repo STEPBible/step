@@ -3552,13 +3552,17 @@ step.util = {
 		}
 		return vocabInfoEntry;
 	},
-	fixStrongNumForVocabInfo: function (strongs) { // Remove the augment character.  NASB is like H0000A. THOT is like H0000!a
+	fixStrongNumForVocabInfo: function (strongs, removeAugment) { // NASB is like H0000A. THOT is like H0000!a
+		// fix the strong number to make them consistent
+		// remove augment if the second parameter is true
 		var strongsArray = strongs.split(" ");
 		var result = "";
 		for (var j = 0; j < strongsArray.length; j++) {
 			var fixedStrongNum = strongsArray[j].split(".")[0].split("!")[0];
-			if (fixedStrongNum.search(/([GH])(\d{1,4})[A-Za-z]?$/) > -1) {
+			if (fixedStrongNum.search(/([GH])(\d{1,4})([A-Za-z]?)$/) > -1) {
 				fixedStrongNum = RegExp.$1 + ("000" + RegExp.$2).slice(-4);	// if strong is not 4 digit, make it 4 digit
+				if (!removeAugment)
+					fixedStrongNum += RegExp.$3
 			}						                                      			// remove the last character if it is a letter
 			if (result !== "") result += " ";
 			result += fixedStrongNum;
@@ -3580,7 +3584,7 @@ step.util = {
 			"defaultDStrong"].length - 1;
 		$.ajaxSetup({async: false});
 		for (var j = 0; j < strongArray.length; j++) {
-			var strongWithoutAugment = step.util.fixStrongNumForVocabInfo(strongArray[j]);
+			var strongWithoutAugment = step.util.fixStrongNumForVocabInfo(strongArray[j], true);
 			if (processedStrong.indexOf(strongWithoutAugment) == -1) {
 				processedStrong.push(strongWithoutAugment);
 				$.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(origJsonVar) {

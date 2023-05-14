@@ -127,7 +127,7 @@ var QuickLexicon = Backbone.View.extend({
 		}
         var strongsToUse = this.strong;
         if (self.reference !== "") // The verse vocabulary does not provide a reference so take the provided strong numbers.
-		    strongsToUse = step.util.fixStrongNumForVocabInfo(strongsToUse);
+		    strongsToUse = step.util.fixStrongNumForVocabInfo(strongsToUse, false);
         var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongsToUse, this.morph, this.version);
         if (vocabMorphFromJson.vocabInfos.length > 0) {
             self.processQuickInfo(vocabMorphFromJson, self);

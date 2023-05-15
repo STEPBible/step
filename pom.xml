@@ -40,7 +40,7 @@
 
 		<tomcat.version>8.5.63</tomcat.version>
 		<tomcat.secondary.version>8.5.2</tomcat.secondary.version>
-        <xalan.version>2.7.2</xalan.version>
+        <xalan.version>2.7.3</xalan.version>
 
         <yammer-metrics.version>2.2.0</yammer-metrics.version>
 

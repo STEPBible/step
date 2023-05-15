@@ -90,7 +90,16 @@ var DisplayView = Backbone.View.extend({
         } else if (interlinearMode.indexOf("INTERLEAVED") != -1) {
             step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".verseGrouping", fonts, undefined, 0, '.singleVerse');
         } else if (interlinearMode.indexOf("COLUMN") != -1) {
-            step.util.ui._applyCssClassesRepeatByGroup(passageContent, "tr.row", fonts, undefined, 1);
+            // cater for inserted verse references
+            // instead of lang1 lang2 lang3 .. we have lang1 r lang2 ref lang3 ref
+            var newFonts = [fonts[0]];
+            if(fonts.length > 1){
+                for(var i=1; i < fonts.length; i++){
+                    newFonts.push(undefined);
+                    newFonts.push(fonts[i]);
+                }
+              }
+            step.util.ui._applyCssClassesRepeatByGroup(passageContent, "tr.row", newFonts, undefined, 1);
         } else if(this.model.get("searchType") == 'PASSAGE') {
             //normal mode, so all we need to do is check the language version, and if greek or hebrew then switch the font
             if (fonts[0]) {

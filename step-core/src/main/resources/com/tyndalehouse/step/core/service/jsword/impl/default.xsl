@@ -463,7 +463,9 @@
                 <xsl:variable name="verse">
                     <xsl:choose>
                         <xsl:when test="@n">
-                            <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
+                            <xsl:value-of
+                                    select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))"/>
+                            <!-- <xsl:value-of select="jsword:shape($shaper, string(@n))"/>-->
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:value-of
@@ -1922,17 +1924,17 @@
                         <xsl:when test="cell[@role = 'label']">
                             <xsl:if test="$HideCompareHeaders != 'true'">
                                 <tr>
-                                    <th class="headingVerseNumber"></th>
+                                    <!--<th class="headingVerseNumber"></th>-->
                                     <xsl:call-template name="outputComparingTableHeader"></xsl:call-template>
                                 </tr>
                             </xsl:if>
                         </xsl:when>
                         <xsl:otherwise>
                             <tr class="row">
-                                <xsl:variable name="verse" select="(cell/div[@osisID] | cell/verse)[1]"/>
+                                <!--<xsl:variable name="verse" select="(cell/div[@osisID] | cell/verse)[1]"/>
                                 <xsl:call-template name="columnVerseNumber">
                                     <xsl:with-param name="verse" select="$verse"/>
-                                </xsl:call-template>
+                                </xsl:call-template>-->
                                 <xsl:apply-templates/>
                             </tr>
                         </xsl:otherwise>
@@ -1943,6 +1945,7 @@
     </xsl:template>
 
     <xsl:template name="outputComparingTableHeader">
+        <th class="headingVerseNumber"></th>
         <xsl:variable name="version" select="interleaving:getNextVersion($interleavingProvider)"/>
         <th class="comparingVersionName" data-version="{$version}">
             <xsl:value-of select="$version"/>
@@ -2065,6 +2068,11 @@
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
+                <xsl:variable name="verse" select="(div[@osisID] | verse)[1]"/>
+                <xsl:call-template name="columnVerseNumber">
+                    <xsl:with-param name="verse" select="$verse"/>
+                </xsl:call-template>
+
                 <xsl:if test="$comparing = false()">
                     <xsl:call-template name="columnVerse">
                         <xsl:with-param name="cell-direction" select="$cell-direction"/>

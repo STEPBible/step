@@ -1517,6 +1517,7 @@ step.searchSelect = {
 
 	getVocabInfoFromJson: function (strongNum, limitType) {
         var vocabInfos = [];
+		return vocabInfos; // will re-enable in about two to four weeks
 		if (step.state.isLocal()) return vocabInfos;
         $.ajaxSetup({async: false});
 		var strongWithoutAugment = strongNum;

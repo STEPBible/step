@@ -3573,10 +3573,11 @@ step.util = {
 	},
 	getVocabMorphInfoFromJson: function (strong, morph, version) {
 		var resultJson = {vocabInfos: [], morphInfos: []};
-		return resultJson; // Don't use the vocabinfo from json for two weeks after the implementation of DStrong in mid May 2023
 		if (step.state.isLocal()) return resultJson; // There are no json files for the lexicon in the stand-alone version of STEP
 		var strongArray = strong.split(" ");
 		var processedStrong = [];
+		var additionalPath = step.state.getCurrentVersion();
+		if (additionalPath !== "") additionalPath += "/";
 		var indexToDefaultDStrong = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
 			"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
 			"shortDef", "mediumDef", "lsjDefs",
@@ -3589,7 +3590,7 @@ step.util = {
 			var strongWithoutAugment = step.util.fixStrongNumForVocabInfo(strongArray[j], true);
 			if (processedStrong.indexOf(strongWithoutAugment) == -1) {
 				processedStrong.push(strongWithoutAugment);
-				$.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(origJsonVar) {
+				$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
 					var augStrongIndex = 0;
 					for (var i = 0; i < origJsonVar.v.length; i++) {
 						if (strongArray[j] !== strongWithoutAugment) {

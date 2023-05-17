@@ -1517,14 +1517,15 @@ step.searchSelect = {
 
 	getVocabInfoFromJson: function (strongNum, limitType) {
         var vocabInfos = [];
-		return vocabInfos; // will re-enable in about two to four weeks
 		if (step.state.isLocal()) return vocabInfos;
         $.ajaxSetup({async: false});
 		var strongWithoutAugment = strongNum;
 		if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
 			strongWithoutAugment = RegExp.$1;
 		}
-		$.getJSON("/html/lexicon/" + strongWithoutAugment + ".json", function(origJsonVar) {
+		var additionalPath = step.state.getCurrentVersion();
+		if (additionalPath !== "") additionalPath += "/";
+		$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
 			for (var i = 0; i < origJsonVar.v.length; i++) {
 				var jsonVar = step.searchSelect.unpackVocabJSON(origJsonVar, i);
 				jsonVar['itemType'] = limitType;

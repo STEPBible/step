@@ -526,7 +526,7 @@ step.passageSelect = {
 			 ((userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible)) &&
 			 (step.util.bookOrderInBible(bookOsisID) > -1) )
 			html +=
-				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
+				'<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.passageSelect.getChapters(\'' +
 					bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +
 					((summaryMode) ? 'false' : 'true') +
 					')" title="Show summary information" class="select-version stepButton' +

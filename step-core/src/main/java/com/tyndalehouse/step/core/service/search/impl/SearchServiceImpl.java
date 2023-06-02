@@ -178,7 +178,7 @@ public class SearchServiceImpl implements SearchService {
             else if (userLanguage.toLowerCase().startsWith("id")) defaultVersion = "IndFAYH";
             else if (userLanguage.toLowerCase().startsWith("is")) defaultVersion = "Icelandic";
             else if (userLanguage.toLowerCase().startsWith("it")) defaultVersion = "ItaRive";
-            else if (userLanguage.toLowerCase().startsWith("ja")) defaultVersion = "K[mKCB";
+            else if (userLanguage.toLowerCase().startsWith("ja")) defaultVersion = "JpnJCB";
             else if (userLanguage.toLowerCase().startsWith("ko")) defaultVersion = "KorKLB";
             else if (userLanguage.toLowerCase().startsWith("lv")) defaultVersion = "Latvian";
             else if (userLanguage.toLowerCase().startsWith("ml")) defaultVersion = "MalMCV";

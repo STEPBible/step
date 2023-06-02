@@ -17,11 +17,11 @@
         <packages>${project.build.outputDirectory}</packages>
 <!-- The following line would be different for differ user account! -->
 <!-- sword.home and jsword.home should be provided as paramenters to mvn (maven) -->
-        <sword.home>C:\Users\pat\AppData\Roaming\Sword</sword.home>
-        <jsword.home>${sword.home}/../JSword</jsword.home>
+        <sword.home>${sword.home}</sword.home>
+        <jsword.home>${jsword.home}</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-        <modulesToInclude>esv_th,kjv,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th,sparv1909</modulesToInclude>
-        <indexesToInclude>ESV_th,KJV,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_th,abpgk_th,SpaRV1909</indexesToInclude>
+	    <modulesToInclude>esv_th,kjv,chiun,chiuns,chincvt,chincvs,ccb,osmhb,THOT,lxx_th,sblg_th,niv,abpen_th,abpgk_th,sparv1909</modulesToInclude>
+		<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,CCB,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_th,abpgk_th,SpaRV1909</indexesToInclude>
     </properties>
 
     <build>
@@ -77,7 +77,7 @@
 								<!-- copy the augmented_strongs.txt over -->
                                 <copy toDir="${packages}/homes/jsword/step">
                                     <fileset dir="${jsword.home}/step">
-                                        <include name="augmented_strongs.dat"/>
+                                        <include name="ordinal_strongs.dat"/>
                                     </fileset>
                                 </copy>
                             </target>

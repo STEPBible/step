@@ -327,12 +327,18 @@ public class STEPTomcatServer {
             try {
                 String folderPrefix = "/tmp";
                 if (System.getProperty("os.name").startsWith("Windows")) {
-                    folderPrefix = System.getenv("APPDATA");
+                    folderPrefix = System.getenv("TEMP");
                 }
-                Path dir = Paths.get(folderPrefix);
-                Path dataDir = Files.createTempDirectory(dir, "tomcat");
-                dataDir.toFile().deleteOnExit();
-                tomcat.setBaseDir(dataDir.toString());
+                try {
+                    Path dir = Paths.get(folderPrefix);
+                    Path dataDir = Files.createTempDirectory(dir, "tomcat");
+                    dataDir.toFile().deleteOnExit();
+                    tomcat.setBaseDir(dataDir.toString());
+                }
+                catch (Exception exTmpDir) {
+                    LOGGER.error("Cannot create temp directory for tomcat at [{}]", folderPrefix);
+                    throw exTmpDir;
+                }
                 final String absolutePath = new File(this.warPath).getAbsolutePath();
                 tomcat.addWebapp("", absolutePath);
                 LOGGER.debug("Starting tomcat with path [{}] on port [{}]", absolutePath, this.stepPort);

@@ -18,6 +18,9 @@ import java.net.*;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Tomcat server for STEP
@@ -322,9 +325,15 @@ public class STEPTomcatServer {
         } catch (IOException e) {
             //timed-out, so need to deploy app
             try {
+                String folderPrefix = "/tmp";
+                if (System.getProperty("os.name").startsWith("Windows")) {
+                    folderPrefix = System.getenv("APPDATA");
+                }
+                Path dir = Paths.get(folderPrefix);
+                Path dataDir = Files.createTempDirectory(dir, "tomcat");
+                dataDir.toFile().deleteOnExit();
+                tomcat.setBaseDir(dataDir.toString());
                 final String absolutePath = new File(this.warPath).getAbsolutePath();
-                System.out.println("Starting tomcat with path on port "+absolutePath+this.stepPort);
-
                 tomcat.addWebapp("", absolutePath);
                 LOGGER.debug("Starting tomcat with path [{}] on port [{}]", absolutePath, this.stepPort);
                 tomcat.start();

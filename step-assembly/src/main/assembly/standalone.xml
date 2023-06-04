@@ -55,10 +55,6 @@
 			<outputDirectory>/webapps</outputDirectory>
 		</file>
 		<file>
-			<source>src/main/assembly/README.txt</source>
-			<outputDirectory>/tomcat.8989</outputDirectory>
-		</file>
-		<file>
 			<source>src/main/assembly/runStep.sh</source>
 			<outputDirectory>/</outputDirectory>
 			<filtered>true</filtered>

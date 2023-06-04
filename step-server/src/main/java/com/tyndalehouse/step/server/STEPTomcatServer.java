@@ -323,6 +323,8 @@ public class STEPTomcatServer {
             //timed-out, so need to deploy app
             try {
                 final String absolutePath = new File(this.warPath).getAbsolutePath();
+                System.out.println("Starting tomcat with path on port "+absolutePath+this.stepPort);
+
                 tomcat.addWebapp("", absolutePath);
                 LOGGER.debug("Starting tomcat with path [{}] on port [{}]", absolutePath, this.stepPort);
                 tomcat.start();

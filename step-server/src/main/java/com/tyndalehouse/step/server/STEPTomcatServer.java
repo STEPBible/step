@@ -326,8 +326,12 @@ public class STEPTomcatServer {
             //timed-out, so need to deploy app
             try {
                 String folderPrefix = "/tmp";
-                if (System.getProperty("os.name").startsWith("Windows")) {
-                    folderPrefix = System.getenv("TEMP");
+                try {
+                    folderPrefix = System.getProperty("java.io.tmpdir");
+                }
+                catch (Exception exGetTmp) {
+                    LOGGER.error("error in getting java.io.tmpdir.  Trying /tmp", exGetTmp);
+                    folderPrefix = "/tmp";
                 }
                 try {
                     Path dir = Paths.get(folderPrefix);

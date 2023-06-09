@@ -457,6 +457,10 @@ step.searchSelect = {
 	_find_href_and_go: function(element) {
 		var hrefInfo = $(element).attr("href");
 		if (hrefInfo.toLowerCase().indexOf("javascript:") == 0) {
+			if (hrefInfo.replaceAll(" ","").indexOf("goSearch('text','','')") > -1) {
+				$('#warningMessage').text("Search word is not valid for text (word or phrase) search.");
+				return;
+			}
 			eval(hrefInfo);
 		}
 	},

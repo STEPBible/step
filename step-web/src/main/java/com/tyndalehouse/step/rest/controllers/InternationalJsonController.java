@@ -2,6 +2,7 @@ package com.tyndalehouse.step.rest.controllers;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.service.LanguageService;
 import com.tyndalehouse.step.rest.framework.FrontController;
 import com.tyndalehouse.step.rest.framework.JsonResourceBundle;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,11 +28,18 @@ public class InternationalJsonController extends HttpServlet {
     private static final Map<Locale, String> BUNDLES = new HashMap<Locale, String>();
     private final ObjectMapper objectMapper;
     private final Provider<ClientSession> clientSessionProvider;
+    private final ModuleController modules;
+    private final LanguageService languageService;
 
     @Inject
-    public InternationalJsonController(final Provider<ObjectMapper> objectMapperProvider, final Provider<ClientSession> clientSessionProvider) {
+    public InternationalJsonController(final Provider<ObjectMapper> objectMapperProvider,
+                                       final Provider<ClientSession> clientSessionProvider,
+                                       final ModuleController modules,
+                                       final LanguageService languageService) {
         this.clientSessionProvider = clientSessionProvider;
         this.objectMapper = objectMapperProvider.get();
+        this.modules = modules;
+        this.languageService = languageService;
     }
     
     @Override
@@ -62,6 +70,12 @@ public class InternationalJsonController extends HttpServlet {
         response.setCharacterEncoding(FrontController.UTF_8_ENCODING);
         response.setLocale(locale);
         response.setContentType("text/js");
+        response.getOutputStream().write("window.tempVersions = ".getBytes(FrontController.UTF_8_ENCODING));
+        response.getOutputStream().write(objectMapper.writeValueAsString(modules.getAllModules()).getBytes(FrontController.UTF_8_ENCODING));
+        response.getOutputStream().write(";".getBytes(FrontController.UTF_8_ENCODING));
+        response.getOutputStream().write("window.availLangs = ".getBytes(FrontController.UTF_8_ENCODING));
+        response.getOutputStream().write(objectMapper.writeValueAsString(this.languageService.getAvailableLanguages()).getBytes(FrontController.UTF_8_ENCODING));
+        response.getOutputStream().write(";".getBytes(FrontController.UTF_8_ENCODING));
         response.getOutputStream().write(qualifiedResponse.getBytes(FrontController.UTF_8_ENCODING));
         response.flushBuffer();
         response.getOutputStream().close();

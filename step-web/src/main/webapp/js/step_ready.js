@@ -29,9 +29,34 @@
         markAsRecommended('ItaRive');
         markAsRecommended('RusSynodal');
         markAsRecommended('NRT');
-
-        //save 100k of space
-        window.tempVersions = null;
+        window.tempVersions = null; //save 190k of space
+        for (var i = 0; i < window.availLangs.length; i++) {
+            var currentLang = window.availLangs[i];
+            var newLiElement = "<li ";
+            var userLangCode = step.userLanguageCode;
+            if (userLangCode === "iw") userLangCode = "he"; // iw is Modern Hebrew and he is old Hebrew
+            else if (userLangCode === "in") userLangCode = "id"; // in is the old Indonesia language code
+            if (userLangCode === currentLang.code)
+                newLiElement += "class=active ";
+            if (!currentLang.complete) {
+                var title = (currentLang.partial) ? __s.partially_translated : __s.machine_translated;
+                // title = title.trim();
+                // if (title.lastIndexOf('"') !== title.length-1) // If already end with double quote, don't add it
+                    // title += '"';
+                newLiElement += 'title="' + title + '" ';
+            }
+            newLiElement += '><a onclick="window.localStorage.clear(); $.cookie(\'lang\', \'' + 
+                currentLang.code + '\')"' + ' lang="' +
+                currentLang.code + '" href="/?lang=' + currentLang.code;
+            if ($.getUrlVars().indexOf("debug") > -1)
+                newLiElement += "&debug";
+            newLiElement += '">' + currentLang.originalLanguageName + " - " + currentLang.userLocaleLanguageName;
+            if (!currentLang.complete)
+                newLiElement += "*";
+            newLiElement += "</a></li>";
+            $("#languageMenu").append(newLiElement);
+        }
+        window.availLangs = null; // No longer needed, save 6k of memory
     };
 
     function markAsRecommended(version) {

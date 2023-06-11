@@ -509,7 +509,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <%-- Now do javascript --%>
 <script type="text/javascript">
     window.tempModel = ${ not empty passageModel ? passageModel : 'undefined' };
-    window.tempVersions = ${ versions };
     if (!window.step) {
         window.step = {}
     }

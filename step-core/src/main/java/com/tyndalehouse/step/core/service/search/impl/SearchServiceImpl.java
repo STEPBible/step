@@ -85,7 +85,6 @@ public class SearchServiceImpl implements SearchService {
      * @param bibleInfoService          the service to get information about various bibles/commentaries
      * @param entityManager             the manager for all entities stored in lucene
      * @param relatedVerseService       the related verse service
-     * @param strongAugmentationService the service to deal with augmentation of strong numbers
      */
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch,

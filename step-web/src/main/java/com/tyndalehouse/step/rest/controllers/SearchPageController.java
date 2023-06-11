@@ -37,7 +37,6 @@ public class SearchPageController extends HttpServlet {
     public static String SERVLET_CONTEXT = "";
     private static Logger LOGGER = LoggerFactory.getLogger(SearchPageController.class);
     private final SearchController search;
-    private final ModuleController modules;
     private final BibleController bible;
     private final LanguageService languageService;
     private final AppManagerService appManagerService;
@@ -46,14 +45,12 @@ public class SearchPageController extends HttpServlet {
 
     @Inject
     public SearchPageController(final SearchController search,
-                                final ModuleController modules,
                                 final BibleController bible,
                                 final LanguageService languageService,
                                 final AppManagerService appManagerService,
                                 Provider<ObjectMapper> objectMapper,
                                 Provider<ClientSession> clientSessionProvider) {
         this.search = search;
-        this.modules = modules;
         this.bible = bible;
         this.languageService = languageService;
         this.appManagerService = appManagerService;
@@ -195,10 +192,8 @@ public class SearchPageController extends HttpServlet {
                 .getDisplayLanguage(userLocale)).replace("\"", ""));
         req.setAttribute("languageComplete", this.languageService.isCompleted(userLocale.getLanguage()));
         req.setAttribute("ltr", ComponentOrientation.getOrientation(userLocale).isLeftToRight());
-//        req.setAttribute("versions", objectMapper.get().writeValueAsString(modules.getAllModules()));
         req.setAttribute("searchType", data.getSearchType().name());
         req.setAttribute("versionList", getVersionList(data.getMasterVersion(), data.getExtraVersions()));
-        req.setAttribute("languages", this.languageService.getAvailableLanguages());
 
         //specific to passages
         if (data instanceof OsisWrapper) {

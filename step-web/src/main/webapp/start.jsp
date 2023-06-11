@@ -206,20 +206,6 @@
 	<!-- Add IntroJs styles -->
 	<link href="css/introjs.min.css" rel="stylesheet">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <%
-    if(appManager.isLocal()) {
-    %>
-    <script src="libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="libs/respond.js/1.3.0/respond.min.js"></script>
-    <% } else { %>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.0/html5shiv.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.min.js"></script>
-    <% } %>
-    <![endif]-->
-
     <% if (!appManager.isLocal()) { %>
     <script type="text/javascript">
         var _prum = [['id', '52698a2cabe53d8c20000000'], ['mark', 'firstbyte', (new Date()).getTime()]];
@@ -238,7 +224,7 @@
                 <div class="navbar-brand col-xs-12">
                         <span class="hidden-xs title">
                             <a href="/" id="logo">
-                                <img src="step.png" alt="STEP" width="90px" height="22px">
+                                <img src="/step.png" alt="STEP" width="90px" height="22px">
                             </a>
                         </span>
                     <span class="help"><jsp:include page="jsps/menu.jsp"/></span>

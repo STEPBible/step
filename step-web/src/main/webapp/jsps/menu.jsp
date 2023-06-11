@@ -80,14 +80,9 @@
                 <%
                     }
                 %>
-                <!-- # Quick tryout links -->
                 <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>
-                <!-- # Video demonstrations -->
                 <li><a href="https://www.stepbible.org/videos" target="_blank"><fmt:message key="video_help"/></a></li>
-                <!-- # Guide and Instructions -->
                 <li><a href="https://stepbibleguide.blogspot.com" target="_blank"><fmt:message key="help_online"/></a></li>
-                <!-- # Available Bibles etc -->
-                <!-- # - (offline list + Install more) -->
                 <%
                     if(appManager.isLocal()) {
                 %>
@@ -96,30 +91,21 @@
                 <%
                     } else {
                 %>
-                <!-- # - (online to Resources) -->
                 <li><a href="https://stepweb.atlassian.net/wiki/display/SUG/Resources" target="_blank"><fmt:message key="available_versions"/></a></li>
                 <%
                     }
                 %>
-                <!-- # Classical UI -->
                 <li class="classicalUI"><a href="javascript:void(0)"><fmt:message key="display_classical_ui"/>&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:11px"></span></a></li>
-                <!-- # Reset everything -->
                 <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile"/></a></li>
-                <!-- # We need your help! -->
                 <li><a href="https://stepbibleguide.blogspot.com/p/volunteers.html" target="_blank"><fmt:message key="we_need_help"/></a></li>
-                <!-- # Feedback & contact -->
                 <%
                     if (!appManager.isLocal()) {
                 %>
                 <li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback"/></a></li>
-                <!-- # Privacy policy -->
                 <li><a href="/html/cookies_policy.html" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
                 <% } %>
-                <!-- # Copyright & licences -->
                 <li><a target="_new" href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" name="COPYRIGHT"><fmt:message key="copyright_info_link"/></a></li>
-                <!-- # About... -->
                 <li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about"/></a></li>
-                <!-- # Exit -->
                 <%
                     if(appManager.isLocal()) {
                 %>

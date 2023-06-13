@@ -52,8 +52,8 @@
             currentLang["originalLanguageName"] = curElement[1];
             currentLang["userLocaleLanguageName"] = curElement[2];
             var trueFalseValues = curElement[3].split("");
-            currentLang["isComplete"] = (trueFalseValues[0] === "T") ? true : false;
-            currentLang["isPartial"] = (trueFalseValues[1] === "T") ? true : false;
+            currentLang["complete"] = (trueFalseValues[0] === "T") ? true : false;
+            currentLang["partial"] = (trueFalseValues[1] === "T") ? true : false;
             var newLiElement = "<li ";
             var userLangCode = step.userLanguageCode;
             if (userLangCode === "iw") userLangCode = "he"; // iw is Modern Hebrew and he is old Hebrew
@@ -62,9 +62,6 @@
                 newLiElement += "class=active ";
             if (!currentLang.complete) {
                 var title = (currentLang.partial) ? __s.partially_translated : __s.machine_translated;
-                // title = title.trim();
-                // if (title.lastIndexOf('"') !== title.length-1) // If already end with double quote, don't add it
-                    // title += '"';
                 newLiElement += 'title="' + title + '" ';
             }
             newLiElement += '><a onclick="window.localStorage.clear(); $.cookie(\'lang\', \'' + 

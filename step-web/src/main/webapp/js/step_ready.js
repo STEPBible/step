@@ -174,9 +174,6 @@
                 newLiElement += "class=active ";
             if (!currentLang.complete) {
                 var title = (currentLang.partial) ? __s.partially_translated : __s.machine_translated;
-                // title = title.trim();
-                // if (title.lastIndexOf('"') !== title.length-1) // If already end with double quote, don't add it
-                    // title += '"';
                 newLiElement += 'title="' + title + '" ';
             }
             newLiElement += '><a onclick="window.localStorage.clear(); $.cookie(\'lang\', \'' + 

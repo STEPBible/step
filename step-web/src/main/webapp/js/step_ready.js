@@ -1,5 +1,117 @@
 (function () {
 
+    function addNavBar() {
+        var html = '<div>' +
+            '<div class="navbar-header search-form">' +
+                '<div class="navbar-brand col-xs-12">' +
+                    '<span class="hidden-xs title">' +
+                        '<a href="/" id="logo">' +
+                            '<img src="/step.png" alt="STEP" width="90px" height="22px">' +
+                        '</a>' +
+                    '</span>' +
+                    '<span class="help">' +
+
+                        '<div class="headerButtons pull-right">' +
+                            '<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">' +
+                                '<span class="icon-bar"></span>' +
+                                '<span class="icon-bar"></span>' +
+                                '<span class="icon-bar"></span>' +
+                            '</button>' +
+
+                            '<a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="' + __s.copy + '">' +
+                                '<i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;' + __s.copy + '</span>' +
+                            '</a>' +
+                            
+                            '<a id="panel-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="' + __s.open_in_new_panel + '">' +
+                                '<i class="glyphicon glyphicon-plus"></i><span class="navbarIconDesc hidden-sm">&nbsp;' + __s.new_panel + '</span>' +
+                            '</a>' +
+                            '<a id="report-icon" style="padding-left:5px" href="html/reports_by_step.html" target="_blank" title="Reports that uses STEP">' +
+                                '<i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;' + __s.report + '</span>' +
+                            '</a>' +
+                            '<a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar(\'analysis\');" title="' + __s.passage_stats + '">' +
+                                '<i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;' + __s.passage_stats + '</span>' +
+                            '</a>' +
+                            '<a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar(\'history\');" title="' + __s.bookmarks_and_recent_texts + '">' +
+                                '<i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">&nbsp;' + __s.bookmarks + '</span>' +
+                            '</a>' +
+                            '<a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="' + __s.welcome_to_step + '">' +
+                                '<i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;' + __s.examples + '</span>' +
+                            '</a>' +
+                            '<a id="fonts-icon" style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.showFontSettings();"' +
+                                'title="' + __s.font_sizes + '">' +
+                                '<span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px">' + __s.passage_font_size_symbol + '</span>' +
+                                '<span class="hidden-xs navbarIconDesc">&nbsp;' + __s.font + '</span>' +
+                            '</a>' +
+                            '<span class="navbar-collapse collapse">' +
+                                '<span class="dropdown">' +
+                                    '<a id="languages-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" title="' + __s.installation_book_language+ '">' +
+                                        '<i class="glyphicon icon-language">' +
+                                            '<svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>' +
+                                        '</i>' +
+                                        '<span style="vertical-align:bottom" class="navbarIconDesc">' + __s.installation_book_language + '</span>' +
+                                    '</a>' +
+                                    '<ul id="languageMenu" class="kolumny pull-right dropdown-menu">' +
+                                        '<li><a href="http://crowdin.net/project/step" target="_new">' + __s.translate_step + '</a></li>' +
+                                    '</ul>' +
+                                '</span>';
+
+        if (!step.state.isLocal()) {
+            html +=             '<a style="padding-left:5px" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="' + __s.help_feedback + '">' +
+                                    '<i class="glyphicon glyphicon-bullhorn"></i><span class="navbarIconDesc">&nbsp;' + __s.help_feedback + '</span>' +
+                                '</a>';
+        }
+        html +=                 '<span class="dropdown">' +
+                                    '<a id="more-icon" style="padding-left:5px" class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="' + __s.help + '">' +
+                                        '<i class="glyphicon glyphicon-option-vertical"></i><span style="vertical-align:bottom;line-height:10px" class="navbarIconDesc">' + __s.more + '</span>' +
+                                    '</a>' +
+                                    '<ul class="dropdown-menu pull-right helpMenu" dir="' + (step.state.isLtR() ? "ltr" : "rtl") + '">';
+
+        if (!step.state.isLocal()) {
+            html +=                     '<li><a href="/downloads.jsp" title="' + __s.download_desktop_step_about + '">' + __s.download_desktop_step + '</a></li>';
+        }
+
+        html +=                         '<li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL">' + __s.quick_tutorial_link + '</a></li>' +
+                                        '<li><a href="https://www.stepbible.org/videos" target="_blank">' + __s.video_help + '</a></li>' +
+                                        '<li><a href="https://stepbibleguide.blogspot.com" target="_blank">' + __s.help_online + '</a></li>';
+        if (step.state.isLocal()) {
+            html +=                     '<li class="available_bibles_and_commentaries"><a href="/versions.jsp" target="_blank" name="AVAILABLE_BIBLES_AND_COMMENTARIES">' + __s.available_versions + '</a></li>' +
+                                        '<li><a href="/setup.jsp">' + __s.tools_settings + '</a></li>';
+        }
+        else {
+            html +=                     '<li><a href="https://stepweb.atlassian.net/wiki/display/SUG/Resources" target="_blank">' + __s.available_versions + '</a></li>';
+        }
+            html +=                     '<li class="classicalUI"><a href="javascript:void(0)">' + __s.display_classical_ui + '&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:11px"></span></a></li>' +
+                                        '<li class="resetEverything"><a href="javascript:void(0)">' + __s.tools_forget_my_profile + '</a></li>' +
+                                        '<li><a href="https://stepbibleguide.blogspot.com/p/volunteers.html" target="_blank">' + __s.we_need_help + '</a></li>';
+        if (!step.state.isLocal()) {
+            html+=                      '<li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport">' + __s.help_feedback + '</a></li>' +
+                                        '<li><a href="/html/cookies_policy.html" target="_blank">' + __s.help_privacy_policy + '</a></li>';
+        }
+        html +=                         '<li><a target="_new" href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" name="COPYRIGHT">' + __s.copyright_info_link + '</a></li>' +
+                                        '<li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT">' + __s.help_about + '</a></li>';
+        if (step.state.isLocal()) {
+            html +=                     '<li><a href="/shutdown.jsp">' + __s.tools_exit + '</a></li>';
+        }
+        html +=                     '</ul>' +
+                                '</span>' +
+                            '</span>' +
+                        '</div>' +
+                    '</span>' +
+                    '<form role="form">' +
+                        '<div class="input-group" id="top_input_area" style="display:none">' +
+                            '<input id="masterSearch" type="text" class="form-control input-lg">' +
+                            '<span class="input-group-btn findButton">' +
+                                '<span>Search</span><i class="find glyphicon glyphicon-search"></i>' +
+                            '</span>' +
+                        '</div>' +
+                    '</form>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+        $("#stepnavbar").append(html);
+    };
+
+
     function initDataSources() {
         //format the versions correctly
         step.keyedVersions = {};
@@ -52,8 +164,8 @@
             currentLang["originalLanguageName"] = curElement[1];
             currentLang["userLocaleLanguageName"] = curElement[2];
             var trueFalseValues = curElement[3].split("");
-            currentLang["isComplete"] = (trueFalseValues[0] === "T") ? true : false;
-            currentLang["isPartial"] = (trueFalseValues[1] === "T") ? true : false;
+            currentLang["complete"] = (trueFalseValues[0] === "T") ? true : false;
+            currentLang["partial"] = (trueFalseValues[1] === "T") ? true : false;
             var newLiElement = "<li ";
             var userLangCode = step.userLanguageCode;
             if (userLangCode === "iw") userLangCode = "he"; // iw is Modern Hebrew and he is old Hebrew
@@ -364,6 +476,7 @@
 
         window.step = window.step || {};
         initSettings();
+        addNavBar();
         initDataSources();
         patchBackboneHistory();
         initCoreModelsAndRouter();

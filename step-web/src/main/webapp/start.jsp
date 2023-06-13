@@ -218,27 +218,8 @@
 <div id="wrap">
 
     <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top">
-        <div>
-            <div class="navbar-header search-form">
-                <div class="navbar-brand col-xs-12">
-                        <span class="hidden-xs title">
-                            <a href="/" id="logo">
-                                <img src="/step.png" alt="STEP" width="90px" height="22px">
-                            </a>
-                        </span>
-                    <span class="help"><jsp:include page="jsps/menu.jsp"/></span>
-                    <form role="form">
-                        <div class="input-group" id="top_input_area" style="display:none">
-                            <input id="masterSearch" type="text" class="form-control input-lg">
-                            <span class="input-group-btn findButton">
-                                <span>Search</span><i class="find glyphicon glyphicon-search"></i>
-                            </span>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div id="stepnavbar" class="navbar navbar-default navbar-fixed-top">
+
     </div>
 
     <div class="mainPanel row row-offcanvas">

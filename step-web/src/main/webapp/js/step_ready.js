@@ -4,14 +4,29 @@
         //format the versions correctly
         step.keyedVersions = {};
         step.itemisedVersions = [];
-        for (var ii = 0; ii < window.tempVersions.length; ii++) {
-            var tempVersion = window.tempVersions[ii];
+        for (var ii = 0; ii < window.bibleVersions.length; ii++) {
+            var tempVersion = {};
+            var currentVersion = window.bibleVersions[ii];
+            tempVersion["initials"] = currentVersion[0];
+            tempVersion["name"] = currentVersion[1];
+            tempVersion["originalLanguage"] = currentVersion[2];
+            tempVersion["languageCode"] = currentVersion[3];
+            tempVersion["category"] = currentVersion[4];
+            tempVersion["languageName"] = currentVersion[5];
+            tempVersion["shortInitials"] = currentVersion[6];
+            var trueFalseValues = currentVersion[7].split("");
+            tempVersion["hasStrongs"] = (trueFalseValues[0]) === "T" ? true : false;
+            tempVersion["hasMorphology"] = (trueFalseValues[1]) === "T" ? true : false;
+            tempVersion["hasRedLetter"] = (trueFalseValues[2]) === "T" ? true : false;
+            tempVersion["hasNotes"] = (trueFalseValues[3]) === "T" ? true : false;
+            tempVersion["hasHeadings"] = (trueFalseValues[4]) === "T" ? true : false;
+            tempVersion["questionable"] = (trueFalseValues[5]) === "T" ? true : false;
+            tempVersion["hasSeptuagintTagging"] = (trueFalseValues[6]) === "T" ? true : false;
             var item = {item: tempVersion, itemType: 'version'};
             step.itemisedVersions.push(item);
             step.keyedVersions[tempVersion.initials] = tempVersion;
             step.keyedVersions[tempVersion.shortInitials] = tempVersion;
         }
-
         //now mark some versions as recommended
         markAsRecommended('ESV');
         markAsRecommended('NIV');
@@ -29,9 +44,16 @@
         markAsRecommended('ItaRive');
         markAsRecommended('RusSynodal');
         markAsRecommended('NRT');
-        window.tempVersions = null; //save 190k of space
+        window.bibleVersions = null; // save 68k of space
         for (var i = 0; i < window.availLangs.length; i++) {
-            var currentLang = window.availLangs[i];
+            var curElement = window.availLangs[i];
+            var currentLang = {};
+            currentLang["code"] = curElement[0];
+            currentLang["originalLanguageName"] = curElement[1];
+            currentLang["userLocaleLanguageName"] = curElement[2];
+            var trueFalseValues = curElement[3].split("");
+            currentLang["isComplete"] = (trueFalseValues[0] === "T") ? true : false;
+            currentLang["isPartial"] = (trueFalseValues[1] === "T") ? true : false;
             var newLiElement = "<li ";
             var userLangCode = step.userLanguageCode;
             if (userLangCode === "iw") userLangCode = "he"; // iw is Modern Hebrew and he is old Hebrew
@@ -56,7 +78,7 @@
             newLiElement += "</a></li>";
             $("#languageMenu").append(newLiElement);
         }
-        window.availLangs = null; // No longer needed, save 6k of memory
+        window.availLangs = null; // No longer needed, save 2k of memory
     };
 
     function markAsRecommended(version) {

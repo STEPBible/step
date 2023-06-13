@@ -1,7 +1,9 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.models.Language;
 import com.tyndalehouse.step.core.service.LanguageService;
 import com.tyndalehouse.step.rest.framework.FrontController;
 import com.tyndalehouse.step.rest.framework.JsonResourceBundle;
@@ -70,12 +72,52 @@ public class InternationalJsonController extends HttpServlet {
         response.setCharacterEncoding(FrontController.UTF_8_ENCODING);
         response.setLocale(locale);
         response.setContentType("text/js");
-        response.getOutputStream().write("window.tempVersions = ".getBytes(FrontController.UTF_8_ENCODING));
-        response.getOutputStream().write(objectMapper.writeValueAsString(modules.getAllModules()).getBytes(FrontController.UTF_8_ENCODING));
-        response.getOutputStream().write(";".getBytes(FrontController.UTF_8_ENCODING));
-        response.getOutputStream().write("window.availLangs = ".getBytes(FrontController.UTF_8_ENCODING));
-        response.getOutputStream().write(objectMapper.writeValueAsString(this.languageService.getAvailableLanguages()).getBytes(FrontController.UTF_8_ENCODING));
-        response.getOutputStream().write(";".getBytes(FrontController.UTF_8_ENCODING));
+        response.getOutputStream().write("window.bibleVersions=[".getBytes(FrontController.UTF_8_ENCODING));
+        List<BibleVersion> allMods = modules.getAllModules();
+        // Converting to array will save 2/3 size of the Bible module information to send to the browser
+        // This information is sent to the browser everytime it requests a page from the web server.
+        // In 2023, this reduced from from 190K to 68K.
+        for (int i = 0; i < allMods.size(); i++) {
+            BibleVersion currentMod = allMods.get(i);
+            String[] moduleInArray = new String[8];
+            moduleInArray[0] = currentMod.getInitials();
+            moduleInArray[1] = currentMod.getName();
+            moduleInArray[2] = currentMod.getOriginalLanguage();
+            moduleInArray[3] = currentMod.getLanguageCode();
+            moduleInArray[4] = currentMod.getCategory();
+            moduleInArray[5] = currentMod.getLanguageName();
+            moduleInArray[6] = currentMod.getShortInitials();
+            // Use one character (T or F) to represent true or false for each field.
+            moduleInArray[7] =  (currentMod.isHasStrongs() ? "T" : "F") +
+                                (currentMod.isHasMorphology() ? "T" : "F") +
+                                (currentMod.isHasRedLetter() ? "T" : "F") +
+                                (currentMod.isHasNotes() ? "T" : "F") +
+                                (currentMod.isHasHeadings() ? "T" : "F") +
+                                (currentMod.isQuestionable() ? "T" : "F") +
+                                (currentMod.isHasSeptuagintTagging() ? "T" : "F");
+            response.getOutputStream().write(objectMapper.writeValueAsString(moduleInArray).getBytes(FrontController.UTF_8_ENCODING));
+            if (i < allMods.size() - 1)
+                response.getOutputStream().write(",".getBytes(FrontController.UTF_8_ENCODING)); // separator
+        }
+        response.getOutputStream().write("];".getBytes(FrontController.UTF_8_ENCODING));
+        response.getOutputStream().write("window.availLangs=[".getBytes(FrontController.UTF_8_ENCODING));
+        List<Language> allLanguages = this.languageService.getAvailableLanguages();
+        // Converting to array will save 2/3 size of the Bible module information to send to the browser
+        // This information is sent to the browser everytime it requests a web page from the web server.
+        for (int i = 0; i < allLanguages.size(); i++) {
+            Language curLang = allLanguages.get(i);
+            String[] langsInArray = new String[4];
+            langsInArray[0] = curLang.getCode();
+            langsInArray[1] = curLang.getOriginalLanguageName();
+            langsInArray[2] = curLang.getUserLocaleLanguageName();
+            // Use one character (T or F) to represent true or false for each field.
+            langsInArray[3] = (curLang.isComplete() ? "T" : "F") +
+                    (curLang.isPartial() ? "T" : "F");
+            response.getOutputStream().write(objectMapper.writeValueAsString(langsInArray).getBytes(FrontController.UTF_8_ENCODING));
+            if (i < allLanguages.size() - 1)
+                response.getOutputStream().write(",".getBytes(FrontController.UTF_8_ENCODING)); // separator
+        }
+        response.getOutputStream().write("];".getBytes(FrontController.UTF_8_ENCODING));
         response.getOutputStream().write(qualifiedResponse.getBytes(FrontController.UTF_8_ENCODING));
         response.flushBuffer();
         response.getOutputStream().close();

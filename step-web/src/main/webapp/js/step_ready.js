@@ -121,11 +121,6 @@
             var currentVersion = window.bibleVersions[ii];
             tempVersion["initials"] = currentVersion[0];
             tempVersion["name"] = currentVersion[1];
-            tempVersion["originalLanguage"] = currentVersion[2];
-            tempVersion["languageCode"] = currentVersion[3];
-            tempVersion["category"] = currentVersion[4];
-            tempVersion["languageName"] = currentVersion[5];
-            tempVersion["shortInitials"] = currentVersion[6];
             var trueFalseValues = currentVersion[7].split("");
             tempVersion["hasStrongs"] = (trueFalseValues[0]) === "T" ? true : false;
             tempVersion["hasMorphology"] = (trueFalseValues[1]) === "T" ? true : false;
@@ -133,6 +128,11 @@
             tempVersion["hasNotes"] = (trueFalseValues[3]) === "T" ? true : false;
             tempVersion["hasHeadings"] = (trueFalseValues[4]) === "T" ? true : false;
             tempVersion["questionable"] = (trueFalseValues[5]) === "T" ? true : false;
+            tempVersion["originalLanguage"] = currentVersion[2];
+            tempVersion["languageCode"] = currentVersion[3];
+            tempVersion["category"] = currentVersion[4];
+            tempVersion["languageName"] = currentVersion[5];
+            tempVersion["shortInitials"] = currentVersion[6];
             tempVersion["hasSeptuagintTagging"] = (trueFalseValues[6]) === "T" ? true : false;
             var item = {item: tempVersion, itemType: 'version'};
             step.itemisedVersions.push(item);

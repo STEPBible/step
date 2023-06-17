@@ -25,6 +25,9 @@ public class BibleVersion implements Serializable {
     private String shortInitials;
     private boolean hasSeptuagintTagging;
 
+    // SM V11N
+    private String versification;
+
     /**
      * @return true if the version contains strong-tagged information
      */
@@ -208,4 +211,20 @@ public class BibleVersion implements Serializable {
     public boolean isHasSeptuagintTagging() {
         return hasSeptuagintTagging;
     }
+
+    // SM ===V11n===========>>> versification
+    /**
+     * @return the versification
+     */
+    public String getVersification() {
+        return this.versification;
+    }
+
+    /**
+     * @param versification the versification string
+     */
+    public void setVersification(final String versification) {
+        this.versification = versification;
+    }
+    // SM <<<==================
 }

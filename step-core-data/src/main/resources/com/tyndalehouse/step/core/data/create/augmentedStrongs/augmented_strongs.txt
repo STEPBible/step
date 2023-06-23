@@ -443,10 +443,10 @@
 @AugmentedStrong=	G2577H
 @References=	Jas.5.15
 ===============================
-@AugmentedStrong=	G2763H
+@AugmentedStrong=	G2763G
 @References=	Rom.9.21
 ===============================
-@AugmentedStrong=	G2763G
+@AugmentedStrong=	G2763H
 @References=	Matt.27.7 Matt.27.10
 ===============================
 @AugmentedStrong=	G2787G

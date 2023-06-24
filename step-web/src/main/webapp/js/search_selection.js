@@ -409,7 +409,7 @@ step.searchSelect = {
 		}
 		if (type.indexOf("greek") == 0) type = "greek";
 		else if (type.indexOf("hebrew") == 0) type = "hebrew";
-		if ((this.searchTypeCode.indexOf(type) > 2) && (actPsgeDataElm.item !== null)) { // The first three search types are not original language search types
+		if ((this.searchTypeCode.indexOf(type) > 2) && (actPsgeDataElm.item !== undefined)) { // The first three search types are not original language search types
 			if (typeof __s[type] !== "undefined") type = __s[type];
 			var htmlOfTerm = actPsgeDataElm.item.gloss;
 			if (actPsgeDataElm.item.stepTransliteration !== "") {

@@ -150,6 +150,8 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
             //add verse numbers
 //            options.add(LookupOption.TINY_VERSE_NUMBERS);
             options.add(LookupOption.VERSE_NUMBERS);
+            // SM
+            options.add(LookupOption.XTENDED_VREFERENCE);
         }
 
         final Versification av11n = this.versificationService.getVersificationForVersion(book);

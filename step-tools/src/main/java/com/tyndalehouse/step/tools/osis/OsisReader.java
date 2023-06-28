@@ -59,6 +59,8 @@ public class OsisReader {
         options.add(LookupOption.NOTES);
         options.add(LookupOption.HEADINGS);
         options.add(LookupOption.GREEK_ACCENTS);
+        // SM
+        options.add(LookupOption.XTENDED_VREFERENCE);
 
         final String osisText = jsi.getOsisText(version, ref, options, "ESV_th", InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();

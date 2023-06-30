@@ -229,6 +229,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             options.add(LookupOption.VERSE_NEW_LINE);
             //SM
             options.add(LookupOption.XTENDED_VREFERENCE);
+            options.add(LookupOption.NOTES);
         }
     }
 

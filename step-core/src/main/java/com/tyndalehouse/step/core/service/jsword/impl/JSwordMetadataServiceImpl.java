@@ -227,6 +227,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         if (BIBLE.equals(book.getBookCategory())) {
             options.add(LookupOption.VERSE_NUMBERS);
             options.add(LookupOption.VERSE_NEW_LINE);
+            //SM
+            options.add(LookupOption.NOTES);
         }
     }
 

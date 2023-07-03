@@ -209,9 +209,19 @@ public class JSwordStrongNumberHelper {
                 int bible = 0;
                 int book = 0;
                 while (termDocs.next()) {
-                    final int freq = termDocs.freq();
+                    int freq = termDocs.freq();
                     final Document doc = is.doc(termDocs.doc());
                     final String docRef = doc.get(LuceneIndex.FIELD_KEY);
+                    if (freq % 2 == 0) {
+                        char lastChar = strongKey.charAt(strongKey.length() - 1);
+                        if (lastChar >= 'A')
+                            freq = freq / 2;
+                    }
+                    else {
+                        char lastChar = strongKey.charAt(strongKey.length() - 1);
+                        if (lastChar >= 'A')
+                            System.out.println("Odd number of occurrences for " + strongKey + " in: " + docRef);
+                    }
                     if (docRef != null && docRef.startsWith(bookName))
                         book += freq;
                     bible += freq;

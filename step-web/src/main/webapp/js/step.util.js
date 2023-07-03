@@ -794,6 +794,8 @@ step.util = {
 				if (!searchTokens) return container.html();
             }
 
+			$('#quickLexicon').hide();
+			$(".versePopup").hide();
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
             var firstVersion = "";
             var allSelectedBibleVersions = "";
@@ -1475,7 +1477,6 @@ step.util = {
 
 		emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();
-//            passageContent.detach();
             passageContent.off("scroll");
             passageContent.closest(".column").off("scroll");
 

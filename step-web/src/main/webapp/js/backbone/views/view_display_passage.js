@@ -108,6 +108,26 @@ var PassageDisplayView = DisplayView.extend({
                 if (!this.partRendered) {
                     step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
                 }
+                $(this.$el).find(".passageContentHolder").scroll(function(){
+                    $(".versePopup").hide();
+                    var allVerseNumbers = $(this).find(".verseNumber");
+                    var thisTop = $(this).offset().top;
+                    for (var i = 0; i < allVerseNumbers.length; i++) {
+                        var curVerse = allVerseNumbers[i];
+                        if ($(curVerse).offset().top > thisTop) {
+                            var refButton = $(this).parent().parent().find("button.select-reference");
+                            var newText = curVerse.innerHTML;
+                            if (newText.indexOf(":") == -1) {
+                                var origText = refButton[0].innerHTML.split(":");
+                                if (origText[0] === "Ref")
+                                    origText[0] = origText[1];
+                                newText = origText[0] + ":" + curVerse.innerHTML;    
+                            }
+                            $(refButton).text(newText);
+                            break;
+                        }
+                    }
+                });    
 
                 //needs to happen after appending to DOM
 				

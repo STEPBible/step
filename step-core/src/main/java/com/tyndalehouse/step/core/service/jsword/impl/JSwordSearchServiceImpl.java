@@ -208,11 +208,12 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * @param versions    the versions
      * @param total      the total number of items
      * @param newResults the page of keys to retrieve
-     * @param options    the options to retrieve the passage with
+     * @param optionsInString    the options to retrieve the passage with
      * @return the search result passages
      */
 
-    public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String[] versions, final int total, final Key newResults, final String optionsInString) {
+    public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String[] versions, final int total,
+                                                  final Key newResults, final String optionsInString) {
         boolean colorCode = false;
         boolean hebrewAccents = false;
         int numOfOptions = 0;

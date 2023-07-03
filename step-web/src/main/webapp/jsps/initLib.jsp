@@ -5,14 +5,6 @@
 <%!
     public String restAPIURL;
 %>
-<%-- Don't know if the following lines are useful, commented them out on Jan 20, 2021.  PT --%>
-<%-- <c:set var="baseSTEP"> --%>
-<%--     <c:choose> --%>
-<%--         <c:when test="${ param.mobile eq 'online' and not empty param.baseURL }">${ param.baseURL }</c:when> --%>
-<%--         <c:when test="${ param.mobile eq 'online' }">http://www.stepbible.org/</c:when> --%>
-<%--         <c:otherwise>/</c:otherwise> --%>
-<%--     </c:choose> --%>
-<%-- </c:set> --%>
 <%	if (restAPIURL == null) {
         restAPIURL = "rest/";
         try {

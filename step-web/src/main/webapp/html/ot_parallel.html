@@ -204,8 +204,10 @@ function setupTable(urlPart1) {
 		else if (pos > 0) jsonFileName = tmp.substr(0,pos);
 	}
 	$.ajaxSetup({async: false});
+    var jsonPath =  urlPart1 + "/html/json/";
+    jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
 	var tblRowHTML = ""
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
+    $.getJSON(jsonPath + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
 			tblRowHTML += 
 				'<tr><td class="tb_col tb_col1">' + array[i][0] + '</td>' +

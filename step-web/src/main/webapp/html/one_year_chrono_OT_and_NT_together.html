@@ -231,8 +231,9 @@ function setupTable(urlPart1) {
     var clickText1 = 'class="clickable" onclick=displayPassages(this,"';
     var clickText2 = '")>';
     var clickText3 = '</span>';
-
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
+    var jsonPath =  urlPart1 + "/html/json/";
+    jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
+    $.getJSON(jsonPath + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
             var col0 = array[i][0];
             var col1 = array[i][1];

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>23.7.1</version>
+		<version>23.7.2</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -404,6 +404,7 @@
          					<configuration>
                                 <includes>
                                     <include>${basedir}/target/**/step.*.js</include>
+									<include>${basedir}/target/step-web/html/*.html</include>
                                 </includes>
                                 <replacements>
                                     <replacement>

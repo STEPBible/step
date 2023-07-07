@@ -297,9 +297,10 @@ function setupTable(urlPart1, aDate) {
     }
     var earliest_date;
     var latest_date;
-
+    var jsonPath =  urlPart1 + "/html/json/";
+    jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
     // set 'date' to be the first Advent of the current year (or of the reference year if looking ahead/back)
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName1 + ".json", function(array) {
+    $.getJSON(jsonPath + jsonFileName1 + ".json", function(array) {
         var i = 0;
         var nextYear = new Date (array[i][0]);
         while (i < array.length && refDate > nextYear) {
@@ -321,7 +322,7 @@ function setupTable(urlPart1, aDate) {
     var gospel_reading = new Array();
 
     // read the list of readings into arrays
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName2 + ".json", function(array) {
+    $.getJSON(jsonPath + jsonFileName2 + ".json", function(array) {
         for (var i = 0; i < array.length; i ++ ) {
             reading_title[i] = array[i][1];
             first_reading[i] = array[i][2];
@@ -331,7 +332,7 @@ function setupTable(urlPart1, aDate) {
         }
     });
 
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName3 + ".json", function(array) {
+    $.getJSON(jsonPath + jsonFileName3 + ".json", function(array) {
         var dt1 = "";
         var dt2 = "";
         var implicit_yr = "";

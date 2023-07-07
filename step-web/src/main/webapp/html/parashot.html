@@ -312,9 +312,10 @@ function setupTable(urlPart1) {
 
     var first_sabbath_of_year;
     var first_sabbath_of_next_year;
-
+    var jsonPath =  urlPart1 + "/html/json/";
+    jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
     // set 'date' to be the first Sabbath of the current year
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName1 + ".json", function(array) {
+    $.getJSON(jsonPath + jsonFileName1 + ".json", function(array) {
         var i = 0;
         var nextYear = new Date (array[i]);
         var today = new Date();
@@ -336,7 +337,7 @@ function setupTable(urlPart1) {
     var haftorahEng_reading = new Array();
 
     // read the list of readings into arrays
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName2 + ".json", function(array) {
+    $.getJSON(jsonPath + jsonFileName2 + ".json", function(array) {
         for (var i = 0; i < array.length; i ++ ) {
             reading_title[i] = array[i][1];
             torah_reading[i] = array[i][2];
@@ -348,7 +349,7 @@ function setupTable(urlPart1) {
         }
     });
 
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName3 + ".json", function(array) {
+    $.getJSON(jsonPath + jsonFileName3 + ".json", function(array) {
         var anchor = ' id="today"';
         var row_label = "";
         var today = new Date();

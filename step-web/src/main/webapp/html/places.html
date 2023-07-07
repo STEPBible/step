@@ -225,9 +225,11 @@ function setupTable(urlPart1) {
 		if (pos == -1) jsonFileName = tmp;
 		else if (pos > 0) jsonFileName = tmp.substr(0,pos);
 	}
+    var jsonPath =  urlPart1 + "/html/json/";
+    jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
 	$.ajaxSetup({async: false});
 	var tblRowHTML = ""
-    $.getJSON(urlPart1 +  "/html/json/" + jsonFileName + ".json", function(array) {
+    $.getJSON(jsonPath + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
 			var geoAbbr = "";
 			geoNum = array[i][2].split(',');

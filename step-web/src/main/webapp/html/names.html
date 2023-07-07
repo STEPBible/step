@@ -245,7 +245,9 @@ function setupTable(urlPart1) {
         searchSuffix = 'x';
     }
 
-    $.getJSON(urlPart1 + "/html/json/" + jsonFileName + ".json", function(array) {
+    var jsonPath =  urlPart1 + "/html/json/";
+    jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
+    $.getJSON(jsonPath + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {
             var clickText = "";
             var notes = "";

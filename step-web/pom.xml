@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>23.7.2</version>
+		<version>23.7.3</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -594,6 +594,22 @@
 									<replacement><token>c4ImperativesOnly([:(])</token><value>AF$1</value></replacement>
                                     <replacement><token>^\s*var\s+\d+\s*=\s*\d+\s*\;\s*\/\/\s*TBRBMR\s*\n</token><value></value></replacement>
                                     <replacement><token>\s*var\s+\d+\s*=\s*\d+\s*\;</token><value></value></replacement>
+                                </replacements>
+                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags> 
+                            </configuration>
+						</execution>
+						<execution>
+                            <id>remove-space</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+                            <configuration>
+                                <includes>
+									<include>${basedir}/target/**/*.jsp</include>
+                                </includes>
+                                <replacements>
+                                    <replacement><token>^\s*</token><value></value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags> 
                             </configuration>

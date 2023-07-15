@@ -1146,6 +1146,8 @@ step.util = {
             //currently hard-coded
             if (language == "he") {
                 return "hbFont";
+            } else if (language == "hbo") {
+                return "hbFont";
             } else if (language == "grc") {
                 return "unicodeFont";
             } else if (language == "cop") {

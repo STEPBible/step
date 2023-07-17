@@ -8,6 +8,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.book.sword.SwordBook;
 import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
@@ -131,6 +132,23 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
         if (versification == null) {
             return Versifications.instance().getVersification(Versifications.DEFAULT_V11N);
         }
+
+        // SM index ====>>>
+/*        if(version instanceof SwordBook)
+        {
+            SwordBook bk = (SwordBook) version;
+            if(bk.getOtRefs().size() > 0 || bk.getNtRefs().size() > 0){
+                versification.setOtRefMap(bk.getOtRefs());
+                versification.setNtRefMap(bk.getNtRefs());
+            }
+            else
+            {
+                versification.setOtRefMap(null);
+                versification.setNtRefMap(null);
+            }
+        }*/
+        // SM index <<<====
+
         return versification;
     }
 

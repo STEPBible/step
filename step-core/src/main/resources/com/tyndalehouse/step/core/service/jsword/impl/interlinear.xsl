@@ -1971,7 +1971,7 @@
   <xsl:template name="getDirection">
     <xsl:param name="lang"/>
     <xsl:choose>
-      <xsl:when test="$lang = 'he' or $lang = 'ar' or $lang = 'fa' or $lang = 'ur' or $lang = 'syr'">
+      <xsl:when test="$lang = 'he' or $lang = 'hbo'  or $lang = 'ar' or $lang = 'fa' or $lang = 'ur' or $lang = 'syr'">
         <xsl:value-of select="'rtl'"/>
       </xsl:when>
       <xsl:otherwise>

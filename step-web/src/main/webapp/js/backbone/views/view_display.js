@@ -112,7 +112,7 @@ var DisplayView = Backbone.View.extend({
     //Can be removed when/if Chrome fixes this
     _doChromeHack: function (passageHtml, interlinearMode, options) {
         //only applies to Chrome
-        if (!$.isChrome()) {()
+        if (!$.isChrome()) {
             return;
         }
 

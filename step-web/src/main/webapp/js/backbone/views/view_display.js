@@ -139,8 +139,8 @@ var DisplayView = Backbone.View.extend({
         var interlinearBlocks = passageHtml.find(".interlinear span.w");
 
         //reset the 'clear' values
-        /*interlinearBlocks.not(".verseStart").css("clear", "none");
-        var previousElementOffset = undefined;
+        interlinearBlocks.not(".verseStart").css("clear", "none");
+        /*var previousElementOffset = undefined;
 
         for (var i = 0; i < interlinearBlocks.length; i++) {
             var element = interlinearBlocks.eq(i);

@@ -110,7 +110,7 @@ var DisplayView = Backbone.View.extend({
         }
     },
     //Can be removed when/if Chrome fixes this
-    _doChromeHack: function (passageHtml, interlinearMode, options) {
+    /*_doChromeHack: function (passageHtml, interlinearMode, options) {
         //only applies to Chrome
         if (!$.isChrome) {
             return;
@@ -157,7 +157,7 @@ var DisplayView = Backbone.View.extend({
             }
             previousElementOffset = elementOffset;
         }
-    },
+    },*/
     /**
      * Estimates the height of each block in an interlinear like way
      * @param individualBlocks each individual block in an interlinear.

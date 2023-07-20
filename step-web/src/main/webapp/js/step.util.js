@@ -537,11 +537,6 @@ step.util = {
             ga('send', 'event', eventType, eventName, eventValue, numValue);
         }
     },
-    trackAnalyticsTime: function (eventType, eventName, timeTaken) {
-        if (window["ga"]) {
-            ga('send', 'timing', eventType, eventName, timeTaken);
-        }
-    },
     getPassageContainer: function (passageIdOrElement) {
         if (!this._passageContainers) {
             this._passageContainers = {};

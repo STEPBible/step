@@ -1731,7 +1731,7 @@ step.searchSelect = {
 		$('#updateButton').hide();
 		$("#advancedsearchonoff").hide();
 		$("#previousSearchDropDown").hide();
-		$("#hd4").text(__s.please_select_following);
+		$("#hd4").text(__s.please_select_one);
 		step.searchSelect.searchModalCurrentPage = 3;	
 		$('#srchModalBackButton').show();
 		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;

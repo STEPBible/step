@@ -177,8 +177,7 @@ var StepRouter = Backbone.Router.extend({
             }
         });
     },
-    handleRenderModel: function (passageModel, partRendered, queryArgs, totalTime) {
-        var startRender = new Date().getTime();
+    handleRenderModel: function (passageModel, partRendered, queryArgs) {
         passageModel.save({
                 args: queryArgs != null ? decodeURIComponent(queryArgs) : "",
                 urlFragment: Backbone.history.getFragment()
@@ -205,13 +204,6 @@ var StepRouter = Backbone.Router.extend({
 
         this._renderSummary(passageModel);
 
-        var endRender = new Date().getTime();
-        var totalRender = endRender - startRender;
-        if (totalTime != -1) {
-            step.util.trackAnalyticsTime("search", "renderTime", totalRender);
-            step.util.trackAnalyticsTime(searchType, "renderTime", totalRender);
-            step.util.trackAnalyticsTime("search", "totalTime", totalTime + endRender - startRender);
-            step.util.trackAnalyticsTime(searchType, "totalTime", totalTime + endRender - startRender);
             step.util.trackAnalytics("search", "searchType", searchType);
             step.util.trackAnalytics("search", "masterVersion", passageModel.get("masterVersion"));
 
@@ -247,7 +239,7 @@ var StepRouter = Backbone.Router.extend({
 		var container = $("<span></span>").addClass("argSummary argSumSpan");
 		step.util.ui.renderArgs(searchTokens, container, "button");
 		passageOptions.append(container);
-		// step.util.adjustPassageOptionHeight(passageContainer);
+        return dataForGA;
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;
@@ -312,23 +304,6 @@ var StepRouter = Backbone.Router.extend({
             callback: function (text) {
                 text.startTime = startTime;
 
-                var searchType = text.searchType;
-                var endTime = new Date().getTime();
-                var serverTime = text.timeTookTotal;
-                if (serverTime == null) {
-                    serverTime = 0;
-                }
-                var totalSoFar = endTime - startTime;
-                step.util.trackAnalyticsTime("search", "serverTime", serverTime);
-                step.util.trackAnalyticsTime("search", "latency", totalSoFar - serverTime);
-                step.util.trackAnalyticsTime("search", "roundTrip", totalSoFar);
-
-                if (searchType) {
-                    step.util.trackAnalyticsTime(searchType, "serverTime", serverTime);
-                    step.util.trackAnalyticsTime(searchType, "latency", totalSoFar - serverTime);
-                    step.util.trackAnalyticsTime(searchType, "roundTrip", totalSoFar);
-                }
-
                 step.util.unlinkThis(activePassageId);
                 var passageModel = step.passages.findWhere({ passageId: activePassageId});
                 if (passageModel == null) {
@@ -347,7 +322,7 @@ var StepRouter = Backbone.Router.extend({
                 $("#nextChapterWordle").hide();
                 $("#newLineWordle").show();
                 $("#nextChapterInputLine").show();
-                self.handleRenderModel(passageModel, false, query, totalSoFar);
+                self.handleRenderModel(passageModel, false, query);
             },
             passageId: activePassageId,
             level: 'error'

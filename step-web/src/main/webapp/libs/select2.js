@@ -443,16 +443,11 @@ the specific language governing permissions and limitations under the Apache Lic
 
                 //STEP MODIFICATION START - previous requests get aborted, so no need to worry about
                 //local variable contained in closure
-                var startTime = new Date().getTime();
                 $.extend(params, {
                     url: url,
                     dataType: options.dataType,
                     data: data,
                     success: function (data) {
-                        //get end time
-                        if(startTime != null) {
-                            step.util.trackAnalyticsTime('suggest', 'time', new Date().getTime() - startTime);
-                        }
 
                         // TODO - replace query.page with query so users have access to term, page, etc.
                         var results = options.results(data, query.page);

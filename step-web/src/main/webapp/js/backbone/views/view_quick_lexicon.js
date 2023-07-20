@@ -134,8 +134,6 @@ var QuickLexicon = Backbone.View.extend({
             return;
         }
         return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode], function (data) {
-            step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
-            step.util.trackAnalytics("quickLexicon", "strong", self.strong);
             self.processQuickInfo(data, self);
         }).error(function() {
             if (changeBaseURL())

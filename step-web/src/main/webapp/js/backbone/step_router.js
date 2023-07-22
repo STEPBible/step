@@ -204,28 +204,28 @@ var StepRouter = Backbone.Router.extend({
 
         this._renderSummary(passageModel);
 
-            step.util.trackAnalytics("search", "searchType", searchType);
-            step.util.trackAnalytics("search", "masterVersion", passageModel.get("masterVersion"));
+        step.util.trackAnalytics("search", "searchType", searchType);
+        step.util.trackAnalytics("search", "masterVersion", passageModel.get("masterVersion"));
 
-            if (passageModel.get("interlinearMode") != null) {
-                step.util.trackAnalytics("search", "interlinearMode", passageModel.get("interlinearMode"));
-            }
+        if (passageModel.get("interlinearMode") != null) {
+            step.util.trackAnalytics("search", "interlinearMode", passageModel.get("interlinearMode"));
+        }
 
-            if (searchType == 'PASSAGE') {
-                step.util.trackAnalytics("search", "passage", passageModel.get("osisId"));
-            } else {
-                if (passageModel.get("query") != null) {
-                    step.util.trackAnalytics("search", "query", passageModel.get("query"));
-                }
-            }
-
-            var searchTokens = passageModel.get("searchTokens") || [];
-            for(var i = 0; i < searchTokens.length; i++) {
-                if(searchTokens[i].tokenType && searchTokens[i].token) {
-                    step.util.trackAnalytics("search", searchTokens[i].tokenType, searchTokens[i].token);
-                }
+        if (searchType == 'PASSAGE') {
+            step.util.trackAnalytics("search", "passage", passageModel.get("osisId"));
+        } else {
+            if (passageModel.get("query") != null) {
+                step.util.trackAnalytics("search", "query", passageModel.get("query"));
             }
         }
+
+        var searchTokens = passageModel.get("searchTokens") || [];
+        for(var i = 0; i < searchTokens.length; i++) {
+            if(searchTokens[i].tokenType && searchTokens[i].token) {
+                step.util.trackAnalytics("search", searchTokens[i].tokenType, searchTokens[i].token);
+            }
+        }
+
     },
 
     _renderSummary: function (passageModel) {

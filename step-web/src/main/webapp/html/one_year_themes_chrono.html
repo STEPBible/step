@@ -233,6 +233,8 @@ function setupTable(urlPart1) {
         $("table").css("font-size", sz + "px");
     }
 
+    $.ajaxSetup({async: false});
+
     // set the year in the heading
     var table = document.getElementById("plan");
     var thead = table.getElementsByTagName("thead")[0];
@@ -261,6 +263,10 @@ function setupTable(urlPart1) {
     var jsonPath =  urlPart1 + "/html/json/";
     jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
     $.getJSON(jsonPath + jsonFileName + ".json", function(array) {
+
+        var anchor = ' id="today"';
+        var row_label = "";
+
 		for (var i = 0; i < array.length; i ++ ) {
             var col1 = array[i][0];
             var col2 = array[i][1];
@@ -268,6 +274,11 @@ function setupTable(urlPart1) {
             var col4 = array[i][3];
             var col5 = array[i][4];
             var col6 = array[i][5];
+
+            if (dat >= today) {
+                row_label = anchor;
+                anchor = "";
+            }
 
             text = dat.toDateString().replace(col1_name,"").replace(" 0", " ");
             if (year == (dat.getYear() + 1900)) {
@@ -355,7 +366,7 @@ function setupTable(urlPart1) {
             
             if (inIFrame) {
             	tblRowHTML = 
-            		'<tr><td class="tb_col">' + text + '</td>' +
+            		'<tr' + row_label + '><td class="tb_col">' + text + '</td>' +
             		'<td class="tb_col">' + col1 + '</td>' +
             		'<td class="tb_col">' + col2 + '</td>' +
             		'<td class="tb_col">' + col3 + '</td>' +
@@ -365,7 +376,7 @@ function setupTable(urlPart1) {
             }
             else {
             	tblRowHTML = 
-            		'<tr><td class="tb_col">' + text + '</td>' +
+            		'<tr' + row_label + '><td class="tb_col">' + text + '</td>' +
             		'<td class="tb_col">' +
                         '<div class="ind10">Sun:  ' + col1 + '</div>' +
                         '<div class="ind10">Mon:  ' + col2 + '</div>' +
@@ -378,6 +389,11 @@ function setupTable(urlPart1) {
     	    $("#tb_body").append(tblRowHTML);
 		}
     });
+
+    var e = document.querySelector("#today");
+    if (e) e.scrollIntoView({block: "center"});
+
+    $.ajaxSetup({async: true});
 
 }
 

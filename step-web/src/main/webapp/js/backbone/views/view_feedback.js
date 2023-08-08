@@ -3,7 +3,7 @@ var FeedbackView = Backbone.View.extend({
         return $("body")
     },
   template:
-	    '<div class="modal" id="raiseSupport" dir="<%= step.state.isLtR() ? "ltr" : "rtl" %>" tabindex="-1" role="dialog" aria-labelledby="raiseSupportLabel" aria-hidden="true">' +
+	    '<div class="modal" data-backdrop="static" id="raiseSupport" dir="<%= step.state.isLtR() ? "ltr" : "rtl" %>" tabindex="-1" role="dialog" aria-labelledby="raiseSupportLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
         '<div class="modal-content stepModalFgBg">' +
         '<div class="modal-header">' +

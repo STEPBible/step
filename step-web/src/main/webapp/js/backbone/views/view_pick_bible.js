@@ -86,7 +86,7 @@ var PickBibleView = Backbone.View.extend({
         [__s.widely_used, ['THOT', 'LXX', 'THGNT', 'Byz', 'TR', 'SBLG']],
         [__s.hebrew_ot, ['THOT', "Alep", "OHB", "WLC", "MapM"]],
         [__s.greek_ot, ["LXX_th", "AB", "abpen_th", "abpgk_th"]],
-        [__s.greek_nt, ["Ant", "Byz", "Elzevir", "Nestle", "SBLG", "THGNT", "Tisch", "TNT", "TR", "WHNU"]],
+        [__s.greek_nt, ["Ant", "Byz", "Elzevir", "Nestle", "SBLG", "SRGNT", "THGNT", "Tisch", "TNT", "TR", "WHNU"]],
         [__s.coptic_texts, ["CopNT", "CopSahHorner", "CopSahidica", "CopSahidicMSS"]],
         [__s.latin_texts, ["DRC", "Vulgate", "VulgSistine", "VulgHetzenauer", "VulgConte", "VulgClementine"]],
         [__s.coptic_texts, ["CopNT", "CopSahHorner", "CopSahidica", "CopSahidicMSS"]],

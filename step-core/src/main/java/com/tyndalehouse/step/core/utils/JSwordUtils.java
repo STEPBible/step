@@ -30,6 +30,7 @@ public final class JSwordUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordUtils.class);
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "he";
+    private static final String ANCIENT_HEBREW_HBO = "hbo";
 
     /**
      * hiding implementaiton
@@ -150,7 +151,7 @@ public final class JSwordUtils {
         boolean ancientHebrew = false;
         for(Book b : books) {
             //hard coding in the exception
-            boolean isHebrew = ANCIENT_HEBREW.equals(b.getLanguage().getCode()) && !"HebModern".equals(b.getInitials());
+            boolean isHebrew = ( ANCIENT_HEBREW.equals(b.getLanguage().getCode()) || ANCIENT_HEBREW_HBO.equals(b.getLanguage().getCode()) ) && !"HebModern".equals(b.getInitials());
             if(isHebrew) {
                 return true;
             }

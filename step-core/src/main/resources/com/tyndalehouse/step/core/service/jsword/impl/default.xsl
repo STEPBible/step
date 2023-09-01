@@ -101,7 +101,7 @@
     <xsl:param name="TinyVNum" select="'false'"/>
 
     <!-- The default versification -->
-    <xsl:param name="v11n" select="'KJV'"/>
+    <xsl:param name="v11n" select="'KJVA'"/>
 
     <!-- The order of display. Hebrew is rtl (right to left) -->
     <xsl:param name="direction" select="'ltr'"/>
@@ -134,8 +134,10 @@
 
     <!--=======================================================================-->
     <xsl:template match="/">
-        <div class="passageContentHolder" tabindex="-1">
-            <!-- If there are notes, output a table with notes in the 2nd column. -->
+        <!-- SM Verse Per Line Issue -->
+        <div class="passageContentHolder" style="direction: {$direction};" tabindex="-1">
+
+        <!-- If there are notes, output a table with notes in the 2nd column. -->
             <!-- There is a rendering bug which prevents the notes from adhering to the right edge. -->
             <xsl:choose>
                 <xsl:when test="$Notes = 'true' and //note[not(@type = 'x-strongsMarkup')]">

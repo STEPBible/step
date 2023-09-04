@@ -3380,6 +3380,7 @@ step.util = {
 			"pes", // Persian, Iranian
 			"he",  // Hebrew
 			"heb", // Hebrew *
+			"hbo", // Hebrew, Ancient
 			"syr", // Syriac
 			"tr",  // Turkish
 			"en"   // English

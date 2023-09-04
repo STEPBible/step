@@ -351,7 +351,7 @@ var PickBibleView = Backbone.View.extend({
             //now go through Bibles adding if not already present
             for (var v in step.keyedVersions) {
                 var version = step.keyedVersions[v];
-                if ((version.languageCode == 'he' || version.languageCode == 'grc') &&
+                if ((version.languageCode == 'he' || version.languageCode == 'hbo' || version.languageCode == 'grc') &&
                     version.category == 'BIBLE' && 
                     !added[version.shortInitials] &&
                     this.ancientBlackList.indexOf(version.shortInitials) == -1) {
@@ -387,7 +387,7 @@ var PickBibleView = Backbone.View.extend({
                             this._addGroupingByLanguage(bibleList, v, version);
                         }
                     } else if(selectedLanguage == "_ancient") { 
-                        if((version.languageCode == 'he' || version.languageCode == 'grc')) {
+                        if((version.languageCode == 'he' || version.languageCode == 'hbo' || version.languageCode == 'grc')) {
                             this._addGroupingByLanguage(bibleList, v, version);
                         }  
                     } else {
@@ -475,7 +475,7 @@ var PickBibleView = Backbone.View.extend({
             return true;
         }
         if (wantedLanguage == "_ancient") {
-            return actualLanguage == "he" || actualLanguage == "grc";
+            return actualLanguage == "he" || actualLanguage == "hbo" || actualLanguage == "grc";
         }
         return actualLanguage == wantedLanguage;
     },

@@ -26,7 +26,8 @@ public class SpecificForms {
 
         for (final Book b : Books.installed().getBooks()) {
             if (!"grc".equalsIgnoreCase(b.getLanguage().getCode())
-                    && !"he".equalsIgnoreCase(b.getLanguage().getCode())) {
+                    && !"he".equalsIgnoreCase(b.getLanguage().getCode())
+                    && !"hbo".equalsIgnoreCase(b.getLanguage().getCode())) {
                 continue;
             }
             System.err.println("Processing " + b.getInitials());

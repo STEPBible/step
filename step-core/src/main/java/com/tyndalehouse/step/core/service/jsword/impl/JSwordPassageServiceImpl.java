@@ -1388,9 +1388,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             tsep.setParameter("RemovePointing", false);
             tsep.setParameter("RemoveVowels", false);
         }
-        if (!books[0].getBookMetaData().isLeftToRight())        {
-            tsep.setParameter(LookupOption.VERSE_NEW_LINE.getXsltParameterName(), true);
-        }
+// SM Verse Per Line Issue for RTL
+//        if (!books[0].getBookMetaData().isLeftToRight())        {
+//            tsep.setParameter(LookupOption.VERSE_NEW_LINE.getXsltParameterName(), true);
+//        }
 
         tsep.setParameter("direction", books[0].getBookMetaData().isLeftToRight() ? "ltr" : "rtl");
         tsep.setParameter("baseVersion", this.resolver.getShortName(books[0].getInitials()));

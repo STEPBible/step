@@ -117,11 +117,18 @@ var PassageDisplayView = DisplayView.extend({
                         if ($(curVerse).offset().top > thisTop) {
                             var refButton = $(this).parent().parent().find("button.select-reference");
                             var newText = curVerse.innerHTML;
-                            if (newText.indexOf(":") == -1) {
+                            var isInterLinear = $(this).find('.interlinear').length > 0;
+                            if ( ((isInterLinear) && (newText.indexOf(":") > -1)) ||
+                                 ((!isInterLinear) && (newText.indexOf(":") == -1)) ) {
                                 var origText = refButton[0].innerHTML.split(":");
                                 if (origText[0] === "Ref")
                                     origText[0] = origText[1];
-                                newText = origText[0] + ":" + curVerse.innerHTML;    
+                                if (isInterLinear) {
+                                    var curVerseParts = curVerse.innerHTML.split(":");
+                                    if (curVerseParts.length > 1)
+                                        newText = curVerseParts[1];
+                                }
+                                newText = origText[0].trim() + ":" + newText;
                             }
                             $(refButton).text(newText);
                             break;

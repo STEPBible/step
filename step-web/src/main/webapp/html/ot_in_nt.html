@@ -197,7 +197,10 @@ function setupTable(urlPart1) {
 	}
 	$.ajaxSetup({async: false});
     var jsonPath =  urlPart1 + "/html/json/";
-    jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
+    if (urlPart1.indexOf("localhost") == -1 && urlPart1.indexOf("127.0.0.1") == -1) {
+        jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
+    }
+
 	var tblRowHTML = ""
     $.getJSON(jsonPath + jsonFileName + ".json", function(array) {
 		for (var i = 0; i < array.length; i ++ ) {

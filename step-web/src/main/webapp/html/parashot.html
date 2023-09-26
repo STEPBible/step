@@ -313,7 +313,10 @@ function setupTable(urlPart1) {
     var first_sabbath_of_year;
     var first_sabbath_of_next_year;
     var jsonPath =  urlPart1 + "/html/json/";
-    jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
+    if (urlPart1.indexOf("localhost") == -1 && urlPart1.indexOf("127.0.0.1") == -1) {
+        jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
+    }
+
     // set 'date' to be the first Sabbath of the current year
     $.getJSON(jsonPath + jsonFileName1 + ".json", function(array) {
         var i = 0;

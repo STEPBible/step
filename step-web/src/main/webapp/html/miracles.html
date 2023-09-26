@@ -195,7 +195,10 @@ function setupTable(urlPart1) {
 		else if (pos > 0) jsonFileName = tmp.substr(0,pos);
 	}
 	var jsonPath =  urlPart1 + "/html/json/";
-    jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
+    if (urlPart1.indexOf("localhost") == -1 && urlPart1.indexOf("127.0.0.1") == -1) {
+        jsonPath += ("STEP_SERVER_VERSION_TOKEN".toLowerCase() !== "step_server_version_token") ? "STEP_SERVER_VERSION_TOKEN/" : "";
+    }
+
 	$.ajaxSetup({async: false});
 	var tblRowHTML = ""
     $.getJSON(jsonPath + jsonFileName + ".json", function(array) {

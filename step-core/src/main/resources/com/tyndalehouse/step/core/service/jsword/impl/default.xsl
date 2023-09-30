@@ -88,6 +88,9 @@
     <!-- Whether to output Verse numbers or not -->
     <xsl:param name="VNum" select="'false'"/>
 
+    <!-- SM Whether to output version verse reference or not -->
+    <xsl:param name="XVRef" select="'false'"/>
+
     <!-- Whether to output Chapter and Verse numbers or not -->
     <xsl:param name="CVNum" select="'false'"/>
 
@@ -464,7 +467,16 @@
                 <xsl:variable name="verse">
                     <xsl:choose>
                         <xsl:when test="@n">
-                            <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
+                            <!-- SM -->
+                            <xsl:if test="$XVRef = 'true'">
+                            <xsl:value-of
+                                    select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))"/>
+                            </xsl:if>
+                            <!-- SM -->
+                            <xsl:if test="$XVRef != 'true'">
+                                <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
+                            </xsl:if>
+                            <!-- <xsl:value-of select="jsword:shape($shaper, string(@n))"/>-->
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:value-of
@@ -490,9 +502,21 @@
     </xsl:template>
 
     <xsl:template name="interleavedVersion">
+        <!-- SM -->
+        <xsl:variable name="verse" select="(div[@osisID] | verse)[1]"/>
+        <xsl:variable name="firstOsisID" select="substring-before(concat($verse/@osisID, ' '), ' ')"/>
+
         <xsl:if test="$Interleave = 'true'">
             <xsl:variable name="version" select="interleaving:getNextVersion($interleavingProvider)"/>
-            <span class="smallResultKey" data-version="{$version}">(<xsl:value-of select="$version"/>)
+            <span class="smallResultKey" data-version="{$version}">
+                <!-- SM -->
+                <xsl:if test="$XVRef = 'true'">
+                    <xsl:value-of select="concat('(', $version, ': ', $firstOsisID, ')')"/>
+                </xsl:if>
+                <!-- SM -->
+                <xsl:if test="$XVRef != 'true'">
+                    (<xsl:value-of select="$version"/>)
+                </xsl:if>
             </span>
         </xsl:if>
     </xsl:template>
@@ -1910,9 +1934,11 @@
                         <xsl:otherwise>
                             <div class="verseGrouping">
                                 <xsl:variable name="verse" select="cell/verse"/>
-                                <xsl:call-template name="interleavedVerseNum">
-                                    <xsl:with-param name="verse" select="$verse"/>
-                                </xsl:call-template>
+                                <xsl:if test="$XVRef != 'true'">
+                                    <xsl:call-template name="interleavedVerseNum">
+                                        <xsl:with-param name="verse" select="$verse"/>
+                                    </xsl:call-template>
+                                </xsl:if>
                                 <xsl:apply-templates/>
                             </div>
                         </xsl:otherwise>
@@ -1923,17 +1949,23 @@
                         <xsl:when test="cell[@role = 'label']">
                             <xsl:if test="$HideCompareHeaders != 'true'">
                                 <tr>
-                                    <th class="headingVerseNumber"></th>
+                                    <!-- SM move to outputComparingTableHeader template-->
+                                    <xsl:if test="$XVRef != 'true'">
+                                        <th class="headingVerseNumber"></th>
+                                    </xsl:if>
                                     <xsl:call-template name="outputComparingTableHeader"></xsl:call-template>
                                 </tr>
                             </xsl:if>
                         </xsl:when>
                         <xsl:otherwise>
                             <tr class="row">
-                                <xsl:variable name="verse" select="(cell/div[@osisID] | cell/verse)[1]"/>
-                                <xsl:call-template name="columnVerseNumber">
-                                    <xsl:with-param name="verse" select="$verse"/>
-                                </xsl:call-template>
+                                <!-- SM -->
+                                <xsl:if test="$XVRef != 'true'">
+                                    <xsl:variable name="verse" select="(cell/div[@osisID] | cell/verse)[1]"/>
+                                    <xsl:call-template name="columnVerseNumber">
+                                        <xsl:with-param name="verse" select="$verse"/>
+                                    </xsl:call-template>
+                                </xsl:if>
                                 <xsl:apply-templates/>
                             </tr>
                         </xsl:otherwise>
@@ -1944,6 +1976,10 @@
     </xsl:template>
 
     <xsl:template name="outputComparingTableHeader">
+        <!-- SM -->
+        <xsl:if test="$XVRef = 'true'">
+            <th class="headingVerseNumber"></th>
+        </xsl:if>
         <xsl:variable name="version" select="interleaving:getNextVersion($interleavingProvider)"/>
         <th class="comparingVersionName" data-version="{$version}">
             <xsl:value-of select="$version"/>
@@ -1956,13 +1992,16 @@
 
     <xsl:template name="interleaveVerse">
         <xsl:param name="cell-direction"/>
+        <xsl:param name="verse" select="''"/>
         <xsl:param name="classes" select="''"/>
 
         <xsl:element name="span">
             <xsl:attribute name="class">singleVerse
                 <xsl:value-of select="$classes"/><xsl:value-of select="$cell-direction"/>
             </xsl:attribute>
-            <xsl:call-template name="interleavedVersion"/>
+            <xsl:call-template name="interleavedVersion">
+                <!-- <xsl:with-param name="verse" select="$verse"/> -->
+            </xsl:call-template>
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
@@ -2047,6 +2086,7 @@
         <xsl:choose>
             <!-- interleaving or tabular column form -->
             <xsl:when test="$Interleave = 'true'">
+                <xsl:variable name="verse" select="(div[@osisID] | verse)[1]"/>
                 <xsl:if test="$comparing = false()">
                     <xsl:call-template name="interleaveVerse">
                         <xsl:with-param name="cell-direction" select="$cell-direction"/>
@@ -2066,6 +2106,15 @@
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
+                <!-- SM -->
+                <xsl:if test="$XVRef = 'true'">
+                    <xsl:variable name="verse" select="(div[@osisID] | verse)[1]"/>
+                    <xsl:call-template name="columnVerseNumber">
+                        <xsl:with-param name="verse" select="$verse"/>
+                    </xsl:call-template>
+                </xsl:if>
+
+
                 <xsl:if test="$comparing = false()">
                     <xsl:call-template name="columnVerse">
                         <xsl:with-param name="cell-direction" select="$cell-direction"/>

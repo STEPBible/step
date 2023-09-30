@@ -83,7 +83,10 @@
   <!-- Whether to output Verse numbers or not -->
   <xsl:param name="VNum" select="'false'"/>
 
-  <!-- Whether to output Chapter and Verse numbers or not -->
+    <!-- SM Whether to output extended verse reverence or not -->
+    <xsl:param name="XVRef" select="'false'"/>
+
+    <!-- Whether to output Chapter and Verse numbers or not -->
   <xsl:param name="CVNum" select="'false'"/>
 
   <!-- Whether to output Book, Chapter and Verse numbers or not -->

@@ -4,10 +4,7 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import org.crosswire.common.util.Language;
 import org.crosswire.common.util.Languages;
-import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookData;
-import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.FeatureType;
+import org.crosswire.jsword.book.*;
 import org.crosswire.jsword.book.basic.AbstractPassageBook;
 import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.BibleBook;
@@ -56,6 +53,10 @@ public final class JSwordUtils {
         for (final Book b : bibles) {
             final BibleVersion v = new BibleVersion();
             final String shortName = (String) b.getProperty("shortName");
+            // SM Add versification =======>>>
+            final String v11n = (String) b.getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
+            v.setVersification(v11n);
+            // SM <<<======
             v.setName(shortName != null ? shortName : b.getName());
             v.setInitials(b.getInitials());
             v.setShortInitials(resolver.getShortName(b.getInitials()));

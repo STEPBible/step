@@ -474,6 +474,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         if (InterlinearMode.INTERLINEAR.equals(desiredModeOfDisplay) && options.contains(LookupOption.CHAPTER_BOOK_VERSE_NUMBER)) {
             //then we're in a search kind of lookup, so add proper verse numbers
             options.add(LookupOption.VERSE_NUMBERS);
+            // SM
+            options.add(LookupOption.XTENDED_VREFERENCE);
         }
 
         OsisWrapper passageText;
@@ -1343,6 +1345,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 switch (lookupOption) {
                     case VERSE_NUMBERS:
                         tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
+                        break;
+                    case XTENDED_VREFERENCE:
+                        // SM
+                        tsep.setParameter(LookupOption.XTENDED_VREFERENCE.getXsltParameterName(), true);
                         break;
                     case CHAPTER_BOOK_VERSE_NUMBER:
                         tsep.setParameter(LookupOption.VERSE_NUMBERS.getXsltParameterName(), true);

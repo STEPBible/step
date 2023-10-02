@@ -154,6 +154,7 @@ step.copyText = {
 		}
 		var versionsString = step.util.activePassage().get("masterVersion");
 		var extraVersions = step.util.activePassage().get("extraVersions");
+		var options = step.util.activePassage().get("options");
 		if (extraVersions !== "") versionsString += "," + extraVersions;
 		var versions = versionsString.split(",");
 		var comparingTable = $(copyOfPassage).find('.comparingTable');
@@ -198,6 +199,49 @@ step.copyText = {
 				updatedText += tmp + "\n";
 			}
 			textToCopy = updatedText;
+		}
+		if (options.indexOf("X") > -1) {
+			var lines = textToCopy.split("\n");
+			var lastLineIsHeaderOnly = false;
+			var maxIndexWithText = lines.length;
+			for (var i = maxIndexWithText - 1; i > -1; i--) {
+				if (lines[i].trim().length == 0)
+					maxIndexWithText = i;
+				else
+					break;
+			}
+			for (var i = 0; i < maxIndexWithText; i++) {
+				var onlyHeader = false;
+				if ((lines[i].substring(0,1) === "(") && (lines[i].slice(-1) === ")") && (lines[i].length < 30)) {
+					var lineToCheck = lines[i].substring(1,lines[i].length -1);
+					var parts1 = lineToCheck.split(": ");
+					if (parts1.length == 2) {
+						var parts2 = parts1[1].split(".");
+						if ((parts2.length > 1) && (parts2.length < 4)) {
+							if ((isNaN(parts2[0])) && (!isNaN(parts2[1]))) {
+								if (parts2.length == 3) {
+									if (!isNaN(parts2[2]))
+										onlyHeader = true;
+								}
+								else
+									onlyHeader = true;
+							}
+						}
+					}
+				}
+				if (onlyHeader) {
+					if (lastLineIsHeaderOnly)
+						lines[i-1] = "";
+					if (i == maxIndexWithText - 1)
+						lines[i] = "";
+				}
+				lastLineIsHeaderOnly = onlyHeader;
+			}
+			textToCopy = "";
+			for (var i = 0; i < maxIndexWithText; i++) {
+				if (lines[i].trim().length > 0)
+					textToCopy += lines[i] + "\n";
+			}
 		}
 		if (endNotes !== "") textToCopy += "\nNotes:" + endNotes;
 		if (endXrefs !== "") textToCopy += "\nCross references:" + endXrefs;

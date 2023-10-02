@@ -25,6 +25,7 @@ var PassageMenuView = Backbone.View.extend({
     items: [
         {initial: "H", key: "display_headings"},
         {initial: "V", key: "display_verseNumbers"},
+        {initial: "X", key: "display_extendedReference", help: "display_extendedReference_help"},
         {initial: "L", key: "display_separateLines"},
         {initial: "R", key: "display_redLetter"},
         {initial: "N", key: "display_notes"},

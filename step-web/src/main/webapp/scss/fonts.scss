@@ -28,7 +28,7 @@
 .arabicFont {
   font-family: Amiri;
   line-height: 1.8 !important;
-  font-size: 120%;
+  font-size: 160%;
 }
 
 .chineseFont {
@@ -63,7 +63,7 @@
 }
 
 td {
-  &.copticFont, &.syriacFont, &.burmeseFont, &.arabicFont, &.chineseFont, &.khmerFont {
+  &.copticFont, &.syriacFont, &.burmeseFont, &.chineseFont, &.khmerFont {
     font-size: 100%;
   }
 }

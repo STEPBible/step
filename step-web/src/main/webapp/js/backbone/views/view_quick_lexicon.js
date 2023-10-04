@@ -125,7 +125,21 @@ var QuickLexicon = Backbone.View.extend({
 			(typeof self.strong === "string")) {
 			step.previousSideBarLexiconRef = [self.strong, self.reference];
 		}
-        var strongsToUse = this.strong;
+        var strongsToUse = "";
+        var strongNumbers = this.strong.split(" ");
+        if (strongNumbers.length > 0) {
+            var skippedCount = 0;
+            for ( var i = 0; i < strongNumbers.length; i++) {
+                if ((strongNumbers.length > 1) && (("G0846,H0853,G1161,G3588,G3754G,".indexOf(strongNumbers[i] + ",") > -1) || (strongNumbers[i].substring(0,2) === "H9"))) {
+                    skippedCount ++;
+                    continue;
+                }
+                if (strongsToUse !== "") strongsToUse += " ";
+                strongsToUse += strongNumbers[i];
+            }
+            if (skippedCount == strongNumbers.length) // If everything is skipped, show the first one.
+                strongsToUse += strongNumbers[0];
+        }
         if (self.reference !== "") // The verse vocabulary does not provide a reference so take the provided strong numbers.
 		    strongsToUse = step.util.fixStrongNumForVocabInfo(strongsToUse, false);
         var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongsToUse, this.morph, this.version);

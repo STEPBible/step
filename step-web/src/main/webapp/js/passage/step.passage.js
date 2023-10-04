@@ -19,15 +19,23 @@ step.passage = {
 		if (typeof showSimilarWord === "undefined") showSimilarWord = true;
         if ((strongMorphReference.strong == null) || (!showSimilarWord)) return;
 
-        var references = strongMorphReference.strong.split(" ");
-        var container = step.util.getPassageContainer(strongMorphReference.passageId);
+        var strongNumbers = strongMorphReference.strong.split(" ");
 
 
         // reset all spans that are underlined:
         this.removeStrongsHighlights(undefined, strongMorphReference.classes);
 
-        for ( var ii = 0; ii < references.length; ii++) {
-            this.highlightStrong(undefined, references[ii], strongMorphReference.classes);
+        if (strongNumbers.length > 0) {
+            var skippedCount = 0;
+            for ( var i = 0; i < strongNumbers.length; i++) {
+                if ((strongNumbers.length > 1) && (("G0846,H0853,G1161,G3588,G3754G,".indexOf(strongNumbers[i] + ",") > -1) || (strongNumbers[i].substring(0,2) === "H9"))) {
+                    skippedCount ++;
+                    continue;
+                }
+                this.highlightStrong(undefined, strongNumbers[i], strongMorphReference.classes);
+            }
+            if (skippedCount == strongNumbers.length) // If everything is skipped, show the first one.
+                this.highlightStrong(undefined, strongNumbers[0], strongMorphReference.classes);
         }
     },
 

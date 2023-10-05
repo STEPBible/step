@@ -124,14 +124,24 @@ window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
     timers: {},
-    highlightStrong : function(strong, htmlTag1, htmlTag2, htmlObject, cssClass) {
+	suppressHighlight: function(strongNumber) {
+		if (("G0846,H0853,H0996G,H1961,H4480A,H5704,H5921A,G1161,G3588,G3754G,".indexOf(strongNumber + ",") > -1) || (strongNumber.substring(0,2) === "H9"))
+			return true;
+		return false;
+	},
+    highlightStrong: function(strong, htmlTag1, htmlTag2, htmlObject, cssClass) {
         strong = (strong || "");
 		if (htmlTag2 !== "") htmlTag2 = " " + htmlTag2;
-		$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
-        var updatedStrong = strong.replace(/[a-zA-Z]$/, "").replace(/\!$/, "");
-		if (updatedStrong !== strong) {
-			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
+		if (step.util.suppressHighlight(strong)) {
+			$(htmlTag1 + "='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
+			$(htmlTag1 + "^='" + strong + " ']" + htmlTag2, htmlObject).addClass(cssClass);
 		}
+		else
+			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
+
+		var updatedStrong = strong.replace(/[a-zA-Z]$/, "").replace(/\!$/, "");
+		if (updatedStrong !== strong)
+			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
     },
     refreshWaitStatus: function () {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());

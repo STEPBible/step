@@ -125,8 +125,44 @@ step.util = {
     outstandingRequests: 0,
     timers: {},
 	suppressHighlight: function(strongNumber) {
-		if (("H0846,H0853,H0996G,H1961,H4480A,H5704,H5921A,G1161,G3588,G3754G,".indexOf(strongNumber + ",") > -1) || (strongNumber.substring(0,2) === "H9"))
-			return true;
+		if (strongNumber.substring(0,1) === "H") {
+			if (strongNumber.substring(1,2) === "9")
+				return true;
+			var hebrewStrongToSuppress = // A comma is required at the end of the Strong number for this function to work.
+				"H0408," +      // al       - not
+				"H0428," +      // el.leh   - these
+				"H0518A," +     // im       - if
+				"H0505G," +     // e.leph   - thousand
+				"H0834A," +     // a.sher   - which
+				"H0834D," +     // ka.a.sher- as which
+				"H0853," +      // et       - direct object marker
+				"H0996G," +     // ba.yin   - between
+				"H1571," +      // gam      - also
+				"H1768," +      // di       - that
+				"H1961," +      // ha.yah   - to be
+				"H1992," +      // hem.mah  - they (masc)
+				"H2088," +      // zeh      - this
+				"H3651C," +     // ken      - so
+				"H3967," +      // me.ah    - hundred
+				"H4480A," +     // min      - from
+				"H5704," +      // ad       - till
+				"H5705," +      // al       - till (Aramaic)
+				"H5921A," +     // al       - upon
+				"H5922," +      // al       - upon (Aramaic)
+				"H5973A," +     // im       - with
+				"H6240," +      // a.sar    - ten
+				"H8033G,";      // sham     - there
+			if (hebrewStrongToSuppress.indexOf(strongNumber) > -1)
+				return true;
+		}
+		else {
+			var greekStrongToSuppress = // A comma is required at the end of the Strong number for this function to work.
+				"G1161,"        // de       - then
+				"G3588,"        // ho       - the/this/who
+				"G3754G,";      // hoti     - that/since
+			if (greekStrongToSuppress.indexOf(strongNumber) > -1)
+				return true;
+		}
 		return false;
 	},
     highlightStrong: function(strong, htmlTag1, htmlTag2, htmlObject, cssClass) {

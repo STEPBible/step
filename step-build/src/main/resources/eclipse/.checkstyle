@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fileset-config file-format-version="1.2.0" simple-config="true">
+  <local-check-config name="checkstyle" location=".checkstyle.config.xml" type="project" description="STEP Project Checkstyle config">
+    <property name="checkstyle.header.file" value="${basedir}/.LICENSE.txt"/>
+	<additional-data name="protect-config-file" value="false"/>
+  </local-check-config>
+  <local-check-config name="checkstyle-test" location=".checkstyle.config.test.xml" type="project" description="STEP Project Test Checkstyle config">
+    <property name="checkstyle.header.file" value="${basedir}/.LICENSE.txt"/>
+	<additional-data name="protect-config-file" value="false"/>
+  </local-check-config>
+  <fileset name="all" enabled="true" check-config-name="checkstyle" local="true">
+    <file-match-pattern match-pattern="^src/main/java" include-pattern="true"/>
+  </fileset>
+  <fileset name="test" enabled="true" check-config-name="checkstyle-test" local="true">
+    <file-match-pattern match-pattern="^src/test/java" include-pattern="true"/>
+  </fileset>
+</fileset-config>

@@ -1,0 +1,41 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="timeglider.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="timeglider.datepicker.css" type="text/css" charset="utf-8">
+
+
+
+    <script src='https://code.jquery.com/jquery-1.9.1.min.js' type='text/javascript'></script>
+
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../libs/underscore-min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../libs/backbone-min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../libs/json2.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery.tmpl.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/ba-tinyPubSub.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery.mousewheel.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery.ui.ipad.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/globalize.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/ba-debug.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="timeglider-1.0.3.min.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body>
+    <p>Hi</p>
+    <div id='placement' style="margin:32px;margin-bottom:0;	height:450px;"></div>
+    <p>Bye</p>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var tg1 = $("#placement").timeline({
+                "data_source":"//dev.stepbible.org/rest/timeline/getEventsInPeriod/-6000/1000",
+                "min_zoom":15,
+                "max_zoom":60,
+                "image_lane_height":100
+            });
+        });
+    </script>
+</body>
+</html>

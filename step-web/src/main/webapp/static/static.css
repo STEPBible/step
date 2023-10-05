@@ -1,0 +1,127 @@
+body,h1 {
+	padding: 0px;
+	margin: 0px;
+	font-family: Verdana;
+}
+
+.container {
+    padding: 10px;
+}
+
+h1 {
+	font-size: 16px;
+	padding: 10px;
+}
+
+h1 a {
+	text-decoration: none;
+}
+
+h2 {
+	font-size: 16px;
+	color: #822433;
+}
+
+h3 {
+	font-size: 14px;
+	color: #822433;
+	padding: 0px;
+	margin: 0px;
+}
+
+a {
+	color: #17758F;
+}
+
+.copyright {
+	margin-left: 5px;
+	font-size: 11px;
+	min-width: 200px;
+	/* 	float: left; */
+}
+
+.header {
+	background-image: url('../images/step-top-left-logo.png');
+	background-repeat: no-repeat;
+	background-position: left;
+	background-size: 40px 50px;
+	background-color: #f8f8f8;
+	border-bottom: 1px solid #C8C8C8;
+	color: #5E5E5E;
+	height: 40px;
+    padding-left: 40px;
+}
+
+.listingTable tr.even {
+	background-color: #F0F0F0;
+}
+
+#bookListContainer {
+	width: 700px;
+	padding-right: 10px;
+	float: left;
+}
+
+.listingTable {
+	border: solid 1px lightgrey;
+}
+
+.listingTable th {
+	background-color: black;
+	color: white;
+	font-size: 12px;
+}
+
+.listingTable {
+	border-collapse: collapse;
+}
+
+.listingTable tr,#bookListTable td {
+	border-bottom: solid 1px lightgrey;
+	border-right: solid 1px lightgrey;
+	margin: 0px;
+	font-size: 12px;
+}
+
+.listingTable tr {
+	padding: 0px;
+}
+
+.listingTable td {
+	padding: 2px;
+}
+
+.bookName {
+	color: black;
+	font-weight: bold;
+	padding-left: 5px;
+}
+
+.listingTable a {
+	color: #33339F;
+}
+
+/******************/
+/** versions page */
+/******************/
+a.info {
+	color: #33339F;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.versionInitialsColumn {
+	width: 150px;
+}
+
+.versionNameColumn {
+	
+}
+
+.versionCategoryColumn {
+	width: 100px;
+}
+
+.tyndaleInfo {
+	font-size: 12px;
+}

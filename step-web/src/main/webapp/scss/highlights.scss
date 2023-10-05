@@ -1,0 +1,72 @@
+@import 'template_variables';
+
+[strong] {
+  color: $strong-color; // This line is for IE browser
+  color: var(--clrStrongText);
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+//highlights in text
+.emphasisePassagePhrase {
+  background-color: #F3E5B4;
+}
+
+.relatedWordEmphasis {
+}
+
+.relatedWordEmphasisHover {
+  background-color: rgba($highlight-color, 0.2);  // This line is for IE browser
+  background-color: var(--clrRelatedWordBg);
+  color: $quickLexiconRelatedFontColour;
+}
+
+.lexiconFocus {
+  background-color: $clrLexiconFocusBG;  // This line is for IE browser
+  background-color: var(--clrLexiconFocusBG); // This is a light color
+  color: black; // This will give it enough contrast
+}
+
+.lexiconRelatedFocus {
+  background-color: $lexiconFocusRelatedColour;
+  background-color: var(--clrLexiconFocusBG); // This is a light color
+  color:black; // This will give it enough contrast
+}
+
+.primaryLightBg {
+  background-color: $highlight-color !important;  // This line is for IE browser
+  background-color: var(--clrHighlightBg) !important;
+  color: $quickLexiconFontColour !important;
+  text-shadow: none !important;
+
+  & > .secondaryBackground {
+    background-color: $highlight-color !important;  // This line is for IE browser
+    background-color: var(--clrHighlightBg) !important;
+  }
+
+  .segC0, .segC1 {
+    color: $quickLexiconFontColour;
+  }
+}
+
+.secondaryBackground {
+  background-color: $secondaryHoverColour;
+  color: black; // This will give it enough contrast
+}
+
+.highlightBorder {
+  border: #d3d3d3; // for IE
+  border: var(--clr2ndHover);
+  border-bottom-style: inset;
+}
+
+// hebrew highlights
+.segC0 {
+  color: #33339F;
+}
+
+.segC1 {
+  color: black;
+}

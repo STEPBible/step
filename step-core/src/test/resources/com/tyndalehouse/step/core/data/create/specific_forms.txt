@@ -1,0 +1,15 @@
+# This data is copyright Tyndale House
+# Please contact us through www.tyndalehouse.com to request permission to use it
+GC001,ἄλφα
+GC001,αλφα
+GC001,α
+GC001,Α
+GC010,Ἀβιούδ,
+GC010,αβιουδ
+GC010,αβοήθητος
+GC010,αβουλίας
+GC010,άβραν
+GC010,αβουλία
+GC010,Ἀβιοὺδ
+GC010,άβραις
+GC010,άβραι

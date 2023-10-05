@@ -1,0 +1,62 @@
+@import 'template_variables';
+@import 'mixins';
+
+#history {
+  ul.list-group {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+
+  .list-group-item {
+    background-color: transparent;
+    border: none;
+    padding: 1px 0;
+    line-height: 19pt;
+    a {
+      padding: 0;
+      margin-right: 5px;
+    }
+  }
+
+  .openBookmark {
+    .glyphicon {
+      top: 0;
+    }
+  }
+
+  .glyphicon {
+    font-size: 1em;
+    line-height: 1em;
+    padding: 0;
+
+    &:hover {
+      color: $headingColour;
+      cursor: pointer;
+    }
+    &.glyphicon-open {
+      @include rotate(-90deg);
+      filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    }
+
+    &.glyphicon-pushpin {
+      transition: transform 100ms;
+      &:hover {
+        @include rotate(-45deg);
+      }
+    }
+    &.glyphicon-pushpin-pinned {
+      transition: transform 100ms;
+      &:before {
+        content: "\e146";
+      }
+      @include rotate(-45deg);
+      &:hover {
+        @include rotate(0deg);
+      }
+    }
+  }
+  
+  .historyItem .argSummary {
+    display: inline;
+  }
+}

@@ -1,0 +1,28 @@
+@import 'template_variables';
+
+#supportContainer {
+  z-index: 10;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+
+  #raiseSupportTrigger {
+    border-radius: 3 0 0 0;
+  }
+
+  #stepDisclaimer {
+    &:hover {
+      background-position: inherit;
+    }
+    border-radius: 3 3 0 0;
+  }
+}
+
+#raiseSupport .modal-body {
+  padding: 20 20 0 20;
+}
+
+.mandatory {
+  color: $headingColour;
+  font-weight: bold;
+}

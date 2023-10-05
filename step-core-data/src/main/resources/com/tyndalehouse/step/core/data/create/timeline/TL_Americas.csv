@@ -1,0 +1,7 @@
+"ID","Name","From","To","From2","To2","Importance","Certainty","Flags","Timeline","Type","Description","Refs","Notes"
+"T_Americas","Events in the Americas",-4000,900,,,"T_All",,,"T_All","Timeline",,,"From Finegan, adding post-1917. Fuzzinesses mine. NB: these seem to assume a late Exodus"
+"E_AME1","First date on the Mayan Long Count calendar","-3112-08-11",,,,"T_Americas",,,"T_Americas","Event",,,
+"E_AME2","Mayan pre-classical period","-1000","250",,,"T_Americas","100/25",,"T_Americas","Period",,,
+"E_AME3","Mayan classical period","250","900",,,"T_Americas","25",,"T_Americas","Period",,,
+"E_AME4","Olmec civilisation","-1200","-400",,,"T_Americas","50",,"T_Americas","Period",,,
+"E_AME5","Hopewell tradition","-500","200",,,"T_Americas","50",,"T_Americas","Period","in eastern half of what's now the USA",,

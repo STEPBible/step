@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("saveClrModal")>X</button>
+</div>
+<div class="modal-body">
+<p>Save your color configuration
+<p>Enter a name:
+<input id='saveClrModalInputArea' type="text" name="userClrName"><br>
+<p id='saveClrModalPromptForDropdownList'>or select a previously defined name:
+<div id="saveClrModalSelectArea"></div>
+<div class="footer">
+<button class="btn btn-default btn-xs closeModal" onclick=saveUserClrConfig()><label>Save</label></button>
+</div>
+</div>
+</div>
+</div>
+<script>	
+	$( document ).ready(function() {
+		initSaveClrCodeModal();
+	});
+</script>

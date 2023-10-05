@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("openClrModal")>X</button>
+</div>
+<div class="modal-body">
+<p>Select an existing color configuration:
+<div id="openClrModalSelectArea"></div>
+<div class="footer">
+<br>
+<button id="openButton" class="stepButton closeModal" onclick=cf.openUserSelectedConfig()><label>Open</label></button>
+</div>
+</div>
+</div>
+</div>
+<script>	
+	$( document ).ready(function() {
+		initOpenClrCodeModal();
+	});
+</script>

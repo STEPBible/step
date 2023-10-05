@@ -1,0 +1,68 @@
+/* TODO: Refactor font names to be abstracted away, since Cardo isn't really cardo!  */
+@font-face {
+  font-family: 'Cardo';
+  font-style: normal;
+  font-size: 18px;
+    src: url('../fonts/NotoSerif-Regular.woff') format('woff');
+
+}
+@font-face {
+    font-family: 'Cardo';
+    font-style: normal;
+    font-size: 18px;
+    src: url('../fonts/NotoSerif-Regular.woff') format('woff');
+    unicode-range: U+2E00-2E17;
+}
+
+@font-face {
+    font-family: 'Amiri';
+    font-style: normal;
+    font-size: 18px;
+    src: url('../fonts/Amiri-Regular.woff') format('woff');
+}
+
+@font-face {
+	font-family : "SIL_EZRA";
+    src: url('../fonts/SILEOT.woff');
+}
+
+@font-face {
+    font-family: 'Conv_newathu405';
+    src: url('../fonts/newathu405.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SyrCOMEdessa';
+    src: url('../fonts/SyrCOMEdessa.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Padauk';
+    src: url('../fonts/Padauk.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Hanuman';
+    src: url('../fonts/Mo5V56Bu.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face{
+    font-family: 'DroidKufi';
+    src: url('../fonts/DroidKufi-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal; 
+}
+
+@font-face {
+    font-family: 'Nazli';
+    src: url('../fonts/nazli.woff') format('woff');
+    font-style: normal;
+}

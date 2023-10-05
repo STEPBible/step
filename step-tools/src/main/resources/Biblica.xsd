@@ -1,0 +1,1779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (http://www.altova.com) by Phil Murdy (Biblica) -->
+<xs:schema xmlns="http://www.Biblica.com/namespace/version_1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" targetNamespace="http://www.Biblica.com/namespace/version_1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" xml:lang="en">
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+	<!-- Last Update: 21-September-2011. -->
+	<!-- This schema is only intended for Biblica's Bible translation documents. It is not intended for other translations.
+	The design has made use of the good work contained in the OXES and OSIS schemas.
+	The main differences are that (1) additional elements have been added (e.g., "Introduction Paragraph", "Series List") in order to handle the unique formatting of the NIV,  (2) more explicit and less-generalized names have been used for elements, (3) the use of attributes has been minimized and replaced by specific elements, and (4) the valid locations of element placement is more restrictive.
+	 More information is at http://ws.ibs.org/NIV.
+	 Send comments to: Phil Murdy (Phil.Murdy@Biblica.com) . -->
+	<!-- 21-Sep-2011: Added outlineList to canonEmbeddedSectionCT
+	20-Sep-2011: Added pInlineList to minorSectionCT
+	15-Sep-2011: Modified variantSectionCT
+	14-Sep-2011: Added "selah" to canonOtStanzaCT
+	14-Sep-2011: Modified the canonOtStanzaCT (changed allowed locacation of attribution)
+	13-Sep-2011: Changed pConclusion to pClosing in canonNtEmbeddedCT
+	9-Sep-2011: Modified SongOfSolomonCT.
+	8-Sep-2011: Modified the otBookCT to accomodate sections before majorSections.
+	7-Sep-2011: Removed SeriesList from canonSetApartCT
+	31-Aug-2011: Removed verseStart and verseEnd from "wordsOfJesusCT"
+	31-Aug-2011: Removed "outlineList" from "embeddedSectionCT"
+	29-Aug-2011: Removed "smCaps" element from "noteCT".
+	3-Aug-2011: Modified listCT.
+	1-Aug-2011: Modified table and row definitions.
+	1-Aug-2011: Made "type" attribute of "embedded" optional.
+	29-July-2011: Added parallelPassage to and sectionOTCT and minorSectionCT.
+	28-July-2011: Add "title" to "listCT"
+	27-July-2001: Added "variantSection" element to NtBookCT and removed "separator" attribute from canonNtSectionCT.
+	27-July-2001: Added "introduction" element to oldTestamentCT and newTestamentCT, and improved introductionCT.
+	21-July-2001: Added "from" attribute to the verseEndCT complexType.
+	21-July-2001: Added "ide" and "rem" attributes to the attribute group "attribute-USFM".
+	20-July-2001: Replaced pIntroduction with pOpening (a new element) in canonNtSectionCT and canonEmbeddedCT.
+	14-July-2001: Fixed error in MinorSection in ProverbMajorSection.
+	12-July-2001: Changed "itemContinue" to itemContinued".
+	8-July-2001: Added "bookNameLong", "bookNameShort", and "bookAbbreviation" attributes to book.
+	8-July-2001: Added "workID" attribute to "Scripture" element. -->
+	<xs:element name="biblicaDocument">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="scripture">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="header" type="headerCT"/>
+							<xs:element name="titlePage" type="titlePageCT" minOccurs="0"/>
+							<xs:element name="front" type="frontCT" minOccurs="0"/>
+							<xs:element name="oldTestament" type="oldTestamentCT" minOccurs="0"/>
+							<xs:element name="newTestament" type="newTestamentCT" minOccurs="0"/>
+							<xs:element name="back" type="backCT" minOccurs="0"/>
+						</xs:sequence>
+						<xs:attribute name="workID" type="xs:ID" use="required">
+							<xs:annotation>
+								<xs:documentation>The scripture's abbreviation. For example, "NIV"</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="scope" type="oxesRefType">
+							<xs:annotation>
+								<xs:documentation>For example, GEN.1-REV.22</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- ====< Complex Types >======== -->
+	<xs:complexType name="aCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>A link to another location, which is identified by the "href" attribute.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="href" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="abbreviationCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>An abbreviation in a note or introduction, which is fully defined in the "expansion" attribute.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="expansion" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="acrosticStanzaCT">
+		<xs:sequence>
+			<xs:element name="acrosticTitle" type="acrosticTitleCT"/>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="line1" type="canonParaNoInscriptionCT"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="acrosticTitle" type="acrosticTitleCT" minOccurs="0"/>
+					<xs:sequence>
+						<xs:element name="line2" type="canonParaNoInscriptionCT" maxOccurs="5"/>
+						<xs:element name="line3" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="5"/>
+					</xs:sequence>
+				</xs:choice>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="acrosticTitleCT" mixed="true">
+		<xs:attribute name="letter" type="xs:integer" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="alternateReadingCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Only occurs in "note" elements.</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr"/>
+			<xs:element name="inscription" type="inscriptionCT"/>
+			<xs:element name="lineBreak" type="lineBreakCT"/>
+			<xs:element name="supplied" type="suppliedCT"/>
+			<xs:element name="verseStart" type="verseStartCT"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="annotationCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Annotations are removed from distributed files. They are for internal Biblica use ONLY.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="created" type="dateType" use="required"/>
+		<xs:attribute name="type" type="enum.annotationCategoryValue" use="required"/>
+		<xs:attribute name="modified" type="dateType"/>
+		<xs:attribute name="assignedTo" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Should be "ID" attribute of "Contributor" element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="bookTitleGroupCT">
+		<xs:sequence>
+			<xs:annotation>
+				<xs:documentation>Only one of each title is allowed.</xs:documentation>
+			</xs:annotation>
+			<xs:element name="mainTitle" type="titleCT"/>
+			<xs:element name="secondaryTitle" type="titleCT" minOccurs="0"/>
+			<xs:element name="tertiaryTitle" type="titleCT" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="canonical" type="xs:boolean" use="optional"/>
+		<xs:attribute name="secondFirst" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>When a "secondaryTitle" exists, this flag indicates that it should be before the "mainTitle".</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="bookTitleInTextCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Found in non-canonical text, e.g., front matter or introductions.</xs:documentation>
+		</xs:annotation>
+		<xs:group ref="grp.notes"/>
+	</xs:complexType>
+	<xs:complexType name="canonNtEmbeddedCT">
+		<xs:annotation>
+			<xs:documentation>(Also see "canonSetApart".)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="pOpening" type="canonParaEmbeddedCT" minOccurs="0" maxOccurs="3"/>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="embeddedSection" type="canonEmbeddedSectionCT" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Found in John 17</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="p" type="canonParaNoInscriptionCT" minOccurs="0"/>
+				<xs:element name="stanza" type="canonEmbeddedStanzaCT" minOccurs="0"/>
+			</xs:choice>
+			<xs:element name="pClosing" type="canonParaNoInscriptionCT" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Acts 15:29</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+		<xs:attribute name="type" type="enum.embeddedType"/>
+		<xs:attribute name="from" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="canonOtEmbeddedCT">
+		<xs:annotation>
+			<xs:documentation>(Also see "canonSetApart".)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice minOccurs="0">
+				<xs:element name="pOpening" type="canonParaEmbeddedCT" maxOccurs="3"/>
+				<xs:element name="pIntroduction" type="canonParaEmbeddedCT"/>
+			</xs:choice>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="embeddedSection" type="canonEmbeddedSectionCT" minOccurs="0"/>
+				<xs:element name="p" type="canonParaNoInscriptionCT" minOccurs="0"/>
+				<xs:element name="refrain" type="canonParaNoInscriptionCT" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Deu 27</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="stanza" type="canonEmbeddedStanzaCT" minOccurs="0"/>
+				<xs:element name="seriesList" type="canonSeriesListCT" minOccurs="0"/>
+			</xs:choice>
+			<xs:element name="pConclusion" type="canonParaNoInscriptionCT" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+		<xs:attribute name="type" type="enum.embeddedType"/>
+		<xs:attribute name="from" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="canonEmbeddedSectionCT">
+		<xs:sequence>
+			<xs:element name="sectionHead" type="titleCT" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Found in Daniel 4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="p" type="canonParaNoInscriptionCT"/>
+				<xs:element name="pOpening" type="canonParaEmbeddedCT">
+					<xs:annotation>
+						<xs:documentation>Daniel 4</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="pIntroduction" type="canonParaEmbeddedCT">
+					<xs:annotation>
+						<xs:documentation>Daniel 4:34</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="stanza" type="canonOtStanzaCT">
+					<xs:annotation>
+						<xs:documentation>Daniel 4:3</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="table" type="tableCT">
+					<xs:annotation>
+						<xs:documentation>Nehemiah 7:8 ...</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="outlineList" type="canonOutlineListCT"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="canonEmbeddedStanzaCT">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="line1" type="canonParaNoInscriptionCT" maxOccurs="2"/>
+			<xs:element name="line2" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="3"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="canonEmbeddedListCT">
+		<xs:annotation>
+			<xs:documentation>(Used in canonEmbeddedSectionCT.)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="item1" type="canonParaNoInscriptionCT">
+				<xs:annotation>
+					<xs:documentation>Rendered with hanging indentation on the first line.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="item2" type="canonParaNoInscriptionCT" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="canonNoteCT" mixed="true">
+		<xs:sequence>
+			<xs:element name="referencedText" type="referencedTextCT" minOccurs="0"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="abbreviation" type="abbreviationCT"/>
+				<xs:element name="alternateReading" type="alternateReadingCT"/>
+				<xs:element name="reference" type="referenceCT"/>
+				<xs:group ref="grp.allTr"/>
+				<xs:element name="variant" type="variantCT"/>
+				<xs:element name="keyWord" type="xs:string"/>
+				<xs:element name="emphasis" type="emphasisType"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="general"/>
+					<xs:enumeration value="allusion"/>
+					<xs:enumeration value="alternative"/>
+					<xs:enumeration value="background"/>
+					<xs:enumeration value="citation"/>
+					<xs:enumeration value="crossReference"/>
+					<xs:enumeration value="exegesis"/>
+					<xs:enumeration value="explanation"/>
+					<xs:enumeration value="literal"/>
+					<xs:enumeration value="study"/>
+					<xs:enumeration value="translation"/>
+					<xs:enumeration value="variant"/>
+					<xs:enumeration value="versification"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="refLabel" type="xs:string"/>
+		<xs:attribute name="scope" type="oxesRefType"/>
+		<xs:attribute name="caller" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="canonNtPCT" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr"/>
+			<xs:element name="inscription" type="canonParaNoInscriptionCT"/>
+			<xs:element name="wordsOfJesus" type="wordsOfJesusCT"/>
+			<xs:group ref="grp.canon"/>
+			<xs:group ref="grp.chapters"/>
+			<xs:group ref="grp.notes"/>
+			<xs:group ref="grp.verses"/>
+		</xs:choice>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="canonNtSectionCT">
+		<xs:sequence>
+			<xs:element name="sectionHead" type="titleCT" minOccurs="0"/>
+			<xs:element name="parallelPassage" type="parallelPassageCT" minOccurs="0"/>
+			<xs:element name="pOpening" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="4"/>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="p" type="canonNtPCT" minOccurs="0"/>
+				<xs:choice minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Optional choice of one</xs:documentation>
+					</xs:annotation>
+					<xs:element name="embedded" type="canonNtEmbeddedCT"/>
+					<xs:element name="pInscription" type="canonNtPCT"/>
+					<xs:element name="stanza" type="canonNtStanzaCT"/>
+					<xs:element name="seriesList" type="canonSeriesListCT">
+						<xs:annotation>
+							<xs:documentation>Romans 16:3-16</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="minorSection" type="minorSectionNTCT"/>
+					<xs:element name="outlineList" type="canonOutlineListCT"/>
+					<xs:element name="pContinued" type="canonNtPCT"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:sequence>
+		<xs:attribute name="scope" type="oxesRefType">
+			<xs:annotation>
+				<xs:documentation>i.e., a verse range.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="canonNTVariantSectionCT">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="sectionHead" type="titleCT" minOccurs="0"/>
+			<xs:element name="parallelPassage" type="parallelPassageCT" minOccurs="0"/>
+			<xs:element name="p" type="canonNtPCT"/>
+		</xs:sequence>
+		<xs:attribute name="scope" type="oxesRefType">
+			<xs:annotation>
+				<xs:documentation>i.e., a verse range.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="canonNtStanzaCT">
+		<xs:annotation>
+			<xs:documentation>A repetitive sequence of one or more of "line1" followed by zero or more "line2". Sequencial stanzas separated a blank line.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="line1" type="canonParaNoInscriptionCT" minOccurs="0"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="attribution" type="canonParaNoInscriptionCT">
+					<xs:annotation>
+						<xs:documentation>e.g., Acts 7:49; 2 Corinthians 6:17+18</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="doxology" type="canonParaNoInscriptionCT">
+					<xs:annotation>
+						<xs:documentation>i.e. Revelation 1:7</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:element name="line2" type="canonParaNoInscriptionCT"/>
+					<xs:element name="line3" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>e.g., Luke 6:22</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="citationOT" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="canonNtMajorSectionCT">
+		<xs:sequence>
+			<xs:element name="titleGroup" type="titleGroupCT"/>
+			<xs:choice>
+				<xs:element name="section" type="canonNtSectionCT" maxOccurs="unbounded"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="scope" type="oxesRefType"/>
+	</xs:complexType>
+	<xs:complexType name="canonOtMajorSectionCT">
+		<xs:sequence>
+			<xs:element name="titleGroup" type="titleGroupCT"/>
+			<xs:element name="p" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="stanza" type="canonOtStanzaCT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="section" type="canonOtSectionCT" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="scope" type="oxesRefType"/>
+	</xs:complexType>
+	<xs:complexType name="canonOtSectionCT">
+		<xs:sequence>
+			<xs:element name="sectionHead" type="titleCT" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Missing in Micah 1:1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="parallelPassage" type="parallelPassageCT" minOccurs="0"/>
+			<xs:element name="hebrewTitle" type="hebrewTitleCT" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Zechariah 9:1 + 12:1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:annotation>
+					<xs:documentation>Beginning with ...</xs:documentation>
+				</xs:annotation>
+				<xs:element name="acrosticStanza" type="acrosticStanzaCT"/>
+				<xs:element name="minorSection" type="minorSectionOTCT"/>
+				<xs:element name="pIntroduction" type="canonParaNoInscriptionCT"/>
+				<xs:element name="p" type="canonPCT"/>
+				<xs:element name="stanza" type="canonOtStanzaCT"/>
+				<xs:element name="embedded" type="canonOtEmbeddedCT"/>
+				<xs:element name="setApart" type="canonSetApartCT">
+					<xs:annotation>
+						<xs:documentation>Joshua 16:1-3</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="pContinued" type="canonParaNoInscriptionCT">
+					<xs:annotation>
+						<xs:documentation>E.g., Joshua 13:8</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="outlineList" type="canonOutlineListCT"/>
+			</xs:choice>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="acrosticStanza" type="acrosticStanzaCT"/>
+				<xs:element name="minorSection" type="minorSectionOTCT"/>
+				<xs:element name="p" type="canonPCT"/>
+				<xs:element name="setApart" type="canonSetApartCT"/>
+				<xs:element name="pIntroduction" type="canonParaNoInscriptionCT"/>
+				<xs:element name="embedded" type="canonOtEmbeddedCT"/>
+				<xs:element name="outlineList" type="canonOutlineListCT"/>
+				<xs:element name="pInlineList" type="canonParaNoInscriptionCT"/>
+				<xs:element name="pInscription" type="canonParaNoInscriptionCT">
+					<xs:annotation>
+						<xs:documentation>Used in 1 Chronicles, Ezekiel, Daniel, and Joel.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="seriesList" type="canonSeriesListCT"/>
+				<xs:element name="stanza" type="canonOtStanzaCT"/>
+				<xs:element name="table" type="tableCT">
+					<xs:annotation>
+						<xs:documentation>Only used in Joshua, 1 Chronicles, and Ezra.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="pContinued" type="canonParaNoInscriptionCT"/>
+				<xs:element name="pConclusion" type="canonParaNoInscriptionCT"/>
+			</xs:choice>
+			<xs:element name="hebrewTitle" type="hebrewTitleCT" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Only in Habakkuk 3:19</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="scope" type="oxesRefType">
+			<xs:annotation>
+				<xs:documentation>i.e., a verse range.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="canonOtStanzaCT">
+		<xs:annotation>
+			<xs:documentation>A repetitive sequence of one or more of "line1" followed by zero or more "line2". Sequencial stanzas separated a blank line.</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:choice>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:element name="line1" type="canonParaNoInscriptionCT" maxOccurs="5"/>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="line2" type="canonParaNoInscriptionCT" maxOccurs="5"/>
+							<xs:choice minOccurs="0" maxOccurs="unbounded">
+								<xs:element name="line3" type="canonParaNoInscriptionCT" maxOccurs="3">
+									<xs:annotation>
+										<xs:documentation>i.e., Exodus 15:11</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="refrain" type="canonParaNoInscriptionCT">
+									<xs:annotation>
+										<xs:documentation>i.e., ECC 12:8 in NVI</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:sequence>
+						<xs:choice>
+							<xs:element name="attribution" type="canonParaNoInscriptionCT">
+								<xs:annotation>
+									<xs:documentation>e.g., Isaiah 3:15, 17:3+6 Needs to be allowed after line1.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="doxology" type="canonParaNoInscriptionCT">
+								<xs:annotation>
+									<xs:documentation>e.g., EZK.48.35; JOL 3:21</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="selah" type="canonParaNoInscriptionCT">
+								<xs:annotation>
+									<xs:documentation>e.g., HAB 3</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:choice>
+					</xs:choice>
+				</xs:sequence>
+				<xs:element name="refrain" type="canonParaNoInscriptionCT">
+					<xs:annotation>
+						<xs:documentation>i.e., JOL.3.21</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="attribution" type="canonParaNoInscriptionCT">
+					<xs:annotation>
+						<xs:documentation>i.e., AMO.9.15</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="line2" type="canonParaNoInscriptionCT" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Ecclesiastes 3:2-8</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="canonOutlineListCT">
+		<xs:annotation>
+			<xs:documentation>Most common. Used for genealogies and most administrative lists.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="item1" type="canonParaNoInscriptionCT" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Rendered right indentation on the first line.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="item2" type="canonParaNoInscriptionCT"/>
+				<xs:element name="itemContinued" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="2"/>
+				<xs:element name="item3" type="canonParaNoInscriptionCT" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Only used in GEN 46:12 + 17</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="canonSeriesListCT">
+		<xs:annotation>
+			<xs:documentation>Related items that are usually presented as paragraphs, e.g., Genesis 1.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="item1" type="canonParaNoInscriptionCT">
+				<xs:annotation>
+					<xs:documentation>Rendered with hanging indentation on the first line.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="itemContinued" type="canonParaNoInscriptionCT">
+					<xs:annotation>
+						<xs:documentation>Rendered as a normal paragraph with first line indentation, and with a paragraph margin equal to the  preceding "item1" paragraph indentation, e.g., Genesis 1:11.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="stanza" type="canonOtStanzaCT">
+					<xs:annotation>
+						<xs:documentation>e.g., Genesis 1:27</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="item2" type="canonParaNoInscriptionCT"/>
+				<xs:element name="itemContinued" type="canonParaNoInscriptionCT" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>e.g., 1 Chronicles 5:10</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="canonSetApartCT">
+		<xs:sequence>
+			<xs:element name="pIntroduction" type="canonParaNoInscriptionCT" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Only occurs in Exodus 6:14</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="pContinued" type="canonParaNoInscriptionCT">
+					<xs:annotation>
+						<xs:documentation>Used when the Set Apart block is preceded by an Introduction Paragraph ending with a colon.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="p" type="canonParaNoInscriptionCT" maxOccurs="unbounded"/>
+			</xs:choice>
+			<xs:element name="pConclusion" type="canonParaNoInscriptionCT" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Only occurs in Exodus 6:25b</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="canonParaNoInscriptionCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>This differs from a "p" in that an inscription is not allowed.</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.canon" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.chapters" minOccurs="0"/>
+			<xs:group ref="grp.notes" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.verses" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="wordsOfJesus" type="wordsOfJesusCT"/>
+		</xs:choice>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="canonParaEmbeddedCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>This differs from a "p" in that an inscription is not allowed.</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.canon" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.chapters" minOccurs="0"/>
+			<xs:group ref="grp.notes" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.verses" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="canonPCT" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr"/>
+			<xs:group ref="grp.canon"/>
+			<xs:group ref="grp.chapters"/>
+			<xs:group ref="grp.notes"/>
+			<xs:group ref="grp.verses"/>
+			<xs:element name="inscription" type="inscriptionCT"/>
+		</xs:choice>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="cellCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Only found in a "row" element.</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr"/>
+			<xs:group ref="grp.notes"/>
+			<xs:element name="note" type="canonNoteCT"/>
+			<xs:group ref="grp.verses"/>
+			<xs:group ref="grp.chapters"/>
+		</xs:choice>
+		<xs:attributeGroup ref="attribute-align"/>
+		<xs:attribute name="canonical" type="xs:boolean" use="optional"/>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="chapterEndCT">
+		<xs:attribute name="from" type="xs:IDREF" use="required"/>
+		<xs:attribute name="ID" type="xs:ID" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="chapterStartCT">
+		<xs:choice minOccurs="0">
+			<xs:element name="note" type="noteCT">
+				<xs:annotation>
+					<xs:documentation>Only used in first four chapters of Lamentations.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="ID" type="xs:ID" use="required"/>
+		<xs:attribute name="n" type="xs:short" use="required"/>
+		<xs:attribute name="altID" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="contributorCT" mixed="true">
+		<xs:attribute name="ID" type="xs:ID" use="required"/>
+		<xs:attribute name="role" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Adapter"/>
+					<xs:enumeration value="Author_of_afterword,_colophon,_etc."/>
+					<xs:enumeration value="Author_of_introduction"/>
+					<xs:enumeration value="Author"/>
+					<xs:enumeration value="Collaborator"/>
+					<xs:enumeration value="Commentator_for_written_text"/>
+					<xs:enumeration value="Commentator"/>
+					<xs:enumeration value="Compiler"/>
+					<xs:enumeration value="Consultant_to_a_project"/>
+					<xs:enumeration value="Consultant"/>
+					<xs:enumeration value="Contributor"/>
+					<xs:enumeration value="Editor"/>
+					<xs:enumeration value="Encoder"/>
+					<xs:enumeration value="Grammar_Consultant"/>
+					<xs:enumeration value="Language_Program_Coordinator"/>
+					<xs:enumeration value="Markup_editor"/>
+					<xs:enumeration value="Printer"/>
+					<xs:enumeration value="Process_contact"/>
+					<xs:enumeration value="Programmer"/>
+					<xs:enumeration value="Project_Coordinator"/>
+					<xs:enumeration value="Proofreader"/>
+					<xs:enumeration value="Publisher"/>
+					<xs:enumeration value="Reader"/>
+					<xs:enumeration value="Responsible_party"/>
+					<xs:enumeration value="Reviewer"/>
+					<xs:enumeration value="Sponsor"/>
+					<xs:enumeration value="Mother_Tongue_Translator"/>
+					<xs:enumeration value="Translation_Consultant"/>
+					<xs:enumeration value="Translator"/>
+					<xs:enumeration value="Translator_for_Back_Translation"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="foreignCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Identifies text in a different language that has no other identifying feature, e.g., MAT 27:46 or MRK 5:41.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="canonical" type="xs:boolean" use="optional"/>
+		<xs:attribute ref="xml:lang" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="backCT">
+		<xs:annotation>
+			<xs:documentation>i.e., Back Matter. Non-canonical text following canon.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="titlePage" type="titlePageCT" minOccurs="0"/>
+			<xs:element name="section" type="sectionCT" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="canonical" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="frontCT">
+		<xs:sequence>
+			<xs:element name="titlePage" type="titlePageCT" minOccurs="0"/>
+			<xs:element name="section" type="sectionCT" maxOccurs="unbounded"/>
+			<xs:element name="preface" type="prefaceCT" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="headerCT">
+		<xs:annotation>
+			<xs:documentation>Includes metadata about this 'scripture" element, i.e., the Bible text. Only ONE "header" element can exist in a XML document.</xs:documentation>
+			<xs:documentation>A work element provides information comparable to that found on the title page of a printed work, using the fields defined by the Dublin Core Initiative (see http://dublincore.org). Part of the "Header" element.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="revisionDesc" type="revisionDescCT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="titleGroup" type="titleGroupCT"/>
+			<xs:element name="contributor" type="contributorCT" maxOccurs="unbounded"/>
+			<xs:element name="identifier" type="identifierCT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="language" type="languageCT"/>
+			<xs:element name="rights" type="rightsCT" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The copyright holder and date.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="ID" type="oxesWorkType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="hebrewTitleCT" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.canon" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.chapters" minOccurs="0"/>
+			<xs:group ref="grp.notes" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.verses" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="emphasis" type="emphasisType" minOccurs="0"/>
+		</xs:choice>
+		<xs:attribute name="canonical" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="identifierCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>A formal identification for the work. (The "type" attribute identifies which system the identifier belongs to.) A work can have multiple identifiers. Found only in "header" element.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:ID">
+					<xs:enumeration value="URN"/>
+					<xs:enumeration value="ISBN"/>
+					<xs:enumeration value="SICI"/>
+					<xs:enumeration value="OXES"/>
+					<xs:enumeration value="URL"/>
+					<xs:enumeration value="LCCN"/>
+					<xs:enumeration value="DOI"/>
+					<xs:enumeration value="Dewey"/>
+					<xs:enumeration value="URI"/>
+					<xs:enumeration value="IBS"/>
+					<xs:enumeration value="Biblica"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="inscriptionCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Inline, e.g., Daniel 5:25 or Matthew 27:37. Often rendered in small caps.</xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="nameOfGod" type="nameOfGodType" minOccurs="0"/>
+			<xs:element name="seeInGlossary" type="seeInGlossaryCT" minOccurs="0"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="introductionCT">
+		<xs:choice>
+			<xs:element name="section" type="sectionCT" maxOccurs="unbounded"/>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="p" type="pCT"/>
+				<xs:element name="list" type="listCT"/>
+				<xs:element name="stanza" type="stanzaCT"/>
+			</xs:choice>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="itemCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Used in "list" elements in the  introductions.</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr"/>
+			<xs:group ref="grp.notes"/>
+			<xs:element name="bookTitleInText" type="bookTitleInTextCT"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="languageCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Only used in "header" element.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="type" use="required">
+			<xs:annotation>
+				<xs:documentation>From OSIS: The type attribute must be set to IANA, IETF, ISO-639-1, ISO-639-2, ISO-639-2-B, ISO-639-2-T, LINGUIST, or SIL. (See http://www.sil.org/iso639-3/)</xs:documentation>
+			</xs:annotation>
+			<!--  3 lower case letters required to match SIL standard. -->
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="IANA"/>
+					<xs:enumeration value="IETF"/>
+					<xs:enumeration value="ISO-639-1"/>
+					<xs:enumeration value="ISO-639-2"/>
+					<xs:enumeration value="ISO-639-2-B"/>
+					<xs:enumeration value="ISO-639-2-T"/>
+					<xs:enumeration value="ISO-639-3"/>
+					<xs:enumeration value="LINGUIST"/>
+					<xs:enumeration value="SIL"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="listCT">
+		<xs:annotation>
+			<xs:documentation>Used in introductions.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="title" type="pCT" minOccurs="0"/>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="item1" type="itemCT"/>
+				<xs:sequence minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="item2" type="itemCT" maxOccurs="unbounded"/>
+					<xs:element name="item3" type="itemCT" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="minorSectionOTCT">
+		<xs:sequence>
+			<xs:element name="sectionHead" type="titleCT" minOccurs="0"/>
+			<xs:element name="parallelPassage" type="parallelPassageCT" minOccurs="0"/>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="embedded" type="canonOtEmbeddedCT"/>
+				<xs:element name="pContinued" type="canonParaNoInscriptionCT"/>
+				<xs:element name="p" type="canonPCT"/>
+				<xs:element name="pInlineList" type="canonParaNoInscriptionCT"/>
+				<xs:sequence>
+					<xs:element name="pIntroduction" type="canonParaNoInscriptionCT" minOccurs="0"/>
+					<xs:choice>
+						<xs:element name="outlineList" type="canonOutlineListCT"/>
+						<xs:element name="stanza" type="canonOtStanzaCT"/>
+					</xs:choice>
+					<xs:element name="pConclusion" type="canonParaNoInscriptionCT" minOccurs="0"/>
+				</xs:sequence>
+				<xs:element name="setApart" type="canonSetApartCT"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="scope" type="oxesRefType"/>
+	</xs:complexType>
+	<xs:complexType name="minorSectionNTCT">
+		<xs:sequence>
+			<xs:element name="sectionHead" type="titleCT"/>
+			<xs:element name="p" type="canonNtPCT" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="scope" type="oxesRefType"/>
+	</xs:complexType>
+	<xs:complexType name="noteCT" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="abbreviation" type="abbreviationCT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="emphasis" type="emphasisType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="reference" type="referenceCT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="seeInGlossary" type="seeInGlossaryCT" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="general"/>
+					<xs:enumeration value="explanation"/>
+					<xs:enumeration value="study"/>
+					<xs:enumeration value="translation"/>
+					<xs:enumeration value="versification"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="scope" type="oxesRefType"/>
+	</xs:complexType>
+	<xs:complexType name="newTestamentCT">
+		<xs:sequence>
+			<xs:element name="titlePage" type="titlePageCT" minOccurs="0"/>
+			<xs:element name="introduction" type="introductionCT" minOccurs="0"/>
+			<xs:element name="book" type="ntBookCT" maxOccurs="27"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ntBookCT">
+		<xs:sequence>
+			<xs:element name="titlePage" type="titlePageCT" minOccurs="0"/>
+			<xs:element name="titleGroup" type="bookTitleGroupCT"/>
+			<xs:element name="introduction" type="introductionCT" minOccurs="0"/>
+			<xs:choice>
+				<xs:element name="majorSection" type="canonNtMajorSectionCT" maxOccurs="unbounded"/>
+				<xs:sequence>
+					<xs:element name="pOpening" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="4"/>
+					<xs:choice maxOccurs="unbounded">
+						<xs:element name="section" type="canonNtSectionCT"/>
+						<xs:element name="variantSection" type="canonNTVariantSectionCT"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attributeGroup ref="attribute-USFM"/>
+		<xs:attribute name="ID" type="enum.NTbookCode" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="oldTestamentCT">
+		<xs:sequence>
+			<xs:element name="titlePage" type="titlePageCT" minOccurs="0"/>
+			<xs:element name="introduction" type="introductionCT" minOccurs="0"/>
+			<xs:element name="book" type="otBookCT" maxOccurs="39"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="otBookCT">
+		<xs:sequence>
+			<xs:element name="titlePage" type="titlePageCT" minOccurs="0"/>
+			<xs:element name="titleGroup" type="bookTitleGroupCT"/>
+			<xs:element name="introduction" type="introductionCT" minOccurs="0"/>
+			<xs:choice>
+				<xs:element name="psalmBookGroup" type="psalmBookGroup" maxOccurs="5">
+					<xs:annotation>
+						<xs:documentation>Similar to a "major section".</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="proverbsMajorSection" type="proverbsMajorSectionCT" maxOccurs="9"/>
+				<xs:element name="songOfSolomon" type="songOfSolomonCT">
+					<xs:annotation>
+						<xs:documentation>This "song" is similar to a "section".</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:sequence>
+					<xs:element name="section" type="canonOtSectionCT" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Sections occur before Major Sections in the Russian JOB.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="majorSection" type="canonOtMajorSectionCT" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attributeGroup ref="attribute-USFM"/>
+		<xs:attribute name="ID" type="enum.OTbookCode" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="parallelPassageCT" mixed="true">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="reference" type="referenceCT"/>
+		</xs:sequence>
+		<xs:attribute name="scope" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Refers to the passage that is paralleled by the "reference" passages.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="pCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Non-canonical paragraphs.</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr"/>
+			<xs:group ref="grp.notes"/>
+			<xs:element name="bookTitleInText" type="bookTitleInTextCT"/>
+			<xs:element name="reference" type="referenceCT"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="proverbsMajorSectionCT">
+		<xs:sequence>
+			<xs:element name="title" type="titleCT"/>
+			<xs:choice>
+				<xs:element name="section" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="sectionHead" type="titleCT" minOccurs="0"/>
+							<xs:element name="p" type="canonParaNoInscriptionCT" minOccurs="0"/>
+							<xs:element name="pIntroduction" type="canonParaNoInscriptionCT" minOccurs="0"/>
+							<xs:choice>
+								<xs:element name="minorSection" type="minorSectionOTCT" maxOccurs="unbounded"/>
+								<xs:choice>
+									<xs:element name="stanza" type="proverbsStanzaCT" maxOccurs="unbounded"/>
+									<xs:element name="acrosticStanza" type="acrosticStanzaCT"/>
+								</xs:choice>
+							</xs:choice>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:sequence>
+					<xs:element name="p" type="canonParaNoInscriptionCT"/>
+					<xs:element name="stanza" type="proverbsStanzaCT" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="scope" type="oxesRefType"/>
+	</xs:complexType>
+	<xs:complexType name="proverbsStanzaCT">
+		<xs:annotation>
+			<xs:documentation>A "proverbsStanza" element is a container for 1 or more sequences of one or more of "line1" followed by zero or more "line2".</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="title" type="xs:string" minOccurs="0"/>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="line1" type="canonParaNoInscriptionCT" maxOccurs="5"/>
+				<xs:element name="line2" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="6"/>
+				<xs:element name="line3" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="7"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="psalmCT">
+		<xs:sequence>
+			<xs:element name="note" type="canonNoteCT" minOccurs="0" maxOccurs="2"/>
+			<xs:element name="parallelPassage" type="parallelPassageCT" minOccurs="0" maxOccurs="2"/>
+			<xs:element name="hebrewTitle" type="hebrewTitleCT" minOccurs="0"/>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="acrosticStanza" type="psalmAcrosticStanzaCT"/>
+				<xs:element name="p" type="canonParaNoInscriptionCT"/>
+				<xs:element name="stanza" type="psalmStanzaCT"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="n" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:short">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="150"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ID" type="xs:ID"/>
+	</xs:complexType>
+	<xs:complexType name="psalmAcrosticStanzaCT">
+		<xs:sequence>
+			<xs:element name="acrosticTitle" type="acrosticTitleCT"/>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="line1" type="psalmPCT"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="acrosticTitle" type="acrosticTitleCT" minOccurs="0"/>
+					<xs:sequence>
+						<xs:element name="line2" type="psalmPCT" maxOccurs="5"/>
+						<xs:element name="line3" type="psalmPCT" minOccurs="0" maxOccurs="5"/>
+					</xs:sequence>
+				</xs:choice>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="psalmBookGroup">
+		<xs:sequence>
+			<xs:element name="titleGroup" type="titleGroupCT"/>
+			<xs:choice>
+				<xs:element name="psalm" type="psalmCT" maxOccurs="45"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="n" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="1"/>
+					<xs:enumeration value="2"/>
+					<xs:enumeration value="3"/>
+					<xs:enumeration value="4"/>
+					<xs:enumeration value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="scope" type="oxesRefType"/>
+	</xs:complexType>
+	<xs:complexType name="psalmPCT" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr"/>
+			<xs:group ref="grp.canon"/>
+			<xs:group ref="grp.notes"/>
+			<xs:group ref="grp.verses"/>
+			<xs:group ref="grp.chapters"/>
+		</xs:choice>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="psalmStanzaCT">
+		<xs:annotation>
+			<xs:documentation>A "stanza" element is a container for 1 or more sequences of one or more of "line1" followed by zero or more "line2" followed by an optional "line3" and an optional choice of "selah", "refrain", or "doxology".</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="line1" type="canonParaNoInscriptionCT" maxOccurs="5"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:sequence maxOccurs="5">
+					<xs:element name="line2" type="canonParaNoInscriptionCT" maxOccurs="5"/>
+					<xs:element name="line3" type="canonParaNoInscriptionCT" minOccurs="0" maxOccurs="5"/>
+				</xs:sequence>
+				<xs:element name="doxology" type="canonParaNoInscriptionCT">
+					<xs:annotation>
+						<xs:documentation>Found at the close of books of Psalms and in Revelation.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="refrain" type="canonParaNoInscriptionCT"/>
+				<xs:element name="selah" type="canonParaNoInscriptionCT"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="referenceCT" mixed="true">
+		<xs:attribute name="oxesRef" type="oxesRefType" use="required"/>
+		<xs:attribute name="supplementary" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>Typically when this flag is true, the reference would be appended with the phrase "see also".</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="referencedTextCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Modified: Optional "verseStart" element added. Only applicable in "note" elements.</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="verseStart" type="verseStartCT"/>
+			<xs:element name="inscription" type="inscriptionCT"/>
+			<xs:group ref="grp.allTr"/>
+			<xs:element name="supplied" type="suppliedCT"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="revisionDescCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Used to record changes or edits to the text and should be used every time significant editing is done. Includes a required "date" followed by one or more "para" elements.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="date" type="dateType" use="required"/>
+		<xs:attribute name="contributorID" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="rightsCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Contained in the "Work" element.</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="para" type="pCT" maxOccurs="unbounded"/>
+		</xs:choice>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="copyright"/>
+					<xs:enumeration value="description"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="rowCT">
+		<xs:annotation>
+			<xs:documentation>Only found in "table" element.</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="cellItem3" type="cellCT" minOccurs="0"/>
+			<xs:sequence>
+				<xs:element name="cellItem1" type="cellCT"/>
+				<xs:element name="cellItem3" type="cellCT" minOccurs="0"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="cellItem2" type="cellCT"/>
+				<xs:element name="cellItem3" type="cellCT" minOccurs="0"/>
+			</xs:sequence>
+		</xs:choice>
+		<xs:attributeGroup ref="attribute-align"/>
+	</xs:complexType>
+	<xs:complexType name="prefaceCT">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="p" type="pCT"/>
+			<xs:element name="list" type="listCT"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="sectionCT">
+		<xs:annotation>
+			<xs:documentation>Cannot contain chapter/verse milestones or notes, which must be inside a "p", "line", or "item" element. Two "title" (a.k.a., "sectionHead") elements allowed.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="sectionHead" type="titleCT" minOccurs="0"/>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="p" type="pCT"/>
+				<xs:element name="list" type="listCT"/>
+				<xs:element name="stanza" type="stanzaCT"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="seeInGlossaryCT" mixed="true">
+		<xs:attribute name="foreign" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="songOfSolomonCT">
+		<xs:annotation>
+			<xs:documentation>This element is equivalent to "bookCT". It contains a series of speeches only found in the book of Song of Solomon. (Note: The NIV has no titles.) Similar to a "section".</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="p" type="canonPCT" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Only in SNG 1.1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="songTitle" type="titleCT" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Not used in NIV. Used in NVI.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="speech" type="speechCT" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="speakerCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Only used in "speechCT".</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.notes"/>
+			<xs:element name="note" type="canonNoteCT"/>
+		</xs:choice>
+		<xs:attribute name="canonical" type="xs:byte" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="speechCT">
+		<xs:sequence>
+			<xs:element name="speaker" type="speakerCT"/>
+			<xs:element name="stanza" type="canonOtStanzaCT" maxOccurs="5"/>
+		</xs:sequence>
+		<xs:attribute name="scope" type="oxesRefType"/>
+	</xs:complexType>
+	<xs:complexType name="stanzaCT">
+		<xs:annotation>
+			<xs:documentation>A repetitive sequence of one or more of "line1" followed by zero or more "line2". Sequencial stanzas separated a blank line.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="line1" type="pCT" maxOccurs="5"/>
+			<xs:element name="line2" type="pCT" minOccurs="0" maxOccurs="5"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="suppliedCT" mixed="true">
+		<xs:choice minOccurs="0">
+			<xs:element name="nameOfGod" type="nameOfGodType">
+				<xs:annotation>
+					<xs:documentation>2 Chronicles 15:17</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="note" type="canonNoteCT">
+				<xs:annotation>
+					<xs:documentation>Job 38:33</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:group ref="grp.notes"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="lineBreakCT" mixed="false">
+		<xs:annotation>
+			<xs:documentation>Only used in "referencedText", "variant", and "alternateReading" elements.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="tableCT">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="row" type="rowCT"/>
+		</xs:choice>
+		<xs:attribute name="canonical" type="xs:boolean" use="optional"/>
+		<xs:attributeGroup ref="attribute-Zondervan"/>
+	</xs:complexType>
+	<xs:complexType name="titleCT" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="grp.notes" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="note" type="noteCT"/>
+		</xs:choice>
+		<xs:attribute name="canonical" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="titleGroupCT">
+		<xs:sequence>
+			<xs:annotation>
+				<xs:documentation>Only one of each title is allowed.</xs:documentation>
+			</xs:annotation>
+			<xs:element name="mainTitle" type="titleCT"/>
+			<xs:sequence minOccurs="0">
+				<xs:element name="secondaryTitle" type="titleCT">
+					<xs:annotation>
+						<xs:documentation>Used for the "range" in PsalmBookGroups, e.g., "Psalms 1-41".</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="tertiaryTitle" type="titleCT" minOccurs="0"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="titlePageCT">
+		<xs:choice>
+			<xs:element name="titleGroup" type="titleGroupCT"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="variantCT" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Only occurs in "note" elements.</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr"/>
+			<xs:element name="inscription" type="inscriptionCT"/>
+			<xs:element name="lineBreak" type="lineBreakCT"/>
+			<xs:element name="verseStart" type="verseStartCT"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="verseEndCT">
+		<xs:attribute name="from" type="xs:IDREF" use="required"/>
+		<xs:attribute name="ID" type="xs:ID" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="verseStartCT">
+		<xs:attribute name="ID" type="xs:ID" use="required"/>
+		<xs:attribute name="n" type="xs:string" use="required"/>
+		<xs:attribute name="altID" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="wordsOfJesusCT" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="grp.allTr"/>
+			<xs:group ref="grp.canon"/>
+			<xs:group ref="grp.notes"/>
+		</xs:choice>
+	</xs:complexType>
+	<!-- ====< SIMPLE TYPES >======== -->
+	<xs:simpleType name="commentType">
+		<xs:annotation>
+			<xs:documentation>An unpublished comment or remark that is INCLUDED with the distributed file.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="dateType">
+		<xs:annotation>
+			<xs:documentation>Must be in the form of yyyy.mm.dd or yyyy-mm-dd.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="20[0-3][0-9][-/.](1[0-2]|0[1-9]|[1-9])[-/.](3[0-1]|2[0-9]|1[0-9]|0[1-9]|[1-9])"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="oxesIDType">
+		<xs:annotation>
+			<xs:documentation>Explicitly identifies certain elements by their canonical location.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:pattern value="(((\p{L}|\p{N}|_)+)((\.(\p{L}|\p{N}|_)+)*)?:)?((\p{L}|\p{N}|_|(\\[^\s]))+)((\.(\p{L}|\p{N}|_|(\\[^\s]))+)*)?(!((\p{L}|\p{N}|_|(\\[^\s]))+)((\.(\p{L}|\p{N}|_|(\\[^\s]))+)*)?)?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="oxesRefType">
+		<xs:annotation>
+			<xs:documentation>Explicitly references 1 verse or an inclusive range of verses from any location, e.g., "MRK.2.12-MRK.2.14". It is permissible for oxesRef values, including those on either side of a hyphen in a range reference, to use oxesID values that include the work-specific extension fields ("!" followed by a name, e.g. oxesRef="Ps.3.23!b-Ps.3.24!a")).</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:pattern value="(((\p{L}|\p{N}|_)+)((\.(\p{L}|\p{N}|_)+)*)?:)?((\p{L}|\p{N}|_|(\\[^\s]))+)(\.(\p{L}|\p{N}|_|(\\[^\s]))*)*(!((\p{L}|\p{N}|_|(\\[^\s]))+)((\.(\p{L}|\p{N}|_|(\\[^\s]))+)*)?)?(@(cp\[(\p{Nd})*\]|s\[(\p{L}|\p{N})+\](\[(\p{N})+\])?))?(\-((((\p{L}|\p{N}|_|(\\[^\s]))+)(\.(\p{L}|\p{N}|_|(\\[^\s]))*)*)+)(!((\p{L}|\p{N}|_|(\\[^\s]))+)((\.(\p{L}|\p{N}|_|(\\[^\s]))+)*)?)?(@(cp\[(\p{Nd})*\]|s\[(\p{L}|\p{N})+\](\[(\p{N})+\])?))?)?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="oxesWorkType">
+		<xs:annotation>
+			<xs:documentation>Must be a globally unique name.
+				• the organization abbreviation such as "UBS31" or "WBT32"; a period;
+				• the language code [ISO 639-3] such as "mkn" or "eng"; a period;
+				• the scope of this work such as "Bible" or "NewTestament" or "NewTestamentWithAbridgedOldTestament" or "NewTestamentAndPsalms";
+				• zero-or-more (period; the region of the world [ISO 3166-1 alpha-3 Code] such as "IDN" or "USA";)
+				• (optional period "started" or "published" or "revised");
+				• (optional period and date).
+		You can use letters/numbers/period/underscore. Space, hyphen, and other punctuation characters are not allowed.
+		The attributes oxesWork of element work and attribute oxesIDWork of element oxesText (changed to "scripture") should match.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="((\p{L}|\p{N}|_)+)((\.(\p{L}|\p{N}|_|\-)+)*)?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="emphasisType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="nameOfGodType">
+		<xs:annotation>
+			<xs:documentation>Normally rendered in small caps.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="enum.annotationCategoryValue">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Communication"/>
+			<xs:enumeration value="Culture"/>
+			<xs:enumeration value="Discourse"/>
+			<xs:enumeration value="Exegesis and text"/>
+			<xs:enumeration value="Grammar"/>
+			<xs:enumeration value="Lexicon"/>
+			<xs:enumeration value="Miscellaneous"/>
+			<xs:enumeration value="Receptor language and setting"/>
+			<xs:enumeration value="Rhetoric and highlighting"/>
+			<xs:enumeration value="Co"/>
+			<xs:enumeration value="Cu"/>
+			<xs:enumeration value="D"/>
+			<xs:enumeration value="E"/>
+			<xs:enumeration value="G"/>
+			<xs:enumeration value="L"/>
+			<xs:enumeration value="M"/>
+			<xs:enumeration value="RL"/>
+			<xs:enumeration value="Rh"/>
+			<xs:enumeration value="Accuracy in translation"/>
+			<xs:enumeration value="Ambiguity in translation"/>
+			<xs:enumeration value="Anachronism"/>
+			<xs:enumeration value="Apostrophe"/>
+			<xs:enumeration value="Assumed information"/>
+			<xs:enumeration value="Back reference"/>
+			<xs:enumeration value="Book introduction"/>
+			<xs:enumeration value="Book title"/>
+			<xs:enumeration value="Chiasmus"/>
+			<xs:enumeration value="Chronological order of events"/>
+			<xs:enumeration value="Clarity in translation"/>
+			<xs:enumeration value="Cohesion/transition"/>
+			<xs:enumeration value="Collocation"/>
+			<xs:enumeration value="Comparative relation"/>
+			<xs:enumeration value="Connotation"/>
+			<xs:enumeration value="Cross-cultural mismatch"/>
+			<xs:enumeration value="Cross-reference"/>
+			<xs:enumeration value="Discourse unit"/>
+			<xs:enumeration value="Double meaning (author intended ambiguity)"/>
+			<xs:enumeration value="Dual-plural"/>
+			<xs:enumeration value="Ellipsis"/>
+			<xs:enumeration value="Emotive focus"/>
+			<xs:enumeration value="Euphemism"/>
+			<xs:enumeration value="Extended use"/>
+			<xs:enumeration value="Figurative extension"/>
+			<xs:enumeration value="Footnote"/>
+			<xs:enumeration value="Form"/>
+			<xs:enumeration value="Formula"/>
+			<xs:enumeration value="Front and back matter"/>
+			<xs:enumeration value="Gender appropriate"/>
+			<xs:enumeration value="Genitive in source text"/>
+			<xs:enumeration value="Genre"/>
+			<xs:enumeration value="Glossary"/>
+			<xs:enumeration value="Hendiadys"/>
+			<xs:enumeration value="Hyperbole"/>
+			<xs:enumeration value="Idiom"/>
+			<xs:enumeration value="Illocutionary force"/>
+			<xs:enumeration value="Implicature"/>
+			<xs:enumeration value="Implied exclusion"/>
+			<xs:enumeration value="Inclusive/exclusive 1st person plural"/>
+			<xs:enumeration value="Influence"/>
+			<xs:enumeration value="Information load"/>
+			<xs:enumeration value="Interpretation of source text"/>
+			<xs:enumeration value="Introduction of a new participant."/>
+			<xs:enumeration value="Irony"/>
+			<xs:enumeration value="Key biblical term"/>
+			<xs:enumeration value="Layout in RL"/>
+			<xs:enumeration value="Lexical correspondence"/>
+			<xs:enumeration value="Lexical parallelism"/>
+			<xs:enumeration value="Litotes"/>
+			<xs:enumeration value="Metaphor"/>
+			<xs:enumeration value="Metonymy"/>
+			<xs:enumeration value="Modality"/>
+			<xs:enumeration value="Naturalness in translation"/>
+			<xs:enumeration value="Negation"/>
+			<xs:enumeration value="Numbering"/>
+			<xs:enumeration value="Old Testament quotation"/>
+			<xs:enumeration value="Omission of information in translation"/>
+			<xs:enumeration value="Orthography issues"/>
+			<xs:enumeration value="Other grammatical relationships (within a clause or proposition)"/>
+			<xs:enumeration value="Parable and allegory"/>
+			<xs:enumeration value="Parallel passage"/>
+			<xs:enumeration value="Parallelism"/>
+			<xs:enumeration value="Participant reference"/>
+			<xs:enumeration value="Passive voice"/>
+			<xs:enumeration value="Personification"/>
+			<xs:enumeration value="Perspective/direction"/>
+			<xs:enumeration value="Picture selection"/>
+			<xs:enumeration value="Poetry"/>
+			<xs:enumeration value="Prominence"/>
+			<xs:enumeration value="Pronominal reference"/>
+			<xs:enumeration value="Pronoun system mismatch"/>
+			<xs:enumeration value="Proper value"/>
+			<xs:enumeration value="Relationship between propositions"/>
+			<xs:enumeration value="Relative clause"/>
+			<xs:enumeration value="Repetition"/>
+			<xs:enumeration value="Rhetorical question"/>
+			<xs:enumeration value="Section heading"/>
+			<xs:enumeration value="Simile"/>
+			<xs:enumeration value="Skewing between grammar and semantics"/>
+			<xs:enumeration value="Sociolinguistic setting"/>
+			<xs:enumeration value="Sound symbolism"/>
+			<xs:enumeration value="Speech quotation"/>
+			<xs:enumeration value="Symbolism"/>
+			<xs:enumeration value="Synecdoche"/>
+			<xs:enumeration value="Syntactic parallelism"/>
+			<xs:enumeration value="Tense and aspect"/>
+			<xs:enumeration value="Textual variant"/>
+			<xs:enumeration value="Theme"/>
+			<xs:enumeration value="Unknown idea"/>
+			<xs:enumeration value="Vocative"/>
+			<xs:enumeration value="Co-AInfo"/>
+			<xs:enumeration value="Co-Acc"/>
+			<xs:enumeration value="Co-Amb"/>
+			<xs:enumeration value="Co-Clrty"/>
+			<xs:enumeration value="Co-Emot"/>
+			<xs:enumeration value="Co-IllFrce"/>
+			<xs:enumeration value="Co-Imp"/>
+			<xs:enumeration value="Co-Nat"/>
+			<xs:enumeration value="Co-Om"/>
+			<xs:enumeration value="Co-Soc"/>
+			<xs:enumeration value="Cu-Ana"/>
+			<xs:enumeration value="Cu-CCMsm"/>
+			<xs:enumeration value="Cu-Sym"/>
+			<xs:enumeration value="Cu-UId"/>
+			<xs:enumeration value="D-BckRef"/>
+			<xs:enumeration value="D-Chia"/>
+			<xs:enumeration value="D-Chron"/>
+			<xs:enumeration value="D-Cohes"/>
+			<xs:enumeration value="D-DisUn"/>
+			<xs:enumeration value="D-Form"/>
+			<xs:enumeration value="D-Gen"/>
+			<xs:enumeration value="D-Info"/>
+			<xs:enumeration value="D-PartRef"/>
+			<xs:enumeration value="D-Persp"/>
+			<xs:enumeration value="D-Prom"/>
+			<xs:enumeration value="D-PrtIntro"/>
+			<xs:enumeration value="D-Ptry"/>
+			<xs:enumeration value="D-Rel"/>
+			<xs:enumeration value="D-Spch"/>
+			<xs:enumeration value="D-Thm"/>
+			<xs:enumeration value="E-DblMean"/>
+			<xs:enumeration value="E-Interp"/>
+			<xs:enumeration value="E-OTQt"/>
+			<xs:enumeration value="E-TV"/>
+			<xs:enumeration value="G-ComRel"/>
+			<xs:enumeration value="G-Dual"/>
+			<xs:enumeration value="G-Ellp"/>
+			<xs:enumeration value="G-Ext"/>
+			<xs:enumeration value="G-Gen"/>
+			<xs:enumeration value="G-Gend"/>
+			<xs:enumeration value="G-ImExcl"/>
+			<xs:enumeration value="G-IncExcl"/>
+			<xs:enumeration value="G-Mod"/>
+			<xs:enumeration value="G-Neg"/>
+			<xs:enumeration value="G-OthGram"/>
+			<xs:enumeration value="G-Pass"/>
+			<xs:enumeration value="G-Pron"/>
+			<xs:enumeration value="G-PronMism"/>
+			<xs:enumeration value="G-RelCl"/>
+			<xs:enumeration value="G-Skew"/>
+			<xs:enumeration value="G-TA"/>
+			<xs:enumeration value="L-Col"/>
+			<xs:enumeration value="L-Con"/>
+			<xs:enumeration value="L-Id"/>
+			<xs:enumeration value="L-KT"/>
+			<xs:enumeration value="L-Lex"/>
+			<xs:enumeration value="L-PN"/>
+			<xs:enumeration value="RL-BkIntr"/>
+			<xs:enumeration value="RL-BkTtl"/>
+			<xs:enumeration value="RL-CR"/>
+			<xs:enumeration value="RL-FrntBck"/>
+			<xs:enumeration value="RL-FtNt"/>
+			<xs:enumeration value="RL-Gl"/>
+			<xs:enumeration value="RL-Inf"/>
+			<xs:enumeration value="RL-Lay"/>
+			<xs:enumeration value="RL-Num"/>
+			<xs:enumeration value="RL-Orth"/>
+			<xs:enumeration value="RL-Paral"/>
+			<xs:enumeration value="RL-PicSel"/>
+			<xs:enumeration value="RL-SecHd"/>
+			<xs:enumeration value="Rh-Apos"/>
+			<xs:enumeration value="Rh-Euph"/>
+			<xs:enumeration value="Rh-FigEx"/>
+			<xs:enumeration value="Rh-Frm"/>
+			<xs:enumeration value="Rh-Hen"/>
+			<xs:enumeration value="Rh-Hyp"/>
+			<xs:enumeration value="Rh-Irny"/>
+			<xs:enumeration value="Rh-LexPar"/>
+			<xs:enumeration value="Rh-Lit"/>
+			<xs:enumeration value="Rh-Met"/>
+			<xs:enumeration value="Rh-Par"/>
+			<xs:enumeration value="Rh-Paral"/>
+			<xs:enumeration value="Rh-Per"/>
+			<xs:enumeration value="Rh-Rep"/>
+			<xs:enumeration value="Rh-RhQu"/>
+			<xs:enumeration value="Rh-Sim"/>
+			<xs:enumeration value="Rh-SndSym"/>
+			<xs:enumeration value="Rh-Syn"/>
+			<xs:enumeration value="Rh-SynPar"/>
+			<xs:enumeration value="Rh-Voc"/>
+			<xs:enumeration value="Zondervan"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="enum.embeddedType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="letter"/>
+			<xs:enumeration value="prayer"/>
+			<xs:enumeration value="song"/>
+			<xs:enumeration value="proclamation"/>
+			<xs:enumeration value="decree"/>
+			<xs:enumeration value="message"/>
+			<xs:enumeration value="inscription"/>
+			<xs:enumeration value="citation"/>
+			<xs:enumeration value="announcement"/>
+			<xs:enumeration value="dream"/>
+			<xs:enumeration value="account"/>
+			<xs:enumeration value="UNDETERMINED"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="enum.OTbookCode">
+		<xs:annotation>
+			<xs:documentation>SIL 3-letter book codes.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GEN"/>
+			<xs:enumeration value="EXO"/>
+			<xs:enumeration value="LEV"/>
+			<xs:enumeration value="NUM"/>
+			<xs:enumeration value="DEU"/>
+			<xs:enumeration value="JOS"/>
+			<xs:enumeration value="JDG"/>
+			<xs:enumeration value="RUT"/>
+			<xs:enumeration value="1SA"/>
+			<xs:enumeration value="2SA"/>
+			<xs:enumeration value="1KI"/>
+			<xs:enumeration value="2KI"/>
+			<xs:enumeration value="1CH"/>
+			<xs:enumeration value="2CH"/>
+			<xs:enumeration value="EZR"/>
+			<xs:enumeration value="NEH"/>
+			<xs:enumeration value="EST"/>
+			<xs:enumeration value="JOB"/>
+			<xs:enumeration value="PSA"/>
+			<xs:enumeration value="PRO"/>
+			<xs:enumeration value="ECC"/>
+			<xs:enumeration value="SNG"/>
+			<xs:enumeration value="ISA"/>
+			<xs:enumeration value="JER"/>
+			<xs:enumeration value="LAM"/>
+			<xs:enumeration value="EZK"/>
+			<xs:enumeration value="DAN"/>
+			<xs:enumeration value="HOS"/>
+			<xs:enumeration value="JOL"/>
+			<xs:enumeration value="AMO"/>
+			<xs:enumeration value="OBA"/>
+			<xs:enumeration value="JON"/>
+			<xs:enumeration value="MIC"/>
+			<xs:enumeration value="NAM"/>
+			<xs:enumeration value="HAB"/>
+			<xs:enumeration value="ZEP"/>
+			<xs:enumeration value="HAG"/>
+			<xs:enumeration value="ZEC"/>
+			<xs:enumeration value="MAL"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="enum.NTbookCode">
+		<xs:annotation>
+			<xs:documentation>SIL 3-letter book codes.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MAT"/>
+			<xs:enumeration value="MRK"/>
+			<xs:enumeration value="LUK"/>
+			<xs:enumeration value="JHN"/>
+			<xs:enumeration value="ACT"/>
+			<xs:enumeration value="ROM"/>
+			<xs:enumeration value="1CO"/>
+			<xs:enumeration value="2CO"/>
+			<xs:enumeration value="GAL"/>
+			<xs:enumeration value="EPH"/>
+			<xs:enumeration value="PHP"/>
+			<xs:enumeration value="COL"/>
+			<xs:enumeration value="1TH"/>
+			<xs:enumeration value="2TH"/>
+			<xs:enumeration value="1TI"/>
+			<xs:enumeration value="2TI"/>
+			<xs:enumeration value="TIT"/>
+			<xs:enumeration value="PHM"/>
+			<xs:enumeration value="HEB"/>
+			<xs:enumeration value="JAS"/>
+			<xs:enumeration value="1PE"/>
+			<xs:enumeration value="2PE"/>
+			<xs:enumeration value="1JN"/>
+			<xs:enumeration value="2JN"/>
+			<xs:enumeration value="3JN"/>
+			<xs:enumeration value="JUD"/>
+			<xs:enumeration value="REV"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="enum.spacing">
+		<xs:annotation>
+			<xs:documentation>Used for "spacing" attribute from Zondervan's code.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HALF"/>
+			<xs:enumeration value="FULL"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ====< GROUPS (Attributes) >======== -->
+	<xs:attributeGroup name="attribute-align">
+		<xs:annotation>
+			<xs:documentation>Only used by "head", "row" and "cell" elements.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="align" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="start"/>
+					<xs:enumeration value="end"/>
+					<xs:enumeration value="justify"/>
+					<xs:enumeration value="center"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="attribute-Zondervan">
+		<xs:attribute name="aria" type="xs:string" use="optional"/>
+		<xs:attribute name="spacing" type="enum.spacing" use="optional"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="attribute-USFM">
+		<xs:attribute name="bookNameLong" type="xs:string" use="optional"/>
+		<xs:attribute name="bookNameShort" type="xs:string" use="optional"/>
+		<xs:attribute name="bookAbbreviation" type="xs:string" use="optional"/>
+		<xs:attribute name="ide" type="xs:string" use="optional"/>
+		<xs:attribute name="remark" type="xs:string" use="optional"/>
+		<xs:attribute name="runningHeader" type="xs:string" use="optional"/>
+		<xs:attribute name="runningHeaderLeft" type="xs:string" use="optional"/>
+		<xs:attribute name="runningHeaderRight" type="xs:string" use="optional"/>
+	</xs:attributeGroup>
+	<!-- ====< GROUPS (Elements) >======== -->
+	<xs:group name="grp.allTr">
+		<xs:annotation>
+			<xs:documentation>Elements that can potentially be in ANY text.</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="foreign" type="foreignCT"/>
+			<xs:element name="nameOfGod" type="nameOfGodType"/>
+			<xs:element name="seeInGlossary" type="seeInGlossaryCT"/>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="grp.canon">
+		<xs:annotation>
+			<xs:documentation>Elements that can potentially be in any CANON text.</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="keyWord" type="xs:string"/>
+			<xs:element name="supplied" type="suppliedCT"/>
+			<xs:element name="note" type="canonNoteCT"/>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="grp.notes">
+		<xs:choice>
+			<xs:element name="annotation" type="annotationCT"/>
+			<xs:element name="comment" type="commentType"/>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="grp.HebrewAlphabet">
+		<xs:choice>
+			<xs:element name="Aleph" type="xs:string" fixed="א"/>
+			<xs:element name="Beth" type="xs:string" fixed="בּ"/>
+			<xs:element name="Gimel" type="xs:string" fixed="ג"/>
+			<xs:element name="Daleth" type="xs:string" fixed="ד"/>
+			<xs:element name="He" type="xs:string" fixed="ה"/>
+			<xs:element name="Waw" type="xs:string" fixed="ו"/>
+			<xs:element name="Zayin" type="xs:string" fixed="ז"/>
+			<xs:element name="Heth" type="xs:string" fixed="ח"/>
+			<xs:element name="Teth" type="xs:string" fixed="ט"/>
+			<xs:element name="Yodh" type="xs:string" fixed="י"/>
+			<xs:element name="Kaph" type="xs:string" fixed="כּ"/>
+			<xs:element name="Lamedh" type="xs:string" fixed="ל"/>
+			<xs:element name="Mem" type="xs:string" fixed="מ"/>
+			<xs:element name="Nun" type="xs:string" fixed="נ"/>
+			<xs:element name="Samekh" type="xs:string" fixed="ס"/>
+			<xs:element name="Ayin" type="xs:string" fixed="ע"/>
+			<xs:element name="Pe" type="xs:string" fixed="פּ"/>
+			<xs:element name="Tsadhe" type="xs:string" fixed="צ"/>
+			<xs:element name="Qoph" type="xs:string" fixed="ק"/>
+			<xs:element name="Resh" type="xs:string" fixed="ר"/>
+			<xs:element name="Shin" type="xs:string" fixed="ש"/>
+			<xs:element name="Taw" type="xs:string" fixed="ת"/>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="grp.verses">
+		<xs:choice>
+			<xs:element name="verseStart" type="verseStartCT"/>
+			<xs:element name="verseEnd" type="verseEndCT"/>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="grp.chapters">
+		<xs:choice>
+			<xs:element name="chapterStart" type="chapterStartCT"/>
+			<xs:element name="chapterEnd" type="chapterEndCT"/>
+		</xs:choice>
+	</xs:group>
+</xs:schema>

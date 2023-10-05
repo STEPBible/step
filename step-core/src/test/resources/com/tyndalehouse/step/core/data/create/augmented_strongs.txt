@@ -1,0 +1,9 @@
+===============================
+@AugmentedStrong=	H0001a
+@References=	Gen.1.1 Gen.1.2
+===============================
+@AugmentedStrong=	H0001b
+@References=	Gen.1.3 Gen.1.4
+===============================
+@AugmentedStrong=	H0002a
+@References=	Gen.1.5

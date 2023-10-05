@@ -1,0 +1,5 @@
+"ID","Name","From","To","From2","To2","Importance","Certainty","Flags","Timeline","Type","Description","Refs","Notes"
+"T_Africa","Events in Africa",-3000,1000,,,"T_All",,,"T_All","Timeline",,,
+"E_AFR1","Bantu expansion from Cameroon to Central Africa","-3000","-1500",,,"T_Africa","200",,"T_Africa","Period",,,
+"E_AFR2","Bantu expansion from Central to SouthernAfrica","-1000","500",,,"T_Africa","200",,"T_Africa","Period",,,
+"E_AFR3","Kingdom of Axum in Ethiopia","1","1000",,,"T_Africa","50",,"T_Africa","Dynasty",,,

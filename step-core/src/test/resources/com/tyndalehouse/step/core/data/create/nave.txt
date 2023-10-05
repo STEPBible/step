@@ -1,0 +1,23 @@
+# This data is copyright Tyndale House
+# Please contact us through www.tyndalehouse.com to request permission to use it
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Lineage of
+@References=	Ex 6:16-20; Jos 21:4,10; 1Ch 6:2,3; 23:13 
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Marriage of
+@References=	Ex 6:23 
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Children of
+@References=	Ex 6:23,25; 1Ch 6:3; 1Ch 24:1,2 
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Descendants of
+@References=	Ex 6:23,25; 1Ch 6:3-15,50-53; 24 
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Meets, Moses in the wilderness and is made spokesman for Moses
+@References=	Ex 4:14-16,27-31; 7:1,2 
+===================================================

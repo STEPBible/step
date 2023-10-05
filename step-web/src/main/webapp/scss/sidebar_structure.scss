@@ -1,0 +1,73 @@
+@import 'template_variables';
+@import 'mixins';
+
+//default visibility when sidebar is not active
+#sidebar {
+  display: none;
+  background-color: $header-background-color;
+  background-color: var(--clrBackground);
+  padding-top: 0;
+  border-top: $border-width solid $border-color;
+
+  .tab-content {
+    padding: $page-padding;
+  }
+
+  // Hide close icon for help tab
+  // TODO: It would be better to not include the html for the closeColumn button in the sidebar
+  .tab-pane {
+    .closeColumn {
+      display: none;
+    }
+  }
+}
+
+//default visibility when sidebar is active
+.active #sidebar {
+  display: block;
+}
+
+@media screen and (max-width: $sidebarOverlayMax) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    transition: all 0.25s ease-out;
+
+    .sidebar-offcanvas {
+      right: -$smallSidebarSize;
+      top: $header_height;
+    }
+
+    &.active {
+      right: $smallSidebarSize;
+    }
+  }
+
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: $smallSidebarSize;
+  }
+}
+
+@media screen and (min-width: $sidebarOverlayMax + 1) {
+  #columnHolder {
+    width: 100%;
+  }
+  #columnHolder, #sidebar {
+    position: relative;
+    min-height: 1px;
+    float: left;
+  }
+  .active #columnHolder {
+    width: $defaultColumnsSize;
+  }
+  .active #sidebar {
+    width: $defaultSidebarSize;
+    overflow-y: scroll;
+    height: 100%;
+    padding-right: 0px;
+  }
+
+}

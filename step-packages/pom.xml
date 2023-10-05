@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.tyndalehouse.step</groupId>
+        <artifactId>step-mvn</artifactId>
+        <version>23.10.1</version>
+    </parent>
+
+    <groupId>com.tyndalehouse.step</groupId>
+    <artifactId>step-packages</artifactId>
+    <packaging>jar</packaging>
+    <name>STEP :: A set of packages to be distributed with the desktop application</name>
+
+    <properties>
+        <packages>${project.build.outputDirectory}</packages>
+<!-- The following line would be different for differ user account! -->
+<!-- sword.home and jsword.home should be provided as paramenters to mvn (maven) -->
+        <sword.home>${sword.home}</sword.home>
+        <jsword.home>${jsword.home}</jsword.home>
+        <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
+	    <modulesToInclude>esv_th,kjv,chiun,chiuns,osmhb,THOT,lxx_th,sblg_th,niv,abpen_sb,abpgk_sb,sparv1909,FreSeg21,cpdv</modulesToInclude>
+		<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_sb,abpgk_sb,SpaRV1909,FreSeg21,CPDV</indexesToInclude>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <!-- make some default directories -->
+                                <mkdir dir="${jsword.home}/step/jsword-mods.d/"/>
+
+                                <ac:for list="${modulesToInclude}" param="version" xmlns:ac="antlib:net.sf.antcontrib">
+                                    <sequential>
+                                        <!-- copy the files for the installation process -->
+                                        <copy toDir="${packages}/homes/sword">
+                                            <fileset dir="${sword.home}">
+                                                <include name="mods.d/@{version}.conf"/>
+                                                <include name="modules/**/@{version}/**"/>
+                                            </fileset>
+                                        </copy>
+
+                                        <!--<mkdir dir="${jsword.home}/homes/jsword/step/jsword-mods.d/"/>-->
+                                        <copy toDir="${packages}/homes/jsword/step/jsword-mods.d/">
+                                            <fileset dir="${jsword.home}/step/jsword-mods.d/">
+                                                <include name="**/@{version}.conf"/>
+                                            </fileset>
+                                        </copy>
+                                    </sequential>
+                                </ac:for>
+
+                               <ac:for list="${indexesToInclude}" param="version"  xmlns:ac="antlib:net.sf.antcontrib">
+                                   <sequential>
+                                        <!-- copy the files for the index files to jsword -->
+                                        <copy toDir="${packages}/homes/jsword/lucene/Sword">
+                                            <fileset dir="${jsword.home}/lucene/Sword">
+                                                <include name="@{version}/*"/>
+                                            </fileset>
+                                        </copy>
+                                   </sequential>
+                                </ac:for>
+
+                                <!-- copy the STEP indexes over -->
+                                <copy toDir="${packages}/homes/jsword/step/entities">
+                                    <fileset dir="${jsword.home}/step/entities">
+                                        <include name="**/*"/>
+                                    </fileset>
+                                </copy>
+								<!-- copy the augmented_strongs.txt over -->
+                                <copy toDir="${packages}/homes/jsword/step">
+                                    <fileset dir="${jsword.home}/step">
+                                        <include name="ordinal_strongs.dat"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+	
+	<profiles>
+		<profile>
+			<id>standalone-zh</id>
+			<properties>
+			    <modulesToInclude>esv_th,kjv,chiun,chiuns,chincvt,chincvs,osmhb,THOT,lxx_th,sblg_th,niv,abpen_sb,abpgk_sb,sparv1909</modulesToInclude>
+				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_sb,abpgk_sb,SpaRV1909</indexesToInclude>
+			</properties>
+		</profile>
+	</profiles>
+	
+</project>

@@ -1,0 +1,108 @@
+@import 'mixins';
+@import 'multi_columns';
+
+//  auto suggests
+.search-form .select2-arrow {
+  display: none !important;
+}
+
+@include verticalHeight(".select2-drop-multi");
+.select2-drop-multi {
+  overflow-y: auto;
+}
+
+.select2-drop-active {
+  border: none;
+  background: #f2f2f2;
+}
+
+.select2-results {
+  font-family: tahoma;
+  padding: 0;
+  max-height: none;
+}
+
+a.select2-search-choice-close {
+  left: auto !important;
+  top: 5px !important;
+  right: 3px;
+  font-size: 13px;
+  background: none;
+  color: white;
+  opacity: 0.7;
+
+  &:after {
+    content: '\00d7';
+  }
+
+  &:hover {
+    text-decoration: none;
+    opacity: 1;
+  }
+}
+
+.select2-dropdown-open ul {
+  white-space: normal !important;
+  max-height: 70% !important;
+}
+
+
+.select2-container-multi .select2-choices {
+  white-space: nowrap;
+  overflow: hidden;
+  height: 34px;
+  max-height: 34px;
+  margin: -2 0;
+
+  .select2-search-choice {
+    padding: 6px 21px 5px 7px;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    font-size: 14px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+  }
+
+  .select2-search-field input {
+    font-family: inherit;
+    padding: 6px;
+    margin: 0px -5px 0px 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  }
+}
+
+.select2-container {
+  border: 0px !important;
+}
+
+ul.select2-parent-no-results {
+  @include multi-column(1);
+}
+
+.select2-no-results {
+  .message {
+    color: black;
+    margin-top: -1px;
+  }
+}
+
+
+.sortable-placeholder {
+  min-width: 50px;
+  margin: 5 0 0 5;
+  height: 19px;
+  border: dashed 1 darkgrey;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi)  {
+  .select2-search input, .select2-search-choice-close,
+  .select2-container .select2-choice abbr,
+  .select2-container .select2-choice .select2-arrow b {
+    background-image: none !important;
+  }
+}

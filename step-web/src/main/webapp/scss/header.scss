@@ -1,0 +1,361 @@
+@import 'template_variables';
+@import 'mixins';
+
+@media screen {
+  .navbar {
+    height: $header_height;
+    min-height: $header_height;
+    margin-bottom: 0px;
+    background-image: none;
+
+    .navbar-header {
+      font-size: x-small;
+      background: $header-background-color;
+      width: 100%;
+    }
+
+    .navbar-toggle {
+      border: none;
+      margin: 0 0 0 10px;
+
+      &:hover,
+      &:focus {
+        background-color: transparent;
+      }
+
+      .icon-bar {
+        width: 18px;
+        height: 3px;
+      }
+
+      .icon-bar + .icon-bar {
+        margin-top: 3px;
+      }
+    }
+
+    .navbar-collapse {
+      a {
+        padding-left: 15px;
+      }
+
+      .dropdown-toggle > span {
+        display: none;
+        line-height: 18px;
+        vertical-align: top;
+      }
+    }
+
+    #logo {
+      display: inline-block;
+      width: 90px;
+      height: 21px;
+      margin-bottom: 6px;
+      margin-top: 6px;
+
+      & > svg {
+        fill: $brand-primary;
+      }
+
+    }
+
+    a, .subtitle, .subtitle:hover {
+      color: $header_title;
+    }
+
+    &.form-group, form {
+      input {
+        margin-top: -2px;
+        height: 34px;
+      }
+      margin-bottom: 0px;
+      button {
+        min-width: 80px;
+        text-shadow: none;
+      }
+    }
+  }
+
+  .navbar-brand {
+    @media screen and (min-width: $stepXSBootstrap) {
+      padding-left: $page-padding;
+    }
+
+    padding-bottom: 8px;
+    padding-top: 8px;
+
+    //find button to be aligned to top
+    #masterSearch {
+      border: 0 !important;
+      box-shadow: none;
+      -webkit-box-shadow: none;
+    }
+
+    .title {
+      line-height: 25px;
+      margin-right: 20px;
+      float: left;
+      & > a {
+        color: white !important;
+        font-weight: bold;
+        text-decoration: none;
+      }
+    }
+
+    .subtitle {
+      display: block;
+      white-space: nowrap;
+      font-size: 11px;
+      line-height: 1;
+    }
+  }
+
+  // Search form
+  .search-form {
+    font-size: x-small;
+
+    a {
+      color: $topHeaderLinkColour;
+    }
+
+    .findButton {
+      padding: 0 8px;
+    }
+
+    i.find {
+      position: absolute;
+      right: 16px;
+      top: -1px;
+      z-index: 2;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 8px 12px;
+    }
+  }
+  .searchLinks {
+    float: right;
+    margin-top: 4px;
+    color: $topHeaderLinkColour;
+    a, label {
+      vertical-align: top;
+      margin-left: 20px;
+    }
+    input {
+      margin: 2px 0 0 0;
+    }
+  }
+
+  // Help menu
+  .help {
+    margin-top: 5px;
+    font-size: 12px;
+    float: right;
+    color: $topHeaderLinkColour;
+
+    a {
+      cursor: pointer;
+      display: inline-block;
+      opacity: .85;
+
+      &:hover {
+        opacity: 1;
+        text-decoration: none;
+      }
+    }
+
+    .glyphicon {
+      font-size: 18px;
+
+      &.active {
+        color: $brand-primary;
+      }
+
+      svg {
+        fill: $topHeaderLinkColour;
+      }
+    }
+
+    .icon-sidebar {
+      width: 22px;
+      height: 16px;
+    }
+
+    .icon-language {
+      vertical-align: text-bottom;
+
+      & > svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .headerButtons > a {
+      padding-left: 15px;
+
+      &:first-of-type {
+        padding-left: 0;
+      }
+    }
+
+    @media (min-width: $stepXSBootstrap) {
+      .navbar-collapse {
+        display: inline !important;
+        &:after, &:before {
+          display: inherit;
+        }
+      }
+      .caret {
+        margin-left: 5px;
+      }
+      .caret.mini-level {
+        display: none;
+      }
+    }
+
+    @media (max-width: $stepXS) {
+      .icon-sidebar {
+        top: 2px;
+      }
+
+      .navbar-collapse {
+        background-color: #F2F2F2;
+        border: none;
+        border-bottom: 1px solid #C8C8C8;
+        white-space: nowrap;
+        position: absolute;
+        padding: 0;
+        color: black;
+        top: 50px;
+        left: 0;
+        right: 0;
+        text-align: left;
+        min-width: 270px;
+        max-height: none;
+
+        a.dropdown-toggle {
+          display: block;
+          width: 100%;
+        }
+
+        .dropdown + .dropdown {
+          border-top: 1px solid #C8C8C8;
+        }
+
+        .dropdown-toggle > span {
+          display: inline;
+        }
+
+        .dropdown-toggle > .glyphicon {
+          font-size: 14px;
+          margin-right: 5px;
+        }
+
+        // Use question mark when inside dropdown menu
+        .glyphicon-option-vertical:before {
+          content: "\e085";
+        }
+
+        // Use question mark when inside dropdown menu
+        .icon-language > svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        .helpMenu {
+          width: 234px;
+        }
+        .caret.top-level {
+          display: none;
+        }
+        .caret.mini-level {
+          margin-top: 8px;
+          float: right;
+        }
+
+        a {
+          color: #1d1d1d;
+          padding: 8px 20px;
+
+          &:hover {
+            background-color: #eaeaea;
+          }
+        }
+
+        ul {
+          max-height: 300px;
+        }
+
+        li {
+          &.active a {
+            color: white;
+
+            &:hover {
+              background-color: #17758F;
+            }
+          }
+
+          a {
+            padding-left: 20px;
+          }
+        }
+        .separator {
+          display: none;
+        }
+
+        .dropdown-menu {
+          background-clip: padding-box;
+          border: none;
+          border-radius: 0;
+          -webkit-border-radius: 0;
+          -webkit-box-shadow: none;
+          box-shadow: none;
+
+          background-color: transparent;
+          position: relative;
+          float: none !important;
+          right: auto;
+          width: auto;
+          margin: 0;
+          padding: 0;
+
+          li > a {
+            padding-left: 42px;
+
+            &:hover,
+            &:focus {
+              background-image: none;
+            }
+          }
+
+          li > .dropdown-toggle {
+            padding: 0;
+          }
+        }
+      }
+      .dropdown {
+        display: block;
+      }
+    }
+
+    ul {
+      float: right;
+    }
+
+    button {
+      padding: 3px 5px;
+      margin-left: 10px;
+      margin-right: 20px;
+      font-size: 11px;
+
+    }
+    button.stepBreakout {
+      margin-left: -12px;
+      margin-right: 10px;
+    }
+  }
+
+  // offset the main panel
+  .mainPanel,
+  #sidebar {
+    padding: $header_height 0 0;
+  }
+}

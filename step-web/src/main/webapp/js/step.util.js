@@ -125,7 +125,7 @@ step.util = {
     outstandingRequests: 0,
     timers: {},
 	suppressHighlight: function(strongNumber) {
-		if (("G0846,H0853,H0996G,H1961,H4480A,H5704,H5921A,G1161,G3588,G3754G,".indexOf(strongNumber + ",") > -1) || (strongNumber.substring(0,2) === "H9"))
+		if (("H0846,H0853,H0996G,H1961,H4480A,H5704,H5921A,G1161,G3588,G3754G,".indexOf(strongNumber + ",") > -1) || (strongNumber.substring(0,2) === "H9"))
 			return true;
 		return false;
 	},

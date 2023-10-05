@@ -1,1 +1,0 @@
-Jetty relies on having a webapps folder - therefore we create one as a placeholder

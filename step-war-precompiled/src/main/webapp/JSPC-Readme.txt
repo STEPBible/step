@@ -1,1 +1,0 @@
-Placeholder for the directory. Required by the Maven JSPC plugin to work

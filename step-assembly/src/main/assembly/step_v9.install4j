@@ -2,7 +2,7 @@
 <install4j version="8.0.10" transformSequenceNumber="8">
   <directoryPresets config="./post-install.sh" />
   <application name="STEP - Scripture Tools for Every Person" applicationId="1068-8958-4931-1958" mediaDir="../../../target/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="stepbible" publisher="STEP Bible" publisherWeb="http://www.stepbible.org" version="2.0.29" allPathsRelative="true" macVolumeId="a99b8b185558ecf" javaMinVersion="1.8" javaMaxVersion="1.8">
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk8/jdk8u282-b08" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk8/jdk8u302-b08" />
   </application>
   <files>
     <roots>

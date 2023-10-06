@@ -152,7 +152,7 @@ step.util = {
 				"H5973A," +     // im       - with
 				"H6240," +      // a.sar    - ten
 				"H8033G,";      // sham     - there
-			if (hebrewStrongToSuppress.indexOf(strongNumber) > -1)
+			if (hebrewStrongToSuppress.indexOf(strongNumber + ",") > -1)
 				return true;
 		}
 		else {
@@ -160,7 +160,7 @@ step.util = {
 				"G1161,"        // de       - then
 				"G3588,"        // ho       - the/this/who
 				"G3754G,";      // hoti     - that/since
-			if (greekStrongToSuppress.indexOf(strongNumber) > -1)
+			if (greekStrongToSuppress.indexOf(strongNumber + ",") > -1)
 				return true;
 		}
 		return false;

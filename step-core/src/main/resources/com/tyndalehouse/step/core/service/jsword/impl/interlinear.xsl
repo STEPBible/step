@@ -105,8 +105,7 @@
   <!--  true to display color coding information -->
   <xsl:param name="ColorCoding" select="'false'" />
   <xsl:param name="DivideHebrew" select="'false'" />
-  <xsl:param name="RemoveGreekPointing" select="'true'" />
-  <xsl:param name="RemoveGreekVowels" select="'true'" />
+  <xsl:param name="RemoveGreekAccent" select="'true'" />
   <xsl:param name="RemoveHebrewPointing" select="'true'" />
   <xsl:param name="RemoveHebrewVowels" select="'true'" />
 

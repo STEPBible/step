@@ -598,6 +598,7 @@ step.searchSelect = {
 			    '<p>Examples:</p>' +
 			    '<p><strong>just</strong> → matches words that start with “just” (ex. just, justice, justified, …)</p>' +
 			    '<p><strong>come to me</strong> → matches verses that contain "come", "to", and "me" in any order</p>' +
+				'<p><strong>"come to me"</strong> → matches the exact phrase in the selected translations</p>' +
 			    '<p>For more advanced features, find advanced search with the top right toggle!</p>' +
 			'</div>' +
 			'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +

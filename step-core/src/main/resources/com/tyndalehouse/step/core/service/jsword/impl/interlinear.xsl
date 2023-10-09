@@ -105,8 +105,10 @@
   <!--  true to display color coding information -->
   <xsl:param name="ColorCoding" select="'false'" />
   <xsl:param name="DivideHebrew" select="'false'" />
-  <xsl:param name="RemovePointing" select="'true'" />
-  <xsl:param name="RemoveVowels" select="'true'" />
+  <xsl:param name="RemoveGreekPointing" select="'true'" />
+  <xsl:param name="RemoveGreekVowels" select="'true'" />
+  <xsl:param name="RemoveHebrewPointing" select="'true'" />
+  <xsl:param name="RemoveHebrewVowels" select="'true'" />
 
 
   <xsl:param name="baseVersion" select="''" />
@@ -1956,8 +1958,8 @@
   <xsl:template name="outputPunctuatedText">
     <xsl:param name="text" />
     <xsl:choose>
-        <xsl:when test="$RemoveVowels = 'true'"><xsl:value-of select="conversion:unAccent(string($text))" /></xsl:when>
-        <xsl:when test="$RemovePointing = 'true'"><xsl:value-of select="conversion:unAccentLeavingVowels(string($text))" /></xsl:when>
+        <xsl:when test="$RemoveGreekAccent = 'true' or $RemoveHebrewVowels = 'true' or $RemoveHebrewPointing = 'true'">
+          <xsl:value-of select="conversion:unAccentOrVowels(string($text), $RemoveGreekAccent, $RemoveHebrewVowels, $RemoveHebrewPointing)" />
         <xsl:otherwise><xsl:value-of select="." /></xsl:otherwise>
     </xsl:choose>
   </xsl:template>

@@ -1370,19 +1370,18 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                         break;
                     case GREEK_ACCENTS:
                         if (isGreek) {
-                            tsep.setParameter("RemovePointing", "false");
-                            tsep.setParameter("RemoveVowels", "false");
+                            tsep.setParameter("RemoveGreekAccent", "false");
                         }
                         break;
                     case HEBREW_VOWELS:
                         if (isHebrew) {
-                            tsep.setParameter("RemoveVowels", "false");
+                            tsep.setParameter("RemoveHebrewVowels", "false");
                         }
                         break;
                     case HEBREW_ACCENTS:
                         if (isHebrew) {
-                            tsep.setParameter("RemovePointing", "false");
-                            tsep.setParameter("RemoveVowels", "false");
+                            tsep.setParameter("RemoveHebrewPointing", "false");
+                            tsep.setParameter("RemoveHebrewVowels", "false");
                         }
                         break;
                 }
@@ -1390,9 +1389,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         //if no greek or hebrew, then override to false
-        if (!isGreek && !isHebrew) {
-            tsep.setParameter("RemovePointing", false);
-            tsep.setParameter("RemoveVowels", false);
+        if (!isGreek) {
+            tsep.setParameter("RemoveGreekAccent", "false");
+        }
+        if (!isHebrew) {
+            tsep.setParameter("RemoveHebrewPointing", "false");
+            tsep.setParameter("RemoveHebrewVowels", "false");
         }
 // SM Verse Per Line Issue for RTL
 //        if (!books[0].getBookMetaData().isLeftToRight())        {

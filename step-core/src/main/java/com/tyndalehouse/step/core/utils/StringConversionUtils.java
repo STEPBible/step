@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.language.GreekUtils.removeGreekTranslitMarkUpForIndexing;
@@ -237,6 +239,33 @@ public final class StringConversionUtils {
         return unAccent(unAccent(word, true), false);
     }
 
+    public static String unAccentOrVowels(final String word, final String removeGreekAccent,
+                                       final String removeHebrewVowel, final String removeHebrewAccent) {
+        if (removeGreekAccent.equals("true")) {
+            String regex = "\\p{InGreek}";
+            Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(word);
+            if (matcher.find())
+//                return unAccent(unAccent(word, true), false);
+                return unAccent(word, true);
+        }
+        if (removeHebrewVowel.equals("true") || removeHebrewAccent.equals("true")) {
+            String regexHebrew = "\\p{InHebrew}";
+            Pattern patternHebrew = Pattern.compile(regexHebrew, Pattern.CASE_INSENSITIVE);
+            Matcher matcherHebrew = patternHebrew.matcher(word);
+            if (matcherHebrew.find()) {
+                String updatedWord = word;
+                if (removeHebrewVowel.equals("true"))
+//                    updatedWord =  unAccent(unAccent(updatedWord, false), false);
+                    updatedWord =  unAccent(updatedWord, false);
+                if (removeHebrewAccent.equals("true"))
+                    updatedWord = unAccentHebrewLeavingVowels(updatedWord);
+                return updatedWord;
+            }
+        }
+        return word;
+    }
+
     /**
      * takes accents and other punctuation off the word
      *
@@ -247,7 +276,6 @@ public final class StringConversionUtils {
     public static String unAccent(final String word, final boolean isGreek) {
         return unAccent(word, isGreek, true);
     }
-
 
     /**
      * takes accents and other punctuation off the word

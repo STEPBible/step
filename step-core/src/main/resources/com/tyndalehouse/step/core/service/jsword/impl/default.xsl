@@ -108,8 +108,9 @@
 
     <!--  true to display color coding information -->
     <xsl:param name="ColorCoding" select="'false'"/>
-    <xsl:param name="RemovePointing" select="'true'"/>
-    <xsl:param name="RemoveVowels" select="'true'"/>
+    <xsl:param name="RemoveGreekAccent" select="'true'"/>
+    <xsl:param name="RemoveHebrewPointing" select="'true'"/>
+    <xsl:param name="RemoveHebrewVowels" select="'true'"/>
     <xsl:param name="HideCompareHeaders" select="'false'"/>
 
     <xsl:param name="HideXGen" select="'false'"/>
@@ -2394,11 +2395,8 @@
             <xsl:when test="./ancestor::cell/@xml:lang != 'grc' and ./ancestor::cell/@xml:lang != 'he' and ./ancestor::cell/@xml:lang != 'hbo'">
                 <xsl:value-of select="."/>
             </xsl:when>
-            <xsl:when test="$RemoveVowels = 'true'">
-                <xsl:value-of select="conversion:unAccent(string(.))"/>
-            </xsl:when>
-            <xsl:when test="$RemovePointing = 'true'">
-                <xsl:value-of select="conversion:unAccentLeavingVowels(string(.))"/>
+            <xsl:when test="$RemoveGreekAccent = 'true' or $RemoveHebrewVowels = 'true' or $RemoveHebrewPointing = 'true'">
+                <xsl:value-of select="conversion:unAccentOrVowels(string(.), $RemoveGreekAccent, $RemoveHebrewVowels, $RemoveHebrewPointing)"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="."/>

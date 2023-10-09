@@ -163,9 +163,13 @@ var SidebarView = Backbone.View.extend({
         var currentUserLang = step.userLanguageCode.toLowerCase();
         if (urlLang == "zh_tw") currentUserLang = "zh_tw";
         else if (urlLang == "zh") currentUserLang = "zh";
-        var isOT = false;
-        if (typeof ref === "string")
-            isOT = step.util.getTestamentAndPassagesOfTheReferences([ ref ])[1];
+        var isOTorNT = "";
+        if (typeof ref === "string") {
+            if (step.util.getTestamentAndPassagesOfTheReferences([ ref ])[1])
+                isOTorNT = "OT";
+            else
+                isOTorNT = "NT";
+        }
         if (data.vocabInfos.length > 1) {
             //multiple entries
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
@@ -197,7 +201,7 @@ var SidebarView = Backbone.View.extend({
                 if (i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 }
-                this._createWordPanel(panelBody, item, currentUserLang, isOT);
+                this._createWordPanel(panelBody, item, currentUserLang, isOTorNT);
                 if (i < data.morphInfos.length) {
                     this._createMorphInfo(panelBody, data.morphInfos[i]);
                 }
@@ -220,7 +224,7 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
             }
-            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang, isOT);
+            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang, isOTorNT);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(this.lexicon, data.morphInfos[0]);
             }
@@ -526,7 +530,7 @@ var SidebarView = Backbone.View.extend({
 		this._lookUpGeoInfo(mainWord, bookName, stepLink);
 	},
 	
-    _createWordPanel: function (panel, mainWord, currentUserLang, isOT) {
+    _createWordPanel: function (panel, mainWord, currentUserLang, isOTorNT) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
         if (mainWord.shortDef) {
@@ -574,7 +578,11 @@ var SidebarView = Backbone.View.extend({
 		}
         if (displayEnglishLexicon) { // This might be false if Chinese lexicon is displayed and isEnWithZhLexicon is false append the meanings
             if (mainWord.mediumDef) {
-                var message = (isOT) ? "Hebrew lexicon based on abridged Brown-Driver-Briggs" : "based on Teknia Greek";
+                var message = "";
+                if (isOTorNT === "OT")
+                    message = "based on abridged Brown-Driver-Briggs";
+                else if (isOTorNT === "NT")
+                    message = "based on Teknia Greek";
                 panel.append($("<h2 title='" + message + "'>").append(__s.lexicon_meaning));
                 this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion);
             }

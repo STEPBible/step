@@ -250,6 +250,9 @@
 			  <br/><br/>
 			  Current versions for download are available on the <a href="https://apps.apple.com/us/app/step-bible/id1476903313#">Apple Store</a> and <a href="https://play.google.com/store/apps/details?id=com.tyndale.stepbible">Google Play</a>.
 			  <br/>
+<br/>
+Note:  Some users have experienced issues on later versions of Android (e.g., versions 13 and 14).  STEPBible will update the app when the issue is identified and resolved.
+<br/>
 			  <br/>
 			  The app is free; there are no ads or in-app purchases.
 

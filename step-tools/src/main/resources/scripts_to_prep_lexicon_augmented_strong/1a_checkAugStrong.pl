@@ -26,7 +26,7 @@ while (<FH>) {
 		}
 		else {
             print "$' shows up more than one time\n";
-            exit;
+            #exit;
 		}
 	}
   	if ($line =~ m/^\@References=\t/) {
@@ -61,7 +61,7 @@ foreach my $key (sort keys %allAugInAStrong) {
             if (defined $passageAlreadyProsessedForStrong{$currentRef}) {
                 print "issue: $key $i has $currentRef more than once\n";
                 print "Please correct issue and then re-run this script\n";
-                exit;
+                #exit;
             }
             $passageAlreadyProsessed{$currentRef} = 1;
             $passageAlreadyProsessedForStrong{$currentRef} = 1;

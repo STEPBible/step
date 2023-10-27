@@ -8,11 +8,9 @@ sub getLexTags {
     my $lastStrongNum = "";
     my $stepGloss = "";
     my $strFreq = "0";
+    my $strFreqList = "0";
     my $unicodeAccented = "";
     my $transliteration = "";
-    my $es_Gloss = "";
-    my $zh_Gloss = "";
-    my $zh_tw_Gloss = "";
     my $searchResultRange = "";
     while (<FH>) {
         chomp($_);
@@ -20,17 +18,15 @@ sub getLexTags {
         my $line = $_;
         if ($line =~ m/==========$/) {
             if (($unitedReason ne "") && ($lastStrongNum ne "")) {
-                $lexTags{$lastStrongNum} = "[\"$unitedReason\",\"$lastStrongNum\",\"$stepGloss\",$strFreq,\"$unicodeAccented\",\"$transliteration\"]";
+                $lexTags{$lastStrongNum} = "[\"$unitedReason\",\"$lastStrongNum\",\"$stepGloss\",$strFreq,\"$unicodeAccented\",\"$transliteration\",\"$strFreqList\"]";
             }
             $lastStrongNum = "";
             $unitedReason = "";
             $stepGloss = "";
             $strFreq = "0";
+            $strFreqList = "0";
             $unicodeAccented = "";
             $transliteration = "";
-            $es_Gloss = "";
-            $zh_Gloss = "";
-            $zh_tw_Gloss = "";
             $searchResultRange = "";
         }
         elsif ($line =~ m/^\@StrNo=\t/) {
@@ -48,9 +44,10 @@ sub getLexTags {
             $strFreq = $';
             if ($strFreq !~ /^\d+$/) {
                 $strFreq = 10000;
-#                $strFreq = "\"" . $strFreq . "\"";
-                print "strfreq1 $strFreq\n";
             }
+        }
+        elsif ($line =~ m/^\@StrFreqList=\t/) {
+            $strFreqList = $';
         }
         elsif ($line =~ m/^\@StepGloss=\t/) {
             $stepGloss = $';
@@ -139,6 +136,8 @@ while (<FH>) {
             print "to $line\n";
         }
     }
-    if ($line ne "") {print OUT $line . "\n";}
+    if (($line ne "") && ($line !~ m/^\@STEP_DetailLexicalTag=\t/)) {
+        print OUT $line . "\n";
+    }
 }
 print "DetailLexicalTag has been added to: $outputFile\n";

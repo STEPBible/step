@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -24,19 +25,20 @@ import static java.lang.Integer.parseInt;
  */
 public class StrongAugmentationServiceImpl implements StrongAugmentationService {
 
-    private class ordinalAndOccurencesInVerse implements Comparable<ordinalAndOccurencesInVerse> {
+    private class ordinalAndOccurrencesInVerse implements Comparable<ordinalAndOccurrencesInVerse> {
         short ordinal;
-        short occurencesInVerse;
-        public int compareTo(ordinalAndOccurencesInVerse ordAndOccur) {
+        short occurrencesInVerse;
+        public int compareTo(ordinalAndOccurrencesInVerse ordAndOccur) {
             int comparison = this.ordinal - ordAndOccur.ordinal;
             if (comparison == 0)
-                return this.occurencesInVerse - ordAndOccur.occurencesInVerse;
+                return this.occurrencesInVerse - ordAndOccur.occurrencesInVerse;
             return comparison;
         }
-    };
-    public class OrdinalStrong implements Serializable {
+    }
+    public class OrdinalStrong {
         public TreeMap<Short, String> OTOHB = new TreeMap<>();
-        public TreeMap<Short, Short> OTRSV = new TreeMap<>();
+        public TreeMap<Short, String> OTRSV = new TreeMap<>();
+        public TreeMap<Short, String> OTGreek = new TreeMap<>();
         public TreeMap<Short, String> NTRSV = new TreeMap<>();
     }
 
@@ -57,37 +59,43 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             if (ordinal > 0)
                 return ordinal;
         } catch (NoSuchVerseException e) {
+            System.out.println("Aug strong processing, convertOSIS2Ordinal. Unable to look up OSIS id: " + OSIS);
             throw new StepInternalException("\"Unable to look up strongs for \" + OSIS ", e);
         }
         return -1;
     }
 
-    private void sortAndMarkAugStrongWithoutRef(int numOfRefs, ordinalAndOccurencesInVerse[] refArray,
-                                               TreeMap<Short, String> ordinalStrong, final String augStrong, final String defaultAugStrong, Versification versificationToUse) {
-//        if (augStrong.equals(defaultAugStrong))
-//            return;
+    private void sortAndMarkAugStrongWithoutRef(int numOfRefs, ordinalAndOccurrencesInVerse[] refArrayIn,
+                                               TreeMap<Short, String> ordinalStrong, final String augStrong, Versification versificationToUse) {
+        ordinalAndOccurrencesInVerse[] refArray = null;
+        if (numOfRefs == refArrayIn.length)
+            refArray = refArrayIn;
+        else {
+            refArray = new ordinalAndOccurrencesInVerse[numOfRefs];
+            System.arraycopy(refArrayIn, 0, refArray, 0, numOfRefs);
+        }
         Arrays.sort(refArray);
         for (int i = 0, j = 0; i < numOfRefs; i++, j++) {
             short temp = refArray[j].ordinal;
-            String augStrongToAdd = augStrong;
+            String augStrongToAdd = augStrong.substring(1);
             boolean multiOccurrence = false;
-            if (refArray[j].occurencesInVerse != 0) {
-                augStrongToAdd = defaultAugStrong + ';' + augStrong.substring(augStrong.length()-1) + ';';
-                if ((refArray[j].occurencesInVerse & 0x0001) > 0) augStrongToAdd += "1";
-                if ((refArray[j].occurencesInVerse & 0x0002) > 0) augStrongToAdd += "2";
-                if ((refArray[j].occurencesInVerse & 0x0004) > 0) augStrongToAdd += "3";
-                if ((refArray[j].occurencesInVerse & 0x0008) > 0) augStrongToAdd += "4";
-                if ((refArray[j].occurencesInVerse & 0x0010) > 0) augStrongToAdd += "5";
-                if ((refArray[j].occurencesInVerse & 0x0020) > 0) augStrongToAdd += "6";
-                if ((refArray[j].occurencesInVerse & 0x0040) > 0) augStrongToAdd += "7";
-                if ((refArray[j].occurencesInVerse & 0x0080) > 0) augStrongToAdd += "8";
-                if ((refArray[j].occurencesInVerse & 0x0100) > 0) augStrongToAdd += "9";
+            if (refArray[j].occurrencesInVerse != 0) {
+                augStrongToAdd += ';';
+                if ((refArray[j].occurrencesInVerse & 0x0001) > 0) augStrongToAdd += "1";
+                if ((refArray[j].occurrencesInVerse & 0x0002) > 0) augStrongToAdd += "2";
+                if ((refArray[j].occurrencesInVerse & 0x0004) > 0) augStrongToAdd += "3";
+                if ((refArray[j].occurrencesInVerse & 0x0008) > 0) augStrongToAdd += "4";
+                if ((refArray[j].occurrencesInVerse & 0x0010) > 0) augStrongToAdd += "5";
+                if ((refArray[j].occurrencesInVerse & 0x0020) > 0) augStrongToAdd += "6";
+                if ((refArray[j].occurrencesInVerse & 0x0040) > 0) augStrongToAdd += "7";
+                if ((refArray[j].occurrencesInVerse & 0x0080) > 0) augStrongToAdd += "8";
+                if ((refArray[j].occurrencesInVerse & 0x0100) > 0) augStrongToAdd += "9";
                 multiOccurrence = true;
             }
             if (ordinalStrong != null) {
                 if (ordinalStrong.containsKey(temp)) {
                     String listOfStrongAlreadyAdded = ordinalStrong.get(temp);
-                    if (listOfStrongAlreadyAdded.length() >= augStrong.length()) {
+                    if (listOfStrongAlreadyAdded.length() >= augStrong.length() - 1) { // augStrong has the H or G prefix so need to minus 1 from the length before compare
                         String lastWord = listOfStrongAlreadyAdded.substring(listOfStrongAlreadyAdded.lastIndexOf(" ") + 1);
                         if (multiOccurrence) {
                             String firstPart = augStrongToAdd.split(";")[0];
@@ -113,100 +121,73 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         }
     }
 
-    private void addToRefArray(final boolean hebrew, final String augStrong, final String refs,
-                              final Versification versificationForOT, final Versification versificationForNRSV,
-                              OrdinalStrong ordinalStrong, final String defaultAugStrong) {
-        if (augStrong.equals(defaultAugStrong))
-            return;
-        String[] arrOfRef = refs.split(" ");
-        ordinalAndOccurencesInVerse[] refArray = new ordinalAndOccurencesInVerse[arrOfRef.length];
-        ordinalAndOccurencesInVerse[] refArrayOHB = new ordinalAndOccurencesInVerse[0];
-        if (hebrew)
-            refArrayOHB = new ordinalAndOccurencesInVerse[arrOfRef.length];
-        int index = 0;
-        Versification versificationToUse = (hebrew) ? versificationForOT : versificationForNRSV;
-        for (String s : arrOfRef) {
-            String aRef = s;
-            String NRSVRef = s;
-            String checkString4MultiOccurrencesDStrong = aRef;
-            int start = s.indexOf('(');
-            int end = s.indexOf(')');
-            if ((start > 0) && (end > 1)) {
-                aRef = s.substring(0, start);
-                NRSVRef = aRef.substring(0, aRef.indexOf('.')+1) + s.substring(start+1, end);
-                checkString4MultiOccurrencesDStrong = s;
+    private void addToRefArray(TreeMap<Short, String> ordinalStrong, final Versification versification,
+                               final TreeMap<String, String> sortedAugStrong, byte[] defaultAugment,
+                               final short[] strongsWithAugments, final boolean useSecondReference) {
+        for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
+            String augStrong = entry.getKey();
+            int augStrongIndex = binarySearchOfStrong(augStrong, strongsWithAugments);
+            if (augStrongIndex < 0) {
+                LOGGER.error("Error in AugStrongServiceImpl addToRefArray, cannot find augstrong of " + augStrong);
+                System.exit(405);
             }
+            if (augStrong.charAt(augStrong.length() - 1) == defaultAugment[augStrongIndex])
+                continue; // Do not need to process the default augment.
+            String refs = entry.getValue().trim();
+            String[] arrOfRef = refs.split(" ");
+            ordinalAndOccurrencesInVerse[] ordinalOccurrencesArray = new ordinalAndOccurrencesInVerse[arrOfRef.length];
+            int index = 0;
+            for (String currentRef: arrOfRef) {
+                currentRef = currentRef.trim();
+                if (currentRef.equals(""))
+                    continue;
+                String mainRef = currentRef;
+                int startOfLeftParanthesis = -1;
+                startOfLeftParanthesis = currentRef.indexOf('(');
+                int endOfLeftParanthesis = currentRef.indexOf(')');
+                if ((startOfLeftParanthesis > 0) && (endOfLeftParanthesis > 1)) {
+                    if (useSecondReference)
+                        mainRef = mainRef.substring(0, mainRef.indexOf('.') + 1) + // Name of the book e.g.: Gen.
+                                currentRef.substring(startOfLeftParanthesis + 1, endOfLeftParanthesis); // Chapter and verse e.g: 1.1
+                    else
+                        mainRef = currentRef.substring(0, startOfLeftParanthesis);
 
-            int lastCharIndex = 1;
-            char lastCharOfRef = checkString4MultiOccurrencesDStrong.toUpperCase().charAt(checkString4MultiOccurrencesDStrong.length() - lastCharIndex);
-            refArray[index] = new ordinalAndOccurencesInVerse();
-            refArray[index].occurencesInVerse = 0;
-            while ((lastCharOfRef >= 65) && (lastCharOfRef <= 73)) { // 65 is A, 73 is I, only has 15 bits to store the information
-                refArray[index].occurencesInVerse |= 1 << (lastCharOfRef - 65);
-                lastCharIndex ++;
-                lastCharOfRef = checkString4MultiOccurrencesDStrong.toUpperCase().charAt(checkString4MultiOccurrencesDStrong.length() - lastCharIndex);
-            }
-            if (lastCharIndex > 1) {
-                if (lastCharOfRef != 45) // character is a minus sign
-                    lastCharIndex --;
-                else // If there is a minus sign, it means it is NOT any of the word positions listed after the minus sign.
-                    refArray[index].occurencesInVerse = (short) ~refArray[index].occurencesInVerse; // flip bits 0 to 1 and 1 to 0
-                if (start == -1) {
-                    aRef = aRef.substring(0, aRef.length() - lastCharIndex);
-                    NRSVRef = NRSVRef.substring(0, NRSVRef.length() - lastCharIndex);
                 }
-            }
-            short refOrdinal = (hebrew) ? (short) convertOSIS2Ordinal(aRef, versificationForOT) : (short) (convertOSIS2Ordinal(NRSVRef, versificationForNRSV) - NT_OFFSET);
-            if (refOrdinal > -1) {
-                if (hebrew) {
-                    refArrayOHB[index] = new ordinalAndOccurencesInVerse();
-                    refArrayOHB[index].ordinal = refOrdinal;
-                    refArrayOHB[index].occurencesInVerse = refArray[index].occurencesInVerse;
-                    refOrdinal = (short) convertOSIS2Ordinal(NRSVRef, versificationForNRSV);
-                    short newNRSVOrdinalToSet = refArrayOHB[index].ordinal;
-                    if (refOrdinal > -1) {
-                        refArray[index].ordinal = refOrdinal;
-                        if (ordinalStrong.OTRSV.containsKey(refOrdinal)) {
-                            short alreadySetOrdinal = (short) (ordinalStrong.OTRSV.get(refOrdinal) & 0x7fff);;
-                            if (alreadySetOrdinal != newNRSVOrdinalToSet) {
-                                short secondOrdinal;
-                                if (alreadySetOrdinal > newNRSVOrdinalToSet) {
-                                    secondOrdinal = alreadySetOrdinal;
-                                } else {
-                                    secondOrdinal = newNRSVOrdinalToSet;
-                                    newNRSVOrdinalToSet = alreadySetOrdinal;
-                                }
-                                if ((newNRSVOrdinalToSet + 1) != secondOrdinal) {
-                                    System.out.println("1st: " + aRef + " " + NRSVRef + " refOrdinal: " + refOrdinal + " " + ordinalStrong.OTRSV.get(refOrdinal) + " " + refArrayOHB[index].ordinal);
-                                    System.exit(404);
-                                }
-                                newNRSVOrdinalToSet = (short) (newNRSVOrdinalToSet | 0x8000);
-                            }
-                        }
-                        ordinalStrong.OTRSV.put(refOrdinal, newNRSVOrdinalToSet);
-                    }
-                } else {
-                    refArray[index].ordinal = refOrdinal;
+                int lastCharIndex = 1;
+                char lastCharOfRef = currentRef.toUpperCase().charAt(currentRef.length() - lastCharIndex);
+                ordinalAndOccurrencesInVerse curRefOrdinalAndOccurrences = new ordinalAndOccurrencesInVerse();
+                curRefOrdinalAndOccurrences.occurrencesInVerse = 0;
+                while ((lastCharOfRef >= 65) && (lastCharOfRef <= 73)) { // 65 is A, 73 is I, only has 15 bits to store the information
+                    curRefOrdinalAndOccurrences.occurrencesInVerse |= 1 << (lastCharOfRef - 65);
+                    lastCharIndex++;
+                    lastCharOfRef = currentRef.toUpperCase().charAt(currentRef.length() - lastCharIndex);
                 }
-                index ++;
+                if (lastCharIndex > 1) {
+                    if (lastCharOfRef != 45) // character is a minus sign
+                        lastCharIndex--;
+                    else // If there is a minus sign, it means it is NOT any of the word positions listed after the minus sign.
+                        curRefOrdinalAndOccurrences.occurrencesInVerse = (short) ~curRefOrdinalAndOccurrences.occurrencesInVerse; // flip bits 0 to 1 and 1 to 0
+                    if (startOfLeftParanthesis == -1) // If the reference has the "(" and ")" (e.g.: Exod.22.6(22.7)B), the reference does not have the character for the occurrence.
+                        mainRef = mainRef.substring(0, mainRef.length() - lastCharIndex);
+                }
+                short refOrdinal = (short) convertOSIS2Ordinal(mainRef, versification);
+                if (refOrdinal < 0) {
+                    System.out.println("Cannot find ordinal for " + mainRef);
+                    continue; // cannot process it because it cannot find the ordinal.
+                }
+                if ((!versification.getName().equals("Leningrad")) && (refOrdinal > NT_OFFSET))
+                    refOrdinal -= NT_OFFSET;
+                curRefOrdinalAndOccurrences.ordinal = refOrdinal;
+                ordinalOccurrencesArray[index] = curRefOrdinalAndOccurrences;
+                index++;
             }
+            sortAndMarkAugStrongWithoutRef(index, ordinalOccurrencesArray, ordinalStrong, augStrong, versification);
         }
-        if (hebrew) {
-            sortAndMarkAugStrongWithoutRef(index, refArrayOHB, ordinalStrong.OTOHB, augStrong, defaultAugStrong, versificationToUse);
-        } else
-            sortAndMarkAugStrongWithoutRef(index, refArray, ordinalStrong.NTRSV, augStrong, defaultAugStrong, versificationToUse);
     }
 
-    private int binarySearchOfStrong(final String augStrong, final int numOfGreekStrongWithAugments,
-                                     final short[] strongsWithAugments) {
+    private int binarySearchOfStrong(final String augStrong, final short[] strongsWithAugments) {
         int first = 0;
         int last = strongsWithAugments.length - 1;
-        if (augStrong.charAt(0) == 'G') {
-            last = numOfGreekStrongWithAugments - 1;
-        }
-        else {
-            first = numOfGreekStrongWithAugments;
-        }
         int key = convertStrong2Short(augStrong);
         int mid = (first + last) / 2;
         while( first <= last ) {
@@ -251,6 +232,68 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return num;
     }
 
+    private short[] buildArrayOfStrongsWithAugments(TreeMap<Integer, Integer> strong2AugCount) {
+        short[] strongsWithAugments = new short[strong2AugCount.size()];
+        int counter = 0;
+        for (Map.Entry<Integer, Integer> entry : strong2AugCount.entrySet()) {
+            strongsWithAugments[counter] = entry.getKey().shortValue();
+            counter ++;
+        }
+        return strongsWithAugments;
+    }
+
+    private void addDefaultAugment(final int strongNumUnderReview, final String augStrongWithMostReferences,
+                                   byte[] defaultAugment, final short[] strongsWithAugments) {
+        if (strongNumUnderReview > -1) {
+            int index = binarySearchOfStrong(augStrongWithMostReferences, strongsWithAugments);
+            if (index < 0) {
+                LOGGER.error("Error in AugStrongServiceImpl, cannot find augstrong of " + augStrongWithMostReferences);
+                System.exit(405);
+            }
+            defaultAugment[index] = (byte) augStrongWithMostReferences.charAt(augStrongWithMostReferences.length() - 1);
+        }
+    }
+
+    private void buildAugStringWithMostReferences(final TreeMap<String, String> sortedAugStrong,
+                                                 byte[] defaultAugment,
+                                                 final short[] strongsWithAugments) {
+        int strongNumUnderReview = -1;
+        String augStrongWithMostReferences = "";
+        int mostReferencesWithinAugStrongs = 0;
+        try {
+            for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
+                String augStrong = entry.getKey();
+                String references = entry.getValue().trim();
+                int curStrongNumWithoutAugment = convertStrong2Short(augStrong);
+                if (strongNumUnderReview != curStrongNumWithoutAugment) { // New Strong numbers
+                    addDefaultAugment(strongNumUnderReview, augStrongWithMostReferences, defaultAugment, strongsWithAugments);
+                    strongNumUnderReview = curStrongNumWithoutAugment; // update variables for new Strong numbers
+                    augStrongWithMostReferences = "";
+                    mostReferencesWithinAugStrongs = 0;
+                }
+                final int bigNumber = 99999999;
+                int numOfReferences = 0;
+                if (references.indexOf("*") > -1) {
+                    if (mostReferencesWithinAugStrongs == bigNumber) {
+                        System.out.println("The * for reference is used twice for Strong number at " + augStrong);
+                        System.exit(404);
+                    }
+                    numOfReferences = bigNumber;
+                }
+                else
+                    numOfReferences = references.split(" ").length;
+                if (mostReferencesWithinAugStrongs < numOfReferences) {
+                    mostReferencesWithinAugStrongs = numOfReferences;
+                    augStrongWithMostReferences = augStrong;
+                }
+            }
+            addDefaultAugment(strongNumUnderReview, augStrongWithMostReferences, defaultAugment, strongsWithAugments);
+        } catch (Exception i) {
+            LOGGER.error("Something wrong in StrongAugmentationServices");
+            i.printStackTrace();
+        }
+    }
+
     public void loadFromSerialization(final String installFilePath) {
         String installFileFolder = "";
         int pos = installFilePath.lastIndexOf('\\');
@@ -273,14 +316,94 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         }
     }
 
+    private byte[] compactStrongsString(final String strongsInString) {
+        String[] augStrongs = strongsInString.trim().split(" ");
+        int len = 0;
+        for (int i = 0; i < augStrongs.length; i++) {
+            String[] partsOfStrong = augStrongs[i].split(";");
+            if (partsOfStrong.length > 1)
+                len += 4;
+            else
+                len += 3;
+        }
+        byte[] result = new byte[len];
+
+        int pos = 0;
+        for (int i = 0; i < augStrongs.length; i++) {
+            String[] partsOfStrong = augStrongs[i].split(";");
+            short strongNum = Short.valueOf(partsOfStrong[0].substring(0, 4));
+            if (partsOfStrong.length > 1)
+                strongNum = (short) (strongNum * -1);
+            ByteBuffer buffer = ByteBuffer.allocate(2).putShort(strongNum);
+            System.arraycopy(buffer.array(), 0, result, pos, 2);
+            pos += 2;
+            result[pos] = (byte) (partsOfStrong[0].charAt(4));
+            pos ++;
+            if (partsOfStrong.length > 1) {
+                for (int j = 0; j < partsOfStrong[1].length(); j++) {
+                    char currentChar = partsOfStrong[1].charAt(j);
+                    int shiftByBits = currentChar - '1';
+                    if (shiftByBits == 8) // '9', 9th occurrence
+                        result[pos-1] = (byte) (result[pos-1] * -1); // Make the augment a negative number to indicate the 9th occurrence is a match
+                    else if (shiftByBits <= 7) { // 1st to 8th occurrences
+                        byte mask = (byte) (0x01 << shiftByBits);
+                        result[pos] = (byte) (result[pos] | mask);
+                    }
+                }
+                pos ++;
+            }
+        }
+        return result;
+    }
+
+
+    private int calculateLength(final TreeMap<Short, String> ordinalStrong, HashMap<String, Integer> augStrongsForEachOrdinal) {
+        int totalLength = 0;
+        for (Map.Entry<Short, String> entry : ordinalStrong.entrySet()) {
+            String strongsInString = entry.getValue();
+            byte[] packedStrongs = compactStrongsString(strongsInString);
+            if (!augStrongsForEachOrdinal.containsKey(strongsInString)) {
+                augStrongsForEachOrdinal.put(strongsInString, 0);
+                totalLength += packedStrongs.length + 1;
+            }
+        }
+        return totalLength;
+    }
+
+    private int copyOrdinalStrong(int position, final TreeMap<Short, String> ordinalStrong,
+                                  HashMap<String, Integer> augStrongsForEachOrdinal,
+                                  int[] ordinalPtr2AugStrong, byte[] augStrongByteArray) {
+        for (Map.Entry<Short, String> entry : ordinalStrong.entrySet()) {
+            short currentOrdinal = entry.getKey();
+            String strongsInString = entry.getValue();
+            byte[] packedStrongs = compactStrongsString(strongsInString);
+            int posOfStrongsAlreadyInAugStrongByteArray = augStrongsForEachOrdinal.get(strongsInString);
+            if (posOfStrongsAlreadyInAugStrongByteArray == 0) {
+                ordinalPtr2AugStrong[currentOrdinal] = position;
+                augStrongsForEachOrdinal.put(strongsInString, position);
+                int len = packedStrongs.length;
+                augStrongByteArray[position] = (byte) (len);
+                position ++;
+                System.arraycopy(packedStrongs, 0, augStrongByteArray, position, len);
+                position += len;
+            } else
+                ordinalPtr2AugStrong[currentOrdinal] = posOfStrongsAlreadyInAugStrongByteArray;
+        }
+        return position;
+    }
+
+
     public void readAndLoad(final String augStrongFile, final String installFilePath) {
         Reader fileReader = null;
         BufferedInputStream bufferedStream = null;
         String curAugStrong = "";
-        String curReferences = "";
-        TreeMap<Integer, Integer> strong2AugCountGrk = new TreeMap<>();
         TreeMap<Integer, Integer> strong2AugCountHbr = new TreeMap<>();
-        TreeMap<String, String> sortedAugStrong  = new TreeMap<>();
+        TreeMap<Integer, Integer> strong2AugCountOTGrk = new TreeMap<>();
+        TreeMap<Integer, Integer> strong2AugCountNTGrk = new TreeMap<>();
+        TreeMap<String, String> sortedAugStrongHbr  = new TreeMap<>();
+        TreeMap<String, String> sortedAugStrongOTGreek  = new TreeMap<>();
+        TreeMap<String, String> sortedAugStrongNTGreek  = new TreeMap<>();
+
         String installFileFolder = "";
         int pos = installFilePath.lastIndexOf('\\');
         if (pos == -1)
@@ -297,50 +420,44 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             final BufferedReader bufferedReader = new BufferedReader(fileReader);
             String data;
             try {
-                boolean hebrew = false;
                 while ((data = bufferedReader.readLine()) != null) {
                     if (data.endsWith("=======================")) {
-                        if (!curAugStrong.equals("")) {
-                            throw new StepInternalException("readAndLoad: " + augStrongFile + ", unexpected order at around " + curAugStrong);
-                        }
-                        else if (!curReferences.equals("")) {
-                            throw new StepInternalException("readAndLoad: " + augStrongFile + ", unexpected order at around " + curReferences);
-                        }
+                        curAugStrong = "";
                     }
                     else if (data.startsWith("@AugmentedStrong=\t")) {
-                        if (!curAugStrong.equals("")) {
+                        if (!curAugStrong.equals(""))
                             throw new StepInternalException("readAndLoad: " + augStrongFile + ", unexpected order at around " + curAugStrong);
-                        }
                         curAugStrong = data.substring(18);
                         verifyAugStrongPattern(curAugStrong);
+                    }
+                    else if (data.startsWith("@References=\t")) {
+                        String curReferences = data.substring(13);
                         int num = convertStrong2Short(curAugStrong);
                         if (curAugStrong.charAt(0) == 'H') {
                             strong2AugCountHbr.put(num, 1);
-                            hebrew = true;
+                            if (sortedAugStrongHbr.containsKey(curAugStrong))
+                                throw new StepInternalException("readAndLoad: " + augStrongFile + ", duplicate augmented strong " + curAugStrong);
+                            sortedAugStrongHbr.put(curAugStrong, curReferences);
                         }
                         else {
-                            strong2AugCountGrk.put(num, 1);
-                            hebrew = false;
+                            strong2AugCountNTGrk.put(num, 1);
+                            if (sortedAugStrongNTGreek.containsKey(curAugStrong))
+                                throw new StepInternalException("readAndLoad: " + augStrongFile + ", duplicate augmented strong " + curAugStrong);
+                            sortedAugStrongNTGreek.put(curAugStrong, curReferences);
                         }
                     }
-                    else if (data.startsWith("@References=\t")) {
-                        if (!curReferences.equals("")) {
-                            throw new StepInternalException("readAndLoad: " + augStrongFile + ", empty references");
-                        }
-                        curReferences = data.substring(13);
-                        if (hebrew) {
-                            if (sortedAugStrong.containsKey(curAugStrong)) {
-                                throw new StepInternalException("readAndLoad: " + augStrongFile + ", duplicate augmented strong " + curAugStrong);
-                            }
-                            sortedAugStrong.put(curAugStrong, curReferences);
-                        }
-                        else { // If there are augmented_strong for OT, this will need to be updated
-                            if (sortedAugStrong.containsKey(curAugStrong)) {
-                                throw new StepInternalException("readAndLoad: " + augStrongFile + ", duplicate augmented strong " + curAugStrong);
-                            }
-                            sortedAugStrong.put(curAugStrong, curReferences);
-                        }
-                        curAugStrong = ""; curReferences = ""; hebrew = false;
+                    else if (data.startsWith("@LXXRefs=\t")) {
+                        String curReferences = data.substring(10);
+                        int num = convertStrong2Short(curAugStrong);
+                        if (curAugStrong.charAt(0) != 'G')
+                            throw new StepInternalException("readAndLoad: " + augStrongFile + ", Non Greek DStrong for LXXRefs " + curAugStrong);
+                        strong2AugCountOTGrk.put(num, 1);
+                        if (sortedAugStrongOTGreek.containsKey(curAugStrong))
+                            throw new StepInternalException("readAndLoad: " + augStrongFile + ", duplicate augmented strong " + curAugStrong);
+                        sortedAugStrongOTGreek.put(curAugStrong, curReferences);
+                    }
+                    else {
+                        System.out.println("unrecognized line in augmented_strongs.txt file: " + data);
                     }
                 }
             } catch (final IOException e) {
@@ -348,118 +465,77 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 throw new StepInternalException("Unable to read a line from the augmented strongs file ", e);
             }
             OpenFileStateManager.OrdinalStrongArray osArray = new OpenFileStateManager.OrdinalStrongArray();
-            osArray.numOfGreekStrongWithAugments = strong2AugCountGrk.size();
-            int numOfAugStrong = osArray.numOfGreekStrongWithAugments + strong2AugCountHbr.size();
-            osArray.defaultAugment = new byte[numOfAugStrong];
+
+            osArray.defaultAugmentOTHebrew = new byte[strong2AugCountHbr.size()];
+            osArray.defaultAugmentOTGreek = new byte[strong2AugCountOTGrk.size()];
+            osArray.defaultAugmentNTGreek = new byte[strong2AugCountNTGrk.size()];
+
             // An array of Strong numbers with augmented strongs.  If a Strong does not have augmented, it will not be in this
             // array.  Each Strong number is a short (15 bits) so Strong numbers cannot be over 32,767.  15 bits should be OK
             // because all Strong with augments are 4 digits.  If 15 bit is not enough, change it from a short[] to int[]
             // This array is sorted so that binary search can be used to speed up the lookup.  Since a lookup is need for every
             // Strong word, it is important the lookup is efficient.
-            osArray.strongsWithAugments = new short[numOfAugStrong];
-            int counter = 0;
-            for (Map.Entry<Integer, Integer> entry : strong2AugCountGrk.entrySet()) {
-                osArray.strongsWithAugments[counter] = entry.getKey().shortValue();
-                counter ++;
-            }
-            for (Map.Entry<Integer, Integer> entry : strong2AugCountHbr.entrySet()) {
-                osArray.strongsWithAugments[counter] = entry.getKey().shortValue();
-                counter ++;
-            }
+            osArray.strongsWithAugmentsOTHebrew = buildArrayOfStrongsWithAugments(strong2AugCountHbr);
+            osArray.strongsWithAugmentsOTGreek = buildArrayOfStrongsWithAugments(strong2AugCountOTGrk);
+            osArray.strongsWithAugmentsNTGreek = buildArrayOfStrongsWithAugments(strong2AugCountNTGrk);
+
             final Versification versificationForOT = this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
             final Versification versificationForESV = this.versificationService.getVersificationForVersion("ESV");
 
-            // This section of code is to create a hash for augStrongWithMostReferencesStrongNum
-            HashMap<String, String> augStrongWithMostReferencesStrongNum = new HashMap<>();
-            int strongNumUnderReview = -1;
-            String augStrongWithMostReferences = "";
-            int mostReferencesWithinAugStrongs = 0;
-            for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
-                String augStrong = entry.getKey();
-                int curStrongNumWithoutAugment = convertStrong2Short(augStrong);
-                if (strongNumUnderReview != curStrongNumWithoutAugment) { // New Strong numbers
-                    if (strongNumUnderReview > -1)
-                        augStrongWithMostReferencesStrongNum.put(augStrongWithMostReferences.substring(0, augStrongWithMostReferences.length()-1), augStrongWithMostReferences);
-                    strongNumUnderReview = curStrongNumWithoutAugment; // update variables for new Strong numbers
-                    augStrongWithMostReferences = "";
-                    mostReferencesWithinAugStrongs = 0;
-                }
-                String[] arrOfRef = entry.getValue().split(" ");
-                if (mostReferencesWithinAugStrongs < arrOfRef.length) {
-                    mostReferencesWithinAugStrongs = arrOfRef.length;
-                    augStrongWithMostReferences = augStrong;
-                }
-            }
-            if (strongNumUnderReview > -1) // output the augStrongWithMostReferences for the last Strong number
-                augStrongWithMostReferencesStrongNum.put(augStrongWithMostReferences.substring(0, augStrongWithMostReferences.length()-1), augStrongWithMostReferences);
-
-            int lastStrong = 32767;
             OrdinalStrong ordinalStrong = new OrdinalStrong();
-            try {
-                for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
-                    String augStrong = entry.getKey();
-                    String references = entry.getValue().trim();
-                    int curStrongNum = convertStrong2Short(augStrong);
-                    char prefix = augStrong.charAt(0);
-                    boolean hebrew = ((prefix == 'H') || (prefix == 'h')) ? true : false;
-                    String defaultAugStrong = augStrongWithMostReferencesStrongNum.get(augStrong.substring(0, augStrong.length()-1));
-                    if (lastStrong != curStrongNum) {
-                        int index = binarySearchOfStrong(augStrong, osArray.numOfGreekStrongWithAugments, osArray.strongsWithAugments);
-                        if (index < 0) {
-                            LOGGER.error("Error in AugStrongServiceImpl, cannot find augstrong of " + augStrong);
-                            System.exit(405);
-                        }
-                        lastStrong = curStrongNum;
-                        osArray.defaultAugment[index] = (byte) defaultAugStrong.charAt(defaultAugStrong.length() - 1);
-                    }
-                    if (hebrew) {
-                        addToRefArray(true, augStrong, references, versificationForOT, versificationForESV, ordinalStrong, defaultAugStrong);
-                    } else {
-                        addToRefArray(false, augStrong, references, versificationForOT, versificationForESV, ordinalStrong, defaultAugStrong);
-                    }
-                }
-            } catch (Exception i) {
-                LOGGER.error("Something wrong in StrongAugmentationServices");
-                i.printStackTrace();
-            }
+            // This section of code is to create a hash for augStrongWithMostReferencesStrongNum
+            buildAugStringWithMostReferences(sortedAugStrongHbr, osArray.defaultAugmentOTHebrew, osArray.strongsWithAugmentsOTHebrew);
+            addToRefArray(ordinalStrong.OTOHB, versificationForOT,
+                    sortedAugStrongHbr, osArray.defaultAugmentOTHebrew,
+                    osArray.strongsWithAugmentsOTHebrew, false);
+            addToRefArray(ordinalStrong.OTRSV, versificationForESV,
+                    sortedAugStrongHbr, osArray.defaultAugmentOTHebrew,
+                    osArray.strongsWithAugmentsOTHebrew, true);
 
-            int totalLength = 0;
-            osArray.OHBOrdinal = new int[24183]; // To do: get this number at run time
-            osArray.OTRSVOrdinal = new int[24116];
-            osArray.NTRSVOrdinal = new int[8248];
-            for (Map.Entry<Short, String> entry : ordinalStrong.OTOHB.entrySet()) {
-                totalLength += entry.getValue().length();
-            }
-            for (Map.Entry<Short, String> entry : ordinalStrong.NTRSV.entrySet()) {
-                totalLength += entry.getValue().length();
-            }
-            osArray.augStrong = new byte[totalLength+1];
+            buildAugStringWithMostReferences(sortedAugStrongNTGreek, osArray.defaultAugmentNTGreek, osArray.strongsWithAugmentsNTGreek);
+            addToRefArray(ordinalStrong.NTRSV, versificationForESV,
+                    sortedAugStrongNTGreek, osArray.defaultAugmentNTGreek,
+                    osArray.strongsWithAugmentsNTGreek, false);
+
+            buildAugStringWithMostReferences(sortedAugStrongOTGreek, osArray.defaultAugmentOTGreek, osArray.strongsWithAugmentsOTGreek);
+            addToRefArray(ordinalStrong.OTGreek, versificationForESV,
+                    sortedAugStrongOTGreek, osArray.defaultAugmentOTGreek,
+                    osArray.strongsWithAugmentsOTGreek, false);
+
+            osArray.ordinalOTHebrewOHB = new int[24183]; // To do: get this number at run time
+            osArray.ordinalOTHebrewRSV = new int[24116];
+            osArray.ordinalOTGreek = new int[24116];
+            osArray.ordinalNT = new int[8248];
+            HashMap<String, Integer> augStrongsForEachOrdinal  = new HashMap<>();
+            int totalLength = calculateLength(ordinalStrong.OTOHB, augStrongsForEachOrdinal);
+            totalLength += calculateLength(ordinalStrong.OTRSV, augStrongsForEachOrdinal);
+            osArray.hebrewAugStrong = new byte[totalLength+1];
             int position = 1; // position 0 means no entry so start at position 1;
-            short currentOrdinal = 0;
-            for (Map.Entry<Short, String> entry : ordinalStrong.OTOHB.entrySet()) {
-                currentOrdinal = entry.getKey();
-                osArray.OHBOrdinal[currentOrdinal] = position;
-                byte [] b = entry.getValue().getBytes();
-                int len = b.length;
-                System.arraycopy(b, 0, osArray.augStrong, position, len);
-                position += len;
-            }
-            for (Map.Entry<Short, String> entry : ordinalStrong.NTRSV.entrySet()) {
-                currentOrdinal = entry.getKey();
-                osArray.NTRSVOrdinal[currentOrdinal] = position;
-                byte [] b = entry.getValue().getBytes();
-                int len = b.length;
-                System.arraycopy(b, 0, osArray.augStrong, position, len);
-                position += len;
-            }
-            for (Map.Entry<Short, Short> entry : ordinalStrong.OTRSV.entrySet()) {
-                osArray.OTRSVOrdinal[entry.getKey()] = entry.getValue();
-            }
+            position = copyOrdinalStrong(position, ordinalStrong.OTOHB, augStrongsForEachOrdinal,
+                    osArray.ordinalOTHebrewOHB, osArray.hebrewAugStrong);
+            copyOrdinalStrong(position, ordinalStrong.OTRSV, augStrongsForEachOrdinal,
+                    osArray.ordinalOTHebrewRSV, osArray.hebrewAugStrong);
+            augStrongsForEachOrdinal.clear();
+            totalLength = calculateLength(ordinalStrong.NTRSV, augStrongsForEachOrdinal);
+            totalLength += calculateLength(ordinalStrong.OTGreek, augStrongsForEachOrdinal);
+            osArray.greekAugStrong = new byte[totalLength+1];
+            position = 1; // position 0 means no entry so start at position 1;
+            position = copyOrdinalStrong(position, ordinalStrong.NTRSV, augStrongsForEachOrdinal,
+                    osArray.ordinalNT, osArray.greekAugStrong);
+            copyOrdinalStrong(position, ordinalStrong.OTGreek, augStrongsForEachOrdinal,
+                    osArray.ordinalOTGreek, osArray.greekAugStrong);
+
             OpenFileStateManager.addOrdinalStrong(osArray);
 
-            strong2AugCountGrk = null;
+            ordinalStrong = null;
+            sortedAugStrongOTGreek = null;
+            sortedAugStrongHbr = null;
+            sortedAugStrongNTGreek = null;
+            strong2AugCountNTGrk = null;
             strong2AugCountHbr = null;
-            sortedAugStrong = null;
+            strong2AugCountOTGrk = null;
+            augStrongsForEachOrdinal = null;
+
             try {
                 FileOutputStream fileOut =
                         new FileOutputStream(installFileFolder + "ordinal_strongs.dat");
@@ -472,7 +548,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 LOGGER.error("Serialized data cannot be saved in " + installFileFolder + "ordinal_strongs.dat");
                 i.printStackTrace();
             }
-            ordinalStrong = null;
+
             System.gc(); // Free memory that will not be used after the initial load.  This like is probably unnecessary but just in case.
         } finally {
             closeQuietly(fileReader);

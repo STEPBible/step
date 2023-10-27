@@ -78,7 +78,30 @@ var StepRouter = Backbone.Router.extend({
         }
 
         if (!step.util.isBlank(options)) {
-            urlStub = this._addArg(urlStub, "options", options);
+            if ((options.indexOf("M") > -1) || (options.indexOf("C") > -1)) {
+                var versions = urlStub.split("version=");
+                var hasMorphology = false;
+                for (var i = 1; i < versions.length; i++) { // skip the first element is q= or things before version=
+                    var curVersion = versions[i].split("|")[0].split("&")[0];
+                    if ((typeof step.keyedVersions[curVersion] === "object") &&
+                        (step.keyedVersions[curVersion].hasMorphology)) {
+                            hasMorphology = true;
+                            break;
+                        }
+                }
+                if (!hasMorphology) // If there is no morphology, the grammar and color code grammar are not relevant
+                    options = options.replace("M", "").replace("C", "");
+            }
+            var optionWithoutDups = "";
+            var freq = {};
+            for (var i=0; i < options.length; i++) {
+                var oneChar = options[i];
+                if (typeof freq[oneChar] === "undefined") {
+                    freq[oneChar] = 1;
+                    optionWithoutDups += oneChar;
+                }
+            }
+            urlStub = this._addArg(urlStub, "options", optionWithoutDups);
         }
         if (!step.util.isBlank(interlinearMode) && interlinearMode != "NONE") {
             urlStub = this._addArg(urlStub, "display", interlinearMode);
@@ -225,7 +248,6 @@ var StepRouter = Backbone.Router.extend({
                 step.util.trackAnalytics("search", searchTokens[i].tokenType, searchTokens[i].token);
             }
         }
-
     },
 
     _renderSummary: function (passageModel) {

@@ -343,7 +343,10 @@
                                                                                 <%      else %>
                                                                                             ${ definition._zh_Gloss}
                                                                                 <%  }
-                                                                                                                                                                        else { %>
+                                                                                    else if (locale.getLanguage().equalsIgnoreCase("km")) { %>
+																						${ definition._km_Gloss}
+																				<%	}
+                                                                                    else { %>
                                                                                         ${ definition.gloss}
                                                                                 <%  } %>
 

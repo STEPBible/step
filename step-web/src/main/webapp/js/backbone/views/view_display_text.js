@@ -30,7 +30,6 @@ var TextDisplayView = SearchDisplayView.extend({
             //we customize the generation of the actual verse content to add the version
             this._displayPassageResults(table, searchResults, sortOrder, existingResults, function (cell, item) {
                 var surrounding = $("<span>");
-                var surrounding = $("<span>");
                 for (var i = 0; i < item.verseContent.length; i++) {
                     var verseContent = item.verseContent[i];
                     var content = $("<div>").addClass("multiVersionSubResult");

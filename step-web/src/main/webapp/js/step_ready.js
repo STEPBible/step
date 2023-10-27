@@ -220,6 +220,10 @@
 		if (!step.touchDevice) {
 			var timer;
 			$(document).keyup(function(e) {
+                if ($('#saveClrModalInputArea:visible').length > 0) {
+                    e.preventDefault();
+                    return false;
+                }
                 const element = document.getElementById('quickLexicon');
                 if ((element) && (typeof element.scrollTop === "number") && ($('#down-arrow').length = 1)) {
                     if ((e.keyCode == 39) || (e.keyCode == 40) || (e.keyCode == 34) || // down arrow, right arrow, page down
@@ -470,7 +474,6 @@
         if ((window.location.hash || "").indexOf("#") != -1) {
             window.location.hash = "";
         }
-
         window.step = window.step || {};
         initSettings();
         addNavBar();

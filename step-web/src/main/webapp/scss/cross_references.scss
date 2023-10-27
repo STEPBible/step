@@ -43,6 +43,38 @@
   }
 }
 
+.qtip.freqListHover {
+  background-color: white;
+  background-color: var(--clrBackground);
+  border: 1px solid #ccc;
+  border: 1px solid var(--clrText);
+  padding: 8px;
+  margin: 10px;
+  max-width: 200px;
+  font-size: 1em;
+
+  .qtip-content {
+    padding: 0;
+  }
+
+  & > a:hover {
+    cursor: text;
+    text-decoration: none;
+  }
+
+  .margin {
+    a.sideNote {
+      color: #333;
+      font-weight: bold;
+
+      &:hover {
+        cursor: text;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
 .qtip-titlebar {
   margin-top: -1px;
 

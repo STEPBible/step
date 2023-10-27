@@ -64,25 +64,39 @@ var SidebarView = Backbone.View.extend({
             if ((this.model.get("morph") != undefined) && (this.model.get("morph").indexOf('TOS:') == 0)) {
                 lastMorphCode = this.model.get("morph");
             }
-			if ((typeof this.model.get("version") === "undefined") &&
-				(typeof this.model.get("ref") === "undefined") &&
-				(typeof this.model.get("morph") === "undefined") &&
-				(this.model.get("strong") === "H0001")) {
+			var ref = this.model.get("ref");
+			var version = this.model.get("version");
+			var allVersions = this.model.get("allVersions");
+			var strong = this.model.get("strong");
+			var morph = this.model.get("morph");
+            if (typeof allVersions !== "string") {
+                if (typeof version === "string")
+                    allVersions = version;
+                else {
+                    allVersions = step.util.activePassage().get("masterVersion");
+                    var extraVersions = step.util.activePassage().get("extraVersions");
+                    if ((typeof extraVersions === "string") && (extraVersions !== ""))
+                        allVersions += "," + extraVersions;
+                }
+            }
+            if ((typeof version === "undefined") &&
+				(typeof ref === "undefined") &&
+				(typeof morph === "undefined") &&
+				(strong === "H0001")) {
 				console.log("MODULE_GET_INFO undefined H0001");
 				return;
 			}
-			var ref = this.model.get("ref");
-            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(this.model.get("strong"), this.model.get("morph"), this.model.get("version"));
+            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strong, morph, version);
             if (vocabMorphFromJson.vocabInfos.length > 0) {
-                self.createDefinition(vocabMorphFromJson, ref);
+                self.createDefinition(vocabMorphFromJson, ref, allVersions);
                 return;
             }
-            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
-                self.createDefinition(data, ref);
+            $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
+                self.createDefinition(data, ref, allVersions);
             }).error(function() {
                 if (changeBaseURL())
-                    $.getSafe(MODULE_GET_INFO, [this.model.get("version"), ref, this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
-                        self.createDefinition(data, ref);
+                    $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
+                        self.createDefinition(data, ref, allVersions);
                     })
             });
         }
@@ -144,12 +158,13 @@ var SidebarView = Backbone.View.extend({
     createHelp: function () {
         this.helpView = new ExamplesView({el: this.help});
     },
-    createDefinition: function (data, ref) {
+    createDefinition: function (data, ref, allVersions) {
         var displayLexicalRelatedWords = (($(".detailLex:visible").length > 0) || (step.util.localStorageGetItem("sidebar.detailLex") === "true"));
         //get definition tab
         this.lexicon.detach();
         this.lexicon.empty();
 
+        $('#quickLexicon').remove();
         var alternativeEntries = $("<div id='vocabEntries'>");
         this.lexicon.append(alternativeEntries);
         this.lexicon.append($("<h1>").append(__s.lexicon_vocab));
@@ -184,6 +199,7 @@ var SidebarView = Backbone.View.extend({
 				if (currentUserLang =="es") currentGloss += " " + item._es_Gloss;
 				else if (currentUserLang =="zh") currentGloss += " " + item._zh_Gloss;
 				else if (currentUserLang =="zh_tw") currentGloss += " " + item._zh_tw_Gloss;
+				else if (currentUserLang =="km") currentGloss += " " + item._km_Gloss;
                 var panelTitle = currentGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (hebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
                 var panelContentContainer = $('<div class="panel-collapse collapse">').attr("id", panelId);
                 var panelBody = $('<div class="panel-body"></div>');
@@ -193,7 +209,7 @@ var SidebarView = Backbone.View.extend({
                     panelContentContainer.addClass("in");
                 }
 
-                this._createBriefWordPanel(panelBody, item, currentUserLang);
+                this._createBriefWordPanel(panelBody, item, currentUserLang, allVersions);
 // need to handle multiple morphInfo (array)
                 if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                     data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
@@ -201,7 +217,7 @@ var SidebarView = Backbone.View.extend({
                 if (i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 }
-                this._createWordPanel(panelBody, item, currentUserLang, isOTorNT);
+                this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT);
                 if (i < data.morphInfos.length) {
                     this._createMorphInfo(panelBody, data.morphInfos[i]);
                 }
@@ -216,7 +232,7 @@ var SidebarView = Backbone.View.extend({
 
         }
         else {
-            this._createBriefWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang);
+            this._createBriefWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang, allVersions);
             // need to handle multiple morphInfo (array)
             if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                 data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
@@ -224,7 +240,7 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
             }
-            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang, isOTorNT);
+            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(this.lexicon, data.morphInfos[0]);
             }
@@ -241,6 +257,7 @@ var SidebarView = Backbone.View.extend({
         if ((currentUserLang == "es") && (mainWord._es_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._es_Gloss + "&nbsp;";
         else if ((currentUserLang == "zh") && (mainWord._zh_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._zh_Gloss + "&nbsp;";
         else if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._zh_tw_Gloss + "&nbsp;";
+        else if ((currentUserLang == "km") && (mainWord._km_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._km_Gloss + "&nbsp;";
         panel.append(
             $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
                 .append(mainWord.accentedUnicode))
@@ -373,7 +390,7 @@ var SidebarView = Backbone.View.extend({
         return foundChineseJSON;
     },
 
-    _addDetailLexicalWords: function (detailLex, panel, isCurrentWord) {
+    _addDetailLexicalWords: function (detailLex, panel, isCurrentWord, totalOT, totalNT, hasBothTestaments, allVersions) {
         var frequency = parseInt(detailLex[3]); // Just in case it is provided in String instead of number
         panel.append($("<br class='detailLex' style='display:none'>"));
         var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
@@ -381,48 +398,85 @@ var SidebarView = Backbone.View.extend({
             panel.append($("<span class='detailLex glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>"));
             spaceWithoutLabel = "";
         }
-        panel.append($("<a title='" + detailLex[1] + " " + detailLex[4] + "'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
-            append($("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + " </span>")).click(function () {
-            step.util.ui.showDef($(this).data("strongNumber"));
+        panel.append($("<a title='" + detailLex[1] + " " + detailLex[4] + "'></a>").attr("onclick", "javascript:void(0)").data("strongNumber", detailLex[1]).
+              append($("<span class='detailLex' style='display:none'" +
+                step.searchSelect.addMouseOverEvent("strong", detailLex[1]) + ">" +
+                spaceWithoutLabel + detailLex[0] + " </span>")).click(function () {
+                step.util.ui.showDef($(this).data("strongNumber"));
         }));
         panel.append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[4] + "'>" + detailLex[2] + "</span>"));
         panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;</span>'));
-        panel.append($("<a title='click to show all occurrences of this word'></a>").attr("href", "javascript:void(0)").data("strongNumber", detailLex[1]).
-              append('<span class="strongCount detailLex" style="unicode-bidi:normal;display:none">~' + sprintf(__s.stats_occurs, frequency) + '</span>').
+        var statsOccursMsg = step.util.formatFrequency({versionCountOT: totalOT, versionCountNT: totalNT}, frequency, hasBothTestaments);
+        panel.append($("<a title='click to show all occurrences of this word'></a>").attr("onclick", "javascript:void(0)").data("strongNumber", detailLex[1]).
+              append('<span class="strongCount detailLex" style="unicode-bidi:normal;display:none">~' + statsOccursMsg + '</span>').
               click(function () {
-            var strongNumber = $(this).data("strongNumber");
-            var args = "strong=" + encodeURIComponent(strongNumber);
-            step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
-            step.router.navigatePreserveVersions(args, false, true);
-            return false;
+                var strongNumber = $(this).data("strongNumber");
+                var args = "strong=" + encodeURIComponent(strongNumber);
+                step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
+                step.router.navigatePreserveVersions(args, false, true);
+                return false;
         }));
+        panel.append("&nbsp;&nbsp;");
+        var freqListLink = $("<a style='font-size:11px;display:none' class='detaillex glyphicon glyphicon-info-sign'></a>");
+        var msg = step.util.showFrequencyOnAllBibles(detailLex[1], detailLex[6].split(";"), detailLex[4], detailLex[5], allVersions);
+        require(["qtip"], function () {
+            freqListLink.qtip({
+                show: {event: 'mouseenter'},
+                hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
+                position: {my: "top center", at: "top center", of: freqListLink, viewport: $(window), effect: false},
+                style: {classes: "freqListHover"},
+                overwrite: true,
+                content: {
+                    text: msg
+                }
+            });
+        });
+        panel.append($(freqListLink));
     },
 
     _composeDescriptionOfOccurrences: function(stepType) {
         if ((typeof stepType !== "string") || (stepType === "") ||
             (stepType === "word") || (stepType === "verb") || (stepType === "name") ||
             ((step.userLanguage !== "English") &                                     // If user language is not English, but it is using the English message,
-             ((__s.lexicon_search_for_this_person === "This person occurs about") || // there is no translation for these two new messages.  Therefore use the original message which is
-              (__s.lexicon_search_for_this_place === "This place occurs about"))) )   // lexicon_search_for_this_word.  That has been translated for many years.
+             ((__s.lexicon_search_for_person === "This person occurs about") || // there is no translation for these two new messages.  Therefore use the original message which is
+              (__s.lexicon_search_for_place === "This place occurs about"))) )   // lexicon_search_for_this_word.  That has been translated for many years.
              return __s.lexicon_search_for_this_word;
         if (stepType === "place") return __s.lexicon_search_for_this_place;
         return __s.lexicon_search_for_this_person;
     },
 
-    _appendLexiconSearch: function (panel, mainWord, detailLex) {
+    _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions) {
         var total = mainWord.count;
+        var totalOT = 0;
+        var totalNT = 0;
+        var totalOTs = [];
+        var totalNTs = [];
         var allStrongs = [];
         panel.append("<br />").append(this._composeDescriptionOfOccurrences(mainWord._step_Type));
         if ((detailLex) && (detailLex.length > 0)) {
 			allStrongs.push(mainWord.strongNumber);
-			for (var i = 0; i < detailLex.length; i++) {
+            for (var i = 0; i < detailLex.length; i++) {
+                total += parseInt(detailLex[i][3]); // Just in case it is provided in String instead of number
                 if (detailLex[i][1] !== mainWord.strongNumber) {
-				    total += parseInt(detailLex[i][3]); // Just in case it is provided in String instead of number
                     allStrongs.push(detailLex[i][1]);
+                    var vocabMorphFromJson = {vocabInfos: [{ strongNumber: detailLex[i][1], freqList: detailLex[i][6]}] };
                 }
+                else {
+                    vocabMorphFromJson = { vocabInfos: [ mainWord ] };
+                }
+                step.util.lookUpFrequencyFromMultiVersions(vocabMorphFromJson, allVersions);
+                var curOT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountOT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountOT : 0;
+                var curNT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountNT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountNT : 0;
+                totalOT += curOT;
+                totalNT += curNT;
+                totalOTs.push(curOT);
+                totalNTs.push(curNT);
             }
+            var hasBothTestaments = ((totalOT > 0) && (totalNT > 0));
+            var statsOccursMsg = step.util.formatFrequency({versionCountOT: totalOT, versionCountNT: totalNT}, total, hasBothTestaments);
+
 			panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount" style="unicode-bidi:normal"> ' +
-               sprintf(__s.stats_occurs, total) + '</span>').click(function () {
+               statsOccursMsg + '</span>').click(function () {
 				var args = $(this).data("strongNumber");
 				console.log("args " + args);
 				var currentSearch = "strong=" + encodeURIComponent(args[0]);
@@ -453,22 +507,41 @@ var SidebarView = Backbone.View.extend({
 				return false;
 			}));
 			for (var i = 0; i < detailLex.length; i++) {
-                this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber));
+                this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber), totalOTs[i], totalNTs[i], hasBothTestaments, allVersions);
 			}
         }
         else {
-            if (total) {
-                panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, total) + '</span>').click(function () {
+            var data = {vocabInfos: [mainWord]};
+            step.util.lookUpFrequencyFromMultiVersions(data, allVersions);
+            var countDisplay = step.util.formatFrequency(mainWord, total, false);
+            if (countDisplay !== "") {
+                panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + countDisplay + '</span>').click(function () {
                     var strongNumber = $(this).data("strongNumber");
                     var args = "strong=" + encodeURIComponent(strongNumber);
                     step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
                     step.router.navigatePreserveVersions(args, false, true);
 			    	return false;
                 }));
+                panel.append("&nbsp;&nbsp;");
+                var freqListLink = $("<a style='font-size:11px' class='detaillex glyphicon glyphicon-info-sign'></a>");
+                var msg = step.util.showFrequencyOnAllBibles(mainWord.strongNumber, mainWord.freqList.split(";"), "", "",allVersions);
+                require(["qtip"], function () {
+                    freqListLink.qtip({
+                        show: {event: 'mouseenter'},
+                        hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
+                        position: {my: "top center", at: "top center", of: freqListLink, viewport: $(window), effect: false},
+                        style: {classes: "freqListHover"},
+                        overwrite: true,
+                        content: {
+                            text: msg
+                        }
+                    });
+                });
+                panel.append($(freqListLink));
             }
         }
         panel.append().append('<br />');
-		return false;
+        return false;
     },
 
 	_lookUpGeoInfo: function(mainWord, bookName, coordinates) {
@@ -530,18 +603,21 @@ var SidebarView = Backbone.View.extend({
 		this._lookUpGeoInfo(mainWord, bookName, stepLink);
 	},
 	
-    _createWordPanel: function (panel, mainWord, currentUserLang, isOTorNT) {
+    _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
-        if (mainWord.shortDef) {
-            this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode, bibleVersion);
+        if (typeof mainWord.shortDef === "string") {
+            if ((typeof mainWord.mediumDef !== "string") ||
+                (mainWord.shortDef.length < 3) ||
+                (mainWord.mediumDef.indexOf(mainWord.shortDef) == -1) )
+                this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode, bibleVersion);
         }
 		var detailLex = [];
 		if (mainWord._stepDetailLexicalTag) {
 			detailLex = (typeof mainWord._stepDetailLexicalTag === "string") ? 
                 JSON.parse(mainWord._stepDetailLexicalTag) : mainWord._stepDetailLexicalTag;
 		}
-        this._appendLexiconSearch(panel, mainWord, detailLex);
+        this._appendLexiconSearch(panel, mainWord, detailLex, allVersions);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;
 
@@ -574,7 +650,13 @@ var SidebarView = Backbone.View.extend({
 				panel.append($("<h2>").append("Từ điển Hy Lạp-Việt"));
                 this._addLinkAndAppend(panel, vietnameseDef, currentWordLanguageCode, bibleVersion);
             }
-
+		}
+		else if (currentUserLang == "km") {
+			var khmerDef = mainWord._km_Definition;
+			if (khmerDef) {
+				panel.append($("<h2>").append("និយមន័យ"));
+                this._addLinkAndAppend(panel, khmerDef, currentWordLanguageCode, bibleVersion);
+            }
 		}
         if (displayEnglishLexicon) { // This might be false if Chinese lexicon is displayed and isEnWithZhLexicon is false append the meanings
             if (mainWord.mediumDef) {
@@ -604,6 +686,7 @@ var SidebarView = Backbone.View.extend({
                     if ((currentUserLang == "es") && (relatedNosToDisplay[i]._es_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._es_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._zh_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._zh_tw_Gloss + "&nbsp;";
+                    else if ((currentUserLang == "km") && (relatedNosToDisplay[i]._km_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._km_Gloss + "&nbsp;";
                     var li = "";
                     if ((!relatedNosToDisplay[i]._searchResultRange) || (relatedNosToDisplay[i]._searchResultRange === "")) {
                         var fontClass = "";

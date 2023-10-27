@@ -124,34 +124,127 @@ window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
     timers: {},
+	versionsBoth: ["ESV", "KJV", "NASB2020", "BSB", "HCSB", "RV_TH", "WEB_TH", "ASV-TH", "CHIUN", "CHIUNS", "NASB1995", "RWEBSTER", "SPABES2018EB", "ARASVD"],
+	versionsGreekNT: ["SBLG_TH", "THGNT", "TR", "BYZ", "WHNU", "ELZEVIR", "ANTONIADES", "KHMKCB"],
+	versionsGreekOT: ["LXX_TH"],
+	versionsGreekBoth: ["ABEN", "ABGK"],
+	versionsHebrewOT: ["THOT", "OSMHB", "SP", "SPMT"],
+	vocabKeys: ["strongNumber", "stepGloss", "stepTransliteration", "count", 
+		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
+		"shortDef", "mediumDef", "lsjDefs",
+		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
+		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
+		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
+		"freqList", "defaultDStrong"],
+
+	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
+		var bibleVersions = allVersions.split(",");
+		for (var i =0; i < bibleVersions.length; i ++) {
+			bibleVersions[i] = step.util.normalizeVersionName(bibleVersions[i]);
+		}
+		for (var i = 0; i < bibleList.length; i++) {
+			var newMsg = "";
+			if ((typeof freqList[i + offset] === "string") && (freqList[i + offset] !== "")) {
+				newMsg += "<br>" + bibleList[i] + ": "
+				var freqDetail = freqList[i + offset].split("@");
+				var bibleName = bibleList[i].split("@")[0];
+				newMsg += "<a target='_blank' href='?q=version=" + bibleName + "|strong=" + strongNumber;
+				if (bibleList[i].endsWith("@NT"))
+					newMsg += "|reference=Matt-Rev";
+				else if (bibleList[i].endsWith("@OT"))
+					newMsg += "|reference=Gen-Mal";
+				if (window.location.href.indexOf("debug") > -1)
+					newMsg += "&debug";
+				newMsg += "'>" + freqDetail[0] + "x in ";
+				if (freqDetail.length == 2)
+				newMsg += freqDetail[1] + " verses";
+				else
+				newMsg += freqDetail[0] + " verses";
+				newMsg += "</a>";
+			}
+			if (bibleVersions.indexOf(bibleName) > -1) // Bibles selected by the users
+				msg[0] += newMsg;
+			else if ("ESV,NASB2020,SBLG_TH,LXX_TH,THOT".indexOf(bibleName) > -1) // Popular Bibles with good Strong tagging
+				msg[1] += newMsg;
+			else
+				msg[2] += newMsg;
+		}
+		return msg;
+	},
+	showHideFreqList: function () {
+		if ($(".detailFreqList:visible").length > 0) {
+			$(".detailFreqList").hide();
+			$(".freqListSelect").text("More ...");
+			$(".freqListSelectIcon").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+		}
+		else {
+			$(".detailFreqList").show();
+			$(".freqListSelect").text("Less ...");
+			$(".freqListSelectIcon").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+		}
+	},
+	showFrequencyOnAllBibles: function (strongNumber, freqList, accentedUnicode, stepTransliteration, allVersions) {
+		var msg = ["", "", ""];
+		if (accentedUnicode !== "") {
+			msg[0] = "<span style='font-size:12px' class='";
+			if (strongNumber.substring(0,1) === "H")
+				msg[0] += "hbFontSmall";
+			else
+				msg[0] += "unicodeFont";
+			msg[0] += "'>" + accentedUnicode + "</span> (<span class='transliteration'>" + stepTransliteration + 
+				"</span>) " + strongNumber;
+		}
+		msg = step.util.msgForFrequencyOnAllBibles(step.util.versionsBoth, freqList, 0, strongNumber, msg, allVersions);
+		if (strongNumber.substring(0,1) === "H")
+			msg = step.util.msgForFrequencyOnAllBibles(step.util.versionsHebrewOT, freqList, step.util.versionsBoth.length, strongNumber, msg, allVersions);
+		else {
+			msg = step.util.msgForFrequencyOnAllBibles(step.util.versionsGreekNT, freqList, step.util.versionsBoth.length + step.util.versionsHebrewOT.length, strongNumber, msg, allVersions);
+			msg = step.util.msgForFrequencyOnAllBibles(step.util.versionsGreekOT, freqList, step.util.versionsBoth.length + step.util.versionsHebrewOT.length + step.util.versionsGreekNT.length, strongNumber, msg, allVersions);
+			for (var i = 0; i < step.util.versionsGreekBoth.length; i ++) {
+				msg = step.util.msgForFrequencyOnAllBibles([step.util.versionsGreekBoth[i] + "@OT"], freqList, step.util.versionsBoth.length + step.util.versionsHebrewOT.length + step.util.versionsGreekNT.length + step.util.versionsGreekOT.length + (i * 2), strongNumber, msg, allVersions);
+				msg = step.util.msgForFrequencyOnAllBibles([step.util.versionsGreekBoth[i] + "@NT"], freqList, step.util.versionsBoth.length + step.util.versionsHebrewOT.length + step.util.versionsGreekNT.length + step.util.versionsGreekOT.length + (i * 2) + 1, strongNumber, msg, allVersions);
+			}
+		}
+		if ((accentedUnicode === "") && (msg[0].indexOf("<br>") == 0))
+			msg[0] = msg[0].substring(4);
+		msg[2] = "<br><a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
+				 "<span class='detailFreqList' style='display:none'>" + msg[2] + 
+				 "<br><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#heading=h.4a5fldrviek' target='_blank'>Information on word occurrences.</a>" +
+				 "</span>";
+		return msg[0] + msg[1] + msg[2];
+	},
 	suppressHighlight: function(strongNumber) {
+		if (strongNumber === "") return false;
+		strongNumber = strongNumber.substring(0, 5); // If there is an augment, remove it.
 		if (strongNumber.substring(0,1) === "H") {
 			if (strongNumber.substring(1,2) === "9")
 				return true;
 			var hebrewStrongToSuppress = // A comma is required at the end of the Strong number for this function to work.
 				"H0408," +      // al       - not
+				"H0413," +		// el		- to, toward
 				"H0428," +      // el.leh   - these
-				"H0518A," +     // im       - if
-				"H0505G," +     // e.leph   - thousand
-				"H0834A," +     // a.sher   - which
-				"H0834D," +     // ka.a.sher- as which
+				"H0518," +     	// im       - if
+				"H0505," +     	// e.leph   - thousand
+				"H0834," +     	// a.sher   - which
+				"H0834," +     	// ka.a.sher- as which
 				"H0853," +      // et       - direct object marker
-				"H0996G," +     // ba.yin   - between
+				"H0996," +     	// ba.yin   - between
 				"H1571," +      // gam      - also
 				"H1768," +      // di       - that
 				"H1961," +      // ha.yah   - to be
 				"H1992," +      // hem.mah  - they (masc)
 				"H2088," +      // zeh      - this
-				"H3651C," +     // ken      - so
+				"H3588," +		// ki		- for, since, as
+				"H3651," +     	// ken      - so
 				"H3967," +      // me.ah    - hundred
-				"H4480A," +     // min      - from
+				"H4480," +     	// min      - from
 				"H5704," +      // ad       - till
 				"H5705," +      // al       - till (Aramaic)
-				"H5921A," +     // al       - upon
+				"H5921," +     	// al       - upon
 				"H5922," +      // al       - upon (Aramaic)
-				"H5973A," +     // im       - with
+				"H5973," +     	// im       - with
 				"H6240," +      // a.sar    - ten
-				"H8033G,";      // sham     - there
+				"H8033,";      	// sham     - there
 			if (hebrewStrongToSuppress.indexOf(strongNumber + ",") > -1)
 				return true;
 		}
@@ -159,7 +252,7 @@ step.util = {
 			var greekStrongToSuppress = // A comma is required at the end of the Strong number for this function to work.
 				"G1161,"        // de       - then
 				"G3588,"        // ho       - the/this/who
-				"G3754G,";      // hoti     - that/since
+				"G3754,";      // hoti     - that/since
 			if (greekStrongToSuppress.indexOf(strongNumber + ",") > -1)
 				return true;
 		}
@@ -834,7 +927,6 @@ step.util = {
                 container = $("<span>");
 				if (!searchTokens) return container.html();
             }
-
 			$('#quickLexicon').hide();
 			$(".versePopup").hide();
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
@@ -984,7 +1076,6 @@ step.util = {
 						'<i style="font-size:10px" class="find glyphicon glyphicon-search"></i>' +
 						'&nbsp;' + searchWords +
 					'</button>' );
-				return container.html();
 			}
 			else if (outputMode === "span") {
 				if (allSelectedBibleVersions.length > 0)
@@ -1222,7 +1313,7 @@ step.util = {
          * called when click on a piece of text.
          */
         showDef: function (source) {
-            var strong, morph, ref, version;
+            var strong, morph, ref, version, allVersions;
 
             if (typeof source == "string") {
                 strong = source;
@@ -1240,13 +1331,15 @@ step.util = {
 				if (ref !== '')
 					ref += step.util.ui.getWordOrderSuffix(s, strong);
 				version = verseAndVersion[1];
+				var firstVersion = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
 				if (version === '')
-	                version = step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("masterVersion");
+	                version = firstVersion;
+				allVersions = firstVersion + "," + step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("extraVersions");
             }
 
-            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, version: version });
+            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, version: version, allVersions: allVersions });
             require(["sidebar"], function (module) {
-                step.util.ui.openStrongNumber(strong, morph, ref, version);
+                step.util.ui.openStrongNumber(strong, morph, ref, version, allVersions);
             });
         },
         initSidebar: function (mode, data) {
@@ -1263,6 +1356,7 @@ step.util = {
                         morph: data.morph,
                         ref: data.ref,
                         version: data.version,
+						allVersions: data.allVersions,
                         mode: mode == null ? 'analysis' : mode
                     });
                     new SidebarList().add(step.sidebar);
@@ -1281,13 +1375,14 @@ step.util = {
                 }
             });
         },
-        openStrongNumber: function (strong, morph, reference, version) {
+        openStrongNumber: function (strong, morph, reference, version, allVersions) {
             step.sidebar.save({
                 strong: strong,
                 morph: morph,
                 mode: 'lexicon',
                 ref: reference,
-                version: version
+                version: version,
+				allVersions: allVersions
             });
         },
         openStats: function (focusedPassage) {
@@ -1409,6 +1504,9 @@ step.util = {
 				});
 			}
 		},
+		removeQuickLexicon: function() {
+			$('#quickLexicon').remove();
+		},
         _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
@@ -1437,17 +1535,29 @@ step.util = {
             }
         },
 
-				_displayNewQuickLexiconForVerseVocab: function (strong, reference, version, passageId, touchEvent, pageYParam, hoverContext) {
+				_displayNewQuickLexiconForVerseVocab: function (strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong) {
 					var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
 					var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
-					if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
-						new QuickLexicon({
-								strong: strong,
-								version: version, reference: reference,
-								target: hoverContext, position: pageY, touchEvent: touchEvent,
-								height: $(window).height(), 
-								passageId: passageId
+					if (typeof txtForMultipleStrong !== "string") txtForMultipleStrong = "";
+					if (typeof QuickLexicon == "undefined") {
+						require(['quick_lexicon'], function () {
+							step.util.delay(function () {
+								// do the quick lexicon
+								step.util.ui._displayNewQuickLexiconForVerseVocab(strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong);
+							}, MOUSE_PAUSE, 'show-quick-lexicon');
 						});
+					}
+					else {
+						if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
+							new QuickLexicon({
+									strong: strong,
+									txtForMultiStrong: txtForMultipleStrong,
+									version: version, reference: reference,
+									target: hoverContext, position: pageY, touchEvent: touchEvent,
+									height: $(window).height(), 
+									passageId: passageId
+							});
+						}
 					}
 				},
 
@@ -1665,6 +1775,7 @@ step.util = {
 																	if ((currentLang == "es") && (strongData._es_Gloss)) strongData.gloss = strongData._es_Gloss;
 																	else if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
 																	else if ((currentLang == "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
+																	else if ((currentLang == "km") && (strongData._km_Gloss)) strongData.gloss = strongData._km_Gloss;
 																	rows.push({
 																			strongData: strongData,
 																			counts: counts
@@ -2928,8 +3039,8 @@ step.util = {
 				'</div>' +
 			'</div>' +
 		'</div>';
-        $(_.template(modalHTML)()).modal("show");
-    },
+		$(_.template(modalHTML)()).modal("show");
+	},
     startPickBible: function () {
         require(["menu_extras"], function () {
             new PickBibleView({model: step.settings, searchView: self});
@@ -3561,21 +3672,15 @@ step.util = {
         else return " only at " + searchResultRange;
 	},
 	unpackJson: function (origJsonVar, index) {
-		var vocabKeys = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
-		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
-		"shortDef", "mediumDef", "lsjDefs",
-		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
-		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
-		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-		"defaultDStrong"];
-		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange"];
+
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss"];
 		var duplicateStrings = origJsonVar.d;
 		var relatedNumbers = origJsonVar.r;
 		var vocabInfo = origJsonVar.v[index];
 		var vocabInfoEntry = {};
-		for (var j = 0; j < vocabKeys.length - 1; j ++) {
+		for (var j = 0; j < step.util.vocabKeys.length - 1; j ++) {
 			if (vocabInfo[j] === "") continue;
-			if (vocabKeys[j] === "relatedNos") {
+			if (step.util.vocabKeys[j] === "relatedNos") {
 				var allRelatedNumbersResult = [];
 				relatedNumbersArray = vocabInfo[j];
 				if (Array.isArray(relatedNumbersArray)) {
@@ -3591,10 +3696,10 @@ step.util = {
 						}
 						allRelatedNumbersResult.push(relatedNumResult);
 					}
-					vocabInfoEntry[vocabKeys[j]] = allRelatedNumbersResult;
+					vocabInfoEntry[step.util.vocabKeys[j]] = allRelatedNumbersResult;
 				}
 			}
-			else vocabInfoEntry[vocabKeys[j]] = ((Number.isInteger(vocabInfo[j])) && (vocabKeys[j] !== "count")) ?
+			else vocabInfoEntry[step.util.vocabKeys[j]] = ((Number.isInteger(vocabInfo[j])) && (step.util.vocabKeys[j] !== "count")) ?
 					duplicateStrings[vocabInfo[j]] : vocabInfo[j];
 		}
 		return vocabInfoEntry;
@@ -3623,20 +3728,16 @@ step.util = {
 		var processedStrong = [];
 		var additionalPath = step.state.getCurrentVersion();
 		if (additionalPath !== "") additionalPath += "/";
-		var indexToDefaultDStrong = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
-			"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
-			"shortDef", "mediumDef", "lsjDefs",
-			"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
-			"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
-			"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-			"defaultDStrong"].length - 1;
+		var indexToDefaultDStrong = step.util.vocabKeys.length - 1;
 		$.ajaxSetup({async: false});
 		for (var j = 0; j < strongArray.length; j++) {
 			var strongWithoutAugment = step.util.fixStrongNumForVocabInfo(strongArray[j], true);
 			if (processedStrong.indexOf(strongWithoutAugment) == -1) {
 				processedStrong.push(strongWithoutAugment);
 				$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
-					var augStrongIndex = 0;
+					var augStrongIndex = -1;
+					var defaultDStrong = -1;
+					var lxxDefaultDstrong = -1;
 					for (var i = 0; i < origJsonVar.v.length; i++) {
 						if (strongArray[j] !== strongWithoutAugment) {
 							var strongNumToCheck = (typeof origJsonVar.v[i][0] === "number") ? origJsonVar.d[origJsonVar.v[i][0]] : origJsonVar.v[i][0];
@@ -3645,10 +3746,27 @@ step.util = {
 								break;
 							}
 						}
-						if (origJsonVar.v[i][indexToDefaultDStrong] === "*") {
-							augStrongIndex = i; // Default DStrong
+						if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("*") > -1)
+							defaultDStrong = i; // Default DStrong
+						if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("L") > -1)
+							lxxDefaultDstrong = i;
+					}
+					if (augStrongIndex == -1) {
+						augStrongIndex = defaultDStrong;
+						if (lxxDefaultDstrong > -1) {
+							var versions = step.util.activePassage().get("masterVersion") + "," +
+								step.util.activePassage().get("extraVersions");
+							if ((versions.toUpperCase().indexOf("ABEN") > -1) || (versions.toUpperCase().indexOf("ABGK") > -1)) {
+								var r = step.util.getTestamentAndPassagesOfTheReferences([ step.util.activePassage().get("osisId") ]);
+								if (r[1]) // has OT passage
+									augStrongIndex = lxxDefaultDstrong;
+							}
+							else if (versions.toUpperCase().indexOf("LXX") > -1)
+								augStrongIndex = lxxDefaultDstrong;
 						}
 					}
+					if (augStrongIndex == -1)
+						augStrongIndex = 0;
 					var jsonVar = step.util.unpackJson(origJsonVar, augStrongIndex);
 					resultJson.vocabInfos.push(jsonVar);
 				}).error(function() {
@@ -3908,6 +4026,130 @@ step.util = {
 			}
 		}
 		$.cookie(key, value);
-	}
+	},
+	normalizeVersionName: function(curVersion) {
+		curVersion = curVersion.toUpperCase();
+		if (curVersion === "KJVA") curVersion = "KJV";
+		else if (curVersion === "ESV_TH") curVersion = "ESV";
+		else if (curVersion === "OHB") curVersion = "OSMHB";
+		else if (curVersion === "SBLG") curVersion = "SBLG_TH";
+		else if (curVersion === "LXX") curVersion = "LXX_TH";
+		else if (curVersion === "CUN") curVersion = "CHIUN";
+		else if (curVersion === "CUNS") curVersion = "CHIUNS";
+		else if (curVersion === "ANT") curVersion = "ANTONIADES";
+		else if (curVersion === "ELZ") curVersion = "ELZEVIR";
+		else if (curVersion === "RWEBS") curVersion = "RWEBSTER";
+		return curVersion;
+	},
+	lookUpFrequencyFromMultiVersions: function(mainWord, allVersions) {
+		if (typeof allVersions !== "string") {
+			console.log("lookupFrequency no version");
+			step.util.getFrequency("ESV", mainWord);
+			return; 
+		}
+        var versions = allVersions.split(",");
+        var allVersionsWithoutStrong = true;
+        for (var i = 0; i < versions.length; i++) {
+            if (step.util.getFrequency(versions[i], mainWord))
+                allVersionsWithoutStrong = false;
+        }
+        if (allVersionsWithoutStrong) // Server will search the ESV Bible
+            step.util.getFrequency("ESV", mainWord);
+    },
+	getFrequency: function(curVersion, data) {
+		var isHebrew = (data.vocabInfos[0].strongNumber.substring(0,1) === "H") ? true : false;
+		var testamentOfFrequency = (isHebrew) ? "OT" : "NT"; 
+		if (typeof curVersion === "string") {
+			curVersion = step.util.normalizeVersionName(curVersion);
+			var versionIndex = this.versionsBoth.indexOf(curVersion);
+			if (versionIndex == -1) {
+				if (isHebrew) {
+					versionIndex = this.versionsHebrewOT.indexOf(curVersion);
+					if (versionIndex > -1) versionIndex += this.versionsBoth.length;
+				}
+				else {
+					versionIndex = this.versionsGreekNT.indexOf(curVersion);
+					if (versionIndex > -1) versionIndex += this.versionsBoth.length + this.versionsHebrewOT.length;
+					else {
+						versionIndex = this.versionsGreekOT.indexOf(curVersion);
+						if (versionIndex > -1) {
+							versionIndex += this.versionsBoth.length + this.versionsHebrewOT.length + this.versionsGreekNT.length;
+							testamentOfFrequency = "OT";
+						}
+						else {
+							versionIndex = this.versionsGreekBoth.indexOf(curVersion);
+							if (versionIndex > -1) {
+								versionIndex = (versionIndex * 2) + this.versionsBoth.length + this.versionsHebrewOT.length + this.versionsGreekNT.length + this.versionsGreekOT.length;
+								testamentOfFrequency = "BOTH";
+							}
+						}
+					}
+				}
+			}
+			if (versionIndex > -1) {
+				for (var i = 0; i < data.vocabInfos.length; i++) {
+					if (typeof data.vocabInfos[i].freqList !== "string") {
+						if (typeof data.vocabInfos[i].popularityList === "string")
+							data.vocabInfos[i].freqList = data.vocabInfos[i].popularityList;
+						else {
+							continue;
+						}
+					}
+					var spl1 = data.vocabInfos[i].freqList.split(";");
+					if (spl1.length > versionIndex) {
+						var freqInVersion1 = spl1[versionIndex];
+						if (freqInVersion1 === "")
+							freqInVersion1 = 0;
+						else {
+							var spl2 = freqInVersion1.split("@");
+							if (spl2.length > 1)
+								freqInVersion1 = spl2[0];
+						}
+						freqInVersion1 = parseInt(freqInVersion1);
+						var versionCountName = (testamentOfFrequency === "BOTH") ? "versionCountOT" : ("versionCount" + testamentOfFrequency);
+						if ((typeof data.vocabInfos[i][versionCountName] !== "number") ||
+							((typeof data.vocabInfos[i][versionCountName] === "number") && (data.vocabInfos[i][versionCountName] < freqInVersion1)))
+								data.vocabInfos[i][versionCountName] = freqInVersion1;
+						if (testamentOfFrequency === "BOTH") {
+							var freqInVersion2 = spl1[versionIndex + 1];
+							if (freqInVersion2 === "")
+								freqInVersion2 = 0;
+							else {
+								var spl2 = freqInVersion2.split("@");
+								if (spl2.length > 1)
+									freqInVersion2 = spl2[0];
+							}
+							freqInVersion2 = parseInt(freqInVersion2);
+							if ((typeof data.vocabInfos[i]["versionCountNT"] !== "number") ||
+								((typeof data.vocabInfos[i]["versionCountNT"] === "number") && (data.vocabInfos[i]["versionCountNT"] < freqInVersion2)))
+								data.vocabInfos[i]["versionCountNT"] = freqInVersion2;
+						}
+					}
+				}
+				return true;
+			}
+			return false;
+		}
+		else {
+			console.log("no version");
+		}
+	},
+	formatFrequency: function(mainWord, total, hasBothTestaments) {
+        if ((typeof mainWord.versionCountOT === "number") && (mainWord.versionCountOT !== 0)) {
+            if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0))
+                return mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)";
+            if (hasBothTestaments)
+                return mainWord.versionCountOT + "x (OT)";
+            return sprintf(__s.stats_occurs, mainWord.versionCountOT);
+        }
+        if (typeof mainWord.versionCountNT === "number") {
+			if ((mainWord.versionCountNT !== 0) && (hasBothTestaments))
+   	            return mainWord.versionCountNT + "x (NT)";
+            return sprintf(__s.stats_occurs, mainWord.versionCountNT);
+        }
+        if (typeof total === "number")
+            return sprintf(__s.stats_occurs, total);
+        return "";
+    },
 }
 ;

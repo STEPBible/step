@@ -454,14 +454,14 @@ step.searchSelect = {
 	},
 
 
-	_find_href_and_go: function(element) {
-		var hrefInfo = $(element).attr("href");
-		if (hrefInfo.toLowerCase().indexOf("javascript:") == 0) {
-			if (hrefInfo.replaceAll(" ","").indexOf("goSearch('text','','')") > -1) {
+	_find_onclick_and_go: function(element) {
+		var onclickInfo = $(element).attr("onclick");
+		if ((typeof onclickInfo === "string") && (onclickInfo.toLowerCase().indexOf("javascript:") == 0)) {
+			if (onclickInfo.replaceAll(" ","").indexOf("goSearch('text','','')") > -1) {
 				$('#warningMessage').text("Search word is not valid for text (word or phrase) search.");
 				return;
 			}
-			eval(hrefInfo);
+			eval(onclickInfo);
 		}
 	},
 
@@ -511,12 +511,12 @@ step.searchSelect = {
 								var nextElement = $(textSearchResult[i]).next();
 								if ((nextElement.length > 0) && ($(nextElement).prop("tagName").toLowerCase() === "span") &&
 									($(nextElement).text() === __s.default_search)) {
-									step.searchSelect._find_href_and_go(textSearchResult[i]);
+									step.searchSelect._find_onclick_and_go(textSearchResult[i]);
 									return;
 								}
 							}
 						}
-						step.searchSelect._find_href_and_go(textSearchResult[0]); // Did not find default search text, go with the first link.
+						step.searchSelect._find_onclick_and_go(textSearchResult[0]); // Did not find default search text, go with the first link.
 						return;
 					}
 					else {
@@ -596,7 +596,7 @@ step.searchSelect = {
 			'<div id="basic_search_help_text" style="font-size:14px;width:90%">' +
 			    '<br>' +
 			    '<p>Examples:</p>' +
-			    '<p><strong>just</strong> → matches words that start with “just” (ex. just, justice, justified, …)</p>' +
+			    '<p><strong>just</strong> → matches words that start with “just” (e.g. just, justice, justified, …)</p>' +
 			    '<p><strong>come to me</strong> → matches verses that contain "come", "to", and "me" in any order</p>' +
 				'<p><strong>"come to me"</strong> → matches the exact phrase in the selected translations</p>' +
 			    '<p>For more advanced features, find advanced search with the top right toggle!</p>' +
@@ -1302,7 +1302,8 @@ step.searchSelect = {
 												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
 													str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
-													limitType, null, false, false);
+													limitType, 
+													null, false, false, "", "");
 												
 												defaultSearchString = "";
 												defaultMouseOverTitle = "";
@@ -1312,7 +1313,7 @@ step.searchSelect = {
 												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
 													str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", defaultSearchString, defaultMouseOverTitle,
-													limitType, null, false, false);
+													limitType, null, false, false, "", "");
 												text2Display = '"' + str2Search + '"';
 												str2Search = '%22' + str2Search + '%22';
 											}
@@ -1320,7 +1321,7 @@ step.searchSelect = {
 												
 												if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
 													step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-														str2Search, suggestionType, text2Display, "", "", "", limitType, null, false, false);
+														str2Search, suggestionType, text2Display, "", "", "", limitType, null, false, false, "", "");
 													text2Display = str2Search + "* (" + __s.words_that_start_with + " " + str2Search + ")";
 													str2Search += "*";
 												}
@@ -1367,22 +1368,40 @@ step.searchSelect = {
 									if ((hasDetailLexInfo) || ((isAugmentedStrong) && (augStrongSameMeaning.length > 1))) {
 											text2Display += " etc.";
 									}
+									var activePassageData = step.util.activePassage().get("searchTokens") || [];
+									var allVersions = "";
+									for (var l = 0; l < activePassageData.length; l++) {
+										var itemType = activePassageData[l].itemType ? activePassageData[l].itemType : activePassageData[l].tokenType
+										if (itemType === VERSION) {
+											if (allVersions !== "") allVersions += ",";
+											allVersions += activePassageData[l].item.shortInitials;
+										}
+									}
 									if ((isAugmentedStrong) || (hasDetailLexInfo)) {
 										step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-											strongWithoutAugment, suggestionType, text2Display, "", suffixToDisplay, "", limitType, augStrongSameMeaning, hasDetailLexInfo, false, userInput);
+											strongWithoutAugment, suggestionType, text2Display, "", suffixToDisplay, "", limitType,
+											augStrongSameMeaning, hasDetailLexInfo, false, userInput, allVersions);
 										continue;
 									}
-									else text2Display += '<span class="srchFrequency"> ~' + data[i].suggestion.popularity + ' x</span>';
+									else {
+										var curWord = { vocabInfos: [{ strongNumber: data[i].suggestion.strongNumber, freqList: data[i].suggestion.popularityList }] };
+										step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
+										var hasBothTestaments = ((typeof curWord.vocabInfos[0].versionCountOT === "number") && (curWord.vocabInfos[0].versionCountOT > 0) &&
+											(typeof curWord.vocabInfos[0].versionCountNT === "number") && (curWord.vocabInfos[0].versionCountNT > 0));
+										var countDisplay = step.util.formatFrequency(curWord.vocabInfos[0], parseInt(data[i].suggestion.popularity), hasBothTestaments);
+										text2Display += '<span class="srchFrequency"> ' + countDisplay + '</span>';
+									}
 								}
 								step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-									str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle, limitType, null, false, false);
+									str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle, limitType,
+									null, false, false, "", allVersions);
 							}
 							break;
 						case REFERENCE:
 							if ((data[i].suggestion.sectionType === 'PASSAGE') && (!data[i].suggestion.wholeBook)) {
 								pos = step.searchSelect.searchUserInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i);
 								if (pos > -1) {
-									if (userPressedEnterKey) step.searchSelect.goToPassage(data[0].suggestion.osisID, 0);
+									if (userPressedEnterKey) step.searchSelect.goToPassage(data[0].suggestion.osisID);
 									$('#warningMessage').empty();
 									$('#warningMessage').append('<a href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">You can only search for words and subjects here.  Click to learn how to select passage.<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>');
 								}
@@ -1434,12 +1453,21 @@ step.searchSelect = {
 			showPreviousSearch(); // The update previous search button might need to be displayed if user has includes previous search 
 		}
 	},
-	_getSuggestedWordsInfo: function(data, strongNum, augStrongSameMeaning, includeHebrewForGreekWords) {
+	_getSuggestedFrequency: function(curWord, allVersions) {
+		var vocabMorphFromJson = { vocabInfos: [ curWord ] };
+		step.util.lookUpFrequencyFromMultiVersions(vocabMorphFromJson, allVersions);
+		var curOT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountOT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountOT : 0;
+		var curNT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountNT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountNT : 0;
+		return [curOT, curNT];
+	},
+	_getSuggestedWordsInfo: function(data, strongNum, augStrongSameMeaning, includeHebrewForGreekWords, allVersions) {
 		var augStrongWithMostOccurrence = 0;
 		var detailLexSearchStrongs = [];
 		var selectedGloss = "";
 		var result = 0;
 		var frequency = 0;
+		var frequencyOT = 0;
+		var frequencyNT = 0;
 		var allDStrongNums = [];
 		var allOtherStrongNums = [];
 		for (var i = 0; i < data.length; i++) {
@@ -1454,6 +1482,9 @@ step.searchSelect = {
 				if (!allDStrongNums.includes(data[i].suggestion.strongNumber)) {
 					allDStrongNums.push(data[i].suggestion.strongNumber);
 					frequency += parseInt(data[i].suggestion.popularity);
+					var resultArray = this._getSuggestedFrequency(data[i].suggestion, allVersions);
+					frequencyOT += resultArray[0];
+					frequencyNT += resultArray[1];
 				}
 				str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);
 				if (detailLexSearchStrongs.includes(str2Search)) continue; // Don't show the same search suggestion twice
@@ -1468,6 +1499,11 @@ step.searchSelect = {
 									((suggestionType == GREEK) && includeHebrewForGreekWords)) {
 									allOtherStrongNums.push(data[i].suggestion._detailLexicalTag[j][1]);
 									frequency += parseInt(data[i].suggestion._detailLexicalTag[j][3]);
+									var curWord = {	strongNumber: data[i].suggestion._detailLexicalTag[j][1],
+																  freqList: data[i].suggestion._detailLexicalTag[j][6]};
+									var resultArray = this._getSuggestedFrequency(curWord, allVersions);
+									frequencyOT += resultArray[0];
+									frequencyNT += resultArray[1];				
 								}
 							}
 						}
@@ -1485,12 +1521,15 @@ step.searchSelect = {
 			else {
 				result ++;
 				frequency += parseInt(data[i].suggestion.popularity);
+				var resultArray = this._getSuggestedFrequency(data[i].suggestion, allVersions);
+				frequencyOT += resultArray[0];
+				frequencyNT += resultArray[1];
 			}
 		}
 		console.log(strongNum + " gloss: " + selectedGloss + " result: " + result +
 			" allDStrongNums: " + allDStrongNums + " allOtherStrongNums: " +
-			allOtherStrongNums + " frequency: " + frequency);
-		return [selectedGloss, result, allDStrongNums, allOtherStrongNums, frequency];
+			allOtherStrongNums + " frequency: " + frequency + " OT: " + frequencyOT + " NT: " + frequencyNT + " allversions: " + allVersions);
+		return [selectedGloss, result, allDStrongNums, allOtherStrongNums, frequency, frequencyOT, frequencyNT];
 	},
 
 	valueInDuplicatStrongOrNot: function(vocabInfo, index, duplicateStrings) {
@@ -1516,6 +1555,7 @@ step.searchSelect = {
 		suggestion['matchingForm'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 14, duplicateStrings);
 		suggestion['_detailLexicalTag'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 17, duplicateStrings);
 		suggestion['type'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 19, duplicateStrings);
+		suggestion['popularityList'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 21, duplicateStrings);
 		result['suggestion'] = suggestion;
 		return result;
 	},
@@ -1543,11 +1583,11 @@ step.searchSelect = {
 		return vocabInfos;
 	},
 
-	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, includeHebrewForGreekWords) {
+	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, includeHebrewForGreekWords, allVersions) {
 		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
 		var data = step.searchSelect.getVocabInfoFromJson(strongNum, limitType);
 		if (data.length > 1)
-			return step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, includeHebrewForGreekWords);
+			return step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, includeHebrewForGreekWords, allVersions);
 		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
 				"%7C" + LIMIT + "%3D" + limitType +
 				"%7C?lang=" + step.searchSelect.userLang;
@@ -1559,14 +1599,17 @@ step.searchSelect = {
 					data[i].suggestion._detailLexicalTag = JSON.parse(data[i].suggestion._detailLexicalTag);
 				}
 			}
-			result = step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, includeHebrewForGreekWords);
+			result = step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, includeHebrewForGreekWords, allVersions);
 		});
 		$.ajaxSetup({async: true});
 		return result;
 	},
 
-	createFirstLineForAugmentedStrong: function(data, strongNum, origSuggestionType, userInput, limitType, augStrongToShow, searchSuggestionsToDisplay, allDStrongNums, strongsToInclude) {
-		var frequencyTotal = 0;
+	createFirstLineForAugmentedStrong: function(data, strongNum, origSuggestionType, userInput, limitType, augStrongToShow, searchSuggestionsToDisplay, allDStrongNums, 
+		strongsToInclude, allVersions) {
+		var frequencyFromLexicon = 0;
+		var frequencyOT = 0;
+		var frequencyNT = 0;
 		var allStrongNumsPlusLexicalGroup = [];
 		for (var i = 0; i < data.length; i++) {
 			if ((data[i].itemType === GREEK) || (data[i].itemType === HEBREW)) {
@@ -1575,10 +1618,14 @@ step.searchSelect = {
 				if ((strongsToInclude.length == 0) ||
 					(strongsToInclude.includes(data[i].suggestion.strongNumber))) {
 					augStrongToShow[i] = parseInt(data[i].suggestion.popularity);
-					augStrongToShow[i] = step.searchSelect.getFrequencyFromDetailLexicalTag(data[i].suggestion.strongNumber, augStrongToShow[i], data[i].suggestion._detailLexicalTag);
+					var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(data[i].suggestion.strongNumber, augStrongToShow[i], 
+						data[i].suggestion._detailLexicalTag, allVersions);
+					augStrongToShow[i] = frequencies[0];
 					if (!allStrongNumsPlusLexicalGroup.includes(data[i].suggestion.strongNumber)) {
 						allStrongNumsPlusLexicalGroup.push(data[i].suggestion.strongNumber);
-						frequencyTotal += augStrongToShow[i];
+						frequencyFromLexicon += augStrongToShow[i];
+						frequencyOT += frequencies[1];
+						frequencyNT += frequencies[2];	
 					}
 					var otherStrong2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag).split(",");
 					for (var count = 0; count < otherStrong2Search.length; count ++) {
@@ -1603,11 +1650,16 @@ step.searchSelect = {
 			suffixText = "";
 		}
 		else text2Display += ' (<i>' + data[0].suggestion.stepTransliteration + '</i>)';
-		text2Display += '<span class="srchFrequency"> ~' + frequencyTotal + ' x</span>';
+		var hasBothTestaments = ((frequencyOT > 0) && (frequencyNT > 0));
+		var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequencyFromLexicon, hasBothTestaments);
+		text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 		step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
-			allStrongNumsPlusLexicalGroup.toString(), suggestionType, text2Display, "", suffixText, "", limitType, null, false, false);
+			allStrongNumsPlusLexicalGroup.toString(), suggestionType, text2Display, "", suffixText, "", limitType, 
+			null, false, false, "", allVersions);
+		return hasBothTestaments;
 	},
-	createSubsequentLineForAugmentedStrong: function(sorted, data, strongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, detailLexSearchStrongs) {
+	createSubsequentLineForAugmentedStrong: function(sorted, data, strongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, 
+		detailLexSearchStrongs, allVersions, hasBothTestaments) {
 		for (var k = 0; k < sorted.length; k++) {
 			var i = parseInt(sorted[k][0]);
 			var suggestionType = data[i].itemType;
@@ -1636,7 +1688,6 @@ step.searchSelect = {
 				var curStrong = data[i].suggestion.strongNumber;
 				var searchExplaination = "";
 				if ((Array.isArray(data[i].suggestion._detailLexicalTag)) && (data[i].suggestion._detailLexicalTag.length > 0)) {
-					frequency = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, data[i].suggestion._detailLexicalTag);
 					if ((data[i].suggestion.type === "man") || (data[i].suggestion.type === "woman") || 
 						(data[i].suggestion.type === "king") || (data[i].suggestion.type === "queen") ||
 						(data[i].suggestion.type === "judge") || (data[i].suggestion.type === "place") ||
@@ -1650,10 +1701,19 @@ step.searchSelect = {
 						searchExplaination = sprintf(__s.word_has_synonyms, data[i].suggestion._detailLexicalTag.length);
 					}
 					searchExplaination = searchExplaination + ": " + gloss.split(":")[0] + ": ";
-					text2Display = "All " + frequency + " occurrences";
+					var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, data[i].suggestion._detailLexicalTag, allVersions);
+					hasBothTestaments |= ((frequencies[1] > 0) && (frequencies[2] > 0));
+					var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments);
+					text2Display = "All " + frequencyMsg + " occurrences";
 					gloss = "";
 				}
 				else {
+					var curWord = { vocabInfos: [{ strongNumber: strongNum, freqList: data[i].suggestion.popularityList }] };
+					step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
+					frequencyOT = (typeof curWord.vocabInfos[0].versionCountOT === "number") ? curWord.vocabInfos[0].versionCountOT : 0;
+					frequencyNT = (typeof curWord.vocabInfos[0].versionCountNT === "number") ? curWord.vocabInfos[0].versionCountNT : 0;
+					hasBothTestaments |= ((frequencyOT > 0) && (frequencyNT > 0));
+					var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT }, frequency, hasBothTestaments);
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
@@ -1665,7 +1725,7 @@ step.searchSelect = {
 							'<span class="srchStrong_number">' + curStrong + '</span>' +
 							'<span class="srchParathesis">)</span>' +
 							step.util.formatSearchResultRange(data[i].suggestion._searchResultRange, moreThanOneStrong) +
-							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
+							'<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 					}
 					else text2Display +=
 							'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
@@ -1674,11 +1734,13 @@ step.searchSelect = {
 							'<span class="srchSpaceStrong"> </span>' +
 							'<span class="srchStrong_number">' + curStrong + '</span>' +
 							'<span class="srchParathesis">)</span>' +
-							'<span class="srchFrequency"> ~' + frequency + ' x</span>';
+							'<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 				}
 				step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-					str2Search, suggestionType, text2Display, searchExplaination, gloss, "", limitType, null, false, true);
-				var detailLex = step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i);
+					str2Search, suggestionType, text2Display, 
+					searchExplaination, gloss, "", limitType, 
+					null, false, true, "", allVersions);
+				var detailLex = step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i, allVersions, hasBothTestaments);
 				searchSuggestionsToDisplay[searchResultIndex] += detailLex[0];
 			}
 			else
@@ -1686,7 +1748,7 @@ step.searchSelect = {
 		}
 	},
 
-	createDisplayForAugmentedStrong: function(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType) {
+	createDisplayForAugmentedStrong: function(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions) {
 		var searchSuggestionsToDisplay = [];
 		var detailLexSearchStrongs = [];
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
@@ -1696,8 +1758,10 @@ step.searchSelect = {
 		var strongsToInclude = ((augStrongSameMeaning == null) || (augStrongSameMeaning === "") || (augStrongSameMeaning === "null")) ? [] : augStrongSameMeaning.split(",");
 		var augStrongToShow = {};
 		var sorted = [];
+		var hasBothTestaments = false;
 		if (data.length > 1) {
-			step.searchSelect.createFirstLineForAugmentedStrong(data, strongNum, origSuggestionType, userInput, limitType, augStrongToShow, searchSuggestionsToDisplay, allDStrongNums, strongsToInclude);
+			hasBothTestaments = step.searchSelect.createFirstLineForAugmentedStrong(data, strongNum, origSuggestionType, userInput, limitType, augStrongToShow, searchSuggestionsToDisplay,
+				allDStrongNums, strongsToInclude, allVersions);
 			for (var key in augStrongToShow) {
 				sorted.push([key, augStrongToShow[key]]);
 			}
@@ -1708,13 +1772,14 @@ step.searchSelect = {
 		if (sorted.length == 0) {
 			sorted.push(['0', 0]);
 		}
-		step.searchSelect.createSubsequentLineForAugmentedStrong(sorted, data, strongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, detailLexSearchStrongs);
-//		step.def2 = definitions;
+		step.searchSelect.createSubsequentLineForAugmentedStrong(sorted, data, strongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, 
+			detailLexSearchStrongs, allVersions, hasBothTestaments);
 		if (isNaN(strongNum.slice(-1))) {
 			searchSuggestionsToDisplay[searchResultIndex] += "<br>";
 			step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
 				allDStrongNums.toString(), suggestionType, strongNum.substring(0, strongNum.length-1) + "*", 
-				"Click here for all words that starts with ", "", "", limitType, null, false, false);
+				"Click here for all words that starts with ", "", "", limitType,
+				null, false, false, "", allVersions);
 		}
 		for (var l = 0; l < searchSuggestionsToDisplay.length; l++) {
 			if (step.searchSelect.searchTypeCode[l] === limitType) {
@@ -1725,7 +1790,7 @@ step.searchSelect = {
 		}
 	},
 
-	_showAugmentedStrong: function(strongNum, augStrongSameMeaning, origSuggestionType, userInput) {
+	_showAugmentedStrong: function(strongNum, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
 		console.log("X: " + strongNum + " " + augStrongSameMeaning + " " + origSuggestionType + " " + userInput);
 		$('#warningMessage').text('');
 		$('textarea#userTextInput').hide();
@@ -1738,7 +1803,7 @@ step.searchSelect = {
 		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
 		var data = step.searchSelect.getVocabInfoFromJson(strongNum, limitType);
 		if (data.length > 0)
-			step.searchSelect.createDisplayForAugmentedStrong(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType);
+			step.searchSelect.createDisplayForAugmentedStrong(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions);
 		else {
 			var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
 					"%7C" + LIMIT + "%3D" + limitType +
@@ -1750,7 +1815,7 @@ step.searchSelect = {
 						data[i].suggestion._detailLexicalTag = JSON.parse(data[i].suggestion._detailLexicalTag);
 					}
 				}
-				step.searchSelect.createDisplayForAugmentedStrong(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType);
+				step.searchSelect.createDisplayForAugmentedStrong(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions);
 			}).fail(function() {
 				changeBaseURL();
 			});
@@ -1798,8 +1863,25 @@ step.searchSelect = {
 		}
 		existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak + newSuggestion;
 	},
+	addMouseOverEvent: function(searchType, searchString) {
+		if ((searchType !== "strong") || (step.touchDevice) || ($(window).height() < 700))
+			return '';
+		var multipleStrongText = "";
+		if (searchString.indexOf(",") > -1) {
+			var numOfWord = searchString.split(",").length;
+			if ($("#userTextInput").is(":visible")) // 1st search modal screen with input field
+				multipleStrongText = "Search of " + numOfWord + " words with same meaning, click on \\'<i>" + numOfWord +
+					" forms</i>\\' at the end of this line for more information";
+			else // 2nd search modal screen with input field hidden
+				multipleStrongText = "Search of " + numOfWord + " words with same meaning, mouse over words listed below for more information";
+		}
+		return ' onmouseover="javascript:step.util.ui._displayNewQuickLexiconForVerseVocab(\'' + searchString + '\', \'\', \'\',' + 
+						step.util.activePassageId() + ',null,null,null,\'' + multipleStrongText + '\')" ' +
+						'onmouseleave="javascript:step.util.ui.removeQuickLexicon()"';
+	},
 	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, suggestToDisplayIndex, str2Search, suggestionType, text2Display, 
-		prefixToDisplay, suffixToDisplay, suffixTitle, limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput) {
+		prefixToDisplay, suffixToDisplay, suffixTitle, limitType, 
+		augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions) {
 		var brCount = 0;
 		var suggestionsToDisplay = 5;
 		var needLineBreak = "";
@@ -1829,12 +1911,15 @@ step.searchSelect = {
 			var searchType = ((suggestionType === GREEK) || (suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW) || (suggestionType === HEBREW_MEANINGS)) ? "strong" : suggestionType;
 			if ((isAugStrong) || (hasDetailLexInfo)) {
 				var includeHebrewForGreekWords = needIndent && (hasDetailLexInfo == null);
-				var additionalInfoOnStrong = this._getAdditionalInformationOnStrong(str2Search, augStrongSameMeaning, includeHebrewForGreekWords);
+				var additionalInfoOnStrong = this._getAdditionalInformationOnStrong(str2Search, augStrongSameMeaning, includeHebrewForGreekWords, allVersions);
 				var numOfForm = additionalInfoOnStrong[1];
 				var updatedGloss = additionalInfoOnStrong[0];
 				var numOfFormMsg = (numOfForm > 0) ? "(" + numOfForm + " forms)" : "";
 				var frequency = additionalInfoOnStrong[4];
-				text2Display += '<span class="srchFrequency"> ~' + frequency + ' x</span>';
+				var frequencyOT = additionalInfoOnStrong[5];
+				var frequencyNT = additionalInfoOnStrong[6];
+				var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequency, ((frequencyOT > 0) && (frequencyNT > 0)));
+				text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 
 				var str2Search4ShowAugmentedStrong = str2Search;
 				if (isAugStrong) {
@@ -1845,20 +1930,23 @@ step.searchSelect = {
 					str2Search += "," + additionalInfoOnStrong[3].toString();
 					titleText = ' title="All forms: ' + str2Search + '" ';
 				}
+				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search);
 				step.searchSelect.addWithoutDuplicates(existingSuggestionsToDisplay, suggestToDisplayIndex, needLineBreak, 
 					prefixToDisplay +
-					'<a style="padding:0px"' + titleText + ' href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')">' +
+					'<a style="padding:0px"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')"' +
+					mouseOverEvent + '>' +
 					text2Display + "</a> - " + this.buildSuffixTag(suffixToDisplay, suffixTitle) +
 					' <a style="padding:0px" title="Select forms" href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search4ShowAugmentedStrong + '\',\'' +
-					augStrongSameMeaning + '\',\'' + suggestionType + '\',\'' + userInput + '\')"><span>' + numOfFormMsg + '</span></a>');
+					augStrongSameMeaning + '\',\'' + suggestionType + '\',\'' + userInput + '\',\'' + allVersions + '\')"><span>' + numOfFormMsg + '</span></a>');
 			}
 			else {
 				var aTagStyle = "padding:0px";
+				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search);
 				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak + prefixToDisplay +
-					'<a style="' + aTagStyle + '"' + titleText + ' href="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
+					'<a style="' + aTagStyle + '"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
 					str2Search + '\',\'' + 
 					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
-					'\')">' + text2Display + "</a> " + this.buildSuffixTag(suffixToDisplay, suffixTitle);
+					'\')"' + mouseOverEvent + '>' + text2Display + "</a> " + this.buildSuffixTag(suffixToDisplay, suffixTitle);
 			}
 			return;
 		}
@@ -1883,19 +1971,24 @@ step.searchSelect = {
 		return strongNumber;
 	},
 
-	getFrequencyFromDetailLexicalTag: function(strongNum, frequency, detailLexicalJSON) {
-		total = parseInt(frequency);
+	getFrequencyFromDetailLexicalTag: function(strongNum, frequencyFromLexicon, detailLexicalJSON, allVersions) {
+		frequencyFromLexicon = parseInt(frequencyFromLexicon);
+		var frequencyOT = 0;
+		var frequencyNT = 0;
 		if ((Array.isArray(detailLexicalJSON)) && (detailLexicalJSON.length > 0)) {
 			detailLexicalJSON.forEach(function (item, index) {
-				if (item[1] !== strongNum) {
-					total += parseInt(item[3]);
-				}
+				if (item[1] !== strongNum)
+					frequencyFromLexicon += parseInt(item[3]);
+				var curWord = { vocabInfos: [{ strongNumber: item[1] , freqList: item[6] }] };
+				step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
+				frequencyOT += (typeof curWord.vocabInfos[0].versionCountOT === "number") ? curWord.vocabInfos[0].versionCountOT : 0;
+				frequencyNT += (typeof curWord.vocabInfos[0].versionCountNT === "number") ? curWord.vocabInfos[0].versionCountNT : 0;
 			});
 		}
-		return total;
+		return [frequencyFromLexicon, frequencyOT, frequencyNT];
 	},
 
-	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalJSON, count) {
+	buildHTMLFromDetailLexicalTag: function(strongNum, detailLexicalJSON, count, allVersions, hasBothTestaments) {
 		if ((!detailLexicalJSON) || (!Array.isArray(detailLexicalJSON))) return ["", []];
 		var result = "<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>" +
 			"<ol class='detailLex" + count + "' style='margin-bottom:0px;line-height:14px'>";
@@ -1911,16 +2004,20 @@ step.searchSelect = {
 				result += "<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px'></span>";
 				spaceWithoutLabel = "";
 			}
+			var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(item[1], item[3], [item], allVersions);
+			hasBothTestaments |= ((frequencies[1] > 0) && (frequencies[2] > 0));
+			var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments);
+			var mouseOverEvent = step.searchSelect.addMouseOverEvent("strong", item[1]);
 			result += '<a class="detailLex' + count + '" style="' + aTagStype + '" title="' + item[1] + '"' +
-				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
-				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "" + item[0] + ": " +
+				'onclick="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
+				item[1] + '\',\'' + item[1] +	'\')"' + mouseOverEvent + '>' + spaceWithoutLabel + "" + item[0] + ": " +
 				'<i class="srchTransliteration">' + item[5] + '</i>' +
 				'<span class="srchParathesis"> (</span>' +
 				'<span class="srchOriginal_Language">' + item[4] + '</span>' +
 				'<span class="srchSpaceStrong"> </span>' +
 				'<span class="srchStrong_number">' + item[1] + '</span>' +
 				'<span class="srchParathesis">)</span>' +
-				'<span class="srchFrequency"> ~' + item[3] + ' x</span>' +
+				'<span class="srchFrequency"> ' + frequencyMsg + '</span>' +
 				"</a> - " + item[2];
 			definitions.push({ gloss: item[2], matchingForm: item[4],
 				popularity: item[3], stepTransliteration: item[5], strongNumber: item[1],
@@ -2080,23 +2177,8 @@ step.searchSelect = {
 		step.router.navigateSearch(url, true, true);
 	},
 
-	goToPassage: function(osisID, chptrOrVrsNum) {
-		var bookID = osisID.substring(0, osisID.indexOf("."));
-		if (bookID === "") bookID = osisID;
-		var activePassageData = step.util.activePassage().get("searchTokens") || [];
-		var allVersions = "";
-		var existingReferences = "";
+	goToPassage: function(osisID) {
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
-		for (var i = 0; i < activePassageData.length; i++) {
-			var itemType = activePassageData[i].itemType ? activePassageData[i].itemType : activePassageData[i].tokenType
-			if (itemType == "version") {
-				if (allVersions.length > 0) allVersions += "|version=";
-				allVersions += activePassageData[i].item.shortInitials;
-			}
-			else if ((selectedDisplayLoc === "append") && (itemType == "reference")) {
-				existingReferences += "|reference=" + activePassageData[i].item.osisID;
-			}
-		}
 		step.util.closeModal('searchSelectionModal');
 		if (selectedDisplayLoc === "new") {
 			step.util.createNewColumn();

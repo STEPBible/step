@@ -43,15 +43,18 @@ public final class OriginalWordUtils {
             suggestion.setType(def.get("STEP_Type"));
             suggestion.setDetailLexicalTag(def.get("STEP_DetailLexicalTag"));
             suggestion.setPopularity(def.get("popularity"));
+            suggestion.setPopularityList(def.get("popularityList"));
         }
         if ((userLanguage == null) || (userLanguage.equals(""))) {
 			suggestion.set_es_Gloss(def.get("es_Gloss"));
 			suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
 			suggestion.set_zh_Gloss(def.get("zh_Gloss"));
+			suggestion.set_km_Gloss(def.get("km_Gloss"));
         }
 		else if (userLanguage.equalsIgnoreCase("es")) 	 suggestion.set_es_Gloss(def.get("es_Gloss"));
 		else if (userLanguage.equalsIgnoreCase("zh_tw")) suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
 		else if (userLanguage.equalsIgnoreCase("zh")) 	 suggestion.set_zh_Gloss(def.get("zh_Gloss"));
+		else if (userLanguage.equalsIgnoreCase("km")) 	 suggestion.set_km_Gloss(def.get("km_Gloss"));
         return suggestion;
     }
  

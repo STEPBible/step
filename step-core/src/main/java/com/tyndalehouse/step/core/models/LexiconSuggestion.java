@@ -13,10 +13,12 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private String es_Gloss;
     private String zh_tw_Gloss;
     private String zh_Gloss;
+	private String km_Gloss;
     private String searchResultRange;
 	private String type;
 	private String detailLexicalTag;
     private String popularity;
+    private String popularityList;
 
     /**
      * @return the stepTransliteration
@@ -64,6 +66,14 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     }
 	
     /**
+     * @return the Khmer gloss
+     */
+
+    public String get_km_Gloss() {
+        return this.km_Gloss;
+    }
+
+    /**
      * @return the STEP_Type
      */
 
@@ -91,6 +101,10 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
         return this.popularity;
     }
 
+    public String getPopularityList() {
+        return this.popularityList;
+    }
+
     /**
      * @param gloss the gloss to set
      */
@@ -113,6 +127,10 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
         this.zh_Gloss = chineseGloss;
     }
 
+    public void set_km_Gloss(final String kmherGloss) {
+        this.km_Gloss = kmherGloss;
+    }
+
     public void set_searchResultRange(final String searchResultRange) {
         this.searchResultRange = searchResultRange;
     }
@@ -127,6 +145,10 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
 
     public void setPopularity(final String stepPopularity) {
         this.popularity = stepPopularity;
+    }
+
+    public void setPopularityList(final String stepPopularityList) {
+        this.popularityList = stepPopularityList;
     }
 
     /**

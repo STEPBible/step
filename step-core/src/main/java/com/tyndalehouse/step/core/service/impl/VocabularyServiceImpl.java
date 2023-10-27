@@ -68,6 +68,12 @@ public class VocabularyServiceImpl implements VocabularyService {
             return l.get("zh_Gloss");
         }
     };
+	private final LexiconDataProvider km_VocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final EntityDoc l) {
+            return l.get("km_Gloss");
+        }
+    };
     private final LexiconDataProvider greekVocabProvider = new LexiconDataProvider() {
         @Override
         public String getData(final EntityDoc l) {
@@ -140,6 +146,10 @@ public class VocabularyServiceImpl implements VocabularyService {
                     }
                     if (!userLanguage.equalsIgnoreCase("vi")) {
                         strongDefs[0].removeField("vi_Definition");
+                    }
+                    if (!userLanguage.equalsIgnoreCase("km")) {
+                        strongDefs[0].removeField("km_Gloss");
+                        strongDefs[0].removeField("km_Definition");
                     }
                 }
             }
@@ -237,6 +247,10 @@ public class VocabularyServiceImpl implements VocabularyService {
         for (final String strong : strongList) {
             final EntityDoc entityDoc = entitiesByStrong.get(strong);
             if (entityDoc != null) {
+                if (current >= results.length) {
+                    LOGGER.error("Strong List greater than EntityDoc array: " + strongList.toString());
+                    return results;
+                }
                 results[current++] = entityDoc;
             }
         }
@@ -247,8 +261,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final String[] strongList = getKeys(vocabIdentifiers);
-
+        final String[] strongList = Arrays.stream(getKeys(vocabIdentifiers)).distinct().toArray(String[]::new); // Get String array of strong number and remove duplicates
         if (strongList.length != 0) {
             EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
             final EntityDoc[] definitions = reOrder(strongList, strongNumbers);

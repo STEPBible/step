@@ -167,6 +167,7 @@ var WordDisplayView = TextDisplayView.extend({
                 if ((step.userLanguageCode.toLowerCase() == "es") && (item._es_Gloss)) tmpGloss = item._es_Gloss;
                 else if ((step.userLanguageCode.toLowerCase() == "zh") && (item._zh_Gloss)) tmpGloss = item._zh_Gloss;
                 else if ((step.userLanguageCode.toLowerCase() == "zh_tw") && (item._zh_tw_Gloss)) tmpGloss = item._zh_tw_Gloss;
+                else if ((step.userLanguageCode.toLowerCase() == "km") && (item._km_Gloss)) tmpGloss = item._km_Gloss;
                 span.append(tmpGloss + " ");
             }
 

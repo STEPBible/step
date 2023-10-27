@@ -296,6 +296,14 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         return spanishGloss;
     }
 
+    private String shouldKhmerGlossBeUsed(final String book, final EntityDoc strong) {
+        String khmerGloss = "";
+        if (this.currentBook.toString().equals("KhmKCB")) {
+            khmerGloss = strong.get("km_Gloss");
+        }
+        return khmerGloss;
+    }
+
     /**
      * Lookup mappings, if the strong number is there, then it is used
      *
@@ -347,6 +355,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             String chineseVocab = shouldChineseGlossBeUsed(this.currentBook.toString(), strongDefinition[0]);
             if (StringUtils.isNotBlank(chineseVocab)) {
                 return "#" + chineseVocab;
+            }
+            String khmerVocab = shouldKhmerGlossBeUsed(this.currentBook.toString(), strongDefinition[0]);
+            if (StringUtils.isNotBlank(khmerVocab)) {
+                return "#" + khmerVocab;
             }
             final String englishVocab = strongDefinition[0].get("stepGloss");
             if (StringUtils.isNotBlank(englishVocab)) {

@@ -28,10 +28,12 @@ public class VocabInfo implements Serializable {
     private String es_Gloss;
     private String zh_tw_Gloss;
     private String zh_Gloss;
+    private String km_Gloss;
     private String es_Definition;
     private String zh_tw_Definition;
     private String zh_Definition;
 	private String vi_Definition;
+	private String km_Definition;
     private String stepGloss;
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
@@ -41,6 +43,7 @@ public class VocabInfo implements Serializable {
 	private String step_Link;
 	private String step_Type;
     private Integer count;
+    private String freqList;
 
     /**
      * for serialisation
@@ -71,6 +74,8 @@ public class VocabInfo implements Serializable {
             this.zh_tw_Gloss = d.get("zh_tw_Gloss");
             this.zh_tw_Definition = d.get("zh_tw_Definition");
             this.vi_Definition = d.get("vi_Definition");
+			this.km_Gloss = d.get("km_Gloss");
+			this.km_Definition = d.get("km_Definition");
 		}
 		else if (userLanguage.equalsIgnoreCase("es")) {
             this.es_Gloss = d.get("es_Gloss");
@@ -87,14 +92,21 @@ public class VocabInfo implements Serializable {
         else if (userLanguage.equalsIgnoreCase("vi")) {
             this.vi_Definition = d.get("vi_Definition");
         }
+        else if (userLanguage.equalsIgnoreCase("km")) {
+            this.km_Gloss = d.get("km_Gloss");
+            this.km_Definition = d.get("km_Definition");
+        }
 
         final String popularity = d.get("popularity");
-        
         if(StringUtils.isNotBlank(popularity)) {
             if (popularity.matches("^\\d+")) {
                 this.count = Integer.parseInt(popularity);
             }
             else this.count = 0;
+        }
+        final String popularityList = d.get("popularityList");
+        if(StringUtils.isNotBlank(popularityList)) {
+            this.freqList = popularityList;
         }
 
         this.strongNumber = d.get("strongNumber");
@@ -309,6 +321,20 @@ public class VocabInfo implements Serializable {
     }
 
     /**
+     * @return the km_Def
+     */
+    public String get_km_Definition() {
+        return this.km_Definition;
+    }
+
+    /**
+     * @param km_Definition the km_Def to set
+     */
+    public void set_km_Definition(final String km_Definition) {
+        this.km_Definition = km_Definition;
+    }
+
+    /**
      * @return the STEP_Type
      */
     public String get_step_Type() {
@@ -403,6 +429,20 @@ public class VocabInfo implements Serializable {
     }
 
     /**
+     * @return the Khmer Gloss
+     */
+    public String get_km_Gloss() {
+        return this.km_Gloss;
+    }
+
+    /**
+     * @param km_Gloss the km_Gloss to set
+     */
+    public void set_km_Gloss(final String km_Gloss) {
+        this.km_Gloss = km_Gloss;
+    }
+
+    /**
      * @return the stepGloss
      */
     public String getStepGloss() {
@@ -478,4 +518,13 @@ public class VocabInfo implements Serializable {
     public Integer getCount() {
         return count;
     }
+
+    /**
+     * @return The number of LXX occurrences of a particular strong number
+     */
+    public String getFreqList() {
+        return freqList;
+    }
+
+
 }

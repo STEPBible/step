@@ -251,6 +251,12 @@
                                 <%
                                     }
                                 %>
+
+                                <a class="resizePanel hidden-sm hidden-md hidden-lg" title="Increase size of panel">
+                                    <i class="glyphicon glyphicon-resize-full" style="display:inline"></i>
+                                    <i class="glyphicon glyphicon-resize-small" style="display:none"></i>
+                                </a>
+
                                 <span class="dropdown settingsDropdown">
                                         <a class="dropdown-toggle showSettings" data-toggle="dropdown"
                                            title="<fmt:message key="view" />">
@@ -337,7 +343,7 @@
                                                                                 <%      else %>
                                                                                             ${ definition._zh_Gloss}
                                                                                 <%  }
-                                                                                    else { %>
+                                                                                                                                                                        else { %>
                                                                                         ${ definition.gloss}
                                                                                 <%  } %>
 
@@ -462,6 +468,65 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     step.userLanguage = "${ languageName }";
     step.userLanguageCode = "${ languageCode }";
     step.userCountryCode = "<%=userCountry%>";
+
+
+    // code to enable mobile device swipe to go back or forward one chapter
+    var ua = navigator.userAgent.toLowerCase(); 
+    if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
+        ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints == 5))) {
+        touchableElement = document.getElementById("columnHolder");
+        touchableElement.addEventListener('touchstart', function (event) {
+            touchstartX = event.changedTouches[0].screenX;
+            touchstartY = event.changedTouches[0].screenY;
+        }, false);
+
+        touchableElement.addEventListener('touchend', function (event) {
+            touchendX = event.changedTouches[0].screenX;
+            touchendY = event.changedTouches[0].screenY;
+            handleGesture();
+        }, false);
+    }
+
+    function showUserSwipeIsAccepted(activePassage) {
+        activePassage.find(".heading").remove();
+        var verseElements = activePassage.find(".verse");
+        for (var i = 1; i < verseElements.length; i++) {
+            $(verseElements[i]).remove();
+        }       
+        var randomDots = "..... .... .... ....... ... .... ... ........ .... ...<br> .... .. .... ... .... ........ .... ... .... ........<br>... ..... .. .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ......<br> ...... .... ... ..... .... ..... ..... ..... ....<br>...... .... ... ..... .... ..... ..... ..... ... .<br> .... .. .... ... .... ........ .... ... .... ......<br>... ..... .... .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ... ...<br> ...... .... ... ..... .... ..... ..... ..... ..<br";
+        $(verseElements[0]).html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
+    }
+
+    function handleGesture() {
+        var minDistance = 40;
+        var verticalTolerance = 40;
+        var touchDiffY = Math.abs(touchendY - touchstartY);
+        if (touchDiffY < verticalTolerance) { // If there is lots of vertical movement, it is not a swipe left/right
+            var touchDiffX = touchendX - touchstartX;
+            if (Math.abs(touchDiffX) > minDistance) {
+                var activePassage = $(event.srcElement.closest(".passageContainer"));
+                var ref = activePassage.find("button.select-reference").text().split(":")[0];
+                if (touchDiffX < 0) {
+                    if ((ref !== "Rev 22") && (ref !== "Mal 4") && (ref !== "Deu 34"))
+                        showUserSwipeIsAccepted(activePassage);
+                    activePassage.find("a.nextChapter").click();
+                }
+                else {
+                    if ((ref !== "Ref") && (ref !== "Gen 1") && (ref !== "Matt 1"))
+                        showUserSwipeIsAccepted(activePassage);
+                    activePassage.find("a.previousChapter").click();
+                }
+                // Record swipeCount up to two, after which the prev/next arrows won't be displayed.
+                var swipeCount = step.util.localStorageGetItem("swipeCount");
+                if (swipeCount == null) swipeCount = 0;
+                if (swipeCount <= 2) {
+                    swipeCount++;
+                    step.util.localStorageSetItem("swipeCount", swipeCount);
+                }
+            }
+        }
+    }
+
 </script>
 <script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script>
 <script src="libs/bootstrap.min.js" type="text/javascript"></script>
@@ -575,30 +640,15 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
             load('//connect.facebook.net/en_GB/all.js#xfbml=1', 'fbjssdk');
             load('//platform.twitter.com/widgets.js', 'tweetjs');
 
-            (function (i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-                a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
-                m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-            ga('create', '${analyticsToken}', 'auto');
-            ga('require', 'displayfeatures');
-            ga('send', 'pageview');
-        }
-
+            window.dataLayer = window.dataLayer || [];
+ 	    }
         if (w.addEventListener) {
             w.addEventListener("load", go, false);
         }
         else if (w.attachEvent) {
             w.attachEvent("onload", go);
         }
-    }(window, document, 'script'));
+    } (window, document, 'script'));
 </script>
 <% }
 %>

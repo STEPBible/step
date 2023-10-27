@@ -6,7 +6,7 @@
   left: 0;
   margin: 0 0 0 0;
   width: 100%;
-  z-index: 40;
+  z-index: 15000;
 
   .close {
     color: #fff;
@@ -42,11 +42,11 @@
     }
   }
   .shortDef {
-    line-height: 18px;
+//    line-height: 18px;
   }
   .mediumDef {
     font-size: 13px;
-    line-height: 18px;
+//    line-height: 18px;
     max-height: 108px;
     margin-top: 0;
     margin-left: 10px;
@@ -63,7 +63,7 @@
     background: var(--clrHighlightBg);
     color: $quickLexiconFontColour;
 //    opacity:.95;
-    line-height:22px;
+//    line-height:18px;
 
     // Need a min height because Chrome has a hover bar that tells you where the link will go if you click it.
     min-height: 50px;
@@ -73,7 +73,7 @@
     color: $quickLexiconFontColour;
     display: inline-block;
     clear: left;
-    margin-top: 5px;
+//    margin-top: 5px;
     font-size: 18px;
   }
 
@@ -100,7 +100,7 @@
     display: block;
     width: auto;
     text-align: left;
-    margin-top: 3px;
+//    margin-top: 3px;
   }
 
   .close {

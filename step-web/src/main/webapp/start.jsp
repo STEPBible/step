@@ -527,6 +527,16 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
                     step.util.localStorageSetItem("swipeCount", swipeCount);
                 }
             }
+            else if ((touchDiffX < 3) && (touchDiffY < 3)) {
+                if ((event.srcElement.outerHTML.substring(0,7) === "<button") ||
+                    ((event.srcElement.outerHTML.substring(0,5) === "<span") && (event.srcElement.outerHTML.indexOf("verse") == -1)) ) {
+                        console.log("skiped: "+ event.srcElement.outerHTML);
+                        return;
+                }
+                // A touch on elements which do not have events will clear highlight and quick lexicon
+                step.passage.removeStrongsHighlights(undefined, "primaryLightBg secondaryBackground relatedWordEmphasisHover");
+                $('#quickLexicon').remove();
+            }
         }
     }
 

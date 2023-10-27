@@ -181,9 +181,14 @@
 .nextPreviousChapterGroup {
   .previousChapter,
   .nextChapter {
+    // display is set to none be default so these don't show up on mobile devices; otherwise,
+    // these buttons will be set appropriately in view_menu_passage's _updateVisibleDropdown:
+    // function.
+    display: none;
+
     position: absolute;
     top: auto;
-    bottom: 45px;
+    bottom: 35px;
     z-index: 1;
     padding: 12px;
     background-color: white;

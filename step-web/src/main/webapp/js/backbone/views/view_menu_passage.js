@@ -8,6 +8,7 @@ var PassageMenuView = Backbone.View.extend({
         "click .nextChapter": "goToNextChapter",
         "click .closeColumn": "closeColumn",
         "click .openNewPanel": "openNewPanel",
+        "click .resizePanel": "resizePanel",
         "show.bs.dropdown *": "handleDropdownMenu"
     },
     fontButtons: '<li><%= __s.font_sizes %><span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group">' +
@@ -156,17 +157,53 @@ var PassageMenuView = Backbone.View.extend({
         }
     },
     _updateVisibleDropdown: function () {
-        var openDropdown = this.$el.find(".dropdown.open");
-        if (this._isDisplayOptionsDropdown(openDropdown)) {
-            this._updateColumnOptions();
+        var swipeCount = step.util.localStorageGetItem("swipeCount");
+        if (swipeCount == null) swipeCount = -1;
+            
+        // If the device is mobile, and the user has swiped at least twice (so they know
+        // how it works), then don't display the prev/next arrows anymore.
+
+        if (step.touchDevice && swipeCount >= 2) {
+            $(".nextPreviousChapterGroup").css("display", "none");
+        }
+        else {
+            var openDropdown = this.$el.find(".dropdown.open");
+            if (this._isDisplayOptionsDropdown(openDropdown)) {
+                this._updateColumnOptions();
+            }
+
+            var isPassage = this.model.get("searchType") == 'PASSAGE';
+            var previousNext = this.$el.find(".nextPreviousChapterGroup");
+            previousNext.toggle(true);
+            nextOnly = previousNext.find(".nextChapter");
+            nextOnly.toggle(isPassage);
+            // the previousChapter button is always set if not a mobile device
+            prevOnly = previousNext.find(".previousChapter");
+            prevOnly.toggle(true);
+            this.$el.find(".contextContainer").toggle(!isPassage);
         }
 
-        var isPassage = this.model.get("searchType") == 'PASSAGE';
-        var previousNext = this.$el.find(".nextPreviousChapterGroup");
-        previousNext.toggle(true);
-        nextOnly = previousNext.find(".nextChapter");
-        nextOnly.toggle(isPassage);
-        this.$el.find(".contextContainer").toggle(!isPassage);
+        // Introduce the swipe feature on a mobile device.  Note, wait until
+        // STEP's usage count > 1 so that the initial introJsStep has already
+        // played, and hopefully the user knows what the arrows are for.
+
+        var swipeIntro = step.util.localStorageGetItem("swipeIntro");
+        if (swipeIntro == null) swipeIntro = 0;
+        if (step.touchDevice && swipeIntro == 0) {
+            var stepUsage = step.util.localStorageGetItem("step.usageCount");
+            if (stepUsage == null) stepUsage = 0;
+            if (stepUsage >= 1) {
+                var introJsSteps = [{
+                    element: document.getElementsByClassName('previousChapter')[0],
+                    intro: "Swipe left for next chapter, right for previous chapter.  Once you have used the swipe feature a couple of times, the arrows will hide."
+                }];
+                introJs().setOptions({
+                    steps: introJsSteps
+                }).start();
+
+                step.util.localStorageSetItem("swipeIntro", 1);
+            }
+        }
 
     },
     _updateDropdownContents: function (targetTrigger) {
@@ -530,7 +567,7 @@ var PassageMenuView = Backbone.View.extend({
                     var helpText = __s[items[i].help];
                     var link = this._createLink(items[i].initial, keyText, helpText);
                     this._setVisible(link, selectedOptions.indexOf(items[i].initial) != -1);
-                }
+                                    }
             }
             dropdown.append($("<li>").addClass("passage").append(link)).attr("role", "presentation");
         }
@@ -598,7 +635,7 @@ var PassageMenuView = Backbone.View.extend({
         for (var i = 0; i < selectedOptions.length; i++) {
             selectedCode += selectedOptions.eq(i).data('value');
         }
-        this.model.save({
+                this.model.save({
             pageNumber: 1,
             selectedOptions: selectedCode,
             interlinearMode: this.displayModeContainer.find("a:has(.glyphicon.active)").attr("data-value")
@@ -764,6 +801,26 @@ var PassageMenuView = Backbone.View.extend({
         step.util.activePassageId(this.model.get("passageId"));
         step.util.createNewColumn();
         ev.stopPropagation();
+    },
+    resizePanel: function (ev) {
+        try {
+            if (document.getElementsByClassName("mainPanel")[0].style.paddingTop == "0px") {
+                document.getElementById("stepnavbar").style.display = "block";
+                document.getElementsByClassName("resizePanel")[0].title = "Increase size of panel";
+                document.getElementsByClassName("mainPanel")[0].style.paddingTop="50px";
+                document.getElementsByClassName("glyphicon-resize-full")[0].style.display = "inline";
+                document.getElementsByClassName("glyphicon-resize-small")[0].style.display = "none";
+            }
+            else {
+                document.getElementById("stepnavbar").style.display = "none";
+                document.getElementsByClassName("resizePanel")[0].title = "Decrease size of panel";
+                document.getElementsByClassName("mainPanel")[0].style.paddingTop="0px";
+                document.getElementsByClassName("glyphicon-resize-full")[0].style.display = "none";
+                document.getElementsByClassName("glyphicon-resize-small")[0].style.display = "inline";
+            }
+            document.getElementsByClassName("resizePanel")[0].style.backgroundColor = "white";
+        } catch(e) {
+        }
     },
     updateVisibleCloseButton: function () {
         var shouldShow = $(".column").not(".examplesColumn").length > 1;

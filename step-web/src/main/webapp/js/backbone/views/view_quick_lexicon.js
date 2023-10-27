@@ -5,7 +5,7 @@ var QuickLexicon = Backbone.View.extend({
     templateFooter: '</div>',
     templateDef: '<%= view.templateHeader %>' +
         '<% _.each(data, function(item, data_index) { %>' +
-        '<div><h1>' +
+        '<div><h1 style="line-height:1;margin-bottom:0">' +
         '<%= item.stepGloss %>' +
         '<% var urlLang = $.getUrlVar("lang") || ""; %>' +
         '<% urlLang = urlLang.toLowerCase(); %>' +
@@ -13,22 +13,29 @@ var QuickLexicon = Backbone.View.extend({
         // '<% var currentEnWithEsLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon"); %>' +
         // '<% if (currentEnWithEsLexiconSetting == undefined) currentEnWithEsLexiconSetting = false; %>' +
 		'<% if ((currentLang.indexOf("es") == 0) && (item._es_Gloss != undefined)) { %><span>,&nbsp;<%= item._es_Gloss %></span> <% } %>' +
-        '<% if (urlLang == "zh_tw") { currentLang = "zh_tw"; } else if (urlLang == "zh") { currentLang = "zh"; } %>' +
+		'<% if ((currentLang.indexOf("km") == 0) && (item._km_Gloss != undefined)) { %><span>,&nbsp;<%= item._km_Gloss %></span> <% } %>' +
+        '<% if (urlLang === "zh_tw") { currentLang = "zh_tw"; } else if (urlLang === "zh") { currentLang = "zh"; } %>' +
         '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
-        '<% if (currentEnWithZhLexiconSetting == undefined) currentEnWithZhLexiconSetting = false; %>' +
-        '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_tw_Gloss %></span> <% } else if ( (currentLang == "zh") && (item._zh_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_Gloss %></span> <% } %>' +
+        '<% if (currentEnWithZhLexiconSetting === undefined) currentEnWithZhLexiconSetting = false; %>' +
+        '<% if ( (currentLang === "zh_tw") && (item._zh_tw_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_tw_Gloss %></span> <% } else if ( (currentLang === "zh") && (item._zh_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_Gloss %></span> <% } %>' +
         '&nbsp;(<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1> ' +
-        '<% if ( (currentLang == "es") && (item._es_Definition != undefined) ) { %><div class="mediumDef"><%= item._es_Definition %></div><% } %>' +
-        '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
-        '<% if ( (currentLang == "vi") && (item._vi_Definition != undefined) ) { %><div class="mediumDef"><%= item._vi_Definition %></div> <% } %>' +
+        '<% if ( (currentLang === "es") && (item._es_Definition != undefined) ) { %><div class="mediumDef"><%= item._es_Definition %></div><% } %>' +
+        '<% if ( (currentLang === "km") && (item._km_Definition != undefined) ) { %><div class="mediumDef"><%= item._km_Definition %></div><% } %>' +
+        '<% if ( (currentLang === "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
+        '<% if ( (currentLang === "vi") && (item._vi_Definition != undefined) ) { %><div class="mediumDef"><%= item._vi_Definition %></div> <% } %>' +
         // '<% if ((currentEnWithZhLexiconSetting) || (currentEnWithEsLexiconSetting) || ( (!currentLang.indexOf("zh") == 0) && (!currentLang.indexOf("es") == 0))) { %>' +
         '<% if ((currentEnWithZhLexiconSetting) || (!currentLang.indexOf("zh") == 0)) { %>' +
             '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
-            '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
+            '<% if ((item.mediumDef != undefined) && (item.mediumDef !== "")) { %><div class="mediumDef"><%= item.mediumDef %></div> <% } %>' +
         '<% } %>' +
-        '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <span class="clickMoreInfo"><%= __s.more_info_on_click_of_word %></span></span><% } %>' +
+        '<% var showClickWord = false; %>' +
+        '<% if ((item.versionCountOT != null) && (item.versionCountNT != null)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_ot_nt_bible, item.versionCountOT, item.versionCountNT, view.version) %>.) <% } %>' +
+        '<% if ((item.versionCountOT != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_bible, item.versionCountOT, view.version) %>.) <% } %>' +
+        '<% if ((item.versionCountNT != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_bible, item.versionCountNT, view.version) %>.) <% } %>' +
+        '<% if ((item.count != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) <% } %>' +
+        '<% if (showClickWord) { %> - <span class="clickMoreInfo"><%= __s.more_info_on_click_of_word %></span></span> <% } %>' +
         '</div>' +
         '<% if (brief_morph_info[data_index] != null) { %> ' +
 		'&nbsp;&nbsp;<span><%= brief_morph_info[data_index] %></span> ' +
@@ -56,29 +63,81 @@ var QuickLexicon = Backbone.View.extend({
         this.render();
     },
 
-    processQuickInfo: function (data, self) {
+    processQuickInfo: function (origData, self, strongsNotToDisplay, multipleStrongTextFromSearchModal) {
         $("#quickLexicon").remove();
         var morphOnly = false;
+        var data = JSON.parse(JSON.stringify(origData));
+        var trailerLineForStrongsNotDisplay = "";
+        var numOfWordNotDisplayed = 0;
+        if (typeof multipleStrongTextFromSearchModal !== "string")
+            multipleStrongTextFromSearchModal = "";
+        for (counter = origData.vocabInfos.length - 1; counter >= 0; counter --) {
+            var item = origData.vocabInfos[counter];
+            if ((strongsNotToDisplay.indexOf(item.strongNumber) > -1) || (multipleStrongTextFromSearchModal !== "")) {
+                if (data.vocabInfos[counter].accentedUnicode !== "") {
+                    if (trailerLineForStrongsNotDisplay !== "")
+                        trailerLineForStrongsNotDisplay += ", ";
+                    trailerLineForStrongsNotDisplay += "<span style='font-size:12px' class='";
+                    if (data.vocabInfos[counter].strongNumber.substring(0,1) === "H")
+                        trailerLineForStrongsNotDisplay += "hbFontSmall";
+                    else
+                        trailerLineForStrongsNotDisplay += "unicodeFont";
+                    trailerLineForStrongsNotDisplay += "'>" + data.vocabInfos[counter].accentedUnicode + "</span>";
+                    if (data.vocabInfos[counter].stepTransliteration !== "")
+                        trailerLineForStrongsNotDisplay += " (<span class='transliteration'>" + data.vocabInfos[counter].stepTransliteration + "</span>)";
+                    trailerLineForStrongsNotDisplay += " " + data.vocabInfos[counter].strongNumber;
+                }
+                data.vocabInfos.splice(counter, 1);
+                if (origData.vocabInfos.length == origData.morphInfos.length)
+                    data.morphInfos.splice(counter, 1);
+                numOfWordNotDisplayed ++;
+            }
+        }
         if ((data.vocabInfos.length == 0) && (lastMorphCode != '') && (data.morphInfos.length == 0)) morphOnly = true;
-        if ((data.vocabInfos.length > 0) || (morphOnly)) {
+        if ((data.vocabInfos.length > 0) || (morphOnly) || (multipleStrongTextFromSearchModal !== "")) {
             var morph_information = [];
             if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                 data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
-            } 
+            }
             for (counter = 0; counter < data.morphInfos.length; counter ++) {
                 var item = data.morphInfos[counter];
                 if (item) morph_information[counter] = self._createBriefMorphInfo(item);
             }
             var lexicon;
-            if (morphOnly) lexicon = $(_.template(self.templateDef2)({ brief_morph_info: morph_information,
-                view: self }));
-            else lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos,
-                brief_morph_info: morph_information,
-                fontClass: step.util.ui.getFontForStrong(self.strong),
-                view: self }));
+            if (morphOnly)
+                lexicon = $(_.template(self.templateDef2)({ brief_morph_info: morph_information, view: self }));
+            else if (multipleStrongTextFromSearchModal !== "") {
+                lexicon = $(_.template(self.templateDef2)({ brief_morph_info: [ "<span class='mediumDef'>" +
+                    multipleStrongTextFromSearchModal + ":</span><div class='mediumDef'>&nbsp;&nbsp;" + trailerLineForStrongsNotDisplay + "</div>" ]
+                    , view: self }));
+                trailerLineForStrongsNotDisplay = "";
+            }
+            else {
+                step.util.getFrequency(self.version, data);
+                for (var i = 0; i < data.vocabInfos.length; i++) {
+                    if (typeof data.vocabInfos[i].mediumDef === "string") {
+                        if ((typeof data.vocabInfos[i].shortDef === "string") && (data.vocabInfos[i].shortDef.length > 2)) {
+                            var pos = data.vocabInfos[i].mediumDef.indexOf(data.vocabInfos[i].shortDef);
+                            if (pos > -1)
+                                data.vocabInfos[i].mediumDef = data.vocabInfos[i].mediumDef.substring(0, pos - 1) + data.vocabInfos[i].mediumDef.substring(pos + data.vocabInfos[i].shortDef.length);
+                        }
+                        data.vocabInfos[i].mediumDef = data.vocabInfos[i].mediumDef.replace(/<br>/g, "  ").replace(/<br \/>/g, "  ").trim();
+                    }
+                }
+                lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos,
+                    brief_morph_info: morph_information,
+                    fontClass: step.util.ui.getFontForStrong(self.strong),
+                    view: self 
+                }));
+            }
             if (step.touchDevice) $(lexicon).find(".clickMoreInfo").text(__s.more_info_on_touch_of_word);
-            if ((self.position / self.height) > 0.66) {
-                lexicon.css({"top": "37", "bottom": "auto"});
+            if ((self.position / self.height) > 0.4)
+                lexicon.css({"top": "0", "bottom": "auto"});
+            if (trailerLineForStrongsNotDisplay !== "") {
+                trailerLineForStrongsNotDisplay = "<br>" + numOfWordNotDisplayed + " words are also tagged here but not displayed: " + 
+                   trailerLineForStrongsNotDisplay +
+                    ".  Click on the word again for more information."
+                $(lexicon).find(".clickMoreInfo").html(trailerLineForStrongsNotDisplay);
             }
             if (step.touchDevice) {
                 if ((step.strongOfLastQuickLexicon == self.strong) && (step.touchForQuickLexiconTime > 0)) {
@@ -115,7 +174,7 @@ var QuickLexicon = Backbone.View.extend({
         }
     },
     
-    loadDefinition: function (time) {
+    loadDefinition: function () {
         var self = this;
         lastMorphCode = '';
         if ((typeof this.morph !== "undefined") && (this.morph.indexOf('TOS:') == 0)) {
@@ -125,29 +184,36 @@ var QuickLexicon = Backbone.View.extend({
 			(typeof self.strong === "string")) {
 			step.previousSideBarLexiconRef = [self.strong, self.reference];
 		}
+        
         var strongsToUse = "";
+        var strongsNotToDisplay = "";
         var strongNumbers = this.strong.split(" ");
+        if (strongNumbers.length == 1)
+            strongNumbers = this.strong.split(",");
         if (strongNumbers.length > 0) {
             strongsToUse = strongNumbers[0];
             for ( var i = 1; i < strongNumbers.length; i++) {
                 if (step.util.suppressHighlight(strongNumbers[i]))
-                    continue;
+                    strongsNotToDisplay += " " + strongNumbers[i];
                 strongsToUse += " " + strongNumbers[i];
             }
         }
-        if (self.reference !== "") // The verse vocabulary does not provide a reference so take the provided strong numbers.
+        if (self.reference !== "") { // The verse vocabulary does not provide a reference so take the provided strong numbers.
 		    strongsToUse = step.util.fixStrongNumForVocabInfo(strongsToUse, false);
+            strongsNotToDisplay = step.util.fixStrongNumForVocabInfo(strongsNotToDisplay, false);
+        }
         var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongsToUse, this.morph, this.version);
+        var multipleStrongText = (typeof self.options.txtForMultiStrong === "string") ? self.options.txtForMultiStrong : "";
         if (vocabMorphFromJson.vocabInfos.length > 0) {
-            self.processQuickInfo(vocabMorphFromJson, self);
+            self.processQuickInfo(vocabMorphFromJson, self, strongsNotToDisplay, multipleStrongText);
             return;
         }
         return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode], function (data) {
-            self.processQuickInfo(data, self);
+            self.processQuickInfo(data, self, strongsNotToDisplay, multipleStrongText);
         }).error(function() {
             if (changeBaseURL())
                 $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode], function (data) {
-                    self.processQuickInfo(data, self);
+                    self.processQuickInfo(data, self, strongsNotToDisplay, multipleStrongText);
                 })
         });
     }, /**
@@ -162,10 +228,8 @@ var QuickLexicon = Backbone.View.extend({
             var header = (this.type === "versesWithWord") ? 'Verses with word' : 'Notes';
             this.displayQuickDef(note, header);
         } else {
-            //remove all quick lexicons
             //make request to server
-            var time = new Date().getTime();
-            this.loadDefinition(time);
+            this.loadDefinition();
         }
         // added for colour code grammar  Should be const instead of var, but older browser does not work
         // This must match the definition in the color_code_grammar.js
@@ -178,36 +242,46 @@ var QuickLexicon = Backbone.View.extend({
     displayQuickDef: function(lexicon, headerText, augStrongNum) {
         var self = this;
 		if ((typeof augStrongNum === "string") && (augStrongNum !== "")) self.augStrong = augStrongNum;
-        var pointerPosition = self.position - 90;
-        var heightOfWindow = self.height - 90;
-        var quickDefPositionAtTop = ((pointerPosition / heightOfWindow) > 0.5);
-        if (quickDefPositionAtTop) {
-            lexicon.css({"top": "37", "bottom": "auto"});
-        }
-        this.passageContainer.append(lexicon);
-        var top = $("#quickLexicon").position().top - 37;
+        var quickDefPositionAtTop = ((self.position / self.height) > 0.4);
+        if (quickDefPositionAtTop)
+            lexicon.css({"top": "0", "bottom": "auto"});
+        if ($('#sidebar:hover').length > 0)
+            $('#columnHolder').append(lexicon);
+        else
+            $('#wrap').append(lexicon);
+        var top = $("#quickLexicon").position().top;
         var bottom = $("#quickLexicon").outerHeight(true) + top;
         if (headerText === "Verses with word") {
             $('#quickLexicon').height('auto');
             $('#quickLexicon').css({'maxHeight':'200px','overflow-y':'auto'});
         }
-        else if (    (top < -8) || (bottom > heightOfWindow + 8) || // The quickLexicon div's top or bottom is not visible
-                ((!step.touchDevice) && (quickDefPositionAtTop) && (bottom > pointerPosition)) || // Overlap with mouse pointer
-                ((!step.touchDevice) && (!quickDefPositionAtTop) && (top < pointerPosition)) ) {  // Overlap with mouse pointer
-            lexicon.remove();
-            if (headerText === "Notes") {
-                if ($(lexicon).find('strong').text() === '▼')
-                    $(lexicon).find('strong').text("");
+        else {
+            if (step.touchDevice) {
+                var quickLexiconHeightForTouchDevices = Math.floor(self.height * .4);
+                if (quickLexiconHeightForTouchDevices < (bottom - top)) {
+                    $('#quickLexicon').height('auto');
+                    quickLexiconHeightForTouchDevices += "px";
+                    $('#quickLexicon').css({'maxHeight': quickLexiconHeightForTouchDevices ,'overflow-y':'auto'});    
+                }
             }
-            else {
-                $(lexicon).find('h1').replaceWith(function() {
-                    return '<br><h4>' + $(this).text() + '</h4>';
-                });
-                $(lexicon).find(".clickMoreInfo").hide();
+            else if ((top < -8) || (bottom > self.height + 8) || // The quickLexicon div's top or bottom is not visible
+                    ((quickDefPositionAtTop) && (bottom > self.position)) || // Overlap with mouse pointer
+                    ((!quickDefPositionAtTop) && (top < self.position)) ) {  // Overlap with mouse pointer
+                lexicon.remove();
+                if (headerText === "Notes") {
+                    if ($(lexicon).find('strong').text() === '▼')
+                        $(lexicon).find('strong').text("");
+                }
+                else {
+                    $(lexicon).find('h1').replaceWith(function() {
+                        return '<br><h4>' + $(this).text() + '</h4>';
+                    });
+                    $(lexicon).find(".clickMoreInfo").hide();
+                }
+                $(lexicon).find(".close").hide().html();
+                step.util.showLongAlert(lexicon.html(), headerText);
+                return;
             }
-			$(lexicon).find(".close").hide().html();
-            step.util.showLongAlert(lexicon.html(), headerText);
-            return;
         }
 
         if (this.touchEvent) {

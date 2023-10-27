@@ -1959,6 +1959,7 @@
     <xsl:choose>
         <xsl:when test="$RemoveGreekAccent = 'true' or $RemoveHebrewVowels = 'true' or $RemoveHebrewPointing = 'true'">
           <xsl:value-of select="conversion:unAccentOrVowels(string($text), $RemoveGreekAccent, $RemoveHebrewVowels, $RemoveHebrewPointing)" />
+        </xsl:when>
         <xsl:otherwise><xsl:value-of select="." /></xsl:otherwise>
     </xsl:choose>
   </xsl:template>

@@ -566,8 +566,11 @@ var PassageMenuView = Backbone.View.extend({
 					var keyText = __s[items[i].key];
                     var helpText = __s[items[i].help];
                     var link = this._createLink(items[i].initial, keyText, helpText);
-                    this._setVisible(link, selectedOptions.indexOf(items[i].initial) != -1);
-                                    }
+                    var makeVisible = (selectedOptions.indexOf(items[i].initial) != -1);
+                    if ((items[i].initial === "U") && (!makeVisible))
+                        makeVisible = selectedOptions.indexOf("P"); // If Hebrew accent is on, turn on Hebrew vowel because it automatically turned on.
+                    this._setVisible(link, makeVisible);
+                }
             }
             dropdown.append($("<li>").addClass("passage").append(link)).attr("role", "presentation");
         }
@@ -635,7 +638,11 @@ var PassageMenuView = Backbone.View.extend({
         for (var i = 0; i < selectedOptions.length; i++) {
             selectedCode += selectedOptions.eq(i).data('value');
         }
-                this.model.save({
+        if ((selectedCode.indexOf("P") > -1) && (selectedCode.indexOf("U") == -1))
+            $( "a[data-value='U']" ).find(".glyphicon").css("visibility","visible");
+        else if ((selectedCode.indexOf("P") == -1) && (selectedCode.indexOf("U") == -1))
+            $( "a[data-value='U']" ).find(".glyphicon").css("visibility","hidden");
+        this.model.save({
             pageNumber: 1,
             selectedOptions: selectedCode,
             interlinearMode: this.displayModeContainer.find("a:has(.glyphicon.active)").attr("data-value")

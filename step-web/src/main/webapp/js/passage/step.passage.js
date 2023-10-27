@@ -24,7 +24,6 @@ step.passage = {
 
         // reset all spans that are underlined:
         this.removeStrongsHighlights(undefined, strongMorphReference.classes);
-
         if (strongNumbers.length > 0) {
             this.highlightStrong(undefined, strongNumbers[0], strongMorphReference.classes);
             for ( var i = 1; i < strongNumbers.length; i++) {
@@ -63,7 +62,6 @@ step.passage = {
 
     removeStrongsHighlights : function(passageId, classes) {
         var classes = classes || "emphasisePassagePhrase relatedWordEmphasis";
-
         var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
         $(".verse span, span.w span, .heading span", container).removeClass(classes);
     }

@@ -2094,6 +2094,12 @@ step.util = {
 			}
 			step.readyToShowPassageSelect = false;
 		}
+		else if (userChoice === 3) {
+			$(".passageContainer.active").find(".select-version").click();
+		}
+		else if (userChoice === 4) {
+			$(".passageContainer.active").find(".select-reference").click();
+		}
 	},
   passageSelectionModal: function (activePassageNumber) {
     var element = document.getElementById('passageSelectionModal');

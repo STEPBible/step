@@ -354,9 +354,9 @@ var PassageDisplayView = DisplayView.extend({
                     var alertMessage = "<br>The Bible selected, " + masterVersion + ", only has the " +
                         theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected." +
                         "<br><br>You can either:<ul>" +
-                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(2)\">Add another Bible which has " + testamentOfPassageSelected + " Testament" + 
+                        "<li><a href=\"javascript:step.util.correctPassageNotInBible(3)\">Add another Bible which has " + testamentOfPassageSelected + " Testament" + 
                         extraVersionsMsg + ".</a>" +
-                        "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(1)\">Select a " + theOtherTestament + " Testament passage.</a>" +
+                        "<li><a href=\"javascript:step.util.correctPassageNotInBible(4)\">Select a " + theOtherTestament + " Testament passage.</a>" +
                         "</ul>";
                     return alertMessage;
                 }

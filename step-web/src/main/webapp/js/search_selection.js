@@ -1562,7 +1562,7 @@ step.searchSelect = {
 
 	getVocabInfoFromJson: function (strongNum, limitType) {
         var vocabInfos = [];
-		return vocabInfos; // 23.10.6 installation to prevent getting of JSON.  Will re-enable 2 weeks after implemenation
+		return vocabInfos; // 23.10.5 installation to prevent getting of JSON.  Will re-enable 2 weeks after implemenation
 		if (step.state.isLocal()) return vocabInfos;
         $.ajaxSetup({async: false});
 		var strongWithoutAugment = strongNum;

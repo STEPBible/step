@@ -252,7 +252,7 @@
                                     }
                                 %>
 
-                                <a class="resizePanel hidden-sm hidden-md hidden-lg" title="Increase size of panel">
+                                <a id="resizeButton" class="resizePanel" title="Increase size of panel" style="display:none">
                                     <i class="glyphicon glyphicon-resize-full" style="display:inline"></i>
                                     <i class="glyphicon glyphicon-resize-small" style="display:none"></i>
                                 </a>
@@ -477,6 +477,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     var ua = navigator.userAgent.toLowerCase(); 
     if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
         ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints == 5))) {
+        document.getElementById("resizeButton").style.display = "inline";
         touchableElement = document.getElementById("columnHolder");
         touchableElement.addEventListener('touchstart', function (event) {
             touchstartX = event.changedTouches[0].screenX;
@@ -490,16 +491,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
         }, false);
     }
 
-    function showUserSwipeIsAccepted(activePassage) {
-        activePassage.find(".heading").remove();
-        var verseElements = activePassage.find(".verse");
-        for (var i = 1; i < verseElements.length; i++) {
-            $(verseElements[i]).remove();
-        }       
-        var randomDots = "..... .... .... ....... ... .... ... ........ .... ...<br> .... .. .... ... .... ........ .... ... .... ........<br>... ..... .. .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ......<br> ...... .... ... ..... .... ..... ..... ..... ....<br>...... .... ... ..... .... ..... ..... ..... ... .<br> .... .. .... ... .... ........ .... ... .... ......<br>... ..... .... .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ... ...<br> ...... .... ... ..... .... ..... ..... ..... ..<br";
-        $(verseElements[0]).html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
-    }
-
     function handleGesture() {
         var minDistance = 40;
         var verticalTolerance = 40;
@@ -508,21 +499,14 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
             var touchDiffX = touchendX - touchstartX;
             if (Math.abs(touchDiffX) > minDistance) {
                 var activePassage = $(event.srcElement.closest(".passageContainer"));
-                var ref = activePassage.find("button.select-reference").text().split(":")[0];
-                if (touchDiffX < 0) {
-                    if ((ref !== "Rev 22") && (ref !== "Mal 4") && (ref !== "Deu 34"))
-                        showUserSwipeIsAccepted(activePassage);
+                if (touchDiffX < 0)
                     activePassage.find("a.nextChapter").click();
-                }
-                else {
-                    if ((ref !== "Ref") && (ref !== "Gen 1") && (ref !== "Matt 1"))
-                        showUserSwipeIsAccepted(activePassage);
+                else 
                     activePassage.find("a.previousChapter").click();
-                }
-                // Record swipeCount up to two, after which the prev/next arrows won't be displayed.
+                // Record swipeCount up to three, after which the prev/next arrows won't be displayed.
                 var swipeCount = step.util.localStorageGetItem("swipeCount");
                 if (swipeCount == null) swipeCount = 0;
-                if (swipeCount <= 2) {
+                if (swipeCount <= 3) {
                     swipeCount++;
                     step.util.localStorageSetItem("swipeCount", swipeCount);
                 }
@@ -530,7 +514,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
             else if ((touchDiffX < 3) && (touchDiffY < 3)) {
                 if ((event.srcElement.outerHTML.substring(0,7) === "<button") ||
                     ((event.srcElement.outerHTML.substring(0,5) === "<span") && (event.srcElement.outerHTML.indexOf("verse") == -1)) ) {
-                        console.log("skiped: "+ event.srcElement.outerHTML);
                         return;
                 }
                 // A touch on elements which do not have events will clear highlight and quick lexicon

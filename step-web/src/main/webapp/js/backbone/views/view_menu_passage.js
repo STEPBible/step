@@ -160,10 +160,10 @@ var PassageMenuView = Backbone.View.extend({
         var swipeCount = step.util.localStorageGetItem("swipeCount");
         if (swipeCount == null) swipeCount = -1;
             
-        // If the device is mobile, and the user has swiped at least twice (so they know
+        // If the device is mobile, and the user has swiped at least 3x (so they know
         // how it works), then don't display the prev/next arrows anymore.
 
-        if (step.touchDevice && swipeCount >= 2) {
+        if (step.touchDevice && swipeCount >= 3) {
             $(".nextPreviousChapterGroup").css("display", "none");
         }
         else {
@@ -195,7 +195,7 @@ var PassageMenuView = Backbone.View.extend({
             if (stepUsage >= 1) {
                 var introJsSteps = [{
                     element: document.getElementsByClassName('previousChapter')[0],
-                    intro: "Swipe left for next chapter, right for previous chapter.  Once you have used the swipe feature a couple of times, the arrows will hide."
+                    intro: "Swipe left for next chapter, right for previous chapter.  Once you have used the swipe feature three times, the arrows will hide."
                 }];
                 introJs().setOptions({
                     steps: introJsSteps
@@ -709,16 +709,17 @@ var PassageMenuView = Backbone.View.extend({
         return false;
     },
     goToPreviousChapter: function (ev) {
-        this.goToSiblingChapter(this.model.get("previousChapter"), ev);
+        this.goToSiblingChapter(this.model.get("previousChapter"), ev, false);
     },
     goToNextChapter: function (ev) {
-        this.goToSiblingChapter(this.model.get("nextChapter"), ev);
+        this.goToSiblingChapter(this.model.get("nextChapter"), ev, true);
     },
-    goToSiblingChapter: function (key, ev) {
+    goToSiblingChapter: function (key, ev, isNext) {
         if (ev) {
             ev.preventDefault();
         }
-        step.util.activePassageId(this.model.get("passageId"));
+        var currentPassageId = this.model.get("passageId");
+        step.util.activePassageId(currentPassageId);
         var args = this.model.get("args") || "";
         args = args.replace(new RegExp('\\|?' + REFERENCE        + '[^|]+', "ig"), "");
         var reference = "";
@@ -731,6 +732,13 @@ var PassageMenuView = Backbone.View.extend({
         else {
             if ((key != undefined) && (key.osisKeyId != undefined) && (key.osisKeyId != null)) reference = key.osisKeyId;
             else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
+            if (step.touchDevice) {
+                if (!this.showUserSwipeIsAccepted(this.model.get("masterVersion"), this.model.get("previousChapter").osisKeyId,
+                    this.model.get("nextChapter").osisKeyId, this.model.get("nextChapter").lastChapter,
+                    step.util.getPassageContainer(currentPassageId), isNext)) {
+                        return; // Next or previous chapter is not available
+                }
+            }
         }
         args = args.replace(/&&/ig, "")
                    .replace(/&$/ig, "");
@@ -741,6 +749,81 @@ var PassageMenuView = Backbone.View.extend({
         }
         args += "reference=" + reference;
         step.router.navigateSearch(args);
+    },
+    showUserSwipeIsAccepted: function(version, previousChapter, nextChapter, lastChapter, activePassage, isNext) {
+        var alreadyCheckedNextOrPreviousIsValid = false;
+        if (typeof previousChapter === "string") {
+            var prevChptParts = previousChapter.split(".");
+            if ((prevChptParts.length == 2) && (!isNaN(prevChptParts[1]))) {
+                if (typeof nextChapter === "string") {
+                    var nextChptParts = nextChapter.split(".");
+                    if ((nextChptParts.length == 2) && (!isNaN(prevChptParts[1]))) {
+                        alreadyCheckedNextOrPreviousIsValid = true;
+                        if ((nextChptParts[1] - prevChptParts[1] == 2))
+                            this.showDots(activePassage);
+                        else if (isNext) {
+                            if ((typeof lastChapter === "boolean") && (!lastChapter)) {
+                                if ((nextChapter === "Matt.1") &&
+                                    (step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(version.toLowerCase()) > -1)) {
+                                        this.tempAlert("You are at the last chapter of the " + version + ".", 3);
+                                        return false;
+                                }
+                                this.showDots(activePassage);
+                            }
+                            else if (nextChapter === "Rev.22") {
+                                this.tempAlert("You are at the last chapter of " + version + ".", 3);
+                                return false;                       
+                            }
+                        }
+                        else {
+                            if ((previousChapter === "Gen.1") ||
+                                ((previousChapter === "Mal.4") &&
+                                (step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(version.toLowerCase()) > -1))) {
+                                    this.tempAlert("You are at the first chapter of " + version + ".", 3);
+                                    return false;
+                            }
+                            this.showDots(activePassage);
+                        }
+                    }
+                }
+            }
+        }
+        if (!alreadyCheckedNextOrPreviousIsValid) {
+            var ref = activePassage.find("button.select-reference").text().split(":")[0];
+            if (isNext) {
+                if ((ref !== "Rev 22") && (ref !== "Mal 4") && (ref !== "Deu 34"))
+                this.showDots(activePassage);
+            }
+            else if ((ref !== "Ref") && (ref !== "Gen 1") && (ref !== "Matt 1"))
+            this.showDots(activePassage);
+        }
+        return true;
+    },
+    showDots: function(activePassage) {
+        activePassage.find(".heading").remove();
+        var verseElements = activePassage.find(".verse");
+        if (verseElements.length == 0)
+            verseElements = activePassage.find(".interlinear");
+        for (var i = verseElements.length - 1; i > 0; i--) {
+            $(verseElements[i]).remove();
+        }
+        var randomDots = "..... .... .... ....... ... .... ... ........ .... ...<br> .... .. .... ... .... ........ .... ... .... ........<br>... ..... .. .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ......<br> ...... .... ... ..... .... ..... ..... ..... ....<br>...... .... ... ..... .... ..... ..... ..... ... .<br> .... .. .... ... .... ........ .... ... .... ......<br>... ..... .... .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ... ...<br> ...... .... ... ..... .... ..... ..... ..... ..<br";
+        $(verseElements[0]).html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
+    },
+    tempAlert: function(msg, duration) {
+        var el = document.createElement("div");
+        el.setAttribute("style","text-align:center;position:absolute;top:15%;left:10%;right:10%;background-color:#ffffcc;color:black;font-size:20px;");
+        el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + duration + " seconds.</div>";
+        setTimeout(function(){
+            el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + Math.ceil(duration * .666)  + " seconds.</div>";
+            setTimeout(function(){
+                el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + Math.ceil(duration * .333)  + " second.</div>";
+                setTimeout(function(){
+                    el.parentNode.removeChild(el);
+                },duration * 333);
+            },duration * 333);
+        },duration * 333);
+        document.body.appendChild(el);
     },
     removeSearchArgs: function(args) {
         return args.replace(new RegExp('\\|?' + STRONG_NUMBER    + '[^|]+', "ig"), "")

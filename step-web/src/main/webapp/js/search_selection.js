@@ -1252,7 +1252,7 @@ step.searchSelect = {
 										}
 										if (text2Display.length == 0) console.log('group, but no examples');
 										else {
-											text2Display = '<b>' + __s.more + '</b>...';
+											text2Display = '&nbsp;&nbsp;&nbsp;<b>' + __s.more + '</b>...';
 											if (searchSuggestionsToDisplay[searchResultIndex] !== "") searchSuggestionsToDisplay[searchResultIndex] += "<br>";
 											searchSuggestionsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>";
 										}
@@ -1324,7 +1324,6 @@ step.searchSelect = {
 												str2Search = '%22' + str2Search + '%22';
 											}
 											else {
-												
 												if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
 													step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
 														str2Search, suggestionType, text2Display, "", "", "", limitType, null, false, false, "", "");
@@ -1960,19 +1959,28 @@ step.searchSelect = {
 			return;
 		}
 		if (brCount < suggestionsToDisplay) {
-			existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
-				'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-				+ suggestionType + '\')"><b>' + __s.more + ' with meaning of your search word...</b></a>';
-			if (suggestionType === GREEK_MEANINGS) {
-				existingSuggestionsToDisplay[suggestToDisplayIndex] +=
-				'<br>&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-				+ GREEK + '\')"><b>' + __s.more + ' with similar Greek spelling...</b></a>';	
+			var additionalSuggestionType = suggestionType;
+			if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS)) {
+				// It it runs out of space to display GREEK_MEANINGS / HEBREW_MEANINGS, the suggestions for GREEK and HEBREW are
+				// not displayed.  Therefore, provide a "more..." option to get the GREEK_MEANINGS / HEBREW_MEANINGS search suggestions
+				// and another "more..." option to get the GREEK / HEBREW search suggestions.
+				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
+					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+					+ suggestionType + '\')"><b>' + __s.more + ' with meaning of your search word...</b></a>';
+				additionalSuggestionType = (suggestionType === GREEK_MEANINGS) ? GREEK : HEBREW;
 			}
-			else if (suggestionType === HEBREW_MEANINGS) {
+			if ((additionalSuggestionType === GREEK) || (additionalSuggestionType === HEBREW)) {
+				if (suggestionType !== additionalSuggestionType ) 
+					existingSuggestionsToDisplay[suggestToDisplayIndex] += '<br>';
 				existingSuggestionsToDisplay[suggestToDisplayIndex] +=
-				'<br>&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-				+ HEBREW + '\')"><b>' + __s.more + ' with similar Hebrew spelling...</b></a>';	
+					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
+					additionalSuggestionType + '\')"><b>' + __s.more + ' with similar ' + additionalSuggestionType.charAt(0) + additionalSuggestionType.slice(1).toLowerCase() +
+					' spelling...</b></a>';	
 			}
+			else
+				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
+					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+					+ suggestionType + '\')"><b>' + __s.more + '...</b></a>';
 		}
 		return;
 	},

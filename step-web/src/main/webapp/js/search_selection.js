@@ -1970,9 +1970,9 @@ step.searchSelect = {
 				additionalSuggestionType = (suggestionType === GREEK_MEANINGS) ? GREEK : HEBREW;
 			}
 			if ((additionalSuggestionType === GREEK) || (additionalSuggestionType === HEBREW)) {
-				if (suggestionType !== additionalSuggestionType ) 
+				if ((suggestionType !== additionalSuggestionType ) && (needLineBreak === ""))
 					existingSuggestionsToDisplay[suggestToDisplayIndex] += '<br>';
-				existingSuggestionsToDisplay[suggestToDisplayIndex] +=
+				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
 					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
 					additionalSuggestionType + '\')"><b>' + __s.more + ' with similar ' + additionalSuggestionType.charAt(0) + additionalSuggestionType.slice(1).toLowerCase() +
 					' spelling...</b></a>';	

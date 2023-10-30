@@ -297,6 +297,22 @@ step.util = {
             model.trigger("squashErrors");
         }
     },
+	tempAlert: function(msg, duration) {
+        var el = document.createElement("div");
+		el.setAttribute("id","tmpStepAlert");
+        el.setAttribute("style","z-index:99999;text-align:center;position:absolute;top:15%;left:10%;right:10%;background-color:#ffffcc;color:black;font-size:20px;");
+        el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + duration + " seconds.</div>";
+        setTimeout(function(){
+            el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + Math.ceil(duration * .666)  + " seconds.</div>";
+            setTimeout(function(){
+                el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + Math.ceil(duration * .333)  + " second.</div>";
+                setTimeout(function(){
+                    el.parentNode.removeChild(el);
+                },duration * 333);
+            },duration * 333);
+        },duration * 333);
+        document.body.appendChild(el);
+    },
     getErrorPopup: function (message, level) {
         var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
 			step.util.modalCloseBtn(null, "") +

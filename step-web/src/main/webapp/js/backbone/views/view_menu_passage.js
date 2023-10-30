@@ -765,13 +765,13 @@ var PassageMenuView = Backbone.View.extend({
                             if ((typeof lastChapter === "boolean") && (!lastChapter)) {
                                 if ((nextChapter === "Matt.1") &&
                                     (step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(version.toLowerCase()) > -1)) {
-                                        this.tempAlert("You are at the last chapter of the " + version + ".", 3);
+                                        step.util.tempAlert("You are at the last chapter of the " + version + ".", 3);
                                         return false;
                                 }
                                 this.showDots(activePassage);
                             }
                             else if (nextChapter === "Rev.22") {
-                                this.tempAlert("You are at the last chapter of " + version + ".", 3);
+                                step.util.tempAlert("You are at the last chapter of " + version + ".", 3);
                                 return false;                       
                             }
                         }
@@ -779,7 +779,7 @@ var PassageMenuView = Backbone.View.extend({
                             if ((previousChapter === "Gen.1") ||
                                 ((previousChapter === "Mal.4") &&
                                 (step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(version.toLowerCase()) > -1))) {
-                                    this.tempAlert("You are at the first chapter of " + version + ".", 3);
+                                    step.util.tempAlert("You are at the first chapter of " + version + ".", 3);
                                     return false;
                             }
                             this.showDots(activePassage);
@@ -809,21 +809,6 @@ var PassageMenuView = Backbone.View.extend({
         }
         var randomDots = "..... .... .... ....... ... .... ... ........ .... ...<br> .... .. .... ... .... ........ .... ... .... ........<br>... ..... .. .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ......<br> ...... .... ... ..... .... ..... ..... ..... ....<br>...... .... ... ..... .... ..... ..... ..... ... .<br> .... .. .... ... .... ........ .... ... .... ......<br>... ..... .... .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ... ...<br> ...... .... ... ..... .... ..... ..... ..... ..<br";
         $(verseElements[0]).html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
-    },
-    tempAlert: function(msg, duration) {
-        var el = document.createElement("div");
-        el.setAttribute("style","text-align:center;position:absolute;top:15%;left:10%;right:10%;background-color:#ffffcc;color:black;font-size:20px;");
-        el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + duration + " seconds.</div>";
-        setTimeout(function(){
-            el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + Math.ceil(duration * .666)  + " seconds.</div>";
-            setTimeout(function(){
-                el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + Math.ceil(duration * .333)  + " second.</div>";
-                setTimeout(function(){
-                    el.parentNode.removeChild(el);
-                },duration * 333);
-            },duration * 333);
-        },duration * 333);
-        document.body.appendChild(el);
     },
     removeSearchArgs: function(args) {
         return args.replace(new RegExp('\\|?' + STRONG_NUMBER    + '[^|]+', "ig"), "")

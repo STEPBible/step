@@ -500,7 +500,7 @@ step.searchSelect = {
 				if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true); // probably a passage
 				var sleep = 50;
 				if (step.searchSelect.searchUserInput !== userInput) {
-				step.searchSelect._handleEnteredSearchWord();
+					step.searchSelect._handleEnteredSearchWord();
 					sleep = 250;
 				}
 				setTimeout(function() { // Need to give time for the input to the sent to the server and also time for the response to come back to the browser.
@@ -1196,6 +1196,11 @@ step.searchSelect = {
 		}
 		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 		if ((userInput.length > 1) || ((step.searchSelect.userLang.toLowerCase().indexOf("zh") == 0) && (userInput.length > 0))) {
+			// If user enter a Lucene standard stop word, let the user know.
+			if (" a an and are as at be but by for if in into is it no not of on or such that the their then there these they this to was will with ".indexOf(" " + userInput.toLowerCase() + " ") > -1)
+				step.util.tempAlert("The word your entered is an extremely common word. That exact word will not be found in Fuzzy (meaning), Greek and Hebrew searches.", 3);
+			else
+				$('#tmpStepAlert').remove();
 			$('#updateButton').hide();
 			var url;
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))

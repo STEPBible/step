@@ -1219,6 +1219,7 @@ step.searchSelect = {
 				}
 				var alreadyShownStrong = [];
 				for (var i = 0; i < data.length; i++) {
+					var skipBecauseOfZeroCount = false;
 					var suggestionType = data[i].itemType;
 					var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
 					if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
@@ -1389,12 +1390,14 @@ step.searchSelect = {
 										var hasBothTestaments = ((typeof curWord.vocabInfos[0].versionCountOT === "number") && (curWord.vocabInfos[0].versionCountOT > 0) &&
 											(typeof curWord.vocabInfos[0].versionCountNT === "number") && (curWord.vocabInfos[0].versionCountNT > 0));
 										var countDisplay = step.util.formatFrequency(curWord.vocabInfos[0], parseInt(data[i].suggestion.popularity), hasBothTestaments);
+										if (countDisplay === "0 x") skipBecauseOfZeroCount = true;
 										text2Display += '<span class="srchFrequency"> ' + countDisplay + '</span>';
 									}
 								}
-								step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-									str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle, limitType,
-									null, false, false, "", allVersions);
+								if ((!skipBecauseOfZeroCount) || (limitType !== ""))
+									step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
+										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle, limitType,
+										null, false, false, "", allVersions);
 							}
 							break;
 						case REFERENCE:
@@ -1953,12 +1956,21 @@ step.searchSelect = {
 		}
 		if (brCount < suggestionsToDisplay) {
 			existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
-				'<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-				+ suggestionType + '\')"><b>' + __s.more + '...</b></a>';
+				'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+				+ suggestionType + '\')"><b>' + __s.more + ' with meaning of your search word...</b></a>';
+			if (suggestionType === GREEK_MEANINGS) {
+				existingSuggestionsToDisplay[suggestToDisplayIndex] +=
+				'<br>&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+				+ GREEK + '\')"><b>' + __s.more + ' with similar Greek spelling...</b></a>';	
+			}
+			else if (suggestionType === HEBREW_MEANINGS) {
+				existingSuggestionsToDisplay[suggestToDisplayIndex] +=
+				'<br>&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+				+ HEBREW + '\')"><b>' + __s.more + ' with similar Hebrew spelling...</b></a>';	
+			}
 		}
 		return;
 	},
-
 	extractStrongFromDetailLexicalTag: function(strongNumber, detailLexicalJSON) {
 		if ((Array.isArray(detailLexicalJSON)) && (detailLexicalJSON.length > 0)) {
 			var allStrongs = [strongNumber];

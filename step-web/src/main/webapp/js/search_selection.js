@@ -1666,8 +1666,11 @@ step.searchSelect = {
 			null, false, false, "", allVersions);
 		return hasBothTestaments;
 	},
-	createSubsequentLineForAugmentedStrong: function(sorted, data, strongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, 
+	createSubsequentLineForAugmentedStrong: function(sorted, data, origStrongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, 
 		detailLexSearchStrongs, allVersions, hasBothTestaments) {
+		var strongsWithSameSimpleStrongsAsMainStrong = "";
+		var numWithSameSimpleStrongsAsMainStrong = 0;
+		var freqencyOfSameSimpleStrongAsMainStrong = 0;
 		for (var k = 0; k < sorted.length; k++) {
 			var i = parseInt(sorted[k][0]);
 			var suggestionType = data[i].itemType;
@@ -1695,6 +1698,17 @@ step.searchSelect = {
 				var frequency = data[i].suggestion.popularity;
 				var curStrong = data[i].suggestion.strongNumber;
 				var searchExplaination = "";
+				var curWord = { vocabInfos: [{ strongNumber: strongNum, freqList: data[i].suggestion.popularityList }] };
+				step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
+				var frequencyOT = (typeof curWord.vocabInfos[0].versionCountOT === "number") ? curWord.vocabInfos[0].versionCountOT : 0;
+				var frequencyNT = (typeof curWord.vocabInfos[0].versionCountNT === "number") ? curWord.vocabInfos[0].versionCountNT : 0;
+				if (curStrong.slice(0, -1) === origStrongNum) {
+					numWithSameSimpleStrongsAsMainStrong ++;
+					if (strongsWithSameSimpleStrongsAsMainStrong !== "")
+						strongsWithSameSimpleStrongsAsMainStrong += ",";
+					strongsWithSameSimpleStrongsAsMainStrong += curStrong;
+					freqencyOfSameSimpleStrongAsMainStrong += frequencyOT + frequencyNT;
+				}
 				if ((Array.isArray(data[i].suggestion._detailLexicalTag)) && (data[i].suggestion._detailLexicalTag.length > 0)) {
 					if ((data[i].suggestion.type === "man") || (data[i].suggestion.type === "woman") || 
 						(data[i].suggestion.type === "king") || (data[i].suggestion.type === "queen") ||
@@ -1716,10 +1730,6 @@ step.searchSelect = {
 					gloss = "";
 				}
 				else {
-					var curWord = { vocabInfos: [{ strongNumber: strongNum, freqList: data[i].suggestion.popularityList }] };
-					step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
-					frequencyOT = (typeof curWord.vocabInfos[0].versionCountOT === "number") ? curWord.vocabInfos[0].versionCountOT : 0;
-					frequencyNT = (typeof curWord.vocabInfos[0].versionCountNT === "number") ? curWord.vocabInfos[0].versionCountNT : 0;
 					hasBothTestaments |= ((frequencyOT > 0) && (frequencyNT > 0));
 					var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT }, frequency, hasBothTestaments);
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
@@ -1754,6 +1764,14 @@ step.searchSelect = {
 			else
 				console.log("Unknown result: " + suggestionType);
 		}
+		searchSuggestionsToDisplay[searchResultIndex] += "<br>";
+		if (numWithSameSimpleStrongsAsMainStrong > 1) {
+			searchSuggestionsToDisplay[searchResultIndex] += "<br><hr><br>";
+			step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
+				strongsWithSameSimpleStrongsAsMainStrong, suggestionType, origStrongNum + '* <span class="srchFrequency"> ' + freqencyOfSameSimpleStrongAsMainStrong + ' x</span>',
+				"Search on original Strong number (1890 era) that starts with ", "", "", limitType,
+				null, false, false, "", allVersions);
+		}
 	},
 
 	createDisplayForAugmentedStrong: function(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions) {
@@ -1782,13 +1800,6 @@ step.searchSelect = {
 		}
 		step.searchSelect.createSubsequentLineForAugmentedStrong(sorted, data, strongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, 
 			detailLexSearchStrongs, allVersions, hasBothTestaments);
-		if (isNaN(strongNum.slice(-1))) {
-			searchSuggestionsToDisplay[searchResultIndex] += "<br>";
-			step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
-				allDStrongNums.toString(), suggestionType, strongNum.substring(0, strongNum.length-1) + "*", 
-				"Click here for all words that starts with ", "", "", limitType,
-				null, false, false, "", allVersions);
-		}
 		for (var l = 0; l < searchSuggestionsToDisplay.length; l++) {
 			if (step.searchSelect.searchTypeCode[l] === limitType) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
@@ -1871,7 +1882,7 @@ step.searchSelect = {
 		}
 		existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak + newSuggestion;
 	},
-	addMouseOverEvent: function(searchType, searchString) {
+	addMouseOverEvent: function(searchType, searchString, prefixToDisplay) {
 		if ((searchType !== "strong") || (step.touchDevice) || ($(window).height() < 700))
 			return '';
 		var multipleStrongText = "";
@@ -1880,8 +1891,13 @@ step.searchSelect = {
 			if ($("#userTextInput").is(":visible")) // 1st search modal screen with input field
 				multipleStrongText = "Search of " + numOfWord + " words with same meaning, click on \\'<i>" + numOfWord +
 					" forms</i>\\' at the end of this line for more information";
-			else // 2nd search modal screen with input field hidden
-				multipleStrongText = "Search of " + numOfWord + " words with same meaning, mouse over words listed below for more information";
+			else { // 2nd search modal screen with input field hidden
+				if ((typeof prefixToDisplay === "string") && (prefixToDisplay.indexOf("1890 era")) > -1)
+					multipleStrongText = "Note: The original Strong numbering system was written 130 years ago. It is not as precise as the enhanced Strong numbering listed above. A click on this link will search " + numOfWord + " words with same original Strong number, mouse over words listed above for more information.";
+				else
+					multipleStrongText = "Search of " + numOfWord + " words with same meaning, mouse over words listed below for more information";
+
+			}
 		}
 		return ' onmouseover="javascript:step.util.ui._displayNewQuickLexiconForVerseVocab(\'' + searchString + '\', \'\', \'\',' + 
 						step.util.activePassageId() + ',null,null,null,\'' + multipleStrongText + '\')" ' +
@@ -1949,7 +1965,7 @@ step.searchSelect = {
 			}
 			else {
 				var aTagStyle = "padding:0px";
-				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search);
+				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search, prefixToDisplay);
 				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak + prefixToDisplay +
 					'<a style="' + aTagStyle + '"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
 					str2Search + '\',\'' + 

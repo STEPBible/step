@@ -45,7 +45,6 @@ while (<FH>) {
 					$lineToPrint = $strNoLine;
 				}
 				my $lastChar = chop($lineToPrint);
-				# $lastChar = lc $lastChar;
 				print OF $lineToPrint . $lastChar . "\n"; 
 			}
 			elsif ($outLine !~ /^\@StrNo=\t/) {
@@ -105,7 +104,6 @@ for (@out) {
         }
         else { $lineToPrint = $strNoLine; }
         my $lastChar = chop($lineToPrint);
-        $lastChar = lc $lastChar;
         print OF $lineToPrint . $lastChar . "\n"; 
     }
     elsif ($outLine !~ /^\@StrNo=\t/) {

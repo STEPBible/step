@@ -145,7 +145,10 @@ step.util = {
 		for (var i = 0; i < bibleList.length; i++) {
 			var newMsg = "";
 			if ((typeof freqList[i + offset] === "string") && (freqList[i + offset] !== "")) {
-				newMsg += "<br>" + bibleList[i] + ": "
+				var bibleDisplayName = bibleList[i];
+				if (bibleDisplayName === "SBLG_TH") bibleDisplayName = "SBLG";
+				if (bibleDisplayName === "LXX_TH") bibleDisplayName = "LXX";
+				newMsg += "<br>" + bibleDisplayName + ": "
 				var freqDetail = freqList[i + offset].split("@");
 				var bibleName = bibleList[i].split("@")[0];
 				newMsg += "<a target='_blank' href='?q=version=" + bibleName + "|strong=" + strongNumber;

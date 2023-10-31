@@ -4168,10 +4168,10 @@ step.util = {
                 return mainWord.versionCountOT + "x (OT)";
             return sprintf(__s.stats_occurs, mainWord.versionCountOT);
         }
-        if (typeof mainWord.versionCountNT === "number") {
-			if ((mainWord.versionCountNT !== 0) && (hasBothTestaments))
+        if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0)) {
+			if (hasBothTestaments)
    	            return mainWord.versionCountNT + "x (NT)";
-            return sprintf(__s.stats_occurs, mainWord.versionCountNT);
+   	        return sprintf(__s.stats_occurs, mainWord.versionCountNT);
         }
         if (typeof total === "number")
             return sprintf(__s.stats_occurs, total);

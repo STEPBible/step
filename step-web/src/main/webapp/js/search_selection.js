@@ -1197,10 +1197,15 @@ step.searchSelect = {
 		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 		if ((userInput.length > 1) || ((step.searchSelect.userLang.toLowerCase().indexOf("zh") == 0) && (userInput.length > 0))) {
 			// If user enter a Lucene standard stop word, let the user know.
-			if (" a an and are as at be but by for if in into is it no not of on or such that the their then there these they this to was will with ".indexOf(" " + userInput.toLowerCase() + " ") > -1)
-				step.util.tempAlert("The word your entered is an extremely common word. That exact word will not be found in Fuzzy (meaning), Greek and Hebrew searches.", 3);
-			else
-				$('#tmpStepAlert').remove();
+			if (" a an and are as at be but by for if in into is it no not of on or such that the their then there these they this to was will with ".indexOf(" " + userInput.toLowerCase() + " ") > -1) {
+				$('#warningMessage').text('Search for extremely common words might not be found in Fuzzy, Greek and Hebrew searches.');
+				setTimeout(function(){
+                    $('#warningMessage').text('');
+                }, 3000);
+			}
+			else if ($('#warningMessage').html().indexOf("common word") > -1)
+				$('#warningMessage').text('');
+				//$('#tmpStepAlert').remove();
 			$('#updateButton').hide();
 			var url;
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))

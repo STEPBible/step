@@ -311,9 +311,9 @@ step.util = {
                 el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + Math.ceil(duration * .333)  + " second.</div>";
                 setTimeout(function(){
                     el.parentNode.removeChild(el);
-                },duration * 333);
-            },duration * 333);
-        },duration * 333);
+                }, duration * 333);
+            }, duration * 333);
+        }, duration * 333);
         document.body.appendChild(el);
     },
     getErrorPopup: function (message, level) {

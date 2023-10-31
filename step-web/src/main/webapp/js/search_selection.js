@@ -1202,7 +1202,7 @@ step.searchSelect = {
 				$('#warningMessage').text('Search for extremely common words might not be found in Fuzzy, Greek and Hebrew searches.');
 				setTimeout(function(){
                     $('#warningMessage').text('');
-                }, 3000);
+                }, 5000);
 			}
 			else if ($('#warningMessage').html().indexOf("common word") > -1)
 				$('#warningMessage').text('');

@@ -1229,6 +1229,14 @@ step.searchSelect = {
 					searchSuggestionsToDisplay.push("");
 				}
 				var alreadyShownStrong = [];
+				var hasGreek = false;
+				var hasHebrew = false;
+				for (var i = 0; i < data.length; i++) {
+					if (data[i].itemType === GREEK)
+						hasGreek = true;
+					else if (data[i].itemType === HEBREW)
+						hasHebrew = true;
+				}
 				for (var i = 0; i < data.length; i++) {
 					var skipBecauseOfZeroCount = false;
 					var suggestionType = data[i].itemType;
@@ -1314,9 +1322,7 @@ step.searchSelect = {
 												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
 													str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
-													limitType, 
-													null, false, false, "", "");
-												
+													limitType, null, false, false, "", "", hasHebrew, hasGreek);
 												defaultSearchString = "";
 												defaultMouseOverTitle = "";
 												if (foundOr) {
@@ -1325,14 +1331,15 @@ step.searchSelect = {
 												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
 													str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", defaultSearchString, defaultMouseOverTitle,
-													limitType, null, false, false, "", "");
+													limitType, null, false, false, "", "", hasHebrew, hasGreek);
 												text2Display = '"' + str2Search + '"';
 												str2Search = '%22' + str2Search + '%22';
 											}
 											else {
 												if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
 													step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-														str2Search, suggestionType, text2Display, "", "", "", limitType, null, false, false, "", "");
+														str2Search, suggestionType, text2Display, "", "", "",
+														limitType, null, false, false, "", "", hasHebrew, hasGreek);
 													text2Display = str2Search + "* (" + __s.words_that_start_with + " " + str2Search + ")";
 													str2Search += "*";
 												}
@@ -1390,8 +1397,8 @@ step.searchSelect = {
 									}
 									if ((isAugmentedStrong) || (hasDetailLexInfo)) {
 										step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-											strongWithoutAugment, suggestionType, text2Display, "", suffixToDisplay, "", limitType,
-											augStrongSameMeaning, hasDetailLexInfo, false, userInput, allVersions);
+											strongWithoutAugment, suggestionType, text2Display, "", suffixToDisplay, "",
+											limitType, augStrongSameMeaning, hasDetailLexInfo, false, userInput, allVersions, hasHebrew, hasGreek);
 										continue;
 									}
 									else {
@@ -1406,8 +1413,8 @@ step.searchSelect = {
 								}
 								if ((!skipBecauseOfZeroCount) || (limitType !== ""))
 									step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle, limitType,
-										null, false, false, "", allVersions);
+										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
+										limitType, null, false, false, "", allVersions, hasHebrew, hasGreek);
 							}
 							break;
 						case REFERENCE:
@@ -1668,8 +1675,8 @@ step.searchSelect = {
 		var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequencyFromLexicon, hasBothTestaments);
 		text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 		step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
-			allStrongNumsPlusLexicalGroup.toString(), suggestionType, text2Display, "", suffixText, "", limitType, 
-			null, false, false, "", allVersions);
+			allStrongNumsPlusLexicalGroup.toString(), suggestionType, text2Display, "", suffixText, "",
+			limitType, null, false, false, "", allVersions, false, false);
 		return hasBothTestaments;
 	},
 	createSubsequentLineForAugmentedStrong: function(sorted, data, origStrongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, 
@@ -1761,9 +1768,8 @@ step.searchSelect = {
 							'<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 				}
 				step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-					str2Search, suggestionType, text2Display, 
-					searchExplaination, gloss, "", limitType, 
-					null, false, true, "", allVersions);
+					str2Search, suggestionType, text2Display, searchExplaination, gloss, "", 
+					limitType, null, false, true, "", allVersions, false, false);
 				var detailLex = step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i, allVersions, hasBothTestaments);
 				searchSuggestionsToDisplay[searchResultIndex] += detailLex[0];
 			}
@@ -1775,8 +1781,8 @@ step.searchSelect = {
 			searchSuggestionsToDisplay[searchResultIndex] += "<br><hr><br>";
 			step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
 				strongsWithSameSimpleStrongsAsMainStrong, suggestionType, origStrongNum + '* <span class="srchFrequency"> ' + freqencyOfSameSimpleStrongAsMainStrong + ' x</span>',
-				"Search on original Strong number (1890 era) that starts with ", "", "", limitType,
-				null, false, false, "", allVersions);
+				"Search on original Strong number (1890 era) that starts with ", "", "",
+				limitType, null, false, false, "", allVersions, false, false);
 		}
 	},
 
@@ -1909,9 +1915,9 @@ step.searchSelect = {
 						step.util.activePassageId() + ',null,null,null,\'' + multipleStrongText + '\')" ' +
 						'onmouseleave="javascript:step.util.ui.removeQuickLexicon()"';
 	},
-	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, suggestToDisplayIndex, str2Search, suggestionType, text2Display, 
-		prefixToDisplay, suffixToDisplay, suffixTitle, limitType, 
-		augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions) {
+	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, suggestToDisplayIndex,
+		str2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
+		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions, hasHebrew, hasGreek) {
 		var brCount = 0;
 		var suggestionsToDisplay = 5;
 		var needLineBreak = "";
@@ -1991,7 +1997,8 @@ step.searchSelect = {
 					+ suggestionType + '\')"><b>' + __s.more + ' with meaning of your search word...</b></a>';
 				additionalSuggestionType = (suggestionType === GREEK_MEANINGS) ? GREEK : HEBREW;
 			}
-			if ((additionalSuggestionType === GREEK) || (additionalSuggestionType === HEBREW)) {
+			if (((additionalSuggestionType === GREEK) && (hasGreek)) ||
+				((additionalSuggestionType === HEBREW) && (hasHebrew))) {
 				if ((suggestionType !== additionalSuggestionType ) && (needLineBreak === ""))
 					existingSuggestionsToDisplay[suggestToDisplayIndex] += '<br>';
 				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
@@ -1999,10 +2006,10 @@ step.searchSelect = {
 					additionalSuggestionType + '\')"><b>' + __s.more + ' with similar ' + additionalSuggestionType.charAt(0) + additionalSuggestionType.slice(1).toLowerCase() +
 					' spelling...</b></a>';	
 			}
-			else
-				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
-					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-					+ suggestionType + '\')"><b>' + __s.more + '...</b></a>';
+			// else
+			// 	existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
+			// 		'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+			// 		+ suggestionType + '\')"><b>' + __s.more + '...</b></a>';
 		}
 		return;
 	},

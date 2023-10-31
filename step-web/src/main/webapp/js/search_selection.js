@@ -1639,8 +1639,10 @@ step.searchSelect = {
 				if ((strongsToInclude.length == 0) ||
 					(strongsToInclude.includes(data[i].suggestion.strongNumber))) {
 					augStrongToShow[i] = parseInt(data[i].suggestion.popularity);
-					var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(data[i].suggestion.strongNumber, augStrongToShow[i], 
-						data[i].suggestion._detailLexicalTag, allVersions);
+					var frequencies = [augStrongToShow[i], 0, 0];
+					if (typeof data[i].suggestion._detailLexicalTag === "object")
+						frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(data[i].suggestion.strongNumber, augStrongToShow[i], 
+							data[i].suggestion._detailLexicalTag, allVersions);
 					augStrongToShow[i] = frequencies[0];
 					if (!allStrongNumsPlusLexicalGroup.includes(data[i].suggestion.strongNumber)) {
 						allStrongNumsPlusLexicalGroup.push(data[i].suggestion.strongNumber);
@@ -1950,7 +1952,16 @@ step.searchSelect = {
 				var additionalInfoOnStrong = this._getAdditionalInformationOnStrong(str2Search, augStrongSameMeaning, includeHebrewForGreekWords, allVersions);
 				var numOfForm = additionalInfoOnStrong[1];
 				var updatedGloss = additionalInfoOnStrong[0];
-				var numOfFormMsg = (numOfForm > 0) ? "(" + numOfForm + " forms)" : "";
+				var numOfFormMsg = "";
+				if (numOfForm > 1) {
+					numOfFormMsg = "(" + numOfForm + " forms)";
+				}
+				else {
+					if (augStrongSameMeaning.length == 1) {
+						titleText = ' title="' + augStrongSameMeaning[0] + '" ';
+						text2Display = text2Display.replace(str2Search + "\*", augStrongSameMeaning[0]);
+					}
+				}
 				var frequency = additionalInfoOnStrong[4];
 				var frequencyOT = additionalInfoOnStrong[5];
 				var frequencyNT = additionalInfoOnStrong[6];
@@ -2030,7 +2041,7 @@ step.searchSelect = {
 		frequencyFromLexicon = parseInt(frequencyFromLexicon);
 		var frequencyOT = 0;
 		var frequencyNT = 0;
-		if ((Array.isArray(detailLexicalJSON)) && (detailLexicalJSON.length > 0)) {
+		if (Array.isArray(detailLexicalJSON)) {
 			detailLexicalJSON.forEach(function (item, index) {
 				if (item[1] !== strongNum)
 					frequencyFromLexicon += parseInt(item[3]);

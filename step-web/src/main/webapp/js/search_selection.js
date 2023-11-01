@@ -2009,7 +2009,7 @@ step.searchSelect = {
 				// and another "more..." option to get the GREEK / HEBREW search suggestions.
 				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
 					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-					+ suggestionType + '\')"><b>' + __s.more + ' with meaning of your search word...</b></a>';
+					+ suggestionType + '\')"><b>list all with similar meaning...</b></a>';
 				additionalSuggestionType = (suggestionType === GREEK_MEANINGS) ? GREEK : HEBREW;
 			}
 			if (((additionalSuggestionType === GREEK) && (hasGreek)) ||
@@ -2018,7 +2018,7 @@ step.searchSelect = {
 					existingSuggestionsToDisplay[suggestToDisplayIndex] += '<br>';
 				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
 					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
-					additionalSuggestionType + '\')"><b>' + __s.more + ' with similar ' + additionalSuggestionType.charAt(0) + additionalSuggestionType.slice(1).toLowerCase() +
+					additionalSuggestionType + '\')"><b>list all with with similar ' + additionalSuggestionType.charAt(0) + additionalSuggestionType.slice(1).toLowerCase() +
 					' spelling...</b></a>';	
 			}
 			// else

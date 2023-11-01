@@ -1686,6 +1686,7 @@ step.searchSelect = {
 		var strongsWithSameSimpleStrongsAsMainStrong = "";
 		var numWithSameSimpleStrongsAsMainStrong = 0;
 		var freqencyOfSameSimpleStrongAsMainStrong = 0;
+		var transliterationOfSameSimpleStrongAsMainStrong = "";
 		for (var k = 0; k < sorted.length; k++) {
 			var i = parseInt(sorted[k][0]);
 			var suggestionType = data[i].itemType;
@@ -1723,6 +1724,7 @@ step.searchSelect = {
 						strongsWithSameSimpleStrongsAsMainStrong += ",";
 					strongsWithSameSimpleStrongsAsMainStrong += curStrong;
 					freqencyOfSameSimpleStrongAsMainStrong += frequencyOT + frequencyNT;
+					transliterationOfSameSimpleStrongAsMainStrong = data[i].suggestion.stepTransliteration;
 				}
 				if ((Array.isArray(data[i].suggestion._detailLexicalTag)) && (data[i].suggestion._detailLexicalTag.length > 0)) {
 					if ((data[i].suggestion.type === "man") || (data[i].suggestion.type === "woman") || 
@@ -1782,8 +1784,10 @@ step.searchSelect = {
 		if (numWithSameSimpleStrongsAsMainStrong > 1) {
 			searchSuggestionsToDisplay[searchResultIndex] += "<br><hr><br>";
 			step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
-				strongsWithSameSimpleStrongsAsMainStrong, suggestionType, origStrongNum + '* <span class="srchFrequency"> ' + freqencyOfSameSimpleStrongAsMainStrong + ' x</span>',
-				"Search on original Strong number (1890 era) that starts with ", "", "",
+				strongsWithSameSimpleStrongsAsMainStrong, suggestionType, origStrongNum,
+				"Find all instances of the <a title='information on Strong number system' href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#heading=h.4a5fldrviek' target='_blank'>simple Strong</a> number: ",
+				'(<i class="srchTransliteration">' + transliterationOfSameSimpleStrongAsMainStrong + '</i> - <span class="srchFrequency"> ' + freqencyOfSameSimpleStrongAsMainStrong + ' x</span>)',
+				"",
 				limitType, null, false, false, "", allVersions, false, false);
 		}
 	},
@@ -1906,8 +1910,8 @@ step.searchSelect = {
 				multipleStrongText = "Search of " + numOfWord + " words with same meaning, click on \\'<i>" + numOfWord +
 					" forms</i>\\' at the end of this line for more information";
 			else { // 2nd search modal screen with input field hidden
-				if ((typeof prefixToDisplay === "string") && (prefixToDisplay.indexOf("1890 era")) > -1)
-					multipleStrongText = "Note: The original Strong numbering system was written 130 years ago. It is not as precise as the enhanced Strong numbering listed above. A click on this link will search " + numOfWord + " words with same original Strong number, mouse over words listed above for more information.";
+				if ((typeof prefixToDisplay === "string") && (prefixToDisplay.indexOf("docs.google.com")) > -1)
+					multipleStrongText = "Note: The original Strong numbering system was written in 1890. It is not as precise as the enhanced Strong numbering listed above. A click on this link will search " + numOfWord + " words with same simple Strong number, mouse over words listed above for more information.";
 				else
 					multipleStrongText = "Search of " + numOfWord + " words with same meaning, mouse over words listed below for more information";
 

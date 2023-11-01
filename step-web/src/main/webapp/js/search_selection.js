@@ -1961,7 +1961,7 @@ step.searchSelect = {
 					numOfFormMsg = "(" + numOfForm + " forms)";
 				}
 				else {
-					if (augStrongSameMeaning.length == 1) {
+					if ((Array.isArray(augStrongSameMeaning)) && (augStrongSameMeaning.length == 1)) {
 						titleText = ' title="' + augStrongSameMeaning[0] + '" ';
 						text2Display = text2Display.replace(str2Search + "\*", augStrongSameMeaning[0]);
 					}

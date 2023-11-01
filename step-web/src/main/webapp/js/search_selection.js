@@ -1206,7 +1206,6 @@ step.searchSelect = {
 			}
 			else if ($('#warningMessage').html().indexOf("common word") > -1)
 				$('#warningMessage').text('');
-				//$('#tmpStepAlert').remove();
 			$('#updateButton').hide();
 			var url;
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
@@ -1224,9 +1223,8 @@ step.searchSelect = {
 			}
 			$.ajaxSetup({async: false});
 			$.getJSON(url, function (data) {
-				var searchSuggestionsToDisplay = [];
 				for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
-					searchSuggestionsToDisplay.push("");
+					$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
 				}
 				var alreadyShownStrong = [];
 				var hasGreek = false;
@@ -1254,7 +1252,8 @@ step.searchSelect = {
 							var text2Display = "";
 							if (data[i].grouped) {
 								if (typeof data[i].extraExamples !== "undefined") {
-									if ((searchSuggestionsToDisplay[searchResultIndex].match(/<br>/g) || []).length < 4) {
+									var currentHTML = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]).html()
+									if ((typeof currentHTML === "string") && ((currentHTML.match(/<br>/g) || []).length < 4)) {
 										for (var k = 0; k < data[i].extraExamples.length; k++) {
 											if (k > 0) text2Display += ", ";
 											if ((suggestionType === GREEK) || (suggestionType === HEBREW))
@@ -1267,14 +1266,16 @@ step.searchSelect = {
 										if (text2Display.length == 0) console.log('group, but no examples');
 										else {
 											text2Display = '&nbsp;&nbsp;&nbsp;<b>' + __s.more + '</b>...';
-											if (searchSuggestionsToDisplay[searchResultIndex] !== "") searchSuggestionsToDisplay[searchResultIndex] += "<br>";
-											searchSuggestionsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>";
+											if (currentHTML !== "") $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]).append("<br>");
+											$('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]).append($('<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>"));
 										}
 									}
 								}
 								else {
-									if (searchSuggestionsToDisplay[searchResultIndex] !== "") searchSuggestionsToDisplay[searchResultIndex] += "<br>";
-									searchSuggestionsToDisplay[searchResultIndex] += 'There are ' + data[i].count + ' more options.  Keep typing to see them.';
+									var currentHTML = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]).html();
+									if ((typeof currentHTML === "string") && (currentHTML !== ""))
+										$('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]).append("<br>");
+									$('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]).append('<span>There are ' + data[i].count + ' more options.  Keep typing to see them.</span>');
 								}
 							}
 							else {
@@ -1320,16 +1321,16 @@ step.searchSelect = {
 													defaultSearchString = "<b>" + __s.default_search + "</b>";
 													defaultMouseOverTitle = __s.default_search_mouse_over_title;
 												}
-												step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
+												step.searchSelect.appendSearchSuggestionsToDisplay(searchResultIndex, 
 													str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
 													limitType, null, false, false, "", "", hasHebrew, hasGreek);
-												defaultSearchString = "";
+																								defaultSearchString = "";
 												defaultMouseOverTitle = "";
 												if (foundOr) {
 													defaultSearchString = "<b>" + __s.default_search + "</b>";
 													defaultMouseOverTitle = __s.default_search_mouse_over_title;
 												}
-												step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
+												step.searchSelect.appendSearchSuggestionsToDisplay(searchResultIndex, 
 													str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", defaultSearchString, defaultMouseOverTitle,
 													limitType, null, false, false, "", "", hasHebrew, hasGreek);
 												text2Display = '"' + str2Search + '"';
@@ -1337,7 +1338,7 @@ step.searchSelect = {
 											}
 											else {
 												if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
-													step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
+													step.searchSelect.appendSearchSuggestionsToDisplay(searchResultIndex,
 														str2Search, suggestionType, text2Display, "", "", "",
 														limitType, null, false, false, "", "", hasHebrew, hasGreek);
 													text2Display = str2Search + "* (" + __s.words_that_start_with + " " + str2Search + ")";
@@ -1396,7 +1397,7 @@ step.searchSelect = {
 										}
 									}
 									if ((isAugmentedStrong) || (hasDetailLexInfo)) {
-										step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
+										step.searchSelect.appendSearchSuggestionsToDisplay(searchResultIndex,
 											strongWithoutAugment, suggestionType, text2Display, "", suffixToDisplay, "",
 											limitType, augStrongSameMeaning, hasDetailLexInfo, false, userInput, allVersions, hasHebrew, hasGreek);
 										continue;
@@ -1412,7 +1413,7 @@ step.searchSelect = {
 									}
 								}
 								if ((!skipBecauseOfZeroCount) || (limitType !== ""))
-									step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
+									step.searchSelect.appendSearchSuggestionsToDisplay(searchResultIndex,
 										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
 										limitType, null, false, false, "", allVersions, hasHebrew, hasGreek);
 							}
@@ -1437,8 +1438,7 @@ step.searchSelect = {
 				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(limitTypeToCompare);
 				if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
 					limitTypeToCompare = step.searchSelect.searchTypeCode[searchResultIndex - 2];
-				for (l = 0; l < searchSuggestionsToDisplay.length; l++) {
-					$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
+				for (var l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
 					if (limitTypeToCompare === "") {
 						$('.select-' + step.searchSelect.searchTypeCode[l]).show();
 						showedSomething = true;
@@ -1546,9 +1546,9 @@ step.searchSelect = {
 				frequencyNT += resultArray[1];
 			}
 		}
-		console.log(strongNum + " gloss: " + selectedGloss + " result: " + result +
-			" allDStrongNums: " + allDStrongNums + " allOtherStrongNums: " +
-			allOtherStrongNums + " frequency: " + frequency + " OT: " + frequencyOT + " NT: " + frequencyNT + " allversions: " + allVersions);
+		// console.log(strongNum + " gloss: " + selectedGloss + " result: " + result +
+		// 	" allDStrongNums: " + allDStrongNums + " allOtherStrongNums: " +
+		// 	allOtherStrongNums + " frequency: " + frequency + " OT: " + frequencyOT + " NT: " + frequencyNT + " allversions: " + allVersions);
 		return [selectedGloss, result, allDStrongNums, allOtherStrongNums, frequency, frequencyOT, frequencyNT];
 	},
 
@@ -1626,7 +1626,7 @@ step.searchSelect = {
 		return result;
 	},
 
-	createFirstLineForAugmentedStrong: function(data, strongNum, origSuggestionType, userInput, limitType, augStrongToShow, searchSuggestionsToDisplay, allDStrongNums, 
+	createFirstLineForAugmentedStrong: function(data, strongNum, origSuggestionType, userInput, limitType, augStrongToShow, allDStrongNums, 
 		strongsToInclude, allVersions) {
 		var frequencyFromLexicon = 0;
 		var frequencyOT = 0;
@@ -1674,12 +1674,12 @@ step.searchSelect = {
 		var hasBothTestaments = ((frequencyOT > 0) && (frequencyNT > 0));
 		var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequencyFromLexicon, hasBothTestaments);
 		text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
-		step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex, 
+		step.searchSelect.appendSearchSuggestionsToDisplay(searchResultIndex, 
 			allStrongNumsPlusLexicalGroup.toString(), suggestionType, text2Display, "", suffixText, "",
 			limitType, null, false, false, "", allVersions, false, false);
 		return hasBothTestaments;
 	},
-	createSubsequentLineForAugmentedStrong: function(sorted, data, origStrongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, 
+	createSubsequentLineForAugmentedStrong: function(sorted, data, origStrongNum, origSuggestionType, limitType, strongsToInclude, 
 		detailLexSearchStrongs, allVersions, hasBothTestaments) {
 		var strongsWithSameSimpleStrongsAsMainStrong = "";
 		var numWithSameSimpleStrongsAsMainStrong = 0;
@@ -1767,19 +1767,19 @@ step.searchSelect = {
 							'<span class="srchParathesis">)</span>' +
 							'<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 				}
-				step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
+				step.searchSelect.appendSearchSuggestionsToDisplay(searchResultIndex,
 					str2Search, suggestionType, text2Display, searchExplaination, gloss, "", 
 					limitType, null, false, true, "", allVersions, false, false);
 				var detailLex = step.searchSelect.buildHTMLFromDetailLexicalTag(strongNum, data[i].suggestion._detailLexicalTag, i, allVersions, hasBothTestaments);
-				searchSuggestionsToDisplay[searchResultIndex] += detailLex[0];
+				$('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]).append(detailLex[0]);
 			}
 			else
 				console.log("Unknown result: " + suggestionType);
 		}
-		searchSuggestionsToDisplay[searchResultIndex] += "<br>";
+		$('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]).append('<br>');
 		if (numWithSameSimpleStrongsAsMainStrong > 1) {
-			searchSuggestionsToDisplay[searchResultIndex] += "<br><hr><br>";
-			step.searchSelect.appendSearchSuggestionsToDisplay(searchSuggestionsToDisplay, searchResultIndex,
+			$('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]).append('<br><hr><br>');
+			step.searchSelect.appendSearchSuggestionsToDisplay(searchResultIndex,
 				strongsWithSameSimpleStrongsAsMainStrong, suggestionType, origStrongNum + '* <span class="srchFrequency"> ' + freqencyOfSameSimpleStrongAsMainStrong + ' x</span>',
 				"Search on original Strong number (1890 era) that starts with ", "", "",
 				limitType, null, false, false, "", allVersions, false, false);
@@ -1787,10 +1787,9 @@ step.searchSelect = {
 	},
 
 	createDisplayForAugmentedStrong: function(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions) {
-		var searchSuggestionsToDisplay = [];
 		var detailLexSearchStrongs = [];
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
-			searchSuggestionsToDisplay.push("");
+			$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
 		}
 		var allDStrongNums = [];
 		var strongsToInclude = ((augStrongSameMeaning == null) || (augStrongSameMeaning === "") || (augStrongSameMeaning === "null")) ? [] : augStrongSameMeaning.split(",");
@@ -1798,7 +1797,7 @@ step.searchSelect = {
 		var sorted = [];
 		var hasBothTestaments = false;
 		if (data.length > 1) {
-			hasBothTestaments = step.searchSelect.createFirstLineForAugmentedStrong(data, strongNum, origSuggestionType, userInput, limitType, augStrongToShow, searchSuggestionsToDisplay,
+			hasBothTestaments = step.searchSelect.createFirstLineForAugmentedStrong(data, strongNum, origSuggestionType, userInput, limitType, augStrongToShow,
 				allDStrongNums, strongsToInclude, allVersions);
 			for (var key in augStrongToShow) {
 				sorted.push([key, augStrongToShow[key]]);
@@ -1810,11 +1809,10 @@ step.searchSelect = {
 		if (sorted.length == 0) {
 			sorted.push(['0', 0]);
 		}
-		step.searchSelect.createSubsequentLineForAugmentedStrong(sorted, data, strongNum, origSuggestionType, limitType, searchSuggestionsToDisplay, strongsToInclude, 
+		step.searchSelect.createSubsequentLineForAugmentedStrong(sorted, data, strongNum, origSuggestionType, limitType, strongsToInclude, 
 			detailLexSearchStrongs, allVersions, hasBothTestaments);
-		for (var l = 0; l < searchSuggestionsToDisplay.length; l++) {
+		for (var l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
 			if (step.searchSelect.searchTypeCode[l] === limitType) {
-				$('#searchResults' + step.searchSelect.searchTypeCode[l]).html(searchSuggestionsToDisplay[l]);
 				$('.select-' + step.searchSelect.searchTypeCode[l]).show();
 			}
 			else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
@@ -1865,7 +1863,7 @@ step.searchSelect = {
 		tag += '>' + suffixToDisplay + '</span>';
 		return tag;
 	},
-	addWithoutDuplicates: function(existingSuggestionsToDisplay, suggestToDisplayIndex, needLineBreak, newSuggestion) {
+	addWithoutDuplicates: function(suggestToDisplayIndex, needLineBreak, newSuggestion) {
 		var i = newSuggestion.search(/\.goSearch\([^)]+\)/);
 		if (i > -1) {
 			var search1 = RegExp.lastMatch;
@@ -1875,16 +1873,19 @@ step.searchSelect = {
 				i = RegExp.rightContext.search(/<span>\((\d{1,3}) forms\)<\/span>/);
 				if (i > -1) {
 					var search3 = RegExp.lastMatch;
-					var existingLines = existingSuggestionsToDisplay[suggestToDisplayIndex].split("<br>");
-					for (var j = 0; j < existingLines.length; j++) {
-						var k = existingSuggestionsToDisplay[suggestToDisplayIndex].indexOf(search1);
-						if (k > -1) {
-							k = existingSuggestionsToDisplay[suggestToDisplayIndex].indexOf(search2, k);
+					var existingHTML = $('#searchResults' + step.searchSelect.searchTypeCode[suggestToDisplayIndex]).html();
+					if ((typeof existingHTML === "string") && (existingHTML !== "")) {
+						var existingLines = existingHTML.split("<br>");
+						for (var j = 0; j < existingLines.length; j++) {
+							var k = existingHTML.indexOf(search1);
 							if (k > -1) {
-								k = existingSuggestionsToDisplay[suggestToDisplayIndex].indexOf(search3, k);
+								k = existingHTML.indexOf(search2, k);
 								if (k > -1) {
-									console.log("skip: " + search1 + " " + search2 + " " + search3);
-									return;
+									k = existingHTML.indexOf(search3, k);
+									if (k > -1) {
+										console.log("skip: " + search1 + " " + search2 + " " + search3);
+										return;
+									}
 								}
 							}
 						}
@@ -1892,7 +1893,7 @@ step.searchSelect = {
 				}
 			}
 		}
-		existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak + newSuggestion;
+		$('#searchResults' + step.searchSelect.searchTypeCode[suggestToDisplayIndex]).append($(needLineBreak + newSuggestion));
 	},
 	addMouseOverEvent: function(searchType, searchString, prefixToDisplay) {
 		if ((searchType !== "strong") || (step.touchDevice) || ($(window).height() < 700))
@@ -1915,18 +1916,19 @@ step.searchSelect = {
 						step.util.activePassageId() + ',null,null,null,\'' + multipleStrongText + '\')" ' +
 						'onmouseleave="javascript:step.util.ui.removeQuickLexicon()"';
 	},
-	appendSearchSuggestionsToDisplay: function(existingSuggestionsToDisplay, suggestToDisplayIndex,
+	appendSearchSuggestionsToDisplay: function(suggestToDisplayIndex,
 		str2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
 		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions, hasHebrew, hasGreek) {
 		var brCount = 0;
 		var suggestionsToDisplay = 5;
 		var needLineBreak = "";
 		var isAugStrong = Array.isArray(augStrongSameMeaning);
-		if (existingSuggestionsToDisplay[suggestToDisplayIndex] !== "") {
-			brCount = (existingSuggestionsToDisplay[suggestToDisplayIndex].match(/<br>/g) || []).length;
-			brCount += (existingSuggestionsToDisplay[suggestToDisplayIndex].match(/<\/ol>/g) || []).length;
+		var existingHTML = $('#searchResults' + step.searchSelect.searchTypeCode[suggestToDisplayIndex]).html();
+		if ((typeof existingHTML === "string") && (existingHTML !== "")) {
+			brCount = (existingHTML.match(/<br>/g) || []).length;
+			brCount += (existingHTML.match(/<\/ol>/g) || []).length;
 			if (((brCount < suggestionsToDisplay + 1) || (limitType !== ""))) {
-					if (existingSuggestionsToDisplay[suggestToDisplayIndex].slice(-5) !== "</ol>") {
+					if (existingHTML.slice(-5) !== "</ol>") {
 						needLineBreak = "<br>";
 					}
 					if (needIndent) {
@@ -1967,7 +1969,7 @@ step.searchSelect = {
 					titleText = ' title="All forms: ' + str2Search + '" ';
 				}
 				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search);
-				step.searchSelect.addWithoutDuplicates(existingSuggestionsToDisplay, suggestToDisplayIndex, needLineBreak, 
+				step.searchSelect.addWithoutDuplicates(suggestToDisplayIndex, needLineBreak, 
 					prefixToDisplay +
 					'<a style="padding:0px"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')"' +
 					mouseOverEvent + '>' +
@@ -1978,11 +1980,11 @@ step.searchSelect = {
 			else {
 				var aTagStyle = "padding:0px";
 				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search, prefixToDisplay);
-				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak + prefixToDisplay +
+				$('#searchResults' + step.searchSelect.searchTypeCode[suggestToDisplayIndex]).append($(needLineBreak + prefixToDisplay +
 					'<a style="' + aTagStyle + '"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + 
 					str2Search + '\',\'' + 
 					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
-					'\')"' + mouseOverEvent + '>' + text2Display + "</a> " + this.buildSuffixTag(suffixToDisplay, suffixTitle);
+					'\')"' + mouseOverEvent + '>' + text2Display + "</a> " + this.buildSuffixTag(suffixToDisplay, suffixTitle)));
 			}
 			return;
 		}
@@ -1992,24 +1994,24 @@ step.searchSelect = {
 				// It it runs out of space to display GREEK_MEANINGS / HEBREW_MEANINGS, the suggestions for GREEK and HEBREW are
 				// not displayed.  Therefore, provide a "more..." option to get the GREEK_MEANINGS / HEBREW_MEANINGS search suggestions
 				// and another "more..." option to get the GREEK / HEBREW search suggestions.
-				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
+				$('#searchResults' + step.searchSelect.searchTypeCode[suggestToDisplayIndex]).append(needLineBreak +
 					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-					+ suggestionType + '\')"><b>' + __s.more + ' with meaning of your search word...</b></a>';
+					+ suggestionType + '\')"><b>' + __s.more + ' with meaning of your search word...</b></a>');
 				additionalSuggestionType = (suggestionType === GREEK_MEANINGS) ? GREEK : HEBREW;
 			}
 			if (((additionalSuggestionType === GREEK) && (hasGreek)) ||
 				((additionalSuggestionType === HEBREW) && (hasHebrew))) {
 				if ((suggestionType !== additionalSuggestionType ) && (needLineBreak === ""))
-					existingSuggestionsToDisplay[suggestToDisplayIndex] += '<br>';
-				existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
+					$('#searchResults' + step.searchSelect.searchTypeCode[suggestToDisplayIndex]).append('<br>');
+				$('#searchResults' + step.searchSelect.searchTypeCode[suggestToDisplayIndex]).append($(needLineBreak +
 					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
 					additionalSuggestionType + '\')"><b>' + __s.more + ' with similar ' + additionalSuggestionType.charAt(0) + additionalSuggestionType.slice(1).toLowerCase() +
-					' spelling...</b></a>';	
+					' spelling...</b></a>'));	
 			}
 			// else
-			// 	existingSuggestionsToDisplay[suggestToDisplayIndex] += needLineBreak +
-			// 		'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-			// 		+ suggestionType + '\')"><b>' + __s.more + '...</b></a>';
+			//	$('#searchResults' + step.searchSelect.searchTypeCode[suggestToDisplayIndex]).append($(needLineBreak +
+			//		'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
+			//		+ suggestionType + '\')"><b>' + __s.more + '...</b></a>'));
 		}
 		return;
 	},

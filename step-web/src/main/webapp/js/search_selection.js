@@ -8,7 +8,7 @@ step.searchSelect = {
 	// with GREEK.  HEBREW_MEANINGS are displayed with HEBREW.
 	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, HEBREW, GREEK_MEANINGS, HEBREW_MEANINGS],
 	numOfSearchTypesToDisplay: 5, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
-	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency"],
+	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
 	searchRange: "Gen-Rev",
@@ -299,7 +299,8 @@ step.searchSelect = {
         var localStorageSetting = step.util.localStorageGetItem("step.srchOptn" + optionName);
 		var currentSetting = false;
 		if ((typeof localStorageSetting !== "string") &&
-			(optionName !== "strong_number") && (optionName !== "original_language")) {
+			(optionName !== "strong_number") && (optionName !== "original_language") &&
+			(optionName !== "frequency_details")) {
 				currentSetting = true;
 		}
 		else
@@ -2016,7 +2017,7 @@ step.searchSelect = {
 				}
 			}
 			if (freqList !== "") {
-				var freqListLink = $("<a style='font-size:11px' class='glyphicon glyphicon-info-sign'></a>");
+				var freqListLink = $("<a class='srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px'></a>");
 				var msg = step.util.showFrequencyOnAllBibles(str2Search, freqList.split(";"), "", "", allVersions);
 				require(["qtip"], function () {
 					freqListLink.qtip({
@@ -2119,7 +2120,7 @@ step.searchSelect = {
 				.append("- " + item[2]);
 
 				if (item[6] !== "") {
-					var freqListLink = $("<a style='font-size:11px' class='glyphicon glyphicon-info-sign'></a>");
+					var freqListLink = $("<a class='srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px'></a>");
 					var msg = step.util.showFrequencyOnAllBibles(item[1], item[6].split(";"), "", "", allVersions);
 					require(["qtip"], function () {
 						freqListLink.qtip({

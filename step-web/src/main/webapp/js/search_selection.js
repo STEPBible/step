@@ -525,7 +525,7 @@ step.searchSelect = {
 				}, sleep);
 			}
 			else {
-				$('#warningMessage').text(' ');
+				$('#warningMessage').text('');
 				step.searchSelect._handleEnteredSearchWord();
 			}
 		}
@@ -1188,7 +1188,7 @@ step.searchSelect = {
 		$("#hd4").text(__s.enter_search_word);
 		$("#column1width").width("30%");
 		$(".search-type-column").show();
-		$('#warningMessage').text(' ');
+		$('#warningMessage').text('');
 		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))  userInput =  $('textarea#userTextInput').val();
 		else {
 			userInput = previousUserInput;
@@ -1201,11 +1201,11 @@ step.searchSelect = {
 				($("#select_advanced_search").hasClass("checked"))) {
 				$('#warningMessage').text('Search for extremely common words might not be found in Fuzzy, Greek and Hebrew searches.');
 				setTimeout(function(){
-                    $('#warningMessage').text(' ');
+                    $('#warningMessage').text('');
                 }, 5000);
 			}
 			else if ($('#warningMessage').html().indexOf("common word") > -1)
-				$('#warningMessage').text(' ');
+				$('#warningMessage').text('');
 			$('#updateButton').hide();
 			var url;
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
@@ -1849,7 +1849,7 @@ step.searchSelect = {
 
 	_showAugmentedStrong: function(strongNum, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
 		console.log("X: " + strongNum + " " + augStrongSameMeaning + " " + origSuggestionType + " " + userInput);
-		$('#warningMessage').text(' ');
+		$('#warningMessage').text('');
 		$('textarea#userTextInput').hide();
 		$('#updateButton').hide();
 		$("#advancedsearchonoff").hide();
@@ -1985,7 +1985,7 @@ step.searchSelect = {
 					numOfFormMsg = "(" + numOfForm + " forms)";
 				}
 				else {
-					if (augStrongSameMeaning.length == 1) {
+					if ((Array.isArray(augStrongSameMeaning)) && (augStrongSameMeaning.length == 1)) {
 						titleText = ' title="' + augStrongSameMeaning[0] + '" ';
 						text2Display = text2Display.replace(str2Search + "\*", augStrongSameMeaning[0]);
 					}
@@ -2033,7 +2033,7 @@ step.searchSelect = {
 				// and another "more..." option to get the GREEK / HEBREW search suggestions.
 				currentSearchSuggestionElement.append(needLineBreak +
 					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' 
-					+ suggestionType + '\')"><b>' + __s.more + ' with meaning of your search word...</b></a>');
+					+ suggestionType + '\')"><b>list all with similar meaning...</b></a>';
 				additionalSuggestionType = (suggestionType === GREEK_MEANINGS) ? GREEK : HEBREW;
 			}
 			if (((additionalSuggestionType === GREEK) && (hasGreek)) ||
@@ -2042,7 +2042,7 @@ step.searchSelect = {
 					currentSearchSuggestionElement.append('<br>');
 				currentSearchSuggestionElement.append($(needLineBreak +
 					'&nbsp;&nbsp;&nbsp;<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
-					additionalSuggestionType + '\')"><b>' + __s.more + ' with similar ' + additionalSuggestionType.charAt(0) + additionalSuggestionType.slice(1).toLowerCase() +
+					additionalSuggestionType + '\')"><b>list all with with similar ' + additionalSuggestionType.charAt(0) + additionalSuggestionType.slice(1).toLowerCase() +
 					' spelling...</b></a>'));	
 			}
 		}

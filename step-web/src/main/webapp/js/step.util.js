@@ -4161,18 +4161,27 @@ step.util = {
 		}
 	},
 	formatFrequency: function(mainWord, total, hasBothTestaments) {
-        if ((typeof mainWord.versionCountOT === "number") && (mainWord.versionCountOT !== 0)) {
-            if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0))
-                return mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)";
-            if (hasBothTestaments)
-                return mainWord.versionCountOT + "x (OT)";
-            return sprintf(__s.stats_occurs, mainWord.versionCountOT);
+		var hasNumForOTorNT = false;
+        if (typeof mainWord.versionCountOT === "number") {
+			hasNumForOTorNT = true;
+			if (mainWord.versionCountOT > 0) {
+            	if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0))
+                	return mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)";
+            	if (hasBothTestaments)
+                	return mainWord.versionCountOT + "x (OT)";
+            	return sprintf(__s.stats_occurs, mainWord.versionCountOT);
+			}
         }
-        if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0)) {
-			if (hasBothTestaments)
-   	            return mainWord.versionCountNT + "x (NT)";
-   	        return sprintf(__s.stats_occurs, mainWord.versionCountNT);
+        if (typeof mainWord.versionCountNT === "number") {
+			hasNumForOTorNT = true;
+			if (mainWord.versionCountNT > 0) {
+				if (hasBothTestaments)
+   	        	    return mainWord.versionCountNT + "x (NT)";
+   	        	return sprintf(__s.stats_occurs, mainWord.versionCountNT);
+			}
         }
+		if (hasNumForOTorNT)
+			return sprintf(__s.stats_occurs, 0);
         if (typeof total === "number")
             return sprintf(__s.stats_occurs, total);
         return "";

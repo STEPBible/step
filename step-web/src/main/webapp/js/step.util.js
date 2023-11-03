@@ -210,11 +210,14 @@ step.util = {
 		}
 		if ((accentedUnicode === "") && (msg[0].indexOf("<br>") == 0))
 			msg[0] = msg[0].substring(4);
-		msg[2] = "<br><a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
-				 "<span class='detailFreqList' style='display:none'>" + msg[2] + 
-				 "<br><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#heading=h.4a5fldrviek' target='_blank'>Information on word occurrences.</a>" +
-				 "</span>";
-		return msg[0] + msg[1] + msg[2];
+		if ((msg[0] === "") && (msg[1].indexOf("<br>") == 0))
+			msg[1] = msg[1].substring(4);
+		return "<span>Frequencies vary </span><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#bookmark=id.11g1a0zd07wd' target='_blank'>(why?)</a>" +
+			"<br>" + msg[0] + msg[1] + "<br>" +
+			"<a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
+			"<span class='detailFreqList' style='display:none'>" +
+				msg[2] +
+			"</span>";
 	},
 	suppressHighlight: function(strongNumber) {
 		if (strongNumber === "") return false;
@@ -4068,29 +4071,19 @@ step.util = {
 		return curVersion;
 	},
 	lookUpFrequencyFromMultiVersions: function(mainWord, allVersions) {
-		if (typeof allVersions !== "string") {
-			console.log("lookupFrequency no version");
-			step.util.getFrequency("ESV", mainWord);
-			return; 
+		var allVersionsWithoutStrong = true;
+		if (typeof allVersions === "string") {
+			var versions = allVersions.split(",");
+			for (var i = 0; i < versions.length; i++) {
+				if (step.util.getFrequency(versions[i], mainWord))
+					allVersionsWithoutStrong = false;
+			}
 		}
-        var versions = allVersions.split(",");
-        var allVersionsWithoutStrong = true;
-        for (var i = 0; i < versions.length; i++) {
-            if (step.util.getFrequency(versions[i], mainWord))
-                allVersionsWithoutStrong = false;
-        }
+		else
+			allVersions = "";
         if (allVersionsWithoutStrong) { // Server will search the ESV Bible
             step.util.getFrequency("ESV", mainWord);
-			for (var i = 0; i < mainWord.vocabInfos.length; i++) {
-				if (typeof mainWord.vocabInfos[i].versionCountNT === "number") {
-					if (typeof mainWord.vocabInfos[i].versionCountOT === "number")
-						mainWord.vocabInfos[i].notInBibleSelected = "OTNT";
-					else
-						mainWord.vocabInfos[i].notInBibleSelected = "NT";
-				}
-				else if (typeof mainWord.vocabInfos[i].versionCountOT === "number")
-					mainWord.vocabInfos[i].notInBibleSelected = "OT";
-			}
+			mainWord.vocabInfos[0].notInBibleSelected = allVersions;
 		}
     },
 	getFrequency: function(curVersion, data) {
@@ -4173,32 +4166,52 @@ step.util = {
 	},
 	formatFrequency: function(mainWord, total, hasBothTestaments, notInBibleSelected) {
 		var hasNumForOTorNT = false;
+		var prefix = "";
 		var suffix = "";
-		if ((typeof notInBibleSelected === "string") && (notInBibleSelected !== ""))
-			suffix = '<span style="font-weight:bold;color:red;" title="not in the Bible(s) you selected, ESV counts is shown"> *</span>';
+		if ((typeof notInBibleSelected === "string") && (notInBibleSelected !== "")) {
+			prefix = '<span style="color:red" title="not in the Bible(s) you selected, ESV counts is shown">';
+			suffix = '<span style="font-weight:bold"> *</span></span>';
+		}
         if (typeof mainWord.versionCountOT === "number") {
 			hasNumForOTorNT = true;
 			if (mainWord.versionCountOT > 0) {
             	if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0))
-                	return mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)" + suffix;
+                	return prefix + mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)" + suffix;
             	if (hasBothTestaments)
-                	return mainWord.versionCountOT + "x (OT)" + suffix;
-            	return sprintf(__s.stats_occurs, mainWord.versionCountOT) + suffix;
+                	return prefix + mainWord.versionCountOT + "x (OT)" + suffix;
+            	return prefix + sprintf(__s.stats_occurs, mainWord.versionCountOT) + suffix;
 			}
         }
         if (typeof mainWord.versionCountNT === "number") {
 			hasNumForOTorNT = true;
 			if (mainWord.versionCountNT > 0) {
 				if (hasBothTestaments)
-   	        	    return mainWord.versionCountNT + "x (NT)"  + suffix;
-   	        	return sprintf(__s.stats_occurs, mainWord.versionCountNT) + suffix;
+   	        	    return prefix + mainWord.versionCountNT + "x (NT)"  + suffix;
+   	        	return prefix + sprintf(__s.stats_occurs, mainWord.versionCountNT) + suffix;
 			}
         }
 		if (hasNumForOTorNT)
-			return sprintf(__s.stats_occurs, 0)  + suffix;
+			return prefix + sprintf(__s.stats_occurs, 0)  + suffix;
         if (typeof total === "number")
-            return sprintf(__s.stats_occurs, total) + suffix;
+            return prefix + sprintf(__s.stats_occurs, total) + suffix;
         return "";
     },
+	freqListQTip: function(str2Search, freqList, allVersions, accentedUnicode, stepTransliteration) {
+		var freqListElm = $("<a class='srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px'></a>");
+		var msg = step.util.showFrequencyOnAllBibles(str2Search, freqList.split(";"), accentedUnicode, stepTransliteration, allVersions);
+		require(["qtip"], function () {
+			freqListElm.qtip({
+				show: {event: 'mouseenter'},
+				hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
+				position: {my: "top center", at: "top center", of: freqListElm, viewport: $(window), effect: false},
+				style: {classes: "freqListHover"},
+				overwrite: true,
+				content: {
+					text: msg
+				}
+			});
+		});
+		return (freqListElm);
+	}
 }
 ;

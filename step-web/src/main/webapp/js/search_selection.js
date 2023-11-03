@@ -592,7 +592,7 @@ step.searchSelect = {
 			'<h4 id="hd4">' + __s.enter_search_word + '</h4>' +
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
-			'<span id="warningMessage" style="color: red;"></span>' +
+			'<span id="warningMessage" style="color:red;"></span>' +
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
 			'<div id="basic_search_help_text" style="font-size:14px;width:90%">' +
 			    '<br>' +
@@ -1417,7 +1417,7 @@ step.searchSelect = {
 											(typeof curWord.vocabInfos[0].versionCountNT === "number") && (curWord.vocabInfos[0].versionCountNT > 0));
 										var countDisplay = step.util.formatFrequency(curWord.vocabInfos[0], parseInt(data[i].suggestion.popularity), hasBothTestaments,
 											curWord.vocabInfos[0].notInBibleSelected);
-										if (countDisplay === "0 x") skipBecauseOfZeroCount = true;
+										if (countDisplay.indexOf(">0 x") > -1) skipBecauseOfZeroCount = true;
 										text2Display += '<span class="srchFrequency"> ' + countDisplay + '</span>';
 									}
 								}
@@ -1517,7 +1517,7 @@ step.searchSelect = {
 					var resultArray = this._getSuggestedFrequency(data[i].suggestion, allVersions);
 					frequencyOT += resultArray[0];
 					frequencyNT += resultArray[1];
-					notInBibleSelected += resultArray[2];
+					notInBibleSelected = step.searchSelect.addNotInBibleSelected(notInBibleSelected, resultArray[2]);
 					if ((!Array.isArray(augStrongSameMeaning)) || ((Array.isArray(augStrongSameMeaning)) && (augStrongSameMeaning.length == 1)))
 						freqList = data[i].suggestion.popularityList;
 				}
@@ -1536,7 +1536,7 @@ step.searchSelect = {
 								var resultArray = this._getSuggestedFrequency(curWord, allVersions);
 								frequencyOT += resultArray[0];
 								frequencyNT += resultArray[1];
-								notInBibleSelected += resultArray[2];
+								notInBibleSelected = step.searchSelect.addNotInBibleSelected(notInBibleSelected, resultArray[2]);
 							}
 						}
 					}
@@ -1548,7 +1548,7 @@ step.searchSelect = {
 				if ((selectedGloss === "") || (currentWordPopularity > augStrongWithMostOccurrence)) {
 					selectedGloss = data[i].suggestion.gloss;
 					augStrongWithMostOccurrence = currentWordPopularity;
-					notInBibleSelected += resultArray[2];
+					notInBibleSelected = step.searchSelect.addNotInBibleSelected(notInBibleSelected, resultArray[2]);
 				}
 			}
 			else {
@@ -1557,12 +1557,20 @@ step.searchSelect = {
 				var resultArray = this._getSuggestedFrequency(data[i].suggestion, allVersions);
 				frequencyOT += resultArray[0];
 				frequencyNT += resultArray[1];
-				notInBibleSelected += resultArray[2];
+				notInBibleSelected = step.searchSelect.addNotInBibleSelected(notInBibleSelected, resultArray[2]);
 			}
 		}
 		return [selectedGloss, result, allDStrongNums, allOtherStrongNums, frequency, frequencyOT, frequencyNT, freqList, notInBibleSelected];
 	},
-
+	addNotInBibleSelected: function(currentNotInBibleSelected, newNotInBibleSelected) {
+		if ((typeof newNotInBibleSelected === "string") && (newNotInBibleSelected.length > 0)) {
+			if (currentNotInBibleSelected === "")
+				currentNotInBibleSelected = newNotInBibleSelected;
+			else
+				currentNotInBibleSelected += "," + newNotInBibleSelected;
+		}
+		return currentNotInBibleSelected;
+	},
 	valueInDuplicatStrongOrNot: function(vocabInfo, index, duplicateStrings) {
 		// index of 3 is count
 		return ((Number.isInteger(vocabInfo[index])) && (index != 3)) ?
@@ -1655,8 +1663,7 @@ step.searchSelect = {
 					if (typeof data[i].suggestion._detailLexicalTag === "object") {
 						frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(data[i].suggestion.strongNumber, augStrongToShow[i], 
 							data[i].suggestion._detailLexicalTag, allVersions);
-						if (typeof frequencies[3] === "string")
-							notInBibleSelected += frequencies[3]; 
+						notInBibleSelected = step.searchSelect.addNotInBibleSelected(notInBibleSelected, frequencies[3]); 
 					}
 					augStrongToShow[i] = frequencies[0];
 					if (!allStrongNumsPlusLexicalGroup.includes(data[i].suggestion.strongNumber)) {
@@ -1735,7 +1742,7 @@ step.searchSelect = {
 				step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
 				var frequencyOT = (typeof curWord.vocabInfos[0].versionCountOT === "number") ? curWord.vocabInfos[0].versionCountOT : 0;
 				var frequencyNT = (typeof curWord.vocabInfos[0].versionCountNT === "number") ? curWord.vocabInfos[0].versionCountNT : 0;
-				var notInBibleSelected = curWord.vocabInfos[0].notInBibleSelected;
+				var notInBibleSelected = step.searchSelect.addNotInBibleSelected("", curWord.vocabInfos[0].notInBibleSelected);
 				if (curStrong.slice(0, -1) === origStrongNum) {
 					numWithSameSimpleStrongsAsMainStrong ++;
 					if (strongsWithSameSimpleStrongsAsMainStrong !== "")
@@ -2028,21 +2035,8 @@ step.searchSelect = {
 				}
 			}
 			if (freqList !== "") {
-				var freqListLink = $("<a class='srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px'></a>");
-				var msg = step.util.showFrequencyOnAllBibles(str2Search, freqList.split(";"), "", "", allVersions);
-				require(["qtip"], function () {
-					freqListLink.qtip({
-						show: {event: 'mouseenter'},
-						hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
-						position: {my: "top center", at: "top center", of: freqListLink, viewport: $(window), effect: false},
-						style: {classes: "freqListHover"},
-						overwrite: true,
-						content: {
-							text: msg
-						}
-					});
-				});
-				currentSearchSuggestionElement.append('&nbsp;').append($(freqListLink));
+				var freqListElm = step.util.freqListQTip(str2Search, freqList, allVersions, "", "");
+				currentSearchSuggestionElement.append('&nbsp;').append($(freqListElm));
 			}
 			return;
 		}
@@ -2061,10 +2055,10 @@ step.searchSelect = {
 				((additionalSuggestionType === HEBREW) && (hasHebrew))) {
 				if ((suggestionType !== additionalSuggestionType ) && (needLineBreak === ""))
 					currentSearchSuggestionElement.append('<br>');
-				currentSearchSuggestionElement.append($(needLineBreak +	'&nbsp;&nbsp;&nbsp;')
+				currentSearchSuggestionElement.append(needLineBreak +	'&nbsp;&nbsp;&nbsp;')
 					.append('<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
 						additionalSuggestionType + '\')"><b>list all with with similar ' + additionalSuggestionType.charAt(0).toUpperCase() + additionalSuggestionType.slice(1).toLowerCase() +
-						' spelling...</b></a>'));	
+						' spelling...</b></a>');	
 			}
 		}
 		return;
@@ -2095,8 +2089,7 @@ step.searchSelect = {
 				step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
 				frequencyOT += (typeof curWord.vocabInfos[0].versionCountOT === "number") ? curWord.vocabInfos[0].versionCountOT : 0;
 				frequencyNT += (typeof curWord.vocabInfos[0].versionCountNT === "number") ? curWord.vocabInfos[0].versionCountNT : 0;
-				if (typeof curWord.vocabInfos[0].notInBibleSelected === "string")
-					notInBibleSelected += curWord.vocabInfos[0].notInBibleSelected;
+				notInBibleSelected = step.searchSelect.addNotInBibleSelected(notInBibleSelected, curWord.vocabInfos[0].notInBibleSelected);
 			});
 		}
 		return [frequencyFromLexicon, frequencyOT, frequencyNT, notInBibleSelected];
@@ -2132,23 +2125,9 @@ step.searchSelect = {
 					'<span class="srchFrequency"> ' + frequencyMsg + '</span>' +
 				"</a>")
 				.append("- " + item[2]);
-
 				if (item[6] !== "") {
-					var freqListLink = $("<a class='srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px'></a>");
-					var msg = step.util.showFrequencyOnAllBibles(item[1], item[6].split(";"), "", "", allVersions);
-					require(["qtip"], function () {
-						freqListLink.qtip({
-							show: {event: 'mouseenter'},
-							hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
-							position: {my: "top center", at: "top center", of: freqListLink, viewport: $(window), effect: false},
-							style: {classes: "freqListHover"},
-							overwrite: true,
-							content: {
-								text: msg
-							}
-						});
-					});
-					list.append('&nbsp;').append($(freqListLink));
+					var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
+					list.append('&nbsp;').append($(freqListElm));
 				}
 			orderList.append(list);
 		});

@@ -417,21 +417,8 @@ var SidebarView = Backbone.View.extend({
                 return false;
         }));
         panel.append("&nbsp;&nbsp;");
-        var freqListLink = $("<a style='font-size:11px;display:none' class='detaillex glyphicon glyphicon-info-sign'></a>");
-        var msg = step.util.showFrequencyOnAllBibles(detailLex[1], detailLex[6].split(";"), detailLex[4], detailLex[5], allVersions);
-        require(["qtip"], function () {
-            freqListLink.qtip({
-                show: {event: 'mouseenter'},
-                hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
-                position: {my: "top center", at: "top center", of: freqListLink, viewport: $(window), effect: false},
-                style: {classes: "freqListHover"},
-                overwrite: true,
-                content: {
-                    text: msg
-                }
-            });
-        });
-        panel.append($(freqListLink));
+        var freqListElm = step.util.freqListQTip(detailLex[1], detailLex[6], allVersions, detailLex[4], detailLex[5]);
+        panel.append($(freqListElm));
     },
 
     _composeDescriptionOfOccurrences: function(stepType) {
@@ -523,21 +510,8 @@ var SidebarView = Backbone.View.extend({
 			    	return false;
                 }));
                 panel.append("&nbsp;&nbsp;");
-                var freqListLink = $("<a style='font-size:11px' class='detaillex glyphicon glyphicon-info-sign'></a>");
-                var msg = step.util.showFrequencyOnAllBibles(mainWord.strongNumber, mainWord.freqList.split(";"), "", "",allVersions);
-                require(["qtip"], function () {
-                    freqListLink.qtip({
-                        show: {event: 'mouseenter'},
-                        hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
-                        position: {my: "top center", at: "top center", of: freqListLink, viewport: $(window), effect: false},
-                        style: {classes: "freqListHover"},
-                        overwrite: true,
-                        content: {
-                            text: msg
-                        }
-                    });
-                });
-                panel.append($(freqListLink));
+                var freqListElm = step.util.freqListQTip(mainWord.strongNumbe, mainWord.freqList, allVersions, "", "");
+                panel.append($(freqListElm));
             }
         }
         panel.append().append('<br />');

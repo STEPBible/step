@@ -4169,7 +4169,7 @@ step.util = {
 		var prefix = "";
 		var suffix = "";
 		if ((typeof notInBibleSelected === "string") && (notInBibleSelected !== "")) {
-			prefix = '<span style="color:red" title="not in the Bible(s) you selected, ESV counts is shown">';
+			prefix = '<span style="color:red" title="not in the Bible(s) you selected, ESV count is shown">';
 			suffix = '<span style="font-weight:bold"> *</span></span>';
 		}
         if (typeof mainWord.versionCountOT === "number") {

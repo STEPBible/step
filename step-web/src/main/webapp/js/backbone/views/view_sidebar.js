@@ -510,7 +510,7 @@ var SidebarView = Backbone.View.extend({
 			    	return false;
                 }));
                 panel.append("&nbsp;&nbsp;");
-                var freqListElm = step.util.freqListQTip(mainWord.strongNumbe, mainWord.freqList, allVersions, "", "");
+                var freqListElm = step.util.freqListQTip(mainWord.strongNumber, mainWord.freqList, allVersions, "", "");
                 panel.append(freqListElm);
             }
         }

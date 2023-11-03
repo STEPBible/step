@@ -1623,7 +1623,7 @@ step.searchSelect = {
 		return vocabInfos;
 	},
 
-	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, allVersions) {
+	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, allVersions, element) {
 		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
 		var data = step.searchSelect.getVocabInfoFromJson(strongNum, limitType);
 		if (data.length > 1)
@@ -1631,7 +1631,8 @@ step.searchSelect = {
 		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
 				"%7C" + LIMIT + "%3D" + limitType +
 				"%7C?lang=" + step.searchSelect.userLang;
-		$.ajaxSetup({async: false});
+		if (!element)
+			$.ajaxSetup({async: false});
 		var result;
 		$.getJSON(url, function (data) {
 			for (var i = 0; i < data.length; i++) {
@@ -1640,9 +1641,15 @@ step.searchSelect = {
 				}
 			}
 			result = step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, allVersions);
+			if ((element) && (augStrongSameMeaning.length == 1)) {
+				var freqListElm = step.util.freqListQTip(augStrongSameMeaning[0], result[7], allVersions, "", "");
+				$('#freqList' + augStrongSameMeaning[0]).append('&nbsp;').append(freqListElm);
+			}
 		});
-		$.ajaxSetup({async: true});
-		return result;
+		if (!element) {
+			$.ajaxSetup({async: true});
+			return result;
+		}
 	},
 
 	createFirstLineForAugmentedStrong: function(data, strongNum, origSuggestionType, userInput, limitType, augStrongToShow, allDStrongNums, 
@@ -2030,8 +2037,9 @@ step.searchSelect = {
 					var nonAugStrong = str2Search;
 					if (isNaN(str2Search.slice(-1)))
 						nonAugStrong = str2Search.slice(0, -1);
-					var additionalInfoOnStrong = this._getAdditionalInformationOnStrong(nonAugStrong, [ str2Search ], allVersions);
-					freqList = additionalInfoOnStrong[7];
+					currentSearchSuggestionElement.append('&nbsp;').append('<span id="freqList' + str2Search + '"></span');
+					this._getAdditionalInformationOnStrong(nonAugStrong, [ str2Search ], allVersions, 'freqList' + str2Search);
+						//freqList = additionalInfoOnStrong[7];
 				}
 			}
 			if (freqList !== "") {

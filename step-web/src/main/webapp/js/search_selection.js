@@ -2036,7 +2036,7 @@ step.searchSelect = {
 			}
 			if (freqList !== "") {
 				var freqListElm = step.util.freqListQTip(str2Search, freqList, allVersions, "", "");
-				currentSearchSuggestionElement.append('&nbsp;').append($(freqListElm));
+				currentSearchSuggestionElement.append('&nbsp;').append(freqListElm);
 			}
 			return;
 		}
@@ -2127,7 +2127,7 @@ step.searchSelect = {
 				.append("- " + item[2]);
 				if (item[6] !== "") {
 					var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
-					list.append('&nbsp;').append($(freqListElm));
+					list.append('&nbsp;').append(freqListElm);
 				}
 			orderList.append(list);
 		});

@@ -4079,8 +4079,19 @@ step.util = {
             if (step.util.getFrequency(versions[i], mainWord))
                 allVersionsWithoutStrong = false;
         }
-        if (allVersionsWithoutStrong) // Server will search the ESV Bible
+        if (allVersionsWithoutStrong) { // Server will search the ESV Bible
             step.util.getFrequency("ESV", mainWord);
+			for (var i = 0; i < mainWord.vocabInfos.length; i++) {
+				if (typeof mainWord.vocabInfos[i].versionCountNT === "number") {
+					if (typeof mainWord.vocabInfos[i].versionCountOT === "number")
+						mainWord.vocabInfos[i].notInBibleSelected = "OTNT";
+					else
+						mainWord.vocabInfos[i].notInBibleSelected = "NT";
+				}
+				else if (typeof mainWord.vocabInfos[i].versionCountOT === "number")
+					mainWord.vocabInfos[i].notInBibleSelected = "OT";
+			}
+		}
     },
 	getFrequency: function(curVersion, data) {
 		var isHebrew = (data.vocabInfos[0].strongNumber.substring(0,1) === "H") ? true : false;
@@ -4146,9 +4157,9 @@ step.util = {
 									freqInVersion2 = spl2[0];
 							}
 							freqInVersion2 = parseInt(freqInVersion2);
-							if ((typeof data.vocabInfos[i]["versionCountNT"] !== "number") ||
-								((typeof data.vocabInfos[i]["versionCountNT"] === "number") && (data.vocabInfos[i]["versionCountNT"] < freqInVersion2)))
-								data.vocabInfos[i]["versionCountNT"] = freqInVersion2;
+							if ((typeof data.vocabInfos[i].versionCountNT !== "number") ||
+								((typeof data.vocabInfos[i].versionCountNT === "number") && (data.vocabInfos[i].versionCountNT < freqInVersion2)))
+								data.vocabInfos[i].versionCountNT = freqInVersion2;
 						}
 					}
 				}
@@ -4160,30 +4171,33 @@ step.util = {
 			console.log("no version");
 		}
 	},
-	formatFrequency: function(mainWord, total, hasBothTestaments) {
+	formatFrequency: function(mainWord, total, hasBothTestaments, notInBibleSelected) {
 		var hasNumForOTorNT = false;
+		var suffix = "";
+		if ((typeof notInBibleSelected === "string") && (notInBibleSelected !== ""))
+			suffix = '<span style="font-weight:bold;color:red;" title="not in the Bible(s) you selected, ESV counts is shown"> *</span>';
         if (typeof mainWord.versionCountOT === "number") {
 			hasNumForOTorNT = true;
 			if (mainWord.versionCountOT > 0) {
             	if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0))
-                	return mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)";
+                	return mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)" + suffix;
             	if (hasBothTestaments)
-                	return mainWord.versionCountOT + "x (OT)";
-            	return sprintf(__s.stats_occurs, mainWord.versionCountOT);
+                	return mainWord.versionCountOT + "x (OT)" + suffix;
+            	return sprintf(__s.stats_occurs, mainWord.versionCountOT) + suffix;
 			}
         }
         if (typeof mainWord.versionCountNT === "number") {
 			hasNumForOTorNT = true;
 			if (mainWord.versionCountNT > 0) {
 				if (hasBothTestaments)
-   	        	    return mainWord.versionCountNT + "x (NT)";
-   	        	return sprintf(__s.stats_occurs, mainWord.versionCountNT);
+   	        	    return mainWord.versionCountNT + "x (NT)"  + suffix;
+   	        	return sprintf(__s.stats_occurs, mainWord.versionCountNT) + suffix;
 			}
         }
 		if (hasNumForOTorNT)
-			return sprintf(__s.stats_occurs, 0);
+			return sprintf(__s.stats_occurs, 0)  + suffix;
         if (typeof total === "number")
-            return sprintf(__s.stats_occurs, total);
+            return sprintf(__s.stats_occurs, total) + suffix;
         return "";
     },
 }

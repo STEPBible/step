@@ -1415,7 +1415,8 @@ step.searchSelect = {
 										step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
 										var hasBothTestaments = ((typeof curWord.vocabInfos[0].versionCountOT === "number") && (curWord.vocabInfos[0].versionCountOT > 0) &&
 											(typeof curWord.vocabInfos[0].versionCountNT === "number") && (curWord.vocabInfos[0].versionCountNT > 0));
-										var countDisplay = step.util.formatFrequency(curWord.vocabInfos[0], parseInt(data[i].suggestion.popularity), hasBothTestaments);
+										var countDisplay = step.util.formatFrequency(curWord.vocabInfos[0], parseInt(data[i].suggestion.popularity), hasBothTestaments,
+											curWord.vocabInfos[0].notInBibleSelected);
 										if (countDisplay === "0 x") skipBecauseOfZeroCount = true;
 										text2Display += '<span class="srchFrequency"> ' + countDisplay + '</span>';
 									}
@@ -1487,7 +1488,7 @@ step.searchSelect = {
 		step.util.lookUpFrequencyFromMultiVersions(vocabMorphFromJson, allVersions);
 		var curOT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountOT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountOT : 0;
 		var curNT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountNT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountNT : 0;
-		return [curOT, curNT];
+		return [curOT, curNT, vocabMorphFromJson.vocabInfos[0].notInBibleSelected];
 	},
 	_getSuggestedWordsInfo: function(data, strongNum, augStrongSameMeaning, allVersions) {
 		var augStrongWithMostOccurrence = 0;
@@ -1497,6 +1498,7 @@ step.searchSelect = {
 		var frequency = 0;
 		var frequencyOT = 0;
 		var frequencyNT = 0;
+		var notInBibleSelected = "";
 		var allDStrongNums = [];
 		var allOtherStrongNums = [];
 		var freqList = "";
@@ -1515,6 +1517,7 @@ step.searchSelect = {
 					var resultArray = this._getSuggestedFrequency(data[i].suggestion, allVersions);
 					frequencyOT += resultArray[0];
 					frequencyNT += resultArray[1];
+					notInBibleSelected += resultArray[2];
 					if ((!Array.isArray(augStrongSameMeaning)) || ((Array.isArray(augStrongSameMeaning)) && (augStrongSameMeaning.length == 1)))
 						freqList = data[i].suggestion.popularityList;
 				}
@@ -1532,7 +1535,8 @@ step.searchSelect = {
 															  freqList: data[i].suggestion._detailLexicalTag[j][6]};
 								var resultArray = this._getSuggestedFrequency(curWord, allVersions);
 								frequencyOT += resultArray[0];
-								frequencyNT += resultArray[1];				
+								frequencyNT += resultArray[1];
+								notInBibleSelected += resultArray[2];
 							}
 						}
 					}
@@ -1544,6 +1548,7 @@ step.searchSelect = {
 				if ((selectedGloss === "") || (currentWordPopularity > augStrongWithMostOccurrence)) {
 					selectedGloss = data[i].suggestion.gloss;
 					augStrongWithMostOccurrence = currentWordPopularity;
+					notInBibleSelected += resultArray[2];
 				}
 			}
 			else {
@@ -1552,9 +1557,10 @@ step.searchSelect = {
 				var resultArray = this._getSuggestedFrequency(data[i].suggestion, allVersions);
 				frequencyOT += resultArray[0];
 				frequencyNT += resultArray[1];
+				notInBibleSelected += resultArray[2];
 			}
 		}
-		return [selectedGloss, result, allDStrongNums, allOtherStrongNums, frequency, frequencyOT, frequencyNT, freqList];
+		return [selectedGloss, result, allDStrongNums, allOtherStrongNums, frequency, frequencyOT, frequencyNT, freqList, notInBibleSelected];
 	},
 
 	valueInDuplicatStrongOrNot: function(vocabInfo, index, duplicateStrings) {
@@ -1636,6 +1642,7 @@ step.searchSelect = {
 		var frequencyFromLexicon = 0;
 		var frequencyOT = 0;
 		var frequencyNT = 0;
+		var notInBibleSelected = "";
 		var allStrongNumsPlusLexicalGroup = [];
 		for (var i = 0; i < data.length; i++) {
 			if ((data[i].itemType === GREEK) || (data[i].itemType === HEBREW)) {
@@ -1645,9 +1652,12 @@ step.searchSelect = {
 					(strongsToInclude.includes(data[i].suggestion.strongNumber))) {
 					augStrongToShow[i] = parseInt(data[i].suggestion.popularity);
 					var frequencies = [augStrongToShow[i], 0, 0];
-					if (typeof data[i].suggestion._detailLexicalTag === "object")
+					if (typeof data[i].suggestion._detailLexicalTag === "object") {
 						frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(data[i].suggestion.strongNumber, augStrongToShow[i], 
 							data[i].suggestion._detailLexicalTag, allVersions);
+						if (typeof frequencies[3] === "string")
+							notInBibleSelected += frequencies[3]; 
+					}
 					augStrongToShow[i] = frequencies[0];
 					if (!allStrongNumsPlusLexicalGroup.includes(data[i].suggestion.strongNumber)) {
 						allStrongNumsPlusLexicalGroup.push(data[i].suggestion.strongNumber);
@@ -1680,7 +1690,7 @@ step.searchSelect = {
 		}
 		else text2Display += ' (<i>' + data[0].suggestion.stepTransliteration + '</i>)';
 		var hasBothTestaments = ((frequencyOT > 0) && (frequencyNT > 0));
-		var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequencyFromLexicon, hasBothTestaments);
+		var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequencyFromLexicon, hasBothTestaments, notInBibleSelected);
 		text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 		step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
 			allStrongNumsPlusLexicalGroup.toString(), suggestionType, text2Display, "", suffixText, "",
@@ -1725,6 +1735,7 @@ step.searchSelect = {
 				step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
 				var frequencyOT = (typeof curWord.vocabInfos[0].versionCountOT === "number") ? curWord.vocabInfos[0].versionCountOT : 0;
 				var frequencyNT = (typeof curWord.vocabInfos[0].versionCountNT === "number") ? curWord.vocabInfos[0].versionCountNT : 0;
+				var notInBibleSelected = curWord.vocabInfos[0].notInBibleSelected;
 				if (curStrong.slice(0, -1) === origStrongNum) {
 					numWithSameSimpleStrongsAsMainStrong ++;
 					if (strongsWithSameSimpleStrongsAsMainStrong !== "")
@@ -1749,13 +1760,13 @@ step.searchSelect = {
 					searchExplaination = searchExplaination + ": " + gloss.split(":")[0] + ": ";
 					var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, data[i].suggestion._detailLexicalTag, allVersions);
 					hasBothTestaments = (hasBothTestaments || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
-					var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments);
+					var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments, notInBibleSelected);
 					text2Display = "All " + frequencyMsg + " occurrences";
 					gloss = "";
 				}
 				else {
 					hasBothTestaments = (hasBothTestaments || ((frequencyOT > 0) && (frequencyNT > 0))) ? true : false;
-					var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT }, frequency, hasBothTestaments);
+					var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT }, frequency, hasBothTestaments, notInBibleSelected);
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
@@ -1978,7 +1989,7 @@ step.searchSelect = {
 				var frequency = additionalInfoOnStrong[4];
 				var frequencyOT = additionalInfoOnStrong[5];
 				var frequencyNT = additionalInfoOnStrong[6];
-				var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequency, ((frequencyOT > 0) && (frequencyNT > 0)));
+				var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequency, ((frequencyOT > 0) && (frequencyNT > 0)), additionalInfoOnStrong[8]);
 				text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 				if (numOfForm === "")
 					freqList = additionalInfoOnStrong[7];
@@ -2075,6 +2086,7 @@ step.searchSelect = {
 		frequencyFromLexicon = parseInt(frequencyFromLexicon);
 		var frequencyOT = 0;
 		var frequencyNT = 0;
+		var notInBibleSelected = "";
 		if (Array.isArray(detailLexicalJSON)) {
 			detailLexicalJSON.forEach(function (item, index) {
 				if (item[1] !== strongNum)
@@ -2083,9 +2095,11 @@ step.searchSelect = {
 				step.util.lookUpFrequencyFromMultiVersions(curWord, allVersions);
 				frequencyOT += (typeof curWord.vocabInfos[0].versionCountOT === "number") ? curWord.vocabInfos[0].versionCountOT : 0;
 				frequencyNT += (typeof curWord.vocabInfos[0].versionCountNT === "number") ? curWord.vocabInfos[0].versionCountNT : 0;
+				if (typeof curWord.vocabInfos[0].notInBibleSelected === "string")
+					notInBibleSelected += curWord.vocabInfos[0].notInBibleSelected;
 			});
 		}
-		return [frequencyFromLexicon, frequencyOT, frequencyNT];
+		return [frequencyFromLexicon, frequencyOT, frequencyNT, notInBibleSelected];
 	},
 
 	buildHTMLFromDetailLexicalTag: function(currentSearchSuggestionElement, strongNum, detailLexicalJSON, count, allVersions, hasBothTestaments) {
@@ -2104,7 +2118,7 @@ step.searchSelect = {
 			}
 			var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(item[1], item[3], [item], allVersions);
 			hasBothTestaments = ((hasBothTestaments) || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
-			var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments);
+			var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments, frequencies[3]);
 			var mouseOverEvent = step.searchSelect.addMouseOverEvent("strong", item[1], "", allVersions.split(',')[0]);
 			list.append('<a class="detailLex' + count + '" style="padding:0px;color:var(--clrStrongText)" title="' + item[1] + '"' +
 					'onclick="javascript:step.searchSelect.goSearch(\'strong\',\'' + 

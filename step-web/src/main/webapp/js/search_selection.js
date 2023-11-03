@@ -2005,7 +2005,7 @@ step.searchSelect = {
 				var frequencyNT = additionalInfoOnStrong[6];
 				var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequency, ((frequencyOT > 0) && (frequencyNT > 0)), additionalInfoOnStrong[8]);
 				text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
-				if (numOfForm === "")
+				if (numOfForm < 2)
 					freqList = additionalInfoOnStrong[7];
 				var str2Search4ShowAugmentedStrong = str2Search;
 				if (isAugStrong) {

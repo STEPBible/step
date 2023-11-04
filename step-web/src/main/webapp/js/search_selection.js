@@ -1603,6 +1603,7 @@ step.searchSelect = {
 		callBack, titleText, text2Display, userInput, isAugStrong,
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
 		if (step.searchSelect["LASTSUGGESTKEY"] === strongNum + step.searchSelect.version + limitType) {
+			console.log("cache: " + strongNum);
 			data = step.searchSelect["LASTSUGGESTDATA"];
 			step.searchSelect._processAdditionalInfoOnStrong(data, strongNum, augStrongSameMeaning, allVersions, element, 
 				callBack, titleText, text2Display, userInput, isAugStrong,
@@ -1651,13 +1652,6 @@ step.searchSelect = {
 		});
 	},
 	processVocabInfoForShowAugStrong: function(strongNum, limitType, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
-		if (step.searchSelect["LASTSUGGESTKEY"] === strongNum + step.searchSelect.version + limitType) {
-			data = step.searchSelect["LASTSUGGESTDATA"];
-			step.searchSelect._processAdditionalInfoOnStrong(data, strongNum, augStrongSameMeaning, allVersions, element, 
-				callBack, titleText, text2Display, userInput, isAugStrong,
-				needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
-			return;
-		}
 		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
 			"%7C" + LIMIT + "%3D" + limitType +
 			"%7C?lang=" + step.searchSelect.userLang;

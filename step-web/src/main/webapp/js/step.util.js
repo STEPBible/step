@@ -147,7 +147,8 @@ step.util = {
 			if ((typeof freqList[i + offset] === "string") && (freqList[i + offset] !== "")) {
 				var bibleDisplayName = bibleList[i];
 				if (bibleDisplayName === "SBLG_TH") bibleDisplayName = "SBLG";
-				if (bibleDisplayName === "LXX_TH") bibleDisplayName = "LXX";
+				else if (bibleDisplayName === "LXX_TH") bibleDisplayName = "LXX";
+				else if (bibleDisplayName === "OSMHB") bibleDisplayName = "OHB";
 				newMsg += "<br>" + bibleDisplayName + ": "
 				var freqDetail = freqList[i + offset].split("@");
 				var bibleName = bibleList[i].split("@")[0];
@@ -4167,16 +4168,18 @@ step.util = {
 	formatFrequency: function(mainWord, total, hasBothTestaments, notInBibleSelected) {
 		var hasNumForOTorNT = false;
 		var prefix = "";
+		var prefixForBothTestament = "";
 		var suffix = "";
 		if ((typeof notInBibleSelected === "string") && (notInBibleSelected !== "")) {
 			prefix = '<span title="not in the Bible(s) you selected, ESV count is shown">';
+			prefixForBothTestament = '<span title="some words are not in the Bible(s) you selected, ESV count is shown">';
 			suffix = ' <span style="background-color:#fffacd;font-weight:bold">*</span></span>';
 		}
         if (typeof mainWord.versionCountOT === "number") {
 			hasNumForOTorNT = true;
 			if (mainWord.versionCountOT > 0) {
             	if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0))
-                	return prefix + mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)" + suffix;
+                	return prefixForBothTestament + mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)" + suffix;
             	if (hasBothTestaments)
                 	return prefix + mainWord.versionCountOT + "x (OT)" + suffix;
             	return prefix + sprintf(__s.stats_occurs, mainWord.versionCountOT) + suffix;

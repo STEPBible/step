@@ -1706,6 +1706,7 @@ step.searchSelect = {
 		if ((element) && (augStrongSameMeaning.length == 1)) {
 			var freqListElm = step.util.freqListQTip(augStrongSameMeaning[0], freqList, allVersions, "", "");
 			element.append('&nbsp;').append(freqListElm);
+			step.searchSelect._updateDisplayBasedOnOptions();
 		}		
 	},
 
@@ -1749,6 +1750,7 @@ step.searchSelect = {
 				console.log("num: "+numOfForm);
 				var freqListElm = step.util.freqListQTip(str2Search, additionalInfoOnStrong[7], allVersions, "", "");
 				currentSearchSuggestionElement.append('&nbsp;').append(freqListElm);
+				step.searchSelect._updateDisplayBasedOnOptions();
 			}
 		}
 	},
@@ -2182,6 +2184,7 @@ step.searchSelect = {
 				if (item[6] !== "") {
 					var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
 					list.append('&nbsp;').append(freqListElm);
+					step.searchSelect._updateDisplayBasedOnOptions();
 				}
 			orderList.append(list);
 		});

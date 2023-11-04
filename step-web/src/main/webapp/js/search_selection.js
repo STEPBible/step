@@ -1747,7 +1747,6 @@ step.searchSelect = {
 			' <a style="padding:0px" title="Select forms" href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search4ShowAugmentedStrong + '\',\'' +
 			augStrongSameMeaning + '\',\'' + suggestionType + '\',\'' + userInput + '\',\'' + allVersions + '\')"><span>' + numOfFormMsg + '</span></a>')) {
 			if (numOfForm < 2) {
-				console.log("num: "+numOfForm);
 				var freqListElm = step.util.freqListQTip(str2Search, additionalInfoOnStrong[7], allVersions, "", "");
 				currentSearchSuggestionElement.append('&nbsp;').append(freqListElm);
 				step.searchSelect._updateDisplayBasedOnOptions();
@@ -2156,6 +2155,7 @@ step.searchSelect = {
 		currentSearchSuggestionElement.append("<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>");
 		var orderList = $("<ol class='detailLex" + count + "' style='margin-bottom:0px;line-height:14px'>");
 		var allStrongs = [];
+		var addedFreqList = false;
 		detailLexicalJSON.forEach(function (item, index) {
 			if (allStrongs.includes(item[1])) return;
 			allStrongs.push(item[1]);
@@ -2184,11 +2184,13 @@ step.searchSelect = {
 				if (item[6] !== "") {
 					var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
 					list.append('&nbsp;').append(freqListElm);
-					step.searchSelect._updateDisplayBasedOnOptions();
+					addedFreqList = true;
 				}
 			orderList.append(list);
 		});
 		currentSearchSuggestionElement.append(orderList);
+		if (addedFreqList)
+			step.searchSelect._updateDisplayBasedOnOptions();
 	},
 	_handleClickOnTriangle: function(ev){
 		var idName = ev.target.id;

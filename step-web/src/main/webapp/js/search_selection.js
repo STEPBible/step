@@ -1290,6 +1290,15 @@ step.searchSelect = {
 								var str2Search = "";
 								var suffixToDisplay = "";
 								var suffixTitle = "";
+								var activePassageData = step.util.activePassage().get("searchTokens") || [];
+								var allVersions = "";
+								for (var l = 0; l < activePassageData.length; l++) {
+									var itemType = activePassageData[l].itemType ? activePassageData[l].itemType : activePassageData[l].tokenType
+									if (itemType === VERSION) {
+										if (allVersions !== "") allVersions += ",";
+										allVersions += activePassageData[l].item.shortInitials;
+									}
+								}
 								if (suggestionType === SUBJECT_SEARCH) {
 									text2Display = data[i].suggestion.value;
 									str2Search = text2Display;
@@ -1394,15 +1403,6 @@ step.searchSelect = {
 										'<span class="srchParathesis">)</span>';
 									if ((hasDetailLexInfo) || ((isAugmentedStrong) && (augStrongSameMeaning.length > 1))) {
 											text2Display += " etc.";
-									}
-									var activePassageData = step.util.activePassage().get("searchTokens") || [];
-									var allVersions = "";
-									for (var l = 0; l < activePassageData.length; l++) {
-										var itemType = activePassageData[l].itemType ? activePassageData[l].itemType : activePassageData[l].tokenType
-										if (itemType === VERSION) {
-											if (allVersions !== "") allVersions += ",";
-											allVersions += activePassageData[l].item.shortInitials;
-										}
 									}
 									if ((isAugmentedStrong) || (hasDetailLexInfo)) {
 										step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
@@ -1599,11 +1599,31 @@ step.searchSelect = {
 		return result;
 	},
 
-	getVocabInfoFromJson: function (strongNum, limitType) {
-        var vocabInfos = [];
-		return vocabInfos; // 23.10.5 installation to prevent getting of JSON.  Will re-enable 2 weeks after implemenation
-		if (step.state.isLocal()) return vocabInfos;
-        $.ajaxSetup({async: false});
+	getVocabInfoFromSuggestAPI: function (strongNum, limitType, augStrongSameMeaning, allVersions, element, 
+		callBack, titleText, text2Display, userInput, isAugStrong,
+		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
+		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
+			"%7C" + LIMIT + "%3D" + limitType +
+			"%7C?lang=" + step.searchSelect.userLang;
+		$.getJSON(url, function (data) {
+			for (var i = 0; i < data.length; i++) {
+				if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
+					data[i].suggestion._detailLexicalTag = JSON.parse(data[i].suggestion._detailLexicalTag);
+				}
+			}
+			step.searchSelect._processAdditionalInfoOnStrong(data, strongNum, augStrongSameMeaning, allVersions, element, 
+				callBack, titleText, text2Display, userInput, isAugStrong,
+				needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
+		});
+
+	},
+
+	getVocabInfoForShowAugStrong: function (strongNum, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
+		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
+		//if (step.state.isLocal()) {
+			step.searchSelect.processVocabInfoForShowAugStrong(strongNum, limitType, augStrongSameMeaning, origSuggestionType, userInput, allVersions);
+			return;
+		//}
 		var strongWithoutAugment = strongNum;
 		if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
 			strongWithoutAugment = RegExp.$1;
@@ -1616,39 +1636,120 @@ step.searchSelect = {
 				jsonVar['itemType'] = limitType;
 				vocabInfos.push(jsonVar);
 			}
+			step.searchSelect.createDisplayForAugmentedStrong(vocabInfos, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions);
 		}).error(function() {
-			console.log("getJSon failed strong:"+ strongNum);
+			step.searchSelect.processVocabInfoForShowAugStrong(strongNum, limitType, augStrongSameMeaning, origSuggestionType, userInput, allVersions);
 		});
-        $.ajaxSetup({async: true});
-		return vocabInfos;
 	},
-
-	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, allVersions, element) {
-		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
-		var data = step.searchSelect.getVocabInfoFromJson(strongNum, limitType);
-		if (data.length > 1)
-			return step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, allVersions);
+	processVocabInfoForShowAugStrong: function(strongNum, limitType, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
 		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
-				"%7C" + LIMIT + "%3D" + limitType +
-				"%7C?lang=" + step.searchSelect.userLang;
-		if (!element)
-			$.ajaxSetup({async: false});
-		var result;
+			"%7C" + LIMIT + "%3D" + limitType +
+			"%7C?lang=" + step.searchSelect.userLang;
 		$.getJSON(url, function (data) {
 			for (var i = 0; i < data.length; i++) {
 				if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
 					data[i].suggestion._detailLexicalTag = JSON.parse(data[i].suggestion._detailLexicalTag);
 				}
 			}
-			result = step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, allVersions);
-			if ((element) && (augStrongSameMeaning.length == 1)) {
-				var freqListElm = step.util.freqListQTip(augStrongSameMeaning[0], result[7], allVersions, "", "");
-				$('#freqList' + augStrongSameMeaning[0]).append('&nbsp;').append(freqListElm);
-			}
+			step.searchSelect.createDisplayForAugmentedStrong(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions);
+		}).fail(function() {
+			changeBaseURL();
 		});
-		if (!element) {
-			$.ajaxSetup({async: true});
-			return result;
+	},
+
+	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, allVersions, element, callBack, titleText, text2Display, userInput, isAugStrong,
+		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
+		//if (step.state.isLocal()) {
+			var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
+			step.searchSelect.getVocabInfoFromSuggestAPI(strongNum, limitType, augStrongSameMeaning, allVersions, element, 
+				callBack, titleText, text2Display, userInput, isAugStrong,
+				needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
+			return;
+		//}
+		var strongWithoutAugment = strongNum;
+		if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
+			strongWithoutAugment = RegExp.$1;
+		}
+		var additionalPath = step.state.getCurrentVersion();
+		if (additionalPath !== "") additionalPath += "/";
+		$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
+			var vocabInfos = [];
+			for (var i = 0; i < origJsonVar.v.length; i++) {
+				var jsonVar = step.searchSelect.unpackVocabJSON(origJsonVar, i);
+				jsonVar['itemType'] = limitType;
+				vocabInfos.push(jsonVar);
+			}
+			step.searchSelect._processAdditionalInfoOnStrong(vocabInfos, strongNum, augStrongSameMeaning, allVersions, element, 
+				callBack, titleText, text2Display, userInput, isAugStrong,
+				needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
+		}).error(function() {
+			step.searchSelect.getVocabInfoFromSuggestAPI(strongNum, limitType, augStrongSameMeaning, allVersions, element, 
+				callBack, titleText, text2Display, userInput, isAugStrong,
+				needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
+		});
+	},
+
+	_processAdditionalInfoOnStrong: function(data, strongNum, augStrongSameMeaning, allVersions, element, 
+		callBack, titleText, text2Display, userInput, isAugStrong,
+		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
+		var result = step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, allVersions);
+		if (typeof callBack === "function") {
+			if (callBack.name === "_addFreqListQTip")
+				callBack(augStrongSameMeaning, allVersions, result[7], element);
+			else if (callBack.name === "_addLineWithAugStrongOrDetailLexInfo")
+				callBack(result, augStrongSameMeaning, titleText, text2Display, userInput, strongNum, isAugStrong,
+					element, needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType, allVersions);
+		}
+	},
+
+	_addFreqListQTip: function(augStrongSameMeaning, allVersions, freqList, element) {
+		if ((element) && (augStrongSameMeaning.length == 1)) {
+			var freqListElm = step.util.freqListQTip(augStrongSameMeaning[0], freqList, allVersions, "", "");
+			element.append('&nbsp;').append(freqListElm);
+		}		
+	},
+
+	_addLineWithAugStrongOrDetailLexInfo: function(additionalInfoOnStrong, augStrongSameMeaning, titleText, text2Display, userInput, str2Search, isAugStrong,
+		currentSearchSuggestionElement, needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType, allVersions) {
+		var numOfForm = additionalInfoOnStrong[1];
+		var updatedGloss = additionalInfoOnStrong[0];
+		var numOfFormMsg = "";
+		if (numOfForm > 1) {
+			numOfFormMsg = "(" + numOfForm + " forms)";
+		}
+		else {
+			if ((Array.isArray(augStrongSameMeaning)) && (augStrongSameMeaning.length == 1)) {
+				titleText = ' title="' + augStrongSameMeaning[0] + '" ';
+				text2Display = text2Display.replace(str2Search + "\*", augStrongSameMeaning[0]);
+			}
+		}
+		var frequency = additionalInfoOnStrong[4];
+		var frequencyOT = additionalInfoOnStrong[5];
+		var frequencyNT = additionalInfoOnStrong[6];
+		var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequency, ((frequencyOT > 0) && (frequencyNT > 0)), additionalInfoOnStrong[8]);
+		text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
+		var str2Search4ShowAugmentedStrong = str2Search;
+		if (isAugStrong) {
+			str2Search = additionalInfoOnStrong[2].toString();
+			if (updatedGloss !== "") suffixToDisplay = updatedGloss;
+		}
+		if (additionalInfoOnStrong[3].length > 0) {
+			str2Search += "," + additionalInfoOnStrong[3].toString();
+			titleText = ' title="All forms: ' + str2Search + '" ';
+		}
+		var mouseOverEvent = step.searchSelect.addMouseOverEvent(searchType, str2Search, "", allVersions.split(',')[0]);
+		if (step.searchSelect.addWithoutDuplicates(currentSearchSuggestionElement, needLineBreak, 
+			prefixToDisplay +
+			'<a style="padding:0px"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')"' +
+			mouseOverEvent + '>' +
+			text2Display + "</a> - " + step.searchSelect.buildSuffixTag(suffixToDisplay, suffixTitle) +
+			' <a style="padding:0px" title="Select forms" href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search4ShowAugmentedStrong + '\',\'' +
+			augStrongSameMeaning + '\',\'' + suggestionType + '\',\'' + userInput + '\',\'' + allVersions + '\')"><span>' + numOfFormMsg + '</span></a>')) {
+			if (numOfForm < 2) {
+				console.log("num: "+numOfForm);
+				var freqListElm = step.util.freqListQTip(str2Search, additionalInfoOnStrong[7], allVersions, "", "");
+				currentSearchSuggestionElement.append('&nbsp;').append(freqListElm);
+			}
 		}
 	},
 
@@ -1854,6 +1955,10 @@ step.searchSelect = {
 			}
 			else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
 		}
+		$(".detailLexTriangle").click(step.searchSelect._handleClickOnTriangle);
+		$("#column1width").width("100%");
+		$(".search-type-column").hide();
+		step.searchSelect._updateDisplayBasedOnOptions();
 	},
 
 	_showAugmentedStrong: function(strongNum, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
@@ -1866,31 +1971,7 @@ step.searchSelect = {
 		$("#hd4").text(__s.please_select_one);
 		step.searchSelect.searchModalCurrentPage = 3;	
 		$('#srchModalBackButton').show();
-		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
-		var data = step.searchSelect.getVocabInfoFromJson(strongNum, limitType);
-		if (data.length > 0)
-			step.searchSelect.createDisplayForAugmentedStrong(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions);
-		else {
-			var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
-					"%7C" + LIMIT + "%3D" + limitType +
-					"%7C?lang=" + step.searchSelect.userLang;
-			$.ajaxSetup({async: false});
-			$.getJSON(url, function (data) {
-				for (var i = 0; i < data.length; i++) {
-					if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
-						data[i].suggestion._detailLexicalTag = JSON.parse(data[i].suggestion._detailLexicalTag);
-					}
-				}
-				step.searchSelect.createDisplayForAugmentedStrong(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions);
-			}).fail(function() {
-				changeBaseURL();
-			});
-			$.ajaxSetup({async: true});
-		}
-		$(".detailLexTriangle").click(step.searchSelect._handleClickOnTriangle);
-		$("#column1width").width("100%");
-		$(".search-type-column").hide();
-		step.searchSelect._updateDisplayBasedOnOptions();
+		step.searchSelect.getVocabInfoForShowAugStrong(strongNum, augStrongSameMeaning, origSuggestionType, userInput, allVersions);
 	},
 	buildSuffixTag: function(suffixToDisplay, suffixTitle) {
 		//if ((step.touchDevice) || (suffixToDisplay === "")) return "";
@@ -1908,21 +1989,21 @@ step.searchSelect = {
 			if (i > -1) {
 				var search2 = RegExp.lastMatch;
 				i = RegExp.rightContext.search(/<span>\((\d{1,3}) forms\)<\/span>/);
-				if (i > -1) {
-					var search3 = RegExp.lastMatch;
-					var existingHTML = currentSearchSuggestionElement.html();
-					if ((typeof existingHTML === "string") && (existingHTML !== "")) {
-						var existingLines = existingHTML.split("<br>");
-						for (var j = 0; j < existingLines.length; j++) {
-							var k = existingHTML.indexOf(search1);
+				var search3 = "";
+				if (i > -1)
+					search3 = RegExp.lastMatch;
+				var existingHTML = currentSearchSuggestionElement.html();
+				if ((typeof existingHTML === "string") && (existingHTML !== "")) {
+					var existingLines = existingHTML.split("<br>");
+					for (var j = 0; j < existingLines.length; j++) {
+						var k = existingHTML.indexOf(search1);
+						if (k > -1) {
+							k = existingHTML.indexOf(search2, k);
 							if (k > -1) {
-								k = existingHTML.indexOf(search2, k);
+								k = existingHTML.indexOf(search3, k);
 								if (k > -1) {
-									k = existingHTML.indexOf(search3, k);
-									if (k > -1) {
-										console.log("skip: " + search1 + " " + search2 + " " + search3);
-										return;
-									}
+									console.log("skip: " + search1 + " " + search2 + " " + search3);
+									return false;
 								}
 							}
 						}
@@ -1931,6 +2012,7 @@ step.searchSelect = {
 			}
 		}
 		currentSearchSuggestionElement.append($(needLineBreak + newSuggestion));
+		return true;
 	},
 	addMouseOverEvent: function(searchType, searchString, prefixToDisplay, version) {
 		if ((searchType !== "strong") || (step.touchDevice) || ($(window).height() < 700))
@@ -1987,43 +2069,11 @@ step.searchSelect = {
 			var searchType = ((suggestionType === GREEK) || (suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW) || (suggestionType === HEBREW_MEANINGS)) ? "strong" : suggestionType;
 			var freqList = "";
 			if ((isAugStrong) || (hasDetailLexInfo)) {
-				var additionalInfoOnStrong = this._getAdditionalInformationOnStrong(str2Search, augStrongSameMeaning, allVersions);
-				var numOfForm = additionalInfoOnStrong[1];
-				var updatedGloss = additionalInfoOnStrong[0];
-				var numOfFormMsg = "";
-				if (numOfForm > 1) {
-					numOfFormMsg = "(" + numOfForm + " forms)";
-				}
-				else {
-					if ((Array.isArray(augStrongSameMeaning)) && (augStrongSameMeaning.length == 1)) {
-						titleText = ' title="' + augStrongSameMeaning[0] + '" ';
-						text2Display = text2Display.replace(str2Search + "\*", augStrongSameMeaning[0]);
-					}
-				}
-				var frequency = additionalInfoOnStrong[4];
-				var frequencyOT = additionalInfoOnStrong[5];
-				var frequencyNT = additionalInfoOnStrong[6];
-				var frequencyMsg = step.util.formatFrequency({versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequency, ((frequencyOT > 0) && (frequencyNT > 0)), additionalInfoOnStrong[8]);
-				text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
-				if (numOfForm < 2)
-					freqList = additionalInfoOnStrong[7];
-				var str2Search4ShowAugmentedStrong = str2Search;
-				if (isAugStrong) {
-					str2Search = additionalInfoOnStrong[2].toString();
-					if (updatedGloss !== "") suffixToDisplay = updatedGloss;
-				}
-				if (additionalInfoOnStrong[3].length > 0) {
-					str2Search += "," + additionalInfoOnStrong[3].toString();
-					titleText = ' title="All forms: ' + str2Search + '" ';
-				}
-				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search, "", allVersions.split(',')[0]);
-				step.searchSelect.addWithoutDuplicates(currentSearchSuggestionElement, needLineBreak, 
-					prefixToDisplay +
-					'<a style="padding:0px"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')"' +
-					mouseOverEvent + '>' +
-					text2Display + "</a> - " + this.buildSuffixTag(suffixToDisplay, suffixTitle) +
-					' <a style="padding:0px" title="Select forms" href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search4ShowAugmentedStrong + '\',\'' +
-					augStrongSameMeaning + '\',\'' + suggestionType + '\',\'' + userInput + '\',\'' + allVersions + '\')"><span>' + numOfFormMsg + '</span></a>');
+				// var strongWithAugOrDetailLexInfo = $('<span></span');
+				// currentSearchSuggestionElement.append(strongWithAugOrDetailLexInfo);
+				this._getAdditionalInformationOnStrong(str2Search, augStrongSameMeaning, allVersions, currentSearchSuggestionElement, step.searchSelect._addLineWithAugStrongOrDetailLexInfo,
+					titleText, text2Display, userInput, isAugStrong,
+					needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
 			}
 			else {
 				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0]);
@@ -2033,18 +2083,14 @@ step.searchSelect = {
 						text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
 						'\')"' + mouseOverEvent + '>' + text2Display + "</a>")
 					.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
-				if (searchType === "strong") {
+				if ((searchType === "strong") && (str2Search.indexOf(',') == -1)) {
 					var nonAugStrong = str2Search;
 					if (isNaN(str2Search.slice(-1)))
 						nonAugStrong = str2Search.slice(0, -1);
-					currentSearchSuggestionElement.append('&nbsp;').append('<span id="freqList' + str2Search + '"></span');
-					this._getAdditionalInformationOnStrong(nonAugStrong, [ str2Search ], allVersions, 'freqList' + str2Search);
-						//freqList = additionalInfoOnStrong[7];
+					var freqListElm = $('<span></span');
+					currentSearchSuggestionElement.append('&nbsp;').append(freqListElm);
+					this._getAdditionalInformationOnStrong(nonAugStrong, [ str2Search ], allVersions, freqListElm, step.searchSelect._addFreqListQTip);
 				}
-			}
-			if (freqList !== "") {
-				var freqListElm = step.util.freqListQTip(str2Search, freqList, allVersions, "", "");
-				currentSearchSuggestionElement.append('&nbsp;').append(freqListElm);
 			}
 			return;
 		}
@@ -2132,7 +2178,7 @@ step.searchSelect = {
 					'<span class="srchParathesis">)</span>' +
 					'<span class="srchFrequency"> ' + frequencyMsg + '</span>' +
 				"</a>")
-				.append("- " + item[2]);
+				.append(" - " + item[2]);
 				if (item[6] !== "") {
 					var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
 					list.append('&nbsp;').append(freqListElm);

@@ -4186,6 +4186,11 @@ step.util = {
 				var result = this.getVersionIndex(versions[i], isHebrew);
 				if (result[0] > -1)
 					userSelectedBiblesHaveStrong = true;
+				else { // Need to check both because we are finding out if the Bible selected by the user has Strong tagging.
+					result = this.getVersionIndex(versions[i], !isHebrew);
+					if (result[0] > -1)
+						userSelectedBiblesHaveStrong = true;
+				}
 			}
 			if (userSelectedBiblesHaveStrong) {
 				prefix = '<span title="not in the Bible(s) you selected, ESV count is shown">';

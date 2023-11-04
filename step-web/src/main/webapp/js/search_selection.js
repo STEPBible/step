@@ -1602,6 +1602,13 @@ step.searchSelect = {
 	getVocabInfoFromSuggestAPI: function (strongNum, limitType, augStrongSameMeaning, allVersions, element, 
 		callBack, titleText, text2Display, userInput, isAugStrong,
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
+		if (step.searchSelect["LASTSUGGESTKEY"] === strongNum + step.searchSelect.version + limitType) {
+			data = step.searchSelect["LASTSUGGESTDATA"];
+			step.searchSelect._processAdditionalInfoOnStrong(data, strongNum, augStrongSameMeaning, allVersions, element, 
+				callBack, titleText, text2Display, userInput, isAugStrong,
+				needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
+			return;
+		}
 		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
 			"%7C" + LIMIT + "%3D" + limitType +
 			"%7C?lang=" + step.searchSelect.userLang;
@@ -1611,6 +1618,8 @@ step.searchSelect = {
 					data[i].suggestion._detailLexicalTag = JSON.parse(data[i].suggestion._detailLexicalTag);
 				}
 			}
+			step.searchSelect["LASTSUGGESTKEY"] = strongNum + step.searchSelect.version + limitType;
+			step.searchSelect["LASTSUGGESTDATA"] = data;
 			step.searchSelect._processAdditionalInfoOnStrong(data, strongNum, augStrongSameMeaning, allVersions, element, 
 				callBack, titleText, text2Display, userInput, isAugStrong,
 				needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
@@ -1642,6 +1651,13 @@ step.searchSelect = {
 		});
 	},
 	processVocabInfoForShowAugStrong: function(strongNum, limitType, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
+		if (step.searchSelect["LASTSUGGESTKEY"] === strongNum + step.searchSelect.version + limitType) {
+			data = step.searchSelect["LASTSUGGESTDATA"];
+			step.searchSelect._processAdditionalInfoOnStrong(data, strongNum, augStrongSameMeaning, allVersions, element, 
+				callBack, titleText, text2Display, userInput, isAugStrong,
+				needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
+			return;
+		}
 		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
 			"%7C" + LIMIT + "%3D" + limitType +
 			"%7C?lang=" + step.searchSelect.userLang;
@@ -1651,6 +1667,8 @@ step.searchSelect = {
 					data[i].suggestion._detailLexicalTag = JSON.parse(data[i].suggestion._detailLexicalTag);
 				}
 			}
+			step.searchSelect["LASTSUGGESTKEY"] = strongNum + step.searchSelect.version + limitType;
+			step.searchSelect["LASTSUGGESTDATA"] = data;
 			step.searchSelect.createDisplayForAugmentedStrong(data, strongNum, augStrongSameMeaning, origSuggestionType, userInput, limitType, allVersions);
 		}).fail(function() {
 			changeBaseURL();

@@ -1560,7 +1560,11 @@ step.util = {
 
 				_displayNewQuickLexiconForVerseVocab: function (strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong) {
 					var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
-					var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
+					var pageY = 0;
+					if (typeof pageYParam == "number")
+						pageY = pageYParam;
+					else if ((event) && (typeof event.clientY === "number"))
+						pageY = event.clientY;
 					if (typeof txtForMultipleStrong !== "string") txtForMultipleStrong = "";
 					if (typeof QuickLexicon == "undefined") {
 						require(['quick_lexicon'], function () {
@@ -4087,12 +4091,12 @@ step.util = {
 			mainWord.vocabInfos[0].notInBibleSelected = allVersions;
 		}
     },
-	getFrequency: function(curVersion, data) {
-		var isHebrew = (data.vocabInfos[0].strongNumber.substring(0,1) === "H") ? true : false;
-		var testamentOfFrequency = (isHebrew) ? "OT" : "NT"; 
+	getVersionIndex: function(curVersion, isHebrew) {
+		var testamentOfFrequency = (isHebrew) ? "OT" : "NT";
+		var versionIndex = -1; 
 		if (typeof curVersion === "string") {
 			curVersion = step.util.normalizeVersionName(curVersion);
-			var versionIndex = this.versionsBoth.indexOf(curVersion);
+			versionIndex = this.versionsBoth.indexOf(curVersion);
 			if (versionIndex == -1) {
 				if (isHebrew) {
 					versionIndex = this.versionsHebrewOT.indexOf(curVersion);
@@ -4117,63 +4121,77 @@ step.util = {
 					}
 				}
 			}
-			if (versionIndex > -1) {
-				for (var i = 0; i < data.vocabInfos.length; i++) {
-					if (typeof data.vocabInfos[i].freqList !== "string") {
-						if (typeof data.vocabInfos[i].popularityList === "string")
-							data.vocabInfos[i].freqList = data.vocabInfos[i].popularityList;
-						else {
-							continue;
-						}
-					}
-					var spl1 = data.vocabInfos[i].freqList.split(";");
-					if (spl1.length > versionIndex) {
-						var freqInVersion1 = spl1[versionIndex];
-						if (freqInVersion1 === "")
-							freqInVersion1 = 0;
-						else {
-							var spl2 = freqInVersion1.split("@");
-							if (spl2.length > 1)
-								freqInVersion1 = spl2[0];
-						}
-						freqInVersion1 = parseInt(freqInVersion1);
-						var versionCountName = (testamentOfFrequency === "BOTH") ? "versionCountOT" : ("versionCount" + testamentOfFrequency);
-						if ((typeof data.vocabInfos[i][versionCountName] !== "number") ||
-							((typeof data.vocabInfos[i][versionCountName] === "number") && (data.vocabInfos[i][versionCountName] < freqInVersion1)))
-								data.vocabInfos[i][versionCountName] = freqInVersion1;
-						if (testamentOfFrequency === "BOTH") {
-							var freqInVersion2 = spl1[versionIndex + 1];
-							if (freqInVersion2 === "")
-								freqInVersion2 = 0;
-							else {
-								var spl2 = freqInVersion2.split("@");
-								if (spl2.length > 1)
-									freqInVersion2 = spl2[0];
-							}
-							freqInVersion2 = parseInt(freqInVersion2);
-							if ((typeof data.vocabInfos[i].versionCountNT !== "number") ||
-								((typeof data.vocabInfos[i].versionCountNT === "number") && (data.vocabInfos[i].versionCountNT < freqInVersion2)))
-								data.vocabInfos[i].versionCountNT = freqInVersion2;
-						}
+		}
+		return [versionIndex, testamentOfFrequency];
+	},
+	getFrequency: function(curVersion, data) {
+		var isHebrew = (data.vocabInfos[0].strongNumber.substring(0,1) === "H") ? true : false;
+		var result = this.getVersionIndex(curVersion, isHebrew);
+		var versionIndex = result[0];
+		var testamentOfFrequency = result[1];
+		if (versionIndex > -1) {
+			for (var i = 0; i < data.vocabInfos.length; i++) {
+				if (typeof data.vocabInfos[i].freqList !== "string") {
+					if (typeof data.vocabInfos[i].popularityList === "string")
+						data.vocabInfos[i].freqList = data.vocabInfos[i].popularityList;
+					else {
+						continue;
 					}
 				}
-				return true;
+				var spl1 = data.vocabInfos[i].freqList.split(";");
+				if (spl1.length > versionIndex) {
+					var freqInVersion1 = spl1[versionIndex];
+					if (freqInVersion1 === "")
+						freqInVersion1 = 0;
+					else {
+						var spl2 = freqInVersion1.split("@");
+						if (spl2.length > 1)
+							freqInVersion1 = spl2[0];
+					}
+					freqInVersion1 = parseInt(freqInVersion1);
+					var versionCountName = (testamentOfFrequency === "BOTH") ? "versionCountOT" : ("versionCount" + testamentOfFrequency);
+					if ((typeof data.vocabInfos[i][versionCountName] !== "number") ||
+						((typeof data.vocabInfos[i][versionCountName] === "number") && (data.vocabInfos[i][versionCountName] < freqInVersion1)))
+							data.vocabInfos[i][versionCountName] = freqInVersion1;
+					if (testamentOfFrequency === "BOTH") {
+						var freqInVersion2 = spl1[versionIndex + 1];
+						if (freqInVersion2 === "")
+							freqInVersion2 = 0;
+						else {
+							var spl2 = freqInVersion2.split("@");
+							if (spl2.length > 1)
+								freqInVersion2 = spl2[0];
+						}
+						freqInVersion2 = parseInt(freqInVersion2);
+						if ((typeof data.vocabInfos[i].versionCountNT !== "number") ||
+							((typeof data.vocabInfos[i].versionCountNT === "number") && (data.vocabInfos[i].versionCountNT < freqInVersion2)))
+							data.vocabInfos[i].versionCountNT = freqInVersion2;
+					}
+				}
 			}
-			return false;
+			return true;
 		}
-		else {
-			console.log("no version");
-		}
+		return false;
 	},
-	formatFrequency: function(mainWord, total, hasBothTestaments, notInBibleSelected) {
+	formatFrequency: function(mainWord, total, hasBothTestaments, notInBibleSelected, allVersions) {
 		var hasNumForOTorNT = false;
 		var prefix = "";
 		var prefixForBothTestament = "";
 		var suffix = "";
 		if ((typeof notInBibleSelected === "string") && (notInBibleSelected !== "")) {
-			prefix = '<span title="not in the Bible(s) you selected, ESV count is shown">';
-			prefixForBothTestament = '<span title="some words are not in the Bible(s) you selected, ESV count is shown">';
-			suffix = ' <span style="background-color:#fffacd;font-weight:bold">*</span></span>';
+			var userSelectedBiblesHaveStrong = false;
+			var isHebrew = (mainWord.strongNumber.substring(0,1) === "H") ? true : false;
+			var versions = allVersions.split(",");
+			for (var i = 0; i < versions.length; i ++) {
+				var result = this.getVersionIndex(versions[i], isHebrew);
+				if (result[0] > -1)
+					userSelectedBiblesHaveStrong = true;
+			}
+			if (userSelectedBiblesHaveStrong) {
+				prefix = '<span title="not in the Bible(s) you selected, ESV count is shown">';
+				prefixForBothTestament = '<span title="some words are not in the Bible(s) you selected, ESV count is shown">';
+				suffix = ' <span style="background-color:#fffacd;font-weight:bold">*</span></span>';
+			}
 		}
         if (typeof mainWord.versionCountOT === "number") {
 			hasNumForOTorNT = true;

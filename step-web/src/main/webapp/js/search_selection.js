@@ -2043,8 +2043,11 @@ step.searchSelect = {
 		return true;
 	},
 	addMouseOverEvent: function(searchType, searchString, prefixToDisplay, version) {
-		if ((searchType !== "strong") || (step.touchDevice) || ($(window).height() < 600))
+		if ((step.touchDevice) || ($(window).height() < 600))
 			return '';
+		if (searchType !== "strong") {
+			return '  onmouseover="javascript:$(\'#quickLexicon\').remove()"';
+		} 
 		var multipleStrongText = "";
 		if (searchString.indexOf(",") > -1) {
 			var numOfWord = searchString.split(",").length;

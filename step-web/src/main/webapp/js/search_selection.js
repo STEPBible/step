@@ -1416,7 +1416,7 @@ step.searchSelect = {
 										var hasBothTestaments = ((typeof curWord.vocabInfos[0].versionCountOT === "number") && (curWord.vocabInfos[0].versionCountOT > 0) &&
 											(typeof curWord.vocabInfos[0].versionCountNT === "number") && (curWord.vocabInfos[0].versionCountNT > 0));
 										var countDisplay = step.util.formatFrequency(curWord.vocabInfos[0], parseInt(data[i].suggestion.popularity), hasBothTestaments,
-											curWord.vocabInfos[0].notInBibleSelected, allVersions);
+											curWord.vocabInfos[0].notInBibleSelected);
 										if (countDisplay.indexOf(">0 x") > -1) skipBecauseOfZeroCount = true;
 										text2Display += '<span class="srchFrequency"> ' + countDisplay + '</span>';
 									}
@@ -1746,7 +1746,7 @@ step.searchSelect = {
 		var frequencyOT = additionalInfoOnStrong[5];
 		var frequencyNT = additionalInfoOnStrong[6];
 		var frequencyMsg = step.util.formatFrequency({strongNumber: str2Search, versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequency, ((frequencyOT > 0) && (frequencyNT > 0)),
-			additionalInfoOnStrong[8], allVersions);
+			additionalInfoOnStrong[8]);
 		text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 		var str2Search4ShowAugmentedStrong = str2Search;
 		if (isAugStrong) {
@@ -1826,7 +1826,7 @@ step.searchSelect = {
 		else text2Display += ' (<i>' + data[0].suggestion.stepTransliteration + '</i>)';
 		var hasBothTestaments = ((frequencyOT > 0) && (frequencyNT > 0));
 		var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequencyFromLexicon, hasBothTestaments,
-			notInBibleSelected, allVersions);
+			notInBibleSelected);
 		text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 		step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
 			allStrongNumsPlusLexicalGroup.toString(), suggestionType, text2Display, "", suffixText, "",
@@ -1897,14 +1897,14 @@ step.searchSelect = {
 					var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, data[i].suggestion._detailLexicalTag, allVersions);
 					hasBothTestaments = (hasBothTestaments || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
 					var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments,
-						notInBibleSelected, allVersions);
+						notInBibleSelected);
 					text2Display = "All " + frequencyMsg + " occurrences";
 					gloss = "";
 				}
 				else {
 					hasBothTestaments = (hasBothTestaments || ((frequencyOT > 0) && (frequencyNT > 0))) ? true : false;
 					var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencyOT, versionCountNT: frequencyNT }, frequency, hasBothTestaments,
-						notInBibleSelected, allVersions);
+						notInBibleSelected);
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
@@ -2190,7 +2190,7 @@ step.searchSelect = {
 			var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(item[1], item[3], [item], allVersions);
 			hasBothTestaments = ((hasBothTestaments) || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
 			var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments,
-				frequencies[3], allVersions);
+				frequencies[3]);
 			var mouseOverEvent = step.searchSelect.addMouseOverEvent("strong", item[1], "", allVersions.split(',')[0]);
 			list.append('<a class="detailLex' + count + '" style="padding:0px;color:var(--clrStrongText)" title="' + item[1] + '"' +
 					'onclick="javascript:step.searchSelect.goSearch(\'strong\',\'' + 

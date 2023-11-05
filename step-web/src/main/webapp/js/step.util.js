@@ -4173,7 +4173,7 @@ step.util = {
 		}
 		return false;
 	},
-	formatFrequency: function(mainWord, total, hasBothTestaments, notInBibleSelected, allVersions) {
+	formatFrequency: function(mainWord, total, hasBothTestaments, notInBibleSelected) {
 		var hasNumForOTorNT = false;
 		var prefix = "";
 		var prefixForBothTestament = "";
@@ -4181,7 +4181,7 @@ step.util = {
 		if ((typeof notInBibleSelected === "string") && (notInBibleSelected !== "")) {
 			var userSelectedBiblesHaveStrong = false;
 			var isHebrew = (mainWord.strongNumber.substring(0,1) === "H") ? true : false;
-			var versions = allVersions.split(",");
+			var versions = notInBibleSelected.split(",");
 			for (var i = 0; i < versions.length; i ++) {
 				var result = this.getVersionIndex(versions[i], isHebrew);
 				if (result[0] > -1)

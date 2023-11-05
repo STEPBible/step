@@ -467,6 +467,7 @@ step.searchSelect = {
 	},
 
 	handleKeyboardInput: function(e) {
+		$('#quickLexicon').remove();
 		if (e.target.id === "enterRange") {
 			$('#userEnterRangeError').text("");
 			var userInput =  $('textarea#enterRange').val();
@@ -533,6 +534,7 @@ step.searchSelect = {
 	},
 
 	goBackToPreviousPage: function() {
+		$('#quickLexicon').remove();
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
@@ -1183,6 +1185,7 @@ step.searchSelect = {
 		return false;
 	},
 	_handleEnteredSearchWord: function(limitType, previousUserInput, userPressedEnterKey) {
+		$('#quickLexicon').remove();
 		if ((typeof limitType === "undefined") || (limitType === null)) limitType = "";
 		var userInput = '';
 		$('textarea#userTextInput').show();
@@ -1985,7 +1988,7 @@ step.searchSelect = {
 	},
 
 	_showAugmentedStrong: function(strongNum, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
-		console.log("X: " + strongNum + " " + augStrongSameMeaning + " " + origSuggestionType + " " + userInput);
+		$('#quickLexicon').remove();
 		$('#warningMessage').text('');
 		$('textarea#userTextInput').hide();
 		$('#updateButton').hide();
@@ -2275,6 +2278,7 @@ step.searchSelect = {
 	},
 
 	goSearch: function(searchType, searchWord, displayText) {
+		$('#quickLexicon').remove();
 		step.searchSelect.addSearchWords(step.searchSelect.searchUserInput);
 		var activePassageData = step.util.activePassage().get("searchTokens") || [];
 		var allVersions = "";

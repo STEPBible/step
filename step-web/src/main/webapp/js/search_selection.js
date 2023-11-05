@@ -2056,7 +2056,7 @@ step.searchSelect = {
 					" forms</i>\\' at the end of this line for more information";
 			else { // 2nd search modal screen with input field hidden
 				if ((typeof prefixToDisplay === "string") && (prefixToDisplay.indexOf("docs.google.com")) > -1)
-					multipleStrongText = "Note: The original Strong numbering system was written in 1890. It is not as precise as the enhanced Strong numbering listed above. A click on this link will search " + numOfWord + " words with same simple Strong number, mouse over words listed above for more information.";
+					multipleStrongText = "Note: The original Strong numbering system was written in 1890. It is not as precise as the enhanced Strong numbering listed in lines above your mouse pointer. A click on this link will search " + numOfWord + " words with same simple Strong number.";
 				else
 					multipleStrongText = "Search of " + numOfWord + " words with same meaning, mouse over words listed below for more information";
 

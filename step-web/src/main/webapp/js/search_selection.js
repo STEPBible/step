@@ -1566,8 +1566,14 @@ step.searchSelect = {
 		if ((typeof newNotInBibleSelected === "string") && (newNotInBibleSelected.length > 0)) {
 			if (currentNotInBibleSelected === "")
 				currentNotInBibleSelected = newNotInBibleSelected;
-			else
-				currentNotInBibleSelected += "," + newNotInBibleSelected;
+			else { // add Bibles without duplicate.
+				var newBibles = newNotInBibleSelected.split(",");
+				for (var i = 0; i < newBibles.length; i++) {
+					var bibles = currentNotInBibleSelected.split(",");
+					if (!bibles.includes(newBibles[i]))
+						currentNotInBibleSelected += "," + newBibles[i];
+				}
+			}
 		}
 		return currentNotInBibleSelected;
 	},
@@ -1819,7 +1825,8 @@ step.searchSelect = {
 		}
 		else text2Display += ' (<i>' + data[0].suggestion.stepTransliteration + '</i>)';
 		var hasBothTestaments = ((frequencyOT > 0) && (frequencyNT > 0));
-		var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequencyFromLexicon, hasBothTestaments, notInBibleSelected, allVersions);
+		var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencyOT, versionCountNT: frequencyNT}, frequencyFromLexicon, hasBothTestaments,
+			notInBibleSelected, allVersions);
 		text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 		step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
 			allStrongNumsPlusLexicalGroup.toString(), suggestionType, text2Display, "", suffixText, "",
@@ -1889,13 +1896,15 @@ step.searchSelect = {
 					searchExplaination = searchExplaination + ": " + gloss.split(":")[0] + ": ";
 					var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, data[i].suggestion._detailLexicalTag, allVersions);
 					hasBothTestaments = (hasBothTestaments || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
-					var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments, notInBibleSelected, allVersions);
+					var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments,
+						notInBibleSelected, allVersions);
 					text2Display = "All " + frequencyMsg + " occurrences";
 					gloss = "";
 				}
 				else {
 					hasBothTestaments = (hasBothTestaments || ((frequencyOT > 0) && (frequencyNT > 0))) ? true : false;
-					var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencyOT, versionCountNT: frequencyNT }, frequency, hasBothTestaments, notInBibleSelected, allVersions);
+					var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencyOT, versionCountNT: frequencyNT }, frequency, hasBothTestaments,
+						notInBibleSelected, allVersions);
 					if (((strongPrefix === "H") || (strongPrefix === "G")) &&
 						(typeof data[i].suggestion._searchResultRange === "string")) {
 						var moreThanOneStrong = str2Search.indexOf(",") > -1;
@@ -2180,7 +2189,8 @@ step.searchSelect = {
 			}
 			var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(item[1], item[3], [item], allVersions);
 			hasBothTestaments = ((hasBothTestaments) || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
-			var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments, frequencies[3], allVersions);
+			var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments,
+				frequencies[3], allVersions);
 			var mouseOverEvent = step.searchSelect.addMouseOverEvent("strong", item[1], "", allVersions.split(',')[0]);
 			list.append('<a class="detailLex' + count + '" style="padding:0px;color:var(--clrStrongText)" title="' + item[1] + '"' +
 					'onclick="javascript:step.searchSelect.goSearch(\'strong\',\'' + 

@@ -635,6 +635,7 @@ step.searchSelect = {
 	},
 
 	_buildRangeHeaderAndTable: function(booksToDisplay) {
+		$('#quickLexicon').remove();
 		var onlyDisplaySpecifiedBooks = ((typeof booksToDisplay === "object") && (Array.isArray(booksToDisplay)) && (booksToDisplay.length > 0));
 		$('#searchSelectError').text("");
 		$('#updateFeedback').text("");
@@ -1766,7 +1767,8 @@ step.searchSelect = {
 			'<a style="padding:0px"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')"' +
 			mouseOverEvent + '>' +
 			text2Display + "</a> - " + step.searchSelect.buildSuffixTag(suffixToDisplay, suffixTitle) +
-			' <a style="padding:0px" title="Select forms" href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search4ShowAugmentedStrong + '\',\'' +
+			' <a style="padding:0px" title="Select forms" onmouseover="javascript:$(\'#quickLexicon\').remove()"' +
+			' href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search4ShowAugmentedStrong + '\',\'' +
 			augStrongSameMeaning + '\',\'' + suggestionType + '\',\'' + userInput + '\',\'' + allVersions + '\')"><span>' + numOfFormMsg + '</span></a>')) {
 			if (numOfForm < 2) {
 				var freqListElm = step.util.freqListQTip(str2Search, additionalInfoOnStrong[7], allVersions, "", "");
@@ -2041,7 +2043,7 @@ step.searchSelect = {
 		return true;
 	},
 	addMouseOverEvent: function(searchType, searchString, prefixToDisplay, version) {
-		if ((searchType !== "strong") || (step.touchDevice) || ($(window).height() < 700))
+		if ((searchType !== "strong") || (step.touchDevice) || ($(window).height() < 600))
 			return '';
 		var multipleStrongText = "";
 		if (searchString.indexOf(",") > -1) {
@@ -2104,7 +2106,7 @@ step.searchSelect = {
 			else {
 				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0]);
 				currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
-					.append('<a style="padding:0px"' + titleText + 
+					.append('<a style="padding:0px"' + titleText +
 						' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\',\'' + 
 						text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
 						'\')"' + mouseOverEvent + '>' + text2Display + "</a>")

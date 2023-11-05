@@ -4223,7 +4223,7 @@ step.util = {
         return "";
     },
 	freqListQTip: function(str2Search, freqList, allVersions, accentedUnicode, stepTransliteration) {
-		var freqListElm = $("<a class='srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px'></a>");
+		var freqListElm = $("<a class='srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px' onmouseover='javascript:$(\"#quickLexicon\").remove()'></a>");
 		var msg = step.util.showFrequencyOnAllBibles(str2Search, freqList.split(";"), accentedUnicode, stepTransliteration, allVersions);
 		require(["qtip"], function () {
 			freqListElm.qtip({

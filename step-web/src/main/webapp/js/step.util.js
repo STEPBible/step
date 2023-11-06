@@ -147,7 +147,8 @@ step.util = {
 			if ((typeof freqList[i + offset] === "string") && (freqList[i + offset] !== "")) {
 				var bibleDisplayName = bibleList[i];
 				if (bibleDisplayName === "SBLG_TH") bibleDisplayName = "SBLG";
-				if (bibleDisplayName === "LXX_TH") bibleDisplayName = "LXX";
+				else if (bibleDisplayName === "LXX_TH") bibleDisplayName = "LXX";
+				else if (bibleDisplayName === "OSMHB") bibleDisplayName = "OHB";
 				newMsg += "<br>" + bibleDisplayName + ": "
 				var freqDetail = freqList[i + offset].split("@");
 				var bibleName = bibleList[i].split("@")[0];
@@ -210,11 +211,14 @@ step.util = {
 		}
 		if ((accentedUnicode === "") && (msg[0].indexOf("<br>") == 0))
 			msg[0] = msg[0].substring(4);
-		msg[2] = "<br><a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
-				 "<span class='detailFreqList' style='display:none'>" + msg[2] + 
-				 "<br><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#heading=h.4a5fldrviek' target='_blank'>Information on word occurrences.</a>" +
-				 "</span>";
-		return msg[0] + msg[1] + msg[2];
+		if ((msg[0] === "") && (msg[1].indexOf("<br>") == 0))
+			msg[1] = msg[1].substring(4);
+		return "<span>Frequencies vary </span><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#bookmark=id.11g1a0zd07wd' target='_blank'>(why?)</a>" +
+			"<br>" + msg[0] + msg[1] + "<br>" +
+			"<a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
+			"<span class='detailFreqList' style='display:none'>" +
+				msg[2] +
+			"</span>";
 	},
 	suppressHighlight: function(strongNumber) {
 		if (strongNumber === "") return false;
@@ -1556,7 +1560,11 @@ step.util = {
 
 				_displayNewQuickLexiconForVerseVocab: function (strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong) {
 					var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
-					var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
+					var pageY = 0;
+					if (typeof pageYParam == "number")
+						pageY = pageYParam;
+					else if ((event) && (typeof event.clientY === "number"))
+						pageY = event.clientY;
 					if (typeof txtForMultipleStrong !== "string") txtForMultipleStrong = "";
 					if (typeof QuickLexicon == "undefined") {
 						require(['quick_lexicon'], function () {
@@ -4068,26 +4076,27 @@ step.util = {
 		return curVersion;
 	},
 	lookUpFrequencyFromMultiVersions: function(mainWord, allVersions) {
-		if (typeof allVersions !== "string") {
-			console.log("lookupFrequency no version");
-			step.util.getFrequency("ESV", mainWord);
-			return; 
+		var allVersionsWithoutStrong = true;
+		if (typeof allVersions === "string") {
+			var versions = allVersions.split(",");
+			for (var i = 0; i < versions.length; i++) {
+				if (step.util.getFrequency(versions[i], mainWord))
+					allVersionsWithoutStrong = false;
+			}
 		}
-        var versions = allVersions.split(",");
-        var allVersionsWithoutStrong = true;
-        for (var i = 0; i < versions.length; i++) {
-            if (step.util.getFrequency(versions[i], mainWord))
-                allVersionsWithoutStrong = false;
-        }
-        if (allVersionsWithoutStrong) // Server will search the ESV Bible
+		else
+			allVersions = "";
+        if (allVersionsWithoutStrong) { // Server will search the ESV Bible
             step.util.getFrequency("ESV", mainWord);
+			mainWord.vocabInfos[0].notInBibleSelected = allVersions;
+		}
     },
-	getFrequency: function(curVersion, data) {
-		var isHebrew = (data.vocabInfos[0].strongNumber.substring(0,1) === "H") ? true : false;
-		var testamentOfFrequency = (isHebrew) ? "OT" : "NT"; 
+	getVersionIndex: function(curVersion, isHebrew) {
+		var testamentOfFrequency = (isHebrew) ? "OT" : "NT";
+		var versionIndex = -1; 
 		if (typeof curVersion === "string") {
 			curVersion = step.util.normalizeVersionName(curVersion);
-			var versionIndex = this.versionsBoth.indexOf(curVersion);
+			versionIndex = this.versionsBoth.indexOf(curVersion);
 			if (versionIndex == -1) {
 				if (isHebrew) {
 					versionIndex = this.versionsHebrewOT.indexOf(curVersion);
@@ -4112,70 +4121,123 @@ step.util = {
 					}
 				}
 			}
-			if (versionIndex > -1) {
-				for (var i = 0; i < data.vocabInfos.length; i++) {
-					if (typeof data.vocabInfos[i].freqList !== "string") {
-						if (typeof data.vocabInfos[i].popularityList === "string")
-							data.vocabInfos[i].freqList = data.vocabInfos[i].popularityList;
-						else {
-							continue;
-						}
-					}
-					var spl1 = data.vocabInfos[i].freqList.split(";");
-					if (spl1.length > versionIndex) {
-						var freqInVersion1 = spl1[versionIndex];
-						if (freqInVersion1 === "")
-							freqInVersion1 = 0;
-						else {
-							var spl2 = freqInVersion1.split("@");
-							if (spl2.length > 1)
-								freqInVersion1 = spl2[0];
-						}
-						freqInVersion1 = parseInt(freqInVersion1);
-						var versionCountName = (testamentOfFrequency === "BOTH") ? "versionCountOT" : ("versionCount" + testamentOfFrequency);
-						if ((typeof data.vocabInfos[i][versionCountName] !== "number") ||
-							((typeof data.vocabInfos[i][versionCountName] === "number") && (data.vocabInfos[i][versionCountName] < freqInVersion1)))
-								data.vocabInfos[i][versionCountName] = freqInVersion1;
-						if (testamentOfFrequency === "BOTH") {
-							var freqInVersion2 = spl1[versionIndex + 1];
-							if (freqInVersion2 === "")
-								freqInVersion2 = 0;
-							else {
-								var spl2 = freqInVersion2.split("@");
-								if (spl2.length > 1)
-									freqInVersion2 = spl2[0];
-							}
-							freqInVersion2 = parseInt(freqInVersion2);
-							if ((typeof data.vocabInfos[i]["versionCountNT"] !== "number") ||
-								((typeof data.vocabInfos[i]["versionCountNT"] === "number") && (data.vocabInfos[i]["versionCountNT"] < freqInVersion2)))
-								data.vocabInfos[i]["versionCountNT"] = freqInVersion2;
-						}
+		}
+		return [versionIndex, testamentOfFrequency];
+	},
+	getFrequency: function(curVersion, data) {
+		var isHebrew = (data.vocabInfos[0].strongNumber.substring(0,1) === "H") ? true : false;
+		var result = this.getVersionIndex(curVersion, isHebrew);
+		var versionIndex = result[0];
+		var testamentOfFrequency = result[1];
+		if (versionIndex > -1) {
+			for (var i = 0; i < data.vocabInfos.length; i++) {
+				if (typeof data.vocabInfos[i].freqList !== "string") {
+					if (typeof data.vocabInfos[i].popularityList === "string")
+						data.vocabInfos[i].freqList = data.vocabInfos[i].popularityList;
+					else {
+						continue;
 					}
 				}
-				return true;
+				var spl1 = data.vocabInfos[i].freqList.split(";");
+				if (spl1.length > versionIndex) {
+					var freqInVersion1 = spl1[versionIndex];
+					if (freqInVersion1 === "")
+						freqInVersion1 = 0;
+					else {
+						var spl2 = freqInVersion1.split("@");
+						if (spl2.length > 1)
+							freqInVersion1 = spl2[0];
+					}
+					freqInVersion1 = parseInt(freqInVersion1);
+					var versionCountName = (testamentOfFrequency === "BOTH") ? "versionCountOT" : ("versionCount" + testamentOfFrequency);
+					if ((typeof data.vocabInfos[i][versionCountName] !== "number") ||
+						((typeof data.vocabInfos[i][versionCountName] === "number") && (data.vocabInfos[i][versionCountName] < freqInVersion1)))
+							data.vocabInfos[i][versionCountName] = freqInVersion1;
+					if (testamentOfFrequency === "BOTH") {
+						var freqInVersion2 = spl1[versionIndex + 1];
+						if (freqInVersion2 === "")
+							freqInVersion2 = 0;
+						else {
+							var spl2 = freqInVersion2.split("@");
+							if (spl2.length > 1)
+								freqInVersion2 = spl2[0];
+						}
+						freqInVersion2 = parseInt(freqInVersion2);
+						if ((typeof data.vocabInfos[i].versionCountNT !== "number") ||
+							((typeof data.vocabInfos[i].versionCountNT === "number") && (data.vocabInfos[i].versionCountNT < freqInVersion2)))
+							data.vocabInfos[i].versionCountNT = freqInVersion2;
+					}
+				}
 			}
-			return false;
+			return true;
 		}
-		else {
-			console.log("no version");
-		}
+		return false;
 	},
-	formatFrequency: function(mainWord, total, hasBothTestaments) {
-        if ((typeof mainWord.versionCountOT === "number") && (mainWord.versionCountOT !== 0)) {
-            if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0))
-                return mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)";
-            if (hasBothTestaments)
-                return mainWord.versionCountOT + "x (OT)";
-            return sprintf(__s.stats_occurs, mainWord.versionCountOT);
+	formatFrequency: function(mainWord, total, hasBothTestaments, notInBibleSelected) {
+		var hasNumForOTorNT = false;
+		var prefix = "";
+		var prefixForBothTestament = "";
+		var suffix = "";
+		if ((typeof notInBibleSelected === "string") && (notInBibleSelected !== "")) {
+			var userSelectedBiblesHaveStrong = false;
+			var isHebrew = (mainWord.strongNumber.substring(0,1) === "H") ? true : false;
+			var versions = notInBibleSelected.split(",");
+			for (var i = 0; i < versions.length; i ++) {
+				var result = this.getVersionIndex(versions[i], isHebrew);
+				if (result[0] > -1)
+					userSelectedBiblesHaveStrong = true;
+				else { // Need to check both because we are finding out if the Bible selected by the user has Strong tagging.
+					result = this.getVersionIndex(versions[i], !isHebrew);
+					if (result[0] > -1)
+						userSelectedBiblesHaveStrong = true;
+				}
+			}
+			if (userSelectedBiblesHaveStrong) {
+				prefix = '<span title="not in the Bible(s) you selected, ESV count is shown">';
+				prefixForBothTestament = '<span title="some words are not in the Bible(s) you selected, ESV count is shown">';
+				suffix = ' <span style="background-color:#fffacd;font-weight:bold">*</span></span>';
+			}
+		}
+        if (typeof mainWord.versionCountOT === "number") {
+			hasNumForOTorNT = true;
+			if (mainWord.versionCountOT > 0) {
+            	if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0))
+                	return prefixForBothTestament + mainWord.versionCountOT + "x (OT), " + mainWord.versionCountNT + "x (NT)" + suffix;
+            	if (hasBothTestaments)
+                	return prefix + mainWord.versionCountOT + "x (OT)" + suffix;
+            	return prefix + sprintf(__s.stats_occurs, mainWord.versionCountOT) + suffix;
+			}
         }
-        if ((typeof mainWord.versionCountNT === "number") && (mainWord.versionCountNT !== 0)) {
-			if (hasBothTestaments)
-   	            return mainWord.versionCountNT + "x (NT)";
-   	        return sprintf(__s.stats_occurs, mainWord.versionCountNT);
+        if (typeof mainWord.versionCountNT === "number") {
+			hasNumForOTorNT = true;
+			if (mainWord.versionCountNT > 0) {
+				if (hasBothTestaments)
+   	        	    return prefix + mainWord.versionCountNT + "x (NT)"  + suffix;
+   	        	return prefix + sprintf(__s.stats_occurs, mainWord.versionCountNT) + suffix;
+			}
         }
+		if (hasNumForOTorNT)
+			return prefix + sprintf(__s.stats_occurs, 0)  + suffix;
         if (typeof total === "number")
-            return sprintf(__s.stats_occurs, total);
+            return prefix + sprintf(__s.stats_occurs, total) + suffix;
         return "";
     },
+	freqListQTip: function(str2Search, freqList, allVersions, accentedUnicode, stepTransliteration) {
+		var freqListElm = $("<a class='srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px' onmouseover='javascript:$(\"#quickLexicon\").remove()'></a>");
+		var msg = step.util.showFrequencyOnAllBibles(str2Search, freqList.split(";"), accentedUnicode, stepTransliteration, allVersions);
+		require(["qtip"], function () {
+			freqListElm.qtip({
+				show: {event: 'mouseenter'},
+				hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
+				position: {my: "top center", at: "top center", of: freqListElm, viewport: $(window), effect: false},
+				style: {classes: "freqListHover"},
+				overwrite: true,
+				content: {
+					text: msg
+				}
+			});
+		});
+		return (freqListElm);
+	}
 }
 ;

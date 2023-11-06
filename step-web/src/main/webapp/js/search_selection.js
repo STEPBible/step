@@ -1280,7 +1280,7 @@ step.searchSelect = {
 												text2Display += __s.more
 											text2Display += '</b>...';
 											if (currentHTML !== "") currentSearchSuggestionElement.append("<br>");
-											currentSearchSuggestionElement.append($('<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>"));
+											currentSearchSuggestionElement.append('<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>");
 										}
 									}
 								}
@@ -1345,7 +1345,7 @@ step.searchSelect = {
 												step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
 													str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
 													limitType, null, false, false, "", "", hasHebrew, hasGreek);
-																								defaultSearchString = "";
+												defaultSearchString = "";
 												defaultMouseOverTitle = "";
 												if (foundOr) {
 													defaultSearchString = "<b>" + __s.default_search + "</b>";
@@ -1613,7 +1613,6 @@ step.searchSelect = {
 		callBack, titleText, text2Display, userInput, isAugStrong,
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
 		if (step.searchSelect["LASTSUGGESTKEY"] === strongNum + step.searchSelect.version + limitType) {
-			console.log("cache: " + strongNum);
 			data = step.searchSelect["LASTSUGGESTDATA"];
 			step.searchSelect._processAdditionalInfoOnStrong(data, strongNum, augStrongSameMeaning, allVersions, element, 
 				callBack, titleText, text2Display, userInput, isAugStrong,

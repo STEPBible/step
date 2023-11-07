@@ -485,20 +485,20 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
         }, false);
 
         touchableElement.addEventListener('touchend', function (event) {
-            touchendX = event.changedTouches[0].screenX;
-            touchendY = event.changedTouches[0].screenY;
-            handleGesture();
+            handleGesture(event, touchstartX, touchstartY);
         }, false);
     }
 
-    function handleGesture() {
+    function handleGesture(touchEvent, touchstartX, touchstartY) {
+        var touchendX = touchEvent.changedTouches[0].screenX;
+        var touchendY = touchEvent.changedTouches[0].screenY;
         var minDistance = 40;
         var verticalTolerance = 40;
         var touchDiffY = Math.abs(touchendY - touchstartY);
         if (touchDiffY < verticalTolerance) { // If there is lots of vertical movement, it is not a swipe left/right
             var touchDiffX = touchendX - touchstartX;
             if (Math.abs(touchDiffX) > minDistance) {
-                var activePassage = $(event.srcElement.closest(".passageContainer"));
+                var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));
                 if (touchDiffX < 0)
                     activePassage.find("a.nextChapter").click();
                 else 
@@ -512,8 +512,8 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
                 }
             }
             else if ((touchDiffX < 3) && (touchDiffY < 3)) {
-                if ((event.srcElement.outerHTML.substring(0,7) === "<button") ||
-                    ((event.srcElement.outerHTML.substring(0,5) === "<span") && (event.srcElement.outerHTML.indexOf("verse") == -1)) ) {
+                if ((touchEvent.srcElement.outerHTML.substring(0,7) === "<button") ||
+                    ((touchEvent.srcElement.outerHTML.substring(0,5) === "<span") && (touchEvent.srcElement.outerHTML.indexOf("verse") == -1)) ) {
                         return;
                 }
                 // A touch on elements which do not have events will clear highlight and quick lexicon

@@ -800,15 +800,18 @@ var PassageMenuView = Backbone.View.extend({
         return true;
     },
     showDots: function(activePassage) {
-        activePassage.find(".heading").remove();
-        var verseElements = activePassage.find(".verse");
-        if (verseElements.length == 0)
-            verseElements = activePassage.find(".interlinear");
-        for (var i = verseElements.length - 1; i > 0; i--) {
-            $(verseElements[i]).remove();
-        }
-        var randomDots = "..... .... .... ....... ... .... ... ........ .... ...<br> .... .. .... ... .... ........ .... ... .... ........<br>... ..... .. .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ......<br> ...... .... ... ..... .... ..... ..... ..... ....<br>...... .... ... ..... .... ..... ..... ..... ... .<br> .... .. .... ... .... ........ .... ... .... ......<br>... ..... .... .... ..... .... ..... ........ .... ...<br>.... .. .... ... .... ........ .... ... .... ... ...<br> ...... .... ... ..... .... ..... ..... ..... ..<br";
-        $(verseElements[0]).html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
+        var passageContent = activePassage.find(".passageContent");
+        passageContent.empty();
+//        activePassage.find(".heading").remove();
+//        var verseElements = activePassage.find(".verse");
+//        if (verseElements.length == 0)
+        //     verseElements = activePassage.find(".interlinear");
+        // for (var i = verseElements.length - 1; i > 0; i--) {
+        //     $(verseElements[i]).remove();
+        // }
+        var randomDots = "..... .... .... ....... ... .... ... ........ .... ... ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ........ ... .... ... .....<br>... ..... .. .... ..... .... ..... ........ .... ...... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .... ... .... ... .....<br>...... .... ... ..... .... ..... ..... ..... ... . ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br>... ..... .... .... ..... .... ..... ........ .... ... ... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ... ... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .. ... .... ... .....<br";
+        // $(verseElements[0]).html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
+        passageContent.html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
     },
     removeSearchArgs: function(args) {
         return args.replace(new RegExp('\\|?' + STRONG_NUMBER    + '[^|]+', "ig"), "")

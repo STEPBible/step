@@ -6,8 +6,8 @@ step.searchSelect = {
 	// Don't change the order of the following. The first 3 search types are non original language
 	// searches.  The last two are not displayed in it's own group.  GREEK_MEANINGS are are displayed
 	// with GREEK.  HEBREW_MEANINGS are displayed with HEBREW.
-	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, HEBREW, GREEK_MEANINGS, HEBREW_MEANINGS],
-	numOfSearchTypesToDisplay: 5, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
+	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, GREEK_MEANINGS, HEBREW, HEBREW_MEANINGS],
+	numOfSearchTypesToDisplay: 7, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
 	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
@@ -1232,14 +1232,15 @@ step.searchSelect = {
 					$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
 				}
 				var alreadyShownStrong = [];
-				var hasGreek = false;
-				var hasHebrew = false;
-				for (var i = 0; i < data.length; i++) {
-					if (data[i].itemType === GREEK)
-						hasGreek = true;
-					else if (data[i].itemType === HEBREW)
-						hasHebrew = true;
-				}
+				// only needed if we show 5 category, combining Greek and Greek Meaning and also Hebrew and Hebrew Meaning
+				// var hasGreek = false;
+				// var hasHebrew = false;
+				// for (var i = 0; i < data.length; i++) {
+				// 	if (data[i].itemType === GREEK)
+				// 		hasGreek = true;
+				// 	else if (data[i].itemType === HEBREW)
+				// 		hasHebrew = true;
+				// }
 				for (var i = 0; i < data.length; i++) {
 					var skipBecauseOfZeroCount = false;
 					var suggestionType = data[i].itemType;
@@ -1344,7 +1345,7 @@ step.searchSelect = {
 												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
 													str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
-													limitType, null, false, false, "", "", hasHebrew, hasGreek);
+													limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
 												defaultSearchString = "";
 												defaultMouseOverTitle = "";
 												if (foundOr) {
@@ -1353,7 +1354,7 @@ step.searchSelect = {
 												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
 													str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", defaultSearchString, defaultMouseOverTitle,
-													limitType, null, false, false, "", "", hasHebrew, hasGreek);
+													limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
 												text2Display = '"' + str2Search + '"';
 												str2Search = '%22' + str2Search + '%22';
 											}
@@ -1361,7 +1362,7 @@ step.searchSelect = {
 												if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
 													step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 														str2Search, suggestionType, text2Display, "", "", "",
-														limitType, null, false, false, "", "", hasHebrew, hasGreek);
+														limitType, null, false, false, "", ""); // , hasHebrew, hasGreek);
 													text2Display = str2Search + "* (" + __s.words_that_start_with + " " + str2Search + ")";
 													str2Search += "*";
 												}
@@ -1411,7 +1412,7 @@ step.searchSelect = {
 									if ((isAugmentedStrong) || (hasDetailLexInfo)) {
 										step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 											strongWithoutAugment, suggestionType, text2Display, "", suffixToDisplay, "",
-											limitType, augStrongSameMeaning, hasDetailLexInfo, false, userInput, allVersions, hasHebrew, hasGreek);
+											limitType, augStrongSameMeaning, hasDetailLexInfo, false, userInput, allVersions); //, hasHebrew, hasGreek);
 										continue;
 									}
 									else {
@@ -1428,7 +1429,7 @@ step.searchSelect = {
 								if ((!skipBecauseOfZeroCount) || (limitType !== "")) {
 									step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
-										limitType, null, false, false, "", allVersions, hasHebrew, hasGreek);
+										limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);
 								}
 							}
 							break;
@@ -1450,8 +1451,9 @@ step.searchSelect = {
 				var showedSomething = false;
 				var limitTypeToCompare = limitType;
 				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(limitTypeToCompare);
-				if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
-					limitTypeToCompare = step.searchSelect.searchTypeCode[searchResultIndex - 2];
+				// Only needed if we combine Greek / Greek Meaning and Hebrew / Hebrew Meaning
+				// if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
+				// 	limitTypeToCompare = step.searchSelect.searchTypeCode[searchResultIndex - 2];
 				for (var l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
 					if (limitTypeToCompare === "") {
 						$('.select-' + step.searchSelect.searchTypeCode[l]).show();
@@ -1814,8 +1816,9 @@ step.searchSelect = {
 		}
 		var suggestionType = data[0].itemType;
 		var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
-		if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
-			searchResultIndex = searchResultIndex - 2;
+		// Only needed if we combine Greek / Greek Meaning and Hebrew / Hebrew Meaning
+		// if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
+		// 	searchResultIndex = searchResultIndex - 2;
 		var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 		var text2Display = '<span>' + strongNum + '*</span>';
 		var suffixText = __s.has_various_and_related_forms;
@@ -1844,8 +1847,9 @@ step.searchSelect = {
 		var freqencyOfSameSimpleStrongAsMainStrong = 0;
 		var transliterationOfSameSimpleStrongAsMainStrong = "";
 		var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(origSuggestionType);
-		if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
-				searchResultIndex = searchResultIndex - 2;
+		// Only needed if we combine Greek / Greek Meaning and Hebrew / Hebrew Meaning
+		// if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
+		// 		searchResultIndex = searchResultIndex - 2;
 		var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 		for (var k = 0; k < sorted.length; k++) {
 			var i = parseInt(sorted[k][0]);
@@ -2068,7 +2072,7 @@ step.searchSelect = {
 	},
 	appendSearchSuggestionsToDisplay: function(currentSearchSuggestionElement,
 		str2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
-		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions, hasHebrew, hasGreek) {
+		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions) { // , hasHebrew, hasGreek) {
 		var brCount = 0;
 		var suggestionsToDisplay = 5;
 		var needLineBreak = "";
@@ -2125,23 +2129,17 @@ step.searchSelect = {
 			return;
 		}
 		if (brCount < suggestionsToDisplay) {
-			var additionalSuggestionType = suggestionType;
 			if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS)) {
-				// It it runs out of space to display GREEK_MEANINGS / HEBREW_MEANINGS, the suggestions for GREEK and HEBREW are
-				// not displayed.  Therefore, provide a "more..." option to get the GREEK_MEANINGS / HEBREW_MEANINGS search suggestions
-				// and another "more..." option to get the GREEK / HEBREW search suggestions.
-				currentSearchSuggestionElement.append(needLineBreak + '&nbsp;&nbsp;&nbsp;')
+				currentSearchSuggestionElement.append(needLineBreak).append('&nbsp;&nbsp;&nbsp;')
 					.append('<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
 						suggestionType + '\')"><b>list all with similar meaning...</b></a>');
-				additionalSuggestionType = (suggestionType === GREEK_MEANINGS) ? GREEK : HEBREW;
 			}
-			if (((additionalSuggestionType === GREEK) && (hasGreek)) ||
-				((additionalSuggestionType === HEBREW) && (hasHebrew))) {
-				if ((suggestionType !== additionalSuggestionType ) && (needLineBreak === ""))
+			else if ((suggestionType === GREEK) || (suggestionType === HEBREW)) {
+				if (needLineBreak === "")
 					currentSearchSuggestionElement.append('<br>');
-				currentSearchSuggestionElement.append(needLineBreak +	'&nbsp;&nbsp;&nbsp;')
+				currentSearchSuggestionElement.append(needLineBreak).append('&nbsp;&nbsp;&nbsp;')
 					.append('<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
-						additionalSuggestionType + '\')"><b>list all with with similar ' + additionalSuggestionType.charAt(0).toUpperCase() + additionalSuggestionType.slice(1).toLowerCase() +
+						suggestionType + '\')"><b>list all with with similar ' + suggestionType.charAt(0).toUpperCase() + suggestionType.slice(1).toLowerCase() +
 						' spelling...</b></a>');	
 			}
 		}

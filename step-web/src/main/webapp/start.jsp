@@ -472,7 +472,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     step.userLanguageCode = "${ languageCode }";
     step.userCountryCode = "<%=userCountry%>";
 
-
     // code to enable mobile device swipe to go back or forward one chapter
     var ua = navigator.userAgent.toLowerCase(); 
     if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||

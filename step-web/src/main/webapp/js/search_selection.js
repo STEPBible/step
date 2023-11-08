@@ -612,7 +612,7 @@ step.searchSelect = {
 				'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
 			'</span>' +
 			'<br><br>' +
-			'<div id="search_table" onmousemoue="javascript:$(\'#quickLexicon\').remove()" class="advanced_search_elements">' +
+			'<div id="search_table" class="advanced_search_elements">' +
 			'<table border="1" style="background-color:' + backgroundColor + '">' +
 			'<colgroup>' +
 			'<col id="column1width" span="1" style="width:39%;">' +
@@ -2067,7 +2067,7 @@ step.searchSelect = {
 		return ' onmouseover="javascript:step.util.ui._displayNewQuickLexiconForVerseVocab(\'' + searchString + '\', \'\', \'' +
 						version + '\',' + 
 						step.util.activePassageId() + ',null,null,null,\'' + multipleStrongText + '\')" ' +
-						'onmouseleave="javascript:step.util.ui.removeQuickLexicon()"';
+						'onmouseout="javascript:step.util.ui.removeQuickLexicon()"';
 	},
 	appendSearchSuggestionsToDisplay: function(currentSearchSuggestionElement,
 		str2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,

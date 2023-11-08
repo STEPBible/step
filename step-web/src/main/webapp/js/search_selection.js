@@ -1281,7 +1281,7 @@ step.searchSelect = {
 												text2Display += __s.more
 											text2Display += '</b>...';
 											if (currentHTML !== "") currentSearchSuggestionElement.append("<br>");
-											currentSearchSuggestionElement.append('<a style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>");
+											currentSearchSuggestionElement.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>");
 										}
 									}
 								}
@@ -1768,7 +1768,7 @@ step.searchSelect = {
 			'<a style="padding:0px"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')"' +
 			mouseOverEvent + '>' +
 			text2Display + "</a> - " + step.searchSelect.buildSuffixTag(suffixToDisplay, suffixTitle) +
-			' <a style="padding:0px" title="Select forms" onmouseover="javascript:$(\'#quickLexicon\').remove()"' +
+			' <a style="padding:0px" title="Select forms" onmousemove="javascript:$(\'#quickLexicon\').remove()"' +
 			' href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search4ShowAugmentedStrong + '\',\'' +
 			augStrongSameMeaning + '\',\'' + suggestionType + '\',\'' + userInput + '\',\'' + allVersions + '\')"><span>' + numOfFormMsg + '</span></a>')) {
 			if (numOfForm < 2) {
@@ -2064,11 +2064,18 @@ step.searchSelect = {
 
 			}
 		}
-		return ' onmouseover="javascript:step.util.ui._displayNewQuickLexiconForVerseVocab(\'' + searchString + '\', \'\', \'' +
+		return ' onmouseover="javascript:step.searchSelect.processMouseOverEvent(\'' + searchString + '\', \'\', \'' +
 						version + '\',' + 
 						step.util.activePassageId() + ',null,null,null,\'' + multipleStrongText + '\')" ' +
-						'onmouseout="javascript:step.util.ui.removeQuickLexicon()"';
+						'onmouseout="javascript:$(\'#quickLexicon\').remove()"';
 	},
+	processMouseOverEvent: function(strongParameterForCall, refParameterForCall, version, passageId, ev, evPageY, hoverContext, multipleStrongText) {
+		step.util.delay(function () {
+			// do the quick lexicon
+				step.util.ui._displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, ev, evPageY, hoverContext, multipleStrongText);
+		}, MOUSE_PAUSE, 'show-quick-lexicon');
+	},
+
 	appendSearchSuggestionsToDisplay: function(currentSearchSuggestionElement,
 		str2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
 		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions) { // , hasHebrew, hasGreek) {
@@ -2130,14 +2137,14 @@ step.searchSelect = {
 		if (brCount < suggestionsToDisplay) {
 			if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS)) {
 				currentSearchSuggestionElement.append(needLineBreak).append('&nbsp;&nbsp;&nbsp;')
-					.append('<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
+					.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
 						suggestionType + '\')"><b>list all with similar meaning...</b></a>');
 			}
 			else if ((suggestionType === GREEK) || (suggestionType === HEBREW)) {
 				if (needLineBreak === "")
 					currentSearchSuggestionElement.append('<br>');
 				currentSearchSuggestionElement.append(needLineBreak).append('&nbsp;&nbsp;&nbsp;')
-					.append('<a style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
+					.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
 						suggestionType + '\')"><b>list all with with similar ' + suggestionType.charAt(0).toUpperCase() + suggestionType.slice(1).toLowerCase() +
 						' spelling...</b></a>');	
 			}

@@ -489,27 +489,8 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     }
 
 </script>
-<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.10.2.min.js" type="text/javascript"></script>
-<script>
-if (!window.jQuery) {
-    var scriptd = document.createElement('script');
-    var scatt = document.createAttribute("src");       // Create a "class" attribute
-    scatt.value = "/libs/jquery-1.10.2.min.js";
-    scriptd.setAttributeNode(scatt);
-    document.head.appendChild(scriptd);
-}
-</script>
-<script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.1.1/bootstrap.min.js" type="text/javascript"></script>
-<script>
-var bootstrap_enabled = (typeof $().emulateTransitionEnd == 'function');
-if (!window.jQuery) {
-    var scriptd = document.createElement('script');
-    var scatt = document.createAttribute("src");       // Create a "class" attribute
-    scatt.value = "/libs/bootstrap.min.js";
-    scriptd.setAttributeNode(scatt);
-    document.head.appendChild(scriptd);
-}
-</script>
+<script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="libs/bootstrap.min.js" type="text/javascript"></script>
 <script src="libs/introjs.min.js" type="text/javascript"></script>
 <%
     if (request.getParameter("debug") != null) {

@@ -612,7 +612,7 @@ step.searchSelect = {
 				'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
 			'</span>' +
 			'<br><br>' +
-			'<div id="search_table" class="advanced_search_elements">' +
+			'<div id="search_table" onmousemoue="javascript:$(\'#quickLexicon\').remove()" class="advanced_search_elements">' +
 			'<table border="1" style="background-color:' + backgroundColor + '">' +
 			'<colgroup>' +
 			'<col id="column1width" span="1" style="width:39%;">' +
@@ -1814,8 +1814,7 @@ step.searchSelect = {
 				}
 			}
 		}
-		var suggestionType = data[0].itemType;
-		var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
+		var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(origSuggestionType);
 		// Only needed if we combine Greek / Greek Meaning and Hebrew / Hebrew Meaning
 		// if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
 		// 	searchResultIndex = searchResultIndex - 2;
@@ -1836,7 +1835,7 @@ step.searchSelect = {
 			notInBibleSelected);
 		text2Display += '<span class="srchFrequency"> ' + frequencyMsg + '</span>';
 		step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
-			allStrongNumsPlusLexicalGroup.toString(), suggestionType, text2Display, "", suffixText, "",
+			allStrongNumsPlusLexicalGroup.toString(), origSuggestionType, text2Display, "", suffixText, "",
 			limitType, null, false, false, "", allVersions, false, false);
 		return hasBothTestaments;
 	},
@@ -1981,7 +1980,7 @@ step.searchSelect = {
 		step.searchSelect.createSubsequentLineForAugmentedStrong(sorted, data, strongNum, origSuggestionType, limitType, strongsToInclude, 
 			detailLexSearchStrongs, allVersions, hasBothTestaments);
 		for (var l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
-			if (step.searchSelect.searchTypeCode[l] === limitType) {
+			if (step.searchSelect.searchTypeCode[l] === origSuggestionType) {
 				$('.select-' + step.searchSelect.searchTypeCode[l]).show();
 			}
 			else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();

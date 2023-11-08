@@ -182,6 +182,8 @@
 								<jsSourceDir>.</jsSourceDir>
 								<jsSourceFiles>
 									<!--<jsSourceFile>libs/dohighlight-min.js</jsSourceFile>-->
+									<jsSourceFile>libs/jquery-1.10.2.min.js</jsSourceFile>
+									<jsSourceFile>libs/bootstrap.min.js</jsSourceFile>
 									<jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
 									<jsSourceFile>libs/underscore-min.js</jsSourceFile>
 									<jsSourceFile>libs/json2.js</jsSourceFile>

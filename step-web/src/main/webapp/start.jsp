@@ -489,8 +489,8 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     }
 
 </script>
-<script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script>
-<script src="libs/bootstrap.min.js" type="text/javascript"></script>
+<%-- <script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script> --%>
+<%-- <script src="libs/bootstrap.min.js" type="text/javascript"></script> --%>
 <script src="libs/introjs.min.js" type="text/javascript"></script>
 <%
     if (request.getParameter("debug") != null) {
@@ -504,12 +504,16 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 
 <c:choose>
     <c:when test="${ param.debug eq '' }">
+        <script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+        <script src="libs/bootstrap.min.js" type="text/javascript"></script>
         <script src="libs/backbone.js" type="text/javascript"></script>
         <script src="libs/backbone.localStorage.js" type="text/javascript"></script>
         <script src="libs/select2.js" type="text/javascript"></script>
         <script src="libs/require-2.1.9.js" type="text/javascript"></script>
     </c:when>
     <c:otherwise>
+        <script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+        <script src="libs/bootstrap.min.js" type="text/javascript"></script>
         <script src="libs/backbone-min.js" type="text/javascript"></script>
         <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
         <script src="libs/select2-3.4.5.min.js" type="text/javascript"></script>

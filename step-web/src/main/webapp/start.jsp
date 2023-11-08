@@ -195,6 +195,8 @@
     <link href="css/select2.css" rel="stylesheet" media="screen"/>
     <link href="css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="scss/step-template.css" rel="stylesheet" media="screen"/>
+   	<!-- Add IntroJs styles -->
+	<link href="css/introjs.min.css" rel="stylesheet">
     <%
     } else {
     %>
@@ -203,8 +205,6 @@
     <%
         }
     %>
-	<!-- Add IntroJs styles -->
-	<link href="css/introjs.min.css" rel="stylesheet">
 
     <% if (!appManager.isLocal()) { %>
     <script type="text/javascript">

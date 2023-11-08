@@ -2065,14 +2065,14 @@ step.searchSelect = {
 			}
 		}
 		return ' onmouseover="javascript:step.searchSelect.processMouseOverEvent(\'' + searchString + '\', \'\', \'' +
-						version + '\',' + 
-						step.util.activePassageId() + ',null,null,null,\'' + multipleStrongText + '\')" ' +
+						version + '\',' + step.util.activePassageId() +
+						',\'' + multipleStrongText + '\')" ' +
 						'onmouseout="javascript:$(\'#quickLexicon\').remove()"';
 	},
-	processMouseOverEvent: function(strongParameterForCall, refParameterForCall, version, passageId, ev, evPageY, hoverContext, multipleStrongText) {
+	processMouseOverEvent: function(strongParameterForCall, refParameterForCall, version, passageId, multipleStrongText) {
 		step.util.delay(function () {
 			// do the quick lexicon
-				step.util.ui._displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, ev, evPageY, hoverContext, multipleStrongText);
+				step.util.ui._displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, null, null, null, multipleStrongText);
 		}, MOUSE_PAUSE, 'show-quick-lexicon');
 	},
 

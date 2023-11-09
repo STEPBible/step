@@ -1232,21 +1232,10 @@ step.searchSelect = {
 					$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
 				}
 				var alreadyShownStrong = [];
-				// only needed if we show 5 category, combining Greek and Greek Meaning and also Hebrew and Hebrew Meaning
-				// var hasGreek = false;
-				// var hasHebrew = false;
-				// for (var i = 0; i < data.length; i++) {
-				// 	if (data[i].itemType === GREEK)
-				// 		hasGreek = true;
-				// 	else if (data[i].itemType === HEBREW)
-				// 		hasHebrew = true;
-				// }
 				for (var i = 0; i < data.length; i++) {
 					var skipBecauseOfZeroCount = false;
 					var suggestionType = data[i].itemType;
 					var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
-					if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
-						searchResultIndex = searchResultIndex - 2;
 					var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 					switch(suggestionType) {
 						case GREEK:
@@ -1739,7 +1728,7 @@ step.searchSelect = {
 		var updatedGloss = additionalInfoOnStrong[0];
 		var numOfFormMsg = "";
 		if (numOfForm > 1) {
-			numOfFormMsg = "(" + numOfForm + " forms)";
+			numOfFormMsg = "<span>(" + numOfForm + " forms)</span>";
 		}
 		else {
 			if ((Array.isArray(augStrongSameMeaning)) && (augStrongSameMeaning.length == 1)) {
@@ -1762,15 +1751,17 @@ step.searchSelect = {
 			str2Search += "," + additionalInfoOnStrong[3].toString();
 			titleText = ' title="All forms: ' + str2Search + '" ';
 		}
-		var mouseOverEvent = step.searchSelect.addMouseOverEvent(searchType, str2Search, "", allVersions.split(',')[0]);
-		if (step.searchSelect.addWithoutDuplicates(currentSearchSuggestionElement, needLineBreak, 
-			prefixToDisplay +
-			'<a style="padding:0px"' + titleText + ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')"' +
-			mouseOverEvent + '>' +
-			text2Display + "</a> - " + step.searchSelect.buildSuffixTag(suffixToDisplay, suffixTitle) +
-			' <a style="padding:0px" title="Select forms" onmousemove="javascript:$(\'#quickLexicon\').remove()"' +
-			' href="javascript:step.searchSelect._showAugmentedStrong(\'' + str2Search4ShowAugmentedStrong + '\',\'' +
-			augStrongSameMeaning + '\',\'' + suggestionType + '\',\'' + userInput + '\',\'' + allVersions + '\')"><span>' + numOfFormMsg + '</span></a>')) {
+		var goSearchCall = 'step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')';
+		var newSuggestion =	$('<a style="padding:0px"' + titleText + ' onclick="javascript:' + goSearchCall + '">' + text2Display + '</a>');
+		var showAugmentCall = 'step.searchSelect._showAugmentedStrong(\'' + str2Search4ShowAugmentedStrong + '\',\'' +
+			augStrongSameMeaning + '\',\'' + suggestionType + '\',\'' + userInput + '\',\'' + allVersions + '\')';
+		step.searchSelect.addMouseOverEvent(searchType, str2Search, "", allVersions.split(',')[0], newSuggestion);
+		if (!step.searchSelect.checkDuplicates(goSearchCall, showAugmentCall, numOfFormMsg) ) {
+			currentSearchSuggestionElement.append(needLineBreak).append(prefixToDisplay)
+				.append(newSuggestion).append(' - ').append(step.searchSelect.buildSuffixTag(suffixToDisplay, suffixTitle))
+				.append(' ')
+				.append('<a style="padding:0px" title="Select forms" onmousemove="javascript:$(\'#quickLexicon\').remove()"' + 
+				' href="javascript:' + showAugmentCall + '">' + numOfFormMsg + '</a>');
 			if (numOfForm < 2) {
 				var freqListElm = step.util.freqListQTip(str2Search, additionalInfoOnStrong[7], allVersions, "", "");
 				currentSearchSuggestionElement.append('&nbsp;').append(freqListElm);
@@ -2011,44 +2002,38 @@ step.searchSelect = {
 		tag += '>' + suffixToDisplay + '</span>';
 		return tag;
 	},
-	addWithoutDuplicates: function(currentSearchSuggestionElement, needLineBreak, newSuggestion) {
-		var i = newSuggestion.search(/\.goSearch\([^)]+\)/);
-		if (i > -1) {
-			var search1 = RegExp.lastMatch;
-			i = RegExp.rightContext.search(/\._showAugmentedStrong\('[GH]\d{4,5}',/);
-			if (i > -1) {
-				var search2 = RegExp.lastMatch;
-				i = RegExp.rightContext.search(/<span>\((\d{1,3}) forms\)<\/span>/);
-				var search3 = "";
-				if (i > -1)
-					search3 = RegExp.lastMatch;
-				var existingHTML = currentSearchSuggestionElement.html();
-				if ((typeof existingHTML === "string") && (existingHTML !== "")) {
-					var existingLines = existingHTML.split("<br>");
-					for (var j = 0; j < existingLines.length; j++) {
-						var k = existingHTML.indexOf(search1);
+	checkDuplicates: function(goSearchCall, showAugmentCall, numOfFormMsg) {
+		var showAugmentCallWithFirstParam = showAugmentCall.split(',')[0];
+		// Check the Greek spelling, meaning and Hebrew spelling and meaning catagories
+		for (var i = 3; i < step.searchSelect.numOfSearchTypesToDisplay - 1; i++) {
+			var existingHTML = $('#searchResults' + step.searchSelect.searchTypeCode[i]).html();
+			if ((typeof existingHTML === "string") && (existingHTML !== "")) {
+				var existingLines = existingHTML.split("<a");
+				for (var j = 0; j < existingLines.length; j++) {
+					var k = existingLines[j].indexOf(goSearchCall);
+					if (k > -1) {
+						k = existingLines[j+1].indexOf(showAugmentCallWithFirstParam); // next a tag should have the next call
 						if (k > -1) {
-							k = existingHTML.indexOf(search2, k);
-							if (k > -1) {
-								k = existingHTML.indexOf(search3, k);
-								if (k > -1) {
-									console.log("skip: " + search1 + " " + search2 + " " + search3);
-									return false;
-								}
+							k = existingLines[j+1].indexOf(numOfFormMsg);
+							if (k > -1) { // if numOfFormMsg is an empty string, k would be zero
+								console.log("skip: " + goSearchCall + " " + showAugmentCall + " " + numOfFormMsg);
+								return true;
 							}
 						}
 					}
 				}
-			}
+			}	
 		}
-		currentSearchSuggestionElement.append($(needLineBreak + newSuggestion));
-		return true;
+		return false;
 	},
-	addMouseOverEvent: function(searchType, searchString, prefixToDisplay, version) {
+	addMouseOverEvent: function(searchType, searchString, prefixToDisplay, version, newElement) {
 		if ((step.touchDevice) || ($(window).height() < 600))
 			return '';
 		if (searchType !== "strong") {
-			return '  onmouseover="javascript:$(\'#quickLexicon\').remove()"';
+			newElement.hover(function (ev) {
+				$('#quickLexicon').remove();
+			});
+			return '';
 		} 
 		var multipleStrongText = "";
 		if (searchString.indexOf(",") > -1) {
@@ -2064,11 +2049,16 @@ step.searchSelect = {
 
 			}
 		}
-		return ' onmouseover="javascript:step.searchSelect.processMouseOverEvent(\'' + searchString + '\', \'\', \'' +
-						version + '\',' + step.util.activePassageId() +
-						',\'' + multipleStrongText + '\')" ' +
-						'onmouseout="javascript:$(\'#quickLexicon\').remove()"';
+		newElement.hover(function (ev) {
+			require(['quick_lexicon'], function () {
+				step.util.delay(function () {
+					// do the quick lexicon
+					step.util.ui._displayNewQuickLexiconForVerseVocab(searchString, '', version, step.util.activePassageId(), null, null, null, multipleStrongText);
+				}, MOUSE_PAUSE, 'show-quick-lexicon');
+			});
+		});
 	},
+
 	processMouseOverEvent: function(strongParameterForCall, refParameterForCall, version, passageId, multipleStrongText) {
 		step.util.delay(function () {
 			// do the quick lexicon
@@ -2116,12 +2106,13 @@ step.searchSelect = {
 					needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
 			}
 			else {
-				var mouseOverEvent = this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0]);
-				currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
-					.append('<a style="padding:0px"' + titleText +
+				var newSuggestion = $('<a style="padding:0px"' + titleText +
 						' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\',\'' + 
 						text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
-						'\')"' + mouseOverEvent + '>' + text2Display + "</a>")
+						'\')">' + text2Display + "</a>");
+				this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0], newSuggestion);
+				currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
+					.append(newSuggestion)
 					.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
 				if ((searchType === "strong") && (str2Search.indexOf(',') == -1)) {
 					var nonAugStrong = str2Search;
@@ -2202,10 +2193,9 @@ step.searchSelect = {
 			hasBothTestaments = ((hasBothTestaments) || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
 			var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments,
 				frequencies[3]);
-			var mouseOverEvent = step.searchSelect.addMouseOverEvent("strong", item[1], "", allVersions.split(',')[0]);
-			list.append('<a class="detailLex' + count + '" style="padding:0px;color:var(--clrStrongText)" title="' + item[1] + '"' +
+			var newSuggestion = $('<a class="detailLex' + count + '" style="padding:0px;color:var(--clrStrongText)" title="' + item[1] + '"' +
 					'onclick="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
-					item[1] + '\',\'' + item[1] +	'\')"' + mouseOverEvent + '>' + spaceWithoutLabel + "" + item[0] + ": " +
+					item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "" + item[0] + ": " +
 					'<i class="srchTransliteration">' + item[5] + '</i>' +
 					'<span class="srchParathesis"> (</span>' +
 					'<span class="srchOriginal_Language">' + item[4] + '</span>' +
@@ -2213,13 +2203,15 @@ step.searchSelect = {
 					'<span class="srchStrong_number">' + item[1] + '</span>' +
 					'<span class="srchParathesis">)</span>' +
 					'<span class="srchFrequency"> ' + frequencyMsg + '</span>' +
-				"</a>")
+				"</a>");
+			step.searchSelect.addMouseOverEvent("strong", item[1], "", allVersions.split(',')[0], newSuggestion);
+			list.append(newSuggestion)
 				.append(" - " + item[2]);
-				if (item[6] !== "") {
-					var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
-					list.append('&nbsp;').append(freqListElm);
-					addedFreqList = true;
-				}
+			if (item[6] !== "") {
+				var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
+				list.append('&nbsp;').append(freqListElm);
+				addedFreqList = true;
+			}
 			orderList.append(list);
 		});
 		currentSearchSuggestionElement.append(orderList);

@@ -625,9 +625,9 @@ step.searchSelect = {
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i ++) {
 			var srchCode = this.searchTypeCode[i];
 			html += '<tr style="height:40px;" class="select2-result select2-result-selectable select-' + srchCode + '">' +
-				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
+				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
 				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td>' +
-				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
+				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
 		}
 		html += '</table>' +
 			'</div>';
@@ -1270,7 +1270,7 @@ step.searchSelect = {
 												text2Display += __s.more
 											text2Display += '</b>...';
 											if (currentHTML !== "") currentSearchSuggestionElement.append("<br>");
-											currentSearchSuggestionElement.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>");
+											currentSearchSuggestionElement.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>");
 										}
 									}
 								}
@@ -1761,6 +1761,7 @@ step.searchSelect = {
 				.append(newSuggestion).append(' - ').append(step.searchSelect.buildSuffixTag(suffixToDisplay, suffixTitle))
 				.append(' ')
 				.append('<a style="padding:0px" title="Select forms" onmousemove="javascript:$(\'#quickLexicon\').remove()"' + 
+				' onmouseover="javascript:$(\'#quickLexicon\').remove()"' +
 				' href="javascript:' + showAugmentCall + '">' + numOfFormMsg + '</a>');
 			if (numOfForm < 2) {
 				var freqListElm = step.util.freqListQTip(str2Search, additionalInfoOnStrong[7], allVersions, "", "");
@@ -1997,7 +1998,7 @@ step.searchSelect = {
 	buildSuffixTag: function(suffixToDisplay, suffixTitle) {
 		//if ((step.touchDevice) || (suffixToDisplay === "")) return "";
 		if (suffixToDisplay === "") return "";
-		var tag = "<span";
+		var tag = '<span onmouseover="javascript:$(\'#quickLexicon\').remove()" onmousemove="javascript:$(\'#quickLexicon\').remove()" ';
 		if (suffixTitle !== "") tag += ' title="' + suffixTitle + '"';
 		tag += '>' + suffixToDisplay + '</span>';
 		return tag;
@@ -2028,12 +2029,12 @@ step.searchSelect = {
 	},
 	addMouseOverEvent: function(searchType, searchString, prefixToDisplay, version, newElement) {
 		if ((step.touchDevice) || ($(window).height() < 600))
-			return '';
+			return;
 		if (searchType !== "strong") {
 			newElement.hover(function (ev) {
 				$('#quickLexicon').remove();
 			});
-			return '';
+			return;
 		} 
 		var multipleStrongText = "";
 		if (searchString.indexOf(",") > -1) {
@@ -2046,24 +2047,20 @@ step.searchSelect = {
 					multipleStrongText = "Note: The original Strong numbering system was written in 1890. It is not as precise as the enhanced Strong numbering listed in lines above your mouse pointer. A click on this link will search " + numOfWord + " words with same simple Strong number.";
 				else
 					multipleStrongText = "Search of " + numOfWord + " words with same meaning, mouse over words listed below for more information";
-
 			}
 		}
 		newElement.hover(function (ev) {
+			if (ev.type === "mouseleave") {
+				$('#quickLexicon').remove();
+				return;
+			}
 			require(['quick_lexicon'], function () {
 				step.util.delay(function () {
 					// do the quick lexicon
-					step.util.ui._displayNewQuickLexiconForVerseVocab(searchString, '', version, step.util.activePassageId(), null, null, null, multipleStrongText);
+					step.util.ui._displayNewQuickLexiconForVerseVocab(searchString, '', version, step.util.activePassageId(),  ev, ev.pageY, null, multipleStrongText);
 				}, MOUSE_PAUSE, 'show-quick-lexicon');
 			});
 		});
-	},
-
-	processMouseOverEvent: function(strongParameterForCall, refParameterForCall, version, passageId, multipleStrongText) {
-		step.util.delay(function () {
-			// do the quick lexicon
-				step.util.ui._displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, null, null, null, multipleStrongText);
-		}, MOUSE_PAUSE, 'show-quick-lexicon');
 	},
 
 	appendSearchSuggestionsToDisplay: function(currentSearchSuggestionElement,
@@ -2128,14 +2125,14 @@ step.searchSelect = {
 		if (brCount < suggestionsToDisplay) {
 			if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS)) {
 				currentSearchSuggestionElement.append(needLineBreak).append('&nbsp;&nbsp;&nbsp;')
-					.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
+					.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
 						suggestionType + '\')"><b>list all with similar meaning...</b></a>');
 			}
 			else if ((suggestionType === GREEK) || (suggestionType === HEBREW)) {
 				if (needLineBreak === "")
 					currentSearchSuggestionElement.append('<br>');
 				currentSearchSuggestionElement.append(needLineBreak).append('&nbsp;&nbsp;&nbsp;')
-					.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
+					.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
 						suggestionType + '\')"><b>list all with with similar ' + suggestionType.charAt(0).toUpperCase() + suggestionType.slice(1).toLowerCase() +
 						' spelling...</b></a>');	
 			}
@@ -2206,7 +2203,7 @@ step.searchSelect = {
 				"</a>");
 			step.searchSelect.addMouseOverEvent("strong", item[1], "", allVersions.split(',')[0], newSuggestion);
 			list.append(newSuggestion)
-				.append(" - " + item[2]);
+				.append(' - ' + item[2]);
 			if (item[6] !== "") {
 				var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
 				list.append('&nbsp;').append(freqListElm);

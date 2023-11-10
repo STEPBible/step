@@ -4222,8 +4222,12 @@ step.util = {
             return prefix + sprintf(__s.stats_occurs, total) + suffix;
         return "";
     },
-	freqListQTip: function(str2Search, freqList, allVersions, accentedUnicode, stepTransliteration) {
-		var freqListElm = $("<a class='srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px' onmouseover='javascript:$(\"#quickLexicon\").remove()'></a>");
+	freqListQTip: function(str2Search, freqList, allVersions, accentedUnicode, stepTransliteration, additionalClass) {
+		if (typeof additionalClass !== "string")
+			additionalClass = "";
+		var additionalStyle = (additionalClass === "detailLex") ? ";display:none" : "";
+
+		var freqListElm = $("<a class=' " + additionalClass + " srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px" + additionalStyle + "' onmouseover='javascript:$(\"#quickLexicon\").remove()'></a>");
 		var msg = step.util.showFrequencyOnAllBibles(str2Search, freqList.split(";"), accentedUnicode, stepTransliteration, allVersions);
 		require(["qtip"], function () {
 			freqListElm.qtip({

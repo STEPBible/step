@@ -398,12 +398,13 @@ var SidebarView = Backbone.View.extend({
             panel.append($("<span class='detailLex glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>"));
             spaceWithoutLabel = "";
         }
-        panel.append($("<a title='" + detailLex[1] + " " + detailLex[4] + "'></a>").attr("onclick", "javascript:void(0)").data("strongNumber", detailLex[1]).
-              append($("<span class='detailLex' style='display:none'" +
-                step.searchSelect.addMouseOverEvent("strong", detailLex[1]) + ">" +
-                spaceWithoutLabel + detailLex[0] + " </span>")).click(function () {
+        panel.append($("<a title='" + detailLex[1] + " " + detailLex[4] + "'></a>").attr("onclick", "javascript:void(0)").data("strongNumber", detailLex[1]));
+        var spanElement = $("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + " </span>");
+        step.searchSelect.addMouseOverEvent("strong", detailLex[1], "", allVersions.split(",")[0], spanElement);
+        spanElement.click(function () {
                 step.util.ui.showDef($(this).data("strongNumber"));
-        }));
+        });
+        panel.append(spanElement);
         panel.append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[4] + "'>" + detailLex[2] + "</span>"));
         panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;</span>'));
         var statsOccursMsg = step.util.formatFrequency({versionCountOT: totalOT, versionCountNT: totalNT}, frequency, hasBothTestaments);
@@ -417,7 +418,7 @@ var SidebarView = Backbone.View.extend({
                 return false;
         }));
         panel.append("&nbsp;&nbsp;");
-        var freqListElm = step.util.freqListQTip(detailLex[1], detailLex[6], allVersions, detailLex[4], detailLex[5]);
+        var freqListElm = step.util.freqListQTip(detailLex[1], detailLex[6], allVersions, detailLex[4], detailLex[5], "detailLex");
         panel.append(freqListElm);
     },
 

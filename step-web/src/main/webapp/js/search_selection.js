@@ -1641,6 +1641,7 @@ step.searchSelect = {
 		var additionalPath = step.state.getCurrentVersion();
 		if (additionalPath !== "") additionalPath += "/";
 		$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
+			var vocabInfos = [];
 			for (var i = 0; i < origJsonVar.v.length; i++) {
 				var jsonVar = step.searchSelect.unpackVocabJSON(origJsonVar, i);
 				jsonVar['itemType'] = limitType;

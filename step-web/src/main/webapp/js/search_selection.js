@@ -1630,10 +1630,10 @@ step.searchSelect = {
 
 	getVocabInfoForShowAugStrong: function (strongNum, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
 		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
-		//if (step.state.isLocal()) {
+		if (step.state.isLocal()) {
 			step.searchSelect.processVocabInfoForShowAugStrong(strongNum, limitType, augStrongSameMeaning, origSuggestionType, userInput, allVersions);
 			return;
-		//}
+		}
 		var strongWithoutAugment = strongNum;
 		if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
 			strongWithoutAugment = RegExp.$1;
@@ -1671,13 +1671,13 @@ step.searchSelect = {
 
 	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, allVersions, element, callBack, titleText, text2Display, userInput, isAugStrong,
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
-		//if (step.state.isLocal()) {
+		if (step.state.isLocal()) {
 			var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
 			step.searchSelect.getVocabInfoFromSuggestAPI(strongNum, limitType, augStrongSameMeaning, allVersions, element, 
 				callBack, titleText, text2Display, userInput, isAugStrong,
 				needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
 			return;
-		//}
+		}
 		var strongWithoutAugment = strongNum;
 		if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
 			strongWithoutAugment = RegExp.$1;

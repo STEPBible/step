@@ -3756,7 +3756,6 @@ step.util = {
 	},
 	getVocabMorphInfoFromJson: function (strong, morph, version) {
 		var resultJson = {vocabInfos: [], morphInfos: []};
-		return resultJson; // 23.10.5 installation to prevent getting of JSON.  Will re-enable 2 weeks after implemenation
 		if (step.state.isLocal()) return resultJson; // There are no json files for the lexicon in the stand-alone version of STEP
 		var strongArray = strong.split(" ");
 		var processedStrong = [];

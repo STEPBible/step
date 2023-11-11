@@ -2041,8 +2041,8 @@ step.searchSelect = {
 		if (searchString.indexOf(",") > -1) {
 			var numOfWord = searchString.split(",").length;
 			if ($("#userTextInput").is(":visible")) // 1st search modal screen with input field
-				multipleStrongText = "Search of " + numOfWord + " words with same meaning, click on \\'<i>" + numOfWord +
-					" forms</i>\\' at the end of this line for more information";
+				multipleStrongText = "Search of " + numOfWord + " words with same meaning, click on '<i>" + numOfWord +
+					" forms</i>' at the end of this line for more information";
 			else { // 2nd search modal screen with input field hidden
 				if ((typeof prefixToDisplay === "string") && (prefixToDisplay.indexOf("docs.google.com")) > -1)
 					multipleStrongText = "Note: The original Strong numbering system was written in 1890. It is not as precise as the enhanced Strong numbering listed in lines above your mouse pointer. A click on this link will search " + numOfWord + " words with same simple Strong number.";

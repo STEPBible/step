@@ -4225,9 +4225,10 @@ step.util = {
 	freqListQTip: function(str2Search, freqList, allVersions, accentedUnicode, stepTransliteration, additionalClass) {
 		if (typeof additionalClass !== "string")
 			additionalClass = "";
-		var additionalStyle = (additionalClass === "detailLex") ? ";display:none" : "";
-
-		var freqListElm = $("<a class=' " + additionalClass + " srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px" + additionalStyle + "' onmouseover='javascript:$(\"#quickLexicon\").remove()'></a>");
+		else
+			additionalClass += " "; // need a space between the class names
+		var additionalStyle = (additionalClass.indexOf("detailLex ") > -1) ? ";display:none" : "";
+		var freqListElm = $("<a class='" + additionalClass + "srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px" + additionalStyle + "' onmouseover='javascript:$(\"#quickLexicon\").remove()'></a>");
 		var msg = step.util.showFrequencyOnAllBibles(str2Search, freqList.split(";"), accentedUnicode, stepTransliteration, allVersions);
 		require(["qtip"], function () {
 			freqListElm.qtip({

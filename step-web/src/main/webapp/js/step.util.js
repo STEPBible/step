@@ -3765,8 +3765,8 @@ step.util = {
 		$.ajaxSetup({async: false});
 		for (var j = 0; j < strongArray.length; j++) {
 			var strongWithoutAugment = step.util.fixStrongNumForVocabInfo(strongArray[j], true);
-			if (processedStrong.indexOf(strongWithoutAugment) == -1) {
-				processedStrong.push(strongWithoutAugment);
+			if (processedStrong.indexOf(strongArray[j]) == -1) {
+				processedStrong.push(strongArray[j]);
 				$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
 					var augStrongIndex = -1;
 					var defaultDStrong = -1;

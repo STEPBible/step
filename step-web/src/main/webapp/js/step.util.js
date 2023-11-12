@@ -1335,11 +1335,13 @@ step.util = {
         /**
          * called when click on a piece of text.
          */
-        showDef: function (source) {
+        showDef: function (source, sourceVersion) {
             var strong, morph, ref, version, allVersions;
 
             if (typeof source == "string") {
                 strong = source;
+				if (typeof sourceVersion === "string")
+					version = sourceVersion;
             } else if (source.strong) {
                 strong = source.strong;
                 ref = source.ref;

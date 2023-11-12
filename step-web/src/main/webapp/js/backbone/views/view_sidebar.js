@@ -390,7 +390,7 @@ var SidebarView = Backbone.View.extend({
         return foundChineseJSON;
     },
 
-    _addDetailLexicalWords: function (detailLex, panel, isCurrentWord, totalOT, totalNT, hasBothTestaments, allVersions) {
+    _addDetailLexicalWords: function (detailLex, panel, isCurrentWord, totalOT, totalNT, hasBothTestaments, allVersions, bibleVersion) {
         var frequency = parseInt(detailLex[3]); // Just in case it is provided in String instead of number
         panel.append($("<br class='detailLex' style='display:none'>"));
         var spaceWithoutLabel = "&nbsp;&nbsp;&nbsp;";
@@ -398,13 +398,12 @@ var SidebarView = Backbone.View.extend({
             panel.append($("<span class='detailLex glyphicon glyphicon-arrow-right' style='font-size:10px;display:none' ></span>"));
             spaceWithoutLabel = "";
         }
-        panel.append($("<a title='" + detailLex[1] + " " + detailLex[4] + "'></a>").attr("onclick", "javascript:void(0)").data("strongNumber", detailLex[1]));
-        var spanElement = $("<span class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + " </span>");
-        step.searchSelect.addMouseOverEvent("strong", detailLex[1], "", allVersions.split(",")[0], spanElement);
-        spanElement.click(function () {
-                step.util.ui.showDef($(this).data("strongNumber"));
-        });
-        panel.append(spanElement);
+        var aTagElement = $("<a class='detailLex' style='display:none'>" + spaceWithoutLabel + detailLex[0] + " </a>");
+        step.searchSelect.addMouseOverEvent("strong", detailLex[1], "", bibleVersion, aTagElement);
+        aTagElement.data("strongNumber", detailLex[1]).click(function () {
+            step.util.ui.showDef($(this).data("strongNumber"), bibleVersion);
+        })
+        panel.append(aTagElement);
         panel.append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[4] + "'>" + detailLex[2] + "</span>"));
         panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;</span>'));
         var statsOccursMsg = step.util.formatFrequency({versionCountOT: totalOT, versionCountNT: totalNT}, frequency, hasBothTestaments);
@@ -433,7 +432,7 @@ var SidebarView = Backbone.View.extend({
         return __s.lexicon_search_for_this_person;
     },
 
-    _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions) {
+    _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions, bibleVersion) {
         var total = mainWord.count;
         var totalOT = 0;
         var totalNT = 0;
@@ -495,7 +494,7 @@ var SidebarView = Backbone.View.extend({
 				return false;
 			}));
 			for (var i = 0; i < detailLex.length; i++) {
-                this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber), totalOTs[i], totalNTs[i], hasBothTestaments, allVersions);
+                this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber), totalOTs[i], totalNTs[i], hasBothTestaments, allVersions, bibleVersion);
 			}
         }
         else {
@@ -592,7 +591,7 @@ var SidebarView = Backbone.View.extend({
 			detailLex = (typeof mainWord._stepDetailLexicalTag === "string") ? 
                 JSON.parse(mainWord._stepDetailLexicalTag) : mainWord._stepDetailLexicalTag;
 		}
-        this._appendLexiconSearch(panel, mainWord, detailLex, allVersions);
+        this._appendLexiconSearch(panel, mainWord, detailLex, allVersions, bibleVersion);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;
 
@@ -668,7 +667,7 @@ var SidebarView = Backbone.View.extend({
                         var firstChar = relatedNosToDisplay[i].strongNumber.substr(0, 1).toLowerCase();
                         if (firstChar === "h") fontClass = "hbFontMini";
                         else if (firstChar === "g") fontClass = "unicodeFont";
-                        li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong href="javascript:void(0)">')
+                        li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong onclick="javascript:void(0)">')
                             .append(userLangGloss)
                             .append(relatedNosToDisplay[i].gloss)
                             .append(" (")
@@ -684,12 +683,13 @@ var SidebarView = Backbone.View.extend({
                         li = $("<li title='" + relatedNosToDisplay[i].strongNumber + " " +
                                 relatedNosToDisplay[i].stepTransliteration + " " +
                                 relatedNosToDisplay[i].matchingForm +
-                                "'></li>").append($('<a sbstrong href="javascript:void(0)">')
+                                "'></li>").append($('<a sbstrong onclick="javascript:void(0)">')
                             .append(userLangGloss)
 							.append(relatedNosToDisplay[i].gloss)
                             .append(step.util.formatSearchResultRange(relatedNosToDisplay[i]._searchResultRange, false))
                             .data("strongNumber", relatedNosToDisplay[i].strongNumber));                        
                     }
+                    step.searchSelect.addMouseOverEvent("strong", relatedNosToDisplay[i].strongNumber, "", bibleVersion, li);
                     ul.append(li);
 
                     matchingExpression += relatedNosToDisplay[i].strongNumber + " ";
@@ -699,7 +699,7 @@ var SidebarView = Backbone.View.extend({
             panel.append(ul);
         }
         panel.find("[sbstrong]").click(function () {
-            step.util.ui.showDef($(this).data("strongNumber"));
+            step.util.ui.showDef($(this).data("strongNumber"), bibleVersion);
         });
         if ((foundChineseJSON) && (!step.state.isLocal())) 
             panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +

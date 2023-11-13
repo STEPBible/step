@@ -116,7 +116,7 @@
   <xsl:param name="morphologyProvider" />
   <xsl:param name="vocabProvider" />
   <xsl:param name="colorCodingProvider" />
-  <xsl:param name="isOT" select="'false'" />
+  <xsl:param name="isOTWithHebrew" select="'false'" />
  
   <!--  set up interlinear provider, if we have requested it -->
   <xsl:param name="interlinearProvider" />
@@ -643,7 +643,7 @@
                     <xsl:if test="$GreekVocab = 'true'">
                         <xsl:variable name="ancientClass">
                             <xsl:choose>
-                                <xsl:when test="$isOT = 'true'">hbFont ancientVocab</xsl:when>
+                                <xsl:when test="$isOTWithHebrew = 'true'">hbFont ancientVocab</xsl:when>
                                 <xsl:otherwise>unicodeFont</xsl:otherwise>
                             </xsl:choose>
                         </xsl:variable>

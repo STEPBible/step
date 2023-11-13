@@ -1264,7 +1264,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 if (firstKey instanceof Verse) {
                     final Verse verse = (Verse) firstKey;
                     Testament t = masterVersification.getTestament(verse.getOrdinal());
-                    tsep.setParameter("isOT", t == Testament.OLD);
+                    tsep.setParameter("isOTWithHebrew", 
+                        (t == Testament.OLD) && 
+                        (!masterVersion.toLowerCase().startsWith("ab")) && 
+                        (!masterVersion.toLowerCase().startsWith("lxx"))
+                    );
                 }
             }
 

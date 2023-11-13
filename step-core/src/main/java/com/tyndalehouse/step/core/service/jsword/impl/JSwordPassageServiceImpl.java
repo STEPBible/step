@@ -1254,23 +1254,23 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                                                            final String reference,
                                                            final InterlinearMode displayMode,
                                                            final Key key, final List<LookupOption> options) {
+        //TODO: work out OT or NT
+        Iterator<Key> keys = key.iterator();
+        if (keys.hasNext()) {
+            Key firstKey = keys.next();
+            if (firstKey instanceof Verse) {
+                final Verse verse = (Verse) firstKey;
+                Testament t = masterVersification.getTestament(verse.getOrdinal());
+                tsep.setParameter("isOTWithHebrew",
+                        (t == Testament.OLD) &&
+                                (!masterVersion.toLowerCase().startsWith("ab")) &&
+                                (!masterVersion.toLowerCase().startsWith("lxx"))
+                );
+            }
+        }
+
         if (displayMode == InterlinearMode.INTERLINEAR) {
             tsep.setParameter("VLine", false);
-
-            //TODO: work out OT or NT
-            Iterator<Key> keys = key.iterator();
-            if (keys.hasNext()) {
-                Key firstKey = keys.next();
-                if (firstKey instanceof Verse) {
-                    final Verse verse = (Verse) firstKey;
-                    Testament t = masterVersification.getTestament(verse.getOrdinal());
-                    tsep.setParameter("isOTWithHebrew", 
-                        (t == Testament.OLD) && 
-                        (!masterVersion.toLowerCase().startsWith("ab")) && 
-                        (!masterVersion.toLowerCase().startsWith("lxx"))
-                    );
-                }
-            }
 
             if (isNotBlank(interlinearVersion)) {
                 tsep.setParameter("interlinearVersion", interlinearVersion);

@@ -1952,15 +1952,17 @@ step.util = {
 
 		showListOfVersesInQLexArea: function(data, yPosOfEntryInVerseVocab, wordInfo, target) {
 			const results = data.results;
-			var searchHTML = '';
+			var qLexTxt = '';
 			if (results.length > 6) {
-				searchHTML += '<div id="bvesearch" style="font-size:12px;height:150px;overflow:auto">';
-				searchHTML += '<p style="margin-top:2px">Press the ' +
+				qLexTxt += '<div id="bvesearch" style="font-size:12px;height:150px;overflow:auto">';
+				qLexTxt += '<p style="margin-top:2px">Press the ' +
 					'<svg width="18px" height="18px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff" stroke-width="1.176" transform="matrix(1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="0" y="0" width="24.00" height="24.00" rx="0" fill="#3B88C3" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M11.0303 7.71967C11.3232 8.01256 11.3232 8.48744 11.0303 8.78033L8.56066 11.25H17.25C17.6642 11.25 18 11.5858 18 12C18 12.4142 17.6642 12.75 17.25 12.75H8.56066L11.0303 15.2197C11.3232 15.5126 11.3232 15.9874 11.0303 16.2803C10.7374 16.5732 10.2626 16.5732 9.96967 16.2803L6.21967 12.5303C5.92678 12.2374 5.92678 11.7626 6.21967 11.4697L9.96967 7.71967C10.2626 7.42678 10.7374 7.42678 11.0303 7.71967Z" fill="#ffffff"></path> </g></svg>' +
 					' or ' +
 					'<svg id="down-arrow" width="18px" height="18px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff" stroke-width="1.176" transform="matrix(-1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="0" y="0" width="24.00" height="24.00" rx="0" fill="#3B88C3" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M11.0303 7.71967C11.3232 8.01256 11.3232 8.48744 11.0303 8.78033L8.56066 11.25H17.25C17.6642 11.25 18 11.5858 18 12C18 12.4142 17.6642 12.75 17.25 12.75H8.56066L11.0303 15.2197C11.3232 15.5126 11.3232 15.9874 11.0303 16.2803C10.7374 16.5732 10.2626 16.5732 9.96967 16.2803L6.21967 12.5303C5.92678 12.2374 5.92678 11.7626 6.21967 11.4697L9.96967 7.71967C10.2626 7.42678 10.7374 7.42678 11.0303 7.71967Z" fill="#ffffff"></path> </g></svg>' +
 					' keys (left or right arrow) to scroll the list of verses with the word: ' + wordInfo + '.</p>';
 			}
+			else
+				qLexTxt = '<p>' + wordInfo + '</p>';
 			for (var i = 0; i < results.length; i++) {
 				var currentResult = results[i].preview;
 				var pos1 = currentResult.indexOf('<h3');
@@ -1970,24 +1972,25 @@ step.util = {
 						currentResult = currentResult.substring(0, pos1) + currentResult.substring(pos2 + 5);
 					}
 				}
-				searchHTML += currentResult.replaceAll('<br>', '').replaceAll('<BR>', '')
+				qLexTxt += currentResult.replaceAll('<br>', '').replaceAll('<BR>', '')
 					.replaceAll('<p></p>', '').replaceAll('<br />', '').replaceAll('tabindex=\'-1\'', '');
 			}
-			// add strongHighlights
-			for (var j = 0; j < data.strongHighlights.length; j++) {
-				searchHTML = searchHTML.replaceAll("strong='" + data.strongHighlights[j] + "'", "style='text-decoration:underline;color:#FCAE1E'");
-			}
-			searchHTML = searchHTML.replaceAll("<a name=", "<span name=").replaceAll("</a>", "</span>");
-			searchHTML = searchHTML.replaceAll("passageContentHolder", "").replaceAll("'verse ltrDirection'", "''").replaceAll("'verseLink'", "''").replaceAll("'verseNumber'", "''");
+			qLexTxt = qLexTxt.replaceAll("<a name=", "<span name=").replaceAll("</a>", "</span>");
+			qLexTxt = qLexTxt.replaceAll("passageContentHolder", "").replaceAll("'verse ltrDirection'", "''").replaceAll("'verseLink'", "''").replaceAll("'verseNumber'", "''");
 			if (data.total > data.pageSize)
-				searchHTML += '<p>Showing the first ' + results.length + ' of ' + data.total + ' verses.  Click at where your mouse is located to see all verses.</p>';
-			searchHTML += '<p style="margin-bottom:2px">ESV: The Holy Bible, English Standard Version ©2011 Crossway Bibles, a division of Good News Publishers.  All rights reserved.</p>';
+				qLexTxt += '<p>Showing the first ' + results.length + ' of ' + data.total + ' verses.  Click at where your mouse is located to see all verses.</p>';
+			qLexTxt += '<p style="margin-bottom:2px">ESV: The Holy Bible, English Standard Version ©2011 Crossway Bibles, a division of Good News Publishers.  All rights reserved.</p>';
 
 			if (results.length > 6)
-				searchHTML += '</div>';
+				qLexTxt += '</div>';
+			var qLexElements = $(qLexTxt);
+			// add strongHighlights
+			for (var j = 0; j < data.strongHighlights.length; j++) {
+				$("span [strong*=" + data.strongHighlights[j] + "]", qLexElements).css("text-decoration","underline").css("color","#FCAE1E");
+			}
 
             require(['quick_lexicon'], function () {
-                var parts = $(searchHTML);
+                var parts = qLexElements;
 				var text = $(parts[0]);
 				for (var i = 1; i < parts.length; i++) {
 					text.append($(parts[1]));

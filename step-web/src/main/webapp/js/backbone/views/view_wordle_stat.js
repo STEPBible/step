@@ -174,8 +174,6 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         var currentUserLang = (step.userLanguageCode) ? step.userLanguageCode.toLowerCase() : "en";
         $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, (this.isNextChapter), currentUserLang, mostOccurrences], function (data) {
-            step.util.trackAnalytics('wordle', 'type', statType);
-            step.util.trackAnalytics('wordle', 'scope', scope);
             self.transientReference = data.passageStat.reference.name;
             self._createWordleTab(self.statsContainer, scope, data.passageStat, statType, callback, data.lexiconWords, self.isNextChapter, self.transientReference);
         }).error(function() {

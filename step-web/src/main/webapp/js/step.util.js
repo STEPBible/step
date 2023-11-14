@@ -694,11 +694,6 @@ step.util = {
     isSeptuagintVersion: function (item) {
         return $.inArray(item.initials || item, step.util.septuagintVersions) != -1;
     },
-    trackAnalytics: function (eventType, eventName, eventValue, numValue) {
-        if (window["ga"]) {
-            ga('send', 'event', eventType, eventName, eventValue, numValue);
-        }
-    },
     getPassageContainer: function (passageIdOrElement) {
         if (!this._passageContainers) {
             this._passageContainers = {};
@@ -1823,7 +1818,6 @@ step.util = {
 											}));
 
 											templatedTable.find(".definition").click(function () {
-													step.util.trackAnalytics('verseVocab', 'definition');
 													var strongParameterForCall = $(this).parent().data("strong");
 													var refParameterForCall = (strongParameterForCall.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) ? "" : reference; // if it is augmented Strong, don't include the reference
 													self.showDef({strong: strongParameterForCall, ref: refParameterForCall, version: version });
@@ -1858,7 +1852,6 @@ step.util = {
 											});
 
 										templatedTable.find(".bookCount").click(function () {
-												step.util.trackAnalytics('verseVocab', 'bookCount');
 												var bookKey = key.substring(0, key.indexOf('.'));
 												var strong = $(this).parent().data("strong");
 												var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent(strong);
@@ -1891,7 +1884,6 @@ step.util = {
 											});
 
 											templatedTable.find(".bibleCount").click(function () {
-													step.util.trackAnalytics('verseVocab', 'bibleCount');
 													var strong = $(this).parent().data("strong");
 													var args = "strong=" + encodeURIComponent(strong);
 													//make this the active passage
@@ -1922,19 +1914,16 @@ step.util = {
 											});
 
 											templatedTable.find(".relatedVerses").click(function () {
-													step.util.trackAnalytics('verseVocab', 'relatedVerses');
 													step.util.createNewLinkedColumn(passageId);
 													step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
 											});
 
 											templatedTable.find(".relatedSubjects").click(function () {
-													step.util.trackAnalytics('verseVocab', 'relatedSubjects');
 													step.util.createNewLinkedColumn(passageId);
 													step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
 											});
 
 											templatedTable.find(".verseInContext").click(function () {
-													step.util.trackAnalytics('verseVocab', 'verseInContext');
 													element.trigger("click");
 											});
 

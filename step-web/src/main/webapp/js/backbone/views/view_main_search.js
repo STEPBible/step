@@ -191,12 +191,6 @@ var MainSearchView = Backbone.View.extend({
             //if we're replacing an item, then remove it
             var container = self.masterSearch.select2("container");
             var term = container.find("input").val() || "";
-
-            step.util.trackAnalytics("suggest", "termPrefix", term);
-            step.util.trackAnalytics("suggest", "termPrefixLength", term.length);
-            step.util.trackAnalytics("suggest", "termType", ((event.choice) || {}).itemType);
-            step.util.trackAnalytics("suggest", "termText", ((event.choice) || {}).text);
-
             var replaceItem = container.find(".replaceItem");
             var replaceItemParent = replaceItem.parent().parent().first();
             var data = self.masterSearch.select2("data");

@@ -581,7 +581,6 @@
         if (step.state.getIncompleteLanguage()) {
             step.util.raiseOneTimeOnly("machine_translated", 'info');
         }
-        step.util.trackAnalytics('interface', 'language', step.state.language(1));
         if (window.localStorage) {
             var storedVersion = step.util.localStorageGetItem("step.version");
             var downloadedVersion = step.state.getCurrentVersion();

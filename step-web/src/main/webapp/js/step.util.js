@@ -152,7 +152,7 @@ step.util = {
 				newMsg += "<br>" + bibleDisplayName + ": "
 				var freqDetail = freqList[i + offset].split("@");
 				var bibleName = bibleList[i].split("@")[0];
-				newMsg += "<a target='_blank' href='?q=version=" + bibleName + "|strong=" + strongNumber;
+				newMsg += "<a target='_blank' href='?q=version=" + bibleDisplayName.split("@")[0] + "|strong=" + strongNumber;
 				if (bibleList[i].endsWith("@NT"))
 					newMsg += "|reference=Matt-Rev";
 				else if (bibleList[i].endsWith("@OT"))

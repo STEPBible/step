@@ -467,7 +467,6 @@ var SidebarView = Backbone.View.extend({
 				var args = $(this).data("strongNumber");
 				console.log("args " + args);
 				var currentSearch = "strong=" + encodeURIComponent(args[0]);
-
 				var searchJoins = "";
 				for (var i = 1; i < allStrongs.length; i++) {
 					currentSearch += '|strong=' + encodeURIComponent(args[i]);
@@ -688,10 +687,7 @@ var SidebarView = Backbone.View.extend({
 							.append(relatedNosToDisplay[i].gloss)
                             .append(step.util.formatSearchResultRange(relatedNosToDisplay[i]._searchResultRange, false))
                             .data("strongNumber", relatedNosToDisplay[i].strongNumber));                        
-                    }
-                    step.searchSelect.addMouseOverEvent("strong", relatedNosToDisplay[i].strongNumber, "", bibleVersion, li);
-                    ul.append(li);
-
+                    }                    ul.append(li);
                     matchingExpression += relatedNosToDisplay[i].strongNumber + " ";
                 }
             }
@@ -701,6 +697,19 @@ var SidebarView = Backbone.View.extend({
         panel.find("[sbstrong]").click(function () {
             step.util.ui.showDef($(this).data("strongNumber"), bibleVersion);
         });
+		panel.find("[sbstrong]").hover(function (ev) {
+			if (ev.type === "mouseleave") {
+				$('#quickLexicon').remove();
+				return;
+			}
+            var searchString = $(this).data("strongNumber");
+			require(['quick_lexicon'], function () {
+				step.util.delay(function () {
+					// do the quick lexicon
+					step.util.ui._displayNewQuickLexiconForVerseVocab(searchString, '', bibleVersion, step.util.activePassageId(),  ev, ev.pageY, null, "");
+				}, MOUSE_PAUSE, 'show-quick-lexicon');
+			});
+		});
         if ((foundChineseJSON) && (!step.state.isLocal())) 
             panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
                 "\" target=\"_blank\">" +

@@ -1767,21 +1767,18 @@ step.util = {
 													'<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
 													'<% _.each(rows, function(row, i) { %>' +
 													'<span data-strong="<%= row.strongData.strongNumber %>">' +
-													'<a href="javascript:void(0)" class="definition col-xs-8 col-sm-4 <%= i % 2 == 1 ? "even" : "" %>"><%= row.strongData.gloss %> ' +
+													'<a onclick="javascript:void(0)" class="definition col-xs-8 col-sm-4 <%= i % 2 == 1 ? "even" : "" %>"><%= row.strongData.gloss %> ' +
 													'(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)</a>' +
-													'<a href="javascript:void(0)" class="bookCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.book) %></a>' +
-													'<a href="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
+													'<a onclick="javascript:void(0)" class="bookCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.book) %></a>' +
+													'<a onclick="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
 													'</span><% }); %>' +
 													'<% if(rows.length % 2 == 1) { %>' +
-													// The "&nbsp;" in the following line has caused the Chrome browser to run into an infinite loop.  This issued was discovered in September 2019.
-													//                                        '<span class="even">&nbsp;</span>' +
-													// Removed the "&nbsp;" to resolve the Chrome browser issue
 													'<span class="even"></span>' +
 													'<% } %>' +
 													'</div>' +
-													'<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
-													'<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
-													'<% if(isSearch) { %><a href="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
+													'<div class="verseVocabLinks"><a onclick="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
+													'<a onclick="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
+													'<% if(isSearch) { %><a onclick="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
 											var rows = [];
 											// Check step.userLanguageCode and $.getURlvar
 											var urlLang = $.getUrlVar("lang");

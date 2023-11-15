@@ -2061,6 +2061,9 @@ step.searchSelect = {
 					step.util.ui._displayNewQuickLexiconForVerseVocab(searchString, '', version, step.util.activePassageId(),  ev, ev.pageY, null, multipleStrongText);
 				}, MOUSE_PAUSE, 'show-quick-lexicon');
 			});
+		},
+		function () { // mouse pointer ends hover (leave)
+			$("#quickLexicon").remove();
 		});
 	},
 

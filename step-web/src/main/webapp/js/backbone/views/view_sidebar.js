@@ -3,11 +3,9 @@ var SidebarView = Backbone.View.extend({
     initialize: function () {
         //hide the help
         step.util.showOrHideTutorial(true);
-
         _.bindAll(this);
-
         //create tab container
-        var container = this.$el.find(">div");
+        // var container = this.$el.find(">div");
         this.sidebarButton = $(".navbar-brand .showSidebar");
         this.sidebarButtonIcon = this.sidebarButton.find(".glyphicon");
         this.tabContainer = this._createBaseTabs();
@@ -193,14 +191,14 @@ var SidebarView = Backbone.View.extend({
             });
             for (var i = 0; i < data.vocabInfos.length; i++) {
                 var item = data.vocabInfos[i];
-                var hebrew = data.vocabInfos[i].strongNumber == 'H';
+                var isHebrew = data.vocabInfos[i].strongNumber.substring(0,1) === 'H';
                 var panelId = "lexicon-" + data.vocabInfos[i].strongNumber;
 				var currentGloss = item.stepGloss;
 				if (currentUserLang =="es") currentGloss += " " + item._es_Gloss;
 				else if (currentUserLang =="zh") currentGloss += " " + item._zh_Gloss;
 				else if (currentUserLang =="zh_tw") currentGloss += " " + item._zh_tw_Gloss;
 				else if (currentUserLang =="km") currentGloss += " " + item._km_Gloss;
-                var panelTitle = currentGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (hebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
+                var panelTitle = currentGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
                 var panelContentContainer = $('<div class="panel-collapse collapse">').attr("id", panelId);
                 var panelBody = $('<div class="panel-body"></div>');
                 panelContentContainer.append(panelBody);
@@ -407,7 +405,11 @@ var SidebarView = Backbone.View.extend({
         panel.append($("<span class='detailLex' style='display:none' title='" + detailLex[1] + " " + detailLex[4] + "'>" + detailLex[2] + "</span>"));
         panel.append($('<span class="detailLex" style="display:none">&nbsp;&nbsp;</span>'));
         var statsOccursMsg = step.util.formatFrequency({versionCountOT: totalOT, versionCountNT: totalNT}, frequency, hasBothTestaments);
-        panel.append($("<a title='click to show all occurrences of this word'></a>").attr("onclick", "javascript:void(0)").data("strongNumber", detailLex[1]).
+        var isHebrew = detailLex[1].substring(0,1) === 'H';
+        var vocabTitle = detailLex[2] + " (<span class='transliteration'>" + detailLex[5] + "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + detailLex[4] + "</span>)"
+        panel.append($("<a title='click to show all occurrences of this word'></a>").attr("onclick", "javascript:void(0)").
+              data("strongNumber", detailLex[1]).
+              data("vocabTitle", vocabTitle).
               append('<span class="strongCount detailLex" style="unicode-bidi:normal;display:none">~' + statsOccursMsg + '</span>').
               click(function () {
                 var strongNumber = $(this).data("strongNumber");
@@ -415,7 +417,23 @@ var SidebarView = Backbone.View.extend({
                 step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
                 step.router.navigatePreserveVersions(args, false, true);
                 return false;
-        }));
+              }).
+              hover(function (ev) {
+                var strong = $(this).data("strongNumber");
+                var wordInfo = $(this).data("vocabTitle");
+                fetch("https://www.stepbible.org/rest/search/masterSearch/version-ESV|" +
+                    "strong=" + strong + "/HNVUG///" +
+                    strong + "///en?lang=en")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    step.util.ui.showListOfVersesInQLexArea(data, ev.pageY, wordInfo, $('#columHolder'));
+                });
+            }, function () { // mouse pointer ends hover (leave)
+                $("#quickLexicon").remove();
+            })
+        );
         panel.append("&nbsp;&nbsp;");
         var freqListElm = step.util.freqListQTip(detailLex[1], detailLex[6], allVersions, detailLex[4], detailLex[5], "detailLex");
         panel.append(freqListElm);
@@ -461,22 +479,24 @@ var SidebarView = Backbone.View.extend({
             }
             var hasBothTestaments = ((totalOT > 0) && (totalNT > 0));
             var statsOccursMsg = step.util.formatFrequency({versionCountOT: totalOT, versionCountNT: totalNT}, total, hasBothTestaments);
-
 			panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", allStrongs).append('<span class="strongCount" style="unicode-bidi:normal"> ' +
                statsOccursMsg + '</span>').click(function () {
 				var args = $(this).data("strongNumber");
-				console.log("args " + args);
-				var currentSearch = "strong=" + encodeURIComponent(args[0]);
-				var searchJoins = "";
-				for (var i = 1; i < allStrongs.length; i++) {
-					currentSearch += '|strong=' + encodeURIComponent(args[i]);
-					if (i == 1) searchJoins = "srchJoin=(1o2";
-					else searchJoins += "o" + (i+1);
-				}
-                if (allStrongs.length > 1) currentSearch = searchJoins + ")|" + currentSearch;
-				step.router.navigatePreserveVersions(currentSearch, false, true, true);
-				return false;
-			}));
+                    var currentSearch = "strong=" + encodeURIComponent(args[0]);
+                    var searchJoins = "";
+                    for (var i = 1; i < allStrongs.length; i++) {
+                        currentSearch += '|strong=' + encodeURIComponent(args[i]);
+                        if (i == 1) searchJoins = "srchJoin=(1o2";
+                        else searchJoins += "o" + (i+1);
+                    }
+                    if (allStrongs.length > 1) currentSearch = searchJoins + ")|" + currentSearch;
+                    step.router.navigatePreserveVersions(currentSearch, false, true, true);
+                    return false;
+			    }).
+                hover(function() {
+                    $('#quickLexicon').remove();
+                })           
+            );
             panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {
 				if (ev.target.id === "detailLexSelect") {
 					if ($(".detailLex:visible").length > 0) {
@@ -501,13 +521,31 @@ var SidebarView = Backbone.View.extend({
             step.util.lookUpFrequencyFromMultiVersions(data, allVersions);
             var countDisplay = step.util.formatFrequency(mainWord, total, false);
             if (countDisplay !== "") {
-                panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + countDisplay + '</span>').click(function () {
+                var isHebrew = mainWord.strongNumber.substring(0,1) == 'H';
+                var vocabTitle = mainWord.stepGloss + " (<span class='transliteration'>" + mainWord.stepTransliteration + "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + mainWord.accentedUnicode + "</span>)"
+                panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).data("vocabTitle", vocabTitle).
+                    append('<span class="strongCount"> ' + countDisplay + '</span>').click(function () {
                     var strongNumber = $(this).data("strongNumber");
                     var args = "strong=" + encodeURIComponent(strongNumber);
                     step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
                     step.router.navigatePreserveVersions(args, false, true);
 			    	return false;
-                }));
+                }).hover(function (ev) {
+                    var strong = $(this).data("strongNumber");
+                    var wordInfo = $(this).data("vocabTitle");
+                    fetch("https://www.stepbible.org/rest/search/masterSearch/version-ESV|" +
+                        "strong=" + strong + "/HNVUG///" +
+                        strong + "///en?lang=en")
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        step.util.ui.showListOfVersesInQLexArea(data, ev.pageY, wordInfo, $('#columHolder'));
+                    });
+                }, function () { // mouse pointer ends hover (leave)
+                    $("#quickLexicon").remove();
+                })              
+                );
                 panel.append("&nbsp;&nbsp;");
                 var freqListElm = step.util.freqListQTip(mainWord.strongNumber, mainWord.freqList, allVersions, "", "");
                 panel.append(freqListElm);

@@ -447,10 +447,10 @@
     </div>
 </div>
 
-<% if (request.getParameter("mobile") == null) {
+<%
     String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
     <script src="intl/<%= URLEncoder.encode(langCode, "UTF-8") %>.${project.version}.js" type="text/javascript"></script>
-<% } %>
+%>
 <%@include file="jsps/initLib.jsp"%>
 <%
 String userCountry = request.getHeader("cf-ipcountry");
@@ -470,6 +470,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     var ua = navigator.userAgent.toLowerCase(); 
     if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
         ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints == 5))) {
+        step.touchDevice = true;
         document.getElementById("resizeButton").style.display = "inline";
         touchableElement = document.getElementById("columnHolder");
         touchableElement.addEventListener('touchstart', function (event) {
@@ -481,6 +482,8 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
             step.util.handleGesture(event, touchstartX, touchstartY);
         }, false);
     }
+    else
+        step.touchDevice = false;
 
 </script>
 <%-- <script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script> --%>
@@ -548,40 +551,25 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 } else {
 %>
 
-<c:choose>
-    <c:when test="${ param.mobile eq 'online' }">
-        <script type="text/javascript">
-            var languages = document.createElement("script");
-            languages.src = 'international/interactive-en.js';
-            languages.id = "international";
-            languages.async = false;
-            document.head.appendChild(languages);
 
-            var stepJs = document.createElement("script");
-            stepJs.src = '/js/step.${project.version}.min.js';
-            stepJs.id = "international";
-            stepJs.async = false;
-            document.head.appendChild(stepJs);
-        </script>
-    </c:when>
-    <c:otherwise>
-        <script src="js/step.${project.version}.min.js" type="text/javascript"></script>
-        <script src="js/color_code_grammar.${project.version}.min.js" type="text/javascript"></script>
-    </c:otherwise>
-</c:choose>
+<script src="js/step.${project.version}.min.js" type="text/javascript"></script>
+<script src="js/color_code_grammar.${project.version}.min.js" type="text/javascript"></script>
 <%
     }
 %>
 <script>
-	jQuery.event.special.touchstart = {
-		setup: function( _, ns, handle ){
-			if ( ns.includes("noPreventDefault") ) {
-				this.addEventListener("touchstart", handle, { passive: false });
-			} else {
-				this.addEventListener("touchstart", handle, { passive: true });
-			}
-		}
-	};
+    var ua = navigator.userAgent.toLowerCase(); 
+	if (step.touchDevice) {
+        jQuery.event.special.touchstart = {
+            setup: function( _, ns, handle ){
+                if ( ns.includes("noPreventDefault") ) {
+                    this.addEventListener("touchstart", handle, { passive: false });
+                } else {
+                    this.addEventListener("touchstart", handle, { passive: true });
+                }
+            }
+        };
+    }
 </script>
 <% if (!appManager.isLocal()) { %>
 <script>

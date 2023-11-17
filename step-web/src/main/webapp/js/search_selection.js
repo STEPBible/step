@@ -1997,7 +1997,6 @@ step.searchSelect = {
 		step.searchSelect.getVocabInfoForShowAugStrong(strongNum, augStrongSameMeaning, origSuggestionType, userInput, allVersions);
 	},
 	buildSuffixTag: function(suffixToDisplay, suffixTitle) {
-		//if ((step.touchDevice) || (suffixToDisplay === "")) return "";
 		if (suffixToDisplay === "") return "";
 		var tag = '<span onmouseover="javascript:$(\'#quickLexicon\').remove()" onmousemove="javascript:$(\'#quickLexicon\').remove()" ';
 		if (suffixTitle !== "") tag += ' title="' + suffixTitle + '"';

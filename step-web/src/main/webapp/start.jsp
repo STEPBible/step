@@ -550,8 +550,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <%
 } else {
 %>
-
-
 <script src="js/step.${project.version}.min.js" type="text/javascript"></script>
 <script src="js/color_code_grammar.${project.version}.min.js" type="text/javascript"></script>
 <%

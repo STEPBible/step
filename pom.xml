@@ -377,11 +377,6 @@
                 <artifactId>javatar</artifactId>
                 <version>${javatar.version}</version>
             </dependency>
-            <!-- <dependency> -->
-            <!-- <groupId>org.jdom</groupId> -->
-            <!-- <artifactId>jdom</artifactId> -->
-            <!-- <version>${jdom.version}</version> -->
-            <!-- </dependency> -->
 
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>

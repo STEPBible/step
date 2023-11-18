@@ -61,10 +61,6 @@
 			<groupId>org.sonatype.sisu.inject</groupId>
 			<artifactId>guice-servlet</artifactId>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>com.yammer.metrics</groupId>-->
-			<!--<artifactId>metrics-guice</artifactId>-->
-		<!--</dependency>-->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -79,11 +75,6 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>com.yammer.metrics</groupId>-->
-			<!--<artifactId>metrics-servlet</artifactId>-->
-		<!--</dependency>-->
-
 
 		<!-- test dependencies -->
 		<dependency>

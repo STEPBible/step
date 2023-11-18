@@ -40,7 +40,7 @@ step.passage = {
      * @strongReference the reference look for across this passage pane and
      *                  highlight
      */
-    highlightStrong : function(passageId, strongReference, emphasiseClass) {
+    highlightStrong: function(passageId, strongReference, emphasiseClass) {
 		var showSimilarWord = step.passages.findWhere({ passageId: 0}).get("isSimilarWord");
 		if (typeof showSimilarWord === "undefined") showSimilarWord = true;
         if ((!strongReference) || (!showSimilarWord)) return;

@@ -725,7 +725,8 @@ var SidebarView = Backbone.View.extend({
 							.append(relatedNosToDisplay[i].gloss)
                             .append(step.util.formatSearchResultRange(relatedNosToDisplay[i]._searchResultRange, false))
                             .data("strongNumber", relatedNosToDisplay[i].strongNumber));                        
-                    }                    ul.append(li);
+                    }
+                    ul.append(li);
                     matchingExpression += relatedNosToDisplay[i].strongNumber + " ";
                 }
             }

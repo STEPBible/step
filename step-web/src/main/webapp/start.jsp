@@ -205,12 +205,6 @@
     <%
         }
     %>
-
-    <% if (!appManager.isLocal()) { %>
-    <script type="text/javascript">
-        var _prum = [['id', '52698a2cabe53d8c20000000'], ['mark', 'firstbyte', (new Date()).getTime()]];
-    </script>
-    <% } %>
 </head>
 <!-- The following line has to use background and color style.  Using stepFgBg class does not work for the side panel.  -->
 <body xmlns:fb="http://ogp.me/ns/fb#" style="background-color:var(--clrBackground);color:var(--clrText)">

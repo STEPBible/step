@@ -47,9 +47,4 @@
 
     //Set up the variables for accessing the server
     STEP_SERVER_BASE_URL = "<%= restAPIURL %>";
-
-    //Set up timeline - comment out in June 13, 2023
-    // Timeline_ajax_url="libs/timeline_ajax/simile-ajax-api.js?bundle=true";
-    // Timeline_urlPrefix="libs/timeline_js/";
-    // Timeline_parameters="bundle=true";
 </script>

@@ -20,6 +20,7 @@ var PassageMenuView = Backbone.View.extend({
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>"></span></a></li>',
     secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.zh_second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>"></span></a></li>',
+    swipeLeftRight: '<li><a href="javascript:void(0)" data-selected="true"><span>Swipe left/right</span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSwipeLeftRight ? "visible" : "hidden" %>"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
     },
@@ -528,7 +529,22 @@ var PassageMenuView = Backbone.View.extend({
         dropdown.append(li);
         dropdown.append(_.template(this.fontButtons)())
             .find(".largerFontSize").click(this.changeFontSizeInThisPanel);
-
+        if (step.touchDevice) {
+            var currentSwipeLRSetting = self.model.get("isSwipeLeftRight");
+            if (currentSwipeLRSetting == null) {
+                this.model.save({isSwipeLeftRight: true});
+                currentSwipeLRSetting = true;
+            }
+            dropdown.append($(_.template(this.swipeLeftRight)({isSwipeLeftRight: currentSwipeLRSetting})).click(function (e) {
+                //prevent the bubbling up
+                e.stopPropagation();
+                //set the setting
+                var newSwipeLRSetting = !self.model.get("isSwipeLeftRight");
+                self.model.save({isSwipeLeftRight: newSwipeLRSetting});
+                //toggle the tick
+                self._setVisible(this, newSwipeLRSetting);
+            }));
+        }
         return dropdown;
 
     },

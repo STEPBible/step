@@ -2,7 +2,7 @@ var CONTINUOUS_SCROLLING_VERSE_GAP = 50;
 
 step.passage = {
     lastUrls : [undefined, undefined],
-    getPassageId : function(element) {
+    getPassageId: function(element) {
         return parseInt($(element).closest(".passageContainer").attr("passage-id"));
     },
     blacklistedStrongs : [ "G3588" ],
@@ -14,7 +14,7 @@ step.passage = {
      * @param strongMorphReference
      *            the references of all strongs and morphs asked for
      */
-    higlightStrongs : function(strongMorphReference) {
+    higlightStrongs: function(strongMorphReference) {
 		var showSimilarWord = step.passages.findWhere({ passageId: 0}).get("isSimilarWord");
 		if (typeof showSimilarWord === "undefined") showSimilarWord = true;
         if ((strongMorphReference.strong == null) || (!showSimilarWord)) return;
@@ -60,7 +60,7 @@ step.passage = {
         }
     },
 
-    removeStrongsHighlights : function(passageId, classes) {
+    removeStrongsHighlights: function(passageId, classes) {
         var classes = classes || "emphasisePassagePhrase relatedWordEmphasis";
         var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
         $(".verse span, span.w span, .heading span", container).removeClass(classes);

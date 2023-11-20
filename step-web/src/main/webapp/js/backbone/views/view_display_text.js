@@ -72,7 +72,7 @@ var TextDisplayView = SearchDisplayView.extend({
      * @param lastHeader the last header that was output
      * @return the header that is output, or null otherwise
      */
-    doGroupHeader : function(table, result, sortOrder, lastHeader) {
+    doGroupHeader: function(table, result, sortOrder, lastHeader) {
         //by default, we don't group items
     }
 });

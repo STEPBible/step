@@ -1,5 +1,5 @@
 step.alternatives = {
-        enrichPassage : function(passageId, passageContent, version, reference) {
+        enrichPassage: function(passageId, passageContent, version, reference) {
             var self = this;
             
             // only do this if we've got a particular parameter set in the URL
@@ -53,7 +53,7 @@ step.alternatives = {
                                 hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
                                 position : { my: "bottom center", at: "top center", viewport: $(window) },
                                 events : {
-                                    visible : function(event, api) {
+                                    visible: function(event, api) {
                                         $("a.alt-" + o).click(function(event) {
                                             if(step.passage.versions == undefined) {
                                                 step.passage.versions = { warningRaised : true};
@@ -100,7 +100,7 @@ step.alternatives = {
             });
         },
         
-        enrichTypeQualifier : function(text) {
+        enrichTypeQualifier: function(text) {
             var extraValue = "";
             
             if(text == undefined || text == "") {

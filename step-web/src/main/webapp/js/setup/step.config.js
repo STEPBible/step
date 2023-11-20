@@ -18,7 +18,7 @@ step.config = {
     confirmedInternet : false,
     installers : [],
     
-    init : function() {
+    init: function() {
         var self = this;
         // get all installed modules
         this.populateInstalledModules();
@@ -33,7 +33,7 @@ step.config = {
         this.updateProgress();
     },
 
-    receiveItem : function(draggedItem, parent) {
+    receiveItem: function(draggedItem, parent) {
         var self = this;
         var item = $.data(draggedItem.get(0), "item");
         draggedItem.remove();
@@ -48,7 +48,7 @@ step.config = {
     },
 
     /** modules that have yet to be installed */
-    populateInstallableModules : function(index) {
+    populateInstallableModules: function(index) {
         
         var installableColumn = $("#toBeInstalledColumn");
         var self = this;
@@ -88,7 +88,7 @@ step.config = {
     },
 
     /** loads the installed modules from the server */
-    populateInstalledModules : function() {
+    populateInstalledModules: function() {
         var self = this;
         var installedColumn = $("#installedColumn");
         $.get(MODULE_GET_ALL_MODULES, function(data) {
@@ -98,7 +98,7 @@ step.config = {
         });
     },
 
-    updateProgress : function() {
+    updateProgress: function() {
         var self = this;
         this.queryProgress(SETUP_PROGRESS_INSTALL, this.currentInstalls, 0, function(initials) {
             //now kick off indexing
@@ -121,7 +121,7 @@ step.config = {
         step.util.delay(function() { step.config.updateProgress(); }, 1000);
     },
     
-    queryProgress : function(progressUrl, versions, offsetProgress, completeHandler) {
+    queryProgress: function(progressUrl, versions, offsetProgress, completeHandler) {
         var self = this;
         if(versions != 0) {
             $.get(progressUrl + versions.join(), function(data) {
@@ -158,7 +158,7 @@ step.config = {
         }
     },
     
-    renderVersion : function(item, column, installer) {
+    renderVersion: function(item, column, installer) {
         var self = this;
 
         var category = item.category == 'BIBLE' ? __s.bible : __s.commentary;
@@ -246,7 +246,7 @@ step.config = {
             });
         });
     },
-    sortBy : function(field) {
+    sortBy: function(field) {
         $("#sortLinks a").removeClass("selected");
         $("#" + field + "Sort").addClass('selected');
 
@@ -259,7 +259,7 @@ step.config = {
         $(".version ." + field).addClass("ui-state-highlight");
     },
     
-    filterBy : function(field) {
+    filterBy: function(field) {
         if(!field) {
             field = $(".filterBy").val();
         }
@@ -271,7 +271,7 @@ step.config = {
         var rc = $("#installedColumn ." + field + ":icontains(\"" + value +"\")").closest(".version").show();
     },
 
-    createOption : function(option) {
+    createOption: function(option) {
         var repositories = $("#repositories");
         var optionElement = $("<option></option>").html(option.name).val(option.index);
         repositories.append(optionElement);
@@ -279,7 +279,7 @@ step.config = {
         return optionElement;
     },
     
-    populateRepositories : function() {
+    populateRepositories: function() {
         var self = this;
         var repositories = $("#repositories");
         $.get(SETUP_GET_INSTALLERS, function(data) {

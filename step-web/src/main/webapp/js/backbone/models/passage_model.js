@@ -15,7 +15,7 @@ var PassageModelList = Backbone.Collection.extend({
     initialize: function () {
         this.on("change", this.changePassage, this);
     },
-    changePassage : function(a,b,c) {
+    changePassage: function(a,b,c) {
         //hack for backbone as models don't get created silently
         if(a.get("createSilently")) {
             a.save({createSilently: null}, {silent: true});

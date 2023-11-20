@@ -1,6 +1,6 @@
 step.state = {
     responseLanguage : undefined,
-    language : function(numParts) {
+    language: function(numParts) {
         if(this.responseLanguage != undefined) {
             return this.responseLanguage;
         }
@@ -23,25 +23,25 @@ step.state = {
         return lang;
     },
     
-    restore : function() {
+    restore: function() {
         //restore active language
         this._restoreLanguage();
      },
 
 
-    isLocal : function() {
+    isLocal: function() {
         if(this.local == undefined) {
             this.local = $("meta[step-local]").attr("content") == "true";
         }
         return this.local;
     },
-    getDomain : function() {
+    getDomain: function() {
         if(this.domain == undefined) {
             this.domain = $("meta[step-domain]").attr("content");
         }
         return this.domain;
     },
-    getIncompleteLanguage : function() {
+    getIncompleteLanguage: function() {
         if(this.incomplete == undefined) {
             var incomplete = $("meta[step-incomplete-language]");
             this.incomplete = incomplete.attr("content") == "true";
@@ -54,7 +54,7 @@ step.state = {
         }
         return this.direction;
     },
-    getCurrentVersion : function() {
+    getCurrentVersion: function() {
         if(this.version == undefined) {
             this.version = $("meta[name='step.version']").attr("content");
         }

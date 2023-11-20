@@ -78,10 +78,10 @@ var ViewHelpMenuOptions = Backbone.View.extend({
         //set the location
         window.location.href = '/' + ($.getUrlVars() || []).indexOf("debug") != -1 ? "" : "?debug";
     },
-    openTutorial : function() {
+    openTutorial: function() {
         step.util.ui.showTutorial();
     },
-	classicalUI : function() {
+	classicalUI: function() {
         var classicalUISetting = step.util.localStorageGetItem('step.classicalUI');
 		var classicalUI;
 		if (classicalUISetting === "true") { // reserse the setting

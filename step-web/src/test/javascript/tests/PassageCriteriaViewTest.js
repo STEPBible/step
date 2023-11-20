@@ -4,7 +4,7 @@ var __s;
 module("STEP Passage Criteria View Test", {
     setup: function () {
         step = {
-            util : {ui : { autocompleteSearch : function() { } } },
+            util : {ui : { autocompleteSearch: function() { } } },
             defaults : { passage : {
                 interNamedOptions: ["A", "B", "C", "INTERLINEAR"],
                 interOptions: ["x", "y", "z", "Interlinear"],
@@ -44,9 +44,9 @@ test("PassageCriteriaView Resync disables and sets the source correctly", functi
     var view = new PassageCriteriaView({ model : model});
 
     view.interlinearMode = {
-        prop : function(key, disabled) { this.disabledValue = disabled; },
-        autocomplete : function(option, source, options) { this.optionsValue = options; },
-        val : function(newValue) { this.value = newValue }
+        prop: function(key, disabled) { this.disabledValue = disabled; },
+        autocomplete: function(option, source, options) { this.optionsValue = options; },
+        val: function(newValue) { this.value = newValue }
     };
 
 

@@ -163,16 +163,17 @@ var PassageMenuView = Backbone.View.extend({
             
         // If the device is mobile, and the user has swiped at least 3x (so they know
         // how it works), then don't display the prev/next arrows anymore.
-
-        if (step.touchDevice && swipeCount >= 3) {
+		var swipeStatus = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSwipeLeftRight");
+        if (swipeStatus == undefined)
+            swipeStatus = true;
+        if (step.touchDevice && swipeCount >= 3 && swipeStatus)
             $(".nextPreviousChapterGroup").css("display", "none");
-        }
         else {
+            $(".nextPreviousChapterGroup").css("display", "block");
             var openDropdown = this.$el.find(".dropdown.open");
             if (this._isDisplayOptionsDropdown(openDropdown)) {
                 this._updateColumnOptions();
             }
-
             var isPassage = this.model.get("searchType") == 'PASSAGE';
             var previousNext = this.$el.find(".nextPreviousChapterGroup");
             previousNext.toggle(true);
@@ -531,18 +532,23 @@ var PassageMenuView = Backbone.View.extend({
             .find(".largerFontSize").click(this.changeFontSizeInThisPanel);
         if (step.touchDevice) {
             var currentSwipeLRSetting = self.model.get("isSwipeLeftRight");
-            if (currentSwipeLRSetting == null) {
+            if (currentSwipeLRSetting == undefined) {
                 this.model.save({isSwipeLeftRight: true});
                 currentSwipeLRSetting = true;
             }
             dropdown.append($(_.template(this.swipeLeftRight)({isSwipeLeftRight: currentSwipeLRSetting})).click(function (e) {
                 //prevent the bubbling up
                 e.stopPropagation();
+                var currentSwipeLRSetting = self.model.get("isSwipeLeftRight");
+                if (currentSwipeLRSetting == undefined)
+                    currentSwipeLRSetting = true;
                 //set the setting
-                var newSwipeLRSetting = !self.model.get("isSwipeLeftRight");
+                var newSwipeLRSetting = !currentSwipeLRSetting;
                 self.model.save({isSwipeLeftRight: newSwipeLRSetting});
                 //toggle the tick
                 self._setVisible(this, newSwipeLRSetting);
+                var displayStyle = (newSwipeLRSetting) ? "none" : "block";
+                $(".nextPreviousChapterGroup").css("display", displayStyle);
             }));
         }
         return dropdown;

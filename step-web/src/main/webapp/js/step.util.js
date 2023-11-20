@@ -4235,7 +4235,8 @@ step.util = {
 		return (freqListElm);
 	},
     handleGesture: function(touchEvent, touchstartX, touchstartY) {
-		if (!step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSwipeLeftRight"))
+		var status = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSwipeLeftRight");
+		if ((status != undefined) && (!status))
 			return;
 		var touchendX = touchEvent.changedTouches[0].screenX;
 		var touchendY = touchEvent.changedTouches[0].screenY;

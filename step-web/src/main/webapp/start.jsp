@@ -447,10 +447,10 @@
     </div>
 </div>
 
-<%
+<% if (request.getParameter("mobile") == null) {
     String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
     <script src="intl/<%= URLEncoder.encode(langCode, "UTF-8") %>.${project.version}.js" type="text/javascript"></script>
-%>
+<% } %>
 <%@include file="jsps/initLib.jsp"%>
 <%
 String userCountry = request.getHeader("cf-ipcountry");

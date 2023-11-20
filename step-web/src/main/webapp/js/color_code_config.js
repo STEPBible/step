@@ -100,7 +100,7 @@ function initSortVerbItem() {
     new Sortable(nestedSortables[j], {
       group: 'nested',
       animation: 150,
-      onEnd: function(/**Event*/evt) {
+      onEnd: function() {
         cv[C_userProvidedSortOrder] = [];
         for (var j = 0; j < $('#nestedVerbItem')[0].children.length; j ++) {
           cv[C_userProvidedSortOrder].push($('#nestedVerbItem')[0].children[j].innerText);

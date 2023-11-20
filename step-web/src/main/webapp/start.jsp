@@ -556,7 +556,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     }
 %>
 <script>
-    var ua = navigator.userAgent.toLowerCase(); 
 	if (step.touchDevice) {
         jQuery.event.special.touchstart = {
             setup: function( _, ns, handle ){

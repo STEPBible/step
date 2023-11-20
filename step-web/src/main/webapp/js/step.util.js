@@ -1543,7 +1543,7 @@ step.util = {
 							version = possibleVersion;
 						}
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
-						var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
+			var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
                     strong: strong, morph: morph,
@@ -4235,37 +4235,39 @@ step.util = {
 		return (freqListElm);
 	},
     handleGesture: function(touchEvent, touchstartX, touchstartY) {
-        var touchendX = touchEvent.changedTouches[0].screenX;
-        var touchendY = touchEvent.changedTouches[0].screenY;
-        var minDistance = 40;
-        var verticalTolerance = 40;
-        var touchDiffY = Math.abs(touchendY - touchstartY);
-        if (touchDiffY < verticalTolerance) { // If there is lots of vertical movement, it is not a swipe left/right
-            var touchDiffX = touchendX - touchstartX;
-            if (Math.abs(touchDiffX) > minDistance) {
-                var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));
-                if (touchDiffX < 0)
-                    activePassage.find("a.nextChapter").click();
-                else 
-                    activePassage.find("a.previousChapter").click();
-                // Record swipeCount up to three, after which the prev/next arrows won't be displayed.
-                var swipeCount = step.util.localStorageGetItem("swipeCount");
-                if (swipeCount == null) swipeCount = 0;
-                if (swipeCount <= 3) {
-                    swipeCount++;
-                    step.util.localStorageSetItem("swipeCount", swipeCount);
-                }
-            }
-            else if ((touchDiffX < 3) && (touchDiffY < 3)) {
-                if ((touchEvent.srcElement.outerHTML.substring(0,7) === "<button") ||
-                    ((touchEvent.srcElement.outerHTML.substring(0,5) === "<span") && (touchEvent.srcElement.outerHTML.indexOf("verse") == -1)) ) {
-                        return;
-                }
-                // A touch on elements which do not have events will clear highlight and quick lexicon
-                step.passage.removeStrongsHighlights(undefined, "primaryLightBg secondaryBackground relatedWordEmphasisHover");
-                $('#quickLexicon').remove();
-            }
-        }
+		if (!step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSwipeLeftRight"))
+			return;
+		var touchendX = touchEvent.changedTouches[0].screenX;
+		var touchendY = touchEvent.changedTouches[0].screenY;
+		var minDistance = 40;
+		var verticalTolerance = 35;
+		var touchDiffY = Math.abs(touchendY - touchstartY);
+		if (touchDiffY < verticalTolerance) { // If there is lots of vertical movement, it is not a swipe left/right
+			var touchDiffX = touchendX - touchstartX;
+			if (Math.abs(touchDiffX) > minDistance) {
+				var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));
+				if (touchDiffX < 0)
+					activePassage.find("a.nextChapter").click();
+				else 
+					activePassage.find("a.previousChapter").click();
+				// Record swipeCount up to three, after which the prev/next arrows won't be displayed.
+				var swipeCount = step.util.localStorageGetItem("swipeCount");
+				if (swipeCount == null) swipeCount = 0;
+				if (swipeCount <= 3) {
+					swipeCount++;
+					step.util.localStorageSetItem("swipeCount", swipeCount);
+				}
+			}
+			else if ((touchDiffX < 3) && (touchDiffY < 3)) {
+				if ((touchEvent.srcElement.outerHTML.substring(0,7) === "<button") ||
+					((touchEvent.srcElement.outerHTML.substring(0,5) === "<span") && (touchEvent.srcElement.outerHTML.indexOf("verse") == -1)) ) {
+						return;
+				}
+				// A touch on elements which do not have events will clear highlight and quick lexicon
+				step.passage.removeStrongsHighlights(undefined, "primaryLightBg secondaryBackground relatedWordEmphasisHover");
+				$('#quickLexicon').remove();
+			}
+		}
     }
 }
 ;

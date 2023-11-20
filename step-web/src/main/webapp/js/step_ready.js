@@ -415,7 +415,8 @@
                 isVerseVocab: likelyPreviousPassage ? likelyPreviousPassage.get("isVerseVocab") : true,
                 results: null,
                 linked: null,
-                value: pageValue
+                value: pageValue,
+                isSwipeLeftRight: likelyPreviousPassage ? likelyPreviousPassage.get("isSwipeLeftRight") : true,
             }, {silent: true});
             new PassageMenuView({
                 model: modelZero

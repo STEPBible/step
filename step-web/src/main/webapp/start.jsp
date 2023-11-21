@@ -147,6 +147,7 @@
             <% }
         } %>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <meta step-local content="<%= appManager.isLocal() %>"/>
     <meta step-domain content="<%= appManager.getAppDomain() %>"/>

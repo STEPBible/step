@@ -446,17 +446,13 @@
         <div class="sidebar-offcanvas" dir="${ ltr ? "ltr" : "rtl" }" id="sidebar" style="overflow-y:hidden" role="navigation"></div>
     </div>
 </div>
-
-<% if (request.getParameter("mobile") == null) {
-    String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
-    <script src="intl/<%= URLEncoder.encode(langCode, "UTF-8") %>.${project.version}.js" type="text/javascript"></script>
-<% } %>
+<% String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
+<script src="intl/<%= URLEncoder.encode(langCode, "UTF-8") %>.${project.version}.js" type="text/javascript"></script>
 <%@include file="jsps/initLib.jsp"%>
 <%
 String userCountry = request.getHeader("cf-ipcountry");
 userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 %>
-<%-- Now do javascript --%>
 <script type="text/javascript">
     window.tempModel = ${ not empty passageModel ? passageModel : 'undefined' };
     if (!window.step) {
@@ -467,7 +463,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     step.userCountryCode = "<%=userCountry%>";
 
     // code to enable mobile device swipe to go back or forward one chapter
-    var ua = navigator.userAgent.toLowerCase(); 
+    var ua = navigator.userAgent.toLowerCase();
     if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
         ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints == 5))) {
         step.touchDevice = true;
@@ -486,6 +482,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
         step.touchDevice = false;
 
 </script>
+<%-- The following 3 were added to the step.version_num.min.js.  Keep them as comment in case we want to reverse the change --%>
 <%-- <script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script> --%>
 <%-- <script src="libs/bootstrap.min.js" type="text/javascript"></script> --%>
 <%-- <script src="libs/introjs.min.js" type="text/javascript"></script> --%>

@@ -20,7 +20,7 @@
         <sword.home>${sword.home}</sword.home>
         <jsword.home>${jsword.home}</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-	    <modulesToInclude>esv_th,kjv,chiun,chiuns,osmhb,THOT,lxx_th,SBLG_th,NIV,abpen_sb,abpgk_sb,sparv1909,FreSeg21,cpdv</modulesToInclude>
+	    <modulesToInclude>ESV_th,kjv,chiun,chiuns,osmhb,THOT,lxx_th,SBLG_th,NIV,abpen_sb,abpgk_sb,sparv1909,FreSeg21,cpdv</modulesToInclude>
 		<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_sb,abpgk_sb,SpaRV1909,FreSeg21,CPDV</indexesToInclude>
     </properties>
 
@@ -113,7 +113,7 @@
 		<profile>
 			<id>standalone-zh</id>
 			<properties>
-			    <modulesToInclude>esv_th,kjv,chiun,chiuns,chincvt,chincvs,osmhb,THOT,lxx_th,SBLG_th,NIV,abpen_sb,abpgk_sb,sparv1909</modulesToInclude>
+			    <modulesToInclude>ESV_th,kjv,chiun,chiuns,chincvt,chincvs,osmhb,THOT,lxx_th,SBLG_th,NIV,abpen_sb,abpgk_sb,sparv1909</modulesToInclude>
 				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,OSMHB,THOT,LXX_th,SBLG_th,NIV,abpen_sb,abpgk_sb,SpaRV1909</indexesToInclude>
 			</properties>
 		</profile>

@@ -163,7 +163,8 @@ var PassageMenuView = Backbone.View.extend({
             
         // If the device is mobile, and the user has swiped at least 3x (so they know
         // how it works), then don't display the prev/next arrows anymore.
-		var swipeStatus = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSwipeLeftRight");
+        // Calling activePassageId can crash so just use passageID 0
+		var swipeStatus = step.passages.findWhere({ passageId: 0}).get("isSwipeLeftRight");
         if (swipeStatus == undefined)
             swipeStatus = true;
         if (step.touchDevice && swipeCount >= 3 && swipeStatus)

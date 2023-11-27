@@ -342,6 +342,8 @@ function setupTable(urlPart1, aDate) {
         var anchor = ' id="today"';
         var row_label = "";
         var today = new Date();
+        // subtracting 6 day from today will ensure the last row will be centred when viewing all that week
+        today.setDate(today.getDate() - 6);
 
         for (var i = 0; i < array.length; i ++ ) {
             if (array[i][0] >= first_advent_of_year && array[i][0] < first_advent_of_next_year)

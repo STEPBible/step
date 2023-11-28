@@ -110,6 +110,8 @@ var PassageDisplayView = DisplayView.extend({
                 }
                 $(this.$el).find(".passageContentHolder").scroll(function(){
                     $(".versePopup").hide();
+                    if ($(this).find(".resultsLabel").text() !== "") // This is search result
+                        return;
                     var allVerseNumbers = $(this).find(".verseNumber");
                     var thisTop = $(this).offset().top;
                     for (var i = 0; i < allVerseNumbers.length; i++) {

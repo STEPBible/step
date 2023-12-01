@@ -3088,6 +3088,11 @@ step.util = {
 	},
 	showIntro: function (showAnyway) {
 		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
+		if (step.touchDevice) {
+			var ua = navigator.userAgent.toLowerCase(); 
+			if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
+				return;
+		}
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
@@ -3139,6 +3144,11 @@ step.util = {
 	},
     showIntroOfMultiVersion: function () {
 		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
+		if (step.touchDevice) {
+			var ua = navigator.userAgent.toLowerCase(); 
+			if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
+				return;
+		}
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.multiVersionCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;

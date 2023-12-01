@@ -190,20 +190,24 @@ var PassageMenuView = Backbone.View.extend({
         // STEP's usage count > 1 so that the initial introJsStep has already
         // played, and hopefully the user knows what the arrows are for.
 
-        var swipeIntro = step.util.localStorageGetItem("swipeIntro");
-        if (swipeIntro == null) swipeIntro = 0;
-        if (step.touchDevice && swipeIntro == 0) {
-            var stepUsage = step.util.localStorageGetItem("step.usageCount");
-            if (stepUsage == null) stepUsage = 0;
-            if (stepUsage >= 1) {
-                var introJsSteps = [{
-                    element: document.getElementsByClassName('previousChapter')[0],
-                    intro: "Swipe left for next chapter, right for previous chapter.  Once you have used the swipe feature three times, the arrows will hide."
-                }];
-                introJs().setOptions({
-                    steps: introJsSteps
-                }).start();
-
+		if (step.touchDevice) {
+            var ua = navigator.userAgent.toLowerCase(); 
+            if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
+                return;
+            var swipeIntro = step.util.localStorageGetItem("swipeIntro");
+            if (swipeIntro == null) swipeIntro = 0;
+            if (swipeIntro == 0) {
+                var stepUsage = step.util.localStorageGetItem("step.usageCount");
+                if (stepUsage == null) stepUsage = 0;
+                if (stepUsage >= 1) {
+                    var introJsSteps = [{
+                        element: document.getElementsByClassName('previousChapter')[0],
+                        intro: "Swipe left for next chapter, right for previous chapter.  Once you have used the swipe feature three times, the arrows will hide."
+                    }];
+                    introJs().setOptions({
+                        steps: introJsSteps
+                    }).start();
+                }
                 step.util.localStorageSetItem("swipeIntro", 1);
             }
         }

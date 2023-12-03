@@ -4244,7 +4244,7 @@ step.util = {
 		});
 		return (freqListElm);
 	},
-    handleGesture: function(touchEvent, touchstartX, touchstartY) {
+    handleGesture: function(touchEvent, touchstartX, touchstartY, touchstartTime) {
 		var status = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSwipeLeftRight");
 		if ((status != undefined) && (!status))
 			return;
@@ -4253,31 +4253,30 @@ step.util = {
 		var minDistance = 40;
 		var verticalTolerance = 35;
 		var touchDiffY = Math.abs(touchendY - touchstartY);
-		if (touchDiffY < verticalTolerance) { // If there is lots of vertical movement, it is not a swipe left/right
-			var touchDiffX = touchendX - touchstartX;
-			if (Math.abs(touchDiffX) > minDistance) {
-				var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));
-				if (touchDiffX < 0)
-					activePassage.find("a.nextChapter").click();
-				else 
-					activePassage.find("a.previousChapter").click();
-				// Record swipeCount up to three, after which the prev/next arrows won't be displayed.
-				var swipeCount = step.util.localStorageGetItem("swipeCount");
-				if (swipeCount == null) swipeCount = 0;
-				if (swipeCount <= 10) {
-					swipeCount++;
-					step.util.localStorageSetItem("swipeCount", swipeCount);
-				}
+		if ((touchDiffY > verticalTolerance) || (new Date().getTime() - touchstartTime > 300)) return; // must be within 300 milliseconds
+		var touchDiffX = touchendX - touchstartX;
+		if (Math.abs(touchDiffX) > minDistance) {
+			var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));
+			if (touchDiffX < 0)
+				activePassage.find("a.nextChapter").click();
+			else 
+				activePassage.find("a.previousChapter").click();
+			// Record swipeCount up to three, after which the prev/next arrows won't be displayed.
+			var swipeCount = step.util.localStorageGetItem("swipeCount");
+			if (swipeCount == null) swipeCount = 0;
+			if (swipeCount <= 10) {
+				swipeCount++;
+				step.util.localStorageSetItem("swipeCount", swipeCount);
 			}
-			else if ((touchDiffX < 3) && (touchDiffY < 3)) {
-				if ((touchEvent.srcElement.outerHTML.substring(0,7) === "<button") ||
-					((touchEvent.srcElement.outerHTML.substring(0,5) === "<span") && (touchEvent.srcElement.outerHTML.indexOf("verse") == -1)) ) {
-						return;
-				}
-				// A touch on elements which do not have events will clear highlight and quick lexicon
-				step.passage.removeStrongsHighlights(undefined, "primaryLightBg secondaryBackground relatedWordEmphasisHover");
-				$('#quickLexicon').remove();
+		}
+		else if ((touchDiffX < 3) && (touchDiffY < 3)) {
+			if ((touchEvent.srcElement.outerHTML.substring(0,7) === "<button") ||
+				((touchEvent.srcElement.outerHTML.substring(0,5) === "<span") && (touchEvent.srcElement.outerHTML.indexOf("verse") == -1)) ) {
+					return;
 			}
+			// A touch on elements which do not have events will clear highlight and quick lexicon
+			step.passage.removeStrongsHighlights(undefined, "primaryLightBg secondaryBackground relatedWordEmphasisHover");
+			$('#quickLexicon').remove();
 		}
     }
 }

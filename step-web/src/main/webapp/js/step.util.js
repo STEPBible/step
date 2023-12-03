@@ -4253,7 +4253,7 @@ step.util = {
 		var minDistance = 40;
 		var verticalTolerance = 35;
 		var touchDiffY = Math.abs(touchendY - touchstartY);
-		if ((touchDiffY > verticalTolerance) || (new Date().getTime() - touchstartTime > 300)) return; // must be within 300 milliseconds
+		if ((touchDiffY > verticalTolerance) || (new Date().getTime() - touchstartTime > 400)) return; // must be within 300 milliseconds
 		var touchDiffX = touchendX - touchstartX;
 		if (Math.abs(touchDiffX) > minDistance) {
 			var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));

@@ -4264,7 +4264,7 @@ step.util = {
 				// Record swipeCount up to three, after which the prev/next arrows won't be displayed.
 				var swipeCount = step.util.localStorageGetItem("swipeCount");
 				if (swipeCount == null) swipeCount = 0;
-				if (swipeCount <= 3) {
+				if (swipeCount <= 10) {
 					swipeCount++;
 					step.util.localStorageSetItem("swipeCount", swipeCount);
 				}

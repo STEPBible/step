@@ -473,10 +473,11 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
         touchableElement.addEventListener('touchstart', function (event) {
             touchstartX = event.changedTouches[0].screenX;
             touchstartY = event.changedTouches[0].screenY;
+            touchstartTime = new Date().getTime();
         }, false);
 
         touchableElement.addEventListener('touchend', function (event) {
-            step.util.handleGesture(event, touchstartX, touchstartY);
+            step.util.handleGesture(event, touchstartX, touchstartY, touchstartTime);
         }, false);
     }
     else

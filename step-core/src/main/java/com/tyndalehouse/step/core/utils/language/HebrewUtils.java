@@ -93,7 +93,9 @@ public final class HebrewUtils {
      * @return true if it is hebrew text
      */
     public static boolean isHebrewText(final String rawForm) {
-        final int firstCharacter = rawForm.charAt(0);
+        int firstCharacter = rawForm.charAt(0);
+        if (firstCharacter == 47)
+            firstCharacter = rawForm.charAt(1);
         return isHebrewCharacter(firstCharacter);
     }
 
@@ -249,8 +251,17 @@ public final class HebrewUtils {
     public static String transliterateHebrew(final String inputString) {
         final HebrewLetter[] letters = new HebrewLetter[inputString.length()];
         final char[] input = inputString.toCharArray();
+        if ((input.length == 3 || input.length == 2) && input[0] == 47) {
+            if (input[1] == 1493) return "v";
+            else if (input[1] == 1478) return "a";
+            else if (input[1] == 1489) return "b";
+            else if (input[1] == 1492) return "h";
+            else if (input[1] == 1499) return "k";
+            else if (input[1] == 1500) return "l";
+            else if (input[1] == 1502) return "m";
+            else if (input[1] == 1513) return "s";
+        }
         try {
-
             // iterate through looking for Yods
             for (int ii = 0; ii < input.length; ii++) {
                 if (isHebrewConsonant(input[ii])) {

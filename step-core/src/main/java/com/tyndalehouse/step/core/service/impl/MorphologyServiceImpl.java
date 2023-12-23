@@ -23,6 +23,9 @@ public class MorphologyServiceImpl implements MorphologyService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MorphologyServiceImpl.class);
     private static final String ROBINSON_PREFIX = "robinson:";
     private static final int ROBINSON_PREFIX_LENGTH = ROBINSON_PREFIX.length();
+    private static final String SB_PREFIX = "sb:";
+    private static final int SB_PREFIX_LENGTH = SB_PREFIX.length();
+
     private static final String NON_BREAKING_SPACE = "&nbsp;";
     private final EntityIndexReader morphology;
 
@@ -64,11 +67,14 @@ public class MorphologyServiceImpl implements MorphologyService {
      */
     @SuppressWarnings("PMD")
     private EntityDoc retrieveMorphologyByLongName(final String code) {
-        final String key = code.startsWith(ROBINSON_PREFIX) ? code.substring(ROBINSON_PREFIX_LENGTH) : code;
-
-        final long currentTimeNanos = System.nanoTime();
+        String key = null;
+        if (code.startsWith(ROBINSON_PREFIX))
+            key = code.substring(ROBINSON_PREFIX_LENGTH);
+        else if (code.startsWith(SB_PREFIX))
+            key = code.substring(SB_PREFIX_LENGTH);
+        else
+            key = code;
         final EntityDoc[] entry = this.morphology.searchExactTermBySingleField("code", 1, key);
-        LOGGER.debug("Took [{}] nano-seconds", System.nanoTime() - currentTimeNanos);
         return entry.length > 0 ? entry[0] : null;
     }
 

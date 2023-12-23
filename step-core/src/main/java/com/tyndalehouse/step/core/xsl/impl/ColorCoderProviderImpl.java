@@ -45,7 +45,10 @@ public class ColorCoderProviderImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(ColorCoderProviderImpl.class);
     private static final String ROBINSON_PREFIX_LC = "robinson:";
     private static final String ROBINSON_PREFIX_UC = "ROBINSON:";
-    private static final int MINIMUM_MORPH_LENGTH = ROBINSON_PREFIX_UC.length() + 2;
+	private static final String SB_PREFIX_LC = "sb:";
+	private static final int ROBINSON_PREFIX_LENGTH = ROBINSON_PREFIX_LC.length();
+	private static final int SB_PREFIX_LENGTH = SB_PREFIX_LC.length();
+    private static final int MINIMUM_MORPH_LENGTH = 2;
 
     // css classes
     private final EntityIndexReader morphology;
@@ -63,115 +66,113 @@ public class ColorCoderProviderImpl {
      * @return the classname
      */
     public String getColorClass(final String morph) {
-        if (morph == null || morph.length() < MINIMUM_MORPH_LENGTH) {
+        if (morph == null || morph.length() < MINIMUM_MORPH_LENGTH || morph.startsWith("TOS:"))
             return "";
-        }
-
         String classes = null;
-        if (morph.startsWith(ROBINSON_PREFIX_LC) || morph.startsWith(ROBINSON_PREFIX_UC)) {
-            // we're in business and we know we have at least 3 characters
-            LOGGER.debug("Identifying grammar for [{}]", morph);
+		String curMorph;
+        if (morph.startsWith(ROBINSON_PREFIX_LC) || morph.startsWith(ROBINSON_PREFIX_UC))
+			curMorph = morph.substring(ROBINSON_PREFIX_LENGTH);
+		else if (morph.startsWith(SB_PREFIX_LC))
+			curMorph = morph.substring(SB_PREFIX_LENGTH);
+		else
+			curMorph = morph;
+            // we're in business and we know we have at least 2 characters
+		LOGGER.debug("Identifying grammar for [{}]", morph);
 
-            final int length = ROBINSON_PREFIX_LC.length();
-            final int firstSpace = morph.indexOf(' ', length);
-            String code;
-            if (firstSpace != -1) {
-                code = morph.substring(length, firstSpace);
-            } else {
-                code = morph.substring(length);
-            }
-
-            final EntityDoc[] results = this.morphology.searchExactTermBySingleField("code", 1, code);
-            if (results.length > 0) {
-                classes = results[0].get("cssClasses");
-                // Added on Feb 27, 2018 to annotate verbs
-				String funct;
+		final int firstSpace = curMorph.indexOf(' ');
+		if (firstSpace != -1) {
+			curMorph = curMorph.substring(0, firstSpace);
+		}
+		final EntityDoc[] results = this.morphology.searchExactTermBySingleField("code", 1, curMorph);
+		if (results.length > 0) {
+			classes = results[0].get("cssClasses");
+			// Added on Feb 27, 2018 to annotate verbs
+			String funct;
+			try {
+				funct = results[0].get("function").toLowerCase();
+			}
+			catch (NullPointerException e) {
+				funct = "";
+			}
+			if (funct.equals("verb")) {
+				String tense, voice, mood;
 				try {
-					funct = results[0].get("function").toLowerCase();
+					tense = results[0].get("tense").toLowerCase();
+					voice = results[0].get("voice").toLowerCase();
+					mood = results[0].get("mood").toLowerCase();
 				}
 				catch (NullPointerException e) {
-					funct = "";
+					tense = voice = mood = "";
 				}
-                if (funct.equals("verb")) {					
-                	String tense, voice, mood;
-					try {
-						tense = results[0].get("tense").toLowerCase();
-						voice = results[0].get("voice").toLowerCase();
-						mood = results[0].get("mood").toLowerCase();
+				if (!tense.isEmpty() && !mood.isEmpty()) {
+					// Annotate 2nd Aorist as Aorist, 2nd Future as Future, 2nd Perfect as Perfect, 2nd Pluperfect ...
+					if (tense.startsWith("2nd ")) {
+						tense = tense.substring(4);
+					} else if (tense.equals("indefinite tense")) {
+						tense = "indefinite";
 					}
-					catch (NullPointerException e) {
-						tense = voice = mood = "";
-					}
-					if (!tense.isEmpty() && !mood.isEmpty()) {
-						// Annotate 2nd Aorist as Aorist, 2nd Future as Future, 2nd Perfect as Perfect, 2nd Pluperfect ...
-						if (tense.startsWith("2nd ")) {
-							tense = tense.substring(4);
-						} else if (tense.equals("indefinite tense")) {
-							tense = "indefinite";
-						}
-						if ( (voice.equals("passive")) || (voice.equals("either middle or passive")) ) {
-							voice = "p";
-						}
-						else if (voice.equals("middle") ) {
-							voice = "m";
-						}
-						else if ((voice.indexOf("active") > -1) || (voice.indexOf("deponent") > -1) || (voice.indexOf("indefinite") > -1) ) {
-							voice = "a";
-						}
-						else {
-							LOGGER.warn("cannot identify voice [{}]", voice);
-							voice = "a";
-						}
-						classes = classes + " v" + getShortCodeTense(tense) + voice + getShortCodeMood(mood);
-					}
-                }
-				try {
-					String caseOfWord = results[0].get("case").toLowerCase();
-					if (!isBlank(caseOfWord)) {
-						classes = classes + " n-" + caseOfWord.substring(0, 3);
-					}
-				}
-				catch (NullPointerException e) {
-					//e.printStackTrace();
-				}
-            }
-            /* Added this section for the Chinese Bible which has the morphology on verbs */
-            else if (code.length() > 4) {
-            	if (code.substring(0,1).equalsIgnoreCase("v")) {
-            		String tense = code.substring(2,3).toLowerCase();
-					String voice = code.substring(3,4).toLowerCase();
-            		String mood = code.substring(4,5).toLowerCase();
-            		if (tense.equals("2")) {
-                		tense = code.substring(3,4).toLowerCase();
-						voice = code.substring(4,5).toLowerCase();
-                		mood = code.substring(5,6).toLowerCase();
-            		}
-					if (voice.equals("e")) {
+					if ( (voice.equals("passive")) || (voice.equals("either middle or passive")) ) {
 						voice = "p";
 					}
-					else if ( (!(voice.equals("p"))) && (!(voice.equals("m"))) ) {
-						String voice_displayed_as_active = "adnoqx"; // active, middle deponent, middle or passive deponent, passive deponent, impersonal active, indefinite
-						if (voice_displayed_as_active.indexOf(voice) == -1)  {
-							LOGGER.warn("cannot identify morphology for [{}]", code);
-						}
+					else if (voice.equals("middle") ) {
+						voice = "m";
+					}
+					else if ((voice.indexOf("active") > -1) || (voice.indexOf("deponent") > -1) || (voice.indexOf("indefinite") > -1) ) {
 						voice = "a";
 					}
-					classes = "v" + tense + voice + mood;
-
-            		if (classes == null) {
-                        LOGGER.warn("cannot identify morphology for [{}]", code);
-            		}
-            	}
-            	else {
-					LOGGER.warn("other than verb [{}]", code);
+					else {
+						LOGGER.warn("cannot identify voice [{}]", voice);
+						voice = "a";
+					}
+					classes = classes + " v" + getShortCodeTense(tense) + voice + getShortCodeMood(mood);
 				}
-            }
+			}
+			try {
+				String caseOfWord = results[0].get("case").toLowerCase();
+				if (!isBlank(caseOfWord)) {
+					classes = classes + " n-" + caseOfWord.substring(0, 3);
+				}
+			}
+			catch (NullPointerException e) {
+				//e.printStackTrace();
+			}
+		}
+		/* Added this section for the Chinese Bible which has the morphology on verbs */
+		else if (curMorph.length() > 4) {
+			if (curMorph.substring(0,1).equalsIgnoreCase("v")) {
+				String tense = curMorph.substring(2,3).toLowerCase();
+				String voice = curMorph.substring(3,4).toLowerCase();
+				String mood = curMorph.substring(4,5).toLowerCase();
+				if (tense.equals("2")) {
+					tense = curMorph.substring(3,4).toLowerCase();
+					voice = curMorph.substring(4,5).toLowerCase();
+					mood = curMorph.substring(5,6).toLowerCase();
+				}
+				if (voice.equals("e")) {
+					voice = "p";
+				}
+				else if ( (!(voice.equals("p"))) && (!(voice.equals("m"))) ) {
+					String voice_displayed_as_active = "adnoqx"; // active, middle deponent, middle or passive deponent, passive deponent, impersonal active, indefinite
+					if (voice_displayed_as_active.indexOf(voice) == -1)  {
+						LOGGER.warn("cannot identify morphology for [{}]", curMorph);
+					}
+					voice = "a";
+				}
+				classes = "v" + tense + voice + mood;
 
-            if (isBlank(classes) && firstSpace != -1) {
-                // redo the same process, but with less of the string,
-                return getColorClass(morph.substring(firstSpace + 1));
-            }
-        }
+				if (classes == null) {
+					LOGGER.warn("cannot identify morphology for [{}]", curMorph);
+				}
+			}
+			else {
+				LOGGER.warn("other than verb [{}]", curMorph);
+			}
+		}
+
+		if (isBlank(classes) && firstSpace != -1) {
+			// redo the same process, but with less of the string,
+			return getColorClass(morph.substring(firstSpace + 1));
+		}
         return classes != null ? classes : "";
     }
 

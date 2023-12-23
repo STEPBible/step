@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>23.12.3</version>
+		<version>23.12.4</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -173,7 +173,6 @@
 								<cssFinalFile>step.${project.version}.css</cssFinalFile>
 								<jsSourceDir>.</jsSourceDir>
 								<jsSourceFiles>
-									<!--<jsSourceFile>libs/dohighlight-min.js</jsSourceFile>-->
 									<jsSourceFile>libs/jquery-1.10.2.min.js</jsSourceFile>
 									<jsSourceFile>libs/bootstrap.min.js</jsSourceFile>
 									<jsSourceFile>libs/introjs.min.js</jsSourceFile>
@@ -529,70 +528,442 @@
                                     <replacement><token>C_updatedGenderNumberCSS</token><value>19</value></replacement>
                                     <replacement><token>C_userTurnGenderNumberFromOffToOn</token><value>20</value></replacement>
                                     <replacement><token>C_c4Version</token><value>9</value></replacement>
-									<replacement><token>createC4([:(])</token><value>A$1</value></replacement>
-									<replacement><token>calcAnimationPixelIncrement([:(])</token><value>B$1</value></replacement>
-									<replacement><token>createCanvas([:(])</token><value>C$1</value></replacement>
-									<replacement><token>createUlFor_OT([:(])</token><value>D$1</value></replacement>
-									<replacement><token>createUlForAllItemsInYAndX([:(])</token><value>E$1</value></replacement>
-									<replacement><token>createUlForOneInstanceOfTense([:(])</token><value>F$1</value></replacement>
-									<replacement><token>displayVerbUlOrNot([:(])</token><value>G$1</value></replacement>
-									<replacement><token>displayOTVerbUlOrNot([:(])</token><value>H$1</value></replacement>
-									<replacement><token>getRowColNum([:(])</token><value>I$1</value></replacement>
-									<replacement><token>updateUlForSpecificYAxis([:(])</token><value>J$1</value></replacement>
-									<replacement><token>animateCanvasBottomLine([:(])</token><value>K$1</value></replacement>
-									<replacement><token>updateBottomLineOnly([:(])</token><value>L$1</value></replacement>
-									<replacement><token>updtLocalStorage([:(])</token><value>M$1</value></replacement>
-									<replacement><token>getVariablesForVerbTable([:(])</token><value>N$1</value></replacement>
-									<replacement><token>getVariablesForOTVerbTable([:(])</token><value>O$1</value></replacement>
-									<replacement><token>upCaseFirst([:(])</token><value>P$1</value></replacement>
-									<replacement><token>getSpecificMorphologyInfo([:(])</token><value>Q$1</value></replacement>
-									<replacement><token>assembleDescriptionsOfMorph([:(])</token><value>R$1</value></replacement>
-									<replacement><token>createCopyOfClrSetting([:(])</token><value>S$1</value></replacement>
-									<replacement><token>tableAxisSpan([:(])</token><value>T$1</value></replacement>
-									<replacement><token>addVerbTable([:(])</token><value>U$1</value></replacement>
-									<replacement><token>htmlToAdd1([:(])</token><value>V$1</value></replacement>
-									<replacement><token>htmlToAdd2([:(])</token><value>W$1</value></replacement>
-									<replacement><token>htmlToAdd3([:(])</token><value>X$1</value></replacement>
-									<replacement><token>htmlToAdd4([:(])</token><value>Y$1</value></replacement>
-									<replacement><token>htmlToAdd5([:(])</token><value>Z$1</value></replacement>
-									<replacement><token>htmlToAdd6([:(])</token><value>a$1</value></replacement>
-									<replacement><token>voicesInTenseAndMood([:(])</token><value>b$1</value></replacement>
-									<replacement><token>updateCssForNumber([:(])</token><value>c$1</value></replacement>
-									<replacement><token>getAxisOrderOfItem([:(])</token><value>d$1</value></replacement>
-									<replacement><token>createUlForOTYAxis([:(])</token><value>e$1</value></replacement>
-									<replacement><token>hex2Rgb([:(])</token><value>f$1</value></replacement>
-									<replacement><token>addTitleToYAxis([:(])</token><value>g$1</value></replacement>
-									<replacement><token>createUlArrow([:(])</token><value>h$1</value></replacement>
-									<replacement><token>createUlShortArrow([:(])</token><value>i$1</value></replacement>
-									<replacement><token>createUlReverseArrow([:(])</token><value>j$1</value></replacement>
-									<replacement><token>createUlShortReverseArrow([:(])</token><value>k$1</value></replacement>
-									<replacement><token>createUl_Dash([:(])</token><value>l$1</value></replacement>
-									<replacement><token>createUlSolid([:(])</token><value>m$1</value></replacement>
-									<replacement><token>createUlDash_Dot([:(])</token><value>n$1</value></replacement>
-									<replacement><token>createUlDashDotDot([:(])</token><value>o$1</value></replacement>
-									<replacement><token>createUlNone([:(])</token><value>p$1</value></replacement>
-									<replacement><token>createUlDoubleSolid([:(])</token><value>q$1</value></replacement>
-									<replacement><token>createUlDot([:(])</token><value>r$1</value></replacement>
-									<replacement><token>createUlWave([:(])</token><value>s$1</value></replacement>
-									<replacement><token>animateCanvas([:(])</token><value>t$1</value></replacement>
-									<replacement><token>changeImageClr([:(])</token><value>u$1</value></replacement>
-									<replacement><token>getC4([:(])</token><value>v$1</value></replacement>
-									<replacement><token>getExplanationOfMorph([:(])</token><value>w$1</value></replacement>
-									<replacement><token>morph2CSS([:(])</token><value>x$1</value></replacement>
-									<replacement><token>addTitleToXAxis([:(])</token><value>y$1</value></replacement>
-									<replacement><token>getAllTenseMoodForThisGroup([:(])</token><value>z$1</value></replacement>
-									<replacement><token>c4VerbTenseMood([:(])</token><value>AA$1</value></replacement>
-									<replacement><token>c4NounOnly([:(])</token><value>AB$1</value></replacement>
-									<replacement><token>c4VerbMoodTense2([:(])</token><value>AC$1</value></replacement>
-									<replacement><token>c4VerbWithMiddlePassive([:(])</token><value>AD$1</value></replacement>
-									<replacement><token>c4MainVsSupporingVerbs([:(])</token><value>AE$1</value></replacement>
-									<replacement><token>c4ImperativesOnly([:(])</token><value>AF$1</value></replacement>
+									<replacement><token>createC4([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>calcAnimationPixelIncrement([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>createCanvas([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>createUlFor_OT([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>createUlForAllItemsInYAndX([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>createUlForOneInstanceOfTense([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>displayVerbUlOrNot([:(])</token><value>zG$1</value></replacement>
+									<replacement><token>displayOTVerbUlOrNot([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>getRowColNum([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>updateUlForSpecificYAxis([:(])</token><value>zJ$1</value></replacement>
+									<replacement><token>animateCanvasBottomLine([:(])</token><value>zK$1</value></replacement>
+									<replacement><token>updateBottomLineOnly([:(])</token><value>zL$1</value></replacement>
+									<replacement><token>updtLocalStorage([:(])</token><value>zM$1</value></replacement>
+									<replacement><token>getVariablesForVerbTable([:(])</token><value>zN$1</value></replacement>
+									<replacement><token>getVariablesForOTVerbTable([:(])</token><value>zO$1</value></replacement>
+									<replacement><token>upCaseFirst([:(])</token><value>zP$1</value></replacement>
+									<replacement><token>getSpecificMorphologyInfo([:(])</token><value>zQ$1</value></replacement>
+									<replacement><token>assembleDescriptionsOfMorph([:(])</token><value>zR$1</value></replacement>
+									<replacement><token>createCopyOfClrSetting([:(])</token><value>zS$1</value></replacement>
+									<replacement><token>tableAxisSpan([:(])</token><value>zT$1</value></replacement>
+									<replacement><token>addVerbTable([:(])</token><value>zU$1</value></replacement>
+									<replacement><token>htmlToAdd1([:(])</token><value>zV$1</value></replacement>
+									<replacement><token>htmlToAdd2([:(])</token><value>zW$1</value></replacement>
+									<replacement><token>htmlToAdd3([:(])</token><value>zX$1</value></replacement>
+									<replacement><token>htmlToAdd4([:(])</token><value>zY$1</value></replacement>
+									<replacement><token>htmlToAdd5([:(])</token><value>zZ$1</value></replacement>
+									<replacement><token>htmlToAdd6([:(])</token><value>za$1</value></replacement>
+									<replacement><token>voicesInTenseAndMood([:(])</token><value>zb$1</value></replacement>
+									<replacement><token>updateCssForNumber([:(])</token><value>zc$1</value></replacement>
+									<replacement><token>getAxisOrderOfItem([:(])</token><value>zd$1</value></replacement>
+									<replacement><token>createUlForOTYAxis([:(])</token><value>ze$1</value></replacement>
+									<replacement><token>hex2Rgb([:(])</token><value>zf$1</value></replacement>
+									<replacement><token>addTitleToYAxis([:(])</token><value>zg$1</value></replacement>
+									<replacement><token>createUlArrow([:(])</token><value>zh$1</value></replacement>
+									<replacement><token>createUlShortArrow([:(])</token><value>zi$1</value></replacement>
+									<replacement><token>createUlReverseArrow([:(])</token><value>zj$1</value></replacement>
+									<replacement><token>createUlShortReverseArrow([:(])</token><value>zk$1</value></replacement>
+									<replacement><token>createUl_Dash([:(])</token><value>zl$1</value></replacement>
+									<replacement><token>createUlSolid([:(])</token><value>zm$1</value></replacement>
+									<replacement><token>createUlDash_Dot([:(])</token><value>zn$1</value></replacement>
+									<replacement><token>createUlDashDotDot([:(])</token><value>zo$1</value></replacement>
+									<replacement><token>createUlNone([:(])</token><value>zp$1</value></replacement>
+									<replacement><token>createUlDoubleSolid([:(])</token><value>zq$1</value></replacement>
+									<replacement><token>createUlDot([:(])</token><value>zr$1</value></replacement>
+									<replacement><token>createUlWave([:(])</token><value>zs$1</value></replacement>
+									<replacement><token>animateCanvas([:(])</token><value>zt$1</value></replacement>
+									<replacement><token>changeImageClr([:(])</token><value>zu$1</value></replacement>
+									<replacement><token>getC4([:(])</token><value>zv$1</value></replacement>
+									<replacement><token>getExplanationOfMorph([:(])</token><value>zw$1</value></replacement>
+									<replacement><token>morph2CSS([:(])</token><value>zx$1</value></replacement>
+									<replacement><token>addTitleToXAxis([:(])</token><value>zy$1</value></replacement>
+									<replacement><token>getAllTenseMoodForThisGroup([:(])</token><value>zz$1</value></replacement>
+									<replacement><token>c4VerbTenseMood([:(])</token><value>zAA$1</value></replacement>
+									<replacement><token>c4NounOnly([:(])</token><value>zAB$1</value></replacement>
+									<replacement><token>c4VerbMoodTense2([:(])</token><value>zAC$1</value></replacement>
+									<replacement><token>c4VerbWithMiddlePassive([:(])</token><value>zAD$1</value></replacement>
+									<replacement><token>c4MainVsSupporingVerbs([:(])</token><value>zAE$1</value></replacement>
+									<replacement><token>c4ImperativesOnly([:(])</token><value>zAF$1</value></replacement>
                                     <replacement><token>^\s*var\s+\d+\s*=\s*\d+\s*\;\s*\/\/\s*TBRBMR\s*\n</token><value></value></replacement>
                                     <replacement><token>\s*var\s+\d+\s*=\s*\d+\s*\;</token><value></value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags> 
                             </configuration>
 						</execution>
+
+						<execution>
+                            <id>remove-const2</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+                            <configuration>
+                            <!-- Remove const which give long, readable index names in the program -->
+                                <includes>
+                                    <include>${basedir}/target/**/*.min.js</include>
+                                </includes>
+                                <replacements>
+									<!-- variables in multiple js files -->
+									<replacement><token>idx2osisChapterJsword</token><value>vMA</value></replacement>
+									<!-- for function with same name in multiple js files-->
+									<replacement><token>_buildBookTableHeader([:(])</token><value>MA$1</value></replacement>
+									<replacement><token>_buildBookTable([:(])</token><value>MB$1</value></replacement>
+									<replacement><token>_getTranslationType([:(])</token><value>MC$1</value></replacement>
+									<replacement><token>_buildBookHTMLTable([:(])</token><value>MD$1</value></replacement>
+									<replacement><token>goToPassage([:(])</token><value>ME$1</value></replacement>
+									<replacement><token>goBackToPreviousPage([:(])</token><value>MF$1</value></replacement>
+									<replacement><token>_addSpecificContext([:(])</token><value>MG$1</value></replacement>
+									<replacement><token>_removeSpecificContext([:(])</token><value>MH$1</value></replacement>
+									<replacement><token>doSwapInterlinearLink([:(])</token><value>MI$1</value></replacement>
+									<replacement><token>doFonts([:(])</token><value>MJ$1</value></replacement>
+									<replacement><token>_doChromeHack([:(])</token><value>MK$1</value></replacement>
+									<replacement><token>doInterlinearVerseNumbers([:(])</token><value>ML$1</value></replacement>
+									<replacement><token>_doSideNotes([:(])</token><value>MM$1</value></replacement>
+									<replacement><token>_makeSideNoteQtipHandler([:(])</token><value>MN$1</value></replacement>
+									<replacement><token>_makeSideNoteQtip([:(])</token><value>MO$1</value></replacement>
+									<!--  for step.util -->
+									<replacement><token>msgForFrequencyOnAllBibles([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>showHideFreqList([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>_highlightStrongs([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>highlightStrong([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>showFrequencyOnAllBibles([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>suppressHighlight([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>refreshWaitStatus([:(])</token><value>zG$1</value></replacement>
+									<replacement><token>escapeRegExp([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>getTestamentAndPassagesOfTheReferences([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>tempAlert([:(])</token><value>zJ$1</value></replacement>
+									<replacement><token>checkFirstBibleHasPassageBeforeSwap([:(])</token><value>zK$1</value></replacement>
+									<replacement><token>raiseOneTimeOnly([:(])</token><value>zL$1</value></replacement>
+									<replacement><token>localStorageGetItem([:(])</token><value>zM$1</value></replacement>
+									<replacement><token>raiseError([:(])</token><value>zN$1</value></replacement>
+									<replacement><token>isBlank([:(])</token><value>zO$1</value></replacement>
+									<replacement><token>activePassageId([:(])</token><value>zP$1</value></replacement>
+									<replacement><token>activePassage([:(])</token><value>zQ$1</value></replacement>
+									<replacement><token>postCanvasToURL([:(])</token><value>zR$1</value></replacement>
+									<replacement><token>refreshColumnSize([:(])</token><value>zS$1</value></replacement>
+									<replacement><token>findSearchTermsInQuotesAndRemovePrefix([:(])</token><value>zT$1</value></replacement>
+									<replacement><token>reNumberModels([:(])</token><value>zU$1</value></replacement>
+									<replacement><token>showOrHideTutorial([:(])</token><value>zV$1</value></replacement>
+									<replacement><token>createNewLinkedColumn([:(])</token><value>zW$1</value></replacement>
+									<replacement><token>createNewLinkedColumnWithScroll([:(])</token><value>zX$1</value></replacement>
+									<replacement><token>createNewColumn([:(])</token><value>zY$1</value></replacement>
+									<replacement><token>unlinkThis([:(])</token><value>zZ$1</value></replacement>
+									<replacement><token>unlink([:(])</token><value>za$1</value></replacement>
+									<replacement><token>localStorageSetItem([:(])</token><value>zb$1</value></replacement>
+									<replacement><token>getPassageContainer([:(])</token><value>zc$1</value></replacement>
+									<replacement><token>getVocabMorphInfoFromJson([:(])</token><value>zd$1</value></replacement>
+									<replacement><token>getDetailsOfStrong([:(])</token><value>ze$1</value></replacement>
+									<replacement><token>modalCloseBtn([:(])</token><value>zf$1</value></replacement>
+									<replacement><token>restoreFontSize([:(])</token><value>zg$1</value></replacement>
+									<replacement><token>changeSpecificFontSize([:(])</token><value>zzh$1</value></replacement>
+									<replacement><token>getFontSizeByName([:(])</token><value>zi$1</value></replacement>
+									<replacement><token>getFontSize([:(])</token><value>zj$1</value></replacement>
+									<replacement><token>normalizeVersionName([:(])</token><value>zk$1</value></replacement>
+									<replacement><token>safeEscapeQuote([:(])</token><value>zl$1</value></replacement>
+									<replacement><token>swapMasterVersion([:(])</token><value>zm$1</value></replacement>
+									<replacement><token>lookUpFrequencyFromMultiVersions([:(])</token><value>zn$1</value></replacement>
+									<replacement><token>correctPassageNotInBible([:(])</token><value>zo$1</value></replacement>
+									<replacement><token>passageSelectionModal([:(])</token><value>zp$1</value></replacement>
+									<replacement><token>copyModal([:(])</token><value>zq$1</value></replacement>
+									<replacement><token>searchSelectionModal([:(])</token><value>zr$1</value></replacement>
+									<replacement><token>showVideoModal([:(])</token><value>zs$1</value></replacement>
+									<replacement><token>showSummary([:(])</token><value>zt$1</value></replacement>
+									<replacement><token>showLongAlert([:(])</token><value>zu$1</value></replacement>
+									<replacement><token>setDefaultColor([:(])</token><value>zv$1</value></replacement>
+									<replacement><token>switchColorMode([:(])</token><value>zw$1</value></replacement>
+									<replacement><token>showFontSettings([:(])</token><value>zx$1</value></replacement>
+									<replacement><token>startPickBible([:(])</token><value>zy$1</value></replacement>
+									<replacement><token>setClassicalUI([:(])</token><value>zz$1</value></replacement>
+									<replacement><token>showIntro([:(])</token><value>AA$1</value></replacement>
+									<replacement><token>showIntroOfMultiVersion([:(])</token><value>AB$1</value></replacement>
+									<replacement><token>addTagLine([:(])</token><value>AC$1</value></replacement>
+									<replacement><token>showByGeo([:(])</token><value>AD$1</value></replacement>
+									<replacement><token>putStrongDetails([:(])</token><value>AE$1</value></replacement>
+									<replacement><token>isDarkMode([:(])</token><value>AF$1</value></replacement>
+									<replacement><token>formatSearchResultRange([:(])</token><value>AG$1</value></replacement>
+									<replacement><token>unpackJson([:(])</token><value>AH$1</value></replacement>
+									<replacement><token>fixStrongNumForVocabInfo([:(])</token><value>AI$1</value></replacement>
+									<replacement><token>bookOrderInBible([:(])</token><value>AJ$1</value></replacement>
+									<replacement><token>checkBibleHasTheTestament([:(])</token><value>AK$1</value></replacement>
+									<replacement><token>whichBibleIsTheBest([:(])</token><value>AL$1</value></replacement>
+									<replacement><token>checkFirstBibleHasPassage([:(])</token><value>AM$1</value></replacement>
+									<replacement><token>getVersionIndex([:(])</token><value>AN$1</value></replacement>
+									<replacement><token>getFrequency([:(])</token><value>AO$1</value></replacement>
+									<replacement><token>formatFrequency([:(])</token><value>AP$1</value></replacement>
+									<!--  for step.util.ui -->
+									<replacement><token>freqListQTip([:(])</token><value>Aa$1</value></replacement>
+									<replacement><token>selectMark([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>shortenDisplayText([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>renderArgs([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>renderArg([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>getSource([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>renderEnhancedToken([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>_getFontClasses([:(])</token><value>zG$1</value></replacement>
+									<replacement><token>_getFontClassForLanguage([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>showTutorial([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>showDef([:(])</token><value>zJ$1</value></replacement>
+									<replacement><token>initSidebar([:(])</token><value>zK$1</value></replacement>
+									<replacement><token>openStrongNumber([:(])</token><value>zL$1</value></replacement>
+									<replacement><token>addStrongHandlers([:(])</token><value>zM$1</value></replacement>
+									<replacement><token>_getStrongStringAndPrevHTML([:(])</token><value>zN$1</value></replacement>
+									<replacement><token>_processTouchOnStrong([:(])</token><value>zO$1</value></replacement>
+									<replacement><token>removeQuickLexicon([:(])</token><value>zP$1</value></replacement>
+									<replacement><token>_displayNewQuickLexiconForVerseVocab([:(])</token><value>zQ$1</value></replacement>
+									<replacement><token>_displayNewQuickLexicon([:(])</token><value>zR$1</value></replacement>
+									<replacement><token>getVerseNumberAndVersion([:(])</token><value>zS$1</value></replacement>
+									<replacement><token>getWordOrderSuffix([:(])</token><value>zT$1</value></replacement>
+									<replacement><token>emptyOffDomAndPopulate([:(])</token><value>zU$1</value></replacement>
+									<replacement><token>getCopyrightInfo([:(])</token><value>zV$1</value></replacement>
+									<replacement><token>_getCopyrightLink([:(])</token><value>zW$1</value></replacement>
+									<replacement><token>_applyCssClassesRepeatByGroup([:(])</token><value>zX$1</value></replacement>
+									<replacement><token>getFeaturesLabel([:(])</token><value>zY$1</value></replacement>
+									<replacement><token>enhanceVerseNumbers([:(])</token><value>zZ$1</value></replacement>
+									<replacement><token>_addSubjectAndRelatedWordsPopup([:(])</token><value>za$1</value></replacement>
+									<replacement><token>showListOfVersesInQLexArea([:(])</token><value>zb$1</value></replacement>
+									<replacement><token>getFontForStrong([:(])</token><value>zc$1</value></replacement>
+									<replacement><token>addCollapsiblePanel([:(])</token><value>ze$1</value></replacement>
+									<!-- for step.passage -->
+									<replacement><token>getPassageId([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>higlightStrongs([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>removeStrongsHighlights([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>blacklistedStrongs</token><value>zD</value></replacement>
+									
+									<!-- for step.util variables -->
+									<replacement><token>outstandingRequests</token><value>vA</value></replacement>
+									<replacement><token>timersForSTEPApp</token><value>vB</value></replacement>
+									<replacement><token>versionsBoth</token><value>vC</value></replacement>
+									<replacement><token>versionsGreekNT</token><value>vD</value></replacement>
+									<replacement><token>versionsGreekOT</token><value>vE</value></replacement>
+									<replacement><token>versionsGreekBoth</token><value>vF</value></replacement>
+									<replacement><token>versionsHebrewOT</token><value>vG</value></replacement>
+									<replacement><token>vocabKeys</token><value>vH</value></replacement>
+									<!-- for passage_selection function -->
+									<replacement><token>initPassageSelect([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>_handleKeyboardEntry([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>_displayListOfBooks([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>checkForBiblesWithoutOneTestament([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>_buildBookHeaderAndSkeleton([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>getNumOfChapters([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>getChapters([:(])</token><value>zG$1</value></replacement>
+									<replacement><token>_handleEnteredPassage([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>changeNumberForm([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>_buildChptrVrsTbl([:(])</token><value>zJ$1</value></replacement>
+									<!-- for passage_selection variables -->
+									<replacement><token>hasEnglishBible</token><value>vA</value></replacement>
+									<replacement><token>lastOsisID</token><value>vB</value></replacement>
+									<replacement><token>lastNumOfChapters</token><value>vC</value></replacement>
+									<replacement><token>arrayOfTyplicalBooksChapters</token><value>vD</value></replacement>
+									<replacement><token>osisChapterJsword</token><value>vE</value></replacement>
+									<replacement><token>translationsWithPopularBooksChapters</token><value>vF</value></replacement>
+									<replacement><token>translationsWithPopularNTBooksChapters</token><value>vG</value></replacement>
+									<replacement><token>translationsWithPopularOTBooksChapters</token><value>vH</value></replacement>
+									<!-- for search_selection function -->
+									<replacement><token>initSearchSelection([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>updateAdvancedSearchElements([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>_initOptions([:(])</token><value>zC$1</value></replacement>
+									<!-- <replacement><token>_handleOptions</token><value>zD</value></replacement> -->
+									<replacement><token>_previousSearchesEnteredByUser([:(])</token><value>zE$1</value></replacement>
+									<!-- <replacement><token>_displayPreviousSearchWord</token><value>zF</value></replacement> -->
+									<replacement><token>_updateDisplayBasedOnOptions([:(])</token><value>zG$1</value></replacement>
+									<replacement><token>createPreviousSearchList([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>_find_onclick_and_go([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>_buildSearchHeaderAndTable([:(])</token><value>zJ$1</value></replacement>
+									<replacement><token>_buildRangeHeaderAndTable([:(])</token><value>zK$1</value></replacement>
+									<replacement><token>_buildRangeHeaderAndSkeleton([:(])</token><value>zL$1</value></replacement>
+									<replacement><token>_buildRangeKeyboard([:(])</token><value>zM$1</value></replacement>
+									<replacement><token>_updateRange([:(])</token><value>zN$1</value></replacement>
+									<replacement><token>_createSingleRange([:(])</token><value>zO$1</value></replacement>
+									<replacement><token>_isBookInGroup([:(])</token><value>zP$1</value></replacement>
+									<replacement><token>_getBookDisplayName([:(])</token><value>zQ$1</value></replacement>
+									<replacement><token>_fillBooksTable([:(])</token><value>zR$1</value></replacement>
+									<replacement><token>_userClickedTestament([:(])</token><value>zS$1</value></replacement>
+									<replacement><token>_userClickedCategory([:(])</token><value>zT$1</value></replacement>
+									<replacement><token>_userClickedBook([:(])</token><value>zU$1</value></replacement>
+									<replacement><token>_checkHeaderButton([:(])</token><value>zV$1</value></replacement>
+									<replacement><token>wordsWithNoInflection([:(])</token><value>zW$1</value></replacement>
+									<replacement><token>_handleEnteredSearchWord([:(])</token><value>zX$1</value></replacement>
+									<replacement><token>_getSuggestedFrequency([:(])</token><value>zY$1</value></replacement>
+									<replacement><token>_getSuggestedWordsInfo([:(])</token><value>zZ$1</value></replacement>
+									<replacement><token>addNotInBibleSelected([:(])</token><value>za$1</value></replacement>
+									<replacement><token>valueInDuplicatStrongOrNot([:(])</token><value>zb$1</value></replacement>
+									<replacement><token>unpackVocabJSON([:(])</token><value>zc$1</value></replacement>
+									<replacement><token>getVocabInfoFromSuggestAPI([:(])</token><value>zd$1</value></replacement>
+									<replacement><token>getVocabInfoForShowAugStrong([:(])</token><value>ze$1</value></replacement>
+									<replacement><token>processVocabInfoForShowAugStrong([:(])</token><value>zf$1</value></replacement>
+									<replacement><token>_getAdditionalInformationOnStrong([:(])</token><value>zg$1</value></replacement>
+									<replacement><token>_processAdditionalInfoOnStrong([:(])</token><value>zi$1</value></replacement>
+									<!-- <replacement><token>_addFreqListQTip</token><value>zi</value></replacement> -->
+									<replacement><token>createFirstLineForAugmentedStrong([:(])</token><value>zj$1</value></replacement>
+									<replacement><token>createSubsequentLineForAugmentedStrong([:(])</token><value>zk$1</value></replacement>
+									<replacement><token>createDisplayForAugmentedStrong([:(])</token><value>zl$1</value></replacement>
+									<replacement><token>_showAugmentedStrong([:(])</token><value>zm$1</value></replacement>
+									<replacement><token>buildSuffixTag([:(])</token><value>zn$1</value></replacement>
+									<replacement><token>checkDuplicates([:(])</token><value>zo$1</value></replacement>
+									<replacement><token>addMouseOverEvent([:(])</token><value>zp$1</value></replacement>
+									<replacement><token>appendSearchSuggestionsToDisplay([:(])</token><value>zq$1</value></replacement>
+									<replacement><token>extractStrongFromDetailLexicalTag([:(])</token><value>zr$1</value></replacement>
+									<replacement><token>getFrequencyFromDetailLexicalTag([:(])</token><value>zs$1</value></replacement>
+									<replacement><token>buildHTMLFromDetailLexicalTag([:(])</token><value>zt$1</value></replacement>
+									<replacement><token>_handleClickOnTriangle</token><value>zu</value></replacement>
+									<replacement><token>verifySearchJoin([:(])</token><value>zv$1</value></replacement>
+									<replacement><token>addSearchWords([:(])</token><value>zw$1</value></replacement>
+									<replacement><token>goSearch([:(])</token><value>zx$1</value></replacement>
+									<replacement><token>removePreviousSearch([:(])</token><value>zy$1</value></replacement>
+									<!-- for search_selection variables -->
+									<replacement><token>searchOnSpecificType</token><value>vA</value></replacement>
+									<replacement><token>searchTypeCode</token><value>vB</value></replacement>
+									<replacement><token>numOfSearchTypesToDisplay</token><value>vC</value></replacement>
+									<replacement><token>searchModalCurrentPage</token><value>vD</value></replacement>
+									<replacement><token>searchUserInput</token><value>vE</value></replacement>
+									<replacement><token>previousSearchTokens</token><value>vF</value></replacement>
+									<replacement><token>numOfPreviousSearchTokens</token><value>vG</value></replacement>
+									<replacement><token>includePreviousSearches</token><value>vH</value></replacement>
+									<replacement><token>rangeWasUpdated</token><value>vI</value></replacement>
+									<replacement><token>andOrNotUpdated</token><value>vJ</value></replacement>
+									<replacement><token>groupsOT</token><value>vK</value></replacement>
+									<replacement><token>groupsNT</token><value>vL</value></replacement>
+									<replacement><token>groupsOther</token><value>vM</value></replacement>
+									<replacement><token>idx2BookOrder</token><value>vN</value></replacement>
+									<!-- these two are function but it does not have a "(" after the use of the name -->
+									<replacement><token>handleKeyboardInput</token><value>vO</value></replacement>
+									<replacement><token>_addLineWithAugStrongOrDetailLexInfo</token><value>vP</value></replacement>
+
+									<!-- view_main_search -->
+									<replacement><token>_setData([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>_resetReplaceItems([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>_addTokenHandlers([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>_addVersionHandlers([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>_addTextHandlers([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>_addExactFormHandlers([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>_addReferenceHandlers([:(])</token><value>zG$1</value></replacement>
+									<replacement><token>_addDefaultExampleHandlers([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>_searchExampleData([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>openAdvancedSearch([:(])</token><value>zJ$1</value></replacement>
+									<replacement><token>_markItemForReplacing([:(])</token><value>zK$1</value></replacement>
+									<replacement><token>pickBible([:(])</token><value>zL$1</value></replacement>
+									<replacement><token>convertResultTermToNormalOption([:(])</token><value>zM$1</value></replacement>
+									<replacement><token>convertResultToGroup([:(])</token><value>zN$1</value></replacement>
+									<replacement><token>convertResultTermToTypedOptions([:(])</token><value>zO$1</value></replacement>
+									<replacement><token>setGroupText([:(])</token><value>zP$1</value></replacement>
+									<replacement><token>_getAncientFirstRepresentation([:(])</token><value>zQ$1</value></replacement>
+									<replacement><token>_getEnglishFirstRepresentation([:(])</token><value>zR$1</value></replacement>
+									<replacement><token>getCurrentInput([:(])</token><value>zS$1</value></replacement>
+									<replacement><token>_getData([:(])</token><value>zT$1</value></replacement>
+									<replacement><token>_getSpecificContext([:(])</token><value>zU$1</value></replacement>
+									<replacement><token>filterLocalData([:(])</token><value>zV$1</value></replacement>
+									<replacement><token>_markMatch([:(])</token><value>zW$1</value></replacement>
+									<replacement><token>_getPartialToken([:(])</token><value>zX$1</value></replacement>
+									<replacement><token>_reconstructToken([:(])</token><value>zY$1</value></replacement>
+									<replacement><token>_reEvaluateMasterVersion([:(])</token><value>zZ$1</value></replacement>
+									<!-- <replacement><token>_appendVersions</token><value>zS</value></replacement> -->
+									<!-- <replacement><token>_removeVersion</token><value>zT</value></replacement> -->
+									<!-- <replacement><token>formatResults</token><value>zZ</value></replacement> -->
+									<!-- <replacement><token>syncWithUrl</token><value>zd</value></replacement> -->
+									<!-- <replacement><token>_handleKeyPressInSearch</token><value>ze</value></replacement> -->
+									<!-- <replacement><token>matchDropdownEntry</token><value>zfW</value></replacement> -->
+									<!-- <replacement><token>showAnalysis</token><value>zf</value></replacement> -->
+									<!-- step_router.js -->
+									<replacement><token>_addArg([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>overwriteUrl([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>navigatePreserveVersions([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>navigateSearch([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>getShareableColumnUrl([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>handleSearchResults([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>handleRenderModel([:(])</token><value>zG$1</value></replacement>
+									<replacement><token>_renderSummary([:(])</token><value>zH$1</value></replacement>
+									<!-- <replacement><token>doMasterSearch</token><value>zI</value></replacement> -->
+									<replacement><token>_addBookmark([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>_normalizeArgs([:(])</token><value>zJ$1</value></replacement>
+									<!-- view_display.js -->
+									<replacement><token>_getBlockSizes([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>_isInterlinearMode([:(])</token><value>zB$1</value></replacement>
+
+									<!-- view_menu_passage -->
+									<replacement><token>_updateIcon([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>handleInfoHide([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>showDots([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>removeSearchArgs([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>_updateDropdownContents([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>_isDisplayOptionsDropdown([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>_isShareDropdown([:(])</token><value>zG$1</value></replacement>
+									<replacement><token>_updateColumnOptions([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>_updateDisplayOptions([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>_updateDisplayModeOptions([:(])</token><value>zJ$1</value></replacement>
+									<replacement><token>_initUI([:(])</token><value>zK$1</value></replacement>
+									<replacement><token>_createDisplayModes([:(])</token><value>zL$1</value></replacement>
+									<replacement><token>_createDisplayOptions([:(])</token><value>zM$1</value></replacement>
+									<replacement><token>getContextLabel([:(])</token><value>zN$1</value></replacement>
+									<replacement><token>_createSearchOptions([:(])</token><value>zO$1</value></replacement>
+									<replacement><token>_createItemsInDropdown([:(])</token><value>zP$1</value></replacement>
+									<replacement><token>_createPassageOptions([:(])</token><value>zQ$1</value></replacement>
+									<replacement><token>_addTickHandlers([:(])</token><value>zR$1</value></replacement>
+									<replacement><token>_createLink([:(])</token><value>zS$1</value></replacement>
+									<replacement><token>_updateOptions([:(])</token><value>zU$1</value></replacement>
+									<replacement><token>_setVisible([:(])</token><value>zV$1</value></replacement>
+									<replacement><token>_doSocialButtons([:(])</token><value>zW$1</value></replacement>
+									<replacement><token>goToSiblingChapter([:(])</token><value>zX$1</value></replacement>
+									<replacement><token>showUserSwipeIsAccepted([:(])</token><value>zY$1</value></replacement>
+									<!-- <replacement><token>handleDropdownMenu</token><value>zC</value></replacement> -->
+									<!-- <replacement><token>_updateVisibleDropdown</token><value>zD</value></replacement> -->
+									<!-- <replacement><token>activateColumn([:(])</token><value>za$1</value></replacement> -->
+									<!-- <replacement><token>changeFontSizeInThisPanel</token><value>zX</value></replacement> -->
+									<!-- <replacement><token>goToPreviousChapter</token><value>zY</value></replacement> -->
+									<!-- <replacement><token>goToNextChapter</token><value>zZ</value></replacement> -->
+									<!-- step_ready.js -->
+									<replacement><token>addNavBar([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>initDataSources([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>markAsRecommended([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>initSettings([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>initSearchDropdown([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>patchBackboneHistory([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>identifyLikelyPreviousPassage([:(])</token><value>zG$1</value></replacement>
+									<replacement><token>initCoreModelsAndRouter([:(])</token><value>zH$1</value></replacement>
+									<!-- view_wordle_stat.js -->
+									<replacement><token>addRefreshStats([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>populateMenu([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>_getBestReference([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>_getStats([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>doStats([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>createWordleLink([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>_createWordleTab([:(])</token><value>zG$1</value></replacement>
+									<!-- view_history.js -->
+									<replacement><token>removeBookmarkHandler([:(])</token><value>zA$1</value></replacement>
+									<replacement><token>starBookmarkHandler([:(])</token><value>zB$1</value></replacement>
+									<replacement><token>openBookmarkHandler([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>_insertBookmark([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>_findByModel([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>_getList([:(])</token><value>zF$1</value></replacement>
+
+									<!-- view_display_passage.js -->
+									<!-- <replacement><token>scrollToTargetLocation</token><value>zA</value></replacement> -->
+									<!-- <replacement><token>_scrollPassageToTarget([:(])</token><value>zB$1</value></replacement> -->
+									<replacement><token>_warnCommentaryLookupVersion([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>_warnIfFirstTimeCompare([:(])</token><value>zD$1</value></replacement>
+									<replacement><token>_warnFirstTimeColorCoding([:(])</token><value>zE$1</value></replacement>
+									<replacement><token>_warnIfInterlinearFirstTime([:(])</token><value>zF$1</value></replacement>
+									<replacement><token>_warnIfNoStrongs([:(])</token><value>zG$1</value></replacement>
+
+									<replacement><token>_doDuplicateNotice([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>_doInterlinearDividers([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>_doAlternatives([:(])</token><value>zJ$1</value></replacement>
+									<replacement><token>warnIfBibleDoesNotHaveTestament([:(])</token><value>zK$1</value></replacement>
+									<replacement><token>doInlineNoteQuickLexicon([:(])</token><value>zL$1</value></replacement>
+									<replacement><token>_doNonInlineNotes([:(])</token><value>zM$1</value></replacement>
+									<replacement><token>_doHighlightNoteInPane([:(])</token><value>zN$1</value></replacement>
+									<replacement><token>_doVerseNumbers([:(])</token><value>zO$1</value></replacement>
+									<replacement><token>_doHideEmptyNotesPane([:(])</token><value>zP$1</value></replacement>
+									<replacement><token>_adjustTextAlignment([:(])</token><value>zQ$1</value></replacement>
+									<replacement><token>_updatePageTitle([:(])</token><value>zR$1</value></replacement>
+									<replacement><token>_addStrongHandlers([:(])</token><value>zS$1</value></replacement>
+									<replacement><token>updateSpecificColor([:(])</token><value>zT$1</value></replacement>
+									<replacement><token>updateSTEPColor([:(])</token><value>zU$1</value></replacement>
+								</replacements>
+                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags> 
+                            </configuration>
+						</execution>
+
 						<execution>
                             <id>remove-space</id>
 							<phase>prepare-package</phase>

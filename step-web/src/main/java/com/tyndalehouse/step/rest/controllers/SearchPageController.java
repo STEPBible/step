@@ -155,7 +155,7 @@ public class SearchPageController extends HttpServlet {
 
     private void doRedirect(final HttpServletResponse response) {
         try {
-            response.setStatus(301);
+            response.setStatus(302);
             response.setHeader("Location", String.format("http://%s", appManagerService.getAppDomain()));
             response.setHeader("Connection", "close");
         } catch (Exception ex) {

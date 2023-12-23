@@ -1,13 +1,12 @@
 var ViewHistory = Backbone.View.extend({
     MAX_HISTORY: 250,
     itemTemplate: _.template('<li class="list-group-item historyItem" data-item="<%= item.get("id") %>">' +
-        '<a class="openBookmark" title="<%= __s.bookmarks_open %>"><span class="glyphicon glyphicon-open"></span></a>' +
-        '<a class="starBookmark" data-favourite="<%= item.get("favourite")%>" title="<%= item.get("favourite") ? __s.passage_tools_delete_bookmark : __s.passage_tools_bookmark %>">' +
-        '<span class="glyphicon <%= item.get("favourite") ? "glyphicon-pushpin-pinned" : "glyphicon-pushpin" %>"></span></a>' +
-        '<a class="removeBookmark" title="<%= __s.bookmark_remove %>"><span class="glyphicon glyphicon-remove"></span></a>' +
-        '<span class="argSummary argSumSpan">' +
-        '<%= step.util.ui.renderArgs(item.get("searchTokens"), null, "span") %>' +
+        '<span class="argSummary argSumSpan" style="text-decoration:underline;display:inline">' +
+            '<%= step.util.ui.renderArgs(item.get("searchTokens"), null, "span") %>' +
         '</span>' +
+        '<a class="removeBookmark" title="<%= __s.bookmark_remove %>" style="float:right;padding-left:15px"><span class="glyphicon glyphicon-remove"></span></a>' +
+        '<a class="starBookmark" data-favourite="<%= item.get("favourite")%>" title="<%= item.get("favourite") ? __s.passage_tools_delete_bookmark : __s.passage_tools_bookmark %>" style="float:right">' +
+        '<span class="glyphicon <%= (item.get("favourite") && (!step.touchDevice || step.touchWideDevice)) ? "glyphicon-pushpin-pinned" : "glyphicon-pushpin" %>"></span></a>' +
         '</li>'),
     fullList: _.template(
         '<h2><%= __s.bookmarks_pinned %></h2><ul class="list-group">' +
@@ -28,20 +27,24 @@ var ViewHistory = Backbone.View.extend({
         var bookmarkId = item.data("item");
         step.bookmarks.findWhere({id: bookmarkId }).destroy();
         item.remove();
-    }, starBookmarkHandler: function (self) {
+    },
+    starBookmarkHandler: function (self) {
         var item = $(self).closest("li");
         var bookmarkId = item.data("item");
         var model = step.bookmarks.findWhere({id: bookmarkId });
         model.save({ favourite: !model.get("favourite") });
         step.bookmarks.sort();
         this.render();
-    }, openBookmarkHandler: function (self) {
+    },
+    openBookmarkHandler: function (self) {
         var item = $(self).closest("li");
         var bookmarkId = item.data("item");
         var model = step.bookmarks.findWhere({id: bookmarkId });
         step.router.doMasterSearch(decodeURIComponent(model.get("args")),
         	model.get("options") || "", // in case it is not defined, provide empty string
         	model.get("display") || "");  // in case it is not defined, provide empty string
+        if (step.touchDevice && !step.touchWideDevice)
+            step.util.closeModal("showLongAlertModal");
     }, render: function () {
         var self = this;
         if(this.list) {
@@ -50,16 +53,19 @@ var ViewHistory = Backbone.View.extend({
         }
         //force re-add
         this._getList();
-
-        this.$el.find(".removeBookmark").click(function () {
-            self.removeBookmarkHandler(this);
-        });
-        this.$el.find(".starBookmark").click(function() {
-            self.starBookmarkHandler(this);
-        });
-        this.$el.find(".openBookmark").click(function() {
+        var currentElement = (step.touchDevice && !step.touchWideDevice) ?
+            $(".modal-body") : this.$el;
+        currentElement.find(".argSumSpan").click(function() {
             self.openBookmarkHandler(this);
         });
+        currentElement.find(".removeBookmark").click(function () {
+            self.removeBookmarkHandler(this);
+        });
+        currentElement.find(".starBookmark").click(function() {
+            self.starBookmarkHandler(this);
+        });
+
+
     },
     
     refresh: function () {
@@ -77,9 +83,6 @@ var ViewHistory = Backbone.View.extend({
         });
         newItem.find(".starBookmark").click(function() {
             self.starBookmarkHandler(this);
-        });
-        newItem.find(".openBookmark").click(function() {
-            self.openBookmarkHandler(this);
         });
 
         //count the number of bookmark items, and if too large, then get rid of them.
@@ -131,7 +134,12 @@ var ViewHistory = Backbone.View.extend({
             return this.list;
         }
         this.list = $(this.fullList({ bookmarks: step.bookmarks, view: this }));
-        this.$el.append(this.list);
+        if (step.touchDevice && !step.touchWideDevice) {
+            step.util.showLongAlert("", "<b>Bookmarks</b>", [ this.list ]);
+            step.sidebar = null;
+        }
+        else
+            this.$el.append(this.list);
         return this.list;
     }
 });

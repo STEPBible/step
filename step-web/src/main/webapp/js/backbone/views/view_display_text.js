@@ -2,8 +2,8 @@ var TextDisplayView = SearchDisplayView.extend({
     titleFragment : __s.search_text,
     renderSearch: function (append, existingResults) {
         console.log("Rendering text search results");
-
-        var results = $("<span>");
+        var cssForTouchDevice = (step.touchDevice && !step.touchWideDevice) ? " style='overflow-y:hidden;height:auto' " : "";        
+        var results = $("<span id='srchRslts'" + cssForTouchDevice + ">");
         var searchResults = this.model.get("results");
         var sortOrder = this.model.get("order");
 

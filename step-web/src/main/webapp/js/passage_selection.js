@@ -76,10 +76,9 @@ step.passageSelect = {
 		["Rev", 22, [20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,21,15,27,21]]
 	],
     // The Bible at the beginning of the list have vocabulary.  The are listed first so they will be suggested when user select a NT passage with an OT Bible or vice versa.
-	translationsWithPopularBooksChapters: " esv esv_th nasb2020 kjv bsb nasb nasb1995 cun cuns hcsb sparv1909 abgk aben netfull niv nav sparv chincvs acv akjv alb arasvd asmulb asv bbe benulb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv ee esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nasb1995 nbla ndebele neno nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ",
+	translationsWithPopularBooksChapters: " esv nasb2020 kjv bsb nasb nasb1995 cun cuns hcsb sparv1909 abgk aben netfull niv nav sparv chincvs acv akjv alb arasvd asmulb asv bbe benulb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv ee esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt amhnasv arbkeh cebapd ckbkss	danbph deu1912eb gerbolut hilapd hinhss ibobiu japkougo jpnjcb kikgky korklb lsb lugeeee malmcv ndeben nirv nivuk nldhtb nyaccl pornvi thatncv twiakna viekthd web zomziv yorbmyo tglasd swhnen spanvi snabdsc ronntr ",
 	translationsWithPopularNTBooksChapters: ' sblg thgnt 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblgntapp spavnt swahili swaulb tisch tnt tr ukrkulish uma varapp weym whnu wors ',
 	translationsWithPopularOTBooksChapters: ' lxx ab gertextbibel kd wlc lees rusmakarij ',
-
 	initPassageSelect: function(summaryMode) {
         this.version = "ESV_th";
 		this.userLang = step.state.language() || "en-US";
@@ -93,7 +92,8 @@ step.passageSelect = {
 			$('#append_to_panel').hide();
 			hideAppend = true;
 		}
-		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
+		if (($('.passageContainer.active').width() < 500) || (step.touchDevice && !step.touchWideDevice))
+			$('#displayLocForm').hide();
 		this._displayListOfBooks(summaryMode);
 		$("textarea#enterYourPassage").on('input', function(e){
 			step.passageSelect._handleKeyboardEntry(e);
@@ -178,8 +178,8 @@ step.passageSelect = {
 									  (step.keyedVersions[data[i].item.initials].languageCode === "en"));
 			}
 		}
-		var lowerCaseVersion = ' ' + this.version.toLowerCase() + ' ';
-		versionAltName = ' ' + versionAltName.toLowerCase() + ' ';
+		var lowerCaseVersion = ' ' + this.version.toLowerCase().replace(/_sbonly$/, "").replace(/_sb$/, "").replace(/_th$/, "") + ' ';
+		versionAltName = ' ' + versionAltName.toLowerCase().replace(/_sbonly$/, "").replace(/_sb$/, "").replace(/_th$/, "") + ' ';
 		var translationType = "";
 		if ((this.translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (this.translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
 		else if ((this.translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (this.translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
@@ -495,7 +495,6 @@ step.passageSelect = {
 			}
 		}
         var chapterDescription = [];
-        var chapterHeader = [];
         if (summaryMode) {
             tableColumns = 1;
             for (var i = 0; i <= numOfChptrsOrVrs; i++) {

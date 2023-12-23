@@ -258,8 +258,24 @@ var ExamplesView = Backbone.View.extend({
         this.render();
     },
     render: function () {
-		if ($('#welcomeExamples').length == 0) {
-			this.$el.append(this.exampleTemplate);
+		if (($('#welcomeExamples').length == 0) || (step.touchDevice && !step.touchWideDevice)) {
+			if (step.touchDevice && !step.touchWideDevice) {
+				step.util.showLongAlert("", "<b>" + __s.welcome_to_step + "</b>", [ this.exampleTemplate() ]);
+				$(".closeColumn").click(function (ev) {
+					step.util.closeModal("showLongAlertModal");
+				});
+				var contextOfOriginalExecution = this;
+				$(".accordion-heading").click(function (ev) {
+					contextOfOriginalExecution.onClickHeading(ev, contextOfOriginalExecution);
+				});
+				$(".plusminus").click(function (ev) {
+					contextOfOriginalExecution.onClickHeading(ev, contextOfOriginalExecution);
+				});
+				$(".modal-body").find(".closeColumn").hide();
+				$(".modal-body").find("h3").hide();
+			}
+			else
+				this.$el.append(this.exampleTemplate);
 			this.initAccordions();
             var options = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("selectedOptions") || [];
             var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
@@ -272,7 +288,7 @@ var ExamplesView = Backbone.View.extend({
         else $("#keyboard_shortcut").show();
     },
     initAccordions: function () {
-        var count = this.$el.find(".accordion-row").length - 1; // Don't need to highlight keyboard shortcut
+        var count = $(".accordion-row").length - 1; // Don't need to highlight keyboard shortcut
         var hasStoredState = false;
         var timesDisplayedKey = "accordionTimesDisplayed";
 		var timesDisplayed = step.util.localStorageGetItem(timesDisplayedKey);
@@ -295,7 +311,7 @@ var ExamplesView = Backbone.View.extend({
     },
     toggleAccordion: function (index, accordionCount) {
         var query = ".accordion-row[data-row=" + index + "]";
-        var $accordionRow = this.$el.find(query);
+        var $accordionRow = $(query);
         var $accordionBody = $accordionRow.find(".accordion-body");
         var storageKey = "displayQuickTryoutAccordion" + index;
 		var displayFlag = false;
@@ -318,14 +334,17 @@ var ExamplesView = Backbone.View.extend({
             step.util.localStorageSetItem(storageKey, "false");
         }
     },
-    onClickHeading: function (event) {
+    onClickHeading: function (event, contextOfOriginalExecution) {
 		event.stopImmediatePropagation();
 		event.stopPropagation(); //prevent the bubbling up
         var target = $(event.target);
         var accordionRow = target.parent();
 		if ($(accordionRow).find('.accordion-heading').length == 0) accordionRow = $(accordionRow).parent();
         var index = accordionRow.attr("data-row");
-        this.toggleAccordion(index);
+		if (contextOfOriginalExecution)
+			contextOfOriginalExecution.toggleAccordion(index);
+		else
+	        this.toggleAccordion(index);
     },
     onClickClose: function () {
         step.util.showOrHideTutorial(true);

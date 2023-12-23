@@ -22,7 +22,7 @@ var StepRouter = Backbone.Router.extend({
         this.navigate(url, { trigger: false, replace: true});
     },
 
-    navigatePreserveVersions: function (partial, stripCommentaries, skipPage, skipQFilter) {
+    navigatePreserveVersions: function (partial, stripCommentaries, skipPage, skipQFilter, startNewPageForPhone) {
         //get versions of current active passage
         //add versions from current active passage
         var activePassage = step.util.activePassage();
@@ -51,7 +51,10 @@ var StepRouter = Backbone.Router.extend({
 		skipPage = (skipPage) ? true : false;
 		skipQFilter = (skipQFilter) ? true : false;
         if ((allVersions !== "") && (searchParameters !== "")) searchParameters = allVersions + "|" + searchParameters;
-        this.navigateSearch(searchParameters, skipQFilter, skipPage);
+        if (step.touchDevice && !step.touchWideDevice && startNewPageForPhone)
+            window.open("/?q=" + searchParameters.split(" ")[0], "_blank");
+        else
+            this.navigateSearch(searchParameters, skipQFilter, skipPage);
     },
     navigateSearch: function (args, skipQFilter, skipPage) {
         var activePassageId = step.util.activePassageId();
@@ -200,7 +203,7 @@ var StepRouter = Backbone.Router.extend({
             }
         });
     },
-    handleRenderModel: function (passageModel, partRendered, queryArgs) {
+    handleRenderModel: function (passageModel, partRendered, queryArgs, doNotScroll) {
         passageModel.save({
                 args: queryArgs != null ? decodeURIComponent(queryArgs) : "",
                 urlFragment: Backbone.history.getFragment()
@@ -224,8 +227,8 @@ var StepRouter = Backbone.Router.extend({
         } else {
             this.handleSearchResults(passageModel, partRendered);
         }
-
         this._renderSummary(passageModel);
+        step.util.hideNavBarOnPhones(doNotScroll);
     },
 
     _renderSummary: function (passageModel) {
@@ -321,7 +324,13 @@ var StepRouter = Backbone.Router.extend({
                 $("#nextChapterWordle").hide();
                 $("#newLineWordle").show();
                 $("#nextChapterInputLine").show();
-                self.handleRenderModel(passageModel, false, query);
+                var doNotScroll = false;
+                if ( ((typeof pageNumber === "string") && (!isNaN(pageNumber))) ||
+                      (typeof pageNumber === "number") ) {
+                    if (parseInt(pageNumber) > 1)
+                    	doNotScroll = true;
+                }
+                self.handleRenderModel(passageModel, false, query, doNotScroll);
             },
             passageId: activePassageId,
             level: 'error'

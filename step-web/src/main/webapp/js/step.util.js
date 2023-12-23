@@ -88,6 +88,7 @@
             }).error(function() {
                 changeBaseURL();
             });
+
         },
 
         /**
@@ -123,7 +124,7 @@
 window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
-    timers: {},
+    timersForSTEPApp: {},
 	versionsBoth: ["ESV", "KJV", "NASB2020", "BSB", "HCSB", "RV_TH", "WEB_TH", "ASV-TH", "CHIUN", "CHIUNS", "NASB1995", "RWEBSTER", "SPABES2018EB", "ARASVD"],
 	versionsGreekNT: ["SBLG_TH", "THGNT", "TR", "BYZ", "WHNU", "ELZEVIR", "ANTONIADES", "KHMKCB"],
 	versionsGreekOT: ["LXX_TH"],
@@ -178,12 +179,12 @@ step.util = {
 	showHideFreqList: function () {
 		if ($(".detailFreqList:visible").length > 0) {
 			$(".detailFreqList").hide();
-			$(".freqListSelect").text("More ...");
+			$(".freqListSelect").text(__s.more + " ...");
 			$(".freqListSelectIcon").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
 		}
 		else {
 			$(".detailFreqList").show();
-			$(".freqListSelect").text("Less ...");
+			$(".freqListSelect").text(__s.less + " ...");
 			$(".freqListSelectIcon").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
 		}
 	},
@@ -213,7 +214,7 @@ step.util = {
 			msg[0] = msg[0].substring(4);
 		if ((msg[0] === "") && (msg[1].indexOf("<br>") == 0))
 			msg[1] = msg[1].substring(4);
-		return "<span>Frequencies vary </span><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#bookmark=id.11g1a0zd07wd' target='_blank'>(why?)</a>" +
+		return "<span>" + __s.frequencies_vary + " </span><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#bookmark=id.11g1a0zd07wd' target='_blank'>(" + __s.why + ")</a>" +
 			"<br>" + msg[0] + msg[1] + "<br>" +
 			"<a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
 			"<span class='detailFreqList' style='display:none'>" +
@@ -304,10 +305,11 @@ step.util = {
             model.trigger("squashErrors");
         }
     },
-	tempAlert: function(msg, duration) {
+	tempAlert: function(msg, duration, showAtBottom) {
         var el = document.createElement("div");
 		el.setAttribute("id","tmpStepAlert");
-        el.setAttribute("style","z-index:99999;text-align:center;position:absolute;top:15%;left:10%;right:10%;background-color:#ffffcc;color:black;font-size:20px;");
+		var topOrBottom = (showAtBottom) ? "bottom" : "top";
+        el.setAttribute("style","z-index:99999;text-align:center;position:absolute;" + topOrBottom + ":15%;left:10%;right:10%;background-color:#ffffcc;color:black;font-size:20px;");
         el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + duration + " seconds.</div>";
         setTimeout(function(){
             el.innerHTML = msg + "<div style='font-size:12px'>This message will go away in " + Math.ceil(duration * .666)  + " seconds.</div>";
@@ -320,12 +322,13 @@ step.util = {
         }, duration * 333);
         document.body.appendChild(el);
     },
-    getErrorPopup: function (message, level) {
-        var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
-			step.util.modalCloseBtn(null, "") +
-            '<%= message %></div>')({ message: message, level: level}));
-        return errorPopup;
-    },
+// seems like it is not used.  PT 11/20/2023
+//    getErrorPopup: function (message, level) {
+//        var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
+//			step.util.modalCloseBtn(null, "") +
+//            '<%= message %></div>')({ message: message, level: level}));
+//        return errorPopup;
+//    },
     raiseOneTimeOnly: function (key, level) {
         var k = step.settings.get(key);
         if (!k) {
@@ -560,29 +563,31 @@ step.util = {
      * @param el
      */
     createNewLinkedColumn: function (passageId) {
-		if ($(window).width() < 768) {
-			if (step.util.localStorageGetItem("already_warned_screen_not_wide_enough") !== "true") {
-				var msg = __s.screen_not_wide_enought;
-			if ((step.touchDevice) && ($(window).height() > 768))
-					msg += " " + __s.rotate_screen_to_landscape_mode;
-			alert(msg);
-				step.util.localStorageSetItem("already_warned_screen_not_wide_enough", true);
-			}
-		}
+		// if ($(window).width() < 768) {
+		// 	if (step.util.localStorageGetItem("already_warned_screen_not_wide_enough") !== "true") {
+		// 		var msg = __s.screen_not_wide_enought;
+		// 	if ((step.touchDevice) && ($(window).height() > 768))
+		// 			msg += " " + __s.rotate_screen_to_landscape_mode;
+		// 	alert(msg);
+		// 		step.util.localStorageSetItem("already_warned_screen_not_wide_enough", true);
+		// 	}
+		// }
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
     createNewLinkedColumnWithScroll: function (passageId, verseRef, stripCommentaries, postProcessModelCallback, ev) {
-        this.createNewLinkedColumn(passageId);
+		if (!step.touchDevice || step.touchWideDevice) {
+	        this.createNewLinkedColumn(passageId);
 
         //call the post processor
-        var activePassage = step.util.activePassage();
-        if (postProcessModelCallback) {
-            postProcessModelCallback(activePassage);
-        }
+			var activePassage = step.util.activePassage();
+			if (postProcessModelCallback) {
+				postProcessModelCallback(activePassage);
+			}
 
-        //next target can be set on the active model
-        activePassage.save({ targetLocation: verseRef }, { silent: true });
+			//next target can be set on the active model
+			activePassage.save({ targetLocation: verseRef }, { silent: true });
+		}
 
         var chapterRef = verseRef.substr(0, verseRef.lastIndexOf("."));
         if (step.util.isBlank(chapterRef)) {
@@ -593,7 +598,7 @@ step.util = {
 			var numOfChaptersInBook = step.passageSelect.getNumOfChapters(bookName);
 			if (numOfChaptersInBook == 1) chapterRef = bookName;
 		}
-        step.router.navigatePreserveVersions("reference=" + chapterRef, stripCommentaries);
+        step.router.navigatePreserveVersions("reference=" + chapterRef, stripCommentaries, null, null, true);
 
         //we prevent the event from bubbling up to set the passage id, as we expect a new passage to take focus
         if (ev) ev.stopPropagation();
@@ -691,9 +696,10 @@ step.util = {
         step.util.getPassageContainer(newPassageId).find(".linkPanel").remove();
         return linkedPassageIds;
     },
-    isSeptuagintVersion: function (item) {
-        return $.inArray(item.initials || item, step.util.septuagintVersions) != -1;
-    },
+// Does not seem like it is used.  11/20/2023 PT
+//    isSeptuagintVersion: function (item) {
+//        return $.inArray(item.initials || item, step.util.septuagintVersions) != -1;
+//    },
     getPassageContainer: function (passageIdOrElement) {
         if (!this._passageContainers) {
             this._passageContainers = {};
@@ -710,9 +716,9 @@ step.util = {
         return container;
     },
     clearTimeout: function (timerName) {
-        var tn = this.timers[timerName];
+        var tn = this.timersForSTEPApp[timerName];
         if (tn == undefined) {
-            this.timers[timerName] = tn = 0;
+            this.timersForSTEPApp[timerName] = tn = 0;
         }
         clearTimeout(tn);
     },
@@ -721,16 +727,16 @@ step.util = {
         if (timerName) {
             this.clearTimeout(timerName);
             if (callback) {
-                this.timers[timerName] = setTimeout(callback, ms);
+                this.timersForSTEPApp[timerName] = setTimeout(callback, ms);
             }
         } else {
             clearTimeout(timer);
             timer = setTimeout(callback, ms);
         }
     },
-    getMainLanguage: function (passageModel) {
-        return (passageModel.get("languageCode") || ["en"])[0];
-    },
+//    getMainLanguage: function (passageModel) {
+//        return (passageModel.get("languageCode") || ["en"])[0];
+//    },
     restoreFontSize: function (passageModel, element) {
 		var fontArray = ["defaultfont", "hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
         var passageId = passageModel.get("passageId");
@@ -884,19 +890,20 @@ step.util = {
 		}
 		return currentFontSize;
 	},
-    getKeyValues: function (args) {
-        var tokens = (args || "").split("|");
-        var data = [];
-        for (var i = 0; i < tokens.length; i++) {
-            var tokenParts = tokens[i].split("=");
-            if (tokenParts.length > 1) {
-                var key = tokenParts[0];
-                var value = tokenParts.slice(1).join("=");
-                data.push({ key: key, value: value });
-            }
-        }
-        return data;
-    },
+	// Might not be called 11/20/2023 PT
+//    getKeyValues: function (args) {
+//        var tokens = (args || "").split("|");
+//        var data = [];
+//        for (var i = 0; i < tokens.length; i++) {
+//            var tokenParts = tokens[i].split("=");
+//            if (tokenParts.length > 1) {
+//                var key = tokenParts[0];
+//                var value = tokenParts.slice(1).join("=");
+//                data.push({ key: key, value: value });
+//            }
+ //       }
+//        return data;
+//    },
     safeEscapeQuote: function (term) {
         if (term == null) {
             return "";
@@ -1321,11 +1328,16 @@ step.util = {
          */
         showTutorial: function () {
             step.util.ui.initSidebar('help', { });
-            require(["sidebar"], function (module) {
-                step.sidebar.save({
-                    mode: 'help'
-                });
-            });
+			if (step.sidebar != null) {
+				if (!step.touchDevice || step.touchWideDevice)
+	  	            require(["sidebar"], function (module) {
+		                step.sidebar.save({
+		                    mode: 'help'
+		                });
+		            });
+	   			else
+					step.sidebar = null;
+	        }
         },
         /**
          * called when click on a piece of text.
@@ -1396,14 +1408,19 @@ step.util = {
             });
         },
         openStrongNumber: function (strong, morph, reference, version, allVersions) {
-            step.sidebar.save({
-                strong: strong,
-                morph: morph,
-                mode: 'lexicon',
-                ref: reference,
-                version: version,
-				allVersions: allVersions
-            });
+			if (step.sidebar != null) {
+				if (!step.touchDevice || step.touchWideDevice)
+					step.sidebar.save({
+						strong: strong,
+						morph: morph,
+						mode: 'lexicon',
+						ref: reference,
+						version: version,
+						allVersions: allVersions
+					});
+				else
+					step.sidebar = null;
+			}
         },
         openStats: function (focusedPassage) {
             this.initSidebar("analysis", { ref: focusedPassage });
@@ -1439,7 +1456,7 @@ step.util = {
 							if ((typeof ev.originalEvent === "object") &&
 								(typeof ev.originalEvent.touches === "object") &&
 								(typeof ev.originalEvent.touches[0] === "object") &&
-								(typeof ev.originalEvent.touches[0].pageY === "number")) that.pageY = ev.originalEvent.touches[0].pageY;
+								(typeof ev.originalEvent.touches[0].clientY === "number")) that.pageY = ev.originalEvent.touches[0].clientY;
 							step.touchForQuickLexiconTime = Date.now();
 							var strongStringAndPrevHTML = step.util.ui._getStrongStringAndPrevHTML(this); // Try to get something unique on the word touch by the user to compare if it is the 2nd touch
 							var userTouchedSameWord = (strongStringAndPrevHTML == step.lastTapStrong);
@@ -1464,29 +1481,26 @@ step.util = {
 								step.lastTapStrong = "";
 							}
 						}).hover(function (ev) { // mouse pointer starts hover (enter)
-							if ((!step.touchDevice) && (!step.util.keepQuickLexiconOpen)) {
-								step.passage.higlightStrongs({
-									passageId: undefined,
-									strong: $(this).attr('strong'),
-									morph: $(this).attr('morph'),
-									classes: "primaryLightBg"
-								});
-								var hoverContext = this;
-								require(['quick_lexicon'], function () {
-									step.util.delay(function () {
-										// do the quick lexicon
-										step.util.ui._displayNewQuickLexicon(hoverContext, passageId, false, ev.pageY);
-									}, MOUSE_PAUSE, 'show-quick-lexicon');
-								});
-							}
+							if (step.touchDevice || step.util.keepQuickLexiconOpen) return;
+							step.passage.higlightStrongs({
+								passageId: undefined,
+								strong: $(this).attr('strong'),
+								morph: $(this).attr('morph'),
+								classes: "primaryLightBg"
+							});
+							var hoverContext = this;
+							require(['quick_lexicon'], function () {
+								step.util.delay(function () {
+									// do the quick lexicon
+									step.util.ui._displayNewQuickLexicon(hoverContext, passageId, false, ev.pageY);
+								}, MOUSE_PAUSE, 'show-quick-lexicon');
+							});
 						}, function () { // mouse pointer ends hover (leave)
-							if (!step.touchDevice) {
-								step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-								step.util.delay(undefined, 0, 'show-quick-lexicon');
-								if (!step.util.keepQuickLexiconOpen) {
-									$("#quickLexicon").remove();
-								}
-							}
+							if (step.touchDevice || step.util.keepQuickLexiconOpen) return;
+							step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+							step.util.delay(undefined, 0, 'show-quick-lexicon');
+							if (!step.util.keepQuickLexiconOpen)
+								$("#quickLexicon").remove();
 						});
 				},
 				_getStrongStringAndPrevHTML: function (touchedObject) {
@@ -1818,34 +1832,33 @@ step.util = {
 													var strongParameterForCall = $(this).parent().data("strong");
 													var refParameterForCall = (strongParameterForCall.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) ? "" : reference; // if it is augmented Strong, don't include the reference
 													self.showDef({strong: strongParameterForCall, ref: refParameterForCall, version: version });
+													if (step.touchDevice && !step.touchWideDevice)
+														$(".versePopup").hide();
 											});
 
 											templatedTable.find(".definition").hover(function (ev) { // mouse pointer starts hover (enter)
-												if ((!step.touchDevice) && (!step.util.keepQuickLexiconOpen)) {
-													var strongParameterForCall = $(this).parent().data("strong");
-													var refParameterForCall = (strongParameterForCall.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) ? "" : reference; // if it is augmented Strong, don't include the reference
-													step.passage.higlightStrongs({
-														passageId: undefined,
-														strong: strongParameterForCall,
-														morph: undefined,
-														classes: "primaryLightBg"
-													});
-													var hoverContext = this;
-													require(['quick_lexicon'], function () {
-														step.util.delay(function () {
-															// do the quick lexicon
-															step.util.ui._displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, ev, ev.pageY, hoverContext);
-														}, MOUSE_PAUSE, 'show-quick-lexicon');
-													});
-												}
+												if (step.touchDevice || step.util.keepQuickLexiconOpen) return;
+												var strongParameterForCall = $(this).parent().data("strong");
+												var refParameterForCall = (strongParameterForCall.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) ? "" : reference; // if it is augmented Strong, don't include the reference
+												step.passage.higlightStrongs({
+													passageId: undefined,
+													strong: strongParameterForCall,
+													morph: undefined,
+													classes: "primaryLightBg"
+												});
+												var hoverContext = this;
+												require(['quick_lexicon'], function () {
+													step.util.delay(function () {
+														// do the quick lexicon
+														step.util.ui._displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, ev, ev.pageY, hoverContext);
+													}, MOUSE_PAUSE, 'show-quick-lexicon');
+												});
 											}, function () { // mouse pointer ends hover (leave)
-												if (!step.touchDevice) {
-													step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-													step.util.delay(undefined, 0, 'show-quick-lexicon');
-													if (!step.util.keepQuickLexiconOpen) {
-														$("#quickLexicon").remove();
-													}
-												}
+												if (step.touchDevice || step.util.keepQuickLexiconOpen) return;
+												step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+												step.util.delay(undefined, 0, 'show-quick-lexicon');
+												if (!step.util.keepQuickLexiconOpen)
+													$("#quickLexicon").remove();
 											});
 
 										templatedTable.find(".bookCount").click(function () {
@@ -1853,16 +1866,18 @@ step.util = {
 												var strong = $(this).parent().data("strong");
 												var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent(strong);
 												//make this the active passage
-												step.util.createNewLinkedColumn(passageId);
+												if (!step.touchDevice || step.touchWideDevice)
+													step.util.createNewLinkedColumn(passageId);
 												step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
-												step.router.navigatePreserveVersions(args);
+												step.router.navigatePreserveVersions(args, null, null, null, true);
 										});
 
 										templatedTable.find(".bookCount").hover(function (ev) {
+												if (step.touchDevice) return;
 												var bookName = key.substring(0, key.indexOf('.'));
 												var strong = $(this).parent().data("strong");
 												var wordInfo = $($(this).parent().find('a')[0]).html();
-												fetch("https://www.stepbible.org/rest/search/masterSearch/version-ESV|reference=" + bookName +
+												fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|reference=" + bookName +
 													"|strong=" + strong + "/HNVUG///" +
 													strong + "///en?lang=en")
 												.then(function(response) {
@@ -1872,11 +1887,10 @@ step.util = {
 													step.util.ui.showListOfVersesInQLexArea(data, ev.pageY, wordInfo, passageHtml);
 												});
 											}, function () { // mouse pointer ends hover (leave)
-												if (!step.touchDevice) {
-													step.util.delay(undefined, 0, 'show-quick-lexicon');
-													if (!step.util.keepQuickLexiconOpen) {
-														$("#quickLexicon").remove();
-													}
+												if (step.touchDevice) return
+												step.util.delay(undefined, 0, 'show-quick-lexicon');
+												if (!step.util.keepQuickLexiconOpen) {
+													$("#quickLexicon").remove();
 												}
 											});
 
@@ -1884,15 +1898,17 @@ step.util = {
 													var strong = $(this).parent().data("strong");
 													var args = "strong=" + encodeURIComponent(strong);
 													//make this the active passage
-													step.util.createNewLinkedColumn(passageId);
+													if (!step.touchDevice || step.touchWideDevice)
+														step.util.createNewLinkedColumn(passageId);
 													step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
-													step.router.navigatePreserveVersions(args);
+													step.router.navigatePreserveVersions(args, null, null, null, true);
 											});
 
 											templatedTable.find(".bibleCount").hover(function (ev) {
+												if (step.touchDevice) return
 												var strong = $(this).parent().data("strong");
 												var wordInfo = $($(this).parent().find('a')[0]).html();
-												fetch("https://www.stepbible.org/rest/search/masterSearch/version-ESV|" +
+												fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|" +
 													"strong=" + strong + "/HNVUG///" +
 													strong + "///en?lang=en")
 												.then(function(response) {
@@ -1902,22 +1918,23 @@ step.util = {
 													step.util.ui.showListOfVersesInQLexArea(data, ev.pageY, wordInfo, passageHtml);
 												});
 											}, function () { // mouse pointer ends hover (leave)
-												if (!step.touchDevice) {
-													step.util.delay(undefined, 0, 'show-quick-lexicon');
-													if (!step.util.keepQuickLexiconOpen) {
-														$("#quickLexicon").remove();
-													}
+												if (step.touchDevice) return
+												step.util.delay(undefined, 0, 'show-quick-lexicon');
+												if (!step.util.keepQuickLexiconOpen) {
+													$("#quickLexicon").remove();
 												}
 											});
 
 											templatedTable.find(".relatedVerses").click(function () {
+												if (!step.touchDevice || step.touchWideDevice)
 													step.util.createNewLinkedColumn(passageId);
-													step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
+												step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key), null, null, null, true);
 											});
 
 											templatedTable.find(".relatedSubjects").click(function () {
+												if (!step.touchDevice || step.touchWideDevice)
 													step.util.createNewLinkedColumn(passageId);
-													step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
+												step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key), null, null, null, true);
 											});
 
 											templatedTable.find(".verseInContext").click(function () {
@@ -2037,8 +2054,6 @@ step.util = {
     },
 	showConfigGrammarColor: function (e) {
         if (e) e.preventDefault();
-        // var temp = document.getElementById("grammarClrModal");
-        // if (!temp) grammarColorConfigPage.appendTo("body");
         var element = document.getElementById('grammarClrModal');
         if (element) element.parentNode.removeChild(element);
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
@@ -2082,6 +2097,7 @@ step.util = {
 				'});' +
 			'</script>' +
 		'</div>').modal("show");
+		step.util.blockBackgroundScrolling('grammarClrModal');
     },
 	correctPassageNotInBible: function (userChoice, queryString) {
 		$("#showLongAlertModal").click();
@@ -2189,6 +2205,8 @@ step.util = {
 			$('textarea#enterYourPassage').focus().val(step.tempKeyInput);
 			step.tempKeyInput = "";
 		}
+		else
+			step.util.blockBackgroundScrolling("passageSelectionModal");
   },
 
   copyModal: function () {
@@ -2229,6 +2247,7 @@ step.util = {
 			'</div>' +
 		'</div>';
 		$(_.template(modalHTML)()).modal("show");
+		step.util.blockBackgroundScrolling("copyModal");
 	},
 
 	searchSelectionModal: function () {
@@ -2332,6 +2351,7 @@ step.util = {
 				'</div>' +
 			'</div>' +
 		'</div>')()).modal("show");
+		step.util.blockBackgroundScrolling("searchSelectionModal");
 		$('textarea#userTextInput').focus();
     },
 	showVideoModal: function (videoFile, seconds, width) {
@@ -2369,6 +2389,7 @@ step.util = {
 				'</div>' +
 			'</div>'
 		)()).modal("show");
+		step.util.blockBackgroundScrolling("videoModal");		
     },
     showSummary: function (reference) {
         element = document.getElementById('showBookOrChapterSummaryModal');
@@ -2378,10 +2399,10 @@ step.util = {
         var osisID = tmpArray[0]; // get the string before the "." character
         var longBookName = osisID;
 		var posOfBook = step.util.bookOrderInBible(osisID);
-        var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
+        var arrayOfTyplicalBooksAndChapters = JSON.parse(__s.list_of_bibles_books);
 		if ((posOfBook > -1) &&
-			(typeof arrayOfTyplicalBooksChapters !== "undefined"))
-			longBookName = arrayOfTyplicalBooksChapters[posOfBook][0];
+			(typeof arrayOfTyplicalBooksAndChapters !== "undefined"))
+			longBookName = arrayOfTyplicalBooksAndChapters[posOfBook][0];
         var chapterNum = (tmpArray.length > 1) ? parseInt(tmpArray[1].split(":")[0].split("-")[0].split(";")[0]) : 1;
         if (typeof chapterNum !== "number") chapterNum = 1;
         var bibleSummary = 
@@ -2471,7 +2492,6 @@ step.util = {
             '<tr></tr></tbody></table>' +
             '</div>';
 
-        $.ajaxSetup({async: false});
         $.getJSON("html/json/" + osisID.toLowerCase() + ".json", function(summary) {
             var bookSummary =
                 '<br><span style="font-size:18px"><b>Book summary of ' + longBookName + '</b></span><br>' +
@@ -2537,15 +2557,22 @@ step.util = {
                     '</div>' +
                 '</div>'
             )()).modal("show");
+			step.util.blockBackgroundScrolling('showBookOrChapterSummaryModal');
         });
-        $.ajaxSetup({async: true});
     },
-    showLongAlert: function (message, headerText) {
-        element = document.getElementById('showLongAlertModal');
-        if (element) element.parentNode.removeChild(element);
-        $(".modal-backdrop.in").remove();
+	blockBackgroundScrolling: function(idName) {
+		if (step.touchDevice && !step.touchWideDevice) {
+			$("body").css("overflow-y","hidden"); // do not let body (web page) scroll
+			$('#' + idName).on('hidden.bs.modal', function (e) {
+				$("body").css("overflow-y","auto"); // if modal is hidden, let body scroll
+			});
+		}
+	},
+    showLongAlert: function (message, headerText, panelBodies) {
+		step.util.closeModal("showLongAlertModal");
+		var extraStyling = (panelBodies == null) ? '' : 'style="padding:25px" ';
 		$(_.template(
-			'<div id="showLongAlertModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div id="showLongAlertModal" class="modal" ' + extraStyling + 'role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 				'<div class="modal-dialog">' +
 					'<div class="modal-content stepModalFgBg"">' +
 						'<script>' +
@@ -2558,13 +2585,24 @@ step.util = {
 						'<div class="modal-header">' + headerText +
 							step.util.modalCloseBtn("showLongAlertModal") + '<br>' +
 						'</div>' +
-						'<div class="modal-body" style="text-align:left font-size:16px">' +
+						'<div class="modal-body" style="text-align:left;font-size:14px">' +
 							message +
 						'</div>' +
 					'</div>' +
 				'</div>' +
 			'</div>'
 		)()).modal("show");
+		if (panelBodies != null) {
+			if (panelBodies.length == 1) {
+				$(".modal-body").append(panelBodies[0]);
+			}
+			else {
+				for (var i = 0; i < panelBodies.length; i++) {
+					$($(".panel-collapse.lexmodal")[i]).append(panelBodies[i]);
+				}
+			}
+		}
+		step.util.blockBackgroundScrolling('showLongAlertModal');
     },
 
     setDefaultColor: function(option) {
@@ -2589,7 +2627,7 @@ step.util = {
             rootVar.style.setProperty('--clr2ndHover',"#c5d0fb");
             step.settings.save({"clr2ndHover":"#c5d0fb"});
             $('body,html').css('color-scheme','dark');
-            newBtnText = "Disable";
+            newBtnText = __s.disable;
         }
         else {
             rootVar.style.setProperty('--clrText',"#5d5d5d");
@@ -2605,7 +2643,7 @@ step.util = {
             rootVar.style.setProperty('--clr2ndHover',"#d3d3d3");
             step.settings.save({"clr2ndHover":"#d3d3d3"});
             $('body,html').css('color-scheme','normal');
-            newBtnText = "Enable";
+            newBtnText = __s.enable;
         }
         rootVar.style.setProperty('--clrLexiconFocusBG',"#c8d8dc");
         step.settings.save({"clrLexiconFocusBG":"#c8d8dc"});
@@ -2970,19 +3008,19 @@ step.util = {
 									'<button id="darkModeBtn" class="btn btn-default btn-sm' +
                                         ((darkModeEnabled) ? ' stepPressedButton' : '') +
                                         '" type="button" title="Dark mode" onclick="step.util.setDefaultColor(\'flip\')"><span style="font-size:10px;line-height:12px;font-weight:bold">' +
-                                        ((darkModeEnabled) ? 'Disable' : 'Enable') +
+                                        ((darkModeEnabled) ? __s.disable : __s.enable) +
                                         '</span></button>' +
 								'</td>' +
 							'</tr>';
 		if ((colorReady) && ((typeof panelNumber !== "number")))
 			modalHTML +=
 							'<tr>' +
-								'<td class="passageContent defaultfont">Advanced color update:</td>' +
+								'<td class="passageContent defaultfont">' + __s.advanced_color_update + ':</td>' +
 								'<td class="pull-right">' +
 									'<button id="colorUpdateMode" class="btn btn-default btn-sm' +
                                         ((step.colorUpdateMode) ? ' stepPressedButton' : '') +
                                         '" type="button" title="Color mode" onclick="step.util.switchColorMode()"><span style="font-size:10px;line-height:12px;font-weight:bold">' +
-                                        ((step.colorUpdateMode) ? 'Disable' : 'Enable') +
+                                        ((step.colorUpdateMode) ? __s.disable : __s.enable) +
                                         '</span></button>' +
 								'</td>' +
 							'</tr>' +
@@ -3064,6 +3102,7 @@ step.util = {
 			'</div>' +
 		'</div>';
 		$(_.template(modalHTML)()).modal("show");
+		step.util.blockBackgroundScrolling("fontSettings");
 	},
     startPickBible: function () {
         require(["menu_extras"], function () {
@@ -3130,7 +3169,7 @@ step.util = {
 				var introJsSteps = [
 				{
 					element: document.querySelector('#copy-icon'),
-					intro: "NEW: Copy from STEPBible to your documents.",
+					intro: __s.copy_intro,
 					position: 'left'
 				}
          	   ];
@@ -3168,8 +3207,11 @@ step.util = {
 		}
 	},
 	closeModal: function (modalID) {
+		var modalsRequireUnfreezeOfScroll = " showLongAlertModal showBookOrChapterSummaryModal grammarClrModal passageSelectionModal searchSelectionModal copyModal videoModal fontSettings raiseSupport aboutModal bibleVersions ";
+		if ((modalsRequireUnfreezeOfScroll.indexOf( " " + modalID + " ") > -1) && step.touchDevice && !step.touchWideDevice)
+			$("body").css("overflow-y","auto"); // let the body (web page) scroll
         var element = document.getElementById(modalID);
-		if (element) {	
+		if (element) {
 			$('#' + modalID).modal('hide');
 			$('#' + modalID).modal({
 				show: false
@@ -3755,77 +3797,112 @@ step.util = {
 		}
 		return result;
 	},
-	getVocabMorphInfoFromJson: function (strong, morph, version) {
+	getVocabMorphInfoFromJson: function (strong, morph, version, callProcessQuickInfo, callBack1Param, callBackLoadDefFromAPI, callBack2Param) {
 		var resultJson = {vocabInfos: [], morphInfos: []};
-		if (step.state.isLocal()) return resultJson; // There are no json files for the lexicon in the stand-alone version of STEP
+		if (step.state.isLocal()) {
+			callBackLoadDefFromAPI(callBack2Param);
+			return;
+		}
 		var strongArray = strong.split(" ");
-		var processedStrong = [];
+		var uniqueStrongArray = [];
+		for (var j = 0; j < strongArray.length; j++) { // remove duplicates
+			if (uniqueStrongArray.indexOf(strongArray[j]) == -1)
+				uniqueStrongArray.push(strongArray[j]);
+		}
 		var additionalPath = step.state.getCurrentVersion();
 		if (additionalPath !== "") additionalPath += "/";
 		var indexToDefaultDStrong = step.util.vocabKeys.length - 1;
-		$.ajaxSetup({async: false});
-		for (var j = 0; j < strongArray.length; j++) {
-			var strongWithoutAugment = step.util.fixStrongNumForVocabInfo(strongArray[j], true);
-			if (processedStrong.indexOf(strongArray[j]) == -1) {
-				processedStrong.push(strongArray[j]);
-				$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
-					var augStrongIndex = -1;
-					var defaultDStrong = -1;
-					var lxxDefaultDstrong = -1;
-					for (var i = 0; i < origJsonVar.v.length; i++) {
-						if (strongArray[j] !== strongWithoutAugment) {
-							var strongNumToCheck = (typeof origJsonVar.v[i][0] === "number") ? origJsonVar.d[origJsonVar.v[i][0]] : origJsonVar.v[i][0];
-							if (strongArray[j] === strongNumToCheck ) {
-								augStrongIndex = i;
-								break;
-							}
+		var numOfResponse = 0;
+		resultJson.vocabInfos = new Array(uniqueStrongArray.length);
+		for (var j = 0; j < uniqueStrongArray.length; j++) {
+			var strongWithoutAugment = step.util.fixStrongNumForVocabInfo(uniqueStrongArray[j], true);
+			$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
+				var augStrongIndex = -1;
+				var defaultDStrong = -1;
+				var lxxDefaultDstrong = -1;
+				var indexToUniqueStrongArry = -1;
+				var requestedStrong = "";
+				if (this.url.search("\/([HG]\\d+)\\.json$") > -1) {
+					requestedStrong = RegExp.$1;
+					for (var i = 0; i < uniqueStrongArray.length; i++) {
+						if (requestedStrong === step.util.fixStrongNumForVocabInfo(uniqueStrongArray[i], true)) {
+							indexToUniqueStrongArry = i;
+							break;
 						}
-						if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("*") > -1)
-							defaultDStrong = i; // Default DStrong
-						if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("L") > -1)
-							lxxDefaultDstrong = i;
 					}
-					if (augStrongIndex == -1) {
-						augStrongIndex = defaultDStrong;
-						if (lxxDefaultDstrong > -1) {
-							var versions = step.util.activePassage().get("masterVersion") + "," +
-								step.util.activePassage().get("extraVersions");
-							if ((versions.toUpperCase().indexOf("ABEN") > -1) || (versions.toUpperCase().indexOf("ABGK") > -1)) {
-								var r = step.util.getTestamentAndPassagesOfTheReferences([ step.util.activePassage().get("osisId") ]);
-								if (r[1]) // has OT passage
-									augStrongIndex = lxxDefaultDstrong;
-							}
-							else if (versions.toUpperCase().indexOf("LXX") > -1)
+				}
+				if (indexToUniqueStrongArry == -1)
+					alert("something wrong, cannot locate original search Strong in getVocabMorphInfoFromJson");
+				for (var i = 0; i < origJsonVar.v.length; i++) {
+					if (uniqueStrongArray[indexToUniqueStrongArry] !== requestedStrong) { // requestedStrong does not have augment
+						var strongNumToCheck = (typeof origJsonVar.v[i][0] === "number") ? origJsonVar.d[origJsonVar.v[i][0]] : origJsonVar.v[i][0];
+						if (uniqueStrongArray[indexToUniqueStrongArry] === strongNumToCheck ) {
+							augStrongIndex = i;
+							break;
+						}
+					}
+					if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("*") > -1)
+						defaultDStrong = i; // Default DStrong
+					if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("L") > -1)
+						lxxDefaultDstrong = i;
+				}
+				if (augStrongIndex == -1) {
+					augStrongIndex = defaultDStrong;
+					if (lxxDefaultDstrong > -1) {
+						var versions = step.util.activePassage().get("masterVersion") + "," +
+							step.util.activePassage().get("extraVersions");
+						if ((versions.toUpperCase().indexOf("ABEN") > -1) || (versions.toUpperCase().indexOf("ABGK") > -1)) {
+							var r = step.util.getTestamentAndPassagesOfTheReferences([ step.util.activePassage().get("osisId") ]);
+							if (r[1]) // has OT passage
 								augStrongIndex = lxxDefaultDstrong;
 						}
+						else if (versions.toUpperCase().indexOf("LXX") > -1)
+							augStrongIndex = lxxDefaultDstrong;
 					}
-					if (augStrongIndex == -1)
-						augStrongIndex = 0;
-					var jsonVar = step.util.unpackJson(origJsonVar, augStrongIndex);
-					resultJson.vocabInfos.push(jsonVar);
-				}).error(function() {
-					console.log("getJSon failed strong:"+ strong + " morph: " + morph + " version: " + version);
-					return resultJson;
-				});
-			}
+				}
+				if (augStrongIndex == -1)
+					augStrongIndex = 0;
+				var jsonVar = step.util.unpackJson(origJsonVar, augStrongIndex);					
+				resultJson.vocabInfos[indexToUniqueStrongArry] = jsonVar;
+				numOfResponse ++;
+				if (numOfResponse == uniqueStrongArray.length) {
+					if (morph) {
+						var numOfMorphResponse = 0;
+						var morphArray = morph.split(" ");
+						for (var k = 0; k < morphArray.length; k++) {
+							numOfMorphResponse ++;
+							var morph = morphArray[k];
+							var morphLowerCase = morph.toLowerCase();
+							if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1))
+								continue;
+							var pos = morph.search("robinson:");
+							if (pos > -1) morph = morphArray[k].substring(pos+9);
+							$.getJSON("/html/lexicon/" + additionalPath + morph + ".json", function(jsonVar) {
+								numOfMorphResponse ++;
+								resultJson.morphInfos.push(jsonVar.morphInfos[0]);
+								if (numOfMorphResponse == morphArray.length)
+									callProcessQuickInfo(resultJson, callBack1Param);
+							}).error(function() {
+								console.log("getJSon failed strong:"+ strong + " morph: " + morph + " version: " + version);
+								if (numOfMorphResponse < 0) return; // already processed error from $getjson of /html/lexicon ...
+								numOfMorphResponse = -100;
+								callBackLoadDefFromAPI(callBack2Param);
+								//return false;
+							});
+						}
+					}
+					else
+						callProcessQuickInfo(resultJson, callBack1Param);
+				}
+			}).error(function() {
+				console.log("getJSon failed strong:"+ strong + " morph: " + morph + " version: " + version);
+				if (numOfResponse < 0) return; // already processed error from $getjson of /html/lexicon ...
+				numOfResponse = -100; // indicated there is a failure
+				callBackLoadDefFromAPI(callBack2Param);
+				//return false;
+			});
 		}
-		if (morph) {
-			var morphArray = morph.split(" ");
-			for (var k = 0; k < morphArray.length; k++) {
-				var morph = morphArray[k];
-				var morphLowerCase = morph.toLowerCase();
-				if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1)) continue;
-				var pos = morph.search("robinson:");
-				if (pos > -1) morph = morphArray[k].substring(pos+9);
-				$.getJSON("/html/lexicon/" + morph + ".json", function(jsonVar) {
-					resultJson.morphInfos.push(jsonVar.morphInfos[0]);
-				});
-			}
-		}
-		$.ajaxSetup({async: true});
-		return resultJson;
 	},
-
 	bookOrderInBible: function (reference) {
 		var idx2osisChapterJsword = {
 			"gen": 0,
@@ -4245,7 +4322,8 @@ step.util = {
 		return (freqListElm);
 	},
     handleGesture: function(touchEvent, touchstartX, touchstartY, touchstartTime) {
-		var status = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSwipeLeftRight");
+		// only get teh swipe left/right from the first panel.  In view_menu_passage.js, getting the passageId would bomb.
+		var status = step.passages.findWhere({ passageId: 0}).get("isSwipeLeftRight");
 		if ((status != undefined) && (!status))
 			return;
 		var touchendX = touchEvent.changedTouches[0].screenX;
@@ -4253,32 +4331,61 @@ step.util = {
 		var minDistance = 40;
 		var verticalTolerance = 35;
 		var touchDiffY = Math.abs(touchendY - touchstartY);
-		if (touchDiffY > verticalTolerance) return;
 		var touchDiffX = touchendX - touchstartX;
-		if (Math.abs(touchDiffX) > minDistance) {
-			if (new Date().getTime() - touchstartTime > 400) return; // must be within 300 milliseconds
-			var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));
-			if (touchDiffX < 0)
-				activePassage.find("a.nextChapter").click();
-			else 
-				activePassage.find("a.previousChapter").click();
-			// Record swipeCount up to three, after which the prev/next arrows won't be displayed.
-			var swipeCount = step.util.localStorageGetItem("swipeCount");
-			if (swipeCount == null) swipeCount = 0;
-			if (swipeCount <= 10) {
-				swipeCount++;
-				step.util.localStorageSetItem("swipeCount", swipeCount);
+		if (touchDiffY < verticalTolerance) {
+			if (Math.abs(touchDiffX) > minDistance) {
+				if (new Date().getTime() - touchstartTime > 400) return; // must be with 400 milliseconds
+				var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));
+				if (touchDiffX < 0)
+					activePassage.find("a.nextChapter").click();
+				else 
+					activePassage.find("a.previousChapter").click();
+				// Record swipeCount up to three, after which the prev/next arrows won't be displayed.
+				var swipeCount = step.util.localStorageGetItem("swipeCount");
+				if (swipeCount == null) swipeCount = 0;
+				if (swipeCount < 11) {
+					swipeCount++;
+					step.util.localStorageSetItem("swipeCount", swipeCount);
+				}
 			}
+			else if ((touchDiffX < 3) && (touchDiffY < 3)) {
+				if ((touchEvent.srcElement.outerHTML.substring(0,7) === "<button") ||
+					((touchEvent.srcElement.outerHTML.substring(0,5) === "<span") && (touchEvent.srcElement.outerHTML.indexOf("verse") == -1)) ||
+					(touchEvent.srcElement.closest("#quickLexicon") != null) ||
+					(touchEvent.srcElement.closest("#showLongAlertModal") != null) ) {
+						return;
+				}
+				// A touch on elements which do not have events will clear highlight and quick lexicon
+				step.passage.removeStrongsHighlights(undefined, "primaryLightBg secondaryBackground relatedWordEmphasisHover");
+				$('#quickLexicon').remove();
+				step.util.closeModal("showLongAlertModal");
+			}	
 		}
-		else if ((touchDiffX < 3) && (touchDiffY < 3)) {
-			if ((touchEvent.srcElement.outerHTML.substring(0,7) === "<button") ||
-				((touchEvent.srcElement.outerHTML.substring(0,5) === "<span") && (touchEvent.srcElement.outerHTML.indexOf("verse") == -1)) ) {
-					return;
-			}
-			// A touch on elements which do not have events will clear highlight and quick lexicon
-			step.passage.removeStrongsHighlights(undefined, "primaryLightBg secondaryBackground relatedWordEmphasisHover");
-			$('#quickLexicon').remove();
+    },
+	hideNavBarOnPhones: function(doNotScroll) {
+		if (step.touchDevice && !step.touchWideDevice) {
+			$("body").css("overflow-y","auto");
+			$("#stepnavbar").css("position","relative");
+			$(".mainPanel.row.row-offcanvas").css("padding",0);
+			$("#columnHolder").css("overflow-y","unset");
+			$(".passageContainer").css("border","0");
+			$(".passageOptionsGroup").css("position","sticky").css("top",0).css("left",0).
+				css("opacity",1).css("z-index",2145);
+			$(".previousChapter").css("top","90%").css("display","inline").css("position","fixed").
+				css("bottom","unset");
+			$(".nextChapter").css("top","90%").css("display","inline").css("position","fixed").
+				css("bottom","unset");
+			$(".passageContent").css("height","auto");
+			$(".searchResults").css("overflow-y","hidden").css("height","auto");
+			$(".passageContentHolder").css("overflow-y","hidden").css("height","auto");
+			$(".copyrightInfo").removeClass("copyrightInfo").addClass("crInfoX");
+			$("#srchRslts").css("overflow-y","hidden").css("height","auto");
+			$("#panel-icon").remove();
+			$(".openNewPanel").remove();
+			$("#resizeButton").remove();
+			if (!doNotScroll)
+				window.scrollTo(0,1);
 		}
-    }
+	}
 }
 ;

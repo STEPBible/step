@@ -74,14 +74,11 @@ var SearchDisplayView = DisplayView.extend({
             if ((cv[C_colorCodeGrammarAvailableAndSelected]) && (typeof c4 === "undefined")) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
             var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', hasTOS = false, hasNTMorph = false;
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
-            if ((bibleVersions.indexOf('THOT') > -1)) {
+            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('THOT') > -1)) {
                 if (cv[C_otMorph] == null) {
-                    var notIE = !(false || !!document.documentMode);
-                    // If browser is not IE, use "cache: true".  If IE, use "cache: false"
-                    // This is required because of an IE and Jquery issue.
                     jQuery.ajax({
                         dataType: "script",
-                        cache: notIE,
+                        cache: true,
                         url: "js/tos_morph.js",
                         error: function (jqXHR, exception) {
                             console.log('load tos_morph.js Failed: ' + exception);
@@ -90,7 +87,7 @@ var SearchDisplayView = DisplayView.extend({
                 }
                 hasTOS = true;
             }
-            if ((bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
+            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
 
             results = this.options.partRendered ? this.$el.find("> span") : this.renderSearch(append, this.$el.find(".searchResults"));
 
@@ -190,6 +187,8 @@ var SearchDisplayView = DisplayView.extend({
 		}
 		
         this._doChromeHack(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
+        if (step.touchDevice && !step.touchWideDevice)
+            $(".copyrightInfo").removeClass("copyrightInfo").addClass("crInfoX");
     },
     _getErrorMessage: function () {
         var errorMessage = $("<span>");
@@ -243,8 +242,11 @@ var SearchDisplayView = DisplayView.extend({
      * @returns {*}
      */
     getScrollableArea: function () {
+        if (step.touchDevice && !step.touchWideDevice)
+            return $(document);
         return this.$el.closest(".passageContent").find("> span");
-    }, getMoreResults: function () {
+    },
+    getMoreResults: function () {
         var self = this;
 
         //never load new pages
@@ -258,20 +260,18 @@ var SearchDisplayView = DisplayView.extend({
 
         var scrollableArea = this.getScrollableArea();
 
-
         //visible height
         var clientHeight = scrollableArea.prop("clientHeight");
+        if (typeof clientHeight !== "number")
+            clientHeight = $(window).height();
 
-        //how far down we are
-        var scrollTop = scrollableArea.prop("scrollTop");
-
-        //total scrollable height
-        var scrollHeight = scrollableArea.prop("scrollHeight");
-
-        var leftToScroll = scrollHeight - scrollTop - clientHeight;
-
-        var scrollDownProportion = scrollableArea.scrollTop() / scrollableArea.prop("scrollHeight");
-        if (scrollDownProportion > 0.7 || scrollDownProportion == scrollableArea.height() || leftToScroll < 800) {
+        var numOfSearchRows = $(".searchResultRow").length;
+        if (numOfSearchRows == 0)
+            return;
+        var thirtyPercentRowsPerPage = (numOfSearchRows / this.pageNumber) * .3;
+        var checkRow = Math.floor(numOfSearchRows - thirtyPercentRowsPerPage);
+        var posOf70PercentRowInLastPage = $($(".searchResultRow")[checkRow])[0].getBoundingClientRect().top;
+        if (posOf70PercentRowInLastPage < clientHeight) {
             var currentPageNumber = this.pageNumber;
             var newPageNumber = parseInt(currentPageNumber) + 1;
             var pageSize = this.model.get("pageSize");

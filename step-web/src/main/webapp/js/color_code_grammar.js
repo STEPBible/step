@@ -4,7 +4,7 @@
 // The maven process will replace the constant with number so the minify code is small.
 // For the color_code_grammar.js and color_code_config.js, it reduced the size of the minify two files by almost 20k bytes.
 // Each line starts with "const" and ends with "; // TBRBMR".
-// Do not take away the TBRMBR comment (to be removed by maven replacer)
+// Do not take away the comment: TBRMBR (abbreviation of To Be Removed By Maven Replacer)
 // The maven replacer look for these patterns and remove them from the minify code.
 // should use const instead of var, but older browser does not support const
 var C_Greek = 0; // TBRBMR
@@ -1384,98 +1384,102 @@ var cf = {
   },
   // Called by other javascript (view_quick_lexicon view_sidebar) in Step.  Do not shorten the name.
   getTOSMorphologyInfo: function (morphCode) {
-    var result = {};
-    if ((morphCode.indexOf('TOS:') == 0) && (cv[C_otMorph] != null)) {
-      var code = morphCode.substr(4);
-      var languageCode = code.substr(0, 1);
-      cf.getSpecificMorphologyInfo(languageCode, "language", result);
-      var descriptionCode = code.substr(1) + code.substr(0, 1);
-      cf.getSpecificMorphologyInfo(descriptionCode, "description", result);
-      var functionCd = code.substr(1, 1);
-      cf.getSpecificMorphologyInfo(functionCd, "ot_function", result);
-      if (result.ot_function != undefined) {
-        if (code.length > 2) {
-          var formPos = 2; var stemExpandedCd = '';
-          if (result.ot_function.toLowerCase().indexOf('verb') == 0) {
-            formPos = 3;
-            stemExpandedCd = code.substr(2, 1) + languageCode;
-            cf.getSpecificMorphologyInfo(stemExpandedCd, "stem", result);
-            if ( (code.length == 5) && ((code.substr(3, 2) == 'aa') || (code.substr(3, 2) == 'cc')) ) {
-                cf.getSpecificMorphologyInfo(code.substr(4, 1), "state", result);
-                cf.getSpecificMorphologyInfo(code.substr(4, 1), "stateExplained", result);
-                cf.getSpecificMorphologyInfo(code.substr(4, 1), "stateDesc", result);
-                code = code.substr(0, 3) + 'f' + code.substr(4, 1); // Have to change the code for infinitive code because it does not have one.
-            }
-          }
-          var formCd = code.substr(formPos, 1);
-          var formExpandedCd = formCd + functionCd;
-          var personCd, numberCd;
-          cf.getSpecificMorphologyInfo(formExpandedCd, "ot_form", result);
-          if (code.length == (formPos + 4)) {
-            var pos1 = code.substr(formPos + 1, 1);
-            var pos2 = code.substr(formPos + 2, 1);
-            var pos3 = code.substr(formPos + 3, 1);
-            var genderCd;
-            if ((pos1 == '1') || (pos1 == '2') || (pos1 == '3') ) {
-              personCd = pos1;
-              cf.getSpecificMorphologyInfo(personCd, "person", result);
-              cf.getSpecificMorphologyInfo(pos1 + pos3, "personExplained", result);
-              cf.getSpecificMorphologyInfo(pos1 + pos3, "personDesc", result);
-              genderCd = pos2;
-              numberCd = pos3;
-            }
-            else {
-              genderCd = pos1;
-              numberCd = pos2;
-              cf.getSpecificMorphologyInfo(pos3, "state", result);
-              cf.getSpecificMorphologyInfo(pos3, "stateExplained", result);
-              cf.getSpecificMorphologyInfo(pos3, "stateDesc", result);
-            }
-            cf.getSpecificMorphologyInfo(genderCd, "gender", result);
-            cf.getSpecificMorphologyInfo(numberCd, "number", result);
-            cf.getSpecificMorphologyInfo(genderCd, "genderExplained", result);
-            var genderExpandedCd = genderCd + numberCd;
-            cf.getSpecificMorphologyInfo(genderExpandedCd, "genderDesc", result);
-            cf.getSpecificMorphologyInfo(numberCd, "numberExplained", result);
-            cf.getSpecificMorphologyInfo(numberCd, "numberDesc", result);
-          }
-          else if (code.length == 4) {
-            cf.getSpecificMorphologyInfo(code.substr(3, 1), "gender", result);
-            cf.getSpecificMorphologyInfo(code.substr(3, 1), "genderExplained", result);
-            cf.getSpecificMorphologyInfo(code.substr(3, 1), "genderDesc", result);
-          }
-          if (functionCd == 'V') {
-            cf.getSpecificMorphologyInfo(stemExpandedCd, "ot_action", result);
-            var voiceCd = stemExpandedCd;
-            if ((formExpandedCd == 'sV') && (stemExpandedCd == 'qH')) voiceCd = stemExpandedCd + formCd;
-            cf.getSpecificMorphologyInfo(voiceCd, "ot_voice", result);
-            cf.getSpecificMorphologyInfo(formExpandedCd, "ot_tense", result);
-            var moodCd = formExpandedCd;
-            if (formExpandedCd == 'iV') moodCd = formExpandedCd + personCd;
-            cf.getSpecificMorphologyInfo(moodCd, "ot_mood", result);
-            cf.getSpecificMorphologyInfo(moodCd, "ot_moodExplained", result);
-            cf.getSpecificMorphologyInfo(moodCd, "ot_moodDesc", result);
-            cf.getSpecificMorphologyInfo(stemExpandedCd, "stemExplained", result);
-            cf.getSpecificMorphologyInfo(stemExpandedCd, "stemDesc", result);
-            cf.getSpecificMorphologyInfo(stemExpandedCd, "ot_actionExplained", result);
-            cf.getSpecificMorphologyInfo(stemExpandedCd, "ot_actionDesc", result);
-            cf.getSpecificMorphologyInfo(voiceCd + numberCd, "ot_voiceExplained", result);
-            cf.getSpecificMorphologyInfo(voiceCd + numberCd, "ot_voiceDesc", result);
-            cf.getSpecificMorphologyInfo(formExpandedCd, "ot_tenseExplained", result);
-            cf.getSpecificMorphologyInfo(formExpandedCd, "ot_tenseDesc", result);
-          }
-          var functionExpandedCd = functionCd + formCd + numberCd;
-          cf.getSpecificMorphologyInfo(functionExpandedCd, "ot_functionExplained", result);
-          cf.getSpecificMorphologyInfo(functionExpandedCd, "ot_functionDesc", result);
-          cf.getSpecificMorphologyInfo(formExpandedCd, "ot_formExplained", result);
-          cf.getSpecificMorphologyInfo(formExpandedCd, "ot_formDesc", result);
-        }
-      }
-      cf.getExplanationOfMorph(code, result);
-    }
     var resultArray = [];
-    resultArray.push(result);
-    //console.log(result);
+    if ((morphCode.indexOf('TOS:') == 0) && (cv[C_otMorph] != null)) {
+      var morphs = morphCode.split(" ");
+      for (var i = 0; i < morphs.length; i++) {
+        var result = {};
+        var code = morphs[i];
+        if (code.indexOf('TOS:') == 0)
+          code = code.substr(4);
+        var languageCode = code.substr(0, 1);
+        cf.getSpecificMorphologyInfo(languageCode, "language", result);
+        var descriptionCode = code.substr(1) + code.substr(0, 1);
+        cf.getSpecificMorphologyInfo(descriptionCode, "description", result);
+        var functionCd = code.substr(1, 1);
+        cf.getSpecificMorphologyInfo(functionCd, "ot_function", result);
+        if (result.ot_function != undefined) {
+          if (code.length > 2) {
+            var formPos = 2; var stemExpandedCd = '';
+            if (result.ot_function.toLowerCase().indexOf('verb') == 0) {
+              formPos = 3;
+              stemExpandedCd = code.substr(2, 1) + languageCode;
+              cf.getSpecificMorphologyInfo(stemExpandedCd, "stem", result);
+              if ( (code.length == 5) && ((code.substr(3, 2) == 'aa') || (code.substr(3, 2) == 'cc')) ) {
+                  cf.getSpecificMorphologyInfo(code.substr(4, 1), "state", result);
+                  cf.getSpecificMorphologyInfo(code.substr(4, 1), "stateExplained", result);
+                  cf.getSpecificMorphologyInfo(code.substr(4, 1), "stateDesc", result);
+                  code = code.substr(0, 3) + 'f' + code.substr(4, 1); // Have to change the code for infinitive code because it does not have one.
+              }
+            }
+            var formCd = code.substr(formPos, 1);
+            var formExpandedCd = formCd + functionCd;
+            var personCd, numberCd;
+            cf.getSpecificMorphologyInfo(formExpandedCd, "ot_form", result);
+            if (code.length == (formPos + 4)) {
+              var pos1 = code.substr(formPos + 1, 1);
+              var pos2 = code.substr(formPos + 2, 1);
+              var pos3 = code.substr(formPos + 3, 1);
+              var genderCd;
+              if ((pos1 == '1') || (pos1 == '2') || (pos1 == '3') ) {
+                personCd = pos1;
+                cf.getSpecificMorphologyInfo(personCd, "person", result);
+                cf.getSpecificMorphologyInfo(pos1 + pos3, "personExplained", result);
+                cf.getSpecificMorphologyInfo(pos1 + pos3, "personDesc", result);
+                genderCd = pos2;
+                numberCd = pos3;
+              }
+              else {
+                genderCd = pos1;
+                numberCd = pos2;
+                cf.getSpecificMorphologyInfo(pos3, "state", result);
+                cf.getSpecificMorphologyInfo(pos3, "stateExplained", result);
+                cf.getSpecificMorphologyInfo(pos3, "stateDesc", result);
+              }
+              cf.getSpecificMorphologyInfo(genderCd, "gender", result);
+              cf.getSpecificMorphologyInfo(numberCd, "number", result);
+              cf.getSpecificMorphologyInfo(genderCd, "genderExplained", result);
+              var genderExpandedCd = genderCd + numberCd;
+              cf.getSpecificMorphologyInfo(genderExpandedCd, "genderDesc", result);
+              cf.getSpecificMorphologyInfo(numberCd, "numberExplained", result);
+              cf.getSpecificMorphologyInfo(numberCd, "numberDesc", result);
+            }
+            else if (code.length == 4) {
+              cf.getSpecificMorphologyInfo(code.substr(3, 1), "gender", result);
+              cf.getSpecificMorphologyInfo(code.substr(3, 1), "genderExplained", result);
+              cf.getSpecificMorphologyInfo(code.substr(3, 1), "genderDesc", result);
+            }
+            if (functionCd == 'V') {
+              cf.getSpecificMorphologyInfo(stemExpandedCd, "ot_action", result);
+              var voiceCd = stemExpandedCd;
+              if ((formExpandedCd == 'sV') && (stemExpandedCd == 'qH')) voiceCd = stemExpandedCd + formCd;
+              cf.getSpecificMorphologyInfo(voiceCd, "ot_voice", result);
+              cf.getSpecificMorphologyInfo(formExpandedCd, "ot_tense", result);
+              var moodCd = formExpandedCd;
+              if (formExpandedCd == 'iV') moodCd = formExpandedCd + personCd;
+              cf.getSpecificMorphologyInfo(moodCd, "ot_mood", result);
+              cf.getSpecificMorphologyInfo(moodCd, "ot_moodExplained", result);
+              cf.getSpecificMorphologyInfo(moodCd, "ot_moodDesc", result);
+              cf.getSpecificMorphologyInfo(stemExpandedCd, "stemExplained", result);
+              cf.getSpecificMorphologyInfo(stemExpandedCd, "stemDesc", result);
+              cf.getSpecificMorphologyInfo(stemExpandedCd, "ot_actionExplained", result);
+              cf.getSpecificMorphologyInfo(stemExpandedCd, "ot_actionDesc", result);
+              cf.getSpecificMorphologyInfo(voiceCd + numberCd, "ot_voiceExplained", result);
+              cf.getSpecificMorphologyInfo(voiceCd + numberCd, "ot_voiceDesc", result);
+              cf.getSpecificMorphologyInfo(formExpandedCd, "ot_tenseExplained", result);
+              cf.getSpecificMorphologyInfo(formExpandedCd, "ot_tenseDesc", result);
+            }
+            var functionExpandedCd = functionCd + formCd + numberCd;
+            cf.getSpecificMorphologyInfo(functionExpandedCd, "ot_functionExplained", result);
+            cf.getSpecificMorphologyInfo(functionExpandedCd, "ot_functionDesc", result);
+            cf.getSpecificMorphologyInfo(formExpandedCd, "ot_formExplained", result);
+            cf.getSpecificMorphologyInfo(formExpandedCd, "ot_formDesc", result);
+          }
+        }
+        cf.getExplanationOfMorph(code, result);
+        resultArray.push(result);
+      }
+    }
     return resultArray;
   },
 
@@ -1521,10 +1525,10 @@ var cf = {
       var morphPos = passageHTML.indexOf("morph=", currentPos);
       if (morphPos > -1) {
         var charAfterMorph = passageHTML.substr(morphPos + 6, 1);
-        if (((charAfterMorph == '"') || (charAfterMorph == "'")) && (passageHTML.substr(morphPos + 7, 4) == 'TOS:')) {
+        if (((charAfterMorph == '"') || (charAfterMorph == "'")) && (passageHTML.substr(morphPos + 7, 4) === 'TOS:')) {
           currentPos = morphPos + 11;
           var endingQuotePos = passageHTML.indexOf(charAfterMorph, currentPos);
-          if ((endingQuotePos > -1) && (endingQuotePos - currentPos < 10)) {
+          if ((endingQuotePos > -1) && (endingQuotePos - currentPos < 60)) {
             var morphCode = passageHTML.substring(currentPos, endingQuotePos);
             currentPos = endingQuotePos + 1;
             var cssCode = cf.morph2CSS(morphCode).trim();
@@ -1546,7 +1550,7 @@ var cf = {
                         result = result.concat(cssCode);
                         if (shorterStringToSearch.substr(classPos+7, 1) != quoteAfterClass) result = result.concat(' ');
                       }
-                      else alert("error at addClassForTHOT Cannot find quote after class.  Please let the STEP people know");
+                      else console.log("error at addClassForTHOT Cannot find quote after class.  Please let the STEP people know");
                     }
                     else result = result.concat('="' + cssCode + '" ');
                   }
@@ -1562,10 +1566,10 @@ var cf = {
                 var foundCode = cssCode.split(' ').filter(function(code) { return (code.substr(0,4) == 'vot_' && otCSSOnThisPage.indexOf(code.substr(4,4)) == -1); });
                 if (foundCode.length > 0) otCSSOnThisPage += ' ' + foundCode[0].substr(4, 4);
               }
-              else alert("error at addClassForTHOT cannot find >");
+              else console.log("error at addClassForTHOT cannot find >");
             }
           }
-          else alert("error at addClassForTHOT cannot find ending quote at " + endingQuotePos);
+          else console.log("error at addClassForTHOT cannot find ending quote at " + endingQuotePos);
         }
         else currentPos = morphPos + 6;
       }
@@ -1638,9 +1642,10 @@ var cf = {
     return htmlTable;
   },
 
-  morph2CSS: function (morphCode) {
+  morph2CSS: function (origMorphCode) {
     var result = '';
-    if (morphCode != undefined) {
+    if (typeof origMorphCode === "string") {
+      var morphCode = origMorphCode.split(" ")[0];
       var number = ''; var gender = '';
       var morphCodeLength = morphCode.length;
       if ((morphCodeLength == 6) || (morphCodeLength == 7)) {

@@ -1,7 +1,7 @@
 var CONTINUOUS_SCROLLING_VERSE_GAP = 50;
 
 step.passage = {
-    lastUrls : [undefined, undefined],
+    // lastUrls : [undefined, undefined],
     getPassageId: function(element) {
         return parseInt($(element).closest(".passageContainer").attr("passage-id"));
     },

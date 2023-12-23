@@ -1,5 +1,9 @@
 var PassageMenuView = Backbone.View.extend({
+    
     infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-html="true" data-toggle="popover" data-placement="top">' +
+        '<span class="glyphicon glyphicon-info-sign"></span>' +
+        '</a>',
+    infoIconMobile: '<a href="javascript:void(0)" style="position:fixed;top:unset;bottom:3%" class="infoIcon" data-html="true" data-toggle="popover" data-placement="top">' +
         '<span class="glyphicon glyphicon-info-sign"></span>' +
         '</a>',
     events: {
@@ -67,7 +71,10 @@ var PassageMenuView = Backbone.View.extend({
 
         this.warnings = $(step.util.getPassageContainer(this.model.get("passageId"))).find(".infoIcon");
         if (this.warnings.length == 0) {
-            this.warnings = $(_.template(this.infoIcon)());
+            if (step.touchDevice && !step.touchWideDevice)
+                this.warnings = $(_.template(this.infoIconMobile)());
+            else
+                this.warnings = $(_.template(this.infoIcon)());
             this.$el.parent().append(this.warnings);
         }
 
@@ -94,7 +101,8 @@ var PassageMenuView = Backbone.View.extend({
                 .removeClass("text-muted text-info text-danger text-warning").addClass("text-info")
                 .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-info-sign");
         }
-    }, raiseMessage: function (opts) {
+    },
+    raiseMessage: function (opts) {
         var self = this;
         var titleSoFar = this.warnings.attr("data-content") || "";
         if (titleSoFar != "") {
@@ -119,6 +127,8 @@ var PassageMenuView = Backbone.View.extend({
         this.warnings.show();
         if (opts.silent != true) {
             this.warnings.popover('show');
+            if (step.touchDevice && !step.touchWideDevice)
+                $(".popover.fade.top.in").css("position","fixed");
             this.warnings.next(".popover").on('click', function () {
                 self.warnings.popover("hide");
                 self.handleInfoHide();
@@ -126,13 +136,14 @@ var PassageMenuView = Backbone.View.extend({
         }
         else {
             this.warnings.on("shown.bs.popover", function () {
+                if (step.touchDevice && !step.touchWideDevice)
+                    $(".popover.fade.top.in").css("position","fixed");
                 self.warnings.next(".popover").on('click', function () {
                     self.warnings.popover("hide");
                     self.handleInfoHide();
                 })
             });
         }
-
     },
     handleInfoHide: function () {
         this.warnings.removeClass("text-info text-warning text-danger");
@@ -164,10 +175,11 @@ var PassageMenuView = Backbone.View.extend({
         // If the device is mobile, and the user has swiped at least 3x (so they know
         // how it works), then don't display the prev/next arrows anymore.
         // Calling activePassageId can crash so just use passageID 0
-		var swipeStatus = step.passages.findWhere({ passageId: 0}).get("isSwipeLeftRight");
+        var swipeStatus = step.passages.findWhere({ passageId: 0}).get("isSwipeLeftRight");
         if (swipeStatus == undefined)
             swipeStatus = true;
-        if (step.touchDevice && swipeCount >= 3 && swipeStatus)
+
+        if (step.touchDevice && swipeCount > 6 && swipeStatus)
             $(".nextPreviousChapterGroup").css("display", "none");
         else {
             $(".nextPreviousChapterGroup").css("display", "block");
@@ -175,6 +187,7 @@ var PassageMenuView = Backbone.View.extend({
             if (this._isDisplayOptionsDropdown(openDropdown)) {
                 this._updateColumnOptions();
             }
+
             var isPassage = this.model.get("searchType") == 'PASSAGE';
             var previousNext = this.$el.find(".nextPreviousChapterGroup");
             previousNext.toggle(true);
@@ -189,29 +202,22 @@ var PassageMenuView = Backbone.View.extend({
         // Introduce the swipe feature on a mobile device.  Note, wait until
         // STEP's usage count > 1 so that the initial introJsStep has already
         // played, and hopefully the user knows what the arrows are for.
-
 		if (step.touchDevice) {
-            var ua = navigator.userAgent.toLowerCase(); 
-            if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
-                return;
             var swipeIntro = step.util.localStorageGetItem("swipeIntro");
-            if (swipeIntro == null) swipeIntro = 0;
-            if (swipeIntro == 0) {
+            if (swipeIntro != 1) {
                 var stepUsage = step.util.localStorageGetItem("step.usageCount");
                 if (stepUsage == null) stepUsage = 0;
-                if (stepUsage >= 1) {
+                else if (stepUsage > 0) {
                     var introJsSteps = [{
-                        element: document.getElementsByClassName('previousChapter')[0],
-                        intro: "Swipe left for next chapter, right for previous chapter.  Once you have used the swipe feature three times, the arrows will hide."
+                        intro: __s.swipe_lr // do not specify an element because it will hide the buttons to select Bible, passage and to search
                     }];
                     introJs().setOptions({
                         steps: introJsSteps
                     }).start();
+                    step.util.localStorageSetItem("swipeIntro", 1);
                 }
-                step.util.localStorageSetItem("swipeIntro", 1);
             }
         }
-
     },
     _updateDropdownContents: function (targetTrigger) {
         if (this._isDisplayOptionsDropdown(targetTrigger)) {
@@ -237,7 +243,7 @@ var PassageMenuView = Backbone.View.extend({
         var masterVersion = step.keyedVersions[this.model.get("masterVersion")];
         this._updateDisplayModeOptions(masterVersion);
         this._updateDisplayOptions();
-        this._updateSearchOptions();
+        // this._updateSearchOptions();
     },
     /**
      * Obtains the options available in the masterVersion.
@@ -288,9 +294,9 @@ var PassageMenuView = Backbone.View.extend({
         });
 
     },
-    _updateSearchOptions: function () {
+    // _updateSearchOptions: function () {
 
-    },
+    // },
     _updateDisplayModeOptions: function (masterVersion) {
         //set the current display mode.
         this.displayModeContainer.find(".glyphicon").removeClass("active");
@@ -535,7 +541,7 @@ var PassageMenuView = Backbone.View.extend({
         dropdown.append(li);
         dropdown.append(_.template(this.fontButtons)())
             .find(".largerFontSize").click(this.changeFontSizeInThisPanel);
-        if (step.touchDevice) {
+        if (step.touchDevice && (step.util.activePassageId() == 0)) {
             var currentSwipeLRSetting = self.model.get("isSwipeLeftRight");
             if (currentSwipeLRSetting == undefined) {
                 this.model.save({isSwipeLeftRight: true});
@@ -566,7 +572,6 @@ var PassageMenuView = Backbone.View.extend({
      * @private
      */
     _createItemsInDropdown: function (dropdown, items) {
-//        <div class="panel-group" id="accordion">
         var selectedOptions = this.model.get("selectedOptions") || "";
         for (var i = 0; i < items.length; i++) {
             if (items[i].group) {
@@ -603,7 +608,6 @@ var PassageMenuView = Backbone.View.extend({
         }
     },
     _createPassageOptions: function (dropdown) {
-//        var selectedOptions = this.model.get("selectedOptions") || "";
         this._createItemsInDropdown(dropdown, this.items);
 
         var self = this;
@@ -655,9 +659,9 @@ var PassageMenuView = Backbone.View.extend({
             .append("<span>" + text + "</span>")
             .append(step.util.ui.selectMark("pull-right"));
     },
-    _updateAvailableOptions: function () {
-        console.log("updating options");
-    },
+    // _updateAvailableOptions: function () {
+    //     console.log("updating options");
+    // },
     _updateOptions: function () {
         //update the model
         var selectedOptions = this.displayOptions.find("[data-selected='true']");
@@ -724,12 +728,6 @@ var PassageMenuView = Backbone.View.extend({
 			}
         }
     },
-    // decreaseFontSize: function (ev) {
-        // ev.stopPropagation();
-        // step.util.activePassageId(this.model.get("passageId"));
-        // step.util.changeFontSize(this.$el, -1);
-        // return false;
-    // },
     changeFontSizeInThisPanel: function (ev) {
         ev.stopPropagation();
         step.util.showFontSettings(this.model.get("passageId"));
@@ -829,15 +827,7 @@ var PassageMenuView = Backbone.View.extend({
     showDots: function(activePassage) {
         var passageContent = activePassage.find(".passageContent");
         passageContent.empty();
-//        activePassage.find(".heading").remove();
-//        var verseElements = activePassage.find(".verse");
-//        if (verseElements.length == 0)
-        //     verseElements = activePassage.find(".interlinear");
-        // for (var i = verseElements.length - 1; i > 0; i--) {
-        //     $(verseElements[i]).remove();
-        // }
         var randomDots = "..... .... .... ....... ... .... ... ........ .... ... ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ........ ... .... ... .....<br>... ..... .. .... ..... .... ..... ........ .... ...... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .... ... .... ... .....<br>...... .... ... ..... .... ..... ..... ..... ... . ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br>... ..... .... .... ..... .... ..... ........ .... ... ... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ... ... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .. ... .... ... .....<br";
-        // $(verseElements[0]).html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
         passageContent.html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
     },
     removeSearchArgs: function(args) {
@@ -911,32 +901,26 @@ var PassageMenuView = Backbone.View.extend({
         try {
             if (document.getElementsByClassName("mainPanel")[0].style.paddingTop == "0px") {
                 document.getElementById("stepnavbar").style.display = "block";
-                document.getElementsByClassName("resizePanel")[0].title = "Increase size of panel";
+                $('.resizePanel').attr('title', 'Increase size of panel');
+                document.getElementsByClassName("resizePanel")[0].title = "";
                 document.getElementsByClassName("mainPanel")[0].style.paddingTop="50px";
-                document.getElementsByClassName("glyphicon-resize-full")[0].style.display = "inline";
-                document.getElementsByClassName("glyphicon-resize-small")[0].style.display = "none";
+                $('.glyphicon-resize-full').css("display","inline");
+                $('.glyphicon-resize-small').css("display","none");
             }
             else {
                 document.getElementById("stepnavbar").style.display = "none";
-                document.getElementsByClassName("resizePanel")[0].title = "Decrease size of panel";
+                $('.resizePanel').attr('title', 'Decrease size of panel');
                 document.getElementsByClassName("mainPanel")[0].style.paddingTop="0px";
-                document.getElementsByClassName("glyphicon-resize-full")[0].style.display = "none";
-                document.getElementsByClassName("glyphicon-resize-small")[0].style.display = "inline";
+                $('.glyphicon-resize-full').css("display","none");
+                $('.glyphicon-resize-small').css("display","inline");
             }
-            document.getElementsByClassName("resizePanel")[0].style.backgroundColor = "white";
+            $('.resizePanel').css("background-color","var(--clrBackground)");
         } catch(e) {
         }
     },
     updateVisibleCloseButton: function () {
         var shouldShow = $(".column").not(".examplesColumn").length > 1;
         this.$el.find(".closeColumn").toggleClass("disabled", !shouldShow);
-//        if (!shouldShow) {
-//            make sure it's not the last button
-//            this.$el.find(".closeColumn").insertBefore(this.$el.find(".openNewPanel"));
-//        } else {
-//            ensure last element
-//            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
-//        }
     }
 
 });

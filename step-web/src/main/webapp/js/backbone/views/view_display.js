@@ -147,23 +147,6 @@ var DisplayView = Backbone.View.extend({
 
         //reset the 'clear' values
         interlinearBlocks.not(".verseStart").css("clear", "none");
-        /*var previousElementOffset = undefined;
-
-        for (var i = 0; i < interlinearBlocks.length; i++) {
-            var element = interlinearBlocks.eq(i);
-            var elementOffset = element.offset();
-
-            //skip the first element
-            if (previousElementOffset) {
-                //check that previous element is either left or higher up
-                var currentPadding = 0;
-                if (previousElementOffset.top < elementOffset.top) {
-                    element.css("clear", "left");
-                }
-                elementOffset = element.offset();
-            }
-            previousElementOffset = elementOffset;
-        }*/
     },
     /**
      * Estimates the height of each block in an interlinear like way

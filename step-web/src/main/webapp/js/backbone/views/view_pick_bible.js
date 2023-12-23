@@ -153,6 +153,7 @@ var PickBibleView = Backbone.View.extend({
 
         this.$el.find(this._getSelectedTab()).addClass("active");
         this.bibleVersions = this.$el.find("#bibleVersions").modal({ show: true});
+        step.util.blockBackgroundScrolling("bibleVersions");
         // this.$el.find("input[type='text']").focus();
         this.$el.find(".btn").click(this.handleLanguageButton);
         this.$el.find(".closeModal").click(this.closeModal);

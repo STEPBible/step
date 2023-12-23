@@ -18,7 +18,7 @@
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
 <fmt:setBundle basename="HtmlBundle" scope="request"/>
-<!DOCTYPE html xmlns:fb="http://ogp.me/ns/fb#">
+<!DOCTYPE html">
 <html>
 <head>
     <%
@@ -148,6 +148,8 @@
         } %>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#17758F" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <meta step-local content="<%= appManager.isLocal() %>"/>
     <meta step-domain content="<%= appManager.getAppDomain() %>"/>
@@ -160,8 +162,6 @@
     <meta name="description" content="${ description }"/>
     <meta name="keywords" content="${ keywords }"/>
     <link rel="shortcut icon" href="images/step-favicon.ico"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <c:choose>
         <c:when test="${ empty canonicalUrl }">
             <link rel="canonical" href="http://${stepDomain}/"/>
@@ -208,7 +208,7 @@
     %>
 </head>
 <!-- The following line has to use background and color style.  Using stepFgBg class does not work for the side panel.  -->
-<body xmlns:fb="http://ogp.me/ns/fb#" style="background-color:var(--clrBackground);color:var(--clrText)">
+<body style="background-color:var(--clrBackground);color:var(--clrText)">
 <!-- Wrap all page content here -->
 <div id="wrap">
 
@@ -251,8 +251,7 @@
                                     <i class="glyphicon glyphicon-resize-full" style="display:inline"></i>
                                     <i class="glyphicon glyphicon-resize-small" style="display:none"></i>
                                 </a>
-
-                                <span class="dropdown settingsDropdown">
+                                <span class="dropdown settingsDropdown" style="background-color:var(--clrBackground)">
                                         <a class="dropdown-toggle showSettings" data-toggle="dropdown"
                                            title="<fmt:message key="view" />">
                                             <i class="glyphicon glyphicon-cog"></i>
@@ -280,7 +279,7 @@
                                     ${ passageText }
                                 </c:when>
                                 <c:otherwise>
-                                        <span>
+                                        <span id="srchRslts">
                                             <%-- Do toolbar for original word search --%>
                                             <c:if test="${ ('ORIGINAL_GREEK_RELATED' eq searchType or 'ORIGINAL_HEBREW_RELATED' eq searchType or 'ORIGINAL_MEANING' eq searchType) and fn:length(definitions) gt 0  }">
                                                 <div class="originalWordSearchToolbar">
@@ -447,6 +446,7 @@
         <div class="sidebar-offcanvas" dir="${ ltr ? "ltr" : "rtl" }" id="sidebar" style="overflow-y:hidden" role="navigation"></div>
     </div>
 </div>
+
 <% String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
 <script src="intl/<%= URLEncoder.encode(langCode, "UTF-8") %>.${project.version}.js" type="text/javascript"></script>
 <%@include file="jsps/initLib.jsp"%>
@@ -465,23 +465,28 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 
     // code to enable mobile device swipe to go back or forward one chapter
     var ua = navigator.userAgent.toLowerCase();
+    step.touchDevice = false;
+    step.touchWideDevice = false;
     if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
-        ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints == 5))) {
+        ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints > 1))) {
         step.touchDevice = true;
-        document.getElementById("resizeButton").style.display = "inline";
-        touchableElement = document.getElementById("columnHolder");
+        var touchableElement;
+        if ((screen.height > 599) && (screen.width > 599)) {
+            step.touchWideDevice = true;
+        	document.getElementById("resizeButton").style.display = "inline";
+        	touchableElement = document.getElementById("columnHolder");
+        }
+        else
+        	touchableElement = document.getElementsByTagName("body")[0];
         touchableElement.addEventListener('touchstart', function (event) {
             touchstartX = event.changedTouches[0].screenX;
             touchstartY = event.changedTouches[0].screenY;
             touchstartTime = new Date().getTime();
         }, false);
-
         touchableElement.addEventListener('touchend', function (event) {
             step.util.handleGesture(event, touchstartX, touchstartY, touchstartTime);
         }, false);
     }
-    else
-        step.touchDevice = false;
 
 </script>
 <%-- The following 3 were added to the step.version_num.min.js.  Keep them as comment in case we want to reverse the change --%>

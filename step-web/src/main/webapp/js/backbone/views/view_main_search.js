@@ -80,11 +80,6 @@ var MainSearchView = Backbone.View.extend({
                 var n = min - input.length;
                 var message = sprintf(__s.x_more_characters, n);
                 var labels = $("<span>").addClass("searchLabel")
-                    //.append($("<a>").attr("data-toggle", "modal").attr("data-target", "#bibleVersions").append(__s.all_versions).attr("title", __s.all_versions)
-                    //    .on("click", function () {
-                    //        view.pickBible();
-                    //    }))
-                    //.append("&nbsp;|&nbsp;")
                     .append($("<a>").append(__s.search_advanced).on('click', function () {
                         view.openAdvancedSearch();
                     }));
@@ -491,7 +486,8 @@ var MainSearchView = Backbone.View.extend({
         var data = this.masterSearch.select2("data");
         var initials = [];
         for (var i = 0; i < data.length; i++) {
-            initials.push(data[i].item.shortInitials);
+            if ((typeof data[i].item === "object") && (typeof data[i].item.shortInitials === "string"))
+                initials.push(data[i].item.shortInitials);
         }
         return initials;
     },
@@ -518,22 +514,22 @@ var MainSearchView = Backbone.View.extend({
         //find the element
         var versions = this.masterSearch.select2("data");
         for (var i = versions.length - 1; i > -1; i--) {
-            if (versions[i].item.initials == data.value.initials || versions.shortInitials == data.value.initials) {
+            if ((typeof versions[i].item === "object") &&
+                (versions[i].item.initials === data.value.initials || versions[i].item.shortInitials === data.value.initials) ) {
                 versions.splice(i, 1);
             }
         }
         this._setData(versions);
     },
-    _trackSearch: function (options) {
-        if (!options) {
-            return;
-        }
-
-
-    },
+    // Seems like it does not do anything PT 11/30/2023
+    // _trackSearch: function (options) {
+    //     if (!options) {
+    //         return;
+    //     }
+    // },
     search: function () {
         var options = this.masterSearch.select2("data");
-        this._trackSearch(options);
+        // this._trackSearch(options);
         var args = "";
         var refArgs = "";
         var searchArgs = "";

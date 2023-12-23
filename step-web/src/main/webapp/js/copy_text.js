@@ -15,7 +15,7 @@ step.copyText = {
 	    $('#bookchaptermodalbody').empty();
 		var html = this._buildHeaderAndSkeleton();
 		$('#bookchaptermodalbody').append(html);
-		$('#bookchaptermodalbody').append(this._buildChptrVrsTbl(-1));
+		$('#bookchaptermodalbody').append(this._buildChapterVerseTable(-1));
 	},
 
 
@@ -306,7 +306,7 @@ step.copyText = {
 		setTimeout( function() { step.util.closeModal("copyModal")}, sleepTime);
 	},
 
-	_buildChptrVrsTbl: function(firstSelection) {
+	_buildChapterVerseTable: function(firstSelection) {
 		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
 		var versesInPanel = $(passageContainer).find(".versenumber");
 		var verses = [];
@@ -385,7 +385,7 @@ step.copyText = {
 					'>' + verseName + 
 					'</a></td>'
 			}
-			else html += '<td><a href="javascript:step.copyText._buildChptrVrsTbl(' + i + ');"' +
+			else html += '<td><a href="javascript:step.copyText._buildChapterVerseTable(' + i + ');"' +
 					'>' + verseName + 
 					'</a></td>'
 			if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {

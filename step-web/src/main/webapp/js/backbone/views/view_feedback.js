@@ -75,6 +75,7 @@ var FeedbackView = Backbone.View.extend({
             self.feedbackForm.find("#feedbackEmail").val(step.settings.get("userFeedbackEmail") || "" );
             self.feedbackForm.find("#feedbackDescription").val("");
             self.feedbackForm.find("#feedbackSummary").val("");
+            step.util.blockBackgroundScrolling("raiseSupport");
         });
         
         $(".sendFeedback").click(function (ev) {

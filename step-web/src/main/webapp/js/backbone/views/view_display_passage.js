@@ -32,15 +32,17 @@ var PassageDisplayView = DisplayView.extend({
             cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
             if ((cv[C_colorCodeGrammarAvailableAndSelected]) && (typeof c4 === "undefined")) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
             var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', pch, hasTOS = false, hasNTMorph = false;
-            var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
-            if ((bibleVersions.indexOf('THOT') > -1)) {
+            var reference = this.model.get("osisId");
+            var version = this.model.get("masterVersion");
+            var extraVersions = this.model.get("extraVersions");
+            var bibleVersions = version.toUpperCase() + "," + extraVersions.toUpperCase();
+            // check if OT or NT  12/13/2023 PT
+            // console.log("place to add NT OT check: "+reference+ " " +bibleVersions);
+            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('THOT') > -1)) {
                 if (cv[C_otMorph] == null) {
-                    var notIE = !(false || !!document.documentMode);
-                    // If browser is not IE, use "cache: true".  If IE, use "cache: false"
-                    // This is required because of an IE and Jquery issue.
                     jQuery.ajax({
                         dataType: "script",
-                        cache: notIE,
+                        cache: true,
                         url: "js/tos_morph.js",
                         error: function (jqXHR, exception) {
                             console.log('load tos_morph.js Failed: ' + exception);
@@ -49,7 +51,7 @@ var PassageDisplayView = DisplayView.extend({
                 }
                 hasTOS = true;
             }
-            if ((bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
+            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
             if (this.partRendered) {
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {
                     if (hasTOS) {
@@ -78,9 +80,6 @@ var PassageDisplayView = DisplayView.extend({
             }
             var passageId = this.model.get("passageId");
             var interlinearMode = this.model.get("interlinearMode");
-            var extraVersions = this.model.get("extraVersions");
-            var reference = this.model.get("osisId");
-            var version = this.model.get("masterVersion");
             var languages = this.model.get("languageCode");
             var passageContainer = this.$el.closest(".passageContainer");
             if (this._isPassageValid(passageHtml, reference)) {
@@ -88,7 +87,7 @@ var PassageDisplayView = DisplayView.extend({
                 this._warnIfNoStrongs(version);
                 this._warnIfFirstTimeCompare(interlinearMode);
                 this._warnIfInterlinearFirstTime(interlinearMode);
-                this._warnFirstTimeColourCoding();
+                this._warnFirstTimeColorCoding();
                 this._warnCommentaryLookupVersion(version, extraVersions);
                 this.doFonts(passageHtml, options, interlinearMode, languages);
                 this.doSwapInterlinearLink(passageHtml);
@@ -108,16 +107,17 @@ var PassageDisplayView = DisplayView.extend({
                 if (!this.partRendered) {
                     step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
                 }
-                $(this.$el).find(".passageContentHolder").scroll(function(){
+                var monitorElement = (step.touchDevice && !step.touchWideDevice) ? $(document) : $(this.$el).find(".passageContentHolder");
+                monitorElement.scroll(function(){
                     $(".versePopup").hide();
                     if ($(this).find(".resultsLabel").text() !== "") // This is search result
                         return;
                     var allVerseNumbers = $(this).find(".verseNumber");
-                    var thisTop = $(this).offset().top;
+                    var thisTop = (step.touchDevice && !step.touchWideDevice) ? $(window).scrollTop() + 21 : $(this).offset().top;
                     for (var i = 0; i < allVerseNumbers.length; i++) {
                         var curVerse = allVerseNumbers[i];
                         if ($(curVerse).offset().top > thisTop) {
-                            var refButton = $(this).parent().parent().find("button.select-reference");
+                            var refButton = (step.touchDevice && !step.touchWideDevice) ? $("button.select-reference") : $(this).parent().parent().find("button.select-reference");
                             var newText = curVerse.innerHTML;
                             var isInterLinear = $(this).find('.interlinear').length > 0;
                             if ( ((isInterLinear) && (newText.indexOf(":") > -1)) ||
@@ -130,7 +130,10 @@ var PassageDisplayView = DisplayView.extend({
                                     if (curVerseParts.length > 1)
                                         newText = curVerseParts[1];
                                 }
-                                newText = origText[0].trim() + ":" + newText;
+                                if (origText[0].trim() === "")
+                                    newText = "Ref";
+                                else
+                                    newText = origText[0].trim() + ":" + newText;
                             }
                             $(refButton).text(newText);
                             break;
@@ -140,7 +143,7 @@ var PassageDisplayView = DisplayView.extend({
 
                 //needs to happen after appending to DOM
 				
-                this.updateColor();
+                this.updateSTEPColor();
 				
                 this._doChromeHack(passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
@@ -252,7 +255,7 @@ var PassageDisplayView = DisplayView.extend({
                 });
             }
         },
-        _warnFirstTimeColourCoding: function () {
+        _warnFirstTimeColorCoding: function () {
             var options = this.model.get("options") || "";
             if (options.indexOf("D") != -1) {
                 step.util.raiseOneTimeOnly("display_divide_hebrew_explanation", "info");
@@ -463,30 +466,31 @@ var PassageDisplayView = DisplayView.extend({
             }
         },
 
-        keepNotesInSync: function (passageContent) {
-            var currentHeight = passageContent.height();
-            passageContent.find(".notesPane").height(currentHeight);
-            $(passageContent).on('scroll', function () {
-                //find top verse - 1.
-                var allVerses = $(".verse", passageContent);
-                var lastVerse = undefined;
-                for (var ii = 0; ii < allVerses.length; ii++) {
-                    var currentVerse = $(allVerses[ii]);
-                    var versePosition = currentVerse.position().top;
-                    if (top >= 0) {
-                        break;
-                    }
-                    lastVerse = currentVerse;
-                }
+        // Does not seem to be in used.  11/30/2023 PT
+        // keepNotesInSync: function (passageContent) {
+        //     var currentHeight = passageContent.height();
+        //     passageContent.find(".notesPane").height(currentHeight);
+        //     $(passageContent).on('scroll', function () {
+        //         //find top verse - 1.
+        //         var allVerses = $(".verse", passageContent);
+        //         var lastVerse = undefined;
+        //         for (var ii = 0; ii < allVerses.length; ii++) {
+        //             var currentVerse = $(allVerses[ii]);
+        //             var versePosition = currentVerse.position().top;
+        //             if (top >= 0) {
+        //                 break;
+        //             }
+        //             lastVerse = currentVerse;
+        //         }
 
-                if (lastVerse == undefined) {
-                    passageContent.find(".notesPane").scrollTop(0);
-                }
-                else {
+        //         if (lastVerse == undefined) {
+        //             passageContent.find(".notesPane").scrollTop(0);
+        //         }
+        //         else {
 
-                }
-            });
-        },
+        //         }
+        //     });
+        // },
 
         /**
          * Creates a QTIP for a particular xref
@@ -528,12 +532,10 @@ var PassageDisplayView = DisplayView.extend({
                                         }
                                     }
                                 }
-
                                 $.getSafe(BIBLE_GET_BIBLE_TEXT + chosenVersion + "/" + encodeURIComponent(xref), function (data) {
                                     var text2Display = data.value;
-                                    if (data.value.length > 1200) {
-                                        text2Display = $(data.value).text().substring(0,1000) + " ...";
-                                    }
+                                    if (data.value.length > 1100)
+                                    	text2Display = $(data.value).text().substring(0,900) + " ...";
                                     api.set('content.title.text', data.longName);
                                     api.set('content.text', text2Display);
                                     api.set('content.osisId', data.osisId)
@@ -676,7 +678,7 @@ var PassageDisplayView = DisplayView.extend({
             step.util.ui.addStrongHandlers(passageId, passageContent)
         },
 
-        updateColor: function () {
+        updateSTEPColor: function () {
             this.updateSpecificColor("clrHighlight", "#17758F");
 			this.updateSpecificColor("clrHighlightBg", "#17758F");
             this.updateSpecificColor("clrText", "#5d5d5d");

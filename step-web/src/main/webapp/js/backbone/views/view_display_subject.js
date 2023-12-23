@@ -37,7 +37,8 @@ var SubjectDisplayView = SearchDisplayView.extend({
      * @private
      */
     _doSimpleSubjectSearchResults: function (searchResults) {
-        var results = $("<span>").addClass("subjectSection searchResults simpleSubjectSearch");
+        var cssForTouchDevice = (step.touchDevice && !step.touchWideDevice) ? " style='overflow-y:hidden;height:auto' " : "";        
+        var results = $("<span id='srchRslts'" + cssForTouchDevice + ">").addClass("subjectSection searchResults simpleSubjectSearch");
         var headingsSearch = searchResults[0].headingsSearch;
         var headingsResults = headingsSearch.results;
 
@@ -54,7 +55,6 @@ var SubjectDisplayView = SearchDisplayView.extend({
      * @private
      */
     _doSpecificSearchRequirements: function (query, results) {
-        var self = this;
         var passageId = this.model.get("passageId");
         var searchType = this.model.get("searchType");
 
@@ -90,8 +90,8 @@ var SubjectDisplayView = SearchDisplayView.extend({
 
     },
     _doNaveSearchResults: function (searchResults) {
-        var self = this;
-        var results = $("<span>").addClass("searchResults");
+        var cssForTouchDevice = (step.touchDevice && !step.touchWideDevice) ? " style='overflow-y:hidden;height:auto' " : "";        
+        var results = $("<span id='srchRslts'" + cssForTouchDevice + ">").addClass("searchResults");
 
         var lastHeader = "";
         if (!searchResults || searchResults.length == 0) {

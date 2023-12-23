@@ -1,5 +1,5 @@
 var QuickLexicon = Backbone.View.extend({
-    templateHeader: '<div id="quickLexicon"><div>' +
+    templateHeader: '<div id="quickLexicon" style="position:fixed"><div>' +
         '<div>' +
         '<button type="button" class="close" aria-hidden="true">X</button>',
     templateFooter: '</div>',
@@ -63,7 +63,10 @@ var QuickLexicon = Backbone.View.extend({
         this.render();
     },
 
-    processQuickInfo: function (origData, self, strongsNotToDisplay, multipleStrongTextFromSearchModal) {
+    processQuickInfo: function (origData, parameters) {
+        var self = parameters[0];
+        var strongsNotToDisplay = parameters[1];
+        var multipleStrongTextFromSearchModal  = parameters[2];
         $("#quickLexicon").remove();
         var morphOnly = false;
         var data = JSON.parse(JSON.stringify(origData));
@@ -202,21 +205,33 @@ var QuickLexicon = Backbone.View.extend({
 		    strongsToUse = step.util.fixStrongNumForVocabInfo(strongsToUse, false);
             strongsNotToDisplay = step.util.fixStrongNumForVocabInfo(strongsNotToDisplay, false);
         }
-        var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strongsToUse, this.morph, this.version);
         var multipleStrongText = (typeof self.options.txtForMultiStrong === "string") ? self.options.txtForMultiStrong : "";
-        if (vocabMorphFromJson.vocabInfos.length > 0) {
-            self.processQuickInfo(vocabMorphFromJson, self, strongsNotToDisplay, multipleStrongText);
-            return;
-        }
-        return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode], function (data) {
-            self.processQuickInfo(data, self, strongsNotToDisplay, multipleStrongText);
+        var callBack1Param = [ self, strongsNotToDisplay, multipleStrongText ];
+        var callBack2Param = [ this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode, self, strongsNotToDisplay, multipleStrongText, self.processQuickInfo ];
+        step.util.getVocabMorphInfoFromJson(strongsToUse, this.morph, this.version, self.processQuickInfo, callBack1Param, 
+            self.loadDefinitionFromRestAPI, callBack2Param);
+    }, 
+    loadDefinitionFromRestAPI: function ( paramArray ) {
+        var version = paramArray[0];
+        var reference = paramArray[1];
+        var strongsToUse  = paramArray[2];
+        var morph = paramArray[3];
+        var userLanguageCode = paramArray[4];
+        var callerSelf = paramArray[5];
+        var strongsNotToDisplay = paramArray[6];
+        var multipleStrongText = paramArray[7];
+        var callBackProcessQuickInfo = paramArray[8];
+        $.getSafe(MODULE_GET_QUICK_INFO, [version, reference, strongsToUse, morph, userLanguageCode], function (data) {
+            callBackProcessQuickInfo(data, [ callerSelf, strongsNotToDisplay, multipleStrongText ]);
         }).error(function() {
             if (changeBaseURL())
-                $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode], function (data) {
-                    self.processQuickInfo(data, self, strongsNotToDisplay, multipleStrongText);
+                $.getSafe(MODULE_GET_QUICK_INFO, [version, reference, strongsToUse, morph, userLanguageCode], function (data) {
+                    callBackProcessQuickInfo(data, [ callerSelf, strongsNotToDisplay, multipleStrongText ]);
                 })
         });
-    }, /**
+        return false;
+    },
+    /**
      * Updates the text and shows it
      * @param strongNumbers
      */
@@ -288,7 +303,13 @@ var QuickLexicon = Backbone.View.extend({
             lexicon.click(function () {
 				var strongToUse = (typeof self.augStrong === "string") ? self.augStrong : self.strong;
                 step.util.ui.showDef({ strong: strongToUse, morph: self.morph });
+                // lexicon.remove();
+            });
+        }
+        else if (!step.touchDevice) {
+            lexicon.mouseover(function() {
                 lexicon.remove();
+                step.util.keepQuickLexiconOpen = false;
             });
         }
 
@@ -297,7 +318,8 @@ var QuickLexicon = Backbone.View.extend({
             step.util.keepQuickLexiconOpen = false;
         });
 
-        this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span").one('scroll', function() {
+        var monitorElement = (step.touchDevice && !step.touchWideDevice) ? $(document) : this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span");
+        monitorElement.one('scroll', function() {
             lexicon.remove();
         })
         step.touchForQuickLexiconTime = 0;

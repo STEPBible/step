@@ -149,7 +149,6 @@ step.searchSelect = {
 		$("#searchmodalbody").addClass("scrollPart");
 		if ((this.userLang.indexOf('en') != 0) && (this.groupsOT[0].groupName === "Books of Moses") && (this.groupsOT[0].groupName !== "Pentateuch"))
 			this.groupsOT[0].groupName = __s.the_pentateuch;
-		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
 		if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
 			var activePassageData = step.util.activePassage().get("searchTokens") || [];
 			var existingReferences = "";
@@ -271,6 +270,8 @@ step.searchSelect = {
 			$("#select_advanced_search").removeClass("checked");
 			$("#advancesearchonoffswitch").prop( "checked", false );
 		}
+		if (($('.passageContainer.active').width() < 500) || (step.touchDevice && !step.touchWideDevice))
+			$('#displayLocForm').hide();
 	},
 
 	_initOptions: function() {
@@ -571,7 +572,7 @@ step.searchSelect = {
 		if (((this.userLang.toLowerCase().indexOf("zh") == 0) || (this.userLang.toLowerCase().indexOf("es") == 0)) &&
 			(this._getTranslationType() !== "")) {
 			displayRange = "";
-			var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
+			var arrayOfTyplicalBooksAndChapters = JSON.parse(__s.list_of_bibles_books);
 			while (copyOfRange != "") {
 				var separatorChar = "";
 				var pos = copyOfRange.search(/[-,]/);
@@ -580,9 +581,9 @@ step.searchSelect = {
 				var currentOsisID = copyOfRange.substr(0, pos);
 				var posOfBook = this.idx2osisChapterJsword[currentOsisID];
 				if ((posOfBook > -1) &&
-					(typeof arrayOfTyplicalBooksChapters !== "undefined") &&
-					(arrayOfTyplicalBooksChapters[posOfBook].length === 2)) {
-						displayRange += arrayOfTyplicalBooksChapters[posOfBook][1];
+					(typeof arrayOfTyplicalBooksAndChapters !== "undefined") &&
+					(arrayOfTyplicalBooksAndChapters[posOfBook].length === 2)) {
+						displayRange += arrayOfTyplicalBooksAndChapters[posOfBook][1];
 				}
 				else displayRange += currentOsisID;
 				displayRange += separatorChar;
@@ -928,7 +929,7 @@ step.searchSelect = {
 		var typlicalBooksChapters = false;
 		var start = 0;
 		var end = 0;
-		var arrayOfTyplicalBooksChapters;
+		var arrayOfTyplicalBooksAndChapters;
 		if (typeof data === "string") {
 			if (data == "OTNT") end = 66;
 			else if (data == "OT") end = 39;
@@ -938,7 +939,7 @@ step.searchSelect = {
 			}
 			data = step.passageSelect.osisChapterJsword;
 			typlicalBooksChapters = true;
-			arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
+			arrayOfTyplicalBooksAndChapters = JSON.parse(__s.list_of_bibles_books);
 		}
 		else end = data.length;
 		this.groupsOther = [{groupName: 'Other', show: false, books: [], bookOrderPos: []}];
@@ -965,9 +966,9 @@ step.searchSelect = {
 			var posOfBook = this.idx2osisChapterJsword[currentOsisID];
 			if (posOfBook > -1) {
 				if (typeof step.passageSelect.osisChapterJsword[posOfBook][3] !== "undefined") longID = step.passageSelect.osisChapterJsword[posOfBook][3];
-				if (typeof arrayOfTyplicalBooksChapters !== "undefined") {
-					longNameToDisplay = arrayOfTyplicalBooksChapters[posOfBook][0];
-					shortNameToDisplay = (arrayOfTyplicalBooksChapters[posOfBook].length === 2) ? arrayOfTyplicalBooksChapters[posOfBook][1] : currentOsisID;
+				if (typeof arrayOfTyplicalBooksAndChapters !== "undefined") {
+					longNameToDisplay = arrayOfTyplicalBooksAndChapters[posOfBook][0];
+					shortNameToDisplay = (arrayOfTyplicalBooksAndChapters[posOfBook].length === 2) ? arrayOfTyplicalBooksAndChapters[posOfBook][1] : currentOsisID;
 				}
 			}
 			this.bookOrder.push([currentOsisID, false, longID, shortNameToDisplay, longNameToDisplay]);
@@ -1750,7 +1751,7 @@ step.searchSelect = {
 		}
 		if (additionalInfoOnStrong[3].length > 0) {
 			str2Search += "," + additionalInfoOnStrong[3].toString();
-			titleText = ' title="All forms: ' + str2Search + '" ';
+			titleText = ' title="' + __s.all + ' forms: ' + str2Search + '" ';
 		}
 		var goSearchCall = 'step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\')';
 		var newSuggestion =	$('<a style="padding:0px"' + titleText + ' onclick="javascript:' + goSearchCall + '">' + text2Display + '</a>');
@@ -1817,7 +1818,7 @@ step.searchSelect = {
 		if ((origSuggestionType === GREEK_MEANINGS) || (origSuggestionType === HEBREW_MEANINGS)) {
 			text2Display = '<span>';
 			if (strongsToInclude.length > 1)
-				text2Display += strongsToInclude.length + ' different ';
+				text2Display += strongsToInclude.length + ' ' + __s.different + ' ';
 			text2Display += strongNum + '* (<i>' + data[0].suggestion.stepTransliteration + '</i>) ' +
 				__s.and_synonyms_with_the_meaning + ' ' + userInput + '</span>';
 			suffixText = "";
@@ -1898,7 +1899,7 @@ step.searchSelect = {
 					hasBothTestaments = (hasBothTestaments || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
 					var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments,
 						notInBibleSelected);
-					text2Display = "All " + frequencyMsg + " occurrences";
+					text2Display = __s.all + " " + frequencyMsg + " " + __s.occurrences;
 					gloss = "";
 				}
 				else {
@@ -1940,7 +1941,8 @@ step.searchSelect = {
 			currentSearchSuggestionElement.append('<br><hr><br>');
 			step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 				strongsWithSameSimpleStrongsAsMainStrong, suggestionType, origStrongNum,
-				"Find all instances of the <a title='Document on the Strong number system' href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#heading=h.4a5fldrviek' target='_blank'>simple Strong</a> number: ",
+				__s.find_all + " <a title='Document on the Strong number system' href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#heading=h.4a5fldrviek' target='_blank'>" + 
+				__s.simple_strong + "</a>: ",
 				'(<i class="srchTransliteration">' + transliterationOfSameSimpleStrongAsMainStrong + '</i> - <span class="srchFrequency"> ' + freqencyOfSameSimpleStrongAsMainStrong + ' x</span>)',
 				"",
 				limitType, null, false, false, "", allVersions, false, false);
@@ -2044,9 +2046,9 @@ step.searchSelect = {
 					" forms</i>' at the end of this line for more information";
 			else { // 2nd search modal screen with input field hidden
 				if ((typeof prefixToDisplay === "string") && (prefixToDisplay.indexOf("docs.google.com")) > -1)
-					multipleStrongText = "Note: The original Strong numbering system was written in 1890. It is not as precise as the enhanced Strong numbering listed in lines above your mouse pointer. A click on this link will search " + numOfWord + " words with same simple Strong number.";
+					multipleStrongText = sprintf(__s.old_strong_explain, numOfWord);
 				else
-					multipleStrongText = "Search of " + numOfWord + " words with same meaning, mouse over words listed below for more information";
+					multipleStrongText = sprintf(__s.search_word_same_meaning, numOfWord);
 			}
 		}
 		newElement.hover(function (ev) {
@@ -2239,27 +2241,27 @@ step.searchSelect = {
 			return join.substring(0,1).toLowerCase();
 	},
 
-	_buildJoinString: function(currentJoin, previousJoins, searchType) {
-		var previousJoinString = "";
-		if (typeof searchType === "undefined") {
-			console.log("dont know why the searchtype is undefined in buildJoinString");
-		}
-		if ((typeof currentJoin === "string") && (currentJoin.length > 0)) currentJoin = currentJoin.substring(0,1).toLowerCase();
-		else currentJoin = "a";
-		var previousJoinString = "1";
-		var searchCount = 0;
-		if (previousJoins.length > 0) {
-			for (searchCount = 0; i < previousJoins.length; searchCount++) {
-				previousJoinString += previousJoins[searchCount].substring(0,1).toLowerCase();
-				previousJoinString += (searchCount + 1);
-			}
-		}
-		else searchCount = 1;
-		var newJoinString = "";
-		if (previousJoinString !== "") newJoinString = previousJoinString + currentJoin + (searchCount + 1);
-		if (newJoinString !== "") newJoinString = "|srchJoin=" + newJoinString;
-		return newJoinString;
-	},
+	// _buildJoinString: function(currentJoin, previousJoins, searchType) {
+	// 	var previousJoinString = "";
+	// 	if (typeof searchType === "undefined") {
+	// 		console.log("dont know why the searchtype is undefined in buildJoinString");
+	// 	}
+	// 	if ((typeof currentJoin === "string") && (currentJoin.length > 0)) currentJoin = currentJoin.substring(0,1).toLowerCase();
+	// 	else currentJoin = "a";
+	// 	var previousJoinString = "1";
+	// 	var searchCount = 0;
+	// 	if (previousJoins.length > 0) {
+	// 		for (searchCount = 0; i < previousJoins.length; searchCount++) {
+	// 			previousJoinString += previousJoins[searchCount].substring(0,1).toLowerCase();
+	// 			previousJoinString += (searchCount + 1);
+	// 		}
+	// 	}
+	// 	else searchCount = 1;
+	// 	var newJoinString = "";
+	// 	if (previousJoinString !== "") newJoinString = previousJoinString + currentJoin + (searchCount + 1);
+	// 	if (newJoinString !== "") newJoinString = "|srchJoin=" + newJoinString;
+	// 	return newJoinString;
+	// },
 
 	addSearchWords: function(searchWord) {
 		var current = step.util.localStorageGetItem("step.previousSearches");

@@ -4,8 +4,8 @@
         var html = '<div>' +
             '<div class="navbar-header search-form">' +
                 '<div class="navbar-brand col-xs-12">' +
-                    '<span class="hidden-xs title">' +
-                        '<a href="/" id="logo">' +
+                    '<span class="hidden-xs title" title="Reset to default configuration">' +
+                        '<a href="/?noredirect" id="logo">' +
                             '<img src="/step.png" alt="STEP" width="90px" height="22px">' +
                         '</a>' +
                     '</span>' +
@@ -56,7 +56,7 @@
                                 '</span>';
 
         if (!step.state.isLocal()) {
-            html +=             '<a style="padding-left:5px" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="' + __s.help_feedback + '">' +
+            html +=             '<a style="padding-left:5px" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="' + __s.help_feedback + '">' +
                                     '<i class="glyphicon glyphicon-bullhorn"></i><span class="navbarIconDesc">&nbsp;' + __s.help_feedback + '</span>' +
                                 '</a>';
         }
@@ -84,7 +84,7 @@
                                         '<li class="resetEverything"><a href="javascript:void(0)">' + __s.tools_forget_my_profile + '</a></li>' +
                                         '<li><a href="https://stepbibleguide.blogspot.com/p/volunteers.html" target="_blank">' + __s.we_need_help + '</a></li>';
         if (!step.state.isLocal()) {
-            html+=                      '<li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport">' + __s.help_feedback + '</a></li>' +
+            html+=                      '<li><a href="javascript:void(0)" id="provideFeedback" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport">' + __s.help_feedback + '</a></li>' +
                                         '<li><a href="/html/cookies_policy.html" target="_blank">' + __s.help_privacy_policy + '</a></li>';
         }
         html +=                         '<li><a target="_new" href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" name="COPYRIGHT">' + __s.copyright_info_link + '</a></li>' +
@@ -145,7 +145,6 @@
         markAsRecommended('OHB');
         markAsRecommended('SBLG');
         markAsRecommended('LXX');
-        markAsRecommended('SBLG');
         markAsRecommended('Neno');
         markAsRecommended('NVI');
         markAsRecommended('PNVI');
@@ -210,14 +209,6 @@
         //override some particular settings to avoid UI shifting on load:
         //we never open up a related words section
         step.settings.save({relatedWordsOpen: false});
-		if (typeof step.touchDevice !== "boolean") {
-            console.log("define touchDevice variable in step_ready")
-            step.touchDevice = false;
-            var ua = navigator.userAgent.toLowerCase(); 
-            if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
-                ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints == 5))) // iPad requesting a desktop web site
-                step.touchDevice = true;
-        }
 		step.tempKeyInput = "";
 		if (!step.touchDevice) {
 			var timer;
@@ -225,6 +216,10 @@
                 if ($('#saveClrModalInputArea:visible').length > 0) {
                     e.preventDefault();
                     return false;
+                }
+                if (e.keyCode == 27) { // escape key
+                    $("#quickLexicon").remove();
+                    $(".qtip-focus").css("opacity",0)
                 }
                 const element = document.getElementById('quickLexicon');
                 if ((element) && (typeof element.scrollTop === "number") && ($('#down-arrow').length = 1)) {
@@ -277,7 +272,7 @@
                         else $(".passageContainer.active").find("a.nextChapter").click();
                         step.tempKeyInput = "";
                     }
-                    else if (code == 187) {
+                    else if ((code == 187) && (!step.touchDevice)) {
                     	step.util.createNewColumn();
                     	step.tempKeyInput = "";
                     }
@@ -306,9 +301,9 @@
                                     step.tempKeyInput = "";
                             }, 1500);
                             if (step.tempKeyInput.length >= 2) {
-                                var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
-                                for (var i = 0; i < arrayOfTyplicalBooksChapters.length; i++) {
-                                    var tempVar = arrayOfTyplicalBooksChapters[i][0];
+                                var arrayOfTyplicalBooksAndChapters = JSON.parse(__s.list_of_bibles_books);
+                                for (var i = 0; i < arrayOfTyplicalBooksAndChapters.length; i++) {
+                                    var tempVar = arrayOfTyplicalBooksAndChapters[i][0];
                                     if (!(false || !!document.documentMode)) tempVar = tempVar.normalize("NFD"); // For characters with accent.  For example, Spanish
                                     if (tempVar.replace(/[\u0300-\u036f\s]/g,"").toLowerCase().indexOf(step.tempKeyInput) == 0) {
                                         step.util.passageSelectionModal();
@@ -422,7 +417,7 @@
                 model: modelZero
             });
 
-            step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'), -1);
+            step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'));
 
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {
@@ -441,7 +436,8 @@
         var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
         if (isNaN(stepUsageCount)) stepUsageCount = 0;
         var urlVars = $.getUrlVars();
-        if ((urlVars.indexOf("skipwelcome") > -1) || (urlVars.indexOf("clickvocab") > -1)) {
+        if ((urlVars.indexOf("skipwelcome") > -1) || (urlVars.indexOf("clickvocab") > -1) ||
+            (step.touchDevice && !step.touchWideDevice) ) { // phones do not have the width to display the Welcome to STEP panel
             step.util.showOrHideTutorial('true'); // URL has skipwelcome
             if (urlVars.indexOf("clickvocab") > -1) {
                 var pos = urlVars.q.indexOf("strong=");
@@ -462,12 +458,13 @@
     }
 
     //can this be done before load? self executing function
-    function registerColumnChangeEvents() {
-        Backbone.Events.listenTo(Backbone.Events, "columnsChanged", function () {
-            step.util.reNumberModels();
-        });
-        step.util.reNumberModels();
-    }
+    // seams like not used 12/1/2023 PT
+    // function registerColumnChangeEvents() {
+    //     Backbone.Events.listenTo(Backbone.Events, "columnsChanged", function () {
+    //         step.util.reNumberModels();
+    //     });
+    //     step.util.reNumberModels();
+    // }
 
     $(window).on("load", function () {
         //disable amd
@@ -493,57 +490,57 @@
 
             // If the version (i.e., Bible text) is not specified in the URL, then determine
             // the version (and reference) defaults using the recent history
-
-            if (query.search(/version/) == -1) {
+            if ((query.search(/version/) == -1) && ($.getUrlVars().indexOf("noredirect") == -1)) {
+//            if (query.search(/version/) == -1) {
                 query = query.replace(/%3D/g, '=').replace(/%7C/g, '|');
 
                 var history = new HistoryModelList;
                 if (typeof history === "object") {
-                history.fetch();
-                var histIndex = 0;
-                var mostRecentPassage = "";
-                while (histIndex < history.length && mostRecentPassage == "") {
-                    var histItem = history.at(histIndex);
+                    history.fetch();
+                    var histIndex = 0;
+                    var mostRecentPassage = "";
+                    while (histIndex < history.length && mostRecentPassage == "") {
+                        var histItem = history.at(histIndex);
                         if (typeof histItem === "object") {
                             var histItemArgs = histItem.get("args");
                             if ((typeof histItemArgs === "string") && (histItemArgs.search(/reference/) > -1)) {
                                 mostRecentPassage = decodeURIComponent(histItemArgs)
-                                    // get the version(s) from the most recent passage in history
-                        var pos = mostRecentPassage.search(/version=[^|]+/);
-                        var version = "";
-                        while (pos > -1) {
-                            var ver = RegExp.lastMatch;
-                            ver = ver.replace(/version=/, '');
-                            if (typeof step.keyedVersions[ver] === "object") {
-                                version += 'version=' + ver + '|';
-                            }
-                            mostRecentPassage = mostRecentPassage.replace(/version=[^|]+/, '');
-                            pos = mostRecentPassage.search(/version=[^|]+/);
-                        }
-                        version = version.replace(/\|$/, '');
+                                // get the version(s) from the most recent passage in history
+                                var pos = mostRecentPassage.search(/version=[^|]+/);
+                                var version = "";
+                                while (pos > -1) {
+                                    var ver = RegExp.lastMatch;
+                                    ver = ver.replace(/version=/, '');
+                                    if (typeof step.keyedVersions[ver] === "object") {
+                                        version += 'version=' + ver + '|';
+                                    }
+                                    mostRecentPassage = mostRecentPassage.replace(/version=[^|]+/, '');
+                                    pos = mostRecentPassage.search(/version=[^|]+/);
+                                }
+                                version = version.replace(/\|$/, '');
 
                                 if (query === "") {
-                            // get the reference(s) from the most recent passage in history
-                            pos = mostRecentPassage.search(/reference=[^|]+/);
-                            while (pos > -1) {
-                                query += RegExp.lastMatch + '|';
-                                mostRecentPassage = mostRecentPassage.replace(/reference=[^|]+/, '');
-                                pos = mostRecentPassage.search(/reference=[^|]+/);
-                            }
-                            query = query.replace(/\|$/, '');
-                        }
+                                    // get the reference(s) from the most recent passage in history
+                                    pos = mostRecentPassage.search(/reference=[^|]+/);
+                                    while (pos > -1) {
+                                        query += RegExp.lastMatch + '|';
+                                        mostRecentPassage = mostRecentPassage.replace(/reference=[^|]+/, '');
+                                        pos = mostRecentPassage.search(/reference=[^|]+/);
+                                    }
+                                    query = query.replace(/\|$/, '');
+                                }
 
                                 if (version !== "" && query !== "") {
-                            console.log("Opening to '%s'", version + '|' + query);
+                                    console.log("Opening to '%s'", version + '|' + query);
                                     //                            step.router.navigateSearch(version + '|' + query, true, true);
                                     var histItemOptions = histItem.get("options") || "";
                                     var histItemDisplay = histItem.get("display") || "";
                                     if ((typeof histItemOptions === "string") && (typeof histItemDisplay === "string"))
                                         step.router.doMasterSearch(version + '|' + query, histItemOptions, histItemDisplay);
                                 }
+                            }
                         }
-                    }
-                    ++histIndex;
+                        ++histIndex;
                     }
                 }
             }

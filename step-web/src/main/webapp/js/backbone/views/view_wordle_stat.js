@@ -31,9 +31,14 @@ var ViewLexiconWordle = Backbone.View.extend({
         scopeContainer.append(
             $('<div id="nextChapterInputLine" class="form-group"><label for="nextChapterWordle">' + __s.analyse_update + ':</label></div>').append(this.nextChapter).append(this.newLineSelected));
 
-		this.$el.append("<h2>" + __s.vocabulary_analysis + "</h2>");
-        this.$el.append(scopeContainer);
-        this.$el.append(this.statsContainer);
+        var combinedContainer = scopeContainer;
+        combinedContainer.append(this.statsContainer);
+        if (step.touchDevice && !step.touchWideDevice)
+            step.util.showLongAlert("", __s.vocabulary_analysis, [ combinedContainer ]);
+        else {
+            this.$el.append("<h2>" + __s.vocabulary_analysis + "</h2>");
+            this.$el.append(combinedContainer);
+        }
 
         this.newLineSelected.click(function(ev) {
             event.preventDefault();
@@ -47,9 +52,8 @@ var ViewLexiconWordle = Backbone.View.extend({
 //        this.$el.closest(".tab-content").on("tab-change", function(ev) { self._stopAnimationOnTabChange(ev); });
     },
     refresh: function() {
-        if(this.$el.hasClass("active")) {
+        if ((this.$el.hasClass("active")) || (step.touchDevice && !step.touchWideDevice))
             this.doStats();
-        }
     },
 
     addRefreshStats: function(el) {
@@ -187,8 +191,6 @@ var ViewLexiconWordle = Backbone.View.extend({
      * @private
      */
     doStats: function () {
-        //console.log(new Date().getTime(), "Doing stats");
-
         this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"),  this.sortSelection.find(".selected").data("value"),  function (key, statType) {
             if (statType == 'WORD') {
                 var args = "strong=" + encodeURIComponent(key);

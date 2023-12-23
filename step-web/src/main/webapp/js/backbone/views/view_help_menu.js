@@ -70,6 +70,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
                 '</div>' + //end dialog
                 '</div>' +
                 '</div>')()).modal("show");
+			step.util.blockBackgroundScrolling("aboutModal");
     },
     resetEverything: function () {
         window.localStorage.clear();

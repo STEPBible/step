@@ -41,7 +41,6 @@ var SidebarView = Backbone.View.extend({
         else if (data == '#help') {
             mode = 'help';
         }
-
         this.model.save({
             mode: mode
         });
@@ -49,7 +48,8 @@ var SidebarView = Backbone.View.extend({
     activate: function () {
         var self = this;
         //make sidebar visible
-        this.openSidebar();
+        if (!step.touchDevice || step.touchWideDevice)
+            this.openSidebar();
 
         //show the correct tab
         this.$el.find("[data-target='#" + this.model.get("mode") + "']").tab("show");
@@ -84,19 +84,9 @@ var SidebarView = Backbone.View.extend({
 				console.log("MODULE_GET_INFO undefined H0001");
 				return;
 			}
-            var vocabMorphFromJson = step.util.getVocabMorphInfoFromJson(strong, morph, version);
-            if (vocabMorphFromJson.vocabInfos.length > 0) {
-                self.createDefinition(vocabMorphFromJson, ref, allVersions);
-                return;
-            }
-            $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-                self.createDefinition(data, ref, allVersions);
-            }).error(function() {
-                if (changeBaseURL())
-                    $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-                        self.createDefinition(data, ref, allVersions);
-                    })
-            });
+            callBackCreateDefParams = [ ref, allVersions ];
+            callBackLoadDefFromAPIParams = [ version, ref, strong, morph, allVersions, self.createDefinition]; 
+            step.util.getVocabMorphInfoFromJson(strong, morph, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
         }
         else if (this.model.get("mode") == 'analysis') {
             self.createAnalysis();
@@ -113,6 +103,24 @@ var SidebarView = Backbone.View.extend({
         var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRBMR
         if ((cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
             cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
+    },
+    loadDefinitionFromRestAPI: function (parameters) {
+        var version = parameters[0];
+        var ref = parameters[1];
+        var strong = parameters[2];
+        var morph = parameters[3];
+        var allVersions = parameters[4];
+        var callBackCreateDef = parameters[5];
+        $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
+            callBackCreateDef(data, [ ref, allVersions ]);
+            //return false;
+        }).error(function() {
+            if (changeBaseURL())
+                $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
+                    callBackCreateDef(data, [ ref, allVersions ]);
+                })
+        });
+        //return false;
     },
     _createBaseTabs: function () {
         var tabContent = $("<div class='tab-content'></div>");
@@ -152,24 +160,31 @@ var SidebarView = Backbone.View.extend({
         else {
             this.analysisView.refresh();
         }
+        if (step.touchDevice && !step.touchWideDevice) {
+            this.closeSidebar()
+            step.sidebar = null;
+        }
     },
     createHelp: function () {
         this.helpView = new ExamplesView({el: this.help});
     },
-    createDefinition: function (data, ref, allVersions) {
+    createDefinition: function (data, parameters) {
+        var ref = parameters[0];
+        var allVersions = parameters[1];
         var displayLexicalRelatedWords = (($(".detailLex:visible").length > 0) || (step.util.localStorageGetItem("sidebar.detailLex") === "true"));
         //get definition tab
         this.lexicon.detach();
         this.lexicon.empty();
-
         $('#quickLexicon').remove();
-        var alternativeEntries = $("<div id='vocabEntries'>");
-        this.lexicon.append(alternativeEntries);
-        this.lexicon.append($("<h1>").append(__s.lexicon_vocab));
-
-        if (data.vocabInfos.length == 0) {
-            return;
+        // var alternativeEntries = $("<div id='vocabEntries'>"); // does not seem to be used.  PT 12/2/2023
+        // this.lexicon.append(alternativeEntries);
+        var headerType = "h4";
+        if (!step.touchDevice || step.touchWideDevice) { 
+            this.lexicon.append("<h1>");
+            headerType = "h2";
         }
+        if (data.vocabInfos.length == 0)
+            return;
         var urlLang = $.getUrlVar("lang");
         if (urlLang == null) urlLang = "";
         else urlLang = urlLang.toLowerCase();
@@ -183,12 +198,10 @@ var SidebarView = Backbone.View.extend({
             else
                 isOTorNT = "NT";
         }
+        var panelBodies = [];
         if (data.vocabInfos.length > 1) {
             //multiple entries
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
-            var openDef = _.min(data.vocabInfos, function (def) {
-                return def.count;
-            });
             for (var i = 0; i < data.vocabInfos.length; i++) {
                 var item = data.vocabInfos[i];
                 var isHebrew = data.vocabInfos[i].strongNumber.substring(0,1) === 'H';
@@ -198,15 +211,12 @@ var SidebarView = Backbone.View.extend({
 				else if (currentUserLang =="zh") currentGloss += " " + item._zh_Gloss;
 				else if (currentUserLang =="zh_tw") currentGloss += " " + item._zh_tw_Gloss;
 				else if (currentUserLang =="km") currentGloss += " " + item._km_Gloss;
-                var panelTitle = currentGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
-                var panelContentContainer = $('<div class="panel-collapse collapse">').attr("id", panelId);
+                var panelTitle = "<span>" + currentGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)</span>";
+                var isIn = (i == 0) ? " in" : ""; // expand (show) the first one to the users
+                var panelContentContainer = $('<div class="panel-collapse lexmodal' + isIn + ' collapse">').attr("id", panelId);
                 var panelBody = $('<div class="panel-body"></div>');
-                panelContentContainer.append(panelBody);
-
-                if (openDef == data.vocabInfos[i]) {
-                    panelContentContainer.addClass("in");
-                }
-
+                if (!step.touchDevice || step.touchWideDevice)
+                	panelContentContainer.append(panelBody);
                 this._createBriefWordPanel(panelBody, item, currentUserLang, allVersions);
 // need to handle multiple morphInfo (array)
                 if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
@@ -215,11 +225,11 @@ var SidebarView = Backbone.View.extend({
                 if (i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 }
-                this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT);
+                this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType);
                 if (i < data.morphInfos.length) {
-                    this._createMorphInfo(panelBody, data.morphInfos[i]);
+                    this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
                 }
-
+                panelBodies.push(panelBody);
                 var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target="#' + panelId + '"><a>' +
                     panelTitle + '</a></h4></div>';
 
@@ -227,28 +237,41 @@ var SidebarView = Backbone.View.extend({
                 panelGroup.append(panel);
             }
             this.lexicon.append(panelGroup);
-
         }
         else {
-            this._createBriefWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang, allVersions);
+            var panelBody = $('<div class="panel-body"></div>');
+            this._createBriefWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions);
             // need to handle multiple morphInfo (array)
             if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                 data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
             }
             if (data.morphInfos.length > 0) {
-                this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
+                this._createBriefMorphInfo(panelBody, data.morphInfos[0]);
             }
-            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT);
+            this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType);
             if (data.morphInfos.length > 0) {
-                this._createMorphInfo(this.lexicon, data.morphInfos[0]);
+                this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             }
+            if ((step.touchDevice) && (!step.touchWideDevice))
+	            panelBodies.push(panelBody);
+	        else
+	        	this.lexicon.append(panelBody);
         }
-        this.tabContainer.append(this.lexicon);
+        if (step.touchDevice && !step.touchWideDevice) {
+            step.util.showLongAlert(this.lexicon.html(), "<b>" + __s.lexicon_vocab + "</b>", panelBodies);
+            this.closeSidebar();
+            step.sidebar = null;
+        }
+        else {
+            this.lexicon.find("h1").text(__s.lexicon_vocab);
+            this.tabContainer.append(this.lexicon);
+        }
+
         if (displayLexicalRelatedWords) {
             $(".detailLex").show();
             $("#detailLexSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
         }
-		this._isItALocation(data.vocabInfos[0], ref);
+        this._isItALocation(data.vocabInfos[0], ref);
     },
     _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
         var userLangGloss = "";
@@ -378,6 +401,7 @@ var SidebarView = Backbone.View.extend({
                             var args = "strong=" + encodeURIComponent(strongNumber) + refURLStr;
                             step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
                             step.router.navigatePreserveVersions(args, false, true);
+                            step.util.closeModal("showLongAlertModal");
                     }));
                 }
                 ul.append(li);
@@ -407,7 +431,7 @@ var SidebarView = Backbone.View.extend({
         var statsOccursMsg = step.util.formatFrequency({versionCountOT: totalOT, versionCountNT: totalNT}, frequency, hasBothTestaments);
         var isHebrew = detailLex[1].substring(0,1) === 'H';
         var vocabTitle = detailLex[2] + " (<span class='transliteration'>" + detailLex[5] + "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + detailLex[4] + "</span>)"
-        panel.append($("<a title='click to show all occurrences of this word'></a>").attr("onclick", "javascript:void(0)").
+        panel.append($("<a title='" + __s.click_to_show_all + "'></a>").attr("onclick", "javascript:void(0)").
               data("strongNumber", detailLex[1]).
               data("vocabTitle", vocabTitle).
               append('<span class="strongCount detailLex" style="unicode-bidi:normal;display:none">~' + statsOccursMsg + '</span>').
@@ -416,12 +440,14 @@ var SidebarView = Backbone.View.extend({
                 var args = "strong=" + encodeURIComponent(strongNumber);
                 step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
                 step.router.navigatePreserveVersions(args, false, true);
+                step.util.closeModal("showLongAlertModal");
                 return false;
               }).
               hover(function (ev) {
+                if (step.touchDevice) return;
                 var strong = $(this).data("strongNumber");
                 var wordInfo = $(this).data("vocabTitle");
-                fetch("https://www.stepbible.org/rest/search/masterSearch/version-ESV|" +
+                fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|" +
                     "strong=" + strong + "/HNVUG///" +
                     strong + "///en?lang=en")
                 .then(function(response) {
@@ -431,6 +457,7 @@ var SidebarView = Backbone.View.extend({
                     step.util.ui.showListOfVersesInQLexArea(data, ev.pageY, wordInfo, $('#columHolder'));
                 });
             }, function () { // mouse pointer ends hover (leave)
+                if (step.touchDevice) return;
                 $("#quickLexicon").remove();
             })
         );
@@ -491,6 +518,7 @@ var SidebarView = Backbone.View.extend({
                     }
                     if (allStrongs.length > 1) currentSearch = searchJoins + ")|" + currentSearch;
                     step.router.navigatePreserveVersions(currentSearch, false, true, true);
+                    step.util.closeModal("showLongAlertModal");
                     return false;
 			    }).
                 hover(function() {
@@ -529,11 +557,13 @@ var SidebarView = Backbone.View.extend({
                     var args = "strong=" + encodeURIComponent(strongNumber);
                     step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
                     step.router.navigatePreserveVersions(args, false, true);
-			    	return false;
+                    step.util.closeModal("showLongAlertModal");
+                    return false;
                 }).hover(function (ev) {
+                    if (step.touchDevice) return;
                     var strong = $(this).data("strongNumber");
                     var wordInfo = $(this).data("vocabTitle");
-                    fetch("https://www.stepbible.org/rest/search/masterSearch/version-ESV|" +
+                    fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|" +
                         "strong=" + strong + "/HNVUG///" +
                         strong + "///en?lang=en")
                     .then(function(response) {
@@ -543,6 +573,7 @@ var SidebarView = Backbone.View.extend({
                         step.util.ui.showListOfVersesInQLexArea(data, ev.pageY, wordInfo, $('#columHolder'));
                     });
                 }, function () { // mouse pointer ends hover (leave)
+                    if (step.touchDevice) return;
                     $("#quickLexicon").remove();
                 })              
                 );
@@ -614,7 +645,7 @@ var SidebarView = Backbone.View.extend({
 		this._lookUpGeoInfo(mainWord, bookName, stepLink);
 	},
 	
-    _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT) {
+    _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
         if (typeof mainWord.shortDef === "string") {
@@ -637,7 +668,7 @@ var SidebarView = Backbone.View.extend({
 									// false;
             var spanishDef = mainWord._es_Definition;
             if (spanishDef) {
-                panel.append($("<h2>").append(__s.es_lexicon_meaning));
+                panel.append($("<" + headerType + ">").append(__s.es_lexicon_meaning));
                 this._addLinkAndAppend(panel, spanishDef, currentWordLanguageCode, bibleVersion);
             }
         }
@@ -648,7 +679,7 @@ var SidebarView = Backbone.View.extend({
             if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Definition != undefined)) chineseDef = mainWord._zh_tw_Definition;
             else if (mainWord._zh_Definition != undefined) chineseDef =  mainWord._zh_Definition;
             if (chineseDef) {
-                panel.append($("<h2>").append(__s.zh_lexicon_meaning_fhl));
+                panel.append($("<" + headerType + ">").append(__s.zh_lexicon_meaning_fhl));
                 this._addLinkAndAppend(panel, chineseDef, currentWordLanguageCode, bibleVersion);
             }
             var useSecondZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSecondZhLexicon");
@@ -658,14 +689,14 @@ var SidebarView = Backbone.View.extend({
 		else if (currentUserLang == "vi") {
 			var vietnameseDef = mainWord._vi_Definition;
 			if (vietnameseDef) {
-				panel.append($("<h2>").append("Từ điển Hy Lạp-Việt"));
+				panel.append($("<" + headerType + ">").append("Từ điển Hy Lạp-Việt"));
                 this._addLinkAndAppend(panel, vietnameseDef, currentWordLanguageCode, bibleVersion);
             }
 		}
 		else if (currentUserLang == "km") {
 			var khmerDef = mainWord._km_Definition;
 			if (khmerDef) {
-				panel.append($("<h2>").append("និយមន័យ"));
+				panel.append($("<" + headerType + ">").append("និយមន័យ"));
                 this._addLinkAndAppend(panel, khmerDef, currentWordLanguageCode, bibleVersion);
             }
 		}
@@ -676,19 +707,19 @@ var SidebarView = Backbone.View.extend({
                     message = "based on abridged Brown-Driver-Briggs";
                 else if (isOTorNT === "NT")
                     message = "based on Teknia Greek";
-                panel.append($("<h2 title='" + message + "'>").append(__s.lexicon_meaning));
+                panel.append($("<" + headerType + " title='" + message + "'>").append(__s.lexicon_meaning));
                 this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion);
             }
             //longer definitions
             if (mainWord.lsjDefs) {
-                panel.append($("<h2 title='based on Liddell-Scott-Jones Greek Lexicon, 9th ed'>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
+                panel.append($("<" + headerType + " title='based on Liddell-Scott-Jones Greek Lexicon, 9th ed'>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
                 panel.append('<span class="unicodefont">' + mainWord.lsjDefs + '</span>');
             }
         }
 		
 		relatedNosToDisplay = this._relatedNosNotDisplayed(mainWord.relatedNos, detailLex);
         if (relatedNosToDisplay.length > 0) {
-            panel.append($("<h2>").append(__s.lexicon_related_words));
+            panel.append($("<" + headerType + ">").append(__s.lexicon_related_words));
             var ul = $('<ul>');
             var matchingExpression = "";
             for (var i = 0; i < relatedNosToDisplay.length; i++) {
@@ -736,19 +767,24 @@ var SidebarView = Backbone.View.extend({
         panel.find("[sbstrong]").click(function () {
             step.util.ui.showDef($(this).data("strongNumber"), bibleVersion);
         });
-		panel.find("[sbstrong]").hover(function (ev) {
-			if (ev.type === "mouseleave") {
-				$('#quickLexicon').remove();
-				return;
-			}
-            var searchString = $(this).data("strongNumber");
-			require(['quick_lexicon'], function () {
-				step.util.delay(function () {
-					// do the quick lexicon
-					step.util.ui._displayNewQuickLexiconForVerseVocab(searchString, '', bibleVersion, step.util.activePassageId(),  ev, ev.pageY, null, "");
-				}, MOUSE_PAUSE, 'show-quick-lexicon');
-			});
-		});
+        if (!step.touchDevice) {
+            panel.find("[sbstrong]").hover(function (ev) {
+                if (ev.type === "mouseleave") {
+                    $('#quickLexicon').remove();
+                    return;
+                }
+                var searchString = $(this).data("strongNumber");
+                require(['quick_lexicon'], function () {
+                    step.util.delay(function () {
+                        // do the quick lexicon
+                        step.util.ui._displayNewQuickLexiconForVerseVocab(searchString, '', bibleVersion, step.util.activePassageId(),  ev, ev.pageY, null, "");
+                    }, MOUSE_PAUSE, 'show-quick-lexicon');
+                });
+            },
+            function () { // mouse pointer ends hover (leave)
+                $("#quickLexicon").remove();
+            });
+        }
         if ((foundChineseJSON) && (!step.state.isLocal())) 
             panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
                 "\" target=\"_blank\">" +
@@ -787,9 +823,9 @@ var SidebarView = Backbone.View.extend({
             panel.append(" ");
         }
     },
-    _createMorphInfo: function (panel, info) {
+    _createMorphInfo: function (panel, info, headerType) {
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
-        panel.append($("<h2>").append(__s.display_grammar));
+        panel.append($("<" + headerType + ">").append(__s.display_grammar));
         this.renderMorphItem(panel, info, __s.lexicon_grammar_language, "language");
 		// Added following two lines. Accidentally delected the info["function'] 2019 - PT Sept 2020.
 		if (info["ot_function"] === undefined) this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "function");

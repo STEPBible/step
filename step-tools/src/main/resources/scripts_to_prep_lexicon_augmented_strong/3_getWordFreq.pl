@@ -17,7 +17,7 @@ sub collectWordsUsedByAStrong {
 	else {
 		$testament = "";
 	}
-	my $server = "https://us.stepbible.org";
+	my $server = "https://dev.stepbible.org";
 	#if ( 	((($version eq "SBLG") || ($version eq "LXX")) && ($strongNum =~ m/^H\d/)) ||
 	#		((($version eq "OHB") || ($version eq "THOT")) && ($strongNum =~ m/^G\d/)) ) {
 	#		return;
@@ -127,9 +127,9 @@ sub collectWordsUsedByAStrong {
 	print "$totalForWord,$numOfVerseFoundByServer,";
 }
 
-my $inputFile = $ARGV[0];
-my $testament = $ARGV[1];
-my $specificStrong = $ARGV[2];
+my $inputFile = $ARGV[0]; // A file with a list of all Strong number
+my $testament = $ARGV[1]; // optional
+my $specificStrong = $ARGV[2]; // optional
 open (FH, '<', $inputFile) or die "Could not open input file";
 my %passagesForBasicStrong;
 my %numOfPassagesForBasicStrong;

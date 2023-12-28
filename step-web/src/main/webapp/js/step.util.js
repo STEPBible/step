@@ -3876,8 +3876,10 @@ step.util = {
 						for (var k = 0; k < morphArray.length; k++) {
 							var currentMorph = morphArray[k];
 							var morphLowerCase = currentMorph.toLowerCase();
-							if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1))
-								continue;
+							if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1)) {
+								callProcessQuickInfo(resultJson, callBack1Param);
+								return;
+							}
 							var pos = morphLowerCase.search("robinson:"); // need to check to see if this is still used
 							if (pos > -1) currentMorph = currentMorph.substring(pos+9);
 							$.getJSON("/html/lexicon/" + additionalPath + currentMorph + ".json", function(jsonVar) {

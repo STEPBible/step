@@ -3831,8 +3831,11 @@ step.util = {
 						}
 					}
 				}
-				if (indexToUniqueStrongArry == -1)
-					alert("something wrong, cannot locate original search Strong in getVocabMorphInfoFromJson");
+				if (indexToUniqueStrongArry == -1) {
+					console.log("something wrong, cannot locate original search Strong in getVocabMorphInfoFromJson");
+					callBackLoadDefFromAPI(callBack2Param);
+					return;
+				}
 				for (var i = 0; i < origJsonVar.v.length; i++) {
 					if (uniqueStrongArray[indexToUniqueStrongArry] !== requestedStrong) { // requestedStrong does not have augment
 						var strongNumToCheck = (typeof origJsonVar.v[i][0] === "number") ? origJsonVar.d[origJsonVar.v[i][0]] : origJsonVar.v[i][0];
@@ -3869,25 +3872,44 @@ step.util = {
 					if (morph) {
 						var numOfMorphResponse = 0;
 						var morphArray = morph.split(" ");
+						resultJson.morphInfos = new Array(morphArray.length);
 						for (var k = 0; k < morphArray.length; k++) {
-							numOfMorphResponse ++;
-							var morph = morphArray[k];
-							var morphLowerCase = morph.toLowerCase();
+							var currentMorph = morphArray[k];
+							var morphLowerCase = currentMorph.toLowerCase();
 							if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1))
 								continue;
-							var pos = morph.search("robinson:");
-							if (pos > -1) morph = morphArray[k].substring(pos+9);
-							$.getJSON("/html/lexicon/" + additionalPath + morph + ".json", function(jsonVar) {
+							var pos = morphLowerCase.search("robinson:"); // need to check to see if this is still used
+							if (pos > -1) currentMorph = currentMorph.substring(pos+9);
+							$.getJSON("/html/lexicon/" + additionalPath + currentMorph + ".json", function(jsonVar) {
+								var indexToUniqueMorphArry = -1;
+								var requestedMorph = "";
+								if (morphArray.length > 1) {
+									if (this.url.search("\/([^.]+)\\.json$") > -1) {
+										requestedMorph = RegExp.$1;
+										for (var j = 0; j < morphArray.length; j++) {
+											if (requestedMorph === morphArray[j]) {
+												indexToUniqueMorphArry = j;
+												break;
+											}
+										}
+									}
+								}
+								else // most of the time, there is only one morph for SBLG, THGNT and THOT
+									indexToUniqueMorphArry = 0;
+								if (indexToUniqueMorphArry == -1) {
+									console.log("something wrong, cannot locate original search morph in getVocabMorphInfoFromJson");
+									callBackLoadDefFromAPI(callBack2Param);
+									return;
+								}
 								numOfMorphResponse ++;
-								resultJson.morphInfos.push(jsonVar.morphInfos[0]);
+								resultJson.morphInfos[indexToUniqueMorphArry] = jsonVar.morphInfos[0];
 								if (numOfMorphResponse == morphArray.length)
 									callProcessQuickInfo(resultJson, callBack1Param);
 							}).error(function() {
-								console.log("getJSon failed strong:"+ strong + " morph: " + morph + " version: " + version);
+								console.log("getJSon failed strong:"+ strong + " morph: " + currentMorph + " version: " + version);
 								if (numOfMorphResponse < 0) return; // already processed error from $getjson of /html/lexicon ...
 								numOfMorphResponse = -100;
 								callBackLoadDefFromAPI(callBack2Param);
-								//return false;
 							});
 						}
 					}

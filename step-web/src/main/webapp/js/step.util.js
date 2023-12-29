@@ -3877,6 +3877,7 @@ step.util = {
 							var currentMorph = morphArray[k];
 							var morphLowerCase = currentMorph.toLowerCase();
 							if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1)) {
+								resultJson.morphInfos = [];
 								callProcessQuickInfo(resultJson, callBack1Param);
 								return;
 							}

@@ -127,16 +127,16 @@ sub collectWordsUsedByAStrong {
 	print "$totalForWord,$numOfVerseFoundByServer,";
 }
 
-my $inputFile = $ARGV[0]; // A file with a list of all Strong number
-my $testament = $ARGV[1]; // optional
-my $specificStrong = $ARGV[2]; // optional
+my $inputFile = $ARGV[0];
+my $testament = $ARGV[1];
+my $specificStrong = $ARGV[2];
 open (FH, '<', $inputFile) or die "Could not open input file";
 my %passagesForBasicStrong;
 my %numOfPassagesForBasicStrong;
 my @allVersions = ("ESV", "KJV", "NASB2020", "BSB", "HCSB", "RV_th", "WEB_th",
     "ASV-TH", "ChiUn", "ChiUns", "NASB1995", "RWebster", "spaBES2018eb", "AraSVD");
 my @hebrewVersions = ("THOT", "OSMHB", "SP", "SPMT");
-my @greekVersions = ("SBLG_th", "THGNT", "TR", "Byz", "WHNU", "Elzevir", "Antoniades", "KhmKCB", "LXX_th");
+my @greekVersions = ("SBLG", "THGNT", "TR", "Byz", "WHNU", "Elzevir", "Antoniades", "KhmKCB", "LXX_th");
 my @greekVersionsOTNT = ("ABEn", "ABGk");
 
 print "Strong,";

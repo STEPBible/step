@@ -11,20 +11,60 @@ sub trim {
 sub addFreqToStepLexicon {
     my $findPattern = '^@StrNo=\t';
     my $found = 0;
+	my $verifyCount = 0;
+	my $curCode = "";
+	my $previousCode = "";
+	my $printNext = 0;
     foreach (@lexiconLines) {
         my $currentLine = $_;
         if ($currentLine =~ /$findPattern/) {
-            my $curCode = $';
+			$previousCode = $curCode;
+            $curCode = $';
+			if ($printNext) {
+				print "     next strong number: $curCode\n";
+				$printNext = 0;
+			}
             print OUT $currentLine . "\n";
             if ($curCode ne "") {
                 if (exists($freqList{$curCode})) {
                     print OUT "\@StrFreqList=\t" . $freqList{$curCode} . "\n";
+					#print "$curCode  $freqList{$curCode}\n";
+					$verifyCount = $freqCount{$curCode};
                 }
+				else {
+                    print "Frequency count of $curCode is zero for all Bibles\n";
+					print "     previous strong number: $previousCode\n";
+					$printNext = 1;
+					$verifyCount = 0;
+                }	
             }
         }
         elsif ($currentLine !~ /^\@StrFreqList=\t/) {
             print OUT $currentLine . "\n";
         }
+		elsif ($currentLine =~ /^\@StrFreqList=\t/) {
+            my $curList = $';
+			my @spl = split(';', $curList);
+			my $countOfPrevious = 0;
+			for (my $i = 0; $i <= $#spl; $i++) {
+				my @tempNum = split('@', trim($spl[$i]));
+				my $curNum = trim($tempNum[0]);
+				if (($curNum ne "") && ($curNum ne "0")) { 
+					$countOfPrevious += $curNum;
+#					print "cc $curNum\n";
+				}
+			}
+			if ($verifyCount > 0) {
+				if ($verifyCount < $countOfPrevious) {
+					my $percentage = abs($countOfPrevious / $verifyCount);
+					if ($percentage > 1.3) {
+						print "$curCode has over 30% diff. current count: $verifyCount, previous count: $countOfPrevious, percent difference: $percentage\n";
+						print "     previous strong number: $previousCode\n";
+						$printNext = 1;
+					}
+				}
+			}
+		}
     }
 }
 
@@ -47,7 +87,7 @@ open STEP_LEXICON_IN, '<:encoding(UTF-8)', $input_lexicon_file_from_step;
 chomp(@lexiconLines = <STEP_LEXICON_IN>);
 close STEP_LEXICON_IN;
 %freqList; # initialize as global variables because they will be used in subroutine
-
+%freqCount;
 my $curStrong = "";
 
 my $header = 1;
@@ -56,20 +96,21 @@ while ($line = <FREQ_IN>) {
 #    print $line . "\n";
     my @spl = split(',', $line);
     if ($header > 0) {
-        for (my $i = 1; $i < $#spl; $i = $i + 2) {
-            my @spl2 = split('-', $spl[$i]);
-            print trim($spl2[0]) . ";";
-        }
-        print "\n";
+#        for (my $i = 1; $i < $#spl; $i = $i + 2) {
+#            my @spl2 = split('-', $spl[$i]);
+#            print trim($spl2[0]) . ";";
+#        }
+#        print "\n";
         $header = 0;
     }
     else {
         $curStrong = trim($spl[0]);
         my $outputString = "";
         my $checkNotZero = 0;
-        for (my $i = 1; $i < $#spl; $i = $i + 2) {
+        for (my $i = 1; $i < $#spl; $i = $i + 2) {	
             my $curNum = trim($spl[$i]);
             my $nextNum = trim($spl[$i+1]);
+#			print "x: $curNum $nextNum\n";
             if (($curNum eq "") || ($curNum eq "0")) { $outputString .= ";";}
             else {
                 if ($curNum eq $nextNum) { $outputString .= "$curNum;";}
@@ -77,10 +118,11 @@ while ($line = <FREQ_IN>) {
                 $checkNotZero += $curNum;
             }
         }
-        if ($checkNotZero > 0) {
+       if ($checkNotZero > 0) {
 			$outputString =~ s/\;$//;
             $freqList{$curStrong} = $outputString;
-#            print "$outputString\n";
+			$freqCount{$curStrong} = $checkNotZero;
+#			print "checkNotZero $checkNotZero\n";
         }
     }
 }

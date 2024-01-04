@@ -462,8 +462,10 @@ var SidebarView = Backbone.View.extend({
             })
         );
         panel.append("&nbsp;&nbsp;");
-        var freqListElm = step.util.freqListQTip(detailLex[1], detailLex[6], allVersions, detailLex[4], detailLex[5], "detailLex");
-        panel.append(freqListElm);
+        if (!step.state.isLocal) {
+            var freqListElm = step.util.freqListQTip(detailLex[1], detailLex[6], allVersions, detailLex[4], detailLex[5], "detailLex");
+            panel.append(freqListElm);
+        }
     },
 
     _composeDescriptionOfOccurrences: function(stepType) {

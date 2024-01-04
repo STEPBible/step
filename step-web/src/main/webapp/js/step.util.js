@@ -4331,6 +4331,9 @@ step.util = {
 			additionalClass += " "; // need a space between the class names
 		var additionalStyle = (additionalClass.indexOf("detailLex ") > -1) ? ";display:none" : "";
 		var freqListElm = $("<a class='" + additionalClass + "srchFrequency_details glyphicon glyphicon-info-sign' style='font-size:11px" + additionalStyle + "' onmouseover='javascript:$(\"#quickLexicon\").remove()'></a>");
+		if (freqList == undefined) {
+			freqList = "";
+		}
 		var msg = step.util.showFrequencyOnAllBibles(str2Search, freqList.split(";"), accentedUnicode, stepTransliteration, allVersions);
 		require(["qtip"], function () {
 			freqListElm.qtip({

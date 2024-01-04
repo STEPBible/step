@@ -461,8 +461,8 @@ var SidebarView = Backbone.View.extend({
                 $("#quickLexicon").remove();
             })
         );
-        panel.append("&nbsp;&nbsp;");
         if (!step.state.isLocal) {
+            panel.append("&nbsp;&nbsp;");
             var freqListElm = step.util.freqListQTip(detailLex[1], detailLex[6], allVersions, detailLex[4], detailLex[5], "detailLex");
             panel.append(freqListElm);
         }
@@ -579,9 +579,11 @@ var SidebarView = Backbone.View.extend({
                     $("#quickLexicon").remove();
                 })              
                 );
-                panel.append("&nbsp;&nbsp;");
-                var freqListElm = step.util.freqListQTip(mainWord.strongNumber, mainWord.freqList, allVersions, "", "");
-                panel.append(freqListElm);
+                if (!step.state.isLocal) {
+                    panel.append("&nbsp;&nbsp;");
+                    var freqListElm = step.util.freqListQTip(mainWord.strongNumber, mainWord.freqList, allVersions, "", "");
+                    panel.append(freqListElm);
+                }
             }
         }
         panel.append().append('<br />');

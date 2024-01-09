@@ -3891,8 +3891,10 @@ step.util = {
 										requestedMorph = RegExp.$1;
 										for (var j = 0; j < morphArray.length; j++) {
 											if (requestedMorph === morphArray[j]) {
-												indexToUniqueMorphArry = j;
-												break;
+												if (resultJson.morphInfos[j] == undefined) {
+													indexToUniqueMorphArry = j;
+													break;
+												}
 											}
 										}
 									}

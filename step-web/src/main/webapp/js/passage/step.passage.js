@@ -15,12 +15,9 @@ step.passage = {
      *            the references of all strongs and morphs asked for
      */
     higlightStrongs: function(strongMorphReference) {
-		var showSimilarWord = step.passages.findWhere({ passageId: 0}).get("isSimilarWord");
-		if (typeof showSimilarWord === "undefined") showSimilarWord = true;
-        if ((strongMorphReference.strong == null) || (!showSimilarWord)) return;
+        if (strongMorphReference.strong == null) return;
 
         var strongNumbers = strongMorphReference.strong.split(" ");
-
 
         // reset all spans that are underlined:
         this.removeStrongsHighlights(undefined, strongMorphReference.classes);

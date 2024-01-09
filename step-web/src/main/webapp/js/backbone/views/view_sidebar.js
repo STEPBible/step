@@ -831,6 +831,10 @@ var SidebarView = Backbone.View.extend({
         }
     },
     _createMorphInfo: function (panel, info, headerType) {
+        if (typeof info === "undefined") {
+            panel.append("<br />");
+            return;
+        }
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
         panel.append($("<" + headerType + ">").append(__s.display_grammar));
         this.renderMorphItem(panel, info, __s.lexicon_grammar_language, "language");

@@ -797,8 +797,11 @@ var SidebarView = Backbone.View.extend({
     },
     // for one-line morphology
     _createBriefMorphInfo: function (panel, info) {
+        if (typeof info === "undefined") {
+            panel.append("<br />");
+            return;
+        }
         panel.append("(");
-		// Added following two lines. Accidentally delected the info["function'] 2019 - PT Sept 2020.
 		if (info["ot_function"] === undefined) this.renderBriefMorphItem(panel, info, "function");
 		else this.renderBriefMorphItem(panel, info, "ot_function");
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019

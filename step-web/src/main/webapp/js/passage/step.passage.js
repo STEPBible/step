@@ -43,7 +43,8 @@ step.passage = {
     highlightStrong: function(passageId, strongReference, emphasiseClass) {
 		var showSimilarWord = step.passages.findWhere({ passageId: 0}).get("isSimilarWord");
 		if (typeof showSimilarWord === "undefined") showSimilarWord = true;
-        if ((!strongReference) || (!showSimilarWord)) return;
+        if ((!strongReference) || 
+            ((!showSimilarWord) && (emphasiseClass === "relatedWordEmphasisHover"))) return;
 
         var classes = emphasiseClass || "emphasisePassagePhrase";
 

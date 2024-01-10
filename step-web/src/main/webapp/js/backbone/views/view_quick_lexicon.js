@@ -173,6 +173,8 @@ var QuickLexicon = Backbone.View.extend({
             else {
                 self.displayQuickDef(lexicon, "Quick Lexicon");
                 for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+                    if (data.vocabInfos[i] == null)
+                        continue;
                     self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
                 }
             }

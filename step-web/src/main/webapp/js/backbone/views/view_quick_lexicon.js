@@ -75,6 +75,8 @@ var QuickLexicon = Backbone.View.extend({
         if (typeof multipleStrongTextFromSearchModal !== "string")
             multipleStrongTextFromSearchModal = "";
         for (counter = origData.vocabInfos.length - 1; counter >= 0; counter --) {
+            if (typeof origData.vocabInfos[counter] !== "object")
+                continue;
             var item = origData.vocabInfos[counter];
             if ((strongsNotToDisplay.indexOf(item.strongNumber) > -1) || (multipleStrongTextFromSearchModal !== "")) {
                 if (data.vocabInfos[counter].accentedUnicode !== "") {

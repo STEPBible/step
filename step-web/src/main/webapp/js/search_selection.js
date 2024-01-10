@@ -1596,6 +1596,7 @@ step.searchSelect = {
 		suggestion['matchingForm'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 14, duplicateStrings);
 		suggestion['_detailLexicalTag'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 17, duplicateStrings);
 		suggestion['type'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 19, duplicateStrings);
+		suggestion['_searchResultRange'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 20, duplicateStrings);
 		suggestion['popularityList'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 21, duplicateStrings);
 		result['suggestion'] = suggestion;
 		return result;

@@ -42,6 +42,7 @@ public class VocabInfo implements Serializable {
 	private String stepDetailLexicalTag;
 	private String step_Link;
 	private String step_Type;
+    private String stepSearchResultRange;
     private Integer count;
     private String freqList;
 
@@ -118,6 +119,7 @@ public class VocabInfo implements Serializable {
                 this.stepDetailLexicalTag = d.get("STEP_DetailLexicalTag");
 				this.step_Link = d.get("STEP_Link");
 				this.step_Type = d.get("STEP_Type");
+                this.stepSearchResultRange = d.get("SearchResultRange");
             }
         }
         this.rawRelatedNumbers = OriginalWordUtils.stripExtensions(d.get("relatedNumbers"));
@@ -358,7 +360,19 @@ public class VocabInfo implements Serializable {
     public void set_step_Link(final String step_Link) {
         this.step_Link = step_Link;
     }
-	
+    /**
+     * @return the stepSearchResultRange
+     */
+    public String get_stepSearchResultRange() {
+        return this.stepSearchResultRange;
+    }
+    /**
+     * @param stepSearchResultRange to set the stepSearchResultRange
+     */
+    public void set_stepSearchResultRange(final String stepSearchResultRange) {
+        this.stepSearchResultRange = stepSearchResultRange;
+    }
+
     /**
      * @return the STEPDetailLexicalTag
      */

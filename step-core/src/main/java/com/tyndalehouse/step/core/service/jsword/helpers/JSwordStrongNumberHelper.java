@@ -190,7 +190,7 @@ public class JSwordStrongNumberHelper {
         return osisID.substring(0, firstPartStart);
     }
 
-    public static class detailLexClass {
+    public static class detailLexClass { // used by ObjectMapper to convert JSON in string to object
         public String[][] detailLexs;
     }
     /**
@@ -205,9 +205,7 @@ public class JSwordStrongNumberHelper {
             final IndexSearcher is = jSwordSearchService.getIndexSearcher(
                     this.isOT ? STRONG_OT_VERSION_BOOK.getInitials() : STRONG_NT_VERSION_BOOK.getInitials());
             final TermDocs termDocs = is.getIndexReader().termDocs();
-
-            final String curRef = this.reference.getOsisID();
-            final ArrayList lexiconSuggestions = (ArrayList) this.verseStrongs.get(curRef);
+            final ArrayList lexiconSuggestions = (ArrayList) this.verseStrongs.get( this.reference.getOsisID() );
             final int sizeOfLexiconSuggestion = (lexiconSuggestions == null) ? 0 : lexiconSuggestions.size();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {
                 final String strongKey = strong.getKey();
@@ -222,13 +220,13 @@ public class JSwordStrongNumberHelper {
                         if ((curDetailLexiconTag != null) && (!curDetailLexiconTag.equals("")))  {
                             detailLexClass detailLexicalTag = mapper.readValue("{\"detailLexs\":" + curDetailLexiconTag + "}", detailLexClass.class);
                             for (int j = 0; j < detailLexicalTag.detailLexs.length; j++) {
-                                if (strongKey.equals(detailLexicalTag.detailLexs[j][1]))
+                                if (strongKey.equals(detailLexicalTag.detailLexs[j][1])) // already process about 11 lines above
                                     continue;
                                 int[] result2 = getCountsForStrong(termDocs, detailLexicalTag.detailLexs[j][1], bookName, is);
-                                book += result2[0];
-                                bible += result2[1];
+                                book += result2[0]; // Add to count in book
+                                bible += result2[1]; // Add to count in entire Bible
                                 if (!otherStrong.equals("")) otherStrong += " ";
-                                otherStrong += detailLexicalTag.detailLexs[j][1];
+                                otherStrong += detailLexicalTag.detailLexs[j][1]; // append another Strong
                             }
                             curSuggestion.setDetailLexicalTag(otherStrong);
                         }
@@ -236,8 +234,6 @@ public class JSwordStrongNumberHelper {
                             curSuggestion.setDetailLexicalTag("");
                     }
                 }
-
-
                 final BookAndBibleCount value = strong.getValue();
                 value.setBible(bible);
                 value.setBook(book);

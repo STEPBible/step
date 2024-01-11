@@ -1780,7 +1780,7 @@ step.util = {
 													'<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
 													'<% _.each(rows, function(row, i) { %>' +
 													'<span data-strong="<%= row.strongData.strongNumber %>" ' +
-													'<% if (row.strongData._detailLexicalTag !== "") { %>' +
+													'<% if (row.strongData._detailLexicalTag !== "") { %>' + // add information to search all words in lexical group or detailLexicalTag
 														'data-otherstrongs="<%= row.strongData._detailLexicalTag %>"' +
 													'<% } %>' +
 													'>' +
@@ -1867,9 +1867,8 @@ step.util = {
 										templatedTable.find(".bookCount").click(function () {
 												var bookKey = key.substring(0, key.indexOf('.'));
 												var strong = $(this).parent().data("strong");
-												var otherStrongs = $(this).parent().data("otherstrongs");
 												var args = "reference=" + encodeURIComponent(bookKey) + 
-													step.util._createStrongSearchArg(strong, otherStrongs);
+													step.util._createStrongSearchArg(strong, $(this).parent().data("otherstrongs"));
 												//make this the active passage
 												if (!step.touchDevice || step.touchWideDevice)
 													step.util.createNewLinkedColumn(passageId);
@@ -1880,11 +1879,9 @@ step.util = {
 										templatedTable.find(".bookCount").hover(function (ev) {
 												if (step.touchDevice) return;
 												var bookName = key.substring(0, key.indexOf('.'));
-												var strong = $(this).parent().data("strong");
-												var otherStrongs = $(this).parent().data("otherstrongs");
 												var wordInfo = $($(this).parent().find('a')[0]).html();
 												fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|reference=" + bookName +
-													step.util._createStrongSearchArg(strong, otherStrongs) +
+													step.util._createStrongSearchArg($(this).parent().data("strong"), $(this).parent().data("otherstrongs")) +
 													"/HNVUG//////en?lang=en")
 												.then(function(response) {
 													return response.json();
@@ -1902,8 +1899,7 @@ step.util = {
 
 											templatedTable.find(".bibleCount").click(function () {
 													var strong = $(this).parent().data("strong");
-													var otherStrongs = $(this).parent().data("otherstrongs");
-													var args = step.util._createStrongSearchArg(strong, otherStrongs);
+													var args = step.util._createStrongSearchArg(strong, $(this).parent().data("otherstrongs"));
 													//make this the active passage
 													if (!step.touchDevice || step.touchWideDevice)
 														step.util.createNewLinkedColumn(passageId);
@@ -1913,11 +1909,9 @@ step.util = {
 
 											templatedTable.find(".bibleCount").hover(function (ev) {
 												if (step.touchDevice) return
-												var strong = $(this).parent().data("strong");
-												var otherStrongs = $(this).parent().data("otherstrongs");
 												var wordInfo = $($(this).parent().find('a')[0]).html();
 												fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|" +
-													step.util._createStrongSearchArg(strong, otherStrongs) +
+													step.util._createStrongSearchArg($(this).parent().data("strong"), $(this).parent().data("otherstrongs")) +
 													"/HNVUG//////en?lang=en")
 												.then(function(response) {
 													return response.json();

@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.service.jsword.helpers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
@@ -189,6 +190,9 @@ public class JSwordStrongNumberHelper {
         return osisID.substring(0, firstPartStart);
     }
 
+    public static class detailLexClass {
+        public String[][] detailLexs;
+    }
     /**
      * Applies the search counts for every strong number.
      *
@@ -197,35 +201,43 @@ public class JSwordStrongNumberHelper {
     private void applySearchCounts(final String bookName) {
 
         try {
+            ObjectMapper mapper = new ObjectMapper();
             final IndexSearcher is = jSwordSearchService.getIndexSearcher(
                     this.isOT ? STRONG_OT_VERSION_BOOK.getInitials() : STRONG_NT_VERSION_BOOK.getInitials());
             final TermDocs termDocs = is.getIndexReader().termDocs();
+
+            final String curRef = this.reference.getOsisID();
+            final ArrayList lexiconSuggestions = (ArrayList) this.verseStrongs.get(curRef);
+            final int sizeOfLexiconSuggestion = (lexiconSuggestions == null) ? 0 : lexiconSuggestions.size();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {
                 final String strongKey = strong.getKey();
-
-                termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, strongKey));
-
-                // we'll never need more than 200 documents as this is the cut off point
-                int bible = 0;
-                int book = 0;
-                while (termDocs.next()) {
-                    int freq = termDocs.freq();
-                    final Document doc = is.doc(termDocs.doc());
-                    final String docRef = doc.get(LuceneIndex.FIELD_KEY);
-                    if (freq % 2 == 0) {
-                        char lastChar = strongKey.charAt(strongKey.length() - 1);
-                        if (lastChar >= 'A')
-                            freq = freq / 2;
+                int[] result = getCountsForStrong(termDocs, strongKey, bookName, is);
+                int book = result[0];
+                int bible = result[1];
+                String otherStrong = "";
+                for (int i = 0; i < sizeOfLexiconSuggestion; i++) {
+                    LexiconSuggestion curSuggestion = (LexiconSuggestion) lexiconSuggestions.get(i);
+                    if (strongKey.equals(curSuggestion.getStrongNumber())) {
+                        String curDetailLexiconTag = curSuggestion.get_detailLexicalTag();
+                        if ((curDetailLexiconTag != null) && (!curDetailLexiconTag.equals("")))  {
+                            detailLexClass detailLexicalTag = mapper.readValue("{\"detailLexs\":" + curDetailLexiconTag + "}", detailLexClass.class);
+                            for (int j = 0; j < detailLexicalTag.detailLexs.length; j++) {
+                                if (strongKey.equals(detailLexicalTag.detailLexs[j][1]))
+                                    continue;
+                                int[] result2 = getCountsForStrong(termDocs, detailLexicalTag.detailLexs[j][1], bookName, is);
+                                book += result2[0];
+                                bible += result2[1];
+                                if (!otherStrong.equals("")) otherStrong += " ";
+                                otherStrong += detailLexicalTag.detailLexs[j][1];
+                            }
+                            curSuggestion.setDetailLexicalTag(otherStrong);
+                        }
+                        else
+                            curSuggestion.setDetailLexicalTag("");
                     }
-                    else {
-                        char lastChar = strongKey.charAt(strongKey.length() - 1);
-                        if (lastChar >= 'A')
-                            System.out.println("Odd number of occurrences for " + strongKey + " in: " + docRef);
-                    }
-                    if (docRef != null && docRef.startsWith(bookName))
-                        book += freq;
-                    bible += freq;
                 }
+
+
                 final BookAndBibleCount value = strong.getValue();
                 value.setBible(bible);
                 value.setBook(book);
@@ -233,6 +245,34 @@ public class JSwordStrongNumberHelper {
         } catch (final IOException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
+    }
+
+    private int[] getCountsForStrong(TermDocs termDocs, final String strongKey, final String bookName, final IndexSearcher is) {
+        int[] result = {0, 0}; // count in book and Bible
+        try {
+            termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, strongKey));
+            // we'll never need more than 200 documents as this is the cut off point
+            while (termDocs.next()) {
+                int freq = termDocs.freq();
+                final Document doc = is.doc(termDocs.doc());
+                final String docRef = doc.get(LuceneIndex.FIELD_KEY);
+                if (freq % 2 == 0) {
+                    char lastChar = strongKey.charAt(strongKey.length() - 1);
+                    if (lastChar >= 'A')
+                        freq = freq / 2;
+                } else {
+                    char lastChar = strongKey.charAt(strongKey.length() - 1);
+                    if (lastChar >= 'A')
+                        System.out.println("Odd number of occurrences for " + strongKey + " in: " + docRef);
+                }
+                if (docRef != null && docRef.startsWith(bookName))
+                    result[0] += freq;
+                result[1] += freq;
+            }
+        } catch (final IOException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+        return result;
     }
 
     /**
@@ -267,6 +307,7 @@ public class JSwordStrongNumberHelper {
 			else if (userLanguage.equalsIgnoreCase("km")) {
                 ls.set_es_Gloss(d.get("km_Gloss"));
             }
+            ls.setDetailLexicalTag(d.get("STEP_DetailLexicalTag"));
             ls.setMatchingForm(d.get("accentedUnicode"));
             ls.setStepTransliteration(d.get("stepTransliteration"));
             suggestionsFromSearch.put(ls.getStrongNumber(), ls);

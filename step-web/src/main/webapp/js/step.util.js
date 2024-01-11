@@ -1764,10 +1764,9 @@ step.util = {
             });
         },
 
-				_addSubjectAndRelatedWordsPopup: function (passageId, element, version, isSearch) {
-						var reference = element.attr("name");
-						var self = this;
-
+		_addSubjectAndRelatedWordsPopup: function (passageId, element, version, isSearch) {
+			var reference = element.attr("name");
+			var self = this;
             require(["qtip"], function () {
 							var delay = step.passages.findWhere({ passageId: passageId }).get("interlinearMode") == 'INTERLINEAR' ? 650 : 50;
 							step.util.delay(function () {
@@ -1780,14 +1779,18 @@ step.util = {
 													'<div class="hidden-xs col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
 													'<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
 													'<% _.each(rows, function(row, i) { %>' +
-													'<span data-strong="<%= row.strongData.strongNumber %>">' +
+													'<span data-strong="<%= row.strongData.strongNumber %>" ' +
+													'<% if (row.strongData._detailLexicalTag !== "") { %>' +
+														'data-otherstrongs="<%= row.strongData._detailLexicalTag %>"' +
+													'<% } %>' +
+													'>' +
 													'<a onclick="javascript:void(0)" class="definition col-xs-8 col-sm-4 <%= i % 2 == 1 ? "even" : "" %>"><%= row.strongData.gloss %> ' +
 													'(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)</a>' +
 													'<a onclick="javascript:void(0)" class="bookCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.book) %></a>' +
 													'<a onclick="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
 													'</span><% }); %>' +
 													'<% if(rows.length % 2 == 1) { %>' +
-													'<span class="even"></span>' +
+														'<span class="even"></span>' +
 													'<% } %>' +
 													'</div>' +
 													'<div class="verseVocabLinks"><a onclick="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
@@ -1864,53 +1867,58 @@ step.util = {
 										templatedTable.find(".bookCount").click(function () {
 												var bookKey = key.substring(0, key.indexOf('.'));
 												var strong = $(this).parent().data("strong");
-												var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent(strong);
+												var otherStrongs = $(this).parent().data("otherstrongs");
+												var args = "reference=" + encodeURIComponent(bookKey) + 
+													step.util._createStrongSearchArg(strong, otherStrongs);
 												//make this the active passage
 												if (!step.touchDevice || step.touchWideDevice)
 													step.util.createNewLinkedColumn(passageId);
 												step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
-												step.router.navigatePreserveVersions(args, null, null, null, true);
+												step.router.navigatePreserveVersions(args, null, null, true, true);
 										});
 
 										templatedTable.find(".bookCount").hover(function (ev) {
 												if (step.touchDevice) return;
 												var bookName = key.substring(0, key.indexOf('.'));
 												var strong = $(this).parent().data("strong");
+												var otherStrongs = $(this).parent().data("otherstrongs");
 												var wordInfo = $($(this).parent().find('a')[0]).html();
 												fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|reference=" + bookName +
-													"|strong=" + strong + "/HNVUG///" +
-													strong + "///en?lang=en")
+													step.util._createStrongSearchArg(strong, otherStrongs) +
+													"/HNVUG//////en?lang=en")
 												.then(function(response) {
 													return response.json();
 												})
 												.then(function(data) {
 													step.util.ui.showListOfVersesInQLexArea(data, ev.pageY, wordInfo, passageHtml);
 												});
-											}, function () { // mouse pointer ends hover (leave)
+										}, function () { // mouse pointer ends hover (leave)
 												if (step.touchDevice) return
 												step.util.delay(undefined, 0, 'show-quick-lexicon');
 												if (!step.util.keepQuickLexiconOpen) {
 													$("#quickLexicon").remove();
 												}
-											});
+										});
 
 											templatedTable.find(".bibleCount").click(function () {
 													var strong = $(this).parent().data("strong");
-													var args = "strong=" + encodeURIComponent(strong);
+													var otherStrongs = $(this).parent().data("otherstrongs");
+													var args = step.util._createStrongSearchArg(strong, otherStrongs);
 													//make this the active passage
 													if (!step.touchDevice || step.touchWideDevice)
 														step.util.createNewLinkedColumn(passageId);
 													step.util.activePassage().save({ strongHighlights: strong }, { silent: true });
-													step.router.navigatePreserveVersions(args, null, null, null, true);
+													step.router.navigatePreserveVersions(args, null, null, true, true);
 											});
 
 											templatedTable.find(".bibleCount").hover(function (ev) {
 												if (step.touchDevice) return
 												var strong = $(this).parent().data("strong");
+												var otherStrongs = $(this).parent().data("otherstrongs");
 												var wordInfo = $($(this).parent().find('a')[0]).html();
 												fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|" +
-													"strong=" + strong + "/HNVUG///" +
-													strong + "///en?lang=en")
+													step.util._createStrongSearchArg(strong, otherStrongs) +
+													"/HNVUG//////en?lang=en")
 												.then(function(response) {
 													return response.json();
 												})
@@ -4416,6 +4424,18 @@ step.util = {
 			if (!doNotScroll)
 				window.scrollTo(0,1);
 		}
+	},
+	_createStrongSearchArg: function (strong, otherStrongs) {
+		var result = "|strong=" + encodeURIComponent(strong);
+		if ((otherStrongs == null) || (otherStrongs === ""))
+			return result;
+		var eachStrong = otherStrongs.split(" ");
+		var searchJoin = "|srchJoin=(1";
+		for (var i = 0; i < eachStrong.length; i++) {
+			searchJoin += "o" + (i+2);
+			result += "|strong=" + encodeURIComponent(eachStrong[i]);
+		}
+		return searchJoin + ")" + result;
 	}
 }
 ;

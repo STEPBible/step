@@ -65,7 +65,6 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param jswordSearch
      * @param entityManager             the entity manager
      * @param jswordVersification       the jsword versification
-     * @param strongAugmentationService to augment strong numbers
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,

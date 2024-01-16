@@ -205,7 +205,9 @@ public class JSwordStrongNumberHelper {
             final IndexSearcher is = jSwordSearchService.getIndexSearcher(
                     this.isOT ? STRONG_OT_VERSION_BOOK.getInitials() : STRONG_NT_VERSION_BOOK.getInitials());
             final TermDocs termDocs = is.getIndexReader().termDocs();
-            final ArrayList lexiconSuggestions = (ArrayList) this.verseStrongs.get( this.reference.getOsisID() );
+            ArrayList lexiconSuggestions = null;
+            if (this.verseStrongs != null)
+                lexiconSuggestions = (ArrayList) this.verseStrongs.get(this.reference.getOsisID());
             final int sizeOfLexiconSuggestion = (lexiconSuggestions == null) ? 0 : lexiconSuggestions.size();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {
                 final String strongKey = strong.getKey();

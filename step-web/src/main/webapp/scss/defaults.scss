@@ -75,6 +75,19 @@ li .glyphicon-ok {
   font-style: italic !important;
 }
 
+.in.clicktoview {
+  display: none;
+}
+
+.clicktoview.collapsing {
+  display: none;
+}
+
+.clicktoview {
+  display: inline-block;
+  color: red;
+}
+
 .btn {
 /*  transition: background-color 200ms;  comment out because it is not compatible with dark mode */
 }

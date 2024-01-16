@@ -239,7 +239,7 @@ var SidebarView = Backbone.View.extend({
                 panelGroup.append(panel);
             }
             this.lexicon.append(panelGroup);
-            this.lexicon.append($('<div style="color:red">the word you clicked translates multiple words, select one of the word listed above to view</div>'));
+            this.lexicon.append($('<div style="color:red">the word you clicked translates multiple words, click one of the word listed above to view the definition</div>'));
         }
         else {
             var panelBody = $('<div class="panel-body"></div>');

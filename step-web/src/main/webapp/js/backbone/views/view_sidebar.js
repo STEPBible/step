@@ -211,9 +211,11 @@ var SidebarView = Backbone.View.extend({
 				else if (currentUserLang =="zh") currentGloss += " " + item._zh_Gloss;
 				else if (currentUserLang =="zh_tw") currentGloss += " " + item._zh_tw_Gloss;
 				else if (currentUserLang =="km") currentGloss += " " + item._km_Gloss;
-                var panelTitle = "<span>" + currentGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)</span>";
-                var isIn = (i == 0) ? " in" : ""; // expand (show) the first one to the users
-                var panelContentContainer = $('<div class="panel-collapse lexmodal' + isIn + ' collapse">').attr("id", panelId);
+                var panelTitle = "<span>" + currentGloss + " (<span class='transliteration'>" +
+                    item.stepTransliteration + "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)</span>";
+                //var isIn = (i == 0) ? " in" : ""; // expand (show) the first one to the users
+//                var panelContentContainer = $('<div class="panel-collapse lexmodal' + isIn + ' collapse">').attr("id", panelId);
+                var panelContentContainer = $('<div class="panel-collapse lexmodal collapse">').attr("id", panelId);
                 var panelBody = $('<div class="panel-body"></div>');
                 if (!step.touchDevice || step.touchWideDevice)
                 	panelContentContainer.append(panelBody);
@@ -237,6 +239,7 @@ var SidebarView = Backbone.View.extend({
                 panelGroup.append(panel);
             }
             this.lexicon.append(panelGroup);
+            this.lexicon.append($('<div style="color:red">the word you clicked translates multiple words, select one of the word listed above to view</div>'));
         }
         else {
             var panelBody = $('<div class="panel-body"></div>');

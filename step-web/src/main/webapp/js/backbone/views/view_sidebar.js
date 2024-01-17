@@ -202,7 +202,7 @@ var SidebarView = Backbone.View.extend({
         if (data.vocabInfos.length > 1) {
             //multiple entries
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
-            for (var i = 0; i < data.vocabInfos.length; i++) {
+            for (var i = data.vocabInfos.length - 1; i > -1 ; i--) {
                 var item = data.vocabInfos[i];
                 var isHebrew = data.vocabInfos[i].strongNumber.substring(0,1) === 'H';
                 var panelId = "lexicon-" + data.vocabInfos[i].strongNumber;
@@ -213,10 +213,7 @@ var SidebarView = Backbone.View.extend({
 				else if (currentUserLang =="km") currentGloss += " " + item._km_Gloss;
                 var panelTitle = "<span>" + currentGloss + " (<span class='transliteration'>" + item.stepTransliteration +
                     "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)</span>";
-                var isIn = "";
-                if (i == data.vocabInfos.length - 1) {
-                    isIn = " in";
-                }
+                var isIn = (i == 0) ? " in" : "";
                 var panelContentContainer = $('<div class="panel-collapse lexmodal ' + panelId + isIn + ' collapse">');
                 var panelBody = $('<div class="panel-body"></div>');
                 if (!step.touchDevice || step.touchWideDevice)
@@ -226,21 +223,32 @@ var SidebarView = Backbone.View.extend({
                 if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                     data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
                 } 
-                if (i < data.morphInfos.length) {
+                if (i < data.morphInfos.length)
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
-                }
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType);
-                if (i < data.morphInfos.length) {
+                if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
-                }
                 panelBodies.push(panelBody);
-                var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target=".' + panelId + '"><a>' +
-                    panelTitle + '</a></h4></div>' + 
-                    '<span class="clicktoview ' + panelId + isIn + ' collapse">(click the above word to view)</span>';
+                var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target=".' + panelId +
+                    '"><a>' + panelTitle;
+                if (i > 0)
+                    panelHeading += '<span class="clicktoview"> (click to view)</span>';
+                panelHeading += '</a></h4></div>';
                 var panel = $('<div class="panel panel-default"></div>').append(panelHeading).append(panelContentContainer);
                 panelGroup.append(panel);
             }
             this.lexicon.append(panelGroup);
+            var sleepTime = 6000;
+            if (typeof step.shownClick === "number") {
+                step.shownClick ++;
+                sleepTime = Math.max(( sleepTime - (step.shownClick * 300) ), 1500);
+            }
+            else
+                step.shownClick = 1;
+
+            setTimeout(function() { // Need to give time for the input to the sent to the server and also time for the response to come back to the browser.
+                $('.clicktoview').remove();
+            }, sleepTime);
         }
         else {
             var panelBody = $('<div class="panel-body"></div>');

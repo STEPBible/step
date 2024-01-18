@@ -258,9 +258,54 @@ step.util = {
 		}
 		else {
 			var greekStrongToSuppress = // A comma is required at the end of the Strong number for this function to work.
-				"G1161,"        // de       - then
-				"G3588,"        // ho       - the/this/who
-				"G3754,";      // hoti     - that/since
+				"G1063," +		// gar (γάρ) -  for
+				"G1161," +      // de       - then
+				"G1473," +		// egō (ἐγώ) - I myself 
+				"G1565," +		// ekeinos (ἐκεῖνος) - that
+				"G1699," +		// emos (ἐμός) - mine
+				"G2532," +		// kai (καί) - and  
+				"G3588," +      // ho       - the/this/who
+				"G3739," +		// hos (ὅς) - which
+				"G3748," +		// hostis (ὅστις) - who/which
+				"G3754," +      // hoti     - that/since
+				"G3761," +		// oude (οὐδέ) - nor
+				"G3778," +		// houtos (οὗτος) - this/these
+				"G4219," +		// pote (πότε) - when?
+				"G4674," +		// sos (σός) - your
+				"G5100," +		// tis (τις) - one
+				"G5101," +		// tis (τίς) - which?
+				"G0846," +	// αὐτός=he/she/it/self
+				"G1302," +	// diati (διατί) - why?
+				"G1438," +	// ἑαυτοῦ=my/your/him-self
+				"G1683," +	// ἐμαυτοῦ=myself
+				"G1691," +	// ἐμέ me	Acc. Sing.
+				"G1698," +	// ἐμοί to me Dat. Sing.
+				"G1700," +	// ἐμοῦ=of me
+				"G2228," +	// ἤ=or
+				"G2248," +	// ἡμᾶς us Acc. Plur.
+				"G2249," +	// ἡμεῖς G2249 Nom. Plur.
+				"G2254," +	// ἡμῖν to us	Dat. Plur.
+				"G2257," +	// ἡμῶν of us Gen. Plur.
+				"G2504," +	// κἀγώ=and I
+				"G3165," +	// μέ me Acc. Sing.
+				"G3427," +	// μοί to me Dat. SIng.
+				"G3450," +	// μοῦ of me Gen. Sing.
+				"G4459," +	// πῶς=how?!
+				"G4571," +	// σέ you	Acc. Sing.
+				"G4671," +	// σοί to you Dat.Sing.
+				"G4675," +	// σοῦ of you	Gen. Sing.
+				"G4771," +	// σύ you	Nom. Sing.
+				"G5023," +	// ταῦτα these Nom/Acc Neut. Plur.
+				"G5026," +	// ταύτῃ to this Dat/Acc/Gen Fem. Sing.
+				"G5037," +	// τε=and/both
+				"G5124," +	// τοῦτο this Nom/Acc Neut. Sing.
+				"G5126," +	// τοῦτον that Acc Masc. Sing.
+				"G5127," +	// τούτου of this	Gen Masc/Neut Sing.
+				"G5129," +	// τούτῳ to this Dat Masc/Neut Sing.
+				"G5209," +	// ὑμᾶς you Acc. Plur.
+				"G5210," +	// ὑμεῖς you Nom. Plur.
+				"G5213," +	// ὑμῖν to you Dat. Plur.
+				"G5216,";	// ὑμῶν of you Gen. Plur.
 			if (greekStrongToSuppress.indexOf(strongNumber + ",") > -1)
 				return true;
 		}

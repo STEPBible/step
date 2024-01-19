@@ -268,14 +268,11 @@ step.util = {
 				"G3739," +		// hos (ὅς) - which
 				"G3748," +		// hostis (ὅστις) - who/which
 				"G3754," +      // hoti     - that/since
-				"G3761," +		// oude (οὐδέ) - nor
 				"G3778," +		// houtos (οὗτος) - this/these
-				"G4219," +		// pote (πότε) - when?
 				"G4674," +		// sos (σός) - your
 				"G5100," +		// tis (τις) - one
 				"G5101," +		// tis (τίς) - which?
 				"G0846," +	// αὐτός=he/she/it/self
-				"G1302," +	// diati (διατί) - why?
 				"G1438," +	// ἑαυτοῦ=my/your/him-self
 				"G1683," +	// ἐμαυτοῦ=myself
 				"G1691," +	// ἐμέ me	Acc. Sing.
@@ -290,7 +287,6 @@ step.util = {
 				"G3165," +	// μέ me Acc. Sing.
 				"G3427," +	// μοί to me Dat. SIng.
 				"G3450," +	// μοῦ of me Gen. Sing.
-				"G4459," +	// πῶς=how?!
 				"G4571," +	// σέ you	Acc. Sing.
 				"G4671," +	// σοί to you Dat.Sing.
 				"G4675," +	// σοῦ of you	Gen. Sing.

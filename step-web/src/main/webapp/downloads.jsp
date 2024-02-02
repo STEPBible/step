@@ -352,7 +352,7 @@ Note:  Some users have experienced issues on later versions of Android (e.g., ve
 			fileName = "stepbible" + version;
 			var path = "";
 			if (region === "region_usa") path = "https://downloads.stepbible.com/file/Stepbible/";
-			else if (region === "region_europe") path = "https://stepbible-eu.s3.eu-north-1.amazonaws.com/";
+			else if (region === "region_europe") path = "https://downloads-eu.stepbible.com/file/STEPBible-download/";
 			else if (region === "region_asia_pacific") path = "https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/";
 			else console.log("Unknown region selected: " + region);
 			var downloadPath = path + fileName + "." + fileExtension;

@@ -2,7 +2,7 @@
     //some extensions (perhaps should go in another file)
     String.prototype.startsWith = function (nonEscapedString) {
         var str = nonEscapedString.replace('+', '\\+');
-        return (this.match("^" + step.util.escapeRegExp(str)) == nonEscapedString);
+        return (this.match("^" + step.util.escapeRegExp(str)) === nonEscapedString);
     };
     $.extend({
         /**
@@ -381,7 +381,7 @@ step.util = {
     },
     raiseInfo: function (message, level, passageId, progress, silent) {
         //no parsing for info and warning
-        if (level == 'error') {
+        if (level === 'error') {
             level = 'danger';
         } else if (level == undefined) {
             level = 'info';
@@ -422,9 +422,8 @@ step.util = {
             currentActivePassageId = parseInt(activePassageEl.attr("passage-id"));
         }
 
-        if (typeof val == 'string') {
+        if (typeof val === 'string')
             val = parseInt(val);
-        }
 
         //are we going to set a different passage
         if ((val !== null && val !== undefined && val != currentActivePassageId) || force) {
@@ -495,7 +494,7 @@ step.util = {
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
-                if (xhr.status == 200 && xhr.response == "") {
+                if (xhr.status == 200 && xhr.response === "") {
                     callback(true);
                 } else {
                     callback(false);
@@ -1004,7 +1003,7 @@ step.util = {
 			var searchJoins = [];
             for (var i = 0; i < searchTokens.length; i++) { // get the searchJoins first
 				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType;  // This is needed for syntax search.  Don't know why.  PT 5/26/2021
-                if (searchTokens[i].itemType == "searchJoins") {
+                if (searchTokens[i].itemType === "searchJoins") {
 					searchJoins = searchTokens[i].token.split(",");
 				}
 			}
@@ -1013,12 +1012,12 @@ step.util = {
             for (var i = 0; i < searchTokens.length; i++) { // process all the VERSION and REFERENCE first so that the buttons will always show up first at the top of the panel
 				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType; // This is needed for syntax search.  Don't know why.  PT 5/26/2021
 				var itemType = searchTokens[i].itemType;
-                if (itemType == VERSION) {
+                if (itemType === VERSION) {
                     searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
                     if (allSelectedBibleVersions.length > 0) allSelectedBibleVersions += ", ";
 					allSelectedBibleVersions += (searchTokens[i].item.shortInitials.length > 0) ?
 						step.util.safeEscapeQuote(searchTokens[i].item.shortInitials) : step.util.safeEscapeQuote(searchTokens[i].token);
-                    if (firstVersion == "") firstVersion = allSelectedBibleVersions;
+                    if (firstVersion === "") firstVersion = allSelectedBibleVersions;
                     isMasterVersion = false;
                 }
                 else if (itemType === REFERENCE) {
@@ -1177,11 +1176,11 @@ step.util = {
             searchToken.item = searchToken.enhancedTokenInfo;
 
             //rewrite the item type in case it's a strong number
-            if (searchToken.itemType == STRONG_NUMBER) { //pretend it's a Greek meaning, or a Hebrew meaning
+            if (searchToken.itemType === STRONG_NUMBER) { //pretend it's a Greek meaning, or a Hebrew meaning
 				if (searchToken.item)
-					searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
+					searchToken.itemType = (searchToken.item.strongNumber || " ")[0] === 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
 			}
-            else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH)
+            else if (searchToken.itemType === NAVE_SEARCH_EXTENDED || searchToken.itemType === NAVE_SEARCH)
                 searchToken.itemType = SUBJECT_SEARCH;
             return '<span class="argSelect select-' + searchToken.itemType + '">' +
                 this.renderEnhancedToken(searchToken, isMasterVersion) +
@@ -1342,25 +1341,25 @@ step.util = {
          */
         _getFontClassForLanguage: function (language) {
             //currently hard-coded
-            if (language == "he") {
+            if (language === "he") {
                 return "hbFont";
-            } else if (language == "hbo") {
+            } else if (language === "hbo") {
                 return "hbFont";
-            } else if (language == "grc") {
+            } else if (language === "grc") {
                 return "unicodeFont";
-            } else if (language == "cop") {
+            } else if (language === "cop") {
                 return "copticFont";
-            } else if (language == "my") {
+            } else if (language === "my") {
                 return "burmeseFont";
-            } else if (language == "syr") {
+            } else if (language === "syr") {
                 return "syriacFont";
-            } else if (language == "ar") {
+            } else if (language === "ar") {
                 return "arabicFont";
-            } else if (language == "zh") {
+            } else if (language === "zh") {
                 return "chineseFont";
-            } else if (language == "khm" || language == "km") {
+            } else if (language === "khm" || language === "km") {
                 return "khmerFont";
-            } else if (language == "far" || language == "fa" || language == "per") {
+            } else if (language === "far" || language === "fa" || language === "per") {
                 return "farsiFont";
             }
         },
@@ -1386,7 +1385,7 @@ step.util = {
         showDef: function (source, sourceVersion) {
             var strong, morph, ref, version, allVersions;
 
-            if (typeof source == "string") {
+            if (typeof source === "string") {
                 strong = source;
 				if (typeof sourceVersion === "string")
 					version = sourceVersion;
@@ -1500,7 +1499,7 @@ step.util = {
 								(typeof ev.originalEvent.touches[0].clientY === "number")) that.pageY = ev.originalEvent.touches[0].clientY;
 							step.touchForQuickLexiconTime = Date.now();
 							var strongStringAndPrevHTML = step.util.ui._getStrongStringAndPrevHTML(this); // Try to get something unique on the word touch by the user to compare if it is the 2nd touch
-							var userTouchedSameWord = (strongStringAndPrevHTML == step.lastTapStrong);
+							var userTouchedSameWord = (strongStringAndPrevHTML === step.lastTapStrong);
 							step.lastTapStrong = "notdisplayed" + strongStringAndPrevHTML;
 							step.util.ui._processTouchOnStrong(this, passageId, userTouchedSameWord, that.pageY); 
 						}).on("touchend", function (ev) {
@@ -1598,7 +1597,7 @@ step.util = {
 							version = possibleVersion;
 						}
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
-			var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
+			var pageY = (typeof pageYParam === "number") ? pageYParam : 0;
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
                     strong: strong, morph: morph,
@@ -1613,12 +1612,12 @@ step.util = {
 				_displayNewQuickLexiconForVerseVocab: function (strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong) {
 					var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
 					var pageY = 0;
-					if (typeof pageYParam == "number")
+					if (typeof pageYParam === "number")
 						pageY = pageYParam;
 					else if ((event) && (typeof event.clientY === "number"))
 						pageY = event.clientY;
 					if (typeof txtForMultipleStrong !== "string") txtForMultipleStrong = "";
-					if (typeof QuickLexicon == "undefined") {
+					if (typeof QuickLexicon === "undefined") {
 						require(['quick_lexicon'], function () {
 							step.util.delay(function () {
 								// do the quick lexicon
@@ -1680,7 +1679,7 @@ step.util = {
 							if (strongsInCurrentWord) {
 								var strongsInAWordOfVerse = strongsInCurrentWord.value.split(" "); // Some words are tagged with more than one STRONG number.
 								for (var j = 0; j < strongsInAWordOfVerse.length; j++) {
-									if (strongsInAWordOfVerse[j] == aStrongSelectedByUser) {
+									if (strongsInAWordOfVerse[j] === aStrongSelectedByUser) {
 							count ++;
 										if ($(el).is(spansInVerse[i])) {
 								foundPosition = count;
@@ -1809,7 +1808,7 @@ step.util = {
 			var reference = element.attr("name");
 			var self = this;
             require(["qtip"], function () {
-							var delay = step.passages.findWhere({ passageId: passageId }).get("interlinearMode") == 'INTERLINEAR' ? 650 : 50;
+							var delay = step.passages.findWhere({ passageId: passageId }).get("interlinearMode") === 'INTERLINEAR' ? 650 : 50;
 							step.util.delay(function () {
 									$.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference, step.userLanguageCode], function (data) {
 											var template = '<div class="vocabTable">' +
@@ -1843,18 +1842,18 @@ step.util = {
 											if (urlLang == null) urlLang = "";
 											else urlLang = urlLang.toLowerCase();
 											var currentLang = step.userLanguageCode.toLowerCase();
-											if (urlLang == "zh_tw") currentLang = "zh_tw";
-											else if (urlLang == "zh") currentLang = "zh";
+											if (urlLang === "zh_tw") currentLang = "zh_tw";
+											else if (urlLang === "zh") currentLang = "zh";
 											for (var key in data.strongData) {
 													var verseData = data.strongData[key];
 													for (var strong in verseData) {
 															var strongData = verseData[strong];
 															if (strongData && strongData.strongNumber) {
 																	var counts = data.counts[strongData.strongNumber];
-																	if ((currentLang == "es") && (strongData._es_Gloss)) strongData.gloss = strongData._es_Gloss;
-																	else if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
-																	else if ((currentLang == "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
-																	else if ((currentLang == "km") && (strongData._km_Gloss)) strongData.gloss = strongData._km_Gloss;
+																	if ((currentLang === "es") && (strongData._es_Gloss)) strongData.gloss = strongData._es_Gloss;
+																	else if ((currentLang === "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
+																	else if ((currentLang === "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
+																	else if ((currentLang === "km") && (strongData._km_Gloss)) strongData.gloss = strongData._km_Gloss;
 																	rows.push({
 																			strongData: strongData,
 																			counts: counts
@@ -2073,7 +2072,7 @@ step.util = {
          * @private
          */
         getFontForStrong: function (strong) {
-            if (strong[0] == 'H') {
+            if (strong[0] === 'H') {
                 return "hbFontSmall";
             } else {
                 return "unicodeFont";

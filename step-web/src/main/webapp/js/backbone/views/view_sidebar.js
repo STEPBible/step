@@ -300,7 +300,7 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.stepGloss)
                 .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
-				.append('<span id="possibleMap"></span>')
+				.append('<span id="possibleMap' + mainWord.strongNum + '"></span>')
         );
     },
 
@@ -604,11 +604,11 @@ var SidebarView = Backbone.View.extend({
 
 	_lookUpGeoInfo: function(mainWord, bookName, coordinates) {
 		bookName = bookName.substring(0, bookName.length - 1);
-		var possibleMapElement = $("#possibleMap");
+		var possibleMapElement = $("#possibleMap" + mainWord.strongNum);
 		if (possibleMapElement.length == 0) {
 			console.log ("cannot find possible Map ID in html");
 			// add a sleep here
-			possibleMapElement = $("#possibleMap");
+			possibleMapElement = $("#possibleMap" + mainWord.strongNum);
 		}
 		possibleMapElement.empty().html("<a href='/html/multimap.html?coord=" + coordinates + 
 			"&strong=" + mainWord.strongNumber + "&gloss=" + mainWord.stepGloss +

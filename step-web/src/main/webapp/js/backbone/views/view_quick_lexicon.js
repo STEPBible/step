@@ -312,7 +312,7 @@ var QuickLexicon = Backbone.View.extend({
         }
         else if (!step.touchDevice) {
             lexicon.mouseover(function() {
-                if (step.util.keepQuickLexiconOpen) {
+                if (!step.util.keepQuickLexiconOpen) {
                     lexicon.remove();
                     step.util.keepQuickLexiconOpen = false;
                 }

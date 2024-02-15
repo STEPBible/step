@@ -312,8 +312,10 @@ var QuickLexicon = Backbone.View.extend({
         }
         else if (!step.touchDevice) {
             lexicon.mouseover(function() {
-                lexicon.remove();
-                step.util.keepQuickLexiconOpen = false;
+                if (!step.util.keepQuickLexiconOpen) {
+                    lexicon.remove();
+                    step.util.keepQuickLexiconOpen = false;
+                }
             });
         }
 

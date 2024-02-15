@@ -403,7 +403,7 @@ var PassageDisplayView = DisplayView.extend({
                         self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
                     }
                     else {
-                    step.util.keepQuickLexiconOpen = true;
+                        step.util.keepQuickLexiconOpen = true;
                         $("#quickLexicon").find(".close").css("color","yellow");
                         $("#quickLexicon").find("a.sideNote").find("strong").parent().addClass("glyphicon glyphicon-lock")
                         var unlockNotes = function() {

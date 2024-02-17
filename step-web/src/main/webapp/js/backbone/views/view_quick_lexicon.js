@@ -261,7 +261,7 @@ var QuickLexicon = Backbone.View.extend({
     displayQuickDef: function(lexicon, headerText, augStrongNum) {
         var self = this;
 		if ((typeof augStrongNum === "string") && (augStrongNum !== "")) self.augStrong = augStrongNum;
-        var quickDefPositionAtTop = ((self.position / self.height) > 0.4);
+        var quickDefPositionAtTop = ((self.position / self.height) > 0.2);
         if (quickDefPositionAtTop)
             lexicon.css({"top": "0", "bottom": "auto"});
         if ($('#sidebar:hover').length > 0)

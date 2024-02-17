@@ -35,10 +35,10 @@ var QuickLexicon = Backbone.View.extend({
         '<% if ((item.versionCountOT != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_bible, item.versionCountOT, view.version) %>.) <% } %>' +
         '<% if ((item.versionCountNT != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_bible, item.versionCountNT, view.version) %>.) <% } %>' +
         '<% if ((item.count != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) <% } %>' +
-        '<% if (showClickWord) { %> - <span class="clickMoreInfo"><%= __s.more_info_on_click_of_word %></span></span> <% } %>' +
-        '</div>' +
         '<% if (brief_morph_info[data_index] != null) { %> ' +
 		'&nbsp;&nbsp;<span><%= brief_morph_info[data_index] %></span> ' +
+        '<% if (showClickWord) { %> - <span class="clickMoreInfo"><%= __s.more_info_on_click_of_word %></span></span> <% } %>' +
+        '</div>' +
 		'<% } %>' +
         '<% }); %>' +
         '<%= view.templatedFooter %>',
@@ -261,7 +261,8 @@ var QuickLexicon = Backbone.View.extend({
     displayQuickDef: function(lexicon, headerText, augStrongNum) {
         var self = this;
 		if ((typeof augStrongNum === "string") && (augStrongNum !== "")) self.augStrong = augStrongNum;
-        var quickDefPositionAtTop = ((self.position / self.height) > 0.25); // Changed from .4 to .25 to put most of the quick lexicon on top
+//        var quickDefPositionAtTop = ((self.position / self.height) > 0.25 ); // Changed from .4 to .25 (non-touch screen) or 0.35 (touch screen) to put most of the quick lexicon on top
+        var quickDefPositionAtTop = true; // Try to show it on top first.  Swap to bottom if it overlaps with current mouse/touch position.
         if (quickDefPositionAtTop)
             lexicon.css({"top": "0", "bottom": "auto"});
         if ($('#sidebar:hover').length > 0)
@@ -283,23 +284,31 @@ var QuickLexicon = Backbone.View.extend({
                     $('#quickLexicon').css({'maxHeight': quickLexiconHeightForTouchDevices ,'overflow-y':'auto'});    
                 }
             }
-            else if ((top < -8) || (bottom > self.height + 8) || // The quickLexicon div's top or bottom is not visible
-                    ((quickDefPositionAtTop) && (bottom > self.position)) || // Overlap with mouse pointer
+            else {
+                if ((quickDefPositionAtTop) && (bottom > self.position)) {
+                    lexicon.css({"top": "", "bottom": "0"});
+                    top = $("#quickLexicon").position().top;
+                    bottom = $("#quickLexicon").outerHeight(true) + top;
+                    quickDefPositionAtTop = false;
+                }
+                if ((top < -8) || (bottom > self.height + 8) || // The quickLexicon div's top or bottom is not visible
+                    // ((quickDefPositionAtTop) && (bottom > self.position)) || // Overlap with mouse pointer // Already checked a few lines above.
                     ((!quickDefPositionAtTop) && (top < self.position)) ) {  // Overlap with mouse pointer
-                lexicon.remove();
-                if (headerText === "Notes") {
-                    if ($(lexicon).find('strong').text() === '▼')
-                        $(lexicon).find('strong').text("");
+                    lexicon.remove();
+                    if (headerText === "Notes") {
+                        if ($(lexicon).find('strong').text() === '▼')
+                            $(lexicon).find('strong').text("");
+                    }
+                    else {
+                        $(lexicon).find('h1').replaceWith(function() {
+                            return '<br><h4>' + $(this).text() + '</h4>';
+                        });
+                        $(lexicon).find(".clickMoreInfo").hide();
+                    }
+                    $(lexicon).find(".close").hide().html();
+                    step.util.showLongAlert(lexicon.html(), headerText);
+                    return;
                 }
-                else {
-                    $(lexicon).find('h1').replaceWith(function() {
-                        return '<br><h4>' + $(this).text() + '</h4>';
-                    });
-                    $(lexicon).find(".clickMoreInfo").hide();
-                }
-                $(lexicon).find(".close").hide().html();
-                step.util.showLongAlert(lexicon.html(), headerText);
-                return;
             }
         }
 

@@ -1532,6 +1532,12 @@ var cf = {
             var morphCode = passageHTML.substring(currentPos, endingQuotePos);
             currentPos = endingQuotePos + 1;
             var cssCode = cf.morph2CSS(morphCode).trim();
+            // var morphInformation = cf.getTOSMorphologyInfo("TOS:" + morphCode);
+            // if ((morphInformation.length == 1) && (typeof morphInformation[0]["ot_function"] === "string"))
+            //   morphInformation = morphInformation[0]["ot_function"];
+            // else
+            //   morphInformation = "";
+            // console.log("morph: " + morphCode + " css: " + cssCode + " function: " + morphInformation);
             if (cssCode.length > 0) {
               var endOfSpanPos = passageHTML.indexOf(">", currentPos);
               if (endOfSpanPos > -1) {

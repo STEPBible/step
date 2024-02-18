@@ -174,6 +174,14 @@ var PassageDisplayView = DisplayView.extend({
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
                         reference + '\')" title="Show summary information" class="select-version stepButton">' + __s.book_summary + '</button>');
             }
+            var elmtsWithMorph = $(".morphs");
+            for (var cc = 0; cc < elmtsWithMorph.length; cc ++) {
+                var curMorph = $($(elmtsWithMorph[cc]).parent()[0]).attr('morph');
+                if ((typeof curMorph !== "string") || (curMorph.indexOf("TOS:") != 0)) continue;
+                var morphinfo = cf.getTOSMorphologyInfo(curMorph);
+                if ((morphinfo.length != 1) || (typeof morphinfo[0]["ot_function"] !== "string")) continue;
+                elmtsWithMorph[cc].innerText = morphinfo[0]["ot_function"].charAt(0).toUpperCase() + morphinfo[0]["ot_function"].slice(1);
+            }
         },
         scrollToTargetLocation: function (passageContainer) {
             var self = this;

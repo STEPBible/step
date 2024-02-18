@@ -457,15 +457,6 @@
         $("#stepDisclaimer").popover();
     }
 
-    //can this be done before load? self executing function
-    // seams like not used 12/1/2023 PT
-    // function registerColumnChangeEvents() {
-    //     Backbone.Events.listenTo(Backbone.Events, "columnsChanged", function () {
-    //         step.util.reNumberModels();
-    //     });
-    //     step.util.reNumberModels();
-    // }
-
     $(window).on("load", function () {
         //disable amd
         define.amd = null;

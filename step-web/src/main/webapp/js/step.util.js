@@ -1796,19 +1796,29 @@ step.util = {
             return features + "&nbsp;";
         },
         enhanceVerseNumbers: function (passageId, passageContent, version, isSearch) {
-			var verseNumTimer;
-            $(".verseNumber", passageContent).closest("a").hover(function () {
-                var isVerseVocab = step.passages.findWhere({ passageId: passageId }).get("isVerseVocab");
-                if (isVerseVocab || isVerseVocab == null) {
-					if (typeof verseNumTimer !== "undefined") // clear previous timeout
-						clearTimeout(verseNumTimer);	
-					verseNumTimer = setTimeout(step.util.ui._addSubjectAndRelatedWordsPopup, 500, passageId, $(this), version, isSearch);
-//                    step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version, isSearch);
-                }
-            }, function() {
-				if (typeof verseNumTimer !== "undefined")
-					clearTimeout(verseNumTimer);
-			});
+			if (step.touchDevice) {
+				$(".verseNumber", passageContent).closest("a").mouseenter(function () {
+					var isVerseVocab = step.passages.findWhere({ passageId: passageId }).get("isVerseVocab");
+					if (isVerseVocab || isVerseVocab == null) {
+						step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version, isSearch);
+					}
+				});
+			}
+			else {
+				var verseNumTimer;
+				$(".verseNumber", passageContent).closest("a").hover(function () {
+					var isVerseVocab = step.passages.findWhere({ passageId: passageId }).get("isVerseVocab");
+					if (isVerseVocab || isVerseVocab == null) {
+						if (typeof verseNumTimer !== "undefined") // clear previous timeout
+							clearTimeout(verseNumTimer);	
+						verseNumTimer = setTimeout(step.util.ui._addSubjectAndRelatedWordsPopup, 500, passageId, $(this), version, isSearch);
+
+					}
+				}, function() {
+					if (typeof verseNumTimer !== "undefined")
+						clearTimeout(verseNumTimer);
+				});
+			}
         },
 
 		_addSubjectAndRelatedWordsPopup: function (passageId, element, version, isSearch) {

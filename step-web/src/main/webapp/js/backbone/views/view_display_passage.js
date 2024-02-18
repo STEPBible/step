@@ -40,6 +40,7 @@ var PassageDisplayView = DisplayView.extend({
             // console.log("place to add NT OT check: "+reference+ " " +bibleVersions);
             if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('THOT') > -1)) {
                 if (cv[C_otMorph] == null) {
+                    $.ajaxSetup({async: false});
                     jQuery.ajax({
                         dataType: "script",
                         cache: true,
@@ -48,6 +49,7 @@ var PassageDisplayView = DisplayView.extend({
                             console.log('load tos_morph.js Failed: ' + exception);
                         }
                     });
+                    $.ajaxSetup({async: true});
                 }
                 hasTOS = true;
             }

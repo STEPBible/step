@@ -28,7 +28,6 @@ var PassageDisplayView = DisplayView.extend({
             // This must match the definition in the color_code_grammar.js
             // Do not take away the TBRMBR comment (to be removed by maven replacer
             var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
-            var C_otMorph = 1; // TBRBMR
             cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
             if ((cv[C_colorCodeGrammarAvailableAndSelected]) && (typeof c4 === "undefined")) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
             var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', pch, hasTOS = false, hasNTMorph = false;
@@ -38,19 +37,9 @@ var PassageDisplayView = DisplayView.extend({
             var bibleVersions = version.toUpperCase() + "," + extraVersions.toUpperCase();
             // check if OT or NT  12/13/2023 PT
             // console.log("place to add NT OT check: "+reference+ " " +bibleVersions);
+            var justLoadedTOS = false;
             if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('THOT') > -1)) {
-                if (cv[C_otMorph] == null) {
-                    $.ajaxSetup({async: false});
-                    jQuery.ajax({
-                        dataType: "script",
-                        cache: true,
-                        url: "js/tos_morph.js",
-                        error: function (jqXHR, exception) {
-                            console.log('load tos_morph.js Failed: ' + exception);
-                        }
-                    });
-                    $.ajaxSetup({async: true});
-                }
+                justLoadedTOS = step.util.loadTOS();
                 hasTOS = true;
             }
             if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
@@ -176,14 +165,7 @@ var PassageDisplayView = DisplayView.extend({
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
                         reference + '\')" title="Show summary information" class="select-version stepButton">' + __s.book_summary + '</button>');
             }
-            var elmtsWithMorph = $(".morphs");
-            for (var cc = 0; cc < elmtsWithMorph.length; cc ++) {
-                var curMorph = $($(elmtsWithMorph[cc]).parent()[0]).attr('morph');
-                if ((typeof curMorph !== "string") || (curMorph.indexOf("TOS:") != 0)) continue;
-                var morphinfo = cf.getTOSMorphologyInfo(curMorph);
-                if ((morphinfo.length != 1) || (typeof morphinfo[0]["ot_function"] !== "string")) continue;
-                elmtsWithMorph[cc].innerText = morphinfo[0]["ot_function"].charAt(0).toUpperCase() + morphinfo[0]["ot_function"].slice(1);
-            }
+            if (!justLoadedTOS) step.util.addGrammar();
         },
         scrollToTargetLocation: function (passageContainer) {
             var self = this;

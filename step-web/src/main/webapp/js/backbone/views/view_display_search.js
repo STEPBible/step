@@ -69,22 +69,12 @@ var SearchDisplayView = DisplayView.extend({
             // This must match the definition in the color_code_grammar.js
             // Do not take away the TBRMBR comment (to be removed by maven replacer
             var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
-            var C_otMorph = 1; // TBRBMR
             cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
             if ((cv[C_colorCodeGrammarAvailableAndSelected]) && (typeof c4 === "undefined")) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
             var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', hasTOS = false, hasNTMorph = false;
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
             if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('THOT') > -1)) {
-                if (cv[C_otMorph] == null) {
-                    jQuery.ajax({
-                        dataType: "script",
-                        cache: true,
-                        url: "js/tos_morph.js",
-                        error: function (jqXHR, exception) {
-                            console.log('load tos_morph.js Failed: ' + exception);
-                        }
-                    });
-                }
+                step.util.loadTOS();              
                 hasTOS = true;
             }
             if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;

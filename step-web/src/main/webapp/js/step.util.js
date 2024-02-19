@@ -4487,6 +4487,49 @@ step.util = {
 			result += "|strong=" + encodeURIComponent(eachStrong[i]);
 		}
 		return searchJoin + ")" + result;
+	},
+	loadTOS: function() {
+		var C_otMorph = 1; // TBRBMR
+		if (cv[C_otMorph] == null) {
+//			$.ajaxSetup({async: false});
+			var callback = step.util.addGrammar;
+			jQuery.ajax({
+				dataType: "script",
+				cache: true,
+				url: "js/tos_morph.js",
+				error: function (jqXHR, exception) {
+					console.log('load tos_morph.js Failed: ' + exception);
+				},
+				complete: function (jqXHR, status) {
+				    console.log('finish loading');
+				    callback();
+				}
+			});
+//			$.ajaxSetup({async: true});
+			return true;
+		}
+		return false;
+	},
+	addGrammar: function () {
+		var elmtsWithMorph = $(".morphs");
+		for (var cc = 0; cc < elmtsWithMorph.length; cc ++) {
+			if (elmtsWithMorph[cc].innerText !== "") continue;
+			var curMorphs = $($(elmtsWithMorph[cc]).parent()[0]).attr('morph');
+			if ((typeof curMorphs !== "string") || (curMorphs.indexOf("TOS:") != 0)) continue;
+			var cmArray = curMorphs.split(" ");
+			var grammarToShow = "";
+			for (var dd = 0; dd < cmArray.length; dd ++ ) {
+				if ((dd > 0) && (cmArray[dd].indexOf("TOS:") == -1))
+					cmArray[dd] = "TOS:" + cmArray[dd];
+				var morphinfo = cf.getTOSMorphologyInfo(cmArray[dd]);
+				if ((morphinfo.length != 1) || (typeof morphinfo[0]["ot_function"] !== "string")) continue;
+				if (grammarToShow !== "") {
+					grammarToShow += ". ";
+				}
+				grammarToShow += morphinfo[0]["ot_function"].charAt(0).toUpperCase() + morphinfo[0]["ot_function"].slice(1);
+			}
+			elmtsWithMorph[cc].innerText = grammarToShow;
+		}
 	}
 }
 ;

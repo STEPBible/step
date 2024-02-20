@@ -4517,7 +4517,12 @@ step.util = {
 			var curMorphs = $($(elmtsWithMorph[cc]).parent()[0]).attr('morph');
 			if ((typeof curMorphs !== "string") || (curMorphs.indexOf("TOS:") != 0)) continue;
 			var cmArray = curMorphs.split(" ");
-			var strongArray = (cmArray.length > 1) ? $($(elmtsWithMorph[cc]).parent()[0]).attr('strong') : [ ];
+			var strongArray = [];
+			if (cmArray.length > 1) {
+				var strongsInWord = $($(elmtsWithMorph[cc]).parent()[0]).attr('strong');
+				if ((typeof strongsInWord === "string") && (strongsInWord !== ""))
+					strongArray = strongsInWord.split(" ");
+			}
 			var grammarToShow = "";
 			for (var dd = 0; dd < cmArray.length; dd ++ ) {
 				if ((dd > 0) && (dd < strongArray.length) && (typeof strongArray[dd] === "strong") && (strongArray[dd] !== ""))

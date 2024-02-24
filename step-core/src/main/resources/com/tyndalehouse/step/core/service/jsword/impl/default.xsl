@@ -2390,8 +2390,6 @@
 
     <xsl:template match="text()">
         <xsl:choose>
-            <xsl:when
-                    test="name(./preceding-sibling::node()) and name(./following-sibling::node()) = 'note' and normalize-space(.) = ','"></xsl:when>
             <xsl:when test="./ancestor::cell/@xml:lang != 'grc' and ./ancestor::cell/@xml:lang != 'he' and ./ancestor::cell/@xml:lang != 'hbo'">
                 <xsl:value-of select="."/>
             </xsl:when>

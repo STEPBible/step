@@ -607,7 +607,7 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows with Java" id="25" installDir="STEP" jreBitType="32">
+    <windows name="Windows with Java" id="25" installDir="STEP" jreBitType="32" runPostProcessor="true" postProcessor="sign_stepbible $EXECUTABLE" failOnPostProcessorError="true">
       <jreBundle jreBundleSource="generated" shared="true" />
     </windows>
     <macosFolder name="macOS Folder" id="507" compressDmg="true" signLaunchers="true">

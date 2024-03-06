@@ -841,14 +841,32 @@
                         <xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)"/>
                         <xsl:choose>
                             <xsl:when test="@morph">
-                                <span class="{$colorClass}" strong="{$lemma}" morph="{@morph}">
-                                    <xsl:apply-templates/>
-                                </span>
+                                <xsl:choose>
+                                    <xsl:when test="@var">
+                                        <span class="{$colorClass}" strong="{$lemma}" morph="{@morph}" var="{@var}">
+                                            <xsl:apply-templates/>
+                                        </span>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <span class="{$colorClass}" strong="{$lemma}" morph="{@morph}">
+                                            <xsl:apply-templates/>
+                                        </span>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:when>
                             <xsl:otherwise>
-                                <span class="{$colorClass}" strong="{$lemma}">
-                                    <xsl:apply-templates/>
-                                </span>
+                                <xsl:choose>
+                                    <xsl:when test="@var">
+                                        <span class="{$colorClass}" strong="{$lemma}" var="{@var}">
+                                            <xsl:apply-templates/>
+                                        </span>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <span class="{$colorClass}" strong="{$lemma}">
+                                            <xsl:apply-templates/>
+                                        </span>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
@@ -856,14 +874,32 @@
                         <xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)"/>
                         <xsl:choose>
                             <xsl:when test="@morph">
-                                <span strong="{$lemma}" morph="{@morph}">
-                                    <xsl:apply-templates/>
-                                </span>
+                                <xsl:choose>
+                                    <xsl:when test="@var">
+                                        <span strong="{$lemma}" morph="{@morph}" var="{@var}">
+                                            <xsl:apply-templates/>
+                                        </span>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <span strong="{$lemma}" morph="{@morph}">
+                                            <xsl:apply-templates/>
+                                        </span>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:when>
                             <xsl:otherwise>
-                                <span strong="{$lemma}">
-                                    <xsl:apply-templates/>
-                                </span>
+                                <xsl:choose>
+                                    <xsl:when test="@var">
+                                        <span strong="{$lemma}" var="{@var}">
+                                            <xsl:apply-templates/>
+                                        </span>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <span strong="{$lemma}">
+                                            <xsl:apply-templates/>
+                                        </span>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:otherwise>

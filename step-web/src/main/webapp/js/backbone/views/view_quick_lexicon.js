@@ -34,9 +34,10 @@ var QuickLexicon = Backbone.View.extend({
         '<% if ((item.versionCountOT != null) && (item.versionCountNT != null)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_ot_nt_bible, item.versionCountOT, item.versionCountNT, view.version) %>.) <% } %>' +
         '<% if ((item.versionCountOT != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_bible, item.versionCountOT, view.version) %>.) <% } %>' +
         '<% if ((item.versionCountNT != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_bible, item.versionCountNT, view.version) %>.) <% } %>' +
-        '<% if ((item.count != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) <% } %>' +
+        '<% if ((item.count != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.)<% } %>' +
         '<% if (brief_morph_info[data_index] != null) { %> ' +
-		'&nbsp;&nbsp;<span><%= brief_morph_info[data_index] %></span> ' +
+		',&nbsp;&nbsp;<span><%= brief_morph_info[data_index] %></span> ' +
+        '<% if (view.variant[data_index] !== "") { %> <span>, (Only in <%= view.variant[data_index] %> manuscript)</span> <% } %>' +
         '<% if (showClickWord) { %> - <span class="clickMoreInfo"><%= __s.more_info_on_click_of_word %></span></span> <% } %>' +
         '</div>' +
 		'<% } %>' +
@@ -57,6 +58,7 @@ var QuickLexicon = Backbone.View.extend({
         this.type = opts.type;
         this.touchEvent = opts.touchEvent || false;
         this.passageContainer = step.util.getPassageContainer(opts.target);
+        this.variant = opts.variant.split(";");
         if(this.passageContainer.length == 0) {
             this.passageContainer = step.util.getPassageContainer(opts.passageId);
         }

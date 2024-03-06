@@ -166,6 +166,13 @@ var PassageDisplayView = DisplayView.extend({
                         reference + '\')" title="Show summary information" class="select-version stepButton">' + __s.book_summary + '</button>');
             }
             if (!justLoadedTOS) step.util.addGrammar();
+            var elmntsWithCaretChar = $("span:contains(^)");
+            for (var ii = 0; ii < elmntsWithCaretChar.length; ii++ ) {
+                if (elmntsWithCaretChar[ii].outerText.length == 1) {
+                    $($("span:contains(^)")[ii]).css("vertical-align", "sub");
+                    $($("span:contains(^)")[ii]).attr("var", "other")
+                }
+            }
         },
         scrollToTargetLocation: function (passageContainer) {
             var self = this;

@@ -1409,7 +1409,7 @@ step.util = {
 	                version = firstVersion;
 				allVersions = firstVersion + "," + step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("extraVersions");
             }
-
+			variant = variant || "";
             step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, variant: variant, version: version, allVersions: allVersions });
             require(["sidebar"], function (module) {
                 step.util.ui.openStrongNumber(strong, morph, ref, version, allVersions, variant);

@@ -130,7 +130,7 @@
 	  .h {
 	  font-weight: bold;
 	  font-size: 36px;
-      line-height: 1;
+          line-height: 1;
 	  }
 
 	  .p {
@@ -328,7 +328,8 @@ Note:  Some users have experienced issues on later versions of Android (e.g., ve
 			else if (region === "region_asia_pacific") path = "https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/";
 			else console.log("Unknown region selected: " + region);
 			var downloadPath = path + fileName + "." + fileExtension;
-			window.location.href = downloadPath;
+			window.open(downloadPath)
+			window.location.href = "http://step.stepbible.org/verifyDownload.jsp#" + os.replace(/_.*$/,"");
 		}
 		else if (clickItemID === "exeInstruction") {
 			var os =  $( "#step_os option:selected" ).val();

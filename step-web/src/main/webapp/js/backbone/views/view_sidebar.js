@@ -223,8 +223,11 @@ var SidebarView = Backbone.View.extend({
                 if (!step.touchDevice || step.touchWideDevice)
                 	panelContentContainer.append(panelBody);
                 this._createBriefWordPanel(panelBody, item, currentUserLang, allVersions);
-                if (variant[i] !== "")
-                    panelBody.append("<div>Only in " + variant[i] + " manuscript</div>");
+                var currentVariant = variant[i];
+                if ((typeof currentVariant !== "string") && (typeof variant[0] === "string"))
+                    currentVariant = variant[0];
+                if ((typeof currentVariant === "string") && (currentVariant !== ""))
+                    panelBody.append("<div>in " + currentVariant + " manuscript</div>");
                 // need to handle multiple morphInfo (array)
                 if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                     data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);

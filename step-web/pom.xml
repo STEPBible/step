@@ -720,7 +720,7 @@
 									<replacement><token>_applyCssClassesRepeatByGroup([:(])</token><value>zX$1</value></replacement>
 									<replacement><token>getFeaturesLabel([:(])</token><value>zY$1</value></replacement>
 									<replacement><token>enhanceVerseNumbers([:(])</token><value>zZ$1</value></replacement>
-									<replacement><token>_addSubjectAndRelatedWordsPopup([:(])</token><value>za$1</value></replacement>
+									<replacement><token>_addSubjectAndRelatedWordsPopup([:(,])</token><value>za$1</value></replacement>
 									<replacement><token>showListOfVersesInQLexArea([:(])</token><value>zb$1</value></replacement>
 									<replacement><token>getFontForStrong([:(])</token><value>zc$1</value></replacement>
 									<replacement><token>addCollapsiblePanel([:(])</token><value>ze$1</value></replacement>

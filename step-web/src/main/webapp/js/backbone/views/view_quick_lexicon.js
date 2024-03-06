@@ -37,7 +37,9 @@ var QuickLexicon = Backbone.View.extend({
         '<% if ((item.count != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.)<% } %>' +
         '<% if (brief_morph_info[data_index] != null) { %> ' +
 		',&nbsp;&nbsp;<span><%= brief_morph_info[data_index] %></span> ' +
-        '<% if (view.variant[data_index] !== "") { %> <span>, (Only in <%= view.variant[data_index] %> manuscript)</span> <% } %>' +
+        '<% var currentVariant = view.variant[data_index]; %> ' +
+        '<% if ((typeof currentVariant !== "string") && (typeof view.variant[0] === "string")) currentVariant = view.variant[0]; %> ' +
+        '<% if ((typeof currentVariant === "string") && (currentVariant !== "")) { %> <span>, (in <%= currentVariant %> manuscript)</span> <% } %>' +
         '<% if (showClickWord) { %> - <span class="clickMoreInfo"><%= __s.more_info_on_click_of_word %></span></span> <% } %>' +
         '</div>' +
 		'<% } %>' +

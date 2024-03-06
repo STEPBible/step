@@ -86,7 +86,7 @@ var SidebarView = Backbone.View.extend({
 				console.log("MODULE_GET_INFO undefined H0001");
 				return;
 			}
-            callBackCreateDefParams = [ ref, allVersions ];
+            callBackCreateDefParams = [ ref, allVersions, variant ];
             callBackLoadDefFromAPIParams = [ version, ref, strong, morph, allVersions, variant, self.createDefinition]; 
             step.util.getVocabMorphInfoFromJson(strong, morph, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
         }

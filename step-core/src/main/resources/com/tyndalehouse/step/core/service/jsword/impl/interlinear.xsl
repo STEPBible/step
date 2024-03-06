@@ -618,8 +618,9 @@
 				</xsl:choose>
 			</xsl:variable>
     
-    		<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
-			<span class="{$classes} {$colorClass}" strong="{$lemma}" morph="{@morph}">
+    	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
+    	<xsl:variable name="variant" select="@var" />
+			<span class="{$classes} {$colorClass}" strong="{$lemma}" morph="{@morph}" var="{$variant}">
 				<xsl:if test="normalize-space($remainingText) != ''">
 					<!-- 1st - Output first line or a blank if no text available. -->
 					<xsl:variable name="outputText">

@@ -67,6 +67,8 @@ var SidebarView = Backbone.View.extend({
 			var allVersions = this.model.get("allVersions");
 			var strong = this.model.get("strong");
 			var morph = this.model.get("morph");
+            var variant = this.model.get("variant") || "";
+            variant = variant.split(";");
             if (typeof allVersions !== "string") {
                 if (typeof version === "string")
                     allVersions = version;
@@ -85,7 +87,7 @@ var SidebarView = Backbone.View.extend({
 				return;
 			}
             callBackCreateDefParams = [ ref, allVersions ];
-            callBackLoadDefFromAPIParams = [ version, ref, strong, morph, allVersions, self.createDefinition]; 
+            callBackLoadDefFromAPIParams = [ version, ref, strong, morph, allVersions, variant, self.createDefinition]; 
             step.util.getVocabMorphInfoFromJson(strong, morph, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
         }
         else if (this.model.get("mode") == 'analysis') {
@@ -110,14 +112,15 @@ var SidebarView = Backbone.View.extend({
         var strong = parameters[2];
         var morph = parameters[3];
         var allVersions = parameters[4];
-        var callBackCreateDef = parameters[5];
+        var variant = parameters[5];
+        var callBackCreateDef = parameters[6];
         $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-            callBackCreateDef(data, [ ref, allVersions ]);
+            callBackCreateDef(data, [ ref, allVersions, variant ]);
             //return false;
         }).error(function() {
             if (changeBaseURL())
                 $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-                    callBackCreateDef(data, [ ref, allVersions ]);
+                    callBackCreateDef(data, [ ref, allVersions, variant ]);
                 })
         });
         //return false;
@@ -171,6 +174,7 @@ var SidebarView = Backbone.View.extend({
     createDefinition: function (data, parameters) {
         var ref = parameters[0];
         var allVersions = parameters[1];
+        var variant = parameters[2];
         var displayLexicalRelatedWords = (($(".detailLex:visible").length > 0) || (step.util.localStorageGetItem("sidebar.detailLex") === "true"));
         //get definition tab
         this.lexicon.detach();
@@ -219,7 +223,12 @@ var SidebarView = Backbone.View.extend({
                 if (!step.touchDevice || step.touchWideDevice)
                 	panelContentContainer.append(panelBody);
                 this._createBriefWordPanel(panelBody, item, currentUserLang, allVersions);
-// need to handle multiple morphInfo (array)
+                var currentVariant = variant[i];
+                if ((typeof currentVariant !== "string") && (typeof variant[0] === "string"))
+                    currentVariant = variant[0];
+                if ((typeof currentVariant === "string") && (currentVariant !== ""))
+                    panelBody.append("<div>in " + currentVariant + " manuscript</div>");
+                // need to handle multiple morphInfo (array)
                 if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                     data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
                 } 
@@ -253,6 +262,8 @@ var SidebarView = Backbone.View.extend({
         else {
             var panelBody = $('<div class="panel-body"></div>');
             this._createBriefWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions);
+            if (variant[0] !== "")
+                panelBody.append("<div>Only in " + variant[0] + " manuscript</div>");
             // need to handle multiple morphInfo (array)
             if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                 data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);

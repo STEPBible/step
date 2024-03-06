@@ -1383,8 +1383,7 @@ step.util = {
          * called when click on a piece of text.
          */
         showDef: function (source, sourceVersion) {
-            var strong, morph, ref, version, allVersions;
-
+            var strong, morph, ref, version, allVersions, variant;
             if (typeof source === "string") {
                 strong = source;
 				if (typeof sourceVersion === "string")
@@ -1394,10 +1393,12 @@ step.util = {
                 ref = source.ref;
                 morph = source.morph;
                 version = source.version;
+				variant = source.variant;
             } else {
                 var s = $(source);
                 strong = s.attr("strong");
                 morph = s.attr("morph");
+				variant = s.attr("var") || "";
 				var verseAndVersion = step.util.ui.getVerseNumberAndVersion(s);
 				ref = verseAndVersion[0];
 				if (ref !== '')
@@ -1409,9 +1410,9 @@ step.util = {
 				allVersions = firstVersion + "," + step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("extraVersions");
             }
 
-            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, version: version, allVersions: allVersions });
+            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, variant: variant, version: version, allVersions: allVersions });
             require(["sidebar"], function (module) {
-                step.util.ui.openStrongNumber(strong, morph, ref, version, allVersions);
+                step.util.ui.openStrongNumber(strong, morph, ref, version, allVersions, variant);
             });
         },
         initSidebar: function (mode, data) {
@@ -1427,6 +1428,7 @@ step.util = {
                         strong: data.strong,
                         morph: data.morph,
                         ref: data.ref,
+						variant: data.variant,
                         version: data.version,
 						allVersions: data.allVersions,
                         mode: mode == null ? 'analysis' : mode
@@ -1447,7 +1449,7 @@ step.util = {
                 }
             });
         },
-        openStrongNumber: function (strong, morph, reference, version, allVersions) {
+        openStrongNumber: function (strong, morph, reference, version, allVersions, variant) {
 			if (step.sidebar != null) {
 				if (!step.touchDevice || step.touchWideDevice)
 					step.sidebar.save({
@@ -1456,7 +1458,8 @@ step.util = {
 						mode: 'lexicon',
 						ref: reference,
 						version: version,
-						allVersions: allVersions
+						allVersions: allVersions,
+						variant: variant
 					});
 				else
 					step.sidebar = null;
@@ -1584,6 +1587,7 @@ step.util = {
         _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
+			var variant = $(hoverContext).attr('var') || "";
 			var verseAndVersion = step.util.ui.getVerseNumberAndVersion(hoverContext);
             var reference = verseAndVersion[0];
 			var version = verseAndVersion[1];
@@ -1601,7 +1605,7 @@ step.util = {
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
                     strong: strong, morph: morph,
-                    version: version, reference: reference,
+                    version: version, reference: reference, variant: variant,
                     target: hoverContext, position: pageY, touchEvent: touchEvent,
                     height: $(window).height(), 
                     passageId: passageId

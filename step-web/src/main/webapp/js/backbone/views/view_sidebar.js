@@ -735,6 +735,19 @@ var SidebarView = Backbone.View.extend({
                 else if (isOTorNT === "NT")
                     message = "based on Teknia Greek";
                 panel.append($("<" + headerType + " title='" + message + "'>").append(__s.lexicon_meaning));
+
+                if (mainWord.strongNumber.charAt(0) === "H") {
+                    var lines = mainWord.mediumDef.split(/<br>/i);
+                    var updtMedDef = "";
+                    for (var i = 0; i < lines.length; i ++ ) {
+                        var pos = lines[i].indexOf(")");
+                        var left = 0;
+                        if ((pos > 1) && (pos < 6))
+                            left = pos * 8;
+                        updtMedDef += '<p style="margin-left:' + left + 'px">' + lines[i] + '</p>';
+                    }
+                    mainWord.mediumDef = updtMedDef
+                }
                 this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion);
             }
             //longer definitions

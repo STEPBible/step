@@ -744,7 +744,7 @@ var SidebarView = Backbone.View.extend({
                         var left = 0;
                         if ((pos > 1) && (pos < 6))
                             left = pos * 8;
-                        updtMedDef += '<p style="margin-left:' + left + 'px">' + lines[i] + '</p>';
+                        updtMedDef += '<p style="margin-botton:0px;margin-left:' + left + 'px">' + lines[i] + '</p>';
                     }
                     mainWord.mediumDef = updtMedDef
                 }

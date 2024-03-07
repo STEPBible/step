@@ -60,6 +60,8 @@ var QuickLexicon = Backbone.View.extend({
         this.type = opts.type;
         this.touchEvent = opts.touchEvent || false;
         this.passageContainer = step.util.getPassageContainer(opts.target);
+        if (typeof opts.variant !== "string")
+            opts.variant = "";
         this.variant = opts.variant.split(";");
         if(this.passageContainer.length == 0) {
             this.passageContainer = step.util.getPassageContainer(opts.passageId);

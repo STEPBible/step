@@ -742,9 +742,9 @@ var SidebarView = Backbone.View.extend({
                     for (var i = 0; i < lines.length; i ++ ) {
                         var pos = lines[i].indexOf(")");
                         var left = 0;
-                        if ((pos > 1) && (pos < 6))
+                        if ((pos > 1) && (pos < 6) && (!isNaN(lines[i].charAt(0))) && (lines[i].substring(0, pos).indexOf("(") == -1))
                             left = pos * 8;
-                        updtMedDef += '<p style="margin-botton:0px;margin-left:' + left + 'px">' + lines[i] + '</p>';
+                        updtMedDef += '<p style="margin-bottom:0px;margin-left:' + left + 'px">' + lines[i] + '</p>';
                     }
                     mainWord.mediumDef = updtMedDef
                 }

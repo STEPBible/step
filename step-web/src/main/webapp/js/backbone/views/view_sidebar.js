@@ -816,7 +816,7 @@ var SidebarView = Backbone.View.extend({
                         mainWord.mediumDef = result1;
                     }
                 }
-                this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion, true);
+                this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion, addedLineBreaks);
             }
             //longer definitions
             if (mainWord.lsjDefs) {

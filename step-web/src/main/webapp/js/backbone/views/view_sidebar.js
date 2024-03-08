@@ -792,16 +792,21 @@ var SidebarView = Backbone.View.extend({
                         }
                     }
                     if (addedLineBreaks) {
-                        var result = "<ul><li>";
+                        var result1 = "";
                         for (var jj = 0; jj < parts.length; jj++ ) {
                             if (jj > 0) 
-                                result += "<ref"
-                            result += parts[jj].replace(/<br>/gi, "<li>").replace(/<br \/>/gi, "<li>");
+                                result1 += "<ref";
+                            result1 += parts[jj]
                         }
-                        result += "</ul>";
+                        result1 = result1.replace(/<br \/>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>");
+                        var result2 = "<ul>";
+                        var partsBetweenBreak = result1.split("<br>");
+                        for (var kk = 0; kk < partsBetweenBreak.length; kk ++) {
+                            result2 += "<li>" + partsBetweenBreak[kk] + "</li>";
+                        }
+                        result2 += "</ul>";
                         console.log("med1:" + mainWord.mediumDef);
-                        result = result.replace(/<li>\s*<li>/gi, "<li>");
-                        mainWord.mediumDef = result;
+                        mainWord.mediumDef = result2;
                         console.log("med2:" + mainWord.mediumDef);
                     }
                 }

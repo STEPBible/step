@@ -315,7 +315,7 @@ var SidebarView = Backbone.View.extend({
         );
     },
 
-    _addLinkAndAppend: function (panel, textToAdd, currentWordLangCode, bibleVersion) {
+    _addLinkAndAppend: function (panel, textToAdd, currentWordLangCode, bibleVersion, changeBreakToList) {
         // Find all ref tag and change
         //        panel.append('<a sbRef=" PASSAGE1 " class="linkRef" href="?q=version= VERSION &amp;reference= PASSAGE1 "> PASSAGE2 </a>');
         //        '<ref=\'' . PASSAGE1 . '\'>' . PASSAGE2 . '</ref>';
@@ -355,7 +355,21 @@ var SidebarView = Backbone.View.extend({
             }
             textToAdd2 += remainingText;
         }
-        remainingText = textToAdd2;
+        if (changeBreakToList) {
+            var partsBetweenBreak = textToAdd2.split("<br>");
+            var orderList = $("<ul>");
+            for (var kk = 0; kk < partsBetweenBreak.length; kk ++) {
+                var listElmt = $("<li>");
+                this._addLinkToStrongWord(listElmt, partsBetweenBreak[kk]);
+                orderList.append(listElmt);
+            }
+            panel.append(orderList);
+        }
+        else
+            this._addLinkToStrongWord(panel, remainingText);
+    },
+
+    _addLinkToStrongWord: function(htmlObj, remainingText) {
         var matchExpression = new RegExp(/[GH]\d{4,5}[a-zA-Z]?/g);
         var matchResult = remainingText.match(matchExpression);
         if (matchResult != null) {
@@ -368,14 +382,14 @@ var SidebarView = Backbone.View.extend({
                     currentStrongNumber = currentWordLangCode + currentMatch;
                 if ((currentStrongNumber.length == 6) && (currentStrongNumber.substr(1,1) == "0") && (!isNaN(currentStrongNumber.substr(2,5)))) // G0nnnn -> Gnnnn or H0nnnn -> Hnnnn
                     currentStrongNumber = currentStrongNumber.substr(0,1) + currentStrongNumber.substr(2);
-                panel.append(remainingText.substr(0, pos));  // text before the 4 character code
-                panel.append($('<a sbstrong href="javascript:void(0)">')
+                htmlObj.append(remainingText.substr(0, pos));  // text before the 4 character code
+                htmlObj.append($('<a sbstrong href="javascript:void(0)">')
                     .append(currentMatch)
                     .data("strongNumber", currentStrongNumber));
                 remainingText = remainingText.substr(pos + matchLength);
             }
         }
-        panel.append(remainingText).append("<br />");        
+        htmlObj.append(remainingText).append("<br />");
     },
 
     _addChineseDefinitions: function (panel, mainWord, currentUserLang, bibleVersion, addLinkAndAppendFunction) {
@@ -757,7 +771,7 @@ var SidebarView = Backbone.View.extend({
                                 foundNumOfStem = lines[i].substring(0, pos);
                             else if ((foundNumOfStem !== "") && (lines[i].indexOf(foundNumOfStem) == 0))
                                 highlightLinesOnSameStem = true;
-                            left = pos * 8;
+                            left = (pos - 1) * 8;
                         }
                         if (foundStem || highlightLinesOnSameStem) {
                             lines[i] = "<b>" + lines[i] + "</b>";
@@ -799,18 +813,10 @@ var SidebarView = Backbone.View.extend({
                             result1 += parts[jj]
                         }
                         result1 = result1.replace(/<br \/>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>");
-                        var result2 = "<ul>";
-                        var partsBetweenBreak = result1.split("<br>");
-                        for (var kk = 0; kk < partsBetweenBreak.length; kk ++) {
-                            result2 += "<li>" + partsBetweenBreak[kk] + "</li>";
-                        }
-                        result2 += "</ul>";
-                        console.log("med1:" + mainWord.mediumDef);
-                        mainWord.mediumDef = result2;
-                        console.log("med2:" + mainWord.mediumDef);
+                        mainWord.mediumDef = result1;
                     }
                 }
-                this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion);
+                this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion, true);
             }
             //longer definitions
             if (mainWord.lsjDefs) {

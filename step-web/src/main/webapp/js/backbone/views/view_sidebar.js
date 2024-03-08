@@ -750,6 +750,7 @@ var SidebarView = Backbone.View.extend({
                     message = "based on Teknia Greek";
                 panel.append($("<" + headerType + " title='" + message + "'>").append(__s.lexicon_meaning));
                 var firstLetterOfStrong = mainWord.strongNumber.charAt(0);
+                var addedLineBreaks = false;
                 if (firstLetterOfStrong === "H") {
                     var stem = "";
                     if ((typeof morphInfo === "object") && (typeof morphInfo.stem === "string")) {
@@ -783,7 +784,6 @@ var SidebarView = Backbone.View.extend({
                 }
                 else if (firstLetterOfStrong === "G") {
                     var parts = mainWord.mediumDef.split(/<ref/i);
-                    var addedLineBreaks = false;
                     var pos = parts[0].indexOf(";");
                     if (pos > -1) {
                         parts[0] = parts[0].replace(/;/g, ";<br>");

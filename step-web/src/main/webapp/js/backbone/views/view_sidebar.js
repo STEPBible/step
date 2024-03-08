@@ -234,7 +234,7 @@ var SidebarView = Backbone.View.extend({
                 } 
                 if (i < data.morphInfos.length)
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
-                this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType);
+                this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
                 if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
                 panelBodies.push(panelBody);
@@ -271,7 +271,7 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0]);
             }
-            this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType);
+            this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             }
@@ -672,7 +672,7 @@ var SidebarView = Backbone.View.extend({
 		this._lookUpGeoInfo(mainWord, bookName, stepLink);
 	},
 	
-    _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType) {
+    _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
         if (typeof mainWord.shortDef === "string") {
@@ -735,18 +735,75 @@ var SidebarView = Backbone.View.extend({
                 else if (isOTorNT === "NT")
                     message = "based on Teknia Greek";
                 panel.append($("<" + headerType + " title='" + message + "'>").append(__s.lexicon_meaning));
-
-                if (mainWord.strongNumber.charAt(0) === "H") {
+                var firstLetterOfStrong = mainWord.strongNumber.charAt(0);
+                if (firstLetterOfStrong === "H") {
+                    var stem = "";
+                    if ((typeof morphInfo === "object") && (typeof morphInfo.stem === "string")) {
+                        stem = "(" + morphInfo.stem.charAt(0).toUpperCase() + morphInfo.stem.substring(1) + ")";
+                    }
                     var lines = mainWord.mediumDef.split(/<br>/i);
                     var updtMedDef = "";
+                    var foundNumOfStem = "";
                     for (var i = 0; i < lines.length; i ++ ) {
+                        var foundStem = false;
+                        if ((stem !== "") && (lines[i].indexOf(stem) > -1)) { 
+                            foundStem = true;
+                        }
                         var pos = lines[i].indexOf(")");
+                        var highlightLinesOnSameStem = false;
                         var left = 0;
-                        if ((pos > 1) && (pos < 6) && (!isNaN(lines[i].charAt(0))) && (lines[i].substring(0, pos).indexOf("(") == -1))
+                        if ((pos > 1) && (pos < 6) && (!isNaN(lines[i].charAt(0))) && (lines[i].substring(0, pos).indexOf("(") == -1)) {
+                            if (foundStem)
+                                foundNumOfStem = lines[i].substring(0, pos);
+                            else if ((foundNumOfStem !== "") && (lines[i].indexOf(foundNumOfStem) == 0))
+                                highlightLinesOnSameStem = true;
                             left = pos * 8;
+                        }
+                        if (foundStem || highlightLinesOnSameStem) {
+                            lines[i] = "<b>" + lines[i] + "</b>";
+                            console.log("bold: " + lines[i])
+                        }
                         updtMedDef += '<p style="margin-bottom:0px;margin-left:' + left + 'px">' + lines[i] + '</p>';
                     }
                     mainWord.mediumDef = updtMedDef
+                }
+                else if (firstLetterOfStrong === "G") {
+                    var parts = mainWord.mediumDef.split(/<ref/i);
+                    var addedLineBreaks = false;
+                    var pos = parts[0].indexOf(";");
+                    if (pos > -1) {
+                        parts[0] = parts[0].replace(/;/g, ";<br>");
+                        addedLineBreaks = true;
+                    }
+                    for (var ii = 1; ii < parts.length; ii++ ) {
+                        partsInRef = parts[ii].split("</ref>");
+                        if (partsInRef.length > 2) {
+                            console.log("more than 2 parts " + ii + " " + parts[ii] + " " + mainWord.mediumDef);
+                            continue;
+                        }
+                        if (partsInRef.length == 2) {
+                            var pos = partsInRef[1].indexOf(";");
+                            if (pos > -1) {
+                                if (partsInRef[1].trim().length > 1) {
+                                    parts[ii] = partsInRef[0] + "</ref>" + partsInRef[1].replace(/;/g, ";<br>");
+                                    addedLineBreaks = true;
+                                }
+                            }
+                        }
+                    }
+                    if (addedLineBreaks) {
+                        var result = "<ul><li>";
+                        for (var jj = 0; jj < parts.length; jj++ ) {
+                            if (jj > 0) 
+                                result += "<ref"
+                            result += parts[jj].replace(/<br>/gi, "<li>").replace(/<br \/>/gi, "<li>");
+                        }
+                        result += "</ul>";
+                        console.log("med1:" + mainWord.mediumDef);
+                        result = result.replace(/<li>\s*<li>/gi, "<li>");
+                        mainWord.mediumDef = result;
+                        console.log("med2:" + mainWord.mediumDef);
+                    }
                 }
                 this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion);
             }

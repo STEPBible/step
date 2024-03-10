@@ -366,7 +366,7 @@ var SidebarView = Backbone.View.extend({
             panel.append(orderList);
         }
         else
-            this._addLinkToStrongWord(panel, remainingText);
+            this._addLinkToStrongWord(panel, textToAdd2);
     },
 
     _addLinkToStrongWord: function(htmlObj, remainingText) {

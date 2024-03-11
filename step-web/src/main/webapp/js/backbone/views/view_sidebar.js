@@ -710,7 +710,7 @@ var SidebarView = Backbone.View.extend({
 									// false;
             var spanishDef = mainWord._es_Definition;
             if (spanishDef) {
-                panel.append($("<" + headerType + ">").append(__s.es_lexicon_meaning));
+                panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.es_lexicon_meaning));
                 this._addLinkAndAppend(panel, spanishDef, currentWordLanguageCode, bibleVersion);
             }
         }
@@ -721,7 +721,7 @@ var SidebarView = Backbone.View.extend({
             if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Definition != undefined)) chineseDef = mainWord._zh_tw_Definition;
             else if (mainWord._zh_Definition != undefined) chineseDef =  mainWord._zh_Definition;
             if (chineseDef) {
-                panel.append($("<" + headerType + ">").append(__s.zh_lexicon_meaning_fhl));
+                panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.zh_lexicon_meaning_fhl));
                 this._addLinkAndAppend(panel, chineseDef, currentWordLanguageCode, bibleVersion);
             }
             var useSecondZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSecondZhLexicon");
@@ -731,14 +731,14 @@ var SidebarView = Backbone.View.extend({
 		else if (currentUserLang == "vi") {
 			var vietnameseDef = mainWord._vi_Definition;
 			if (vietnameseDef) {
-				panel.append($("<" + headerType + ">").append("Từ điển Hy Lạp-Việt"));
+				panel.append($("<" + headerType + " style='margin-top:8px'>").append("Từ điển Hy Lạp-Việt"));
                 this._addLinkAndAppend(panel, vietnameseDef, currentWordLanguageCode, bibleVersion);
             }
 		}
 		else if (currentUserLang == "km") {
 			var khmerDef = mainWord._km_Definition;
 			if (khmerDef) {
-				panel.append($("<" + headerType + ">").append("និយមន័យ"));
+				panel.append($("<" + headerType + " style='margin-top:8px'>").append("និយមន័យ"));
                 this._addLinkAndAppend(panel, khmerDef, currentWordLanguageCode, bibleVersion);
             }
 		}
@@ -749,7 +749,7 @@ var SidebarView = Backbone.View.extend({
                     message = "based on abridged Brown-Driver-Briggs";
                 else if (isOTorNT === "NT")
                     message = "based on Teknia Greek";
-                panel.append($("<" + headerType + " title='" + message + "'>").append(__s.lexicon_meaning));
+                panel.append($("<" + headerType + " style='margin-top:8px' title='" + message + "'>").append(__s.lexicon_meaning));
                 var firstLetterOfStrong = mainWord.strongNumber.charAt(0);
                 var addedLineBreaks = false;
                 if (firstLetterOfStrong === "H") {
@@ -821,14 +821,14 @@ var SidebarView = Backbone.View.extend({
             }
             //longer definitions
             if (mainWord.lsjDefs) {
-                panel.append($("<" + headerType + " title='based on Liddell-Scott-Jones Greek Lexicon, 9th ed'>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
+                panel.append($("<" + headerType + " style='margin-top:8px' title='based on Liddell-Scott-Jones Greek Lexicon, 9th ed'>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
                 panel.append('<span class="unicodefont">' + mainWord.lsjDefs + '</span>');
             }
         }
 		
 		relatedNosToDisplay = this._relatedNosNotDisplayed(mainWord.relatedNos, detailLex);
         if (relatedNosToDisplay.length > 0) {
-            panel.append($("<" + headerType + ">").append(__s.lexicon_related_words));
+            panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.lexicon_related_words));
             var ul = $('<ul>');
             var matchingExpression = "";
             for (var i = 0; i < relatedNosToDisplay.length; i++) {
@@ -941,7 +941,7 @@ var SidebarView = Backbone.View.extend({
             return;
         }
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
-        panel.append($("<" + headerType + ">").append(__s.display_grammar));
+        panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.display_grammar));
         this.renderMorphItem(panel, info, __s.lexicon_grammar_language, "language");
 		// Added following two lines. Accidentally delected the info["function'] 2019 - PT Sept 2020.
 		if (info["ot_function"] === undefined) this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "function");
@@ -964,11 +964,11 @@ var SidebarView = Backbone.View.extend({
         panel.append("<br />");
 
         if (info["explanation"] != undefined) {
-            panel.append($("<h3>").append(__s.lexicon_ie)).append(this.replaceEmphasis(info["explanation"]));
+            panel.append($("<h5>").append(__s.lexicon_ie)).append(this.replaceEmphasis(info["explanation"]));
             panel.append("<br />");
         }
         if (info["description"] != undefined)
-            panel.append($("<h3>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
+            panel.append($("<h5>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
     },
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {
@@ -976,7 +976,7 @@ var SidebarView = Backbone.View.extend({
 			var local_var_name = morphValue.toLowerCase().replace(/ /g, "_");
 			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
             var htmlValue = $("<span>" + morphValue + "</span>");
-            panel.append($("<h3>").append(title)).append(htmlValue);
+            panel.append($("<h5>").append(title)).append(htmlValue);
             if (morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"]) {
                 var explanation = morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"];
                 htmlValue.attr("title", this.stripEmphasis(explanation));

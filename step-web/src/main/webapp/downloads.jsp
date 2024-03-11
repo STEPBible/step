@@ -329,7 +329,7 @@ Note:  Some users have experienced issues on later versions of Android (e.g., ve
 			else console.log("Unknown region selected: " + region);
 			var downloadPath = path + fileName + "." + fileExtension;
 			window.open(downloadPath)
-			window.location.href = "http://step.stepbible.org/verifyDownload.jsp#" + os.replace(/_.*$/,"");
+			window.location.href = window.location.origin + "/verifyDownload.jsp#" + os.replace(/_.*$/,"");
 		}
 		else if (clickItemID === "exeInstruction") {
 			var os =  $( "#step_os option:selected" ).val();

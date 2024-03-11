@@ -2633,6 +2633,7 @@ step.util = {
 	},
     showLongAlert: function (message, headerText, panelBodies) {
 		step.util.closeModal("showLongAlertModal");
+		$('.qtip-titlebar button.close').click();
 		var extraStyling = (panelBodies == null) ? '' : 'style="padding:25px" ';
 		$(_.template(
 			'<div id="showLongAlertModal" class="modal" ' + extraStyling + 'role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
@@ -3280,6 +3281,7 @@ step.util = {
 				show: false
 			});
 			if ((element.parentNode) && (modalID !== "raiseSupport")) element.parentNode.removeChild(element);
+			$('.qtip-titlebar button.close').click();
 		}
     },
 	addTagLine: function(){

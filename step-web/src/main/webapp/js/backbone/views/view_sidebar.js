@@ -175,6 +175,7 @@ var SidebarView = Backbone.View.extend({
         var ref = parameters[0];
         var allVersions = parameters[1];
         var variant = parameters[2];
+        if (!Array.isArray(variant)) variant = [""]; // Initialize in case it is not.
         var displayLexicalRelatedWords = (($(".detailLex:visible").length > 0) || (step.util.localStorageGetItem("sidebar.detailLex") === "true"));
         //get definition tab
         this.lexicon.detach();

@@ -226,7 +226,7 @@
 
 			</p>
 			<p>Previous versions of STEP installation files are available at our 
-			 <a href="https://dev.stepbible.org/downloads">dev server</a>
+			 <a href="https://dev.stepbible.org/downloads/">dev server</a>
 			</p>
 			<p>
 			  STEP is available on different platforms, thanks to the

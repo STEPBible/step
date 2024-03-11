@@ -607,17 +607,17 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows with Java" id="25" installDir="STEP" jreBitType="32" runPostProcessor="true" postProcessor="sign_stepbible $EXECUTABLE" failOnPostProcessorError="true">
+    <windows name="Windows with Java" id="25" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}" installDir="STEP" jreBitType="32" runPostProcessor="true" postProcessor="sign_stepbible $EXECUTABLE" failOnPostProcessorError="true">
       <jreBundle jreBundleSource="generated" shared="true" />
     </windows>
-    <macosFolder name="macOS Folder" id="507" compressDmg="true" signLaunchers="true">
+    <macosFolder name="macOS Folder" id="507" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}" compressDmg="true" signLaunchers="true">
       <jreBundle jreBundleSource="generated" />
     </macosFolder>
-    <linuxRPM name="Linux RPM" id="405" installDir="/opt/step">
+    <linuxRPM name="Linux RPM" id="405" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}" installDir="/opt/step">
       <jreBundle usePack200="true" jreBundleSource="generated" />
       <postInstallScript>sh /opt/step/post-install.sh</postInstallScript>
     </linuxRPM>
-    <linuxDeb name="Linux Deb Archive" id="406" installDir="/opt/step" bzip="true" description="STEP Bible ::  Scripture Tools for Every Person" maintainerEmail="feedback@stepbible.org">
+    <linuxDeb name="Linux Deb Archive" id="406" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}" installDir="/opt/step" bzip="true" description="STEP Bible ::  Scripture Tools for Every Person" maintainerEmail="feedback@stepbible.org">
       <jreBundle usePack200="true" jreBundleSource="generated" />
       <postInstallScript>sh /opt/step/post-install.sh</postInstallScript>
     </linuxDeb>

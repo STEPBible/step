@@ -38,11 +38,12 @@ var PassageDisplayView = DisplayView.extend({
             // check if OT or NT  12/13/2023 PT
             // console.log("place to add NT OT check: "+reference+ " " +bibleVersions);
             var justLoadedTOS = false;
-            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('THOT') > -1)) {
+            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('EVS') > -1) || (bibleVersions.indexOf('THOT') > -1)) {
                 justLoadedTOS = step.util.loadTOS();
                 hasTOS = true;
             }
-            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
+            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('EVS') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
+                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
             if (this.partRendered) {
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {
                     if (hasTOS) {

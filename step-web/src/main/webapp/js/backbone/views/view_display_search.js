@@ -73,12 +73,12 @@ var SearchDisplayView = DisplayView.extend({
             if ((cv[C_colorCodeGrammarAvailableAndSelected]) && (typeof c4 === "undefined")) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
             var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', hasTOS = false, hasNTMorph = false;
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
-            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('THOT') > -1)) {
+            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('EVS') > -1) || (bibleVersions.indexOf('THOT') > -1)) {
                 step.util.loadTOS();              
                 hasTOS = true;
             }
-            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('KJV') > -1) || (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
-
+            if ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('EVS') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
+                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1)) hasNTMorph = true;
             results = this.options.partRendered ? this.$el.find("> span") : this.renderSearch(append, this.$el.find(".searchResults"));
 
 			if (cv[C_colorCodeGrammarAvailableAndSelected]) {

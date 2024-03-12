@@ -964,19 +964,20 @@ var SidebarView = Backbone.View.extend({
         panel.append("<br />");
 
         if (info["explanation"] != undefined) {
-            panel.append($("<h5>").append(__s.lexicon_ie)).append(this.replaceEmphasis(info["explanation"]));
+            panel.append($("<span style='font-weight:bold'>").append(__s.lexicon_ie + ": ")).append(this.replaceEmphasis(info["explanation"]));
             panel.append("<br />");
         }
         if (info["description"] != undefined)
-            panel.append($("<h5>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
+            panel.append($("<span style='font-weight:bold'>").append(__s.lexicon_eg + ": ")).append(this.replaceEmphasis(info["description"]));
     },
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {
 			var morphValue = this.replaceEmphasis(morphInfo[param]);
 			var local_var_name = morphValue.toLowerCase().replace(/ /g, "_");
-			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
+            if ((typeof __s[local_var_name] === "string") && (__s[local_var_name].trim().toLowerCase() !== morphValue.trim().toLowerCase()))
+			    morphValue += " (" + __s[local_var_name] + ")"; // If the international language definition has that name/value defined, use it
             var htmlValue = $("<span>" + morphValue + "</span>");
-            panel.append($("<h5>").append(title)).append(htmlValue);
+            panel.append($("<span style='font-weight:bold'>").append(title + ": ")).append(htmlValue);
             if (morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"]) {
                 var explanation = morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"];
                 htmlValue.attr("title", this.stripEmphasis(explanation));

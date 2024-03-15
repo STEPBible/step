@@ -683,7 +683,7 @@ var PassageDisplayView = DisplayView.extend({
 			this.updateSpecificColor("clrHighlightBg", "#17758F");
             this.updateSpecificColor("clrText", "#5d5d5d");
             this.updateSpecificColor("clr2ndHover", "#d3d3d3");
-            this.updateSpecificColor("clrStrongText", "#498090");
+            this.updateSpecificColor("clrStrongText", "#447A88");
             this.updateSpecificColor("clrLexiconFocusBG", "#c8d8dc");
             this.updateSpecificColor("clrRelatedWordBg", "#b2e5f3");
             this.updateSpecificColor("clrBackground", "#ffffff");

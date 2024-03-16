@@ -4544,6 +4544,23 @@ step.util = {
 			}
 			elmtsWithMorph[cc].innerText = grammarToShow;
 		}
+	},
+    expandColapse: function (ev) {
+		var pos = ev.target.id.indexOf("Select");
+		if ((pos < 1) || (ev.target.id.length != (pos + 6)))
+			return false; // Did not find "Select" at the end of the ID.
+		var className = ev.target.id.substring(0, pos);
+		if ($("." + className + ":visible").length > 0) {
+			$("." + className).hide();
+			$("#" + ev.target.id).removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+			step.util.localStorageSetItem("sidebar." + className, "false");
+		}
+		else {
+			$("." + className).show();
+			$("#" + ev.target.id).removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+			step.util.localStorageSetItem("sidebar." + className, "true");
+		}
+		return false;
 	}
 }
 ;

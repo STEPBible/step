@@ -219,7 +219,7 @@
 		<tr class="tr" style="height:473px">
 		  <td class="td1">
                           <ol class="ol" start="5">
-                          <li>Check the certificate information, which should state that the certificate was issued to STEPBIBLE (SCRIPTURE TOOLS FOR EVERY PERSON) by Sectigo Public Code Signing CA, and is valid from 2024-01-24 to 2027-01-24.</li>
+                          <li>Check the certificate information, which should state that the certificate was issued to STEPBIBLE (SCRIPTURE TOOLS FOR EVERY PERSON) by Sectigo Public Code Signing CA.</li>
                           </ol>
                           <br><br>
                           <p class="p">

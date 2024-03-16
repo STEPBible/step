@@ -591,20 +591,14 @@ step.searchSelect = {
 			}
 		}
 		var backgroundColor = (step.util.isDarkMode()) ? "var(--clrBackground)" : "#f5f5f5";
+		var fontColor = "var(--clrStrongText)";
 		var html = '<div class="header">' +
 			'<h4 id="hd4">' + __s.enter_search_word + '</h4>' +
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
 			'<span id="warningMessage" style="color:red;"></span>' +
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
-			'<div id="basic_search_help_text" style="font-size:14px;width:90%">' +
-			    '<br>' +
-			    '<p>Examples:</p>' +
-			    '<p><strong>just</strong> → matches words that start with “just” (e.g. just, justice, justified, …)</p>' +
-			    '<p><strong>come to me</strong> → matches verses that contain "come", "to", and "me" in any order</p>' +
-				'<p><strong>"come to me"</strong> → matches the exact phrase in the selected translations</p>' +
-			    '<p>For more advanced features, find advanced search with the top right toggle!</p>' +
-			'</div>' +
+
 			'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +
 				'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
 				    // using https://www.iconfinder.com/icons/326655/history_icon
@@ -612,7 +606,15 @@ step.searchSelect = {
 				'</a>' +
 				'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
 			'</span>' +
-			'<br><br>' +
+
+			'<div id="basic_search_help_text" style="font-size:14px;width:90%">' +
+			'<br>' +
+			'<p>Examples:</p>' +
+			'<p><strong>just</strong> → matches words that start with “just” (e.g. just, justice, justified, …)</p>' +
+			'<p><strong>come to me</strong> → matches verses that contain "come", "to", and "me" in any order</p>' +
+			'<p><strong>"come to me"</strong> → matches the exact phrase in the selected translations</p>' +
+			// '<p>For more advanced features, find advanced search with the top right toggle!</p>' +
+			'</div>' +
 			'<div id="search_table" class="advanced_search_elements">' +
 			'<table border="1" style="background-color:' + backgroundColor + '">' +
 			'<colgroup>' +
@@ -631,7 +633,17 @@ step.searchSelect = {
 				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
 		}
 		html += '</table>' +
-			'</div>';
+			'</div>' +
+			'<div id="advancedsearchonoff" class="modalonoffswitch" style="margin-top:10px">' +
+				'<span id="select_advanced_search" class="pull-left" style="font-size:16px">&nbsp;<b>' + __s.search_advanced + '</b>&nbsp;</span>' +
+				'<span class="onoffswitch2 pull-left">' +
+					'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="advancesearchonoffswitch" onchange="advanceMode()"/>' +
+					'<label class="onoffswitch2-label" for="advancesearchonoffswitch">' +
+					'<span class="onoffswitch2-inner"></span>' +
+					'<span class="onoffswitch2-switch"></span>' +
+					'</label>' +
+				'</span>' +
+			'</div><br>';
 		return html;
 	},
 

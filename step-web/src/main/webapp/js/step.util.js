@@ -2377,17 +2377,6 @@ step.util = {
 								'<div id="srchOptions" class="passageOptionsGroup stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
 							'</span>' +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
-							'<div id="advancedsearchonoff" class="pull-right modalonoffswitch">' +
-								'<span id="select_advanced_search" style="font-size:16px">&nbsp;<b><%= __s.search_advanced %></b></span>' +
-								'<div class="onoffswitch2 append pull-right">' +
-									'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="advancesearchonoffswitch" onchange="advanceMode()"/>' +
-									'<label class="onoffswitch2-label" for="advancesearchonoffswitch">' +
-									'<span class="onoffswitch2-inner"></span>' +
-									'<span class="onoffswitch2-switch"></span>' +
-									'</label>' +
-								'</div>' +
-							'</div>' +
-
 							'<span class="pull-right advanced_search_elements">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
 							'<span id="displayLocForm" class="form-group pull-right hidden-xs advanced_search_elements" style="font-size:16px">' +
 								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +

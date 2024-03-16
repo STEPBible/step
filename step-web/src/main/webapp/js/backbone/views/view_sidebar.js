@@ -176,7 +176,6 @@ var SidebarView = Backbone.View.extend({
         var allVersions = parameters[1];
         var variant = parameters[2];
         if (!Array.isArray(variant)) variant = [""]; // Initialize in case it is not.
-        var displayLexicalRelatedWords = (($(".detailLex:visible").length > 0) || (step.util.localStorageGetItem("sidebar.detailLex") === "true"));
         //get definition tab
         this.lexicon.detach();
         this.lexicon.empty();
@@ -290,10 +289,17 @@ var SidebarView = Backbone.View.extend({
             this.lexicon.find("h1").text(__s.lexicon_vocab);
             this.tabContainer.append(this.lexicon);
         }
-
-        if (displayLexicalRelatedWords) {
+        if (($(".detailLex:visible").length > 0) || (step.util.localStorageGetItem("sidebar.detailLex") === "true")) {
             $(".detailLex").show();
             $("#detailLexSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+        }
+        if (($(".LSJLexicon:visible").length > 0) || (step.util.localStorageGetItem("sidebar.LSJLexicon") === "true")) {
+            $(".LSJLexicon").show();
+            $("#LSJLexiconSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+        }
+        if (($(".GeneralRelatedWords:visible").length > 0) || (step.util.localStorageGetItem("sidebar.GeneralRelatedWords") === "true")) {
+            $(".GeneralRelatedWords").show();
+            $("#GeneralRelatedWordsSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
         }
         this._isItALocation(data.vocabInfos[0], ref);
     },
@@ -565,21 +571,9 @@ var SidebarView = Backbone.View.extend({
                     $('#quickLexicon').remove();
                 })           
             );
-            panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)").click(function (ev) {
-				if (ev.target.id === "detailLexSelect") {
-					if ($(".detailLex:visible").length > 0) {
-						$(".detailLex").hide();
-						$("#detailLexSelect").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
-                        step.util.localStorageSetItem("sidebar.detailLex", "false");
-					}
-					else {
-						$(".detailLex").show();
-						$("#detailLexSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
-                        step.util.localStorageSetItem("sidebar.detailLex", "true");
-					}
-				}
-				return false;
-			}));
+            panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)")
+                .click(step.util.expandColapse)
+            );
 			for (var i = 0; i < detailLex.length; i++) {
                 this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber), totalOTs[i], totalNTs[i], hasBothTestaments, allVersions, bibleVersion);
 			}
@@ -821,15 +815,24 @@ var SidebarView = Backbone.View.extend({
             }
             //longer definitions
             if (mainWord.lsjDefs) {
-                panel.append($("<" + headerType + " style='margin-top:8px' title='based on Liddell-Scott-Jones Greek Lexicon, 9th ed'>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
-                panel.append('<span class="unicodefont">' + mainWord.lsjDefs + '</span>');
+                panel.append($("<" + headerType + " style='margin-top:8px' title='based on Liddell-Scott-Jones Greek Lexicon, 9th ed'>")
+                    .append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition)
+                    .append($("<a id='LSJLexiconSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)")
+                        .click(step.util.expandColapse)
+                    )
+                );
+                panel.append('<span class="LSJLexicon unicodefont" style="display:none">' + mainWord.lsjDefs + '</span>');
             }
         }
 		
 		relatedNosToDisplay = this._relatedNosNotDisplayed(mainWord.relatedNos, detailLex);
         if (relatedNosToDisplay.length > 0) {
-            panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.lexicon_related_words));
-            var ul = $('<ul>');
+            panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.lexicon_related_words)
+                .append($("<a id='GeneralRelatedWordsSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)")
+                    .click(step.util.expandColapse)
+                )
+            );
+            var ul = $('<ul class="GeneralRelatedWords"  style="display:none">');
             var matchingExpression = "";
             for (var i = 0; i < relatedNosToDisplay.length; i++) {
                 if (relatedNosToDisplay[i].strongNumber != mainWord.strongNumber) {

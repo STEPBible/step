@@ -301,6 +301,10 @@ var SidebarView = Backbone.View.extend({
             $(".GeneralRelatedWords").show();
             $("#GeneralRelatedWordsSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
         }
+        if (($(".GrammarInfo:visible").length > 0) || (step.util.localStorageGetItem("sidebar.GrammarInfo") === "true")) {
+            $(".GrammarInfo").show();
+            $("#GrammarInfoSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+        }
         this._isItALocation(data.vocabInfos[0], ref);
     },
     _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
@@ -769,10 +773,8 @@ var SidebarView = Backbone.View.extend({
                                 highlightLinesOnSameStem = true;
                             left = (pos - 1) * 8;
                         }
-                        if (foundStem || highlightLinesOnSameStem) {
+                        if (foundStem || highlightLinesOnSameStem)
                             lines[i] = "<b>" + lines[i] + "</b>";
-                            console.log("bold: " + lines[i])
-                        }
                         updtMedDef += '<p style="margin-bottom:0px;margin-left:' + left + 'px">' + lines[i] + '</p>';
                     }
                     mainWord.mediumDef = updtMedDef
@@ -832,7 +834,7 @@ var SidebarView = Backbone.View.extend({
                     .click(step.util.expandColapse)
                 )
             );
-            var ul = $('<ul class="GeneralRelatedWords"  style="display:none">');
+            var ul = $('<ul class="GeneralRelatedWords" style="display:none">');
             var matchingExpression = "";
             for (var i = 0; i < relatedNosToDisplay.length; i++) {
                 if (relatedNosToDisplay[i].strongNumber != mainWord.strongNumber) {
@@ -944,9 +946,12 @@ var SidebarView = Backbone.View.extend({
             return;
         }
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
-        panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.display_grammar));
+        panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.display_grammar)
+            .append($("<a id='GrammarInfoSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)")
+                .click(step.util.expandColapse)
+            )
+        );
         this.renderMorphItem(panel, info, __s.lexicon_grammar_language, "language");
-		// Added following two lines. Accidentally delected the info["function'] 2019 - PT Sept 2020.
 		if (info["ot_function"] === undefined) this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "function");
 		else this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "ot_function");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
@@ -964,14 +969,15 @@ var SidebarView = Backbone.View.extend({
         this.renderMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_state, "state");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
-        panel.append("<br />");
-
+        panel.append("<br class='GrammarInfo' style='display:none;line-height:4px'/>"); // Adding a full line is too much so a shorter line.
         if (info["explanation"] != undefined) {
-            panel.append($("<span style='font-weight:bold'>").append(__s.lexicon_ie + ": ")).append(this.replaceEmphasis(info["explanation"]));
-            panel.append("<br />");
+            panel.append($("<span class='GrammarInfo' style='font-weight:bold;display:none'>").append(__s.lexicon_ie + ": "))
+                .append($("<span class='GrammarInfo' style='display:none'>").append(this.replaceEmphasis(info["explanation"])))
+                .append("<br class='GrammarInfo'/>");
         }
         if (info["description"] != undefined)
-            panel.append($("<span style='font-weight:bold'>").append(__s.lexicon_eg + ": ")).append(this.replaceEmphasis(info["description"]));
+            panel.append($("<span class='GrammarInfo' style='font-weight:bold;display:none'>").append(__s.lexicon_eg + ": "))
+                .append($("<span class='GrammarInfo' style='display:none'>").append(this.replaceEmphasis(info["description"])));
     },
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {
@@ -979,13 +985,13 @@ var SidebarView = Backbone.View.extend({
 			var local_var_name = morphValue.toLowerCase().replace(/ /g, "_");
             if ((typeof __s[local_var_name] === "string") && (__s[local_var_name].trim().toLowerCase() !== morphValue.trim().toLowerCase()))
 			    morphValue += " (" + __s[local_var_name] + ")"; // If the international language definition has that name/value defined, use it
-            var htmlValue = $("<span>" + morphValue + "</span>");
-            panel.append($("<span style='font-weight:bold'>").append(title + ": ")).append(htmlValue);
+            var htmlValue = $("<span class='GrammarInfo' style='display:none'>" + morphValue + "</span>");
+            panel.append($("<span class='GrammarInfo' style='font-weight:bold;display:none'>").append(title + ": ")).append(htmlValue);
             if (morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"]) {
                 var explanation = morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"];
                 htmlValue.attr("title", this.stripEmphasis(explanation));
             }
-            panel.append("<br />");
+            panel.append("<br class='GrammarInfo' style='display:none'/>");
         }
     },
     replaceEmphasis: function (str) {

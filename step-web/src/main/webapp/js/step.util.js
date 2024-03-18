@@ -4534,7 +4534,7 @@ step.util = {
 			elmtsWithMorph[cc].innerText = grammarToShow;
 		}
 	},
-    expandColapse: function (ev) {
+    expandCollapse: function (ev) {
 		var pos = ev.target.id.indexOf("Select");
 		if ((pos < 1) || (ev.target.id.length != (pos + 6)))
 			return false; // Did not find "Select" at the end of the ID.

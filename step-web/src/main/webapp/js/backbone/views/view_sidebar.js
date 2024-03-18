@@ -575,8 +575,8 @@ var SidebarView = Backbone.View.extend({
                     $('#quickLexicon').remove();
                 })           
             );
-            panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)")
-                .click(step.util.expandColapse)
+            panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>")
+                .click(step.util.expandCollapse)
             );
 			for (var i = 0; i < detailLex.length; i++) {
                 this._addDetailLexicalWords(detailLex[i], panel, (detailLex[i][1] === mainWord.strongNumber), totalOTs[i], totalNTs[i], hasBothTestaments, allVersions, bibleVersion);
@@ -819,8 +819,8 @@ var SidebarView = Backbone.View.extend({
             if (mainWord.lsjDefs) {
                 panel.append($("<" + headerType + " style='margin-top:8px' title='based on Liddell-Scott-Jones Greek Lexicon, 9th ed'>")
                     .append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition)
-                    .append($("<a id='LSJLexiconSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)")
-                        .click(step.util.expandColapse)
+                    .append($("<a id='LSJLexiconSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>")
+                        .click(step.util.expandCollapse)
                     )
                 );
                 panel.append('<span class="LSJLexicon unicodefont" style="display:none">' + mainWord.lsjDefs + '</span>');
@@ -830,8 +830,8 @@ var SidebarView = Backbone.View.extend({
 		relatedNosToDisplay = this._relatedNosNotDisplayed(mainWord.relatedNos, detailLex);
         if (relatedNosToDisplay.length > 0) {
             panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.lexicon_related_words)
-                .append($("<a id='GeneralRelatedWordsSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)")
-                    .click(step.util.expandColapse)
+                .append($("<a id='GeneralRelatedWordsSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>")
+                    .click(step.util.expandCollapse)
                 )
             );
             var ul = $('<ul class="GeneralRelatedWords" style="display:none">');
@@ -945,10 +945,10 @@ var SidebarView = Backbone.View.extend({
             panel.append("<br />");
             return;
         }
-        // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
+        // Updated the order of the display so that it matches the order of the robinson code
         panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.display_grammar)
-            .append($("<a id='GrammarInfoSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>").attr("href", "javascript:void(0)")
-                .click(step.util.expandColapse)
+            .append($("<a id='GrammarInfoSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>")
+                .click(step.util.expandCollapse)
             )
         );
         this.renderMorphItem(panel, info, __s.lexicon_grammar_language, "language");

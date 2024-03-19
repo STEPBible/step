@@ -289,23 +289,17 @@ var SidebarView = Backbone.View.extend({
             this.lexicon.find("h1").text(__s.lexicon_vocab);
             this.tabContainer.append(this.lexicon);
         }
-        if (($(".detailLex:visible").length > 0) || (step.util.localStorageGetItem("sidebar.detailLex") === "true")) {
-            $(".detailLex").show();
-            $("#detailLexSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
-        }
-        if (($(".LSJLexicon:visible").length > 0) || (step.util.localStorageGetItem("sidebar.LSJLexicon") === "true")) {
-            $(".LSJLexicon").show();
-            $("#LSJLexiconSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
-        }
-        if (($(".GeneralRelatedWords:visible").length > 0) || (step.util.localStorageGetItem("sidebar.GeneralRelatedWords") === "true")) {
-            $(".GeneralRelatedWords").show();
-            $("#GeneralRelatedWordsSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
-        }
-        if (($(".GrammarInfo:visible").length > 0) || (step.util.localStorageGetItem("sidebar.GrammarInfo") === "true")) {
-            $(".GrammarInfo").show();
-            $("#GrammarInfoSelect").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
-        }
+        this._initExpandCollapse("detailLex");
+        this._initExpandCollapse("LSJLexicon");
+        this._initExpandCollapse("GeneralRelatedWords");
+        this._initExpandCollapse("GrammarInfo");
         this._isItALocation(data.vocabInfos[0], ref);
+    },
+    _initExpandCollapse: function (name) {
+        if (($("." + name + ":visible").length > 0) || (step.util.localStorageGetItem("sidebar." + name) === "true")) {
+            $("." + name).show();
+            $("." + name + "Select").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+        }
     },
     _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
         var userLangGloss = "";
@@ -575,7 +569,7 @@ var SidebarView = Backbone.View.extend({
                     $('#quickLexicon').remove();
                 })           
             );
-            panel.append($("<a id='detailLexSelect' class='glyphicon glyphicon-triangle-right'></a>")
+            panel.append($("<a class='glyphicon glyphicon-triangle-right detailLexSelect'></a>")
                 .click(step.util.expandCollapse)
             );
 			for (var i = 0; i < detailLex.length; i++) {
@@ -819,7 +813,7 @@ var SidebarView = Backbone.View.extend({
             if (mainWord.lsjDefs) {
                 panel.append($("<" + headerType + " style='margin-top:8px' title='based on Liddell-Scott-Jones Greek Lexicon, 9th ed'>")
                     .append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition)
-                    .append($("<a id='LSJLexiconSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>")
+                    .append($("<a style='font-size:14px' class='glyphicon glyphicon-triangle-right LSJLexiconSelect'></a>")
                         .click(step.util.expandCollapse)
                     )
                 );
@@ -830,7 +824,7 @@ var SidebarView = Backbone.View.extend({
 		relatedNosToDisplay = this._relatedNosNotDisplayed(mainWord.relatedNos, detailLex);
         if (relatedNosToDisplay.length > 0) {
             panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.lexicon_related_words)
-                .append($("<a id='GeneralRelatedWordsSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>")
+                .append($("<a style='font-size:14px' class='glyphicon glyphicon-triangle-right GeneralRelatedWordsSelect'></a>")
                     .click(step.util.expandCollapse)
                 )
             );
@@ -947,7 +941,7 @@ var SidebarView = Backbone.View.extend({
         }
         // Updated the order of the display so that it matches the order of the robinson code
         panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.display_grammar)
-            .append($("<a id='GrammarInfoSelect' style='font-size:14px' class='glyphicon glyphicon-triangle-right'></a>")
+            .append($("<a style='font-size:14px' class='glyphicon glyphicon-triangle-right GrammarInfoSelect'></a>")
                 .click(step.util.expandCollapse)
             )
         );

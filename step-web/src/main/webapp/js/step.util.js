@@ -4535,18 +4535,24 @@ step.util = {
 		}
 	},
     expandCollapse: function (ev) {
-		var pos = ev.target.id.indexOf("Select");
-		if ((pos < 1) || (ev.target.id.length != (pos + 6)))
-			return false; // Did not find "Select" at the end of the ID.
-		var className = ev.target.id.substring(0, pos);
+		var classList = ev.target.classList;
+		if (classList.length < 1) return false;
+		var className = "";
+		for (var i = 0; i < classList.length; i++) {
+			if (classList[i].indexOf("glyphicon") == 0) continue;
+			var pos = classList[i].indexOf("Select");
+			if ((pos < 1) || (classList[i].length != (pos + 6))) continue;
+			className = classList[i].substring(0, pos);
+		}
+		if (className === "") return false;
 		if ($("." + className + ":visible").length > 0) {
 			$("." + className).hide();
-			$("#" + ev.target.id).removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+			$("." + className + "Select").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
 			step.util.localStorageSetItem("sidebar." + className, "false");
 		}
 		else {
 			$("." + className).show();
-			$("#" + ev.target.id).removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+			$("." + className + "Select").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
 			step.util.localStorageSetItem("sidebar." + className, "true");
 		}
 		return false;

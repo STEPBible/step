@@ -21,10 +21,9 @@
                             '<a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="' + __s.copy + '">' +
                                 '<i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;' + __s.copy + '</span>' +
                             '</a>' +
-                            
-                            '<a id="panel-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="' + __s.open_in_new_panel + '">' +
-                                '<i class="glyphicon glyphicon-plus"></i><span class="navbarIconDesc hidden-sm">&nbsp;' + __s.new_panel + '</span>' +
-                            '</a>' +
+                            // '<a id="panel-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="' + __s.open_in_new_panel + '">' +
+                            //     '<i class="glyphicon glyphicon-plus"></i><span class="navbarIconDesc hidden-sm">&nbsp;' + __s.new_panel + '</span>' +
+                            // '</a>' +
                             '<a id="report-icon" style="padding-left:5px" href="html/reports_by_step.html" target="_blank" title="Resources powered by STEPBible">' +
                                 '<i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;' + __s.report + '</span>' +
                             '</a>' +

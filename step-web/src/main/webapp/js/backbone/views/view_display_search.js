@@ -59,6 +59,7 @@ var SearchDisplayView = DisplayView.extend({
         }
 
         var results;
+        var strongShowDef = "";
         if (total == 0) {
             results = (this.options.partRendered ? this.$el.find("> span") : $("<div>")).append(this._getErrorMessage());
         } else {
@@ -96,6 +97,8 @@ var SearchDisplayView = DisplayView.extend({
             var strongHighlights = this.model.get("strongHighlights");
             if (strongHighlights) {
                 this._highlightStrongs(results, strongHighlights);
+                if (($(".column").length == 1) && (!step.touchDevice) && (window.innerWidth > 770))
+                    strongShowDef = strongHighlights.join(' ');
             } else {
                 this._highlightResults(results, query);
             }
@@ -179,6 +182,8 @@ var SearchDisplayView = DisplayView.extend({
         this._doChromeHack(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
         if (step.touchDevice && !step.touchWideDevice)
             $(".copyrightInfo").removeClass("copyrightInfo").addClass("crInfoX");
+        if (strongShowDef !== "")
+            step.util.ui.showDef(strongShowDef);
     },
     _getErrorMessage: function () {
         var errorMessage = $("<span>");

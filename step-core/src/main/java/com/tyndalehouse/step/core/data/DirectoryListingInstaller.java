@@ -124,7 +124,8 @@ public class DirectoryListingInstaller extends DirectoryInstaller {
 
                 String internal = entry.getName();
 
-                if (!v11nDone && internal.endsWith("json")) {
+                if (!v11nDone && internal.endsWith("json")
+                        && internal.startsWith("step/versification/")) {
                     // Custom versification
                     LOGGER.trace("Reading a json file [{}]", entry.getName());
 
@@ -141,7 +142,8 @@ public class DirectoryListingInstaller extends DirectoryInstaller {
 
                     v11nDone = true;
                 }
-                else if (!confDone && internal.endsWith(SwordConstants.EXTENSION_CONF)) {
+                else if (!confDone && internal.endsWith(SwordConstants.EXTENSION_CONF)
+                        && internal.startsWith(SwordConstants.DIR_CONF + '/')) {
                     LOGGER.trace("Reading a conf file [{}]", entry.getName());
 
                     try {

@@ -8,6 +8,9 @@ import org.crosswire.common.util.NetUtil;
 import org.crosswire.jsword.JSMsg;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookDriver;
+import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.versification.custom.CustomVersification;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.sword.*;
 import org.slf4j.Logger;
@@ -85,7 +88,7 @@ public class DirectoryListingInstaller extends DirectoryInstaller {
      *
      * @param zipFile the zip file in question
      */
-    private void extraConfFile(BookDriver fakeDriver, File zipFile) {
+    private void extraConfFile(BookDriver fakeDriver, File zipFile)  throws NoSuchKeyException, BookException {
         InputStream in = null;
         ZipInputStream zin = null;
         try {
@@ -93,14 +96,52 @@ public class DirectoryListingInstaller extends DirectoryInstaller {
 
             in = NetUtil.getInputStream(zipFile.toURI());
             zin = new ZipInputStream(in);
+            boolean confDone = false;
+            boolean v11nDone = false;
+            byte[] confBytes = null;
+            byte[] v11nBytes = null;
+            String confName = "";
             while (true) {
                 ZipEntry entry = zin.getNextEntry();
                 if (entry == null) {
+                    // We scanned the whole zip file
+                    if(v11nDone && v11nBytes != null) {
+                        // process custom versification first
+                        CustomVersification cv = new CustomVersification();
+                        cv.loadFromJSON(v11nBytes);
+                    }
+                    if(confDone && confBytes != null) {
+                        // Process the conf file
+                        SwordBookMetaData sbmd = new SwordBookMetaData(confBytes, confName);
+                        sbmd.setDriver(fakeDriver);
+                        Book book = new SwordBook(sbmd, new NullBackend());
+                        entries.put(book.getName(), book);
+
+                        return;
+                    }
                     break;
                 }
 
                 String internal = entry.getName();
-                if (internal.endsWith(SwordConstants.EXTENSION_CONF)) {
+
+                if (!v11nDone && internal.endsWith("json")) {
+                    // Custom versification
+                    LOGGER.trace("Reading a json file [{}]", entry.getName());
+
+                    int size = (int) entry.getSize();
+
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    byte[] bytes = new byte[1024];
+                    int read;
+                    while ((read = zin.read(bytes)) > 0) {
+                        os.write(bytes, 0, read);
+                    }
+
+                    v11nBytes = os.toByteArray();
+
+                    v11nDone = true;
+                }
+                else if (!confDone && internal.endsWith(SwordConstants.EXTENSION_CONF)) {
                     LOGGER.trace("Reading a conf file [{}]", entry.getName());
 
                     try {
@@ -118,13 +159,18 @@ public class DirectoryListingInstaller extends DirectoryInstaller {
                             internal = internal.substring(7);
                         }
 
+                        confName = internal;
+                        confBytes = os.toByteArray();
+                        confDone = true;
+
+                        /*
                         SwordBookMetaData sbmd = new SwordBookMetaData(os.toByteArray(), internal);
                         sbmd.setDriver(fakeDriver);
                         Book book = new SwordBook(sbmd, new NullBackend());
                         entries.put(book.getName(), book);
-
+                        */
                         //assume 1 conf file per zip file
-                        return;
+                        // return
                     } catch (Exception ex) {
                         LOGGER.error("Failed to load config for entry: {}", internal, ex);
                     }

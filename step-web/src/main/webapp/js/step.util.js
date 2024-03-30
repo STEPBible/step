@@ -3861,7 +3861,8 @@ step.util = {
 		var strongArray = strong.split(" ");
 		var uniqueStrongArray = [];
 		for (var j = 0; j < strongArray.length; j++) { // remove duplicates
-			if (uniqueStrongArray.indexOf(strongArray[j]) == -1)
+			if ((strongArray[j].indexOf("lemma") > -1) && // KJV has some non strong tags
+				(uniqueStrongArray.indexOf(strongArray[j]) == -1))
 				uniqueStrongArray.push(strongArray[j]);
 		}
 		var additionalPath = step.state.getCurrentVersion();

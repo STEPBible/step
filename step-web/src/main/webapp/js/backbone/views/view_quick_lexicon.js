@@ -208,7 +208,8 @@ var QuickLexicon = Backbone.View.extend({
             for ( var i = 1; i < strongNumbers.length; i++) {
                 if (step.util.suppressHighlight(strongNumbers[i]))
                     strongsNotToDisplay += " " + strongNumbers[i];
-                strongsToUse += " " + strongNumbers[i];
+                if (strongNumbers[i].indexOf("lemma") == -1)
+                    strongsToUse += " " + strongNumbers[i];
             }
         }
         if (self.reference !== "") { // The verse vocabulary does not provide a reference so take the provided strong numbers.

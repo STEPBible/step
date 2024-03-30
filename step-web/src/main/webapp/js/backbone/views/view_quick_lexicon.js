@@ -204,7 +204,8 @@ var QuickLexicon = Backbone.View.extend({
         if (strongNumbers.length == 1)
             strongNumbers = this.strong.split(",");
         if (strongNumbers.length > 0) {
-            strongsToUse = strongNumbers[0];
+            if (strongNumbers[0].indexOf("lemma") == -1)
+                strongsToUse = strongNumbers[0];
             for ( var i = 1; i < strongNumbers.length; i++) {
                 if (step.util.suppressHighlight(strongNumbers[i]))
                     strongsNotToDisplay += " " + strongNumbers[i];

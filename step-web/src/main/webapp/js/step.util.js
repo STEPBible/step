@@ -3842,6 +3842,8 @@ step.util = {
 		var result = "";
 		for (var j = 0; j < strongsArray.length; j++) {
 			var fixedStrongNum = strongsArray[j].split(".")[0].split("!")[0];
+			if (fixedStrongNum.indexOf("lemma") > -1) // KJV has lemma in strong tag which is not needed
+				continue;
 			if (fixedStrongNum.search(/([GH])(\d{1,4})([A-Za-z]?)$/) > -1) {
 				fixedStrongNum = RegExp.$1 + ("000" + RegExp.$2).slice(-4);	// if strong is not 4 digit, make it 4 digit
 				if (!removeAugment)
@@ -3861,8 +3863,6 @@ step.util = {
 		var strongArray = strong.split(" ");
 		var uniqueStrongArray = [];
 		for (var j = 0; j < strongArray.length; j++) { // remove duplicates
-			if ((strongArray[j].indexOf("lemma") == -1) && // KJV has some non strong tags
-				(uniqueStrongArray.indexOf(strongArray[j]) == -1))
 				uniqueStrongArray.push(strongArray[j]);
 		}
 		var additionalPath = step.state.getCurrentVersion();

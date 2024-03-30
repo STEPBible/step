@@ -216,10 +216,10 @@ var QuickLexicon = Backbone.View.extend({
             strongsNotToDisplay = step.util.fixStrongNumForVocabInfo(strongsNotToDisplay, false);
         }
         var multipleStrongText = (typeof self.options.txtForMultiStrong === "string") ? self.options.txtForMultiStrong : "";
-        var callBack1Param = [ self, strongsNotToDisplay, multipleStrongText ];
-        var callBack2Param = [ this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode, self, strongsNotToDisplay, multipleStrongText, self.processQuickInfo ];
-        step.util.getVocabMorphInfoFromJson(strongsToUse, this.morph, this.version, self.processQuickInfo, callBack1Param, 
-            self.loadDefinitionFromRestAPI, callBack2Param);
+        var callBackCreateDefParams = [ self, strongsNotToDisplay, multipleStrongText ];
+        var callBackLoadDefFromAPIParams = [ this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode, self, strongsNotToDisplay, multipleStrongText, self.processQuickInfo ];
+        step.util.getVocabMorphInfoFromJson(strongsToUse, this.morph, this.version, self.processQuickInfo, callBackCreateDefParams, 
+            self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
     }, 
     loadDefinitionFromRestAPI: function ( paramArray ) {
         var version = paramArray[0];

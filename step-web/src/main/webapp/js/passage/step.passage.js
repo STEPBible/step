@@ -19,7 +19,6 @@ step.passage = {
 
         var strongNumbers = strongMorphReference.strong.split(" ");
 
-
         // reset all spans that are underlined:
         this.removeStrongsHighlights(undefined, strongMorphReference.classes);
         if (strongNumbers.length > 0) {

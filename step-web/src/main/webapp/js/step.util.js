@@ -223,6 +223,7 @@ step.util = {
 	},
 	suppressHighlight: function(strongNumber) {
 		if (strongNumber === "") return false;
+		if (strongNumber.indexOf("lemma") > -1) return true; // KJV has strong tags that are not strong tags
 		strongNumber = strongNumber.substring(0, 5); // If there is an augment, remove it.
 		if (strongNumber.substring(0,1) === "H") {
 			if (strongNumber.substring(1,2) === "9")

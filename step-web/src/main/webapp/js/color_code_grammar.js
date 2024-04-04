@@ -1525,59 +1525,63 @@ var cf = {
       var morphPos = passageHTML.indexOf("morph=", currentPos);
       if (morphPos > -1) {
         var charAfterMorph = passageHTML.substr(morphPos + 6, 1);
-        if (((charAfterMorph == '"') || (charAfterMorph == "'")) && (passageHTML.substr(morphPos + 7, 4) === 'TOS:')) {
-          currentPos = morphPos + 11;
-          var endingQuotePos = passageHTML.indexOf(charAfterMorph, currentPos);
-          if ((endingQuotePos > -1) && (endingQuotePos - currentPos < 60)) {
-            var morphCode = passageHTML.substring(currentPos, endingQuotePos);
-            currentPos = endingQuotePos + 1;
-            var cssCode = cf.morph2CSS(morphCode).trim();
-            // var morphInformation = cf.getTOSMorphologyInfo("TOS:" + morphCode);
-            // if ((morphInformation.length == 1) && (typeof morphInformation[0]["ot_function"] === "string"))
-            //   morphInformation = morphInformation[0]["ot_function"];
-            // else
-            //   morphInformation = "";
-            // console.log("morph: " + morphCode + " css: " + cssCode + " function: " + morphInformation);
-            if (cssCode.length > 0) {
-              var endOfSpanPos = passageHTML.indexOf(">", currentPos);
-              if (endOfSpanPos > -1) {
-                var startOfSpanPos = passageHTML.lastIndexOf("<span", morphPos);
-                if ((startOfSpanPos > -1) && (startOfSpanPos >= lastCopyPos)) {
-                  var shorterStringToSearch = passageHTML.substring(startOfSpanPos + 6, endOfSpanPos);
-                  var classPos = shorterStringToSearch.indexOf("class");
-                  if (classPos > -1) {
-                    result = result.concat(passageHTML.substring(lastCopyPos, startOfSpanPos + classPos + 11));
-                    lastCopyPos = startOfSpanPos + classPos + 11;
-                    if (shorterStringToSearch.substr(classPos+5, 1) == '=') {
-                      var quoteAfterClass = shorterStringToSearch.substr(classPos+6, 1);
-                      if ( (quoteAfterClass == '"') || (quoteAfterClass == "'") ) {
-                        result = result.concat(passageHTML.substring(lastCopyPos, startOfSpanPos + classPos + 13));
-                        lastCopyPos = startOfSpanPos + classPos + 13;
-                        result = result.concat(cssCode);
-                        if (shorterStringToSearch.substr(classPos+7, 1) != quoteAfterClass) result = result.concat(' ');
-                      }
-                      else console.log("error at addClassForTHOT Cannot find quote after class.  Please let the STEP people know");
+        if ((charAfterMorph !== '"') && (charAfterMorph !== "'")) {
+          console.log("error at addClassForTHOT cannot find ending quote at " + endingQuotePos);
+          continue;
+        }
+        currentPos = morphPos + 6;
+        var isOSHM = false;
+        if (passageHTML.substr(morphPos + 7, 4) === 'TOS:')
+          currentPos += 5;
+        else if (passageHTML.substr(morphPos + 7, 5) === 'oshm:') {
+          currentPos += 6;
+          isOSHM = true;
+        }
+        else
+          continue;
+        var endingQuotePos = passageHTML.indexOf(charAfterMorph, currentPos);
+        if ((endingQuotePos > -1) && (endingQuotePos - currentPos < 60)) {
+          var morphCode = passageHTML.substring(currentPos, endingQuotePos);
+          currentPos = endingQuotePos + 1;
+          var cssCode = cf.morph2CSS(morphCode, isOSHM).trim();
+          if (cssCode.length > 0) {
+            var endOfSpanPos = passageHTML.indexOf(">", currentPos);
+            if (endOfSpanPos > -1) {
+              var startOfSpanPos = passageHTML.lastIndexOf("<span", morphPos);
+              if ((startOfSpanPos > -1) && (startOfSpanPos >= lastCopyPos)) {
+                var shorterStringToSearch = passageHTML.substring(startOfSpanPos + 6, endOfSpanPos);
+                var classPos = shorterStringToSearch.indexOf("class");
+                if (classPos > -1) {
+                  result = result.concat(passageHTML.substring(lastCopyPos, startOfSpanPos + classPos + 11));
+                  lastCopyPos = startOfSpanPos + classPos + 11;
+                  if (shorterStringToSearch.substr(classPos+5, 1) == '=') {
+                    var quoteAfterClass = shorterStringToSearch.substr(classPos+6, 1);
+                    if ( (quoteAfterClass == '"') || (quoteAfterClass == "'") ) {
+                      result = result.concat(passageHTML.substring(lastCopyPos, startOfSpanPos + classPos + 13));
+                      lastCopyPos = startOfSpanPos + classPos + 13;
+                      result = result.concat(cssCode);
+                      if (shorterStringToSearch.substr(classPos+7, 1) != quoteAfterClass) result = result.concat(' ');
                     }
-                    else result = result.concat('="' + cssCode + '" ');
+                    else console.log("error at addClassForTHOT Cannot find quote after class.  Please let the STEP people know");
                   }
-                  else {
-                    result = result.concat(passageHTML.substring(lastCopyPos, endOfSpanPos));
-                    lastCopyPos = endOfSpanPos;
-                    result = result.concat(' class="');
-                    result = result.concat(cssCode);
-                    result = result.concat('" ');
-                  }
+                  else result = result.concat('="' + cssCode + '" ');
                 }
-                // look for CSS class that starts with 'vot_'.  If found, there should only be one
-                var foundCode = cssCode.split(' ').filter(function(code) { return (code.substr(0,4) == 'vot_' && otCSSOnThisPage.indexOf(code.substr(4,4)) == -1); });
-                if (foundCode.length > 0) otCSSOnThisPage += ' ' + foundCode[0].substr(4, 4);
+                else {
+                  result = result.concat(passageHTML.substring(lastCopyPos, endOfSpanPos));
+                  lastCopyPos = endOfSpanPos;
+                  result = result.concat(' class="');
+                  result = result.concat(cssCode);
+                  result = result.concat('" ');
+                }
               }
-              else console.log("error at addClassForTHOT cannot find >");
+              // look for CSS class that starts with 'vot_'.  If found, there should only be one
+              var foundCode = cssCode.split(' ').filter(function(code) { return (code.substr(0,4) == 'vot_' && otCSSOnThisPage.indexOf(code.substr(4,4)) == -1); });
+              if (foundCode.length > 0) otCSSOnThisPage += ' ' + foundCode[0].substr(4, 4);
             }
+            else console.log("error at addClassForTHOT cannot find >");
           }
           else console.log("error at addClassForTHOT cannot find ending quote at " + endingQuotePos);
         }
-        else currentPos = morphPos + 6;
       }
       else break;
     }
@@ -1648,10 +1652,15 @@ var cf = {
     return htmlTable;
   },
 
-  morph2CSS: function (origMorphCode) {
+  morph2CSS: function (origMorphCode, isOSHM) {
     var result = '';
     if (typeof origMorphCode === "string") {
       var morphCode = origMorphCode.split(" ")[0];
+      if (isOSHM) {
+        var convertedResult = step.util.convertMorphOSHM2TOS("oshm:" + origMorphCode);
+        if (convertedResult.substring(0,4) === "TOS:")
+          morphCode = convertedResult.substring(4).split(" ")[0]; // Get the first morph
+      }
       var number = ''; var gender = '';
       var morphCodeLength = morphCode.length;
       if ((morphCodeLength == 6) || (morphCodeLength == 7)) {

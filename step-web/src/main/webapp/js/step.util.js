@@ -4563,17 +4563,19 @@ step.util = {
 		return false;
 	},
 	convertMorphOSHM2TOS: function(curMorphs) {
-		var result = curMorphs;
 		if ((typeof curMorphs !== "string") || (curMorphs.substring(0, 5) !== "oshm:"))
-			return result;
+			return curMorphs;
 		var morphs = curMorphs.substring(5).split("/");
-		result = "TOS:";
-		result += morphs[0];
+		var result = morphs[0];
 		var firstLetterOfMorph = morphs[0].substring(0, 1);
 		for (var i = 1; i < morphs.length; i++) {
-			result += " " + firstLetterOfMorph + morphs[i];
+			if ( (morphs[i].substring(0,1) === "V") || // Verbs be first
+				 ((morphs[i].substring(0,1) === "N") && ( result.substring(1, 2) !== "V") ) ) // Nouns will be first if Verb is not already the first morphology
+				result = firstLetterOfMorph + morphs[i] + " " + result;
+			else
+				result += " " + firstLetterOfMorph + morphs[i];
 		}
-		return result;
+		return "TOS:" + result;
 	}
 }
 ;

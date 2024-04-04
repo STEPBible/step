@@ -66,7 +66,7 @@ public class ColorCoderProviderImpl {
      * @return the classname
      */
     public String getColorClass(final String morph) {
-        if (morph == null || morph.length() < MINIMUM_MORPH_LENGTH || morph.startsWith("TOS:"))
+        if (morph == null || morph.length() < MINIMUM_MORPH_LENGTH || morph.startsWith("TOS:") || morph.startsWith("oshm:"))
             return "";
         String classes = null;
 		String curMorph;

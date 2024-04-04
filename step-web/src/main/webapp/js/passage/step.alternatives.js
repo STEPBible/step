@@ -73,7 +73,9 @@ step.alternatives = {
                                                 
                                                 if(parent.children().length == 0) {
                                                     //add strongs and morphs
-                                                    firstParent.attr('morph', firstParent.attr('morph') + " " + parent.attr('morph'));
+                                                    var firstParentMorph = step.util.convertMorphOSHM2TOS(firstParent.attr('morph'));
+                                                    var parentMorph = step.util.convertMorphOSHM2TOS(parent.attr('morph'));
+                                                    firstParent.attr('morph', firstParentMorph + " " + parentMorph);
                                                     firstParent.attr('strong', firstParent.attr('strong') + " " + parent.attr('strong'));
                                                     parent.remove();
                                                 }

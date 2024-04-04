@@ -59,14 +59,14 @@ var SidebarView = Backbone.View.extend({
             //load content
             var requestTime = new Date().getTime();
             lastMorphCode = '';
-            if ((this.model.get("morph") != undefined) && (this.model.get("morph").indexOf('TOS:') == 0)) {
-                lastMorphCode = this.model.get("morph");
+            var curMorphs = step.util.convertMorphOSHM2TOS( this.model.get("morph") );
+            if ((curMorphs != undefined) && (curMorphs.indexOf('TOS:') == 0) ) {
+                lastMorphCode = curMorphs;
             }
 			var ref = this.model.get("ref");
 			var version = this.model.get("version");
 			var allVersions = this.model.get("allVersions");
 			var strong = this.model.get("strong");
-			var morph = this.model.get("morph");
             var variant = this.model.get("variant") || "";
             variant = variant.split(";");
             if (typeof allVersions !== "string") {
@@ -88,8 +88,8 @@ var SidebarView = Backbone.View.extend({
 			}
             strong = step.util.fixStrongNumForVocabInfo(strong, false);
             var callBackCreateDefParams = [ ref, allVersions, variant ];
-            var callBackLoadDefFromAPIParams = [ version, ref, strong, morph, allVersions, variant, self.createDefinition]; 
-            step.util.getVocabMorphInfoFromJson(strong, morph, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
+            var callBackLoadDefFromAPIParams = [ version, ref, strong, curMorphs, allVersions, variant, self.createDefinition]; 
+            step.util.getVocabMorphInfoFromJson(strong, curMorphs, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
         }
         else if (this.model.get("mode") == 'analysis') {
             self.createAnalysis();

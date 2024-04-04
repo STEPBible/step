@@ -1398,7 +1398,7 @@ step.util = {
             } else {
                 var s = $(source);
                 strong = s.attr("strong");
-                morph = s.attr("morph");
+                morph = step.util.convertMorphOSHM2TOS (s.attr("morph") );
 				variant = s.attr("var") || "";
 				var verseAndVersion = step.util.ui.getVerseNumberAndVersion(s);
 				ref = verseAndVersion[0];
@@ -1488,10 +1488,11 @@ step.util = {
 								$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
 								$(this).addClass("lexiconFocus");
 								step.util.ui.showDef(this);
+								var curMorphs = step.util.convertMorphOSHM2TOS( $(this).attr('morph') );
 								step.passage.higlightStrongs({
 									passageId: undefined,
 									strong: $(this).attr('strong'),
-									morph: $(this).attr('morph'),
+									morph: curMorphs,
 									classes: "lexiconFocus"
 								});
 								return false; // This will prevent trigering two times.
@@ -1526,10 +1527,11 @@ step.util = {
 							}
 						}).hover(function (ev) { // mouse pointer starts hover (enter)
 							if (step.touchDevice || step.util.keepQuickLexiconOpen) return;
+							var curMorphs = step.util.convertMorphOSHM2TOS( $(this).attr('morph') );
 							step.passage.higlightStrongs({
 								passageId: undefined,
 								strong: $(this).attr('strong'),
-								morph: $(this).attr('morph'),
+								morph: curMorphs,
 								classes: "primaryLightBg"
 							});
 							var hoverContext = this;
@@ -1568,10 +1570,11 @@ step.util = {
 				$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
 				$(touchedObject).addClass("lexiconFocus");
 				step.util.ui.showDef(touchedObject);
+				var curMorphs = step.util.convertMorphOSHM2TOS( $(touchedObject).attr('morph') );
 				step.passage.higlightStrongs({
 					passageId: undefined,
 					strong: $(touchedObject).attr('strong'),
-					morph: $(touchedObject).attr('morph'),
+					morph: curMorphs,
 					classes: "lexiconFocus"
 				});
 			}
@@ -1587,7 +1590,7 @@ step.util = {
 		},
         _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
-            var morph = $(hoverContext).attr('morph');
+            var curMorphs = step.util.convertMorphOSHM2TOS( $(hoverContext).attr('morph') );
 			var variant = $(hoverContext).attr('var') || "";
 			var verseAndVersion = step.util.ui.getVerseNumberAndVersion(hoverContext);
             var reference = verseAndVersion[0];
@@ -1605,7 +1608,7 @@ step.util = {
 			var pageY = (typeof pageYParam === "number") ? pageYParam : 0;
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
-                    strong: strong, morph: morph,
+                    strong: strong, morph: curMorphs,
                     version: version, reference: reference, variant: variant,
                     target: hoverContext, position: pageY, touchEvent: touchEvent,
                     height: $(window).height(), 
@@ -4511,7 +4514,7 @@ step.util = {
 		var elmtsWithMorph = $(".morphs");
 		for (var cc = 0; cc < elmtsWithMorph.length; cc ++) {
 			if (elmtsWithMorph[cc].innerText !== "") continue;
-			var curMorphs = $($(elmtsWithMorph[cc]).parent()[0]).attr('morph');
+			var curMorphs = step.util.convertMorphOSHM2TOS( $($(elmtsWithMorph[cc]).parent()[0]).attr('morph') );
 			if ((typeof curMorphs !== "string") || (curMorphs.indexOf("TOS:") != 0)) continue;
 			var cmArray = curMorphs.split(" ");
 			var strongArray = [];
@@ -4558,6 +4561,19 @@ step.util = {
 			step.util.localStorageSetItem("sidebar." + className, "true");
 		}
 		return false;
+	},
+	convertMorphOSHM2TOS: function(curMorphs) {
+		var result = curMorphs;
+		if ((typeof curMorphs !== "string") || (curMorphs.substring(0, 5) !== "oshm:"))
+			return result;
+		var morphs = curMorphs.substring(5).split("/");
+		result = "TOS:";
+		result += morphs[0];
+		var firstLetterOfMorph = morphs[0].substring(0, 1);
+		for (var i = 1; i < morphs.length; i++) {
+			result += " " + firstLetterOfMorph + morphs[i];
+		}
+		return result;
 	}
 }
 ;

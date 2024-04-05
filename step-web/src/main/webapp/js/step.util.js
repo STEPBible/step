@@ -2547,7 +2547,10 @@ step.util = {
             '<p style="margin-left:10%;height:14px;font-size:14px"">Revelation of John - Visions of the End</p>' +
             '<tr></tr></tbody></table>' +
             '</div>';
-
+		var urlForiFrame = osisID;
+		if ((osisID === "1Sam") || (osisID === "2Sam")) urlForiFrame = "1_2Sam";
+		else if ((osisID === "1Kngs") || (osisID === "2Kngs")) urlForiFrame = "1_2Kngs";
+		else if ((osisID === "1Chr") || (osisID === "2Chr")) urlForiFrame = "1_2Chr";
         $.getJSON("html/json/" + osisID.toLowerCase() + ".json", function(summary) {
             var bookSummary =
                 '<br><span style="font-size:18px"><b>Book summary of ' + longBookName + '</b></span><br>' +
@@ -2559,7 +2562,9 @@ step.util = {
                 '</span>' +
                 '<div class="copyrightInfo">' +
                     'Copyright information for <a href="/version.jsp?version=ESV" target="_new">ESV</a>' +
-                '</div>';
+                '</div>' +
+                '<br><hr>' +
+				'<a target="_blank" href="https://beta.garytuck.com/docs/' + urlForiFrame + '.htm#outline">Outline of ' + longBookName + ' by Dr. Gary Tuck</a>';
             var chptSummary =
                 '<br><span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
                 '<span style="font-size:16px">' +
@@ -3267,6 +3272,8 @@ step.util = {
 		var modalsRequireUnfreezeOfScroll = " showLongAlertModal showBookOrChapterSummaryModal grammarClrModal passageSelectionModal searchSelectionModal copyModal videoModal fontSettings raiseSupport aboutModal bibleVersions ";
 		if ((modalsRequireUnfreezeOfScroll.indexOf( " " + modalID + " ") > -1) && step.touchDevice && !step.touchWideDevice)
 			$("body").css("overflow-y","auto"); // let the body (web page) scroll
+		if (modalID === "bibleVersions")
+			userHasUpdated = false;
         var element = document.getElementById(modalID);
 		if (element) {
 			$('#' + modalID).modal('hide');

@@ -7,9 +7,11 @@ var PickBibleView = Backbone.View.extend({
         '<ul class="list-group langUL ul_<%= key.replace(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item stepModalFgBg" data-initials="<%= languageBible.shortInitials %>">' +
-        '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="<%= window.location.origin %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
+        '<input class="list-group-checkbox" type="checkbox" input-initials="<%= languageBible.shortInitials %>">&nbsp;' +
         '<a class="resource" href="javascript:void(0)">' +
-        '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a></li>' +
+        '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a>' +
+        '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="<%= window.location.origin %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
+        '</li>' +
         '<% }) %>' +
         '</li>' +
         '</ul>' +
@@ -22,9 +24,11 @@ var PickBibleView = Backbone.View.extend({
         '<ul class="list-group langUL ul_<%= languageBibles[0].languageCode.replace(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item stepModalFgBg" data-initials="<%= languageBible.shortInitials %>">' +
-        '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="<%= window.location.origin %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
+        '<input class="list-group-checkbox" type="checkbox" input-initials="<%= languageBible.shortInitials %>">&nbsp;' +
         '<a class="resource" href="javascript:void(0)">' +
-        '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a></li>' +
+        '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a>' +
+        '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="<%= window.location.origin %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
+        '</li>' +
         '<% }) %>' +
         '</li>' +
         '</ul>' +
@@ -158,8 +162,10 @@ var PickBibleView = Backbone.View.extend({
         this.$el.find(".btn").click(this.handleLanguageButton);
         this.$el.find(".closeModal").click(this.closeModal);
         this.$el.find("#order_button_bible_modal").click(this.orderButton);
-        this.$el.find("#ok_button_bible_modal").click(this.okButton);
+        var okButton = this.okButton;
+        this.$el.find("#ok_button_bible_modal").click(okButton);
         $('#bibleVersions').on('hidden.bs.modal', function (ev) {
+            okButton();
             $('#bibleVersions').remove(); // Need to be removed, if not the next call to this routine will display an empty tab (Bible or Commentary).
         });
         this._filter(false, true); // 1st param not called for Keyboard, 2nd param call from initialize()
@@ -428,19 +434,24 @@ var PickBibleView = Backbone.View.extend({
             self.$el.find("[data-initials='" + version.shortInitials + "']").toggleClass("active");
             var added = target.hasClass("active");
             userHasUpdated = true;
+            var checkboxes = self.$el.find("[input-initials='" + version.shortInitials + "']");
             if (added) {
                 Backbone.Events.trigger("search:add", { value: version, itemType: VERSION });
                 numberOfVersionsSelected ++;
+                checkboxes.prop("checked", true);
             } else {
                 Backbone.Events.trigger("search:remove", { value: version, itemType: VERSION});
                 numberOfVersionsSelected --;
+                checkboxes.prop("checked", false);
             }
             if (numberOfVersionsSelected > 1) $('#order_button_bible_modal').show();
             else $('#order_button_bible_modal').hide();
         }).each(function (i, item) {
             var el = $(this);
-            if (versionsSelected.indexOf(el.data("initials")) != -1) {
+            var currentInitials = el.data("initials");
+            if (versionsSelected.indexOf(currentInitials) != -1) {
                 el.addClass("active");
+                self.$el.find("[input-initials='" + currentInitials + "']").prop("checked", true);
             }
         });
         if ((selectedTab !== '#commentaryList') && (selectedLanguage == "_all")) {

@@ -33,27 +33,34 @@ var PickBibleView = Backbone.View.extend({
         '</li>' +
         '</ul>' +
         '<% }) %>'),
-    filtersTemplate: _.template('<form role="form" class="form-inline">' +
-        '<span class="form-group btn-group" data-toggle="buttons">' +
-        '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.all  %></label>' +
-        '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="en"  checked="checked" /><%= __s.english %></label>' +
-        '<% if(step.userLanguageCode != "en") { %>' +
-        '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="<%= step.userLanguageCode %>" /><%= step.userLanguage %></label>' +
+    filtersTemplate: _.template(
+        '<ul class="nav nav-tabs langTabs">' +
+        '<span class="pull-left" style="font-size:13px;margin-top:12px;font-weight:bold">Select language:&nbsp;</span>' +
+        '<li><a class="langTabsLi" href="#engLang" data-toggle="tab" data-lang="en"><%= __s.english %></a></li>' +
+        '<% if (Object.keys(myOtherLanguages).length > 3) { %>' +
+            '<% for (var key in myOtherLanguages) { %>' +
+                '<li><a class="langTabsLi" href="#otherLang<%=key%>"  data-toggle="tab" data-lang="<%=key%>" title="<%= myOtherLanguages[key] %>"><%= key.toUpperCase() %></a></li>' +
+            '<% } %>' +
+        '<% } else { %>' +
+            '<% for (var key in myOtherLanguages) { %>' +
+                '<li><a class="langTabsLi" href="#otherLang<%=key%>"  data-toggle="tab" data-lang="<%=key%>"><%= myOtherLanguages[key] %></a></li>' +
+            '<% } %>' +
         '<% } %>' +
-        '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
-        '</span>' +
-		'&nbsp;&nbsp;&nbsp;' +
-		step.util.modalCloseBtn("bibleVersions") +
-        '</form>'),
+        '<li><a class="langTabsLi" href="#antLang" data-toggle="tab" data-lang="_ancient"><%= __s.ancient %></a></li>' +
+        '<li><a class="langTabsLi" href="#allLang" data-toggle="tab" data-lang="_all"><%= __s.all %></a></li>' +
+        '</ul>'
+        ),
     modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" dir="<%= step.state.isLtR() ? "ltr" : "rtl" %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
         '<div class="modal-content stepModalFgBg">' +
         '<div class="modal-body">' +
-        '<span class="pull-right"><%= view.filtersTemplate({myLanguage: myLanguage}) %></span>' +
-        '<ul class="nav nav-tabs">' +
+        '<span class="pull-right">' + step.util.modalCloseBtn("bibleVersions") + '</span>' +
+        '<ul class="nav nav-tabs bookTypeTabs">' +
+        '<span class="pull-left" style="font-size:13px;margin-top:12px;font-weight:bold">Select book type:&nbsp;</span>' +
         '<li><a href="#bibleList" data-toggle="tab"><%= __s.bibles %></a></li>' +
         '<li><a href="#commentaryList" data-toggle="tab"><%= __s.commentaries %></a></li>' +
         '</ul>' +
+        '<%= view.filtersTemplate({myOtherLanguages: myOtherLanguages}) %>' +
 		'<label class="selectGeo" ' +
         'style="font-size:16px" ' +
         'for="selectGeo">Filter languges by geography:</label>' +
@@ -67,8 +74,6 @@ var PickBibleView = Backbone.View.extend({
 		  '<option value="south_asia">South Asia</option>' +
 		  '<option value="western_asia">Western Asia</option>' +
 		'</select>' +
-        '<p><%= __s.bible_version_features %></p>' +
-		((step.touchDevice) ? "" : '<textarea id="enterYourTranslation" rows="1" style="font-size:13px;width:95%;resize=none;height:24px" placeholder="<%= __s.pick_bible_input_placeholder %>"></textarea><br><br>') +
         '<div class="tab-content">' +
         '<div class="tab-pane" id="bibleList">' +
         '</div>' +
@@ -76,8 +81,9 @@ var PickBibleView = Backbone.View.extend({
         '</div>' +
         '</div>' + //end body
         '<div class="modal-footer">' +
-			((step.touchDevice) ? '<textarea id="enterYourTranslation" rows="1" style="font-size:16px;width:90%;resize=none;height:24px" placeholder="<%= __s.pick_bible_input_short_placeholder %>"></textarea>' : "") +
-			'<br><br><span class="tagLine"></span>' +
+			'<textarea id="enterYourTranslation" rows="1" style="font-size:16px;width:90%;resize=none;height:24px" placeholder="<%= __s.pick_bible_input_short_placeholder %>"></textarea>' +
+            '<p><%= __s.bible_version_features %></p>' +
+			'<span class="tagLine"></span>' +
 			'<button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.update_display_order %></label></button>' +
             '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
         '</div>' + //end content
@@ -133,33 +139,68 @@ var PickBibleView = Backbone.View.extend({
         }
         arr[version.languageName].push(version);
     },
+    getUserOtherLanguages: function() {
+        var myOtherLanguages = {};
+        if (step.userLanguageCode.indexOf("en") != 0)
+            myOtherLanguages[ step.userLanguageCode.split("_")[0].split("-"[0]) ] = step.userLanguage;
+        if (typeof step.acceptLanguages === "string") {
+            var allAcceptedLanguages = step.acceptLanguages.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().split(",");
+            if (allAcceptedLanguages.length > 0) {
+                var intlDisplayNames = null;
+                try {
+                    intlDisplayNames = new Intl.DisplayNames([step.userLanguageCode.split("_")[0].split("-")[0]], { type: 'language' });
+                }
+                catch {
+                    console.log("Cannot not get Intl.DisplayName for " + step.userLanguageCode);
+                }
+                for (var i = 0; i < allAcceptedLanguages.length; i++) {
+                    var curCode = allAcceptedLanguages[i].split("_")[0].split("-")[0];
+                    if (curCode === "en") continue; // English is a primary language in STEP
+                    if (typeof myOtherLanguages[curCode] === "string")
+                        continue; // Already took care of this language.
+                    myOtherLanguages[curCode] = curCode.toUpperCase();
+                    if (intlDisplayNames) {
+                        try {
+                            myOtherLanguages[curCode] = intlDisplayNames.of(curCode);
+                        }
+                        catch {
+                            console.log("Cannot get name of language code: " + curCode);
+                        }
+                    }
+                }
+            }
+        }
+        return myOtherLanguages;
+    },
     initialize: function (opts) {
         _.bindAll(this);
         var self = this;
         this.searchView = opts.searchView;
-
-        this.$el.append(this.modalPopupTemplate({
+         this.$el.append(this.modalPopupTemplate({
             view: this,
-            myLanguage: "en"
+            myOtherLanguages: this.getUserOtherLanguages()
         }));
 
         //make the right button active
         var language = this._getLanguage();
         userHasUpdated = false;
-        this.$el.find(".btn").has("input[data-lang='" + language + "']").addClass("active").addClass("stepPressedButton");
-
-        var navTabsLi = $(".nav-tabs li");
-        navTabsLi.has("a[href='" + this._getSelectedTab() + "']").addClass("active");
-        navTabsLi.on('shown.bs.tab', function (event) {
+        var bookTypeTabsLi = $(".bookTypeTabs li");
+        bookTypeTabsLi.has("a[href='" + this._getBookTypeTab() + "']").addClass("active");
+        bookTypeTabsLi.on('shown.bs.tab', function (event) {
             self.model.save({ selectedVersionsTab: $(event.target).attr("href") });
             self._filter();
         });
-
-        this.$el.find(this._getSelectedTab()).addClass("active");
+        var langTabsLi = $(".langTabs li");
+        langTabsLi.has("a[data-lang='" + language + "']").addClass("active");
+        langTabsLi.on('shown.bs.tab', function (event) {
+            self.model.save({ selectedLanguage: $(event.target).attr("href") });
+            self._filter();
+        });
+        this.$el.find(this._getBookTypeTab()).addClass("active");
         this.bibleVersions = this.$el.find("#bibleVersions").modal({ show: true});
         step.util.blockBackgroundScrolling("bibleVersions");
         // this.$el.find("input[type='text']").focus();
-        this.$el.find(".btn").click(this.handleLanguageButton);
+        this.$el.find(".langTabsLi").click(this.handleLanguageButton);
         this.$el.find(".closeModal").click(this.closeModal);
         this.$el.find("#order_button_bible_modal").click(this.orderButton);
         var okButton = this.okButton;
@@ -263,23 +304,21 @@ var PickBibleView = Backbone.View.extend({
         }
     },
     handleLanguageButton: function (ev) {
-        var target = $(ev.target).find("input");
-        var language = target.data("lang");
-
+        var language = $(ev.target).data("lang");
         this.model.save({
             selectedLanguageSet: language
         });
         this._filter();
     },
-    _getSelectedTab: function () {
-        var selectedTab = this.model.get("selectedVersionsTab");
-        if (selectedTab == null) {
-            selectedTab =  "#bibleList";
+    _getBookTypeTab: function () {
+        var bookTypeTab = this.model.get("selectedVersionsTab");
+        if (bookTypeTab == null) {
+            bookTypeTab =  "#bibleList";
             this.model.save({
-                selectedVersionsTab: selectedTab
+                selectedVersionsTab: bookTypeTab
             })
         }
-        return selectedTab;
+        return bookTypeTab;
     },
     _getLanguage: function () {
         var selectedLanguage = this.model.get("selectedLanguageSet");
@@ -291,15 +330,30 @@ var PickBibleView = Backbone.View.extend({
     },
     _filter: function (keyboard, calledFromInitialize) {
         var self = this;
-        var selectedTab = this._getSelectedTab();
+        var bookTypeTab = this._getBookTypeTab();
         var selectedLanguage = (keyboard) ? "_all" : this._getLanguage();
-        var origLanguage = selectedLanguage;
 		if (selectedLanguage == "zh_TW") selectedLanguage = "zh";
 
-        var filter = (selectedTab == '#commentaryList') ? "COMMENTARY" : "BIBLE";
-		$('.form-inline').find('.btn.btn-default.btn-sm.stepButton').removeClass("active");
-        this.$el.find(".btn.stepPressedButton").removeClass("stepPressedButton");
-        this.$el.find(".btn").has("input[data-lang='" + origLanguage + "']").addClass("stepPressedButton").addClass("active");
+        var filter = (bookTypeTab == '#commentaryList') ? "COMMENTARY" : "BIBLE";
+        var langTabsLi = $(".langTabs li");
+        langTabsLi.removeClass("active").has("a[data-lang='" + selectedLanguage + "']").addClass("active");
+        langTabsLi.show();
+        if (bookTypeTab === '#commentaryList') {
+            for (var i = 0; i < langTabsLi.length; i ++) {
+                var curLangTabLi = $(langTabsLi[i]);
+                var curTabLangCode = curLangTabLi.find("a").data("lang");
+                console.log("lang code " +curTabLangCode );
+                // We currently only have commentaries in English, ancient Greek, Greek, German, Dutch and Latin
+                if (" en _ancient _all de grc nl la ".indexOf(" " + curTabLangCode.toLowerCase() + " ") == -1) {
+                    if (curLangTabLi.hasClass("active")) {
+                        curLangTabLi.removeClass("active");
+                        $(langTabsLi[0]).addClass("active");
+                        selectedLanguage = "en";
+                    }
+                    curLangTabLi.hide();
+                }
+            }
+        }
 
         var bibleList = {};
 
@@ -417,7 +471,7 @@ var PickBibleView = Backbone.View.extend({
 			}
 		}
 		var templateName = (selectedLanguage === "_all") ? this.versionTemplateAll : this.versionTemplate;
-		this.$el.find(selectedTab).append(templateName({
+		this.$el.find(bookTypeTab).append(templateName({
             versions: bibleList
         }));
 
@@ -454,7 +508,7 @@ var PickBibleView = Backbone.View.extend({
                 self.$el.find("[input-initials='" + currentInitials + "']").prop("checked", true);
             }
         });
-        if ((selectedTab !== '#commentaryList') && (selectedLanguage == "_all")) {
+        if ((bookTypeTab !== '#commentaryList') && (selectedLanguage == "_all")) {
 			if (keyboard) $('.selectGeo').hide();
 			else $('.selectGeo').show();
 		}
@@ -473,7 +527,7 @@ var PickBibleView = Backbone.View.extend({
         this.$el.find(".langBtn").click(this._handleUsrClick);
         this.$el.find(".langPlusMinus").click(this._handleUsrClick);
 		if (selectedLanguage === "_all") {
-			$(".btn_Selected").click();
+			$(".btn_" + __s.selected_bibles).click();
 		}
 		else {
 			var listObj = $(".ul_" + __s.widely_used.replace(/[()\s,']/g, "_"));

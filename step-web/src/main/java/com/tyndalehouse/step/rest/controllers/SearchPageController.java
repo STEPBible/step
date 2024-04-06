@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
+import static java.util.Collections.list;
 
 @Singleton
 public class SearchPageController extends HttpServlet {
@@ -194,6 +195,7 @@ public class SearchPageController extends HttpServlet {
         req.setAttribute("ltr", ComponentOrientation.getOrientation(userLocale).isLeftToRight());
         req.setAttribute("searchType", data.getSearchType().name());
         req.setAttribute("versionList", getVersionList(data.getMasterVersion(), data.getExtraVersions()));
+        req.setAttribute("acceptLanguages", list(req.getLocales()).toString());
 
         //specific to passages
         if (data instanceof OsisWrapper) {

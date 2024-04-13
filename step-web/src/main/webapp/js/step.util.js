@@ -2694,8 +2694,8 @@ step.util = {
         else {
             rootVar.style.setProperty('--clrText',"#5d5d5d");
             step.settings.save({"clrText":"#5d5d5d"});
-            rootVar.style.setProperty('--clrStrongText',"#3C6977");
-            step.settings.save({"clrStrongText":"#3C6977"});
+            rootVar.style.setProperty('--clrStrongText',"#447888");
+            step.settings.save({"clrStrongText":"#447888"});
             rootVar.style.setProperty('--clrBackground',"#ffffff");
             step.settings.save({"clrBackground":"#ffffff"});
             rootVar.style.setProperty('--clrHighlight',"#17758F");
@@ -3107,13 +3107,13 @@ step.util = {
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
 								'<td>' + __s.highlighted_text + ' 2</td>' +
 								'<td class="pull-right">' +
-									'<input id="clrHighlight" type="color" value="#3C6977"/>' +
+									'<input id="clrHighlight" type="color" value="#447888"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr style="' + styleForColorExamples + '">' +
 								'<td>' + __s.highlighted_background + ' 1</td>' +
 								'<td class="pull-right">' +
-									'<input id="clrHighlightBg" type="color" value="#3C6977"/>' +
+									'<input id="clrHighlightBg" type="color" value="#447888"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +

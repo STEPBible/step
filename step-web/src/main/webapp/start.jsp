@@ -175,7 +175,7 @@
 	:root {
 		--clrHighlight: #17758F;
 		--clrHighlightBg: #17758F;
-		--clrStrongText: #3C6977;
+		--clrStrongText: #447888;
 		--clrLexiconFocusBG: #c8d8dc;
 		--clrRelatedWordBg: #b2e5f3;
         --clrBackground: #ffffff;

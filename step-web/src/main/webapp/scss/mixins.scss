@@ -49,6 +49,12 @@
 // Vertical height creates a class called .className where maxHeight is set to 400, 600, 900 depending on screen size
 // gap identifies how much space is lost on the screen already
 @mixin verticalHeight($className, $gap: 100px) {
+  @media screen and (min-height: 350px) {
+    #{$className} {
+        height: 360px - $gap;
+    }
+  }
+
   @media screen and (min-height: 400px) {
   #{$className} {
       height: 400px - $gap;
@@ -57,13 +63,19 @@
 
   @media screen and (min-height: 600px) {
     #{$className} {
-      height: 600px - $gap;
+      height: 575px - $gap;
+    }
+  }
+
+  @media screen and (min-height: 750px) {
+    #{$className} {
+      height: 730px - $gap;
     }
   }
 
   @media screen and (min-height: 900px) {
     #{$className} {
-      height: 900px - $gap;
+      height: 865px - $gap;
     }
   }
 }

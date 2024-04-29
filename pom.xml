@@ -39,7 +39,7 @@
         <opencsv.version>2.3</opencsv.version>
         <tomcat.version>8.5.99</tomcat.version>
         <tomcat.secondary.version>8.5.2</tomcat.secondary.version>
-        <version>[2.7.3,)</version>
+        <xalan.version>2.7.3</xalan.version>
 
         <yammer-metrics.version>2.2.0</yammer-metrics.version>
 

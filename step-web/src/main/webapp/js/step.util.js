@@ -4583,6 +4583,110 @@ step.util = {
 				result += " " + firstLetterOfMorph + morphs[i];
 		}
 		return "TOS:" + result;
+	},
+	adjustBibleListingHeight: function() { // The features of the Bible has the "pull-right" class.  It would not show if the description of the Bible (aka name) uses up most of a line.
+		var allBibleFeaturesElement = $('.BibleFeatures');
+        for (var i = 0; i < allBibleFeaturesElement.length; i ++) {
+            var curElement = $(allBibleFeaturesElement[i]);
+			if (curElement.text().trim() === "") continue;
+            var top = curElement.position().top;
+            if (top > 20) {
+                curElement.css("margin-top",""); // remove the setting which is only good if there is one line.  If more than one line, looks better without change.
+                var parent = curElement.parent();
+                var height = parent.height();
+				if (height < 1) continue;
+                if (height < top) { // If the line height is shorter than the position of the Bible feature display, add height
+					console.log(parent.text() + " h: " + height + ' t: ' + top);
+                    parent.height(top + 15);
+				}
+            }
+        }
+	},
+	fineTuneBibleName: function(languageBible) {
+		var re = new RegExp("^" + languageBible.shortInitials + "\\s", "g");
+		return languageBible.name.replace("(" + languageBible.shortInitials + ")", "").
+									replace(" " + languageBible.shortInitials + " ", "").
+									replace(re, "").replace(/\s\s/g, " ").replace(/^[ -]/g, "").
+									replace(/^[ -]/g, "").trim();
+	},
+	expandCollapseExample: function (ev) {
+		var currentElement = $(ev.target);
+		var nextElement = currentElement.parent().next();
+		if ((nextElement.is("div")) && (nextElement.has("stepExample"))) {
+			if (ev.target.classList.contains("glyphicon-triangle-right")) {
+				currentElement.removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+				nextElement.show();
+				// step.util.showVideoinExample(currentElement);
+			}
+			else {
+				currentElement.removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+				nextElement.hide();
+				$("#videoExample").remove();
+			}
+		}
+		return false;
 	}
+	// showVideoinExample: function (currentElement) {
+    //     var element = document.getElementById('videoExample');
+    //     if (element) element.parentNode.removeChild(element);
+	// 	var videoFile = currentElement.data("videofile");
+	// 	if (typeof videoFile !== "string") return false;
+	// 	var seconds = currentElement.data("videotime");
+	// 	var originalWidth = currentElement.data("width");
+	// 	var width = originalWidth;
+	// 	var height = currentElement.data("height");
+	// 	var whereToPrepend = currentElement.parent().next();
+	// 	if (step.touchDevice) {
+	// 		step.util.showVideoModal(videoFile, seconds, originalWidth);
+	// 		return ;
+	// 	}
+	// 	var currentWidth = $("div#welcomeExamples").width();
+	// 	if (currentWidth < 100) {
+	// 		currentWidth = window.innerWidth;
+	// 	}
+	// 	if (originalWidth > currentWidth) {
+	// 		height = Math.floor(height * (currentWidth / width));
+	// 		width = currentWidth;
+	// 	}
+    //     var videoElement = $(_.template(
+	// 		'<div id="videoExample" data-videofile="' + videoFile + '" data-videotime="' + seconds + '" data-width="' + width + '" ' +
+	// 			'data-height="' + height + '">' +
+	// 			'<div">' +
+	// 				'<div class="stepModalFgBg">' +
+	// 					'<script>' +
+	// 						'$(document).ready(function () {' +
+	// 							'var file = $("#videoExample").data("videofile");' +
+	// 							'var time = $("#videoExample").data("videotime") * 1000;' +
+	// 							'var height = $("#videoExample").data("height") - 15;' +
+	// 							'var width = $("#videoExample").data("width") - 15;' +
+	// 							'var gifElement = document.createElement("img");' +
+	// 							'var randomString = "";' +
+	// 							'if ((typeof performance === "object") && (typeof performance.now() === "number")) {' +
+	// 								'randomString = "?" + performance.now();' +  // GIF file in some browser gets stuck in the last frame after it has played once.
+	// 							'}' +
+	// 							'else randomString = "?" + Math.floor(Math.random() * 10000); ' +
+	// 							'gifElement.src = "images/" + file + randomString;' +
+	// 							'gifElement.style.height = height;' +
+	// 							'gifElement.style.width = width;' +
+	// 							'gifElement.style.left = "-40px";' +
+	// 							'gifElement.onload = function() {' +
+	// 								'$("#pleasewait").remove();' +
+	// 								'$("#videomodalbody").append(gifElement);' +
+	// 								'setTimeout(function() {' +
+	// 									'$("#videoExample").empty().append(\'<a href="javascript:step.util.showVideoModal(\\\'' + videoFile + '\\\',' + seconds + ',' +  width + ')">' +
+	// 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>\');' +
+	// 								'}, time);' +
+	// 							'}' +
+	// 						'})' +
+	// 					'</script>' +
+	// 				'</div>' +
+	// 				'<div id="videomodalbody" style="left:-40px;text-align:center;">' +
+	// 					'<p id="pleasewait">Loading video, please wait...</p>' +
+	// 				'</div>' +
+	// 			'</div>' +
+	// 		'</div>'
+	// 	)());
+	// 	$(whereToPrepend).prepend(videoElement);
+    // },
 }
 ;

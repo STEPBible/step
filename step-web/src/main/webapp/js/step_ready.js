@@ -212,7 +212,7 @@
 		if (!step.touchDevice) {
 			var timer;
 			$(document).keyup(function(e) {
-                if ($('#saveClrModalInputArea:visible').length > 0) {
+                if (($('#bibleVersions:visible').length > 0) || ($('#saveClrModalInputArea:visible').length > 0)) {
                     e.preventDefault();
                     return false;
                 }

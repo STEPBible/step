@@ -4436,7 +4436,7 @@ step.util = {
 					activePassage.find("a.nextChapter").click();
 				else 
 					activePassage.find("a.previousChapter").click();
-				// Record swipeCount up to three, after which the prev/next arrows won't be displayed.
+				// Record swipeCount up to eleven, after which the prev/next arrows won't be displayed.
 				var swipeCount = step.util.localStorageGetItem("swipeCount");
 				if (swipeCount == null) swipeCount = 0;
 				if (swipeCount < 11) {

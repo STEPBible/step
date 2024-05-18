@@ -178,8 +178,8 @@ var PassageMenuView = Backbone.View.extend({
         var swipeStatus = step.passages.findWhere({ passageId: 0}).get("isSwipeLeftRight");
         if (swipeStatus == undefined)
             swipeStatus = true;
-
-        if (step.touchDevice && swipeCount > 6 && swipeStatus)
+        var appleTouchDevices = ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)); // iPhone need the left and right buttons
+        if (step.touchDevice && swipeCount > 6 && swipeStatus && !appleTouchDevices)
             $(".nextPreviousChapterGroup").css("display", "none");
         else {
             $(".nextPreviousChapterGroup").css("display", "block");
@@ -188,7 +188,7 @@ var PassageMenuView = Backbone.View.extend({
                 this._updateColumnOptions();
             }
 
-            var isPassage = this.model.get("searchType") == 'PASSAGE';
+            var isPassage = this.model.get("searchType") === 'PASSAGE';
             var previousNext = this.$el.find(".nextPreviousChapterGroup");
             previousNext.toggle(true);
             nextOnly = previousNext.find(".nextChapter");
@@ -202,7 +202,9 @@ var PassageMenuView = Backbone.View.extend({
         // Introduce the swipe feature on a mobile device.  Note, wait until
         // STEP's usage count > 1 so that the initial introJsStep has already
         // played, and hopefully the user knows what the arrows are for.
-		if (step.touchDevice) {
+        // iPhone need the left and right buttons. Swipe right / left does not work on iPhones when the chapter
+        // does not have clickable elements (e.g. strong words) and the chapter is long.
+		if (step.touchDevice && !appleTouchDevices) {
             var swipeIntro = step.util.localStorageGetItem("swipeIntro");
             if (swipeIntro != 1) {
                 var stepUsage = step.util.localStorageGetItem("step.usageCount");
@@ -541,7 +543,9 @@ var PassageMenuView = Backbone.View.extend({
         dropdown.append(li);
         dropdown.append(_.template(this.fontButtons)())
             .find(".largerFontSize").click(this.changeFontSizeInThisPanel);
-        if (step.touchDevice && (step.util.activePassageId() == 0)) {
+        var ua = navigator.userAgent.toLowerCase();
+        var appleTouchDevices = ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)); // iPhone need the left and right buttons
+        if (step.touchDevice && (step.util.activePassageId() == 0) && !appleTouchDevices) {
             var currentSwipeLRSetting = self.model.get("isSwipeLeftRight");
             if (currentSwipeLRSetting == undefined) {
                 this.model.save({isSwipeLeftRight: true});
@@ -557,7 +561,7 @@ var PassageMenuView = Backbone.View.extend({
                 var newSwipeLRSetting = !currentSwipeLRSetting;
                 self.model.save({isSwipeLeftRight: newSwipeLRSetting});
                 //toggle the tick
-                self._setVisible(this, newSwipeLRSetting);
+                self._setVisible(this, newSwipeLRSetting);                
                 var displayStyle = (newSwipeLRSetting) ? "none" : "block";
                 $(".nextPreviousChapterGroup").css("display", displayStyle);
             }));

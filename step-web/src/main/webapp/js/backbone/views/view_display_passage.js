@@ -131,6 +131,7 @@ var PassageDisplayView = DisplayView.extend({
                                     newText = origText[0].trim() + ":" + newText;
                             }
                             $(refButton).text(newText);
+                            step.util.setupGesture();
                             break;
                         }
                     }

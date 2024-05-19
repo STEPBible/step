@@ -4417,20 +4417,41 @@ step.util = {
 		});
 		return (freqListElm);
 	},
-    handleGesture: function(touchEvent, touchstartX, touchstartY, touchstartTime) {
+    setupGesture: function() {
+// 		var ua = navigator.userAgent.toLowerCase();
+//      var appleTouchDevices = ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)); // iPhone need the left and right buttons
+		var touchableElement;
+		if ((screen.height > 599) && (screen.width > 599)) {
+			step.touchWideDevice = true;
+			document.getElementById("resizeButton").style.display = "inline";
+			touchableElement = document.getElementById("columnHolder");
+		}
+		else
+			touchableElement = document.getElementsByTagName("body")[0];
+		touchableElement.addEventListener('touchstart', step.util.handleTouchStart, false);
+		touchableElement.addEventListener('touchend', step.util.handleTouchEnd, false);
+	},
+    handleTouchStart: function(touchEvent) {
+		step.touchstartX = touchEvent.changedTouches[0].screenX;
+		step.touchstartY = touchEvent.changedTouches[0].screenY;
+		step.touchstartTime = new Date().getTime();
+	},
+	handleTouchEnd: function(touchEvent) {
 		// only get teh swipe left/right from the first panel.  In view_menu_passage.js, getting the passageId would bomb.
 		var status = step.passages.findWhere({ passageId: 0}).get("isSwipeLeftRight");
-		if ((status != undefined) && (!status))
+		if ( ((status != undefined) && (!status)) || (typeof touchEvent.changedTouches === "undefined") )
 			return;
 		var touchendX = touchEvent.changedTouches[0].screenX;
 		var touchendY = touchEvent.changedTouches[0].screenY;
 		var minDistance = 40;
 		var verticalTolerance = 35;
-		var touchDiffY = Math.abs(touchendY - touchstartY);
-		var touchDiffX = touchendX - touchstartX;
+		var touchDiffY = Math.abs(touchendY - step.touchstartY);
+		var touchDiffX = touchendX - step.touchstartX;
+		step.touchstartX = null;
+		step.touchstartY = null;
 		if (touchDiffY < verticalTolerance) {
 			if (Math.abs(touchDiffX) > minDistance) {
-				if (new Date().getTime() - touchstartTime > 400) return; // must be with 400 milliseconds
+				if (new Date().getTime() - step.touchstartTime > 400) return; // must be with 400 milliseconds
 				var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));
 				if (touchDiffX < 0)
 					activePassage.find("a.nextChapter").click();

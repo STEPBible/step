@@ -178,8 +178,9 @@ var PassageMenuView = Backbone.View.extend({
         var swipeStatus = step.passages.findWhere({ passageId: 0}).get("isSwipeLeftRight");
         if (swipeStatus == undefined)
             swipeStatus = true;
-//        var appleTouchDevices = ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)); // iPhone need the left and right buttons
-        if (step.touchDevice && swipeCount > 6 && swipeStatus) // && !appleTouchDevices)
+        var ua = navigator.userAgent.toLowerCase();
+        var appleTouchDevices = ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)); // iPhone need the left and right buttons
+        if (step.touchDevice && swipeCount > 6 && swipeStatus && !appleTouchDevices)
             $(".nextPreviousChapterGroup").css("display", "none");
         else {
             $(".nextPreviousChapterGroup").css("display", "block");
@@ -204,7 +205,7 @@ var PassageMenuView = Backbone.View.extend({
         // played, and hopefully the user knows what the arrows are for.
         // iPhone need the left and right buttons. Swipe right / left does not work on iPhones when the chapter
         // does not have clickable elements (e.g. strong words) and the chapter is long.
-		if (step.touchDevice) { // && !appleTouchDevices) {
+		if (step.touchDevice && !appleTouchDevices) {
             var swipeIntro = step.util.localStorageGetItem("swipeIntro");
             if (swipeIntro != 1) {
                 var stepUsage = step.util.localStorageGetItem("step.usageCount");
@@ -543,9 +544,7 @@ var PassageMenuView = Backbone.View.extend({
         dropdown.append(li);
         dropdown.append(_.template(this.fontButtons)())
             .find(".largerFontSize").click(this.changeFontSizeInThisPanel);
-        // var ua = navigator.userAgent.toLowerCase();
-//        var appleTouchDevices = ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)); // iPhone need the left and right buttons
-        if (step.touchDevice && (step.util.activePassageId() == 0)) { // } && !appleTouchDevices) {
+        if (step.touchDevice && (step.util.activePassageId() == 0)) {
             var currentSwipeLRSetting = self.model.get("isSwipeLeftRight");
             if (currentSwipeLRSetting == undefined) {
                 this.model.save({isSwipeLeftRight: true});

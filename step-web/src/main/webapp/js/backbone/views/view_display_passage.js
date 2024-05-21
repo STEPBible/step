@@ -131,12 +131,10 @@ var PassageDisplayView = DisplayView.extend({
                                     newText = origText[0].trim() + ":" + newText;
                             }
                             $(refButton).text(newText);
-                            step.util.setupGesture();
                             break;
                         }
                     }
                 });    
-
                 //needs to happen after appending to DOM
 				
                 this.updateSTEPColor();
@@ -144,6 +142,7 @@ var PassageDisplayView = DisplayView.extend({
                 this._doChromeHack(passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 this.scrollToTargetLocation(passageContainer);
+                step.util.setupGesture();
 
                 //give focus:
                 $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();

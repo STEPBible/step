@@ -1899,7 +1899,7 @@ step.util = {
 											templatedTable.find(".definition").click(function () {
 													var strongParameterForCall = $(this).parent().data("strong");
 													var refParameterForCall = (strongParameterForCall.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) ? "" : reference; // if it is augmented Strong, don't include the reference
-													self.showDef({strong: strongParameterForCall, ref: refParameterForCall, version: version });
+													step.util.ui.showDef({strong: strongParameterForCall, ref: refParameterForCall, version: version });
 													if (step.touchDevice && !step.touchWideDevice)
 														$(".versePopup").hide();
 											});

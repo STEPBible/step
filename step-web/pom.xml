@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>24.5.4</version>
+		<version>24.6.7</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -710,7 +710,7 @@
 									<replacement><token>_getStrongStringAndPrevHTML([:(])</token><value>zN$1</value></replacement>
 									<replacement><token>_processTouchOnStrong([:(])</token><value>zO$1</value></replacement>
 									<replacement><token>removeQuickLexicon([:(])</token><value>zP$1</value></replacement>
-									<replacement><token>_displayNewQuickLexiconForVerseVocab([:(])</token><value>zQ$1</value></replacement>
+									<replacement><token>displayNewQuickLexiconForVerseVocab([:(])</token><value>zQ$1</value></replacement>
 									<replacement><token>_displayNewQuickLexicon([:(])</token><value>zR$1</value></replacement>
 									<replacement><token>getVerseNumberAndVersion([:(])</token><value>zS$1</value></replacement>
 									<replacement><token>getWordOrderSuffix([:(])</token><value>zT$1</value></replacement>
@@ -764,7 +764,7 @@
 									<replacement><token>updateAdvancedSearchElements([:(])</token><value>zB$1</value></replacement>
 									<replacement><token>_initOptions([:(])</token><value>zC$1</value></replacement>
 									<!-- <replacement><token>_handleOptions</token><value>zD</value></replacement> -->
-									<replacement><token>_previousSearchesEnteredByUser([:(])</token><value>zE$1</value></replacement>
+									<!-- <replacement><token>_previousSearchesEnteredByUser([:(])</token><value>zE$1</value></replacement> -->
 									<!-- <replacement><token>_displayPreviousSearchWord</token><value>zF</value></replacement> -->
 									<replacement><token>_updateDisplayBasedOnOptions([:(])</token><value>zG$1</value></replacement>
 									<replacement><token>createPreviousSearchList([:(])</token><value>zH$1</value></replacement>

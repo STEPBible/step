@@ -24,11 +24,10 @@ vocabKeys = ["strongNumber", "stepGloss", "stepTransliteration", "count",
                 "shortDef", "mediumDef", "lsjDefs",
                 "_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
                 "accentedUnicode", "rawRelatedNumbers", "relatedNos", 
-                "_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
+                "_stepDetailLexicalTag", "_step_Link", "_step_Type", "_stepSearchResultRange", 
                 "freqList", "defaultDStrong"
                 ]
-relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange"]
-
+relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss"]
 
 def checkDupStrings(currentValue, strings):
     if currentValue in strings:

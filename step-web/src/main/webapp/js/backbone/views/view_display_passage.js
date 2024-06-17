@@ -38,14 +38,12 @@ var PassageDisplayView = DisplayView.extend({
             // check if OT or NT  12/13/2023 PT
             // console.log("place to add NT OT check: "+reference+ " " +bibleVersions);
             var justLoadedTOS = false;
-            if ( ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('THOT') > -1) || (bibleVersions.indexOf('OSHB') > -1)) ||
-                 ((window.location.origin.toLowerCase().indexOf("dev.stepbible.org") > -1) && (bibleVersions.indexOf('ESV') > -1)) ) {
+            if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) || (bibleVersions.indexOf('OSHB') > -1)) {
                 justLoadedTOS = step.util.loadTOS();
                 hasTOS = true;
             }
-            if ( ((bibleVersions.indexOf('ESV_MORPH') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
-                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1)) ||
-                ((window.location.origin.toLowerCase().indexOf("dev.stepbible.org") > -1) && (bibleVersions.indexOf('ESV') > -1)) )
+            if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
+                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1))
                 hasNTMorph = true;
             if (this.partRendered) {
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {

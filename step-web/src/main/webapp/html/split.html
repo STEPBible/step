@@ -266,33 +266,41 @@ window.onmessage = function(e) {
             }
         }
 
-        // Strip version= in case it's to be overridden
-        var newURL = left.replace(/version=[^|&]*[|&]/g, "");
         
-        // Find overriding version= strings in the new URL
-        var versions = "";
-        var reference = e.data;
-        var pos = reference.search(/\|version=[A-Za-z0-9]*/);
-        while (pos > -1) {
-            versions += RegExp.lastMatch;
-            versions = versions.replace(/^\|/, '') + '|';
-            reference = reference.replace(/\|version=[A-Za-z0-9]*/, "");
-            pos = reference.search(/\|version=[A-Za-z0-9]*/);
+        var newURL;
+        if ((e.data.indexOf("colorCode") == 0) || (e.data.indexOf("otGreek") == 0)) // from examples
+            newURL = e.origin + "/?debug&" + e.data;
+        else if (e.data.indexOf("backotgreek") == 0) {
+            window.location.assign(e.origin + "/?debug&otgreekexamples");
+            return;
         }
-        
-        if (e.data.indexOf("strong=") > -1 || e.data.indexOf("srchJoin=") > -1
-            || e.data.indexOf("text=") > -1) {
-            newURL += versions + reference + lastChar + right;
+        else if (e.data.indexOf("backcolor") == 0) {
+            window.location.assign(e.origin + "/?debug&colorexamples");
+            return;
         }
         else {
-            newURL += versions + "reference=" + reference + lastChar + right;
+            newURL = left.replace(/version=[^|&]*[|&]/g, ""); // Strip version= in case it's to be overridden
+            // Find overriding version= strings in the new URL
+            var versions = "";
+            var reference = e.data;
+            var pos = reference.search(/\|version=[A-Za-z0-9]*/);
+            while (pos > -1) {
+                versions += RegExp.lastMatch;
+                versions = versions.replace(/^\|/, '') + '|';
+                reference = reference.replace(/\|version=[A-Za-z0-9]*/, "");
+                pos = reference.search(/\|version=[A-Za-z0-9]*/);
+            }
+            
+            if (e.data.indexOf("strong=") > -1 || e.data.indexOf("srchJoin=") > -1
+                || e.data.indexOf("text=") > -1) {
+                newURL += versions + reference + lastChar + right;
+            }
+            else {
+                newURL += versions + "reference=" + reference + lastChar + right;
+            }
         }
-
         if (newURL.indexOf("skipwelcome") == -1) newURL += "&skipwelcome";
-
         document.getElementById("f1").src = newURL;
-        console.log("old: " + curURL);
-        console.log("new: " + newURL);
     }
 };
 

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Examples</title>
+    <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
+    <link href="/css/cardo.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
+    <script src="/international/en.js" type="text/javascript"></script>
+    <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/libs/underscore-min.js" type="text/javascript"></script>
+    <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/libs/backbone.js" type="text/javascript"></script>
+    <script src="/libs/backbone.localStorage.js" type="text/javascript"></script>
+    <script src="/js/backbone/models/model_settings.js" type="text/javascript"></script>
+  <style>
+    :root {
+        --clrHighlight: #17758F;
+        --clrHighlightBg: #17758F;
+        --clrStrongText: #447888;
+        --clrLexiconFocusBG: #c8d8dc;
+        --clrRelatedWordBg: #b2e5f3;
+        --clrBackground: #ffffff;
+        --clrText: #5d5d5d;
+        --clr2ndHover: #d3d3d3;
+    }
+	
+  </style>
+</head>
+<body style="background-color:white"">
+<div id="header">
+    <button id="backbutton1" class="glyphicon glyphicon-arrow-left" onclick="displayPassages(this,'backotgreek')" style="display:none"></button>
+    <button id="backbutton2" class="glyphicon glyphicon-arrow-left" onclick="displayPassages(this,'backcolor')" style="display:none"></button>
+</div>
+    <span id="greekotexamples" style="display:none">
+        <h2 >Examples of Old Testament in Greek</h2>
+        <br>
+        <ol>
+        <li id="greekExplain1" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'otGreek1')">See multiple OT Greek Bibles (LXX, EngLXX, ABGk, ABEn)</a>
+        <br><br>
+        <li id="greekExplain2" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'otGreek2')">See NT and OT passages with ESV, THOT, ABGk, ABEn</a>
+        </ol>
+    </span>
+    <span id="colorcodeexamples" style="font-size:15px;display:none">
+        <h2>Examples of color code grammar</h2>
+        <br>
+        <ol>
+        <li id="colorExplain1" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'colorCode1')">See red underline on imperative verbs</a>
+        <br><br>
+        <li id="colorExplain2" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'colorCode2')">See main and supporting verbs</a>
+        <br><br>
+        <li id="colorExplain3" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'colorCode3')">See color code of gender and number</a>
+        <br><br>
+        <li id="colorExplain4" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'colorCode4')">See highlights of all verbs</a>
+        <br><br>
+        <li id="colorExplain5" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'colorCode5')">See Greek NT with color code, root word and English vocabulary</a>
+        <br><br>
+        <li id="colorExplain6" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'colorCode6')">See OT in color code</a>
+        <br><br>
+        <li id="colorExplain7" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'colorCode7')">See Chinese Bible in color code</a>
+        <br><br>
+        <li id="colorExplain8" class="explanationText"></li>
+        <a class="linksToExample" onclick="displayPassages(this,'colorCode8')">See Greek, English and Chinese Bible in color code</a>
+        </ol>
+    </span>
+
+    <script>
+
+(function() {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+	var debugOption = "";
+	var urlPart1 = window.location.origin;
+	var pos = window.location.href.indexOf("/html/additional_examples.html");
+	if (pos > 8) { // probably running in development environment.
+		urlPart1 = window.location.href.substr(0, pos);
+		debugOption = "&debug";
+	}
+    var exampleType = getQueryParam("exampleType");
+    var langFile = getQueryParam("langFile").replace("..", ".");
+    var param = "?exampleType=" + exampleType + "&langFile=" + langFile;
+    if (window.innerWidth > 960) {
+        if (!inIFrame)
+           window.location = urlPart1 + "/html/split.html?" + urlPart1 + 
+    			"/?debug&skipwelcome" + 
+    			debugOption + "&secondURL=" + window.location.origin + window.location.pathname + param;
+    }
+    var urlPart1 = window.location.origin;
+	if (typeof jQuery == 'undefined') {
+  		loadFile(urlPart1 + "/css/bootstrap.css");
+		loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
+		loadFile(urlPart1 + "/css/select2.css");
+		loadFile(urlPart1 + "/css/select2-bootstrap.css");
+		loadFile(urlPart1 + "/scss/step-template.css");
+		loadFile(urlPart1 + "/international/en.js");
+		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js');
+		loadFile(urlPart1 + "/libs/underscore-min.js");
+		loadFile(urlPart1 + "/libs/bootstrap.min.js");
+		loadFile(urlPart1 + "/libs/backbone.js");
+		loadFile(urlPart1 + "/libs/backbone.localStorage.js");
+		loadFile(urlPart1 + "/js/backbone/models/model_settings.js");
+		// Poll for jQuery to come into existance
+		var checkReady = function(callback) {
+			if (window.jQuery) {
+				callback(jQuery);
+			}
+			else {
+				window.setTimeout(function() { checkReady(callback); }, 200);
+			}
+		};
+		// Start polling...
+		checkReady(function($) {
+			$(function() {
+				setupPage(urlPart1, langFile, exampleType, inIFrame);
+			});
+		});
+	}
+	else setupPage(urlPart1, langFile, exampleType, inIFrame);
+})();
+
+function loadFile(path) {
+  if (path.endsWith(".js")) {
+    var fileref = document.createElement("script");
+    fileref.setAttribute("type", "text/javascript");
+    fileref.setAttribute("src", path);
+  } else if (path.endsWith(".css")) {
+    var fileref = document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", path);
+  }
+  else return;
+  fileref.async = false;
+  document.getElementsByTagName("head")[0].appendChild(fileref);
+}
+
+function setupPage(urlPart1, langFile, exampleType, inIFrame) {
+    loadFile(urlPart1 + "/intl/" + langFile);
+    if (exampleType == "greekot") {
+        if (inIFrame)
+            $("#backbutton1").show();
+        $(document).attr("title", "OT in Greek examples");
+        $("#greekExplain1").html(__s.lxx_ab);
+        $("#greekExplain2").html(__s.cmp_greek_hebrew);
+        $("#greekotexamples").show();
+    }
+    else if (exampleType == "colorCode") {
+        if (inIFrame)
+            $("#backbutton2").show();
+        $(document).attr("title", "Color code examples");
+        $("#colorExplain1").html(__s.kjv_verb_imperative_explanation);
+        $("#colorExplain2").html(__s.kjv_verb_main_supporting_explanation);
+        $("#colorExplain3").html(__s.kjv_verb_number_and_gender_explanation);
+        $("#colorExplain4").html(__s.kjv_verb_colour_explanation);
+        $("#colorExplain5").html(__s.sblg_verb_color_explanation);
+        $("#colorExplain6").html(__s.ot_color_explanation);
+        $("#colorExplain7").html(__s.cun_verb_color_explanation);
+        $("#colorExplain8").html(__s.interlinear_verb_color_explanation);
+        $(".displayGrammarColor").html(__s.display_grammarColor);
+        $("#colorcodeexamples").show();
+    }
+    $(".linksToExample").attr({title: __s.click_to_try_this });
+}
+
+function getQueryParam(param, defaultValue = undefined) {
+    location.search.substr(1)
+        .split("&")
+        .some(function(item) { // returns first occurence and stops
+            return item.split("=")[0] == param && (defaultValue = item.split("=")[1], true)
+        })
+    return defaultValue
+}
+
+function displayPassages(item, string) {
+    var inIFrame = false;
+    try {
+        inIFrame = window.self !== window.top;
+    } catch (e) {
+        inIFrame = true;
+    }
+
+	var urlPart1 = window.location.origin;
+    if (!inIFrame) {
+        var tabURL = urlPart1 + "/?skipwelcome&";
+    	if (string !== "") {
+            if ((string.indexOf("otGreek") > -1) || (string.indexOf("colorCode") > -1))
+                tabURL += string;
+            else {
+                tabURL += "q=";
+                string = string.replace(/ /g, ";");
+        		if (string.indexOf("strong=") > -1 || string.indexOf("srchJoin=") > -1
+                    || string.indexOf("text=") > -1) {
+    		    	tabURL += string;
+    		    }
+    		    else {
+    			    tabURL += "reference=" + string;
+    		    }
+            }
+            window.open(tabURL, "_blank");
+    	}
+
+    }
+    else
+    {
+    	if (string !== "") {
+            string = string.replace(/ /g, ";");
+    		window.top.postMessage(string, '*');
+    	}
+    }
+}
+
+</script>
+</body>
+</html>

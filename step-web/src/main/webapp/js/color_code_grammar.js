@@ -1352,14 +1352,16 @@ var cf = {
   },
 // Do not shorten name, called by view_examples.js
   setNextPageURL: function (url, configName, infoMsg) {
-
-    if (configName.indexOf("function:") == 0){
-      var functionName = configName.substr(9);
-      if (functionName == "openStats")
-        step.util.localStorageSetItem('colorCode-openStatus', JSON.stringify(true));
+    if (configName !== "") {
+      if (configName.indexOf("function:") == 0){
+        var functionName = configName.substr(9);
+        if (functionName == "openStats")
+          step.util.localStorageSetItem('colorCode-openStatus', JSON.stringify(true));
+      }
+      else cf.openUserSelectedConfig(configName);
     }
-    else cf.openUserSelectedConfig(configName);
-    step.util.localStorageSetItem('colorCode-InfoMsg', JSON.stringify(infoMsg));
+    if (infoMsg !== "")
+      step.util.localStorageSetItem('colorCode-InfoMsg', JSON.stringify(infoMsg));
     window.location.assign(url);
   },
 
@@ -2027,7 +2029,7 @@ var cf = {
         }
       }
       if (!found) {
-        alert('Cannot find a configuation that match your selection');
+        alert('Cannot find a configuation that match your selection ' + selectedConfig);
         return;
       }
     }

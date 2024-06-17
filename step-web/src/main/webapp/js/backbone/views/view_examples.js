@@ -5,247 +5,301 @@ var ExamplesView = Backbone.View.extend({
 				'<i class="glyphicon glyphicon-remove"></i>' +
 			'</a>' +
 			'<h3><%= __s.simple_intro_welcome %></h3>' +
-			'<p><%= __s.simple_intro %></p>' +
+			'<span style="background-color:lightyellow;font-size:16px;font-weight:bold">ESV now has morphology!    </span>' +
+			'<a style="background-color:lightyellow" href="javascript:step.util.showVideoModal(\'esv_morph.gif\', 66)">Video introduction  ' +
+				'<span class="glyphicon glyphicon-play-circle" style="background-color:lightyellow;font-size:16px"></span></a>' +
+			'<br><br><p><%= __s.simple_intro %></p>' +
 			'<div class="accordion-row" data-row="0">' +
-				'<h5 class="accordion-heading stepButton"><%= __s.quick_tutorial_header1 %>' +
-					'<span class="plusminus">+</span>' +
+				'<h5 class="accordion-heading stepButton">How do I read passages in Bibles?' +
+					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
-					'<br><div style="overflow:hidden">' +
-						'<a href="/?q=version=ESV|reference=Ps.23&options=VHNUG" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">ESV</span><span class="stepButton">Psalm 23</span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.simple_passage_explanation %>' +
-						'<a id="firstVideoLink" href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15, 434)">&nbsp;' +
-						'<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-
-					'<div style="overflow:hidden">' +
-					'<a href="/?q=version=NIV|version=ESV|version=KJV|reference=Joh.3&options=HVGUN&display=COLUMN" title="<%= __s.click_to_try_this %>">' +
-					'<span dir="auto">' +
-					'<span class="stepButton">NIV, ESV, KJV</span><span class="stepButton">John 3</span></span>' +
-					'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.multiple_versions_explanation %>' +
-						'<a href="javascript:step.util.showVideoModal(\'John3.gif\', 27, 434)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-					
-					'<div style="overflow:hidden">' +
-					'<a href="/?q=version=ESV|strong=G0080&options=HVNGU" title="<%= __s.click_to_try_this %>">' +
-					'<span dir="auto">' +
-					'<span class="stepButton">ESV</span><span class="stepButton"><span class="glyphicon glyphicon-search" style="font-size:12px"></span><span> brother</span></span></span>' +
-					'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.simple_search_explanation %>' +
-						'<a href="javascript:step.util.showVideoModal(\'ESV_brother.gif\', 39, 467)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-
-					'<div style="overflow:hidden">' +
-						'<a href="/?q=version=NIV|version=ESV|text=land|strong=H2617A&options=VGUVNH&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">NIV, ESV</span><span class="stepButton"><span class="glyphicon glyphicon-search" style="font-size:12px"></span><span> land,&nbsp;</span><span class="transliteration" style="line-height:13px">he.sed</span></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.chained_searches_explanation %>' +
-						'<a href="javascript:step.util.showVideoModal(\'ESV_NIV_land_chesed.gif\', 65, 452)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-
-					'<div style="overflow:hidden">' +
-					'<a href="/?q=version=ESV|meanings=throne|subject=david|reference=Isa-Rev&options=HNVUG" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-							'<span class="stepButton">ESV</span>' +
-							'<span class="stepButton">' +
-								'<span class="glyphicon glyphicon-search" style="font-size:12px"></span>' +
-								'<span> throne, David (Isa-Rev)</span>' +
-							'</span>' +
-						'</span>' +
-					'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.chained_searches_explanation_subject %>' +
-						'<a href="javascript:step.util.showVideoModal(\'ESV_Isa_Rev_throne_david.gif\', 63, 452)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-
-					'<div style="overflow:hidden">' +
-						'<a href="javascript:cf.setNextPageURL(\'/?q=version=ESV|reference=1Jo.1&options=HVGUN\', \'function:openStats\', \'esv_word_frequency_explanation\')" title="<%= __s.click_to_try_this %>">' +
-							'<span dir="auto">' +
-							'<span class="stepButton">ESV</span><span class="stepButton">1Jo 1</span>' +
-							'&nbsp;<span class=\'glyphicon glyphicon-stats\' style="line-height:13px"></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.esv_word_frequency_explanation %>' +
-						'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-
-					'<a href="javascript:step.util.showIntro(true)">' +
-					'<span id="quickTour"><span style="font-size:14px;font-weight:bold"><%= __s.quick_tour %></span>' +
-					'<br><span class="explanationText"><%= __s.quick_tour_explain %></span>' +
-					'</span>' +
-					'</a>' +
-                    '<div class="explanationText">  Or see a quick introduction in the ' +
-						'<a href="https://drive.google.com/drive/folders/19OgRWS8Rbk92V5zAETpJ14QFSNjf76um">' +
-						'user guide.</a>' +
-					'</div>' +
-					'<div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold"><%= __s.display_classical_ui %></span>' +
-					'<br><span class="explanationText"><%= __s.advanced_interface_explain %></span>' +
-					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23, 580)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
+					'<ul style="padding-inline-start:10px">' +
+						'<li style="font-weight:bold">How do I look up a passage?' +
+							'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>Click the Passage button for a chapter or references.</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/select_passage.png">' +
+							'</div>' +
+						'<li style="font-weight:bold">How do I see three Bibles at once?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'John3.gif\', 27)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>Click the Bible button to select one or several Bibles.</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/select_bible.png">' +
+							'</div>' +
+						'<li style="font-weight:bold">How do I find a parallel gospel passage?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span>1) Click the Resource icon.</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/resource_icon.png">' +
+								'<br><span>2) Click the resource for parallel gospel passage</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/gospel_harmony.png">' +
+							'</div>' +
+						'<li style="font-weight:bold">How do I follow a Bible reading plan?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span>1) Click the Resource icon.</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/resource_icon.png">' +
+								'<br><span>2) Plans for 1/2/3 years, chronological, Jewish etc</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/bible_reading_plan.png">' +
+							'</div>' +
+						'<li style="font-weight:bold">How do I also see a commentary?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span>1) Click the Bible button.</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><span>2) Click on Commentaries</span>' +
+								'<br><img style="border:3px solid black" src="images/commentaries.png">' +
+							'</div>' +
+						'</ul>' +
 				'</div>' +
 			'</div>' +
+
 			'<div class="accordion-row" data-row="1">' +
-				'<h5 class="accordion-heading stepButton"><%= __s.quick_tutorial_header2 %>' +
-					'<span class="plusminus">+</span>' +
+				'<h5 class="accordion-heading stepButton">How do I find words and phrases?' +
+					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
-					'<br>' +
-					
-					'<div style="overflow:hidden">' +
-						'<a href="/?q=version=KJV|version=THGNT|reference=John.1&options=HVLUNM&display=INTERLINEAR" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">KJV, THGNT</span><span class="stepButton">John 1</span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.interlinear_grammar_explanation %>' +
-						'<a href="javascript:step.util.showVideoModal(\'KJV_THGNT_John1.gif\', 35, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
+					'<ul style="padding-inline-start:10px">' +
+						'<li style="font-weight:bold">How do I find words or topics?' +
+							'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'basic_search.gif\', 25)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1) Click on the search button</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/search_button.png">' +
+								'<br><span>2) Enter word or phrase in search bar and press Return</span>' +
+							'</div>' +
+						'<li style="font-weight:bold">How do I search only some books in the Bible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'search_range.gif\', 40)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1) Click on the search button</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/search_button.png">' +
+								'<br><span>2) Click on Range</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/search_range.png">' +
+								'<br><span>3) Select the books that you wish to search</span>' +
+							'</div>' +
+						'<li style="font-weight:bold">How do I find a Greek or Hebrew word?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'search_original_language.gif\', 50)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1) Click on the search button</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/search_button.png">' +
+								'<br><span>2) Switch on the Advanced search toggle </span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/search_advanced_mode.png">' +
+								'<br><span>3) Type in the Greek/Hebrew word in the search box, press Return, and wait for the table to fill itself.</span>' +
+								'<br><span>4) View corresponding row to see Greek/Hebrew translation of the word</span>' +
+							'</div>' +
+						'<li style="font-weight:bold">How do I find a word only where it relates to a subject?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'subject_search.gif\', 46)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1) Click on the search button</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/search_button.png">' +
+								'<br><span>2) Switch on the Advanced search toggle </span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/search_advanced_mode.png">' +
+								'<br><span>3) Type in the subject in the search box, press Return, and wait for the table to fill itself.</span>' +
+								'<br><span>4) View the row: Subject or a person in the Bible</span>' +
+							'</div>' +
 
-					'<div style="overflow:hidden">' +
-						'<a href="/?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">OHB, ESV</span><span class="stepButton">Gen 1</span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.interlinear_ot_explanation %>' +
-						'<a href="javascript:step.util.showVideoModal(\'OHB_ESV_Gen1.gif\', 40, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-
-					'<div style="overflow:hidden">' +
-						'<a href="/?q=version=ESV|reference=John.1&options=TLHVAGUN" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">ESV</span><span class="stepButton">John 1</span>' +
-						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_greekVocab %></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.vocab_explanation %>' +
-						'<a href="javascript:step.util.showVideoModal(\'ESV_orig_voc_transliteration.gif\', 35, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-
-					'<div style="overflow:hidden">' +
-						'<a href="?q=version=LXX|version=EngLXX|version=ABGk|version=ABEn|reference=Exod.31&options=VLGUHVNAT&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
-						'<span>' +
-						'<span class="stepButton">LXX, EngLXX, ABGk, ABEn</span><span class="stepButton">Exo 31</span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.lxx_ab %></div>' +
-
-					'<div style="overflow:hidden">' +
-						'<a href="?q=version=ESV|version=THOT|version=ABGk|version=ABEn|reference=Isa.53.1 John.12.38&options=VVNH&display=COLUMN&pos=1" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">ESV, THOT, ABGk, ABEn</span><span class="stepButton">Isa 53:1, Joh 12:38</span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.cmp_greek_hebrew %></div>' +
+						'<li style="font-weight:bold">How do I find more about advanced search?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+							'<a href="https://stepbibleguide.blogspot.com/p/finding-words-and-subjects.html">' +
+							'Detailed instructions are in the user\'s guide</a>' +
+						'</ul>' +
 				'</div>' +
 			'</div>' +
+
 			'<div class="accordion-row" data-row="2">' +
-				'<h5 class="accordion-heading stepButton"><%= __s.quick_tutorial_header3 %>' +
-					'<span class="plusminus">+</span>' +
-				'</h5>' +
+			'<h5 class="accordion-heading stepButton">How do I do a word study?' +
+				'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
+			'</h5>' +
 				'<div class="accordion-body">' +
-					'<br>' +
-					'<div style="overflow:hidden">' +
-						'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Col.3&options=HVGUNC\', \'verb, imperative mood\', \'kjv_verb_imperative_explanation\')" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">KJV</span><span class="stepButton">Col 3</span>' +
-						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.kjv_verb_imperative_explanation %>' +
-						'<a href="javascript:step.util.showVideoModal(\'color_code_1.gif\', 93, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-
-					'<div style="overflow:hidden">' +
-						'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Col.1&options=HVGUNC\', \'verb, main vs supporting verbs\', \'kjv_verb_main_supporting_explanation\')" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton" style="line-height:13px">KJV</span>' +
-						'<span class="stepButton" style="line-height:13px">Col 1</span>' +
-						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.kjv_verb_main_supporting_explanation %></div>' +
-					
-					'<div style="overflow:hidden">' +
-						'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Mat.1&options=HVGUNC\', \'gender and number\', \'kjv_verb_number_and_gender_explanation\')" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">KJV</span><span class="stepButton">Mat 1</span>' +
-						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.kjv_verb_number_and_gender_explanation %></div>' +
-
-					'<div style="overflow:hidden">' +
-						'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Eph.1&options=HVGUNC\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">KJV</span><span class="stepButton">Eph 1</span>' +
-						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.kjv_verb_colour_explanation %></div>' +
-					
-					'<div style="overflow:hidden">' +
-						'<a href="javascript:cf.setNextPageURL(\'/?q=version=SBLG|reference=Rom.12&options=CEMVALHUN\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">SBLG</span><span class="stepButton">Rom 12</span>' +
-						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s. sblg_verb_color_explanation %></div>' +
-
-					'<div style="overflow:hidden">' +
-						'<a href="javascript:cf.setNextPageURL(\'/?q=version=THOT|reference=Gen.1&options=HVLUNC\', \'verb, gender and number\', \'\')" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">THOT</span><span class="stepButton">Gen 1</span>' +
-						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s. ot_color_explanation %></div>' +
-					
-					'<div style="overflow:hidden">' +
-						'<a href="javascript:cf.setNextPageURL(\'/?q=version=CUn|reference=Col.1&options=HVGUNC\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">CUn</span><span class="stepButton">Col 1</span>' +
-						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s. cun_verb_color_explanation %></div>' +
-					
-					'<div style="overflow:hidden">' +
-						'<a href="javascript:cf.setNextPageURL(\'/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
-						'<span dir="auto">' +
-						'<span class="stepButton">SBLG, KJV, CUn</span><span class="stepButton">Eph 5</span>' +
-						'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px">&nbsp;</span><span style="line-height:13px"><%= __s.display_grammarColor %></span></span>' +
-						'</a>' +
-					'</div>' +
-					'<div class="explanationText"><%= __s.interlinear_verb_color_explanation %></div>' +
+					'<ul style="padding-inline-start:10px">' +
+						'<li style="font-weight:bold">What information can I find about a word?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span>When you click on a word, the detailed lexicon opens with:</span>' +
+								'<ul>' +
+								'<li>Meaning: how the word is used throughout the Bible</li>' +
+								'<li>Dictionary: academic details about the word</li>' +
+								'<li>Related words: similar in meaning or origin</li>' +
+								'<li>Grammar: (only available for some Bibles)</li>' +
+								'</ul>' +
+								'<br><img style="width:210px;border:3px solid black" src="images/info_on_word.png">' +
+							'</div>' +
+						'<li style="font-weight:bold">Why do only some Bibles have clickable words?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span>\'Vocabulary\' Bibles link the translation to Greek & Hebrew. So far, only some Bibles have this vocabulary feature. They are shown in the Bible select screen with the letter \'V\'.</span>' +
+								'<br><img style="width:180px;border:3px solid black" src="images/bible_with_vocab.png">' +
+							'</div>' +
+						'<li style="font-weight:bold">What does “~20x” or “Frequency” mean?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span>It is the number of occurrences of a word in the Bible. Click on it to see them all in the selected Bible(s).</span>' +
+							'</div>' +
+						'<li style="font-weight:bold">Why do some words have dropdown next to the frequency number?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span>This reveals different forms for some words and names. These details are often interesting to scholars, eg the word \'beginning\' in Genesis.</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/dropdown_frequency.png">' +
+							'</div>' +
+						'<li style="font-weight:bold">Where do I find the maps?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'map.gif\', 22)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1st method:</span>' +
+								'<br><span>Click on a place name then on the Map button in the detailed lexicon.</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/map_in_lexicon.png">' +
+								'<br><span>2nd method:</span>' +
+								'<br><span>1) Click the Resource icon.</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/resource_icon.png">' +
+								'<br><span>2) Click on "Places in the Bible"</span>' +
+								'<br><img style="width:180px;border:3px solid black" src="images/find_map.png">' +
+							'</div>' +
+						'<li style="font-weight:bold">How do I get the word frequency for a chapter or a book?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1) Click on the analysis icon.</span>' +
+								'&nbsp;<span class="glyphicon glyphicon-stats" style="line-height:13px"></span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/analysis.png">' +
+								'<br><span>2) Click on the "Selected passage" button if no analysis is shown.</span>' +
+							'</div>' +
+						'</ul>' +
 				'</div>' +
 			'</div>' +
-            '<div id="keyboard_shortcut" class="accordion-row" data-row="3" style="display:none">' +
-				'<h5 class="accordion-heading stepButton"><%= __s.quick_tutorial_header4 %>' +
-					'<span class="plusminus">+</span>' +
+
+			'<div class="accordion-row" data-row="3">' +
+				'<h5 class="accordion-heading stepButton">How do I find more information on original languges?' +
+					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
-					'<br>' +
-					'<div><span style="font-size:14px;font-weight:bold"><%= __s.keyboard_explain1 %></span>' +
-                    '<a href="javascript:step.util.showVideoModal(\'Keyboard.gif\', 85, 1153)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'<ul><%= __s.keyboard_explain2 %></ul>' +
-					'</div>' +
+					'<ul style="padding-inline-start:10px">' +
+						'<li style="font-weight:bold">How do I see Greek/Hebrew vocabulary for my Bible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'greek_hebrew_vocab.gif\', 53)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1) Click on the Bible translation button</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><span>2) Refer to the legend and select the Bible translations with the Vocab feature</span>' +
+								'<br><img style="width:180px;border:3px solid black" src="images/esv_with_vocab.png">' +
+								'<br><span>3) Click on the Option button, then click "Interlinear options”, then select "Greek / Hebrew".  Original language vocab will be shown.</span>' +
+								'<br><img style="width:200px;border:3px solid black" src="images/original_vocab_feature.png">' +
+							'</div>' +
+
+						'<li style="font-weight:bold">How do I see Greek/Hebrew transliteration for my Bible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'ESV_orig_voc_transliteration.gif\', 35)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1) Click on the Bible translation button</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><span>2) Refer to the legend and select the Bible translations with the Vocab feature</span>' +
+								'<br><img style="width:180px;border:3px solid black" src="images/esv_with_vocab.png">' +
+								'<br><span>3) Click on the Option button, then click "Interlinear options”, then select "Transliteration".</span>' +
+								'<br><img style="width:200px;border:3px solid black" src="images/transliteration.png">' +
+							'</div>' +
+
+						'<li style="font-weight:bold">How do I see Greek/Hebrew vocabulary for a verse?    <a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'verse_vocab.gif\', 18)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1) Click on the verse number to list the words and meanings</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/verse_vocab.png">' +
+								'<br>2) Hover over or click on a word for more details about the word</span>' +
+							'</div>' +
+
+						'<li style="font-weight:bold">How can I view multiple Bibles together as an Interlinear?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'OHB_ESV_Gen1.gif\', 40)">Video guides  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'&nbsp;&nbsp;' +
+								'<a href="javascript:step.util.showVideoModal(\'KJV_THGNT_John1.gif\', 35)">' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+
+								'<br><span>1) Click on the Bible translation button</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><span>2) Refer to the legend and select two Bible with the vocabulary feature</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/select_two_bibles.png">' +
+								'<br><span>3) Click on the Option button, then click Interlinear”.  Interlinear will be shown.</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/interlinear.png">' +
+							'</div>' +
+
+						'<li style="font-weight:bold">How do I see the various versions of the Greek OT?<a id="ot-greek-qa" style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span>1) Click on the Bible translation button</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><span>2) Select “Ancient” for the language</span>' +
+								'<br><span>3) Scroll down to see the Greek OT translations</span>' +
+								'<br><img style="width:176px;border:3px solid black" src="images/bible_ancient.png">' +
+								'<br><br><a id="otgreekexamples" href="html/additional_examples.html?exampleType=greekot&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
+								'<br><br>' +
+							'</div>' +
+						'<li style="font-weight:bold">How do I display the color-coded grammar?<a id="color-qa" style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'color_code_grammar.gif\', 50)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span>1) Click on the Bible translation button</span>' +
+								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><span>2) Refer to the legend and select the Bible translations with the grammar feature</span>' +
+								'<br><img style="width:200px;border:3px solid black" src="images/grammar_feature.png">' +
+								'<br><span>3) Click on the Option button, then click "Interlinear options", then click “Colour code grammar”. The text will then be colour coded.</span>' +
+								'<br><img style="width:200px;border:3px solid black" src="images/color_code_grammar.png">' +
+								'<br><span>4) To understand the colour code, click on the button “Configure colour code grammar”.</span>' +
+								'<br><img style="width:200px;border:3px solid black" src="images/configure_color_code_grammar.png">' +
+								'<br><br><a id="colorcodeexamples" href="html/additional_examples.html?exampleType=colorCode&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
+								'<br>' +
+							'</div>' +
+					'</ul>' +
 				'</div>' +
 			'</div>' +
-            
+
+
+			// '<div class="accordion-row" data-row="4">' +
+			// 	'<h5 class="accordion-heading stepButton">Additional FAQ' +
+			// 		'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
+			// 	'</h5>' +
+			// 	'<div class="accordion-body">' +
+			// 		'<ul style="padding-inline-start:10px">' +
+			// 			// '<li style="font-weight:bold">Where are the documentation on STEPBible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+			// 			// 	'<div class="stepExample" style="display:none">' +
+			// 			// 		'<br><a href="https://drive.google.com/file/d/1YllGKdletxufI_b6n8bOc5GCDBc_VX3x/view" target="_blank">1) Introduction guide</a>' +
+			// 			// 		'<br><a href="https://stepbibleguide.blogspot.com/p/home_19.html" target="_blank">2) <%= __s.help_online %></a>' +
+			// 			// 	'</div>' +
+
+			// 			// '<li style="font-weight:bold">Where are the videos on STEPBible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+			// 			// 	'<div class="stepExample" style="display:none">' +
+			// 			// 		'<br><a href="https://www.youtube.com/watch?v=PzazvPVYoSg" target="_blank">1) Introduction video</a>' +
+			// 			// 		'<br><a href="https://www.youtube.com/watch?v=zOmdjtlNLTg&t=119s" target="_blank">2) Independent review of STEPBible video</a>' +
+			// 			// 		'<br><a href="https://www.youtube.com/channel/UCAmOaidZsuuhiW1X78UCaDQ" target="_blank">3) <%= __s.video_help %></a>' +
+			// 			// 	'</div>' +
+
+			// 			'<li class="keyboard_shortcut" style="font-weight:bold"><%= __s.quick_tutorial_header4 %>' +
+			// 				'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+			// 				'<div class="stepExample" style="display:none">' +
+			// 					'<a href="javascript:step.util.showVideoModal(\'Keyboard.gif\', 85)">Video guide  ' +
+			// 						'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+			// 					'<br><span><%= __s.keyboard_explain2 %>.</span>' +
+			// 				'</div>' +
+			// 			'<li style="font-weight:bold"><%= __s.display_classical_ui %>' +
+			// 				'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+			// 				'<div class="stepExample" style="display:none">' +
+			// 					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23)">&nbsp;Video guide  <span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+			// 					'<br><span><%= __s.advanced_interface_explain %></span>' +
+			// 				'</div>' +
+			// 			'<li style="font-weight:bold">How do I write my own notes?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+			// 				'<div class="stepExample" style="display:none">' +
+			// 					'<span>1) Click the Resource icon.</span>' +
+			// 					'<br><img style="width:176px;border:3px solid black" src="images/resource_icon.png">' +
+			// 					'<br><span>2) Click on "Create your own notes"</span>' +
+			// 					'<br><img style="border:3px solid black" src="images/create_notes.png">' +
+			// 				'</div>' +
+			// 		'</ul>' +
+			// 	'</div>' +
+			// '</div>' +
+
+
 			'<div id=\'colorCodeTableDiv\'></div>' +
 			'<div class="text-muted step-copyright">' +
-				'<span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank">STEPBible</a> - 2022</span>' +
+				'<span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank">STEPBible</a> - 2024</span>' +
 			'</div>' +
 		'</div>'
 	),
@@ -275,8 +329,8 @@ var ExamplesView = Backbone.View.extend({
 				$(".modal-body").find("h3").hide();
 			}
 			else
-				this.$el.append(this.exampleTemplate);
-			this.initAccordions();
+				this.$el.append(this.exampleTemplate());
+			$("a.glyphicon.glyphicon-triangle-right.stepExample").click(step.util.expandCollapseExample);
             var options = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("selectedOptions") || [];
             var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
             if ((options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1)) cf.initCanvasAndCssForClrCodeGrammar();
@@ -284,30 +338,27 @@ var ExamplesView = Backbone.View.extend({
         var classicalUISetting = step.util.localStorageGetItem("step.classicalUI");
 		if (classicalUISetting === "true") $('#classicalUIVideo').hide();
 		else $('#classicalUIVideo').show();
-        if (step.touchDevice) $("#keyboard_shortcut").hide();
-        else $("#keyboard_shortcut").show();
-    },
-    initAccordions: function () {
-        var count = $(".accordion-row").length - 1; // Don't need to highlight keyboard shortcut
-        var hasStoredState = false;
-        var timesDisplayedKey = "accordionTimesDisplayed";
-		var timesDisplayed = step.util.localStorageGetItem(timesDisplayedKey);
-		if (timesDisplayed == null) timesDisplayed = 1;
-		else timesDisplayed ++;
-		
-        for (var i = 0; i < count; i++) {
-            if (step.util.localStorageGetItem("displayQuickTryoutAccordion" + i) === "true") {
-                hasStoredState = true;
-				var index = i;
-				if (timesDisplayed > 4) {
-					index = (i + 1) % count;
-					timesDisplayed = 1;
-				}
-                this.toggleAccordion(index, count);
-            }
-        }
-        if (!hasStoredState) this.toggleAccordion(0, count);
-		step.util.localStorageSetItem(timesDisplayedKey, timesDisplayed);
+		var urlVars = $.getUrlVars();
+		if (urlVars.indexOf("otgreekexamples") > -1) {
+            this.toggleAccordion(3, 2);
+			if ($("#ot-greek-qa").hasClass("glyphicon-triangle-right")) {
+				$("#ot-greek-qa").click();
+				setTimeout(function() {
+					$("#otgreekexamples").get(0).scrollIntoView();
+				}, 700);
+			}
+		}
+		else if (urlVars.indexOf("colorexamples") > -1) {
+			this.toggleAccordion(3, 2);
+			if ($("#color-qa").hasClass("glyphicon-triangle-right")) {
+				$("#color-qa").click();
+				setTimeout(function() {
+					$("#colorcodeexamples").get(0).scrollIntoView();
+				}, 700);
+			}
+		}
+        // if (step.touchDevice) $(".keyboard_shortcut").hide();
+        // else $(".keyboard_shortcut").show();
     },
     toggleAccordion: function (index, accordionCount) {
         var query = ".accordion-row[data-row=" + index + "]";
@@ -324,15 +375,16 @@ var ExamplesView = Backbone.View.extend({
         if ( (!$accordionBody.is(":visible")) || (displayFlag) ) {
             $accordionRow.find(".accordion-body").slideDown();
 			$accordionRow.find(".accordion-heading").addClass('stepPressedButton');
-            $accordionRow.find(".plusminus").text("-");
-            step.util.localStorageSetItem(storageKey, "true");
+            $accordionRow.find(".plusminus").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom")
+			step.util.localStorageSetItem(storageKey, "true");
         }
         else {
             $accordionRow.find(".accordion-body").slideUp();
 			$accordionRow.find(".accordion-heading").removeClass('stepPressedButton');
-            $accordionRow.find(".plusminus").text("+");
+            $accordionRow.find(".plusminus").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right")
             step.util.localStorageSetItem(storageKey, "false");
         }
+		$accordionRow.find(".plusminus").css("color", $accordionRow.find(".accordion-heading").css("color"));
     },
     onClickHeading: function (event, contextOfOriginalExecution) {
 		event.stopImmediatePropagation();

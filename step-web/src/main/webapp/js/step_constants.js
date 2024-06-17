@@ -26,7 +26,7 @@ ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
 SCRIPTURE_SORT = "SCRIPTURE";
 
 KEY_PAUSE=200;
-MOUSE_PAUSE=200;
+MOUSE_PAUSE=450;
 TOUCH_DURATION=50; // Minimum touch duration to trigger quick lexicon and highlight of same word
 TOUCH_CANCELLATION_TIME=150; // If touch move detected with this time and before quicklexicon is rendered, it will stop quick lexicon.
 

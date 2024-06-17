@@ -33,8 +33,8 @@
                             '<a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar(\'history\');" title="' + __s.bookmarks_and_recent_texts + '">' +
                                 '<i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">&nbsp;' + __s.bookmarks + '</span>' +
                             '</a>' +
-                            '<a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="' + __s.welcome_to_step + '">' +
-                                '<i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;' + __s.examples + '</span>' +
+                            '<a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="' + __s.frequently_asked_questions + '">' +
+                                '<i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;' + __s.faq + '</span>' +
                             '</a>' +
                             '<a id="fonts-icon" style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.showFontSettings();"' +
                                 'title="' + __s.font_sizes + '">' +
@@ -456,7 +456,37 @@
         $("#stepDisclaimer").popover();
     }
 
+    function checkForExampleURL() {
+        var urlVars = $.getUrlVars();
+        var debugParam = (urlVars.indexOf("debug") > -1) ? "&debug" : "";
+        if (urlVars.indexOf("colorCode1") > -1)
+            cf.setNextPageURL('?q=version=ESV|reference=Col.3&options=HVGUNC&skipwelcome' + debugParam, 'verb, imperative mood', 'kjv_verb_imperative_explanation');
+        else if (urlVars.indexOf("colorCode2") > -1)
+            cf.setNextPageURL('/?q=version=ESV|reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, main vs supporting verbs', 'kjv_verb_main_supporting_explanation');
+        else if (urlVars.indexOf("colorCode3") > -1)
+            cf.setNextPageURL('/?q=version=ESV|reference=Mat.1&options=HVGUNC&skipwelcome' + debugParam, 'gender and number', 'kjv_verb_number_and_gender_explanation');
+        else if (urlVars.indexOf("colorCode4") > -1)
+            cf.setNextPageURL('/?q=version=KJV|reference=Eph.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
+        else if (urlVars.indexOf("colorCode5") > -1)
+            cf.setNextPageURL('/?q=version=SBLG|reference=Rom.12&options=CEMVALHUN&skipwelcome' + debugParam, 'verb, gender and number', '');
+        else if (urlVars.indexOf("colorCode6") > -1)
+            cf.setNextPageURL('/?q=version=THOT|reference=Gen.1&options=HVLUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
+        else if (urlVars.indexOf("colorCode7") > -1)
+            cf.setNextPageURL('/?q=version=CUn|reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
+        else if (urlVars.indexOf("colorCode8") > -1)
+            cf.setNextPageURL('/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED&skipwelcome' + debugParam, 'verb, gender and number', '');
+        else if (urlVars.indexOf("otGreek1") > -1)
+            cf.setNextPageURL('/?q=version=LXX|version=EngLXX|version=ABGk|version=ABEn|reference=Exod.31&options=VLGUHVNAT&display=INTERLEAVED&skipwelcome' + debugParam, '', '');
+        else if (urlVars.indexOf("otGreek2") > -1)
+            cf.setNextPageURL('/?q=version=ESV|version=THOT|version=ABGk|version=ABEn|reference=Isa.53.1%20John.12.38&options=VVNH&display=COLUMN&pos=1&skipwelcome' + debugParam, '', '');
+        else return false;
+        return true;
+    }
+
     $(window).on("load", function () {
+        if (checkForExampleURL())
+            return;
+
         //disable amd
         define.amd = null;
 

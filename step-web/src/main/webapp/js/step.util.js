@@ -364,16 +364,9 @@ step.util = {
         }, duration * 333);
         document.body.appendChild(el);
     },
-// seems like it is not used.  PT 11/20/2023
-//    getErrorPopup: function (message, level) {
-//        var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
-//			step.util.modalCloseBtn(null, "") +
-//            '<%= message %></div>')({ message: message, level: level}));
-//        return errorPopup;
-//    },
     raiseOneTimeOnly: function (key, level) {
         var k = step.settings.get(key);
-        if (!k) {
+        if ((!k) || (key.indexOf("kjv_verb") == 0)) { // the kjv_verb messages are for examples of color code grammar
             var obj = {};
             obj[key] = true;
             step.settings.save(obj);
@@ -1409,7 +1402,9 @@ step.util = {
 				if (version === '')
 	                version = firstVersion;
 				allVersions = firstVersion + "," + step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("extraVersions");
-            }
+				step.historyStrong = [];
+				step.historyMorph = [];
+			}
 			variant = variant || "";
             step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, variant: variant, version: version, allVersions: allVersions });
             require(["sidebar"], function (module) {
@@ -1617,7 +1612,7 @@ step.util = {
             }
         },
 
-				_displayNewQuickLexiconForVerseVocab: function (strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong) {
+				displayNewQuickLexiconForVerseVocab: function (strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong) {
 					var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
 					var pageY = 0;
 					if (typeof pageYParam === "number")
@@ -1629,7 +1624,7 @@ step.util = {
 						require(['quick_lexicon'], function () {
 							step.util.delay(function () {
 								// do the quick lexicon
-								step.util.ui._displayNewQuickLexiconForVerseVocab(strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong);
+								step.util.ui.displayNewQuickLexiconForVerseVocab(strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong);
 							}, MOUSE_PAUSE, 'show-quick-lexicon');
 						});
 					}
@@ -1813,7 +1808,6 @@ step.util = {
 				});
 			}
 			else {
-				var verseNumTimer;
 				$(".verseNumber", passageContent).closest("a").hover(function () {
 					var isVerseVocab = step.passages.findWhere({ passageId: passageId }).get("isVerseVocab");
 					if (isVerseVocab || isVerseVocab == null) {
@@ -1918,7 +1912,7 @@ step.util = {
 												require(['quick_lexicon'], function () {
 													step.util.delay(function () {
 														// do the quick lexicon
-														step.util.ui._displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, ev, ev.pageY, hoverContext);
+														step.util.ui.displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, ev, ev.pageY, hoverContext);
 													}, MOUSE_PAUSE, 'show-quick-lexicon');
 												});
 											}, function () { // mouse pointer ends hover (leave)
@@ -2358,13 +2352,15 @@ step.util = {
 								'$(".advanced_search_elements").show();' +
 								'step.util.localStorageSetItem("advanced_search", true);' +
 								'$("#basic_search_help_text").hide();' +
-								'step.searchSelect._previousSearchesEnteredByUser();' +
+//								'step.searchSelect._previousSearchesEnteredByUser();' +
+								'step.searchSelect.checkSearchButton();' +
 							'}' +
 							'else {' +
 								'$("#select_advanced_search").removeClass("checked");' +
 								'$(".advanced_search_elements").hide();' +
 								'$("#basic_search_help_text").show();' +
 								'step.util.localStorageSetItem("advanced_search", false);' +
+								'$("#searchButton").hide();' +
 							'}' +
 						'}' +
 					'</script>' +
@@ -2410,7 +2406,7 @@ step.util = {
 		step.util.blockBackgroundScrolling("searchSelectionModal");
 		$('textarea#userTextInput').focus();
     },
-	showVideoModal: function (videoFile, seconds, width) {
+	showVideoModal: function (videoFile, seconds) {
         var element = document.getElementById('videoModal');
         if (element) element.parentNode.removeChild(element);
         $(_.template(
@@ -2657,6 +2653,11 @@ step.util = {
 		if (panelBodies != null) {
 			if (panelBodies.length == 1) {
 				$(".modal-body").append(panelBodies[0]);
+				if (typeof panelBodies[0] === "string") {
+					var pos = panelBodies[0].indexOf("id=\"welcomeExamples");
+					if (pos > 1 && pos < 10) // Reduce padding for the welcome (Q&A) modal
+						$(".modal-body").css("padding","0")
+				}
 			}
 			else {
 				for (var i = 0; i < panelBodies.length; i++) {
@@ -3989,7 +3990,6 @@ step.util = {
 						callProcessQuickInfo(resultJson, callBack1Param);
 				}
 			}).error(function() {
-				console.log("getJSon failed strong:"+ strong + " morph: " + morph + " version: " + version);
 				if (numOfResponse < 0) return; // already processed error from $getjson of /html/lexicon ...
 				numOfResponse = -100; // indicated there is a failure
 				callBackLoadDefFromAPI(callBack2Param);

@@ -57,12 +57,10 @@ var SidebarView = Backbone.View.extend({
         if (this.model.get("mode") == 'lexicon') {
             this.lexicon.addClass("active");
             //load content
-            var requestTime = new Date().getTime();
             lastMorphCode = '';
             var curMorphs = step.util.convertMorphOSHM2TOS( this.model.get("morph") );
-            if ((curMorphs != undefined) && (curMorphs.indexOf('TOS:') == 0) ) {
+            if (curMorphs != undefined)
                 lastMorphCode = curMorphs;
-            }
 			var ref = this.model.get("ref");
 			var version = this.model.get("version");
 			var allVersions = this.model.get("allVersions");
@@ -106,6 +104,7 @@ var SidebarView = Backbone.View.extend({
         var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRBMR
         if ((cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
             cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
+        return false; // Return false so this will not be called 2 times.
     },
     loadDefinitionFromRestAPI: function (parameters) {
         var version = parameters[0];
@@ -176,13 +175,26 @@ var SidebarView = Backbone.View.extend({
         var ref = parameters[0];
         var allVersions = parameters[1];
         var variant = parameters[2];
+        var allMorphsForBackButton;
+        var allStrongsForBackButton;
         if (!Array.isArray(variant)) variant = [""]; // Initialize in case it is not.
         //get definition tab
+
+        if (this.lexicon.length == 1) {
+            if (!Array.isArray(step.historyMorph))
+                step.historyMorph = [];
+            else if (step.historyMorph.length > 0)
+                allMorphsForBackButton = step.historyMorph[step.historyMorph.length - 1];
+            if (!Array.isArray(step.historyStrong))
+                step.historyStrong = [];
+            else if (step.historyStrong.length > 0)
+                allStrongsForBackButton = step.historyStrong[step.historyStrong.length - 1];
+        }
+        else console.log("this lexicon "+this.lexicon.length);
+
         this.lexicon.detach();
         this.lexicon.empty();
         $('#quickLexicon').remove();
-        // var alternativeEntries = $("<div id='vocabEntries'>"); // does not seem to be used.  PT 12/2/2023
-        // this.lexicon.append(alternativeEntries);
         var headerType = "h4";
         if (!step.touchDevice || step.touchWideDevice) { 
             this.lexicon.append("<h1>");
@@ -204,6 +216,10 @@ var SidebarView = Backbone.View.extend({
                 isOTorNT = "NT";
         }
         var panelBodies = [];
+        var allStrongsForNextBackButton = "";
+        // need to handle multiple morphInfo (array)
+        if ((lastMorphCode != '') && (data.morphInfos.length == 0) && (lastMorphCode.indexOf('TOS:') == 0))
+            data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
         if (data.vocabInfos.length > 1) {
             //multiple entries
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
@@ -211,6 +227,9 @@ var SidebarView = Backbone.View.extend({
                 var item = data.vocabInfos[i];
                 var isHebrew = data.vocabInfos[i].strongNumber.substring(0,1) === 'H';
                 var panelId = "lexicon-" + data.vocabInfos[i].strongNumber;
+                if (allStrongsForNextBackButton !== "")
+                    allStrongsForNextBackButton += " ";
+                allStrongsForNextBackButton += data.vocabInfos[i].strongNumber;
 				var currentGloss = item.stepGloss;
 				if (currentUserLang =="es") currentGloss += " " + item._es_Gloss;
 				else if (currentUserLang =="zh") currentGloss += " " + item._zh_Gloss;
@@ -229,10 +248,6 @@ var SidebarView = Backbone.View.extend({
                     currentVariant = variant[0];
                 if ((typeof currentVariant === "string") && (currentVariant !== ""))
                     panelBody.append("<div>in " + currentVariant + " manuscript</div>");
-                // need to handle multiple morphInfo (array)
-                if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
-                    data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
-                } 
                 if (i < data.morphInfos.length)
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
@@ -261,14 +276,12 @@ var SidebarView = Backbone.View.extend({
             }, sleepTime);
         }
         else {
+            allStrongsForNextBackButton += data.vocabInfos[0].strongNumber;
             var panelBody = $('<div class="panel-body"></div>');
             this._createBriefWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions);
             if (variant[0] !== "")
                 panelBody.append("<div>Only in " + variant[0] + " manuscript</div>");
             // need to handle multiple morphInfo (array)
-            if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
-                data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
-            }
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0]);
             }
@@ -281,6 +294,17 @@ var SidebarView = Backbone.View.extend({
 	        else
 	        	this.lexicon.append(panelBody);
         }
+        if (this.lexicon.length == 1) {
+            step.historyMorph.push(lastMorphCode);
+            step.historyStrong.push(allStrongsForNextBackButton);
+        }
+        else console.log("this.lexicon length is " + this.lexicon.length);
+
+        if ((typeof allStrongsForBackButton === "string") && (allStrongsForBackButton !== allStrongsForNextBackButton)) {
+            var lexiconElement = $(this.lexicon[0]);
+            lexiconElement.prepend("<button id='lexicon-back-button' class='glyphicon glyphicon-arrow-left' title='Back to the definition of the previous word, " + allStrongsForBackButton + "'></button>");
+        }
+
         if (step.touchDevice && !step.touchWideDevice) {
             step.util.showLongAlert(this.lexicon.html(), "<b>" + __s.lexicon_vocab + "</b>", panelBodies);
             this.closeSidebar();
@@ -295,6 +319,28 @@ var SidebarView = Backbone.View.extend({
         this._initExpandCollapse("GeneralRelatedWords");
         this._initExpandCollapse("GrammarInfo");
         this._isItALocation(data.vocabInfos[0], ref);
+        var lexiconBackButtonElement = $("#lexicon-back-button");
+        if (lexiconBackButtonElement.length != 1)
+            return;
+        lexiconBackButtonElement.click(function () {
+            if (step.historyMorph.length > 2) {
+                step.historyMorph.pop();
+                step.historyMorph.pop();
+            }
+            else step.historyMorph = [];
+            if (step.historyStrong.length > 2) {
+                step.historyStrong.pop();
+                step.historyStrong.pop();
+            }
+            else step.historyStrong = [];
+            // When more than one Strong number, reverse the order.  For example, "H1234 H2345" will be "H2345 H1234"
+            var reservedOrderOfStrongs = allStrongsForBackButton.split(" ").reverse().join(" ");
+            step.util.ui.showDef(
+            {   strong: reservedOrderOfStrongs,
+                morph: allMorphsForBackButton,
+                version: allVersions.split(" ")[0] } );
+        });
+
     },
     _initExpandCollapse: function (name) {
         if (($("." + name + ":visible").length > 0) || (step.util.localStorageGetItem("sidebar." + name) === "true")) {
@@ -886,11 +932,12 @@ var SidebarView = Backbone.View.extend({
                 require(['quick_lexicon'], function () {
                     step.util.delay(function () {
                         // do the quick lexicon
-                        step.util.ui._displayNewQuickLexiconForVerseVocab(searchString, '', bibleVersion, step.util.activePassageId(),  ev, ev.pageY, null, "");
+                        step.util.ui.displayNewQuickLexiconForVerseVocab(searchString, '', bibleVersion, step.util.activePassageId(), ev, ev.pageY, null, "");
                     }, MOUSE_PAUSE, 'show-quick-lexicon');
                 });
             },
             function () { // mouse pointer ends hover (leave)
+                step.util.delay(undefined, 0, 'show-quick-lexicon');
                 $("#quickLexicon").remove();
             });
         }
@@ -1000,7 +1047,7 @@ var SidebarView = Backbone.View.extend({
             '<li class="active"><a class="glyphicon glyphicon-info-sign" title="<%= __s.original_word %>" data-toggle="tab" data-target="#lexicon"></li>' +
             '<li><a class="glyphicon glyphicon-stats" title="<%= __s.passage_stats %>" data-toggle="tab" data-target="#analysis"></li>' +
             '<li><a class="glyphicon glyphicon-bookmark" title="<%= __s.bookmarks_and_recent_texts %>" data-toggle="tab" data-target="#history"></li>' +
-            '<li><a class="stepglyph-help" title="<%= __s.quick_tutorial %>" data-toggle="tab" data-target="#help">?</li>' +
+            '<li><a class="stepglyph-help glyphicon glyphicon-question-sign" title="<%= __s.frequently_asked_questions %>" data-toggle="tab" data-target="#help"></li>' +
             '</ul>';
 
         var tabContainer = $(_.template(template)());

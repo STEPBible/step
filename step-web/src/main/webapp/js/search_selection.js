@@ -262,7 +262,7 @@ step.searchSelect = {
 			$(".advanced_search_elements").show();
 			$("#select_advanced_search").addClass("checked");
 			$("#advancesearchonoffswitch").prop( "checked", true );
-			step.searchSelect._previousSearchesEnteredByUser();
+//			step.searchSelect._previousSearchesEnteredByUser();
 		}
 		else {
 			$("#basic_search_help_text").show();
@@ -317,38 +317,37 @@ step.searchSelect = {
 		if (ev !== null) step.searchSelect._updateDisplayBasedOnOptions();
 		return false;
 	},
-	_previousSearchesEnteredByUser: function() {
-		var previousSearches = step.util.localStorageGetItem("step.previousSearches");
-		if (previousSearches == null) {
-			$("#previousSearchDropDown").hide();
-			return;
-		}
-		var searchWordsHTML = 
-			'<h4 style="font-size:14px;margin-bottom:0px">Previous searches</h4>' +
-			'<ul class="displayModes" style="padding-left:0px" role="presentation">';
-		previousSearches = previousSearches.split(";");
-		for (var i = 0; i < previousSearches.length; i ++) {
-			searchWordsHTML += '<li class="stepModalFgBg dropdown-menu passageOptionsGroup" style="display:block;position:initial;opacity:1;border:0px;padding:0px;box-shadow:none">' +
-				'<a class="searchWords" id="searchWords' + i +'" style="display:inline-block;width:100%;line-height:20px">' +
-				previousSearches[i] +
-				'</a>' +
-				'</li>';
-		}
-		searchWordsHTML += '</ul>';
-		$("#previousSearchWords").empty().append(searchWordsHTML);
-		$(".searchWords").click(step.searchSelect._displayPreviousSearchWord);
-	},
-	_displayPreviousSearchWord: function(ev) {
-		if ((ev == null) || (typeof ev.target.id !== "string") ||
-			(ev.target.id.substring(0, 11) !== "searchWords")) return;
-		var wordIndex = ev.target.id.substring(11);
-        var previousSearches = step.util.localStorageGetItem("step.previousSearches");
-		previousSearches = previousSearches.split(";");
-		$("textarea#userTextInput").text(previousSearches[wordIndex]);
-		$("#previousSearchDropDown").removeClass("open");
-		step.searchSelect.handleKeyboardInput(ev);
-		return false;
-	},
+	// _previousSearchesEnteredByUser: function() {
+	// 	var previousSearches = step.util.localStorageGetItem("step.previousSearches");
+	// 	if (previousSearches == null) {
+	// 		return;
+	// 	}
+	// 	var searchWordsHTML = 
+	// 		'<h4 style="font-size:14px;margin-bottom:0px">Previous searches</h4>' +
+	// 		'<ul class="displayModes" style="padding-left:0px" role="presentation">';
+	// 	previousSearches = previousSearches.split(";");
+	// 	for (var i = 0; i < previousSearches.length; i ++) {
+	// 		searchWordsHTML += '<li class="stepModalFgBg dropdown-menu passageOptionsGroup" style="display:block;position:initial;opacity:1;border:0px;padding:0px;box-shadow:none">' +
+	// 			'<a class="searchWords" id="searchWords' + i +'" style="display:inline-block;width:100%;line-height:20px">' +
+	// 			previousSearches[i] +
+	// 			'</a>' +
+	// 			'</li>';
+	// 	}
+	// 	searchWordsHTML += '</ul>';
+	// 	$("#previousSearchWords").empty().append(searchWordsHTML);
+	// 	$(".searchWords").click(step.searchSelect._displayPreviousSearchWord);
+	// },
+	// _displayPreviousSearchWord: function(ev) {
+	// 	if ((ev == null) || (typeof ev.target.id !== "string") ||
+	// 		(ev.target.id.substring(0, 11) !== "searchWords")) return;
+	// 	var wordIndex = ev.target.id.substring(11);
+    //     var previousSearches = step.util.localStorageGetItem("step.previousSearches");
+	// 	previousSearches = previousSearches.split(";");
+	// 	$("textarea#userTextInput").text(previousSearches[wordIndex]);
+	// 	$("#previousSearchDropDown").removeClass("open");
+	// 	step.searchSelect.handleKeyboardInput(ev);
+	// 	return false;
+	// },
 	_updateDisplayBasedOnOptions: function() {
 		var wordsAroundDash = 0;
 		var showStrong = false;
@@ -496,44 +495,63 @@ step.searchSelect = {
 			}
 		}
 		else {
+			$("#searchButton").hide();
 			var userInput = $('textarea#userTextInput').val();
 			if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
 				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 				$('textarea#userTextInput').val(userInput);
-				if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true); // probably a passage
-				var sleep = 50;
-				if (step.searchSelect.searchUserInput !== userInput) {
-					step.searchSelect._handleEnteredSearchWord();
-					sleep = 250;
-				}
-				setTimeout(function() { // Need to give time for the input to the sent to the server and also time for the response to come back to the browser.
-					var textSearchResult = $("#searchResultstext").find("a");
-					if (textSearchResult.length > 0) {
-						if (textSearchResult.length > 1) {
-							for (var i = 0; i < textSearchResult.length; i++) {
-								var nextElement = $(textSearchResult[i]).next();
-								if ((nextElement.length > 0) && ($(nextElement).prop("tagName").toLowerCase() === "span") &&
-									($(nextElement).text() === __s.default_search)) {
-									step.searchSelect._find_onclick_and_go(textSearchResult[i]);
-									return;
+				if (!$("#select_advanced_search").hasClass("checked")) {
+					if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true); // probably a passage
+					var sleep = 50;
+					if (step.searchSelect.searchUserInput !== userInput) {
+						step.searchSelect._handleEnteredSearchWord();
+						sleep = 330;
+					}
+					setTimeout(function() { // Need to give time for the input to the sent to the server and also time for the response to come back to the browser.
+						var textSearchResult = $("#searchResultstext").find("a");
+						if (textSearchResult.length > 0) {
+							if (textSearchResult.length > 1) {
+								for (var i = 0; i < textSearchResult.length; i++) {
+									var nextElement = $(textSearchResult[i]).next();
+									if ((nextElement.length > 0) && ($(nextElement).prop("tagName").toLowerCase() === "span") &&
+										($(nextElement).text() === __s.default_search)) {
+										step.searchSelect._find_onclick_and_go(textSearchResult[i]);
+										return;
+									}
 								}
 							}
+							step.searchSelect._find_onclick_and_go(textSearchResult[0]); // Did not find default search text, go with the first link.
+							return;
 						}
-						step.searchSelect._find_onclick_and_go(textSearchResult[0]); // Did not find default search text, go with the first link.
-						return;
-					}
-					else {
-						$('#warningMessage').text(__s.enter_search_word);
-					}
-				}, sleep);
+						else {
+							$('#warningMessage').text(__s.enter_search_word);
+						}
+					}, sleep);
+				}
+				else {
+					$('#warningMessage').text('');
+					step.searchSelect._handleEnteredSearchWord();
+				}	
 			}
 			else {
-				$('#warningMessage').text('');
-				step.searchSelect._handleEnteredSearchWord();
+				if ($("#select_advanced_search").hasClass("checked"))
+					step.searchSelect.checkSearchButton(userInput);
+				else
+					step.searchSelect._handleEnteredSearchWord();
 			}
+
 		}
 	},
-
+	checkSearchButton: function(userInput) {
+		if (userInput === undefined)
+			userInput = $('textarea#userTextInput').val();
+		var requiredLength = (step.searchSelect.userLang.toLowerCase().indexOf("zh") == 0) ? 1 : 2;
+		if (userInput.length < requiredLength) $("#searchButton").hide();
+		else if ($("#userTextInput").data("lastsearchword") !== userInput)
+			$("#searchButton").show();
+		else
+			$("#searchButton").hide();
+	},
 	goBackToPreviousPage: function() {
 		$('#quickLexicon').remove();
 		$('#searchSelectError').text("");
@@ -591,21 +609,23 @@ step.searchSelect = {
 			}
 		}
 		var backgroundColor = (step.util.isDarkMode()) ? "var(--clrBackground)" : "#f5f5f5";
-		var fontColor = "var(--clrStrongText)";
+		//var fontColor = "var(--clrStrongText)";
 		var html = '<div class="header">' +
 			'<h4 id="hd4">' + __s.enter_search_word + '</h4>' +
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
 			'<span id="warningMessage" style="color:red;"></span>' +
-			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
-
-			'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +
-				'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
+			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:50%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
+			'<button id="searchButton" style="vertical-align:top;display:none;padding-left:10px;padding-right:10px" class="stepButton primaryLightBg" onclick=step.searchSelect._handleEnteredSearchWord() title="Get suggested search">' +
+				'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
+			'</button>' +
+			//'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +
+			//	'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
 				    // using https://www.iconfinder.com/icons/326655/history_icon
-				    '&nbsp;&nbsp;<?xml version="1.0" ?><svg height="21px" version="1.1" viewBox="0 0 20 21" width="20px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g fill="#000000" id="Core" opacity="0.9" transform="translate(-464.000000, -254.000000)"><g id="history" transform="translate(464.000000, 254.500000)"><path d="M10.5,0 C7,0 3.9,1.9 2.3,4.8 L0,2.5 L0,9 L6.5,9 L3.7,6.2 C5,3.7 7.5,2 10.5,2 C14.6,2 18,5.4 18,9.5 C18,13.6 14.6,17 10.5,17 C7.2,17 4.5,14.9 3.4,12 L1.3,12 C2.4,16 6.1,19 10.5,19 C15.8,19 20,14.7 20,9.5 C20,4.3 15.7,0 10.5,0 L10.5,0 Z M9,5 L9,10.1 L13.7,12.9 L14.5,11.6 L10.5,9.2 L10.5,5 L9,5 L9,5 Z" id="Shape"/></g></g></g></svg>' +
-				'</a>' +
-				'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
-			'</span>' +
+			//	    '&nbsp;&nbsp;<?xml version="1.0" ?><svg height="21px" version="1.1" viewBox="0 0 20 21" width="20px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g fill="#000000" id="Core" opacity="0.9" transform="translate(-464.000000, -254.000000)"><g id="history" transform="translate(464.000000, 254.500000)"><path d="M10.5,0 C7,0 3.9,1.9 2.3,4.8 L0,2.5 L0,9 L6.5,9 L3.7,6.2 C5,3.7 7.5,2 10.5,2 C14.6,2 18,5.4 18,9.5 C18,13.6 14.6,17 10.5,17 C7.2,17 4.5,14.9 3.4,12 L1.3,12 C2.4,16 6.1,19 10.5,19 C15.8,19 20,14.7 20,9.5 C20,4.3 15.7,0 10.5,0 L10.5,0 Z M9,5 L9,10.1 L13.7,12.9 L14.5,11.6 L10.5,9.2 L10.5,5 L9,5 L9,5 Z" id="Shape"/></g></g></g></svg>' +
+			//	'</a>' +
+			//	'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
+			//'</span>' +
 
 			'<div id="basic_search_help_text" style="font-size:14px;width:90%">' +
 			'<br>' +
@@ -1239,11 +1259,18 @@ step.searchSelect = {
 					"%7C" + LIMIT + "%3D" + limitType +
 					"%7C?lang=" + step.searchSelect.userLang;
 			}
-			$.ajaxSetup({async: false});
+			for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
+				$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
+			}
+			step["SearchCount" + GREEK] = 0;
+			step["SearchCount" + GREEK_MEANINGS] = 0;
+			step["SearchCount" + HEBREW] = 0;
+			step["SearchCount" + HEBREW_MEANINGS] = 0;
+			step["SearchCount" + MEANINGS] = 0;
+			step["SearchCount" + SUBJECT_SEARCH] = 0;
+			step["SearchCount" + TEXT_SEARCH] = 0;
+//			$.ajaxSetup({async: false});
 			$.getJSON(url, function (data) {
-				for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
-					$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
-				}
 				var alreadyShownStrong = [];
 				for (var i = 0; i < data.length; i++) {
 					var skipBecauseOfZeroCount = false;
@@ -1273,7 +1300,7 @@ step.searchSelect = {
 												text2Display += data[i].extraExamples[k].value;
 										}
 										if (text2Display.length == 0) console.log('group, but no examples');
-										else {
+										else if (currentSearchSuggestionElement.text().indexOf("list all with similar") == -1) {
 											var text2Display = '&nbsp;&nbsp;&nbsp;<b>';
 											if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS))
 												text2Display += 'list all with similar meaning...';
@@ -1317,6 +1344,7 @@ step.searchSelect = {
 								else if (suggestionType === TEXT_SEARCH) {
 									if (data[i].suggestion.text.search(/^[HG]\d/i) == -1) { // Make sure it is not a STRONG number (e.g.: H0001)
 										text2Display = data[i].suggestion.text;
+										$('#userTextInput').attr('data-lastsearchword', text2Display);
 										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
 										if (str2Search.indexOf("%22") == -1) {
 											var strings2Search = str2Search.split(" ");
@@ -1478,7 +1506,7 @@ step.searchSelect = {
 			}).fail(function() {
                 changeBaseURL();
             });
-			$.ajaxSetup({async: true});
+//			$.ajaxSetup({async: true});
 			step.searchSelect.searchUserInput = userInput;
 			step.searchSelect._updateDisplayBasedOnOptions();
 		}
@@ -2005,7 +2033,7 @@ step.searchSelect = {
 		$('textarea#userTextInput').hide();
 		$('#updateButton').hide();
 		$("#advancedsearchonoff").hide();
-		$("#previousSearchDropDown").hide();
+//		$("#previousSearchDropDown").hide();
 		$("#hd4").text(__s.please_select_one);
 		step.searchSelect.searchModalCurrentPage = 3;	
 		$('#srchModalBackButton').show();
@@ -2072,11 +2100,12 @@ step.searchSelect = {
 			require(['quick_lexicon'], function () {
 				step.util.delay(function () {
 					// do the quick lexicon
-					step.util.ui._displayNewQuickLexiconForVerseVocab(searchString, '', version, step.util.activePassageId(),  ev, ev.pageY, null, multipleStrongText);
+					step.util.ui.displayNewQuickLexiconForVerseVocab(searchString, '', version, step.util.activePassageId(),  ev, ev.pageY, null, multipleStrongText);
 				}, MOUSE_PAUSE, 'show-quick-lexicon');
 			});
 		},
 		function () { // mouse pointer ends hover (leave)
+			step.util.delay(undefined, 0, 'show-quick-lexicon');
 			$("#quickLexicon").remove();
 		});
 	},
@@ -2085,13 +2114,20 @@ step.searchSelect = {
 		str2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
 		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions) { // , hasHebrew, hasGreek) {
 		var brCount = 0;
-		var suggestionsToDisplay = 5;
+		var suggestionsToDisplay = 7;
 		var needLineBreak = "";
 		var isAugStrong = Array.isArray(augStrongSameMeaning);
 		var existingHTML = currentSearchSuggestionElement.html();
+		step["SearchCount" + suggestionType] ++;
+		brCount = step["SearchCount" + suggestionType];
+		if (brCount >= suggestionsToDisplay) return;
+		if ((suffixToDisplay.indexOf(__s.default_search) > -1) && ($("#select_advanced_search").hasClass("checked"))) {
+			console.log("removing " + suffixToDisplay);
+			suffixToDisplay = "";
+		}
 		if ((typeof existingHTML === "string") && (existingHTML !== "")) {
-			brCount = (existingHTML.match(/<br>/g) || []).length;
-			brCount += (existingHTML.match(/<\/ol>/g) || []).length;
+			// brCount = (existingHTML.match(/<br>/g) || []).length;
+			// brCount += (existingHTML.match(/<\/ol>/g) || []).length;
 			if (((brCount < suggestionsToDisplay + 1) || (limitType !== ""))) {
 					if (existingHTML.slice(-5) !== "</ol>") {
 						needLineBreak = "<br>";
@@ -2112,11 +2148,10 @@ step.searchSelect = {
 				titleText += '" ';
 			}
 			var searchType = ((suggestionType === GREEK) || (suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW) || (suggestionType === HEBREW_MEANINGS)) ? "strong" : suggestionType;
-			var freqList = "";
 			if ((isAugStrong) || (hasDetailLexInfo)) {
-				// var strongWithAugOrDetailLexInfo = $('<span></span');
-				// currentSearchSuggestionElement.append(strongWithAugOrDetailLexInfo);
-				this._getAdditionalInformationOnStrong(str2Search, augStrongSameMeaning, allVersions, currentSearchSuggestionElement, step.searchSelect._addLineWithAugStrongOrDetailLexInfo,
+				var strongWithAugOrDetailLexInfo = $('<span></span');
+				currentSearchSuggestionElement.append(strongWithAugOrDetailLexInfo);
+				this._getAdditionalInformationOnStrong(str2Search, augStrongSameMeaning, allVersions, strongWithAugOrDetailLexInfo, step.searchSelect._addLineWithAugStrongOrDetailLexInfo,
 					titleText, text2Display, userInput, isAugStrong,
 					needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
 			}
@@ -2151,7 +2186,7 @@ step.searchSelect = {
 					currentSearchSuggestionElement.append('<br>');
 				currentSearchSuggestionElement.append(needLineBreak).append('&nbsp;&nbsp;&nbsp;')
 					.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding:0px" title="click to see more suggestions" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' +
-						suggestionType + '\')"><b>list all with with similar ' + suggestionType.charAt(0).toUpperCase() + suggestionType.slice(1).toLowerCase() +
+						suggestionType + '\')"><b>list all with similar ' + suggestionType.charAt(0).toUpperCase() + suggestionType.slice(1).toLowerCase() +
 						' spelling...</b></a>');	
 			}
 		}

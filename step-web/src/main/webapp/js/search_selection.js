@@ -1269,7 +1269,6 @@ step.searchSelect = {
 			step["SearchCount" + MEANINGS] = 0;
 			step["SearchCount" + SUBJECT_SEARCH] = 0;
 			step["SearchCount" + TEXT_SEARCH] = 0;
-//			$.ajaxSetup({async: false});
 			$.getJSON(url, function (data) {
 				var alreadyShownStrong = [];
 				for (var i = 0; i < data.length; i++) {
@@ -1506,7 +1505,6 @@ step.searchSelect = {
 			}).fail(function() {
                 changeBaseURL();
             });
-//			$.ajaxSetup({async: true});
 			step.searchSelect.searchUserInput = userInput;
 			step.searchSelect._updateDisplayBasedOnOptions();
 		}

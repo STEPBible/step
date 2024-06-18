@@ -2559,8 +2559,8 @@ step.util = {
                 '<div class="copyrightInfo">' +
                     'Copyright information for <a href="/version.jsp?version=ESV" target="_new">ESV</a>' +
                 '</div>' +
-                '<br><hr>' +
-				'<a target="_blank" href="https://beta.garytuck.com/docs/' + urlForiFrame + '.htm#outline">Outline of ' + longBookName + ' by Dr. Gary Tuck</a>';
+                '<br>';
+				// '<a target="_blank" href="https://beta.garytuck.com/docs/' + urlForiFrame + '.htm#outline">Outline of ' + longBookName + ' by Dr. Gary Tuck</a>';
             var chptSummary =
                 '<br><span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
                 '<span style="font-size:16px">' +

@@ -45,7 +45,7 @@ public class LoaderTest {
 
     @Test
     public void testLoaderProgress() {
-        Loader l = new Loader(null, new Properties(), null, null, null, null);
+        Loader l = new Loader(null, new Properties(), null, null, null, null, null);
         assertEquals(0, l.getTotalProgress());
 
         l.setTotalProgress(1);
@@ -154,7 +154,7 @@ public class LoaderTest {
         coreProperties.put(key, file);
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         return new Loader(null, coreProperties, this.entityManager,
-                null, this.clientSessionProvider, mock(AppManagerService.class));
+                null, null, this.clientSessionProvider, mock(AppManagerService.class));
     }
 
     /**

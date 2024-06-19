@@ -8,6 +8,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.AppManagerService;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
+import com.tyndalehouse.step.core.service.TranslationTipsService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.common.progress.JobManager;
@@ -47,6 +48,7 @@ public class Loader {
     private int totalItems = 6;
     private boolean inProgress = false;
     private final StrongAugmentationService strongAugmentationService;
+    private final TranslationTipsService translationTipsService;
 
     /**
      * The loader is given a connection source to load the data.
@@ -54,18 +56,22 @@ public class Loader {
      * @param coreProperties        the step core properties
      * @param entityManager         the entity manager
      * @param strongAugmentationService            the strongAugmentationService Strong service
+     * @param translationTipsService            the translationTipsService Translation Tips service
      * @param clientSessionProvider the client session provider
      */
     @Inject
     public Loader(final JSwordModuleService jswordModule,
                   @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
-                  final StrongAugmentationService strongAugmentationService, final Provider<ClientSession> clientSessionProvider,
+                  final StrongAugmentationService strongAugmentationService,
+                  final TranslationTipsService translationTipsService, 
+                  final Provider<ClientSession> clientSessionProvider,
                   AppManagerService appManager
     ) {
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
         this.strongAugmentationService = strongAugmentationService;
+        this.translationTipsService = translationTipsService;
         this.clientSessionProvider = clientSessionProvider;
         this.runningAppVersion = coreProperties.getProperty(AppManagerService.APP_VERSION);
         this.appManager = appManager;
@@ -206,6 +212,8 @@ public class Loader {
         loadAlternativeTranslations();
         this.totalProgress += 1;
         loadAugmentedStrongs(true);
+        this.totalProgress += 1;
+        loadTranslationTips();
         LOGGER.info("Finished loading...");
     }
 
@@ -215,6 +223,12 @@ public class Loader {
         String installFile = appManager.getStepInstallFile().toString();
         if (loadAugmentedFile) this.strongAugmentationService.readAndLoad(strongsFile, installFile);
         else this.strongAugmentationService.loadFromSerialization(appManager.getStepInstallFile().toString());
+    }
+
+    public void loadTranslationTips() {
+        LOGGER.debug("Indexing translation tips");
+        String translationTipsPath = this.coreProperties.getProperty("test.data.path.translationtips");
+        this.translationTipsService.readAndLoad(translationTipsPath);
     }
 
     /**

@@ -14,6 +14,8 @@ public class StrongCountsAndSubjects {
     private boolean ot;
     private String verse;
     private boolean multipleVerses;
+    private String allMorphsInVerse;
+    private String translationTipsFN;
 
     /**
      * Sets the counts.
@@ -31,6 +33,22 @@ public class StrongCountsAndSubjects {
      */
     public void setStrongData(final Map<String, List<LexiconSuggestion>> strongData) {
         this.strongData = strongData;
+    }
+
+    public void setTranslationTipsFN(final String translationTipsFN) {
+        this.translationTipsFN = translationTipsFN;
+    }
+
+    public String getTranslationTipsFN() {
+        return this.translationTipsFN;
+    }
+
+    public void setAllMorphsInVerse(final String allMorphsInVerse) {
+        this.allMorphsInVerse = allMorphsInVerse;
+    }
+
+    public String getAllMorphsInVerse() {
+        return this.allMorphsInVerse;
     }
 
     /**

@@ -58,6 +58,7 @@ public class JSwordStrongNumberHelper {
     private Map<String, List<LexiconSuggestion>> verseStrongs;
     private Map<String, BookAndBibleCount> allStrongs;
     private boolean isOT;
+    private String allMorph;
     private String translationTipsFN;
 
     /**
@@ -135,6 +136,8 @@ public class JSwordStrongNumberHelper {
             final List<Element> elements = JSwordUtils.getOsisElements(new BookData(preferredCountBook, key));
             Set<String> strongAlreadyIncluded = new HashSet<String>();
             for (final Element e : elements) {
+                if (elements.size() == 1) // If it is from verseVocabuary, it will only has one morphology
+                    allMorph = OSISUtil.getMorphologiesWithStrong(e);
                 final String verseRef = e.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID);
                 final String strongsNumbers = OSISUtil.getStrongsNumbers(e);
                 if (StringUtils.isBlank(strongsNumbers)) {

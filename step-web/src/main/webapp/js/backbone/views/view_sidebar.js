@@ -61,6 +61,7 @@ var SidebarView = Backbone.View.extend({
             var curMorphs = step.util.convertMorphOSHM2TOS( this.model.get("morph") );
             if (curMorphs != undefined)
                 lastMorphCode = curMorphs;
+            var morphCount = this.model.get("morphCount");
 			var ref = this.model.get("ref");
 			var version = this.model.get("version");
 			var allVersions = this.model.get("allVersions");
@@ -85,8 +86,8 @@ var SidebarView = Backbone.View.extend({
 				return;
 			}
             strong = step.util.fixStrongNumForVocabInfo(strong, false);
-            var callBackCreateDefParams = [ ref, allVersions, variant ];
-            var callBackLoadDefFromAPIParams = [ version, ref, strong, curMorphs, allVersions, variant, self.createDefinition]; 
+            var callBackCreateDefParams = [ ref, allVersions, variant, morphCount ];
+            var callBackLoadDefFromAPIParams = [ version, ref, strong, curMorphs, allVersions, variant, self.createDefinition, morphCount ]; 
             step.util.getVocabMorphInfoFromJson(strong, curMorphs, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
         }
         else if (this.model.get("mode") == 'analysis') {
@@ -104,7 +105,7 @@ var SidebarView = Backbone.View.extend({
         var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRBMR
         if ((cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
             cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
-        return false; // Return false so this will not be called 2 times.
+        return false; // Return false so this will not be called 2 times.s
     },
     loadDefinitionFromRestAPI: function (parameters) {
         var version = parameters[0];
@@ -114,13 +115,14 @@ var SidebarView = Backbone.View.extend({
         var allVersions = parameters[4];
         var variant = parameters[5];
         var callBackCreateDef = parameters[6];
+        var morphCount = parameters[7];
         $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-            callBackCreateDef(data, [ ref, allVersions, variant ]);
+            callBackCreateDef(data, [ ref, allVersions, variant, morphCount ]);
             //return false;
         }).error(function() {
             if (changeBaseURL())
                 $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-                    callBackCreateDef(data, [ ref, allVersions, variant ]);
+                    callBackCreateDef(data, [ ref, allVersions, variant, morphCount ]);
                 })
         });
         //return false;
@@ -175,6 +177,7 @@ var SidebarView = Backbone.View.extend({
         var ref = parameters[0];
         var allVersions = parameters[1];
         var variant = parameters[2];
+        var morphCount = parameters[3];
         var allMorphsForBackButton;
         var allStrongsForBackButton;
         if (!Array.isArray(variant)) variant = [""]; // Initialize in case it is not.
@@ -283,7 +286,7 @@ var SidebarView = Backbone.View.extend({
                 panelBody.append("<div>Only in " + variant[0] + " manuscript</div>");
             // need to handle multiple morphInfo (array)
             if (data.morphInfos.length > 0) {
-                this._createBriefMorphInfo(panelBody, data.morphInfos[0]);
+                this._createBriefMorphInfo(panelBody, data.morphInfos[0], morphCount, ref, data.vocabInfos[0].strongNumber);
             }
             this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
             if (data.morphInfos.length > 0) {
@@ -300,7 +303,7 @@ var SidebarView = Backbone.View.extend({
         }
         else console.log("this.lexicon length is " + this.lexicon.length);
 
-        if ((typeof allStrongsForBackButton === "string") && (allStrongsForBackButton !== allStrongsForNextBackButton)) {
+		if ((typeof allStrongsForBackButton === "string") && (allStrongsForBackButton !== allStrongsForNextBackButton)) {
             var lexiconElement = $(this.lexicon[0]);
             lexiconElement.prepend("<button id='lexicon-back-button' class='glyphicon glyphicon-arrow-left' title='Back to the definition of the previous word, " + allStrongsForBackButton + "'></button>");
         }
@@ -932,7 +935,7 @@ var SidebarView = Backbone.View.extend({
                 require(['quick_lexicon'], function () {
                     step.util.delay(function () {
                         // do the quick lexicon
-                        step.util.ui.displayNewQuickLexiconForVerseVocab(searchString, '', bibleVersion, step.util.activePassageId(), ev, ev.pageY, null, "");
+                        step.util.ui.displayNewQuickLexiconForVerseVocab(searchString, '', '', bibleVersion, step.util.activePassageId(), ev, ev.pageY, null, "");
                     }, MOUSE_PAUSE, 'show-quick-lexicon');
                 });
             },
@@ -948,7 +951,7 @@ var SidebarView = Backbone.View.extend({
         this._doSideNotes(panel, bibleVersion);
     },
     // for one-line morphology
-    _createBriefMorphInfo: function (panel, info) {
+    _createBriefMorphInfo: function (panel, info, morphCount, ref, strongNum) {
         if (typeof info === "undefined") {
             panel.append("<br />");
             return;
@@ -968,7 +971,20 @@ var SidebarView = Backbone.View.extend({
         this.renderBriefMorphItem(panel, info, "gender");
         this.renderBriefMorphItem(panel, info, "state");
         this.renderBriefMorphItem(panel, info, "suffix");
-        panel.append(")<br />");
+        panel.append(")");
+        if (morphCount > 1) {
+            if ((typeof ref === "string") && (ref !== "") && (typeof strongNum === "string") &&
+                ((strongNum.substring(0,1) === "G") || (strongNum.substring(0,1) === "H"))) {
+                panel.append(" - 1st of ");
+                var version = (strongNum.substring(0,1) === "G") ? "THGNT" : "OSHB";
+                strongNum = step.util.fixStrongNumForVocabInfo(strongNum, true);
+                panel.append("<a href='https://www.stepbible.org/?q=version=" + version + "|reference=" + ref + "|strong=" + strongNum + "&clickStrong' target='_blank'>" + morphCount + " different grammars</a>");
+            }
+            else
+                panel.append(" - 1st of " + morphCount + "  different grammars");
+            panel.append(" for this word in this verse.");
+        }
+        panel.append("<br />");
     },
     renderBriefMorphItem: function (panel, morphInfo, param) {
         if(morphInfo && param && morphInfo[param]) {

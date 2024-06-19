@@ -58,6 +58,7 @@ var QuickLexicon = Backbone.View.extend({
         this.position = opts.position;
         this.height = opts.height;
         this.type = opts.type;
+        this.morphCount = opts.morphCount;
         this.touchEvent = opts.touchEvent || false;
         this.passageContainer = step.util.getPassageContainer(opts.target);
         if (typeof opts.variant !== "string")
@@ -72,6 +73,7 @@ var QuickLexicon = Backbone.View.extend({
         var self = parameters[0];
         var strongsNotToDisplay = parameters[1];
         var multipleStrongTextFromSearchModal  = parameters[2];
+        var morphCount = parameters[3];
         $("#quickLexicon").remove();
         var morphOnly = false;
         var data = JSON.parse(JSON.stringify(origData));
@@ -134,6 +136,8 @@ var QuickLexicon = Backbone.View.extend({
                         data.vocabInfos[i].mediumDef = data.vocabInfos[i].mediumDef.replace(/<br>/g, "  ").replace(/<br \/>/g, "  ").trim();
                     }
                 }
+                if (morphCount > 1)
+                    morph_information[0] += " - 1st of " + morphCount + " different grammar for this word in this verse.";
                 lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos,
                     brief_morph_info: morph_information,
                     fontClass: step.util.ui.getFontForStrong(self.strong),
@@ -215,8 +219,8 @@ var QuickLexicon = Backbone.View.extend({
             strongsNotToDisplay = step.util.fixStrongNumForVocabInfo(strongsNotToDisplay, false);
         }
         var multipleStrongText = (typeof self.options.txtForMultiStrong === "string") ? self.options.txtForMultiStrong : "";
-        var callBackCreateDefParams = [ self, strongsNotToDisplay, multipleStrongText ];
-        var callBackLoadDefFromAPIParams = [ this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode, self, strongsNotToDisplay, multipleStrongText, self.processQuickInfo ];
+        var callBackCreateDefParams = [ self, strongsNotToDisplay, multipleStrongText, this.morphCount ];
+        var callBackLoadDefFromAPIParams = [ this.version, this.reference, strongsToUse, this.morph, step.userLanguageCode, self, strongsNotToDisplay, multipleStrongText, self.processQuickInfo, this.morphCount ];
         step.util.getVocabMorphInfoFromJson(strongsToUse, this.morph, this.version, self.processQuickInfo, callBackCreateDefParams, 
             self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
     }, 
@@ -230,12 +234,13 @@ var QuickLexicon = Backbone.View.extend({
         var strongsNotToDisplay = paramArray[6];
         var multipleStrongText = paramArray[7];
         var callBackProcessQuickInfo = paramArray[8];
+        var morphCount = paramArray[9];
         $.getSafe(MODULE_GET_QUICK_INFO, [version, reference, strongsToUse, morph, userLanguageCode], function (data) {
-            callBackProcessQuickInfo(data, [ callerSelf, strongsNotToDisplay, multipleStrongText ]);
+            callBackProcessQuickInfo(data, [ callerSelf, strongsNotToDisplay, multipleStrongText, morphCount ]);
         }).error(function() {
             if (changeBaseURL())
                 $.getSafe(MODULE_GET_QUICK_INFO, [version, reference, strongsToUse, morph, userLanguageCode], function (data) {
-                    callBackProcessQuickInfo(data, [ callerSelf, strongsNotToDisplay, multipleStrongText ]);
+                    callBackProcessQuickInfo(data, [ callerSelf, strongsNotToDisplay, multipleStrongText, morphCount ]);
                 })
         });
         return false;
@@ -267,7 +272,17 @@ var QuickLexicon = Backbone.View.extend({
         var self = this;
 		if ((typeof augStrongNum === "string") && (augStrongNum !== "")) self.augStrong = augStrongNum;
         var quickDefPositionAtTop = true; // Try to show it on top first.  Swap to bottom if it overlaps with current mouse/touch position.
-        if (step.touchDevice)
+        var versePopupLocations = $(".versePopup");
+        var hasVersePopup = false;
+        for (var i = versePopupLocations.length -1; i >= 0; i --) {
+            var versePopupLoc = $(versePopupLocations[i]);
+            if ((typeof versePopupLoc.position === "function") && (typeof versePopupLoc.position().top === "number")) {
+                self.position = versePopupLoc.position().top;
+                hasVersePopup = true;
+                break;
+            }
+        } 
+        if ((step.touchDevice) || (hasVersePopup)) // If versePopup is close to the top, the quick lexicon should go to the bottom.
             quickDefPositionAtTop = ((self.position / self.height) > 0.35 ); // 0.35 (touch screen) to put most of the quick lexicon on top
         if (quickDefPositionAtTop)
             lexicon.css({"top": "0", "bottom": "auto"});

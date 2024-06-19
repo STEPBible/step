@@ -1377,7 +1377,7 @@ step.util = {
          * called when click on a piece of text.
          */
         showDef: function (source, sourceVersion) {
-            var strong, morph, ref, version, allVersions, variant;
+            var strong, morph, ref, version, allVersions, variant, morphCount;
             if (typeof source === "string") {
                 strong = source;
 				if (typeof sourceVersion === "string")
@@ -1388,6 +1388,7 @@ step.util = {
                 morph = source.morph;
                 version = source.version;
 				variant = source.variant;
+				morphCount = source.morphCount;
             } else {
                 var s = $(source);
                 strong = s.attr("strong");
@@ -1402,13 +1403,13 @@ step.util = {
 				if (version === '')
 	                version = firstVersion;
 				allVersions = firstVersion + "," + step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("extraVersions");
-				step.historyStrong = [];
 				step.historyMorph = [];
+				step.historyStrong = [];
 			}
 			variant = variant || "";
-            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, variant: variant, version: version, allVersions: allVersions });
+            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph, ref: ref, variant: variant, version: version, allVersions: allVersions, morphCount: morphCount });
             require(["sidebar"], function (module) {
-                step.util.ui.openStrongNumber(strong, morph, ref, version, allVersions, variant);
+                step.util.ui.openStrongNumber(strong, morph, ref, version, allVersions, variant, morphCount);
             });
         },
         initSidebar: function (mode, data) {
@@ -1427,7 +1428,8 @@ step.util = {
 						variant: data.variant,
                         version: data.version,
 						allVersions: data.allVersions,
-                        mode: mode == null ? 'analysis' : mode
+                        mode: mode == null ? 'analysis' : mode,
+						morphCount: data.morphCount
                     });
                     new SidebarList().add(step.sidebar);
                     new SidebarView({
@@ -1445,7 +1447,7 @@ step.util = {
                 }
             });
         },
-        openStrongNumber: function (strong, morph, reference, version, allVersions, variant) {
+        openStrongNumber: function (strong, morph, reference, version, allVersions, variant, morphCount) {
 			if (step.sidebar != null) {
 				if (!step.touchDevice || step.touchWideDevice)
 					step.sidebar.save({
@@ -1455,7 +1457,8 @@ step.util = {
 						ref: reference,
 						version: version,
 						allVersions: allVersions,
-						variant: variant
+						variant: variant,
+						morphCount: morphCount
 					});
 				else
 					step.sidebar = null;
@@ -1612,9 +1615,15 @@ step.util = {
             }
         },
 
-				displayNewQuickLexiconForVerseVocab: function (strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong) {
+				displayNewQuickLexiconForVerseVocab: function (strong, morph, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong, morphCount) {
 					var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
 					var pageY = 0;
+					if (typeof morph === "string")
+						morph = morph.split("/")[0].replace("oshm:", "TOS:"); // If there are multiple morphs separated by /, only use the first one
+					else
+						morph = "";
+					if ((strong.substring(0,1) === "H") && (morph.indexOf("TOS:") == -1))
+						morph = "TOS:" + morph;
 					if (typeof pageYParam === "number")
 						pageY = pageYParam;
 					else if ((event) && (typeof event.clientY === "number"))
@@ -1624,7 +1633,7 @@ step.util = {
 						require(['quick_lexicon'], function () {
 							step.util.delay(function () {
 								// do the quick lexicon
-								step.util.ui.displayNewQuickLexiconForVerseVocab(strong, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong);
+								step.util.ui.displayNewQuickLexiconForVerseVocab(strong, morph, reference, version, passageId, touchEvent, pageYParam, hoverContext, txtForMultipleStrong, morphCount);
 							}, MOUSE_PAUSE, 'show-quick-lexicon');
 						});
 					}
@@ -1632,11 +1641,13 @@ step.util = {
 						if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
 							new QuickLexicon({
 									strong: strong,
+									morph: morph,
 									txtForMultiStrong: txtForMultipleStrong,
 									version: version, reference: reference,
 									target: hoverContext, position: pageY, touchEvent: touchEvent,
 									height: $(window).height(), 
-									passageId: passageId
+									passageId: passageId,
+									morphCount: morphCount
 							});
 						}
 					}
@@ -1814,7 +1825,6 @@ step.util = {
 						if (typeof verseNumTimer !== "undefined") // clear previous timeout
 							clearTimeout(verseNumTimer);	
 						verseNumTimer = setTimeout(step.util.ui._addSubjectAndRelatedWordsPopup, 500, passageId, $(this), version, isSearch);
-
 					}
 				}, function() {
 					if (typeof verseNumTimer !== "undefined")
@@ -1822,6 +1832,30 @@ step.util = {
 				});
 			}
         },
+
+		_showVerseWithStrongInBookPopup: function (bookName, dataStrong, dataOtherStrongs, evPageY, wordInfo, passageHtml) {
+			fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|reference=" + bookName +
+				step.util._createStrongSearchArg(dataStrong, dataOtherStrongs) +
+				"/HNVUG//////en?lang=en")
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(data) {
+				step.util.ui.showListOfVersesInQLexArea(data, evPageY, wordInfo, passageHtml);
+			});
+		},
+
+		_showVerseWithStrongInBiblePopup: function (dataStrong, dataOtherStrongs, evPageY, wordInfo, passageHtml) {
+			fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|" +
+				step.util._createStrongSearchArg(dataStrong, dataOtherStrongs) +
+				"/HNVUG//////en?lang=en")
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(data) {
+				step.util.ui.showListOfVersesInQLexArea(data, evPageY, wordInfo, passageHtml);
+			});
+		},
 
 		_addSubjectAndRelatedWordsPopup: function (passageId, element, version, isSearch) {
 			var reference = element.attr("name");
@@ -1839,12 +1873,21 @@ step.util = {
 													'<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
 													'<% _.each(rows, function(row, i) { %>' +
 													'<span data-strong="<%= row.strongData.strongNumber %>" ' +
+
+													'<% if (row.morphCount > 0) { %>' +
+														'data-morph="<%= row.morph %>" ' +
+														'<% if (row.morphCount > 1) { %>' +
+															'data-morphcount="<%= row.morphCount %>" ' +
+														'<% } %>' +
+													'<% } %>' +
+	
 													'<% if (row.strongData._detailLexicalTag !== "") { %>' + // add information to search all words in lexical group or detailLexicalTag
 														'data-otherstrongs="<%= row.strongData._detailLexicalTag %>"' +
 													'<% } %>' +
 													'>' +
 													'<a onclick="javascript:void(0)" class="definition col-xs-8 col-sm-4 <%= i % 2 == 1 ? "even" : "" %>"><%= row.strongData.gloss %> ' +
-													'(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)</a>' +
+														'(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)' +
+													'</a>' +
 													'<a onclick="javascript:void(0)" class="bookCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.book) %></a>' +
 													'<a onclick="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
 													'</span><% }); %>' +
@@ -1864,6 +1907,8 @@ step.util = {
 											var currentLang = step.userLanguageCode.toLowerCase();
 											if (urlLang === "zh_tw") currentLang = "zh_tw";
 											else if (urlLang === "zh") currentLang = "zh";
+											var allMorphs = [];
+											if (typeof data.allMorphsInVerse === "string") allMorphs = data.allMorphsInVerse.split(" ");
 											for (var key in data.strongData) {
 													var verseData = data.strongData[key];
 													for (var strong in verseData) {
@@ -1874,9 +1919,24 @@ step.util = {
 																	else if ((currentLang === "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
 																	else if ((currentLang === "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
 																	else if ((currentLang === "km") && (strongData._km_Gloss)) strongData.gloss = strongData._km_Gloss;
+																	var morph = "";
+																	allMorphsOfThisWord = [];
+																	var morphCount = 0;
+																	for (var z = 0; z < allMorphs.length; z++) {
+																		var twoParts = allMorphs[z].split("@");
+																		if ((strongData.strongNumber === twoParts[0]) && (typeof twoParts[1] === "string")) {
+																			if (allMorphsOfThisWord.indexOf(twoParts[1].trim()) == -1) {
+																				allMorphsOfThisWord.push(twoParts[1].trim());
+																				morphCount ++;
+																			}
+																			allMorphs[z] = ""; // don't want to process twice
+																		}
+																	}
 																	rows.push({
-																			strongData: strongData,
-																			counts: counts
+																		strongData: strongData,
+																		counts: counts,
+																		morph: allMorphsOfThisWord[0],
+																		morphCount: morphCount
 																	});
 															}
 													}
@@ -1892,9 +1952,14 @@ step.util = {
 											}));
 
 											templatedTable.find(".definition").click(function () {
+													step.historyMorph = [];
+													step.historyStrong = [];
 													var strongParameterForCall = $(this).parent().data("strong");
+													var morphParameterForCall = step.util.convertMorphOSHM2TOS($(this).parent().data("morph"));
+													var morphCountParameterForCall = $(this).parent().data("morphcount");
 													var refParameterForCall = (strongParameterForCall.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) ? "" : reference; // if it is augmented Strong, don't include the reference
-													step.util.ui.showDef({strong: strongParameterForCall, ref: refParameterForCall, version: version });
+													step.util.ui.showDef({strong: strongParameterForCall, ref: refParameterForCall, version: version,
+														morph: morphParameterForCall, morphCount: morphCountParameterForCall});
 													if (step.touchDevice && !step.touchWideDevice)
 														$(".versePopup").hide();
 											});
@@ -1902,6 +1967,8 @@ step.util = {
 											templatedTable.find(".definition").hover(function (ev) { // mouse pointer starts hover (enter)
 												if (step.touchDevice || step.util.keepQuickLexiconOpen) return;
 												var strongParameterForCall = $(this).parent().data("strong");
+												var morphParameterForCall = step.util.convertMorphOSHM2TOS($(this).parent().data("morph"));
+												var morphCountParameterForCall = $(this).parent().data("morphcount");
 												var refParameterForCall = (strongParameterForCall.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) ? "" : reference; // if it is augmented Strong, don't include the reference
 												step.passage.higlightStrongs({
 													passageId: undefined,
@@ -1913,7 +1980,8 @@ step.util = {
 												require(['quick_lexicon'], function () {
 													step.util.delay(function () {
 														// do the quick lexicon
-														step.util.ui.displayNewQuickLexiconForVerseVocab(strongParameterForCall, refParameterForCall, version, passageId, ev, ev.pageY, hoverContext);
+														step.util.ui.displayNewQuickLexiconForVerseVocab(strongParameterForCall, morphParameterForCall, refParameterForCall, version,
+															passageId, ev, ev.pageY, hoverContext, "", morphCountParameterForCall);
 													}, MOUSE_PAUSE, 'show-quick-lexicon');
 												});
 											}, function () { // mouse pointer ends hover (leave)
@@ -1940,17 +2008,13 @@ step.util = {
 												if (step.touchDevice) return;
 												var bookName = key.substring(0, key.indexOf('.'));
 												var wordInfo = $($(this).parent().find('a')[0]).html();
-												fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|reference=" + bookName +
-													step.util._createStrongSearchArg($(this).parent().data("strong"), $(this).parent().data("otherstrongs")) +
-													"/HNVUG//////en?lang=en")
-												.then(function(response) {
-													return response.json();
-												})
-												.then(function(data) {
-													step.util.ui.showListOfVersesInQLexArea(data, ev.pageY, wordInfo, passageHtml);
-												});
+												if (typeof bookCountTimer !== "undefined") // clear previous timeout
+													clearTimeout(bookCountTimer);	
+												bookCountTimer = setTimeout(step.util.ui._showVerseWithStrongInBookPopup, 750, bookName, $(this).parent().data("strong"), $(this).parent().data("otherstrongs"), ev.pageY, wordInfo, passageHtml);
 										}, function () { // mouse pointer ends hover (leave)
 												if (step.touchDevice) return
+												if (typeof bookCountTimer !== "undefined")
+													clearTimeout(bookCountTimer);
 												step.util.delay(undefined, 0, 'show-quick-lexicon');
 												if (!step.util.keepQuickLexiconOpen) {
 													$("#quickLexicon").remove();
@@ -1970,17 +2034,13 @@ step.util = {
 											templatedTable.find(".bibleCount").hover(function (ev) {
 												if (step.touchDevice) return
 												var wordInfo = $($(this).parent().find('a')[0]).html();
-												fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|" +
-													step.util._createStrongSearchArg($(this).parent().data("strong"), $(this).parent().data("otherstrongs")) +
-													"/HNVUG//////en?lang=en")
-												.then(function(response) {
-													return response.json();
-												})
-												.then(function(data) {
-													step.util.ui.showListOfVersesInQLexArea(data, ev.pageY, wordInfo, passageHtml);
-												});
+												if (typeof bibleCountTimer !== "undefined") // clear previous timeout
+													clearTimeout(bibleCountTimer);	
+												bibleCountTimer = setTimeout(step.util.ui._showVerseWithStrongInBiblePopup, 750, $(this).parent().data("strong"), $(this).parent().data("otherstrongs"), ev.pageY, wordInfo, passageHtml);
 											}, function () { // mouse pointer ends hover (leave)
 												if (step.touchDevice) return
+												if (typeof bibleCountTimer !== "undefined")
+													clearTimeout(bibleCountTimer);
 												step.util.delay(undefined, 0, 'show-quick-lexicon');
 												if (!step.util.keepQuickLexiconOpen) {
 													$("#quickLexicon").remove();

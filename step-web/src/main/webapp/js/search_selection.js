@@ -552,6 +552,7 @@ step.searchSelect = {
 		else
 			$("#searchButton").hide();
 	},
+
 	goBackToPreviousPage: function() {
 		$('#quickLexicon').remove();
 		$('#searchSelectError').text("");
@@ -619,6 +620,7 @@ step.searchSelect = {
 			'<button id="searchButton" style="vertical-align:top;display:none;padding-left:10px;padding-right:10px" class="stepButton primaryLightBg" onclick=step.searchSelect._handleEnteredSearchWord() title="Get suggested search">' +
 				'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
 			'</button>' +
+
 			//'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +
 			//	'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
 				    // using https://www.iconfinder.com/icons/326655/history_icon
@@ -2098,7 +2100,7 @@ step.searchSelect = {
 			require(['quick_lexicon'], function () {
 				step.util.delay(function () {
 					// do the quick lexicon
-					step.util.ui.displayNewQuickLexiconForVerseVocab(searchString, '', version, step.util.activePassageId(),  ev, ev.pageY, null, multipleStrongText);
+					step.util.ui.displayNewQuickLexiconForVerseVocab(searchString, '', '', version, step.util.activePassageId(),  ev, ev.pageY, null, multipleStrongText);
 				}, MOUSE_PAUSE, 'show-quick-lexicon');
 			});
 		},

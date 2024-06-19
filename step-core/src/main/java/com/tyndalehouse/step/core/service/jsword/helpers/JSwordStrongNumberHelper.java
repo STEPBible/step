@@ -35,6 +35,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static com.tyndalehouse.step.core.service.TranslationTipsService.regularFormatedFN;
+import static com.tyndalehouse.step.core.service.TranslationTipsService.alternativeFormatedFN;
+import static com.tyndalehouse.step.core.service.TranslationTipsService.customFN;
 /**
  * Provides each strong number given a verse.
  * <p/>
@@ -55,6 +58,7 @@ public class JSwordStrongNumberHelper {
     private Map<String, List<LexiconSuggestion>> verseStrongs;
     private Map<String, BookAndBibleCount> allStrongs;
     private boolean isOT;
+    private String translationTipsFN;
 
     /**
      * Instantiates a new strong number provider impl.
@@ -101,15 +105,28 @@ public class JSwordStrongNumberHelper {
     private void calculateCounts(String userLanguage) {
         try {
             Verse curReference = this.reference;
+            Verse verseInNRSV = curReference;
             final BibleBook book = curReference.getBook();
             this.isOT = DivisionName.OLD_TESTAMENT.contains(book);
 			final Versification targetVersification;
 			if (isOT) { //is key OT or NT
 				targetVersification = otV11n;
-				if (curReference.getVersification().getName().equals("MT")) // OHB and MT have the same chapters and numbers.  Converting has inconsistency in Neh.7.68, Ps.13.5, Isa 63.19
-					curReference = new Verse(targetVersification, book, curReference.getChapter(), curReference.getVerse());
-			}
+                if (!curReference.getVersification().getName().equals("NRSV")) {
+                    verseInNRSV = new Verse(ntV11n, book, curReference.getChapter(), curReference.getVerse());
+                    if (curReference.getVersification().getName().equals("MT")) // OHB and MT have the same chapters and numbers.  Converting has inconsistency in Neh.7.68, Ps.13.5, Isa 63.19
+                        curReference = new Verse(targetVersification, book, curReference.getChapter(), curReference.getVerse());
+                }
+            }
 			else targetVersification = ntV11n;
+            int curOrdinal = verseInNRSV.getOrdinal();
+            if (regularFormatedFN.store.get(curOrdinal))
+                this.translationTipsFN = verseInNRSV.getBook().toString().toLowerCase() + "-" + verseInNRSV.getChapter() + verseInNRSV.getVerse();
+            else if (alternativeFormatedFN.store.get(curOrdinal))
+                this.translationTipsFN = verseInNRSV.getBook().toString().toLowerCase() + "-" + verseInNRSV.getChapter() + "-" + verseInNRSV.getVerse();
+            else if (customFN.containsKey(curOrdinal))
+                this.translationTipsFN = customFN.get(curOrdinal);
+            else
+                this.translationTipsFN = ""; // If there are no tips, it will be an empty string
             final Key key = VersificationsMapper.instance().mapVerse(curReference, targetVersification);
             this.verseStrongs = new TreeMap<>();
             this.allStrongs = new HashMap<>(256);
@@ -329,6 +346,8 @@ public class JSwordStrongNumberHelper {
         sac.setCounts(this.allStrongs);
         sac.setStrongData(this.verseStrongs);
         sac.setOT(this.isOT);
+        sac.setAllMorphsInVerse(this.allMorph);
+        sac.setTranslationTipsFN(this.translationTipsFN);
         return sac;
     }
 }

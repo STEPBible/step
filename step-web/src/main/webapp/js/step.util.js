@@ -1854,6 +1854,7 @@ step.util = {
 													'</div>' +
 													'<div class="verseVocabLinks"><a onclick="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
 													'<a onclick="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
+													'<a onclick="javascript:void(0)" class="seeTips">See Translation TIPS</a> ' +
 													'<% if(isSearch) { %><a onclick="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
 											var rows = [];
 											// Check step.userLanguageCode and $.getURlvar
@@ -1997,6 +1998,17 @@ step.util = {
 													step.util.createNewLinkedColumn(passageId);
 												step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key), null, null, null, true);
 											});
+
+											if ((typeof data.translationTipsFN === "string") && (data.translationTipsFN !== "")) {
+												var tipRef = data.translationTipsFN;
+												if (tipRef.endsWith(".0"))
+													tipRef = tipRef.substring(0, tipRef.length - 3) + ".1";
+												templatedTable.find(".seeTips").click(function () {
+													window.open("https://tips.translation.bible/tip_verse/" + tipRef + "/", "_blank");
+												});
+											}
+											else
+												templatedTable.find(".seeTips").remove(); // No translation tips
 
 											templatedTable.find(".verseInContext").click(function () {
 													element.trigger("click");

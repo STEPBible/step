@@ -276,7 +276,7 @@ var QuickLexicon = Backbone.View.extend({
         var hasVersePopup = false;
         for (var i = versePopupLocations.length -1; i >= 0; i --) {
             var versePopupLoc = $(versePopupLocations[i]);
-            if ((typeof versePopupLoc.position === "function") && (typeof versePopupLoc.position().top === "number")) {
+            if (versePopupLoc.is(":visible") && (typeof versePopupLoc.position === "function") && (typeof versePopupLoc.position().top === "number")) {
                 self.position = versePopupLoc.position().top;
                 hasVersePopup = true;
                 break;
@@ -306,15 +306,14 @@ var QuickLexicon = Backbone.View.extend({
                 }
             }
             else {
-                if ((quickDefPositionAtTop) && (bottom > self.position)) {
+                if ((quickDefPositionAtTop) && (bottom + 20 > self.position)) {
                     lexicon.css({"top": "", "bottom": "0"});
-                    top = $("#quickLexicon").position().top;
-                    bottom = $("#quickLexicon").outerHeight(true) + top;
-                    quickDefPositionAtTop = false;
+                    top = $("#quickLexicon").position().top; // The top position has changed
+                    bottom = $("#quickLexicon").outerHeight(true) + top; // The bottom position has changed
                 }
                 if ((top < -8) || (bottom > self.height + 8) || // The quickLexicon div's top or bottom is not visible
-                    // ((quickDefPositionAtTop) && (bottom > self.position)) || // Overlap with mouse pointer // Already checked a few lines above.
-                    ((!quickDefPositionAtTop) && (top < self.position)) ) {  // Overlap with mouse pointer
+                    ((top < 20) && (bottom > self.position)) || // Quick lexicon is at top. Bottom of quick lexicon overlap mouse pointer
+                    ((top > 50) && (top < self.position))) {    // Quick lexicon is at bottom. Top of quick lexicon overlap mouse pointer
                     lexicon.remove();
                     if (headerText === "Notes") {
                         if ($(lexicon).find('strong').text() === '▼')

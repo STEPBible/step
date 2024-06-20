@@ -218,7 +218,7 @@ var ExamplesView = Backbone.View.extend({
 								'<br><span>1) Click on the Bible translation button</span>' +
 								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
 								'<br><span>2) Refer to the legend and select two Bible with the vocabulary feature</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/select_two_bibles.png">' +
+								'<br><div style="background-image: url(\'images\/select_two_bibles.png\');width:190px;height:340px;border:3px solid black;display:none"></div>' +
 								'<br><span>3) Click on the Option button, then click Interlinear”.  Interlinear will be shown.</span>' +
 								'<br><img style="width:190px;border:3px solid black" src="images/interlinear.png">' +
 							'</div>' +

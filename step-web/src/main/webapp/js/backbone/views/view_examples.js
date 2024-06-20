@@ -21,35 +21,35 @@ var ExamplesView = Backbone.View.extend({
 								'<a href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>Click the Passage button for a chapter or references.</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/select_passage.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/select_passage.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'<li style="font-weight:bold">How do I see three Bibles at once?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
 								'<a href="javascript:step.util.showVideoModal(\'John3.gif\', 27)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>Click the Bible button to select one or several Bibles.</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'<li style="font-weight:bold">How do I find a parallel gospel passage?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
 								'<span>1) Click the Resource icon.</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/resource_icon.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/resource_icon.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Click the resource for parallel gospel passage</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/gospel_harmony.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/gospel_harmony.png\');width:190px;height:164px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'<li style="font-weight:bold">How do I follow a Bible reading plan?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
 								'<span>1) Click the Resource icon.</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/resource_icon.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/resource_icon.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Plans for 1/2/3 years, chronological, Jewish etc</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/bible_reading_plan.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/bible_reading_plan.png\');width:190px;height:286px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'<li style="font-weight:bold">How do I also see a commentary?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
 								'<span>1) Click the Bible button.</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Click on Commentaries</span>' +
-								'<br><img style="border:3px solid black" src="images/commentaries.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/commentaries.png\');width:184px;height:40px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'</ul>' +
 				'</div>' +
@@ -67,7 +67,7 @@ var ExamplesView = Backbone.View.extend({
 								'<a href="javascript:step.util.showVideoModal(\'basic_search.gif\', 25)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1) Click on the search button</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/search_button.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/search_button.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Enter word or phrase in search bar and press Return</span>' +
 							'</div>' +
 						'<li style="font-weight:bold">How do I search only some books in the Bible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
@@ -75,9 +75,9 @@ var ExamplesView = Backbone.View.extend({
 								'<a href="javascript:step.util.showVideoModal(\'search_range.gif\', 40)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1) Click on the search button</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/search_button.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/search_button.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Click on Range</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/search_range.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/search_range.png\');width:176px;height:52px;border:3px solid black;display:none"></div>' +
 								'<br><span>3) Select the books that you wish to search</span>' +
 							'</div>' +
 						'<li style="font-weight:bold">How do I find a Greek or Hebrew word?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
@@ -85,9 +85,9 @@ var ExamplesView = Backbone.View.extend({
 								'<a href="javascript:step.util.showVideoModal(\'search_original_language.gif\', 50)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1) Click on the search button</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/search_button.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/search_button.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Switch on the Advanced search toggle </span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/search_advanced_mode.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/search_advanced_mode.png\');width:190px;height:199px;border:3px solid black;display:none"></div>' +
 								'<br><span>3) Type in the Greek/Hebrew word in the search box, press Return, and wait for the table to fill itself.</span>' +
 								'<br><span>4) View corresponding row to see Greek/Hebrew translation of the word</span>' +
 							'</div>' +
@@ -96,9 +96,9 @@ var ExamplesView = Backbone.View.extend({
 								'<a href="javascript:step.util.showVideoModal(\'subject_search.gif\', 46)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1) Click on the search button</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/search_button.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/search_button.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Switch on the Advanced search toggle </span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/search_advanced_mode.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/search_advanced_mode.png\');width:190px;height:199px;border:3px solid black;display:none"></div>' +
 								'<br><span>3) Type in the subject in the search box, press Return, and wait for the table to fill itself.</span>' +
 								'<br><span>4) View the row: Subject or a person in the Bible</span>' +
 							'</div>' +
@@ -126,12 +126,12 @@ var ExamplesView = Backbone.View.extend({
 								'<li>Related words: similar in meaning or origin</li>' +
 								'<li>Grammar: (only available for some Bibles)</li>' +
 								'</ul>' +
-								'<br><img style="width:210px;border:3px solid black" src="images/info_on_word.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/info_on_word.png\');width:190px;height:167px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'<li style="font-weight:bold">Why do only some Bibles have clickable words?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
 								'<span>\'Vocabulary\' Bibles link the translation to Greek & Hebrew. So far, only some Bibles have this vocabulary feature. They are shown in the Bible select screen with the letter \'V\'.</span>' +
-								'<br><img style="width:180px;border:3px solid black" src="images/bible_with_vocab.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/bible_with_vocab.png\');width:190px;height:283px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'<li style="font-weight:bold">What does “~20x” or “Frequency” mean?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
@@ -140,7 +140,7 @@ var ExamplesView = Backbone.View.extend({
 						'<li style="font-weight:bold">Why do some words have dropdown next to the frequency number?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
 								'<span>This reveals different forms for some words and names. These details are often interesting to scholars, eg the word \'beginning\' in Genesis.</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/dropdown_frequency.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/dropdown_frequency.png\');width:190px;height:88px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'<li style="font-weight:bold">Where do I find the maps?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
@@ -148,12 +148,12 @@ var ExamplesView = Backbone.View.extend({
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1st method:</span>' +
 								'<br><span>Click on a place name then on the Map button in the detailed lexicon.</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/map_in_lexicon.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/map_in_lexicon.png\');width:190px;height:126px;border:3px solid black;display:none"></div>' +
 								'<br><span>2nd method:</span>' +
 								'<br><span>1) Click the Resource icon.</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/resource_icon.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/resource_icon.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Click on "Places in the Bible"</span>' +
-								'<br><img style="width:180px;border:3px solid black" src="images/find_map.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/find_map.png\');width:190px;height:131px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'<li style="font-weight:bold">How do I get the word frequency for a chapter or a book?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
@@ -161,7 +161,7 @@ var ExamplesView = Backbone.View.extend({
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1) Click on the analysis icon.</span>' +
 								'&nbsp;<span class="glyphicon glyphicon-stats" style="line-height:13px"></span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/analysis.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/analysis.png\');width:190px;height:116px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Click on the "Selected passage" button if no analysis is shown.</span>' +
 							'</div>' +
 						'</ul>' +
@@ -179,11 +179,11 @@ var ExamplesView = Backbone.View.extend({
 								'<a href="javascript:step.util.showVideoModal(\'greek_hebrew_vocab.gif\', 53)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1) Click on the Bible translation button</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Refer to the legend and select the Bible translations with the Vocab feature</span>' +
-								'<br><img style="width:180px;border:3px solid black" src="images/esv_with_vocab.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/esv_with_vocab.png\');width:190px;height:306px;border:3px solid black;display:none"></div>' +
 								'<br><span>3) Click on the Option button, then click "Interlinear options”, then select "Greek / Hebrew".  Original language vocab will be shown.</span>' +
-								'<br><img style="width:200px;border:3px solid black" src="images/original_vocab_feature.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/original_vocab_feature.png\');width:190px;height:198px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 
 						'<li style="font-weight:bold">How do I see Greek/Hebrew transliteration for my Bible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
@@ -191,11 +191,11 @@ var ExamplesView = Backbone.View.extend({
 								'<a href="javascript:step.util.showVideoModal(\'ESV_orig_voc_transliteration.gif\', 35)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1) Click on the Bible translation button</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Refer to the legend and select the Bible translations with the Vocab feature</span>' +
-								'<br><img style="width:180px;border:3px solid black" src="images/esv_with_vocab.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/esv_with_vocab.png\');width:190px;height:306px;border:3px solid black;display:none"></div>' +
 								'<br><span>3) Click on the Option button, then click "Interlinear options”, then select "Transliteration".</span>' +
-								'<br><img style="width:200px;border:3px solid black" src="images/transliteration.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/transliteration.png\');width:190px;height:230px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 
 						'<li style="font-weight:bold">How do I see Greek/Hebrew vocabulary for a verse?    <a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
@@ -203,7 +203,7 @@ var ExamplesView = Backbone.View.extend({
 								'<a href="javascript:step.util.showVideoModal(\'verse_vocab.gif\', 18)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1) Click on the verse number to list the words and meanings</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/verse_vocab.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/verse_vocab.png\');width:190px;height:250px;border:3px solid black;display:none"></div>' +
 								'<br>2) Hover over or click on a word for more details about the word</span>' +
 							'</div>' +
 
@@ -214,22 +214,21 @@ var ExamplesView = Backbone.View.extend({
 								'&nbsp;&nbsp;' +
 								'<a href="javascript:step.util.showVideoModal(\'KJV_THGNT_John1.gif\', 35)">' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-
 								'<br><span>1) Click on the Bible translation button</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Refer to the legend and select two Bible with the vocabulary feature</span>' +
-								'<br><div style="background-image: url(\'images\/select_two_bibles.png\');width:190px;height:340px;border:3px solid black;display:none"></div>' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/select_two_bibles.png\');width:190px;height:322px;border:3px solid black;display:none"></div>' +
 								'<br><span>3) Click on the Option button, then click Interlinear”.  Interlinear will be shown.</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/interlinear.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/interlinear.png\');width:190px;height:338px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 
 						'<li style="font-weight:bold">How do I see the various versions of the Greek OT?<a id="ot-greek-qa" style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
 								'<span>1) Click on the Bible translation button</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Select “Ancient” for the language</span>' +
 								'<br><span>3) Scroll down to see the Greek OT translations</span>' +
-								'<br><img style="width:176px;border:3px solid black" src="images/bible_ancient.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/bible_ancient.png\');width:190px;height:23px;border:3px solid black;display:none"></div>' +
 								'<br><br><a id="otgreekexamples" href="html/additional_examples.html?exampleType=greekot&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
 								'<br><br>' +
 							'</div>' +
@@ -238,13 +237,13 @@ var ExamplesView = Backbone.View.extend({
 								'<a href="javascript:step.util.showVideoModal(\'color_code_grammar.gif\', 50)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span>1) Click on the Bible translation button</span>' +
-								'<br><img style="width:190px;border:3px solid black" src="images/select_bible.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span>2) Refer to the legend and select the Bible translations with the grammar feature</span>' +
-								'<br><img style="width:200px;border:3px solid black" src="images/grammar_feature.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/grammar_feature.png\');width:190px;height:221px;border:3px solid black;display:none"></div>' +
 								'<br><span>3) Click on the Option button, then click "Interlinear options", then click “Colour code grammar”. The text will then be colour coded.</span>' +
-								'<br><img style="width:200px;border:3px solid black" src="images/color_code_grammar.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/color_code_grammar.png\');width:190px;height:273px;border:3px solid black;display:none"></div>' +
 								'<br><span>4) To understand the colour code, click on the button “Configure colour code grammar”.</span>' +
-								'<br><img style="width:200px;border:3px solid black" src="images/configure_color_code_grammar.png">' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/configure_color_code_grammar.png\');width:170px;height:78px;border:3px solid black;display:none"></div>' +
 								'<br><br><a id="colorcodeexamples" href="html/additional_examples.html?exampleType=colorCode&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
 								'<br>' +
 							'</div>' +
@@ -288,9 +287,9 @@ var ExamplesView = Backbone.View.extend({
 			// 			'<li style="font-weight:bold">How do I write my own notes?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 			// 				'<div class="stepExample" style="display:none">' +
 			// 					'<span>1) Click the Resource icon.</span>' +
-			// 					'<br><img style="width:176px;border:3px solid black" src="images/resource_icon.png">' +
+			//					'<br><div class="faq_img" style="background-image: url(\'images\/resource_icon.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 			// 					'<br><span>2) Click on "Create your own notes"</span>' +
-			// 					'<br><img style="border:3px solid black" src="images/create_notes.png">' +
+			//					'<br><div class="faq_img" style="background-image: url(\'images\/create_notes.png\');width:190px;height:171px;border:3px solid black;display:none"></div>' +
 			// 				'</div>' +
 			// 		'</ul>' +
 			// 	'</div>' +

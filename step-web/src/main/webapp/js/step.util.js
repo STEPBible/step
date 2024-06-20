@@ -4708,6 +4708,7 @@ step.util = {
 			if (ev.target.classList.contains("glyphicon-triangle-right")) {
 				currentElement.removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
 				nextElement.show();
+				nextElement.find("div.faq_img").show();
 				// step.util.showVideoinExample(currentElement);
 			}
 			else {

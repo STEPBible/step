@@ -75,12 +75,12 @@ var SearchDisplayView = DisplayView.extend({
             var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', hasTOS = false, hasNTMorph = false;
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
             if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('OSHB') > -1) || 
-                (bibleVersions.indexOf('THOT') > -1)  || (bibleVersions.indexOf('NASB2020_morph') > -1)) {
+                (bibleVersions.indexOf('THOT') > -1)  || (bibleVersions.indexOf('NASB2020_MORPH') > -1)) {
                 step.util.loadTOS();              
                 hasTOS = true;
             }
             if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
-                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1)  || (bibleVersions.indexOf('NASB2020_morph') > -1)) hasNTMorph = true;
+                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1)  || (bibleVersions.indexOf('NASB2020_MORPH') > -1)) hasNTMorph = true;
             results = this.options.partRendered ? this.$el.find("> span") : this.renderSearch(append, this.$el.find(".searchResults"));
 
 			if (cv[C_colorCodeGrammarAvailableAndSelected]) {

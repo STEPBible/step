@@ -197,7 +197,7 @@ var QuickLexicon = Backbone.View.extend({
         if (strongNumbers.length == 1)
             strongNumbers = this.strong.split(",");
 //        if ((typeof this.morph !== "undefined") && (this.morph.indexOf('TOS:') == 0)) {
-        if ((typeof this.morph === "string") && (strongNumbers.length > 0) && (strongNumbers.substring(0, 1) === "H"))
+        if ((typeof this.morph === "string") && (strongNumbers.length > 0) && (strongNumbers[0].substring(0, 1) === "H"))
             lastMorphCode = this.morph;
 		if ((typeof self.reference === "string") && (typeof self.strong === "string"))
 			step.previousSideBarLexiconRef = [self.strong, self.reference];

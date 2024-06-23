@@ -4614,7 +4614,7 @@ step.util = {
 		for (var cc = 0; cc < elmtsWithMorph.length; cc ++) {
 			if (elmtsWithMorph[cc].innerText !== "") continue;
 			var curMorphs = step.util.convertMorphOSHM2TOS( $($(elmtsWithMorph[cc]).parent()[0]).attr('morph') );
-			if ((typeof curMorphs !== "string") || (curMorphs.indexOf("TOS:") != 0)) continue;
+			if (typeof curMorphs !== "string") continue; // || (curMorphs.indexOf("TOS:") != 0)) continue;
 			var cmArray = curMorphs.split(" ");
 			var strongArray = [];
 			if (cmArray.length > 1) {

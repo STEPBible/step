@@ -58,14 +58,17 @@ var SidebarView = Backbone.View.extend({
             this.lexicon.addClass("active");
             //load content
             lastMorphCode = '';
-            var curMorphs = step.util.convertMorphOSHM2TOS( this.model.get("morph") );
+            var strong = this.model.get("strong");
+            var currentMorph = this.model.get("morph");
+            if ((strong.substring(0,1) === "H") && (typeof currentMorph === "string") && (currentMorph.substring(0,4) !== "TOS:"))
+                currentMorph = "TOS:" + currentMorph;
+            var curMorphs = step.util.convertMorphOSHM2TOS( currentMorph );
             if (curMorphs != undefined)
                 lastMorphCode = curMorphs;
             var morphCount = this.model.get("morphCount");
 			var ref = this.model.get("ref");
 			var version = this.model.get("version");
 			var allVersions = this.model.get("allVersions");
-			var strong = this.model.get("strong");
             var variant = this.model.get("variant") || "";
             variant = variant.split(";");
             if (typeof allVersions !== "string") {
@@ -80,7 +83,7 @@ var SidebarView = Backbone.View.extend({
             }
             if ((typeof version === "undefined") &&
 				(typeof ref === "undefined") &&
-				(typeof morph === "undefined") &&
+				(typeof currentMorph === "undefined") &&
 				(strong === "H0001")) {
 				console.log("MODULE_GET_INFO undefined H0001");
 				return;

@@ -4626,7 +4626,8 @@ step.util = {
 			for (var dd = 0; dd < cmArray.length; dd ++ ) {
 				if ((dd > 0) && (dd < strongArray.length) && (typeof strongArray[dd] === "string") && (strongArray[dd] !== ""))
 					if (step.util.suppressHighlight(strongArray[dd])) continue;
-				if ((dd > 0) && (cmArray[dd].indexOf("TOS:") == -1))
+				// if ((dd > 0) && (cmArray[dd].indexOf("TOS:") == -1))
+				if (cmArray[dd].indexOf("TOS:") == -1)
 					cmArray[dd] = "TOS:" + cmArray[dd];
 				var morphinfo = cf.getTOSMorphologyInfo(cmArray[dd]);
 				if ((morphinfo.length != 1) || (typeof morphinfo[0]["ot_function"] !== "string")) continue;

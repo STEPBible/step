@@ -1,0 +1,103 @@
+addEventListener('fetch', event => {
+	event.respondWith(handleRequest(event.request))
+})
+
+const url = "https://www.stepbible.org/?"
+async function gatherResponse(response) {
+  const { headers } = response
+  const contentType = headers.get("content-type") || ""
+  if (contentType.includes("application/json")) {
+    console.log("json")
+    return JSON.stringify(await response.json())
+  }
+  else if (contentType.includes("application/text")) {
+    console.log("application")
+    return response.text()
+  }
+  else if (contentType.includes("text/html")) {
+    return response.text()
+  }
+  else {
+    console.log("other")
+    return response.text()
+  }
+}
+
+async function handleRequest(request) {
+  const userurl = request.url
+
+	// Function to parse query strings
+	function getParameterByName(name) {
+		name = name.replace(/[\[\]]/g, '\\$&')
+		name = name.replace(/\//g, '')
+		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+			results = regex.exec(userurl)
+
+		if (!results) return null
+		else if (!results[2]) return ''
+		else if (results[2]) {
+			results[2] = results[2].replace(/\//g, '')
+		}
+		
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
+
+  const langs = ["en", "es", "zh", "zh-tw", "aa", "af", "ar", "az", "be", "bg", "bn", "cs", "cy", "de", "el", "et", "fa", "fi", "fr", "ga", "gl", "gu", "hi", "hr", "hu", "id", "in", "is", "it", "iw", "ja", "ka", "ko", "lt", "lv", "mk", "ml", "ms", "mt", "nl", "no", "pl", "pt", "ro", "ru", "ry", "sk", "sl", "sq", "sr", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "uz", "vi"];
+  const respInit = {
+    headers: {
+      "content-type": "text/html;charset=UTF-8",
+      "accept-language": "en"
+    },
+  }
+  const languageSelected = getParameterByName('lang')
+  if ((typeof languageSelected === "string") && (langs.indexOf(languageSelected) > -1)) {
+    var init = {}
+    init = {
+        headers: {
+          "content-type": "text/html;charset=UTF-8",
+          "accept-language": languageSelected
+        },
+    }
+    const response = await fetch(url, init)
+    var results = await gatherResponse(response)
+    var resultsLines = results.split("\n")
+    var cfScriptRemoved = ""
+    var newResults = ""
+    var linesAdded = 0
+    for (var i = 0; i < resultsLines.length; i++ ) {
+      var curLine = resultsLines[i].trim()
+      if ((curLine.indexOf("<script>") == 0) &&
+          (curLine.indexOf("https://static.cloudflareinsights.com/beacon.min.js") > -1) &&
+          (curLine.endsWith("</script>"))) {
+        cfScriptRemoved = ", Cloudflare script was removed"
+      }
+      else if (curLine !== "") {
+        newResults += curLine + "\n"
+        linesAdded ++
+      }
+    }
+    await wwwcache.put(languageSelected, newResults)
+    return new Response("added " + linesAdded + " out of " + resultsLines.length + " lines for language " + languageSelected + " to Cloudflare KV " + cfScriptRemoved, respInit)
+  }
+  else {
+    var deleteName = getParameterByName('deleteKV')
+    if (typeof deleteName === "string") {
+      var deleteNames = []
+      if (deleteName === "all") {
+        deleteNames = langs
+      }
+      else
+        deleteNames = [ deleteName ]
+      for (var i = 0; i < deleteNames.length; i++) {
+        await wwwcache.delete(deleteNames[i])
+      }
+      return new Response("deleted " + deleteName + " from Cloudflare KV", respInit)
+    }
+  }
+  return new Response("don't understand your request", respInit)
+
+}
+
+addEventListener("fetch", event => {
+  return event.respondWith(handleRequest())
+})

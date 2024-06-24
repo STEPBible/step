@@ -220,7 +220,7 @@
 							<configuration>
 								<jsSourceDir>.</jsSourceDir>
 								<jsSourceFiles>
-									<jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
+									<!-- <jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile> -->
 									<jsSourceFile>js/backbone/models/model_sidebar.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_wordle_stat.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_history.js</jsSourceFile>

@@ -345,14 +345,15 @@ var ViewLexiconWordle = Backbone.View.extend({
         });
 
         var links = $("a", container);
-        links.tagcloud({
-            size: {
-                start: statType == "SUBJECT" ? self.minSubjectFont : self.minFont,
-                end: self.maxFont,
-                unit: "px"
-            },
-            animate: isNextChapter
-        });
+        // June 21, 2024 - PT, probably no longer use
+        // links.tagcloud({
+        //     size: {
+        //         start: statType == "SUBJECT" ? self.minSubjectFont : self.minFont,
+        //         end: self.maxFont,
+        //         unit: "px"
+        //     },
+        //     animate: isNextChapter
+        // });
 
         if (statType === 'WORD') {
             links.hover(

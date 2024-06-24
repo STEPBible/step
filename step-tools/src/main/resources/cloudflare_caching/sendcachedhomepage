@@ -1,0 +1,33 @@
+export default {
+  async fetch(request, env) {
+    var ul = request.headers.get("Accept-Language");
+    if (typeof ul !== "string")
+      ul = "en"
+    const ulToCheck = ul.toLowerCase()
+    const ul2 = ulToCheck.substring(0,2)
+    var foundLang = "";
+    if ((ulToCheck.length >= 5) && (ul2 === "zh")) {
+      const ul5 = ulToCheck.substring(2,5)
+      if ((ul5 === "_tw") || (ul5 === "-tw") || (ul5 === "_hk") || (ul5 === "-hk"))
+        foundLang = 'zh-tw';
+    }
+    const langs = ["en", "es", "zh", "zh-tw", "aa", "af", "ar", "az", "be", "bg", "bn", "cs", "cy", "de", "el", "et", "fa", "fi", "fr", "ga", "gl", "gu", "hi", "hr", "hu", "id", "in", "is", "it", "iw", "ja", "ka", "ko", "lt", "lv", "mk", "ml", "ms", "mt", "nl", "no", "pl", "pt", "ro", "ru", "ry", "sk", "sl", "sq", "sr", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "uz", "vi"];
+    var redirectCode = 301
+    if ((foundLang === "") && (langs.indexOf(ul2) > -1))
+      foundLang = ul2
+    if (foundLang !== "") {
+      var pageForUser = await env.wwwcache.get(foundLang, { cacheTtl: 4800 }) 
+      if ((typeof pageForUser === "string") && (pageForUser.length > 6000)) {
+        const respInit = {
+          headers: {
+            "content-type": "text/html;charset=UTF-8",
+            "cache-control": "no-cache",
+          },
+        }
+        return new Response(pageForUser, respInit)
+      }
+      else redirectCode = 302 // If redirect is needed, it is a temporary redirect because it is a language supported by STEP but does not have a KV for it.
+    }    
+    return Response.redirect("https://www.stepbible.org/?q=reference=Gen.1", redirectCode);
+  },
+};

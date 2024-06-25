@@ -543,7 +543,7 @@ public class SearchServiceImpl implements SearchService {
      * @return the search result
      */
     private SearchResult doSearch(final SearchQuery sq, final String options, final String srchJoin) {
-        final long start = System.currentTimeMillis();
+//        final long start = System.currentTimeMillis();
 
         SearchResult result;
         // if we've only got one search, we want to retrieve the keys, the page, etc. all in one go
@@ -568,7 +568,7 @@ public class SearchServiceImpl implements SearchService {
         result.setSearchType(getBestSearchType(sq));
         result.setPageSize(sq.getPageSize());
         result.setPageNumber(sq.getPageNumber());
-        result.setTimeTookTotal(System.currentTimeMillis() - start);
+//        result.setTimeTookTotal(System.currentTimeMillis() - start);
         result.setQuery(sq.getOriginalQuery());
         setBestRestriction(sq, result);
         final String[] allVersions = sq.getCurrentSearch().getVersions();

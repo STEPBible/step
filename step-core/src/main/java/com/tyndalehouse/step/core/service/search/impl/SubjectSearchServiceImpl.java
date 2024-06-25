@@ -441,7 +441,7 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
         });
 
         final SearchResult sr = new SearchResult();
-        sr.setTimeTookTotal(System.currentTimeMillis() - start);
+//        sr.setTimeTookTotal(System.currentTimeMillis() - start);
         sr.setTimeTookToRetrieveScripture(0);
         sr.setResults(headingMatches);
         sr.setTotal(headingMatches.size());

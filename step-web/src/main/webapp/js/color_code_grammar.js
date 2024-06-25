@@ -1372,13 +1372,13 @@ var cf = {
       index = ot_var[morphCode.substr(0, count)];
     }
     if (index == undefined) {
-      console.log("cannot find code " + morphCode + " name: " + morphName);
+//      console.log("cannot find code " + morphCode + " name: " + morphName);
       return;
     }
     else {
       var resultStr = cv[C_otMorph].txtArray[index];
       if (resultStr == undefined) {
-        console.log("Cannot find code: " + morphCode + " name: " + morphName);
+//        console.log("Cannot find code: " + morphCode + " name: " + morphName);
         return;
       }
       result[morphName] = resultStr;

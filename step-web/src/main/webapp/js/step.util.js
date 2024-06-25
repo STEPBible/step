@@ -4600,7 +4600,7 @@ step.util = {
 					console.log('load tos_morph.js Failed: ' + exception);
 				},
 				complete: function (jqXHR, status) {
-				    console.log('finish loading');
+//				    console.log('finish loading');
 				    callback();
 				}
 			});

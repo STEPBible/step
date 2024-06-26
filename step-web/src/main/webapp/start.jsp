@@ -471,22 +471,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
         ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints > 1))) {
         step.touchDevice = true;
-        // var touchableElement;
-        // if ((screen.height > 599) && (screen.width > 599)) {
-        //     step.touchWideDevice = true;
-        // 	document.getElementById("resizeButton").style.display = "inline";
-        // 	touchableElement = document.getElementById("columnHolder");
-        // }
-        // else
-        // 	touchableElement = document.getElementsByTagName("body")[0];
-        // touchableElement.addEventListener('touchstart', function (event) {
-        //     touchstartX = event.changedTouches[0].screenX;
-        //     touchstartY = event.changedTouches[0].screenY;
-        //     touchstartTime = new Date().getTime();
-        // }, false);
-        // touchableElement.addEventListener('touchend', function (event) {
-        //     step.util.handleGesture(event, touchstartX, touchstartY, touchstartTime);
-        // }, false);
     }
 
 </script>

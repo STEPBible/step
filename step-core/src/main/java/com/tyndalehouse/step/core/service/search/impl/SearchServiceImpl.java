@@ -61,7 +61,7 @@ public class SearchServiceImpl implements SearchService {
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
     private static final String SYNTAX_FORMAT = "[%s...]";
     private static final String[] BASE_GREEK_VERSIONS = new String[]{"WHNU", "Byz", "LXX"};
-    private static final String BASE_HEBREW_VERSION = "OSMHB";
+    private static final String BASE_HEBREW_VERSION = "OSHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
     private static final String NO_FILTER = "all";

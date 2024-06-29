@@ -129,7 +129,7 @@ step.util = {
 	versionsGreekNT: ["SBLG_TH", "THGNT", "TR", "BYZ", "WHNU", "ELZEVIR", "ANTONIADES", "KHMKCB"],
 	versionsGreekOT: ["LXX_TH"],
 	versionsGreekBoth: ["ABEN", "ABGK"],
-	versionsHebrewOT: ["THOT", "OSMHB", "SP", "SPMT"],
+	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
 	vocabKeys: ["strongNumber", "stepGloss", "stepTransliteration", "count", 
 		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
 		"shortDef", "mediumDef", "lsjDefs",
@@ -149,7 +149,7 @@ step.util = {
 				var bibleDisplayName = bibleList[i];
 				if (bibleDisplayName === "SBLG_TH") bibleDisplayName = "SBLG";
 				else if (bibleDisplayName === "LXX_TH") bibleDisplayName = "LXX";
-				else if (bibleDisplayName === "OSMHB") bibleDisplayName = "OHB";
+				else if (bibleDisplayName === "OSHB") bibleDisplayName = "OHB";
 				newMsg += "<br>" + bibleDisplayName + ": "
 				var freqDetail = freqList[i + offset].split("@");
 				var bibleName = bibleList[i].split("@")[0];
@@ -4308,7 +4308,7 @@ step.util = {
 		curVersion = curVersion.toUpperCase();
 		if (curVersion === "KJVA") curVersion = "KJV";
 		else if (curVersion === "ESV_TH") curVersion = "ESV";
-		else if (curVersion === "OHB") curVersion = "OSMHB";
+		else if (curVersion === "OHB") curVersion = "OSHB";
 		else if (curVersion === "SBLG") curVersion = "SBLG_TH";
 		else if (curVersion === "LXX") curVersion = "LXX_TH";
 		else if (curVersion === "CUN") curVersion = "CHIUN";

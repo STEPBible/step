@@ -15,7 +15,7 @@ import org.crosswire.jsword.passage.NoSuchKeyException;
 public class KjvStrongNumbers {
     public static void main(final String[] args) throws BookException, NoSuchKeyException {
         final Book nt = Books.installed().getBook("WHNU");
-        final Book ot = Books.installed().getBook("OSMHB");
+        final Book ot = Books.installed().getBook("OSHB");
 
         final Key ok = ot.getGlobalKeyList();
         final Key nk = nt.getGlobalKeyList();

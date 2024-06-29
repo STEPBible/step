@@ -74,7 +74,7 @@ var SearchDisplayView = DisplayView.extend({
             if ((cv[C_colorCodeGrammarAvailableAndSelected]) && (typeof c4 === "undefined")) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
             var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', hasTOS = false, hasNTMorph = false;
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
-            if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('OSHB') > -1) || 
+            if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('OHB') > -1) || 
                 (bibleVersions.indexOf('THOT') > -1)  || (bibleVersions.indexOf('_MORPH') > -1)) {
                 step.util.loadTOS();              
                 hasTOS = true;

@@ -65,15 +65,15 @@ public class SearchServiceImplTest {
 
     @Test
     public void testLuceneScope() {
-        System.out.println(this.subjects.getLuceneScopeFragment(new String[]{"OSMHB"}));
-        System.out.println(this.subjects.getLuceneScopeFragment(new String[]{"OSMHB", "ESV_th"}));
-        final String luceneScopeFragment = this.subjects.getLuceneScopeFragment(new String[]{"OSMHB"});
+        System.out.println(this.subjects.getLuceneScopeFragment(new String[]{"OSHB"}));
+        System.out.println(this.subjects.getLuceneScopeFragment(new String[]{"OSHB", "ESV_th"}));
+        final String luceneScopeFragment = this.subjects.getLuceneScopeFragment(new String[]{"OSHB"});
 
         assertTrue(luceneScopeFragment.contains("expandedReferences:Lev.*"));
         assertTrue(luceneScopeFragment.contains("+("));
 
         //we should have 66 books here, so we're not restricting anything
-        assertEquals("", this.subjects.getLuceneScopeFragment(new String[]{"OSMHB", "ESV_th"}));
+        assertEquals("", this.subjects.getLuceneScopeFragment(new String[]{"OSHB", "ESV_th"}));
     }
 
     @Test

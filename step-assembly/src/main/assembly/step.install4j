@@ -178,7 +178,7 @@
                         </object>
                       </void>
                       <void property="labelText">
-                        <string>Please note that if you already have SWORD Bible tools installed (such as Xiphos or BibleDesktop), STEP will re-install the ESV and OSMHB modules when launched for the first time.</string>
+                        <string>Please note that if you already have SWORD Bible tools installed (such as Xiphos or BibleDesktop), STEP will re-install the ESV and OSHB modules when launched for the first time.</string>
                       </void>
                     </object>
                   </java>

@@ -52,7 +52,7 @@ public class BibleAnalysis {
     // private TreeSet<WordCount> targetKeyOrder;
 
     public static void main(final String[] args) throws Exception {
-        new BibleAnalysis().read("OSMHB", "ESV_th");
+        new BibleAnalysis().read("OSHB", "ESV_th");
         // processLeastFrequent(sortedKeys, this.sourceWords);
 
     }

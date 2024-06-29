@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class EsvStrongNumberReport {
     private static final Logger LOGGER = LoggerFactory.getLogger(EsvStrongNumberReport.class);
-    private static final String OT = "OSMHB";
+    private static final String OT = "OSHB";
     private static final String NT = "WHNU";
     private final Map<String, Map<String, Integer>> esvStrongsInVerses = new LinkedHashMap<String, Map<String, Integer>>(
             16000);

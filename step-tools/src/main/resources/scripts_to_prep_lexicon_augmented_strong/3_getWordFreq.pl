@@ -135,7 +135,7 @@ my %passagesForBasicStrong;
 my %numOfPassagesForBasicStrong;
 my @allVersions = ("ESV", "KJV", "NASB2020", "BSB", "HCSB", "RV_th", "WEB_th",
     "ASV-TH", "ChiUn", "ChiUns", "NASB1995", "RWebster", "spaBES2018eb", "AraSVD");
-my @hebrewVersions = ("THOT", "OSMHB", "SP", "SPMT");
+my @hebrewVersions = ("THOT", "OSHB", "SP", "SPMT");
 my @greekVersions = ("SBLG", "THGNT", "TR", "Byz", "WHNU", "Elzevir", "Antoniades", "KhmKCB", "LXX_th");
 my @greekVersionsOTNT = ("ABEn", "ABGk");
 

@@ -125,7 +125,7 @@ return console.askOkCancel(message, true);
                     </object>
                   </property>
                   <property name="labelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="CUSTOM" />
-                  <property name="labelText" type="string">Please note that if you already have SWORD Bible tools installed (such as Xiphos or BibleDesktop), STEP will re-install the ESV and OSMHB modules when launched for the first time.</property>
+                  <property name="labelText" type="string">Please note that if you already have SWORD Bible tools installed (such as Xiphos or BibleDesktop), STEP will re-install the ESV and OSHB modules when launched for the first time.</property>
                 </serializedBean>
               </formComponent>
             </formComponents>

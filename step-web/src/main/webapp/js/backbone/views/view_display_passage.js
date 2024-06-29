@@ -38,7 +38,7 @@ var PassageDisplayView = DisplayView.extend({
             // check if OT or NT  12/13/2023 PT
             // console.log("place to add NT OT check: "+reference+ " " +bibleVersions);
             var justLoadedTOS = false;
-            if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) || (bibleVersions.indexOf('OSHB') > -1) || (bibleVersions.indexOf('_MORPH') > -1)) {
+            if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) || (bibleVersions.indexOf('OHB') > -1) || (bibleVersions.indexOf('_MORPH') > -1)) {
                 justLoadedTOS = step.util.loadTOS();
                 hasTOS = true;
             }

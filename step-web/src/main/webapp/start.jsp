@@ -214,6 +214,128 @@
 
     <!-- Fixed navbar -->
     <div id="stepnavbar" class="navbar navbar-default navbar-fixed-top">
+        <div>
+            <div class="navbar-header search-form">
+                <div class="navbar-brand col-xs-12">
+                    <span class="hidden-xs title" title="Reset to default configuration">
+                        <a href="/?noredirect" id="logo">
+                            <img src="/step.png" alt="STEP" width="90px" height="22px">
+                        </a>
+                    </span>
+                    <span class="help">
+                        <div class="headerButtons pull-right">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy" />">
+                                <i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="copy" /></span>
+                            </a>
+                            <a id="report-icon" style="padding-left:5px" href="html/reports_by_step.html" target="_blank" title="Resources powered by STEPBible">
+                                <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;<fmt:message key="report" /></span>
+                            </a>
+                            <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
+                                <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats" /></span>
+                            </a>
+                            <a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
+                                <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="bookmarks" /></span>
+                            </a>
+                            <a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
+                                <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="faq" /></span>
+                            </a>
+
+                            <a id="fonts-icon" style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.showFontSettings();" title="<fmt:message key="font_sizes" />">
+                                <span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px"><fmt:message key="passage_font_size_symbol" /></span>
+                                <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font" /></span>
+                            </a>
+                            <span class="navbar-collapse collapse">
+                                <span class="dropdown">
+                                    <a id="languages-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language" />">
+                                        <i class="glyphicon icon-language">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+                                        </i>
+                                        <span style="vertical-align:bottom" class="navbarIconDesc"><fmt:message key="installation_book_language" /></span>
+                                    </a>
+                                    <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
+                                        <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step" /></a></li>
+                                    </ul>
+                                </span>
+            <%
+                if (!appManager.isLocal()) {
+            %> 
+                                <a style="padding-left:5px" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
+                                    <i class="glyphicon glyphicon-bullhorn"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="help_feedback" /></span>
+                                </a>
+            <%
+                }
+            %>
+                                <span class="dropdown">
+                                    <a id="more-icon" style="padding-left:5px" class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help" />">
+                                        <i class="glyphicon glyphicon-option-vertical"></i><span style="vertical-align:bottom;line-height:10px" class="navbarIconDesc"><fmt:message key="more" /></span>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
+
+            <%
+                if (!appManager.isLocal()) {
+            %> 
+                                        <li><a href="/downloads.jsp" title="<fmt:message key="download_desktop_step_about" />"><fmt:message key="download_desktop_step" /></a></li>
+            <%
+                }
+            %>
+                                        <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link" /></a></li>
+                                        <li><a href="https://www.stepbible.org/videos" target="_blank"><fmt:message key="video_help" /></a></li>
+                                        <li><a href="https://stepbibleguide.blogspot.com" target="_blank"><fmt:message key="help_online" /></a></li>
+            <%
+                if (appManager.isLocal()) {
+            %> 
+                                        <li class="available_bibles_and_commentaries"><a href="/versions.jsp" target="_blank" name="AVAILABLE_BIBLES_AND_COMMENTARIES"><fmt:message key="available_versions" /></a></li>
+                                        <li><a href="/setup.jsp"><fmt:message key="tools_settings" /></a></li>
+            <%
+                }
+                else {
+            %>
+                                        <li><a href="https://stepweb.atlassian.net/wiki/display/SUG/Resources" target="_blank"><fmt:message key="available_versions" /></a></li>
+            <%
+                }
+            %>
+                                        <li class="classicalUI"><a href="javascript:void(0)"><fmt:message key="display_classical_ui" />&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:11px"></span></a></li>
+                                        <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile" /></a></li>
+                                        <li><a href="https://stepbibleguide.blogspot.com/p/volunteers.html" target="_blank"><fmt:message key="we_need_help" /></a></li>
+            <%
+                if (!appManager.isLocal()) {
+            %> 
+                                        <li><a href="javascript:void(0)" id="provideFeedback" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport"><fmt:message key="help_feedback" /></a></li>
+                                        <li><a href="/html/cookies_policy.html" target="_blank"><fmt:message key="help_privacy_policy" /></a></li>
+            <%
+                }
+            %>
+                                        <li><a target="_new" href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" name="COPYRIGHT"><fmt:message key="copyright_info_link" /></a></li>
+                                        <li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about" /></a></li>
+            <%
+                if (appManager.isLocal()) {
+            %>
+                                         <li><a href="/shutdown.jsp"><fmt:message key="tools_exit" /></a></li>
+            <%
+                }
+            %>
+                                 </ul>
+                                </span>
+                            </span>
+                        </div>
+                    </span>
+                    <form role="form">
+                        <div class="input-group" id="top_input_area" style="display:none">
+                            <input id="masterSearch" type="text" class="form-control input-lg">
+                            <span class="input-group-btn findButton">
+                                <span>Search</span><i class="find glyphicon glyphicon-search"></i>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 

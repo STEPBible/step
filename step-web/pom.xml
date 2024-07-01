@@ -666,14 +666,12 @@
 									<replacement><token>lookUpFrequencyFromMultiVersions([:(])</token><value>zn$1</value></replacement>
 									<replacement><token>correctPassageNotInBible([:(])</token><value>zo$1</value></replacement>
 									<replacement><token>passageSelectionModal([:(])</token><value>zp$1</value></replacement>
-									<replacement><token>copyModal([:(])</token><value>zq$1</value></replacement>
 									<replacement><token>searchSelectionModal([:(])</token><value>zr$1</value></replacement>
 									<replacement><token>showVideoModal([:(])</token><value>zs$1</value></replacement>
 									<replacement><token>showSummary([:(])</token><value>zt$1</value></replacement>
 									<replacement><token>showLongAlert([:(])</token><value>zu$1</value></replacement>
 									<replacement><token>setDefaultColor([:(])</token><value>zv$1</value></replacement>
 									<replacement><token>switchColorMode([:(])</token><value>zw$1</value></replacement>
-									<replacement><token>showFontSettings([:(])</token><value>zx$1</value></replacement>
 									<replacement><token>startPickBible([:(])</token><value>zy$1</value></replacement>
 									<replacement><token>setClassicalUI([:(])</token><value>zz$1</value></replacement>
 									<replacement><token>showIntro([:(])</token><value>AA$1</value></replacement>
@@ -702,9 +700,7 @@
 									<replacement><token>renderEnhancedToken([:(])</token><value>zF$1</value></replacement>
 									<replacement><token>_getFontClasses([:(])</token><value>zG$1</value></replacement>
 									<replacement><token>_getFontClassForLanguage([:(])</token><value>zH$1</value></replacement>
-									<replacement><token>showTutorial([:(])</token><value>zI$1</value></replacement>
 									<replacement><token>showDef([:(])</token><value>zJ$1</value></replacement>
-									<!-- <replacement><token>initSidebar([:(])</token><value>zK$1</value></replacement> -->
 									<replacement><token>openStrongNumber([:(])</token><value>zL$1</value></replacement>
 									<replacement><token>addStrongHandlers([:(])</token><value>zM$1</value></replacement>
 									<replacement><token>_getStrongStringAndPrevHTML([:(])</token><value>zN$1</value></replacement>

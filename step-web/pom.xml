@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>24.6.9</version>
+		<version>24.6.10</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -704,7 +704,7 @@
 									<replacement><token>_getFontClassForLanguage([:(])</token><value>zH$1</value></replacement>
 									<replacement><token>showTutorial([:(])</token><value>zI$1</value></replacement>
 									<replacement><token>showDef([:(])</token><value>zJ$1</value></replacement>
-									<replacement><token>initSidebar([:(])</token><value>zK$1</value></replacement>
+									<!-- <replacement><token>initSidebar([:(])</token><value>zK$1</value></replacement> -->
 									<replacement><token>openStrongNumber([:(])</token><value>zL$1</value></replacement>
 									<replacement><token>addStrongHandlers([:(])</token><value>zM$1</value></replacement>
 									<replacement><token>_getStrongStringAndPrevHTML([:(])</token><value>zN$1</value></replacement>

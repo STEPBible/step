@@ -1,0 +1,78 @@
+Php.2.8#A15=NKO	ἄνθρωπος (anthrōpos)	a man	G0444=N-NSM	ἄνθρωπος=a human	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hombre	a human	#15	G0444_B
+Rev.17.10#A21=NKO	ἑπτά (hepta)	seven	G2033=A-NUI	ἑπτά=seven	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz»1			siete	seven	#21	G2033					
+Act.11.2#14=NKO	λέγοντες (legontes)	saying	G3004=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#14	G3004					
+Luk.7.19#15=NKO	μαθητῶν (mathētōn)	disciples	G3101=N-GPM	μαθητής=disciple	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			aprendices	disciples	#15	G3101					
+Luk.22.66#A01=NKO	λέγοντες· (legontes)	saying;	G3004G=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#01	G3004					
+Luk.23.50#A11=NKO	ἀπὸ (apo)	from	G0575=PREP	ἀπό=away from	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			desde	from	#11	G0575					
+Act.24.18#A01=NKO	τινὲς (tines)	Some	G5100=X-NPM	τις=one	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Algunos	one	#01»06:G2453	G5100					
+Act.24.18#A03=NKO	ἀπὸ (apo)	from	G0575=PREP	ἀπό=away from	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			desde	from	#03	G0575					
+2Co.13.14#01=NKO	Ἡ (Hē)	[14] The	G3588=T-NSF	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			La	the	#01»02:G5485	G3588_A					
+2Co.13.14#02=NKO	χάρις (charis)	grace	G5485=N-NSF	χάρις=grace	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			bondad inmerecida	grace	#02	G5485					
+2Co.13.14#03=NKO	τοῦ (tou)	of the	G3588=T-GSM	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de el	the	#03»04:G2962	G3588_B					
+2Co.13.14#04=NKO	κυρίου (kuriou)	Lord	G2962G=N-GSM-T	κύριος=lord	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Señor	: God»lord|1_God	#04	G2962					
+2Co.13.14#05=NKO	Ἰησοῦ (Iēsou)	Jesus	G2424G=N-GSM-P	Ἰησοῦς=Jesus/Joshua	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Jesús	Jesus»Jesus|Jesus@Mat.1.1	#05	G2424					
+2Co.13.14#06=NKO	Χριστοῦ (Christou)	Christ	G5547=N-GSM-T	Χριστός=Christ	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Ungido	Christ»Christ|Jesus@Mat.1.1	#06	G5547					
+2Co.13.14#07=NKO	καὶ (kai)	and	G2532=CONJ	καί=and	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			y	and	#07	G2532_A					
+2Co.13.14#08=NKO	ἡ (hē)	the	G3588=T-NSF	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			el	the	#08»09:G0026	G3588_C					
+2Co.13.14#09=NKO	ἀγάπη (agapē)	love	G0026=N-NSF	ἀγάπη=love	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			amor	love	#09	G0026					
+2Co.13.14#10=NKO	τοῦ (tou)	<the>	G3588=T-GSM	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de el	the	#10»11:G2316	G3588_D					
+2Co.13.14#11=NKO	θεοῦ (theou)	of God	G2316=N-GSM-T	θεός=God	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Dios	God	#11	G2316					
+2Co.13.14#12=NKO	καὶ (kai)	and	G2532=CONJ	καί=and	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			y	and	#12	G2532_B					
+2Co.13.14#13=NKO	ἡ (hē)	the	G3588=T-NSF	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			la	the	#13»14:G2842	G3588_E					
+2Co.13.14#14=NKO	κοινωνία (koinōnia)	fellowship	G2842=N-NSF	κοινωνία=participation	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			participación en común	participation	#14	G2842					
+2Co.13.14#15=NKO	τοῦ (tou)	of the	G3588=T-GSN	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de el	the	#15»17:G4151	G3588_F					
+2Co.13.14#16=NKO	ἁγίου (hagiou)	Holy	G0040G=A-GSN	ἅγιος=holy	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			santo	: holy»holy|1_holy	#16	G0040	G0039				
+2Co.13.14#17=NKO	πνεύματος (pneumatos)	Spirit	G4151G=N-GSN	πνεῦμα=spirit/breath	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			espíritu	: spirit»spirit/breath|1_spirit	#17	G4151					
+2Co.13.14#18=NKO	μετὰ (meta)	[be] with	G3326=PREP	μετά=with/after	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			con	with	#18	G3326					
+2Co.13.14#19=NKO	πάντων (pantōn)	all	G3956=A-GPM	πᾶς=all	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			todos	all	#19	G3956					
+2Co.13.14#20=NKO	ὑμῶν (humōn)	of you	G4771=P-2GP	σύ=you	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			ustedes	of you	#20«19:G3956	G4771	G5216				
+2Co.13.14#21=KO	ἀμήν (amēn)	Amen	G0281=INJ-HEB	ἀμήν=amen	TR+Byz			amén	amen	#21	G0281					
+Php.2.8#A15=NKO	ἄνθρωπος (anthrōpos)	a man	G0444=N-NSM	ἄνθρωπος=a human	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hombre	a human	#15	G0444					
+1Th.2.6#A01=NKO	δυνάμενοι (dunamenoi)	[though] having authority	G1410=V-PNP-NPM	δύναμαι=be able	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando siendo capaces	be able	#01	G1410					
+1Th.2.6#A02=NKO	ἐν (en)	with	G1722=PREP	ἐν=in/on/among	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			en	in	#02	G1722_A					
+1Th.2.6#A03=NKO	βάρει (barei)	weight	G0922=N-DSN	βάρος=burden	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			cosa pesada	burden	#03	G0922					
+1Th.2.6#A04=NKO	εἶναι (einai)	to be	G1511=V-PAN	εἰμί=to be	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estar siendo	to be	#04	G1511					
+1Th.2.6#A05=NKO	ὡς (hōs)	as	G5613=PRT	ὡς=which/how	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			como	as	#05	G5613_A					
+1Th.2.6#A06=NKO	Χριστοῦ (Christou)	Christ’s	G5547=N-GSM-T	Χριστός=Christ	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de Ungido	Christ»Christ|Jesus@Mat.1.1	#06	G5547					
+1Th.2.6#A07=NKO	ἀπόστολοι· (apostoloi)	apostles;	G0652=N-NPM	ἀπόστολος=apostle	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			enviados como emisarios	apostles	#07	G0652					
+1Th.2.12#A04=NKO	ἕνα (hena)	one	G1520=A-ASM	εἷς=one	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a uno	one	#04	G1520					
+1Th.2.12#A05=NKO	ἕκαστον (hekaston)	each	G1538=A-ASM	ἕκαστος=each	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a cada uno	each	#05	G1538					
+Rev.2.27#A03=NKO	εἴληφα (eilēpha)	have received	G2983=V-2RAI-1S	λαμβάνω=to take	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			he recibido	to take	#03	G2983					
+Rev.2.27#A06=NKO	πατρός (patros)	Father	G3962=N-GSM-T	πατήρ=father	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Padre	father	#06	G3962					
+Mrk.7.21#A01=NKO	μοιχεῖαι, (moicheiai)	adulteries	G3430=N-NPF	μοιχεία=adultery	NA28+NA27+Tyn+SBL+WH+Treg+TR«3+Byz«3			adulterios	adultery	#01	G3430					
+Luk.7.19#A11=NKO	προσκαλεσάμενος (proskalesamenos)	having called near	G4341=V-ADP-NSM	προσκαλέω=to call to/summon	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			habiendo llamado hacia (sí)	to summon	#11	G4341					
+Luk.7.19#A12=NKO	δύο (duo)	two	G1417=A-NUI	δύο=two	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a dos	two	#12	G1417					
+Luk.20.28#A11=NKO	ἐπηρώτησαν (epērōtēsan)	they questioned	G1905=V-AAI-3P	ἐπερωτάω=to question	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			inquirieron	to question	#11	G1905					
+Luk.21.34#A02=NKO	παγίς· (pagis)	a snare;	G3803=N-NSF	παγίς=trap	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			trampa de lazo	trap	#02	G3803					
+Luk.23.50#A12=NKO	Ἁριμαθαίας (Harimathaias)	Arimathea	G0707=N-GSF-L	Ἀριμαθαία=Arimathea	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz		Tyn: Ἀριμαθαίας ; 	Arimatea	Mizpah»Mizpah|Mizpah@Jdg.20.1	#12	G0707					
+Luk.23.50#A13=NKO	πόλεως (poleōs)	a city	G4172=N-GSF	πόλις=city	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			ciudad	city	#13	G4172					
+Luk.23.50#A15=NKO	Ἰουδαίων, (Ioudaiōn)	Jews,	G2453=N-GPM-PG	Ἰουδαῖος=Jewish 	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			judíos	Judea»Judea|Judea@Ezr.9.9	#15	G2453	G2449				
+Act.24.2#A06=NKO	κράτιστε (kratiste)	most excellent	G2903=A-VSM	κράτιστος=excellent	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Más Fuerte	excellent	#06	G2903					
+Act.24.2#A07=NKO	Φῆλιξ, (Phēlix)	Felix,	G5344=N-VSM-P	Φῆλιξ=Felix	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Félix	Felix»Felix|Felix@Act.23.24	#07	G5344					
+Act.24.18#A05=NKO	Ἀσίας (Asias)	Asia	G0773=N-GSF-L	Ἀσία=Asia	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de Asia	Asia»Asia|Asia@Act.2.9	#05	G0773					
+Act.24.18#A06=NKO	Ἰουδαῖοι, (Ioudaioi)	Jews	G2453=A-NPM-PG	Ἰουδαῖος=Jewish 	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			judíos	Judea»Judea|Judea@Ezr.9.9	#06	G2453	G2449				
+Rom.3.25#A26=NKO	ἀνοχῇ (anochēa)	forbearance	G0463=N-DSF	ἀνοχή=tolerance	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			autorefrenamiento	tolerance	#26	G0463					
+Rom.7.9#A03=NKO	ἀπέθανον, (apethanon)	died,	G0599=V-2AAI-1S	ἀποθνήσκω=to die	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			morí	died	#03	G0599					
+Rom.9.11#A01=NKO	οὐκ (ouk)	not	G3756=PRT-N	οὐ=no	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			No	not	#01»03:G2041	G3756					
+Rom.9.11#A02=NKO	ἐξ (ex)	of	G1537=PREP	ἐκ=out from	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			procedente de	out of	#02	G1537_A					
+Rom.9.11#A03=NKO	ἔργων (ergōn)	works	G2041=N-GPN	ἔργον=work	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			obras	works	#03	G2041					
+Rom.9.11#A05=NKO	ἐκ (ek)	of	G1537=PREP	ἐκ=out from	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			procedente de	out of	#05	G1537_B					
+Rom.9.11#A07=NKO	καλοῦντος, (kalountos)	calling,	G2564G=V-PAP-GSM	καλέω=to call	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando llamando	: call»to call|1_call/invite	#07	G2564					
+2Co.10.5#A16=NKO	λογισμοὺς (logismous)	[5] arguments	G3053=N-APM	λογισμός=thought	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			razonamientos	thought	#16	G3053					
+2Co.10.5#A17=NKO	καθαιροῦντες (kathairountes)	overthrowing	G2507=V-PAP-NPM	καθαιρέω=to take down	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estamos derribando	to take down	#17	G2507					
+2Co.12.3#A02=NKO	ἡρπάγη (hērpagē)	he was caught up	G0726=V-2API-3S	ἁρπάζω=to seize 	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			fue arrebatado violentamente	to seize	#02	G0726					
+2Co.12.3#A05=NKO	παράδεισον (paradeison)	Paradise	G3857=N-ASM	παράδεισος=paradise	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			parque-jardín	paradise	#05	G3857					
+2Co.13.13#06=NKO	Ἀσπάζονται (Aspazontai)	[13] Greet	G0782=V-PNI-3P	ἀσπάζομαι=to pay respects to	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Están saludando	to pay respects to	#06	G0782					
+Gal.1.16#A03=NKO	εὐδόκησεν (eudokēsen)	was pleased	G2106=V-AAI-3S	εὐδοκέω=to delight	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			pensó bien de	to delight	#03	G2106					
+Gal.2.20#A11=NKO	συνεσταύρωμαι· (sunestaurōmai)	I have been crucified with;	G4957=V-RPI-1S	συσταυρόομαι=to crucify with	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			he sido fijado en madero de ejecución junto con	to crucify with	#11	G4957					
+Php.2.8#A12=NKO	σχήματι (schēmati)	in appearance	G4976=N-DSN	σχῆμα=form	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a condición	form	#12	G4976					
+Php.2.8#A13=NKO	εὑρεθεὶς (heuretheis)	having been found	G2147=V-2APP-NSM	εὑρίσκω=to find/meet	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			habiendo sido hallado	to meet	#13	G2147					
+Heb.3.9#A01=NKO	τεσσεράκοντα (tesserakonta)	forty	G5062=A-NUI	τεσσαράκοντα=forty	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz		Treg+TR+Byz: τεσσαράκοντα ; 	Cuarenta	forty	#01	G5062					
+Heb.3.9#A02=NKO	ἔτη· (etē)	years;	G2094=N-APN	ἔτος=year	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			años	years	#02	G2094					
+1Pe.3.15#A03=NKO	πραΰτητος (prautētos)	gentleness	G4236=N-GSF	πραΰτης=gentleness	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			apacibilidad	gentleness	#03	G4236	G4235, G4239, G4240				
+1Pe.3.15#A05=NKO	φόβου, (phobou)	fear,	G5401=N-GSM	φόβος=fear	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			temor respetuoso	fear	#05	G5401					
+1Jn.2.13#A03=NKO	παιδία, (paidia)	little children,	G3813=N-VPN	παιδίον=child	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hijitos	child	#03	G3813					
+Rev.12.17#A02=N(K)O	ἐστάθη (estathē)	he stood	G2476=V-API-3S	ἵστημι=to stand	NA28+NA27+Tyn+SBL+WH+Treg	ἐστάθην (T=estathēn) I stood - G2476=V-API-1S in: TR+Byz		fue puesto de pie	to stand	#02	G2476					
+Rev.12.17#A05=NKO	ἄμμον (ammon)	sand	G0285=N-ASF	ἄμμος=sand	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			arena	sand	#05	G0285					
+Rev.12.17#A07=NKO	θαλάσσης.¶ (thalassēs)	sea.	G2281=N-GSF	θάλασσα=sea	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			mar	sea	#07	G2281					
+Rev.17.10#A20=NKO	βασιλεῖς (basileis)	kings	G0935=N-NPM	βασιλεύς=king	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			reyes	king	#20	G0935					

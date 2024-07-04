@@ -1,0 +1,64 @@
+# next or previous verse
+Act.24.19#15=NKO	Act.24.19#15=NKO	τι (ti)	anything	G5100=X-ASN	τις=one	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			algo	one	#15»16:G2192	G5100					
+Luk.7.18[7.19]#15=NKO	Luk.7.18[7.19]#15=NKO	μαθητῶν (mathētōn)	disciples	G3101=N-GPM	μαθητής=disciple	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			aprendices	disciples	#15	G3101_b					
+Rev.17.9[17.10]#21=NKO	Rev.17.10#A21=NKO	ἑπτά (hepta)	seven	G2033=A-NUI	ἑπτά=seven	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz»1			siete	seven	#21	G2033_C					
+Mat.15.14#06=NKO	Mat.15.14#06=NKO	τυφλῶν. (tuphlōn)	of the blind.	G5185=A-GPM	τυφλός=blind	NA28+NA27+Tyn+SBL+Treg+TR+Byz			de ciegos	blind	#06	G5185_b					
+Luk.12.28#22=NKO	Luk.12.28#22=NKO	ὀλιγόπιστοι; (oligopistoi)	O [you] of little faith?	G3640=A-VPM	ὀλιγόπιστος=of little faith	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de poca confianza	of little faith	#22	G3640	G6066					
+Act.2.18#10=NKO	Act.2.18#10=NKO	δούλας (doulas)	handmaidens	G1399=N-APF	δούλη=female slave	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			esclavas	female slave	#10	G1399	G1401				
+Rev.16.18#10=NKO	Rev.16.18#10=NKO	ἐγένετο (egeneto)	there was	G1096=V-2ADI-3S	γίνομαι=to be	NA28+NA27+Tyn+SBL+WH+Treg+TR			llegó a ser	to be	#10	G1096_b					
+Php.2.7[2.8]#15=NKO	Php.2.7[2.8]#15=NKO	ἄνθρωπος (anthrōpos)	a man	G0444=N-NSM	ἄνθρωπος=a human	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hombre	a human	#15	G0444_b					
+Mat.16.13#15=NKO	Mat.16.13#15=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#15	G3004_a					
+Mat.17.10#07=NKO	Mat.17.10#07=NKO	λέγοντες· (legontes)	saying;	G3004G=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#07	G3004_a					
+Mat.21.21#05=NKO	Mat.21.21#05=NKO	εἶπεν (eipen)	said	G2036=V-2AAI-3S	ἔπω, ἐρῶ, εἶπον=to say	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			dijo	to say	#05	G2036_a					
+Mat.27.11#13=NKO	Mat.27.11#13=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#13	G3004_a					
+Mrk.8.27#23=NKO	Mrk.8.27#23=NKO	λέγων (legōn)	saying	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#23	G3004_a					
+Mrk.9.11#04=NKO	Mrk.9.11#04=NKO	λέγοντες· (legontes)	saying:	G3004G=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#04	G3004_a					
+Mrk.11.33#05=NKO	Mrk.11.33#05=NKO	λέγουσιν· (legousin)	they say:	G3004G=V-PAI-3P	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			están diciendo	: speak»to speak|1_speak/ask	#05	G3004_a					
+Mrk.12.35#05=NKO	Mrk.12.35#05=NKO	ἔλεγεν (elegen)	was saying	G3004G=V-IAI-3S	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estaba diciendo	: speak»to speak|1_speak/ask	#05	G3004_a					
+Luk.2.15#02=NKO	Luk.2.15#02=NKO	ἐγένετο (egeneto)	it came to pass	G1096=V-2ADI-3S	γίνομαι=to be	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			llegó a ser	to be	#02	G1096_a					
+Luk.9.18#17=NKO	Luk.9.18#17=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#17	G3004_a					
+Luk.11.45#06=NKO	Luk.11.45#06=NKO	λέγει (legei)	says	G3004G=V-PAI-3S	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			está diciendo	: speak»to speak|1_speak/ask	#06	G3004_a					
+Luk.20.3#03=NKO	Luk.20.3#03=NKO	εἶπεν (eipen)	He said	G2036=V-2AAI-3S	ἔπω, ἐρῶ, εἶπον=to say	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			dijo	to say	#03	G2036_a					
+Luk.20.21#04=NKO	Luk.20.21#04=NKO	λέγοντες· (legontes)	saying;	G3004G=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#04	G3004_a					
+Luk.20.39#06=NKO	Luk.20.39#06=NKO	εἶπαν· (eipan)	said;	G2036=V-2AAI-3P	ἔπω, ἐρῶ, εἶπον=to say	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz		TR: εἶπον ; 	dijeron	to say	#06	G2036_a					
+Luk.23.3#06=NKO	Luk.23.3#06=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#06	G3004_a					
+Jhn.9.19#04=NKO	Jhn.9.19#04=NKO	λέγοντες· (legontes)	saying;	G3004G=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#04	G3004_a					
+Jhn.16.18#01=NKO	Jhn.16.18#01=NKO	ἔλεγον (elegon)	They were saying	G3004G=V-IAI-3P	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Estaban diciendo	: speak»to speak|1_speak/ask	#01	G3004_a					
+Jhn.19.6#11=NKO	Jhn.19.6#11=NKO	λέγοντες· (legontes)	saying;	G3004G=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#11	G3004_a					
+1Co.2.11#04=NKO	1Co.2.11#04=NKO	ἀνθρώπων (anthrōpōn)	among men	G0444=N-GPM	ἄνθρωπος=a human	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de hombres	humans	#04	G0444_a					
+1Co.10.13#19=NKO	1Co.10.13#19=NKO	δύνασθε, (dunasthe)	you are able,	G1410=V-PNI-2P	δύναμαι=be able	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			están siendo capaces	be able	#19	G1410_a					
+2Co.12.6#24=NKO	2Co.12.6#24=NKO	τι (ti)	anything	G5100=X-ASN	τις=one	NA28+NA27+Tyn+SBL+TR+Byz			algo	one	#24«23:G0191	G5100_b					
+Rev.18.22#17=NKO	Rev.18.22#17=NKO	πᾶς (pas)	any	G3956=A-NSM	πᾶς=all	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			todo	all	#17	G3956_a					
+Luk.20.28#19=NKO	Luk.20.28#19=NKO	ἀδελφὸς (adelphos)	brother	G0080=N-NSM	ἀδελφός=brother	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hermano	brother	#19	G0080_b					
+1Co.14.7#05=NKO	1Co.14.7#05=NKO	διδόντα, (didonta)	giving,	G1325=V-PAP-NPN	δίδωμι=to give	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando dando	to give	#05	G1325_a					
+Mat.27.9#18=NKO	Mat.27.9#18=NKO	τετιμημένου, (tetimēmenou)	priced,	G5091=V-RPP-GSM	τιμάω=to honor	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			ha sido valorado	to honor	#18	G5091_a					
+Mrk.11.13#08=NKO	Mrk.11.13#08=NKO	ἦλθεν (ēlthen)	He went	G2064=V-2AAI-3S	ἔρχομαι=to come/go	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			vino	to go	#08	G2064_a					
+Heb.6.14#04=NKO	Heb.6.14#04=NKO	εὐλογῶν (eulogōn)	blessing	G2127=V-PAP-NSM	εὐλογέω=to praise/bless	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando bendiciendo	to bless	#04	G2127_a					
+Heb.6.14#08=NKO	Heb.6.14#08=NKO	πληθύνων (plēthunōn)	multiplying	G4129=V-PAP-NSM	πληθύνω=to multiply	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando multiplicando	to multiply	#08	G4129_a					
+Rev.13.14#22=NKO	Rev.13.14#22=NKO	κατοικοῦσιν (katoikousin)	dwelling	G2730=V-PAP-DPM	κατοικέω=to dwell	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando habitando	to dwell	#22	G2730_b					
+Mrk.12.2#12=NKO	Mrk.12.2#12=NKO	γεωργῶν (geōrgōn)	farmers	G1092=N-GPM	γεωργός=farmer	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			cultivadores	farmer	#12	G1092_b					
+Rom.10.3#10=NKO	Rom.10.3#10=NKO	δικαιοσύνην (dikaiosunēn)	righteousness	G1343=N-ASF	δικαιοσύνη=righteousness	NA28+NA27+Tyn+TR+Byz			justicia	righteousness	#10	G1343_b					
+1Co.9.7#25=NKO	1Co.9.7#25=NKO	ποίμνης (poimnēs)	flock	G4167=N-GSF	ποίμνη=flock	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			rebaño	flock	#25	G4167_b					
+1Co.12.26#13=NKO	1Co.12.26#13=NKO	μέλος, (melos)	member,	G3196=N-NSN	μέλος=member	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			miembro	member	#13	G3196_c					
+2Co.3.7#30=NKO	2Co.3.7#30=NKO	προσώπου (prosōpou)	face	G4383=N-GSN	πρόσωπον=face	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			rostro	face	#30	G4383_b					
+2Co.10.11#13=NKO	2Co.10.11#13=NKO	τοιοῦτοι (toioutoi)	such [we are]	G5108=D-NPM	τοιοῦτος=such as this	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			tales	such as this	#13	G5108_b					
+1Jn.5.16#08=NKO	1Jn.5.16#08=NKO	ἁμαρτίαν (hamartian)	a sin	G0266=N-ASF	ἁμαρτία=sin	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			pecado	sin	#08	G0266_a					
+Rev.9.11#18=NKO	Rev.9.11#18=NKO	ὄνομα (onoma)	[the] name	G3686=N-ASN	ὄνομα=name	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			nombre	name	#18	G3686_b					
+Rev.11.9#21=NKO	Rev.11.9#21=NKO	πτώματα (ptōmata)	bodies	G4430=N-APN	πτῶμα=corpse	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			cadáveres	corpse	#21	G4430_b					
+Rev.21.12#17=NKO	Rev.21.12#17=NKO	ὀνόματα (onomata)	names	G3686=N-APN	ὄνομα=name	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			nombres	name	#17	G3686_a					
+Rev.21.19#13=NKO	Rev.21.19#13=NKO	θεμέλιος (themelios)	foundation	G2310=N-NSM	θεμέλιος=foundation	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			fundamento	foundation	#13	G2310_b					
+Act.16.11#13=NKO	Act.16.11#13=NKO	Νέαν (Nean)	Nea	G3496=A-ASF-L	νέος=new	NA28+NA27+Tyn+SBL+WH+Treg+TR»1+Byz»1			Nea	new	#13	G3496	G3496				
+Act.18.7#09=N(O)	Act.18.7#09=N(O)	Τιτίου (Titiou)	Titius	G6084=N-GSM-P	Τιτίος=Titius	NA27+SBL+WH+Treg	Τιτου (O=Titou) Titus - G6084=N-GSM-P in: NA28		Tito	Titius»Titius|Justus@Act.18.7	#09	G6084	G5102 G5103				
+2Co.10.13#19=NKO	2Co.10.13#19=NKO	μέτρου (metrou)	a measure	G3358=N-GSN	μέτρον=measure	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de medida	measure	#19	G3358_b					
+2Co.13.12[13.13]#09=NKO	2Co.13.12[13.13]#09=NKO	ἅγιοι (hagioi)	saints	G0040H=A-NPM	ἅγιος=holy	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			santos	: holy»holy|1_holy	#09	G0040_b	G0039				
+Php.2.4#10=N(k)O	Php.2.4#10=N(k)O	ἕκαστοι. (hekastoi)	everyone.	G1538=A-NPM	ἕκαστος=each	NA28+NA27+Tyn+SBL+WH+Treg	ἕκαστος (t=hekastos) each one - G1538=A-NSM in: TR+Byz		cada uno	each	#10	G1538_b					
+1Th.2.11#04=NKO	1Th.2.12#A04=NKO	ἕνα (hena)	one	G1520=A-ASM	εἷς=one	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a uno	one	#04	G1520					
+1Th.2.11#05=NKO	1Th.2.12#A05=NKO	ἕκαστον (hekaston)	each	G1538=A-ASM	ἕκαστος=each	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a cada uno	each	#05	G1538					
+1Ti.6.11#16=N(K)O	1Ti.6.11#16=N(K)O	πραϋπαθίαν· (praupathian)	[and] gentleness;	G6073=N-ASF	πραϋπαθία=gentleness	NA28+NA27+Tyn+SBL+WH+Treg	πρᾳότητα (T=praotēta) [and] humility - G4236=N-ASF in: TR+Byz	Tyn: πραϋπάθειαν ;	a mansedumbre de temperamento	gentleness	#16	G6073	G4239 G4236				
+1Jn.2.14#10=NKO	1Jn.2.14#10=NKO	πατέρες, (pateres)	fathers,	G3962=N-VPM	πατήρ=father	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			padres	father	#10	G3962_b					
+Rev.1.18#15=NKO	Rev.1.18#15=NKO	αἰώνων (aiōnōn)	ages	G0165H=N-GPM	αἰών=an age	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			edades --	: eternity»an age|2_eternity	#15	G0165_b					
+2Co.13.12[13.13]#06=NKO	2Co.13.12[13.13]#06=NKO	Ἀσπάζονται (Aspazontai)	[13] Greet	G0782=V-PNI-3P	ἀσπάζομαι=to pay respects to	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Están saludando	to pay respects to	#06	G0782_b					
+1Th.4.11#11=NKO	1Th.4.11#11=NKO	ἰδίαις (idiais)	own	G2398=A-DPF	ἴδιος=one's own/private	NA28+NA27+TR+Byz			propias	one's own	#11	G2398_b					
+Luk.11.17#18=NKO	Luk.11.17#18=NKO	οἶκον (oikon)	a house	G3624H=N-ASM	οἶκος=house	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			casa	: household»house|2_household	#18	G3624_b					
+Jhn.11.13#18=NKO	Jhn.11.13#18=NKO	λέγει.¶ (legei)	He speaks.	G3004G=V-PAI-3S	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			está diciendo	: speak»to speak|1_speak/ask	#18	G3004	G2046				
+Act.20.38#07=NKO	Act.20.38#07=NKO	εἰρήκει (eirēkei)	he had spoken	G2036=V-LAI-3S	ἔπω, ἐρῶ, εἶπον=to say	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			había dicho	to say	#07	G2036	G2046				

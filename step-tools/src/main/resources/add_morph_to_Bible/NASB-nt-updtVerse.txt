@@ -1,0 +1,37 @@
+Mat.16.13#15=NKO	Mat.16.13#15=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#15	G3004_a					
+Mat.17.10#07=NKO	Mat.17.10#07=NKO	λέγοντες· (legontes)	saying;	G3004G=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#07	G3004_a					
+Mat.22.42#01=NKO	Mat.22.42#01=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#01	G3004_a					
+Mat.25.45#04=NKO	Mat.25.45#04=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#04	G3004_a					
+Mat.17.20#20=NKO	Mat.17.20#20=NKO	ἐρεῖτε (ereite)	you will say	G3004=V-FAI-2P	ἔπω, ἐρῶ, εἶπον=to say	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			dirán	to say	#20	G3004_C					
+Mat.21.16#02=NKO	Mat.21.16#02=NKO	εἶπαν (eipan)	said	G3004=V-2AAI-3P	ἔπω, ἐρῶ, εἶπον=to say	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz		TR: εἶπον ; 	dijeron	to say	#02	G3004_A					
+Mat.21.16#07=NKO	Mat.21.16#07=NKO	λέγουσιν; (legousin)	say?	G3004G=V-PAI-3P	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			están diciendo?	: speak»to speak|1_speak/ask	#07	G3004_B					
+Mat.21.16#11=NKO	Mat.21.16#11=NKO	λέγει (legei)	says	G3004G=V-PAI-3S	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			está diciendo	: speak»to speak|1_speak/ask	#11	G3004_C					
+Mat.26.64#06=NKO	Mat.26.64#06=NKO	εἶπας. (eipas)	have said.	G3004=V-2AAI-2S	ἔπω, ἐρῶ, εἶπον=to say	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			dijiste	to say	#06	G3004_B					
+Mat.26.64#08=NKO	Mat.26.64#08=NKO	λέγω (legō)	I say	G3004G=V-PAI-1S	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estoy diciendo	: speak»to speak|1_speak/ask	#08	G3004_C					
+Jhn.1.38#15=NKO	Jhn.1.38#15=NKO	εἶπαν (eipan)	they said	G3004=V-2AAI-3P	ἔπω, ἐρῶ, εἶπον=to say	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz		TR: εἶπον ; 	dijeron	to say	#15	G3004_B					
+Jhn.1.38#19=NKO	Jhn.1.38#19=NKO	λέγεται (legetai)	is to say	G3004G=V-PPI-3S	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			está siendo dicho	: speak»to speak|1_speak/ask	#19	G3004_C					
+Jhn.9.17#18=NKO	Jhn.9.17#18=NKO	εἶπεν (eipen)	he said	G3004=V-2AAI-3S	ἔπω, ἐρῶ, εἶπον=to say	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			dijo	to say	#18	G3004_C					
+Jhn.13.33#21=NKO	Jhn.13.33#21=NKO	ἐλθεῖν, (elthein)	to come,	G2064=V-2AAN	ἔρχομαι=to come/go	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			venir	to come	#21	G2064	G1831				
+Jhn.7.31#20=NKO	Jhn.7.31#20=NKO	ποιήσει (poiēsei)	will He do	G4160G=V-FAI-3S	ποιέω=to do/make	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hará	: do»to do/make|1_do/work	#20	G4160_A	G2038				
+Jhn.7.31#23=NKO	Jhn.7.31#23=NKO	ἐποίησεν; (epoiēsen)	has done?	G4160G=V-AAI-3S	ποιέω=to do/make	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hizo?	: do»to do/make|1_do/work	#23	G4160_B	G4162 G2038				
+Jhn.9.16#29=NKO	Jhn.9.16#29=NKO	ποιεῖν; (poiein)	to do?	G4160G=V-PAN	ποιέω=to do/make	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estar haciendo?	: do»to do/make|1_do/work	#29	G4160	G2038				
+Rom.4.21#09=NKO	Rom.4.21#09=NKO	ποιῆσαι· (poiēsai)	to do;	G4160G=V-AAN	ποιέω=to do/make	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hacer	: do»to do/make|1_do/work	#09	G4160	G2038				
+Php.2.28#01=NKO	Php.2.28#01=NKO	σπουδαιοτέρως (spoudaioterōs)	All the more speedily	G4708=ADV-C	σπουδαιοτέρως=more eagerly	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Más rapidez	more eagerly	#01	G4708	G4709				
+Jhn.1.33#18=NKO	Jhn.1.33#18=NKO	ἴδῃς (idēs)	you may see	G3708=V-2AAS-2S	εἴδω=to perceive	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			veas	: see»to perceive|2_see	#18	G3708					
+Act.26.4#20=NKO	Act.26.4#20=NKO	ἴσασιν (isasin)	know	G2467=V-PAI-3P	εἴδω=to perceive	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			han sabido	: know»to perceive|1_know/understand	#20	G2467	G1492				
+Mat.10.42#18=NKO	Mat.10.42#18=NKO	οὐ (ou)	certainly	G3756=PRT-N	οὐ=no	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			no	no	#18»20:G0622	G3756	G3364				
+Mat.25.9#07=NKO	Mat.25.9#07=NKO	οὐ (ou)	certainly	G3756=PRT-N	οὐ=no	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz		TR+Byz: οὐκ ; 	no	no	#07»09:G0714	G3756	G3364				
+Mrk.9.41#19=NKO	Mrk.9.41#19=NKO	οὐ (ou)	certainly	G3756=PRT-N	οὐ=no	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			no	no	#19»21:G0622	G3756	G3364				
+Luk.18.39#12=NKO	Luk.18.39#12=NKO	ἔκραζεν· (ekrazen)	was crying out;	G2896=V-IAI-3S	κράζω=to cry	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estaba clamando a gritos	to cry	#12	G2896	G2905				
+Act.1.18#14=NKO	Act.1.18#14=NKO	ἐλάκησεν (elakēsen)	he burst open	G2997=V-AAI-3S	λάσχω=to burst	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			reventó ruidosamente	to burst	#14	G2997	G2979				
+Act.5.2#06=NKO	Act.5.2#06=NKO	συνειδυίης (suneiduiēs)	already being aware	G4894=V-RAP-GSF	συνείδω=be aware	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz		TR: συνειδυίας ; 	ha sabido juntamente	be aware	#06	G4894	G6083				
+1Pe.2.5#06=NKO	1Pe.2.5#06=NKO	οἰκοδομεῖσθε (oikodomeisthe)	are being built up	G3618=V-PPI-2P	οἰκοδομέω=to build	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			están siendo edificados	to build	#06	G3618	G2026				
+Mrk.16.2#11=NKO	Mrk.16.2#11=NKO	μνημεῖον (mnēmeion)	tomb	G3419=N-ASN	μνημεῖον=grave	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			tumba conmemorativa	grave	#11	G3419	G3418				
+Luk.11.42#31=N(k)O	Luk.11.42#31=N(k)O	παρεῖναι.¶ (pareinai)	to neglect.	G3918=V-2AAN	πάρειμι=be present	NA28+NA27+Tyn+SBL+WH+Treg	ἀφιέναι (t=aphienai) to abandon - G0863=V-PAN in: TR+Byz		soltar al lado de	be present	#31	G3918	G0863 G3935				
+Jhn.8.44#26=NKO	Jhn.8.44#26=NKO	ἔστηκεν, (estēken)	it has stood,	G2476=V-RAI-3S	ἵστημι=to stand	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			(se) ha puesto de pie	to stand	#26	G2476	G4739				
+Act.10.24#13=NKO	Act.10.24#13=NKO	προσδοκῶν (prosdokōn)	expecting	G4328=V-PAP-NSM	προσδοκάω=to look for	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando esperando	to look for	#13	G4328	G4327				
+Rom.3.25#14=NKO	Rom.3.25#14=NKO	ἔνδειξιν (endeixin)	a showing forth	G1732=N-ASF	ἔνδειξις=demonstration	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			demostración	demonstration	#14	G1732	G1731				
+1Co.4.2#03=NKO	1Co.4.2#03=NKO	ζητεῖται (zēteitai)	it is required	G2212=V-PPI-3S	ζητέω=to seek	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			está siendo buscado	to seek	#03	G2212	G0523				
+2Co.12.3#02=NKO	2Co.12.3#02=NKO	οἶδα (oida)	I know	G1492=V-PAI-1S	εἴδω=to perceive	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			he sabido	: know»to perceive|1_know/understand	#02	G1492_A					
+2Co.12.3#14=NKO	2Co.12.3#14=NKO	οἶδα, (oida)	I know,	G1492=V-PAI-1S	εἴδω=to perceive	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			he sabido	: know»to perceive|1_know/understand	#14	G1492_B					
+2Co.12.3#17=NKO	2Co.12.3#17=NKO	οἶδεν, (oiden)	knows —	G1492=V-PAI-3S	εἴδω=to perceive	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			ha sabido --	: know»to perceive|1_know/understand	#17	G1492_C					

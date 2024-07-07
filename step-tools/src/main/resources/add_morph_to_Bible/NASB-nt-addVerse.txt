@@ -1,0 +1,47 @@
+Mat.2.1#21=NKO	λέγοντες· (legontes)	saying;	G3004G=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#01	G3004					
+Mat.2.19#15=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#01	G3004					
+Mat.3.1#16=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#02	G3004					
+Mat.17.14#12=NKO	λέγων· (legōn)	saying;	G3004G=V-PAP-NSM	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#02	G3004					
+Luk.22.66#A01=NKO	λέγοντες· (legontes)	saying;	G3004G=V-PAP-NPM	λέγω=to speak	NA28+NA27+Tyn+SBL+Treg+TR+Byz			estando diciendo	: speak»to speak|1_speak/ask	#01	G3004					
+Mat.20.4#17=NKO	ἀπῆλθον. (apēlthon)	they went.	G0565=V-2AAI-3P	ἀπέρχομαι=to go away	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			vinieron desde	to go away	#03	G0565					
+Act.15.18#22=NKO	λέγει (legei)	says	G3004G=V-PAI-3S	λέγω=to speak	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			está diciendo	: speak»to speak|1_speak/ask	#22	G3004					
+Act.15.18#23=NKO	κύριος (kurios)	[the] Lord	G2962G=N-NSM-T	κύριος=lord	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Señor	: God»lord|1_God	#23	G2962_B					
+Act.15.18#25=NKO	ποιῶν (poiōn)	is doing	G4160G=V-PAP-NSM	ποιέω=to do/make	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando haciendo	to make»2_make/create(OBJECT)	#25	G4160					
+Act.21.5#01a=N(k)O	ἀπησπασάμεθα (apēspasametha)	we greeted	G0782=V-AMI-1P	ἀποσπάω=to draw away	NA28+NA27+Tyn+SBL+WH+Treg	ἀσπασάμενοι (t=aspasamenoi) greeting - G0782=V-ADP-NPM in: TR+Byz		Habiendo saludado (en despedida)	to draw away	#01	G0782	G2009				
+2Co.13.13#01a=NKO	Ἀσπάζονται (Aspazontai)	[13] Greet	G0782=V-PNI-3P	ἀσπάζομαι=to pay respects to	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Están saludando	to pay respects to	#06	G0782					
+Act.5.40#14a=NKO	ἐπείσθησαν (epeisthēsan)	[40] They were persuaded	G3982=V-API-3P	πείθω=to persuade	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Fueron persuadidos	to persuade	#14	G3982					
+Luk.1.74#10a=NKO	δοῦναι (dounai)	to grant	G1325=V-2AAN	δίδωμι=to give	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			dar	to give	#10	G1325					
+Luk.7.19#A11=NKO	προσκαλεσάμενος (proskalesamenos)	having called near	G4341=V-ADP-NSM	προσκαλέω=to call to/summon	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			habiendo llamado hacia (sí)	to summon	#11	G4341					
+Luk.20.28#A11=NKO	ἐπηρώτησαν (epērōtēsan)	they questioned	G1905=V-AAI-3P	ἐπερωτάω=to question	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			inquirieron	to question	#11	G1905					
+Jhn.19.17#08a=NKO	παρέλαβον (parelabon)	They took	G3880=V-2AAI-3P	παραλαμβάνω=to take	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Tomaron consigo	to take	#08	G3880					
+Act.3.19#03a=NKO	ἔλθωσιν (elthōsin)	may come	G2064=V-2AAS-3P	ἔρχομαι=to come/go	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			vengan	to come	#03	G2064					
+Rom.3.25#A26=NKO	ἀνοχῇ (anochēa)	forbearance	G0463=N-DSF	ἀνοχή=tolerance	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			autorefrenamiento	tolerance	#26	G0463					
+Rom.3.25#A26=NKO	ἀνοχῇ (anochēa)	forbearance	G0463=N-DSF	ἀνοχή=tolerance	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			autorefrenamiento	tolerance	#26	G0463					
+Rom.7.9#A03=NKO	ἀπέθανον, (apethanon)	died,	G0599=V-2AAI-1S	ἀποθνήσκω=to die	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			morí	died	#03	G0599					
+Rom.9.11#A07=NKO	καλοῦντος, (kalountos)	calling,	G2564G=V-PAP-GSM	καλέω=to call	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando llamando	: call»to call|1_call/invite	#07	G2564					
+2Co.10.5#17a=NKO	καθαιροῦντες (kathairountes)	overthrowing	G2507=V-PAP-NPM	καθαιρέω=to take down	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estamos derribando	to take down	#17	G2507					
+Gal.2.20#A11=NKO	συνεσταύρωμαι· (sunestaurōmai)	I have been crucified with;	G4957=V-RPI-1S	συσταυρόομαι=to crucify with	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			he sido fijado en madero de ejecución junto con	to crucify with	#11	G4957					
+Php.2.8#A12=NKO	σχήματι (schēmati)	in appearance	G4976=N-DSN	σχῆμα=form	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a condición	form	#12	G4976					
+Php.2.8#A13=NKO	εὑρεθεὶς (heuretheis)	having been found	G2147=V-2APP-NSM	εὑρίσκω=to find/meet	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			habiendo sido hallado	to meet	#13	G2147					
+Php.2.8#A15=NKO	ἄνθρωπος (anthrōpos)	a man	G0444=N-NSM	ἄνθρωπος=a human	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hombre	a human	#15	G0444_B
+Mrk.7.21#A01=NKO	μοιχεῖαι, (moicheiai)	adulteries	G3430=N-NPF	μοιχεία=adultery	NA28+NA27+Tyn+SBL+WH+Treg+TR«3+Byz«3			adulterios	adultery	#01	G3430					
+Luk.7.19#A12=NKO	δύο (duo)	two	G1417=A-NUI	δύο=two	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a dos	two	#12	G1417					
+Luk.7.19#A15=NKO	μαθητῶν (mathētōn)	disciples	G3101=N-GPM	μαθητής=disciple	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			aprendices	disciples	#15	G3101					
+Luk.7.19#A18=NKO	Ἰωάννης (Iōannēs)	John	G2491G=N-NSM-P	Ἰωάννης=John	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz		WH: Ἰωάνης ; 	Juan	John»John|John@Mat.3.1	#18	G2491					
+Luk.4.7#08a=NKO	σοῦ (sou)	Yours	G4674=P-2GS	σύ=you	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de ti	of you	#08«07:G1510	G4674	G4675				
+Luk.21.34#A02=NKO	παγίς· (pagis)	a snare;	G3803=N-NSF	παγίς=trap	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			trampa de lazo	trap	#02	G3803					
+Jhn.10.23#09=NKO	χειμὼν (cheimōn)	winter	G5494=N-NSM	χειμών=winter	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			invierno	winter	#09	G5494					
+Jhn.19.17#11a=NKO	Ἰησοῦν (Iēsoun)	Jesus	G2424G=N-ASM-P	Ἰησοῦς=Jesus/Joshua	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Jesús	Jesus»Jesus|Jesus@Mat.1.1	#11	G2424					
+Act.2.10#01a=NKO	Ἰουδαῖοί (Ioudaioi)	Jews	G2453=N-NPM-PG	Ἰουδαῖος=Jewish 	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			judíos	Jewish»Jews@2Ki.25.25	#01	G2453	G2449				
+Act.2.10#04a=NKO	προσήλυτοι, (prosēlutoi)	converts,	G4339=N-NPM	προσήλυτος=proselyte	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			prosélitos	proselyte	#04	G4339					
+Act.3.19#04a=NKO	καιροὶ (kairoi)	times	G2540=N-NPM	καιρός=time/right time	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			tiempos señalados	times	#04	G2540					
+Act.3.19#05a=NKO	ἀναψύξεως (anapsuxeōs)	of refreshing	G0403=N-GSF	ἀνάψυξις=refreshment	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de refrigerio	refreshment	#05	G0403					
+Act.3.19#07a=NKO	προσώπου (prosōpou)	[the] presence	G4383=N-GSN	πρόσωπον=face	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			rostro	face	#07	G4383					
+Act.3.19#09a=NKO	κυρίου (kuriou)	Lord	G2962G=N-GSM-T	κύριος=lord	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Señor	: God»lord|1_God	#09	G2962					
+1Th.2.11#01a=NKO	παρακαλοῦντες (parakalountes)	exhorting	G3870=V-PAP-NPM	παρακαλέω=to plead/comfort	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Estando exhortando	to plead	#01	G3870					
+1Th.2.11#04a=NKO	παραμυθούμενοι (paramuthoumenoi)	comforting	G3888=V-PNP-NPM	παραμυθέομαι=to encourage	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estando confortando	to encourage	#04	G3888					
+1Th.2.11#06a=N(k)O	μαρτυρόμενοι (marturomenoi)	charging	G3143=V-PNP-NPM	μαρτύρομαι=to testify	NA28+NA27+Tyn+SBL+WH+Treg+Byz	μαρτυρούμενοι (t=marturoumenoi) charging - G3140=V-PMP-NPM in: TR		dando testimonio	to testify	#06	G3143	G3140				
+Rev.13.1#02a=N(K)O	ἐστάθη (estathē)	he stood	G2476=V-API-3S	ἵστημι=to stand	NA28+NA27+Tyn+SBL+WH+Treg	ἐστάθην (T=estathēn) I stood - G2476=V-API-1S in: TR+Byz		fue puesto de pie	to stand	#02	G2476					
+Rev.13.1#05a=NKO	ἄμμον (ammon)	sand	G0285=N-ASF	ἄμμος=sand	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			arena	sand	#05	G0285					
+Rev.2.27#A03=NKO	εἴληφα (eilēpha)	have received	G2983=V-2RAI-1S	λαμβάνω=to take	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			he recibido	to take	#03	G2983					
+Rev.2.27#A06=NKO	πατρός (patros)	Father	G3962=N-GSM-T	πατήρ=father	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Padre	father	#06	G3962					

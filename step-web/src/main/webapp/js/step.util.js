@@ -1834,7 +1834,7 @@ step.util = {
         },
 
 		_showVerseWithStrongInBookPopup: function (bookName, dataStrong, dataOtherStrongs, evPageY, wordInfo, passageHtml) {
-			fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|reference=" + bookName +
+			fetch(document.location.origin + "/rest/search/masterSearch/version=ESV|reference=" + bookName +
 				step.util._createStrongSearchArg(dataStrong, dataOtherStrongs) +
 				"/HNVUG//////en?lang=en")
 			.then(function(response) {
@@ -1846,7 +1846,7 @@ step.util = {
 		},
 
 		_showVerseWithStrongInBiblePopup: function (dataStrong, dataOtherStrongs, evPageY, wordInfo, passageHtml) {
-			fetch("https://www.stepbible.org/rest/search/masterSearch/version=ESV|" +
+			fetch(document.location.origin + "/rest/search/masterSearch/version=ESV|" +
 				step.util._createStrongSearchArg(dataStrong, dataOtherStrongs) +
 				"/HNVUG//////en?lang=en")
 			.then(function(response) {

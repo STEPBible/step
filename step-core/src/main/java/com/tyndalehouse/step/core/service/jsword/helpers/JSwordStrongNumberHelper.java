@@ -226,8 +226,13 @@ public class JSwordStrongNumberHelper {
                     this.isOT ? STRONG_OT_VERSION_BOOK.getInitials() : STRONG_NT_VERSION_BOOK.getInitials());
             final TermDocs termDocs = is.getIndexReader().termDocs();
             ArrayList lexiconSuggestions = null;
-            if (this.verseStrongs != null)
+            if (this.verseStrongs != null) {
                 lexiconSuggestions = (ArrayList) this.verseStrongs.get(this.reference.getOsisID());
+                if ((lexiconSuggestions == null) && (this.verseStrongs.size() == 1)) {
+                    System.out.println("Do not match: " + this.verseStrongs.keySet() + " " + this.reference.getOsisID());
+                    lexiconSuggestions = (ArrayList) this.verseStrongs.get(this.verseStrongs.keySet().toArray()[0]);
+                }
+            }
             final int sizeOfLexiconSuggestion = (lexiconSuggestions == null) ? 0 : lexiconSuggestions.size();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {
                 final String strongKey = strong.getKey();

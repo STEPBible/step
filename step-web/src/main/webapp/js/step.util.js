@@ -2140,7 +2140,7 @@ step.util = {
                 var parts = qLexElements;
 				var text = $(parts[0]);
 				for (var i = 1; i < parts.length; i++) {
-					text.append($(parts[1]));
+					text.append($(parts[i]));
 				}
                 //do the quick note
                 new QuickLexicon({

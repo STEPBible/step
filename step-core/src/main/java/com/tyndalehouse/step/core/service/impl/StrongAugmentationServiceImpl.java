@@ -175,7 +175,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                     System.out.println("Cannot find ordinal for " + mainRef);
                     continue; // cannot process it because it cannot find the ordinal.
                 }
-                if ((!versification.getName().equals("Leningrad")) && (refOrdinal > NT_OFFSET))
+                if ((!versification.getName().equals("MT")) && (refOrdinal > NT_OFFSET))
                     refOrdinal -= NT_OFFSET;
                 curRefOrdinalAndOccurrences.ordinal = refOrdinal;
                 ordinalOccurrencesArray[index] = curRefOrdinalAndOccurrences;

@@ -135,10 +135,11 @@ public class JSwordStrongNumberHelper {
             final Book preferredCountBook = getPreferredCountBook(this.isOT);
             final List<Element> elements = JSwordUtils.getOsisElements(new BookData(preferredCountBook, key));
             Set<String> strongAlreadyIncluded = new HashSet<String>();
+            String verseRef = "";
             for (final Element e : elements) {
                 if (elements.size() == 1) // If it is from verseVocabuary, it will only has one morphology
                     allMorph = OSISUtil.getMorphologiesWithStrong(e);
-                final String verseRef = e.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID);
+                verseRef = e.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID);
                 final String strongsNumbers = OSISUtil.getStrongsNumbers(e);
                 if (StringUtils.isBlank(strongsNumbers)) {
                     LOG.warn("Attempting to search for 'no strongs' in verse [{}]", verseRef);
@@ -156,7 +157,7 @@ public class JSwordStrongNumberHelper {
                 readDataFromLexicon(this.definitions, verseRef, String.join(" ", uniqueStrong), userLanguage);
             }
             // now get counts in the relevant portion of text
-            applySearchCounts(getBookFromKey(key));
+            applySearchCounts(getBookFromKey(key), verseRef);
         } catch (final NoSuchKeyException ex) {
             LOG.warn("Unable to enhance verse numbers.", ex);
         } catch (final BookException ex) {
@@ -184,7 +185,7 @@ public class JSwordStrongNumberHelper {
         Map<String, Integer[]> temp = stat.getStats();
         temp.forEach((strongNum, feq) -> this.allStrongs.put(strongNum, new BookAndBibleCount()));
         // now get counts in the relevant portion of text
-        applySearchCounts(getBookFromKey(key));
+        applySearchCounts(getBookFromKey(key), "");
         temp.forEach((strongNum, freq) -> {
             BookAndBibleCount bBCount = this.allStrongs.get(strongNum);
             result.put(strongNum, new Integer[]{freq[0], bBCount.getBook(), bBCount.getBible()});
@@ -218,7 +219,7 @@ public class JSwordStrongNumberHelper {
      *
      * @param bookName the book name
      */
-    private void applySearchCounts(final String bookName) {
+    private void applySearchCounts(final String bookName, final String curOsisID) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -226,12 +227,12 @@ public class JSwordStrongNumberHelper {
                     this.isOT ? STRONG_OT_VERSION_BOOK.getInitials() : STRONG_NT_VERSION_BOOK.getInitials());
             final TermDocs termDocs = is.getIndexReader().termDocs();
             ArrayList lexiconSuggestions = null;
-            if (this.verseStrongs != null) {
-                lexiconSuggestions = (ArrayList) this.verseStrongs.get(this.reference.getOsisID());
-                if ((lexiconSuggestions == null) && (this.verseStrongs.size() == 1)) {
-                    System.out.println("Do not match: " + this.verseStrongs.keySet() + " " + this.reference.getOsisID());
-                    lexiconSuggestions = (ArrayList) this.verseStrongs.get(this.verseStrongs.keySet().toArray()[0]);
-                }
+            if ((this.verseStrongs != null) && (!curOsisID.equals(""))) {
+                lexiconSuggestions = (ArrayList) this.verseStrongs.get(curOsisID);
+//                if ((lexiconSuggestions == null) && (this.verseStrongs.size() == 1)) {
+//                    System.out.println("Do not match: " + this.verseStrongs.keySet() + " " + this.reference.getOsisID());
+//                    lexiconSuggestions = (ArrayList) this.verseStrongs.get(this.verseStrongs.keySet().toArray()[0]);
+//                }
             }
             final int sizeOfLexiconSuggestion = (lexiconSuggestions == null) ? 0 : lexiconSuggestions.size();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {

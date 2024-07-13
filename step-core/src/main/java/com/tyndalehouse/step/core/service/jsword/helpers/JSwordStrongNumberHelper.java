@@ -229,10 +229,10 @@ public class JSwordStrongNumberHelper {
             ArrayList lexiconSuggestions = null;
             if ((this.verseStrongs != null) && (!curOsisID.equals(""))) {
                 lexiconSuggestions = (ArrayList) this.verseStrongs.get(curOsisID);
-//                if ((lexiconSuggestions == null) && (this.verseStrongs.size() == 1)) {
-//                    System.out.println("Do not match: " + this.verseStrongs.keySet() + " " + this.reference.getOsisID());
-//                    lexiconSuggestions = (ArrayList) this.verseStrongs.get(this.verseStrongs.keySet().toArray()[0]);
-//                }
+                if ((lexiconSuggestions == null) && (this.verseStrongs.size() > 0)) {
+                    System.out.println("Do not match: " + this.verseStrongs.keySet() + " " + curOsisID);
+                    lexiconSuggestions = (ArrayList) this.verseStrongs.get(this.verseStrongs.keySet().toArray()[0]);
+                }
             }
             final int sizeOfLexiconSuggestion = (lexiconSuggestions == null) ? 0 : lexiconSuggestions.size();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {

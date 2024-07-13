@@ -1360,7 +1360,7 @@ step.util = {
         /**
          * called when click on a piece of text.
          */
-        showTutorial: function () {
+        showTutorial: function () { // Do not shorten name in pom.xml because it is called at start.jsp
             step.util.ui.initSidebar('help', { });
 			if (step.sidebar != null) {
 				if (!step.touchDevice || step.touchWideDevice)
@@ -1412,7 +1412,7 @@ step.util = {
                 step.util.ui.openStrongNumber(strong, morph, ref, version, allVersions, variant, morphCount);
             });
         },
-        initSidebar: function (mode, data) {
+        initSidebar: function (mode, data) { // Do not shorten name in pom.xml because it is called at start.jsp
             require(["sidebar"], function (module) {
                 if (!data) {
                     data = {};
@@ -2342,7 +2342,7 @@ step.util = {
 			step.util.blockBackgroundScrolling("passageSelectionModal");
   },
 
-  copyModal: function () {
+  copyModal: function () { // Do not shorten name in pom.xml because it is called at start.jsp
     var element = document.getElementById('copyModal');
     if (element) element.parentNode.removeChild(element);
     $("div.modal-backdrop.in").remove();
@@ -2792,7 +2792,7 @@ step.util = {
 		else step.colorUpdateMode = true;
 		step.util.showFontSettings();
 	},
-    showFontSettings: function (panelNumber) {
+    showFontSettings: function (panelNumber) { // Do not shorten name in pom.xml because it is called at start.jsp
         var element = document.getElementById('fontSettings');
         if (element) element.parentNode.removeChild(element);
 		$(".modal-backdrop.in").remove();

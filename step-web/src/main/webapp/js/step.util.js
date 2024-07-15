@@ -3947,7 +3947,7 @@ step.util = {
 		var strongArray = strong.split(" ");
 		var uniqueStrongArray = [];
 		for (var j = 0; j < strongArray.length; j++) { // remove duplicates
-			if (uniqueStrongArray.indexOf(strongArray[j]) > -1)
+			if (uniqueStrongArray.indexOf(strongArray[j]) == -1)
 				uniqueStrongArray.push(strongArray[j]);
 		}
 		var additionalPath = step.state.getCurrentVersion();

@@ -4374,6 +4374,7 @@ step.util = {
 		var testamentOfFrequency = result[1];
 		if (versionIndex > -1) {
 			for (var i = 0; i < data.vocabInfos.length; i++) {
+				if (data.vocabInfo[i] == null) continue;
 				if (typeof data.vocabInfos[i].freqList !== "string") {
 					if (typeof data.vocabInfos[i].popularityList === "string")
 						data.vocabInfos[i].freqList = data.vocabInfos[i].popularityList;

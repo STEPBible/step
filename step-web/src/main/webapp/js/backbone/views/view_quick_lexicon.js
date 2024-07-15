@@ -127,6 +127,7 @@ var QuickLexicon = Backbone.View.extend({
             else {
                 step.util.getFrequency(self.version, data);
                 for (var i = 0; i < data.vocabInfos.length; i++) {
+                    if (data.vocabInfos[i] == null) continue;
                     if (typeof data.vocabInfos[i].mediumDef === "string") {
                         if ((typeof data.vocabInfos[i].shortDef === "string") && (data.vocabInfos[i].shortDef.length > 2)) {
                             var pos = data.vocabInfos[i].mediumDef.indexOf(data.vocabInfos[i].shortDef);

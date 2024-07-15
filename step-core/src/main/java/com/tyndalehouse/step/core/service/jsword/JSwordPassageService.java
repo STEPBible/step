@@ -12,7 +12,7 @@ import java.util.List;
 public interface JSwordPassageService {
     String REFERENCE_BOOK = "ESV_th";
     String SECONDARY_REFERENCE_BOOK = "NIV";
-    String OT_BOOK = "THOT"; // "OSHB";
+    String OT_BOOK = "THOT"; // Used to be "OSHB" until June 2024;
     String BEST_VERSIFICATION = "KJV";
     int MAX_VERSES_RETRIEVED = 200;
 

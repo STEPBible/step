@@ -4071,11 +4071,10 @@ step.util = {
 		}
 	},
 	cleanVocabResult: function (resultJson) {
-		var originalLen = resultJson.vocabInfos.length;
-		for (var i = 0; i < originalLen; i ++) {
-			resultJson.vocabInfos[i] && resultJson.vocabInfos.push(resultJson.vocabInfos[i]); // copy non-empty values to the end of the array
+		for (var i = resultJson.vocabInfos.length - 1; i > -1; i --) {
+			if (!resultJson.vocabInfos[i])
+				resultJson.vocabInfos.splice(i , 1);  // remove empty elements in the array and leave only the non-empty values
 		}
-		resultJson.vocabInfos.splice(0 , originalLen);  // cut the array and leave only the non-empty values
 		return resultJson;
 	},
 	bookOrderInBible: function (reference) {

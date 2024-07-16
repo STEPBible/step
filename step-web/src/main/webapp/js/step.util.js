@@ -4019,7 +4019,7 @@ step.util = {
 							var morphLowerCase = currentMorph.toLowerCase();
 							if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1)) {
 								resultJson.morphInfos = [];
-								callProcessQuickInfo(resultJson, callBack1Param);
+								callProcessQuickInfo(step.util.cleanVocabResult(resultJson), callBack1Param);
 								return;
 							}
 							var pos = morphLowerCase.search("robinson:"); // need to check to see if this is still used
@@ -4050,7 +4050,7 @@ step.util = {
 								numOfMorphResponse ++;
 								resultJson.morphInfos[indexToUniqueMorphArry] = jsonVar.morphInfos[0];
 								if (numOfMorphResponse == morphArray.length)
-									callProcessQuickInfo(resultJson, callBack1Param);
+									callProcessQuickInfo(step.util.cleanVocabResult(resultJson), callBack1Param);
 							}).error(function() {
 								console.log("getJSon failed strong:"+ strong + " morph: " + currentMorph + " version: " + version);
 								if (numOfMorphResponse < 0) return; // already processed error from $getjson of /html/lexicon ...
@@ -4060,7 +4060,7 @@ step.util = {
 						}
 					}
 					else
-						callProcessQuickInfo(resultJson, callBack1Param);
+						callProcessQuickInfo(step.util.cleanVocabResult(resultJson), callBack1Param);
 				}
 			}).error(function() {
 				if (numOfResponse < 0) return; // already processed error from $getjson of /html/lexicon ...
@@ -4069,6 +4069,9 @@ step.util = {
 				//return false;
 			});
 		}
+	},
+	cleanVocabResult: function (resultJson) {
+		return resultJson;
 	},
 	bookOrderInBible: function (reference) {
 		var idx2osisChapterJsword = {

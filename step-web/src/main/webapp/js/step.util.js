@@ -3366,6 +3366,9 @@ step.util = {
     },
 	showByGeo: function(testMode) { // The following arrays need to be updated when new Bible with additional language codes are added.
 		var africa_lang = [
+			"Abanyom", // abm  * added on July 28, 2024
+			"Abureni", // mgj  * added on July 28, 2024
+			"Alege", // alf  * added on July 28, 2024
 			"Amharic",  // am
 			"Arabic",  // ar
 			"Ewe",  // ee

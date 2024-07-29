@@ -3388,6 +3388,7 @@ step.util = {
 			"Naro", // nhr
 			"North_Ndebele", // nd
 			"Nyanja", // ny
+			"Polci",
 			"Portuguese", // pt
 			"Shona", // sn
 //			"Somali", // so - might not exist May 20, 2024

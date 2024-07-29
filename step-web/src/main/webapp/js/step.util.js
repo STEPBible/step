@@ -3371,33 +3371,62 @@ step.util = {
 			"Alege", // alf  * added on July 28, 2024
 			"Amharic",  // am
 			"Arabic",  // ar
+			"Boghom",
+			"Cakfem-Mushere",
+			"Cibak",
+			"Efutop",
 			"Ewe",  // ee
+			"Fyam",
 			"Ganda",  // lg
 			"Gbagyi", // gbr
 			"Geez", // gez
+			"Gwak",
+			"gyz", // Geji
 			"Hausa", // ha
+			"Hwana",
 			"Igbo", // ig
 			"Ikposo", // kpo
+			"Jere",
 			"Kikuyu", // ki
+			"Kota__Gabon_",
+			"Lala-Roba",
 			"Lama__Togo_", // las
 			"Lingala", // ln
 			"Lopit", // lpx
+			"Luo",
 			"Malagasy", // mg
 			"Malagasy__Plateau", // plt
+			"Mashi__Zambia_",
+			"Mbembe__Cross_River",
+			"Mbere",
 			"Mina__Cameroon_", // hna
+			"Miya",
 			"Naro", // nhr
+			"Nde-Nsele-Nta",
+			"Njebi",
 			"North_Ndebele", // nd
 			"Nyanja", // ny
+			"Olulumo-Ikom",
+			"Oromo",
 			"Polci",
 			"Portuguese", // pt
+			"Sanga__Nigeria_",
+			"Sangu__Gabon_",
 			"Shona", // sn
+			"Sira",
 //			"Somali", // so - might not exist May 20, 2024
+			"Suri",
 			"Swahili", // sw
 			"Swahili__individual_language_", // swh
 			"Tswana", // tn
 			"Twi", // tw
+			"tyy",
+			"Warji",
+			"Wumbvu",
+			"Yiwom",
 			"Yombe", // yom
 			"Yoruba", // yor
+			"Zimba",
 			"English", // en
 			"French", // fr
 			"Spanish" // es
@@ -3415,6 +3444,8 @@ step.util = {
 			"Potawatomi", // pot
 			"Serrano", // ser
 			"Spanish", // es
+			"Tapieté",
+			"Toba-Maskoy",
 			"French" // fr
 		];
 		var east_asia_lang = [
@@ -3462,6 +3493,7 @@ step.util = {
 			"Russian", // ru
 			"Scottish_Gaelic", // gd
 			"Serbian", // sr
+			"Slovak",
 			"Slovenian", // sl
 			"Spanish", // es
 			"Swedish", // sv
@@ -3568,6 +3600,7 @@ step.util = {
 			"Kâte", // kmg
 			"Keapara", // khz
 			"Kein", // bmh
+			"Ketengban",
 			"Kewa__East", // kjs
 			"Kewa__West", // kew
 			"Keyagana", // kyg
@@ -3694,12 +3727,14 @@ step.util = {
 			"Yessan-Mayo", // yss
 			"Yongkom", // yon
 			"Yopno", // yut
+			"Zabana",
 			"Zia", // zia
 			"English", // en
 			"French" // fr
 		];
 		var south_asia_lang = [
 			"Assamese", // asm
+			"Bangla",
 			"Bengali", // ben
 			"Chhattisgarhi", // hne
 			"Gujarati", // guj
@@ -3727,6 +3762,10 @@ step.util = {
 			"Hiligaynon", // hil
 			"Iloko", // ilo
 			"Indonesian", // id
+			"Karen__Manumanaw",
+			"Karen__Yintale",
+			"Kayah__Eastern",
+			"Marma",
 			"Malayalam", // ml
 //			"Orya", // ury - might not exist May 20, 2024
 			"Sama__Central", // sml
@@ -3747,6 +3786,7 @@ step.util = {
 //			"Azerbaijani", // az - might not exist May 20, 2024
 //			"Azerbaijani__South", // azb - might not exist May 20, 2024
 			"Coptic", // cop
+			"Kurdish",
 			"Persian", // fa
 			"Persian__Iranian", // pes
 			"Hebrew", // he

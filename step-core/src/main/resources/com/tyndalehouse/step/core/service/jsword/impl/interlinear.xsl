@@ -354,7 +354,7 @@
             <xsl:value-of select="jsword:getName($passage)"/>
           </xsl:when>
           <xsl:when test="$CVNum = 'true'">
-            <xsl:value-of select="concat($chapter, ':', $verse)"/>
+            <xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$verse"/>

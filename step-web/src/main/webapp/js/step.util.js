@@ -3432,7 +3432,7 @@ step.util = {
 			"Spanish" // es
 		];
 		var americas_lang = [
-//			"Achi", // acr - might not exist May 20, 2024
+			"Achi", // acr
 			"Beaver", // bea
 			"Caló", // rmq
 			"Cherokee", // chr

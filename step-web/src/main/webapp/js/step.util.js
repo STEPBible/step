@@ -3483,7 +3483,7 @@ step.util = {
 			"Italian", // it
 			"Latin", // la
 			"Latvian", // lv
-//			"Lithuanian", // lt - might not exist May 20, 2024
+			"Lithuanian", // lt
 			"Manx", // gv
 			"Norwegian_Bokmål", // nb
 			"Norwegian_Nynorsk", // nn
@@ -3497,6 +3497,7 @@ step.util = {
 			"Slovenian", // sl
 			"Spanish", // es
 			"Swedish", // sv
+			"Turkish",
 			"Ukrainian", // uk
 			"Vlaams",
 			"Welsh" // cy

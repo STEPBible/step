@@ -105,7 +105,7 @@ var QuickLexicon = Backbone.View.extend({
                 numOfWordNotDisplayed ++;
             }
         }
-        if ((data.vocabInfos.length == 0) && (lastMorphCode != '') && (data.morphInfos.length == 0)) morphOnly = true;
+        if ((data.vocabInfos.length == 0) && (lastMorphCode !== '') && (lastMorphCode !== 'TOS:') && (data.morphInfos.length == 0)) morphOnly = true;
         if ((data.vocabInfos.length > 0) || (morphOnly) || (multipleStrongTextFromSearchModal !== "")) {
             var morph_information = [];
             if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {

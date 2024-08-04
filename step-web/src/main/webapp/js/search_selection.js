@@ -1225,6 +1225,7 @@ step.searchSelect = {
 		if ((typeof limitType === "undefined") || (limitType === null)) limitType = "";
 		var userInput = '';
 		$('textarea#userTextInput').show();
+		$('#searchButton').show();
 		$("#hd4").text(__s.enter_search_word);
 		$("#column1width").width("30%");
 		$(".search-type-column").show();
@@ -2031,6 +2032,7 @@ step.searchSelect = {
 		$('#quickLexicon').remove();
 		$('#warningMessage').text('');
 		$('textarea#userTextInput').hide();
+		$('#searchButton').hide();
 		$('#updateButton').hide();
 		$("#advancedsearchonoff").hide();
 //		$("#previousSearchDropDown").hide();

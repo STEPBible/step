@@ -2115,6 +2115,7 @@ step.searchSelect = {
 		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions) { // , hasHebrew, hasGreek) {
 		var brCount = 0;
 		var suggestionsToDisplay = 7;
+		var suggestionsToDisplay = ($("#srchModalBackButton").is(":hidden")) ? 7 : 40; // There are 30+ Zechariah so 40 should be enough
 		var needLineBreak = "";
 		var isAugStrong = Array.isArray(augStrongSameMeaning);
 		var existingHTML = currentSearchSuggestionElement.html();

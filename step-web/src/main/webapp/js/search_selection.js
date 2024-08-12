@@ -300,7 +300,7 @@ step.searchSelect = {
 		var currentSetting = false;
 		if ((typeof localStorageSetting !== "string") &&
 			(optionName !== "strong_number") && (optionName !== "original_language") &&
-			(optionName !== "frequency_details") && (optionName !== "dynamic_update")) {
+			(optionName !== "frequency_details") && (optionName !== "immediate_update")) {
 				currentSetting = true;
 		}
 		else

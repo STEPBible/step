@@ -8,7 +8,7 @@ step.searchSelect = {
 	// with GREEK.  HEBREW_MEANINGS are displayed with HEBREW.
 	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, GREEK_MEANINGS, HEBREW, HEBREW_MEANINGS],
 	numOfSearchTypesToDisplay: 7, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
-	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details"],
+	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details", "Dynamic_update"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
 	searchRange: "Gen-Rev",
@@ -262,7 +262,7 @@ step.searchSelect = {
 			$(".advanced_search_elements").show();
 			$("#select_advanced_search").addClass("checked");
 			$("#advancesearchonoffswitch").prop( "checked", true );
-//			step.searchSelect._previousSearchesEnteredByUser();
+			step.searchSelect.previousSearchesEnteredByUser();
 		}
 		else {
 			$("#basic_search_help_text").show();
@@ -273,7 +273,6 @@ step.searchSelect = {
 		if (($('.passageContainer.active').width() < 500) || (step.touchDevice && !step.touchWideDevice))
 			$('#displayLocForm').hide();
 	},
-
 	_initOptions: function() {
 		var searchOptionsHTML = 
 			'<h5>Show in results</h5>' +
@@ -301,7 +300,7 @@ step.searchSelect = {
 		var currentSetting = false;
 		if ((typeof localStorageSetting !== "string") &&
 			(optionName !== "strong_number") && (optionName !== "original_language") &&
-			(optionName !== "frequency_details")) {
+			(optionName !== "frequency_details") && (optionName !== "dynamic_update")) {
 				currentSetting = true;
 		}
 		else
@@ -317,37 +316,37 @@ step.searchSelect = {
 		if (ev !== null) step.searchSelect._updateDisplayBasedOnOptions();
 		return false;
 	},
-	// _previousSearchesEnteredByUser: function() {
-	// 	var previousSearches = step.util.localStorageGetItem("step.previousSearches");
-	// 	if (previousSearches == null) {
-	// 		return;
-	// 	}
-	// 	var searchWordsHTML = 
-	// 		'<h4 style="font-size:14px;margin-bottom:0px">Previous searches</h4>' +
-	// 		'<ul class="displayModes" style="padding-left:0px" role="presentation">';
-	// 	previousSearches = previousSearches.split(";");
-	// 	for (var i = 0; i < previousSearches.length; i ++) {
-	// 		searchWordsHTML += '<li class="stepModalFgBg dropdown-menu passageOptionsGroup" style="display:block;position:initial;opacity:1;border:0px;padding:0px;box-shadow:none">' +
-	// 			'<a class="searchWords" id="searchWords' + i +'" style="display:inline-block;width:100%;line-height:20px">' +
-	// 			previousSearches[i] +
-	// 			'</a>' +
-	// 			'</li>';
-	// 	}
-	// 	searchWordsHTML += '</ul>';
-	// 	$("#previousSearchWords").empty().append(searchWordsHTML);
-	// 	$(".searchWords").click(step.searchSelect._displayPreviousSearchWord);
-	// },
-	// _displayPreviousSearchWord: function(ev) {
-	// 	if ((ev == null) || (typeof ev.target.id !== "string") ||
-	// 		(ev.target.id.substring(0, 11) !== "searchWords")) return;
-	// 	var wordIndex = ev.target.id.substring(11);
-    //     var previousSearches = step.util.localStorageGetItem("step.previousSearches");
-	// 	previousSearches = previousSearches.split(";");
-	// 	$("textarea#userTextInput").text(previousSearches[wordIndex]);
-	// 	$("#previousSearchDropDown").removeClass("open");
-	// 	step.searchSelect.handleKeyboardInput(ev);
-	// 	return false;
-	// },
+	previousSearchesEnteredByUser: function() {
+	 	var previousSearches = step.util.localStorageGetItem("step.previousSearches");
+	 	if (previousSearches == null) {
+	 		return;
+	 	}
+	 	var searchWordsHTML = 
+	 		'<h4 style="font-size:14px;margin-bottom:0px">Previous searches</h4>' +
+	 		'<ul class="displayModes" style="padding-left:0px" role="presentation">';
+	 	previousSearches = previousSearches.split(";");
+	 	for (var i = 0; i < previousSearches.length; i ++) {
+	 		searchWordsHTML += '<li class="stepModalFgBg dropdown-menu passageOptionsGroup" style="display:block;position:initial;opacity:1;border:0px;padding:0px;box-shadow:none">' +
+	 			'<a class="searchWords" id="searchWords' + i +'" style="display:inline-block;width:100%;line-height:20px">' +
+	 			previousSearches[i] +
+	 			'</a>' +
+	 			'</li>';
+	 	}
+	 	searchWordsHTML += '</ul>';
+	 	$("#previousSearchWords").empty().append(searchWordsHTML);
+	 	$(".searchWords").click(step.searchSelect._displayPreviousSearchWord);
+	},
+	_displayPreviousSearchWord: function(ev) {
+	 	if ((ev == null) || (typeof ev.target.id !== "string") ||
+	 		(ev.target.id.substring(0, 11) !== "searchWords")) return;
+	 	var wordIndex = ev.target.id.substring(11);
+        var previousSearches = step.util.localStorageGetItem("step.previousSearches");
+	 	previousSearches = previousSearches.split(";");
+	 	$("textarea#userTextInput").val(previousSearches[wordIndex]);
+	 	$("#previousSearchDropDown").removeClass("open");
+	 	step.searchSelect.handleKeyboardInput(ev);
+	 	return false;
+	},
 	_updateDisplayBasedOnOptions: function() {
 		var wordsAroundDash = 0;
 		var showStrong = false;
@@ -454,7 +453,6 @@ step.searchSelect = {
 		return previousSearchTokensIndex + 1;
 	},
 
-
 	_find_onclick_and_go: function(element) {
 		var onclickInfo = $(element).attr("onclick");
 		if ((typeof onclickInfo === "string") && (onclickInfo.toLowerCase().indexOf("javascript:") == 0)) {
@@ -534,12 +532,18 @@ step.searchSelect = {
 				}	
 			}
 			else {
-				if ($("#select_advanced_search").hasClass("checked"))
-					step.searchSelect.checkSearchButton(userInput);
-				else
+				if ($("#select_advanced_search").hasClass("checked")) {
+					if ($("#srchOptnsCheckdynamic_update").css("visibility") === "visible") {
+						step.searchSelect._handleEnteredSearchWord();
+						$("#searchButton").hide();
+					}
+					else
+						step.searchSelect.checkSearchButton(userInput);
+				}
+				else {
 					step.searchSelect._handleEnteredSearchWord();
+				}
 			}
-
 		}
 	},
 	checkSearchButton: function(userInput) {
@@ -621,13 +625,13 @@ step.searchSelect = {
 				'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
 			'</button>' +
 
-			//'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +
-			//	'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
+			'<span id="previousSearchDropDown" class="dropdown advanced_search_elements">' +
+				'<a class="dropdown-toggle showSettings" data-toggle="dropdown" title="Previous searches">' +
 				    // using https://www.iconfinder.com/icons/326655/history_icon
-			//	    '&nbsp;&nbsp;<?xml version="1.0" ?><svg height="21px" version="1.1" viewBox="0 0 20 21" width="20px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g fill="#000000" id="Core" opacity="0.9" transform="translate(-464.000000, -254.000000)"><g id="history" transform="translate(464.000000, 254.500000)"><path d="M10.5,0 C7,0 3.9,1.9 2.3,4.8 L0,2.5 L0,9 L6.5,9 L3.7,6.2 C5,3.7 7.5,2 10.5,2 C14.6,2 18,5.4 18,9.5 C18,13.6 14.6,17 10.5,17 C7.2,17 4.5,14.9 3.4,12 L1.3,12 C2.4,16 6.1,19 10.5,19 C15.8,19 20,14.7 20,9.5 C20,4.3 15.7,0 10.5,0 L10.5,0 Z M9,5 L9,10.1 L13.7,12.9 L14.5,11.6 L10.5,9.2 L10.5,5 L9,5 L9,5 Z" id="Shape"/></g></g></g></svg>' +
-			//	'</a>' +
-			//	'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
-			//'</span>' +
+				    '&nbsp;&nbsp;<?xml version="1.0" ?><svg height="21px" version="1.1" viewBox="0 0 20 21" width="20px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g fill="#000000" id="Core" opacity="0.9" transform="translate(-464.000000, -254.000000)"><g id="history" transform="translate(464.000000, 254.500000)"><path d="M10.5,0 C7,0 3.9,1.9 2.3,4.8 L0,2.5 L0,9 L6.5,9 L3.7,6.2 C5,3.7 7.5,2 10.5,2 C14.6,2 18,5.4 18,9.5 C18,13.6 14.6,17 10.5,17 C7.2,17 4.5,14.9 3.4,12 L1.3,12 C2.4,16 6.1,19 10.5,19 C15.8,19 20,14.7 20,9.5 C20,4.3 15.7,0 10.5,0 L10.5,0 Z M9,5 L9,10.1 L13.7,12.9 L14.5,11.6 L10.5,9.2 L10.5,5 L9,5 L9,5 Z" id="Shape"/></g></g></g></svg>' +
+				'</a>' +
+				'<div id="previousSearchWords" class="stepModalFgBg dropdown-menu pull-right" style="opacity:1" role="menu"></div>' +
+			'</span>' +
 
 			'<div id="basic_search_help_text" style="font-size:14px;width:90%">' +
 			'<br>' +
@@ -635,7 +639,6 @@ step.searchSelect = {
 			'<p><strong>just</strong> → matches words that start with “just” (e.g. just, justice, justified, …)</p>' +
 			'<p><strong>come to me</strong> → matches verses that contain "come", "to", and "me" in any order</p>' +
 			'<p><strong>"come to me"</strong> → matches the exact phrase in the selected translations</p>' +
-			// '<p>For more advanced features, find advanced search with the top right toggle!</p>' +
 			'</div>' +
 			'<div id="search_table" class="advanced_search_elements">' +
 			'<table border="1" style="background-color:' + backgroundColor + '">' +
@@ -2035,7 +2038,7 @@ step.searchSelect = {
 		$('#searchButton').hide();
 		$('#updateButton').hide();
 		$("#advancedsearchonoff").hide();
-//		$("#previousSearchDropDown").hide();
+		$("#previousSearchDropDown").hide();
 		$("#hd4").text(__s.please_select_one);
 		step.searchSelect.searchModalCurrentPage = 3;	
 		$('#srchModalBackButton').show();

@@ -2424,7 +2424,7 @@ step.util = {
 								'$(".advanced_search_elements").show();' +
 								'step.util.localStorageSetItem("advanced_search", true);' +
 								'$("#basic_search_help_text").hide();' +
-//								'step.searchSelect._previousSearchesEnteredByUser();' +
+								'step.searchSelect.previousSearchesEnteredByUser();' +
 								'step.searchSelect.checkSearchButton();' +
 							'}' +
 							'else {' +

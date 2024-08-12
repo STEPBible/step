@@ -21,6 +21,7 @@
         <jsword.home>${jsword.home}</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
 	    <modulesToInclude>ESV_th,kjv,chiun,chiuns,oshb,THOT,lxx_th,SBLG_th,NIV,abpen_sb,abpgk_sb,sparv1909,FreSeg21,cpdv</modulesToInclude>
+	    <dataFilesToInclude>ESV_th,kjv,chiun,chiuns,oshb,THOT,LXX_th,SBLG_th,NIV,abpen_sb,abpgk_sb,sparv1909,FreSeg21,cpdv</dataFilesToInclude>
 		<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,OSHB,THOT,LXX_th,SBLG_th,NIV,abpen_sb,abpgk_sb,SpaRV1909,FreSeg21,CPDV</indexesToInclude>
     </properties>
 
@@ -44,7 +45,6 @@
                                         <copy toDir="${packages}/homes/sword">
                                             <fileset dir="${sword.home}">
                                                 <include name="mods.d/@{version}.conf"/>
-                                                <include name="modules/**/@{version}/**"/>
                                             </fileset>
                                         </copy>
 
@@ -52,6 +52,16 @@
                                         <copy toDir="${packages}/homes/jsword/step/jsword-mods.d/">
                                             <fileset dir="${jsword.home}/step/jsword-mods.d/">
                                                 <include name="**/@{version}.conf"/>
+                                            </fileset>
+                                        </copy>
+                                    </sequential>
+                                </ac:for>
+
+                                <ac:for list="${dataFilesToInclude}" param="version" xmlns:ac="antlib:net.sf.antcontrib">
+                                    <sequential>
+                                        <copy toDir="${packages}/homes/sword">
+                                            <fileset dir="${sword.home}">
+                                                <include name="modules/**/@{version}/**"/>
                                             </fileset>
                                         </copy>
                                     </sequential>
@@ -108,15 +118,5 @@
             </plugin>
         </plugins>
     </build>
-	
-	<profiles>
-		<profile>
-			<id>standalone-zh</id>
-			<properties>
-			    <modulesToInclude>ESV_th,kjv,chiun,chiuns,chincvt,chincvs,oshb,THOT,lxx_th,SBLG_th,NIV,abpen_sb,abpgk_sb,sparv1909</modulesToInclude>
-				<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,ChiNCVt,ChiNCVs,OSHB,THOT,LXX_th,SBLG_th,NIV,abpen_sb,abpgk_sb,SpaRV1909</indexesToInclude>
-			</properties>
-		</profile>
-	</profiles>
 	
 </project>

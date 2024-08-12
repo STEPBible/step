@@ -1321,7 +1321,7 @@ step.searchSelect = {
 								else {
 									if ((typeof currentHTML === "string") && (currentHTML !== ""))
 										currentSearchSuggestionElement.append("<br>");
-									currentSearchSuggestionElement.append('<span>There are ' + data[i].count + ' more options.  Keep typing to see them.</span>');
+									currentSearchSuggestionElement.append('<span>There are ' + data[i].count + ' more options. Enter a longer search word to get more specific search suggestions.</span>');
 								}
 							}
 							else {

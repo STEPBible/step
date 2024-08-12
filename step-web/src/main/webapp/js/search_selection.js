@@ -8,7 +8,7 @@ step.searchSelect = {
 	// with GREEK.  HEBREW_MEANINGS are displayed with HEBREW.
 	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, GREEK_MEANINGS, HEBREW, HEBREW_MEANINGS],
 	numOfSearchTypesToDisplay: 7, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
-	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details", "Immediate_update"],
+	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details", "Immediate_lookup"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
 	searchRange: "Gen-Rev",
@@ -300,7 +300,7 @@ step.searchSelect = {
 		var currentSetting = false;
 		if ((typeof localStorageSetting !== "string") &&
 			(optionName !== "strong_number") && (optionName !== "original_language") &&
-			(optionName !== "frequency_details") && (optionName !== "immediate_update")) {
+			(optionName !== "frequency_details") && (optionName !== "immediate_lookup")) {
 				currentSetting = true;
 		}
 		else
@@ -533,7 +533,7 @@ step.searchSelect = {
 			}
 			else {
 				if ($("#select_advanced_search").hasClass("checked")) {
-					if ($("#srchOptnsCheckimmediate_update").css("visibility") === "visible") {
+					if ($("#srchOptnsCheckimmediate_lookup").css("visibility") === "visible") {
 						step.searchSelect._handleEnteredSearchWord();
 						$("#searchButton").hide();
 					}

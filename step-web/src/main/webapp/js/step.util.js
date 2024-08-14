@@ -4545,8 +4545,8 @@ step.util = {
 	},
     setupGesture: function() {
 		var touchableElement;
-		if ((screen.height > 599) && (screen.width > 599)) {
-			step.touchWideDevice = true;
+		if ((screen.height > 700) && (screen.width > 800)) {
+			step.touchWideDevice = true; // screen must be at least 800 pixel wide to show sidebar
 			document.getElementById("resizeButton").style.display = "inline";
 			touchableElement = document.getElementById("columnHolder");
 		}

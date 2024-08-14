@@ -629,7 +629,7 @@
 									<replacement><token>_highlightStrongs([:(])</token><value>zC$1</value></replacement>
 									<replacement><token>highlightStrong([:(])</token><value>zD$1</value></replacement>
 									<replacement><token>showFrequencyOnAllBibles([:(])</token><value>zE$1</value></replacement>
-									<replacement><token>suppressHighlight([:(])</token><value>zF$1</value></replacement>
+									<!--  <replacement><token>suppressHighlight([:(])</token><value>zF$1</value></replacement> -->
 									<replacement><token>refreshWaitStatus([:(])</token><value>zG$1</value></replacement>
 									<replacement><token>escapeRegExp([:(])</token><value>zH$1</value></replacement>
 									<replacement><token>getTestamentAndPassagesOfTheReferences([:(])</token><value>zI$1</value></replacement>

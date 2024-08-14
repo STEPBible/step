@@ -626,7 +626,7 @@
 									<!--  for step.util -->
 									<replacement><token>msgForFrequencyOnAllBibles([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>showHideFreqList([:(])</token><value>zB$1</value></replacement>
-									<replacement><token>_highlightStrongs([:(])</token><value>zC$1</value></replacement>
+									<replacement><token>highlightMultiStrongs([:(])</token><value>zC$1</value></replacement>
 									<!--  <replacement><token>highlightStrong([:(])</token><value>zD$1</value></replacement> -->
 									<replacement><token>showFrequencyOnAllBibles([:(])</token><value>zE$1</value></replacement>
 									<replacement><token>suppressHighlight([:(])</token><value>zF$1</value></replacement>

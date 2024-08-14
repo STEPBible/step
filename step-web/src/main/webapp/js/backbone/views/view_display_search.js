@@ -97,7 +97,7 @@ var SearchDisplayView = DisplayView.extend({
             this._addVerseClickHandlers(results);
             var strongHighlights = this.model.get("strongHighlights");
             if (strongHighlights) {
-                this._highlightStrongs(results, strongHighlights);
+                this.highlightMultiStrongs(results, strongHighlights);
                 if (($(".column").length == 1) && (!step.touchDevice) && (window.innerWidth > 770))
                     strongShowDef = strongHighlights.join(' ');
             } else {
@@ -345,10 +345,10 @@ var SearchDisplayView = DisplayView.extend({
             if (strongHighlights.indexOf(curWord) == -1) strongArray.push(curWord);
         }
         if (strongArray.length > 0)
-            this._highlightStrongs(results, strongArray);
+            this.highlightMultiStrongs(results, strongArray);
     },
 
-    _highlightStrongs: function (results, strongsList) {
+    highlightMultiStrongs: function (results, strongsList) {
         if (strongsList == undefined) {
             return;
         }

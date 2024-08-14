@@ -563,6 +563,9 @@ var PickBibleView = Backbone.View.extend({
         if (wantedLanguage == "_ancient") {
             return actualLanguage == "he" || actualLanguage == "hbo" || actualLanguage == "grc";
         }
+        if (wantedLanguage === "fil") {
+            return ((actualLanguage === "tl") || (actualLanguage === "fil"));
+        }
         return actualLanguage == wantedLanguage;
     },
     _handleUsrClick: function (event) {

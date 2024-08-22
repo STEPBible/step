@@ -39,7 +39,14 @@
 
             var lang = step.state.language();
             var langParam = step.util.isBlank(lang) ? "" : "?lang=" + lang;
-
+			if (url.indexOf("|") > -1) {
+				console.log("Found | in " + url);
+				url = url.replace(/\|/g, "@");
+			}
+			if (url.indexOf("@@") > -1) {
+				console.log("Found @@ in " + url);
+				url = url.replace(/@@/g, "@");
+			}
             return $.get(url + langParam, function (data, textStatus, jqXHR) {
                 if (step.state.responseLanguage == undefined) {
                     //set the language
@@ -101,7 +108,11 @@
         },
         getUrlVars: function () {
             var vars = [], hash;
-            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+			// Around September 2024, the @ character replace the | character in the URL.
+			var windowLocationHRef = window.location.href;
+			if (typeof windowLocationHRef !== "string") return vars;
+			windowLocationHRef = windowLocationHRef.replace(/%7C/g, URL_SEPARATOR).replace(/\|/g, "@"); 
+            var hashes = windowLocationHRef.slice(windowLocationHRef.indexOf('?') + 1).split('&');
             for (var i = 0; i < hashes.length; i++) {
                 hash = hashes[i].split('=');
                 vars.push(hash[0]);
@@ -153,11 +164,12 @@ step.util = {
 				newMsg += "<br>" + bibleDisplayName + ": "
 				var freqDetail = freqList[i + offset].split("@");
 				var bibleName = bibleList[i].split("@")[0];
-				newMsg += "<a target='_blank' href='?q=version=" + bibleDisplayName.split("@")[0] + "|strong=" + strongNumber;
+				newMsg += "<a target='_blank' href='?q=version=" + bibleDisplayName.split("@")[0] + 
+					URL_SEPARATOR + "strong=" + strongNumber;
 				if (bibleList[i].endsWith("@NT"))
-					newMsg += "|reference=Matt-Rev";
+					newMsg += URL_SEPARATOR + "reference=Matt-Rev";
 				else if (bibleList[i].endsWith("@OT"))
-					newMsg += "|reference=Gen-Mal";
+					newMsg += URL_SEPARATOR + "reference=Gen-Mal";
 				if (window.location.href.indexOf("debug") > -1)
 					newMsg += "&debug";
 				newMsg += "'>" + freqDetail[0] + "x in ";
@@ -924,20 +936,6 @@ step.util = {
 		}
 		return currentFontSize;
 	},
-	// Might not be called 11/20/2023 PT
-//    getKeyValues: function (args) {
-//        var tokens = (args || "").split("|");
-//        var data = [];
-//        for (var i = 0; i < tokens.length; i++) {
-//            var tokenParts = tokens[i].split("=");
-//            if (tokenParts.length > 1) {
-//                var key = tokenParts[0];
-//                var value = tokenParts.slice(1).join("=");
-//                data.push({ key: key, value: value });
-//            }
- //       }
-//        return data;
-//    },
     safeEscapeQuote: function (term) {
         if (term == null) {
             return "";
@@ -946,10 +944,11 @@ step.util = {
     },
     swapMasterVersion: function (newMasterVersion, passageModel, silent) {
         var replacePattern = new RegExp("version=" + newMasterVersion, "ig");
+        // check .get() to see if it can be used to replase | with @
         var originalArgs = passageModel.get("args");
         var newArgs = originalArgs.replace(replacePattern, "");
-        newArgs = "version=" + newMasterVersion + "|" + newArgs;
-        newArgs = newArgs.replace(/\|\|/ig, "|").replace(/\|$/ig, "");
+        newArgs = "version=" + newMasterVersion + URL_SEPARATOR + newArgs;
+        newArgs = newArgs.replace(/@@/g, URL_SEPARATOR).replace(/@$/, "").replace(/\|\|/g, URL_SEPARATOR).replace(/\|$/, "");
 
         //now get the versions in the right order and overwrite the stored master version and extraVersions
         var versions = (newArgs || "").match(/version=[a-zA-Z0-9]+/ig) || [];
@@ -3862,7 +3861,7 @@ step.util = {
             if (firstChar === "G") limitType = GREEK;
             else if (firstChar === "H") limitType = HEBREW;
             if (limitType !== "") {
-                var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + version + "%7C" + LIMIT + "%3D" + limitType + "%7C?lang=" + step.userLanguageCode;
+                var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + version + URL_SEPARATOR + LIMIT + "%3D" + limitType + URL_SEPARATOR + "?lang=" + step.userLanguageCode;
                 var value = $.ajax({ 
                     url: url,
                     async: false
@@ -4289,18 +4288,18 @@ step.util = {
 			}
 			var queryStringForFirstBookInAvailableTestament = "version=" + newMasterVersion;
 			for (var i = 0; i < otherVersions.length; i++) {
-				queryStringForFirstBookInAvailableTestament += "|version=" + otherVersions[i];
+				queryStringForFirstBookInAvailableTestament += URL_SEPARATOR + "version=" + otherVersions[i];
 			}
-			queryStringForFirstBookInAvailableTestament += "|reference=" + firstPassageInBible;
+			queryStringForFirstBookInAvailableTestament += URL_SEPARATOR + "reference=" + firstPassageInBible;
 			var recommendedVersionIndex = this.whichBibleIsTheBest(otherVersions, hasNTinReference, hasOTinReference);
 			var queryStringForAnotherBible = "";
 			if (recommendedVersionIndex > -1) {
-				queryStringForAnotherBible = "version=" + otherVersions[recommendedVersionIndex] + "|version=" + newMasterVersion;
+				queryStringForAnotherBible = "version=" + otherVersions[recommendedVersionIndex] + URL_SEPARATOR + "version=" + newMasterVersion;
 				for (var i = 0; i < otherVersions.length; i++) {
-					if (i != recommendedVersionIndex)	queryStringForAnotherBible += "|version=" + otherVersions[i];
+					if (i != recommendedVersionIndex)	queryStringForAnotherBible += URL_SEPARATOR + "version=" + otherVersions[i];
 				}
 				for (var j = 0; j < osisIDs.length; j++) {
-					if (j == 0) queryStringForAnotherBible += "|reference=";
+					if (j == 0) queryStringForAnotherBible += URL_SEPARATOR + "reference=";
 					else queryStringForAnotherBible += ","
 					queryStringForAnotherBible += osisIDs[j];
 				}
@@ -4629,14 +4628,14 @@ step.util = {
 		}
 	},
 	_createStrongSearchArg: function (strong, otherStrongs) {
-		var result = "|strong=" + encodeURIComponent(strong);
+		var result = URL_SEPARATOR + "strong=" + encodeURIComponent(strong);
 		if ((otherStrongs == null) || (otherStrongs === ""))
 			return result;
 		var eachStrong = otherStrongs.split(" ");
-		var searchJoin = "|srchJoin=(1";
+		var searchJoin = URL_SEPARATOR + "srchJoin=(1";
 		for (var i = 0; i < eachStrong.length; i++) {
 			searchJoin += "o" + (i+2);
-			result += "|strong=" + encodeURIComponent(eachStrong[i]);
+			result += URL_SEPARATOR + "strong=" + encodeURIComponent(eachStrong[i]);
 		}
 		return searchJoin + ")" + result;
 	},

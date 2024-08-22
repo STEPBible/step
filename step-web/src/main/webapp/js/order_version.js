@@ -39,7 +39,7 @@ function saveVersionOrder() {
     var otherVersions = [];
     var osisIds = [];
     for (var i = 0; i < afterSort.length; i++) {
-        if (i > 0) allVersions += '|version=';
+        if (i > 0) allVersions += URL_SEPARATOR + 'version=';
         var curVersion = afterSort[i];
         var pos = curVersion.indexOf(' - ');
         if (pos > 1) curVersion = curVersion.substr(0, pos);
@@ -48,11 +48,11 @@ function saveVersionOrder() {
         else if (otherVersions.indexOf() == -1) otherVersions.push(curVersion);
     }
     var activePassageData = step.util.activePassage().get("searchTokens") || [];
-    var allReferences = '|reference=';
+    var allReferences = URL_SEPARATOR + 'reference=';
     numOfReferences = 0;
     for (var i = 0; i < activePassageData.length; i++) {
         if (activePassageData[i].itemType == 'reference') {
-            if (numOfReferences > 0) allReferences += '|reference=';
+            if (numOfReferences > 0) allReferences += URL_SEPARATOR + 'reference=';
             allReferences += activePassageData[i].item.osisID;
             osisIds.push(activePassageData[i].item.osisID);
             numOfReferences ++;

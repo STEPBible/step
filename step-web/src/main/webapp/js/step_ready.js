@@ -335,6 +335,7 @@
                     }
                     var query = window.location.search;
                     if (query) {
+                        query.replace(/%7C/g, URL_SEPARATOR).replace(/\|/g, URL_SEPARATOR);
                         path += query;
                     }
                     return path;
@@ -438,7 +439,7 @@
             if (urlVars.indexOf("clickvocab") > -1) {
                 var pos = urlVars.q.indexOf("strong=");
                 if (pos > -1) {
-                    var strongNum = urlVars.q.substring(pos+7).split('|')[0].split('&')[0];
+                    var strongNum = urlVars.q.substring(pos+7).split(URL_SEPARATOR)[0].split('|')[0].split('&')[0];
                     step.util.ui.showDef(strongNum);
                 }
             }
@@ -457,25 +458,25 @@
         var urlVars = $.getUrlVars();
         var debugParam = (urlVars.indexOf("debug") > -1) ? "&debug" : "";
         if (urlVars.indexOf("colorCode1") > -1)
-            cf.setNextPageURL('?q=version=ESV|reference=Col.3&options=HVGUNC&skipwelcome' + debugParam, 'verb, imperative mood', 'kjv_verb_imperative_explanation');
+            cf.setNextPageURL('?q=version=ESV@reference=Col.3&options=HVGUNC&skipwelcome' + debugParam, 'verb, imperative mood', 'kjv_verb_imperative_explanation');
         else if (urlVars.indexOf("colorCode2") > -1)
-            cf.setNextPageURL('/?q=version=ESV|reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, main vs supporting verbs', 'kjv_verb_main_supporting_explanation');
+            cf.setNextPageURL('/?q=version=ESV@reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, main vs supporting verbs', 'kjv_verb_main_supporting_explanation');
         else if (urlVars.indexOf("colorCode3") > -1)
-            cf.setNextPageURL('/?q=version=ESV|reference=Mat.1&options=HVGUNC&skipwelcome' + debugParam, 'gender and number', 'kjv_verb_number_and_gender_explanation');
+            cf.setNextPageURL('/?q=version=ESV@reference=Mat.1&options=HVGUNC&skipwelcome' + debugParam, 'gender and number', 'kjv_verb_number_and_gender_explanation');
         else if (urlVars.indexOf("colorCode4") > -1)
-            cf.setNextPageURL('/?q=version=KJV|reference=Eph.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=KJV@reference=Eph.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
         else if (urlVars.indexOf("colorCode5") > -1)
-            cf.setNextPageURL('/?q=version=SBLG|reference=Rom.12&options=CEMVALHUN&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=SBLG@reference=Rom.12&options=CEMVALHUN&skipwelcome' + debugParam, 'verb, gender and number', '');
         else if (urlVars.indexOf("colorCode6") > -1)
-            cf.setNextPageURL('/?q=version=THOT|reference=Gen.1&options=HVLUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=THOT@reference=Gen.1&options=HVLUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
         else if (urlVars.indexOf("colorCode7") > -1)
-            cf.setNextPageURL('/?q=version=CUn|reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=CUn@reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
         else if (urlVars.indexOf("colorCode8") > -1)
-            cf.setNextPageURL('/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=SBLG@version=KJV@version=CUn@reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED&skipwelcome' + debugParam, 'verb, gender and number', '');
         else if (urlVars.indexOf("otGreek1") > -1)
-            cf.setNextPageURL('/?q=version=LXX|version=EngLXX|version=ABGk|version=ABEn|reference=Exod.31&options=VLGUHVNAT&display=INTERLEAVED&skipwelcome' + debugParam, '', '');
+            cf.setNextPageURL('/?q=version=LXX@version=EngLXX@version=ABGk@version=ABEn@reference=Exod.31&options=VLGUHVNAT&display=INTERLEAVED&skipwelcome' + debugParam, '', '');
         else if (urlVars.indexOf("otGreek2") > -1)
-            cf.setNextPageURL('/?q=version=ESV|version=THOT|version=ABGk|version=ABEn|reference=Isa.53.1%20John.12.38&options=VVNH&display=COLUMN&pos=1&skipwelcome' + debugParam, '', '');
+            cf.setNextPageURL('/?q=version=ESV@version=THOT@version=ABGk@version=ABEn@reference=Isa.53.1%20John.12.38&options=VVNH&display=COLUMN&pos=1&skipwelcome' + debugParam, '', '');
         else return false;
         return true;
     }
@@ -508,8 +509,7 @@
             // If the version (i.e., Bible text) is not specified in the URL, then determine
             // the version (and reference) defaults using the recent history
             if ((query.search(/version/) == -1) && ($.getUrlVars().indexOf("noredirect") == -1)) {
-//            if (query.search(/version/) == -1) {
-                query = query.replace(/%3D/g, '=').replace(/%7C/g, '|');
+                query = query.replace(/%3D/g, '=').replace(/%7C/g, URL_SEPARATOR).replace(/\|/g, URL_SEPARATOR);
 
                 var history = new HistoryModelList;
                 if (typeof history === "object") {
@@ -520,40 +520,41 @@
                         var histItem = history.at(histIndex);
                         if (typeof histItem === "object") {
                             var histItemArgs = histItem.get("args");
-                            if ((typeof histItemArgs === "string") && (histItemArgs.search(/reference/) > -1)) {
-                                mostRecentPassage = decodeURIComponent(histItemArgs)
-                                // get the version(s) from the most recent passage in history
-                                var pos = mostRecentPassage.search(/version=[^|]+/);
-                                var version = "";
-                                while (pos > -1) {
-                                    var ver = RegExp.lastMatch;
-                                    ver = ver.replace(/version=/, '');
-                                    if (typeof step.keyedVersions[ver] === "object") {
-                                        version += 'version=' + ver + '|';
-                                    }
-                                    mostRecentPassage = mostRecentPassage.replace(/version=[^|]+/, '');
-                                    pos = mostRecentPassage.search(/version=[^|]+/);
-                                }
-                                version = version.replace(/\|$/, '');
-
-                                if (query === "") {
-                                    // get the reference(s) from the most recent passage in history
-                                    pos = mostRecentPassage.search(/reference=[^|]+/);
+                            if (typeof histItemArgs === "string") {
+                                histItemArgs = histItemArgs.replace(/%7C/g, URL_SEPARATOR).replace(/\|/g, URL_SEPARATOR);
+                                if (histItemArgs.search(/reference/) > -1) {
+                                    mostRecentPassage = decodeURIComponent(histItemArgs)
+                                    // get the version(s) from the most recent passage in history
+                                    var pos = mostRecentPassage.search(/version=[^@]+/);
+                                    var version = "";
                                     while (pos > -1) {
-                                        query += RegExp.lastMatch + '|';
-                                        mostRecentPassage = mostRecentPassage.replace(/reference=[^|]+/, '');
-                                        pos = mostRecentPassage.search(/reference=[^|]+/);
+                                        var ver = RegExp.lastMatch;
+                                        ver = ver.replace(/version=/, '');
+                                        if (typeof step.keyedVersions[ver] === "object") {
+                                            version += 'version=' + ver + URL_SEPARATOR;
+                                        }
+                                        mostRecentPassage = mostRecentPassage.replace(/version=[^@]+/, '');
+                                        pos = mostRecentPassage.search(/version=[^@]+/);
                                     }
-                                    query = query.replace(/\|$/, '');
-                                }
+                                    version = version.replace(/@$/, '');
 
-                                if (version !== "" && query !== "") {
-                                    console.log("Opening to '%s'", version + '|' + query);
-                                    //                            step.router.navigateSearch(version + '|' + query, true, true);
-                                    var histItemOptions = histItem.get("options") || "";
-                                    var histItemDisplay = histItem.get("display") || "";
-                                    if ((typeof histItemOptions === "string") && (typeof histItemDisplay === "string"))
-                                        step.router.doMasterSearch(version + '|' + query, histItemOptions, histItemDisplay);
+                                    if (query === "") {
+                                        // get the reference(s) from the most recent passage in history
+                                        pos = mostRecentPassage.search(/reference=[^@]+/);
+                                        while (pos > -1) {
+                                            query += RegExp.lastMatch + URL_SEPARATOR;
+                                            mostRecentPassage = mostRecentPassage.replace(/reference=[^@]+/, '');
+                                            pos = mostRecentPassage.search(/reference=[^@]+/);
+                                        }
+                                        query = query.replace(/@$/, '');
+                                    }
+
+                                    if (version !== "" && query !== "") {
+                                        var histItemOptions = histItem.get("options") || "";
+                                        var histItemDisplay = histItem.get("display") || "";
+                                        if ((typeof histItemOptions === "string") && (typeof histItemDisplay === "string"))
+                                            step.router.doMasterSearch(version + URL_SEPARATOR + query, histItemOptions, histItemDisplay);
+                                    }
                                 }
                             }
                         }

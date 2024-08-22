@@ -39,7 +39,7 @@ var StepRouter = Backbone.Router.extend({
             for (var i = 0; i < extraVersions.length; i++) {
                 if ((extraVersions[i] || "") !== "") {
                     if (!stripCommentaries || step.keyedVersions[extraVersions[i]].category == 'BIBLE') {
-                        if (allVersions !== "") allVersions += "|";
+                        if (allVersions !== "") allVersions += URL_SEPARATOR;
                         allVersions += "version=" + extraVersions[i];
                         otherVersions.push(extraVersions[i]);
                     }
@@ -50,7 +50,7 @@ var StepRouter = Backbone.Router.extend({
         if (!step.util.checkFirstBibleHasPassage(mainVersion, osisIDs, otherVersions, false, true)) return;
 		skipPage = (skipPage) ? true : false;
 		skipQFilter = (skipQFilter) ? true : false;
-        if ((allVersions !== "") && (searchParameters !== "")) searchParameters = allVersions + "|" + searchParameters;
+        if ((allVersions !== "") && (searchParameters !== "")) searchParameters = allVersions + URL_SEPARATOR + searchParameters;
         if (step.touchDevice && !step.touchWideDevice && startNewPageForPhone)
             window.open("/?q=" + searchParameters.split(" ")[0], "_blank");
         else
@@ -85,7 +85,7 @@ var StepRouter = Backbone.Router.extend({
                 var versions = urlStub.split("version=");
                 var hasMorphology = false;
                 for (var i = 1; i < versions.length; i++) { // skip the first element is q= or things before version=
-                    var curVersion = versions[i].split("|")[0].split("&")[0];
+                    var curVersion = versions[i].split(URL_SEPARATOR)[0].split("&")[0];
                     if ((typeof step.keyedVersions[curVersion] === "object") &&
                         (step.keyedVersions[curVersion].hasMorphology)) {
                             hasMorphology = true;
@@ -356,7 +356,7 @@ var StepRouter = Backbone.Router.extend({
         historyModel.save();
     },
     _normalizeArgs: function (args) {
-        var tokens = (args || "").split("|") || [];
+        var tokens = (args || "").split(URL_SEPARATOR) || [];
         tokens.sort(function (a, b) {
             var aTokens = a.split("=");
             var bTokens = b.split("=");
@@ -381,6 +381,6 @@ var StepRouter = Backbone.Router.extend({
                 return 0;
             }
         });
-        return tokens.join("|");
+        return tokens.join(URL_SEPARATOR);
     }
 });

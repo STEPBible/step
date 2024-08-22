@@ -236,11 +236,12 @@ function outFunc() {
 window.onmessage = function(e) {
     if ((typeof e.data === "string") && (typeof e.origin === "string") &&
         ((e.origin.indexOf("stepbible.org") > -1) || (e.origin.indexOf("localhost") > -1)) ) {
-        var curURL = document.getElementById("f1").contentWindow.location.href;
+        var curURL = document.getElementById("f1").contentWindow.location.href.replace(/\|/g, "@");
         var left = "";
         var right = "";
         var lastChar = "";
-
+        var eData = e.data.replace(/\|/g, "@");
+        var eOrigin = e.origin.replace(/\|/g, "@");
         // the current (old) url needs to be checked for search strings before reference=,
         // as a search string may contain reference=
         if (curURL.search(/srchJoin=[^&]+/) > -1
@@ -251,16 +252,16 @@ window.onmessage = function(e) {
             right = RegExp.rightContext;
 
             // Remove old search range
-            left = left.replace(/reference=[^|&]*[|&]/, "");
+            left = left.replace(/reference=[^@&]*[@&]/, "");
         }
-        else if (curURL.search(/reference=[^%&|\s]+([%&|])/) > -1) {
+        else if (curURL.search(/reference=[^%&@\s]+([%&@])/) > -1) {
             left = RegExp.leftContext;
             right = RegExp.rightContext;
             lastChar = RegExp.$1;
             var acceptableStrings = "20 2c 2d 2e 3a 3b"; // %20 is space , - . : ;   %20, %2c, %2d, %3e, %3a, 3b are not the end of the passage reference
             while ((lastChar === "%") &&
                    (acceptableStrings.indexOf(right.substr(0, 2).toLowerCase()) > -1) &&
-                   (right.substr(2).search(/[^%&|\s]+([%&|])/) > -1) ) {
+                   (right.substr(2).search(/[^%&@\s]+([%&@])/) > -1) ) {
                 right = RegExp.rightContext;
                 lastChar = RegExp.$1;
             }
@@ -268,27 +269,27 @@ window.onmessage = function(e) {
 
         
         var newURL;
-        if ((e.data.indexOf("colorCode") == 0) || (e.data.indexOf("otGreek") == 0)) // from examples
-            newURL = e.origin + "/?debug&" + e.data;
-        else if (e.data.indexOf("backotgreek") == 0) {
-            window.location.assign(e.origin + "/?debug&otgreekexamples");
+        if ((eData.indexOf("colorCode") == 0) || (eData.indexOf("otGreek") == 0)) // from examples
+            newURL = eOrigin + "/?debug&" + eData;
+        else if (eData.indexOf("backotgreek") == 0) {
+            window.location.assign(eOrigin + "/?debug&otgreekexamples");
             return;
         }
-        else if (e.data.indexOf("backcolor") == 0) {
-            window.location.assign(e.origin + "/?debug&colorexamples");
+        else if (eData.indexOf("backcolor") == 0) {
+            window.location.assign(eOrigin + "/?debug&colorexamples");
             return;
         }
         else {
-            newURL = left.replace(/version=[^|&]*[|&]/g, ""); // Strip version= in case it's to be overridden
+            newURL = left.replace(/version=[^@&]*[@&]/g, ""); // Strip version= in case it's to be overridden
             // Find overriding version= strings in the new URL
             var versions = "";
-            var reference = e.data;
-            var pos = reference.search(/\|version=[A-Za-z0-9]*/);
+            var reference = eData;
+            var pos = reference.search(/@version=[A-Za-z0-9]*/);
             while (pos > -1) {
                 versions += RegExp.lastMatch;
-                versions = versions.replace(/^\|/, '') + '|';
-                reference = reference.replace(/\|version=[A-Za-z0-9]*/, "");
-                pos = reference.search(/\|version=[A-Za-z0-9]*/);
+                versions = versions.replace(/^@/, "") + URL_SEPARATOR;
+                reference = reference.replace(/@version=[A-Za-z0-9]*/, "");
+                pos = reference.search(/@version=[A-Za-z0-9]*/);
             }
             
             if (e.data.indexOf("strong=") > -1 || e.data.indexOf("srchJoin=") > -1
@@ -303,7 +304,6 @@ window.onmessage = function(e) {
         document.getElementById("f1").src = newURL;
     }
 };
-
 </script>
 </body>
 </html>

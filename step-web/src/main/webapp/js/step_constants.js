@@ -31,6 +31,7 @@ TOUCH_DURATION=50; // Minimum touch duration to trigger quick lexicon and highli
 TOUCH_CANCELLATION_TIME=150; // If touch move detected with this time and before quicklexicon is rendered, it will stop quick lexicon.
 
 DS_VERSIONS = "allVersions";
+URL_SEPARATOR = "@";
 if (typeof STEP_SERVER_BASE_URL === "undefined") STEP_SERVER_BASE_URL = "rest/";
 else {
 	if (STEP_SERVER_BASE_URL.indexOf("https://") == 0) {

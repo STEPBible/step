@@ -473,7 +473,7 @@ step.searchSelect = {
 			userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
 			$('textarea#enterRange').val(userInput);
 			if (userInput.length > 3) {
-				var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + step.searchSelect.version + "%7C?lang=" + step.searchSelect.userLang;
+				var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + URL_SEPARATOR + VERSION + "%3D" + step.searchSelect.version + URL_SEPARATOR +"?lang=" + step.searchSelect.userLang;
 				$.getJSON(url, function (data) {
 					if (data.length == 0) {
 						$("#updateRangeButton").hide();
@@ -928,7 +928,7 @@ step.searchSelect = {
 			this._buildBookHTMLTable(translationType);
 		}
 		else {
-			var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + this.version + "%7C?lang=" + this.userLang;
+			var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + URL_SEPARATOR + LIMIT + "%3D" + REFERENCE + URL_SEPARATOR + VERSION + "%3D" + this.version + URL_SEPARATOR + "?lang=" + this.userLang;
 			$.ajaxSetup({async: false});
 			$.getJSON(url, function (data) {
 				step.searchSelect._buildBookHTMLTable(data);
@@ -1252,7 +1252,7 @@ step.searchSelect = {
 			$('#updateButton').hide();
 			var url;
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
-				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version + "%7C?lang=" + step.searchSelect.userLang;
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version + URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
 			else {
 				if (limitType === "") limitType = step.searchSelect.searchOnSpecificType;
 				else {
@@ -1261,8 +1261,8 @@ step.searchSelect = {
 				}
 				$('#srchModalBackButton').show();
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version +
-					"%7C" + LIMIT + "%3D" + limitType +
-					"%7C?lang=" + step.searchSelect.userLang;
+					URL_SEPARATOR + LIMIT + "%3D" + limitType +
+					URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
 			}
 			for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
@@ -1656,8 +1656,8 @@ step.searchSelect = {
 			return;
 		}
 		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
-			"%7C" + LIMIT + "%3D" + limitType +
-			"%7C?lang=" + step.searchSelect.userLang;
+			URL_SEPARATOR + LIMIT + "%3D" + limitType +
+			URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
 		$.getJSON(url, function (data) {
 			for (var i = 0; i < data.length; i++) {
 				if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
@@ -1699,8 +1699,8 @@ step.searchSelect = {
 	},
 	processVocabInfoForShowAugStrong: function(strongNum, limitType, augStrongSameMeaning, origSuggestionType, userInput, allVersions) {
 		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
-			"%7C" + LIMIT + "%3D" + limitType +
-			"%7C?lang=" + step.searchSelect.userLang;
+			URL_SEPARATOR + LIMIT + "%3D" + limitType +
+			URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
 		$.getJSON(url, function (data) {
 			for (var i = 0; i < data.length; i++) {
 				if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
@@ -2294,28 +2294,6 @@ step.searchSelect = {
 			return join.substring(0,1).toLowerCase();
 	},
 
-	// _buildJoinString: function(currentJoin, previousJoins, searchType) {
-	// 	var previousJoinString = "";
-	// 	if (typeof searchType === "undefined") {
-	// 		console.log("dont know why the searchtype is undefined in buildJoinString");
-	// 	}
-	// 	if ((typeof currentJoin === "string") && (currentJoin.length > 0)) currentJoin = currentJoin.substring(0,1).toLowerCase();
-	// 	else currentJoin = "a";
-	// 	var previousJoinString = "1";
-	// 	var searchCount = 0;
-	// 	if (previousJoins.length > 0) {
-	// 		for (searchCount = 0; i < previousJoins.length; searchCount++) {
-	// 			previousJoinString += previousJoins[searchCount].substring(0,1).toLowerCase();
-	// 			previousJoinString += (searchCount + 1);
-	// 		}
-	// 	}
-	// 	else searchCount = 1;
-	// 	var newJoinString = "";
-	// 	if (previousJoinString !== "") newJoinString = previousJoinString + currentJoin + (searchCount + 1);
-	// 	if (newJoinString !== "") newJoinString = "|srchJoin=" + newJoinString;
-	// 	return newJoinString;
-	// },
-
 	addSearchWords: function(searchWord) {
 		var current = step.util.localStorageGetItem("step.previousSearches");
 		var newSearchLists = searchWord;
@@ -2337,12 +2315,12 @@ step.searchSelect = {
 		step.searchSelect.addSearchWords(step.searchSelect.searchUserInput);
 		var activePassageData = step.util.activePassage().get("searchTokens") || [];
 		var allVersions = "";
-		var range = (this.searchRange === "Gen-Rev") ? "" : "|reference=" + this.searchRange;
+		var range = (this.searchRange === "Gen-Rev") ? "" : URL_SEPARATOR + "reference=" + this.searchRange;
 		var currentSearch = "";
 		for (var i = 0; i < activePassageData.length; i++) {
 			var itemType = activePassageData[i].itemType ? activePassageData[i].itemType : activePassageData[i].tokenType
 			if (itemType === VERSION) {
-				if (allVersions.length > 0) allVersions += '|';
+				if (allVersions.length > 0) allVersions += URL_SEPARATOR;
 				allVersions += 'version=' + activePassageData[i].item.shortInitials;
 			}
 		}
@@ -2375,7 +2353,7 @@ step.searchSelect = {
 					previousJoinString += searchJoinForItem + leftParanthesisString + (numOfSearches);
 				}
 				else previousJoinString += leftParanthesisString + "1";
-				previousSearch += '|' + this.previousSearchTokens[i];
+				previousSearch += URL_SEPARATOR + this.previousSearchTokens[i];
 			}
 		}
 		var searchJoinsForMultipleStrongs = "";
@@ -2385,30 +2363,30 @@ step.searchSelect = {
 			if (andSearchStrings.length > 1) {
 				currentSearch = "";
 				for (var i = 0; i < andSearchStrings.length; i++) {
-					currentSearch += '|text=' + andSearchStrings[i];	
+					currentSearch += URL_SEPARATOR + 'text=' + andSearchStrings[i];	
 				}
 			}
-			else currentSearch = '|text=' + searchWord;
+			else currentSearch = URL_SEPARATOR + 'text=' + searchWord;
 		}
 		else if (searchType === STRONG_NUMBER) {
 			var searchWords = searchWord.split(",");
-			currentSearch = '|strong=' + searchWords[0];
+			currentSearch = URL_SEPARATOR + 'strong=' + searchWords[0];
 			step.util.putStrongDetails(searchWord[0], displayText);
 			if (searchWords.length > 1) {
 				searchJoinsForMultipleStrongs = "("  + numOfSearches;
 				for (var i = 1; i < searchWords.length; i++) {
 					numOfSearches ++;
-					currentSearch += '|strong=' + searchWords[i];
+					currentSearch += URL_SEPARATOR + 'strong=' + searchWords[i];
 					searchJoinsForMultipleStrongs += "o" + numOfSearches;
 					step.util.putStrongDetails(searchWord[i], displayText);
 				}
 				searchJoinsForMultipleStrongs += ")";
 			}
 		}
-		else if (typeof searchType !== "undefined") currentSearch = '|' + searchType + '=' + searchWord;
+		else if (typeof searchType !== "undefined") currentSearch = URL_SEPARATOR + searchType + '=' + searchWord;
 		var joins = "";
 		if (previousJoinString !== "") {
-			joins = "|srchJoin="
+			joins = URL_SEPARATOR + "srchJoin="
 			if (currentSearch === "") joins += previousJoinString;
 			else if (numOfSearches > 1) {
 				if (searchJoinsForMultipleStrongs === "") joins += previousJoinString + currentJoin + numOfSearches;
@@ -2416,7 +2394,7 @@ step.searchSelect = {
 			}
 		}
 		else if (searchJoinsForMultipleStrongs !== "") {
-			joins = "|srchJoin=" + searchJoinsForMultipleStrongs;
+			joins = URL_SEPARATOR + "srchJoin=" + searchJoinsForMultipleStrongs;
 		}
 		var url = allVersions + range + joins + previousSearch + currentSearch;
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();

@@ -728,7 +728,7 @@ var PassageMenuView = Backbone.View.extend({
 					alert("Sorry, Facebook does not accept a URL with a '-' character.  The passage selected has a '-' chaaracter.");
 				}
 				else {
-					url = url.replace(/\|/g, "%7C"); // .replace(/\-/g, "%2D");
+					url = url.replace(/\|/g, "@");
 					var facebook = $('<fb:share-button type="button_count"></fb:share-button>').attr("href", url);
 					this.sharingBar.append($("<li>").append(facebook));
 					window.FB.XFBML.parse(facebook.parent().get(0));
@@ -754,7 +754,7 @@ var PassageMenuView = Backbone.View.extend({
         var currentPassageId = this.model.get("passageId");
         step.util.activePassageId(currentPassageId);
         var args = this.model.get("args") || "";
-        args = args.replace(new RegExp('\\|?' + REFERENCE        + '[^|]+', "ig"), "");
+        args = args.replace(new RegExp('@?' + REFERENCE        + '[^@]+', "g"), "");
         var reference = "";
         var tmpArgs = this.removeSearchArgs(args);
         if (tmpArgs !== args) { // There is probably search so go to current chapter instead.  
@@ -776,9 +776,10 @@ var PassageMenuView = Backbone.View.extend({
         args = args.replace(/&&/ig, "")
                    .replace(/&$/ig, "");
         if (args.length > 0) {
-            args = args.replace(/^\|/, '')
-                       .replace(/\|\|+/, '|');
-            if (args[args.length - 1] !== '|') args += '|';
+            args = args .replace(/^@/, '').replace(/^\|/, '')
+                        .replace(/@@+/, URL_SEPARATOR)
+                        .replace(/\|\|+/, URL_SEPARATOR);
+            if (args[args.length - 1] !== URL_SEPARATOR) args += URL_SEPARATOR;
         }
         args += "reference=" + reference;
         step.router.navigateSearch(args);
@@ -839,15 +840,15 @@ var PassageMenuView = Backbone.View.extend({
         passageContent.html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
     },
     removeSearchArgs: function(args) {
-        return args.replace(new RegExp('\\|?' + STRONG_NUMBER    + '[^|]+', "ig"), "")
-		           .replace(new RegExp('\\|?' + SYNTAX           + '[^|]+', "ig"), "")
-                   .replace(new RegExp('\\|?' + TEXT_SEARCH      + '[^|]+', "ig"), "")
-                   .replace(new RegExp('\\|?' + SUBJECT_SEARCH   + '[^|]+', "ig"), "")
-                   .replace(new RegExp('\\|?' + GREEK            +  '[^|]+', "ig"), "")
-                   .replace(new RegExp('\\|?' + HEBREW           +  '[^|]+', "ig"), "")
-                   .replace(new RegExp('\\|?' + GREEK_MEANINGS   +  '[^|]+', "ig"), "")
-                   .replace(new RegExp('\\|?' + HEBREW_MEANINGS  +  '[^|]+', "ig"), "")
-                   .replace(new RegExp('\\|?' + MEANINGS         +  '[^|]+', "ig"), "");
+        return args.replace(new RegExp('@?' + STRONG_NUMBER    + '[^@]+', "ig"), "")
+		           .replace(new RegExp('@?' + SYNTAX           + '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + TEXT_SEARCH      + '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + SUBJECT_SEARCH   + '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + GREEK            +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + HEBREW           +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + GREEK_MEANINGS   +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + HEBREW_MEANINGS  +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + MEANINGS         +  '[^@]+', "ig"), "");
     },
     /**
      * Closes the whole column by removing it from the DOM

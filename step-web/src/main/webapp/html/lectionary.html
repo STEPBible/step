@@ -575,7 +575,7 @@ function displayPassages(item, string) {
     // provide a default of CPDV for Deuterocanonical books
     var version = "";
     if (string.indexOf("Sir.") > -1 || string.indexOf("Bar.") > -1 || string.indexOf("Wis.") > -1) {
-        version = "|version=CPDV"
+        version = "@version=CPDV"
     }
 
     if (!inIFrame) {

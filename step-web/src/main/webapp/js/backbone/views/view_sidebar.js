@@ -477,7 +477,7 @@ var SidebarView = Backbone.View.extend({
                     var refURLString = "";
                     var refArray2 = refArray1[j];
                     for (var k = 0; k < refArray2.length; k++) {
-                        refURLString += "|reference=" + refArray2[k];
+                        refURLString += URL_SEPARATOR + "reference=" + refArray2[k];
                     }
                     if (refArray1.length > 1) {
                         var displayGroupText = "";
@@ -609,7 +609,7 @@ var SidebarView = Backbone.View.extend({
                     var currentSearch = "strong=" + encodeURIComponent(args[0]);
                     var searchJoins = "";
                     for (var i = 1; i < allStrongs.length; i++) {
-                        currentSearch += '|strong=' + encodeURIComponent(args[i]);
+                        currentSearch += URL_SEPARATOR + 'strong=' + encodeURIComponent(args[i]);
                         if (i == 1) searchJoins = "srchJoin=(1o2";
                         else searchJoins += "o" + (i+1);
                     }
@@ -981,7 +981,8 @@ var SidebarView = Backbone.View.extend({
                 panel.append(" - 1st of ");
                 var version = (strongNum.substring(0,1) === "G") ? "THGNT" : "OHB";
                 strongNum = step.util.fixStrongNumForVocabInfo(strongNum, true);
-                panel.append("<a href='https://www.stepbible.org/?q=version=" + version + "|reference=" + ref + "|strong=" + strongNum + "&clickStrong' target='_blank'>" + morphCount + " different grammars</a>");
+                panel.append("<a href='https://www.stepbible.org/?q=version=" + version + URL_SEPARATOR + "reference=" + ref + 
+                    URL_SEPARATOR + "strong=" + strongNum + "&clickStrong' target='_blank'>" + morphCount + " different grammars</a>");
             }
             else
                 panel.append(" - 1st of " + morphCount + "  different grammars");

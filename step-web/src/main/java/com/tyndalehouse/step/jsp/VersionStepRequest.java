@@ -204,7 +204,7 @@ public class VersionStepRequest {
             bookList.append(SearchToken.VERSION);
             bookList.append('=');
             bookList.append(this.book.getInitials());
-            bookList.append("|");
+            bookList.append("@");
             bookList.append(SearchToken.REFERENCE);
             bookList.append('=');
             bookList.append(v11n.getShortName(bb));

@@ -32,7 +32,7 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
  */
 @Singleton
 public class SearchController {
-    private static final Pattern SPLIT_TOKENS = Pattern.compile("\\|");
+    private static final Pattern SPLIT_TOKENS = Pattern.compile("@");
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private static final String DEFAULT_OPTIONS = "NHVUG";
     private final SearchService searchService;
@@ -317,7 +317,7 @@ public class SearchController {
     private List<SearchToken> parseTokens(final String items) {
         String[] tokens;
         if (!StringUtils.isBlank(items)) {
-            tokens = SPLIT_TOKENS.split(items);
+            tokens = SPLIT_TOKENS.split(items.replaceAll("\\|", "@").replaceAll("@@", "@"));
         } else {
             tokens = new String[0];
         }

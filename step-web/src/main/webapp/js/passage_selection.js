@@ -152,7 +152,7 @@ step.passageSelect = {
 			this._buildBookHTMLTable(translationType, summaryMode);
 		}
 		else {
-			var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + this.version + "%7C?lang=" + this.userLang;
+			var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + URL_SEPARATOR + LIMIT + "%3D" + REFERENCE + URL_SEPARATOR + VERSION + "%3D" + this.version + URL_SEPARATOR + "?lang=" + this.userLang;
 			$.getJSON(url, function (data) {
 				step.passageSelect._buildBookHTMLTable(data, summaryMode);
 			}).fail(function() {
@@ -377,16 +377,16 @@ step.passageSelect = {
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
 		for (var i = 0; i < activePassageData.length; i++) {
 			if (activePassageData[i].itemType == "version") {
-				if (allVersions.length > 0) allVersions += "|version=";
+				if (allVersions.length > 0) allVersions += URL_SEPARATOR + "version=";
 				allVersions += activePassageData[i].item.shortInitials;
 			}
 			else if ((selectedDisplayLoc === "append") && (activePassageData[i].itemType == "reference")) {
-				existingReferences += "|reference=" + activePassageData[i].item.osisID;
+				existingReferences += URL_SEPARATOR + "reference=" + activePassageData[i].item.osisID;
 			}
 		}
 		step.util.closeModal('passageSelectionModal');
 		if (selectedDisplayLoc === "append") {
-			var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
+			var url = VERSION + '=' + allVersions + existingReferences + URL_SEPARATOR + REFERENCE + '=' + osisID;
 			step.router.navigateSearch(url, true, true); // skip QFilter
 		}
 		else {
@@ -422,7 +422,7 @@ step.passageSelect = {
 			this._buildChptrVrsTbl(null, bookOsisID, numOfChptrsOrVrs, true, version, userLang, summaryMode);
 		}
 		else {
-            var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C" + REFERENCE + "%3D" + bookOsisID + "%7C?lang=" + userLang;
+            var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3D" + REFERENCE + URL_SEPARATOR + VERSION + "%3D" + version + URL_SEPARATOR + REFERENCE + "%3D" + bookOsisID + URL_SEPARATOR + "?lang=" + userLang;
 			$.getJSON(url, function (data) {
 				step.passageSelect._buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, true, version, userLang, summaryMode);
 			}).fail(function() {
@@ -437,7 +437,7 @@ step.passageSelect = {
 			userInput = userInput.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
 			userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
 		}
-		var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + this.version + "%7C?lang=" + this.userLang;
+		var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + URL_SEPARATOR + VERSION + "%3D" + this.version + URL_SEPARATOR + "?lang=" + this.userLang;
 		$.getJSON(url, function (data) {
 			if (data.length > 0) {
 				if (data[0].suggestion.passage) {

@@ -422,7 +422,7 @@ public class SearchPageController extends HttpServlet {
         if (StringUtils.isNotBlank(version)) {
             fragment.append(SearchToken.VERSION).append("=");
             fragment.append(version);
-            fragment.append("|");
+            fragment.append("@");
         }
 
         if (StringUtils.isNotBlank(reference)) {

@@ -96,7 +96,7 @@ var MainSearchView = Backbone.View.extend({
 							for (var i = 0; i < self.specificContext.length; i++) {
 								contextArgs += self.specificContext[i].itemType + "=" + self.specificContext[i].value;
 								if (i < self.specificContext.length) {
-									contextArgs += '|';
+									contextArgs += URL_SEPARATOR;
 								}
 							}
 						}
@@ -540,7 +540,7 @@ var MainSearchView = Backbone.View.extend({
         for (var ii = 0; ii < options.length; ii++) {
               switch (options[ii].itemType) {
                 case VERSION:
-                    args += "|" + options[ii].itemType + "=";
+                    args += URL_SEPARATOR + options[ii].itemType + "=";
                     var currentVersionInArg = options[ii].item.shortInitials;
                     args += encodeURIComponent(currentVersionInArg);
                     if (numOfBibleVersions == 0) newMasterVersion = currentVersionInArg;
@@ -549,17 +549,17 @@ var MainSearchView = Backbone.View.extend({
                     break;
                 case REFERENCE:
                     var currentReferenceInArg = options[ii].item.osisID;
-                    refArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(currentReferenceInArg);
+                    refArgs += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(currentReferenceInArg);
                     osisIds.push(currentReferenceInArg);
                     break;
                 case GREEK:
                 case GREEK_MEANINGS:
                 case HEBREW:
                 case HEBREW_MEANINGS:
-                    searchArgs += "|" + STRONG_NUMBER + "=" + encodeURIComponent(options[ii].item.strongNumber);
+                    searchArgs += URL_SEPARATOR + STRONG_NUMBER + "=" + encodeURIComponent(options[ii].item.strongNumber);
                     break;
                 case MEANINGS:
-                    searchArgs += "|" + MEANINGS + "=" + encodeURIComponent(options[ii].item.gloss);
+                    searchArgs += URL_SEPARATOR + MEANINGS + "=" + encodeURIComponent(options[ii].item.gloss);
                     break;
                 case SUBJECT_SEARCH:
                     var lastSelection = step.util.activePassage().get("subjectSearchType");
@@ -576,35 +576,35 @@ var MainSearchView = Backbone.View.extend({
 
                     switch (selectedSubjectSearchType) {
                         case "SUBJECT_SIMPLE":
-                            searchArgs += "|" + SUBJECT_SEARCH;
+                            searchArgs += URL_SEPARATOR + SUBJECT_SEARCH;
                             break;
                         case "SUBJECT_EXTENDED":
-                            searchArgs += "|" + NAVE_SEARCH;
+                            searchArgs += URL_SEPARATOR + NAVE_SEARCH;
                             break;
                         case "SUBJECT_FULL":
-                            searchArgs += "|" + NAVE_SEARCH_EXTENDED;
+                            searchArgs += URL_SEPARATOR + NAVE_SEARCH_EXTENDED;
                             break;
                         default: // The following line probably should not have "+ encodeURIComponent(options[ii].item)" because it is repeated two lines later
-                            searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
+                            searchArgs += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
 							console.log("Check view_main_search.js line 603 " + options[ii].itemType + "=" + encodeURIComponent(options[ii].item));
                     }
                     searchArgs += "=" + encodeURIComponent(options[ii].item.value);
                     break;
                 case TOPIC_BY_REF:
                 case RELATED_VERSES:
-                    searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
+                    searchArgs += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 case SYNTAX:
-                    searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.value);
+                    searchArgs += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.value);
                     break;
                 case TEXT_SEARCH:
-                    searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
+                    searchArgs += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 case EXACT_FORM:
-                    searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
+                    searchArgs += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 default:
-                    args += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
+                    args += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
                     console.log("default search: " + options[ii].itemType + "=" + encodeURIComponent(options[ii].item));
                     break;
             }
@@ -612,15 +612,15 @@ var MainSearchView = Backbone.View.extend({
         if (!step.util.checkFirstBibleHasPassage(newMasterVersion, osisIds, otherVersions)) return;
         //reset defaults:
         step.util.activePassage().save({pageNumber: 1, filter: null, strongHighlights: null}, {silent: true});
-		args = args.replace(/^\|/g, '');
-		searchArgs = searchArgs.replace(/^\|/g, '');
-		refArgs = refArgs.replace(/^\|/g, '');
+		args = args.replace(/^@/, '').replace(/^\|/, '');
+		searchArgs = searchArgs.replace(/^@/, '').replace(/^\|/, '');
+		refArgs = refArgs.replace(/^@/, '').replace(/^\|/g, '');
 		if (searchArgs.length > 0) {
-			args += (args.length > 0) ? "|" : "";
+			args += (args.length > 0) ? URL_SEPARATOR : "";
 			args += searchArgs;
 		}
         if (refArgs.length > 0) {
-            args += (args.length > 0) ? "|" : "";
+            args += (args.length > 0) ? URL_SEPARATOR : "";
             args += refArgs;
         }
         console.log("navigateSearch from view_main_search: ", args);

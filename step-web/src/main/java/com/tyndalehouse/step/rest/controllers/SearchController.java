@@ -316,17 +316,23 @@ public class SearchController {
      */
     private List<SearchToken> parseTokens(final String items) {
         String[] tokens;
-        if (!StringUtils.isBlank(items)) {
+        if (!StringUtils.isBlank(items))
             tokens = SPLIT_TOKENS.split(items.replaceAll("\\|", "@").replaceAll("@@", "@"));
-        } else {
+        else
             tokens = new String[0];
-        }
 
+        for (int i = 1; i < tokens.length; i++) { // Handle search parameter with @.  For example: text=morph:H2603A@*Vq*
+            if ((tokens[i].indexOf("=") == -1)  && (tokens[i-1].indexOf("text=morph") == 0)) {
+                tokens[i-1] += "@" + tokens[i]; // based on the above example, concatenate text=morph:H2603A with *Vq*
+                tokens[i] = ""; // based on above example, empty out the element with *Vq*
+            }
+        }
         List<SearchToken> searchTokens = new ArrayList<SearchToken>();
         for (String t : tokens) {
             int indexOfPrefix = t.indexOf('=');
             if (indexOfPrefix == -1) {
-                LOGGER.warn("Ignoring item: [{}]", t);
+                if (t.length() > 0)
+                    LOGGER.warn("Ignoring item: [{}]", t);
                 continue;
             }
 

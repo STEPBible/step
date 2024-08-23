@@ -322,7 +322,8 @@ public class SearchController {
             tokens = new String[0];
 
         for (int i = 1; i < tokens.length; i++) { // Handle search parameter with @.  For example: text=morph:H2603A@*Vq*
-            if ((tokens[i].indexOf("=") == -1)  && (tokens[i-1].indexOf("text=morph") == 0)) {
+            if ((tokens[i].indexOf("=") == -1) && 
+                ((tokens[i-1].indexOf("text=morph:") == 0) || (tokens[i-1].indexOf("syntax=t=morph:") == 0))) {
                 tokens[i-1] += "@" + tokens[i]; // based on the above example, concatenate text=morph:H2603A with *Vq*
                 tokens[i] = ""; // based on above example, empty out the element with *Vq*
             }

@@ -470,8 +470,8 @@ step.util = {
      * @description        Uploads a file via multipart/form-data, via a Canvas elt
      * @param url  String: Url to post the data
      * @param name String: name of form element
-     * @param fn   String: Name of file
-     * @param canvas HTMLCanvasElement: The canvas element.
+	 * @param fn   String: Name of file
+	 * @param canvas HTMLCanvasElement: The canvas element.
      * @param type String: Content-Type, eg image/png
      ***/
     postCanvasToURL: function (url, name, fn, canvas, type, formData, callback) {
@@ -576,7 +576,7 @@ step.util = {
 		$("#help").height(heightToSet);
     },
     findSearchTermsInQuotesAndRemovePrefix: function(syntaxWords) {
-		if (syntaxWords.length != 1) alert("unexpected syntaxWords");
+//		if (syntaxWords.length != 1) alert("unexpected syntaxWords");
 		if (syntaxWords[0].substr(0, 2) === "t=") syntaxWords[0] = syntaxWords[0].substr(2);
     },
     /**
@@ -1049,7 +1049,7 @@ step.util = {
 								if (stepTransliteration === "") stepTransliteration = strongNum;
 								searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
 							}
-							else alert("unknown syntax search 1: " + syntaxWords);
+							else console.log("unknown syntax search 1: " + syntaxWords);
                         }
                         else if ((itemType === GREEK_MEANINGS) || (itemType === HEBREW_MEANINGS)) {
 							var word2Add = "<i>" + word + "</i>";

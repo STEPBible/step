@@ -14,6 +14,7 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private String zh_tw_Gloss;
     private String zh_Gloss;
 	private String km_Gloss;
+    private String fr_Gloss;
     private String searchResultRange;
 	private String type;
 	private String detailLexicalTag;
@@ -74,6 +75,14 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     }
 
     /**
+     * @return the French gloss
+     */
+
+     public String get_fr_Gloss() {
+        return this.fr_Gloss;
+    }
+
+    /**
      * @return the STEP_Type
      */
 
@@ -129,6 +138,10 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
 
     public void set_km_Gloss(final String kmherGloss) {
         this.km_Gloss = kmherGloss;
+    }
+
+    public void set_fr_Gloss(final String frenchGloss) {
+        this.fr_Gloss = frenchGloss;
     }
 
     public void set_searchResultRange(final String searchResultRange) {

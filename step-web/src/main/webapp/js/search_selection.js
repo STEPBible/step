@@ -1222,6 +1222,11 @@ step.searchSelect = {
 		}
 		return false;
 	},
+	getGlossInUserLanguage: function(dataSuggestion) {
+		if ((step.userLanguageCode === "fr") && (typeof dataSuggestion._fr_Gloss === "string") && (dataSuggestion._fr_Gloss !== ""))
+			return dataSuggestion._fr_Gloss;	
+		return dataSuggestion.gloss;
+	},
 	_handleEnteredSearchWord: function(limitType, previousUserInput, userPressedEnterKey) {
 		$('#quickLexicon').remove();
 		if ((typeof limitType === "undefined") || (limitType === null)) limitType = "";
@@ -1342,7 +1347,7 @@ step.searchSelect = {
 									str2Search = text2Display;
 								}
 								else if (suggestionType === MEANINGS) {
-									text2Display = data[i].suggestion.gloss;
+									text2Display = step.searchSelect.getGlossInUserLanguage(data[i].suggestion);
 									str2Search = text2Display;
 								}
 								else if (suggestionType === TEXT_SEARCH) {
@@ -1431,7 +1436,7 @@ step.searchSelect = {
                                     }
 									if (alreadyShownStrong.includes(suggestionType + strongWithoutAugment)) continue;
 									alreadyShownStrong.push(suggestionType + strongWithoutAugment);
-									suffixToDisplay = data[i].suggestion.gloss;
+									suffixToDisplay = step.searchSelect.getGlossInUserLanguage(data[i].suggestion);
 									var hasDetailLexInfo = (typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "");
 									text2Display = 
 										'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
@@ -1585,7 +1590,7 @@ step.searchSelect = {
 				}
 				var currentWordPopularity = parseInt(data[i].suggestion.popularity);
 				if ((selectedGloss === "") || (currentWordPopularity > augStrongWithMostOccurrence)) {
-					selectedGloss = data[i].suggestion.gloss;
+					selectedGloss = step.searchSelect.getGlossInUserLanguage(data[i].suggestion);
 					augStrongWithMostOccurrence = currentWordPopularity;
 					notInBibleSelected = step.searchSelect.addNotInBibleSelected(notInBibleSelected, resultArray[2]);
 				}
@@ -1641,6 +1646,7 @@ step.searchSelect = {
 		suggestion['type'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 19, duplicateStrings);
 		suggestion['_searchResultRange'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 20, duplicateStrings);
 		suggestion['popularityList'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 21, duplicateStrings);
+		suggestion['_fr_Gloss'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 22, duplicateStrings);
 		result['suggestion'] = suggestion;
 		return result;
 	},
@@ -1903,7 +1909,7 @@ step.searchSelect = {
 				var text2Display = "";
 				var strongNum = data[i].suggestion.strongNumber;
 				var str2Search = strongNum;
-				var gloss = data[i].suggestion.gloss;
+				var gloss = step.searchSelect.getGlossInUserLanguage(data[i].suggestion);
 				var strongPrefix = strongNum[0].toUpperCase();
 				text2Display = data[i].suggestion.type + ": ";
 				str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);

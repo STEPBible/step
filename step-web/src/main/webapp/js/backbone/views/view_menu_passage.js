@@ -42,6 +42,7 @@ var PassageMenuView = Backbone.View.extend({
                 {initial: "T", key: "display_transliteration"},
                 {initial: "B", key: "display_spanishVocab"},
                 {initial: "Z", key: "display_chineseVocab"},
+                {initial: "F", key: "display_frenchVocab"},
                 {initial: "M", key: "display_grammar"},
                 {initial: "C", key: "display_grammarColor"}        
             ]
@@ -592,9 +593,11 @@ var PassageMenuView = Backbone.View.extend({
                 if ((items[i].initial === "Z") && (step.userLanguageCode.toLowerCase() === "zh")) items[i].initial = "S"; // Option code for Simplified Chinese is "S"
 				if (!( ( (items[i].initial === "Z") && (step.userLanguageCode.toLowerCase() !== "zh_tw") ) ||
 					   ( (items[i].initial === "S") && (step.userLanguageCode.toLowerCase() !== "zh") ) ||
-					   ( (items[i].initial === "B") && (step.userLanguageCode.toLowerCase() !== "es") ) ) ) {
+					   ( (items[i].initial === "B") && (step.userLanguageCode.toLowerCase() !== "es") ) ||
+                       ( (items[i].initial === "F") && (step.userLanguageCode.toLowerCase() !== "fr") ) ) ) {
 					var keyText = __s[items[i].key];
                     var helpText = __s[items[i].help];
+console.log(items[i].initial + " " + step.userLanguageCode + " " + keyText);
                     var link = this._createLink(items[i].initial, keyText, helpText);
                     var makeVisible = (selectedOptions.indexOf(items[i].initial) != -1);
                     if ((items[i].initial === "U") && (!makeVisible))

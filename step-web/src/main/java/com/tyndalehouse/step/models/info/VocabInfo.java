@@ -29,11 +29,13 @@ public class VocabInfo implements Serializable {
     private String zh_tw_Gloss;
     private String zh_Gloss;
     private String km_Gloss;
+    private String fr_Gloss;
     private String es_Definition;
     private String zh_tw_Definition;
     private String zh_Definition;
 	private String vi_Definition;
 	private String km_Definition;
+    private String fr_Definition;
     private String stepGloss;
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
@@ -77,6 +79,8 @@ public class VocabInfo implements Serializable {
             this.vi_Definition = d.get("vi_Definition");
 			this.km_Gloss = d.get("km_Gloss");
 			this.km_Definition = d.get("km_Definition");
+            this.fr_Gloss = d.get("fr_Gloss");
+			this.fr_Definition = d.get("fr_Definition");
 		}
 		else if (userLanguage.equalsIgnoreCase("es")) {
             this.es_Gloss = d.get("es_Gloss");
@@ -90,6 +94,10 @@ public class VocabInfo implements Serializable {
             this.zh_tw_Gloss = d.get("zh_tw_Gloss");
             this.zh_tw_Definition = d.get("zh_tw_Definition");
         }
+		else if (userLanguage.equalsIgnoreCase("fr")) {
+            this.fr_Gloss = d.get("fr_Gloss");
+            this.fr_Definition = d.get("fr_Definition");
+		}
         else if (userLanguage.equalsIgnoreCase("vi")) {
             this.vi_Definition = d.get("vi_Definition");
         }
@@ -293,6 +301,19 @@ public class VocabInfo implements Serializable {
     public void set_es_Definition(final String es_Definition) {
         this.es_Definition = es_Definition;
     }
+    /**
+     * @return the fr_Def
+     */
+    public String get_fr_Definition() {
+        return this.fr_Definition;
+    }
+
+    /**
+     * @param fr_Definition the fr_Def to set
+     */
+    public void set_fr_Definition(final String fr_Definition) {
+        this.fr_Definition = fr_Definition;
+    }
 
     /**
      * @return the zh_tw_Def
@@ -454,6 +475,20 @@ public class VocabInfo implements Serializable {
      */
     public void set_km_Gloss(final String km_Gloss) {
         this.km_Gloss = km_Gloss;
+    }
+
+    /**
+     * @return the French Gloss
+     */
+    public String get_fr_Gloss() {
+        return this.fr_Gloss;
+    }
+
+    /**
+     * @param fr_Gloss the fr_Gloss to set
+     */
+    public void set_fr_Gloss(final String fr_Gloss) {
+        this.fr_Gloss = fr_Gloss;
     }
 
     /**

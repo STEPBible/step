@@ -197,6 +197,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         if (book.getBookMetaData().hasFeature(FeatureType.STRONGS_NUMBERS)) {
             options.add(LookupOption.ENGLISH_VOCAB);
             options.add(LookupOption.ES_VOCAB);
+            options.add(LookupOption.FR_VOCAB);
             options.add(LookupOption.ZH_TW_VOCAB);
             options.add(LookupOption.ZH_VOCAB);
             options.add(LookupOption.GREEK_VOCAB);

@@ -459,6 +459,9 @@
                                                                                 <%      else %>
                                                                                             ${ definition._zh_Gloss}
                                                                                 <%  }
+                                                                                    else if (locale.getLanguage().equalsIgnoreCase("fr")) { %>
+                                                                                        ${ definition._fr_Gloss}
+                                                                                <%	}
                                                                                     else if (locale.getLanguage().equalsIgnoreCase("km")) { %>
 																						${ definition._km_Gloss}
 																				<%	}

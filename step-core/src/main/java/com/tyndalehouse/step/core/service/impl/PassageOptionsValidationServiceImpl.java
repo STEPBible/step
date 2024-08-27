@@ -133,6 +133,9 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
         explainRemove(errors, ES_VOCAB, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);
 
+        explainRemove(errors, FR_VOCAB, result, trimmingExplanations, originalModeHasChanged,
+                interleavedMessage);
+
         explainRemove(errors, GREEK_VOCAB, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);
 
@@ -186,6 +189,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
         return options.contains(LookupOption.GREEK_VOCAB) || options.contains(LookupOption.MORPHOLOGY)
                 || options.contains(LookupOption.ENGLISH_VOCAB)
 				|| options.contains(LookupOption.ES_VOCAB)
+                || options.contains(LookupOption.FR_VOCAB)
                 || options.contains(LookupOption.ZH_TW_VOCAB)
                 || options.contains(LookupOption.ZH_VOCAB)
                 || options.contains(LookupOption.TRANSLITERATION);

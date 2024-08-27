@@ -13,6 +13,7 @@ var QuickLexicon = Backbone.View.extend({
         // '<% var currentEnWithEsLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon"); %>' +
         // '<% if (currentEnWithEsLexiconSetting == undefined) currentEnWithEsLexiconSetting = false; %>' +
 		'<% if ((currentLang.indexOf("es") == 0) && (item._es_Gloss != undefined)) { %><span>,&nbsp;<%= item._es_Gloss %></span> <% } %>' +
+        '<% if ((currentLang.indexOf("fr") == 0) && (item._fr_Gloss != undefined)) { %><span>,&nbsp;<%= item._fr_Gloss %></span> <% } %>' +
 		'<% if ((currentLang.indexOf("km") == 0) && (item._km_Gloss != undefined)) { %><span>,&nbsp;<%= item._km_Gloss %></span> <% } %>' +
         '<% if (urlLang === "zh_tw") { currentLang = "zh_tw"; } else if (urlLang === "zh") { currentLang = "zh"; } %>' +
         '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
@@ -22,6 +23,7 @@ var QuickLexicon = Backbone.View.extend({
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1> ' +
         '<% if ( (currentLang === "es") && (item._es_Definition != undefined) ) { %><div class="mediumDef"><%= item._es_Definition %></div><% } %>' +
+        '<% if ( (currentLang === "fr") && (item._fr_Definition != undefined) ) { %><div class="mediumDef"><%= item._fr_Definition %></div><% } %>' +
         '<% if ( (currentLang === "km") && (item._km_Definition != undefined) ) { %><div class="mediumDef"><%= item._km_Definition %></div><% } %>' +
         '<% if ( (currentLang === "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
         '<% if ( (currentLang === "vi") && (item._vi_Definition != undefined) ) { %><div class="mediumDef"><%= item._vi_Definition %></div> <% } %>' +

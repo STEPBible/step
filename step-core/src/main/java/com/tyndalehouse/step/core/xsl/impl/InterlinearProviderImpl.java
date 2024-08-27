@@ -296,6 +296,15 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         return spanishGloss;
     }
 
+// Test French on this code    
+    private String shouldFrenchGlossBeUsed(final String book, final EntityDoc strong) {
+        String frenchGloss = "";
+        if ((this.currentBook.toString().equals("FreLSG")) || (this.currentBook.toString().equals("FreJND"))) {
+            frenchGloss = strong.get("fr_Gloss");
+        }
+        return frenchGloss;
+    }
+
     private String shouldKhmerGlossBeUsed(final String book, final EntityDoc strong) {
         String khmerGloss = "";
         if (this.currentBook.toString().equals("KhmKCB")) {
@@ -355,6 +364,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             String chineseVocab = shouldChineseGlossBeUsed(this.currentBook.toString(), strongDefinition[0]);
             if (StringUtils.isNotBlank(chineseVocab)) {
                 return "#" + chineseVocab;
+            }
+            String frenchVocab = shouldFrenchGlossBeUsed(this.currentBook.toString(), strongDefinition[0]);
+            if (StringUtils.isNotBlank(frenchVocab)) {
+                return "#" + frenchVocab;
             }
             String khmerVocab = shouldKhmerGlossBeUsed(this.currentBook.toString(), strongDefinition[0]);
             if (StringUtils.isNotBlank(khmerVocab)) {

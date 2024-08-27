@@ -58,6 +58,10 @@ public enum LookupOption {
      */
     ES_VOCAB('B', "es_Vocab", XslConversionType.INTERLINEAR, FeatureType.STRONGS_NUMBERS),
     /**
+     * French vocabulary interlinear
+     */
+    FR_VOCAB('F', "fr_Vocab", XslConversionType.INTERLINEAR, FeatureType.STRONGS_NUMBERS),
+    /**
      * Chinese vocabulary interlinear
      */
     ZH_TW_VOCAB('Z', "zh_tw_Vocab", XslConversionType.INTERLINEAR, FeatureType.STRONGS_NUMBERS),

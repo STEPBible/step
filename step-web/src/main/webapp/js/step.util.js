@@ -147,7 +147,7 @@ step.util = {
 		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
 		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
 		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-		"freqList", "defaultDStrong"],
+		"freqList", "defaultDStrong", "_fr_Gloss", "_fr_Definition"],
 
 	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
 		var bibleVersions = allVersions.split(",");
@@ -1917,8 +1917,8 @@ step.util = {
 																	if ((currentLang === "es") && (strongData._es_Gloss)) strongData.gloss = strongData._es_Gloss;
 																	else if ((currentLang === "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
 																	else if ((currentLang === "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
+																	else if ((currentLang === "fr") && (strongData._fr_Gloss)) strongData.gloss = strongData._fr_Gloss;
 																	else if ((currentLang === "km") && (strongData._km_Gloss)) strongData.gloss = strongData._km_Gloss;
-																	var morph = "";
 																	allMorphsOfThisWord = [];
 																	var morphCount = 0;
 																	for (var z = 0; z < allMorphs.length; z++) {
@@ -3932,7 +3932,7 @@ step.util = {
 	},
 	unpackJson: function (origJsonVar, index) {
 
-		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss"];
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss", "_fr_Gloss"];
 		var duplicateStrings = origJsonVar.d;
 		var relatedNumbers = origJsonVar.r;
 		var vocabInfo = origJsonVar.v[index];

@@ -1365,6 +1365,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     case ZH_TW_VOCAB:
                     case ZH_VOCAB:
 					case ES_VOCAB:
+                    case FR_VOCAB:
                     case TRANSLITERATION:
                     case GREEK_VOCAB:
                     case TRANSLITERATE_ORIGINAL:

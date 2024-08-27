@@ -49,11 +49,13 @@ public final class OriginalWordUtils {
 			suggestion.set_es_Gloss(def.get("es_Gloss"));
 			suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
 			suggestion.set_zh_Gloss(def.get("zh_Gloss"));
+            suggestion.set_fr_Gloss(def.get("fr_Gloss"));
 			suggestion.set_km_Gloss(def.get("km_Gloss"));
         }
 		else if (userLanguage.equalsIgnoreCase("es")) 	 suggestion.set_es_Gloss(def.get("es_Gloss"));
-		else if (userLanguage.equalsIgnoreCase("zh_tw")) suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
+		else if (userLanguage.equalsIgnoreCase("zh_tw"))   suggestion.set_zh_tw_Gloss(def.get("zh_tw_Gloss"));
 		else if (userLanguage.equalsIgnoreCase("zh")) 	 suggestion.set_zh_Gloss(def.get("zh_Gloss"));
+        else if (userLanguage.equalsIgnoreCase("fr")) 	 suggestion.set_fr_Gloss(def.get("fr_Gloss"));
 		else if (userLanguage.equalsIgnoreCase("km")) 	 suggestion.set_km_Gloss(def.get("km_Gloss"));
         return suggestion;
     }

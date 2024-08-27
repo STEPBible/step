@@ -56,6 +56,12 @@ public class VocabularyServiceImpl implements VocabularyService {
             return l.get("es_Gloss");
         }
     };
+	private final LexiconDataProvider fr_VocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final EntityDoc l) {
+            return l.get("fr_Gloss");
+        }
+    };
     private final LexiconDataProvider zh_tw_VocabProvider = new LexiconDataProvider() {
         @Override
         public String getData(final EntityDoc l) {
@@ -143,6 +149,10 @@ public class VocabularyServiceImpl implements VocabularyService {
                     if (!userLanguage.equalsIgnoreCase("zh_tw")) {
                         strongDefs[0].removeField("zh_tw_Gloss");
                         strongDefs[0].removeField("zh_tw_Definition");
+                    }
+                    if (!userLanguage.equalsIgnoreCase("fr")) {
+                        strongDefs[0].removeField("fr_Gloss");
+                        strongDefs[0].removeField("fr_Definition");
                     }
                     if (!userLanguage.equalsIgnoreCase("vi")) {
                         strongDefs[0].removeField("vi_Definition");
@@ -295,7 +305,12 @@ public class VocabularyServiceImpl implements VocabularyService {
     public String get_es_Vocab(final String version, final String reference, String vocabIdentifiers) {
         return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.es_VocabProvider, false);
     }
-	
+
+    @Override
+    public String get_fr_Vocab(final String version, final String reference, final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.fr_VocabProvider, false);
+    }
+
     @Override
     public String get_zh_tw_Vocab(final String version, final String reference, final String vocabIdentifiers) {
         return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_tw_VocabProvider, false);

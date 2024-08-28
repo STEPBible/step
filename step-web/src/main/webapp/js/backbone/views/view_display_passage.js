@@ -49,7 +49,7 @@ var PassageDisplayView = DisplayView.extend({
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {
                     if (hasTOS) {
                         pch = document.getElementsByClassName('passageContentHolder');
-                        var r = cf.addClassForTHOT(pch[0].outerHTML);
+                        var r = cf.addClassForTHOT(pch[0].outerHTML, bibleVersions);
                         pch[0].outerHTML = r[0];
                         otCSSOnThisPage = r[1];
                     }
@@ -63,7 +63,7 @@ var PassageDisplayView = DisplayView.extend({
             else {
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {
                     if (hasTOS) {
-                        var r = cf.addClassForTHOT(this.model.attributes.value);
+                        var r = cf.addClassForTHOT(this.model.attributes.value, bibleVersions);
                         this.model.attributes.value = r[0];
                         otCSSOnThisPage = r[1];
                     }

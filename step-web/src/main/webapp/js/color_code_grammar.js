@@ -1520,7 +1520,7 @@ var cf = {
     return result.replace(/\s\s+/, ' ').replace(/^\s/, '').replace(/\s$/, '');
   },
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
-  addClassForTHOT: function (passageHTML) {
+  addClassForTHOT: function (passageHTML, bibleVersions) {
     var result = '', pLength = passageHTML.length, currentPos = 0, lastCopyPos = 0;
     var otCSSOnThisPage = '';
     while (currentPos < pLength) {
@@ -1539,8 +1539,8 @@ var cf = {
           currentPos += 6;
           isOSHM = true;
         }
-        else
-          continue;
+        else if (bibleVersions.indexOf("ESV") > -1) // ESV has not "TOS:" in morph code
+          currentPos += 1;
         var endingQuotePos = passageHTML.indexOf(charAfterMorph, currentPos);
         if ((endingQuotePos > -1) && (endingQuotePos - currentPos < 60)) {
           var morphCode = passageHTML.substring(currentPos, endingQuotePos);

@@ -1528,7 +1528,7 @@ var cf = {
       if (morphPos > -1) {
         var charAfterMorph = passageHTML.substr(morphPos + 6, 1);
         if ((charAfterMorph !== '"') && (charAfterMorph !== "'")) {
-          console.log("error at addClassForTHOT cannot find ending quote at " + endingQuotePos);
+          console.log("error at addClassForTHOT cannot find ending quote at " + endingQuotePos + " " + passageHTML.substr(morphPos + 6, 25));
           continue;
         }
         currentPos = morphPos + 6;
@@ -1541,6 +1541,8 @@ var cf = {
         }
         else if (bibleVersions.indexOf("ESV") > -1) // ESV has not "TOS:" in morph code
           currentPos += 1;
+        else
+          continue;
         var endingQuotePos = passageHTML.indexOf(charAfterMorph, currentPos);
         if ((endingQuotePos > -1) && (endingQuotePos - currentPos < 60)) {
           var morphCode = passageHTML.substring(currentPos, endingQuotePos);
@@ -1582,7 +1584,7 @@ var cf = {
             }
             else console.log("error at addClassForTHOT cannot find >");
           }
-          else console.log("error at addClassForTHOT cannot find ending quote at " + endingQuotePos);
+          //else console.log("error at addClassForTHOT cssCode is zero " + endingQuotePos  + "  morphCode " + morphCode);
         }
       }
       else break;

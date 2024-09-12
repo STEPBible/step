@@ -2189,7 +2189,7 @@ step.util = {
         var element = document.getElementById('grammarClrModal');
         if (element) element.parentNode.removeChild(element);
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
-        $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+        $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">' +
             '<div class="modal-dialog">' +
 				'<div class="modal-content stepModalFgBg"">' +
 					'<link href="css/color_code_grammar.' + jsVersion + 'css" rel="stylesheet"/>' +

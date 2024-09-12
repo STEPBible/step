@@ -83,7 +83,7 @@ var StepRouter = Backbone.Router.extend({
         if (!step.util.isBlank(options)) {
             if ((options.indexOf("M") > -1) || (options.indexOf("C") > -1)) {
                 var versions = urlStub.split("version=");
-                var hasMorphology = false;
+                var hasMorphology = (versions.length == 1) ? true : false; // No version so it is ESV. 
                 for (var i = 1; i < versions.length; i++) { // skip the first element is q= or things before version=
                     var curVersion = versions[i].split(URL_SEPARATOR)[0].split("&")[0];
                     if ((typeof step.keyedVersions[curVersion] === "object") &&

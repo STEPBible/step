@@ -85,7 +85,7 @@ var SearchDisplayView = DisplayView.extend({
 
 			if (cv[C_colorCodeGrammarAvailableAndSelected]) {
 				if (hasTOS) {
-					var r = cf.addClassForTHOT(results[0].outerHTML);
+					var r = cf.addClassForTHOT(results[0].outerHTML, bibleVersions);
 					$(results[0]).html(r[0]);
 					otCSSOnThisPage = r[1];
 				}

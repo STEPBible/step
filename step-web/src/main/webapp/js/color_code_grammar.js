@@ -1520,7 +1520,7 @@ var cf = {
     return result.replace(/\s\s+/, ' ').replace(/^\s/, '').replace(/\s$/, '');
   },
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
-  addClassForTHOT: function (passageHTML) {
+  addClassForTHOT: function (passageHTML, bibleVersions) {
     var result = '', pLength = passageHTML.length, currentPos = 0, lastCopyPos = 0;
     var otCSSOnThisPage = '';
     while (currentPos < pLength) {
@@ -1528,7 +1528,7 @@ var cf = {
       if (morphPos > -1) {
         var charAfterMorph = passageHTML.substr(morphPos + 6, 1);
         if ((charAfterMorph !== '"') && (charAfterMorph !== "'")) {
-          console.log("error at addClassForTHOT cannot find ending quote at " + endingQuotePos);
+          console.log("error at addClassForTHOT cannot find ending quote at " + endingQuotePos + " " + passageHTML.substr(morphPos + 6, 25));
           continue;
         }
         currentPos = morphPos + 6;
@@ -1539,6 +1539,8 @@ var cf = {
           currentPos += 6;
           isOSHM = true;
         }
+        else if (bibleVersions.indexOf("ESV") > -1) // ESV has not "TOS:" in morph code
+          currentPos += 1;
         else
           continue;
         var endingQuotePos = passageHTML.indexOf(charAfterMorph, currentPos);
@@ -1582,7 +1584,7 @@ var cf = {
             }
             else console.log("error at addClassForTHOT cannot find >");
           }
-          else console.log("error at addClassForTHOT cannot find ending quote at " + endingQuotePos);
+          //else console.log("error at addClassForTHOT cssCode is zero " + endingQuotePos  + "  morphCode " + morphCode);
         }
       }
       else break;

@@ -1539,7 +1539,7 @@ var cf = {
           currentPos += 6;
           isOSHM = true;
         }
-        else if (bibleVersions.indexOf("ESV") > -1) // ESV has not "TOS:" in morph code
+        else if ((bibleVersions.indexOf("ESV") > -1) || (bibleVersions.indexOf("NASB2020") > -1)) // ESV has not "TOS:" in morph code
           currentPos += 1;
         else
           continue;

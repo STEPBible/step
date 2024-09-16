@@ -251,8 +251,8 @@ var ExamplesView = Backbone.View.extend({
 				'</div>' +
 			'</div>' +
 
-			'<div class="accordion-row" data-row="4">' +
-				'<h5 class="accordion-heading stepButton">Site Guide' +
+			'<div class="accordion-row keyboard_shortcut" data-row="4">' +
+				'<h5 class="accordion-heading stepButton">Additional information' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
@@ -368,8 +368,8 @@ var ExamplesView = Backbone.View.extend({
 				}, 700);
 			}
 		}
-        // if (step.touchDevice) $(".keyboard_shortcut").hide();
-        // else $(".keyboard_shortcut").show();
+        if (step.touchDevice) $(".keyboard_shortcut").hide();
+        else $(".keyboard_shortcut").show();
     },
     toggleAccordion: function (index, accordionCount) {
         var query = ".accordion-row[data-row=" + index + "]";

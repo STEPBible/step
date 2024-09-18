@@ -251,17 +251,17 @@ var ExamplesView = Backbone.View.extend({
 				'</div>' +
 			'</div>' +
 
-			'<div class="accordion-row keyboard_shortcut" data-row="4">' +
-				'<h5 class="accordion-heading stepButton">Additional information' +
-					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
-				'</h5>' +
-				'<div class="accordion-body">' +
-					'<ul style="padding-inline-start:10px">' +
-						'<li class="keyboard_shortcut" style="font-weight:bold">' +
-							'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/presentation/d/10oUdTW40X3f5y4wmImxRW5_3zTJnRkVUVo4jz4mU9E4/preview" target="_blank">Tutor mode</a>' +
-					'</ul>' +
-				'</div>' +
-			'</div>' +
+			// '<div class="accordion-row keyboard_shortcut" data-row="4">' +
+			// 	'<h5 class="accordion-heading stepButton">Additional information' +
+			// 		'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
+			// 	'</h5>' +
+			// 	'<div class="accordion-body">' +
+			// 		'<ul style="padding-inline-start:10px">' +
+			// 			'<li class="keyboard_shortcut" style="font-weight:bold">' +
+			// 				'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/presentation/d/10oUdTW40X3f5y4wmImxRW5_3zTJnRkVUVo4jz4mU9E4/preview" target="_blank">Tutor mode</a>' +
+			// 		'</ul>' +
+			// 	'</div>' +
+			// '</div>' +
 
 
 			// '<div class="accordion-row" data-row="4">' +

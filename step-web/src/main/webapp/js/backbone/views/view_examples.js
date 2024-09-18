@@ -5,7 +5,7 @@ var ExamplesView = Backbone.View.extend({
 				'<i class="glyphicon glyphicon-remove"></i>' +
 			'</a>' +
 			'<h3><%= __s.simple_intro_welcome %></h3>' +
-			'<span style="background-color:lightyellow;font-size:16px;font-weight:bold">ESV and NASB2020 now has morphology!    </span>' +
+			'<span style="background-color:lightyellow;font-size:16px;font-weight:bold">ESV and NASB2020 now have morphology!    </span>' +
 			'<a style="background-color:lightyellow" href="javascript:step.util.showVideoModal(\'esv_morph.gif\', 66)">Video introduction  ' +
 				'<span class="glyphicon glyphicon-play-circle" style="background-color:lightyellow;font-size:16px"></span></a>' +
 			'<br><br><p><%= __s.simple_intro %></p>' +

@@ -251,18 +251,29 @@ var ExamplesView = Backbone.View.extend({
 				'</div>' +
 			'</div>' +
 
-			// '<div class="accordion-row keyboard_shortcut" data-row="4">' +
-			// 	'<h5 class="accordion-heading stepButton">Additional information' +
-			// 		'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
-			// 	'</h5>' +
-			// 	'<div class="accordion-body">' +
-			// 		'<ul style="padding-inline-start:10px">' +
-			// 			'<li class="keyboard_shortcut" style="font-weight:bold">' +
-			// 				'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/presentation/d/10oUdTW40X3f5y4wmImxRW5_3zTJnRkVUVo4jz4mU9E4/preview" target="_blank">Tutor mode</a>' +
-			// 		'</ul>' +
-			// 	'</div>' +
-			// '</div>' +
-
+			'<div class="accordion-row keyboard_shortcut" data-row="4">' +
+				'<h5 class="accordion-heading stepButton">Additional questions' +
+					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
+				'</h5>' +
+				'<div class="accordion-body">' +
+					'<ul style="padding-inline-start:10px">' +
+						'<li class="keyboard_shortcut" style="font-weight:bold">How can I open the tutorial mode?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span>Click on ' +
+									'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/presentation/d/10oUdTW40X3f5y4wmImxRW5_3zTJnRkVUVo4jz4mU9E4/preview" target="_blank">tutor mode</a>' +
+								'</span>' +
+								'<br>' +
+							'</div>' +
+						'<li class="keyboard_shortcut" style="font-weight:bold"><%= __s.quick_tutorial_header4 %>' +
+							'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<a href="javascript:step.util.showVideoModal(\'Keyboard.gif\', 85)">Video guide  ' +
+									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
+								'<br><span><%= __s.keyboard_explain2 %>.</span><br>' +
+							'</div>' +
+					'</ul>' +
+				'</div>' +
+			'</div>' +
 
 			// '<div class="accordion-row" data-row="4">' +
 			// 	'<h5 class="accordion-heading stepButton">Additional FAQ' +
@@ -283,13 +294,6 @@ var ExamplesView = Backbone.View.extend({
 			// 			// 		'<br><a href="https://www.youtube.com/channel/UCAmOaidZsuuhiW1X78UCaDQ" target="_blank">3) <%= __s.video_help %></a>' +
 			// 			// 	'</div>' +
 
-			// 			'<li class="keyboard_shortcut" style="font-weight:bold"><%= __s.quick_tutorial_header4 %>' +
-			// 				'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
-			// 				'<div class="stepExample" style="display:none">' +
-			// 					'<a href="javascript:step.util.showVideoModal(\'Keyboard.gif\', 85)">Video guide  ' +
-			// 						'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-			// 					'<br><span><%= __s.keyboard_explain2 %>.</span>' +
-			// 				'</div>' +
 			// 			'<li style="font-weight:bold"><%= __s.display_classical_ui %>' +
 			// 				'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 			// 				'<div class="stepExample" style="display:none">' +

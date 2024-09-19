@@ -269,7 +269,7 @@ var ExamplesView = Backbone.View.extend({
 							'<div class="stepExample" style="display:none">' +
 								'<a href="javascript:step.util.showVideoModal(\'Keyboard.gif\', 85)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span><%= __s.keyboard_explain2 %>.</span><br>' +
+								'<br><ul><%= __s.keyboard_explain2 %>.</ul><br>' +
 							'</div>' +
 					'</ul>' +
 				'</div>' +

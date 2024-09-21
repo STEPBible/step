@@ -252,66 +252,20 @@ var ExamplesView = Backbone.View.extend({
 			'</div>' +
 
 			'<div class="accordion-row keyboard_shortcut" data-row="4">' +
-				'<h5 class="accordion-heading stepButton">Additional questions' +
+				'<h5 class="accordion-heading stepButton">Additional information' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<ul style="padding-inline-start:10px">' +
-						'<li class="keyboard_shortcut" style="font-weight:bold">How can I open the tutorial mode?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
-							'<div class="stepExample" style="display:none">' +
-								'<span>Click on ' +
-									'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/presentation/d/10oUdTW40X3f5y4wmImxRW5_3zTJnRkVUVo4jz4mU9E4/preview" target="_blank">tutor mode</a>' +
-								'</span>' +
-								'<br>' +
-							'</div>' +
-						'<li class="keyboard_shortcut" style="font-weight:bold"><%= __s.quick_tutorial_header4 %>' +
-							'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
-							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'Keyboard.gif\', 85)">Video guide  ' +
-									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><ul><%= __s.keyboard_explain2 %>.</ul><br>' +
-							'</div>' +
+						'<li class="keyboard_shortcut" style="font-weight:bold">' +
+							'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/presentation/d/10oUdTW40X3f5y4wmImxRW5_3zTJnRkVUVo4jz4mU9E4/preview" target="_blank">Tutorial</a>' +
+						'</li>' +
+						'<li class="keyboard_shortcut" style="font-weight:bold">' +
+						'<a href="https://dev.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://dev.stepbible.org/html/keyboard_shortcut.html" target="_blank"><%= __s.quick_tutorial_header4 %></a>' +
+						'</li>' +
 					'</ul>' +
 				'</div>' +
 			'</div>' +
-
-			// '<div class="accordion-row" data-row="4">' +
-			// 	'<h5 class="accordion-heading stepButton">Additional FAQ' +
-			// 		'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
-			// 	'</h5>' +
-			// 	'<div class="accordion-body">' +
-			// 		'<ul style="padding-inline-start:10px">' +
-			// 			// '<li style="font-weight:bold">Where are the documentation on STEPBible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
-			// 			// 	'<div class="stepExample" style="display:none">' +
-			// 			// 		'<br><a href="https://drive.google.com/file/d/1YllGKdletxufI_b6n8bOc5GCDBc_VX3x/view" target="_blank">1) Introduction guide</a>' +
-			// 			// 		'<br><a href="https://stepbibleguide.blogspot.com/p/home_19.html" target="_blank">2) <%= __s.help_online %></a>' +
-			// 			// 	'</div>' +
-
-			// 			// '<li style="font-weight:bold">Where are the videos on STEPBible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
-			// 			// 	'<div class="stepExample" style="display:none">' +
-			// 			// 		'<br><a href="https://www.youtube.com/watch?v=PzazvPVYoSg" target="_blank">1) Introduction video</a>' +
-			// 			// 		'<br><a href="https://www.youtube.com/watch?v=zOmdjtlNLTg&t=119s" target="_blank">2) Independent review of STEPBible video</a>' +
-			// 			// 		'<br><a href="https://www.youtube.com/channel/UCAmOaidZsuuhiW1X78UCaDQ" target="_blank">3) <%= __s.video_help %></a>' +
-			// 			// 	'</div>' +
-
-			// 			'<li style="font-weight:bold"><%= __s.display_classical_ui %>' +
-			// 				'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
-			// 				'<div class="stepExample" style="display:none">' +
-			// 					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23)">&nbsp;Video guide  <span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-			// 					'<br><span><%= __s.advanced_interface_explain %></span>' +
-			// 				'</div>' +
-			// 			'<li style="font-weight:bold">How do I write my own notes?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
-			// 				'<div class="stepExample" style="display:none">' +
-			// 					'<span>1) Click the Resource icon.</span>' +
-			//					'<br><div class="faq_img" style="background-image: url(\'images\/resource_icon_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-			// 					'<br><span>2) Click on "Create your own notes"</span>' +
-			//					'<br><div class="faq_img" style="background-image: url(\'images\/create_notes_.png\');width:190px;height:171px;border:3px solid black;display:none"></div>' +
-			// 				'</div>' +
-			// 		'</ul>' +
-			// 	'</div>' +
-			// '</div>' +
-
-
 			'<div id=\'colorCodeTableDiv\'></div>' +
 			'<div class="text-muted step-copyright">' +
 				'<span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank">STEPBible</a> - 2024</span>' +

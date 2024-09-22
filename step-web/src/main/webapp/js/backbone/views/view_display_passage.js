@@ -37,13 +37,13 @@ var PassageDisplayView = DisplayView.extend({
             var bibleVersions = version.toUpperCase() + "," + extraVersions.toUpperCase();
             var r = step.util.getTestamentAndPassagesOfTheReferences(reference.split(" "));
             var justLoadedTOS = false;
-            if (((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) || (bibleVersions.indexOf('OHB') > -1) || (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf("CHIUN") > -1) || (bibleVersions.indexOf('_MORPH') > -1)) &&
+            if (((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) || (bibleVersions.indexOf('OHB') > -1) || (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf("CUN") > -1) || (bibleVersions.indexOf('_MORPH') > -1)) &&
                 (r[1])) { // r[1] is a boolean for reference OT
                 justLoadedTOS = step.util.loadTOS();
                 hasTOS = true;
             }
             if (((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
-                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1) || (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf("CHIUN") > -1) || (bibleVersions.indexOf('_MORPH') > -1)) &&
+                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1) || (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf('_MORPH') > -1)) &&
                 (r[0])) // r[0] is a boolean for references with NT
                 hasNTMorph = true;
             if (this.partRendered) {

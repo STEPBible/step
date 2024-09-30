@@ -4058,6 +4058,14 @@ step.util = {
 						var numOfMorphResponse = 0;
 						var morphArray = morph.split(" ");
 						resultJson.morphInfos = new Array(morphArray.length);
+						// for (var k = 0; k < morphArray.length; k++) {
+						// 	var currentMorph = morphArray[k];
+						// 	if (currentMorph === "n/a") {
+						// 		numOfMorphResponse ++;
+						// 		resultJson.morphInfos[k] = {};
+						// 		break;
+						// 	}
+						// }
 						for (var k = 0; k < morphArray.length; k++) {
 							var currentMorph = morphArray[k];
 							var morphLowerCase = currentMorph.toLowerCase();
@@ -4715,7 +4723,10 @@ step.util = {
 		return false;
 	},
 	convertMorphOSHM2TOS: function(curMorphs) {
-		if ((typeof curMorphs !== "string") || (curMorphs.substring(0, 5) !== "oshm:"))
+		if (typeof curMorphs !== "string")
+			return curMorphs;
+		curMorphs = curMorphs.replace(/n\/a/g, "nomorph");
+		if (curMorphs.substring(0, 5) !== "oshm:")
 			return curMorphs;
 		var morphs = curMorphs.substring(5).split("/");
 		var result = morphs[0];

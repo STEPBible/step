@@ -4058,14 +4058,14 @@ step.util = {
 						var numOfMorphResponse = 0;
 						var morphArray = morph.split(" ");
 						resultJson.morphInfos = new Array(morphArray.length);
-						// for (var k = 0; k < morphArray.length; k++) {
-						// 	var currentMorph = morphArray[k];
-						// 	if (currentMorph === "n/a") {
-						// 		numOfMorphResponse ++;
-						// 		resultJson.morphInfos[k] = {};
-						// 		break;
-						// 	}
-						// }
+						for (var k = 0; k < morphArray.length; k++) {
+							var currentMorph = morphArray[k];
+							if (currentMorph === "nomorph") {
+								numOfMorphResponse ++;
+								resultJson.morphInfos[k] = {};
+								break;
+							}
+						}
 						for (var k = 0; k < morphArray.length; k++) {
 							var currentMorph = morphArray[k];
 							var morphLowerCase = currentMorph.toLowerCase();

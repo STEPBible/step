@@ -1396,7 +1396,7 @@ var cf = {
           code = code.substr(4);
         if (code === "nomorph") {
           resultArray.push(result);
-          next;
+          continue;
         }
         var languageCode = code.substr(0, 1);
         cf.getSpecificMorphologyInfo(languageCode, "language", result);

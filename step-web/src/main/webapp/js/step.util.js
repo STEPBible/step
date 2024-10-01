@@ -2614,7 +2614,6 @@ step.util = {
             '<p style="margin-left:10%;height:14px;font-size:14px"">Revelation of John - Visions of the End</p>' +
             '<tr></tr></tbody></table>' +
             '</div>';
-		var urlForiFrame = osisID;
 		if ((osisID === "1Sam") || (osisID === "2Sam")) urlForiFrame = "1_2Sam";
 		else if ((osisID === "1Kngs") || (osisID === "2Kngs")) urlForiFrame = "1_2Kngs";
 		else if ((osisID === "1Chr") || (osisID === "2Chr")) urlForiFrame = "1_2Chr";
@@ -2631,7 +2630,6 @@ step.util = {
                     'Copyright information for <a href="/version.jsp?version=ESV" target="_new">ESV</a>' +
                 '</div>' +
                 '<br>';
-				// '<a target="_blank" href="https://beta.garytuck.com/docs/' + urlForiFrame + '.htm#outline">Outline of ' + longBookName + ' by Dr. Gary Tuck</a>';
             var chptSummary =
                 '<br><span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
                 '<span style="font-size:16px">' +
@@ -4063,10 +4061,11 @@ step.util = {
 							if (currentMorph === "nomorph") {
 								numOfMorphResponse ++;
 								resultJson.morphInfos[k] = {};
-								break;
 							}
 						}
 						for (var k = 0; k < morphArray.length; k++) {
+							if (morphArray[k] === "nomorph")
+								continue;
 							var currentMorph = morphArray[k];
 							var morphLowerCase = currentMorph.toLowerCase();
 							if ((morphLowerCase.indexOf("strongsmorph:") > -1) || (morphLowerCase.indexOf("strongmorph:") > -1) || (morphLowerCase.indexOf("tos:") > -1)) {

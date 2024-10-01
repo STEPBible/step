@@ -1394,8 +1394,10 @@ var cf = {
         var code = morphs[i];
         if (code.indexOf('TOS:') == 0)
           code = code.substr(4);
-        if (code === "nomorph")
-          return;
+        if (code === "nomorph") {
+          resultArray.push(result);
+          next;
+        }
         var languageCode = code.substr(0, 1);
         cf.getSpecificMorphologyInfo(languageCode, "language", result);
         var descriptionCode = code.substr(1) + code.substr(0, 1);

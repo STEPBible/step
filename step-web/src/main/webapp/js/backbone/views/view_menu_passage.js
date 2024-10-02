@@ -597,7 +597,6 @@ var PassageMenuView = Backbone.View.extend({
                        ( (items[i].initial === "F") && (step.userLanguageCode.toLowerCase() !== "fr") ) ) ) {
 					var keyText = __s[items[i].key];
                     var helpText = __s[items[i].help];
-console.log(items[i].initial + " " + step.userLanguageCode + " " + keyText);
                     var link = this._createLink(items[i].initial, keyText, helpText);
                     var makeVisible = (selectedOptions.indexOf(items[i].initial) != -1);
                     if ((items[i].initial === "U") && (!makeVisible))

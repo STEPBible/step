@@ -965,8 +965,8 @@ var SidebarView = Backbone.View.extend({
     },
     // for one-line morphology
     _createBriefMorphInfo: function (panel, info, morphCount, ref, strongNum) {
-        if (typeof info === "undefined") {
-            panel.append("<br />");
+        if ((typeof info === "undefined") || (Object.keys(info).length === 0)) {
+            // panel.append("<br />");
             return;
         }
         panel.append("(");

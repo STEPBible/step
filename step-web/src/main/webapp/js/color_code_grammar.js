@@ -1394,6 +1394,10 @@ var cf = {
         var code = morphs[i];
         if (code.indexOf('TOS:') == 0)
           code = code.substr(4);
+        if (code === "nomorph") {
+          resultArray.push(result);
+          continue;
+        }
         var languageCode = code.substr(0, 1);
         cf.getSpecificMorphologyInfo(languageCode, "language", result);
         var descriptionCode = code.substr(1) + code.substr(0, 1);
@@ -1539,7 +1543,7 @@ var cf = {
           currentPos += 6;
           isOSHM = true;
         }
-        else if (bibleVersions.indexOf("ESV") > -1) // ESV has not "TOS:" in morph code
+        else if ((bibleVersions.indexOf("ESV") > -1) || (bibleVersions.indexOf("NASB2020") > -1) || (bibleVersions.indexOf("CUN") > -1)) // ESV has not "TOS:" in morph code
           currentPos += 1;
         else
           continue;

@@ -900,12 +900,14 @@ var SidebarView = Backbone.View.extend({
             for (var i = 0; i < relatedNosToDisplay.length; i++) {
                 if (relatedNosToDisplay[i].strongNumber != mainWord.strongNumber) {
                     var userLangGloss = "";
-                    if ((currentUserLang == "es") && (relatedNosToDisplay[i]._es_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._es_Gloss + "&nbsp;";
-                    else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._zh_Gloss + "&nbsp;";
-                    else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._zh_tw_Gloss + "&nbsp;";
-                    else if ((currentUserLang == "fr") && (relatedNosToDisplay[i]._fr_Gloss != undefined))
-                        userLangGloss =  relatedNosToDisplay[i]._fr_Gloss + "&nbsp;&nbsp;";
-                    else if ((currentUserLang == "km") && (relatedNosToDisplay[i]._km_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._km_Gloss + "&nbsp;";
+                    var englishGloss = relatedNosToDisplay[i].gloss;
+                    if ((currentUserLang === "es") && (relatedNosToDisplay[i]._es_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._es_Gloss + "&nbsp;";
+                    else if ((currentUserLang === "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._zh_Gloss + "&nbsp;";
+                    else if ((currentUserLang === "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._zh_tw_Gloss + "&nbsp;";
+                    else if ((currentUserLang === "fr") && (relatedNosToDisplay[i]._fr_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._fr_Gloss + "&nbsp;&nbsp;";
+                    else if ((currentUserLang === "km") && (relatedNosToDisplay[i]._km_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._km_Gloss + "&nbsp;";
+                    if (currentUserLang !== "") // If there is a gloss from a user language (not English), highlight the English gloss in italics.
+                        englishGloss = "(<i>" + englishGloss + "</i>)";
                     var li = "";
                     if ((!relatedNosToDisplay[i]._searchResultRange) || (relatedNosToDisplay[i]._searchResultRange === "")) {
                         var fontClass = "";
@@ -914,7 +916,7 @@ var SidebarView = Backbone.View.extend({
                         else if (firstChar === "g") fontClass = "unicodeFont";
                         li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong onclick="javascript:void(0)">')
                             .append(userLangGloss)
-                            .append(relatedNosToDisplay[i].gloss)
+                            .append(englishGloss)
                             .append(" (")
                             .append("<span class='transliteration'>" + relatedNosToDisplay[i].stepTransliteration + "</span>")
                             .append(" - ")
@@ -930,7 +932,7 @@ var SidebarView = Backbone.View.extend({
                                 relatedNosToDisplay[i].matchingForm +
                                 "'></li>").append($('<a sbstrong onclick="javascript:void(0)">')
                             .append(userLangGloss)
-							.append(relatedNosToDisplay[i].gloss)
+							.append(englishGloss)
                             .append(step.util.formatSearchResultRange(relatedNosToDisplay[i]._searchResultRange, false))
                             .data("strongNumber", relatedNosToDisplay[i].strongNumber));                        
                     }

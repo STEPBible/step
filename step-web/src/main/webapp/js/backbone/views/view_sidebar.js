@@ -733,6 +733,32 @@ var SidebarView = Backbone.View.extend({
 		var bookName = (posOfDot1 > 2) ? ref.substr(0, posOfDot1 + 1) : ""; // Include the "." (dot)
 		this._lookUpGeoInfo(mainWord, bookName, stepLink);
 	},
+
+    _indentOTDefinition: function(origMediumDef, stem) {
+        var lines = origMediumDef.split(/<br>/i);
+        var updtMedDef = "";
+        var foundNumOfStem = "";
+        for (var i = 0; i < lines.length; i ++ ) {
+            var foundStem = false;
+            if ((stem !== "") && (lines[i].indexOf(stem) > -1)) { 
+                foundStem = true;
+            }
+            var pos = lines[i].indexOf(")");
+            var highlightLinesOnSameStem = false;
+            var left = 0;
+            if ((pos > 1) && (pos < 6) && (!isNaN(lines[i].charAt(0))) && (lines[i].substring(0, pos).indexOf("(") == -1)) {
+                if (foundStem)
+                    foundNumOfStem = lines[i].substring(0, pos);
+                else if ((foundNumOfStem !== "") && (lines[i].indexOf(foundNumOfStem) == 0))
+                    highlightLinesOnSameStem = true;
+                left = (pos - 1) * 8;
+            }
+            if (foundStem || highlightLinesOnSameStem)
+                lines[i] = "<b>" + lines[i] + "</b>";
+            updtMedDef += '<p style="margin-bottom:0px;margin-left:' + left + 'px">' + lines[i] + '</p>';
+        }
+        return updtMedDef;
+    },
 	
     _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
@@ -778,6 +804,7 @@ var SidebarView = Backbone.View.extend({
 		else if (currentUserLang == "fr") {
 			var frenchDef = mainWord._fr_Definition;
 			if (frenchDef) {
+                frenchDef = this._indentOTDefinition(frenchDef, "");
 				panel.append($("<" + headerType + " style='margin-top:8px'>").append("Définition"));
                 this._addLinkAndAppend(panel, frenchDef, currentWordLanguageCode, bibleVersion);
             }
@@ -811,29 +838,7 @@ var SidebarView = Backbone.View.extend({
                     if ((typeof morphInfo === "object") && (typeof morphInfo.stem === "string")) {
                         stem = "(" + morphInfo.stem.charAt(0).toUpperCase() + morphInfo.stem.substring(1) + ")";
                     }
-                    var lines = mainWord.mediumDef.split(/<br>/i);
-                    var updtMedDef = "";
-                    var foundNumOfStem = "";
-                    for (var i = 0; i < lines.length; i ++ ) {
-                        var foundStem = false;
-                        if ((stem !== "") && (lines[i].indexOf(stem) > -1)) { 
-                            foundStem = true;
-                        }
-                        var pos = lines[i].indexOf(")");
-                        var highlightLinesOnSameStem = false;
-                        var left = 0;
-                        if ((pos > 1) && (pos < 6) && (!isNaN(lines[i].charAt(0))) && (lines[i].substring(0, pos).indexOf("(") == -1)) {
-                            if (foundStem)
-                                foundNumOfStem = lines[i].substring(0, pos);
-                            else if ((foundNumOfStem !== "") && (lines[i].indexOf(foundNumOfStem) == 0))
-                                highlightLinesOnSameStem = true;
-                            left = (pos - 1) * 8;
-                        }
-                        if (foundStem || highlightLinesOnSameStem)
-                            lines[i] = "<b>" + lines[i] + "</b>";
-                        updtMedDef += '<p style="margin-bottom:0px;margin-left:' + left + 'px">' + lines[i] + '</p>';
-                    }
-                    mainWord.mediumDef = updtMedDef
+                    mainWord.mediumDef = this._indentOTDefinition(mainWord.mediumDef, stem);
                 }
                 else if (firstLetterOfStrong === "G") {
                     var parts = mainWord.mediumDef.split(/<ref/i);
@@ -898,7 +903,8 @@ var SidebarView = Backbone.View.extend({
                     if ((currentUserLang == "es") && (relatedNosToDisplay[i]._es_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._es_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._zh_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._zh_tw_Gloss + "&nbsp;";
-                    else if ((currentUserLang == "fr") && (relatedNosToDisplay[i]._fr_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._fr_Gloss + "&nbsp;";
+                    else if ((currentUserLang == "fr") && (relatedNosToDisplay[i]._fr_Gloss != undefined))
+                        userLangGloss =  relatedNosToDisplay[i]._fr_Gloss + "&nbsp;&nbsp;";
                     else if ((currentUserLang == "km") && (relatedNosToDisplay[i]._km_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._km_Gloss + "&nbsp;";
                     var li = "";
                     if ((!relatedNosToDisplay[i]._searchResultRange) || (relatedNosToDisplay[i]._searchResultRange === "")) {

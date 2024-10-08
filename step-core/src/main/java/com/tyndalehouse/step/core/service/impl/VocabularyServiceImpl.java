@@ -308,7 +308,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String get_fr_Vocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.fr_VocabProvider, false);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.fr_VocabProvider, true);
     }
 
     @Override
@@ -346,7 +346,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @return the data in String form
      */
     private String getDataFromLexiconDefinition(final String version, final String reference, final String vocabIdentifiers,
-                                                final LexiconDataProvider provider, final boolean isEnglishGloss) {
+                                                final LexiconDataProvider provider, final boolean getGlossAfterColon) {
 
         // else we lookup and concatenate
         EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
@@ -355,7 +355,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             return vocabIdentifiers;
         }
         else if (lds.length == 1) {
-            if (isEnglishGloss) return getStringAfterColon(provider.getData(lds[0]));
+            if (getGlossAfterColon) return getStringAfterColon(provider.getData(lds[0]));
             return provider.getData(lds[0]);
         }
 
@@ -364,7 +364,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         sb.append('[');
 
         for (int ii = 0; ii < lds.length; ii++) {
-            if (isEnglishGloss) sb.append(getStringAfterColon(provider.getData(lds[ii])));
+            if (getGlossAfterColon) sb.append(getStringAfterColon(provider.getData(lds[ii])));
             else sb.append(provider.getData(lds[ii]));
             if (ii + 1 < lds.length) {
                 sb.append(MULTI_WORD_SEPARATOR);

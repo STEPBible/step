@@ -165,7 +165,8 @@ public class ColorCoderProviderImpl {
 				}
 			}
 			else {
-				LOGGER.warn("other than verb [{}]", curMorph);
+				if (!curMorph.substring(0,1).equals("H"))
+					LOGGER.warn("other than verb [{}]", curMorph);
 			}
 		}
 

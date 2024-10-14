@@ -66,7 +66,8 @@ public class ColorCoderProviderImpl {
      * @return the classname
      */
     public String getColorClass(final String morph) {
-        if (morph == null || morph.length() < MINIMUM_MORPH_LENGTH || morph.startsWith("TOS:") || morph.startsWith("oshm:"))
+        if (morph == null || morph.length() < MINIMUM_MORPH_LENGTH || morph.startsWith("TOS:") ||
+				morph.startsWith("oshm:") ||  morph.startsWith("H"))
             return "";
         String classes = null;
 		String curMorph;
@@ -138,37 +139,37 @@ public class ColorCoderProviderImpl {
 			}
 		}
 		/* Added this section for the Chinese Bible which has the morphology on verbs */
-		else if (curMorph.length() > 4) {
-			if (curMorph.substring(0,1).equalsIgnoreCase("v")) {
-				String tense = curMorph.substring(2,3).toLowerCase();
-				String voice = curMorph.substring(3,4).toLowerCase();
-				String mood = curMorph.substring(4,5).toLowerCase();
-				if (tense.equals("2")) {
-					tense = curMorph.substring(3,4).toLowerCase();
-					voice = curMorph.substring(4,5).toLowerCase();
-					mood = curMorph.substring(5,6).toLowerCase();
-				}
-				if (voice.equals("e")) {
-					voice = "p";
-				}
-				else if ( (!(voice.equals("p"))) && (!(voice.equals("m"))) ) {
-					String voice_displayed_as_active = "adnoqx"; // active, middle deponent, middle or passive deponent, passive deponent, impersonal active, indefinite
-					if (voice_displayed_as_active.indexOf(voice) == -1)  {
-						LOGGER.warn("cannot identify morphology for [{}]", curMorph);
-					}
-					voice = "a";
-				}
-				classes = "v" + tense + voice + mood;
-
-				if (classes == null) {
-					LOGGER.warn("cannot identify morphology for [{}]", curMorph);
-				}
-			}
-			else {
-				if (!curMorph.substring(0,1).equals("H"))
-					LOGGER.warn("other than verb [{}]", curMorph);
-			}
-		}
+//		else if (curMorph.length() > 4) {
+//			if (curMorph.substring(0,1).equalsIgnoreCase("v")) {
+//				String tense = curMorph.substring(2,3).toLowerCase();
+//				String voice = curMorph.substring(3,4).toLowerCase();
+//				String mood = curMorph.substring(4,5).toLowerCase();
+//				if (tense.equals("2")) {
+//					tense = curMorph.substring(3,4).toLowerCase();
+//					voice = curMorph.substring(4,5).toLowerCase();
+//					mood = curMorph.substring(5,6).toLowerCase();
+//				}
+//				if (voice.equals("e")) {
+//					voice = "p";
+//				}
+//				else if ( (!(voice.equals("p"))) && (!(voice.equals("m"))) ) {
+//					String voice_displayed_as_active = "adnoqx"; // active, middle deponent, middle or passive deponent, passive deponent, impersonal active, indefinite
+//					if (voice_displayed_as_active.indexOf(voice) == -1)  {
+//						LOGGER.warn("cannot identify morphology for [{}]", curMorph);
+//					}
+//					voice = "a";
+//				}
+//				classes = "v" + tense + voice + mood;
+//
+//				if (classes == null) {
+//					LOGGER.warn("cannot identify morphology for [{}]", curMorph);
+//				}
+//			}
+//			else {
+//				if (!curMorph.substring(0,1).equals("H"))
+//					LOGGER.warn("other than verb [{}]", curMorph);
+//			}
+//		}
 
 		if (isBlank(classes) && firstSpace != -1) {
 			// redo the same process, but with less of the string,

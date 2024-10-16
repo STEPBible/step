@@ -231,16 +231,17 @@ var SidebarView = Backbone.View.extend({
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
             for (var i = data.vocabInfos.length - 1; i > -1 ; i--) {
                 var item = data.vocabInfos[i];
-                var isHebrew = data.vocabInfos[i].strongNumber.substring(0,1) === 'H';
-                var panelId = "lexicon-" + data.vocabInfos[i].strongNumber;
+                var strong = item.strongNumber;
+                var isHebrew = strong.substring(0,1) === 'H';
+                var panelId = "lexicon-" + strong;
                 if (allStrongsForNextBackButton !== "")
                     allStrongsForNextBackButton += " ";
-                allStrongsForNextBackButton += data.vocabInfos[i].strongNumber;
+                allStrongsForNextBackButton += strong;
 				var currentGloss = item.stepGloss;
-				if (currentUserLang =="es") currentGloss += " " + item._es_Gloss;
-				else if (currentUserLang =="zh") currentGloss += " " + item._zh_Gloss;
-				else if (currentUserLang =="zh_tw") currentGloss += " " + item._zh_tw_Gloss;
-				else if (currentUserLang =="km") currentGloss += " " + item._km_Gloss;
+				if (currentUserLang === "es") currentGloss += " " + item._es_Gloss;
+				else if (currentUserLang === "zh") currentGloss += " " + item._zh_Gloss;
+				else if (currentUserLang === "zh_tw") currentGloss += " " + item._zh_tw_Gloss;
+				else if (currentUserLang === "km") currentGloss += " " + item._km_Gloss;
                 var panelTitle = "<span>" + currentGloss + " (<span class='transliteration'>" + item.stepTransliteration +
                     "</span> - " + '<span class="' + (isHebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)</span>";
                 var isIn = (i == 0) ? " in" : "";
@@ -360,12 +361,15 @@ var SidebarView = Backbone.View.extend({
         else if ((currentUserLang == "zh") && (mainWord._zh_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._zh_Gloss + "&nbsp;";
         else if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._zh_tw_Gloss + "&nbsp;";
         else if ((currentUserLang == "km") && (mainWord._km_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._km_Gloss + "&nbsp;";
+        var strong = mainWord.strongNumber;
         panel.append(
-            $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
+            $("<div>").append($("<span>").addClass(strong[0] === 'H' ? "hbFontSmall" : "unicodeFont")
                 .append(mainWord.accentedUnicode))
                 .append(" (")
                 .append("<span class='transliteration'>" + mainWord.stepTransliteration + "</span>")
-                .append(") " + userLangGloss + "'")
+                .append(") ")
+                .append("<span id='gloss-" + strong + "'>" + userLangGloss + "</span>")
+                .append(" '")
                 .append(mainWord.stepGloss)
                 .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
@@ -418,16 +422,16 @@ var SidebarView = Backbone.View.extend({
             var orderList = $("<ul>");
             for (var kk = 0; kk < partsBetweenBreak.length; kk ++) {
                 var listElmt = $("<li>");
-                this._addLinkToStrongWord(listElmt, partsBetweenBreak[kk]);
+                this._addLinkToStrongWord(listElmt, partsBetweenBreak[kk], currentWordLangCode);
                 orderList.append(listElmt);
             }
             panel.append(orderList);
         }
         else
-            this._addLinkToStrongWord(panel, textToAdd2);
+            this._addLinkToStrongWord(panel, textToAdd2, currentWordLangCode);
     },
 
-    _addLinkToStrongWord: function(htmlObj, remainingText) {
+    _addLinkToStrongWord: function(htmlObj, remainingText, currentWordLangCode) {
         var matchExpression = new RegExp(/[GH]\d{4,5}[a-zA-Z]?/g);
         var matchResult = remainingText.match(matchExpression);
         if (matchResult != null) {
@@ -787,6 +791,23 @@ var SidebarView = Backbone.View.extend({
                 this._addLinkAndAppend(panel, khmerDef, currentWordLanguageCode, bibleVersion);
             }
 		}
+        if (" fr de pt ".indexOf(currentUserLang) ) {
+            var functionToCall = this._addLinkAndAppend;
+            fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
+                mainWord.strongNumber + ".json")
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                var gloss = data.gloss;
+                var pos = gloss.indexOf(":");
+                if (pos > -1)
+                    gloss = gloss.substring(pos+1);
+                $("#gloss-" + mainWord.strongNumber).text(gloss);
+                panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + "(Google translate)"));
+                functionToCall(panel, data.def, currentWordLanguageCode, bibleVersion);
+            });
+        }
         if (displayEnglishLexicon) { // This might be false if Chinese lexicon is displayed and isEnWithZhLexicon is false append the meanings
             if (mainWord.mediumDef) {
                 var message = "";

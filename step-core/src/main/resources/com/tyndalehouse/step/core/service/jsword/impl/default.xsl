@@ -1203,6 +1203,12 @@
                 <xsl:when test="@type = 'x-gen'">
                     <xsl:if test="$HideXGen != 'true'">
                         <h2 class="xgen">
+                            <xsl:if test="$direction = 'rtl'">
+                                &#x200E;
+                            </xsl:if>
+                            <xsl:if test="$direction != 'rtl'">
+                                &#x200F;
+                            </xsl:if>
                             <xsl:variable name="headerText">
                                 <xsl:apply-templates/>
                             </xsl:variable>

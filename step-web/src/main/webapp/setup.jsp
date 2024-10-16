@@ -134,11 +134,11 @@
                                         <label>
                                                 <fmt:message key="features" />
                                         </label>
-                                        <c:if test="${item.hasRedLetter}"><span class="versionFeature" title="<fmt:message key="jesus_words_in_red_available" />"><fmt:message key="jesus_words_in_red_available_initial" /></span></c:if>
-                                        <c:if test="${item.hasNotes}"><span class="versionFeature" title="<fmt:message key="notes_available" />"><fmt:message key="notes_available_initials" /></span></c:if>
-                                        <c:if test="${item.hasMorphology}"><span class="versionFeature" title="<fmt:message key="grammar_available" />"><fmt:message key="grammar_available_initial" /></span></c:if>
-                                        <c:if test="${item.hasStrongs}"><span class="versionFeature" title="<fmt:message key="vocabulary_available" />"><fmt:message key="vocabulary_available_initial" /></span></c:if>
-                                        <c:if test="${item.hasStrongs}"><span class="versionFeature" title="<fmt:message key="interlinear_available" />"><fmt:message key="interlinear_available_initial" /></span></c:if>
+                                        <c:if test="${item.hasRedLetter}"><span class="versionFeature" title="<fmt:message key="jesus_words_in_red_available" />">R</span></c:if>
+                                        <c:if test="${item.hasNotes}"><span class="versionFeature" title="<fmt:message key="notes_available" />">N</span></c:if>
+                                        <c:if test="${item.hasMorphology}"><span class="versionFeature" title="<fmt:message key="grammar_available" />">G</span></c:if>
+                                        <c:if test="${item.hasStrongs}"><span class="versionFeature" title="<fmt:message key="vocabulary_available" />">V</span></c:if>
+                                        <c:if test="${item.hasStrongs}"><span class="versionFeature" title="<fmt:message key="interlinear_available" />">I</span></c:if>
                                         <c:if test="${not (item.hasStrongs || item.hasRedLetter || item.hasNotes || item.hasMorphology )}"><fmt:message key="not_applicable" /></c:if>
                                     </fmt:bundle>
                                 </span>

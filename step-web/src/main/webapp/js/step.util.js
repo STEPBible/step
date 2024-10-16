@@ -1785,25 +1785,25 @@ step.util = {
 
             // add to Strongs if applicable, and therefore interlinear
             if (item.hasRedLetter) {
-                features += " " + '<span class="versionFeature" title="' + __s.jesus_words_in_red_available + '">' + __s.jesus_words_in_red_available_initial + '</span>';
+                features += " " + '<span class="versionFeature" title="' + __s.jesus_words_in_red_available + '">R</span>';
             }
 
             if (item.hasNotes) {
-                features += " " + '<span class="versionFeature" title="' + __s.notes_available + '">' + __s.notes_available_initials + '</span>';
+                features += " " + '<span class="versionFeature" title="' + __s.notes_available + '">N</span>';
             }
 
             // add morphology
             if (item.hasMorphology) {
-                features += " " + "<span class='versionFeature' title='" + __s.grammar_available + "'>" + __s.grammar_available_initial + "</span>";
+                features += " " + "<span class='versionFeature' title='" + __s.grammar_available + "'>G</span>";
             }
 
             if (item.hasStrongs) {
-                features += " " + "<span class='versionFeature' title='" + __s.vocabulary_available + "'>" + __s.vocabulary_available_initial + "</span>";
+                features += " " + "<span class='versionFeature' title='" + __s.vocabulary_available + "'>V</span>";
 
                 if (item.hasSeptuagintTagging) {
-                    features += " " + "<span class='versionFeature' title='" + __s.septuagint_interlinear_available + "'>" + __s.septuagint_interlinear_available_initial + "</span>";
+                    features += " " + "<span class='versionFeature' title='" + __s.septuagint_interlinear_available + "'>S</span>";
                 } else {
-                    features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";
+                    features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>I</span>";
                 }
             }
             return features + "&nbsp;";

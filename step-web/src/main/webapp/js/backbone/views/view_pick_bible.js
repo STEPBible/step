@@ -7,12 +7,12 @@ var PickBibleView = Backbone.View.extend({
         '<%= key.replace("_", " ") %>&nbsp;<span class="langPlusMinus plusminus_<%= key %>">+</span></button><br></span>' +
         '<ul class="list-group langUL ul_<%= keyForClass %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
-        '<li class="list-group-item stepModalFgBg" data-initials="<%= languageBible.shortInitials %>" style="padding-left:1.5em;text-indent:-1.5em;">' +
+        '<li class="list-group-item stepModalFgBg" data-initials="<%= languageBible.shortInitials %>" style="' + (step.state.isLtR() ? "padding-left" : "padding-right" ) + ':1.5em;text-indent:-1.5em;">' +
         '<input class="list-group-checkbox" type="checkbox" input-initials="<%= languageBible.shortInitials %>" style="margin-left:3px">&nbsp;' +
         '<% var bibleName = step.util.fineTuneBibleName(languageBible); %>' +
         '<a class="resource" href="javascript:void(0)" ><%= languageBible.shortInitials %> - <%= bibleName %></a>' +
-        '<a class="glyphicon glyphicon-info-sign" style="display:inline;margin-left:10px" title="<%= __s.passage_info_about_version %>" target="_blank" href="<%= window.location.origin %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
-        '<span class="BibleFeatures" style="margin-top:4px;float:right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span>' +
+        '&rlm;<a class="glyphicon glyphicon-info-sign" style="display:inline;margin-left:10px" title="<%= __s.passage_info_about_version %>" target="_blank" href="<%= window.location.origin %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
+        '<span class="BibleFeatures" style="margin-top:4px;float:' + (step.state.isLtR() ? "right" : "left" ) + '"><%= step.util.ui.getFeaturesLabel(languageBible) %></span>' +
         '</li>' +
         '<% }) %>' +
         '</li>' +
@@ -26,19 +26,19 @@ var PickBibleView = Backbone.View.extend({
         '<%= key.replace("_", " ") %>&nbsp;<span class="langPlusMinus plusminus_<%= keyForClass %>">+</span></button><br></span>' +
         '<ul class="list-group langUL ul_<%= keyForClass %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
-        '<li class="list-group-item stepModalFgBg" data-initials="<%= languageBible.shortInitials %>" style="padding-left:1.5em;text-indent:-1.5em;">' +
+        '<li class="list-group-item stepModalFgBg " data-initials="<%= languageBible.shortInitials %>" style="' + (step.state.isLtR() ? "padding-left" : "padding-right" ) + ':1.5em;text-indent:-1.5em;">' +
         '<input class="list-group-checkbox" type="checkbox" input-initials="<%= languageBible.shortInitials %>" style="margin-left:3px">&nbsp;' +
         '<% var bibleName = step.util.fineTuneBibleName(languageBible); %>' +
         '<a class="resource" href="javascript:void(0)" ><%= languageBible.shortInitials %> - <%= bibleName %></a>' +
-        '<a class="glyphicon glyphicon-info-sign" style="display:inline;margin-left:10px" title="<%= __s.passage_info_about_version %>" target="_blank" href="<%= window.location.origin %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
-        '<span class="BibleFeatures" style="margin-top:4px;float:right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span>' +
+        '&rlm;<a class="glyphicon glyphicon-info-sign" style="display:inline;margin-left:10px" title="<%= __s.passage_info_about_version %>" target="_blank" href="<%= window.location.origin %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
+        '<span class="BibleFeatures" style="margin-top:4px;float:' + (step.state.isLtR() ? "right" : "left" ) + '"><%= step.util.ui.getFeaturesLabel(languageBible) %></span>' +
         '</li>' +
         '<% }) %>' +
         '</li>' +
         '</ul>' +
         '<% }) %>'),
     filtersTemplate: _.template(
-    	'<span class="pull-left" style="font-size:13px;margin-top:9px;font-weight:bold"><%= __s.language %>:&nbsp;</span>' +
+    	'<span class="' + (step.state.isLtR() ? "pull-left" : "pull-right" ) + '" style="font-size:13px;margin-top:9px;font-weight:bold"><%= __s.language %>:&nbsp;</span>' +
     	'<form role="form" class="form-inline" style="margin-top:8px">' +
         '<span class="form-group btn-group" data-toggle="buttons">' +
         '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.all  %></label>' +
@@ -62,9 +62,9 @@ var PickBibleView = Backbone.View.extend({
         '<div class="modal-body">' +
         '<span class="pull-right">' + step.util.modalCloseBtn("bibleVersions") + '</span>' +
         '<ul class="nav nav-tabs bookTypeTabs">' +
-        '<span class="pull-left" style="font-size:13px;margin-top:12px;font-weight:bold"><%= __s.book_type %>:&nbsp;</span>' +
-        '<li><a href="#bibleList" data-toggle="tab"><%= __s.bibles %></a></li>' +
-        '<li><a href="#commentaryList" data-toggle="tab"><%= __s.commentaries %></a></li>' +
+        '<span class="' + (step.state.isLtR() ? "pull-left" : "pull-right" ) + '" style="font-size:13px;margin-top:12px;font-weight:bold"><%= __s.book_type %>:&nbsp;</span>' +
+        '<li class="' + (step.state.isLtR() ? "pull-left" : "pull-right" ) + '"><a href="#bibleList" data-toggle="tab"><%= __s.bibles %></a></li>' +
+        '<li class="' + (step.state.isLtR() ? "pull-left" : "pull-right" ) + '"><a href="#commentaryList" data-toggle="tab"><%= __s.commentaries %></a></li>' +
         '</ul>' +
         '<%= view.filtersTemplate({myOtherLanguages: myOtherLanguages}) %>' +
 		'<label class="selectGeo" ' +

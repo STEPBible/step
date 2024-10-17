@@ -241,6 +241,7 @@ step.util = {
 			if (strongNumber.substring(1,2) === "9")
 				return true;
 			var hebrewStrongToSuppress = // A comma is required at the end of the Strong number for this function to work.
+				"H0000," +
 				"H0408," +      // al       - not
 				"H0413," +		// el		- to, toward
 				"H0428," +      // el.leh   - these
@@ -271,6 +272,7 @@ step.util = {
 		}
 		else {
 			var greekStrongToSuppress = // A comma is required at the end of the Strong number for this function to work.
+				"G0000," +
 				"G1063," +		// gar (γάρ) -  for
 				"G1161," +      // de       - then
 				"G1473," +		// egō (ἐγώ) - I myself 

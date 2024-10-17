@@ -5,7 +5,7 @@ step.passage = {
     getPassageId: function(element) {
         return parseInt($(element).closest(".passageContainer").attr("passage-id"));
     },
-    blacklistedStrongs : [ "G3588" ],
+    blacklistedStrongs : [ "G0000", "G3588" , "H0000" ],
 
     /**
      * if a number of strongs are given, separated by a space, highlights all of

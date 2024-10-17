@@ -9,11 +9,11 @@ var QuickLexicon = Backbone.View.extend({
         '<%= item.stepGloss %>' +
         '<% var urlLang = $.getUrlVar("lang") || ""; %>' +
         '<% urlLang = urlLang.toLowerCase(); %>' +
-        '<% var currentLang = step.userLanguageCode.toLowerCase(); %>' +
         // '<% var currentEnWithEsLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon"); %>' +
         // '<% if (currentEnWithEsLexiconSetting == undefined) currentEnWithEsLexiconSetting = false; %>' +
 		'<% if ((currentLang.indexOf("es") == 0) && (item._es_Gloss != undefined)) { %><span>,&nbsp;<%= item._es_Gloss %></span> <% } %>' +
 		'<% if ((currentLang.indexOf("km") == 0) && (item._km_Gloss != undefined)) { %><span>,&nbsp;<%= item._km_Gloss %></span> <% } %>' +
+        '<% if (" fr de pt ".indexOf(currentLang) > -1) { %>&nbsp;<span id="quick_gloss_<%= item.strongNumber %>"><%= "&nbsp;".repeat(Math.ceil(item.stepGloss.length*2)) %></span> <% } %>' +
         '<% if (urlLang === "zh_tw") { currentLang = "zh_tw"; } else if (urlLang === "zh") { currentLang = "zh"; } %>' +
         '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
         '<% if (currentEnWithZhLexiconSetting === undefined) currentEnWithZhLexiconSetting = false; %>' +
@@ -30,6 +30,7 @@ var QuickLexicon = Backbone.View.extend({
             '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
             '<% if ((item.mediumDef != undefined) && (item.mediumDef !== "")) { %><div class="mediumDef"><%= item.mediumDef %></div> <% } %>' +
         '<% } %>' +
+        '<% if (" fr de pt ".indexOf(currentLang) > -1) { %><div id="quick_def_<%= item.strongNumber %>" class="mediumDef"><%= "&nbsp;".repeat(Math.ceil(item.mediumDef.length*3)) %></div> <% } %>' +
         '<% var showClickWord = false; %>' +
         '<% if ((item.versionCountOT != null) && (item.versionCountNT != null)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_ot_nt_bible, item.versionCountOT, item.versionCountNT, view.version) %>.) <% } %>' +
         '<% if ((item.versionCountOT != null) && (!showClickWord)) { showClickWord = true; %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_specific_bible, item.versionCountOT, view.version) %>.) <% } %>' +
@@ -116,6 +117,7 @@ var QuickLexicon = Backbone.View.extend({
                 if (item) morph_information[counter] = self._createBriefMorphInfo(item);
             }
             var lexicon;
+            var currentUserLang = step.userLanguageCode.toLowerCase();
             if (morphOnly)
                 lexicon = $(_.template(self.templateDef2)({ brief_morph_info: morph_information, view: self }));
             else if (multipleStrongTextFromSearchModal !== "") {
@@ -141,7 +143,8 @@ var QuickLexicon = Backbone.View.extend({
                 lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos,
                     brief_morph_info: morph_information,
                     fontClass: step.util.ui.getFontForStrong(self.strong),
-                    view: self 
+                    view: self,
+                    currentLang: currentUserLang
                 }));
             }
             if (step.touchDevice) $(lexicon).find(".clickMoreInfo").text(__s.more_info_on_touch_of_word);
@@ -185,6 +188,24 @@ var QuickLexicon = Backbone.View.extend({
                     if (data.vocabInfos[i] == null)
                         continue;
                     self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+                }
+            }
+            if (" fr de pt ".indexOf(currentUserLang) ) {
+                for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+                    var curStrong = data.vocabInfos[i].strongNumber;
+                    fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
+                        curStrong + ".json")
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        var gloss = data.gloss;
+                        var pos = gloss.indexOf(":");
+                        if (pos > -1)
+                            gloss = gloss.substring(pos+1);
+                        $("#quick_gloss_" + curStrong).text(gloss);
+                        $("#quick_def_" + curStrong).html(data.def.replace(/<\s?br\s?>/g, "  ").replace(/<\s?br \/>/g, "  ").trim());
+                    });
                 }
             }
         }
@@ -306,7 +327,9 @@ var QuickLexicon = Backbone.View.extend({
                 }
             }
             else {
-                if ((quickDefPositionAtTop) && (bottom + 20 > self.position)) {
+                var safetyMargin = 20;
+                safetyMargin += (" fr de pt ".indexOf(step.userLanguageCode.toLowerCase()) > -1) ? bottom : 0; // Double the size if there is an additional definition for that langage
+                if ((quickDefPositionAtTop) && (bottom + safetyMargin > self.position)) {
                     lexicon.css({"top": "", "bottom": "0"});
                     top = $("#quickLexicon").position().top; // The top position has changed
                     bottom = $("#quickLexicon").outerHeight(true) + top; // The bottom position has changed

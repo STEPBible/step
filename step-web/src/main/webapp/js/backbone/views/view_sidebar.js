@@ -368,10 +368,9 @@ var SidebarView = Backbone.View.extend({
                 .append(" (")
                 .append("<span class='transliteration'>" + mainWord.stepTransliteration + "</span>")
                 .append(") ")
-                .append("<span id='gloss-" + strong + "'>" + userLangGloss + "</span>")
-                .append(" '")
                 .append(mainWord.stepGloss)
-                .append("' ")
+                .append(" [")
+                .append("<span id='gloss_" + strong + "'>" + userLangGloss + "</span>] ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
         );
@@ -735,6 +734,69 @@ var SidebarView = Backbone.View.extend({
 		var bookName = (posOfDot1 > 2) ? ref.substr(0, posOfDot1 + 1) : ""; // Include the "." (dot)
 		this._lookUpGeoInfo(mainWord, bookName, stepLink);
 	},
+
+    _prepIndentNTDef: function(mediumDef) {
+        var parts = mediumDef.split(/<ref/i);
+        var pos = parts[0].indexOf(";");
+        var addedLineBreaks = false;
+        if (pos > -1) {
+            parts[0] = parts[0].replace(/;/g, ";<br>");
+            addedLineBreaks = true;
+        }
+        for (var ii = 1; ii < parts.length; ii++ ) {
+            partsInRef = parts[ii].split("</ref>");
+            if (partsInRef.length > 2) {
+                console.log("more than 2 parts " + ii + " " + parts[ii] + " " + mainWord.mediumDef);
+                continue;
+            }
+            if (partsInRef.length == 2) {
+                var pos = partsInRef[1].indexOf(";");
+                if (pos > -1) {
+                    if (partsInRef[1].trim().length > 1) {
+                        parts[ii] = partsInRef[0] + "</ref>" + partsInRef[1].replace(/;/g, ";<br>");
+                        addedLineBreaks = true;
+                    }
+                }
+            }
+        }
+        if (addedLineBreaks) {
+            var result = "";
+            for (var jj = 0; jj < parts.length; jj++ ) {
+                if (jj > 0) 
+                    result += "<ref";
+                result += parts[jj]
+            }
+            return [ addedLineBreaks, 
+                result.replace(/<br \/>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>") ];
+        }
+        return [ addedLineBreaks, mediumDef ];
+    },
+
+    _indentOTDefinition: function(origMediumDef, stem) {
+        var lines = origMediumDef.split(/<br>/i);
+        var updtMedDef = "";
+        var foundNumOfStem = "";
+        for (var i = 0; i < lines.length; i ++ ) {
+            var foundStem = false;
+            if ((stem !== "") && (lines[i].indexOf(stem) > -1)) { 
+                foundStem = true;
+            }
+            var pos = lines[i].indexOf(")");
+            var highlightLinesOnSameStem = false;
+            var left = 0;
+            if ((pos > 1) && (pos < 6) && (!isNaN(lines[i].charAt(0))) && (lines[i].substring(0, pos).indexOf("(") == -1)) {
+                if (foundStem)
+                    foundNumOfStem = lines[i].substring(0, pos);
+                else if ((foundNumOfStem !== "") && (lines[i].indexOf(foundNumOfStem) == 0))
+                    highlightLinesOnSameStem = true;
+                left = (pos - 1) * 8;
+            }
+            if (foundStem || highlightLinesOnSameStem)
+                lines[i] = "<b>" + lines[i] + "</b>";
+            updtMedDef += '<p style="margin-bottom:0px;margin-left:' + left + 'px">' + lines[i] + '</p>';
+        }
+        return updtMedDef;
+    },
 	
     _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
@@ -791,8 +853,10 @@ var SidebarView = Backbone.View.extend({
                 this._addLinkAndAppend(panel, khmerDef, currentWordLanguageCode, bibleVersion);
             }
 		}
-        if (" fr de pt ".indexOf(currentUserLang) ) {
-            var functionToCall = this._addLinkAndAppend;
+        var firstLetterOfStrong = mainWord.strongNumber.charAt(0);
+        if (" fr de pt ".indexOf(currentUserLang) > -1) {
+            var function1ToCall = this._addLinkAndAppend;
+            var function2ToCall = (firstLetterOfStrong === "G") ? this._prepIndentNTDef : this._indentOTDefinition;
             fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
                 mainWord.strongNumber + ".json")
             .then(function(response) {
@@ -803,9 +867,15 @@ var SidebarView = Backbone.View.extend({
                 var pos = gloss.indexOf(":");
                 if (pos > -1)
                     gloss = gloss.substring(pos+1);
-                $("#gloss-" + mainWord.strongNumber).text(gloss);
+                $("#gloss_" + mainWord.strongNumber).text(gloss);
                 panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + "(Google translate)"));
-                functionToCall(panel, data.def, currentWordLanguageCode, bibleVersion);
+                var def = function2ToCall(data.def);
+                var addLineBreaks = false;
+                if (firstLetterOfStrong === "G") {
+                    def = def[1];
+                    addLineBreaks = true;
+                }
+                function1ToCall(panel, def, currentWordLanguageCode, bibleVersion, addLineBreaks);
             });
         }
         if (displayEnglishLexicon) { // This might be false if Chinese lexicon is displayed and isEnWithZhLexicon is false append the meanings
@@ -816,70 +886,18 @@ var SidebarView = Backbone.View.extend({
                 else if (isOTorNT === "NT")
                     message = "based on Teknia Greek";
                 panel.append($("<" + headerType + " style='margin-top:8px' title='" + message + "'>").append(__s.lexicon_meaning));
-                var firstLetterOfStrong = mainWord.strongNumber.charAt(0);
                 var addedLineBreaks = false;
                 if (firstLetterOfStrong === "H") {
                     var stem = "";
                     if ((typeof morphInfo === "object") && (typeof morphInfo.stem === "string")) {
                         stem = "(" + morphInfo.stem.charAt(0).toUpperCase() + morphInfo.stem.substring(1) + ")";
                     }
-                    var lines = mainWord.mediumDef.split(/<br>/i);
-                    var updtMedDef = "";
-                    var foundNumOfStem = "";
-                    for (var i = 0; i < lines.length; i ++ ) {
-                        var foundStem = false;
-                        if ((stem !== "") && (lines[i].indexOf(stem) > -1)) { 
-                            foundStem = true;
-                        }
-                        var pos = lines[i].indexOf(")");
-                        var highlightLinesOnSameStem = false;
-                        var left = 0;
-                        if ((pos > 1) && (pos < 6) && (!isNaN(lines[i].charAt(0))) && (lines[i].substring(0, pos).indexOf("(") == -1)) {
-                            if (foundStem)
-                                foundNumOfStem = lines[i].substring(0, pos);
-                            else if ((foundNumOfStem !== "") && (lines[i].indexOf(foundNumOfStem) == 0))
-                                highlightLinesOnSameStem = true;
-                            left = (pos - 1) * 8;
-                        }
-                        if (foundStem || highlightLinesOnSameStem)
-                            lines[i] = "<b>" + lines[i] + "</b>";
-                        updtMedDef += '<p style="margin-bottom:0px;margin-left:' + left + 'px">' + lines[i] + '</p>';
-                    }
-                    mainWord.mediumDef = updtMedDef
+                    mainWord.mediumDef = this._indentOTDefinition(mainWord.mediumDef, stem);
                 }
                 else if (firstLetterOfStrong === "G") {
-                    var parts = mainWord.mediumDef.split(/<ref/i);
-                    var pos = parts[0].indexOf(";");
-                    if (pos > -1) {
-                        parts[0] = parts[0].replace(/;/g, ";<br>");
-                        addedLineBreaks = true;
-                    }
-                    for (var ii = 1; ii < parts.length; ii++ ) {
-                        partsInRef = parts[ii].split("</ref>");
-                        if (partsInRef.length > 2) {
-                            console.log("more than 2 parts " + ii + " " + parts[ii] + " " + mainWord.mediumDef);
-                            continue;
-                        }
-                        if (partsInRef.length == 2) {
-                            var pos = partsInRef[1].indexOf(";");
-                            if (pos > -1) {
-                                if (partsInRef[1].trim().length > 1) {
-                                    parts[ii] = partsInRef[0] + "</ref>" + partsInRef[1].replace(/;/g, ";<br>");
-                                    addedLineBreaks = true;
-                                }
-                            }
-                        }
-                    }
-                    if (addedLineBreaks) {
-                        var result1 = "";
-                        for (var jj = 0; jj < parts.length; jj++ ) {
-                            if (jj > 0) 
-                                result1 += "<ref";
-                            result1 += parts[jj]
-                        }
-                        result1 = result1.replace(/<br \/>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>");
-                        mainWord.mediumDef = result1;
-                    }
+                    var results = this._prepIndentNTDef(mainWord.mediumDef);
+                    addedLineBreaks = results[0];
+                    mainWord.mediumDef = results[1];
                 }
                 this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion, addedLineBreaks);
             }
@@ -907,6 +925,7 @@ var SidebarView = Backbone.View.extend({
             for (var i = 0; i < relatedNosToDisplay.length; i++) {
                 if (relatedNosToDisplay[i].strongNumber != mainWord.strongNumber) {
                     var userLangGloss = "";
+                    var englishGloss = relatedNosToDisplay[i].gloss;
                     if ((currentUserLang == "es") && (relatedNosToDisplay[i]._es_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._es_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._zh_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._zh_tw_Gloss + "&nbsp;";
@@ -919,7 +938,7 @@ var SidebarView = Backbone.View.extend({
                         else if (firstChar === "g") fontClass = "unicodeFont";
                         li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong onclick="javascript:void(0)">')
                             .append(userLangGloss)
-                            .append(relatedNosToDisplay[i].gloss)
+                            .append(englishGloss)
                             .append(" (")
                             .append("<span class='transliteration'>" + relatedNosToDisplay[i].stepTransliteration + "</span>")
                             .append(" - ")
@@ -935,7 +954,7 @@ var SidebarView = Backbone.View.extend({
                                 relatedNosToDisplay[i].matchingForm +
                                 "'></li>").append($('<a sbstrong onclick="javascript:void(0)">')
                             .append(userLangGloss)
-							.append(relatedNosToDisplay[i].gloss)
+							.append(englishGloss)
                             .append(step.util.formatSearchResultRange(relatedNosToDisplay[i]._searchResultRange, false))
                             .data("strongNumber", relatedNosToDisplay[i].strongNumber));                        
                     }

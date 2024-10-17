@@ -11,13 +11,13 @@ var QuickLexicon = Backbone.View.extend({
         '<% urlLang = urlLang.toLowerCase(); %>' +
         // '<% var currentEnWithEsLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon"); %>' +
         // '<% if (currentEnWithEsLexiconSetting == undefined) currentEnWithEsLexiconSetting = false; %>' +
-		'<% if ((currentLang.indexOf("es") == 0) && (item._es_Gloss != undefined)) { %><span>,&nbsp;<%= item._es_Gloss %></span> <% } %>' +
-		'<% if ((currentLang.indexOf("km") == 0) && (item._km_Gloss != undefined)) { %><span>,&nbsp;<%= item._km_Gloss %></span> <% } %>' +
-        '<% if (" fr de pt ".indexOf(currentLang) > -1) { %>&nbsp;<span id="quick_gloss_<%= item.strongNumber %>"><%= "&nbsp;".repeat(Math.ceil(item.stepGloss.length*2)) %></span> <% } %>' +
+		'<% if ((currentLang.indexOf("es") == 0) && (item._es_Gloss != undefined)) { %><span>,&nbsp;[<%= item._es_Gloss %>]</span> <% } %>' +
+		'<% if ((currentLang.indexOf("km") == 0) && (item._km_Gloss != undefined)) { %><span>,&nbsp;[<%= item._km_Gloss %>]</span> <% } %>' +
+        '<% if (" fr de pt ".indexOf(currentLang) > -1) { %>&nbsp;[<span id="quick_gloss_<%= item.strongNumber %>"><%= "&nbsp;".repeat(Math.ceil(item.stepGloss.length*1.6)) %></span>] <% } %>' +
         '<% if (urlLang === "zh_tw") { currentLang = "zh_tw"; } else if (urlLang === "zh") { currentLang = "zh"; } %>' +
         '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
         '<% if (currentEnWithZhLexiconSetting === undefined) currentEnWithZhLexiconSetting = false; %>' +
-        '<% if ( (currentLang === "zh_tw") && (item._zh_tw_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_tw_Gloss %></span> <% } else if ( (currentLang === "zh") && (item._zh_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_Gloss %></span> <% } %>' +
+        '<% if ( (currentLang === "zh_tw") && (item._zh_tw_Gloss != undefined) ) { %><span>&nbsp;[<%= item._zh_tw_Gloss %>]</span> <% } else if ( (currentLang === "zh") && (item._zh_Gloss != undefined) ) { %><span>&nbsp;[<%= item._zh_Gloss %>]</span> <% } %>' +
         '&nbsp;(<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1> ' +
@@ -190,7 +190,7 @@ var QuickLexicon = Backbone.View.extend({
                     self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
                 }
             }
-            if (" fr de pt ".indexOf(currentUserLang) ) {
+            if (" fr de pt ".indexOf(currentUserLang) > -1) {
                 for (var i = 0; i < (data.vocabInfos || []).length; i++) {
                     var curStrong = data.vocabInfos[i].strongNumber;
                     fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +

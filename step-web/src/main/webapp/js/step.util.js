@@ -1918,7 +1918,7 @@ step.util = {
 																	else if ((currentLang === "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
 																	else if ((currentLang === "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
 																	else if ((currentLang === "km") && (strongData._km_Gloss)) strongData.gloss = strongData._km_Gloss;
-																	var morph = "";
+//																	var morph = ""; // Does not seem to be used
 																	allMorphsOfThisWord = [];
 																	var morphCount = 0;
 																	for (var z = 0; z < allMorphs.length; z++) {

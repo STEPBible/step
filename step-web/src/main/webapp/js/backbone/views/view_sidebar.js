@@ -866,14 +866,14 @@ var SidebarView = Backbone.View.extend({
                 var gloss = data.gloss;
                 var pos = gloss.indexOf(":");
                 if (pos > -1)
-                    gloss = gloss.substring(pos+1);
-                $("#gloss_" + mainWord.strongNumber).text(gloss);
-                panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + "(Google translate)"));
+                    gloss = gloss.substring(pos+1).trim();
+                $("#gloss_" + data.strong).text(gloss);
+                panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)"));
                 var def = function2ToCall(data.def);
                 var addLineBreaks = false;
-                if (firstLetterOfStrong === "G") {
+                if (data.strong.charAt(0) === "G") {
                     def = def[1];
-                    addLineBreaks = true;
+                    addLineBreaks = def[0];
                 }
                 function1ToCall(panel, def, currentWordLanguageCode, bibleVersion, addLineBreaks);
             });
@@ -923,22 +923,24 @@ var SidebarView = Backbone.View.extend({
             var ul = $('<ul class="GeneralRelatedWords" style="display:none">');
             var matchingExpression = "";
             for (var i = 0; i < relatedNosToDisplay.length; i++) {
-                if (relatedNosToDisplay[i].strongNumber != mainWord.strongNumber) {
+                var curStrong = relatedNosToDisplay[i].strongNumber;
+                if (curStrong != mainWord.strongNumber) {
                     var userLangGloss = "";
                     var englishGloss = relatedNosToDisplay[i].gloss;
-                    if ((currentUserLang == "es") && (relatedNosToDisplay[i]._es_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._es_Gloss + "&nbsp;";
-                    else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss =  relatedNosToDisplay[i]._zh_Gloss + "&nbsp;";
-                    else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._zh_tw_Gloss + "&nbsp;";
-                    else if ((currentUserLang == "km") && (relatedNosToDisplay[i]._km_Gloss != undefined)) userLangGloss = relatedNosToDisplay[i]._km_Gloss + "&nbsp;";
+                    if ((currentUserLang == "es") && (relatedNosToDisplay[i]._es_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._es_Gloss + "]";
+                    else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._zh_Gloss + "]";
+                    else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._zh_tw_Gloss + "]";
+                    else if ((currentUserLang == "km") && (relatedNosToDisplay[i]._km_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._km_Gloss + "]";
+                    else if (" fr de pt ".indexOf(currentUserLang) > -1) userLangGloss = " <span id='rel_gloss_" + relatedNosToDisplay[i].strongNumber + "'></span>";
                     var li = "";
                     if ((!relatedNosToDisplay[i]._searchResultRange) || (relatedNosToDisplay[i]._searchResultRange === "")) {
                         var fontClass = "";
-                        var firstChar = relatedNosToDisplay[i].strongNumber.substr(0, 1).toLowerCase();
+                        var firstChar = curStrong.substr(0, 1).toLowerCase();
                         if (firstChar === "h") fontClass = "hbFontMini";
                         else if (firstChar === "g") fontClass = "unicodeFont";
-                        li = $("<li title='" + relatedNosToDisplay[i].strongNumber + "'></li>").append($('<a sbstrong onclick="javascript:void(0)">')
-                            .append(userLangGloss)
+                        li = $("<li title='" + curStrong + "'></li>").append($('<a sbstrong onclick="javascript:void(0)">')
                             .append(englishGloss)
+                            .append(userLangGloss)
                             .append(" (")
                             .append("<span class='transliteration'>" + relatedNosToDisplay[i].stepTransliteration + "</span>")
                             .append(" - ")
@@ -946,20 +948,32 @@ var SidebarView = Backbone.View.extend({
                                 relatedNosToDisplay[i].matchingForm +
                                 '</span>')
                             .append(")")
-                            .data("strongNumber", relatedNosToDisplay[i].strongNumber));
+                            .data("strongNumber", curStrong));
                     }
                     else {
                         li = $("<li title='" + relatedNosToDisplay[i].strongNumber + " " +
                                 relatedNosToDisplay[i].stepTransliteration + " " +
                                 relatedNosToDisplay[i].matchingForm +
                                 "'></li>").append($('<a sbstrong onclick="javascript:void(0)">')
-                            .append(userLangGloss)
 							.append(englishGloss)
+                            .append(userLangGloss)
                             .append(step.util.formatSearchResultRange(relatedNosToDisplay[i]._searchResultRange, false))
-                            .data("strongNumber", relatedNosToDisplay[i].strongNumber));                        
+                            .data("strongNumber", curStrong));                        
                     }
                     ul.append(li);
                     matchingExpression += relatedNosToDisplay[i].strongNumber + " ";
+                    fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
+                        curStrong + ".json")
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        var gloss = data.gloss;
+                        var pos = gloss.indexOf(":");
+                        if (pos > -1)
+                            gloss = gloss.substring(pos+1).trim();
+                        $("#rel_gloss_" + data.strong).text("[" + gloss + "]");
+                    });        
                 }
             }
             step.passage.highlightStrong(null, matchingExpression, "lexiconRelatedFocus");

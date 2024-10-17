@@ -202,9 +202,9 @@ var QuickLexicon = Backbone.View.extend({
                         var gloss = data.gloss;
                         var pos = gloss.indexOf(":");
                         if (pos > -1)
-                            gloss = gloss.substring(pos+1);
-                        $("#quick_gloss_" + curStrong).text(gloss);
-                        $("#quick_def_" + curStrong).html(data.def.replace(/<\s?br\s?>/g, "  ").replace(/<\s?br \/>/g, "  ").trim());
+                            gloss = gloss.substring(pos+1).trim();
+                        $("#quick_gloss_" + data.strong).text(gloss);
+                        $("#quick_def_" + data.strong).html(data.def.replace(/<\s?br\s?>/g, "  ").replace(/<\s?br \/>/g, "  ").trim());
                     });
                 }
             }

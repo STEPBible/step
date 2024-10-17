@@ -1240,7 +1240,7 @@ step.searchSelect = {
 			var pos = gloss.indexOf(":");
 			if (pos > -1)
 				gloss = gloss.substring(pos+1).trim();
-			$("#src_gloss_" + dataSuggestion.strongNumber).text(" [" + gloss + "]");
+			$("#src_gloss_" + data.strong).text(" [" + gloss + "]");
 		});
 		return dataSuggestion.gloss + '<span id="src_gloss_' + dataSuggestion.strongNumber + '"></span>';
 	},

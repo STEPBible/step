@@ -784,7 +784,7 @@ step.util = {
     },
 
     updateWhenRendered: function (elementName, textToDisplay, recursionCount, isHTML) {
-		if (recursionCount > 6) return;
+		if (recursionCount > 8) return;
 		console.log(recursionCount + "recursion"); 
 		var srcGlossElm = $(elementName);
 		if (srcGlossElm.length > 0) {
@@ -796,7 +796,7 @@ step.util = {
 		else // The HTML element has not been rendered.  Wait
 			step.util.delay(function () {
 				step.util.updateWhenRendered(elementName, textToDisplay, recursionCount + 1, isHTML);
-			}, 100, elementName.substring(1));
+			}, 120, elementName.substring(1));
 	},
 
 //    getMainLanguage: function (passageModel) {

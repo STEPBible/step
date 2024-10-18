@@ -1226,9 +1226,9 @@ step.searchSelect = {
 		if (dataSuggestion.strongNumber == undefined)
 			return dataSuggestion.gloss;
 		var checkLang = step.userLanguageCode.toLowerCase();
-		if (checkLang === "es") return dataSuggestion._es_Gloss;
-		if ((checkLang === "zh_tw") || (checkLang === "zh_hk")) return dataSuggestion.gloss + " (" + dataSuggestion._zh_tw_Gloss + ")";
-		if (checkLang.substring(0,2) === "zh") return dataSuggestion.gloss + " (" + dataSuggestion._zh_Gloss + ")";
+		if ((checkLang === "es") && (typeof dataSuggestion._es_Gloss === "string")) return dataSuggestion._es_Gloss;
+		if (((checkLang === "zh_tw") || (checkLang === "zh_hk")) && (typeof dataSuggestion._zh_tw_Gloss === "string")) return dataSuggestion.gloss + " (" + dataSuggestion._zh_tw_Gloss + ")";
+		if ((checkLang.substring(0,2) === "zh") && (typeof dataSuggestion._zh_Gloss === "string")) return dataSuggestion.gloss + " (" + dataSuggestion._zh_Gloss + ")";
 		if (" fr de pt ".indexOf(checkLang) == -1) return dataSuggestion.gloss;
 		fetch("https://us.stepbible.org/html/lexicon/" + checkLang + "_json/" +
 			dataSuggestion.strongNumber + ".json")
@@ -1240,9 +1240,9 @@ step.searchSelect = {
 			var pos = gloss.indexOf(":");
 			if (pos > -1)
 				gloss = gloss.substring(pos+1).trim();
-			$("#src_gloss_" + data.strong).text(" [" + gloss + "]");
+			$(".src_gloss_" + data.strong).text(" [" + gloss + "]");
 		});
-		return dataSuggestion.gloss + '<span id="src_gloss_' + dataSuggestion.strongNumber + '"></span>';
+		return dataSuggestion.gloss + '<span class="src_gloss_' + dataSuggestion.strongNumber + '"></span>';
 	},
 	_handleEnteredSearchWord: function(limitType, previousUserInput, userPressedEnterKey) {
 		$('#quickLexicon').remove();
@@ -2282,8 +2282,8 @@ step.searchSelect = {
 					'<span class="srchFrequency"> ' + frequencyMsg + '</span>' +
 				"</a>");
 			step.searchSelect.addMouseOverEvent("strong", item[1], "", allVersions.split(',')[0], newSuggestion);
-			list.append(newSuggestion)
-				.append(' - ' + item[2]);
+			list.append(newSuggestion).append(' - ' +
+				step.searchSelect.getGlossInUserLanguage( {"strongNumber":item[1], "gloss": item[2]}));
 			if (item[6] !== "") {
 				var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
 				list.append('&nbsp;').append(freqListElm);

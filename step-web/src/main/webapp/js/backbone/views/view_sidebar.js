@@ -370,7 +370,7 @@ var SidebarView = Backbone.View.extend({
                 .append(") ")
                 .append(mainWord.stepGloss)
                 .append(" [")
-                .append("<span id='gloss_" + strong + "'>" + userLangGloss + "</span>] ")
+                .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span>] ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
         );
@@ -867,7 +867,7 @@ var SidebarView = Backbone.View.extend({
                 var pos = gloss.indexOf(":");
                 if (pos > -1)
                     gloss = gloss.substring(pos+1).trim();
-                $("#gloss_" + data.strong).text(gloss);
+                $(".side_gloss_" + data.strong).text(gloss);
                 panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)"));
                 var def = function2ToCall(data.def);
                 var addLineBreaks = false;
@@ -931,7 +931,7 @@ var SidebarView = Backbone.View.extend({
                     else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._zh_Gloss + "]";
                     else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._zh_tw_Gloss + "]";
                     else if ((currentUserLang == "km") && (relatedNosToDisplay[i]._km_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._km_Gloss + "]";
-                    else if (" fr de pt ".indexOf(currentUserLang) > -1) userLangGloss = " <span id='rel_gloss_" + relatedNosToDisplay[i].strongNumber + "'></span>";
+                    else if (" fr de pt ".indexOf(currentUserLang) > -1) userLangGloss = " <span class='rel_gloss_" + relatedNosToDisplay[i].strongNumber + "'></span>";
                     var li = "";
                     if ((!relatedNosToDisplay[i]._searchResultRange) || (relatedNosToDisplay[i]._searchResultRange === "")) {
                         var fontClass = "";
@@ -972,7 +972,7 @@ var SidebarView = Backbone.View.extend({
                         var pos = gloss.indexOf(":");
                         if (pos > -1)
                             gloss = gloss.substring(pos+1).trim();
-                        $("#rel_gloss_" + data.strong).text("[" + gloss + "]");
+                        $(".rel_gloss_" + data.strong).text("[" + gloss + "]");
                     });        
                 }
             }

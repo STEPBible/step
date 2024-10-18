@@ -369,8 +369,8 @@ var SidebarView = Backbone.View.extend({
                 .append("<span class='transliteration'>" + mainWord.stepTransliteration + "</span>")
                 .append(") ")
                 .append(mainWord.stepGloss)
-                .append(" [")
-                .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span>] ")
+                .append(" ")
+                .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
         );
@@ -867,7 +867,7 @@ var SidebarView = Backbone.View.extend({
                 var pos = gloss.indexOf(":");
                 if (pos > -1)
                     gloss = gloss.substring(pos+1).trim();
-                $(".side_gloss_" + data.strong).text(gloss);
+                $(".side_gloss_" + data.strong).text("[" + gloss + "]");
                 panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)"));
                 var def = function2ToCall(data.def);
                 var addLineBreaks = false;

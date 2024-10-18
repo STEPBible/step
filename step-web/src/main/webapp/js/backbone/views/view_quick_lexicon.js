@@ -13,7 +13,7 @@ var QuickLexicon = Backbone.View.extend({
         // '<% if (currentEnWithEsLexiconSetting == undefined) currentEnWithEsLexiconSetting = false; %>' +
 		'<% if ((currentLang.indexOf("es") == 0) && (item._es_Gloss != undefined)) { %><span>,&nbsp;[<%= item._es_Gloss %>]</span> <% } %>' +
 		'<% if ((currentLang.indexOf("km") == 0) && (item._km_Gloss != undefined)) { %><span>,&nbsp;[<%= item._km_Gloss %>]</span> <% } %>' +
-        '<% if (" fr de pt ".indexOf(currentLang) > -1) { %>&nbsp;[<span id="quick_gloss_<%= item.strongNumber %>"><%= "&nbsp;".repeat(Math.ceil(item.stepGloss.length*1.6)) %></span>] <% } %>' +
+        '<% if (" fr de pt ".indexOf(currentLang) > -1) { %>&nbsp;<span id="quick_gloss_<%= item.strongNumber %>"><%= "&nbsp;".repeat(Math.ceil(item.stepGloss.length*1.5)) %></span> <% } %>' +
         '<% if (urlLang === "zh_tw") { currentLang = "zh_tw"; } else if (urlLang === "zh") { currentLang = "zh"; } %>' +
         '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
         '<% if (currentEnWithZhLexiconSetting === undefined) currentEnWithZhLexiconSetting = false; %>' +
@@ -203,7 +203,7 @@ var QuickLexicon = Backbone.View.extend({
                         var pos = gloss.indexOf(":");
                         if (pos > -1)
                             gloss = gloss.substring(pos+1).trim();
-                        $("#quick_gloss_" + data.strong).text(gloss);
+                        $("#quick_gloss_" + data.strong).text("[" + gloss + "]");
                         $("#quick_def_" + data.strong).html(data.def.replace(/<\s?br\s?>/g, "  ").replace(/<\s?br \/>/g, "  ").trim());
                     });
                 }

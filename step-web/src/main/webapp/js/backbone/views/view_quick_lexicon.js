@@ -202,8 +202,8 @@ var QuickLexicon = Backbone.View.extend({
                         var gloss = data.gloss;
                         var pos = gloss.indexOf(":");
                         if (pos > -1)
-                            gloss = gloss.substring(pos+1).trim();
-                        gloss = "[" + gloss + "]";
+                            gloss = gloss.substring(pos+1);
+                        gloss = "[" + gloss.trim() + "]";
                         var quickGlossElm = $(".quick_gloss_" + data.strong);
                         if (quickGlossElm.length > 0)
                             quickGlossElm.text(gloss);

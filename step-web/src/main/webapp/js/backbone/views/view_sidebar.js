@@ -866,8 +866,15 @@ var SidebarView = Backbone.View.extend({
                 var gloss = data.gloss;
                 var pos = gloss.indexOf(":");
                 if (pos > -1)
-                    gloss = gloss.substring(pos+1).trim();
-                $(".side_gloss_" + data.strong).text("[" + gloss + "]");
+                    gloss = gloss.substring(pos+1);
+                gloss = "[" + gloss.trim() + "]";
+                var sideGlossElm = $(".side_gloss_" + data.strong);
+                if (sideGlossElm.length > 0)
+                    sideGlossElm.text(gloss);
+                else // The HTML element has not been rendered.  Wait
+                    step.util.delay(function () {
+                        $(".side_gloss_" + data.strong).text(gloss);
+                    }, 500, 'foreign-side-gloss');
                 panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)"));
                 var def = function2ToCall(data.def);
                 var addLineBreaks = false;
@@ -971,8 +978,15 @@ var SidebarView = Backbone.View.extend({
                         var gloss = data.gloss;
                         var pos = gloss.indexOf(":");
                         if (pos > -1)
-                            gloss = gloss.substring(pos+1).trim();
-                        $(".rel_gloss_" + data.strong).text("[" + gloss + "]");
+                            gloss = gloss.substring(pos+1);
+                        gloss = "[" + gloss.trim() + "]";
+                        var relGlossElm = $(".rel_gloss_" + data.strong);
+                        if (relGlossElm.length > 0)
+                            relGlossElm.text(gloss);
+                        else // The HTML element has not been rendered.  Wait
+                            step.util.delay(function () {
+                                $(".rel_gloss_" + data.strong).text(gloss);
+                            }, 500, 'foreign-rel-gloss');
                     });        
                 }
             }

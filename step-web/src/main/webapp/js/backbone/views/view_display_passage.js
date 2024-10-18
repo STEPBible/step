@@ -203,7 +203,7 @@ var PassageDisplayView = DisplayView.extend({
                         return response.json();
                     })
                     .then(function(data) {
-                        var gloss = data.gloss;
+                        var gloss = data.gloss.trim();
                         var pos = gloss.indexOf(":");
                         if (pos > -1)
                             gloss = gloss.substring(pos+1).trim();

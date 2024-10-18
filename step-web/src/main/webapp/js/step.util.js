@@ -785,7 +785,6 @@ step.util = {
 
     updateWhenRendered: function (elementName, textToDisplay, recursionCount, isHTML) {
 		if (recursionCount > 8) return;
-		console.log(recursionCount + "recursion"); 
 		var srcGlossElm = $(elementName);
 		if (srcGlossElm.length > 0) {
 			if (isHTML)

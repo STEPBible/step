@@ -1240,14 +1240,7 @@ step.searchSelect = {
 			var pos = gloss.indexOf(":");
 			if (pos > -1)
 				gloss = gloss.substring(pos+1).trim();
-			gloss = " [" + gloss.trim() + "]"
-			var srcGlossElm = $(".src_gloss_" + data.strong);
-			if (srcGlossElm.length > 0)
-				srcGlossElm.text(gloss);
-			else // The HTML element has not been rendered.  Wait
-				step.util.delay(function () {
-					$(".src_gloss_" + data.strong).text(gloss);
-				}, 500, 'foreign-src-gloss');
+			step.util.updateWhenRendered(".src_gloss_" + data.strong, " [" + gloss.trim() + "]", 0);
 		});
 		return dataSuggestion.gloss + '<span class="src_gloss_' + dataSuggestion.strongNumber + '"></span>';
 	},

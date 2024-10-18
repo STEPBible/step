@@ -782,6 +782,23 @@ step.util = {
             timer = setTimeout(callback, ms);
         }
     },
+
+    updateWhenRendered: function (elementName, textToDisplay, recursionCount, isHTML) {
+		if (recursionCount > 6) return;
+		console.log(recursionCount + "recursion"); 
+		var srcGlossElm = $(elementName);
+		if (srcGlossElm.length > 0) {
+			if (isHTML)
+				srcGlossElm.html(textToDisplay);
+			else
+				srcGlossElm.text(textToDisplay);
+		}
+		else // The HTML element has not been rendered.  Wait
+			step.util.delay(function () {
+				step.util.updateWhenRendered(elementName, textToDisplay, recursionCount + 1, isHTML);
+			}, 100, elementName.substring(1));
+	},
+
 //    getMainLanguage: function (passageModel) {
 //        return (passageModel.get("languageCode") || ["en"])[0];
 //    },

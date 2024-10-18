@@ -203,22 +203,9 @@ var QuickLexicon = Backbone.View.extend({
                         var pos = gloss.indexOf(":");
                         if (pos > -1)
                             gloss = gloss.substring(pos+1);
-                        gloss = "[" + gloss.trim() + "]";
-                        var quickGlossElm = $(".quick_gloss_" + data.strong);
-                        if (quickGlossElm.length > 0)
-                            quickGlossElm.text(gloss);
-                        else // The HTML element has not been rendered.  Wait
-                            step.util.delay(function () {
-                                $(".quick_gloss_" + data.strong).text(gloss);
-                            }, 500, 'foreign-lang-gloss');
-                        var def = data.def.replace(/<\s?br\s?>/g, "  ").replace(/<\s?br \/>/g, "  ").trim();
-                        var quickDefElm = $(".quick_def_" + data.strong);
-                        if (quickDefElm.length > 0)
-                            quickDefElm.html(def);
-                        else // The HTML element has not been rendered.  Wait
-                            step.util.delay(function () {
-                                $(".quick_def_" + data.strong).html(def);
-                            }, 500, 'foreign-lang-def');
+                        step.util.updateWhenRendered(".quick_gloss_" + data.strong, "[" + gloss.trim() + "]", 0);
+                        step.util.updateWhenRendered(".quick_def_" + data.strong, 
+                            data.def.replace(/<\s?br\s?>/g, "  ").replace(/<\s?br \/>/g, "  ").trim(), 0, true);
                     });
                 }
             }

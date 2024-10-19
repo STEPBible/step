@@ -182,7 +182,7 @@ var PickBibleView = Backbone.View.extend({
         _.bindAll(this);
         var self = this;
         this.searchView = opts.searchView;
-         this.$el.append(this.modalPopupTemplate({
+        this.$el.append(this.modalPopupTemplate({
             view: this,
             myOtherLanguages: this.getUserOtherLanguages()
         }));

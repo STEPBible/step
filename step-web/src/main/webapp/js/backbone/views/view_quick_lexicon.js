@@ -329,7 +329,13 @@ var QuickLexicon = Backbone.View.extend({
             }
             else {
                 var safetyMargin = 20;
-                safetyMargin += (" fr de pt ".indexOf(step.userLanguageCode.toLowerCase()) > -1) ? bottom : 0; // Double the size if there is an additional definition for that langage
+                if (" fr de pt ".indexOf(step.userLanguageCode.toLowerCase()) > -1) {
+                    safetyMargin += bottom; // Double the size if there is an additional definition for that langage
+                    lexicon.css({"display": "none"});
+                    step.util.delay(function () {
+                        $("#quickLexicon").show();
+                    }, 300, "showQuickLexicon");
+                }
                 if ((quickDefPositionAtTop) && (bottom + safetyMargin > self.position)) {
                     lexicon.css({"top": "", "bottom": "0"});
                     top = $("#quickLexicon").position().top; // The top position has changed

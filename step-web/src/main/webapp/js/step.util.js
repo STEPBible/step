@@ -787,8 +787,13 @@ step.util = {
 		if (recursionCount > 8) return;
 		var srcGlossElm = $(elementName);
 		if (srcGlossElm.length > 0) {
-			if (isHTML)
+			if (isHTML) {
 				srcGlossElm.html(textToDisplay);
+				if (elementName.indexOf("quick") > -1) {
+					$("#quickLexicon").show();
+					step.util.clearTimeout("showQuickLexicon");
+				}
+			}
 			else
 				srcGlossElm.text(textToDisplay);
 		}

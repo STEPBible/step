@@ -36,6 +36,10 @@
     width: 100%;
     text-align: center;
 
+    tbody {
+      vertical-align: top;
+    }
+
     td > a {
       display: block;
       padding: 8px 0;

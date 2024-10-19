@@ -319,6 +319,13 @@ var QuickLexicon = Backbone.View.extend({
             $('#quickLexicon').css({'maxHeight':'200px','overflow-y':'auto'});
         }
         else {
+            if (" fr de pt ".indexOf(step.userLanguageCode.toLowerCase()) > -1) {
+                safetyMargin += bottom; // Double the size if there is an additional definition for that langage
+                lexicon.css({"display": "none"});
+                step.util.delay(function () {
+                    $("#quickLexicon").show();
+                }, 300, "showQuickLexicon");
+            }
             if (step.touchDevice) {
                 var quickLexiconHeightForTouchDevices = Math.floor(self.height * .4);
                 if (quickLexiconHeightForTouchDevices < (bottom - top)) {
@@ -329,13 +336,6 @@ var QuickLexicon = Backbone.View.extend({
             }
             else {
                 var safetyMargin = 20;
-                if (" fr de pt ".indexOf(step.userLanguageCode.toLowerCase()) > -1) {
-                    safetyMargin += bottom; // Double the size if there is an additional definition for that langage
-                    lexicon.css({"display": "none"});
-                    step.util.delay(function () {
-                        $("#quickLexicon").show();
-                    }, 300, "showQuickLexicon");
-                }
                 if ((quickDefPositionAtTop) && (bottom + safetyMargin > self.position)) {
                     lexicon.css({"top": "", "bottom": "0"});
                     top = $("#quickLexicon").position().top; // The top position has changed

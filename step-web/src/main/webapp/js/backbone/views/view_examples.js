@@ -1,54 +1,55 @@
 var ExamplesView = Backbone.View.extend({
+	biblesWithMorph: "",
 	exampleTemplate: _.template(
 		'<div id="welcomeExamples" class="passageContainer examplesContainer">' +
 			'<a class="closeColumn" title="<%= __s.close %> />" ontouchstart="step.util.showOrHideTutorial(\'true\')">' +
 				'<i class="glyphicon glyphicon-remove"></i>' +
 			'</a>' +
 			'<h3><%= __s.simple_intro_welcome %></h3>' +
-			'<span style="background-color:lightyellow;font-size:16px;font-weight:bold">ESV, NASB2020 and NET2full now have morphology!    </span>' +
-			'<a style="background-color:lightyellow" href="javascript:step.util.showVideoModal(\'esv_morph.gif\', 66)">Video introduction  ' +
+			'<span style="background-color:lightyellow;font-size:16px;font-weight:bold"><%= this.biblesWithMorph %> now have morphology!    </span>' +
+			'<a style="background-color:lightyellow" class="videoGuide" href="javascript:step.util.showVideoModal(\'esv_morph.gif\', 66)">Video introduction  ' +
 				'<span class="glyphicon glyphicon-play-circle" style="background-color:lightyellow;font-size:16px"></span></a>' +
 			'<br><br><p><%= __s.simple_intro %></p>' +
 			'<div class="accordion-row" data-row="0">' +
-				'<h5 class="accordion-heading stepButton">How do I read passages in Bibles?' +
+				'<h5 class="accordion-heading stepButton"><span id="g1q0" style="float:;">How do I read passages in Bibles?</span>' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<ul style="padding-inline-start:10px">' +
-						'<li style="font-weight:bold">How do I look up a passage?' +
+						'<li style="font-weight:bold"><span id="g1q1">How do I look up a passage?</span>' +
 							'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>Click the Passage button for a chapter or references.</span>' +
+								'<br><span id="g1q1a1">Click the Passage button for a chapter or references.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_passage_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 							'</div>' +
-						'<li style="font-weight:bold">How do I see three Bibles at once?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g1q2">How do I see three Bibles at once?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'John3.gif\', 27)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'John3.gif\', 27)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>Click the Bible button to select one or several Bibles.</span>' +
+								'<br><span id="g1q2a1">Click the Bible button to select one or several Bibles.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 							'</div>' +
-						'<li style="font-weight:bold">How do I find a parallel gospel passage?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g1q3">How do I find a parallel gospel passage?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<span>1) Click the Resource icon.</span>' +
+								'<span id="g1q3a1">1) Click the Resource icon.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/resource_icon_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Click the resource for parallel gospel passage</span>' +
+								'<br><span id="g1q3a2">2) Click the resource for parallel gospel passage</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/gospel_harmony_.png\');width:190px;height:164px;border:3px solid black;display:none"></div>' +
 							'</div>' +
-						'<li style="font-weight:bold">How do I follow a Bible reading plan?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g1q4">How do I follow a Bible reading plan?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<span>1) Click the Resource icon.</span>' +
+								'<span id="g1q4a1">1) Click the Resource icon.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/resource_icon_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Plans for 1/2/3 years, chronological, Jewish etc</span>' +
+								'<br><span id="g1q4a2">2) Plans for 1/2/3 years, chronological, Jewish etc</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/bible_reading_plan_.png\');width:190px;height:286px;border:3px solid black;display:none"></div>' +
 							'</div>' +
-						'<li style="font-weight:bold">How do I also see a commentary?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g1q5">How do I also see a commentary?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<span>1) Click the Bible button.</span>' +
+								'<span id="g1q5a1">1) Click the Bible button.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Click on Commentaries</span>' +
+								'<br><span id="g1q5a2">2) Click on Commentaries</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/commentaries_.png\');width:184px;height:40px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 						'</ul>' +
@@ -56,193 +57,193 @@ var ExamplesView = Backbone.View.extend({
 			'</div>' +
 
 			'<div class="accordion-row" data-row="1">' +
-				'<h5 class="accordion-heading stepButton">How do I find words and phrases?' +
+				'<h5 class="accordion-heading stepButton"><span id="g2q0">How do I find words and phrases?</span>' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<ul style="padding-inline-start:10px">' +
-						'<li style="font-weight:bold">How do I find words or topics?' +
+						'<li style="font-weight:bold"><span id="g2q1">How do I find words or topics?</span>' +
 							'<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'basic_search.gif\', 25)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'basic_search.gif\', 25)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the search button</span>' +
+								'<br><span id="g2q1a1">1) Click on the search button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_button_.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Enter word or phrase in search bar and press Return</span>' +
+								'<br><span id="g2q1a2">2) Enter word or phrase in search bar and press Return</span>' +
 							'</div>' +
-						'<li style="font-weight:bold">How do I search only some books in the Bible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g2q2">How do I search only some books in the Bible?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'search_range.gif\', 40)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'search_range.gif\', 40)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the search button</span>' +
+								'<br><span id="g2q2a1">1) Click on the search button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_button_.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Click on Range</span>' +
+								'<br><span id="g2q2a2">2) Click on Range</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_range_.png\');width:176px;height:52px;border:3px solid black;display:none"></div>' +
-								'<br><span>3) Select the books that you wish to search</span>' +
+								'<br><span id="g2q2a3">3) Select the books that you wish to search</span>' +
 							'</div>' +
-						'<li style="font-weight:bold">How do I find a Greek or Hebrew word?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g2q3">How do I find a Greek or Hebrew word?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'search_original_language.gif\', 50)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'search_original_language.gif\', 50)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the search button</span>' +
+								'<br><span id="g2q3a1">1) Click on the search button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_button_.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Switch on the Advanced search toggle </span>' +
+								'<br><span id="g2q3a2">2) Switch on the Advanced search toggle</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_advanced_mode_.png\');width:190px;height:199px;border:3px solid black;display:none"></div>' +
-								'<br><span>3) Type in the Greek/Hebrew word in the search box, press Return, and wait for the table to fill itself.</span>' +
-								'<br><span>4) View corresponding row to see Greek/Hebrew translation of the word</span>' +
+								'<br><span id="g2q3a3">3) Type in the Greek/Hebrew word in the search box, press Return, and wait for the table to fill itself.</span>' +
+								'<br><span id="g2q3a4">4) View corresponding row to see Greek/Hebrew translation of the word</span>' +
 							'</div>' +
-						'<li style="font-weight:bold">How do I find a word only where it relates to a subject?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g2q4">How do I find a word only where it relates to a subject?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'subject_search.gif\', 46)">Video guide  ' +
+								'<a href="javascript:step.util.showVideoModal(\'subject_search.gif\', 46)"><span  class="videoGuide">Video guide  </span>' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the search button</span>' +
+								'<br><span id="g2q4a1">1) Click on the search button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_button_.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Switch on the Advanced search toggle </span>' +
+								'<br><span id="g2q4a2">2) Switch on the Advanced search toggle</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_advanced_mode_.png\');width:190px;height:199px;border:3px solid black;display:none"></div>' +
-								'<br><span>3) Type in the subject in the search box, press Return, and wait for the table to fill itself.</span>' +
-								'<br><span>4) View the row: Subject or a person in the Bible</span>' +
+								'<br><span id="g2q4a3">3) Type in the subject in the search box, press Return, and wait for the table to fill itself.</span>' +
+								'<br><span id="g2q4a4">4) View the row: Subject or a person in the Bible</span>' +
 							'</div>' +
 
-						'<li style="font-weight:bold">How do I find more about advanced search?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g2q5">How do I find more about advanced search?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-							'<a href="https://stepbibleguide.blogspot.com/p/finding-words-and-subjects.html">' +
+							'<a href="https://stepbibleguide.blogspot.com/p/finding-words-and-subjects.html" id="g2q5a1">' +
 							'Detailed instructions are in the user\'s guide</a>' +
 						'</ul>' +
 				'</div>' +
 			'</div>' +
 
 			'<div class="accordion-row" data-row="2">' +
-			'<h5 class="accordion-heading stepButton">How do I do a word study?' +
+			'<h5 class="accordion-heading stepButton"><span id="g3q0">How do I do a word study?</span>' +
 				'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 			'</h5>' +
 				'<div class="accordion-body">' +
 					'<ul style="padding-inline-start:10px">' +
-						'<li style="font-weight:bold">What information can I find about a word?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g3q1">What information can I find about a word?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<span>When you click on a word, the detailed lexicon opens with:</span>' +
+								'<span id="g3q1a1">When you click on a word, the detailed lexicon opens with:</span>' +
 								'<ul>' +
-								'<li>Meaning: how the word is used throughout the Bible</li>' +
-								'<li>Dictionary: academic details about the word</li>' +
-								'<li>Related words: similar in meaning or origin</li>' +
-								'<li>Grammar: (only available for some Bibles)</li>' +
+								'<li id="g3q1a2">Meaning: how the word is used throughout the Bible</li>' +
+								'<li id="g3q1a3">Dictionary: academic details about the word</li>' +
+								'<li id="g3q1a4">Related words: similar in meaning or origin</li>' +
+								'<li id="g3q1a5">Grammar: (only available for some Bibles)</li>' +
 								'</ul>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/info_on_word_.png\');width:190px;height:167px;border:3px solid black;display:none"></div>' +
 							'</div>' +
-						'<li style="font-weight:bold">Why do only some Bibles have clickable words?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g3q2">Why do only some Bibles have clickable words?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<span>\'Vocabulary\' Bibles link the translation to Greek & Hebrew. So far, only some Bibles have this vocabulary feature. They are shown in the Bible select screen with the letter \'V\'.</span>' +
+								'<span id="g3q2a1">\'Vocabulary\' Bibles link the translation to Greek & Hebrew. So far, only some Bibles have this vocabulary feature. They are shown in the Bible select screen with the letter \'V\'.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/bible_with_vocab_.png\');width:190px;height:283px;border:3px solid black;display:none"></div>' +
 							'</div>' +
-						'<li style="font-weight:bold">What does “~20x” or “Frequency” mean?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g3q3">What does “~20x” or “Frequency” mean?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<span>It is the number of occurrences of a word in the Bible. Click on it to see them all in the selected Bible(s).</span>' +
+								'<span id="g3q3a1">It is the number of occurrences of a word in the Bible. Click on it to see them all in the selected Bible(s).</span>' +
 							'</div>' +
-						'<li style="font-weight:bold">Why do some words have dropdown next to the frequency number?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g3q4">Why do some words have dropdown next to the frequency number?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<span>This reveals different forms for some words and names. These details are often interesting to scholars, eg the word \'beginning\' in Genesis.</span>' +
+								'<span id="g3q4a1">This reveals different forms for some words and names. These details are often interesting to scholars, eg the word \'beginning\' in Genesis.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/dropdown_frequency_.png\');width:190px;height:88px;border:3px solid black;display:none"></div>' +
 							'</div>' +
-						'<li style="font-weight:bold">Where do I find the maps?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g3q5">Where do I find the maps?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'map.gif\', 22)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'map.gif\', 22)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1st method:</span>' +
-								'<br><span>Click on a place name then on the Map button in the detailed lexicon.</span>' +
+								'<br><span id="g3q5a1">1st method:</span>' +
+								'<br><span id="g3q5a2">Click on a place name then on the Map button in the detailed lexicon.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/map_in_lexicon_.png\');width:190px;height:126px;border:3px solid black;display:none"></div>' +
-								'<br><span>2nd method:</span>' +
-								'<br><span>1) Click the Resource icon.</span>' +
+								'<br><span id="g3q5a3">2nd method:</span>' +
+								'<br><span id="g3q5a4">1) Click the Resource icon.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/resource_icon_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Click on "Places in the Bible"</span>' +
+								'<br><span id="g3q5a5">2) Click on "Places in the Bible"</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/find_map_.png\');width:190px;height:131px;border:3px solid black;display:none"></div>' +
 							'</div>' +
-						'<li style="font-weight:bold">How do I get the word frequency for a chapter or a book?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g3q6">How do I get the word frequency for a chapter or a book?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the analysis icon.</span>' +
+								'<br><span id="g3q6a1">1) Click on the analysis icon.</span>' +
 								'&nbsp;<span class="glyphicon glyphicon-stats" style="line-height:13px"></span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/analysis_.png\');width:190px;height:116px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Click on the "Selected passage" button if no analysis is shown.</span>' +
+								'<br><span id="g3q6a2">2) Click on the "Selected passage" button if no analysis is shown.</span>' +
 							'</div>' +
 						'</ul>' +
 				'</div>' +
 			'</div>' +
 
 			'<div class="accordion-row" data-row="3">' +
-				'<h5 class="accordion-heading stepButton">How do I find more information on original languges?' +
+				'<h5 class="accordion-heading stepButton"><span id="g4q0">How do I find more information on original languges?</span>' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<ul style="padding-inline-start:10px">' +
-						'<li style="font-weight:bold">How do I see Greek/Hebrew vocabulary for my Bible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g4q1">How do I see Greek/Hebrew vocabulary for my Bible?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'greek_hebrew_vocab.gif\', 53)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'greek_hebrew_vocab.gif\', 53)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the Bible translation button</span>' +
+								'<br><span id="g4q1a1">1) Click on the Bible translation button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Refer to the legend and select the Bible translations with the Vocab feature</span>' +
+								'<br><span id="g4q1a2">2) Refer to the legend and select the Bible translations with the Vocab feature</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/esv_with_vocab_.png\');width:190px;height:306px;border:3px solid black;display:none"></div>' +
-								'<br><span>3) Click on the Option button, then click "Interlinear options”, then select "Greek / Hebrew".  Original language vocab will be shown.</span>' +
+								'<br><span id="g4q1a3">3) Click on the Option button, then click "Interlinear options”, then select "Greek / Hebrew".  Original language vocab will be shown.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/original_vocab_feature_.png\');width:190px;height:198px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 
-						'<li style="font-weight:bold">How do I see Greek/Hebrew transliteration for my Bible?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g4q2">How do I see Greek/Hebrew transliteration for my Bible?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'ESV_orig_voc_transliteration.gif\', 35)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'ESV_orig_voc_transliteration.gif\', 35)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the Bible translation button</span>' +
+								'<br><span id="g4q2a1">1) Click on the Bible translation button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Refer to the legend and select the Bible translations with the Vocab feature</span>' +
+								'<br><span id="g4q2a2">2) Refer to the legend and select the Bible translations with the Vocab feature</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/esv_with_vocab_.png\');width:190px;height:306px;border:3px solid black;display:none"></div>' +
-								'<br><span>3) Click on the Option button, then click "Interlinear options”, then select "Transliteration".</span>' +
+								'<br><span id="g4q2a3">3) Click on the Option button, then click "Interlinear options”, then select "Transliteration".</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/transliteration_.png\');width:190px;height:230px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 
-						'<li style="font-weight:bold">How do I see Greek/Hebrew vocabulary for a verse?    <a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g4q3">How do I see Greek/Hebrew vocabulary for a verse?    </span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'verse_vocab.gif\', 18)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'verse_vocab.gif\', 18)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the verse number to list the words and meanings</span>' +
+								'<br><span id="g4q3a1">1) Click on the verse number to list the words and meanings</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/verse_vocab_.png\');width:190px;height:250px;border:3px solid black;display:none"></div>' +
-								'<br>2) Hover over or click on a word for more details about the word</span>' +
+								'<br><span id="g4q3a2">2) Hover over or click on a word for more details about the word</span>' +
 							'</div>' +
 
-						'<li style="font-weight:bold">How can I view multiple Bibles together as an Interlinear?<a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g4q4">How can I view multiple Bibles together as an Interlinear?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'OHB_ESV_Gen1.gif\', 40)">Video guides  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'OHB_ESV_Gen1.gif\', 40)">Video guides  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'&nbsp;&nbsp;' +
-								'<a href="javascript:step.util.showVideoModal(\'KJV_THGNT_John1.gif\', 35)">' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'KJV_THGNT_John1.gif\', 35)">' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the Bible translation button</span>' +
+								'<br><span id="g4q4a1">1) Click on the Bible translation button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Refer to the legend and select two Bible with the vocabulary feature</span>' +
+								'<br><span id="g4q4a2">2) Refer to the legend and select two Bible with the vocabulary feature</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_two_bibles_.png\');width:190px;height:322px;border:3px solid black;display:none"></div>' +
-								'<br><span>3) Click on the Option button, then click Interlinear”.  Interlinear will be shown.</span>' +
+								'<br><span id="g4q4a3">3) Click on the Option button, then click Interlinear”.  Interlinear will be shown.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/interlinear_.png\');width:190px;height:338px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 
-						'<li style="font-weight:bold">How do I see the various versions of the Greek OT?<a id="ot-greek-qa" style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g4q5">How do I see the various versions of the Greek OT?</span><a id="ot-greek-qa" style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<span>1) Click on the Bible translation button</span>' +
+								'<span id="g4q5a1">1) Click on the Bible translation button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Select “Ancient” for the language</span>' +
-								'<br><span>3) Scroll down to see the Greek OT translations</span>' +
+								'<br><span id="g4q5a2">2) Select “Ancient” for the language</span>' +
+								'<br><span id="g4q5a3">3) Scroll down to see the Greek OT translations</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/bible_ancient_.png\');width:190px;height:23px;border:3px solid black;display:none"></div>' +
 								'<br><br><a id="otgreekexamples" href="html/additional_examples.html?exampleType=greekot&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
 								'<br><br>' +
 							'</div>' +
-						'<li style="font-weight:bold">How do I display the color-coded grammar?<a id="color-qa" style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g4q6">How do I display the color-coded grammar?</span><a id="color-qa" style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'color_code_grammar.gif\', 50)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'color_code_grammar.gif\', 50)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
-								'<br><span>1) Click on the Bible translation button</span>' +
+								'<br><span id="g4q6a1">1) Click on the Bible translation button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
-								'<br><span>2) Refer to the legend and select the Bible translations with the grammar feature</span>' +
+								'<br><span id="g4q6a2">2) Refer to the legend and select the Bible translations with the grammar feature</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/grammar_feature_.png\');width:190px;height:221px;border:3px solid black;display:none"></div>' +
-								'<br><span>3) Click on the Option button, then click "Interlinear options", then click “Colour code grammar”. The text will then be colour coded.</span>' +
+								'<br><spanid="g4q6a3">3) Click on the Option button, then click "Interlinear options", then click “Colour code grammar”. The text will then be colour coded.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/color_code_grammar_.png\');width:190px;height:273px;border:3px solid black;display:none"></div>' +
-								'<br><span>4) To understand the colour code, click on the button “Configure colour code grammar”.</span>' +
+								'<br><span id="g4q6a4">4) To understand the colour code, click on the button “Configure colour code grammar”.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/configure_color_code_grammar_.png\');width:170px;height:78px;border:3px solid black;display:none"></div>' +
 								'<br><br><a id="colorcodeexamples" href="html/additional_examples.html?exampleType=colorCode&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
 								'<br>' +
@@ -252,13 +253,13 @@ var ExamplesView = Backbone.View.extend({
 			'</div>' +
 
 			'<div class="accordion-row keyboard_shortcut" data-row="4">' +
-				'<h5 class="accordion-heading stepButton">Additional information' +
+				'<h5 class="accordion-heading stepButton"><span id="g5q0">Additional information</span>' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<ul style="padding-inline-start:10px">' +
 						'<li class="keyboard_shortcut" style="font-weight:bold">' +
-							'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/presentation/d/10oUdTW40X3f5y4wmImxRW5_3zTJnRkVUVo4jz4mU9E4/preview" target="_blank">Tutorial</a>' +
+							'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/presentation/d/10oUdTW40X3f5y4wmImxRW5_3zTJnRkVUVo4jz4mU9E4/preview" target="_blank" id="g5q1">Tutorial</a>' +
 						'</li>' +
 						'<li class="keyboard_shortcut" style="font-weight:bold">' +
 						'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://www.stepbible.org/html/keyboard_shortcut.html" target="_blank"><%= __s.quick_tutorial_header4 %></a>' +
@@ -282,6 +283,12 @@ var ExamplesView = Backbone.View.extend({
     },
     render: function () {
 		if (($('#welcomeExamples').length == 0) || (step.touchDevice && !step.touchWideDevice)) {
+			this.biblesWithMorph = (step.state.isLocal()) ? "ESV" : "ESV, NASB2020 and NET2full";
+			if (step.userLanguageCode.substring(0,2) === "zh") {
+				if (this.biblesWithMorph.indexOf("and") == -1) this.biblesWithMorph = " and " + this.biblesWithMorph;
+				else this.biblesWithMorph = ", " + this.biblesWithMorph;
+				this.biblesWithMorph = "和合本" + this.biblesWithMorph;
+			}
 			if (step.touchDevice && !step.touchWideDevice) {
 				step.util.showLongAlert("", "<b>" + __s.welcome_to_step + "</b>", [ this.exampleTemplate() ]);
 				$(".closeColumn").click(function (ev) {
@@ -303,6 +310,27 @@ var ExamplesView = Backbone.View.extend({
             var options = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("selectedOptions") || [];
             var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
             if ((options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1)) cf.initCanvasAndCssForClrCodeGrammar();
+		}
+		if (step.userLanguageCode.substring(0,2) === "zh") {
+			fetch("https://us.stepbible.org/html/lexicon/" + step.userLanguageCode.toLowerCase() + "_json/faq.txt")
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(data) {
+				var lines = data.split("\n");
+				for (var i = 0; i < lines.length; i++) {
+					var curLine = lines[i].replace("：",":");
+					var pos = curLine.indexOf(":");
+					if (pos > 1) {
+						var idName = lines[i].substring(0,pos).trim();
+						var text = lines[i].substring(pos+1).trim();
+						var elementName = (idName.substring(0,1) === "_") ? elementName = "." + idName.substring(1) : "#" + idName;
+						$(elementName).text(text);
+					}
+					else
+						console.log("Does not recognize foreign lang example line: " + lines[i]);
+				}
+            });
 		}
         var classicalUISetting = step.util.localStorageGetItem("step.classicalUI");
 		if (classicalUISetting === "true") $('#classicalUIVideo').hide();

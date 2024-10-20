@@ -170,7 +170,7 @@ var ExamplesView = Backbone.View.extend({
 			'</div>' +
 
 			'<div class="accordion-row" data-row="3">' +
-				'<h5 class="accordion-heading stepButton"><span id="g4q0">How do I find more information on original languges?</span>' +
+				'<h5 class="accordion-heading stepButton"><span id="g4q0">How do I find more information on original languages?</span>' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +

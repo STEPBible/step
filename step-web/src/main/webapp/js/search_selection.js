@@ -1222,6 +1222,28 @@ step.searchSelect = {
 		}
 		return false;
 	},
+	getGlossInUserLanguage: function(dataSuggestion) {
+		if (dataSuggestion.strongNumber == undefined)
+			return dataSuggestion.gloss;
+		var checkLang = step.userLanguageCode.toLowerCase();
+		if ((checkLang === "es") && (typeof dataSuggestion._es_Gloss === "string")) return dataSuggestion._es_Gloss;
+		if (((checkLang === "zh_tw") || (checkLang === "zh_hk")) && (typeof dataSuggestion._zh_tw_Gloss === "string")) return dataSuggestion.gloss + " (" + dataSuggestion._zh_tw_Gloss + ")";
+		if ((checkLang.substring(0,2) === "zh") && (typeof dataSuggestion._zh_Gloss === "string")) return dataSuggestion.gloss + " (" + dataSuggestion._zh_Gloss + ")";
+		if (step.defaults.langWithTranslatedLex.indexOf(checkLang) == -1) return dataSuggestion.gloss;
+		fetch("https://us.stepbible.org/html/lexicon/" + checkLang + "_json/" +
+			dataSuggestion.strongNumber + ".json")
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(data) {
+			var gloss = data.gloss;
+			var pos = gloss.indexOf(":");
+			if (pos > -1)
+				gloss = gloss.substring(pos+1).trim();
+			step.util.updateWhenRendered(".src_gloss_" + data.strong, " [" + gloss.trim() + "]", 0);
+		});
+		return dataSuggestion.gloss + '<span class="src_gloss_' + dataSuggestion.strongNumber + '"></span>';
+	},
 	_handleEnteredSearchWord: function(limitType, previousUserInput, userPressedEnterKey) {
 		$('#quickLexicon').remove();
 		if ((typeof limitType === "undefined") || (limitType === null)) limitType = "";
@@ -1342,7 +1364,7 @@ step.searchSelect = {
 									str2Search = text2Display;
 								}
 								else if (suggestionType === MEANINGS) {
-									text2Display = data[i].suggestion.gloss;
+									text2Display = step.searchSelect.getGlossInUserLanguage(data[i].suggestion);
 									str2Search = text2Display;
 								}
 								else if (suggestionType === TEXT_SEARCH) {
@@ -1431,7 +1453,7 @@ step.searchSelect = {
                                     }
 									if (alreadyShownStrong.includes(suggestionType + strongWithoutAugment)) continue;
 									alreadyShownStrong.push(suggestionType + strongWithoutAugment);
-									suffixToDisplay = data[i].suggestion.gloss;
+									suffixToDisplay = step.searchSelect.getGlossInUserLanguage(data[i].suggestion);
 									var hasDetailLexInfo = (typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "");
 									text2Display = 
 										'<i class="srchTransliteration">' + data[i].suggestion.stepTransliteration + '</i>' +
@@ -1585,7 +1607,7 @@ step.searchSelect = {
 				}
 				var currentWordPopularity = parseInt(data[i].suggestion.popularity);
 				if ((selectedGloss === "") || (currentWordPopularity > augStrongWithMostOccurrence)) {
-					selectedGloss = data[i].suggestion.gloss;
+					selectedGloss = step.searchSelect.getGlossInUserLanguage(data[i].suggestion);
 					augStrongWithMostOccurrence = currentWordPopularity;
 					notInBibleSelected = step.searchSelect.addNotInBibleSelected(notInBibleSelected, resultArray[2]);
 				}
@@ -1903,7 +1925,7 @@ step.searchSelect = {
 				var text2Display = "";
 				var strongNum = data[i].suggestion.strongNumber;
 				var str2Search = strongNum;
-				var gloss = data[i].suggestion.gloss;
+				var gloss = step.searchSelect.getGlossInUserLanguage(data[i].suggestion);
 				var strongPrefix = strongNum[0].toUpperCase();
 				text2Display = data[i].suggestion.type + ": ";
 				str2Search = step.searchSelect.extractStrongFromDetailLexicalTag(data[i].suggestion.strongNumber, data[i].suggestion._detailLexicalTag);
@@ -2260,8 +2282,8 @@ step.searchSelect = {
 					'<span class="srchFrequency"> ' + frequencyMsg + '</span>' +
 				"</a>");
 			step.searchSelect.addMouseOverEvent("strong", item[1], "", allVersions.split(',')[0], newSuggestion);
-			list.append(newSuggestion)
-				.append(' - ' + item[2]);
+			list.append(newSuggestion).append(' - ' +
+				step.searchSelect.getGlossInUserLanguage( {"strongNumber":item[1], "gloss": item[2]}));
 			if (item[6] !== "") {
 				var freqListElm = step.util.freqListQTip(item[1], item[6], allVersions, "", "");
 				list.append('&nbsp;').append(freqListElm);

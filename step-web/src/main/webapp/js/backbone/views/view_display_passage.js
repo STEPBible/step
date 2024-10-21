@@ -135,9 +135,8 @@ var PassageDisplayView = DisplayView.extend({
                     }
                 });    
                 //needs to happen after appending to DOM
-				
                 this.updateSTEPColor();
-				
+                this._addForeignLangToInterLinear();
                 this._doChromeHack(passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 this.scrollToTargetLocation(passageContainer);
@@ -177,6 +176,46 @@ var PassageDisplayView = DisplayView.extend({
                 }
             }
         },
+
+        _addForeignLangToInterLinear: function () {
+            var currentUserLang = step.userLanguageCode.toLowerCase();
+            if (step.defaults.langWithTranslatedLex.indexOf(currentUserLang) > -1) {
+                var strongsToElmts = {};
+                var elementsToReview = $(".interlinear").find(".w ").find("span.strongs");
+                for (var i = 0; i < elementsToReview.length; i++) {
+                    var curElement = $(elementsToReview[i]);
+                    var curStrong = curElement.parent().attr("strong");
+                    if ((typeof curStrong !== "string") || (curStrong === "")) {
+                        if (curElement.text() === "Eng Vocab")
+                            curElement.html("Eng Vocab<br>" + currentUserLang.substring(0,1).toUpperCase() + currentUserLang.substring(1,2) + " Vocab");
+                        continue;
+                    }
+                    curStrong = curStrong.split(" ")[0]; // Take the first Strong
+                    if (curStrong in strongsToElmts)
+                        strongsToElmts[curStrong].push(curElement);
+                    else
+                        strongsToElmts[curStrong] = [ curElement ];
+                }
+                for (var key in strongsToElmts) {
+                    fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
+                        key + ".json")
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        var gloss = data.gloss.trim();
+                        var pos = gloss.indexOf(":");
+                        if (pos > -1)
+                            gloss = gloss.substring(pos+1).trim();
+                        for (var i = 0; i < strongsToElmts[data.strong].length; i++) {
+                            var thisElmnt = strongsToElmts[data.strong][i];
+                            thisElmnt.html(thisElmnt.text() + "<br>" + gloss);
+                        }
+                    });
+                }
+            }
+        },
+
         scrollToTargetLocation: function (passageContainer) {
             var self = this;
             if (!passageContainer) {

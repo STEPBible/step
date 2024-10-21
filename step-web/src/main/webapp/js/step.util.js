@@ -782,6 +782,27 @@ step.util = {
             timer = setTimeout(callback, ms);
         }
     },
+
+    updateWhenRendered: function (elementName, textToDisplay, recursionCount, isHTML) {
+		if (recursionCount > 8) return;
+		var srcGlossElm = $(elementName);
+		if (srcGlossElm.length > 0) {
+			if (isHTML) {
+				srcGlossElm.html(textToDisplay);
+				if (elementName.indexOf("quick") > -1) {
+					$("#quickLexicon").show();
+					step.util.clearTimeout("showQuickLexicon");
+				}
+			}
+			else
+				srcGlossElm.text(textToDisplay);
+		}
+		else // The HTML element has not been rendered.  Wait
+			step.util.delay(function () {
+				step.util.updateWhenRendered(elementName, textToDisplay, recursionCount + 1, isHTML);
+			}, 120, elementName.substring(1));
+	},
+
 //    getMainLanguage: function (passageModel) {
 //        return (passageModel.get("languageCode") || ["en"])[0];
 //    },
@@ -1920,7 +1941,7 @@ step.util = {
 																	else if ((currentLang === "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
 																	else if ((currentLang === "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
 																	else if ((currentLang === "km") && (strongData._km_Gloss)) strongData.gloss = strongData._km_Gloss;
-																	var morph = "";
+//																	var morph = ""; // Does not seem to be used
 																	allMorphsOfThisWord = [];
 																	var morphCount = 0;
 																	for (var z = 0; z < allMorphs.length; z++) {

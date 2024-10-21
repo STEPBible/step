@@ -13,7 +13,7 @@ The second script (convert_def.pl) will use the Google translated gloss and defi
 Procedure:
 
 1. Run the first perl script. For example, perl extract_def.pl lexicon_greek.txt.  
-2. Open a new Google Sheet with the name GreekDef_ar
+2. Open a new Google Sheet with the name GreekDef_fr
 3. Copy content of first file to column A.
 4. Copy content of second file to column B
 5. Copy content of third file to column D

@@ -319,6 +319,7 @@ var QuickLexicon = Backbone.View.extend({
             $('#quickLexicon').css({'maxHeight':'200px','overflow-y':'auto'});
         }
         else {
+            var safetyMargin = 20;
             if (step.defaults.langWithTranslatedLex.indexOf(step.userLanguageCode.toLowerCase()) > -1) {
                 safetyMargin += bottom; // Double the size if there is an additional definition for that langage
                 lexicon.css({"display": "none"});
@@ -335,7 +336,6 @@ var QuickLexicon = Backbone.View.extend({
                 }
             }
             else {
-                var safetyMargin = 20;
                 if ((quickDefPositionAtTop) && (bottom + safetyMargin > self.position)) {
                     lexicon.css({"top": "", "bottom": "0"});
                     top = $("#quickLexicon").position().top; // The top position has changed

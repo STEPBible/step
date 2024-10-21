@@ -315,7 +315,7 @@ var ExamplesView = Backbone.View.extend({
 		if ((checkLangCode.substring(0,2) === "zh") || (checkLangCode.substring(0,2) === "ar")) {
 			if (checkLangCode === "zh_hk")
 				checkLangCode = "zh_tw";
-			fetch("https://us.stepbible.org/html/lexicon/" + checkLangCode + "_json/faq.txt")
+			fetch("https://www.stepbible.org/html/lexicon/" + checkLangCode + "_json/faq.txt")
             .then(function(response) {
                 return response.text();
             })

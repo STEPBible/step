@@ -868,6 +868,15 @@ var SidebarView = Backbone.View.extend({
                 if (pos > -1)
                     gloss = gloss.substring(pos+1);
                 step.util.updateWhenRendered(".side_gloss_" + data.strong, "[" + gloss.trim() + "]", 0);
+                if (!isNaN(data.page)) {
+                    var newPage = data.page + 14;
+                    panel.append('<a href="https://gallica.bnf.fr/ark:/12148/bpt6k6507608z/f' + newPage + 
+                                '.item" target="_blank">Dictionnaire hébreu-français...</a>')
+                        .append('&nbsp;&nbsp;')
+                        .append('<a style="font-size:14px" class="glyphicon glyphicon-picture" href="https://gallica.bnf.fr/ark:/12148/bpt6k6507608z/f' + newPage + 
+                    '.highres" target="_blank"></a>')
+                        .append('<br>');
+                }
                 panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)"));
                 var def = function2ToCall(data.def);
                 var addLineBreaks = false;

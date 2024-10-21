@@ -311,8 +311,11 @@ var ExamplesView = Backbone.View.extend({
             var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
             if ((options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1)) cf.initCanvasAndCssForClrCodeGrammar();
 		}
-		if (step.userLanguageCode.substring(0,2) === "zh") {
-			fetch("https://us.stepbible.org/html/lexicon/" + step.userLanguageCode.toLowerCase() + "_json/faq.txt")
+		var checkLangCode = step.userLanguageCode.toLowerCase();
+		if ((checkLangCode.substring(0,2) === "zh") || (checkLangCode.substring(0,2) === "ar")) {
+			if (checkLangCode === "zh_hk")
+				checkLangCode = "zh_tw";
+			fetch("https://us.stepbible.org/html/lexicon/" + checkLangCode + "_json/faq.txt")
             .then(function(response) {
                 return response.text();
             })
@@ -326,6 +329,8 @@ var ExamplesView = Backbone.View.extend({
 						var text = lines[i].substring(pos+1).trim();
 						var elementName = (idName.substring(0,1) === "_") ? elementName = "." + idName.substring(1) : "#" + idName;
 						$(elementName).text(text);
+						if (checkLangCode === "ar")
+							$(elementName).css("direction", "rtl");
 					}
 					else
 						console.log("Does not recognize foreign lang example line: " + lines[i]);

@@ -1229,7 +1229,7 @@ step.searchSelect = {
 		if ((checkLang === "es") && (typeof dataSuggestion._es_Gloss === "string")) return dataSuggestion._es_Gloss;
 		if (((checkLang === "zh_tw") || (checkLang === "zh_hk")) && (typeof dataSuggestion._zh_tw_Gloss === "string")) return dataSuggestion.gloss + " (" + dataSuggestion._zh_tw_Gloss + ")";
 		if ((checkLang.substring(0,2) === "zh") && (typeof dataSuggestion._zh_Gloss === "string")) return dataSuggestion.gloss + " (" + dataSuggestion._zh_Gloss + ")";
-		if (" fr de pt ".indexOf(checkLang) == -1) return dataSuggestion.gloss;
+		if (step.defaults.langWithTranslatedLex.indexOf(checkLang) == -1) return dataSuggestion.gloss;
 		fetch("https://us.stepbible.org/html/lexicon/" + checkLang + "_json/" +
 			dataSuggestion.strongNumber + ".json")
 		.then(function(response) {

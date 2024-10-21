@@ -854,7 +854,7 @@ var SidebarView = Backbone.View.extend({
             }
 		}
         var firstLetterOfStrong = mainWord.strongNumber.charAt(0);
-        if (" fr de pt ".indexOf(currentUserLang) > -1) {
+        if (step.defaults.langWithTranslatedLex.indexOf(currentUserLang) > -1) {
             var function1ToCall = this._addLinkAndAppend;
             var function2ToCall = (firstLetterOfStrong === "G") ? this._prepIndentNTDef : this._indentOTDefinition;
             fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
@@ -940,7 +940,7 @@ var SidebarView = Backbone.View.extend({
                     else if ((currentUserLang == "zh") && (relatedNosToDisplay[i]._zh_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._zh_Gloss + "]";
                     else if ((currentUserLang == "zh_tw") && (relatedNosToDisplay[i]._zh_tw_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._zh_tw_Gloss + "]";
                     else if ((currentUserLang == "km") && (relatedNosToDisplay[i]._km_Gloss != undefined)) userLangGloss = " [" + relatedNosToDisplay[i]._km_Gloss + "]";
-                    else if (" fr de pt ".indexOf(currentUserLang) > -1) userLangGloss = " <span class='rel_gloss_" + relatedNosToDisplay[i].strongNumber + "'></span>";
+                    else if (step.defaults.langWithTranslatedLex.indexOf(currentUserLang) > -1) userLangGloss = " <span class='rel_gloss_" + relatedNosToDisplay[i].strongNumber + "'></span>";
                     var li = "";
                     if ((!relatedNosToDisplay[i]._searchResultRange) || (relatedNosToDisplay[i]._searchResultRange === "")) {
                         var fontClass = "";
@@ -971,7 +971,7 @@ var SidebarView = Backbone.View.extend({
                     }
                     ul.append(li);
                     matchingExpression += relatedNosToDisplay[i].strongNumber + " ";
-                    if (" fr de pt ".indexOf(currentUserLang) > -1) {
+                    if (step.defaults.langWithTranslatedLex.indexOf(currentUserLang) > -1) {
 	                    fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
 	                        curStrong + ".json")
 	                    .then(function(response) {

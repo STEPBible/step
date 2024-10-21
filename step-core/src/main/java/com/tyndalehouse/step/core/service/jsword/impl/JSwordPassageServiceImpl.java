@@ -1159,7 +1159,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     else if (userLanguage.toLowerCase().startsWith("fa")) changeVersion = "FCB";
                     else if (userLanguage.toLowerCase().startsWith("fil")) changeVersion = "TglASD";
                     else if (userLanguage.toLowerCase().startsWith("fi")) changeVersion = "FinPR";
-                    else if (userLanguage.toLowerCase().startsWith("fr")) changeVersion = "FreLSG";
+                    else if (userLanguage.toLowerCase().startsWith("fr")) changeVersion = "FreSeg21";
                     else if (userLanguage.toLowerCase().startsWith("ga")) changeVersion = "IriODomhnuill";
                     else if (userLanguage.toLowerCase().startsWith("hr")) changeVersion = "HrvKOK";
                     else if (userLanguage.toLowerCase().startsWith("hu")) changeVersion = "HunKAR";

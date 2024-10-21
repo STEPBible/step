@@ -962,18 +962,20 @@ var SidebarView = Backbone.View.extend({
                     }
                     ul.append(li);
                     matchingExpression += relatedNosToDisplay[i].strongNumber + " ";
-                    fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
-                        curStrong + ".json")
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(data) {
-                        var gloss = data.gloss;
-                        var pos = gloss.indexOf(":");
-                        if (pos > -1)
-                            gloss = gloss.substring(pos+1);
-                        step.util.updateWhenRendered(".rel_gloss_" + data.strong, "[" + gloss.trim() + "]", 0);
-                    });        
+                    if (" fr de pt ".indexOf(currentUserLang) > -1) {
+	                    fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
+	                        curStrong + ".json")
+	                    .then(function(response) {
+	                        return response.json();
+	                    })
+	                    .then(function(data) {
+	                        var gloss = data.gloss;
+	                        var pos = gloss.indexOf(":");
+	                        if (pos > -1)
+	                            gloss = gloss.substring(pos+1);
+	                        step.util.updateWhenRendered(".rel_gloss_" + data.strong, "[" + gloss.trim() + "]", 0);
+	                    });
+                    }
                 }
             }
             step.passage.highlightStrong(null, matchingExpression, "lexiconRelatedFocus");

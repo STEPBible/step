@@ -179,7 +179,7 @@ var PassageDisplayView = DisplayView.extend({
 
         _addForeignLangToInterLinear: function () {
             var currentUserLang = step.userLanguageCode.toLowerCase();
-            if (" fr de pt ".indexOf(currentUserLang) > -1) {
+            if (step.defaults.langWithTranslatedLex.indexOf(currentUserLang) > -1) {
                 var strongsToElmts = {};
                 var elementsToReview = $(".interlinear").find(".w ").find("span.strongs");
                 for (var i = 0; i < elementsToReview.length; i++) {

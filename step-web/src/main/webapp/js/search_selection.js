@@ -640,7 +640,9 @@ step.searchSelect = {
 				'</span>' +
 			'</form>' +
 //			'<h4 id="hd4">' + __s.enter_search_word + '</h4>' +
-			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
+			'<span id="searchRangeButton" style="float:right;font-size:larger"><b>' + __s.search_range + ':</b> ' +
+				'<a onclick=step.searchSelect._buildRangeHeaderAndTable()>' + displayRange + '</a>' +
+			'</span>' +
 			'</div><br><br><br>' +
 			'<span id="warningMessage" style="color:red;"></span>' +
 

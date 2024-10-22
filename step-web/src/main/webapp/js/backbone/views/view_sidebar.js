@@ -249,7 +249,7 @@ var SidebarView = Backbone.View.extend({
                 var panelBody = $('<div class="panel-body"></div>');
                 if (!step.touchDevice || step.touchWideDevice)
                 	panelContentContainer.append(panelBody);
-                this._createBriefWordPanel(panelBody, item, currentUserLang, allVersions);
+                this._createBriefWordPanel(panelBody, item, currentUserLang, allVersions, ref);
                 var currentVariant = variant[i];
                 if ((typeof currentVariant !== "string") && (typeof variant[0] === "string"))
                     currentVariant = variant[0];
@@ -257,7 +257,7 @@ var SidebarView = Backbone.View.extend({
                     panelBody.append("<div>in " + currentVariant + " manuscript</div>");
                 if (i < data.morphInfos.length)
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
-                this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i], ref);
+                this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
                 if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
                 panelBodies.push(panelBody);
@@ -285,14 +285,14 @@ var SidebarView = Backbone.View.extend({
         else {
             allStrongsForNextBackButton += data.vocabInfos[0].strongNumber;
             var panelBody = $('<div class="panel-body"></div>');
-            this._createBriefWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions);
+            this._createBriefWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, ref);
             if (variant[0] !== "")
                 panelBody.append("<div>Only in " + variant[0] + " manuscript</div>");
             // need to handle multiple morphInfo (array)
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0], morphCount, ref, data.vocabInfos[0].strongNumber);
             }
-            this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0], ref);
+            this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             }
@@ -355,7 +355,7 @@ var SidebarView = Backbone.View.extend({
             $("." + name + "Select").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
         }
     },
-    _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
+    _createBriefWordPanel: function (panel, mainWord, currentUserLang, allVersions, ref) {
         var userLangGloss = "";
         if ((currentUserLang == "es") && (mainWord._es_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._es_Gloss + "&nbsp;";
         else if ((currentUserLang == "zh") && (mainWord._zh_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._zh_Gloss + "&nbsp;";
@@ -373,6 +373,9 @@ var SidebarView = Backbone.View.extend({
                 .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
+                .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + mainWord.strongNumber + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                    '<i style="font-size:smaller" class="glyphicon glyphicon-bullhorn"></i>' +
+                '</a>'))
         );
     },
 
@@ -798,7 +801,7 @@ var SidebarView = Backbone.View.extend({
         return updtMedDef;
     },
 	
-    _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo, ref) {
+    _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
         if (typeof mainWord.shortDef === "string") {
@@ -877,10 +880,7 @@ var SidebarView = Backbone.View.extend({
                     '.highres" target="_blank"></a>')
                         .append('<br>');
                 }
-                panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)")
-                    .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + data.strong + '\',\'' + ref + '\',\'' + bibleVersion + '\')" title="Report lexicon issues">' +
-                                    '<i style="font-size:smaller" class="glyphicon glyphicon-bullhorn"></i>' +
-                                '</a>')));
+                panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)"));
                 var def = function2ToCall(data.def);
                 var addLineBreaks = false;
                 if (data.strong.charAt(0) === "G") {

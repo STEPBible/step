@@ -2409,34 +2409,62 @@ step.util = {
     	var element = document.getElementById('lexFeedbackModal');
     	if (element) element.parentNode.removeChild(element);
     	$("div.modal-backdrop.in").remove();
+		var headerMessage = "";
+		if (typeof version === "string") {
+			if (version !== "")
+				headerMessage += "Bible: " + version;
+		}
+		else version = "";
+		var refToDisplay = ref;
+		if (typeof refToDisplay === "string") {
+			refToDisplay = refToDisplay.split(":")[0];
+			if (refToDisplay !== "") {
+				if (headerMessage !== "") headerMessage += ", ";
+				headerMessage += "passage: " + refToDisplay;
+			}
+		}
+		else ref = "";
+		if (typeof strongNum === "string") {
+			if (strongNum !== "") {
+				if (headerMessage !== "") headerMessage += ", ";
+				headerMessage += "strong number: " + strongNum;
+			}
+		}
+		else strongNum = "";
+		if (headerMessage !== "") headerMessage = "Current " + headerMessage;
 		var modalHTML =
 			'<div class="modal" id="lexFeedbackModal" dir="<%= step.state.isLtR() ? "ltr" : "rtl" %>" tabindex="-1" role="dialog" aria-labelledby="lexFeedbackLabel" aria-hidden="true">' +
 				'<div class="modal-dialog">' +
 					'<div class="modal-content stepModalFgBg">' +
 						'<div class="modal-header">' +
 							step.util.modalCloseBtn("lexFeedbackModal") +
-							'<h4 class="modal-title" id="lexFeedbackLabel"><%= __s.help_feedback %></h4>' +
+							'<h4 class="modal-title" id="lexFeedbackLabel"><%= __s.lexicon_feedback %></h4>' +
 						'</div>' + //end header
 						'<div class="modal-body">' +
+							'<div>' + headerMessage + '</div>' +
 							'<form role="form">' +
 								'<div class="form-group">' +
 									'<label for="feedbackEmail"><%= __s.register_email %><span class="mandatory">*</span></label>' +
 									'<input type="email" class="form-control" value="" id="lexfeedbackEmail" maxlength="200" placeholder="email@email.com">' +
 								'</div>' +
 								'<div class="form-group">' +
-									'<label for="feedbackSummary"><%= __s.feedback_summary %><span class="mandatory">*</span></label> ' +
+									'<label for="lexfeedbackType"><%= __s.register_type %></label>' +
+									'<select type="text" class="form-control" id="lexfeedbackType">' +
+									'<option value="Strong tagging"><%= __s.feedback_strong_tagging %></option>' +
+									'<option value="English lexicon"><%= __s.feedback_english_lexicon %></option>';
+		var userLang = step.userLanguageCode.toLowerCase();
+		if ((step.defaults.langWithTranslatedLex.indexOf(userLang) > -1) || (" zh zh_tw km es vi ".indexOf(userLang) > -1)) {
+			var msg = __s.feedback_other_lexicon + " (" + step.userLanguage + ")";
+			modalHTML +=			'<option value="Other language lexicon">' + msg + '</option>';
+		}
+		modalHTML += 				'</select>' +
+								'</div>' +
+								'<div class="form-group">' +
+									'<label for="lexfeedbackSummary"><%= __s.feedback_summary %><span class="mandatory">*</span></label> ' +
 									'<input type="text" class="form-control" id="lexfeedbackSummary" maxlength="150" placeholder="<%= __s.feedback_summary %>">' +
 								'</div>' +
 								'<div class="form-group">' +
-									'<label for="feedbackType"><%= __s.register_type %></label>' +
-									'<select type="text" class="form-control" id="feedbackType">' +
-									'<option value="Bug"><%= __s.feedback_type_bug %></option>' +
-									'<option value="Improvement"><%= __s.feedback_type_improvement %></option>' +
-									'<option value="Error found"><%= __s.feedback_error_found %></option>' +
-									'</select>' +
-								'</div>' +
-								'<div class="form-group">' +
-									'<label for="feedbackDescription"><%= __s.feedback_description %><span class="mandatory">*</span></label> ' +
+									'<label for="lexfeedbackDescription"><%= __s.feedback_description %><span class="mandatory">*</span></label> ' +
 									'<textarea class="form-control" placeholder="<%= __s.feedback_description %>" id="lexfeedbackDescription" />' +
 								'</div>' + 
 							'</form>' +
@@ -2447,7 +2475,7 @@ step.util = {
 						'</div>' + //end footer
 						'<script>' +
 							'$(document).ready(function () {' +
-								'step.lexiconFeedback.init("' + strongNum + '","' + ref + '","' + version + '");' +
+								'step.lexiconFeedback.init("' + strongNum + '","' + refToDisplay + '","' + version + '");' +
 							'});' +
 						'</script>' +
 					'</div>' + //end content

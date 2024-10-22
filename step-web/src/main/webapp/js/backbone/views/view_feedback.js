@@ -92,7 +92,7 @@ var FeedbackView = Backbone.View.extend({
                 step.settings.save({ userFeedbackEmail: email }, {silent: true});
 
                 //formData.push({ key: "type", value: self.feedbackForm.find("#feedbackType").val()});
-                formData.push({ key: "type", "Bug"});
+                formData.push({ key: "type", value: "Bug"});
                 formData.push({ key: "email", value: email});
                 formData.push({ key: "description", value: self.feedbackForm.find("#feedbackDescription").val()});
                 formData.push({ key: "summary", value: self.feedbackForm.find("#feedbackSummary").val()});

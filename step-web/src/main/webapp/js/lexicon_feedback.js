@@ -14,9 +14,7 @@ step.lexiconFeedback = {
 
                 //store email locally
                 step.settings.save({ userFeedbackEmail: email }, {silent: true});
-
-                //formData.push({ key: "type", value: feedbackForm.find("#lexfeedbackType").val()});
-                formData.push({ key: "type", value: "Bug"});
+                formData.push({ key: "type", value: feedbackForm.find("#lexfeedbackType").val()});
                 formData.push({ key: "email", value: email});
                 formData.push({ key: "description", value: feedbackForm.find("#lexfeedbackDescription").val() + " Passage: " + bibleVersion + "," + ref + "," + strong });
                 formData.push({ key: "summary", value: feedbackForm.find("#lexfeedbackSummary").val()});

@@ -2455,7 +2455,7 @@ step.util = {
 		var userLang = step.userLanguageCode.toLowerCase();
 		if ((step.defaults.langWithTranslatedLex.indexOf(userLang) > -1) || (" zh zh_tw km es vi ".indexOf(userLang) > -1)) {
 			var msg = __s.feedback_other_lexicon + " (" + step.userLanguage + ")";
-			modalHTML +=			'<option value="Other language lexicon">' + msg + '</option>';
+			modalHTML +=			'<option value="Other lexicon">' + msg + '</option>';
 		}
 		modalHTML += 				'</select>' +
 								'</div>' +

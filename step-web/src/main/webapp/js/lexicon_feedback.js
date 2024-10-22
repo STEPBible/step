@@ -17,10 +17,9 @@ step.lexiconFeedback = {
 
                 formData.push({ key: "type", value: feedbackForm.find("#lexfeedbackType").val()});
                 formData.push({ key: "email", value: email});
-                formData.push({ key: "description", value: feedbackForm.find("#lexfeedbackDescription").val()});
+                formData.push({ key: "description", value: feedbackForm.find("#lexfeedbackDescription").val() + " Passage: " + bibleVersion + "," + ref + "," + strong });
                 formData.push({ key: "summary", value: feedbackForm.find("#lexfeedbackSummary").val()});
                 formData.push({ key: "url", value: document.URL});
-                formData.push({ key: "bibleref", value: bibleVersion + "," + ref + "," + strong })
 				$("#lexFeedbackModal").hide();
 				$("#lexFeedbackModal").remove();
                 $('body').removeClass('modal-open');

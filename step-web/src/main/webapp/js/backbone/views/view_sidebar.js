@@ -257,7 +257,7 @@ var SidebarView = Backbone.View.extend({
                     panelBody.append("<div>in " + currentVariant + " manuscript</div>");
                 if (i < data.morphInfos.length)
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
-                this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
+                this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i], ref);
                 if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
                 panelBodies.push(panelBody);
@@ -292,7 +292,7 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0], morphCount, ref, data.vocabInfos[0].strongNumber);
             }
-            this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
+            this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0], ref);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             }
@@ -798,7 +798,7 @@ var SidebarView = Backbone.View.extend({
         return updtMedDef;
     },
 	
-    _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo) {
+    _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo, ref) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
         if (typeof mainWord.shortDef === "string") {
@@ -877,7 +877,10 @@ var SidebarView = Backbone.View.extend({
                     '.highres" target="_blank"></a>')
                         .append('<br>');
                 }
-                panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)"));
+                panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)")
+                    .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + data.strong + '\',\'' + ref + '\',\'' + bibleVersion + '\')" title="Report lexicon issues">' +
+                                    '<i style="font-size:smaller" class="glyphicon glyphicon-bullhorn"></i>' +
+                                '</a>')));
                 var def = function2ToCall(data.def);
                 var addLineBreaks = false;
                 if (data.strong.charAt(0) === "G") {

@@ -20,7 +20,7 @@ step.defaults = {
     detailLevel : 0,
     pageSize : 20,
     syncMode : -1,
-    langWithTranslatedLex : " fr de pt ",
+    langWithTranslatedLex : " fr de pt ar ",
     passages : [{
             version : 'ESV',
             reference : 'Mat 1',

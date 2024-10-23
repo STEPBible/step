@@ -787,6 +787,8 @@ step.util = {
 		if (recursionCount > 8) return;
 		var srcGlossElm = $(elementName);
 		if (srcGlossElm.length > 0) {
+			if (step.userLanguageCode === "ar")
+				srcGlossElm.css("direction", "rtl");
 			if (isHTML) {
 				srcGlossElm.html(textToDisplay);
 				if (elementName.indexOf("quick") > -1) {

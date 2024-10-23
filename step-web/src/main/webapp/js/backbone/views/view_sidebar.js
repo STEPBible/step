@@ -993,6 +993,16 @@ var SidebarView = Backbone.View.extend({
             step.passage.highlightStrong(null, matchingExpression, "lexiconRelatedFocus");
             panel.append(ul);
         }
+        this.addStrongTriggers(bibleVersion);
+        if ((foundChineseJSON) && (!step.state.isLocal())) 
+            panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
+                "\" target=\"_blank\">" +
+                __s.zh_additional_zh_lexicon_info + "</a>");
+        this._doSideNotes(panel, bibleVersion);
+    },
+
+
+    addStrongTriggers: function (bibleVersion) {
         panel.find("[sbstrong]").click(function () {
             step.util.ui.showDef($(this).data("strongNumber"), bibleVersion);
         });
@@ -1015,12 +1025,8 @@ var SidebarView = Backbone.View.extend({
                 $("#quickLexicon").remove();
             });
         }
-        if ((foundChineseJSON) && (!step.state.isLocal())) 
-            panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
-                "\" target=\"_blank\">" +
-                __s.zh_additional_zh_lexicon_info + "</a>");
-        this._doSideNotes(panel, bibleVersion);
     },
+
     // for one-line morphology
     _createBriefMorphInfo: function (panel, info, morphCount, ref, strongNum) {
         if ((typeof info === "undefined") || (Object.keys(info).length === 0)) {

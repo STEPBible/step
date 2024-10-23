@@ -858,8 +858,9 @@ var SidebarView = Backbone.View.extend({
 		}
         var firstLetterOfStrong = mainWord.strongNumber.charAt(0);
         if (step.defaults.langWithTranslatedLex.indexOf(currentUserLang) > -1) {
-            var function1ToCall = this._addLinkAndAppend;
-            var function2ToCall = (firstLetterOfStrong === "G") ? this._prepIndentNTDef : this._indentOTDefinition;
+            var function1ToCall = (firstLetterOfStrong === "G") ? this._prepIndentNTDef : this._indentOTDefinition;
+            var function2ToCall = this._addLinkAndAppend;
+            var function3ToCall = this.addStrongTriggers;
             fetch("https://us.stepbible.org/html/lexicon/" + currentUserLang + "_json/" +
                 mainWord.strongNumber + ".json")
             .then(function(response) {
@@ -881,13 +882,14 @@ var SidebarView = Backbone.View.extend({
                         .append('<br>');
                 }
                 panel.append($("<" + headerType + " style='margin-top:8px'>").append(__s.meaning + " (Google translate)"));
-                var def = function2ToCall(data.def);
+                var def = function1ToCall(data.def);
                 var addLineBreaks = false;
                 if (data.strong.charAt(0) === "G") {
                     def = def[1];
                     addLineBreaks = def[0];
                 }
-                function1ToCall(panel, def, currentWordLanguageCode, bibleVersion, addLineBreaks);
+                function2ToCall(panel, def, currentWordLanguageCode, bibleVersion, addLineBreaks);
+                function3ToCall(panel, bibleVersion);
             });
         }
         if (displayEnglishLexicon) { // This might be false if Chinese lexicon is displayed and isEnWithZhLexicon is false append the meanings
@@ -993,7 +995,7 @@ var SidebarView = Backbone.View.extend({
             step.passage.highlightStrong(null, matchingExpression, "lexiconRelatedFocus");
             panel.append(ul);
         }
-        this.addStrongTriggers(bibleVersion);
+        this.addStrongTriggers(panel, bibleVersion);
         if ((foundChineseJSON) && (!step.state.isLocal())) 
             panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
                 "\" target=\"_blank\">" +
@@ -1001,8 +1003,7 @@ var SidebarView = Backbone.View.extend({
         this._doSideNotes(panel, bibleVersion);
     },
 
-
-    addStrongTriggers: function (bibleVersion) {
+    addStrongTriggers: function (panel, bibleVersion) {
         panel.find("[sbstrong]").click(function () {
             step.util.ui.showDef($(this).data("strongNumber"), bibleVersion);
         });

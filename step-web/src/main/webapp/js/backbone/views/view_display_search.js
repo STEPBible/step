@@ -62,6 +62,38 @@ var SearchDisplayView = DisplayView.extend({
         var strongShowDef = "";
         if (total == 0) {
             results = (this.options.partRendered ? this.$el.find("> span") : $("<div>")).append(this._getErrorMessage());
+            var activePassageData = step.util.activePassage().get("searchTokens");
+            var simpleSearch = "";
+            var searchToken = "";
+            for (var j = 0; j < activePassageData.length; j++) {
+				var actPsgeDataElm = activePassageData[j];
+				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType;
+                console.log("item: "+itemType);
+				if ((itemType === "srchJoin") || (itemType === SYNTAX) ||
+                    (itemType === GREEK_MEANINGS) || (itemType === GREEK) ||
+                    (itemType === HEBREW_MEANINGS) || (itemType === HEBREW) ||
+                    (itemType === STRONG_NUMBER)) {
+                        simpleSearch = ""; // complex search so there are no simple search
+                        break;
+                }
+                else if ((itemType === TEXT_SEARCH) || (itemType === SYNTAX) ||
+                (itemType === MEANINGS) || (itemType === SUBJECT_SEARCH) ) {
+                    if (simpleSearch !== "") {
+                        simpleSearch = ""; // complex search so there are no simple search
+                        break;
+                    }
+                    simpleSearch = itemType;
+                    searchToken = actPsgeDataElm.token;
+                }
+			}
+            if (simpleSearch !== "") {
+                if (searchToken.substring(0,1) === '"') {
+                    if (searchToken.slice(-1) === '"')
+                        searchToken = searchToken.replaceAll('"', '@');
+                }
+                step.util.searchSelectionModal(simpleSearch, searchToken);
+            }
+
         } else {
 			var options = this.model.get("selectedOptions") || [];
             var availableOptions = this.model.get("options") || [];

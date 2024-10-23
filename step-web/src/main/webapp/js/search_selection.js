@@ -107,8 +107,10 @@ step.searchSelect = {
 	groupsOther: undefined,
 	bookOrder: [],
 	idx2BookOrder: {},
+	strikeOutType: "",
+	strikeOutToken: "",
 
-	initSearchSelection: function() {
+	initSearchSelection: function(failedSearchType, failedSearchToken) {
 		if ((typeof step.state === "undefined") || (typeof step.state.language === "undefined")) this.userLang = "en-US";
 		else this.userLang = step.state.language() || "en-US";
         this.version = "ESV_th";
@@ -161,7 +163,7 @@ step.searchSelect = {
 			for (var j = 0; j < activePassageData.length; j++) {
 				var actPsgeDataElm = activePassageData[j];
 				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
-				if (itemType == "srchJoin") {
+				if (itemType === "srchJoin") {
 					var previousJoinsAndSearch = actPsgeDataElm.token.split(/(?=[aon])/);
 					for (var k = 0; k < previousJoinsAndSearch.length; k++) {
 						if (k > 0) {
@@ -257,6 +259,18 @@ step.searchSelect = {
 			});
 		});
 		step.searchSelect.updateAdvancedSearchElements();
+		if ((typeof failedSearchType === "string") && (failedSearchType !== "undefined") &&
+			(typeof failedSearchToken === "string") && (failedSearchToken !== "undefined")) {
+			this.strikeOutType = failedSearchType;
+			this.strikeOutToken = failedSearchToken;
+			step.searchSelect.handleKeyboardInput(this.strikeOutToken.replaceAll('@', ''));
+			if ((this.strikeOutToken.substring(0,1) === "@") && (this.strikeOutToken.slice(-1) === "@"))
+				this.strikeOutToken = this.strikeOutToken.replaceAll('@', '"');
+		}
+		else {
+			this.strikeOutType = "";
+			this.strikeOutToken = "";
+		}
 	},
 	updateAdvancedSearchElements: function() {
 //		var advancedSearchInStorage = step.util.localStorageGetItem("advanced_search");
@@ -469,7 +483,8 @@ step.searchSelect = {
 
 	handleKeyboardInput: function(e) {
 		$('#quickLexicon').remove();
-		if (e.target.id === "enterRange") {
+		var inputStringToAdd = (typeof e === "string") ? e : "";
+		if ((typeof e === "object") && (e.target.id === "enterRange")) {
 			$('#userEnterRangeError').text("");
 			var userInput =  $('textarea#enterRange').val();
 			userInput = userInput.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
@@ -497,7 +512,7 @@ step.searchSelect = {
 		}
 		else {
 			$("#searchButton").hide();
-			var userInput = $('textarea#userTextInput').val();
+			var userInput = (inputStringToAdd !== "") ? inputStringToAdd : $('textarea#userTextInput').val();
 			if ((userInput === "") || (userInput === "\n")) {
 				for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
 					$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
@@ -507,7 +522,8 @@ step.searchSelect = {
 					$('textarea#userTextInput').val("");
 				return;
 			}
-			if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
+			if ((userInput.slice(-1) === "\n") || (typeof e.originalEvent !== "object") ||
+				(e.originalEvent.inputType === "insertLineBreak")) {
 				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 				$('textarea#userTextInput').val(userInput);
 //				if (!$("#select_advanced_search").hasClass("checked")) {
@@ -539,8 +555,10 @@ step.searchSelect = {
 					// }, sleep);
 				// }
 				// else {
-					$('#warningMessage').text('');
-					step.searchSelect._handleEnteredSearchWord();
+				$('#warningMessage').text('');
+				step.searchSelect._handleEnteredSearchWord();
+				if (inputStringToAdd !== "")
+					$("#warningMessage").text("No result for your previous search.  Please try again.");
 				// }	
 			}
 			else {
@@ -643,8 +661,8 @@ step.searchSelect = {
 			'<span id="searchRangeButton" style="float:right;font-size:larger"><b>' + __s.search_range + ':</b> ' +
 				'<a onclick=step.searchSelect._buildRangeHeaderAndTable()>' + displayRange + '</a>' +
 			'</span>' +
-			'</div><br><br><br>' +
-			'<span id="warningMessage" style="color:red;"></span>' +
+			'</div><br><br>' +
+			'<span id="warningMessage" style="color:red;"></span><br>' +
 
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:50%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
 			'<button id="searchButton" style="vertical-align:top;display:none;padding-left:10px;padding-right:10px" class="stepButton primaryLightBg" onclick=step.searchSelect._handleEnteredSearchWord() title="Get suggested search">' +
@@ -894,9 +912,8 @@ step.searchSelect = {
 			'<div id="nt_table"/>' +
 			'<h4 id="other_books_hdr"/>' +
 			'<div id="ob_table"/>';
-			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#keyboardEntry").length == 1)) {
+			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#keyboardEntry").length == 0))
 				$('.footer').prepend('<a id="keyboardEntry" class="advanced_search_elements" href="javascript:step.searchSelect._buildRangeKeyboard();"><img src="images/keyboard.jpg" alt="Keyboard entry"></a>');
-			}
 		return html;
 	},
 
@@ -2288,10 +2305,20 @@ step.searchSelect = {
 					needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType);
 			}
 			else {
-				var newSuggestion = $('<a style="padding:0px"' + titleText +
-						' onclick="javascript:step.searchSelect.goSearch(\'' + searchType + '\',\'' + str2Search + '\',\'' + 
-						text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
-						'\')">' + text2Display + "</a>");
+				var additionalCSS = "";
+				var aTagOnClick = ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType +
+					'\',\'' + str2Search + '\',\'' + 
+					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') + 						'\')"';
+
+				if ((this.strikeOutType === searchType) && (this.strikeOutToken.replaceAll('"', '%22') === str2Search)) {
+					additionalCSS = ";color:red;text-decoration:line-through";
+					aTagOnClick = "";
+					this.strikeOutType = "";
+					this.strikeOutToken = "";
+				}
+				var newSuggestion = $('<a style="padding:0px' + additionalCSS + '"' + titleText +
+						aTagOnClick +
+						'>' + text2Display + "</a>");
 				this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0], newSuggestion);
 				currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
 					.append(newSuggestion)

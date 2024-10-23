@@ -2485,7 +2485,7 @@ step.util = {
 		step.util.blockBackgroundScrolling("lexFeedbackModal");
 	},
 
-	searchSelectionModal: function () {
+	searchSelectionModal: function (failedSearchType, failedSearchToken) {
 		var docWidth = $(document).width();
 		var widthCSS = "";
 		if ((docWidth > 700) && (!step.touchDevice)) { // Touch device can rotate screen so probably better to not adjust the width
@@ -2498,7 +2498,8 @@ step.util = {
 				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<script>' +
 						'$(document).ready(function () {' +
-							'step.searchSelect.initSearchSelection();' +
+							'step.searchSelect.initSearchSelection("' + failedSearchType + '","' +
+								failedSearchToken + '");' +
 						'});' +
 						'function showPreviousSearch() {' +
 							'var element = document.getElementById("showprevioussearchonoff");' +

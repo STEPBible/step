@@ -322,6 +322,8 @@ var ExamplesView = Backbone.View.extend({
             .then(function(data) {
 				var lines = data.split("\n");
 				for (var i = 0; i < lines.length; i++) {
+					if (lines[i].length < 4)
+						continue;
 					var curLine = lines[i].replace("：",":");
 					var pos = curLine.indexOf(":");
 					if (pos > 1) {

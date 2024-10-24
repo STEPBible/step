@@ -1,9 +1,7 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import com.tyndalehouse.step.core.models.*;
-import com.tyndalehouse.step.core.models.search.AutoSuggestion;
-import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SubjectEntries;
+import com.tyndalehouse.step.core.models.search.*;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.SuggestionService;
@@ -78,20 +76,6 @@ public class SearchController {
      * @return
      */
     public List<AutoSuggestion> suggest(String input, final String context) {
-        /* Patrick added and commented out this code because it is probably not needed.  The fix is in StringConversionUtils.java.
-        if (input.length() > 33) {
-            int posOfChar = input.indexOf(' ');
-            if ((posOfChar == -1) || (posOfChar > 32)) {
-                posOfChar = input.indexOf('.');
-                if ((posOfChar == -1) || (posOfChar > 32)) {
-                    posOfChar = input.indexOf(':');
-                    if ((posOfChar == -1) || (posOfChar > 32)) {
-                        posOfChar = input.indexOf(';');
-                        if ((posOfChar == -1) || (posOfChar > 32)) input = input.substring(0, 33);
-                    }
-                }
-            }
-        } */
         return suggest(input, context, null);
     }
 
@@ -141,6 +125,33 @@ public class SearchController {
             addReferenceSuggestions(limitType, input, autoSuggestions, bookContext, referenceContext);
         } else {
             addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData);
+        }
+        for (int i = 0; i < autoSuggestions.size(); i ++) {
+            AutoSuggestion currentSuggestion = autoSuggestions.get(i);
+            AbstractComplexSearch result;
+            String currentType = currentSuggestion.getItemType();
+            if ((currentType == "text") || (currentType == "subject")  || (currentType == "meanings")) {
+                String searchText = "";
+                if (currentType == "text") {
+                    TextSuggestion text = (TextSuggestion) autoSuggestions.get(i).getSuggestion();
+                    if (text != null)
+                        searchText = text.getText();
+                }
+                else if (currentType == "subject") {
+                    SubjectSuggestion subject = (SubjectSuggestion) currentSuggestion.getSuggestion();
+                    if (subject != null)
+                        searchText = subject.getValue();
+                }
+                else if (currentType == "meanings") {
+                    LexiconSuggestion meaning = (LexiconSuggestion) currentSuggestion.getSuggestion();
+                    if (meaning != null)
+                        searchText = meaning.getGloss();
+                }
+                if (!searchText.equals("")) {
+                    result = masterSearch(context + currentType + "=" + searchText);
+                    currentSuggestion.setCount(((SearchResult) result).getTotal());
+                }
+            }
         }
         return autoSuggestions;
     }

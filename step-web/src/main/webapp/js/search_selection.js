@@ -1535,9 +1535,17 @@ step.searchSelect = {
 											}
 											else {
 												if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
-													step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
-														str2Search, suggestionType, text2Display, "", "", "",
-														limitType, null, false, false, "", ""); // , hasHebrew, hasGreek);
+													if (((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) &&
+														(data[i].count == 0)) {
+														console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
+													}
+													else {
+														var suffixToDisplay = ((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) ?
+															" " + data[i].count + " x" : "";
+														step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
+															str2Search, suggestionType, text2Display, "", suffixToDisplay, "",
+															limitType, null, false, false, "", ""); // , hasHebrew, hasGreek);
+													}
 													text2Display = str2Search + "* (" + __s.words_that_start_with + " " + str2Search + ")";
 													str2Search += "*";
 												}
@@ -1602,6 +1610,16 @@ step.searchSelect = {
 									}
 								}
 								if ((!skipBecauseOfZeroCount) || (limitType !== "")) {
+									if ((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) {
+										if (data[i].count == 0) {
+											if ((suggestionType !== "text") && (str2Search.slice(-1) !== "*")) {
+												console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
+												continue;
+											}
+										}
+										else
+											suffixToDisplay += " " + data[i].count + " x";
+									}
 									step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
 										limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);

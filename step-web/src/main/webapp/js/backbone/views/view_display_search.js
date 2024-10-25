@@ -62,6 +62,7 @@ var SearchDisplayView = DisplayView.extend({
         var strongShowDef = "";
         if (total == 0) {
             results = (this.options.partRendered ? this.$el.find("> span") : $("<div>")).append(this._getErrorMessage());
+/* Don't run this until the server code is debugged
             var activePassageData = step.util.activePassage().get("searchTokens");
             var simpleSearch = "";
             var searchToken = "";
@@ -93,7 +94,7 @@ var SearchDisplayView = DisplayView.extend({
                 }
                 step.util.searchSelectionModal(simpleSearch, searchToken);
             }
-
+*/
         } else {
 			var options = this.model.get("selectedOptions") || [];
             var availableOptions = this.model.get("options") || [];

@@ -1514,44 +1514,44 @@ step.searchSelect = {
 											if (strings2Search.length > 1) {
 												var defaultSearchString = "";
 												var defaultMouseOverTitle = "";
-												if (!foundOr) {
-													defaultSearchString = "<b>" + __s.default_search + "</b>";
-													defaultMouseOverTitle = __s.default_search_mouse_over_title;
-												}
+//												if (!foundOr) {
+//													defaultSearchString = "<b>" + __s.default_search + "</b>";
+//													defaultMouseOverTitle = __s.default_search_mouse_over_title;
+//												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
 													str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
 													limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
 												defaultSearchString = "";
 												defaultMouseOverTitle = "";
-												if (foundOr) {
-													defaultSearchString = "<b>" + __s.default_search + "</b>";
-													defaultMouseOverTitle = __s.default_search_mouse_over_title;
-												}
+//												if (foundOr) {
+//													defaultSearchString = "<b>" + __s.default_search + "</b>";
+//													defaultMouseOverTitle = __s.default_search_mouse_over_title;
+//												}
 												step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
 													str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", defaultSearchString, defaultMouseOverTitle,
 													limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
 												text2Display = '"' + str2Search + '"';
 												str2Search = '%22' + str2Search + '%22';
 											}
-											else {
-												if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
-													if (((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) &&
-														(data[i].count == 0)) {
-														console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
-													}
-													else {
-														var suffixToDisplay = ((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) ?
-															" " + data[i].count + " x" : "";
-														step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
-															str2Search, suggestionType, text2Display, "", suffixToDisplay, "",
-															limitType, null, false, false, "", ""); // , hasHebrew, hasGreek);
-													}
-													text2Display = str2Search + "* (" + __s.words_that_start_with + " " + str2Search + ")";
-													str2Search += "*";
-												}
-												suffixToDisplay = "<b>" +__s.default_search + "</b>";
-												suffixTitle = __s.default_search_mouse_over_title;
-											}
+											// else {
+												// if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
+												// 	if (((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) &&
+												// 		(data[i].count == 0)) {
+												// 		console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
+												// 	}
+												// 	else {
+												// 		var suffixToDisplay = ((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) ?
+												// 			" " + data[i].count + " x" : "";
+												// 		step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
+												// 			str2Search, suggestionType, text2Display, "", suffixToDisplay, "",
+												// 			limitType, null, false, false, "", ""); // , hasHebrew, hasGreek);
+												// 	}
+												// 	text2Display = str2Search + "* (" + __s.words_that_start_with + " " + str2Search + ")";
+												// 	str2Search += "*";
+												// }
+//												suffixToDisplay = "<b>" +__s.default_search + "</b>";
+//												suffixTitle = __s.default_search_mouse_over_title;
+											// }
 										}
 									}
 								}
@@ -2287,11 +2287,11 @@ step.searchSelect = {
 		step["SearchCount" + suggestionType] ++;
 		brCount = step["SearchCount" + suggestionType];
 		if (brCount >= suggestionsToDisplay) return;
-		if (suffixToDisplay.indexOf(__s.default_search) > -1) {
+//		if (suffixToDisplay.indexOf(__s.default_search) > -1) {
 			//&& ($("#select_advanced_search").hasClass("checked"))) {
-			console.log("removing " + suffixToDisplay);
-			suffixToDisplay = "";
-		}
+//			console.log("removing " + suffixToDisplay);
+//			suffixToDisplay = "";
+//		}
 		if ((typeof existingHTML === "string") && (existingHTML !== "")) {
 			// brCount = (existingHTML.match(/<br>/g) || []).length;
 			// brCount += (existingHTML.match(/<\/ol>/g) || []).length;

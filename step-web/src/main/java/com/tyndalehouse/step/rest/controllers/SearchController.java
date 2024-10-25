@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import com.tyndalehouse.step.core.data.processors.AugmentedStrongProcessor;
 import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.models.search.*;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -128,28 +129,44 @@ public class SearchController {
         }
         for (int i = 0; i < autoSuggestions.size(); i ++) {
             AutoSuggestion currentSuggestion = autoSuggestions.get(i);
-            AbstractComplexSearch result;
             String currentType = currentSuggestion.getItemType();
-            if ((currentType == "text") || (currentType == "subject")  || (currentType == "meanings")) {
+            if (currentType.equals("text") || currentType.equals("subject")  || currentType.equals("meanings")) {
                 String searchText = "";
-                if (currentType == "text") {
+                if (currentType.equals("text")) {
                     TextSuggestion text = (TextSuggestion) autoSuggestions.get(i).getSuggestion();
-                    if (text != null)
+                    if (text != null) {
                         searchText = text.getText();
+                        if (!searchText.substring(searchText.length() - 1).equals("*")) {
+                            AutoSuggestion newSuggestion =  new AutoSuggestion();
+                            newSuggestion.setItemType(currentType);
+                            newSuggestion.setSuggestion(text);
+                            TextSuggestion newTextSuggestion = new TextSuggestion();
+                            newTextSuggestion.setText(searchText + "*");
+                            newSuggestion.setSuggestion(newTextSuggestion);
+                            autoSuggestions.add(newSuggestion);
+                        }
+                        AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchText);
+                        currentSuggestion.setCount(((SearchResult) result).getTotal());
+                    }
                 }
-                else if (currentType == "subject") {
+                else if (currentType.equals("subject")) {
                     SubjectSuggestion subject = (SubjectSuggestion) currentSuggestion.getSuggestion();
-                    if (subject != null)
+                    if (subject != null) {
                         searchText = subject.getValue();
+                        AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchText);
+                        currentSuggestion.setCount(((SearchResult) result).getTotal());
+                        if (((SearchResult) result).getTotal() > 0)
+                            currentSuggestion.setCount( ((SearchResult) result).getTotal() );
+                        else if (((SearchResult) result).getResults().size() > 0)
+                            currentSuggestion.setCount( ((SearchResult) result).getResults().size() );
+                        else
+                            System.out.println("Subject has 0 total and 0 result");
+                    }
                 }
-                else if (currentType == "meanings") {
+                else if (currentType.equals("meanings")) {
                     LexiconSuggestion meaning = (LexiconSuggestion) currentSuggestion.getSuggestion();
                     if (meaning != null)
-                        searchText = meaning.getGloss();
-                }
-                if (!searchText.equals("")) {
-                    result = masterSearch(context + currentType + "=" + searchText);
-                    currentSuggestion.setCount(((SearchResult) result).getTotal());
+                        currentSuggestion.setCount(((SearchResult) masterSearch(context + currentType + "=" + meaning.getGloss())).getTotal());
                 }
             }
         }

@@ -550,6 +550,7 @@ public class SearchServiceImpl implements SearchService {
         // if we've only got one search, we want to retrieve the keys, the page, etc. all in one go
         try {
 
+
             if (sq.isIndividualSearch()) {
                 result = executeOneSearch(sq, options);
             } else {

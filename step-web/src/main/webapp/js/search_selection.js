@@ -558,7 +558,7 @@ step.searchSelect = {
 				$('#warningMessage').text('');
 				step.searchSelect._handleEnteredSearchWord();
 				if (inputStringToAdd !== "")
-					$("#warningMessage").text("No result for your previous search.  Please try again.");
+					$("#warningMessage").text("No result for your search.  Please try again.");
 				// }	
 			}
 			else {
@@ -662,7 +662,7 @@ step.searchSelect = {
 				'<a onclick=step.searchSelect._buildRangeHeaderAndTable()>' + displayRange + '</a>' +
 			'</span>' +
 			'</div><br><br>' +
-			'<span id="warningMessage" style="color:red;"></span><br>' +
+			'<span id="warningMessage" style="color:red;width:90%;float:left"></span><br>' +
 
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:50%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
 			'<button id="searchButton" style="vertical-align:top;display:none;padding-left:10px;padding-right:10px" class="stepButton primaryLightBg" onclick=step.searchSelect._handleEnteredSearchWord() title="Get suggested search">' +
@@ -787,6 +787,8 @@ step.searchSelect = {
 		else {
 			$("#basic_search_help_text").html(basic_search_help_text);
 			$("#basic_search_help_text").show();
+			if ($('textarea#userTextInput').val().length > 2)
+				$("#warningMessage").text("No result for your search word.  Please update your search word.");
 		}
 	},
 	_buildRangeHeaderAndTable: function(booksToDisplay) {
@@ -1371,7 +1373,8 @@ step.searchSelect = {
 		$("#column1width").width("30%");
 		$(".search-type-column").show();
 		$('#warningMessage').text('');
-		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))  userInput =  $('textarea#userTextInput').val();
+		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))
+			userInput = $('textarea#userTextInput').val();
 		else {
 			userInput = previousUserInput;
 			$('textarea#userTextInput').text(userInput);
@@ -1493,46 +1496,59 @@ step.searchSelect = {
 										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
 										if (str2Search.indexOf("%22") == -1) {
 											var strings2Search = str2Search.split(" ");
-											var foundOr = false;
 											if (strings2Search.length > 1) {
-												var tmp = [];
-												for (var j = 0; j < strings2Search.length; j ++) {
-													var trimString = strings2Search[j].trim();
-													if (trimString.length > 0) {
-														if (trimString.toLowerCase() === "and") {
+												if (strings2Search[0] === "#AND:") {
+													strings2Search.shift();
+													str2Search = strings2Search.join(" ");
+													text2Display = strings2Search.join(" <sub>and</sub> ");
+												}
+												else {
+													var newDisplays = [];
+													var newSearchs = [];
+													for (var j = 0; j < strings2Search.length; j ++) {
+														var trimString = strings2Search[j].trim();
+														if (trimString.length > 0) {
+															if (trimString.toLowerCase() === "and") {
+																newDisplays.push("<sub>and</sub>");
+															}
+															else if (trimString.toLowerCase() === "or") {
+																newDisplays.push("<sub>or</sub>");
+															}
+															else {
+																newDisplays.push(trimString);
+																newSearchs.push(trimString);
+															}
 														}
-														else if (trimString.toLowerCase() === "or") {
-															foundOr = true;
-														}
-														else tmp.push(trimString);
+													}
+													str2Search = newSearchs.join(" ");
+													text2Display = newDisplays.join(" ");
+													if (newSearchs.length == newDisplays.length) {
+														text2Display = strings2Search.join(" <sub>or</sub> ");
 													}
 												}
-												strings2Search = tmp;
-												str2Search = strings2Search.join(" ");
-												text2Display = str2Search;
 											}
-											if (strings2Search.length > 1) {
-												var defaultSearchString = "";
-												var defaultMouseOverTitle = "";
+											// if (strings2Search.length > 1) {
+											// 	var defaultSearchString = "";
+											// 	var defaultMouseOverTitle = "";
 //												if (!foundOr) {
 //													defaultSearchString = "<b>" + __s.default_search + "</b>";
 //													defaultMouseOverTitle = __s.default_search_mouse_over_title;
 //												}
-												step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
-													str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
-													limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
-												defaultSearchString = "";
-												defaultMouseOverTitle = "";
+												// step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
+												// 	str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
+												// 	limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
+												// defaultSearchString = "";
+												// defaultMouseOverTitle = "";
 //												if (foundOr) {
 //													defaultSearchString = "<b>" + __s.default_search + "</b>";
 //													defaultMouseOverTitle = __s.default_search_mouse_over_title;
 //												}
-												step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
-													str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", defaultSearchString, defaultMouseOverTitle,
-													limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
-												text2Display = '"' + str2Search + '"';
-												str2Search = '%22' + str2Search + '%22';
-											}
+												// step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
+												// 	str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", defaultSearchString, defaultMouseOverTitle,
+												// 	limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
+												// text2Display = '"' + str2Search + '"';
+												// str2Search = '%22' + str2Search + '%22';
+											// }
 											// else {
 												// if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
 												// 	if (((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) &&
@@ -1610,16 +1626,20 @@ step.searchSelect = {
 									}
 								}
 								if ((!skipBecauseOfZeroCount) || (limitType !== "")) {
-									if ((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) {
+									if ((suggestionType === "text") || (suggestionType === "meanings")) {
 										if (data[i].count == 0) {
-											if ((suggestionType !== "text") && (str2Search.slice(-1) !== "*")) {
-												console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
-												continue;
-											}
+											console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
+											continue;
 										}
-										else
+										else {
+											if ((suggestionType === "text") && (str2Search.slice(-1) === "*"))
+												suffixToDisplay += "(" + __s.words_that_start_with + " " + str2Search + ")";
 											suffixToDisplay += " " + data[i].count + " x";
+										}
 									}
+												// step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
+												// 	str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
+												// 	limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
 									step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
 										limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);

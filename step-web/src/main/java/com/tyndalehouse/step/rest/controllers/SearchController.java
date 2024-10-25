@@ -130,44 +130,57 @@ public class SearchController {
         for (int i = 0; i < autoSuggestions.size(); i ++) {
             AutoSuggestion currentSuggestion = autoSuggestions.get(i);
             String currentType = currentSuggestion.getItemType();
-            if (currentType.equals("text") || currentType.equals("subject")  || currentType.equals("meanings")) {
-                String searchText = "";
-                if (currentType.equals("text")) {
-                    TextSuggestion text = (TextSuggestion) autoSuggestions.get(i).getSuggestion();
-                    if (text != null) {
-                        searchText = text.getText();
-                        if (!searchText.substring(searchText.length() - 1).equals("*")) {
-                            AutoSuggestion newSuggestion =  new AutoSuggestion();
+            if (currentType.equals("text")) {
+                TextSuggestion text = (TextSuggestion) autoSuggestions.get(i).getSuggestion();
+                if (text != null) {
+                    String searchText = text.getText();
+                    int posOfSpace = searchText.indexOf(" ");
+                    if (posOfSpace == -1) { // One word
+                        if (!searchText.substring(searchText.length() - 1).equals("*")) { // last char is not a *
+                            AutoSuggestion newSuggestion = new AutoSuggestion(); // Add a suggestion to search the string with * at the end
                             newSuggestion.setItemType(currentType);
-                            newSuggestion.setSuggestion(text);
                             TextSuggestion newTextSuggestion = new TextSuggestion();
                             newTextSuggestion.setText(searchText + "*");
                             newSuggestion.setSuggestion(newTextSuggestion);
                             autoSuggestions.add(newSuggestion);
                         }
-                        AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchText);
-                        currentSuggestion.setCount(((SearchResult) result).getTotal());
                     }
-                }
-                else if (currentType.equals("subject")) {
-                    SubjectSuggestion subject = (SubjectSuggestion) currentSuggestion.getSuggestion();
-                    if (subject != null) {
-                        searchText = subject.getValue();
-                        AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchText);
-                        currentSuggestion.setCount(((SearchResult) result).getTotal());
-                        if (((SearchResult) result).getTotal() > 0)
-                            currentSuggestion.setCount( ((SearchResult) result).getTotal() );
-                        else if (((SearchResult) result).getResults().size() > 0)
-                            currentSuggestion.setCount( ((SearchResult) result).getResults().size() );
-                        else
-                            System.out.println("Subject has 0 total and 0 result");
+                    else {
+                        String firstWord = searchText.substring(0, posOfSpace);
+                        String restOfString = searchText.substring(posOfSpace + 1);
+                        if (firstWord.equals("#AND:")) {
+                            String[] multiWords = restOfString.split("\\s");
+                            searchText = multiWords[0];
+                            for (int j = 1; j < multiWords.length; j++) {
+                                searchText += "@" + currentType + "=" + multiWords[j];
+                            }
+                        }
+                        else if ((searchText.indexOf('"') == -1) &&
+                                (searchText.toLowerCase().indexOf(" and ") == -1) &&
+                                (searchText.toLowerCase().indexOf(" or ") == -1)) {
+                            AutoSuggestion newSuggestion1 = new AutoSuggestion();
+                            newSuggestion1.setItemType(currentType);
+                            TextSuggestion newTextSuggestion1 = new TextSuggestion();
+                            newTextSuggestion1.setText("#AND: " + searchText);
+                            newSuggestion1.setSuggestion(newTextSuggestion1);
+                            autoSuggestions.add(newSuggestion1);
+
+                            AutoSuggestion newSuggestion2 = new AutoSuggestion();
+                            newSuggestion2.setItemType(currentType);
+                            TextSuggestion newTextSuggestion2 = new TextSuggestion();
+                            newTextSuggestion2.setText('"' + searchText + '"');
+                            newSuggestion2.setSuggestion(newTextSuggestion2);
+                            autoSuggestions.add(newSuggestion2);
+                        }
                     }
+                    AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchText);
+                    currentSuggestion.setCount(((SearchResult) result).getTotal());
                 }
-                else if (currentType.equals("meanings")) {
-                    LexiconSuggestion meaning = (LexiconSuggestion) currentSuggestion.getSuggestion();
-                    if (meaning != null)
-                        currentSuggestion.setCount(((SearchResult) masterSearch(context + currentType + "=" + meaning.getGloss())).getTotal());
-                }
+            }
+            else if (currentType.equals("meanings")) {
+                LexiconSuggestion meaning = (LexiconSuggestion) currentSuggestion.getSuggestion();
+                if (meaning != null)
+                    currentSuggestion.setCount(((SearchResult) masterSearch(context + currentType + "=" + meaning.getGloss())).getTotal());
             }
         }
         return autoSuggestions;

@@ -8,6 +8,7 @@ import org.crosswire.jsword.book.*;
 import org.crosswire.jsword.book.basic.AbstractPassageBook;
 import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.BibleNames;
 import org.crosswire.jsword.versification.Versification;
 import org.jdom2.Element;
 import org.jdom2.filter.ElementFilter;
@@ -204,6 +205,22 @@ public final class JSwordUtils {
             LOGGER.error(ex.getMessage(), ex);
             return factory.createEmptyKeyList(v11n);
         }
+    }
+
+    public static String getBookNameForLang(String bk, String lang1, String lang2){
+        //if(lang.equals("ar")) {
+
+        String bookName = bk;
+        String lang = lang1;
+        if(lang.isEmpty())
+            lang = lang2;
+        if(!lang.isEmpty())
+            bookName = BibleNames.instance().getShortBibleNameForLocale(new Locale(lang), bk);
+
+        return bookName;
+        //}
+        //else
+        //    return bk;
     }
 
     /**

@@ -182,16 +182,18 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
         return all;
     }
+
     @Override
-    public SearchResult search(final SearchQuery sq, final String version,  
+    public SearchResult search(final SearchQuery sq, final String version,
                                final LookupOption... options) {
         Key resultKeys = searchKeys(sq);
-        // Oct26
-        for (IndividualSearch individualSearch : sq.getSearches()) {
-            System.out.println(individualSearch.getType() + " " + individualSearch.getQuery() + " " + individualSearch.getVersions());
+        if (sq.getCountOnly()) { // Don't get Bible text if only the count is needed
+            SearchResult emptyResult = new SearchResult();
+            emptyResult.setTotal(resultKeys.getCardinality());
+            System.out.println("count only search: " + resultKeys.getCardinality());
+            return emptyResult;
         }
-        System.out.println(resultKeys.getCardinality());
-       return retrieveResultsFromKeys(sq, resultKeys, version, options);
+        return retrieveResultsFromKeys(sq, resultKeys, version, options);
     }
 
     @Override

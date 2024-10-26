@@ -48,5 +48,5 @@ public interface SearchService {
      */
     AbstractComplexSearch runQuery(List<SearchToken> searchTokens, final String options, final String display,
                                    final int pageNumber, final String filter, final String sort, int context,
-                                   final String originalItems, final String userLanguage);
+                                   final String originalItems, final String userLanguage, final boolean countOnly);
 }

@@ -488,21 +488,37 @@
                 </xsl:variable>
 
                 <!-- SM book name to match the language -->
-                <xsl:variable name="language1" select="cell/@xml:lang"/>
-                <xsl:variable name="language2" select="@xml:lang"/>
-                <xsl:variable name="thebook" select="jswordUtils:getBookNameForLang($book, $language1, $language2)"/>
+                <xsl:variable name="lang">
+                    <xsl:choose>
+                        <xsl:when test="@xml:lang">
+                            <xsl:value-of select="@xml:lang"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="cell/@xml:lang"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:variable name="thebook" select="jswordUtils:getBookNameForLang($book, $lang, '')"/>
+                <xsl:variable name="ch" select="substring-before(substring-after($firstOsisID, '.'), '.')"/>
+                <xsl:variable name="vs" select="substring-after(substring-after($firstOsisID, '.'), '.')"/>
 
                 <xsl:choose>
                     <xsl:when test="$includeBook = true()">
                         <span class="verseNumber">
                             <xsl:choose>
-                                <xsl:when test="$language1 = 'ar' or $language2 = 'ar'">
+                                <xsl:when test="$lang = 'ar'">
+                                    <!-- for rtl languages add a space after the colon for correct display of ch:vs -->
                                     <xsl:value-of select="concat($thebook, ' ', $chapter, ': ', $myverse)"/>
                                 </xsl:when>
+                                <xsl:when test="$lang = 'he' or $lang = 'hbo' or $lang = 'fa' or $lang = 'ur' or $lang = 'syr'">
+                                    <!-- for rtl languages add a space after the colon for correct display of ch:vs -->
+                                    <xsl:value-of select="concat($thebook, ' ', $ch, ': ', $vs)"/>
+                                </xsl:when>
+                                <xsl:when test="$lang != 'en'">
+                                    <!-- for languages other than English use the translated language -->
+                                    <xsl:value-of select="concat($thebook, ' ', $ch, ':', $vs)"/>
+                                </xsl:when>
                                 <xsl:otherwise>
-                                    <!-- <xsl:value-of select="concat($thebook, ' ', $chapter, ':', $myverse)"/>-->
-                                    <xsl:variable name="ch" select="substring-before(substring-after($firstOsisID, '.'), '.')"/>
-                                    <xsl:variable name="vs" select="substring-after(substring-after($firstOsisID, '.'), '.')"/>
                                     <xsl:value-of select="concat($book, ' ', $ch, ': ', $vs)"/>
                                 </xsl:otherwise>
                             </xsl:choose>
@@ -524,9 +540,17 @@
         <xsl:variable name="firstOsisID" select="substring-before(concat($verse/@osisID, ' '), ' ')"/>
         <!-- SM book name match lang ============== -->
         <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
-        <xsl:variable name="language1" select="cell/@xml:lang"/>
-        <xsl:variable name="language2" select="@xml:lang"/>
-        <xsl:variable name="thebook" select="jswordUtils:getBookNameForLang($book, $language1, $language2)"/>
+        <xsl:variable name="lang">
+            <xsl:choose>
+                <xsl:when test="@xml:lang">
+                    <xsl:value-of select="@xml:lang"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="cell/@xml:lang"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="thebook" select="jswordUtils:getBookNameForLang($book, $lang, '')"/>
         <xsl:variable name="chapter"
                       select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
         <xsl:variable name="myverse">
@@ -549,6 +573,8 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="ch" select="substring-before(substring-after($firstOsisID, '.'), '.')"/>
+        <xsl:variable name="vs" select="substring-after(substring-after($firstOsisID, '.'), '.')"/>
         <!-- SM =================================== -->
         <xsl:if test="$Interleave = 'true'">
             <xsl:variable name="version" select="interleaving:getNextVersion($interleavingProvider)"/>
@@ -557,11 +583,20 @@
                 <xsl:choose>
                     <xsl:when test="$XVRef = 'true'">
                         <xsl:choose>
-                            <xsl:when test="$language1 = 'ar' or $language2 = 'ar'">
+                            <xsl:when test="$lang = 'ar'">
+                                <!-- for rtl languages add a space after the colon for correct display of ch:vs -->
                                 <xsl:value-of select="concat('(', $version, ': ', $thebook, ' ', $chapter, ': ', $myverse, ')')"/>
                             </xsl:when>
+                            <xsl:when test="$lang = 'he' or $lang = 'hbo' or $lang = 'fa' or $lang = 'ur' or $lang = 'syr'">
+                                <!-- for rtl languages add a space after the colon for correct display of ch:vs -->
+                                <xsl:value-of select="concat('(', $version, ': ', $thebook, ' ', $ch, ': ', $vs, ')')"/>
+                            </xsl:when>
+                            <xsl:when test="$lang != 'en'">
+                                <!-- for languages other than English use the translated language -->
+                                <xsl:value-of select="concat('(', $version, ': ', $thebook, ' ', $ch, ':', $vs, ')')"/>
+                            </xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of select="concat('(', $version, ': ', $firstOsisID, ')')"/>
+                                <xsl:value-of select="concat('(', $version, ': ', $book, ' ', $ch, ':', $vs, ')')"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>

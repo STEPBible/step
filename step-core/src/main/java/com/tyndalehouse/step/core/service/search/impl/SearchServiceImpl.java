@@ -1245,6 +1245,7 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult runStrongTextSearch(final SearchQuery sq, final Set<String> strongs, final String options) {
         Key key = runStrongTextSearchKeys(sq, strongs);
 
+// add return number here.
         final SearchResult textResults = buildCombinedVerseBasedResults(sq, key, options);
 
         textResults.setStrongHighlights(new ArrayList<>(strongs));
@@ -1820,7 +1821,11 @@ public class SearchServiceImpl implements SearchService {
      * @return the set of results
      */
     private SearchResult buildCombinedVerseBasedResults(final SearchQuery sq, final Key results, final String options) {
-
+// Oct26
+        for (IndividualSearch individualSearch : sq.getSearches()) {
+            System.out.println(individualSearch.getType() + " " + individualSearch.getQuery() + " " + individualSearch.getVersions());
+        }
+        System.out.println("2:" + results.getCardinality());
         // combine the results into 1 giant keyed map
         final IndividualSearch currentSearch = sq.getCurrentSearch();
 

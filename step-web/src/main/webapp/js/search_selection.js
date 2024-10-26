@@ -1394,8 +1394,19 @@ step.searchSelect = {
 				$('#warningMessage').text('');
 			$('#updateButton').hide();
 			var url;
+			var activePassageData = step.util.activePassage().get("searchTokens") || [];
+			var versionsQueryString = "";
+			for (var l = 0; l < activePassageData.length; l++) {
+				var itemType = activePassageData[l].itemType ? activePassageData[l].itemType : activePassageData[l].tokenType
+				if (itemType === VERSION) {
+					if (versionsQueryString !== "") versionsQueryString += URL_SEPARATOR;
+					versionsQueryString += VERSION + "%3D" + activePassageData[l].item.shortInitials;
+				}
+			}
+			if (versionsQueryString === "")
+				versionsQueryString = VERSION + "%3D" + step.searchSelect.version;
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
-				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version + URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
 			else {
 				if (limitType === "") limitType = step.searchSelect.searchOnSpecificType;
 				else {
@@ -1404,8 +1415,7 @@ step.searchSelect = {
 					$("#langButtonForm").hide();
 				}
 				$('#srchModalBackButton').show();
-				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + step.searchSelect.version +
-					URL_SEPARATOR + LIMIT + "%3D" + limitType +
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR + LIMIT + "%3D" + limitType +
 					URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
 			}
 			for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {

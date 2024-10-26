@@ -185,7 +185,13 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     @Override
     public SearchResult search(final SearchQuery sq, final String version,  
                                final LookupOption... options) {
-        return retrieveResultsFromKeys(sq, searchKeys(sq), version, options);
+        Key resultKeys = searchKeys(sq);
+        // Oct26
+        for (IndividualSearch individualSearch : sq.getSearches()) {
+            System.out.println(individualSearch.getType() + " " + individualSearch.getQuery() + " " + individualSearch.getVersions());
+        }
+        System.out.println(resultKeys.getCardinality());
+       return retrieveResultsFromKeys(sq, resultKeys, version, options);
     }
 
     @Override
@@ -296,7 +302,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     private void getPassagesForResults(SearchResult result, String[] versions, final Key results, final int context,
                                                     final List<LookupOption> options, String interlinearMode) {
         final List<SearchEntry> resultPassages = new ArrayList<SearchEntry>();
-        final Iterator<Key> iterator = ((Passage) results).iterator();
+        final Iterator<Key> iterator = results.iterator();
         boolean interlinearModeCaptured = false;
         int count = 0;
         while (iterator.hasNext()) {

@@ -1143,8 +1143,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                             osissep);
 
                     // set parameters here
-                    String changeVersion = "";
                     if (userLanguage != null) {
+                        String changeVersion = "";
                         if (userLanguage.toLowerCase().startsWith("es")) changeVersion = "SpaRV1909";
                         else if (userLanguage.equalsIgnoreCase("zh")) changeVersion = "CUns";
                         else if (userLanguage.equalsIgnoreCase("zh_tw")) changeVersion = "CUn";
@@ -1184,9 +1184,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                         else if (userLanguage.toLowerCase().startsWith("uk")) changeVersion = "Ukrainian";
                         else if (userLanguage.toLowerCase().startsWith("ur")) changeVersion = "UrdULB";
                         else if (userLanguage.toLowerCase().startsWith("vi")) changeVersion = "VieKTHD";
-                    }
-                    if (changeVersion.length() > 0) {
-                        tsep.setParameter("defaultVersion", changeVersion);
+                        if (changeVersion.length() > 0)
+                            tsep.setParameter("defaultVersion", changeVersion);
                     }
                     setOptions(tsep, options, bookData.getBooks());
                     setInterlinearOptions(tsep,

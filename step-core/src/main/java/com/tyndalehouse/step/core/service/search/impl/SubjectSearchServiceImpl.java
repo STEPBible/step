@@ -227,7 +227,12 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
         //we will need to restrict the results by the scope of the versions, in the ESV v11n
         final Passage maxScope = getScopeForVersions(originalVersions);
         allTopics.retainAll(VersificationsMapper.instance().map(maxScope, ((VerseKey) allTopics).getVersification()));
-
+        int count = allTopics.getCardinality();
+        if (sq.getCountOnly()) {
+            SearchResult resultWithCountOnly = new SearchResult();
+            resultWithCountOnly.setTotal(count);
+            return resultWithCountOnly;
+        }
         SearchResult resultsAsHeadings = getResultsAsHeadings(sq, searchableVersions, allTopics);
         cleanUpSearchFromHeadingsSearch(sq, originalVersions);
         return resultsAsHeadings;

@@ -654,7 +654,7 @@ step.searchSelect = {
 				'<span class="form-group btn-group" data-toggle="buttons">' +
 					'<label class="btn btn-default btn-sm stepButton stepPressedButton active"><input type="radio" data-lang="en" checked="checked">English</label>' +
 					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="he">Hebrew</label>' +
-					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr" %="">Greek</label>' +
+					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr">Greek</label>' +
 				'</span>' +
 			'</form>' +
 //			'<h4 id="hd4">' + __s.enter_search_word + '</h4>' +
@@ -713,6 +713,7 @@ step.searchSelect = {
 	},
     handleLanguageButton: function (ev) {
 		var language;
+		var langOfOldButtonPressed = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
 		if (typeof ev === "object") {
 			var target = $(ev.target);
     		language = target.find("input").data("lang");
@@ -730,6 +731,10 @@ step.searchSelect = {
 						language = "en";
 				}
 			}
+		}
+		if (langOfOldButtonPressed !== language ) {
+			step.searchSelect._handleEnteredSearchWord();
+			return;
 		}
 		$(".select2-result").hide();
 		var isAnythingShown = false;
@@ -1406,7 +1411,7 @@ step.searchSelect = {
 			if (versionsQueryString === "")
 				versionsQueryString = VERSION + "%3D" + step.searchSelect.version;
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
-				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR;
 			else {
 				if (limitType === "") limitType = step.searchSelect.searchOnSpecificType;
 				else {
@@ -1415,12 +1420,15 @@ step.searchSelect = {
 					$("#langButtonForm").hide();
 				}
 				$('#srchModalBackButton').show();
-				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR + LIMIT + "%3D" + limitType +
-					URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR + LIMIT + "%3D" + limitType + URL_SEPARATOR;
 			}
 			for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
 			}
+			var searchLangSelected = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
+			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
+				url += "//" + searchLangSelected;
+			url += "?lang=" + step.searchSelect.userLang;
 			step["SearchCount" + GREEK] = 0;
 			step["SearchCount" + GREEK_MEANINGS] = 0;
 			step["SearchCount" + HEBREW] = 0;
@@ -1647,9 +1655,24 @@ step.searchSelect = {
 											suffixToDisplay += " " + data[i].count + " x";
 										}
 									}
-												// step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
-												// 	str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
-												// 	limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
+									else if (suggestionType === "subject") {
+										if ((typeof data[i].suggestion === "object") && (Array.isArray(data[i].suggestion.searchTypes))) {
+											for (var k = 0; k < data[i].suggestion.searchTypes.length; k ++) {
+												if ((data[i].suggestion.searchTypes[k] === "SUBJECT_EXTENDED") ||
+													(data[i].suggestion.searchTypes[k] === "SUBJECT_FULL")) {
+													suffixToDisplay += "is in Naves topics";
+													break;
+												}
+											}
+										}
+										if (data[i].count > 0) {
+											if (suffixToDisplay !== "")
+												suffixToDisplay += " and ";
+											else
+												suffixToDisplay = "is in ";
+											suffixToDisplay += data[i].count + " ESV headings";
+										}
+									}
 									step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
 										limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);

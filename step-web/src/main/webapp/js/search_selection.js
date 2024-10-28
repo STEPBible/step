@@ -1664,9 +1664,9 @@ step.searchSelect = {
 													break; // the subject search time is fine.
 												}
 												if (data[i].suggestion.searchTypes[k] === "SUBJECT_FULL")
-													suggestionType = NAVE_SEARCH;
-												else if (data[i].suggestion.searchTypes[k] === "SUBJECT_EXTENDED")
 													suggestionType = NAVE_SEARCH_EXTENDED;
+												else if (data[i].suggestion.searchTypes[k] === "SUBJECT_EXTENDED")
+													suggestionType = NAVE_SEARCH;
 											}
 										}
 										if (data[i].count > 0)

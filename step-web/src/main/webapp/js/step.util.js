@@ -2635,89 +2635,89 @@ step.util = {
         var chapterNum = (tmpArray.length > 1) ? parseInt(tmpArray[1].split(":")[0].split("-")[0].split(";")[0]) : 1;
         if (typeof chapterNum !== "number") chapterNum = 1;
         var bibleSummary = 
-            '<br><span class="stepFgBg" style="font-size:16px"><b>Old Testament</b></span>' +
+            '<br><span class="stepFgBg vid_ot" style="font-size:16px"><b>Old Testament</b></span>' +
             '<div>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>From Eden to wilderness</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Genesis - Beginnings</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Exodus - Escape from Egypt</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Leviticus - Ceremonial laws</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Numbers - Wilderness years</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Deuteronomy - Moses\' farewell</p>' +
+            '<p class="vid_gen" style="margin-left:10%;height:14px;font-size:14px">Genesis - Beginnings</p>' +
+            '<p class="vid_exod" style="margin-left:10%;height:14px;font-size:14px">Exodus - Escape from Egypt</p>' +
+            '<p class="vid_lev" style="margin-left:10%;height:14px;font-size:14px">Leviticus - Ceremonial laws</p>' +
+            '<p class="vid_num" style="margin-left:10%;height:14px;font-size:14px">Numbers - Wilderness years</p>' +
+            '<p class="vid_deut" style="margin-left:10%;height:14px;font-size:14px">Deuteronomy - Moses\' farewell</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>From conquest to King Saul</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Joshua - Taking the land</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Judges - Living among enemies</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Ruth - David\'s ancestors\' love story</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">1 Samuel - Prophets versus Kings</p>' +
+            '<p class="vid_josh" style="margin-left:10%;height:14px;font-size:14px">Joshua - Taking the land</p>' +
+            '<p class="vid_judg" style="margin-left:10%;height:14px;font-size:14px">Judges - Living among enemies</p>' +
+            '<p class="vid_ruth" style="margin-left:10%;height:14px;font-size:14px">Ruth - David\'s ancestors\' love story</p>' +
+            '<p class="vid_1sam" style="margin-left:10%;height:14px;font-size:14px">1 Samuel - Prophets versus Kings</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>From King David to exile</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">2 Samuel - Uniting the Kingdom</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">1 Kings - Dividing the kingdom</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">2 Kings - End of Israel &amp; Judah</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">1 Chronicles - Retelling 1 &amp; 2 Samuel</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">2 Chronicles - Retelling Judah\'s Kings</p>' +
+            '<p class="vid_2sam" style="margin-left:10%;height:14px;font-size:14px">2 Samuel - Uniting the Kingdom</p>' +
+            '<p class="vid_1kgs" style="margin-left:10%;height:14px;font-size:14px">1 Kings - Dividing the kingdom</p>' +
+            '<p class="vid_2kgs" style="margin-left:10%;height:14px;font-size:14px">2 Kings - End of Israel &amp; Judah</p>' +
+            '<p class="vid_1chr" style="margin-left:10%;height:14px;font-size:14px">1 Chronicles - Retelling 1 &amp; 2 Samuel</p>' +
+            '<p class="vid_2chr" style="margin-left:10%;height:14px;font-size:14px">2 Chronicles - Retelling Judah\'s Kings</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Return and faith on trial</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Ezra - Return from exile</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Nehemiah - Rebuilding Jerusalem</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Esther - Surviving in exile</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Job - Understanding suffering</p>' +
+            '<p class="vid_ezra" style="margin-left:10%;height:14px;font-size:14px">Ezra - Return from exile</p>' +
+            '<p class="vid_neh" style="margin-left:10%;height:14px;font-size:14px">Nehemiah - Rebuilding Jerusalem</p>' +
+            '<p class="vid_esth" style="margin-left:10%;height:14px;font-size:14px">Esther - Surviving in exile</p>' +
+            '<p class="vid_job" style="margin-left:10%;height:14px;font-size:14px">Job - Understanding suffering</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Worship and wisdom</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Psalms - Songs of worship</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Proverbs - Understanding society</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Ecclesiastes - Understanding life</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Song of Solomon - Understanding love</p>' +
+            '<p class="vid_ps" style="margin-left:10%;height:14px;font-size:14px">Psalms - Songs of worship</p>' +
+            '<p class="vid_prov" style="margin-left:10%;height:14px;font-size:14px">Proverbs - Understanding society</p>' +
+            '<p class="vid_eccl" style="margin-left:10%;height:14px;font-size:14px">Ecclesiastes - Understanding life</p>' +
+            '<p class="vid_song" style="margin-left:10%;height:14px;font-size:14px">Song of Solomon - Understanding love</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Major Prophets</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Isaiah - Judgement brings hope</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Jeremiah - Warnings of Judgement</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Lamentations - Jerusalem\'s destruction</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Ezekiel - Judgement brings new life</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Daniel - Witnessing in exile</p>' +
+            '<p class="vid_isa" style="margin-left:10%;height:14px;font-size:14px">Isaiah - Judgement brings hope</p>' +
+            '<p class="vid_jer" style="margin-left:10%;height:14px;font-size:14px">Jeremiah - Warnings of Judgement</p>' +
+            '<p class="vid_lam" style="margin-left:10%;height:14px;font-size:14px">Lamentations - Jerusalem\'s destruction</p>' +
+            '<p class="vid_ezek" style="margin-left:10%;height:14px;font-size:14px">Ezekiel - Judgement brings new life</p>' +
+            '<p class="vid_dan" style="margin-left:10%;height:14px;font-size:14px">Daniel - Witnessing in exile</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Minor (brief) Prophets</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Hosea - Acting out God\'s love</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Joel - Day of the Lord</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Amos - Judgement is inescapable</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Obadiah - Judgement on Edom</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Jonah - Anyone can repent</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Micah - Judgement\'s restoration</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Nahum - Judgement on Nineveh</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Habakkuk - Judgement on evil</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Zephaniah - Judgement\'s remnant</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Haggai - Rebuilding the temple</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Zechariah - Repentance after exile</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Malachi - God is coming</p>' +
+            '<p class="vid_hos" style="margin-left:10%;height:14px;font-size:14px">Hosea - Acting out God\'s love</p>' +
+            '<p class="vid_joel" style="margin-left:10%;height:14px;font-size:14px">Joel - Day of the Lord</p>' +
+            '<p class="vid_amos" style="margin-left:10%;height:14px;font-size:14px">Amos - Judgement is inescapable</p>' +
+            '<p class="vid_obad" style="margin-left:10%;height:14px;font-size:14px">Obadiah - Judgement on Edom</p>' +
+            '<p class="vid_jonah" style="margin-left:10%;height:14px;font-size:14px">Jonah - Anyone can repent</p>' +
+            '<p class="vid_mic" style="margin-left:10%;height:14px;font-size:14px">Micah - Judgement\'s restoration</p>' +
+            '<p class="vid_nah" style="margin-left:10%;height:14px;font-size:14px">Nahum - Judgement on Nineveh</p>' +
+            '<p class="vid_hab" style="margin-left:10%;height:14px;font-size:14px">Habakkuk - Judgement on evil</p>' +
+            '<p class="vid_zeph" style="margin-left:10%;height:14px;font-size:14px">Zephaniah - Judgement\'s remnant</p>' +
+            '<p class="vid_hag" style="margin-left:10%;height:14px;font-size:14px">Haggai - Rebuilding the temple</p>' +
+            '<p class="vid_zech" style="margin-left:10%;height:14px;font-size:14px">Zechariah - Repentance after exile</p>' +
+            '<p class="vid_mal" style="margin-left:10%;height:14px;font-size:14px">Malachi - God is coming</p>' +
             '</div>' +
-            '<br><span class="stepFgBg" style="font-size:16px"><b>New Testament</b></span>' +
+            '<br><span class="stepFgBg vid_nt" style="font-size:16px"><b>New Testament</b></span>' +
             '<div>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Life of Jesus</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Matthew - Jesus the Messiah</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Mark - Jesus the Man</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Luke - Jesus the Saviour</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">John - Jesus is God</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Acts - Church growth</p>' +
+            '<p class="vid_matt" style="margin-left:10%;height:14px;font-size:14px">Matthew - Jesus the Messiah</p>' +
+            '<p class="vid_mark" style="margin-left:10%;height:14px;font-size:14px">Mark - Jesus the Man</p>' +
+            '<p class="vid_luke" style="margin-left:10%;height:14px;font-size:14px">Luke - Jesus the Saviour</p>' +
+            '<p class="vid_john" style="margin-left:10%;height:14px;font-size:14px">John - Jesus is God</p>' +
+            '<p class="vid_acts" style="margin-left:10%;height:14px;font-size:14px">Acts - Church growth</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Pauline letters to churches</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Romans - Paul\'s theology</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">1 Corinthians - Church problems</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">2 Corinthians - Leadership problems</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Galatians - Freedom from Law</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Ephesians - Church unity</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Philippians - Encouragement</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Colossians - Christian lifestyle</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">1 Thessalonians - Expecting the End</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">2 Thessalonians - The End delayed</p>' +
+            '<p class="vid_rom" style="margin-left:10%;height:14px;font-size:14px">Romans - Paul\'s theology</p>' +
+            '<p class="vid_1cor" style="margin-left:10%;height:14px;font-size:14px">1 Corinthians - Church problems</p>' +
+            '<p class="vid_2cor" style="margin-left:10%;height:14px;font-size:14px">2 Corinthians - Leadership problems</p>' +
+            '<p class="vid_gal" style="margin-left:10%;height:14px;font-size:14px">Galatians - Freedom from Law</p>' +
+            '<p class="vid_eph" style="margin-left:10%;height:14px;font-size:14px">Ephesians - Church unity</p>' +
+            '<p class="vid_phil" style="margin-left:10%;height:14px;font-size:14px">Philippians - Encouragement</p>' +
+            '<p class="vid_col" style="margin-left:10%;height:14px;font-size:14px">Colossians - Christian lifestyle</p>' +
+            '<p class="vid_1thess" style="margin-left:10%;height:14px;font-size:14px">1 Thessalonians - Expecting the End</p>' +
+            '<p class="vid_2thess" style="margin-left:10%;height:14px;font-size:14px">2 Thessalonians - The End delayed</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Pauline letters to individuals</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">1 Timothy - False teachings</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">2 Timothy - Paul\'s farewell</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Titus - A difficult ministry</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Philemon - Slaves as brothers</p>' +
+            '<p class="vid_1tim" style="margin-left:10%;height:14px;font-size:14px">1 Timothy - False teachings</p>' +
+            '<p class="vid_2tim" style="margin-left:10%;height:14px;font-size:14px">2 Timothy - Paul\'s farewell</p>' +
+            '<p class="vid_titus" style="margin-left:10%;height:14px;font-size:14px">Titus - A difficult ministry</p>' +
+            '<p class="vid_phlm" style="margin-left:10%;height:14px;font-size:14px">Philemon - Slaves as brothers</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Letters from others</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Hebrews - Jewish Christianity</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">James - Trials of faith</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">1 Peter - Life among unbelievers</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">2 Peter - Peter\'s farewell</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">1 John - God loves us</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">2 John - Love each other</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">3 John - Practical love</p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px">Jude - Deserters</p>' +
+            '<p class="vid_heb" style="margin-left:10%;height:14px;font-size:14px">Hebrews - Jewish Christianity</p>' +
+            '<p class="vid_jas" style="margin-left:10%;height:14px;font-size:14px">James - Trials of faith</p>' +
+            '<p class="vid_1pet" style="margin-left:10%;height:14px;font-size:14px">1 Peter - Life among unbelievers</p>' +
+            '<p class="vid_2pet" style="margin-left:10%;height:14px;font-size:14px">2 Peter - Peter\'s farewell</p>' +
+            '<p class="vid_1john" style="margin-left:10%;height:14px;font-size:14px">1 John - God loves us</p>' +
+            '<p class="vid_2john" style="margin-left:10%;height:14px;font-size:14px">2 John - Love each other</p>' +
+            '<p class="vid_3john" style="margin-left:10%;height:14px;font-size:14px">3 John - Practical love</p>' +
+            '<p class="vid_jude" style="margin-left:10%;height:14px;font-size:14px">Jude - Deserters</p>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Prophecies for the future</b></p>' +
-            '<p style="margin-left:10%;height:14px;font-size:14px"">Revelation of John - Visions of the End</p>' +
+            '<p class="vid_rev" style="margin-left:10%;height:14px;font-size:14px"">Revelation of John - Visions of the End</p>' +
             '<tr></tr></tbody></table>' +
             '</div>';
 		if ((osisID === "1Sam") || (osisID === "2Sam")) urlForiFrame = "1_2Sam";
@@ -2729,6 +2729,7 @@ step.util = {
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary.book_description + '<br><br>' +
                     summary.book_overview + '</p>' +
+					'<span class="' + osisID + '" style="font-size:18px;display:none"><b>Video on ' + longBookName + '</b></span><br>' +
 					'<p style="margin:8px">ESV Introduction:<br>' + summary.ESV_introduction + '</p>' +
                     '<p style="margin:8px">ESV Summary:<br>' + summary.ESV_summary + '</p>' +
                 '</span>' +

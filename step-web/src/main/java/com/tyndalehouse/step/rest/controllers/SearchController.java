@@ -133,6 +133,11 @@ public class SearchController {
         } else {
             addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData, searchLanguage);
         }
+        addCountsToSuggestions(autoSuggestions, context);
+        return autoSuggestions;
+    }
+
+    private void addCountsToSuggestions(List<AutoSuggestion> autoSuggestions, final String context) {
         for (int i = 0; i < autoSuggestions.size(); i ++) {
             AutoSuggestion currentSuggestion = autoSuggestions.get(i);
             String currentType = currentSuggestion.getItemType();
@@ -204,7 +209,6 @@ public class SearchController {
                     currentSuggestion.setCount( ((SearchResult) masterSearch(context + currentType + "=" + subject.getValue(), true)).getTotal() );
             }
         }
-        return autoSuggestions;
     }
 
     /**

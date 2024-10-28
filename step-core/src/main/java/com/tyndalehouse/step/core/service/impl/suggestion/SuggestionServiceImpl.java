@@ -105,7 +105,6 @@ public class SuggestionServiceImpl implements SuggestionService {
             results.put(query.getKey(), singleTypeSummary);
         }
 
-        //return results
         summary.setSuggestionsSummaries(new ArrayList<SingleSuggestionsSummary>(results.values()));
         return summary;
     }

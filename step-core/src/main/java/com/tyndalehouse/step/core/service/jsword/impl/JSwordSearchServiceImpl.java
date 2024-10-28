@@ -190,7 +190,6 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         if (sq.getCountOnly()) { // Don't get Bible text if only the count is needed
             SearchResult emptyResult = new SearchResult();
             emptyResult.setTotal(resultKeys.getCardinality());
-            System.out.println("count only search: " + resultKeys.getCardinality());
             return emptyResult;
         }
         return retrieveResultsFromKeys(sq, resultKeys, version, options);

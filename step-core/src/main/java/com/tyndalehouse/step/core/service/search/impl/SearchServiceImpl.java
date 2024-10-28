@@ -1826,7 +1826,6 @@ public class SearchServiceImpl implements SearchService {
         if (sq.getCountOnly()) { // Don't get Bible text if only the count is needed
             SearchResult emptyResult = new SearchResult();
             emptyResult.setTotal(results.getCardinality());
-            System.out.println("count only: build combined " + results.getCardinality());
             return emptyResult;
         }
         // combine the results into 1 giant keyed map

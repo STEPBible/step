@@ -162,11 +162,6 @@ var SearchDisplayView = DisplayView.extend({
                     (itemType === GREEK) || (itemType === HEBREW_MEANINGS) ||
                     (itemType === HEBREW))
                         this._lookForStrongInSearchString(actPsgeDataElm.token, results, strongHighlights);
-//                                EXAMPLE_DATA = "examples";
-//                                MEANINGS = "meanings";
-//                                SUBJECT_SEARCH = "subject";
-//                                NAVE_SEARCH = "nave";
-//                                NAVE_SEARCH_EXTENDED = "xnave";
             }
 
             this.doFonts(append ? this.getScrollableArea() : results, "", this.model.get("interlinearMode"), this.model.get("languageCode"));

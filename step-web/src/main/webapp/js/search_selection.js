@@ -1644,34 +1644,33 @@ step.searchSelect = {
 									}
 								}
 								if ((!skipBecauseOfZeroCount) || (limitType !== "")) {
-									if ((suggestionType === "text") || (suggestionType === "meanings")) {
+									if ((suggestionType === TEXT_SEARCH) || (suggestionType === MEANINGS)) {
 										if (data[i].count == 0) {
 											console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
 											continue;
 										}
 										else {
-											if ((suggestionType === "text") && (str2Search.slice(-1) === "*"))
+											if ((suggestionType === TEXT_SEARCH) && (str2Search.slice(-1) === "*"))
 												suffixToDisplay += "(" + __s.words_that_start_with + " " + str2Search + ")";
 											suffixToDisplay += " " + data[i].count + " x";
 										}
 									}
-									else if (suggestionType === "subject") {
+									else if (suggestionType === SUBJECT_SEARCH) {
 										if ((typeof data[i].suggestion === "object") && (Array.isArray(data[i].suggestion.searchTypes))) {
+											var moreSpecificSearch = "";
 											for (var k = 0; k < data[i].suggestion.searchTypes.length; k ++) {
-												if ((data[i].suggestion.searchTypes[k] === "SUBJECT_EXTENDED") ||
-													(data[i].suggestion.searchTypes[k] === "SUBJECT_FULL")) {
-													suffixToDisplay += "is in Naves topics";
-													break;
+												if (data[i].suggestion.searchTypes[k] === "SUBJECT_SIMPLE") {
+													moreSpecificSearch = SUBJECT_SEARCH;
+													break; // the subject search time is fine.
 												}
+												if (data[i].suggestion.searchTypes[k] === "SUBJECT_FULL")
+													suggestionType = NAVE_SEARCH;
+												else if (data[i].suggestion.searchTypes[k] === "SUBJECT_EXTENDED")
+													suggestionType = NAVE_SEARCH_EXTENDED;
 											}
 										}
-										if (data[i].count > 0) {
-											if (suffixToDisplay !== "")
-												suffixToDisplay += " and ";
-											else
-												suffixToDisplay = "is in ";
-											suffixToDisplay += data[i].count + " ESV headings";
-										}
+										if (data[i].count > 0)
+											suffixToDisplay = " " + data[i].count + " x";
 									}
 									step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
@@ -2337,8 +2336,11 @@ step.searchSelect = {
 		var needLineBreak = "";
 		var isAugStrong = Array.isArray(augStrongSameMeaning);
 		var existingHTML = currentSearchSuggestionElement.html();
-		step["SearchCount" + suggestionType] ++;
-		brCount = step["SearchCount" + suggestionType];
+		var suggestionTypeForCount = suggestionType;
+		if ((suggestionTypeForCount === NAVE_SEARCH) || (suggestionTypeForCount === NAVE_SEARCH_EXTENDED))
+			suggestionTypeForCount = SUBJECT_SEARCH;
+		step["SearchCount" + suggestionTypeForCount] ++;
+		brCount = step["SearchCount" + suggestionTypeForCount];
 		if (brCount >= suggestionsToDisplay) return;
 //		if (suffixToDisplay.indexOf(__s.default_search) > -1) {
 			//&& ($("#select_advanced_search").hasClass("checked"))) {

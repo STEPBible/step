@@ -2,7 +2,6 @@
 use utf8;
 use warnings;
 use strict;
-require './bookName.pl';
 
 sub trim {
     my $string = shift;
@@ -37,7 +36,7 @@ $langName{"German"} = "de";
 $langName{"Chinese (Cantonese)"} = "zh_hk";
 $langName{"Chinese (Mandarin)"} = "zh";
 $langName{"Arabic (Standard)"} = "ar";
-$langName{"Arabic (Egyptian)"} = "ar";
+$langName{"Arabic (Egyptian)"} = "arz";
 $langName{"French"} = "fr";
 $langName{"Spanish"} = "es";
 $langName{"Portuguese"} = "pt";

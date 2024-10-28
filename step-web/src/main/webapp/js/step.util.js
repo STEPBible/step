@@ -2723,13 +2723,14 @@ step.util = {
 		if ((osisID === "1Sam") || (osisID === "2Sam")) urlForiFrame = "1_2Sam";
 		else if ((osisID === "1Kngs") || (osisID === "2Kngs")) urlForiFrame = "1_2Kngs";
 		else if ((osisID === "1Chr") || (osisID === "2Chr")) urlForiFrame = "1_2Chr";
-        $.getJSON("html/json/" + osisID.toLowerCase() + ".json", function(summary) {
+		var curOsisID = osisID.toLowerCase();
+        $.getJSON("html/json/" + curOsisID + ".json", function(summary) {
             var bookSummary =
                 '<br><span style="font-size:18px"><b>Book summary of ' + longBookName + '</b></span><br>' +
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary.book_description + '<br><br>' +
                     summary.book_overview + '</p>' +
-					'<span class="' + osisID + '" style="font-size:18px;display:none"><b>Video on ' + longBookName + '</b></span><br>' +
+					'<span class="vid_' + curOsisID + '" style="font-size:18px;display:none"></span><br>' +
 					'<p style="margin:8px">ESV Introduction:<br>' + summary.ESV_introduction + '</p>' +
                     '<p style="margin:8px">ESV Summary:<br>' + summary.ESV_summary + '</p>' +
                 '</span>' +
@@ -2791,8 +2792,57 @@ step.util = {
                 '</div>'
             )()).modal("show");
 			step.util.blockBackgroundScrolling('showBookOrChapterSummaryModal');
+			step.util.buildBibleProjectVideo(step.userLanguageCode);
         });
     },
+	buildBibleProjectVideo: function(lang, secondLang) {
+		lang = lang.toLowerCase();
+		if (!secondLang) {
+			if (lang.substring(0,2) === "zh") {
+				lang = "zh";
+			}
+		}
+		$.getJSON("html/json/video/" + lang + ".json", function(video) {
+			for (var key in video) {
+				var curVideos = video[key];
+				var textToShow = "";
+				if (!secondLang) {
+					$("#bibleSummary").find(".vid_" + key).append('<span> - </span>');
+					textToShow = "Bible Project " + __s.video;
+					if (lang === "zh")
+						textToShow += " (普通)";
+					else if (lang === "ar") {
+						textToShow += " (فصحى)";
+						$(".vid_" + key).css("direction","rtl");
+					}
+					if (curVideos.length > 1)
+						textToShow += ": part ";
+				}
+				else {
+					if (lang === "zh_hk")
+						textToShow += ", (广东)";
+					else if (lang === "arz")
+						textToShow += " (مصري)";
+				}
+				if (curVideos.length == 1) {
+					$(".vid_" + key).append('<a href="' + video[key][0] + '" target="_blank">' + textToShow + '</a>');
+				}
+				else {
+					$(".vid_" + key).append('<span>' + textToShow + '</span>');
+					for (var i = 0; i < video[key].length; i++) {
+						$(".vid_" + key).append('<a href="' + video[key][i] + '" target="_blank"> ' + (i+1) + '    </a>')
+					}
+				}
+				$("#bookSummary").find(".vid_" + key).show();
+			}
+			if (!secondLang) {
+				if (lang === "zh")
+					step.util.buildBibleProjectVideo("zh_hk", true);
+				else if (lang === "ar")
+					step.util.buildBibleProjectVideo("arz", true);
+			}
+		});
+	},
 	blockBackgroundScrolling: function(idName) {
 		if (step.touchDevice && !step.touchWideDevice) {
 			$("body").css("overflow-y","hidden"); // do not let body (web page) scroll
@@ -4889,67 +4939,5 @@ step.util = {
 		}
 		return false;
 	}
-	// showVideoinExample: function (currentElement) {
-    //     var element = document.getElementById('videoExample');
-    //     if (element) element.parentNode.removeChild(element);
-	// 	var videoFile = currentElement.data("videofile");
-	// 	if (typeof videoFile !== "string") return false;
-	// 	var seconds = currentElement.data("videotime");
-	// 	var originalWidth = currentElement.data("width");
-	// 	var width = originalWidth;
-	// 	var height = currentElement.data("height");
-	// 	var whereToPrepend = currentElement.parent().next();
-	// 	if (step.touchDevice) {
-	// 		step.util.showVideoModal(videoFile, seconds, originalWidth);
-	// 		return ;
-	// 	}
-	// 	var currentWidth = $("div#welcomeExamples").width();
-	// 	if (currentWidth < 100) {
-	// 		currentWidth = window.innerWidth;
-	// 	}
-	// 	if (originalWidth > currentWidth) {
-	// 		height = Math.floor(height * (currentWidth / width));
-	// 		width = currentWidth;
-	// 	}
-    //     var videoElement = $(_.template(
-	// 		'<div id="videoExample" data-videofile="' + videoFile + '" data-videotime="' + seconds + '" data-width="' + width + '" ' +
-	// 			'data-height="' + height + '">' +
-	// 			'<div">' +
-	// 				'<div class="stepModalFgBg">' +
-	// 					'<script>' +
-	// 						'$(document).ready(function () {' +
-	// 							'var file = $("#videoExample").data("videofile");' +
-	// 							'var time = $("#videoExample").data("videotime") * 1000;' +
-	// 							'var height = $("#videoExample").data("height") - 15;' +
-	// 							'var width = $("#videoExample").data("width") - 15;' +
-	// 							'var gifElement = document.createElement("img");' +
-	// 							'var randomString = "";' +
-	// 							'if ((typeof performance === "object") && (typeof performance.now() === "number")) {' +
-	// 								'randomString = "?" + performance.now();' +  // GIF file in some browser gets stuck in the last frame after it has played once.
-	// 							'}' +
-	// 							'else randomString = "?" + Math.floor(Math.random() * 10000); ' +
-	// 							'gifElement.src = "images/" + file + randomString;' +
-	// 							'gifElement.style.height = height;' +
-	// 							'gifElement.style.width = width;' +
-	// 							'gifElement.style.left = "-40px";' +
-	// 							'gifElement.onload = function() {' +
-	// 								'$("#pleasewait").remove();' +
-	// 								'$("#videomodalbody").append(gifElement);' +
-	// 								'setTimeout(function() {' +
-	// 									'$("#videoExample").empty().append(\'<a href="javascript:step.util.showVideoModal(\\\'' + videoFile + '\\\',' + seconds + ',' +  width + ')">' +
-	// 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>\');' +
-	// 								'}, time);' +
-	// 							'}' +
-	// 						'})' +
-	// 					'</script>' +
-	// 				'</div>' +
-	// 				'<div id="videomodalbody" style="left:-40px;text-align:center;">' +
-	// 					'<p id="pleasewait">Loading video, please wait...</p>' +
-	// 				'</div>' +
-	// 			'</div>' +
-	// 		'</div>'
-	// 	)());
-	// 	$(whereToPrepend).prepend(videoElement);
-    // },
 }
 ;

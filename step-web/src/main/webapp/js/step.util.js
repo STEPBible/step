@@ -3336,6 +3336,24 @@ step.util = {
 				introCount ++;
 				step.util.localStorageSetItem("step.copyIntro", introCount);
 			}
+			else {
+				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.userSurvey");
+				var introCount = parseInt(introCountFromStorageOrCookie, 10);
+				if (isNaN(introCount)) introCount = 0;
+				if ((introCount < 1) && (window.innerWidth > 499)) {
+					var introJsSteps = [
+					{
+						intro: __s.user_survey,
+						position: 'center'
+					}
+					];
+					introJs().setOptions({
+						steps: introJsSteps
+					}).start();
+					introCount ++;
+					step.util.localStorageSetItem("step.userSurvey", introCount);
+				}
+			}	
 		}
 	},
     showIntroOfMultiVersion: function () {

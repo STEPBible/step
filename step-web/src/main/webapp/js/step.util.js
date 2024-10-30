@@ -3343,7 +3343,7 @@ step.util = {
 				if ((introCount < 1) && (window.innerWidth > 499)) {
 					var introJsSteps = [
 					{
-						intro: __s.user_survey,
+						intro: '<a href="https://docs.google.com/forms/d/1jgFiiOnpIjGIjuEvLGA8Rl9Zecy5yEHrNlOys1G0x0A/edit?usp=sharing_eip_se_dm&ts=671c1301" target="_blank">Sign up</a> (30 seconds!) to participate in future interface design studies and help us improve our site\'s user experience.',
 						position: 'center'
 					}
 					];

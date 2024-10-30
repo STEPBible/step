@@ -1355,7 +1355,7 @@ var cf = {
     if (configName !== "") {
       if (configName.indexOf("function:") == 0){
         var functionName = configName.substr(9);
-        if (functionName == "openStats")
+        if (functionName === "openStats")
           step.util.localStorageSetItem('colorCode-openStatus', JSON.stringify(true));
       }
       else cf.openUserSelectedConfig(configName);
@@ -1564,7 +1564,7 @@ var cf = {
                   lastCopyPos = startOfSpanPos + classPos + 11;
                   if (shorterStringToSearch.substr(classPos+5, 1) == '=') {
                     var quoteAfterClass = shorterStringToSearch.substr(classPos+6, 1);
-                    if ( (quoteAfterClass == '"') || (quoteAfterClass == "'") ) {
+                    if ( (quoteAfterClass === '"') || (quoteAfterClass === "'") ) {
                       result = result.concat(passageHTML.substring(lastCopyPos, startOfSpanPos + classPos + 13));
                       lastCopyPos = startOfSpanPos + classPos + 13;
                       result = result.concat(cssCode);
@@ -1605,7 +1605,7 @@ var cf = {
       var classPos = passageHTML.indexOf("class=", currentPos);
       if (classPos > -1) {
         var charAfterClass = passageHTML.substr(classPos + 6, 1);
-        if ((charAfterClass == '"') || (charAfterClass == "'")) {
+        if ((charAfterClass === '"') || (charAfterClass === "'")) {
           currentPos = classPos + 7;
           var endingQuotePos = passageHTML.indexOf(charAfterClass, currentPos);
           if ((endingQuotePos > -1) && (endingQuotePos - currentPos < 100)) {
@@ -1673,11 +1673,11 @@ var cf = {
       var morphCodeLength = morphCode.length;
       if ((morphCodeLength == 6) || (morphCodeLength == 7)) {
           var charMinus2 = morphCode.substr(morphCodeLength - 3, 1);
-          if ((charMinus2 == "1") || (charMinus2 == "2") || (charMinus2 == "3")) {
+          if ((charMinus2 === "1") || (charMinus2 === "2") || (charMinus2 === "3")) {
               gender = morphCode.substr(morphCodeLength - 2, 1);
               number = morphCode.substr(morphCodeLength - 1, 1);
           }
-          else if ((charMinus2 == "b") || (charMinus2 == "c") || (charMinus2 == "f") || (charMinus2 == "l") || (charMinus2 == "m") || (charMinus2 == "t")) {
+          else if ((charMinus2 === "b") || (charMinus2 === "c") || (charMinus2 === "f") || (charMinus2 === "l") || (charMinus2 === "m") || (charMinus2 === "t")) {
               gender = charMinus2;
               number = morphCode.substr(morphCodeLength - 2, 1);
           }
@@ -1685,14 +1685,14 @@ var cf = {
       else if (morphCodeLength == 4) {
           gender = morphCode.substr(3, 1);
       }
-      if (number != "") {
-          if ((number == "p") || (number == "d")) result += 'plur ';
-          else if (number == "s") result += 'sing ';
+      if (number !== "") {
+          if ((number === "p") || (number === "d")) result += 'plur ';
+          else if (number === "s") result += 'sing ';
       }
-      if (gender != "") {
-          if (gender == "m") result += 'mas ';
-          else if (gender == "f") result += 'fem ';
-          else if ((gender == "b") || (gender == "c") || (gender == "l") || (gender == "t")) result += 'neut ';
+      if (gender !== "") {
+          if (gender === "m") result += 'mas ';
+          else if (gender === "f") result += 'fem ';
+          else if ((gender === "b") || (gender === "c") || (gender === "l") || (gender === "t")) result += 'neut ';
       }
       if (morphCode.substr(1, 1) == 'V') {
           if (morphCode.length == 5)

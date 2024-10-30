@@ -408,7 +408,7 @@
                     history.fetch();
                     var histIndex = 0;
                     var mostRecentPassage = "";
-                    while (histIndex < history.length && mostRecentPassage == "") {
+                    while (histIndex < history.length && mostRecentPassage === "") {
                         var histItem = history.at(histIndex);
                         if (typeof histItem === "object") {
                             var histItemArgs = histItem.get("args");

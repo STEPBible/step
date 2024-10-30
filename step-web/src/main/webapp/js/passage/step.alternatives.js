@@ -105,7 +105,7 @@ step.alternatives = {
         enrichTypeQualifier: function(text) {
             var extraValue = "";
             
-            if(text == undefined || text == "") {
+            if(text == undefined || text === "") {
                 return "";
             }
             
@@ -117,13 +117,13 @@ step.alternatives = {
                 compare = compare.substring(3).trim();
             }
             
-            if(compare == "") {
+            if(compare === "") {
                 return esvPrefix;
             }
             
             
             var internationalKey = compare.trim().replace(/:+/ig, '').trim().replace(/\s+/ig, '_').trim();
-            if(internationalKey == "") {
+            if(internationalKey === "") {
                 return esvPrefix;
             }
             

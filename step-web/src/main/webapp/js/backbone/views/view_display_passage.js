@@ -160,7 +160,7 @@ var PassageDisplayView = DisplayView.extend({
                 }
             }
 //            if (((languages[0].indexOf("en") == 0) ||
-//				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
+//				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode === "en"))) &&
 		    if (step.util.bookOrderInBible(reference) > -1) { // }) {
                 var xgenObj = passageHtml.find('.xgen');
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))

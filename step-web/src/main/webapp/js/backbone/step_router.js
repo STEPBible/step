@@ -6,7 +6,7 @@ var StepRouter = Backbone.Router.extend({
     initialize: function () {
     },
     _addArg: function (url, argName, argValue) {
-        if (url == "") {
+        if (url === "") {
             url += '?';
         } else if (url[url.length - 1] !== '?') {
             url += '&';

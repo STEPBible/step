@@ -129,11 +129,6 @@ var SearchDisplayView = DisplayView.extend({
                     (itemType === GREEK) || (itemType === HEBREW_MEANINGS) ||
                     (itemType === HEBREW))
                         this._lookForStrongInSearchString(actPsgeDataElm.token, results, strongHighlights);
-//                                EXAMPLE_DATA = "examples";
-//                                MEANINGS = "meanings";
-//                                SUBJECT_SEARCH = "subject";
-//                                NAVE_SEARCH = "nave";
-//                                NAVE_SEARCH_EXTENDED = "xnave";
             }
 
             this.doFonts(append ? this.getScrollableArea() : results, "", this.model.get("interlinearMode"), this.model.get("languageCode"));
@@ -411,11 +406,11 @@ var SearchDisplayView = DisplayView.extend({
      */
     cleanup: function (str) {
         //remove leading/trailing speech marks
-        if (str.length > 0 && (str[0] == "'" || str[0] == '"')) {
+        if (str.length > 0 && (str[0] === "'" || str[0] == '"')) {
             str = str.substring(1);
         }
 
-        if (str.length > 0 && (str[str.length - 1] == "'" || str[str.length - 1] == '"')) {
+        if (str.length > 0 && (str[str.length - 1] ==="'" || str[str.length - 1] === '"')) {
             str = str.substring(0, str.length - 1);
         }
 

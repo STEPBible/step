@@ -336,7 +336,7 @@ var PickBibleView = Backbone.View.extend({
         var self = this;
         var selectedLanguage = (keyboard) ? "_all" : this._getLanguage();
         var origLanguage = selectedLanguage;
-		if (selectedLanguage == "zh_TW") selectedLanguage = "zh";
+		if (selectedLanguage === "zh_TW") selectedLanguage = "zh";
         var bookTypeTab = this._getBookTypeTab();
         var filter = (bookTypeTab === '#commentaryList') ? "COMMENTARY" : "BIBLE";
         var bookTypeTabsLi = $(".bookTypeTabs li");
@@ -420,7 +420,7 @@ var PickBibleView = Backbone.View.extend({
             }
         }
 
-        if (selectedLanguage == "_ancient" && filter == 'BIBLE') {
+        if (selectedLanguage === "_ancient" && filter === 'BIBLE') {
             var added = this._populateAncientBibles(bibleList);
             //now go through Bibles adding if not already present
             for (var v in step.keyedVersions) {
@@ -452,14 +452,14 @@ var PickBibleView = Backbone.View.extend({
                     continue;
                 }
                 if (this._isLanguageValid(version.languageCode, selectedLanguage)) {
-                    if (selectedLanguage == "_all") {
+                    if (selectedLanguage === "_all") {
                         //now filter by language:
                         this._addGroupingByLanguage(bibleList, v, version);
-                    } else if (selectedLanguage == "en") {
-                        if (version.languageCode == "en") {
+                    } else if (selectedLanguage === "en") {
+                        if (version.languageCode === "en") {
                             this._addGroupingByLanguage(bibleList, v, version);
                         }
-                    } else if(selectedLanguage == "_ancient") { 
+                    } else if(selectedLanguage === "_ancient") { 
                         if((version.languageCode == 'he' || version.languageCode == 'hbo' || version.languageCode == 'grc')) {
                             this._addGroupingByLanguage(bibleList, v, version);
                         }  
@@ -477,7 +477,7 @@ var PickBibleView = Backbone.View.extend({
 				// console.log("No Bible module for " + key);
 				delete bibleList[key];
 			}
-			else if (selectedLanguage == "_all") {
+			else if (selectedLanguage === "_all") {
 				if (uniqueBibleList.indexOf(bibleList[key][0].languageCode) > -1) console.log("Same language code shows up in two groups of language: " + bibleList[key][0].languageCode);
 				else uniqueBibleList.push(bibleList[key][0].languageCode);
 			}
@@ -526,7 +526,7 @@ var PickBibleView = Backbone.View.extend({
                 self.$el.find("[input-initials='" + currentInitials + "']").prop("checked", true);
             }
         });
-        if ((bookTypeTab !== '#commentaryList') && (selectedLanguage == "_all")) {
+        if ((bookTypeTab !== '#commentaryList') && (selectedLanguage === "_all")) {
 			if (keyboard) $('.selectGeo').hide();
 			else $('.selectGeo').show();
 		}
@@ -557,11 +557,11 @@ var PickBibleView = Backbone.View.extend({
         step.util.adjustBibleListingHeight();
     },
     _isLanguageValid: function (actualLanguage, wantedLanguage) {
-        if (wantedLanguage == "_all") {
+        if (wantedLanguage === "_all") {
             return true;
         }
-        if (wantedLanguage == "_ancient") {
-            return actualLanguage == "he" || actualLanguage == "hbo" || actualLanguage == "grc";
+        if (wantedLanguage === "_ancient") {
+            return actualLanguage === "he" || actualLanguage === "hbo" || actualLanguage === "grc";
         }
         if (wantedLanguage === "fil") {
             return ((actualLanguage === "tl") || (actualLanguage === "fil"));

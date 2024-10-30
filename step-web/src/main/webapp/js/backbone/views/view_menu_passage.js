@@ -258,7 +258,7 @@ var PassageMenuView = Backbone.View.extend({
     _updateDisplayOptions: function () {
         //first set the available options to be visible, and non-available options to be invisible...
         var availableOptions = this.model.get("options") || "";
-        var isPassage = this.model.get("searchType") == "PASSAGE";
+        var isPassage = this.model.get("searchType") === "PASSAGE";
 
         //don't show the section at all if we're not a passage
         this.displayOptions.toggle(isPassage);
@@ -274,7 +274,7 @@ var PassageMenuView = Backbone.View.extend({
             var displayOption = displayOptions.eq(i);
             var displayOptionCode = displayOption.find("[data-value]").attr("data-value");
             displayOption.toggle(availableOptions.indexOf(displayOptionCode) != -1);
-            if (displayOptionCode == "C") {
+            if (displayOptionCode === "C") {
                 if ((availableOptions.indexOf("C") > -1) && (displayOption.find(".glyphicon").css("visibility") != "hidden")) {
                     this.displayOptions.find("li#grammar_list_item.noHighlight.grammarContainer")[0].hidden = false;
                 }
@@ -313,7 +313,7 @@ var PassageMenuView = Backbone.View.extend({
         var extraVersions = this.model.get("extraVersions");
 
         //remove any empty string...
-        if (extraVersions == undefined || extraVersions == "") {
+        if (extraVersions == undefined || extraVersions === "") {
             extraVersions = [];
         }
         else {
@@ -908,7 +908,7 @@ var PassageMenuView = Backbone.View.extend({
     },
     resizePanel: function (ev) {
         try {
-            if (document.getElementsByClassName("mainPanel")[0].style.paddingTop == "0px") {
+            if (document.getElementsByClassName("mainPanel")[0].style.paddingTop === "0px") {
                 document.getElementById("stepnavbar").style.display = "block";
                 $('.resizePanel').attr('title', 'Increase size of panel');
                 document.getElementsByClassName("resizePanel")[0].title = "";

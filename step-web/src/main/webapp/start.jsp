@@ -265,7 +265,13 @@
                 if (!appManager.isLocal()) {
             %> 
                                 <a style="padding-left:5px" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
-                                    <i class="glyphicon glyphicon-bullhorn"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="help_feedback" /></span>
+                                    <svg viewBox="0 0 18 21" width="18" height="21">
+                                        <path d="M 0 3 L 18 3, 18 16, 16 16, 16 21, 12 16, 0 16, 0 3" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>
+                                        <line x1="2" y1="8" x2="16" y2="8" stroke-width="1" stroke="var(--clrBackground)" />
+                                        <line x1="2" y1="10" x2="16" y2="10" stroke-width="1" stroke="var(--clrBackground)" />
+                                        <line x1="2" y1="12" x2="16" y2="12" stroke-width="1" stroke="var(--clrBackground)" />
+                                    </svg>
+                                    <span class="navbarIconDesc">&nbsp;<fmt:message key="help_feedback" /></span>
                                 </a>
             <%
                 }
@@ -641,6 +647,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <script src="js/passage_selection.js" type="text/javascript"></script>
 <script src="js/search_selection.js" type="text/javascript"></script>
 <script src="js/copy_text.js" type="text/javascript"></script>
+<script src="js/lexicon_feedback.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_main_search.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_restore.js" type="text/javascript"></script>
 

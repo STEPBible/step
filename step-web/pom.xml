@@ -192,6 +192,7 @@
 									<jsSourceFile>js/passage_selection.js</jsSourceFile>
 									<jsSourceFile>js/search_selection.js</jsSourceFile>
                                     <jsSourceFile>js/copy_text.js</jsSourceFile>
+									<jsSourceFile>js/lexicon_feedback.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_main_search.js</jsSourceFile>
 									<jsSourceFile>js/backbone/step_router.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_display.js</jsSourceFile>

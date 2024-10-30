@@ -249,7 +249,7 @@ var SidebarView = Backbone.View.extend({
                 var panelBody = $('<div class="panel-body"></div>');
                 if (!step.touchDevice || step.touchWideDevice)
                 	panelContentContainer.append(panelBody);
-                this._createBriefWordPanel(panelBody, item, currentUserLang, allVersions);
+                this._createBriefWordPanel(panelBody, item, currentUserLang, allVersions, ref);
                 var currentVariant = variant[i];
                 if ((typeof currentVariant !== "string") && (typeof variant[0] === "string"))
                     currentVariant = variant[0];
@@ -285,7 +285,7 @@ var SidebarView = Backbone.View.extend({
         else {
             allStrongsForNextBackButton += data.vocabInfos[0].strongNumber;
             var panelBody = $('<div class="panel-body"></div>');
-            this._createBriefWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions);
+            this._createBriefWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, ref);
             if (variant[0] !== "")
                 panelBody.append("<div>Only in " + variant[0] + " manuscript</div>");
             // need to handle multiple morphInfo (array)
@@ -355,7 +355,7 @@ var SidebarView = Backbone.View.extend({
             $("." + name + "Select").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
         }
     },
-    _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
+    _createBriefWordPanel: function (panel, mainWord, currentUserLang, allVersions, ref) {
         var userLangGloss = "";
         if ((currentUserLang == "es") && (mainWord._es_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._es_Gloss + "&nbsp;";
         else if ((currentUserLang == "zh") && (mainWord._zh_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._zh_Gloss + "&nbsp;";
@@ -373,6 +373,14 @@ var SidebarView = Backbone.View.extend({
                 .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
+                .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + mainWord.strongNumber + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                    '<svg viewBox="0 0 19 21" width="19" height="21">' +
+                        '<path d="M 0 3 L 18 3, 18 16, 16 16, 16 21, 12 16, 0 16, 0 3" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>' +
+                        '<line x1="2" y1="8" x2="16" y2="8" stroke-width="1" stroke="var(--clrBackground)" />' +
+                        '<line x1="2" y1="10" x2="16" y2="10" stroke-width="1" stroke="var(--clrBackground)" />' +
+                        '<line x1="2" y1="12" x2="16" y2="12" stroke-width="1" stroke="var(--clrBackground)" />' +
+                    '</svg>' +
+                '</a>'))
         );
     },
 

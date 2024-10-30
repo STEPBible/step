@@ -159,9 +159,9 @@ var PassageDisplayView = DisplayView.extend({
                     if (cv[C_handleOfRequestedAnimation] == -1) cf.goAnimate();
                 }
             }
-            if (((languages[0].indexOf("en") == 0) ||
-				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
-				(step.util.bookOrderInBible(reference) > -1)) {
+//            if (((languages[0].indexOf("en") == 0) ||
+//				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
+		    if (step.util.bookOrderInBible(reference) > -1) { // }) {
                 var xgenObj = passageHtml.find('.xgen');
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +

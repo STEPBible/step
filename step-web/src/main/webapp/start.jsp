@@ -266,11 +266,10 @@
             %> 
                                 <a style="padding-left:5px" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
                                     <svg viewBox="0 0 18 21" width="18" height="21">
-                                        <line x1="2" y1="7" x2="16" y2="7" stroke-width="1" stroke="var(--clrText)" />
-                                        <line x1="2" y1="9" x2="16" y2="9" stroke-width="1" stroke="var(--clrText)" />
-                                        <line x1="2" y1="11" x2="16" y2="11" stroke-width="1" stroke="var(--clrText)" />
-                                        <path d="M 0 3 L 18 3, 18 15, 0 15, 0 3" stroke="var(--clrText)" fill="none" stroke-width="5"></path>
-                                        <path d="M 16 17 L 16 21, 12 16, 16 17" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>
+                                        <path d="M 0 3 L 18 3, 18 16, 16 16, 16 21, 12 16, 0 16, 0 3" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>
+                                        <line x1="2" y1="8" x2="16" y2="8" stroke-width="1" stroke="var(--clrBackground)" />
+                                        <line x1="2" y1="10" x2="16" y2="10" stroke-width="1" stroke="var(--clrBackground)" />
+                                        <line x1="2" y1="12" x2="16" y2="12" stroke-width="1" stroke="var(--clrBackground)" />
                                     </svg>
                                     <span class="navbarIconDesc">&nbsp;<fmt:message key="help_feedback" /></span>
                                 </a>

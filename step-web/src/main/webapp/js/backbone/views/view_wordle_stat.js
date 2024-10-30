@@ -111,7 +111,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         }
 
         var firstLi = menu.find("li:first");
-        if(firstLi.text() == "") {
+        if(firstLi.text() === "") {
             value.html(firstLi.find("input").val());
         } else {
             value.html(firstLi.text());
@@ -120,7 +120,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         menu.find("a").click(function () {
             var link = $(this)
             var linkText = link.text();
-            if(linkText == "") {
+            if(linkText === "") {
                 var newRef = link.find("input").val();
                 value.html(newRef);
                 link.closest("li").data("value", newRef);
@@ -173,7 +173,7 @@ var ViewLexiconWordle = Backbone.View.extend({
             scope = scopeTypes[0];
         }
 
-        var mostOccurrences = (sortType == "SORT_BY_REVERSED_FREQUENCY") ? false : true;
+        var mostOccurrences = (sortType === "SORT_BY_REVERSED_FREQUENCY") ? false : true;
         this.statsContainer.empty();
 
         var currentUserLang = (step.userLanguageCode) ? step.userLanguageCode.toLowerCase() : "en";
@@ -222,7 +222,7 @@ var ViewLexiconWordle = Backbone.View.extend({
             .attr('href', 'javascript:void(0)')
             .attr('rel', relativeSize);
         if (isLineBreakSelected) {
-            if (statType == "WORD") wordLink.attr('title', sprintf(__s.stats_occurs_times_in_book_bible, value[1], value[2]));
+            if (statType === "WORD") wordLink.attr('title', sprintf(__s.stats_occurs_times_in_book_bible, value[1], value[2]));
         }
         else wordLink.attr('title', sprintf(__s.stats_occurs_times, value[0], scopeText));
 
@@ -287,7 +287,7 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         var strongs = []; //create order of strong numbers
 		var displayScope = passageScope;
-		if (scope == "BOOK") {
+		if (scope === "BOOK") {
 			displayScope = displayScope.replace(/\d+$/, "");
 		}
         var scopeText = step.defaults.analysis.scope[step.defaults.analysis.scopeType.indexOf(scope)];

@@ -82,7 +82,7 @@ var DisplayView = Backbone.View.extend({
         //do display options make it an interlinear
         var isInterlinearOption = languages.length != originalLanguageLength;
         var fonts = step.util.ui._getFontClasses(languages);
-        if (interlinearMode == "INTERLINEAR" || isInterlinearOption) {
+        if (interlinearMode === "INTERLINEAR" || isInterlinearOption) {
             //we inspect each line in turn, and stylise each block.
             step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".w", fonts, function (child) {
                 return child.parent().hasClass("verseStart");
@@ -191,7 +191,7 @@ var DisplayView = Backbone.View.extend({
             options.indexOf("T") != -1 ||
             options.indexOf("A") != -1 ||
             options.indexOf("M") != -1 ||
-            interlinearMode == "INTERLINEAR"
+            interlinearMode === "INTERLINEAR"
     },
 
     /**

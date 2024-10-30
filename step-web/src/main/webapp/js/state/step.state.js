@@ -31,7 +31,7 @@ step.state = {
 
     isLocal: function() {
         if(this.local == undefined) {
-            this.local = $("meta[step-local]").attr("content") == "true";
+            this.local = $("meta[step-local]").attr("content") === "true";
         }
         return this.local;
     },
@@ -44,13 +44,13 @@ step.state = {
     getIncompleteLanguage: function() {
         if(this.incomplete == undefined) {
             var incomplete = $("meta[step-incomplete-language]");
-            this.incomplete = incomplete.attr("content") == "true";
+            this.incomplete = incomplete.attr("content") === "true";
         }
         return this.incomplete;
     },
     isLtR: function() {
         if(this.direction == undefined) {
-            this.direction = $("meta[step-direction]").attr("content") == "true";
+            this.direction = $("meta[step-direction]").attr("content") === "true";
         }
         return this.direction;
     },

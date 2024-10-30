@@ -163,12 +163,12 @@ step.config = {
 
         var category = item.category == 'BIBLE' ? __s.bible : __s.commentary;
         var features = step.util.ui.getFeaturesLabel(item);
-        if (features == "") {
+        if (features === "") {
             features = " " + __s.not_applicable;
         }
 
 
-        var isInstallColumn = column.attr("id") == "installedColumn";
+        var isInstallColumn = column.attr("id") === "installedColumn";
         var module = $(
                 "<div class='version' data-initials='" + item.shortInitials + "'>" +
                         "<button class='pull-right remove-version' title='" + __s.remove + "'>" +
@@ -208,7 +208,7 @@ step.config = {
 
         $(module).data("installer", installer);
 
-        if(column.attr("id") == "installedColumn") {
+        if(column.attr("id") === "installedColumn") {
             module.addClass("bg-success");
         } else {
             module.addClass("bg-danger");

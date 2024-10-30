@@ -231,7 +231,7 @@ var AdvancedSearchView = Backbone.View.extend({
             for (var i = 0; i < returnedData.length; i++) {
                 dropdown.append($('<li role="presentation">' +
                     '<a role="menuitem" href="javascript:void(0)" data-ref="' + returnedData[i].matchingForm + '">' +
-                    "<span class='col-xs-4 " + (language == "true" ? 'unicodeFontMini' : 'hbFontMini') + "'>" + returnedData[i].matchingForm + "</span>" +
+                    "<span class='col-xs-4 " + (language === "true" ? 'unicodeFontMini' : 'hbFontMini') + "'>" + returnedData[i].matchingForm + "</span>" +
                     "<span class='col-xs-4'><span class='transliteration'>" + returnedData[i].stepTransliteration + "</span></span>" +
                     "<span class='col-xs-4'>" + returnedData[i].gloss + "</span>&nbsp;" +
                     '&nbsp;</a>' +
@@ -399,7 +399,7 @@ var AdvancedSearchView = Backbone.View.extend({
             return "";
         }
 
-        if (level == "") {
+        if (level === "") {
             level = 1;
         }
 
@@ -409,7 +409,7 @@ var AdvancedSearchView = Backbone.View.extend({
         //eval first part of the criteria
         query = this._evalCriteria(primaryType, primaryCriteria, query);
 
-        if (level == 0 || secondaryCriteria == null || $.trim(secondaryCriteria) == "") {
+        if (level == 0 || secondaryCriteria == null || $.trim(secondaryCriteria) === "") {
             var finalQuery = prefix + restrictionQuery + query;
             return finalQuery;
         }

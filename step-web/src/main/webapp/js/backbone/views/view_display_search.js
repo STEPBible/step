@@ -439,11 +439,11 @@ var SearchDisplayView = DisplayView.extend({
      */
     cleanup: function (str) {
         //remove leading/trailing speech marks
-        if (str.length > 0 && (str[0] == "'" || str[0] == '"')) {
+        if (str.length > 0 && (str[0] === "'" || str[0] == '"')) {
             str = str.substring(1);
         }
 
-        if (str.length > 0 && (str[str.length - 1] == "'" || str[str.length - 1] == '"')) {
+        if (str.length > 0 && (str[str.length - 1] ==="'" || str[str.length - 1] === '"')) {
             str = str.substring(0, str.length - 1);
         }
 

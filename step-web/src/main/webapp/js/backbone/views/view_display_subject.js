@@ -137,7 +137,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
         return results;
     },
     handleExpandingContainer: function (el) {
-        if(el.attr("loaded") == "true") {
+        if(el.attr("loaded") === "true") {
             return;
         }
 

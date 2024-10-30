@@ -110,9 +110,9 @@ step.passageSelect = {
 		lastPassageEntered  = lastPassageEntered[lastPassageEntered.length -1].replace(/^\s+/g, '').replace(/\s+$/g, '');
 		var firstWord = lastPassageEntered.split(/\.|:|\s/)[0].toLowerCase();
 		if (firstWord.length > 0) {
-			if (firstWord == "jas") firstWord = "jam";
-			else if (firstWord == "obd") firstWord = "obad";
-			else if ((firstWord == "phi") || (firstWord == "phil")) firstWord = "ph(il|lm)"; // Can be either Philippians or Philemon
+			if (firstWord === "jas") firstWord = "jam";
+			else if (firstWord === "obd") firstWord = "obad";
+			else if ((firstWord === "phi") || (firstWord === "phil")) firstWord = "ph(il|lm)"; // Can be either Philippians or Philemon
 			else if (firstWord.length > 3) {
 				for (var i = 0; i < this.arrayOfTyplicalBooksChapters.length; i ++) {
 					var checkString = this.arrayOfTyplicalBooksChapters[i][0].toLowerCase();
@@ -225,7 +225,7 @@ step.passageSelect = {
 		var start = 0;
 		var end = 0;
 		if (typeof data === "string") {
-			if (data == "OTNT") end = 66;
+			if (data === "OTNT") end = 66;
 			else if (data === "OT") {
 				end = 39;
 			}
@@ -376,11 +376,11 @@ step.passageSelect = {
 		var existingReferences = "";
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
 		for (var i = 0; i < activePassageData.length; i++) {
-			if (activePassageData[i].itemType == "version") {
-				if (allVersions.length > 0) allVersions += URL_SEPARATOR + "version=";
+			if (activePassageData[i].itemType === VERSION) {
+				if (allVersions.length > 0) allVersions += URL_SEPARATOR + VERSION + "=";
 				allVersions += activePassageData[i].item.shortInitials;
 			}
-			else if ((selectedDisplayLoc === "append") && (activePassageData[i].itemType == "reference")) {
+			else if ((selectedDisplayLoc === "append") && (activePassageData[i].itemType === "reference")) {
 				existingReferences += URL_SEPARATOR + "reference=" + activePassageData[i].item.osisID;
 			}
 		}
@@ -573,7 +573,7 @@ step.passageSelect = {
 		}
 		else {
 			for (var i = 0; i < data.length; i++) {
-				if (data[i].suggestion.sectionType == "PASSAGE") {
+				if (data[i].suggestion.sectionType === "PASSAGE") {
 					chptrOrVrsNum++;
 					osisIDLink = data[i].suggestion.osisID;
 					var curChptrDesc = "";

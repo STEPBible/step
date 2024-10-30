@@ -23,7 +23,7 @@ var QuickLexicon = Backbone.View.extend({
         '</h1> ' +
         '<% if ( (currentLang === "es") && (item._es_Definition != undefined) ) { %><div class="mediumDef"><%= item._es_Definition %></div><% } %>' +
         '<% if ( (currentLang === "km") && (item._km_Definition != undefined) ) { %><div class="mediumDef"><%= item._km_Definition %></div><% } %>' +
-        '<% if ( (currentLang === "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
+        '<% if ( (currentLang === "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang === "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
         '<% if ( (currentLang === "vi") && (item._vi_Definition != undefined) ) { %><div class="mediumDef"><%= item._vi_Definition %></div> <% } %>' +
         // '<% if ((currentEnWithZhLexiconSetting) || (currentEnWithEsLexiconSetting) || ( (!currentLang.indexOf("zh") == 0) && (!currentLang.indexOf("es") == 0))) { %>' +
         '<% if ((currentEnWithZhLexiconSetting) || (!currentLang.indexOf("zh") == 0)) { %>' +

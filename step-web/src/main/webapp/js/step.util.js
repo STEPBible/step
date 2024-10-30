@@ -2806,9 +2806,9 @@ step.util = {
                                         '<li><a href="#bibleSummary" data-toggle="tab">Bible summary</a></li>' +
                                     '</ul>' +
                                     '<div class="tab-content">' +
-                                        '<div class="tab-pane fade in active" id="chptSummary">' + chptSummary + '</div>' +
+                                        '<div class="tab-pane fade" id="chptSummary">' + chptSummary + '</div>' +
                                         '<div class="tab-pane fade" id="bookSummary">' + bookSummary + '</div>' +
-                                        '<div class="tab-pane fade" id="bibleSummary">' + bibleSummary + '</div>' +
+                                        '<div class="tab-pane fade in active" id="bibleSummary">' + bibleSummary + '</div>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +

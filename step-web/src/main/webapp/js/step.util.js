@@ -2801,9 +2801,9 @@ step.util = {
                             '<div class="modal-body" style="text-align:left font-size:16px">' +
                                 '<div>' +
                                     '<ul class="nav nav-tabs">' +
-                                        '<li class="active"><a href="#chptSummary" data-toggle="tab">Chapter summary</a></li>' +
+                                        '<li><a href="#chptSummary" data-toggle="tab">Chapter summary</a></li>' +
                                         '<li><a href="#bookSummary" data-toggle="tab">Book summary</a></li>' +
-                                        '<li><a href="#bibleSummary" data-toggle="tab">Bible summary</a></li>' +
+                                        '<li class="active"><a href="#bibleSummary" data-toggle="tab">Bible summary</a></li>' +
                                     '</ul>' +
                                     '<div class="tab-content">' +
                                         '<div class="tab-pane fade" id="chptSummary">' + chptSummary + '</div>' +

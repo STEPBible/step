@@ -145,7 +145,6 @@ step.searchSelect = {
         this.bookOrder = [];
         this.idx2BookOrder = {};
         
-		// var ua = navigator.userAgent.toLowerCase();
 		$("#searchmodalbody").addClass("scrollPart");
 		if ((this.userLang.indexOf('en') != 0) && (this.groupsOT[0].groupName === "Books of Moses") && (this.groupsOT[0].groupName !== "Pentateuch"))
 			this.groupsOT[0].groupName = __s.the_pentateuch;
@@ -160,7 +159,7 @@ step.searchSelect = {
 			for (var j = 0; j < activePassageData.length; j++) {
 				var actPsgeDataElm = activePassageData[j];
 				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
-				if (itemType == "srchJoin") {
+				if (itemType === "srchJoin") {
 					var previousJoinsAndSearch = actPsgeDataElm.token.split(/(?=[aon])/);
 					for (var k = 0; k < previousJoinsAndSearch.length; k++) {
 						if (k > 0) {
@@ -178,7 +177,7 @@ step.searchSelect = {
 			for (var i = 0; i < activePassageData.length; i++) {
 				var actPsgeDataElm = activePassageData[i];
 				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
-				if (itemType == REFERENCE) {
+				if (itemType === REFERENCE) {
 					if (existingReferences !== "") existingReferences += ",";
 					existingReferences += actPsgeDataElm.item.osisID.replace(/ /g, ',');
 				}
@@ -944,7 +943,7 @@ step.searchSelect = {
 		var versionAltName = '';
 		var data = step.util.activePassage().get("searchTokens") || [];
 		for (var i = 0; i < data.length; i++) {
-			if (data[i].itemType == VERSION) {
+			if (data[i].itemType === VERSION) {
 				this.version = data[i].item.initials;
 				versionAltName = data[i].item.shortInitials;
 				break;
@@ -967,9 +966,9 @@ step.searchSelect = {
 		var end = 0;
 		var arrayOfTyplicalBooksAndChapters;
 		if (typeof data === "string") {
-			if (data == "OTNT") end = 66;
-			else if (data == "OT") end = 39;
-			else if (data == "NT") {
+			if (data === "OTNT") end = 66;
+			else if (data === "OT") end = 39;
+			else if (data === "NT") {
 				start = 39;
 				end = 66;
 			}
@@ -1104,8 +1103,8 @@ step.searchSelect = {
 			if (htmlID === 'ob_table') $('#other_books_hdr').text('Other Books');
 			var bt = this._buildBookTableHeader(columns, htmlID);
 			$('#' + htmlID).append(this._buildBookTableHeader(columns, htmlID) + tableHTML + '</table>');
-			if (htmlID.substr(0, 2) == "nt") $("#nt_hdr").show();
-			else if (htmlID.substr(0, 2) == "ot") $("#ot_hdr").show();
+			if (htmlID.substr(0, 2) === "nt") $("#nt_hdr").show();
+			else if (htmlID.substr(0, 2) === "ot") $("#ot_hdr").show();
 		}
 	},
 
@@ -1190,8 +1189,8 @@ step.searchSelect = {
 		var numOfGroups = 0;
 		//$('#searchSelectError').text(__s.click_update_when_finish);
 		//$('#updateRangeButton').show();
-		if (idPrefix == 'ot') numOfGroups = this.groupsOT.length;
-		else if (idPrefix == 'nt') numOfGroups = this.groupsNT.length;
+		if (idPrefix === 'ot') numOfGroups = this.groupsOT.length;
+		else if (idPrefix === 'nt') numOfGroups = this.groupsNT.length;
 		idPrefix = '#' + idPrefix + '_tableg';
 		var allOn = true;
 		for (var i = 0; i < numOfGroups; i++) {

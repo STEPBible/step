@@ -45,10 +45,10 @@ $langName{"Vietnamese"} = "vi";
 
 my %bookName;
 $bookName{"OT Overview"} = "ot";
-$bookName{"Genesis 1-11"} = "gen-1";
-$bookName{"Genesis 12-50"} = "gen-2";
-$bookName{"Exodus 1-18"} = "exod-1";
-$bookName{"Exodus 19-40"} = "exod-2";
+$bookName{"Genesis 1-11"} = "gen1";
+$bookName{"Genesis 12-50"} = "gen2";
+$bookName{"Exodus 1-18"} = "exod1";
+$bookName{"Exodus 19-40"} = "exod2";
 $bookName{"Leviticus"} = "lev";
 $bookName{"Numbers"} = "num";
 $bookName{"Deuteronomy"} = "deut";
@@ -57,11 +57,11 @@ $bookName{"Judges"} = "judg";
 $bookName{"1 Samuel"} = "1sam";
 $bookName{"2 Samuel"} = "2sam";
 $bookName{"1 & 2 Kings"} = "1kgs,2kgs";
-$bookName{"Isaiah 1-39"} = "isa-1";
-$bookName{"Isaiah 40-66"} = "isa-2";
+$bookName{"Isaiah 1-39"} = "isa1";
+$bookName{"Isaiah 40-66"} = "isa2";
 $bookName{"Jeremiah"} = "jer";
-$bookName{"Ezekiel 1-33"} = "ezek-1";
-$bookName{"Ezekiel 34-48"} = "ezek-2";
+$bookName{"Ezekiel 1-33"} = "ezek1";
+$bookName{"Ezekiel 34-48"} = "ezek2";
 $bookName{"Hosea"} = "hos";
 $bookName{"Joel"} = "joel";
 $bookName{"Amos"} = "amos";
@@ -86,17 +86,17 @@ $bookName{"Daniel"} = "dan";
 $bookName{"Ezra / Nehemiah"} = "ezra,neh";
 $bookName{"1 & 2 Chronicles"} = "1chr,2chr";
 $bookName{"NT Overview"} = "nt";
-$bookName{"Matthew 1-13"} = "matt-1";
-$bookName{"Matthew 14-28"} = "matt-2";
+$bookName{"Matthew 1-13"} = "matt1";
+$bookName{"Matthew 14-28"} = "matt2";
 $bookName{"Mark"} = "mark";
-$bookName{"John 1-12"} = "john-1";
-$bookName{"John 13-21"} = "john-2";
-$bookName{"Luke 1-9"} = "luke-1";
-$bookName{"Luke 10-24"} = "luke-2";
-$bookName{"Acts 1-12"} = "acts-1";
-$bookName{"Acts 13-28"} = "acts-2";
-$bookName{"Romans 1-4"} = "rom-1";
-$bookName{"Romans 5-16"} = "rom-2";
+$bookName{"John 1-12"} = "john1";
+$bookName{"John 13-21"} = "john2";
+$bookName{"Luke 1-9"} = "luke1";
+$bookName{"Luke 10-24"} = "luke2";
+$bookName{"Acts 1-12"} = "acts1";
+$bookName{"Acts 13-28"} = "acts2";
+$bookName{"Romans 1-4"} = "rom1";
+$bookName{"Romans 5-16"} = "rom2";
 $bookName{"1 Corinthians"} = "1cor";
 $bookName{"2 Corinthians"} = "2cor";
 $bookName{"Galatians"} = "gal";
@@ -115,8 +115,8 @@ $bookName{"1 Peter"} = "1pet";
 $bookName{"2 Peter"} = "2pet";
 $bookName{"1-3 John"} = "1john,2john,3john";
 $bookName{"Jude"} = "jude";
-$bookName{"Revelation 1-11"} = "rev-1";
-$bookName{"Revelation 12-22"} = "rev-2";
+$bookName{"Revelation 1-11"} = "rev1";
+$bookName{"Revelation 12-22"} = "rev2";
 
 chomp(my @lines = <IY>);
 my $columnNum = 1;
@@ -138,7 +138,7 @@ while (1) {
 			my $outFile = $langCode . ".json";
 			open(OF, '>', $outFile) or die "Could not open output file: $outFile";
 			binmode(OF, ":utf8");
-			print OF "{";
+			print OF "{\n";
 			my $alreadyOutput = 0;
 			for my $i (1 .. $#lines) {
 				my @parts2 = split("\t", $lines[$i]);
@@ -152,22 +152,11 @@ while (1) {
 						my @multiBooks = split(",", $books);
 						for my $j (0 .. $#multiBooks) { 
 							my $curBook = $multiBooks[$j];
-							my @bookParts = split("-", $curBook);
-							if (($#bookParts == 0) || 
-							   ((exists($bookParts[1])) && ($bookParts[1] eq "1"))) {
-								if ($alreadyOutput) {
-									print OF ",\n";
-								}
-								$alreadyOutput = 1;
-								print OF "\"$bookParts[0]\":[";
+							print OF "\"" . $curBook . "\":\"" . $link . "\""; 
+							if ($curBook ne "rev2") {
+								print OF ",";
 							}
-							print OF "\"$link\"";
-							if (($#bookParts == 0) || ((exists($bookParts[1])) && ($bookParts[1] eq "2"))) {
-								print OF "]";
-							}
-							else {
-								print OF ",\n";
-							}
+							print OF "\n";
 						}
 					}
 				}

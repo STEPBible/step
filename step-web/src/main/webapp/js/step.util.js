@@ -2640,9 +2640,9 @@ step.util = {
             '<div>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>From Eden to wilderness</b></p>' +
             '<span class="vid_gen1" style="margin-left:10%;height:14px;font-size:14px">Genesis chapters 1-11</span><span> - Beginnings</span>' +
-			'<br><span class="vid_gen2" style="margin-left:10%;height:14px;font-size:14px">Genesis chapters 12-50</span><span> - The family of Abraham</span>' +
-            '<br><span class="vid_exod1" style="margin-left:10%;height:14px;font-size:14px">Exodus chapters 1-18</span><span> - God redeems His people from Egypt</span>' +
-			'<br><span class="vid_exod2" style="margin-left:10%;height:14px;font-size:14px">Exodus chapters 19-40</span><span> - God gives His covenant at Sinai</span>' +
+			'<br><span class="vid_gen2" style="margin-left:10%;height:14px;font-size:14px">Genesis chapters 12-50</span><span> - Abraham to Joseph</span>' +
+            '<br><span class="vid_exod1" style="margin-left:10%;height:14px;font-size:14px">Exodus chapters 1-18</span><span> - Exodus from Egypt</span>' +
+			'<br><span class="vid_exod2" style="margin-left:10%;height:14px;font-size:14px">Exodus chapters 19-40</span><span> - Covenant at Sinai</span>' +
             '<br><span class="vid_lev" style="margin-left:10%;height:14px;font-size:14px">Leviticus</span><span> - Ceremonial laws</span>' +
             '<br><span class="vid_num" style="margin-left:10%;height:14px;font-size:14px">Numbers</span><span> - Wilderness years</span>' +
             '<br><span class="vid_deut" style="margin-left:10%;height:14px;font-size:14px">Deuteronomy</span><span> - Moses\' farewell</span>' +
@@ -2668,12 +2668,12 @@ step.util = {
             '<br><span class="vid_eccl" style="margin-left:10%;height:14px;font-size:14px">Ecclesiastes</span><span> - Understanding life</span>' +
             '<br><span class="vid_song" style="margin-left:10%;height:14px;font-size:14px">Song of Solomon</span><span> - Understanding love</span>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>Major Prophets</b></p>' +
-            '<span class="vid_isa1" style="margin-left:10%;height:14px;font-size:14px">Isaiah chapters 1-39</span><span> - Judah\'s failure and judgement</span>' +
+            '<span class="vid_isa1" style="margin-left:10%;height:14px;font-size:14px">Isaiah chapters 1-39</span><span> - Judah\'s judgement</span>' +
 			'<br><span class="vid_isa2" style="margin-left:10%;height:14px;font-size:14px">Isaiah chapters 40-66</span><span> - Comfort and hope</span>' +
             '<br><span class="vid_jer" style="margin-left:10%;height:14px;font-size:14px">Jeremiah</span><span> - Warnings of Judgement</span>' +
             '<br><span class="vid_lam" style="margin-left:10%;height:14px;font-size:14px">Lamentations</span><span> - Jerusalem\'s destruction</span>' +
-            '<br><span class="vid_ezek1" style="margin-left:10%;height:14px;font-size:14px">Ezekiel chapters 1-33</span><span> - <b>Judgement</b> then brings restoration</span>' +
-			'<br><span class="vid_ezek2" style="margin-left:10%;height:14px;font-size:14px">Ezekiel chapters 34-48</span><span> - <b>Restoration</b> after judgement</span>' +
+            '<br><span class="vid_ezek1" style="margin-left:10%;height:14px;font-size:14px">Ezekiel chapters 1-33</span><span> - Nations judge</span>' +
+			'<br><span class="vid_ezek2" style="margin-left:10%;height:14px;font-size:14px">Ezekiel chapters 34-48</span><span> - A new Temple</span>' +
             '<br><span class="vid_dan" style="margin-left:10%;height:14px;font-size:14px">Daniel</span><span> - Witnessing in exile</span>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>Minor (brief) Prophets</b></p>' +
             '<span class="vid_hos" style="margin-left:10%;height:14px;font-size:14px">Hosea</span><span> - Acting out God\'s love</span>' +
@@ -2692,15 +2692,15 @@ step.util = {
             '<br><span class="stepFgBg vid_nt" style="font-size:16px"><b>Overview of New Testament</b></span>' +
             '<div>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>Life of Jesus</b></p>' +
-            '<span class="vid_matt1" style="margin-left:10%;height:14px;font-size:14px">Matthew chapters 1-13</span><span> - Jesus the Messiah, the King of Israel</span>' +
-			'<br><span class="vid_matt2" style="margin-left:10%;height:14px;font-size:14px">Matthew chapters 14-28</span><span> - Jesus accomplished salvation</span>' +
+            '<span class="vid_matt1" style="margin-left:10%;height:14px;font-size:14px">Matthew chapters 1-13</span><span> - The King\'s ministry</span>' +
+			'<br><span class="vid_matt2" style="margin-left:10%;height:14px;font-size:14px">Matthew chapters 14-28</span><span> - Opposition & victory</span>' +
             '<br><span class="vid_mark" style="margin-left:10%;height:14px;font-size:14px">Mark</span><span> - Jesus the Man</span>' +
-            '<br><span class="vid_luke1" style="margin-left:10%;height:14px;font-size:14px">Luke chapters 1-9</span><span> - Jesus the Saviour, birth to calling disciples</span>' +
-			'<br><span class="vid_luke2" style="margin-left:10%;height:14px;font-size:14px">Luke chapters 10-24</span><span> - Jesus ministry to Jerusalem, redeem, commission disciples</span>' +
-            '<br><span class="vid_john1" style="margin-left:10%;height:14px;font-size:14px">John chapters 1-12</span><span> - Jesus is God and his public ministry</span>' +
-			'<br><span class="vid_john2" style="margin-left:10%;height:14px;font-size:14px">John chapters 13-21</span><span> - Jesus farewell ministry, passion & resurrection</span>' +
-            '<br><span class="vid_acts1" style="margin-left:10%;height:14px;font-size:14px">Acts chapters 1-12</span><span> - Church growth</span>' +
-			'<br><span class="vid_acts2" style="margin-left:10%;height:14px;font-size:14px">Acts chapters 13-28</span><span> - Church growth, Paul\'s ministry</span>' +
+            '<br><span class="vid_luke1" style="margin-left:10%;height:14px;font-size:14px">Luke chapters 1-9</span><span> - The saviour\'s ministry</span>' +
+			'<br><span class="vid_luke2" style="margin-left:10%;height:14px;font-size:14px">Luke chapters 10-24</span><span> - Opposition & victory</span>' +
+            '<br><span class="vid_john1" style="margin-left:10%;height:14px;font-size:14px">John chapters 1-12</span><span> - God\'s son ministry</span>' +
+			'<br><span class="vid_john2" style="margin-left:10%;height:14px;font-size:14px">John chapters 13-21</span><span> - Opposition & victory</span>' +
+            '<br><span class="vid_acts1" style="margin-left:10%;height:14px;font-size:14px">Acts chapters 1-12</span><span> - Peter grows the church</span>' +
+			'<br><span class="vid_acts2" style="margin-left:10%;height:14px;font-size:14px">Acts chapters 13-28</span><span> - Paul spreads the church</span>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>Pauline letters to churches</b></p>' +
             '<span class="vid_rom1" style="margin-left:10%;height:14px;font-size:14px">Romans</span><span> - Paul\'s theology, need for justification</span>' +
 			'<br><span class="vid_rom2" style="margin-left:10%;height:14px;font-size:14px">Romans</span><span> - Life of those justified by faith</span>' +
@@ -2727,8 +2727,8 @@ step.util = {
             '<br><span class="vid_3john" style="margin-left:10%;height:14px;font-size:14px">3 John</span><span> - Practical love</span>' +
             '<br><span class="vid_jude" style="margin-left:10%;height:14px;font-size:14px">Jude</span><span> - Deserters</span>' +
             '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>Prophecies for the future</b></p>' +
-            '<span class="vid_rev1" style="margin-left:10%;height:14px;font-size:14px"">Revelation chapters 1-11</span><span> - Visions of the End</span>' +
-			'<br><span class="vid_rev2" style="margin-left:10%;height:14px;font-size:14px"">Revelation chapters 12-22</span><span> - Judgement and then New Heaven and Earth</span>' +
+            '<span class="vid_rev1" style="margin-left:10%;height:14px;font-size:14px"">Revelation chapters 1-11</span><span> - The world gets worse</span>' +
+			'<br><span class="vid_rev2" style="margin-left:10%;height:14px;font-size:14px"">Revelation chapters 12-22</span><span> - Final war & peace</span>' +
             '<tr></tr></tbody></table>' +
             '</div>';
 		if ((osisID === "1Sam") || (osisID === "2Sam")) urlForiFrame = "1_2Sam";

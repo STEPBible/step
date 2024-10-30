@@ -375,10 +375,11 @@ var SidebarView = Backbone.View.extend({
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
                 .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + mainWord.strongNumber + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     '<svg viewBox="0 0 19 21" width="19" height="21" stroke="var(--clrText)" >' +
-                        '<line x1="3" y1="7" x2="14" y2="7" stroke-width="1"/>' +
-                        '<line x1="3" y1="10" x2="14" y2="10" stroke-width="1"/>' +
-                        '<line x1="3" y1="13" x2="14" y2="13" stroke-width="1"/>' +
-                        '<path d="M 0 3 L 18 3, 18 17, 4 17, 0 21, 0 3" fill="none" stroke-width="1">' +
+                        '<line x1="2" y1="7" x2="16" y2="7" stroke-width="1" stroke="var(--clrText)" />' +
+                        '<line x1="2" y1="9" x2="16" y2="9" stroke-width="1" stroke="var(--clrText)" />' +
+                        '<line x1="2" y1="11" x2="16" y2="11" stroke-width="1" stroke="var(--clrText)" />' +
+                        '<path d="M 0 3 L 18 3, 18 15, 0 15, 0 3" stroke="var(--clrText)" fill="none" stroke-width="5"></path>' +
+                        '<path d="M 16 17 L 16 21, 12 16, 16 17" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>' +
                     '</svg>' +
                 '</a>'))
         );

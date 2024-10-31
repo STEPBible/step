@@ -2824,8 +2824,8 @@ step.util = {
 				var introJsSteps = [
 				{
 					element: document.querySelector('#bibleTab'),
-					intro: "We have added links to the BibleProject videos.  Click on the \"Bible summary\" tab to see them!",
-					position: 'bottom'
+					intro: "Click on the \"Bible summary\" tab to see summary videos by the BibleProject!",
+					position: 'left'
 				}
          	   ];
 				introJs().setOptions({

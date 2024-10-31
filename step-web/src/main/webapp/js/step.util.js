@@ -2821,11 +2821,12 @@ step.util = {
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
 			if (introCount < 1) {
+				var pos = (window.innerWidth > 499) ? "bottom" : "left";
 				var introJsSteps = [
 				{
 					element: document.querySelector('#bibleTab'),
 					intro: "Click on the \"Bible summary\" tab to see summary videos by the BibleProject!",
-					position: 'left'
+					position: pos
 				}
          	   ];
 				introJs().setOptions({

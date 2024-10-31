@@ -2800,14 +2800,14 @@ step.util = {
                             '<div class="modal-body" style="text-align:left font-size:16px">' +
                                 '<div>' +
                                     '<ul class="nav nav-tabs">' +
-                                        '<li><a href="#chptSummary" data-toggle="tab">Chapter summary</a></li>' +
+                                        '<li class="active"><a href="#chptSummary" data-toggle="tab">Chapter summary</a></li>' +
                                         '<li><a href="#bookSummary" data-toggle="tab">Book summary</a></li>' +
-                                        '<li class="active"><a href="#bibleSummary" data-toggle="tab">Bible summary</a></li>' +
+                                        '<li><a id="bibleTab" href="#bibleSummary" data-toggle="tab">Bible summary</a></li>' +
                                     '</ul>' +
                                     '<div class="tab-content">' +
-                                        '<div class="tab-pane fade" id="chptSummary">' + chptSummary + '</div>' +
+                                        '<div class="tab-pane fade in active" id="chptSummary">' + chptSummary + '</div>' +
                                         '<div class="tab-pane fade" id="bookSummary">' + bookSummary + '</div>' +
-                                        '<div class="tab-pane fade in active" id="bibleSummary">' + bibleSummary + '</div>' +
+                                        '<div class="tab-pane fade" id="bibleSummary">' + bibleSummary + '</div>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
@@ -2817,6 +2817,23 @@ step.util = {
             )()).modal("show");
 			step.util.blockBackgroundScrolling('showBookOrChapterSummaryModal');
 			step.util.buildBibleProjectVideo(step.userLanguageCode);
+		    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.showBibleProject");
+			var introCount = parseInt(introCountFromStorageOrCookie, 10);
+			if (isNaN(introCount)) introCount = 0;
+			if (introCount < 1) {
+				var introJsSteps = [
+				{
+					element: document.querySelector('#bibleTab'),
+					intro: "We have added links to the BibleProject videos.  Click on the \"Bible summary\" tab to see them!",
+					position: 'bottom'
+				}
+         	   ];
+				introJs().setOptions({
+					steps: introJsSteps
+				}).start();
+				introCount ++;
+				step.util.localStorageSetItem("step.showBibleProject", introCount);
+			}
         });
     },
 	buildBibleProjectVideo: function(lang, secondLang) {
@@ -2826,6 +2843,8 @@ step.util = {
 				lang = "zh";
 			}
 		}
+		if (" en uk id pl hu th ko te ja ta ro it ru de zh ar arz fr es pt hi vi ".indexOf(lang) == -1)
+			lang = "en"; // Not a langugage provided by BibleProject
 		$.getJSON("html/json/video/" + lang + ".json", function(video) {
 			for (var key in video) {
 				var curVideo = video[key];

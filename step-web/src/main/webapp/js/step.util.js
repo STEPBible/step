@@ -2644,13 +2644,13 @@ step.util = {
 				'<span class="vid_ot glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<div>' +
 				'<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>From Eden to wilderness</b></p>' +
-				'<a href="javascript:step.util.showSummary(\'Gen\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Genesis</a><span> chapters 1-11 - Beginnings</span>' +
+				'<a href="javascript:step.util.showSummary(\'Gen\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Genesis</a> <span class="vdes_gen1">chapters 1-11</span><span> - Beginnings</span>' +
 				'<span class="vid_gen1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px">Genesis</span><span> chapters 12-50 - Abraham to Joseph</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px">Genesis</span> <span class="vdes_gen2">chapters 12-50</span><span> - Abraham to Joseph</span>' +
 				'<span class="vid_gen2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'Exod\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Exodus</a><span> chapters 1-18 - Exodus from Egypt</span>' +
+				'<br><a href="javascript:step.util.showSummary(\'Exod\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Exodus</a> <span class="vdes_exod1">chapters 1-18</span><span> - Exodus from Egypt</span>' +
 				'<span class="vid_exod1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px">Exodus</span><span> chapters 19-40 - Covenant at Sinai</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px">Exodus</span> <span class="vdes_exod2">chapters 19-40</span><span> - Covenant at Sinai</span>' +
 				'<span class="vid_exod2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Lev\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Leviticus</a><span> - Ceremonial laws</span>' +
 				'<span class="vid_lev glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
@@ -2697,17 +2697,17 @@ step.util = {
 				'<br><a href="javascript:step.util.showSummary(\'Song\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Song of Solomon</a><span> - Understanding love</span>' +
 				'<span class="vid_song glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>Major Prophets</b></p>' +
-				'<a href="javascript:step.util.showSummary(\'Isa\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Isaiah</a><span> chapters 1-39 - Judah\'s judgement</span>' +
+				'<a href="javascript:step.util.showSummary(\'Isa\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Isaiah</a> <span class="vdes_isa1">chapters 1-39</span><span> - Judah\'s judgement</span>' +
 				'<span class="vid_isa1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px">Isaiah</span><span> chapters 40-66 - Comfort and hope</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px">Isaiah</span> <span class="vdes_isa2">chapters 40-66</span><span> - Comfort and hope</span>' +
 				'<span class="vid_isa2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Jer\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Jeremiah</a><span> - Warnings of Judgement</span>' +
 				'<span class="vid_jer glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Lam\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Lamentations</a><span> - Jerusalem\'s destruction</span>' +
 				'<span class="vid_lam glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'Ezek\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Ezekiel</a><span> chapters 1-33 - Nations judge</span>' +
+				'<br><a href="javascript:step.util.showSummary(\'Ezek\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Ezekiel</a> <span class="vdes_ezek1">chapters 1-33</span><span> - Nations judge</span>' +
 				'<span class="vid_ezek1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px">Ezekiel</span><span> chapters 34-48 - A new Temple</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px">Ezekiel</span> <span class="vdes_ezek2">chapters 34-48</span><span> - A new Temple</span>' +
 				'<span class="vid_ezek2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Dan\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Daniel</a><span> - Witnessing in exile</span>' +
 				'<span class="vid_dan glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
@@ -2741,28 +2741,28 @@ step.util = {
 				'<span class="vid_nt glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<div>' +
 				'<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>Life of Jesus</b></p>' +
-				'<a href="javascript:step.util.showSummary(\'Matt\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Matthew</a><span> chapters 1-13 - The King\'s ministry</span>' +
+				'<a href="javascript:step.util.showSummary(\'Matt\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Matthew</a> <span class="vdes_matt1">chapters 1-13</span><span> - The King\'s ministry</span>' +
 				'<span class="vid_matt1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px">Matthew</span><span> chapters 14-28 - Opposition & victory</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px">Matthew</span> <span class="vdes_matt2">chapters 14-28</span><span> - Opposition & victory</span>' +
 				'<span class="vid_matt2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Mark\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Mark</a><span> - Jesus the Man</span>' +
 				'<span class="vid_mark glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'Luke\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Luke</a><span> chapters 1-9 - The saviour\'s ministry</span>' +
+				'<br><a href="javascript:step.util.showSummary(\'Luke\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Luke</a> <span class="vdes_luke1">chapters 1-9</span><span> - The saviour\'s ministry</span>' +
 				'<span class="vid_luke1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px">Luke</span><span> chapters 10-24 - Opposition & victory</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px">Luke</span> <span class="vdes_luke2">chapters 10-24</span><span> - Opposition & victory</span>' +
 				'<span class="vid_luke2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'John\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">John</a><span> chapters 1-12 - God\'s son ministry</span>' +
+				'<br><a href="javascript:step.util.showSummary(\'John\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">John</a> <span class="vdes_john1">chapters 1-12</span><span> - God\'s son ministry</span>' +
 				'<span class="vid_john1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px">John</span><span> chapters 13-21 - Opposition & victory</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px">John</span> <span class="vdes_john2">chapters 13-21</span><span> - Opposition & victory</span>' +
 				'<span class="vid_john2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'Acts\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Acts</a><span> chapters 1-12 - Peter grows the church</span>' +
+				'<br><a href="javascript:step.util.showSummary(\'Acts\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Acts</a> <span class="vdes_acts1">chapters 1-12</span><span> - Peter grows the church</span>' +
 				'<span class="vid_acts1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px">Acts</span><span> chapters 13-28 - Paul spreads the church</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px">Acts</span> <span class="vdes_acts2">chapters 13-28</span><span> - Paul spreads the church</span>' +
 				'<span class="vid_acts2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>Pauline letters to churches</b></p>' +
-				'<a href="javascript:step.util.showSummary(\'Rom\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Romans</a><span> chapters 1 - 4 - Paul\'s theology, need for justification</span>' +
+				'<a href="javascript:step.util.showSummary(\'Rom\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Romans</a> <span class="vdes_rom1">chapters 1 - 4</span><span> - Paul\'s theology, need for justification</span>' +
 				'<span class="vid_rom1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px">Romans</span><span> chapters 5 - 16 - Life of those justified by faith</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px">Romans</span> <span class="vdes_rom2">chapters 5 - 16</span><span> - Life of those justified by faith</span>' +
 				'<span class="vid_rom2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'1Cor\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">1 Corinthians</a><span> - Church problems</span>' +
 				'<span class="vid_1cor glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
@@ -2807,9 +2807,9 @@ step.util = {
 				'<br><a href="javascript:step.util.showSummary(\'Jude\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Jude</a><span> - Deserters</span>' +
 				'<span class="vid_jude glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>Prophecies for the future</b></p>' +
-				'<a href="javascript:step.util.showSummary(\'Rev\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Revelation</a><span> chapters 1-11 - The world gets worse</span>' +
+				'<a href="javascript:step.util.showSummary(\'Rev\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Revelation</a> <span class="vdes_rev1">chapters 1-11</span><span> - The world gets worse</span>' +
 				'<span class="vid_rev1 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><span style="margin-left:10%;height:14px;font-size:14px"">Revelation</span><span> chapters 12-22 - Final war & peace</span>' +
+				'<br><span style="margin-left:10%;height:14px;font-size:14px"">Revelation</span> <span class="vdes_rev2">chapters 12-22</span><span> - Final war & peace</span>' +
 				'<span class="vid_rev2 glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<tr></tr></tbody></table>' +
 				'</div>';
@@ -2820,17 +2820,17 @@ step.util = {
                     summary.book_overview + '</p>';
 			if (" gen exod isa ezek matt luke john acts rom rev ".indexOf(curOsisID) == -1) {
 				bookSummary +=
-					'<br><span class="vid_' + curOsisID + 'text" style="font-size:16px;display:none;margin-left:8px">Overview of </span>' +
-					'<span class="vid_' + curOsisID + '" style="font-size:16px;display:none">' + longBookName + ' video</span>' +
+					'<br><span class="vid_' + curOsisID + 'text" style="font-size:16px;display:none;margin-left:8px">Overview video of ' + longBookName + '</span>' +
+					'<span class="vid_' + curOsisID + ' glyphicon glyphicon-play-circle" style="font-size:16px;margin-left:10px;display:none"></span>' +
 					'<span class="vid_' + curOsisID + 'text" style="font-size:16px;display:none"> by the BibleProject</span><br>';
 			}
 			else {
 				bookSummary +=
-					'<br><span class="vid_' + curOsisID + '1text" style="font-size:16px;display:none;margin-left:8px">Overview of </span>' +
-					'<span class="vid_' + curOsisID + '1" style="font-size:16px;display:none">' + longBookName + ' video1 </span>' +
+					'<br><span class="vid_' + curOsisID + '1text" style="font-size:16px;display:none;margin-left:8px">Overview videos of ' + longBookName + '</span>' +
+					'<span class="vid_' + curOsisID + '1 glyphicon glyphicon-play-circle" style="font-size:16px;margin-left:5px;display:none"></span>' +
 					'<span class="vid_' + curOsisID + '1text" style="font-size:16px;display:none"> and </span>' +
-					'<span class="vid_' + curOsisID + '2" style="font-size:16px;display:none">video 2</span>' +
-					'<span class="vid_' + curOsisID + '2text" style="font-size:16px;display:none"> by BibleProject</span>';
+					'<span class="vid_' + curOsisID + '2 glyphicon glyphicon-play-circle" style="font-size:16px;margin-left:5px;display:none"></span>' +
+					'<span class="vid_' + curOsisID + '2text" style="font-size:16px;display:none"> by the BibleProject</span>';
 			}
 			bookSummary +=
 					'<p style="margin:8px">ESV Introduction:<br>' + summary.ESV_introduction + '</p>' +
@@ -2974,31 +2974,39 @@ step.util = {
 		$.getJSON("html/json/video/" + lang + ".json", function(video) {
 			for (var key in video) {
 				var curVideo = video[key];
-				var textToShow = "";
 				if (!secondLang) {
-					if (lang === "zh")
+					var textToShow = "";
+					if (lang === "zh") {
 						textToShow += " (普通)";
+						$(".vid_" + key).css("margin-left","0px");
+					}
 					else if (lang === "ar") {
 						textToShow += " (فصحى)";
-						$(".vid_" + key).css("direction","rtl");
+						$(".vid_" + key).css("direction","rtl").css("margin-left","0px");
 					}
+					$(".vid_" + key).css("color","var(--clrHighlight)").show();
+					$(".vid_" + key).wrap('<a href="' + curVideo + '" target="_blank">' + textToShow + '</a>');	
 				}
 				else {
+					var textToShow = "";
 					if (lang === "zh_hk")
-						textToShow += ", (广东)";
+						textToShow += " (广东)";
 					else if (lang === "arz")
 						textToShow += " (مصري)";
+					else return; // Something is wrong
+					$(".vid_" + key).parent().after('<span class="vid2_' + key + ' glyphicon glyphicon-play-circle"></span>');
+					$(".vid2_" + key).wrap('<a href="' + curVideo + '" target="_blank">' + textToShow + '</a>');	
 				}
-				$(".vid_" + key).css("color","var(--clrHighlight)").show();
-				$(".vid_" + key).wrap('<a href="' + curVideo + '" target="_blank">' + textToShow + '</a>');
 				var lastChar = key.slice(-1);
 				var bookSummary = $('#bookSummary');
 				var bookSummaryVideo = bookSummary.find('.vid_' + key);
-				if (!isNaN(lastChar)) {
-					if (bookSummaryVideo.length == 1) {
-						textInBibleSummary = $('#bibleSummary').find('.vid_' + key).text();
-						if (textInBibleSummary !== "")
-							bookSummaryVideo.text(textInBibleSummary);
+				if (!secondLang) {
+					if (!isNaN(lastChar)) {
+						if (bookSummaryVideo.length == 1) {
+							textInBibleSummary = $('#bibleSummary').find('.vdes_' + key).text();
+							if (textInBibleSummary !== "")
+								$("#bookSummary").find(".vid_" + key).parent().before("<span> " + textInBibleSummary + "</span>");
+						}
 					}
 				}
 				bookSummaryVideo.show();

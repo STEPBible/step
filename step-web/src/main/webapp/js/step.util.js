@@ -2969,7 +2969,7 @@ step.util = {
 				lang = "zh";
 			}
 		}
-		if (" en uk id pl hu th ko te ja ta ro it ru de zh ar arz fr es pt hi vi ".indexOf(lang) == -1)
+		if (" en uk id pl hu th ko te ja ta ro it ru de zh zh_hk ar arz fr es pt hi vi ".indexOf(lang) == -1)
 			lang = "en"; // Not a langugage provided by BibleProject
 		$.getJSON("html/json/video/" + lang + ".json", function(video) {
 			for (var key in video) {

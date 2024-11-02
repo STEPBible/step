@@ -3649,10 +3649,10 @@ step.util = {
 				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.userSurvey");
 				var introCount = parseInt(introCountFromStorageOrCookie, 10);
 				if (isNaN(introCount)) introCount = 0;
-				if ((introCount < 1) && (window.innerWidth > 499)) {
+				if (introCount < 1) {
 					var introJsSteps = [
 					{
-						intro: '<a href="https://docs.google.com/forms/d/1jgFiiOnpIjGIjuEvLGA8Rl9Zecy5yEHrNlOys1G0x0A/edit?usp=sharing_eip_se_dm&ts=671c1301" target="_blank">Sign up</a> (30 seconds!) to participate in future interface design studies and help us improve our site\'s user experience.',
+						intro: '<a href="https://docs.google.com/forms/d/1jgFiiOnpIjGIjuEvLGA8Rl9Zecy5yEHrNlOys1G0x0A/edit?usp=sharing_eip_se_dm&ts=671c1301" target="_blank">Sign up here</a> (30 seconds!) to participate in future interface design studies and help us improve our site\'s user experience.',
 						position: 'center'
 					}
 					];

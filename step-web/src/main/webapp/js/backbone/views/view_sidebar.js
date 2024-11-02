@@ -624,7 +624,7 @@ var SidebarView = Backbone.View.extend({
                         if (i == 1) searchJoins = "srchJoin=(1o2";
                         else searchJoins += "o" + (i+1);
                     }
-                    if (allStrongs.length > 1) currentSearch = searchJoins + ")|" + currentSearch;
+                    if (allStrongs.length > 1) currentSearch = searchJoins + ")" + URL_SEPARATOR + currentSearch;
                     step.router.navigatePreserveVersions(currentSearch, false, true, true);
                     step.util.closeModal("showLongAlertModal");
                     return false;

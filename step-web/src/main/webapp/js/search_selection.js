@@ -2407,7 +2407,7 @@ step.searchSelect = {
 		else if (typeof searchType !== "undefined") currentSearch = URL_SEPARATOR + searchType + '=' + searchWord;
 		var joins = "";
 		if (previousJoinString !== "") {
-			joins = URL_SEPARATOR + "srchJoin="
+			joins = URL_SEPARATOR + "srchJoin=";
 			if (currentSearch === "") joins += previousJoinString;
 			else if (numOfSearches > 1) {
 				if (searchJoinsForMultipleStrongs === "") joins += previousJoinString + currentJoin + numOfSearches;

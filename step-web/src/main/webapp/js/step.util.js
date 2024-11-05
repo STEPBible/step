@@ -1488,15 +1488,6 @@ step.util = {
 					step.sidebar = null;
 			}
         },
-        openStats: function (focusedPassage) {
-            this.initSidebar("analysis", { ref: focusedPassage });
-            require(["sidebar"], function (module) {
-                step.sidebar.save({
-                    mode: 'analysis',
-                    focusedPassage: focusedPassage
-                });
-            });
-        },
         addStrongHandlers: function (passageId, passageContent) {
 						var that = this;
 						var allStrongElements = $("[strong]", passageContent);

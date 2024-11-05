@@ -478,11 +478,6 @@
         //do cookie notification
         var countriesRequiringCookie = "UNKNOWN GB DE FR IT ES PL RO NL BE GR SE PT AT BG CY CZ DK EE FI HR HU IE LT LU LV MT SI SK";
         if (countriesRequiringCookie.indexOf(step.userCountryCode) > -1) step.util.raiseOneTimeOnly("cookie_notification", 'info');
-        var tmp = step.util.localStorageGetItem('colorCode-openStatus');
-        if (tmp) {
-            localStorage.removeItem('colorCode-openStatus');
-            step.util.ui.openStats();
-        }
         var tmp = step.util.localStorageGetItem('colorCode-InfoMsg');
         if (tmp) {
             localStorage.removeItem('colorCode-InfoMsg');

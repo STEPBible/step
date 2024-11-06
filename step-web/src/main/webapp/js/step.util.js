@@ -1849,7 +1849,7 @@ step.util = {
         },
 
 		_showVerseWithStrongInBookPopup: function (bookName, dataStrong, dataOtherStrongs, evPageY, wordInfo, passageHtml) {
-			fetch(document.location.origin + "/rest/search/masterSearch/version=ESV|reference=" + bookName +
+			fetch(document.location.origin + "/rest/search/masterSearch/version=ESV" + URL_SEPARATOR + "reference=" + bookName +
 				step.util._createStrongSearchArg(dataStrong, dataOtherStrongs) +
 				"/HNVUG//////en?lang=en")
 			.then(function(response) {

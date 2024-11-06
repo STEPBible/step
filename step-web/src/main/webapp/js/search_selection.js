@@ -1412,7 +1412,7 @@ step.searchSelect = {
 													limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
 												text2Display = '"' + str2Search + '"';
 												str2Search = '%22' + str2Search + '%22';
-												$("td.search-type-column.select-text").html(__s.search_type_desc_text);
+												$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":");
 											}
 											else {
 												if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {

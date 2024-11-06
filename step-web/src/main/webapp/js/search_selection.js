@@ -794,9 +794,8 @@ step.searchSelect = {
 			'<div id="nt_table"/>' +
 			'<h4 id="other_books_hdr"/>' +
 			'<div id="ob_table"/>';
-			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#keyboardEntry").length == 1)) {
+			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#keyboardEntry").length == 0))
 				$('.footer').prepend('<a id="keyboardEntry" class="advanced_search_elements" href="javascript:step.searchSelect._buildRangeKeyboard();"><img src="images/keyboard.jpg" alt="Keyboard entry"></a>');
-			}
 		return html;
 	},
 
@@ -1391,6 +1390,7 @@ step.searchSelect = {
 												str2Search = strings2Search.join(" ");
 												text2Display = str2Search;
 											}
+											$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":");
 											if (strings2Search.length > 1) {
 												var defaultSearchString = "";
 												var defaultMouseOverTitle = "";
@@ -1412,7 +1412,6 @@ step.searchSelect = {
 													limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
 												text2Display = '"' + str2Search + '"';
 												str2Search = '%22' + str2Search + '%22';
-												$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":");
 											}
 											else {
 												if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
@@ -1421,7 +1420,6 @@ step.searchSelect = {
 														limitType, null, false, false, "", ""); // , hasHebrew, hasGreek);
 													text2Display = str2Search + "* (" + __s.words_that_start_with + " " + str2Search + ")";
 													str2Search += "*";
-													$("td.search-type-column.select-text").html(__s.search_type_desc_text);
 													// Add search_type_desc_text2 to description, if user's language has a definition for it. English already has a definition for it.
 													if ((step.userLanguageCode === "en") || (__s.search_type_desc_text2.indexOf("+ words starting with") == -1))
 														$("td.search-type-column.select-text").html(__s.search_type_desc_text + __s.search_type_desc_text2 + ":");

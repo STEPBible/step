@@ -1424,7 +1424,7 @@ step.searchSelect = {
 													$("td.search-type-column.select-text").html(__s.search_type_desc_text);
 													// Add search_type_desc_text2 to description, if user's language has a definition for it. English already has a definition for it.
 													if ((step.userLanguageCode === "en") || (__s.search_type_desc_text2.indexOf("+ words starting with") == -1))
-														$("td.search-type-column.select-text").html(__s.search_type_desc_text + __s.search_type_desc_text2);
+														$("td.search-type-column.select-text").html(__s.search_type_desc_text + __s.search_type_desc_text2 + ":");
 												}
 												suffixToDisplay = "<b>" +__s.default_search + "</b>";
 												suffixTitle = __s.default_search_mouse_over_title;

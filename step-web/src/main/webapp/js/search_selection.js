@@ -1544,6 +1544,11 @@ step.searchSelect = {
 													}
 												}
 											}
+											if ((strings2Search.length == 1) && (str2Search.slice(-1) !== "*") &&
+												(!step.searchSelect.wordsWithNoInflection(str2Search)))
+												$("td.search-type-column.select-text").html(__s.search_type_desc_text + __s.search_type_desc_text2 + ":");
+											else
+												$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":");
 											// if (strings2Search.length > 1) {
 											// 	var defaultSearchString = "";
 											// 	var defaultMouseOverTitle = "";

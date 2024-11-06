@@ -262,7 +262,7 @@ var ExamplesView = Backbone.View.extend({
 							'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/presentation/d/10oUdTW40X3f5y4wmImxRW5_3zTJnRkVUVo4jz4mU9E4/preview" target="_blank" id="g5q1">Site Guide</a>' +
 						'</li>' +
 						'<li class="keyboard_shortcut" style="font-weight:bold">' +
-						'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://www.stepbible.org/html/keyboard_shortcut.html" target="_blank"><%= __s.quick_tutorial_header4 %></a>' +
+						'<a href="https://www.stepbible.org/html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://www.stepbible.org/html/keyboard_shortcut.html" target="_blank"><%= __s.keyboard_shortcuts %></a>' +
 						'</li>' +
 					'</ul>' +
 				'</div>' +

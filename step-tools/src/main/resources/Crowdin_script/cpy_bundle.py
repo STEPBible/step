@@ -42,6 +42,7 @@ if __name__ == '__main__':
                         f1 = open(appendToFile, 'a+')
                         f2 = open(filePath2, 'r')
                         f1.write(f2.read())
+                        f1.write("\n");
                         f1.close()
                         f2.close()
                     else:

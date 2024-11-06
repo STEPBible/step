@@ -595,6 +595,7 @@ step.searchSelect = {
 		showPreviousSearch(); // The function will determine if it need to show previous search
 		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
+			$('#searchHdrTable').find("label.btn").click(this.handleLanguageButton);
 			this.handleLanguageButton();
 			$('#previousSearch').show();
 			if (this.searchModalCurrentPage == 1) {

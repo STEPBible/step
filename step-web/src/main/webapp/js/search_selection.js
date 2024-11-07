@@ -591,6 +591,7 @@ step.searchSelect = {
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
+		$("#keyboardEntry").remove();
 //		$("#advancedsearchonoff").show();
 		showPreviousSearch(); // The function will determine if it need to show previous search
 		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
@@ -759,11 +760,11 @@ step.searchSelect = {
 			'<li><strong>"come to me"</strong> → matches the exact phrase in the selected translations</ul>';
 		}
 		else if (language === "he" ) {
-			if ($("#searchResultshebrew").text() !== "") {
+			if ($("#searchResultshebrew").html() !== "") {
 				$(".select-hebrew").show();
 				isAnythingShown = true;
 			}
-			if ($("#searchResultshebrewMeanings").text() !== "") {
+			if ($("#searchResultshebrewMeanings").html() !== "") {
 				$(".select-hebrewMeanings").show();
 				isAnythingShown = true;
 			}
@@ -773,11 +774,11 @@ step.searchSelect = {
 			'<li>Hebrew text</ul>';
 		}
 		else if (language === "gr") {
-			if ($("#searchResultsgreek").text() !== "") {
+			if ($("#searchResultsgreek").html() !== "") {
 				$(".select-greek").show();
 				isAnythingShown = true;
 			}
-			if ($("#searchResultsgreekMeanings").text() !== "") {
+			if ($("#searchResultsgreekMeanings").html() !== "") {
 				$(".select-greekMeanings").show();
 				isAnythingShown = true;
 			}

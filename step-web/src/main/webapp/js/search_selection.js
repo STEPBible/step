@@ -6,7 +6,7 @@ step.searchSelect = {
 	// Don't change the order of the following. The first 3 search types are non original language
 	// searches.  The last two are not displayed in it's own group.  GREEK_MEANINGS are are displayed
 	// with GREEK.  HEBREW_MEANINGS are displayed with HEBREW.
-	searchTypeCode: [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK, GREEK_MEANINGS, HEBREW, HEBREW_MEANINGS],
+	searchTypeCode: [TEXT_SEARCH, MEANINGS, SUBJECT_SEARCH, GREEK, GREEK_MEANINGS, HEBREW, HEBREW_MEANINGS],
 	numOfSearchTypesToDisplay: 7, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
 	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details", "Immediate_lookup"],
 	searchModalCurrentPage: 1,

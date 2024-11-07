@@ -561,6 +561,7 @@ step.searchSelect = {
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
+		$("#keyboardEntry").remove();
 		$("#advancedsearchonoff").show();
 		showPreviousSearch(); // The function will determine if it need to show previous search
 		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput

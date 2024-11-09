@@ -471,6 +471,13 @@ step.searchSelect = {
 			var userInput =  $('textarea#enterRange').val();
 			userInput = userInput.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
 			userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+			if (userInput.length > 0) {
+				$("#search_range_table").find(".stepPressedButton").removeClass("stepPressedButton");
+				$("#search_range_table").find(".stepButton").css("opacity","0.3");
+			}
+			else {
+				$("#search_range_table").find(".stepButton").css("opacity","1.0");
+			}
 			$('textarea#enterRange').val(userInput);
 			if (userInput.length > 3) {
 				var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + URL_SEPARATOR + VERSION + "%3D" + step.searchSelect.version + URL_SEPARATOR +"?lang=" + step.searchSelect.userLang;
@@ -561,7 +568,7 @@ step.searchSelect = {
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
-		$("#keyboardEntry").remove();
+		$("#enterRange").remove();
 		$("#advancedsearchonoff").show();
 		showPreviousSearch(); // The function will determine if it need to show previous search
 		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
@@ -683,6 +690,13 @@ step.searchSelect = {
 		$('#srchModalBackButton').show();
 		$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
 		this._buildBookTable();
+		$(function(){
+			$('textarea#enterRange').on('input', function(e){
+				this.timer && clearTimeout(this.timer);
+				var timeoutPeriod = (step.touchDevice) ? 600 : 300;
+				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, timeoutPeriod, e);
+			});
+		});
 		var keyboardEnteredRange = false;
 		if (this.searchRange !== 'Gen-Rev') {
 			var tmpSearchRange = this.searchRange + ',';
@@ -722,7 +736,11 @@ step.searchSelect = {
 				}
 			}
 		}
-		if (keyboardEnteredRange) this._buildRangeKeyboard(this.searchRange);
+		if (keyboardEnteredRange) {
+			$('textarea#enterRange').val(this.searchRange);
+			$("#search_range_table").find(".stepPressedButton").removeClass("stepPressedButton")
+			$("#search_range_table").find(".stepButton").css("opacity","0.4");
+		}
 		else {
 			for (var i = 0; i < 3; i++) {
 				var curGroup;
@@ -795,46 +813,12 @@ step.searchSelect = {
 			'<div id="nt_table"/>' +
 			'<h4 id="other_books_hdr"/>' +
 			'<div id="ob_table"/>';
-			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#keyboardEntry").length == 0))
-				$('.footer').prepend('<a id="keyboardEntry" class="advanced_search_elements" href="javascript:step.searchSelect._buildRangeKeyboard();"><img src="images/keyboard.jpg" alt="Keyboard entry"></a>');
+			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#enterRange").length == 0))
+				$('.footer').prepend('<textarea id="enterRange" rows="1" class="stepFgBg" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px"' +
+				' placeholder="Optionally type in search range, e.g.: Psa.1-15"></textarea>' +
+				'<br><span id="userEnterRangeError" style="color: red"></span>'
+				);
 		return html;
-	},
-
-	_buildRangeKeyboard: function(searchRange) {
-		$('#searchSelectError').text("");
-		$('#updateFeedback').text("");
-		$("#keyboardEntry").remove();
-		var fontSize = 16;
-		var html = '<div class="header">' +
-			'<h4>Enter your search range:</h4>' +
-			'</div>' +
-			'<textarea id="enterRange" rows="1" class="stepFgBg" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px"' +
-				' placeholder="Enter search range"></textarea>' +
-			'<br>' +
-			'<span id="userEnterRangeError" style="color: red"></span>' +
-			'<h5>Examples:</h5>' +
-			'<p>Rom.1-3 (Romans chapter 1 to 3)</p>' +
-			'<p>Psa.1-15,Pro.1-13 (Psalm chapter 1 to 15 and Proverbs chapter 1 to 15)</p>';
-				
-		$('#previousSearch').hide();
-		$('#searchHdrTable').empty().append(html);
-		if (typeof searchRange === "string") $("#enterRange").val(searchRange);
-		$('textarea#enterRange').focus();
-		$('#srchModalBackButton').show();
-		$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
-
-
-		$('#searchSelectError').text("");
-		$('#updateRangeButton').hide();
-		$('#updateRangeButton').text(__s.update_search_range);
-		$('#updateButton').hide();
-		$(function(){
-			$('textarea#enterRange').on('input', function(e){
-				this.timer && clearTimeout(this.timer);
-				var timeoutPeriod = (step.touchDevice) ? 600 : 300;
-				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, timeoutPeriod, e);
-			});
-		});
 	},
 
 	_updateRange: function() {
@@ -1108,7 +1092,15 @@ step.searchSelect = {
 		}
 	},
 
+	_checkKeyboardEntered: function() {
+		if ($('textarea#enterRange').val() === "")
+			return false;
+		$('#userEnterRangeError').text("You can only click to select when keyboard entry field is empty.");
+		return true;
+	},
+
 	_userClickedTestament: function(clicked_id) {
+		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
@@ -1129,6 +1121,7 @@ step.searchSelect = {
 	},
 
 	_userClickedCategory: function(clicked_id) {
+		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
@@ -1151,6 +1144,7 @@ step.searchSelect = {
 	},
 
 	_userClickedBook: function(clicked_id) {
+		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();

@@ -755,9 +755,10 @@ step.searchSelect = {
 				isAnythingShown = true;
 			}
 			basic_search_help_text = '<p>What you can enter:</p>' +
-			'<ul><li><strong>just</strong> → matches words that start with “just” (e.g. just, justice, justified, …)' +
-			'<li><strong>come to me</strong> → matches verses that contain "come", "to", and "me" in any order' +
-			'<li><strong>"come to me"</strong> → matches the exact phrase in the selected translations</ul>';
+			'<ul><li><strong>love</strong> → searches words that start with “love” (e.g. love, loved, lovely, …)' +
+			'<li><strong>"love"</strong> → searches the exact word love (<strong>not</strong> loved, loves, lovely)' +
+			'<li><strong>come to me</strong> → searches for "come", "to", and "me" in any order' +
+			'<li><strong>"come to me"</strong> → searches for the exact phrase in the selected translations</ul>';
 		}
 		else if (language === "he" ) {
 			if ($("#searchResultshebrew").html() !== "") {
@@ -1387,6 +1388,14 @@ step.searchSelect = {
 			}
 			if (versionsQueryString === "")
 				versionsQueryString = VERSION + "%3D" + step.searchSelect.version;
+			var searchLangSelected = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
+			var langCode = step.userLanguageCode.substring(0, 2).toLowerCase();
+			if ((searchLangSelected === "en") && 
+				((langCode !== "zh") && (langCode !== "ar")) &&
+				(userInput.indexOf("*") == -1)) {
+				var parts = userInput.split(" ");
+				userInput = parts.join("* ") + "*";
+			}
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR;
 			else {
@@ -1402,7 +1411,6 @@ step.searchSelect = {
 			for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
 			}
-			var searchLangSelected = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
 				url += "//" + searchLangSelected;
 			url += "?lang=" + step.searchSelect.userLang;
@@ -1522,11 +1530,11 @@ step.searchSelect = {
 													}
 												}
 											}
-											if ((strings2Search.length == 1) && (str2Search.slice(-1) !== "*") &&
-												(!step.searchSelect.wordsWithNoInflection(str2Search)))
-												$("td.search-type-column.select-text").html(__s.search_type_desc_text + __s.search_type_desc_text2 + ":");
-											else
-												$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":");
+											// if ((strings2Search.length == 1) && (str2Search.slice(-1) !== "*") &&
+											// 	(!step.searchSelect.wordsWithNoInflection(str2Search)))
+											// 	$("td.search-type-column.select-text").html(__s.search_type_desc_text + __s.search_type_desc_text2 + ":");
+											// else
+											$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":");
 											// if (strings2Search.length > 1) {
 											// 	var defaultSearchString = "";
 											// 	var defaultMouseOverTitle = "";
@@ -1570,6 +1578,8 @@ step.searchSelect = {
 											// }
 										}
 									}
+									if ($('textarea#userTextInput').val().indexOf("*") == -1)
+										text2Display = text2Display.replaceAll("*", "");
 								}
 								else {
 									str2Search = data[i].suggestion.strongNumber;
@@ -1632,8 +1642,12 @@ step.searchSelect = {
 											continue;
 										}
 										else {
-											if ((suggestionType === TEXT_SEARCH) && (str2Search.slice(-1) === "*"))
-												suffixToDisplay += "(" + __s.words_that_start_with + " " + str2Search + ")";
+											if ((suggestionType === TEXT_SEARCH) && (str2Search.slice(-1) === "*")) {
+												var string2Show = str2Search;
+												if ($('textarea#userTextInput').val().indexOf("*") == -1)
+													string2Show = string2Show.replaceAll("*", "");
+												suffixToDisplay += "(" + __s.words_that_start_with + " " + string2Show + ")";
+											}
 											suffixToDisplay += " " + data[i].count + " x";
 										}
 									}

@@ -144,14 +144,16 @@ public class SearchController {
             if (currentType.equals("text")) {
                 TextSuggestion text = (TextSuggestion) autoSuggestions.get(i).getSuggestion();
                 if (text == null) continue;
-                String searchText = text.getText();
+                String searchText = text.getText().trim();
                 int posOfSpace = searchText.indexOf(" ");
                 if (posOfSpace == -1) { // One word
-                    if (!searchText.substring(searchText.length() - 1).equals("*")) { // last char is not a *
+                    if (!searchText.substring(0, 1).equals("\"") && // first and last chars are not a "
+                            !searchText.substring(searchText.length() - 1).equals("\"") &&
+                            searchText.substring(searchText.length() - 1).equals("*")) { // last char is a *
                         AutoSuggestion newSuggestion = new AutoSuggestion(); // Add a suggestion to search the string with * at the end
                         newSuggestion.setItemType(currentType);
                         TextSuggestion newTextSuggestion = new TextSuggestion();
-                        newTextSuggestion.setText(searchText + "*");
+                        newTextSuggestion.setText("\"" + searchText.substring(0, searchText.length() - 1) + "\"");
                         newSuggestion.setSuggestion(newTextSuggestion);
                         autoSuggestions.add(newSuggestion);
                     }
@@ -177,7 +179,13 @@ public class SearchController {
                         AutoSuggestion newSuggestion2 = new AutoSuggestion();
                         newSuggestion2.setItemType(currentType);
                         TextSuggestion newTextSuggestion2 = new TextSuggestion();
-                        newTextSuggestion2.setText('"' + searchText + '"');
+                        String[] multiWords = searchText.split("\\s");
+                        String searchTextWithoutAsterisk = "";
+                        for (int j = 0; j < multiWords.length; j++) {
+                            if (j > 0) searchTextWithoutAsterisk += " ";
+                            searchTextWithoutAsterisk += multiWords[j].split("\\*")[0];
+                        }
+                        newTextSuggestion2.setText('"' + searchTextWithoutAsterisk + '"');
                         newSuggestion2.setSuggestion(newTextSuggestion2);
                         autoSuggestions.add(newSuggestion2);
                     }

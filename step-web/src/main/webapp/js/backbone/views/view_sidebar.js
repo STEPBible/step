@@ -374,12 +374,9 @@ var SidebarView = Backbone.View.extend({
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
                 .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + mainWord.strongNumber + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
-                    '<svg viewBox="0 0 19 21" width="19" height="21">' +
-                        '<path d="M 0 3 L 18 3, 18 16, 16 16, 16 21, 12 16, 0 16, 0 3" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>' +
-                        '<line x1="2" y1="8" x2="16" y2="8" stroke-width="1" stroke="var(--clrBackground)" />' +
-                        '<line x1="2" y1="10" x2="16" y2="10" stroke-width="1" stroke="var(--clrBackground)" />' +
-                        '<line x1="2" y1="12" x2="16" y2="12" stroke-width="1" stroke="var(--clrBackground)" />' +
-                    '</svg>' +
+                    '<button type="button" class="btn btn-default btn-sm" style="padding:3px 2px;margin:0px;">' +
+                        '<i class="glyphicon glyphicon-exclamation-sign"></i>' +
+                    '</button>' +
                 '</a>'))
         );
     },

@@ -32,7 +32,7 @@ public interface SuggestionService {
      *
      * @param context the context including the term we are searching for, the master book selected, etc.
      */
-    SuggestionsSummary getTopSuggestions(SuggestionContext context);
+    SuggestionsSummary getTopSuggestions(SuggestionContext context, String searchLanguage);
 
     /**
      * Returns the first set of results that are available to the user

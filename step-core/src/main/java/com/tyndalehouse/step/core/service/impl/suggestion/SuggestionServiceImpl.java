@@ -70,13 +70,41 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public SuggestionsSummary getTopSuggestions(final SuggestionContext context) {
+    public SuggestionsSummary getTopSuggestions(final SuggestionContext context, final String searchLanguage) {
         final SuggestionsSummary summary = new SuggestionsSummary();
         final Map<String, SingleSuggestionsSummary> results = new LinkedHashMap<String, SingleSuggestionsSummary>();
 
+        SuggestionContext currentContext = new SuggestionContext();
+        currentContext.setMasterBook(context.getMasterBook());
+        currentContext.setInput(context.getInput());
+        currentContext.setSearchType(context.getSearchType());
+        currentContext.setExampleData(context.isExampleData());
         //go through each search type
         for (Map.Entry<String, SingleTypeSuggestionService> query : queryProviders.entrySet()) {
             String curQueryKey = query.getKey();
+            if (searchLanguage != null) {
+                if (searchLanguage.equals("en")) {
+                    if ((!curQueryKey.equals("meanings")) &&
+                            (!curQueryKey.equals("subject")) &&
+                            (!curQueryKey.equals("text")))
+                        continue;
+                    if (curQueryKey.equals("meanings") || curQueryKey.equals("subject")) {
+                        String curInput = currentContext.getInput();
+                        if (curInput.substring(curInput.length() -1 ).equals("*"))
+                            currentContext.setInput(curInput.substring(0, curInput.length() - 1));
+                    }
+                    else // If there is an asterisk at the end, it needs to have an asterisk
+                        currentContext.setInput(context.getInput()); // reset to original input in case it was previously changed.
+                } else if (searchLanguage.equals("he")) {
+                    if ((!curQueryKey.equals("hebrewMeanings")) &&
+                            (!curQueryKey.equals("hebrew")))
+                        continue;
+                } else if (searchLanguage.equals("gr")) {
+                    if ((!curQueryKey.equals("greekMeanings")) &&
+                            (!curQueryKey.equals("greek")))
+                        continue;
+                }
+            }
             int maxResult = MAX_RESULTS;
             if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew") || curQueryKey.equals("greekMeanings") || curQueryKey.equals("hebrewMeanings"))
                 maxResult = MAX_RESULTS_NON_GROUPED * 4;
@@ -85,8 +113,7 @@ public class SuggestionServiceImpl implements SuggestionService {
             //run exact query against index
             final int groupTotal = this.getGroupTotal(curQueryKey, results);
             final int totalGroupLeftToRetrieve = maxResult - groupTotal + PREVIEW_GROUP;
-            //Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(context, totalGroupLeftToRetrieve, true) : null;
-            Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(context, totalGroupLeftToRetrieve, false) : null;
+            Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(currentContext, totalGroupLeftToRetrieve, false) : null;
             int docLength = docs != null ? docs.length : 0;
 
             //how many do we need to collect
@@ -94,7 +121,7 @@ public class SuggestionServiceImpl implements SuggestionService {
 
             //create collector to collect some more results, if required, but also the total hit count
             Object o = searchService.getNewCollector(leftToCollect, true);
-            final Object[] extraDocs = searchService.collectNonExactMatches(o, context, docs, leftToCollect);
+            final Object[] extraDocs = searchService.collectNonExactMatches(o, currentContext, docs, leftToCollect);
             final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
 
             final SingleSuggestionsSummary singleTypeSummary = new SingleSuggestionsSummary();

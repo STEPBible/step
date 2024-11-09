@@ -235,35 +235,18 @@ public class SearchController {
         context.setExampleData(exampleData);
 
         if (exampleData) {
-            convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context), searchLanguage);
+            convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         } else if (StringUtils.isBlank(limitType)) {
             // we only return the right set of suggestions if there is a limit type
-            convert(autoSuggestions, this.suggestionService.getTopSuggestions(context), searchLanguage);
+            convert(autoSuggestions, this.suggestionService.getTopSuggestions(context, searchLanguage));
         } else {
-            convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context), searchLanguage);
+            convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         }
     }
 
-    private void convert(final List<AutoSuggestion> autoSuggestions, final SuggestionsSummary topSuggestions,
-                         final String searchLanguage) {
+    private void convert(final List<AutoSuggestion> autoSuggestions, final SuggestionsSummary topSuggestions) {
         for (SingleSuggestionsSummary summary : topSuggestions.getSuggestionsSummaries()) {
             String currentSearchType = summary.getSearchType();
-            if (searchLanguage != null) {
-                if (searchLanguage.equals("en")) {
-                    if ((!currentSearchType.equals("meanings")) &&
-                            (!currentSearchType.equals("subject")) &&
-                            (!currentSearchType.equals("text")))
-                        continue;
-                } else if (searchLanguage.equals("he")) {
-                    if ((!currentSearchType.equals("hebrewMeanings")) &&
-                            (!currentSearchType.equals("hebrew")))
-                        continue;
-                } else if (searchLanguage.equals("gr")) {
-                    if ((!currentSearchType.equals("greekMeanings")) &&
-                            (!currentSearchType.equals("greek")))
-                        continue;
-                }
-            }
             //we render each option
             final List<? extends PopularSuggestion> popularSuggestions = summary.getPopularSuggestions();
             for (PopularSuggestion p : popularSuggestions) {

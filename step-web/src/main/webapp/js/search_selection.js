@@ -2582,9 +2582,9 @@ step.searchSelect = {
 		var searchJoinsForMultipleStrongs = "";
 		numOfSearches ++;
 		if (searchType === TEXT_SEARCH) {
-			var andSearchStrings = displayText.split(" <sub>and</sub> ");
-			if (andSearchStrings.length > 1) {
+			if (displayText.indexOf(" <sub>and</sub> ") > 0) {
 				currentSearch = "";
+				var andSearchStrings = searchWord.split(" ");
 				for (var i = 0; i < andSearchStrings.length; i++) {
 					currentSearch += URL_SEPARATOR + 'text=' + andSearchStrings[i];	
 				}

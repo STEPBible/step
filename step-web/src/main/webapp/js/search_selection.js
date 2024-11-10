@@ -942,8 +942,7 @@ step.searchSelect = {
 
 	_updateRange: function() {
 		var keyboardInput = $('textarea#enterRange').val();
-		if (typeof keyboardInput === "string") {
-			if (keyboardInput === "") keyboardInput = "Gen-Rev"
+		if ((typeof keyboardInput === "string") && (keyboardInput !== "")) {
 			this.searchRange = keyboardInput;
 			this.goBackToPreviousPage();
 		}

@@ -147,9 +147,8 @@ public class SearchController {
                 String searchText = text.getText().trim();
                 int posOfSpace = searchText.indexOf(" ");
                 if (posOfSpace == -1) { // One word
-                    if (!searchText.substring(0, 1).equals("\"") && // first and last chars are not a "
-                            !searchText.substring(searchText.length() - 1).equals("\"") &&
-                            searchText.substring(searchText.length() - 1).equals("*")) { // last char is a *
+                    if ((searchText.indexOf("\"") == -1) && // No quotes
+                         searchText.substring(searchText.length() - 1).equals("*")) { // last char is a *
                         AutoSuggestion newSuggestion = new AutoSuggestion(); // Add a suggestion to search the string with * at the end
                         newSuggestion.setItemType(currentType);
                         TextSuggestion newTextSuggestion = new TextSuggestion();

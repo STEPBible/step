@@ -1392,7 +1392,7 @@ step.searchSelect = {
 			var langCode = step.userLanguageCode.substring(0, 2).toLowerCase();
 			if ((searchLangSelected === "en") && 
 				((langCode !== "zh") && (langCode !== "ar")) &&
-				(userInput.indexOf("*") == -1)) {
+				(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
 				var parts = userInput.split(" ");
 				userInput = parts.join("* ") + "*";
 			}

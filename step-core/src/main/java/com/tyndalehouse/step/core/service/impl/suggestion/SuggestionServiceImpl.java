@@ -88,13 +88,16 @@ public class SuggestionServiceImpl implements SuggestionService {
                             (!curQueryKey.equals("subject")) &&
                             (!curQueryKey.equals("text")))
                         continue;
-                    if (curQueryKey.equals("meanings") || curQueryKey.equals("subject")) {
+                    if (curQueryKey.equals("text"))
+                        currentContext.setInput(context.getInput()); // reset to original input in case it was previously changed.
+                    else { // meaning or subject search
                         String curInput = currentContext.getInput();
                         if (curInput.substring(curInput.length() -1 ).equals("*"))
                             currentContext.setInput(curInput.substring(0, curInput.length() - 1));
+                        else if (curInput.substring(curInput.length() -1 ).equals("\"") &&
+                                curInput.substring(0, 1).equals("\""))
+                            currentContext.setInput(curInput.substring(1, curInput.length() - 2)); // remove leading and trailing "
                     }
-                    else // If there is an asterisk at the end, it needs to have an asterisk
-                        currentContext.setInput(context.getInput()); // reset to original input in case it was previously changed.
                 } else if (searchLanguage.equals("he")) {
                     if ((!curQueryKey.equals("hebrewMeanings")) &&
                             (!curQueryKey.equals("hebrew")))

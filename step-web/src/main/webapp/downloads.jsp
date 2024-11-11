@@ -325,7 +325,7 @@ Note:  Some users have experienced issues on later versions of Android (e.g., ve
 			<img src="/images/bible_vocab.png" alt="Bible vocab">
 		</td>
 	  </tr>
-	  </table>
+	</table>
 	</div>
 
 

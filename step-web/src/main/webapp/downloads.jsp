@@ -302,29 +302,30 @@ Note:  Some users have experienced issues on later versions of Android (e.g., ve
 			<img class="image" src="/images/keyboards.png">
 		  </td>
 		</tr>
-		<tr class="tr">
-			<td class="td1">
-				<p class="h">Bible vocabs - a Chrome extension</p>
-				<p class="p">Popup dictionary on Bible words.<br><br>
-					Provides definition of Biblical words when you hover your mouse over a verse number at the following websites:
-					<ul>
-					<li>YouVersion's Bible.com
-					<li>Biblica.com
-					<li>eBible.org
-					<li>BibleSearch (bibles.org)
-					<li>BibleGateway.com
-					</ul><br>
-					Works on all Bible translations in any languages.
-				<br/><br/>
-				Click <a class="here" href="https://chromewebstore.google.com/detail/bible-vocab-a-bible-dicti/hoibkbojkkeacjciibbjbnbflcdkahhp?hl=en" target="_blank">here to open the Google Chrome web store.</a>
-				</p>
-			</td>
-			<td class="td2">
-			<td class="td3">
-				<img src="/images/bible_vocab.png" alt="Bible vocab">
-			</td>
-		</tr>
-	  </table>
+	</tr>
+	<tr class="tr">
+		<td class="td1">
+			<p class="h">Bible vocabs - a Chrome extension</p>
+			<p class="p">Popup dictionary on Bible words.<br><br>
+				Provides definition of Biblical words when you hover your mouse over a verse number at the following websites:
+				<ul>
+				<li>YouVersion's Bible.com
+				<li>Biblica.com
+				<li>eBible.org
+				<li>BibleSearch (bibles.org)
+				<li>BibleGateway.com
+				</ul><br>
+				Works on all Bible translations in any languages.
+			<br/><br/>
+			Click <a class="here" href="https://chromewebstore.google.com/detail/bible-vocab-a-bible-dicti/hoibkbojkkeacjciibbjbnbflcdkahhp?hl=en" target="_blank">here to open the Google Chrome web store.</a>
+			</p>
+		</td>
+		<td class="td2">
+		<td class="td3">
+			<img src="/images/bible_vocab.png" alt="Bible vocab">
+		</td>
+	  </tr>
+	</table>
 	</div>
 
 

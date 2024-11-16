@@ -1210,7 +1210,15 @@ step.searchSelect = {
 		}
 	},
 
+	_checkKeyboardEntered: function() {
+		if ((step.touchDevice) || ($('textarea#enterRange').val() === ""))
+			return false;
+		$('#userEnterRangeError').text("You can only click to select when keyboard entry field is empty.");
+		return true;
+	},
+
 	_userClickedTestament: function(clicked_id) {
+		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
@@ -1231,6 +1239,7 @@ step.searchSelect = {
 	},
 
 	_userClickedCategory: function(clicked_id) {
+		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
@@ -1253,6 +1262,7 @@ step.searchSelect = {
 	},
 
 	_userClickedBook: function(clicked_id) {
+		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
@@ -1389,14 +1399,13 @@ step.searchSelect = {
 				versionsQueryString = VERSION + "%3D" + step.searchSelect.version;
 			var searchLangSelected = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
 			var langCode = step.userLanguageCode.substring(0, 2).toLowerCase();
-			if ((limitType === "") && (searchLangSelected === "en") && 
-				((langCode !== "zh") && (langCode !== "ar")) &&
-				(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
-				var parts = userInput.split(" ");
-				userInput = parts.join("* ") + "*";
-			}
-			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
+			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === "")) {
+				if ((searchLangSelected === "en") && ((langCode !== "zh") && (langCode !== "ar")) &&
+					(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
+					userInput = userInput.split(" ").join("* ") + "*";
+				}
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR;
+			}
 			else {
 				if (limitType === "") limitType = step.searchSelect.searchOnSpecificType;
 				else {
@@ -2376,7 +2385,7 @@ step.searchSelect = {
 				var additionalCSS = "";
 				var aTagOnClick = ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType +
 					'\',\'' + str2Search + '\',\'' + 
-					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') + 						'\')"';
+					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') + '\')"';
 
 				if ((this.strikeOutType === searchType) && (this.strikeOutToken.replaceAll('"', '%22') === str2Search)) {
 					additionalCSS = ";color:red;text-decoration:line-through";

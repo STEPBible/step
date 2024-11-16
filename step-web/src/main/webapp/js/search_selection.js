@@ -1093,7 +1093,7 @@ step.searchSelect = {
 	},
 
 	_checkKeyboardEntered: function() {
-		if ($('textarea#enterRange').val() === "")
+		if ((step.touchDevice) || ($('textarea#enterRange').val() === ""))
 			return false;
 		$('#userEnterRangeError').text("You can only click to select when keyboard entry field is empty.");
 		return true;

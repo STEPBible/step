@@ -759,6 +759,12 @@ step.searchSelect = {
 			'<li><strong>"love"</strong> → searches the exact word love (<strong>not</strong> loved, loves, lovely)' +
 			'<li><strong>come to me</strong> → searches for "come", "to", and "me" in any order' +
 			'<li><strong>"come to me"</strong> → searches for the exact phrase in the selected translations</ul>';
+			if (step.searchSelect.searchOnSpecificType === MEANINGS)
+				basic_search_help_text = '<p>What you can enter:</p>' +
+					'<ul><li>An English word (to find other words with the same meaning)</ul>';
+			else if (step.searchSelect.searchOnSpecificType === SUBJECT_SEARCH)
+				basic_search_help_text = '<p>What you can enter:</p>' +
+					'<ul><li>An English word (to find subjects related to the word)</ul>';
 		}
 		else if (language === "he" ) {
 			if ($("#searchResultshebrew").html() !== "") {
@@ -769,10 +775,12 @@ step.searchSelect = {
 				$(".select-hebrewMeanings").show();
 				isAnythingShown = true;
 			}
-			basic_search_help_text = '<p>What you can enter:</p>' +
-			'<ul><li>An English word (to find Hebrew words with the same meaning)' +
-			'<li>Transliteration (type it like it sounds)' +
-			'<li>Hebrew text</ul>';
+			basic_search_help_text = '<p>What you can enter:</p><ul>';
+			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === HEBREW_MEANINGS))
+				basic_search_help_text += '<li>An English word (to find Hebrew words with the same meaning)';
+			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === HEBREW))
+				basic_search_help_text += '<li>Transliteration (type it like it sounds)<li>Hebrew text';
+			basic_search_help_text += '</ul>';
 		}
 		else if (language === "gr") {
 			if ($("#searchResultsgreek").html() !== "") {
@@ -783,10 +791,12 @@ step.searchSelect = {
 				$(".select-greekMeanings").show();
 				isAnythingShown = true;
 			}
-			basic_search_help_text = '<p>What you can enter:</p>' +
-			'<ul><li>An English word (to find Greek words with the same meaning)' +
-			'<li>Transliteration (type it like it sounds)' +
-			'<li>Greek text</ul>';
+			basic_search_help_text = '<p>What you can enter:</p><ul>';
+			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === GREEK_MEANINGS))
+				basic_search_help_text += '<li>An English word (to find Greek words with the same meaning)';
+			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === GREEK))
+				basic_search_help_text += '<li>Transliteration (type it like it sounds)<li>Greek text';
+			basic_search_help_text += '</ul>';
 		}
 		if (isAnythingShown) {
 			$("#basic_search_help_text").text("");
@@ -1697,31 +1707,31 @@ step.searchSelect = {
 							break;
 					}
 				}
-				var showedSomething = false;
-				var limitTypeToCompare = limitType;
-				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(limitTypeToCompare);
+				// var showedSomething = false;
+				// var limitTypeToCompare = limitType;
+				// var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(limitTypeToCompare);
 				// Only needed if we combine Greek / Greek Meaning and Hebrew / Hebrew Meaning
 				// if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
 				// 	limitTypeToCompare = step.searchSelect.searchTypeCode[searchResultIndex - 2];
-				for (var l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
-					if (limitTypeToCompare === "") {
-						$('.select-' + step.searchSelect.searchTypeCode[l]).show();
-						showedSomething = true;
-					}
-					else if (step.searchSelect.searchTypeCode[l] === limitTypeToCompare) {
-						$('.select-' + step.searchSelect.searchTypeCode[l]).show();
-						showedSomething = true;
-					}
-					else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
-				}
-				if (showedSomething) {
-					$('#suggest_search_words').html('<i>' + __s.click_on_suggest_word + '</i>');
-					$('#suggest_search_words').css('color', "var(--clrStrongText)");
-				}
-				else {
-					$('#suggest_search_words').html(__s.suggested_search_words);
-					$('#suggest_search_words').css('color', "var(--clrText)");
-				}
+				// for (var l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
+				// 	if (limitTypeToCompare === "") {
+				// 		$('.select-' + step.searchSelect.searchTypeCode[l]).show();
+				// 		showedSomething = true;
+				// 	}
+				// 	else if (step.searchSelect.searchTypeCode[l] === limitTypeToCompare) {
+				// 		$('.select-' + step.searchSelect.searchTypeCode[l]).show();
+				// 		showedSomething = true;
+				// 	}
+				// 	else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
+				// }
+				// if (showedSomething) {
+				// 	$('#suggest_search_words').html('<i>' + __s.click_on_suggest_word + '</i>');
+				// 	$('#suggest_search_words').css('color', "var(--clrStrongText)");
+				// }
+				// else {
+				// 	$('#suggest_search_words').html(__s.suggested_search_words);
+				// 	$('#suggest_search_words').css('color', "var(--clrText)");
+				// }
 				step.searchSelect.handleLanguageButton();
 			}).fail(function() {
                 changeBaseURL();
@@ -1733,8 +1743,8 @@ step.searchSelect = {
 			for (l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[l]).text("");
 			}
-			$('#suggest_search_words').html(__s.suggested_search_words);
-			$('#suggest_search_words').css('color', "var(--clrText)");
+			// $('#suggest_search_words').html(__s.suggested_search_words);
+			// $('#suggest_search_words').css('color', "var(--clrText)");
 			showPreviousSearch(); // The update previous search button might need to be displayed if user has includes previous search 
 		}
 	},

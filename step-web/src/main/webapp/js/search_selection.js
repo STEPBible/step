@@ -1389,7 +1389,7 @@ step.searchSelect = {
 				versionsQueryString = VERSION + "%3D" + step.searchSelect.version;
 			var searchLangSelected = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
 			var langCode = step.userLanguageCode.substring(0, 2).toLowerCase();
-			if ((limitType !== MEANINGS) && (limitType !== SUBJECT_SEARCH) && (searchLangSelected === "en") && 
+			if ((limitType === "") && (searchLangSelected === "en") && 
 				((langCode !== "zh") && (langCode !== "ar")) &&
 				(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
 				var parts = userInput.split(" ");

@@ -35,9 +35,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import static com.tyndalehouse.step.core.service.TranslationTipsService.regularFormatedFN;
-import static com.tyndalehouse.step.core.service.TranslationTipsService.alternativeFormatedFN;
-import static com.tyndalehouse.step.core.service.TranslationTipsService.customFN;
+import static com.tyndalehouse.step.core.service.TranslationTipsService.*;
 /**
  * Provides each strong number given a verse.
  * <p/>
@@ -120,12 +118,12 @@ public class JSwordStrongNumberHelper {
             }
 			else targetVersification = ntV11n;
             int curOrdinal = verseInNRSV.getOrdinal();
-            if (regularFormatedFN.store.get(curOrdinal))
+            if (translationTips.regularFormatedFN.store.get(curOrdinal))
                 this.translationTipsFN = verseInNRSV.getBook().toString().toLowerCase() + "-" + verseInNRSV.getChapter() + verseInNRSV.getVerse();
-            else if (alternativeFormatedFN.store.get(curOrdinal))
+            else if (translationTips.alternativeFormatedFN.store.get(curOrdinal))
                 this.translationTipsFN = verseInNRSV.getBook().toString().toLowerCase() + "-" + verseInNRSV.getChapter() + "-" + verseInNRSV.getVerse();
-            else if (customFN.containsKey(curOrdinal))
-                this.translationTipsFN = customFN.get(curOrdinal);
+            else if (translationTips.customFN.containsKey(curOrdinal))
+                this.translationTipsFN = translationTips.customFN.get(curOrdinal);
             else
                 this.translationTipsFN = ""; // If there are no tips, it will be an empty string
             final Key key = VersificationsMapper.instance().mapVerse(curReference, targetVersification);

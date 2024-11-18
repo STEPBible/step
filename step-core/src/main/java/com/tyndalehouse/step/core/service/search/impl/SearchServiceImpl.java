@@ -1212,7 +1212,6 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult runStrongTextSearch(final SearchQuery sq, final Set<String> strongs, final String options) {
         Key key = runStrongTextSearchKeys(sq, strongs);
 
-// add return number here.
         final SearchResult textResults = buildCombinedVerseBasedResults(sq, key, options);
 
         textResults.setStrongHighlights(new ArrayList<>(strongs));

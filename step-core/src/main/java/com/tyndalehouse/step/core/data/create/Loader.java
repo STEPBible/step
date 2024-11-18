@@ -213,7 +213,7 @@ public class Loader {
         this.totalProgress += 1;
         loadAugmentedStrongs(true);
         this.totalProgress += 1;
-        loadTranslationTips();
+        loadTranslationTips(true);
         LOGGER.info("Finished loading...");
     }
 
@@ -225,10 +225,12 @@ public class Loader {
         else this.strongAugmentationService.loadFromSerialization(appManager.getStepInstallFile().toString());
     }
 
-    public void loadTranslationTips() {
+    public void loadTranslationTips(boolean loadTranslationTips) {
         LOGGER.debug("Indexing translation tips");
         String translationTipsPath = this.coreProperties.getProperty("test.data.path.translationtips");
-        this.translationTipsService.readAndLoad(translationTipsPath);
+        String installFile = appManager.getStepInstallFile().toString();
+        if (loadTranslationTips) this.translationTipsService.readAndLoad(translationTipsPath, installFile);
+        else this.translationTipsService.loadFromSerialization(appManager.getStepInstallFile().toString());
     }
 
     /**

@@ -4,6 +4,7 @@ import org.crosswire.jsword.passage.BitwisePassage;
 import org.crosswire.jsword.passage.RocketPassage;
 import org.crosswire.jsword.versification.system.Versifications;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -11,9 +12,15 @@ import java.util.HashMap;
  */
 public interface TranslationTipsService {
 
-    void readAndLoad(final String translationTipsPath);
+    void readAndLoad(final String translationTipsPath, final String installFile);
+    void loadFromSerialization(final String installFilePath);
+    
+    public static class TranslationTips implements Serializable {
+        public BitwisePassage regularFormatedFN = new RocketPassage(Versifications.instance().getVersification("NRSV"));
+        public BitwisePassage alternativeFormatedFN = new RocketPassage(Versifications.instance().getVersification("NRSV"));
+        public HashMap<Integer, String> customFN = new HashMap<Integer, String>();
 
-    public static BitwisePassage regularFormatedFN = new RocketPassage(Versifications.instance().getVersification("NRSV"));
-    public static BitwisePassage alternativeFormatedFN = new RocketPassage(Versifications.instance().getVersification("NRSV"));
-    public static HashMap<Integer, String> customFN = new HashMap<Integer, String>();
+    }
+
+    public static TranslationTips translationTips = new TranslationTips();
 }

@@ -497,9 +497,10 @@
         }
 
         //iframe
+        var isExampleServer = (window.location.origin.indexOf("examples.stepbible.org") > -1);
         if (window != window.top) {
             step.util.showOrHideTutorial(true);
-            if (window.location.origin.indexOf("examples.stepbible.org") == -1) { // Don't want user to break out to examples.stepbible.org
+            if (!isExampleServer) { // Don't want user to break out to examples.stepbible.org
                 var button = $("<button class='stepBreakout btn btn-default btn-xs'><span class='glyphicon glyphicon-new-window'></button>");
                 $(".headerButtons").append(button);
                 button.on("click", function () {
@@ -507,6 +508,8 @@
                 });
             }
         }
+        else if (isExampleServer)
+            alert("Please use www.stepbible.org instead of this server which will only show examples.");
 		var ua = navigator.userAgent.toLowerCase();
 		if (ua.indexOf('firefox') > -1) $("#panel-icon").hide(); // Firefox has some issues with this.
 		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));

@@ -89,7 +89,8 @@
 	var debugOption = "";
 	var urlPart1 = window.location.origin;
 	var pos = window.location.href.indexOf("/html/additional_examples.html");
-	if (pos > 8) { // probably running in development environment.
+    var posExamplesURL = urlPart1.indexOf("examples.stepbible.org");
+	if ((pos > 8) && (posExamplesURL == -1)) { // probably running in development environment.
 		urlPart1 = window.location.href.substr(0, pos);
 		debugOption = "&debug";
 	}

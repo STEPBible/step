@@ -245,7 +245,7 @@ var ExamplesView = Backbone.View.extend({
 								'<br><div class="faq_img" style="background-image: url(\'images\/color_code_grammar_.png\');width:190px;height:273px;border:3px solid black;display:none"></div>' +
 								'<br><span id="g4q6a4">4) To understand the colour code, click on the button “Configure colour code grammar”.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/configure_color_code_grammar_.png\');width:170px;height:78px;border:3px solid black;display:none"></div>' +
-								'<br><br><a id="colorcodeexamples" href="https://examples.stepbible.org/html/additional_examples.html?exampleType=colorCode&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
+								'<br><br><a id="colorcodeexamples" target="_blank" href="https://examples.stepbible.org/html/additional_examples.html?exampleType=colorCode&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
 								'<br>' +
 							'</div>' +
 					'</ul>' +

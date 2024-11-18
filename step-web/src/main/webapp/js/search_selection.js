@@ -815,8 +815,8 @@ step.searchSelect = {
 			'<div id="ob_table"/>';
 			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#enterRange").length == 0))
 				$('.footer').prepend('<textarea id="enterRange" rows="1" class="stepFgBg" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px"' +
-				' placeholder="Optionally type in search range, e.g.: Psa.1-15"></textarea>' +
-				'<br><span id="userEnterRangeError" style="color: red"></span>'
+					' placeholder="Optionally type in search range, e.g.: Psa.1-15"></textarea>' +
+					'<br><span id="userEnterRangeError" style="color: red"></span>'
 				);
 		return html;
 	},
@@ -824,7 +824,6 @@ step.searchSelect = {
 	_updateRange: function() {
 		var keyboardInput = $('textarea#enterRange').val();
 		if ((typeof keyboardInput === "string") && (keyboardInput !== "")) {
-			if (keyboardInput === "") keyboardInput = "Gen-Rev"
 			this.searchRange = keyboardInput;
 			this.goBackToPreviousPage();
 		}

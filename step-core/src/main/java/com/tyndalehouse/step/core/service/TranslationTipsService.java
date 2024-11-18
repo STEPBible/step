@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Given a strong number, we find the augmented version in order to provide more accurate definitions and context
+ * Load translation tips to memory.  It is used in verses vocabulary.
  */
 public interface TranslationTipsService {
 

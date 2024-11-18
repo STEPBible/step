@@ -154,7 +154,7 @@ public class TranslationTipsServiceImpl implements TranslationTipsService {
         } catch (IOException i) {
             i.printStackTrace();
         } catch (ClassNotFoundException c) {
-            System.out.println("augmented strong class not found");
+            System.out.println("Translator tips class not found");
             c.printStackTrace();
         }
     }

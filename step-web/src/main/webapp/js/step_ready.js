@@ -499,7 +499,6 @@
         //iframe
         if (window != window.top) {
             step.util.showOrHideTutorial(true);
-            var urlPart1 = ;
             if (window.location.origin.indexOf("examples.stepbible.org") > -1) { // Don't want user to break out to examples.stepbible.org
                 var button = $("<button class='stepBreakout btn btn-default btn-xs'><span class='glyphicon glyphicon-new-window'></button>");
                 $(".headerButtons").append(button);

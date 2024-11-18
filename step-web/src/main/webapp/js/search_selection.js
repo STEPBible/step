@@ -483,12 +483,18 @@ step.searchSelect = {
 
 	handleKeyboardInput: function(e) {
 		$('#quickLexicon').remove();
-		var inputStringToAdd = (typeof e === "string") ? e : "";
 		if ((typeof e === "object") && (e.target.id === "enterRange")) {
 			$('#userEnterRangeError').text("");
 			var userInput =  $('textarea#enterRange').val();
 			userInput = userInput.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
 			userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+			if (userInput.length > 0) {
+				$("#search_range_table").find(".stepPressedButton").removeClass("stepPressedButton");
+				$("#search_range_table").find(".stepButton").css("opacity","0.3");
+			}
+			else {
+				$("#search_range_table").find(".stepButton").css("opacity","1.0");
+			}
 			$('textarea#enterRange').val(userInput);
 			if (userInput.length > 3) {
 				var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + URL_SEPARATOR + VERSION + "%3D" + step.searchSelect.version + URL_SEPARATOR +"?lang=" + step.searchSelect.userLang;
@@ -512,6 +518,7 @@ step.searchSelect = {
 		}
 		else {
 			$("#searchButton").hide();
+			var inputStringToAdd = (typeof e === "string") ? e : "";
 			var userInput = (inputStringToAdd !== "") ? inputStringToAdd : $('textarea#userTextInput').val();
 			if ((userInput === "") || (userInput === "\n")) {
 				for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
@@ -943,10 +950,11 @@ step.searchSelect = {
 			'<div id="nt_table"/>' +
 			'<h4 id="other_books_hdr"/>' +
 			'<div id="ob_table"/>';
-			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#keyboardEntry").length == 0))
+			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#enterRange").length == 0))
 				$('.footer').prepend('<textarea id="enterRange" rows="1" class="stepFgBg" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px"' +
 					' placeholder="Optionally type in search range, e.g.: Psa.1-15"></textarea>' +
-					'<br><span id="userEnterRangeError" style="color: red"></span>');
+					'<br><span id="userEnterRangeError" style="color: red"></span>'
+				);
 		return html;
 	},
 

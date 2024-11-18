@@ -247,7 +247,7 @@ var ExamplesView = Backbone.View.extend({
 								'<br><div class="faq_img" style="background-image: url(\'images\/configure_color_code_grammar_.png\');width:170px;height:78px;border:3px solid black;display:none"></div>' +
 								// Use https://examples.stepbible.org for color code examples because the examples will change the user's color code configuration
 								// and then store it in local storage of the browser.  Using a different DNS name will have a separate copy of the local storage
-								'<br><br><a id="colorcodeexamples" href="https://examples.stepbible.org/html/additional_examples.html?exampleType=colorCode&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
+								'<br><br><a id="colorcodeexamples" target="_blank" href="https://examples.stepbible.org/html/additional_examples.html?exampleType=colorCode&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
 								'<br>' +
 							'</div>' +
 					'</ul>' +

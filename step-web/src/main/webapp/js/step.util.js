@@ -2611,6 +2611,18 @@ step.util = {
 		)()).modal("show");
 		step.util.blockBackgroundScrolling("videoModal");		
     },
+	showBibleIntro: function (passageId) {
+		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
+		var intros = passageContainer.find(".introduction");
+		if ($(intros[0]).is(":visible")) {
+			intros.hide();
+			passageContainer.find(".introFromBible").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+		}
+		else {
+			intros.show();
+			passageContainer.find(".introFromBible").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+		}
+	},
     showSummary: function (reference, tabToShow) {
         element = document.getElementById('showBookOrChapterSummaryModal');
         if (element) element.parentNode.removeChild(element);

@@ -163,23 +163,9 @@ var PassageDisplayView = DisplayView.extend({
 //				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode === "en"))) &&
 		    if (step.util.bookOrderInBible(reference) > -1) { // }) {
                 var xgenObj = passageHtml.find('.xgen');
-                var introObj = passageHtml.find('.introduction');
-                var addIntro = (introObj.length > 0);
-                if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text().trim().length < 2))) {
+                if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text().trim().length < 2))) // sometimes there is a \n so length == 1 is OK
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
                         reference + '\')" title="Show summary information" class="stepButton">' + __s.book_summary + '</button>');
-                    if (addIntro) {
-                        $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showBibleIntro(' + passageId + ')" title="Show introduction" class="stepButton">' + version + ' intro <span class="introFromBible glyphicon glyphicon-triangle-right"></span></button>');
-                    }
-                }
-                else if (addIntro) {
-                    var nameOfBibleOrCommentary = $($(introObj[0]).parent().parent()[0]).find(".smallResultKey").attr('data-version');
-                    if (nameOfBibleOrCommentary === "")
-                        nameOfBibleOrCommentary = "Intro of Bible selected";
-                    else
-                        nameOfBibleOrCommentary = nameOfBibleOrCommentary + " intro";
-                    passageHtml.prepend('<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showBibleIntro(' + passageId + ')" title="Show introduction from Bible selected" class="stepButton">' + nameOfBibleOrCommentary + ' <span class="introFromBible glyphicon glyphicon-triangle-right"></span></button>');
-                }
             }
             if (!justLoadedTOS) step.util.addGrammar();
             var elmntsWithCaretChar = $("span:contains(^)");
@@ -187,6 +173,18 @@ var PassageDisplayView = DisplayView.extend({
                 if (elmntsWithCaretChar[ii].outerText.length == 1) {
                     $($("span:contains(^)")[ii]).css("vertical-align", "sub");
                     $($("span:contains(^)")[ii]).attr("var", "other")
+                }
+            }
+            var isDebug = $.getUrlVars().indexOf("debug") > -1;
+            var isMatthewHenryConciseCommentary = bibleVersions.indexOf("MHCC") > 1;
+            if (isMatthewHenryConciseCommentary || isDebug) {
+                var intros = passageHtml.find('.introduction');
+                if (intros.length > 0) {
+                    intros.show();
+                    if (isDebug && !isMatthewHenryConciseCommentary) {
+                        intros.children().css('color', 'orange');;
+                        alert("One of the selected Bible or commentary has the \"introduction\" tag.  They are usually hidden.  Since the URL has debug in the query string, they are unhidden in orange color.  If you do not need to review the \"introduction\" tag, you can ignore them.");
+                    }
                 }
             }
         },

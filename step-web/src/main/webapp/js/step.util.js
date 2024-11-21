@@ -2612,9 +2612,10 @@ step.util = {
 		step.util.blockBackgroundScrolling("videoModal");		
     },
 	showBibleIntro: function (passageId) {
-		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
+		var passageContainer = step.util.getPassageContainer(step.util.activePassageId(passageId));
 		var intros = passageContainer.find(".introduction");
-		if ($(intros[0]).is(":visible")) {
+		var isVisible = $(intros[0]).css('display') !== 'none';
+		if (isVisible) {
 			intros.hide();
 			passageContainer.find(".introFromBible").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
 		}

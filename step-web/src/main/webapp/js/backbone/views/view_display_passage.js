@@ -182,7 +182,7 @@ var PassageDisplayView = DisplayView.extend({
                 if (intros.length > 0) {
                     intros.show();
                     if (isDebug && !isMatthewHenryConciseCommentary) {
-                        intros.children().css('color', 'orange');;
+                        intros.children().css('color', 'orange');
                         alert("One of the selected Bible or commentary has the \"introduction\" tag.  They are usually hidden.  Since the URL has debug in the query string, they are unhidden in orange color.  If you do not need to review the \"introduction\" tag, you can ignore them.");
                     }
                 }

@@ -5026,10 +5026,8 @@ step.util = {
                 var parent = curElement.parent();
                 var height = parent.height();
 				if (height < 1) continue;
-                if (height < top) { // If the line height is shorter than the position of the Bible feature display, add height
-					console.log(parent.text() + " h: " + height + ' t: ' + top);
+                if (height < top) // If the line height is shorter than the position of the Bible feature display, add height
                     parent.height(top + 15);
-				}
             }
         }
 	},

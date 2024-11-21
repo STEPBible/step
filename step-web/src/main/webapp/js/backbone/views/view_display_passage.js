@@ -167,7 +167,7 @@ var PassageDisplayView = DisplayView.extend({
                 var addIntro = (introObj.length > 0);
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text().trim().length < 2))) {
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
-                        reference + '\')" title="Show summary information" class="select-version stepButton">' + __s.book_summary + '</button>');
+                        reference + '\')" title="Show summary information" class="stepButton">' + __s.book_summary + '</button>');
                     if (addIntro) {
                         $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showBibleIntro(' + passageId + ')" title="Show introduction" class="stepButton">' + version + ' intro <span class="introFromBible glyphicon glyphicon-triangle-right"></span></button>');
                     }

@@ -175,13 +175,13 @@ var PassageDisplayView = DisplayView.extend({
                     $($("span:contains(^)")[ii]).attr("var", "other")
                 }
             }
-            var isDebug = $.getUrlVars().indexOf("debug") > -1;
-            var isMatthewHenryConciseCommentary = bibleVersions.indexOf("MHCC") > 1;
-            if (isMatthewHenryConciseCommentary || isDebug) {
+            var isDebugMode = $.getUrlVars().indexOf("debug") > -1;
+            var hasMatthewHenryConciseCommentary = bibleVersions.indexOf("MHCC") > 1;
+            if (hasMatthewHenryConciseCommentary || isDebugMode) {
                 var intros = passageHtml.find('.introduction');
                 if (intros.length > 0) {
                     intros.show();
-                    if (isDebug && !isMatthewHenryConciseCommentary) {
+                    if (isDebugMode && !hasMatthewHenryConciseCommentary) {
                         intros.children().css('color', 'orange');
                         alert("One of the selected Bible or commentary has the \"introduction\" tag.  They are usually hidden.  Since the URL has debug in the query string, they are unhidden in orange color.  If you do not need to review the \"introduction\" tag, you can ignore them.");
                     }

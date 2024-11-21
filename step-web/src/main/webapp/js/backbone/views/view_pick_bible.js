@@ -353,7 +353,6 @@ var PickBibleView = Backbone.View.extend({
             for (var i = 0; i < inputFields.length; i ++) {
                 var curInputField = $(inputFields[i]);
                 var curLangCode = curInputField.data("lang");
-                console.log("lang code " + curLangCode );
                 // We currently only have commentaries in English, ancient Greek, Greek, German, Dutch and Latin
                 if (" en _ancient _all de grc nl la ".indexOf(" " + curLangCode.toLowerCase() + " ") == -1) {
                     var curButton = this.$el.find(".btn").has("input[data-lang='" + curLangCode + "']");
@@ -473,10 +472,8 @@ var PickBibleView = Backbone.View.extend({
         this.$el.find(".tab-pane").empty();
 		var uniqueBibleList = [];
 		for (var key in bibleList) { 
-			if (bibleList[key].length == 0) {
-				// console.log("No Bible module for " + key);
+			if (bibleList[key].length == 0)
 				delete bibleList[key];
-			}
 			else if (selectedLanguage === "_all") {
 				if (uniqueBibleList.indexOf(bibleList[key][0].languageCode) > -1) console.log("Same language code shows up in two groups of language: " + bibleList[key][0].languageCode);
 				else uniqueBibleList.push(bibleList[key][0].languageCode);

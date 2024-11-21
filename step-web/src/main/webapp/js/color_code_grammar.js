@@ -1365,16 +1365,12 @@ var cf = {
     for (var count = morphCode.length; ((count > 0) && (index == undefined)); count --) {
       index = ot_var[morphCode.substr(0, count)];
     }
-    if (index == undefined) {
-//      console.log("cannot find code " + morphCode + " name: " + morphName);
+    if (index == undefined)
       return;
-    }
     else {
       var resultStr = cv[C_otMorph].txtArray[index];
-      if (resultStr == undefined) {
-//        console.log("Cannot find code: " + morphCode + " name: " + morphName);
+      if (resultStr == undefined)
         return;
-      }
       result[morphName] = resultStr;
     }
   },
@@ -1582,7 +1578,6 @@ var cf = {
             }
             else console.log("error at addClassForTHOT cannot find >");
           }
-          //else console.log("error at addClassForTHOT cssCode is zero " + endingQuotePos  + "  morphCode " + morphCode);
         }
       }
       else break;

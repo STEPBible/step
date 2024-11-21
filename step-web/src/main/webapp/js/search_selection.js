@@ -627,7 +627,6 @@ step.searchSelect = {
 			$("#langButtonForm").show();
 			this._handleEnteredSearchWord();
 		}
-		else console.log('Unknown state goBackToPreviousPage');
 		step.searchSelect.updateAdvancedSearchElements();
 	},
 
@@ -1587,7 +1586,6 @@ step.searchSelect = {
 												// if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
 												// 	if (((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) &&
 												// 		(data[i].count == 0)) {
-												// 		console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
 												// 	}
 												// 	else {
 												// 		var suffixToDisplay = ((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) ?
@@ -1663,10 +1661,8 @@ step.searchSelect = {
 								}
 								if ((!skipBecauseOfZeroCount) || (limitType !== "")) {
 									if ((suggestionType === TEXT_SEARCH) || (suggestionType === MEANINGS)) {
-										if (data[i].count == 0) {
-											console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
+										if (data[i].count == 0)
 											continue;
-										}
 										else {
 											if ((suggestionType === TEXT_SEARCH) && (str2Search.slice(-1) === "*")) {
 												var string2Show = str2Search;
@@ -2126,7 +2122,7 @@ step.searchSelect = {
 			var i = parseInt(sorted[k][0]);
 			var suggestionType = data[i].itemType;
 			if (data[i].grouped) {
-				console.log("There should be not group here");
+//				console.log("There should be not group here");
 				continue;
 			}
 			if (((origSuggestionType === GREEK_MEANINGS) || (origSuggestionType === HEBREW_MEANINGS)) &&
@@ -2211,8 +2207,6 @@ step.searchSelect = {
 					limitType, null, false, true, "", allVersions, false, false);
 				step.searchSelect.buildHTMLFromDetailLexicalTag(currentSearchSuggestionElement, strongNum, data[i].suggestion._detailLexicalTag, i, allVersions, hasBothTestaments);
 			}
-			else
-				console.log("Unknown result: " + suggestionType);
 		}
 		currentSearchSuggestionElement.append('<br>');
 		if (numWithSameSimpleStrongsAsMainStrong > 1) {
@@ -2298,10 +2292,8 @@ step.searchSelect = {
 						k = existingLines[j+1].indexOf(showAugmentCallWithFirstParam); // next a tag should have the next call
 						if (k > -1) {
 							k = existingLines[j+1].indexOf(numOfFormMsg);
-							if (k > -1) { // if numOfFormMsg is an empty string, k would be zero
-								console.log("skip: " + goSearchCall + " " + showAugmentCall + " " + numOfFormMsg);
+							if (k > -1) // if numOfFormMsg is an empty string, k would be zero
 								return true;
-							}
 						}
 					}
 				}

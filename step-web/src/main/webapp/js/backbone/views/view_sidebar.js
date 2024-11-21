@@ -85,7 +85,6 @@ var SidebarView = Backbone.View.extend({
 				(typeof ref === "undefined") &&
 				(typeof currentMorph === "undefined") &&
 				(strong === "H0001")) {
-				console.log("MODULE_GET_INFO undefined H0001");
 				return;
 			}
             strong = step.util.fixStrongNumForVocabInfo(strong, false);

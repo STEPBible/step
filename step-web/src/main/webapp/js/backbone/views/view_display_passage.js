@@ -176,7 +176,7 @@ var PassageDisplayView = DisplayView.extend({
                 }
             }
             var isDebugMode = $.getUrlVars().indexOf("debug") > -1;
-            var hasMatthewHenryConciseCommentary = bibleVersions.indexOf("MHCC") > 1;
+            var hasMatthewHenryConciseCommentary = bibleVersions.indexOf("MHCC") > -1;
             if (hasMatthewHenryConciseCommentary || isDebugMode) {
                 var intros = passageHtml.find('.introduction');
                 if (intros.length > 0) {

@@ -86,6 +86,8 @@ public class SuggestionServiceImpl implements SuggestionService {
                 if (searchLanguage.equals("en")) {
                     if ((!curQueryKey.equals("meanings")) &&
                             (!curQueryKey.equals("subject")) &&
+                            (!curQueryKey.equals("greekMeanings")) &&
+                            (!curQueryKey.equals("hebrewMeanings")) &&
                             (!curQueryKey.equals("text")))
                         continue;
                     if (curQueryKey.equals("text"))

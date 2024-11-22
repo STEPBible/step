@@ -6,8 +6,8 @@ step.searchSelect = {
 	// Don't change the order of the following. The first 3 search types are non original language
 	// searches.  The last two are not displayed in it's own group.  GREEK_MEANINGS are are displayed
 	// with GREEK.  HEBREW_MEANINGS are displayed with HEBREW.
-	searchTypeCode: [TEXT_SEARCH, MEANINGS, SUBJECT_SEARCH, GREEK, GREEK_MEANINGS, HEBREW, HEBREW_MEANINGS],
-	numOfSearchTypesToDisplay: 7, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
+	searchTypeCode: [TEXT_SEARCH, MEANINGS, SUBJECT_SEARCH, GREEK, GREEK_MEANINGS, HEBREW, HEBREW_MEANINGS, NAMES],
+	numOfSearchTypesToDisplay: 8, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
 	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details", "Immediate_lookup"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
@@ -754,6 +754,10 @@ step.searchSelect = {
 				$(".select-meanings").show();
 				isAnythingShown = true;
 			}
+			if ($("#searchResultsnames").text() !== "") {
+				$(".select-names").show();
+				isAnythingShown = true;
+			}
 			basic_search_help_text = '<p>What you can enter:</p>' +
 			'<ul><li><strong>love</strong> → searches words that start with “love” (e.g. love, loved, lovely, …)' +
 			'<li><strong>"love"</strong> → searches the exact word love (<strong>not</strong> loved, loves, lovely)' +
@@ -1410,7 +1414,11 @@ step.searchSelect = {
 			for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
 			}
+			var names = []
+			var namesInclusion = []
+			var thingsWithNames = ["man"]
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
+			// if ((searchLangSelected === "he") || (searchLangSelected === "gr"))
 				url += "//" + searchLangSelected;
 			url += "?lang=" + step.searchSelect.userLang;
 			step["SearchCount" + GREEK] = 0;
@@ -1420,6 +1428,7 @@ step.searchSelect = {
 			step["SearchCount" + MEANINGS] = 0;
 			step["SearchCount" + SUBJECT_SEARCH] = 0;
 			step["SearchCount" + TEXT_SEARCH] = 0;
+			step["SearchCount" + NAMES] = 0;
 			$.getJSON(url, function (data) {
 				var alreadyShownStrong = [];
 				for (var i = 0; i < data.length; i++) {
@@ -1427,6 +1436,41 @@ step.searchSelect = {
 					var suggestionType = data[i].itemType;
 					var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
 					var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
+					var suggestion = data[i].suggestion;
+					if ((suggestionType == "greekMeanings" || suggestionType == "hebrewMeanings") && thingsWithNames.includes(suggestion.type)) {
+						mainStrong = suggestion.strongNumber
+						if (!namesInclusion.includes(mainStrong)) {
+							namesInclusion.push(mainStrong)
+							var newName = {}
+							newName["strongs"] = []
+							var strongs = newName["strongs"]
+							strongs.push(mainStrong)
+							newName["name"] = suggestion.gloss
+							var name = newName["name"]
+							// get frequency for mainStrong
+							var details = suggestion._detailLexicalTag
+							if (details) {
+								newName["alternateNames"] = []
+								var alternateNames = newName["alternateNames"]
+								details = JSON.parse(details)
+								details.forEach(function(element, index, array) {
+									var otherStrong = element[1]
+									if (!strongs.includes(otherStrong)) {
+										strongs.push(otherStrong)
+									}
+									var otherName = element[2]
+									if (!alternateNames.includes(otherName) && !(otherName === name)) {
+										alternateNames.push(otherName)
+									}
+								});
+								if (alternateNames.length === 0) {
+									delete newName["alternateNames"]
+								}
+							}
+							names.push(newName)
+						}
+						// step.searchSelect.getVocabInfoForShowAugStrongLite(strong)
+					}
 					switch(suggestionType) {
 						case GREEK:
 						case GREEK_MEANINGS:
@@ -1688,6 +1732,47 @@ step.searchSelect = {
 							break;
 					}
 				}
+				var searchNames = $('#searchResultsnames');
+				var namesConglomerate = []
+				var namesConglomerateInclusion = []
+				names.forEach(function(element) {
+					$("td.search-type-column.select-names").html("Names:");
+					var name = element["name"]
+					if (!namesConglomerateInclusion.includes(name)) {
+						var amalgamation = {}
+						amalgamation["name"] = name
+						amalgamation["conglomeration"] = [element]
+						namesConglomerate.push(amalgamation)
+						namesConglomerateInclusion.push(name)
+					} else {
+						namesConglomerate.forEach(function(amalgamation) {
+							if (amalgamation["name"] === name) {
+								amalgamation["conglomeration"].push(element)
+							}
+						})
+					}
+				});
+				namesConglomerate.forEach(function(amalgamation) {
+					var name = amalgamation["name"]
+					var namesIntro = "<div><span style=\"font-weight: bold;\">The name \"" + name + "\"</span> occurs in total - ___x</div>"
+					// frequency count will be link based on which strongs numbers are included in the instance (this is all of them)
+					searchNames.append(namesIntro)
+					amalgamation["conglomeration"].forEach(function(element, index) {
+						var iteration = index + 1
+						var alternateNames = ""
+						alternateNamesList = element["alternateNames"]
+						if (alternateNamesList) {
+							alternateNames = "(also "
+							alternateNamesList.forEach(function(alternateName) {
+								alternateNames += "\"" + alternateName + "\", "
+							})
+							alternateNames = alternateNames.slice(0, -2)
+							alternateNames += ") "
+						}
+						var nameInstance = "<div>" + iteration + ") <span style=\"font-weight: bold;\">A brief description of the instance.</span> " + alternateNames + "- ___x</div>"
+						searchNames.append(nameInstance)
+					})
+				})
 				var showedSomething = false;
 				var limitTypeToCompare = limitType;
 				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(limitTypeToCompare);
@@ -1920,6 +2005,47 @@ step.searchSelect = {
 		}).fail(function() {
 			changeBaseURL();
 		});
+	},
+	getVocabInfoForShowAugStrongLite: function (strongNum) {
+		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
+		var strongWithoutAugment = strongNum;
+		if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
+			strongWithoutAugment = RegExp.$1;
+		}
+		var additionalPath = step.state.getCurrentVersion();
+		if (additionalPath !== "") additionalPath += "/";
+		$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
+			var vocabInfos = [];
+			for (var i = 0; i < origJsonVar.v.length; i++) {
+				var jsonVar = step.searchSelect.unpackVocabJSON(origJsonVar, i);
+				jsonVar['itemType'] = limitType;
+				vocabInfos.push(jsonVar);
+			}
+			step.searchSelect.helper1(vocabInfos)
+		}).error(function() {
+			step.searchSelect.processVocabInfoForShowAugStrongLite(strongNum, limitType)
+		});
+	},
+	processVocabInfoForShowAugStrongLite: function(strongNum, limitType) {
+		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
+			URL_SEPARATOR + LIMIT + "%3D" + limitType +
+			URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
+		$.getJSON(url, function (data) {
+			for (var i = 0; i < data.length; i++) {
+				if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
+					data[i].suggestion._detailLexicalTag = JSON.parse(data[i].suggestion._detailLexicalTag);
+				}
+			}
+			step.searchSelect.helper2(data)
+		}).fail(function() {
+			changeBaseURL();
+		});
+	},
+	helper1: function (vocabInfos) {
+		console.log("test1")
+	},
+	helper2: function (data) {
+		console.log("test2")
 	},
 
 	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, allVersions, element, callBack, titleText, text2Display, userInput, isAugStrong,

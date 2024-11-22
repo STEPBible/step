@@ -483,12 +483,18 @@ step.searchSelect = {
 
 	handleKeyboardInput: function(e) {
 		$('#quickLexicon').remove();
-		var inputStringToAdd = (typeof e === "string") ? e : "";
 		if ((typeof e === "object") && (e.target.id === "enterRange")) {
 			$('#userEnterRangeError').text("");
 			var userInput =  $('textarea#enterRange').val();
 			userInput = userInput.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
 			userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+			if (userInput.length > 0) {
+				$("#search_range_table").find(".stepPressedButton").removeClass("stepPressedButton");
+				$("#search_range_table").find(".stepButton").css("opacity","0.3");
+			}
+			else {
+				$("#search_range_table").find(".stepButton").css("opacity","1.0");
+			}
 			$('textarea#enterRange').val(userInput);
 			if (userInput.length > 3) {
 				var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + URL_SEPARATOR + VERSION + "%3D" + step.searchSelect.version + URL_SEPARATOR +"?lang=" + step.searchSelect.userLang;
@@ -512,6 +518,7 @@ step.searchSelect = {
 		}
 		else {
 			$("#searchButton").hide();
+			var inputStringToAdd = (typeof e === "string") ? e : "";
 			var userInput = (inputStringToAdd !== "") ? inputStringToAdd : $('textarea#userTextInput').val();
 			if ((userInput === "") || (userInput === "\n")) {
 				for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
@@ -526,52 +533,18 @@ step.searchSelect = {
 				(e.originalEvent.inputType === "insertLineBreak")) {
 				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 				$('textarea#userTextInput').val(userInput);
-//				if (!$("#select_advanced_search").hasClass("checked")) {
-					// if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true); // probably a passage
-					// var sleep = 50;
-					// if (step.searchSelect.searchUserInput !== userInput) {
-					// 	step.searchSelect._handleEnteredSearchWord();
-					// 	sleep = 330;
-					// }
-					// setTimeout(function() { // Need to give time for the input to the sent to the server and also time for the response to come back to the browser.
-					// 	var textSearchResult = $("#searchResultstext").find("a");
-					// 	if (textSearchResult.length > 0) {
-					// 		if (textSearchResult.length > 1) {
-					// 			for (var i = 0; i < textSearchResult.length; i++) {
-					// 				var nextElement = $(textSearchResult[i]).next();
-					// 				if ((nextElement.length > 0) && ($(nextElement).prop("tagName").toLowerCase() === "span") &&
-					// 					($(nextElement).text() === __s.default_search)) {
-					// 					step.searchSelect._find_onclick_and_go(textSearchResult[i]);
-					// 					return;
-					// 				}
-					// 			}
-					// 		}
-					// 		step.searchSelect._find_onclick_and_go(textSearchResult[0]); // Did not find default search text, go with the first link.
-					// 		return;
-					// 	}
-					// 	else {
-					// 		$('#warningMessage').text(__s.enter_search_word);
-					// 	}
-					// }, sleep);
-				// }
-				// else {
 				$('#warningMessage').text('');
 				step.searchSelect._handleEnteredSearchWord();
 				if (inputStringToAdd !== "")
 					$("#warningMessage").text("No result for your search.  Please try again.");
-				// }	
 			}
 			else {
-				// if ($("#select_advanced_search").hasClass("checked")) {
-					if ($("#srchOptnsCheckimmediate_lookup").css("visibility") === "visible") {
-						step.searchSelect._handleEnteredSearchWord();
-						$("#searchButton").hide();
-					}
-					else
-						step.searchSelect.checkSearchButton(userInput);
-				// }
-				// else
-				// 	step.searchSelect._handleEnteredSearchWord();
+				if ($("#srchOptnsCheckimmediate_lookup").css("visibility") === "visible") {
+					step.searchSelect._handleEnteredSearchWord();
+					$("#searchButton").hide();
+				}
+				else
+					step.searchSelect.checkSearchButton(userInput);
 			}
 		}
 	},
@@ -592,7 +565,6 @@ step.searchSelect = {
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
 		$("#enterRange").remove();
-//		$("#advancedsearchonoff").show();
 		showPreviousSearch(); // The function will determine if it need to show previous search
 		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
@@ -620,7 +592,6 @@ step.searchSelect = {
 			$("#langButtonForm").show();
 			this._handleEnteredSearchWord();
 		}
-		else console.log('Unknown state goBackToPreviousPage');
 		step.searchSelect.updateAdvancedSearchElements();
 	},
 
@@ -649,7 +620,6 @@ step.searchSelect = {
 				copyOfRange = copyOfRange.substr(pos + 1);
 			}
 		}
-//		var backgroundColor = (step.util.isDarkMode()) ? "var(--clrBackground)" : "#f5f5f5";
 		var fontColor = document.querySelector(':root').style.getPropertyValue('--clrText');
 		var html = '<div class="header">' +
 			'<form id="langButtonForm" role="form" class="form-inline" style="margin-top:8px;float:left">' +
@@ -659,7 +629,6 @@ step.searchSelect = {
 					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr">Greek</label>' +
 				'</span>' +
 			'</form>' +
-//			'<h4 id="hd4">' + __s.enter_search_word + '</h4>' +
 			'<span id="searchRangeButton" style="float:right;font-size:larger"><b>' + __s.search_range + ':</b> ' +
 				'<a onclick=step.searchSelect._buildRangeHeaderAndTable()>' + displayRange + '</a>' +
 			'</span>' +
@@ -682,16 +651,11 @@ step.searchSelect = {
 			'<div id="basic_search_help_text" style="font-size:14px;width:90%">' +
 			'</div>' +
 			'<div id="search_table" class="advanced_search_elements">' +
-//			'<table border="1" style="background-color:' + backgroundColor + '">' +
 			'<table>' +
 			'<colgroup>' +
 			'<col id="column1width" span="1" style="width:39%;">' +
 			'<col span="1" style="width:61%;">' +
 			'</colgroup>';
-//			'<tr>' +
-//			'<th scope="col" class="search-type-column"' + (step.state.isLtR()? '>' : ' style="text-align: right;">') + __s.type_of_search + '</th>' +
-//			'<th id="suggest_search_words" scope="col"' + (step.state.isLtR()? '>' : ' style="text-align: right;">')  + __s.suggested_search_words + '</th>' +
-//			'</tr>';
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i ++) {
 			var srchCode = this.searchTypeCode[i];
 			html += '<tr style="height:40px;border-bottom:solid" class="select2-result select2-result-selectable select-' + srchCode + '">' +
@@ -700,16 +664,6 @@ step.searchSelect = {
 				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
 		}
 		html += '</table>' +
-			// '</div>' +
-			// '<div id="advancedsearchonoff" class="modalonoffswitch" style="display:none;margin-top:10px">' +
-			// 	'<span id="select_advanced_search" class="pull-left" style="font-size:16px">&nbsp;<b>' + __s.search_advanced + '</b>&nbsp;</span>' +
-			// 	'<span class="onoffswitch2 pull-left">' +
-			// 		'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="advancesearchonoffswitch" onchange="advanceMode()"/>' +
-			// 		'<label class="onoffswitch2-label" for="advancesearchonoffswitch">' +
-			// 		'<span class="onoffswitch2-inner"></span>' +
-			// 		'<span class="onoffswitch2-switch"></span>' +
-			// 		'</label>' +
-			// 	'</span>' +
 			'</div><br>';
 		return html;
 	},
@@ -763,6 +717,12 @@ step.searchSelect = {
 			'<li><strong>"love"</strong> → searches the exact word love (<strong>not</strong> loved, loves, lovely)' +
 			'<li><strong>come to me</strong> → searches for "come", "to", and "me" in any order' +
 			'<li><strong>"come to me"</strong> → searches for the exact phrase in the selected translations</ul>';
+			if (step.searchSelect.searchOnSpecificType === MEANINGS)
+				basic_search_help_text = '<p>What you can enter:</p>' +
+					'<ul><li>An English word (to find other words with the same meaning)</ul>';
+			else if (step.searchSelect.searchOnSpecificType === SUBJECT_SEARCH)
+				basic_search_help_text = '<p>What you can enter:</p>' +
+					'<ul><li>An English word (to find subjects related to the word)</ul>';
 		}
 		else if (language === "he" ) {
 			if ($("#searchResultshebrew").html() !== "") {
@@ -773,10 +733,12 @@ step.searchSelect = {
 				$(".select-hebrewMeanings").show();
 				isAnythingShown = true;
 			}
-			basic_search_help_text = '<p>What you can enter:</p>' +
-			'<ul><li>An English word (to find Hebrew words with the same meaning)' +
-			'<li>Transliteration (type it like it sounds)' +
-			'<li>Hebrew text</ul>';
+			basic_search_help_text = '<p>What you can enter:</p><ul>';
+			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === HEBREW_MEANINGS))
+				basic_search_help_text += '<li>An English word (to find Hebrew words with the same meaning)';
+			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === HEBREW))
+				basic_search_help_text += '<li>Transliteration (type it like it sounds)<li>Hebrew text';
+			basic_search_help_text += '</ul>';
 		}
 		else if (language === "gr") {
 			if ($("#searchResultsgreek").html() !== "") {
@@ -787,10 +749,12 @@ step.searchSelect = {
 				$(".select-greekMeanings").show();
 				isAnythingShown = true;
 			}
-			basic_search_help_text = '<p>What you can enter:</p>' +
-			'<ul><li>An English word (to find Greek words with the same meaning)' +
-			'<li>Transliteration (type it like it sounds)' +
-			'<li>Greek text</ul>';
+			basic_search_help_text = '<p>What you can enter:</p><ul>';
+			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === GREEK_MEANINGS))
+				basic_search_help_text += '<li>An English word (to find Greek words with the same meaning)';
+			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === GREEK))
+				basic_search_help_text += '<li>Transliteration (type it like it sounds)<li>Greek text';
+			basic_search_help_text += '</ul>';
 		}
 		if (isAnythingShown) {
 			$("#basic_search_help_text").text("");
@@ -937,10 +901,11 @@ step.searchSelect = {
 			'<div id="nt_table"/>' +
 			'<h4 id="other_books_hdr"/>' +
 			'<div id="ob_table"/>';
-			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#keyboardEntry").length == 0))
+			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#enterRange").length == 0))
 				$('.footer').prepend('<textarea id="enterRange" rows="1" class="stepFgBg" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px"' +
 					' placeholder="Optionally type in search range, e.g.: Psa.1-15"></textarea>' +
-					'<br><span id="userEnterRangeError" style="color: red"></span>');
+					'<br><span id="userEnterRangeError" style="color: red"></span>'
+				);
 		return html;
 	},
 
@@ -1214,7 +1179,15 @@ step.searchSelect = {
 		}
 	},
 
+	_checkKeyboardEntered: function() {
+		if ((step.touchDevice) || ($('textarea#enterRange').val() === ""))
+			return false;
+		$('#userEnterRangeError').text("You can only click to select when keyboard entry field is empty.");
+		return true;
+	},
+
 	_userClickedTestament: function(clicked_id) {
+		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
@@ -1235,6 +1208,7 @@ step.searchSelect = {
 	},
 
 	_userClickedCategory: function(clicked_id) {
+		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
@@ -1257,6 +1231,7 @@ step.searchSelect = {
 	},
 
 	_userClickedBook: function(clicked_id) {
+		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
@@ -1293,8 +1268,6 @@ step.searchSelect = {
 	_checkHeaderButton: function(clicked_id) {
 		var idPrefix = clicked_id.substring(0, 2);
 		var numOfGroups = 0;
-		//$('#searchSelectError').text(__s.click_update_when_finish);
-		//$('#updateRangeButton').show();
 		if (idPrefix === 'ot') numOfGroups = this.groupsOT.length;
 		else if (idPrefix === 'nt') numOfGroups = this.groupsNT.length;
 		idPrefix = '#' + idPrefix + '_tableg';
@@ -1355,7 +1328,6 @@ step.searchSelect = {
 		var userInput = '';
 		$('textarea#userTextInput').show();
 		$('#searchButton').show();
-//		$("#hd4").text(__s.enter_search_word);
 		$("#column1width").width("30%");
 		$(".search-type-column").show();
 		$('#warningMessage').text('');
@@ -1369,8 +1341,6 @@ step.searchSelect = {
 		if ((userInput.length > 1) || ((step.searchSelect.userLang.toLowerCase().indexOf("zh") == 0) && (userInput.length > 0))) {
 			// If user enter a Lucene standard stop word, let the user know.
 			if (" a an and are as at be but by for if in into is it no not of on or such that the their then there these they this to was will with ".indexOf(" " + userInput.toLowerCase() + " ") > -1) {
-//			&&
-//				($("#select_advanced_search").hasClass("checked"))) {
 				$('#warningMessage').text('Search for extremely common words might not be found in Fuzzy, Greek and Hebrew searches.');
 				setTimeout(function(){
                     $('#warningMessage').text('');
@@ -1393,14 +1363,13 @@ step.searchSelect = {
 				versionsQueryString = VERSION + "%3D" + step.searchSelect.version;
 			var searchLangSelected = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
 			var langCode = step.userLanguageCode.substring(0, 2).toLowerCase();
-			if ((searchLangSelected === "en") && 
-				((langCode !== "zh") && (langCode !== "ar")) &&
-				(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
-				var parts = userInput.split(" ");
-				userInput = parts.join("* ") + "*";
-			}
-			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === ""))
+			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === "")) {
+				if ((searchLangSelected === "en") && ((langCode !== "zh") && (langCode !== "ar")) &&
+					(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
+					userInput = userInput.split(" ").join("* ") + "*";
+				}
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR;
+			}
 			else {
 				if (limitType === "") limitType = step.searchSelect.searchOnSpecificType;
 				else {
@@ -1573,52 +1542,7 @@ step.searchSelect = {
 													}
 												}
 											}
-											// if ((strings2Search.length == 1) && (str2Search.slice(-1) !== "*") &&
-											// 	(!step.searchSelect.wordsWithNoInflection(str2Search)))
-											// 	$("td.search-type-column.select-text").html(__s.search_type_desc_text + __s.search_type_desc_text2 + ":");
-											// else
 											$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":");
-											// if (strings2Search.length > 1) {
-											// 	var defaultSearchString = "";
-											// 	var defaultMouseOverTitle = "";
-//												if (!foundOr) {
-//													defaultSearchString = "<b>" + __s.default_search + "</b>";
-//													defaultMouseOverTitle = __s.default_search_mouse_over_title;
-//												}
-												// step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
-												// 	str2Search, suggestionType, strings2Search.join(" <sub>and</sub> "), "", defaultSearchString, defaultMouseOverTitle,
-												// 	limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
-												// defaultSearchString = "";
-												// defaultMouseOverTitle = "";
-//												if (foundOr) {
-//													defaultSearchString = "<b>" + __s.default_search + "</b>";
-//													defaultMouseOverTitle = __s.default_search_mouse_over_title;
-//												}
-												// step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, 
-												// 	str2Search, suggestionType, strings2Search.join(" <sub>or</sub> "),	"", defaultSearchString, defaultMouseOverTitle,
-												// 	limitType, null, false, false, "", ""); //, hasHebrew, hasGreek);
-												// text2Display = '"' + str2Search + '"';
-												// str2Search = '%22' + str2Search + '%22';
-											// }
-											// else {
-												// if ((str2Search.slice(-1) !== "*") && (!step.searchSelect.wordsWithNoInflection(str2Search))) {
-												// 	if (((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) &&
-												// 		(data[i].count == 0)) {
-												// 		console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
-												// 	}
-												// 	else {
-												// 		var suffixToDisplay = ((suggestionType === "text") || (suggestionType === "subject") || (suggestionType === "meanings")) ?
-												// 			" " + data[i].count + " x" : "";
-												// 		step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
-												// 			str2Search, suggestionType, text2Display, "", suffixToDisplay, "",
-												// 			limitType, null, false, false, "", ""); // , hasHebrew, hasGreek);
-												// 	}
-												// 	text2Display = str2Search + "* (" + __s.words_that_start_with + " " + str2Search + ")";
-												// 	str2Search += "*";
-												// }
-//												suffixToDisplay = "<b>" +__s.default_search + "</b>";
-//												suffixTitle = __s.default_search_mouse_over_title;
-											// }
 										}
 									}
 									if ($('textarea#userTextInput').val().indexOf("*") == -1)
@@ -1680,10 +1604,8 @@ step.searchSelect = {
 								}
 								if ((!skipBecauseOfZeroCount) || (limitType !== "")) {
 									if ((suggestionType === TEXT_SEARCH) || (suggestionType === MEANINGS)) {
-										if (data[i].count == 0) {
-											console.log(suggestionType + ", " + str2Search + ", " + data[i].count);
+										if (data[i].count == 0)
 											continue;
-										}
 										else {
 											if ((suggestionType === TEXT_SEARCH) && (str2Search.slice(-1) === "*")) {
 												var string2Show = str2Search;
@@ -1773,31 +1695,7 @@ step.searchSelect = {
 						searchNames.append(nameInstance)
 					})
 				})
-				var showedSomething = false;
-				var limitTypeToCompare = limitType;
-				var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(limitTypeToCompare);
-				// Only needed if we combine Greek / Greek Meaning and Hebrew / Hebrew Meaning
-				// if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
-				// 	limitTypeToCompare = step.searchSelect.searchTypeCode[searchResultIndex - 2];
-				for (var l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
-					if (limitTypeToCompare === "") {
-						$('.select-' + step.searchSelect.searchTypeCode[l]).show();
-						showedSomething = true;
-					}
-					else if (step.searchSelect.searchTypeCode[l] === limitTypeToCompare) {
-						$('.select-' + step.searchSelect.searchTypeCode[l]).show();
-						showedSomething = true;
-					}
-					else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
-				}
-				if (showedSomething) {
-					$('#suggest_search_words').html('<i>' + __s.click_on_suggest_word + '</i>');
-					$('#suggest_search_words').css('color', "var(--clrStrongText)");
-				}
-				else {
-					$('#suggest_search_words').html(__s.suggested_search_words);
-					$('#suggest_search_words').css('color', "var(--clrText)");
-				}
+
 				step.searchSelect.handleLanguageButton();
 			}).fail(function() {
                 changeBaseURL();
@@ -1809,8 +1707,6 @@ step.searchSelect = {
 			for (l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[l]).text("");
 			}
-			$('#suggest_search_words').html(__s.suggested_search_words);
-			$('#suggest_search_words').css('color', "var(--clrText)");
 			showPreviousSearch(); // The update previous search button might need to be displayed if user has includes previous search 
 		}
 	},
@@ -2186,9 +2082,6 @@ step.searchSelect = {
 			}
 		}
 		var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(origSuggestionType);
-		// Only needed if we combine Greek / Greek Meaning and Hebrew / Hebrew Meaning
-		// if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
-		// 	searchResultIndex = searchResultIndex - 2;
 		var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 		var text2Display = '<span>' + strongNum + '*</span>';
 		var suffixText = __s.has_various_and_related_forms;
@@ -2217,15 +2110,12 @@ step.searchSelect = {
 		var freqencyOfSameSimpleStrongAsMainStrong = 0;
 		var transliterationOfSameSimpleStrongAsMainStrong = "";
 		var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(origSuggestionType);
-		// Only needed if we combine Greek / Greek Meaning and Hebrew / Hebrew Meaning
-		// if (searchResultIndex >= step.searchSelect.numOfSearchTypesToDisplay)
-		// 		searchResultIndex = searchResultIndex - 2;
 		var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 		for (var k = 0; k < sorted.length; k++) {
 			var i = parseInt(sorted[k][0]);
 			var suggestionType = data[i].itemType;
 			if (data[i].grouped) {
-				console.log("There should be not group here");
+//				console.log("There should be not group here");
 				continue;
 			}
 			if (((origSuggestionType === GREEK_MEANINGS) || (origSuggestionType === HEBREW_MEANINGS)) &&
@@ -2310,8 +2200,6 @@ step.searchSelect = {
 					limitType, null, false, true, "", allVersions, false, false);
 				step.searchSelect.buildHTMLFromDetailLexicalTag(currentSearchSuggestionElement, strongNum, data[i].suggestion._detailLexicalTag, i, allVersions, hasBothTestaments);
 			}
-			else
-				console.log("Unknown result: " + suggestionType);
 		}
 		currentSearchSuggestionElement.append('<br>');
 		if (numWithSameSimpleStrongsAsMainStrong > 1) {
@@ -2371,7 +2259,6 @@ step.searchSelect = {
 		$('#updateButton').hide();
 		$("#advancedsearchonoff").hide();
 		$("#previousSearchDropDown").hide();
-//		$("#hd4").text(__s.please_select_one);
 		step.searchSelect.searchModalCurrentPage = 3;
 		$("#langButtonForm").hide();
 		$('#srchModalBackButton').show();
@@ -2397,10 +2284,8 @@ step.searchSelect = {
 						k = existingLines[j+1].indexOf(showAugmentCallWithFirstParam); // next a tag should have the next call
 						if (k > -1) {
 							k = existingLines[j+1].indexOf(numOfFormMsg);
-							if (k > -1) { // if numOfFormMsg is an empty string, k would be zero
-								console.log("skip: " + goSearchCall + " " + showAugmentCall + " " + numOfFormMsg);
+							if (k > -1) // if numOfFormMsg is an empty string, k would be zero
 								return true;
-							}
 						}
 					}
 				}
@@ -2463,14 +2348,7 @@ step.searchSelect = {
 		step["SearchCount" + suggestionTypeForCount] ++;
 		brCount = step["SearchCount" + suggestionTypeForCount];
 		if (brCount >= suggestionsToDisplay) return;
-//		if (suffixToDisplay.indexOf(__s.default_search) > -1) {
-			//&& ($("#select_advanced_search").hasClass("checked"))) {
-//			console.log("removing " + suffixToDisplay);
-//			suffixToDisplay = "";
-//		}
 		if ((typeof existingHTML === "string") && (existingHTML !== "")) {
-			// brCount = (existingHTML.match(/<br>/g) || []).length;
-			// brCount += (existingHTML.match(/<\/ol>/g) || []).length;
 			if (((brCount < suggestionsToDisplay + 1) || (limitType !== ""))) {
 					if (existingHTML.slice(-5) !== "</ol>") {
 						needLineBreak = "<br>";
@@ -2502,7 +2380,7 @@ step.searchSelect = {
 				var additionalCSS = "";
 				var aTagOnClick = ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType +
 					'\',\'' + str2Search + '\',\'' + 
-					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') + 						'\')"';
+					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') + '\')"';
 
 				if ((this.strikeOutType === searchType) && (this.strikeOutToken.replaceAll('"', '%22') === str2Search)) {
 					additionalCSS = ";color:red;text-decoration:line-through";

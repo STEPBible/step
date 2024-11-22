@@ -175,9 +175,6 @@ step.copyText = {
 		var textToCopy = ""
 		for (var m = 0; m < copyOfPassage.length; m++) {
 			var posSearch = $(copyOfPassage[m]).html().search(/<br\s*[\/]?>/);
-			if (posSearch> -1) {
-				console.log("pos: " + posSearch + " " + $(copyOfPassage[m]).html());
-			}
 			textToCopy += $(copyOfPassage[m]).text().replace(/    /g, " ")
 			.replace(/   /g, " ").replace(/  /g, " ").replace(/\t /g, "\t")
 			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n").replace(/\n\n\t/g, "\n\t").replace(/^\n/g, "")

@@ -85,7 +85,6 @@ var SidebarView = Backbone.View.extend({
 				(typeof ref === "undefined") &&
 				(typeof currentMorph === "undefined") &&
 				(strong === "H0001")) {
-				console.log("MODULE_GET_INFO undefined H0001");
 				return;
 			}
             strong = step.util.fixStrongNumForVocabInfo(strong, false);
@@ -374,10 +373,10 @@ var SidebarView = Backbone.View.extend({
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
                 .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + mainWord.strongNumber + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
-                            '<button type="button" class="btn btn-default btn-sm" style="padding:3px 2px;margin:0px;">' +
-                                '<i class="glyphicon glyphicon-exclamation-sign"></i>' +
-                            '</button>' +
-                        '</a>'))
+                    '<button type="button" class="btn btn-default btn-sm" style="padding:3px 2px;margin:0px;">' +
+                        '<i class="glyphicon glyphicon-exclamation-sign"></i>' +
+                    '</button>' +
+                '</a>'))
         );
     },
 

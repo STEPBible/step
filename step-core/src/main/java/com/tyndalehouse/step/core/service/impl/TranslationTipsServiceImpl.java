@@ -20,7 +20,7 @@ public class TranslationTipsServiceImpl implements TranslationTipsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StrongAugmentationServiceImpl.class);
 
-    public void loadVersesToBitwise(String translationTipsPath) {
+    public void readAndLoad(final String translationTipsPath, final String installFilePath) {
         Reader fileReader = null;
         BufferedInputStream bufferedStream = null;
         InputStream stream = null;
@@ -81,21 +81,21 @@ public class TranslationTipsServiceImpl implements TranslationTipsService {
                         if (fileNameFromURL.length() < 1) continue;
                         int ordinal = key.getOrdinal();
                         if (fileNameFromURL.equals(bookName + "-" + chapter + verse)) {
-                            if (regularFormatedFN.store.get(ordinal)) {
+                            if (translationTips.regularFormatedFN.store.get(ordinal)) {
                                 System.out.println("Duplicate definition regular: " + data + ", " + ordinal);
                                 continue;
                             }
-                            regularFormatedFN.addAll(keyf.getKey(Versifications.instance().getVersification("NRSV"), parts[0]));
+                            translationTips.regularFormatedFN.addAll(keyf.getKey(Versifications.instance().getVersification("NRSV"), parts[0]));
                         }
                         else if (fileNameFromURL.equals(bookName + "-" + chapter + "-" + verse)) {
-                            if (regularFormatedFN.store.get(ordinal)) {
+                            if (translationTips.regularFormatedFN.store.get(ordinal)) {
                                 System.out.println("Duplicate definition alternate: " + data + ", " + ordinal);
                                 continue;
                             }
-                            alternativeFormatedFN.addAll(keyf.getKey(Versifications.instance().getVersification("NRSV"), parts[0]));
+                            translationTips.alternativeFormatedFN.addAll(keyf.getKey(Versifications.instance().getVersification("NRSV"), parts[0]));
                         }
                         else {
-                            customFN.put(ordinal, fileNameFromURL);
+                            translationTips.customFN.put(ordinal, fileNameFromURL);
                         }
                     }
                     catch (Exception e) {
@@ -108,13 +108,54 @@ public class TranslationTipsServiceImpl implements TranslationTipsService {
                 LOGGER.error("Unable to read a line from the translation tip file");
                 throw new StepInternalException("Unable to read a line from the translation tip file ", e);
             }
+            // Output to serialized data
+            String installFileFolder = "";
+            int pos = installFilePath.lastIndexOf('\\');
+            if (pos == -1)
+                pos = installFilePath.lastIndexOf('/');
+            if (pos > 1)
+                installFileFolder = installFilePath.substring(0, pos+1);
+            try {
+                FileOutputStream fileOut =
+                        new FileOutputStream(installFileFolder + "translator_tips.dat");
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(translationTips);
+                out.close();
+                fileOut.close();
+                LOGGER.info("Serialized data is saved in " + installFileFolder + "translator_tips.dat");
+            } catch (IOException i) {
+                LOGGER.error("Serialized data cannot be saved in " + installFileFolder + "translator_tips.dat");
+                i.printStackTrace();
+            }
+
         } finally {
             closeQuietly(fileReader);
             closeQuietly(bufferedStream);
             closeQuietly(stream);
         }
     }
-    public void readAndLoad(final String translationTipsPath) {
-        loadVersesToBitwise(translationTipsPath);
+
+    public void loadFromSerialization(final String installFilePath) {
+        String installFileFolder = "";
+        int pos = installFilePath.lastIndexOf('\\');
+        if (pos == -1)
+            pos = installFilePath.lastIndexOf('/');
+        if (pos > 1)
+            installFileFolder = installFilePath.substring(0, pos+1);
+        try {
+            FileInputStream fileIn = new FileInputStream(installFileFolder + "translator_tips.dat");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            TranslationTips tipsReadIn = (TranslationTips) in.readObject();
+            translationTips.regularFormatedFN = tipsReadIn.regularFormatedFN;
+            translationTips.alternativeFormatedFN = tipsReadIn.alternativeFormatedFN;
+            translationTips.customFN = tipsReadIn.customFN;
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        } catch (ClassNotFoundException c) {
+            System.out.println("Translator tips class not found");
+            c.printStackTrace();
+        }
     }
 }

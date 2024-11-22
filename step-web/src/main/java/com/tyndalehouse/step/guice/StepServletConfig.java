@@ -98,7 +98,10 @@ public class StepServletConfig extends GuiceServletContextListener {
         if (Boolean.getBoolean("step.loader")) {
             getInjector().getInstance(Loader.class).init();
         }
-        else getInjector().getInstance(Loader.class).loadAugmentedStrongs(false);
+        else {
+            getInjector().getInstance(Loader.class).loadAugmentedStrongs(false);
+            getInjector().getInstance(Loader.class).loadTranslationTips(false);
+        }
 
     }
 

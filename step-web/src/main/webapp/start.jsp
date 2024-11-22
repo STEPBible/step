@@ -265,9 +265,12 @@
                 if (!appManager.isLocal()) {
             %> 
                                 <a style="padding-left:5px;vertical-align:top" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
-                                    <button type="button" class="btn btn-default btn-sm" style="padding:3px 2px;margin:0px;">
-                                        <i class="glyphicon glyphicon-exclamation-sign"></i>
-                                    </button>
+                                    <svg viewBox="0 0 18 21" width="18" height="21">
+                                        <path d="M 0 3 L 18 3, 18 16, 16 16, 16 21, 12 16, 0 16, 0 3" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>
+                                        <line x1="2" y1="8" x2="16" y2="8" stroke-width="1" stroke="var(--clrBackground)" />
+                                        <line x1="2" y1="10" x2="16" y2="10" stroke-width="1" stroke="var(--clrBackground)" />
+                                        <line x1="2" y1="12" x2="16" y2="12" stroke-width="1" stroke="var(--clrBackground)" />
+                                    </svg>
                                     <span class="navbarIconDesc" style="vertical-align:bottom">&nbsp;<fmt:message key="help_feedback" /></span>
                                 </a>
             <%

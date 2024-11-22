@@ -39,14 +39,10 @@
 
             var lang = step.state.language();
             var langParam = step.util.isBlank(lang) ? "" : "?lang=" + lang;
-			if (url.indexOf("|") > -1) {
-				console.log("Found | in " + url);
+			if (url.indexOf("|") > -1)
 				url = url.replace(/\|/g, "@");
-			}
-			if (url.indexOf("@@") > -1) {
-				console.log("Found @@ in " + url);
+			if (url.indexOf("@@") > -1)
 				url = url.replace(/@@/g, "@");
-			}
             return $.get(url + langParam, function (data, textStatus, jqXHR) {
                 if (step.state.responseLanguage == undefined) {
                     //set the language
@@ -939,7 +935,6 @@ step.util = {
 					var pos = tmpKey.indexOf("_font_" + fontName);
 					if (pos > -1) {
 						tmpPanelId = tmpKey.substr(6, pos - 6);
-						console.log("panel " + tmpKey + " " + tmpPanelId);
 						allPanelsWithSpecificFontChange.push(tmpPanelId);
 					}
 				}
@@ -4359,7 +4354,6 @@ step.util = {
 					}
 				}
 				if (indexToUniqueStrongArry == -1) {
-					console.log("something wrong, cannot locate original search Strong in getVocabMorphInfoFromJson");
 					callBackLoadDefFromAPI(callBack2Param);
 					return;
 				}
@@ -5026,10 +5020,8 @@ step.util = {
                 var parent = curElement.parent();
                 var height = parent.height();
 				if (height < 1) continue;
-                if (height < top) { // If the line height is shorter than the position of the Bible feature display, add height
-					console.log(parent.text() + " h: " + height + ' t: ' + top);
+                if (height < top) // If the line height is shorter than the position of the Bible feature display, add height
                     parent.height(top + 15);
-				}
             }
         }
 	},

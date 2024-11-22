@@ -1400,6 +1400,15 @@ step.searchSelect = {
 			step["SearchCount" + NAMES] = 0;
 			$.getJSON(url, function (data) {
 				var alreadyShownStrong = [];
+				var activePassageData = step.util.activePassage().get("searchTokens") || [];
+				var allVersions = "";
+				for (var l = 0; l < activePassageData.length; l++) {
+					var itemType = activePassageData[l].itemType ? activePassageData[l].itemType : activePassageData[l].tokenType
+					if (itemType === VERSION) {
+						if (allVersions !== "") allVersions += ",";
+						allVersions += activePassageData[l].item.shortInitials;
+					}
+				}
 				for (var i = 0; i < data.length; i++) {
 					var skipBecauseOfZeroCount = false;
 					var suggestionType = data[i].itemType;
@@ -1416,7 +1425,10 @@ step.searchSelect = {
 							strongs.push(mainStrong)
 							newName["name"] = suggestion.gloss
 							var name = newName["name"]
-							// get frequency for mainStrong
+							// get frequency for mainStrong and all words in the detail lexical tag.
+							var resultArray = step.searchSelect._getSuggestedFrequency(data[i].suggestion, allVersions);
+							newName["count"] = resultArray[0] + resultArray[1]; // OT count + NT count
+							console.log(mainStrong + ": count OT: " + resultArray[0] + " NT: " + resultArray[1]);
 							var details = suggestion._detailLexicalTag
 							if (details) {
 								newName["alternateNames"] = []
@@ -1487,15 +1499,6 @@ step.searchSelect = {
 								var str2Search = "";
 								var suffixToDisplay = "";
 								var suffixTitle = "";
-								var activePassageData = step.util.activePassage().get("searchTokens") || [];
-								var allVersions = "";
-								for (var l = 0; l < activePassageData.length; l++) {
-									var itemType = activePassageData[l].itemType ? activePassageData[l].itemType : activePassageData[l].tokenType
-									if (itemType === VERSION) {
-										if (allVersions !== "") allVersions += ",";
-										allVersions += activePassageData[l].item.shortInitials;
-									}
-								}
 								if (suggestionType === SUBJECT_SEARCH) {
 									text2Display = data[i].suggestion.value;
 									str2Search = text2Display;
@@ -1664,6 +1667,7 @@ step.searchSelect = {
 						var amalgamation = {}
 						amalgamation["name"] = name
 						amalgamation["conglomeration"] = [element]
+						amalgamation["count"] = element["count"]
 						namesConglomerate.push(amalgamation)
 						namesConglomerateInclusion.push(name)
 					} else {
@@ -1676,7 +1680,11 @@ step.searchSelect = {
 				});
 				namesConglomerate.forEach(function(amalgamation) {
 					var name = amalgamation["name"]
-					var namesIntro = "<div><span style=\"font-weight: bold;\">The name \"" + name + "\"</span> occurs in total - ___x</div>"
+					var grandTotal = 0;
+					for (var count = 0; count < amalgamation["conglomeration"].length; count ++) {
+						grandTotal += amalgamation["conglomeration"][count].count;
+					}
+					var namesIntro = "<div><span style=\"font-weight: bold;\">The name \"" + name + "\"</span> occurs in total - " + grandTotal + " x</div>"
 					// frequency count will be link based on which strongs numbers are included in the instance (this is all of them)
 					searchNames.append(namesIntro)
 					amalgamation["conglomeration"].forEach(function(element, index) {
@@ -1691,7 +1699,7 @@ step.searchSelect = {
 							alternateNames = alternateNames.slice(0, -2)
 							alternateNames += ") "
 						}
-						var nameInstance = "<div>" + iteration + ") <span style=\"font-weight: bold;\">A brief description of the instance.</span> " + alternateNames + "- ___x</div>"
+						var nameInstance = "<div>" + iteration + ") <span style=\"font-weight: bold;\">A brief description of the instance.</span> " + alternateNames + "- " + element["count"] + " x</div>"
 						searchNames.append(nameInstance)
 					})
 				})

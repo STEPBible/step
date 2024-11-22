@@ -1497,7 +1497,7 @@ step.searchSelect = {
 														text2Display = strings2Search.join(" <sub>or</sub> ");
 													}
 												}
-											}			
+											}
 											$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":");
 										}
 									}

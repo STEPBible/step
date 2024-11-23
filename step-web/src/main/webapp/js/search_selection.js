@@ -1678,15 +1678,43 @@ step.searchSelect = {
 						})
 					}
 				});
+				var alreadyDisplayedStrongsSearch = [];
 				namesConglomerate.forEach(function(amalgamation) {
 					var name = amalgamation["name"]
 					var grandTotal = 0;
+					var allStrongs = "";
 					for (var count = 0; count < amalgamation["conglomeration"].length; count ++) {
 						grandTotal += amalgamation["conglomeration"][count].count;
+						if (allStrongs !== "") allStrongs += ",";
+						sortedAllStrongs = amalgamation["conglomeration"][count].strongs.sort().join(",");
+						if (alreadyDisplayedStrongsSearch.includes(sortedAllStrongs)) {
+							amalgamation["conglomeration"].splice(count, 1);  // remove from array, it is a duplicate
+							count --;
+							console.log("Skipped duplicate name: " + sortedAllStrongs);
+						}
+						else {
+							allStrongs += amalgamation["conglomeration"][count].strongs.join(",");
+							alreadyDisplayedStrongsSearch.push(sortedAllStrongs);
+						}
 					}
-					var namesIntro = "<div><span style=\"font-weight: bold;\">The name \"" + name + "\"</span> occurs in total - " + grandTotal + " x</div>"
-					// frequency count will be link based on which strongs numbers are included in the instance (this is all of them)
-					searchNames.append(namesIntro)
+					if (amalgamation["conglomeration"].length < 1) return; // Nothing to process, probably due to removed duplicates
+					var suggestionType = "greekMeanings";
+					var limitType = "greek";
+					if (allStrongs.substring(0,1) === "H") {
+						suggestionType = "hebrewMeanings";
+						limitType = "hebrew";	
+					}
+					var text2Display = "The name \"" + name;
+					var prefixToDisplay = "";
+					var suffixToDisplay = " occurs in total - " + grandTotal + " x";
+					var suffixTitle = "";
+					var augStrongSameMeaning = null;
+					var hasDetailLexInfo = false;
+					var needIndent = false;
+					var userInput = "";
+					step.searchSelect.appendSearchSuggestionsToDisplay(searchNames, 
+						allStrongs, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
+						limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions);
 					amalgamation["conglomeration"].forEach(function(element, index) {
 						var iteration = index + 1
 						var alternateNames = ""
@@ -1699,8 +1727,18 @@ step.searchSelect = {
 							alternateNames = alternateNames.slice(0, -2)
 							alternateNames += ") "
 						}
-						var nameInstance = "<div>" + iteration + ") <span style=\"font-weight: bold;\">A brief description of the instance.</span> " + alternateNames + "- " + element["count"] + " x</div>"
-						searchNames.append(nameInstance)
+						var strongs2Search = element.strongs.join(",");
+						var text2Display = "A brief description of " + element["name"]  + " " + alternateNames;
+						var prefixToDisplay = iteration + ") ";
+						var suffixToDisplay = "- " + element["count"] + " x";
+						var suffixTitle = "";
+						var augStrongSameMeaning = null;
+						var hasDetailLexInfo = false;
+						var needIndent = true;
+						var userInput = "";
+						step.searchSelect.appendSearchSuggestionsToDisplay(searchNames, 
+							strongs2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
+							limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions);
 					})
 				})
 
@@ -2346,7 +2384,8 @@ step.searchSelect = {
 		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions) { // , hasHebrew, hasGreek) {
 		var brCount = 0;
 		var suggestionsToDisplay = 7;
-		var suggestionsToDisplay = ($("#srchModalBackButton").is(":hidden")) ? 7 : 40; // There are 30+ Zechariah so 40 should be enough
+		if (($("#srchModalBackButton").is(":hidden")) || (currentSearchSuggestionElement.selector === "#searchResultsnames"))
+			suggestionsToDisplay = 40; // More entries are needed to display names.  There are 30+ Zechariah so 40 should be enough
 		var needLineBreak = "";
 		var isAugStrong = Array.isArray(augStrongSameMeaning);
 		var existingHTML = currentSearchSuggestionElement.html();

@@ -2854,7 +2854,7 @@ step.util = {
 								var titleTag = "";
 								if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
 									titleTag = ' title="page ' + summary[jsonName] + '"';
-								bookSummary += '<a href="' + icc_url + '" target="_blank"' + titleTag + '> ICC commentary</a>';
+								bookSummary += '<a href="' + icc_url + '" target="icc"' + titleTag + '> ICC commentary</a>';
 							}
 							bookSummary += "</td></tr>";
 						}

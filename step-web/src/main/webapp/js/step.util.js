@@ -2844,8 +2844,20 @@ step.util = {
 							bookSummary += "<tr ><td><b>" + osisID + " " + curChapter + "-" + endOfHeader + "</b></td><td><b>" + summary[jsonName] + "</b></td></tr>";
 						}
 						jsonName = "chapter_" + curChapter + "_description";
-						if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "*") && (summary[jsonName] !== ""))
-							bookSummary += '<tr><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + osisID + " " + curChapter + "</a></td><td>" + summary[jsonName] + "</td></tr>";
+						if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
+							if (summary[jsonName] === "*") summary[jsonName] = "";
+							bookSummary += '<tr><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + osisID + " " + curChapter + "</a></td><td>" + summary[jsonName];
+							jsonName = "chapter_" + curChapter + "_icc_url";
+							if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
+								var icc_url = summary[jsonName];
+								jsonName = "chapter_" + curChapter + "_icc_page";
+								var titleTag = "";
+								if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
+									titleTag = ' title="page ' + summary[jsonName] + '"';
+								bookSummary += '<a href="' + icc_url + '" target="_blank"' + titleTag + '> ICC commentary</a>';
+							}
+							bookSummary += "</td></tr>";
+						}
 					}
 					bookSummary += "</tbody></table></div>";
 				}

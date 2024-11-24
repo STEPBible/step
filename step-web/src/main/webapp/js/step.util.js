@@ -2831,6 +2831,9 @@ step.util = {
 			if (typeof bookOrderInBible === "number") {
 				var lastChapter = step.passageSelect.osisChapterJsword[bookOrderInBible][1];
 				if (typeof lastChapter === "number") {
+					if (typeof summary["chapter_1_icc_url"] === "string")
+						bookSummary += "<p>Links to ICC commentary are listed as <sup>ICC</sup></p>"
+
 					bookSummary += '<div style="margin:8px"><table><tbody><tr><th style="width:20%">Chapter</th><th>Description</th></tr>';
 					for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
 						var jsonName = "chapter_" + curChapter + "_header";
@@ -2854,7 +2857,7 @@ step.util = {
 								var titleTag = "";
 								if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
 									titleTag = ' title="page ' + summary[jsonName] + '"';
-								bookSummary += '<a href="' + icc_url + '" target="icc"' + titleTag + '> ICC commentary</a>';
+								bookSummary += '<a href="' + icc_url + '" target="icc"' + titleTag + '> <sup>ICC</sup></a>';
 							}
 							bookSummary += "</td></tr>";
 						}

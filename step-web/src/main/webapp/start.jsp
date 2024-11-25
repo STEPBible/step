@@ -245,6 +245,11 @@
                                 <span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px"><fmt:message key="passage_font_size_symbol" /></span>
                                 <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font" /></span>
                             </a>
+
+                            <a id="examples-icon1" style="padding-left:5px" class="navbarIconDesc hidden-sm hideen-md hidden-lg" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
+                                <i class="glyphicon glyphicon-question-sign hidden-sm hidden-md hidden-lg"></i>
+                            </a>
+
                             <span class="navbar-collapse collapse">
                                 <span class="dropdown">
                                     <a id="languages-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language" />">
@@ -272,8 +277,8 @@
             <%
                 }
             %>
-                                <a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
-                                    <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="faq" /></span>
+                                <a id="examples-icon2" class="hidden-xs" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
+                                    <i class="glyphicon glyphicon-question-sign hidden-xs"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="faq" /></span>
                                 </a>
                                 <span class="dropdown">
                                     <a id="more-icon" style="padding-left:5px" class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help" />">

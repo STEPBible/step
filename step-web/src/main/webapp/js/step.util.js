@@ -2827,22 +2827,25 @@ step.util = {
 			if (typeof bookOrderInBible === "number") {
 				var lastChapter = step.passageSelect.osisChapterJsword[bookOrderInBible][1];
 				if (typeof lastChapter === "number") {
-					if (typeof summary["chapter_1_icc_url"] === "string")
-						bookSummary += '<p>The <sup class="glyphicon glyphicon-book"></sup> icons are links to the ICC commentary on the Internet.</p>';
+					var hasIntroOrOutline = false;
 					if (typeof summary["chapter_intro_icc_url"] === "string") {
 						var titleTag = "";
-						bookSummary += '<p style="margin-left:8px;margin-bottom:0"><b>ICC introduction</b>';
 						if ((typeof summary["chapter_intro_icc_page"] === "string") && (summary["chapter_intro_icc_page"] !== ""))
 							titleTag = ' title="page ' + summary["chapter_intro_icc_page"] + '"';
-						bookSummary += ' <a href="' + summary["chapter_intro_icc_url"] + '" target="icc"' + titleTag + '><sup class="glyphicon glyphicon-book"></sup></a></p>';
+						bookSummary += ' <a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_intro_icc_url"] + '" target="icc"' + titleTag + '><b><u>ICC commentary introduction</u></b> <sup class="glyphicon glyphicon-book"></sup></a>';
+						hasIntroOrOutline = true;
 					}
 					if (typeof summary["chapter_outline_icc_url"] === "string") {
+						if (hasIntroOrOutline)
+							bookSummary += '<br>';
 						var titleTag = "";
-						bookSummary += '<p style="margin-left:8px;margin-bottom:0"><b>ICC outline</b>';
 						if ((typeof summary["chapter_outline_icc_page"] === "string") && (summary["chapter_outline_icc_page"] !== ""))
 							titleTag = ' title="page ' + summary["chapter_outline_icc_page"] + '"';
-						bookSummary += ' <a href="' + summary["chapter_outline_icc_url"] + '" target="icc"' + titleTag + '><sup class="glyphicon glyphicon-book"></sup></a></p>';
+						bookSummary += ' <a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_outline_icc_url"] + '" target="icc"' + titleTag + '><b><u>ICC commentary outline</u></b> <sup class="glyphicon glyphicon-book"></sup></a>';
+						hasIntroOrOutline = true;
 					}
+					if ((!hasIntroOrOutline) && (typeof summary["chapter_1_icc_url"] === "string"))
+						bookSummary += '<p style="margin-left:8px;margin-bottom:0">The <sup class="glyphicon glyphicon-book"></sup> icons are links to the ICC commentary.</p>';
 					bookSummary += '<div style="margin:8px"><table><tbody><tr><th style="width:20%">Chapter</th><th>Description</th></tr>';
 					for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
 						var jsonName = "chapter_" + curChapter + "_header";

@@ -524,7 +524,8 @@
 			$("#panel-icon").css("color", "black");
 			$("#stats-icon").css("color", "black");
 			$("#bookmark-icon").css("color", "black");
-			$("#examples-icon").css("color", "black");
+			$("#examples-icon1").css("color", "black");
+            $("#examples-icon2").css("color", "black");
 			$("#fonts-icon").css("color", "black");
 			$("#languages-icon").css("color", "black");
 			$(".icon-language").css("color", "black");

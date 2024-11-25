@@ -163,9 +163,9 @@ var PassageDisplayView = DisplayView.extend({
 //				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode === "en"))) &&
 		    if (step.util.bookOrderInBible(reference) > -1) { // }) {
                 var xgenObj = passageHtml.find('.xgen');
-                if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
+                if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text().trim().length < 2))) // sometimes there is a \n so length == 1 is OK
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
-                        reference + '\')" title="Show summary information" class="select-version stepButton">' + __s.book_summary + '</button>');
+                        reference + '\')" title="Show summary information" class="stepButton">' + __s.book_summary + '</button>');
             }
             if (!justLoadedTOS) step.util.addGrammar();
             var elmntsWithCaretChar = $("span:contains(^)");
@@ -173,6 +173,18 @@ var PassageDisplayView = DisplayView.extend({
                 if (elmntsWithCaretChar[ii].outerText.length == 1) {
                     $($("span:contains(^)")[ii]).css("vertical-align", "sub");
                     $($("span:contains(^)")[ii]).attr("var", "other")
+                }
+            }
+            var isDebugMode = $.getUrlVars().indexOf("debug") > -1;
+            var hasMatthewHenryConciseCommentary = bibleVersions.indexOf("MHCC") > -1;
+            if (hasMatthewHenryConciseCommentary || isDebugMode) {
+                var intros = passageHtml.find('.introduction');
+                if (intros.length > 0) {
+                    intros.show();
+                    if (isDebugMode && !hasMatthewHenryConciseCommentary) {
+                        intros.children().css('color', 'orange');
+                        alert("One of the selected Bible or commentary has the \"introduction\" tag.  They are usually hidden.  Since the URL has debug in the query string, they are unhidden in orange color.  If you do not need to review the \"introduction\" tag, you can ignore them.");
+                    }
                 }
             }
         },

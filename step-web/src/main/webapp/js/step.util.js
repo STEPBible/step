@@ -2838,7 +2838,7 @@ step.util = {
 						bookSummary += '<p style="margin-left:8px;margin-bottom:0"><b>ICC introduction</b>';
 						if ((typeof summary["chapter_intro_icc_page"] === "string") && (summary["chapter_intro_icc_page"] !== ""))
 							titleTag = ' title="page ' + summary["chapter_intro_icc_page"] + '"';
-						bookSummary += '<a href="' + summary["chapter_intro_icc_url"] + '" target="icc"' + titleTag + '> <sup class="glyphicon glyphicon-book"></sup></a></p>';
+						bookSummary += ' <a href="' + summary["chapter_intro_icc_url"] + '" target="icc"' + titleTag + '><sup class="glyphicon glyphicon-book"></sup></a></p>';
 					}
 					if (typeof summary["chapter_outline_icc_url"] === "string") {
 						var titleTag = "";
@@ -2870,7 +2870,7 @@ step.util = {
 								var titleTag = "";
 								if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
 									titleTag = ' title="page ' + summary[jsonName] + '"';
-								bookSummary += '<a href="' + icc_url + '" target="icc"' + titleTag + '> <sup class="glyphicon glyphicon-book"></sup></a>';
+								bookSummary += ' <a href="' + icc_url + '" target="icc"' + titleTag + '><sup class="glyphicon glyphicon-book"></sup></a>';
 							}
 							bookSummary += "</td></tr>";
 						}

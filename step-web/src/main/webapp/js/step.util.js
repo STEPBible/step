@@ -39,14 +39,10 @@
 
             var lang = step.state.language();
             var langParam = step.util.isBlank(lang) ? "" : "?lang=" + lang;
-			if (url.indexOf("|") > -1) {
-				console.log("Found | in " + url);
+			if (url.indexOf("|") > -1)
 				url = url.replace(/\|/g, "@");
-			}
-			if (url.indexOf("@@") > -1) {
-				console.log("Found @@ in " + url);
+			if (url.indexOf("@@") > -1)
 				url = url.replace(/@@/g, "@");
-			}
             return $.get(url + langParam, function (data, textStatus, jqXHR) {
                 if (step.state.responseLanguage == undefined) {
                     //set the language
@@ -939,7 +935,6 @@ step.util = {
 					var pos = tmpKey.indexOf("_font_" + fontName);
 					if (pos > -1) {
 						tmpPanelId = tmpKey.substr(6, pos - 6);
-						console.log("panel " + tmpKey + " " + tmpPanelId);
 						allPanelsWithSpecificFontChange.push(tmpPanelId);
 					}
 				}
@@ -2831,22 +2826,25 @@ step.util = {
 			if (typeof bookOrderInBible === "number") {
 				var lastChapter = step.passageSelect.osisChapterJsword[bookOrderInBible][1];
 				if (typeof lastChapter === "number") {
-					if (typeof summary["chapter_1_icc_url"] === "string")
-						bookSummary += '<p>The <sup class="glyphicon glyphicon-book"></sup> icons are links to the ICC commentary on the Internet.</p>';
+					var hasIntroOrOutline = false;
 					if (typeof summary["chapter_intro_icc_url"] === "string") {
 						var titleTag = "";
-						bookSummary += '<p style="margin-left:8px;margin-bottom:0"><b>ICC introduction</b>';
 						if ((typeof summary["chapter_intro_icc_page"] === "string") && (summary["chapter_intro_icc_page"] !== ""))
 							titleTag = ' title="page ' + summary["chapter_intro_icc_page"] + '"';
-						bookSummary += ' <a href="' + summary["chapter_intro_icc_url"] + '" target="icc"' + titleTag + '><sup class="glyphicon glyphicon-book"></sup></a></p>';
+						bookSummary += ' <a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_intro_icc_url"] + '" target="icc"' + titleTag + '><b><u>ICC commentary introduction</u></b> <sup class="glyphicon glyphicon-book"></sup></a>';
+						hasIntroOrOutline = true;
 					}
 					if (typeof summary["chapter_outline_icc_url"] === "string") {
+						if (hasIntroOrOutline)
+							bookSummary += '<br>';
 						var titleTag = "";
-						bookSummary += '<p style="margin-left:8px;margin-bottom:0"><b>ICC outline</b>';
 						if ((typeof summary["chapter_outline_icc_page"] === "string") && (summary["chapter_outline_icc_page"] !== ""))
 							titleTag = ' title="page ' + summary["chapter_outline_icc_page"] + '"';
-						bookSummary += ' <a href="' + summary["chapter_outline_icc_url"] + '" target="icc"' + titleTag + '><sup class="glyphicon glyphicon-book"></sup></a></p>';
+						bookSummary += ' <a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_outline_icc_url"] + '" target="icc"' + titleTag + '><b><u>ICC commentary outline</u></b> <sup class="glyphicon glyphicon-book"></sup></a>';
+						hasIntroOrOutline = true;
 					}
+					if ((!hasIntroOrOutline) && (typeof summary["chapter_1_icc_url"] === "string"))
+						bookSummary += '<p style="margin-left:8px;margin-bottom:0">The <sup class="glyphicon glyphicon-book"></sup> icons are links to the ICC commentary.</p>';
 					bookSummary += '<div style="margin:8px"><table><tbody><tr><th style="width:20%">Chapter</th><th>Description</th></tr>';
 					for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
 						var jsonName = "chapter_" + curChapter + "_header";
@@ -4396,7 +4394,6 @@ step.util = {
 					}
 				}
 				if (indexToUniqueStrongArry == -1) {
-					console.log("something wrong, cannot locate original search Strong in getVocabMorphInfoFromJson");
 					callBackLoadDefFromAPI(callBack2Param);
 					return;
 				}
@@ -5063,10 +5060,8 @@ step.util = {
                 var parent = curElement.parent();
                 var height = parent.height();
 				if (height < 1) continue;
-                if (height < top) { // If the line height is shorter than the position of the Bible feature display, add height
-					console.log(parent.text() + " h: " + height + ' t: ' + top);
+                if (height < top) // If the line height is shorter than the position of the Bible feature display, add height
                     parent.height(top + 15);
-				}
             }
         }
 	},

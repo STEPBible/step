@@ -586,7 +586,6 @@ var MainSearchView = Backbone.View.extend({
                             break;
                         default: // The following line probably should not have "+ encodeURIComponent(options[ii].item)" because it is repeated two lines later
                             searchArgs += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
-							console.log("Check view_main_search.js line 603 " + options[ii].itemType + "=" + encodeURIComponent(options[ii].item));
                     }
                     searchArgs += "=" + encodeURIComponent(options[ii].item.value);
                     break;
@@ -605,7 +604,6 @@ var MainSearchView = Backbone.View.extend({
                     break;
                 default:
                     args += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
-                    console.log("default search: " + options[ii].itemType + "=" + encodeURIComponent(options[ii].item));
                     break;
             }
         }
@@ -623,7 +621,6 @@ var MainSearchView = Backbone.View.extend({
             args += (args.length > 0) ? URL_SEPARATOR : "";
             args += refArgs;
         }
-        console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
         if (numOfBibleVersions > 1) step.util.showIntroOfMultiVersion();
     },
@@ -1030,7 +1027,6 @@ var MainSearchView = Backbone.View.extend({
         }
     },
     showAnalysis: function () {
-        console.log("Showing stats");
         //trigger side bar
         require(["sidebar"], function (module) {
             //read up on requirejs to see if init can form part of download call
@@ -1051,8 +1047,6 @@ var MainSearchView = Backbone.View.extend({
         }
     },
     showBooks: function () {
-        console.log("Triggering book selection");
-
         var dropdownOfBooks = $("<select>");
         var versions = _.template(
             "<% _.each(versions, function(version, i) { %> <option value='<%= version.item.initials %>'><%= version.item.name %></option> <% }) %>")(

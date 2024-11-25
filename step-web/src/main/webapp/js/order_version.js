@@ -61,7 +61,6 @@ function saveVersionOrder() {
     var url = allVersions + allReferences;
     step.util.closeModal("orderVersionModal");
     if (!step.util.checkFirstBibleHasPassage(newMasterVersion, osisIds, otherVersions)) return;
-    console.log("navigateSearch from order_version.html: " + url)
     step.router.navigateSearch(url, true, true);
 }
 

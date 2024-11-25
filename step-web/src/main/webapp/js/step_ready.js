@@ -325,7 +325,7 @@
         var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
         if (isNaN(stepUsageCount)) stepUsageCount = 0;
         var urlVars = $.getUrlVars();
-        if ((urlVars.indexOf("skipwelcome") > -1) || (urlVars.indexOf("clickvocab") > -1) ||
+        if ((urlVars.indexOf("skipwelcome") > -1) || (urlVars.indexOf("clickvocab") > -1) || (stepUsageCount > 30) ||
             (step.touchDevice && !step.touchWideDevice) ) { // phones do not have the width to display the Welcome to STEP panel
             step.util.showOrHideTutorial('true'); // URL has skipwelcome
             if (urlVars.indexOf("clickvocab") > -1) {

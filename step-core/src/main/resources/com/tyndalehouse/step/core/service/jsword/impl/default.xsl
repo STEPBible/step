@@ -510,7 +510,7 @@
                                     <!-- for rtl languages add a space after the colon for correct display of ch:vs -->
                                     <xsl:value-of select="concat($thebook, ' ', $chapter, ': ', $myverse)"/>
                                 </xsl:when>
-                                <xsl:when test="$lang = 'he' or $lang = 'hbo' or $lang = 'fa' or $lang = 'ur' or $lang = 'syr'">
+                                <xsl:when test="$lang = 'he' or $lang = 'fa' or $lang = 'ur' or $lang = 'syr'">
                                     <!-- for rtl languages add a space after the colon for correct display of ch:vs -->
                                     <xsl:value-of select="concat($thebook, ' ', $ch, ': ', $vs)"/>
                                 </xsl:when>
@@ -587,7 +587,7 @@
                                 <!-- for rtl languages add a space after the colon for correct display of ch:vs -->
                                 <xsl:value-of select="concat('(', $version, ': ', $thebook, ' ', $chapter, ': ', $myverse, ')')"/>
                             </xsl:when>
-                            <xsl:when test="$lang = 'he' or $lang = 'hbo' or $lang = 'fa' or $lang = 'ur' or $lang = 'syr'">
+                            <xsl:when test="$lang = 'he' or $lang = 'fa' or $lang = 'ur' or $lang = 'syr'">
                                 <!-- for rtl languages add a space after the colon for correct display of ch:vs -->
                                 <xsl:value-of select="concat('(', $version, ': ', $thebook, ' ', $ch, ': ', $vs, ')')"/>
                             </xsl:when>

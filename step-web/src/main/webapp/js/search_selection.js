@@ -1416,7 +1416,7 @@ step.searchSelect = {
 					var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 					var suggestion = data[i].suggestion;
 					if ((suggestionType == "greekMeanings" || suggestionType == "hebrewMeanings") && thingsWithNames.includes(suggestion.type)) {
-						mainStrong = suggestion.strongNumber
+						var mainStrong = suggestion.strongNumber
 						if (!namesInclusion.includes(mainStrong)) {
 							namesInclusion.push(mainStrong)
 							var newName = {}
@@ -1425,10 +1425,7 @@ step.searchSelect = {
 							strongs.push(mainStrong)
 							newName["name"] = suggestion.gloss
 							var name = newName["name"]
-							// get frequency for mainStrong and all words in the detail lexical tag.
 							var resultArray = step.searchSelect._getSuggestedFrequency(data[i].suggestion, allVersions);
-							newName["count"] = resultArray[0] + resultArray[1]; // OT count + NT count
-							console.log(mainStrong + ": count OT: " + resultArray[0] + " NT: " + resultArray[1]);
 							var details = suggestion._detailLexicalTag
 							if (details) {
 								newName["alternateNames"] = []
@@ -1438,6 +1435,13 @@ step.searchSelect = {
 									var otherStrong = element[1]
 									if (!strongs.includes(otherStrong)) {
 										strongs.push(otherStrong)
+										var alternateSuggestion = {}
+										alternateSuggestion["strongNumber"] = otherStrong
+										alternateSuggestion["popularityList"] = element[6]
+										var alternateResultArray = step.searchSelect._getSuggestedFrequency(alternateSuggestion, allVersions);
+										resultArray[0] += alternateResultArray[0]
+										resultArray[1] += alternateResultArray[1]
+										// step.searchSelect.getVocabInfoForShowAugStrongLite(otherStrong)
 									}
 									var otherName = element[2]
 									if (!alternateNames.includes(otherName) && !(otherName === name)) {
@@ -1448,9 +1452,10 @@ step.searchSelect = {
 									delete newName["alternateNames"]
 								}
 							}
+							newName["count"] = resultArray[0] + resultArray[1]; // OT count + NT count
+							console.log(mainStrong + ": count OT: " + resultArray[0] + " NT: " + resultArray[1]);
 							names.push(newName)
 						}
-						// step.searchSelect.getVocabInfoForShowAugStrongLite(strong)
 					}
 					switch(suggestionType) {
 						case GREEK:
@@ -1684,7 +1689,6 @@ step.searchSelect = {
 					var grandTotal = 0;
 					var allStrongs = "";
 					for (var count = 0; count < amalgamation["conglomeration"].length; count ++) {
-						grandTotal += amalgamation["conglomeration"][count].count;
 						if (allStrongs !== "") allStrongs += ",";
 						sortedAllStrongs = amalgamation["conglomeration"][count].strongs.sort().join(",");
 						if (alreadyDisplayedStrongsSearch.includes(sortedAllStrongs)) {
@@ -1693,6 +1697,7 @@ step.searchSelect = {
 							console.log("Skipped duplicate name: " + sortedAllStrongs);
 						}
 						else {
+							grandTotal += amalgamation["conglomeration"][count].count;
 							allStrongs += amalgamation["conglomeration"][count].strongs.join(",");
 							alreadyDisplayedStrongsSearch.push(sortedAllStrongs);
 						}

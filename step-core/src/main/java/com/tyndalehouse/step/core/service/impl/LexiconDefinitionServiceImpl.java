@@ -72,7 +72,8 @@ public class LexiconDefinitionServiceImpl implements LexiconDefinitionService {
         if (userLanguage.equalsIgnoreCase("es")) suggestion.setGloss(lexiconDefinition.get("es_Gloss"));
         else if (userLanguage.equalsIgnoreCase("zh")) suggestion.setGloss(lexiconDefinition.get("zh_Gloss"));
         else if (userLanguage.equalsIgnoreCase("zh_tw")) suggestion.setGloss(lexiconDefinition.get("zh_tw_Gloss"));
-		else if (userLanguage.equalsIgnoreCase("km")) suggestion.setGloss(lexiconDefinition.get("km_Gloss"));
+        else if (userLanguage.equalsIgnoreCase("fr")) suggestion.setGloss(lexiconDefinition.get("fr_Gloss"));
+        else if (userLanguage.equalsIgnoreCase("km")) suggestion.setGloss(lexiconDefinition.get("km_Gloss"));
         else suggestion.setGloss(lexiconDefinition.get("stepGloss"));
         suggestion.setMatchingForm(lexiconDefinition.get("accentedUnicode"));
         suggestion.setStepTransliteration(lexiconDefinition.get("stepTransliteration"));

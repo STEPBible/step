@@ -328,6 +328,9 @@ public class JSwordStrongNumberHelper {
             else if (userLanguage.equalsIgnoreCase("zh_tw")) {
                 ls.set_zh_tw_Gloss(d.get("zh_tw_Gloss"));
             }
+            else if (userLanguage.equalsIgnoreCase("fr")) {
+                ls.set_es_Gloss(d.get("fr_Gloss"));
+            }
 			else if (userLanguage.equalsIgnoreCase("km")) {
                 ls.set_es_Gloss(d.get("km_Gloss"));
             }

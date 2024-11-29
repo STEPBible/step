@@ -2055,7 +2055,9 @@
         <xsl:variable name="hasWorthyText">
             <xsl:value-of select=".//verse or .//title[@canonical='true']"/>
         </xsl:variable>
-        <xsl:if test="$hasWorthyText = 'true' or cell[@role='label']">
+        <xsl:choose>
+        <!-- <xsl:if test="$hasWorthyText = 'true' or cell[@role='label']"> -->
+        <xsl:when test="$hasWorthyText = 'true' or cell[@role='label']">
             <xsl:choose>
                 <xsl:when test="$Interleave = 'true'">
                     <xsl:choose>
@@ -2101,7 +2103,15 @@
                     </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>
-        </xsl:if>
+        </xsl:when>
+            <xsl:otherwise>
+                <xsl:if test="not($Interleave = 'true')">
+                    <tr>
+                        <xsl:apply-templates select="cell"/>
+                    </tr>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="outputComparingTableHeader">

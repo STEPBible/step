@@ -1385,7 +1385,7 @@ step.searchSelect = {
 			}
 			var names = []
 			var namesInclusion = []
-			var thingsWithNames = ["man"]
+			var thingsWithNames = ["man", "king"]
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
 			// if ((searchLangSelected === "he") || (searchLangSelected === "gr"))
 				url += "//" + searchLangSelected;
@@ -1695,6 +1695,7 @@ step.searchSelect = {
 							amalgamation["conglomeration"].splice(count, 1);  // remove from array, it is a duplicate
 							count --;
 							console.log("Skipped duplicate name: " + sortedAllStrongs);
+							allStrongs = allStrongs.slice(0, -1)
 						}
 						else {
 							grandTotal += amalgamation["conglomeration"][count].count;
@@ -2442,8 +2443,10 @@ step.searchSelect = {
 				}
 				var newSuggestion = $('<a style="padding:0px' + additionalCSS + '"' + titleText +
 						aTagOnClick +
-						'>' + text2Display + "</a>");
-				this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0], newSuggestion);
+						'>' + text2Display + "</a>");	
+				if (!($(currentSearchSuggestionElement).is($('#searchResultsnames')))) {	
+					this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0], newSuggestion);
+				}
 				currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
 					.append(newSuggestion)
 					.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));

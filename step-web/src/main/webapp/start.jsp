@@ -241,14 +241,15 @@
                             <a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
                                 <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="bookmarks" /></span>
                             </a>
-                            <a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
-                                <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="faq" /></span>
-                            </a>
-
                             <a id="fonts-icon" style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.showFontSettings();" title="<fmt:message key="font_sizes" />">
                                 <span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px"><fmt:message key="passage_font_size_symbol" /></span>
                                 <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font" /></span>
                             </a>
+
+                            <a id="examples-icon1" style="padding-left:5px" class="navbarIconDesc hidden-sm hideen-md hidden-lg" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
+                                <i class="glyphicon glyphicon-question-sign hidden-sm hidden-md hidden-lg"></i>
+                            </a>
+
                             <span class="navbar-collapse collapse">
                                 <span class="dropdown">
                                     <a id="languages-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language" />">
@@ -263,7 +264,7 @@
                                 </span>
             <%
                 if (!appManager.isLocal()) {
-            %> 
+            %>
                                 <a style="padding-left:5px;vertical-align:top" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
                                     <svg viewBox="0 0 18 21" width="18" height="21">
                                         <path d="M 0 3 L 18 3, 18 16, 16 16, 16 21, 12 16, 0 16, 0 3" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>
@@ -276,6 +277,9 @@
             <%
                 }
             %>
+                                <a id="examples-icon2" class="hidden-xs" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
+                                    <i class="glyphicon glyphicon-question-sign hidden-xs"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="faq" /></span>
+                                </a>
                                 <span class="dropdown">
                                     <a id="more-icon" style="padding-left:5px" class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help" />">
                                         <i class="glyphicon glyphicon-option-vertical"></i><span style="vertical-align:bottom;line-height:10px" class="navbarIconDesc"><fmt:message key="more" /></span>

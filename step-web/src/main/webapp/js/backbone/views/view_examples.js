@@ -1,14 +1,17 @@
 var ExamplesView = Backbone.View.extend({
-	biblesWithMorph: "",
 	exampleTemplate: _.template(
 		'<div id="welcomeExamples" class="passageContainer examplesContainer">' +
 			'<a class="closeColumn" title="<%= __s.close %> />" ontouchstart="step.util.showOrHideTutorial(\'true\')">' +
 				'<i class="glyphicon glyphicon-remove"></i>' +
 			'</a>' +
 			'<h3><%= __s.simple_intro_welcome %></h3>' +
-			'<span style="background-color:lightyellow;font-size:16px;font-weight:bold"><%= this.biblesWithMorph %> now have morphology!    </span>' +
-			'<a style="background-color:lightyellow" class="videoGuide" href="javascript:step.util.showVideoModal(\'esv_morph.gif\', 66)">Video introduction  ' +
+			'<span style="background-color:lightyellow;font-size:16px"><b>The BibleProject</b> </span>' +
+			'<a style="background-color:lightyellow" class="videoGuide" href="javascript:step.util.showVideoModal(\'BibleProject.gif\', 23)">' +
 				'<span class="glyphicon glyphicon-play-circle" style="background-color:lightyellow;font-size:16px"></span></a>' +
+			'<span style="background-color:lightyellow;font-size:16px"> and <b>ICC commentaries</b> </span>' +
+			'<a style="background-color:lightyellow" class="videoGuide" href="javascript:step.util.showVideoModal(\'ICC.gif\', 26)">' +
+				'<span class="glyphicon glyphicon-play-circle" style="background-color:lightyellow;font-size:16px"></span></a>' +
+			'<span style="background-color:lightyellow;font-size:16px"> are now available!</span>' +
 			'<br><br><p><%= __s.simple_intro %></p>' +
 			'<div class="accordion-row" data-row="0">' +
 				'<h5 class="accordion-heading stepButton"><span id="g1q0" style="float:;">How do I read passages in Bibles?</span>' +
@@ -285,12 +288,6 @@ var ExamplesView = Backbone.View.extend({
     },
     render: function () {
 		if (($('#welcomeExamples').length == 0) || (step.touchDevice && !step.touchWideDevice)) {
-			this.biblesWithMorph = (step.state.isLocal()) ? "ESV" : "ESV, NASB2020 and NET2full";
-			if (step.userLanguageCode.substring(0,2) === "zh") {
-				if (this.biblesWithMorph.indexOf("and") == -1) this.biblesWithMorph = " and " + this.biblesWithMorph;
-				else this.biblesWithMorph = ", " + this.biblesWithMorph;
-				this.biblesWithMorph = "和合本" + this.biblesWithMorph;
-			}
 			if (step.touchDevice && !step.touchWideDevice) {
 				step.util.showLongAlert("", "<b>" + __s.welcome_to_step + "</b>", [ this.exampleTemplate() ]);
 				$(".closeColumn").click(function (ev) {

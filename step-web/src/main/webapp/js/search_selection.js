@@ -1385,7 +1385,7 @@ step.searchSelect = {
 			}
 			var names = []
 			var namesInclusion = []
-			var thingsWithNames = ["man", "king"]
+			var thingsWithNames = ["man", "woman", "king", "queen", "judge", "place", "group", "prophet"]
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
 			// if ((searchLangSelected === "he") || (searchLangSelected === "gr"))
 				url += "//" + searchLangSelected;

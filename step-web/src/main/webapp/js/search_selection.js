@@ -1391,6 +1391,15 @@ step.searchSelect = {
 			step["SearchCount" + TEXT_SEARCH] = 0;
 			$.getJSON(url, function (data) {
 				var alreadyShownStrong = [];
+				var activePassageData = step.util.activePassage().get("searchTokens") || [];
+				var allVersions = "";
+				for (var l = 0; l < activePassageData.length; l++) {
+					var itemType = activePassageData[l].itemType ? activePassageData[l].itemType : activePassageData[l].tokenType
+					if (itemType === VERSION) {
+						if (allVersions !== "") allVersions += ",";
+						allVersions += activePassageData[l].item.shortInitials;
+					}
+				}
 				for (var i = 0; i < data.length; i++) {
 					var skipBecauseOfZeroCount = false;
 					var suggestionType = data[i].itemType;
@@ -1443,15 +1452,6 @@ step.searchSelect = {
 								var str2Search = "";
 								var suffixToDisplay = "";
 								var suffixTitle = "";
-								var activePassageData = step.util.activePassage().get("searchTokens") || [];
-								var allVersions = "";
-								for (var l = 0; l < activePassageData.length; l++) {
-									var itemType = activePassageData[l].itemType ? activePassageData[l].itemType : activePassageData[l].tokenType
-									if (itemType === VERSION) {
-										if (allVersions !== "") allVersions += ",";
-										allVersions += activePassageData[l].item.shortInitials;
-									}
-								}
 								if (suggestionType === SUBJECT_SEARCH) {
 									text2Display = data[i].suggestion.value;
 									str2Search = text2Display;

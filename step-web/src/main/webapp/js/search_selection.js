@@ -1387,7 +1387,6 @@ step.searchSelect = {
 			var namesInclusion = []
 			var thingsWithNames = ["man", "woman", "king", "queen", "judge", "place", "group", "prophet"]
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
-			// if ((searchLangSelected === "he") || (searchLangSelected === "gr"))
 				url += "//" + searchLangSelected;
 			url += "?lang=" + step.searchSelect.userLang;
 			step["SearchCount" + GREEK] = 0;

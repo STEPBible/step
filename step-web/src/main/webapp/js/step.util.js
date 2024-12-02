@@ -2898,8 +2898,8 @@ step.util = {
 				var titleTag = "";
 				if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
 					titleTag = ' title="page ' + summary[jsonName] + '"';
-				chptSummary += '<span style="margin-left:8px"><b>ICC Commentary for chapter ' + chapterNum + '</b> </span>' +
-					'<a href="' + icc_url + '" target="icc"' + titleTag + '><sup class="glyphicon glyphicon-book"></sup></a>';
+				chptSummary += '<a style="margin-left:8px;font-size:14px" href="' + icc_url + '" target="icc"' + titleTag + '><b><u>ICC Commentary for chapter ' + chapterNum + '</u></b> ' +
+					'<sup class="glyphicon glyphicon-book"></sup></a>';
 			}
 			chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
             if (chapterNum > 1) chptSummary +=

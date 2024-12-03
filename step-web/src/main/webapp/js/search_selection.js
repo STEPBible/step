@@ -775,8 +775,6 @@ step.searchSelect = {
 			if (curUserInput.length > 2) {
 				if (step.searchSelect.previousUserInput !== curUserInput)
 					$("#warningMessage").text("No result for your search word.  Please update your search word.");
-				else
-					$("#searchButton").click();
 			}
 		}
 	},

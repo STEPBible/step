@@ -29,7 +29,7 @@ sub getLexTags {
             $transliteration = "";
             $searchResultRange = "";
         }
-        elsif ($line =~ m/^\@StrNo=\t/) {
+        elsif ($line =~ m/^\@dStrNo=\t/) {
             $lastStrongNum = $';
             $unitedReason = "";
             $stepGloss = "";
@@ -55,10 +55,7 @@ sub getLexTags {
         elsif ($line =~ m/^\@STEPUnicodeAccented=\t/) {
             $unicodeAccented = $';
         }
-        elsif ($line =~ m/^\@STEPTranslitOfStr=\t/) {
-            $transliteration = $';
-        }
-        elsif (($line =~ m/^\@StrTranslit=\t/) && ($transliteration eq "")) {
+        elsif ($line =~ m/^\@STEPTranslit=\t/) {
             $transliteration = $';
         }        
     }
@@ -118,7 +115,7 @@ while (<FH>) {
         $lexicalGroup = "";
         $stepRelatedNos2 = "";
     }
-    elsif ($line =~ m/^\@StrNo=\t/) {
+    elsif ($line =~ m/^\@dStrNo=\t/) {
         $lastStrongNum = $';
         $lexicalGroup = "";
         $stepRelatedNos2 = "";

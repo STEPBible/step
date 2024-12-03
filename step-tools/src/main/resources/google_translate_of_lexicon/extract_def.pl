@@ -89,7 +89,7 @@ while (<FH>) {
     chomp($_);
     $_ =~ s/\r//;
 	my $line = $_;
-	if ($line =~ /^\@StrNo=\t/) {
+	if ($line =~ /^\@dStrNo=\t/) {
 		$lastStrongNum = trim($');
 	}
 	elsif ($line =~ m/^\@StepGloss=\t/) {

@@ -3,6 +3,8 @@
 use warnings;
 use strict;
 
+print "This script is probably not needed anymore\n";
+exit;
 my $number_args = $#ARGV + 1;  
 if ($number_args != 1) {  
     print "Please provide the file name of the lexicon file as a command line argument.\n";  

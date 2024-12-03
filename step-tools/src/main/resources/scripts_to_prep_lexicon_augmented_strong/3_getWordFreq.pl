@@ -17,7 +17,7 @@ sub collectWordsUsedByAStrong {
 	else {
 		$testament = "";
 	}
-	my $server = "https://dev.stepbible.org";
+	my $server = "http://localhost:8080";
 	#if ( 	((($version eq "SBLG") || ($version eq "LXX")) && ($strongNum =~ m/^H\d/)) ||
 	#		((($version eq "OHB") || ($version eq "THOT")) && ($strongNum =~ m/^G\d/)) ) {
 	#		return;

@@ -9,7 +9,7 @@ sub trim {
 }
 
 sub addFreqToStepLexicon {
-    my $findPattern = '^@StrNo=\t';
+    my $findPattern = '^@dStrNo=\t';
     my $found = 0;
 	my $verifyCount = 0;
 	my $curCode = "";

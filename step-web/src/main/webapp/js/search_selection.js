@@ -594,7 +594,7 @@ step.searchSelect = {
 				});
 			});
 			$('textarea#userTextInput').focus();
-			this._handleEnteredSearchWord(null, this.searchUserInput);
+			this._handleEnteredSearchWord(null, this.searchUserInput.replaceAll("*", ""));
 		}
 		else if ((this.searchModalCurrentPage == 2) || (this.searchModalCurrentPage == 3)) {
 			this.searchOnSpecificType = "";

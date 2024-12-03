@@ -770,7 +770,6 @@
 									<replacement><token>_buildRangeHeaderAndTable([:(])</token><value>zK$1</value></replacement>
 									<replacement><token>_buildRangeHeaderAndSkeleton([:(])</token><value>zL$1</value></replacement>
 									<replacement><token>_buildRangeKeyboard([:(])</token><value>zM$1</value></replacement>
-									<replacement><token>_updateRange([:(])</token><value>zN$1</value></replacement>
 									<replacement><token>_createSingleRange([:(])</token><value>zO$1</value></replacement>
 									<replacement><token>_isBookInGroup([:(])</token><value>zP$1</value></replacement>
 									<replacement><token>_getBookDisplayName([:(])</token><value>zQ$1</value></replacement>

@@ -1425,6 +1425,8 @@ step.searchSelect = {
 							newName["name"] = suggestion.gloss
 							var name = newName["name"]
 							var resultArray = step.searchSelect._getSuggestedFrequency(data[i].suggestion, allVersions);
+							var briefDef = suggestion.briefDef
+							newName["brief"] = briefDef
 							var details = suggestion._detailLexicalTag
 							if (details) {
 								newName["alternateNames"] = []
@@ -1709,7 +1711,7 @@ step.searchSelect = {
 						suggestionType = "hebrewMeanings";
 						limitType = "hebrew";	
 					}
-					var text2Display = "The name \"" + name;
+					var text2Display = "The name \"" + name + "\"";
 					var prefixToDisplay = "";
 					var suffixToDisplay = " occurs in total - " + grandTotal + " x";
 					var suffixTitle = "";
@@ -1733,7 +1735,8 @@ step.searchSelect = {
 							alternateNames += ") "
 						}
 						var strongs2Search = element.strongs.join(",");
-						var text2Display = "A brief description of " + element["name"]  + " " + alternateNames;
+						// var text2Display = "A brief description of " + element["name"]  + " " + alternateNames;
+						var text2Display = element["brief"]  + " " + alternateNames;
 						var prefixToDisplay = iteration + ") ";
 						var suffixToDisplay = "- " + element["count"] + " x";
 						var suffixTitle = "";

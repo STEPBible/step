@@ -152,7 +152,7 @@ with open(lexiconFile,'r', encoding="utf8") as file:
         line = file.readline()
         if not line:
             break
-        if line[0:8] == "@StrNo=\t":
+        if line[0:8] == "@dStrNo=\t":
             currentStrong = line[8:].strip('\n')
             if currentStrong[-1].isnumeric():
                 strongNumbers.append(currentStrong)

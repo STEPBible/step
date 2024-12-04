@@ -1592,7 +1592,8 @@ step.searchSelect = {
 													string2Show = string2Show.replaceAll("*", "");
 												suffixToDisplay += "(" + __s.words_that_start_with + " " + string2Show + ")";
 											}
-											suffixToDisplay += " " + data[i].count + " x";
+											if (step.searchSelect.searchRange === "Gen-Rev")
+												suffixToDisplay += " " + data[i].count + " x";
 										}
 									}
 									else if (suggestionType === SUBJECT_SEARCH) {
@@ -1609,7 +1610,7 @@ step.searchSelect = {
 													suggestionType = NAVE_SEARCH_EXTENDED;
 											}
 										}
-										if (data[i].count > 0)
+										if ((data[i].count > 0) && (step.searchSelect.searchRange === "Gen-Rev"))
 											suffixToDisplay = " " + data[i].count + " x";
 									}
 									step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,

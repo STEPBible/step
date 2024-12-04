@@ -379,6 +379,8 @@ step.searchSelect = {
 			}
 			else
 				currentSetting = (localStorageSetting === "true");
+			if ((optionName === "frequency") && (step.searchSelect.searchRange !== "Gen-Rev"))
+				currentSetting = false;
 			if (currentSetting) {
 				$(".srch" + optionName).show();
 				if ((optionName === "transliteration") || (optionName === "original_language")) wordsAroundDash ++;
@@ -1592,8 +1594,7 @@ step.searchSelect = {
 													string2Show = string2Show.replaceAll("*", "");
 												suffixToDisplay += "(" + __s.words_that_start_with + " " + string2Show + ")";
 											}
-											if (step.searchSelect.searchRange === "Gen-Rev")
-												suffixToDisplay += " " + data[i].count + " x";
+											suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>';
 										}
 									}
 									else if (suggestionType === SUBJECT_SEARCH) {
@@ -1610,8 +1611,8 @@ step.searchSelect = {
 													suggestionType = NAVE_SEARCH_EXTENDED;
 											}
 										}
-										if ((data[i].count > 0) && (step.searchSelect.searchRange === "Gen-Rev"))
-											suffixToDisplay = " " + data[i].count + " x";
+										if (data[i].count > 0)
+											suffixToDisplay = '<span class="srchFrequency"> ' + data[i].count + ' x</span>';
 									}
 									step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,

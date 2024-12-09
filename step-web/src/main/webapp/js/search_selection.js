@@ -273,6 +273,8 @@ step.searchSelect = {
 			this.strikeOutType = "";
 			this.strikeOutToken = "";
 		}
+		if ($('textarea#userTextInput').val() !== "") // Click on the search button if user provided a search word previously
+			$("#searchButton").click();
 	},
 	updateAdvancedSearchElements: function() {
 //		var advancedSearchInStorage = step.util.localStorageGetItem("advanced_search");
@@ -379,8 +381,6 @@ step.searchSelect = {
 			}
 			else
 				currentSetting = (localStorageSetting === "true");
-			if ((optionName === "frequency") && (step.searchSelect.searchRange !== "Gen-Rev"))
-				currentSetting = false;
 			if (currentSetting) {
 				$(".srch" + optionName).show();
 				if ((optionName === "transliteration") || (optionName === "original_language")) wordsAroundDash ++;
@@ -1637,6 +1637,8 @@ step.searchSelect = {
 				}
 
 				step.searchSelect.handleLanguageButton();
+				if (step.searchSelect.searchRange !== "Gen-Rev")
+					$(".srchFrequency").hide();
 			}).fail(function() {
                 changeBaseURL();
             });

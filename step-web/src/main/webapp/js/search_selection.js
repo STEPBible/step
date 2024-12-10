@@ -1208,7 +1208,7 @@ step.searchSelect = {
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
-		$('#srchModalBackButton').prop('title', 'Updating search range and return to search.');
+		$('#srchModalBackButton').prop('title', 'Update search range and return to search.');
 		if ($(clicked_id2).hasClass('stepPressedButton')) {
 			$(clicked_id2).removeClass('stepPressedButton');
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
@@ -1230,7 +1230,7 @@ step.searchSelect = {
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
-		$('#srchModalBackButton').prop('title', 'Updating search range and return to search.');
+		$('#srchModalBackButton').prop('title', 'Update search range and return to search.');
 		if ($(clicked_id2).hasClass('stepPressedButton')) {
 			$(clicked_id2).removeClass('stepPressedButton');
 			$("button[id^='" + clicked_id + "b']").each(function (i, el) {
@@ -1255,7 +1255,7 @@ step.searchSelect = {
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
 		if (!calledByInitialization)
-			$('#srchModalBackButton').prop('title', 'Updating search range and return to search.');
+			$('#srchModalBackButton').prop('title', 'Update search range and return to search.');
 		if ($(clicked_id2).hasClass('stepPressedButton')) {
 			$(clicked_id2).removeClass('stepPressedButton');
 			var regex = /b\d{1,2}$/;

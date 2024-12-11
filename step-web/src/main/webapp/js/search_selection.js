@@ -1765,7 +1765,7 @@ step.searchSelect = {
 						var strongs2Search = element.strongs.join(",");
 						var text2Display = element["brief"]  + " " + alternateNames;
 						var prefixToDisplay = iteration + ") ";
-						var suffixToDisplay = "- " + element["count"] + " x";
+						var suffixToDisplay = '<span class="srchFrequency"> - ' + element["count"] + ' x</span>';
 						var suffixTitle = "";
 						var needIndent = true;
 						var userInput = "";

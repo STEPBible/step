@@ -11,6 +11,7 @@ step.searchSelect = {
 	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details", "Immediate_lookup"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
+	previousUserInput: "",
 	searchRange: "Gen-Rev",
 	previousSearchTokens: [],
 	numOfPreviousSearchTokens: 0,
@@ -118,6 +119,7 @@ step.searchSelect = {
         this.searchOnSpecificType = "";
         this.searchModalCurrentPage = 1;
 		$("#langButtonForm").show();
+		this.previousUserInput = this.searchUserInput.replaceAll("*", "");
         this.searchUserInput = "";
         this.searchRange = "Gen-Rev";
         this.previousSearchTokens = [];
@@ -271,6 +273,8 @@ step.searchSelect = {
 			this.strikeOutType = "";
 			this.strikeOutToken = "";
 		}
+		if ($('textarea#userTextInput').val() !== "") // Click on the search button if user provided a search word previously
+			$("#searchButton").click();
 	},
 	updateAdvancedSearchElements: function() {
 //		var advancedSearchInStorage = step.util.localStorageGetItem("advanced_search");
@@ -505,14 +509,19 @@ step.searchSelect = {
 						$('textarea#enterRange').focus();
 						$('textarea#enterRange').val(userInput);
 					}
-					else $("#updateRangeButton").show();
+					else {
+						$('#srchModalBackButton').prop('title', 'Update search range and return to search.');
+						$("#updateRangeButton").show();
+					}
 				}).fail(function() {
 					changeBaseURL();
 				});
 			}
 			else {
-				if ((userInput.length == 0) && (step.searchSelect.searchRange.length > 0) && (step.searchSelect.searchRange !== "Gen-Rev"))
+				if ((userInput.length == 0) && (step.searchSelect.searchRange.length > 0) && (step.searchSelect.searchRange !== "Gen-Rev")) {
+					$('#srchModalBackButton').prop('title', 'Update search range and return to search.');
 					$("#updateRangeButton").show();
+				}
 				else $("#updateRangeButton").hide();
 			}
 		}
@@ -563,7 +572,11 @@ step.searchSelect = {
 		$('#quickLexicon').remove();
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
-		$("#updateRangeButton").hide();
+		if ($("#updateRangeButton").is(":visible")) {
+			$("#updateRangeButton").hide();
+			$("#updateRangeButton").click();
+			return;
+		}
 		$("#enterRange").remove();
 		showPreviousSearch(); // The function will determine if it need to show previous search
 		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
@@ -583,7 +596,7 @@ step.searchSelect = {
 				});
 			});
 			$('textarea#userTextInput').focus();
-			this._handleEnteredSearchWord(null, this.searchUserInput);
+			this._handleEnteredSearchWord(null, this.searchUserInput.replaceAll("*", ""));
 		}
 		else if ((this.searchModalCurrentPage == 2) || (this.searchModalCurrentPage == 3)) {
 			this.searchOnSpecificType = "";
@@ -635,7 +648,9 @@ step.searchSelect = {
 			'</div><br><br>' +
 			'<span id="warningMessage" style="color:red;width:90%;float:left"></span><br>' +
 
-			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:50%" placeholder="' + __s.enter_search_word + '"></textarea>' + // size 16px so the mobile devices will not expand
+			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:50%" placeholder="' + __s.enter_search_word + '">' +
+				step.searchSelect.previousUserInput +
+			'</textarea>' + // size 16px so the mobile devices will not expand
 			'<button id="searchButton" style="vertical-align:top;display:none;padding-left:10px;padding-right:10px" class="stepButton primaryLightBg" onclick=step.searchSelect._handleEnteredSearchWord() title="Get suggested search">' +
 				'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
 			'</button>' +
@@ -763,8 +778,11 @@ step.searchSelect = {
 		else {
 			$("#basic_search_help_text").html(basic_search_help_text);
 			$("#basic_search_help_text").show();
-			if ($('textarea#userTextInput').val().length > 2)
-				$("#warningMessage").text("No result for your search word.  Please update your search word.");
+			var curUserInput = $('textarea#userTextInput').val();
+			if (curUserInput.length > 2) {
+				if (step.searchSelect.previousUserInput !== curUserInput)
+					$("#warningMessage").text("No result for your search word.  Please update your search word.");
+			}
 		}
 	},
 	_buildRangeHeaderAndTable: function(booksToDisplay) {
@@ -851,7 +869,7 @@ step.searchSelect = {
 					for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
 						if ( (curGroup[j].bookOrderPos[k] > -1) &&
 							(!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) ) {
-						   this._userClickedBook(idPrefix + j + 'b' + k);
+						   this._userClickedBook(idPrefix + j + 'b' + k, true);
 						}
 						if (onlyDisplaySpecifiedBooks) {
 							curBook = this.bookOrder[curGroup[j].bookOrderPos[k]][0];
@@ -913,6 +931,7 @@ step.searchSelect = {
 		var keyboardInput = $('textarea#enterRange').val();
 		if ((typeof keyboardInput === "string") && (keyboardInput !== "")) {
 			this.searchRange = keyboardInput;
+			$("#updateRangeButton").hide();
 			this.goBackToPreviousPage();
 		}
 		else {
@@ -975,7 +994,10 @@ step.searchSelect = {
 				}
 				filterByRange(allSelectedBooks);
 			}
-			else this.goBackToPreviousPage();
+			else {
+				$("#updateRangeButton").hide();
+				this.goBackToPreviousPage();
+			}
 		}
 	},
 
@@ -1180,7 +1202,7 @@ step.searchSelect = {
 	},
 
 	_checkKeyboardEntered: function() {
-		if ((step.touchDevice) || ($('textarea#enterRange').val() === ""))
+		if ((step.touchDevice) || ($('textarea#enterRange').length != 1) || ($('textarea#enterRange').val() === ""))
 			return false;
 		$('#userEnterRangeError').text("You can only click to select when keyboard entry field is empty.");
 		return true;
@@ -1191,6 +1213,7 @@ step.searchSelect = {
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
+		$('#srchModalBackButton').prop('title', 'Update search range and return to search.');
 		if ($(clicked_id2).hasClass('stepPressedButton')) {
 			$(clicked_id2).removeClass('stepPressedButton');
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
@@ -1212,6 +1235,7 @@ step.searchSelect = {
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
+		$('#srchModalBackButton').prop('title', 'Update search range and return to search.');
 		if ($(clicked_id2).hasClass('stepPressedButton')) {
 			$(clicked_id2).removeClass('stepPressedButton');
 			$("button[id^='" + clicked_id + "b']").each(function (i, el) {
@@ -1230,11 +1254,13 @@ step.searchSelect = {
 		}
 	},
 
-	_userClickedBook: function(clicked_id) {
+	_userClickedBook: function(clicked_id, calledByInitialization) {
 		if (this._checkKeyboardEntered()) return;
 		var clicked_id2 = '#' + clicked_id;
 		$('#searchSelectError').text(__s.click_update_when_finish);
 		$('#updateRangeButton').show();
+		if (!calledByInitialization)
+			$('#srchModalBackButton').prop('title', 'Update search range and return to search.');
 		if ($(clicked_id2).hasClass('stepPressedButton')) {
 			$(clicked_id2).removeClass('stepPressedButton');
 			var regex = /b\d{1,2}$/;
@@ -1322,7 +1348,7 @@ step.searchSelect = {
 		});
 		return dataSuggestion.gloss + '<span class="src_gloss_' + dataSuggestion.strongNumber + '"></span>';
 	},
-	_handleEnteredSearchWord: function(limitType, previousUserInput, userPressedEnterKey) {
+	_handleEnteredSearchWord: function(limitType, lastUserInput, userPressedEnterKey) {
 		$('#quickLexicon').remove();
 		if ((typeof limitType === "undefined") || (limitType === null)) limitType = "";
 		var userInput = '';
@@ -1331,10 +1357,10 @@ step.searchSelect = {
 		$("#column1width").width("30%");
 		$(".search-type-column").show();
 		$('#warningMessage').text('');
-		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))
+		if ((typeof lastUserInput === "undefined") || (lastUserInput === null))
 			userInput = $('textarea#userTextInput').val();
 		else {
-			userInput = previousUserInput;
+			userInput = lastUserInput;
 			$('textarea#userTextInput').text(userInput);
 		}
 		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
@@ -1622,7 +1648,7 @@ step.searchSelect = {
 													string2Show = string2Show.replaceAll("*", "");
 												suffixToDisplay += "(" + __s.words_that_start_with + " " + string2Show + ")";
 											}
-											suffixToDisplay += " " + data[i].count + " x";
+											suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>';
 										}
 									}
 									else if (suggestionType === SUBJECT_SEARCH) {
@@ -1640,7 +1666,7 @@ step.searchSelect = {
 											}
 										}
 										if (data[i].count > 0)
-											suffixToDisplay = " " + data[i].count + " x";
+											suffixToDisplay = '<span class="srchFrequency"> ' + data[i].count + ' x</span>';
 									}
 									step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
 										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
@@ -1751,6 +1777,8 @@ step.searchSelect = {
 				})
 
 				step.searchSelect.handleLanguageButton();
+				if (step.searchSelect.searchRange !== "Gen-Rev")
+					$(".srchFrequency").hide();
 			}).fail(function() {
                 changeBaseURL();
             });

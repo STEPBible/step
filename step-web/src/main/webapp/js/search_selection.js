@@ -388,6 +388,8 @@ step.searchSelect = {
 			}
 			else $(".srch" + optionName).hide();
 		}
+		if (step.searchSelect.searchRange !== "Gen-Rev")
+			$(".srchFrequency").hide();
 		if ((wordsAroundDash > 1) || (showStrong)) $(".srchParathesis").show();
 		else $(".srchParathesis").hide();
 		if (wordsAroundDash > 1) $(".srchDash").show();

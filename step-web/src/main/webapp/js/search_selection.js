@@ -1685,7 +1685,7 @@ step.searchSelect = {
 					}
 				});
 				var alreadyDisplayedStrongsSearch = [];
-				namesConglomerate.forEach(function(amalgamation) {
+				namesConglomerate.forEach(function(amalgamation, index) {
 					var name = amalgamation["name"]
 					var grandTotal = 0;
 					var allStrongs = "";
@@ -1735,19 +1735,19 @@ step.searchSelect = {
 							alternateNames += ") "
 						}
 						var strongs2Search = element.strongs.join(",");
-						// var text2Display = "A brief description of " + element["name"]  + " " + alternateNames;
 						var text2Display = element["brief"]  + " " + alternateNames;
 						var prefixToDisplay = iteration + ") ";
 						var suffixToDisplay = "- " + element["count"] + " x";
 						var suffixTitle = "";
-						var augStrongSameMeaning = null;
-						var hasDetailLexInfo = false;
 						var needIndent = true;
 						var userInput = "";
 						step.searchSelect.appendSearchSuggestionsToDisplay(searchNames, 
 							strongs2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
 							limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions);
 					})
+					if (index < namesConglomerate.length - 1) {
+						searchNames.append("<hr style=\"border: none; border-top: 1px solid #ccc; margin: 0; padding: 0;\">")
+					}
 				})
 
 				step.searchSelect.handleLanguageButton();
@@ -2034,10 +2034,13 @@ step.searchSelect = {
 		callBack, titleText, text2Display, userInput, isAugStrong,
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
 		var result = step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, allVersions);
+		// debugger
 		if (typeof callBack === "function") {
-			if (callBack.name === "_addFreqListQTip")
-				callBack(augStrongSameMeaning, allVersions, result[7], element);
-			else if (callBack.name === "_addLineWithAugStrongOrDetailLexInfo")
+			if (callBack.name === "_addFreqListQTip") {
+				// if (!(element.selector === "#searchResultsnames")) {
+					callBack(augStrongSameMeaning, allVersions, result[7], element);
+				// }
+			} else if (callBack.name === "_addLineWithAugStrongOrDetailLexInfo")
 				callBack(result, augStrongSameMeaning, titleText, text2Display, userInput, strongNum, isAugStrong,
 					element, needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType, allVersions);
 		}
@@ -2445,8 +2448,9 @@ step.searchSelect = {
 				}
 				var newSuggestion = $('<a style="padding:0px' + additionalCSS + '"' + titleText +
 						aTagOnClick +
-						'>' + text2Display + "</a>");	
-				if (!($(currentSearchSuggestionElement).is($('#searchResultsnames')))) {	
+						'>' + text2Display + "</a>");
+				var isNames = ($(currentSearchSuggestionElement).is($('#searchResultsnames')))
+				if (!isNames) {	
 					this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0], newSuggestion);
 				}
 				currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
@@ -2458,7 +2462,11 @@ step.searchSelect = {
 						nonAugStrong = str2Search.slice(0, -1);
 					var freqListElm = $('<span></span');
 					currentSearchSuggestionElement.append('&nbsp;').append(freqListElm);
-					this._getAdditionalInformationOnStrong(nonAugStrong, [ str2Search ], allVersions, freqListElm, step.searchSelect._addFreqListQTip);
+					var callback
+					if (!isNames) {
+						callback = step.searchSelect._addFreqListQTip
+					}
+					this._getAdditionalInformationOnStrong(nonAugStrong, [ str2Search ], allVersions, freqListElm, callback);
 				}
 			}
 			return;

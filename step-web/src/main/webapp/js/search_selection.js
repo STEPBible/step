@@ -1741,7 +1741,7 @@ step.searchSelect = {
 					}
 					var text2Display = "The name \"" + name + "\"";
 					var prefixToDisplay = "";
-					var suffixToDisplay = " occurs in total - " + grandTotal + " x";
+					var suffixToDisplay = '<span class="srchFrequency"> occurs in total - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";
 					var augStrongSameMeaning = null;
 					var hasDetailLexInfo = false;

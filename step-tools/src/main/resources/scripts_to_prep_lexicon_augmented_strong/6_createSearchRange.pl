@@ -270,7 +270,7 @@ while (<FH>) {
             print "\n";
        }
     }
-	elsif ($line =~ m/^\@StrNo=\t/) {
+	elsif ($line =~ m/^\@dStrNo=\t/) {
         $lastStrongNum = $';
         $stepGloss = '';
         $articleGloss = "";

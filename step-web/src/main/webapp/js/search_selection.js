@@ -388,6 +388,8 @@ step.searchSelect = {
 			}
 			else $(".srch" + optionName).hide();
 		}
+		if (step.searchSelect.searchRange !== "Gen-Rev")
+			$(".srchFrequency").hide();
 		if ((wordsAroundDash > 1) || (showStrong)) $(".srchParathesis").show();
 		else $(".srchParathesis").hide();
 		if (wordsAroundDash > 1) $(".srchDash").show();
@@ -648,7 +650,7 @@ step.searchSelect = {
 			'</div><br><br>' +
 			'<span id="warningMessage" style="color:red;width:90%;float:left"></span><br>' +
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:50%" placeholder="' + __s.enter_search_word + '">' +
-			step.searchSelect.previousUserInput +
+				step.searchSelect.previousUserInput +
 			'</textarea>' + // size 16px so the mobile devices will not expand
 			'<button id="searchButton" style="vertical-align:top;display:none;padding-left:10px;padding-right:10px" class="stepButton primaryLightBg" onclick=step.searchSelect._handleEnteredSearchWord() title="Get suggested search">' +
 				'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +

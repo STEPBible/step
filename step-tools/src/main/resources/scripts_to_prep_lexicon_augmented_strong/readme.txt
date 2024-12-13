@@ -1,5 +1,7 @@
-1. The 1_checkAugStrong.pl updates the augmented_strong.txt file from David Instone-Brewer
+1. The 1_checkAugStrong.pl updates the augmented_strongs.txt file from David Instone-Brewer
    to a format which can be read by the STEP Java code.
+
+2. The 2_merge_augstrong.pl will merge the LXX information into the augmented_strongs.txt
    
 2. 2_deleteExtraAugStrong.pl will delete augstrong numbers that are not found in all Bibles.
    You need to run 3_getWordFreq.pl to find out which words have no occurrences.

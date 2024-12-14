@@ -109,10 +109,8 @@ step.searchSelect = {
 	groupsOther: undefined,
 	bookOrder: [],
 	idx2BookOrder: {},
-	strikeOutType: "",
-	strikeOutToken: "",
 
-	initSearchSelection: function(failedSearchType, failedSearchToken) {
+	initSearchSelection: function(isRangeUpdate) {
 		if ((typeof step.state === "undefined") || (typeof step.state.language === "undefined")) this.userLang = "en-US";
 		else this.userLang = step.state.language() || "en-US";
         this.version = "ESV_th";
@@ -261,19 +259,9 @@ step.searchSelect = {
 			});
 		});
 		step.searchSelect.updateAdvancedSearchElements();
-		if ((typeof failedSearchType === "string") && (failedSearchType !== "undefined") &&
-			(typeof failedSearchToken === "string") && (failedSearchToken !== "undefined")) {
-			this.strikeOutType = failedSearchType;
-			this.strikeOutToken = failedSearchToken;
-			step.searchSelect.handleKeyboardInput(this.strikeOutToken.replaceAll('@', ''));
-			if ((this.strikeOutToken.substring(0,1) === "@") && (this.strikeOutToken.slice(-1) === "@"))
-				this.strikeOutToken = this.strikeOutToken.replaceAll('@', '"');
-		}
-		else {
-			this.strikeOutType = "";
-			this.strikeOutToken = "";
-		}
-		if ($('textarea#userTextInput').val() !== "") // Click on the search button if user provided a search word previously
+		if (isRangeUpdate === "range_update")
+			step.searchSelect._buildRangeHeaderAndTable(isRangeUpdate);
+		else if ($('textarea#userTextInput').val() !== "") // Click on the search button if user provided a search word previously
 			$("#searchButton").click();
 	},
 	updateAdvancedSearchElements: function() {
@@ -570,13 +558,17 @@ step.searchSelect = {
 			$("#searchButton").hide();
 	},
 
-	goBackToPreviousPage: function() {
+	goBackToPreviousPage: function(isRangeUpdate) {
 		$('#quickLexicon').remove();
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
 		if ($("#updateRangeButton").is(":visible")) {
 			$("#updateRangeButton").hide();
-			$("#updateRangeButton").click();
+			step.searchSelect._updateRange("doNotCallGoBack");
+		}
+		if (isRangeUpdate === "range_update") {
+			$("#showprevioussearchonoff").click();
+			$("#updateButton").click();
 			return;
 		}
 		$("#enterRange").remove();
@@ -924,12 +916,13 @@ step.searchSelect = {
 		return html;
 	},
 
-	_updateRange: function() {
+	_updateRange: function(option) {
 		var keyboardInput = $('textarea#enterRange').val();
 		if ((typeof keyboardInput === "string") && (keyboardInput !== "")) {
 			this.searchRange = keyboardInput;
 			$("#updateRangeButton").hide();
-			this.goBackToPreviousPage();
+			if (option !== "doNotCallGoBack")
+				this.goBackToPreviousPage(option);
 		}
 		else {
 			$('#searchSelectError').text("");
@@ -993,7 +986,8 @@ step.searchSelect = {
 			}
 			else {
 				$("#updateRangeButton").hide();
-				this.goBackToPreviousPage();
+				if (option !== "doNotCallGoBack")
+					this.goBackToPreviousPage(option);
 			}
 		}
 	},
@@ -2285,12 +2279,6 @@ step.searchSelect = {
 					'\',\'' + str2Search + '\',\'' + 
 					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') + '\')"';
 
-				if ((this.strikeOutType === searchType) && (this.strikeOutToken.replaceAll('"', '%22') === str2Search)) {
-					additionalCSS = ";color:red;text-decoration:line-through";
-					aTagOnClick = "";
-					this.strikeOutType = "";
-					this.strikeOutToken = "";
-				}
 				var newSuggestion = $('<a style="padding:0px' + additionalCSS + '"' + titleText +
 						aTagOnClick +
 						'>' + text2Display + "</a>");

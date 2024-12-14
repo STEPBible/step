@@ -1118,17 +1118,17 @@ step.util = {
 					}
 				}
 			}
+			var searchRange = "";
 			if (foundSearch) {
 				searchWords = searchWords.replace(/ AND /g, "<sub> and </sub>");
 				searchWords = searchWords.replace(/ OR /g, "<sub> or </sub>");
 				searchWords = searchWords.replace(/ NOT /g, "<sub> not </sub>");
 				if (allSelectedReferences.length > 0) {
-					searchWords += " (" + allSelectedReferences + ")";
+					searchRange = allSelectedReferences;
 					allSelectedReferences = "";
 				}
 			}
 			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
-
 			if (outputMode === "button") {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
@@ -1154,6 +1154,14 @@ step.util = {
 						'<i style="font-size:10px" class="find glyphicon glyphicon-search"></i>' +
 						'&nbsp;' + searchWords +
 					'</button>' );
+				if (searchWords !== "")
+					container.append(
+						'<button type="button" ' +
+							'onclick="step.util.searchSelectionModal(\'range_update\')" ' +
+							'title="Search range" class="select-filter stepButtonTriangle">' +
+							'<i style="font-size:10px" class="find glyphicon glyphicon-filter"></i>' +
+							'&nbsp;' + searchRange +
+						'</button>' );
 			}
 			else if (outputMode === "span") {
 				if (allSelectedBibleVersions.length > 0)
@@ -2473,7 +2481,7 @@ step.util = {
 		step.util.blockBackgroundScrolling("lexFeedbackModal");
 	},
 
-	searchSelectionModal: function (failedSearchType, failedSearchToken) {
+	searchSelectionModal: function (isRangeUpdate) {
 		var docWidth = $(document).width();
 		var widthCSS = "";
 		if ((docWidth > 700) && (!step.touchDevice)) { // Touch device can rotate screen so probably better to not adjust the width
@@ -2486,8 +2494,7 @@ step.util = {
 				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<script>' +
 						'$(document).ready(function () {' +
-							'step.searchSelect.initSearchSelection("' + failedSearchType + '","' +
-								failedSearchToken + '");' +
+							'step.searchSelect.initSearchSelection("' + isRangeUpdate + '");' +
 						'});' +
 						'function showPreviousSearch() {' +
 							'var element = document.getElementById("showprevioussearchonoff");' +
@@ -2529,7 +2536,7 @@ step.util = {
 					'</script>' +
 
 					'<div class="modal-header">' +
-						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
+						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage("' + isRangeUpdate + '")><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
 							step.util.modalCloseBtn("searchSelectionModal") +
 							'<span class="pull-right advanced_search_elements">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
@@ -2559,7 +2566,7 @@ step.util = {
 						'<br>' +
 						'<span id="searchSelectError"></span>' +
 						'<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"' +
-						'onclick=step.searchSelect._updateRange()></button>' +
+						'onclick=step.searchSelect._updateRange("' + isRangeUpdate + '")></button>' +
 						'<button id="updateButton" style="display:none;float:right" type="button" class="stepButton"' +
 						'onclick=step.searchSelect.goSearch()><%= __s.update_search %></button><br><br><br>' +
 					'</div>' +

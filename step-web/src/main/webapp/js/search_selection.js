@@ -675,10 +675,10 @@ step.searchSelect = {
 			'</colgroup>';
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i ++) {
 			var srchCode = this.searchTypeCode[i];
-			html += '<tr style="height:40px;border-bottom:solid" class="select2-result select2-result-selectable select-' + srchCode + '">' +
+			html += '<tr" class="select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
-				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td>' +
-				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
+				__s['search_type_title_' + srchCode] + '" style="width:100%;font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td></tr>' +
+				'<tr style="height:40px;border-bottom:solid" class="select2-result select2-result-selectable select-' + srchCode + '"><td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="width:100%;text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
 		}
 		html += '</table>' +
 			'</div><br>';
@@ -1483,7 +1483,9 @@ step.searchSelect = {
 							}
 							newName["count"] = resultArray[0] + resultArray[1]; // OT count + NT count
 							console.log(mainStrong + ": count OT: " + resultArray[0] + " NT: " + resultArray[1]);
-							names.push(newName)
+							if (newName["count"] > 0 ){
+								names.push(newName)
+							}
 						}
 					}
 					switch(suggestionType) {
@@ -1777,7 +1779,9 @@ step.searchSelect = {
 						searchNames.append("<hr style=\"border: none; border-top: 1px solid #ccc; margin: 0; padding: 0;\">")
 					}
 				})
-
+				if(searchNames[0].lastChild && searchNames[0].lastChild.tagName === "HR") {
+					searchNames[0].lastChild.remove()
+				}
 				step.searchSelect.handleLanguageButton();
 				if (step.searchSelect.searchRange !== "Gen-Rev")
 					$(".srchFrequency").hide();

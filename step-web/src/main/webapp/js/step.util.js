@@ -1043,6 +1043,8 @@ step.util = {
                          (itemType === STRONG_NUMBER) ||
 						 (itemType === TEXT_SEARCH) ||
 						 (itemType === SUBJECT_SEARCH) ||
+						 (itemType === NAVE_SEARCH) ||
+						 (itemType === NAVE_SEARCH_EXTENDED) ||
 						 (itemType === GREEK) ||
 						 (itemType === HEBREW) ||
 						 (itemType === GREEK_MEANINGS) ||
@@ -1076,7 +1078,10 @@ step.util = {
 							if (searchWords.indexOf(word2Add) == -1) searchWords += word2Add;
 							else skipLastWord = true;
 						}
-						else if (itemType === SUBJECT_SEARCH) searchWords += word.toUpperCase();
+						else if ((itemType === SUBJECT_SEARCH) ||
+								(itemType === NAVE_SEARCH) ||
+								(itemType === NAVE_SEARCH_EXTENDED))
+							searchWords += word.toUpperCase();
 						else if (itemType === MEANINGS) searchWords += "~" + word;
 						else searchWords += word;
 					}

@@ -659,17 +659,18 @@ step.searchSelect = {
 			'<div id="basic_search_help_text" style="font-size:14px;width:90%">' +
 			'</div>' +
 			'<div id="search_table" class="advanced_search_elements">' +
-			'<table>' +
-			'<colgroup>' +
-			'<col id="column1width" span="1" style="width:39%;">' +
-			'<col span="1" style="width:61%;">' +
-			'</colgroup>';
+			'<table>';
+//			'<colgroup>' +
+//			'<col id="column1width" span="1" style="width:100%;">' +
+//			'<col span="1" style="width:61%;">' +
+//			'</colgroup>';
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i ++) {
 			var srchCode = this.searchTypeCode[i];
-			html += '<tr style="height:40px;border-bottom:solid" class="select2-result select2-result-selectable select-' + srchCode + '">' +
+			html += '<tr class="select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
 				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td>' +
-				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
+				'</tr><tr style="height:40px;border-bottom:solid"  class="select2-result select2-result-selectable select-' + srchCode + '">' +
+				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding-left:20px;text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
 		}
 		html += '</table>' +
 			'</div><br>';
@@ -1345,7 +1346,7 @@ step.searchSelect = {
 		var userInput = '';
 		$('textarea#userTextInput').show();
 		$('#searchButton').show();
-		$("#column1width").width("30%");
+//		$("#column1width").width("30%");
 		$(".search-type-column").show();
 		$('#warningMessage').text('');
 		if ((typeof lastUserInput === "undefined") || (lastUserInput === null))
@@ -2143,7 +2144,7 @@ step.searchSelect = {
 			else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
 		}
 		$(".detailLexTriangle").click(step.searchSelect._handleClickOnTriangle);
-		$("#column1width").width("100%");
+//		$("#column1width").width("100%");
 		$(".search-type-column").hide();
 		step.searchSelect._updateDisplayBasedOnOptions();
 	},

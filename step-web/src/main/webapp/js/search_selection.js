@@ -1696,6 +1696,7 @@ step.searchSelect = {
 				var searchNames = $('#searchResultsnames');
 				var namesConglomerate = []
 				var namesConglomerateInclusion = []
+				names = names.sort(step.util.levenshteinNameComparator(userInput))
 				names.forEach(function(element) {
 					$("td.search-type-column.select-names").html("Names:");
 					var name = element["name"]

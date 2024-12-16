@@ -137,13 +137,14 @@ step.util = {
 	versionsGreekOT: ["LXX_TH"],
 	versionsGreekBoth: ["ABEN", "ABGK"],
 	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
+	// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
 	vocabKeys: ["strongNumber", "stepGloss", "stepTransliteration", "count", 
 		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
 		"shortDef", "mediumDef", "lsjDefs",
 		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
 		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
 		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-		"freqList", "defaultDStrong"],
+		"freqList", "defaultDStrong", "shortDefMounce", "briefDef"],
 
 	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
 		var bibleVersions = allVersions.split(",");
@@ -4310,8 +4311,8 @@ step.util = {
         else return " only at " + searchResultRange;
 	},
 	unpackJson: function (origJsonVar, index) {
-
-		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss"];
+		// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
 		var duplicateStrings = origJsonVar.d;
 		var relatedNumbers = origJsonVar.r;
 		var vocabInfo = origJsonVar.v[index];

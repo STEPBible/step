@@ -378,11 +378,12 @@
                                 <%
                                     }
                                 %>
-
-                                <a id="resizeButton" class="resizePanel" title="Increase size of panel" style="display:none">
-                                    <i class="glyphicon glyphicon-resize-full" style="display:inline"></i>
-                                    <i class="glyphicon glyphicon-resize-small" style="display:none"></i>
-                                </a>
+                                <span class=" hidden-xs">
+                                    <a id="resizeButton" class="resizePanel" title="Increase size of panel" style="display:none">
+                                        <i class="glyphicon glyphicon-resize-full" style="display:inline"></i>
+                                        <i class="glyphicon glyphicon-resize-small" style="display:none"></i>
+                                    </a>
+                                </span>
                                 <span class="dropdown settingsDropdown" style="background-color:var(--clrBackground)">
                                         <a class="dropdown-toggle showSettings" data-toggle="dropdown"
                                            title="<fmt:message key="view" />">

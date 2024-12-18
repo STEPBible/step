@@ -5,7 +5,11 @@
     <parent>
         <artifactId>step-mvn</artifactId>
         <groupId>com.tyndalehouse.step</groupId>
+<<<<<<< HEAD
         <version>24.12.2</version>
+=======
+        <version>24.12.4</version>
+>>>>>>> pattest
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

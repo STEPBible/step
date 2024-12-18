@@ -109,10 +109,8 @@ step.searchSelect = {
 	groupsOther: undefined,
 	bookOrder: [],
 	idx2BookOrder: {},
-	strikeOutType: "",
-	strikeOutToken: "",
 
-	initSearchSelection: function(failedSearchType, failedSearchToken) {
+	initSearchSelection: function(isRangeUpdate) {
 		if ((typeof step.state === "undefined") || (typeof step.state.language === "undefined")) this.userLang = "en-US";
 		else this.userLang = step.state.language() || "en-US";
         this.version = "ESV_th";
@@ -261,6 +259,7 @@ step.searchSelect = {
 			});
 		});
 		step.searchSelect.updateAdvancedSearchElements();
+<<<<<<< HEAD
 		if ((typeof failedSearchType === "string") && (failedSearchType !== "undefined") &&
 			(typeof failedSearchToken === "string") && (failedSearchToken !== "undefined")) {
 			this.strikeOutType = failedSearchType;
@@ -274,6 +273,11 @@ step.searchSelect = {
 			this.strikeOutToken = "";
 		}
 		if ($('textarea#userTextInput').val() !== "") // Click on the search button if user provided a search word previously
+=======
+		if (isRangeUpdate === "range_update")
+			step.searchSelect._buildRangeHeaderAndTable(isRangeUpdate);
+		else if ($('textarea#userTextInput').val() !== "") // Click on the search button if user provided a search word previously
+>>>>>>> pattest
 			$("#searchButton").click();
 	},
 	updateAdvancedSearchElements: function() {
@@ -570,13 +574,21 @@ step.searchSelect = {
 			$("#searchButton").hide();
 	},
 
-	goBackToPreviousPage: function() {
+	goBackToPreviousPage: function(isRangeUpdate) {
 		$('#quickLexicon').remove();
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
 		if ($("#updateRangeButton").is(":visible")) {
 			$("#updateRangeButton").hide();
+<<<<<<< HEAD
 			$("#updateRangeButton").click();
+=======
+			step.searchSelect._updateRange("doNotCallGoBack");
+		}
+		if (isRangeUpdate === "range_update") {
+			$("#showprevioussearchonoff").click();
+			$("#updateButton").click();
+>>>>>>> pattest
 			return;
 		}
 		$("#enterRange").remove();
@@ -649,7 +661,10 @@ step.searchSelect = {
 			'</span>' +
 			'</div><br><br>' +
 			'<span id="warningMessage" style="color:red;width:90%;float:left"></span><br>' +
+<<<<<<< HEAD
 
+=======
+>>>>>>> pattest
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:50%" placeholder="' + __s.enter_search_word + '">' +
 				step.searchSelect.previousUserInput +
 			'</textarea>' + // size 16px so the mobile devices will not expand
@@ -668,17 +683,25 @@ step.searchSelect = {
 			'<div id="basic_search_help_text" style="font-size:14px;width:90%">' +
 			'</div>' +
 			'<div id="search_table" class="advanced_search_elements">' +
-			'<table>' +
-			'<colgroup>' +
-			'<col id="column1width" span="1" style="width:39%;">' +
-			'<col span="1" style="width:61%;">' +
-			'</colgroup>';
+			'<table>';
+//			'<colgroup>' +
+//			'<col id="column1width" span="1" style="width:100%;">' +
+//			'<col span="1" style="width:61%;">' +
+//			'</colgroup>';
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i ++) {
 			var srchCode = this.searchTypeCode[i];
+<<<<<<< HEAD
 			html += '<tr" class="select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
 				__s['search_type_title_' + srchCode] + '" style="width:100%;font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td></tr>' +
 				'<tr style="height:40px;border-bottom:solid" class="select2-result select2-result-selectable select-' + srchCode + '"><td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="width:100%;text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
+=======
+			html += '<tr class="select2-result select2-result-selectable select-' + srchCode + '">' +
+				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
+				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td>' +
+				'</tr><tr style="height:40px;border-bottom:solid"  class="select2-result select2-result-selectable select-' + srchCode + '">' +
+				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding-left:20px;text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
+>>>>>>> pattest
 		}
 		html += '</table>' +
 			'</div><br>';
@@ -929,12 +952,17 @@ step.searchSelect = {
 		return html;
 	},
 
-	_updateRange: function() {
+	_updateRange: function(option) {
 		var keyboardInput = $('textarea#enterRange').val();
 		if ((typeof keyboardInput === "string") && (keyboardInput !== "")) {
 			this.searchRange = keyboardInput;
 			$("#updateRangeButton").hide();
+<<<<<<< HEAD
 			this.goBackToPreviousPage();
+=======
+			if (option !== "doNotCallGoBack")
+				this.goBackToPreviousPage(option);
+>>>>>>> pattest
 		}
 		else {
 			$('#searchSelectError').text("");
@@ -998,7 +1026,12 @@ step.searchSelect = {
 			}
 			else {
 				$("#updateRangeButton").hide();
+<<<<<<< HEAD
 				this.goBackToPreviousPage();
+=======
+				if (option !== "doNotCallGoBack")
+					this.goBackToPreviousPage(option);
+>>>>>>> pattest
 			}
 		}
 	},
@@ -1356,7 +1389,7 @@ step.searchSelect = {
 		var userInput = '';
 		$('textarea#userTextInput').show();
 		$('#searchButton').show();
-		$("#column1width").width("30%");
+//		$("#column1width").width("30%");
 		$(".search-type-column").show();
 		$('#warningMessage').text('');
 		if ((typeof lastUserInput === "undefined") || (lastUserInput === null))
@@ -2338,7 +2371,7 @@ step.searchSelect = {
 			else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
 		}
 		$(".detailLexTriangle").click(step.searchSelect._handleClickOnTriangle);
-		$("#column1width").width("100%");
+//		$("#column1width").width("100%");
 		$(".search-type-column").hide();
 		step.searchSelect._updateDisplayBasedOnOptions();
 	},
@@ -2475,12 +2508,6 @@ step.searchSelect = {
 					'\',\'' + str2Search + '\',\'' + 
 					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') + '\')"';
 
-				if ((this.strikeOutType === searchType) && (this.strikeOutToken.replaceAll('"', '%22') === str2Search)) {
-					additionalCSS = ";color:red;text-decoration:line-through";
-					aTagOnClick = "";
-					this.strikeOutType = "";
-					this.strikeOutToken = "";
-				}
 				var newSuggestion = $('<a style="padding:0px' + additionalCSS + '"' + titleText +
 						aTagOnClick +
 						'>' + text2Display + "</a>");

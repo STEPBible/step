@@ -3,11 +3,7 @@
 
     <groupId>com.tyndalehouse.step</groupId>
     <artifactId>step-mvn</artifactId>
-<<<<<<< HEAD
-    <version>24.12.2</version>
-=======
     <version>24.12.4</version>
->>>>>>> pattest
     <packaging>pom</packaging>
     <name>STEP :: Scripture Tools for Every pastor</name>
 

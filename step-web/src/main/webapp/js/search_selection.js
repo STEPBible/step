@@ -259,25 +259,9 @@ step.searchSelect = {
 			});
 		});
 		step.searchSelect.updateAdvancedSearchElements();
-<<<<<<< HEAD
-		if ((typeof failedSearchType === "string") && (failedSearchType !== "undefined") &&
-			(typeof failedSearchToken === "string") && (failedSearchToken !== "undefined")) {
-			this.strikeOutType = failedSearchType;
-			this.strikeOutToken = failedSearchToken;
-			step.searchSelect.handleKeyboardInput(this.strikeOutToken.replaceAll('@', ''));
-			if ((this.strikeOutToken.substring(0,1) === "@") && (this.strikeOutToken.slice(-1) === "@"))
-				this.strikeOutToken = this.strikeOutToken.replaceAll('@', '"');
-		}
-		else {
-			this.strikeOutType = "";
-			this.strikeOutToken = "";
-		}
-		if ($('textarea#userTextInput').val() !== "") // Click on the search button if user provided a search word previously
-=======
 		if (isRangeUpdate === "range_update")
 			step.searchSelect._buildRangeHeaderAndTable(isRangeUpdate);
 		else if ($('textarea#userTextInput').val() !== "") // Click on the search button if user provided a search word previously
->>>>>>> pattest
 			$("#searchButton").click();
 	},
 	updateAdvancedSearchElements: function() {
@@ -580,15 +564,11 @@ step.searchSelect = {
 		$('#srchModalBackButton').prop('title', '');
 		if ($("#updateRangeButton").is(":visible")) {
 			$("#updateRangeButton").hide();
-<<<<<<< HEAD
-			$("#updateRangeButton").click();
-=======
 			step.searchSelect._updateRange("doNotCallGoBack");
 		}
 		if (isRangeUpdate === "range_update") {
 			$("#showprevioussearchonoff").click();
 			$("#updateButton").click();
->>>>>>> pattest
 			return;
 		}
 		$("#enterRange").remove();
@@ -661,10 +641,6 @@ step.searchSelect = {
 			'</span>' +
 			'</div><br><br>' +
 			'<span id="warningMessage" style="color:red;width:90%;float:left"></span><br>' +
-<<<<<<< HEAD
-
-=======
->>>>>>> pattest
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:50%" placeholder="' + __s.enter_search_word + '">' +
 				step.searchSelect.previousUserInput +
 			'</textarea>' + // size 16px so the mobile devices will not expand
@@ -690,18 +666,11 @@ step.searchSelect = {
 //			'</colgroup>';
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i ++) {
 			var srchCode = this.searchTypeCode[i];
-<<<<<<< HEAD
-			html += '<tr" class="select2-result select2-result-selectable select-' + srchCode + '">' +
-				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
-				__s['search_type_title_' + srchCode] + '" style="width:100%;font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td></tr>' +
-				'<tr style="height:40px;border-bottom:solid" class="select2-result select2-result-selectable select-' + srchCode + '"><td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="width:100%;text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
-=======
 			html += '<tr class="select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
 				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td>' +
 				'</tr><tr style="height:40px;border-bottom:solid"  class="select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding-left:20px;text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
->>>>>>> pattest
 		}
 		html += '</table>' +
 			'</div><br>';
@@ -957,12 +926,8 @@ step.searchSelect = {
 		if ((typeof keyboardInput === "string") && (keyboardInput !== "")) {
 			this.searchRange = keyboardInput;
 			$("#updateRangeButton").hide();
-<<<<<<< HEAD
-			this.goBackToPreviousPage();
-=======
 			if (option !== "doNotCallGoBack")
 				this.goBackToPreviousPage(option);
->>>>>>> pattest
 		}
 		else {
 			$('#searchSelectError').text("");
@@ -1026,12 +991,8 @@ step.searchSelect = {
 			}
 			else {
 				$("#updateRangeButton").hide();
-<<<<<<< HEAD
-				this.goBackToPreviousPage();
-=======
 				if (option !== "doNotCallGoBack")
 					this.goBackToPreviousPage(option);
->>>>>>> pattest
 			}
 		}
 	},

@@ -7,11 +7,7 @@
     <parent>
         <groupId>com.tyndalehouse.step</groupId>
         <artifactId>step-mvn</artifactId>
-<<<<<<< HEAD
-        <version>24.12.2</version>
-=======
         <version>24.12.4</version>
->>>>>>> pattest
     </parent>
 
     <artifactId>step-core-data</artifactId>

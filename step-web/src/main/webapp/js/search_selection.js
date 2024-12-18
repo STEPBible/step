@@ -1985,41 +1985,6 @@ step.searchSelect = {
 			changeBaseURL();
 		});
 	},
-	getVocabInfoForShowAugStrongLite: function (strongNum) {
-		var limitType = (strongNum.substring(0, 1) === "H") ? HEBREW : GREEK;
-		var strongWithoutAugment = strongNum;
-		if (strongWithoutAugment.search(/^([GH]\d{4,5})[A-Za-z]$/) == 0) {
-			strongWithoutAugment = RegExp.$1;
-		}
-		var additionalPath = step.state.getCurrentVersion();
-		if (additionalPath !== "") additionalPath += "/";
-		$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
-			var vocabInfos = [];
-			for (var i = 0; i < origJsonVar.v.length; i++) {
-				var jsonVar = step.searchSelect.unpackVocabJSON(origJsonVar, i);
-				jsonVar['itemType'] = limitType;
-				vocabInfos.push(jsonVar);
-			}
-			step.searchSelect.helper1(vocabInfos)
-		}).error(function() {
-			step.searchSelect.processVocabInfoForShowAugStrongLite(strongNum, limitType)
-		});
-	},
-	processVocabInfoForShowAugStrongLite: function(strongNum, limitType) {
-		var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + step.searchSelect.version +
-			URL_SEPARATOR + LIMIT + "%3D" + limitType +
-			URL_SEPARATOR + "?lang=" + step.searchSelect.userLang;
-		$.getJSON(url, function (data) {
-			for (var i = 0; i < data.length; i++) {
-				if ((typeof data[i].suggestion._detailLexicalTag === "string") && (data[i].suggestion._detailLexicalTag !== "")) {
-					data[i].suggestion._detailLexicalTag = JSON.parse(data[i].suggestion._detailLexicalTag);
-				}
-			}
-			step.searchSelect.helper2(data)
-		}).fail(function() {
-			changeBaseURL();
-		});
-	},
 	helper1: function (vocabInfos) {
 		console.log("test1")
 	},
@@ -2063,12 +2028,9 @@ step.searchSelect = {
 		callBack, titleText, text2Display, userInput, isAugStrong,
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
 		var result = step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, allVersions);
-		// debugger
 		if (typeof callBack === "function") {
 			if (callBack.name === "_addFreqListQTip") {
-				// if (!(element.selector === "#searchResultsnames")) {
-					callBack(augStrongSameMeaning, allVersions, result[7], element);
-				// }
+				callBack(augStrongSameMeaning, allVersions, result[7], element);
 			} else if (callBack.name === "_addLineWithAugStrongOrDetailLexInfo")
 				callBack(result, augStrongSameMeaning, titleText, text2Display, userInput, strongNum, isAugStrong,
 					element, needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType, allVersions);

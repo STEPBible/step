@@ -196,9 +196,12 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
     private void addMatchingBooks(final List<BookName> books, final Versification masterV11n, final String input, final Iterator<BibleBook> bookIterator) {
         while (bookIterator.hasNext()) {
             final BibleBook book = bookIterator.next();
-            if (masterV11n.getLongName(book).toLowerCase().startsWith(input)
-                    || masterV11n.getPreferredName(book).toLowerCase().startsWith(input)
-                    || masterV11n.getShortName(book).toLowerCase().startsWith(input)) {
+            final String longName = masterV11n.getLongName(book);
+            final String preferredName = masterV11n.getPreferredName(book);
+            final String shortName = masterV11n.getShortName(book);
+            if ((longName != null && longName.toLowerCase().startsWith(input))
+                    || (preferredName != null && preferredName.toLowerCase().startsWith(input))
+                    || (shortName != null && shortName.toLowerCase().startsWith(input))) {
                 addBookName(books, book, masterV11n);
             }
         }

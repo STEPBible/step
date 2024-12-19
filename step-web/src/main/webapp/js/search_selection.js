@@ -6,8 +6,8 @@ step.searchSelect = {
 	// Don't change the order of the following. The first 3 search types are non original language
 	// searches.  The last two are not displayed in it's own group.  GREEK_MEANINGS are are displayed
 	// with GREEK.  HEBREW_MEANINGS are displayed with HEBREW.
-	searchTypeCode: [TEXT_SEARCH, MEANINGS, SUBJECT_SEARCH, GREEK, GREEK_MEANINGS, HEBREW, HEBREW_MEANINGS],
-	numOfSearchTypesToDisplay: 7, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
+	searchTypeCode: [TEXT_SEARCH, MEANINGS, SUBJECT_SEARCH, GREEK, GREEK_MEANINGS, HEBREW, HEBREW_MEANINGS, NAMES],
+	numOfSearchTypesToDisplay: 8, // Not counting GREEK_MEANINGS and HEBREW_MEANINGS from the above line
 	displayOptions: ["Strong_number", "Transliteration", "Original_language", "Frequency", "Frequency_details", "Immediate_lookup"],
 	searchModalCurrentPage: 1,
 	searchUserInput: "",
@@ -717,6 +717,10 @@ step.searchSelect = {
 				$(".select-meanings").show();
 				isAnythingShown = true;
 			}
+			if ($("#searchResultsnames").text() !== "") {
+				$(".select-names").show();
+				isAnythingShown = true;
+			}
 			basic_search_help_text = '<p>What you can enter:</p>' +
 			'<ul><li><strong>love</strong> → searches words that start with “love” (e.g. love, loved, lovely, …)' +
 			'<li><strong>"love"</strong> → searches the exact word love (<strong>not</strong> loved, loves, lovely)' +
@@ -1401,6 +1405,9 @@ step.searchSelect = {
 			for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
 			}
+			var names = []
+			var namesInclusion = []
+			var thingsWithNames = ["man", "woman", "king", "queen", "judge", "place", "group", "prophet"]
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
 				url += "//" + searchLangSelected;
 			url += "?lang=" + step.searchSelect.userLang;
@@ -1411,6 +1418,7 @@ step.searchSelect = {
 			step["SearchCount" + MEANINGS] = 0;
 			step["SearchCount" + SUBJECT_SEARCH] = 0;
 			step["SearchCount" + TEXT_SEARCH] = 0;
+			step["SearchCount" + NAMES] = 0;
 			$.getJSON(url, function (data) {
 				var alreadyShownStrong = [];
 				var activePassageData = step.util.activePassage().get("searchTokens") || [];
@@ -1427,6 +1435,54 @@ step.searchSelect = {
 					var suggestionType = data[i].itemType;
 					var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
 					var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
+					var suggestion = data[i].suggestion;
+					if ((suggestionType == "greekMeanings" || suggestionType == "hebrewMeanings") && thingsWithNames.includes(suggestion.type)) {
+						var mainStrong = suggestion.strongNumber
+						if (!namesInclusion.includes(mainStrong)) {
+							namesInclusion.push(mainStrong)
+							var newName = {}
+							newName["strongs"] = []
+							var strongs = newName["strongs"]
+							strongs.push(mainStrong)
+							newName["name"] = suggestion.gloss
+							var name = newName["name"]
+							var resultArray = step.searchSelect._getSuggestedFrequency(data[i].suggestion, allVersions);
+							var briefDef = suggestion.briefDef
+							newName["brief"] = briefDef
+							newName["type"] = suggestion.type
+							var details = suggestion._detailLexicalTag
+							if (details) {
+								newName["alternateNames"] = []
+								var alternateNames = newName["alternateNames"]
+								details = JSON.parse(details)
+								details.forEach(function(element, index, array) {
+									var otherStrong = element[1]
+									if (!strongs.includes(otherStrong)) {
+										strongs.push(otherStrong)
+										var alternateSuggestion = {}
+										alternateSuggestion["strongNumber"] = otherStrong
+										alternateSuggestion["popularityList"] = element[6]
+										var alternateResultArray = step.searchSelect._getSuggestedFrequency(alternateSuggestion, allVersions);
+										resultArray[0] += alternateResultArray[0]
+										resultArray[1] += alternateResultArray[1]
+										// step.searchSelect.getVocabInfoForShowAugStrongLite(otherStrong)
+									}
+									var otherName = element[2]
+									if (!alternateNames.includes(otherName) && !(otherName === name)) {
+										alternateNames.push(otherName)
+									}
+								});
+								if (alternateNames.length === 0) {
+									delete newName["alternateNames"]
+								}
+							}
+							newName["count"] = resultArray[0] + resultArray[1]; // OT count + NT count
+							console.log(mainStrong + ": count OT: " + resultArray[0] + " NT: " + resultArray[1]);
+							if (newName["count"] > 0 ){
+								names.push(newName)
+							}
+						}
+					}
 					switch(suggestionType) {
 						case GREEK:
 						case GREEK_MEANINGS:
@@ -1632,7 +1688,98 @@ step.searchSelect = {
 							break;
 					}
 				}
-
+				var searchNames = $('#searchResultsnames');
+				var namesConglomerate = []
+				var namesConglomerateInclusion = []
+				names = names.sort(step.util.levenshteinNameComparator(userInput))
+				names.forEach(function(element) {
+					$("td.search-type-column.select-names").html("Names:");
+					var name = element["name"]
+					var nameType = element["type"]
+					if (!namesConglomerateInclusion.includes(name)) {
+						var amalgamation = {}
+						amalgamation["name"] = name
+						amalgamation["type"] = nameType
+						amalgamation["conglomeration"] = [element]
+						amalgamation["count"] = element["count"]
+						namesConglomerate.push(amalgamation)
+						namesConglomerateInclusion.push(name)
+					} else {
+						namesConglomerate.forEach(function(amalgamation) {
+							if (amalgamation["name"] === name) {
+								amalgamation["conglomeration"].push(element)
+							}
+						})
+					}
+				});
+				var alreadyDisplayedStrongsSearch = [];
+				namesConglomerate.forEach(function(amalgamation, index) {
+					var name = amalgamation["name"]
+					var grandTotal = 0;
+					var allStrongs = "";
+					for (var count = 0; count < amalgamation["conglomeration"].length; count ++) {
+						if (allStrongs !== "") allStrongs += ",";
+						sortedAllStrongs = amalgamation["conglomeration"][count].strongs.sort().join(",");
+						if (alreadyDisplayedStrongsSearch.includes(sortedAllStrongs)) {
+							amalgamation["conglomeration"].splice(count, 1);  // remove from array, it is a duplicate
+							count --;
+							console.log("Skipped duplicate name: " + sortedAllStrongs);
+							allStrongs = allStrongs.slice(0, -1)
+						}
+						else {
+							grandTotal += amalgamation["conglomeration"][count].count;
+							allStrongs += amalgamation["conglomeration"][count].strongs.join(",");
+							alreadyDisplayedStrongsSearch.push(sortedAllStrongs);
+						}
+					}
+					if (amalgamation["conglomeration"].length < 1) return; // Nothing to process, probably due to removed duplicates
+					var suggestionType = "greekMeanings";
+					var limitType = "greek";
+					if (allStrongs.substring(0,1) === "H") {
+						suggestionType = "hebrewMeanings";
+						limitType = "hebrew";	
+					}
+					var text2Display = "The " + amalgamation["type"] + " named \"" + name + "\"";
+					var prefixToDisplay = "";
+					var suffixToDisplay = '<span class="srchFrequency"> occurs in total - ' + grandTotal + ' x</span>';
+					var suffixTitle = "";
+					var augStrongSameMeaning = null;
+					var hasDetailLexInfo = false;
+					var needIndent = false;
+					var userInput = "";
+					step.searchSelect.appendSearchSuggestionsToDisplay(searchNames, 
+						allStrongs, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
+						limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions);
+					amalgamation["conglomeration"].forEach(function(element, index) {
+						var iteration = index + 1
+						var alternateNames = ""
+						alternateNamesList = element["alternateNames"]
+						if (alternateNamesList) {
+							alternateNames = "(also "
+							alternateNamesList.forEach(function(alternateName) {
+								alternateNames += "\"" + alternateName + "\", "
+							})
+							alternateNames = alternateNames.slice(0, -2)
+							alternateNames += ") "
+						}
+						var strongs2Search = element.strongs.join(",");
+						var text2Display = element["brief"]  + " " + alternateNames;
+						var prefixToDisplay = iteration + ") ";
+						var suffixToDisplay = '<span class="srchFrequency"> - ' + element["count"] + ' x</span>';
+						var suffixTitle = "";
+						var needIndent = true;
+						var userInput = "";
+						step.searchSelect.appendSearchSuggestionsToDisplay(searchNames, 
+							strongs2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
+							limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions);
+					})
+					if (index < namesConglomerate.length - 1) {
+						searchNames.append("<hr style=\"border: none; border-top: 1px solid #ccc; margin: 0; padding: 0;\">")
+					}
+				})
+				if(searchNames[0].lastChild && searchNames[0].lastChild.tagName === "HR") {
+					searchNames[0].lastChild.remove()
+				}
 				step.searchSelect.handleLanguageButton();
 				if (step.searchSelect.searchRange !== "Gen-Rev")
 					$(".srchFrequency").hide();
@@ -1841,6 +1988,12 @@ step.searchSelect = {
 			changeBaseURL();
 		});
 	},
+	helper1: function (vocabInfos) {
+		console.log("test1")
+	},
+	helper2: function (data) {
+		console.log("test2")
+	},
 
 	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, allVersions, element, callBack, titleText, text2Display, userInput, isAugStrong,
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
@@ -1879,9 +2032,9 @@ step.searchSelect = {
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
 		var result = step.searchSelect._getSuggestedWordsInfo(data, strongNum, augStrongSameMeaning, allVersions);
 		if (typeof callBack === "function") {
-			if (callBack.name === "_addFreqListQTip")
+			if (callBack.name === "_addFreqListQTip") {
 				callBack(augStrongSameMeaning, allVersions, result[7], element);
-			else if (callBack.name === "_addLineWithAugStrongOrDetailLexInfo")
+			} else if (callBack.name === "_addLineWithAugStrongOrDetailLexInfo")
 				callBack(result, augStrongSameMeaning, titleText, text2Display, userInput, strongNum, isAugStrong,
 					element, needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType, allVersions);
 		}
@@ -2236,7 +2389,8 @@ step.searchSelect = {
 		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions) { // , hasHebrew, hasGreek) {
 		var brCount = 0;
 		var suggestionsToDisplay = 7;
-		var suggestionsToDisplay = ($("#srchModalBackButton").is(":hidden")) ? 7 : 40; // There are 30+ Zechariah so 40 should be enough
+		if (($("#srchModalBackButton").is(":hidden")) || (currentSearchSuggestionElement.selector === "#searchResultsnames"))
+			suggestionsToDisplay = 40; // More entries are needed to display names.  There are 30+ Zechariah so 40 should be enough
 		var needLineBreak = "";
 		var isAugStrong = Array.isArray(augStrongSameMeaning);
 		var existingHTML = currentSearchSuggestionElement.html();
@@ -2283,7 +2437,10 @@ step.searchSelect = {
 				var newSuggestion = $('<a style="padding:0px' + additionalCSS + '"' + titleText +
 						aTagOnClick +
 						'>' + text2Display + "</a>");
-				this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0], newSuggestion);
+				var isNames = ($(currentSearchSuggestionElement).is($('#searchResultsnames')))
+				if (!isNames) {	
+					this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0], newSuggestion);
+				}
 				currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
 					.append(newSuggestion)
 					.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
@@ -2293,7 +2450,11 @@ step.searchSelect = {
 						nonAugStrong = str2Search.slice(0, -1);
 					var freqListElm = $('<span></span');
 					currentSearchSuggestionElement.append('&nbsp;').append(freqListElm);
-					this._getAdditionalInformationOnStrong(nonAugStrong, [ str2Search ], allVersions, freqListElm, step.searchSelect._addFreqListQTip);
+					var callback
+					if (!isNames) {
+						callback = step.searchSelect._addFreqListQTip
+					}
+					this._getAdditionalInformationOnStrong(nonAugStrong, [ str2Search ], allVersions, freqListElm, callback);
 				}
 			}
 			return;

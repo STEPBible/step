@@ -1476,7 +1476,6 @@ step.searchSelect = {
 								}
 							}
 							newName["count"] = resultArray[0] + resultArray[1]; // OT count + NT count
-							console.log(mainStrong + ": count OT: " + resultArray[0] + " NT: " + resultArray[1]);
 							if (newName["count"] > 0 ){
 								names.push(newName)
 							}
@@ -1720,7 +1719,6 @@ step.searchSelect = {
 						if (alreadyDisplayedStrongsSearch.includes(sortedAllStrongs)) {
 							amalgamation["conglomeration"].splice(count, 1);  // remove from array, it is a duplicate
 							count --;
-							console.log("Skipped duplicate name: " + sortedAllStrongs);
 							allStrongs = allStrongs.slice(0, -1)
 						}
 						else {
@@ -1760,6 +1758,8 @@ step.searchSelect = {
 							alternateNames += ") "
 						}
 						var strongs2Search = element.strongs.join(",");
+						// var text2Display = "<span style=\"text-indent: -20px;margin-left: 20px;\">" + element["brief"]  + " " + alternateNames + "</span>";
+						// var text2Display = "<span style=\"text-indent: -1em; margin-left: 1em;\">" + element["brief"]  + " " + alternateNames + "</span>";
 						var text2Display = element["brief"]  + " " + alternateNames;
 						var prefixToDisplay = iteration + ") ";
 						var suffixToDisplay = '<span class="srchFrequency"> - ' + element["count"] + ' x</span>';
@@ -1984,12 +1984,6 @@ step.searchSelect = {
 		}).fail(function() {
 			changeBaseURL();
 		});
-	},
-	helper1: function (vocabInfos) {
-		console.log("test1")
-	},
-	helper2: function (data) {
-		console.log("test2")
 	},
 
 	_getAdditionalInformationOnStrong: function(strongNum, augStrongSameMeaning, allVersions, element, callBack, titleText, text2Display, userInput, isAugStrong,
@@ -2431,16 +2425,27 @@ step.searchSelect = {
 					'\',\'' + str2Search + '\',\'' + 
 					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') + '\')"';
 
-				var newSuggestion = $('<a style="padding:0px' + additionalCSS + '"' + titleText +
+				var newSuggestion = $('<a style="padding:0px;' + additionalCSS + '"' + titleText +
 						aTagOnClick +
 						'>' + text2Display + "</a>");
 				var isNames = ($(currentSearchSuggestionElement).is($('#searchResultsnames')))
 				if (!isNames) {	
 					this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0], newSuggestion);
 				}
-				currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
-					.append(newSuggestion)
-					.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
+				const isSubResult = !(prefixToDisplay === "")
+				var elementToAppend
+				if (isSubResult) {
+					const wrapper = $('<div class="search-sub-suggestion">');
+					elementToAppend = wrapper
+					needLineBreak = ""
+					if (needLineBreak.slice(0, 4) === "<br>") needLineBreak = needLineBreak.slice(4)
+				} else {
+					elementToAppend = currentSearchSuggestionElement
+				}
+				elementToAppend.append(needLineBreak + prefixToDisplay)
+						.append(newSuggestion)
+						.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
+				if (isSubResult) currentSearchSuggestionElement.append(elementToAppend)
 				if ((searchType === "strong") && (str2Search.indexOf(',') == -1)) {
 					var nonAugStrong = str2Search;
 					if (isNaN(str2Search.slice(-1)))

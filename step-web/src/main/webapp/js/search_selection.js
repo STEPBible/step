@@ -1449,6 +1449,7 @@ step.searchSelect = {
 							var resultArray = step.searchSelect._getSuggestedFrequency(data[i].suggestion, allVersions);
 							var briefDef = suggestion.briefDef
 							newName["brief"] = briefDef
+							newName["type"] = suggestion.type
 							var details = suggestion._detailLexicalTag
 							if (details) {
 								newName["alternateNames"] = []
@@ -1694,9 +1695,11 @@ step.searchSelect = {
 				names.forEach(function(element) {
 					$("td.search-type-column.select-names").html("Names:");
 					var name = element["name"]
+					var nameType = element["type"]
 					if (!namesConglomerateInclusion.includes(name)) {
 						var amalgamation = {}
 						amalgamation["name"] = name
+						amalgamation["type"] = nameType
 						amalgamation["conglomeration"] = [element]
 						amalgamation["count"] = element["count"]
 						namesConglomerate.push(amalgamation)
@@ -1736,7 +1739,7 @@ step.searchSelect = {
 						suggestionType = "hebrewMeanings";
 						limitType = "hebrew";	
 					}
-					var text2Display = "The name \"" + name + "\"";
+					var text2Display = "The " + amalgamation["type"] + " named \"" + name + "\"";
 					var prefixToDisplay = "";
 					var suffixToDisplay = '<span class="srchFrequency"> occurs in total - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";

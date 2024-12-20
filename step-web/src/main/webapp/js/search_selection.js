@@ -1739,7 +1739,7 @@ step.searchSelect = {
 						suggestionType = "hebrewMeanings";
 						limitType = "hebrew";	
 					}
-					var text2Display = "The " + amalgamation["type"] + " named \"" + name + "\"";
+					var text2Display = "A " + amalgamation["type"] + " named \"" + name + "\"";
 					var prefixToDisplay = "";
 					var suffixToDisplay = '<span class="srchFrequency"> occurs in total - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";

@@ -24,6 +24,8 @@ public class VocabInfo implements Serializable {
     private String strongPronunc;
     private List<LexiconSuggestion> relatedNos;
     private String shortDef;
+    private String briefDef;
+    private String shortDefMounce;
     private String mediumDef;
     private String es_Gloss;
     private String zh_tw_Gloss;
@@ -64,6 +66,8 @@ public class VocabInfo implements Serializable {
                      final boolean includeAllInfo, final String userLanguage) {
         this.accentedUnicode = d.get("accentedUnicode");
         this.shortDef = d.get("shortDefinition");
+        this.shortDefMounce = d.get("shortDefinitionMounce");
+        this.briefDef = d.get("briefDefinition");
         this.stepGloss = d.get("stepGloss");
         this.stepTransliteration = d.get("stepTransliteration");
         this.mediumDef = d.get("mediumDefinition");
@@ -265,6 +269,26 @@ public class VocabInfo implements Serializable {
     public void setShortDef(final String shortDef) {
         this.shortDef = shortDef;
     }
+
+    /**
+     * @return the shortDefMounce
+     */
+    public String getShortDefMounce() { return this.shortDefMounce; }
+
+    /**
+     * @param shortDefMounce the shortDefMounce to set
+     */
+    public void setShortDefMounce(final String shortDefMounce) { this.shortDefMounce = shortDefMounce; }
+
+    /**
+     * @return the briefDef
+     */
+    public String getBriefDef() { return this.briefDef; }
+
+    /**
+     * @param briefDef the briefDef to set
+     */
+    public void setBriefDef(final String briefDef) { this.briefDef = briefDef; }
 
     /**
      * @return the mediumDef

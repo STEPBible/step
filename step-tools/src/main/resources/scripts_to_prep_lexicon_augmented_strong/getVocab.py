@@ -4,7 +4,7 @@
 #specified folder for future use.
 
 #STEPBIBLE website
-stepWebsite = "https://dev.stepbible.org/rest/module/getInfo/ESV//"
+stepWebsite = "https://test.stepbible.org/rest/module/getInfo/ESV//"
 #output folder
 #requires ending /
 outFolder = "jsonfiles/"
@@ -19,15 +19,17 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 import json
 
+# The following line is also defined in step.util.js.  The array of keys in step.util.js and the following line must match.
 vocabKeys = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
                 "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
                 "shortDef", "mediumDef", "lsjDefs",
                 "_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
                 "accentedUnicode", "rawRelatedNumbers", "relatedNos", 
                 "_stepDetailLexicalTag", "_step_Link", "_step_Type", "_stepSearchResultRange", 
-                "freqList", "defaultDStrong"
+                "freqList", "defaultDStrong", "shortDefMounce", "briefDef"
                 ]
-relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss"]
+# The following line is also defined in step.util.js.  The array of keys in step.util.js and the following line must match.
+relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"]
 
 def checkDupStrings(currentValue, strings):
     if currentValue in strings:
@@ -146,19 +148,23 @@ starttime = time.perf_counter()
 count = 0
 strongNumbers = []
 augStrongNumbers = []
+strongWithStopWord = []
 #read in all strong numbers
 with open(lexiconFile,'r', encoding="utf8") as file:
     while True:
         line = file.readline()
         if not line:
             break
-        if line[0:8] == "@StrNo=\t":
-            currentStrong = line[8:].strip('\n')
+        if line[0:9] == "@dStrNo=\t":
+            currentStrong = line[9:].strip('\n')
             if currentStrong[-1].isnumeric():
                 strongNumbers.append(currentStrong)
                 count += 1
             else:
                 augStrongNumbers.append(currentStrong)
+        else:
+            if line[0:15] == "@StopWord=\ttrue":
+                strongWithStopWord.append(currentStrong)
 
 #group strong words [[a,b,c],[a,b],[g,h,i],[g,h,i,j]]
 mainStrWords = []
@@ -242,7 +248,7 @@ for n in tqdm(range(len(mainStrWords))):
         if len(mainStrWords[n]) > 1:
             for l in range(len(mainStrWords[n])):
                 curAugStr = mainStrWords[n][l]
-                if curAugStr not in augstr:
+                if curAugStr not in augstr and curAugStr not in strongWithStopWord:
                     print("something wrong, in lexicon, not in augstrong", l, mainStrWords[n])
 
         vocabInfos = []

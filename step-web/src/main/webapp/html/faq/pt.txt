@@ -1,0 +1,107 @@
+g1q0:	Como ler passagens na Bíblia?
+g1q1:	Como procurar uma passagem?
+g1q1a1:	Clique no botão Passagem para encontrar um capítulo ou referências.
+
+g1q2:	Como ver três bíblias ao mesmo tempo?
+g1q2a1: Clique no botão Bíblia para selecionar uma ou várias Bíblias.
+
+g1q3:	Como encontrar uma passagem paralela nos evangelhos?
+g1q3a1:	1) Clique no ícone Recursos.
+g1q3a2:	2) Clique no recurso para passagens paralelas dos evangelhos
+
+g1q4:	Como seguir um plano de leitura da Bíblia?
+g1q4a1:	1) Clique no ícone Recursos.
+g1q4a2: 2) Há planos para 1,2 ou 3 anos, cronológicos, judaicos e etc.
+
+g1q5:	Como ver um comentário?
+g1q5a1:	1) Clique no botão Bíblia.
+g1q5a2:	2) Clique em Comentários.
+
+g2q0:	Como encontrar palavras e frases?
+g2q1:	Como encontrar palavras ou temas?
+g2q1a1:	1) Clique no botão pesquisar.
+g2q1a2:	2) Digite a palavra ou frase na barra de pesquisa e clique em pesquisar.
+
+g2q2:	Como pesquisar apenas alguns livros da Bíblia?
+g2q2a1:	1) Clique no botão pesquisar.
+g2q2a2:	2) Clique em intervalo.
+g2q2a3:	3) Selecione os livros que deseja pesquisar.
+
+g2q3:	Como encontrar uma palavra em grego ou hebraico?
+g2q3a1:	1) Clique no botão pesquisar.
+g2q3a2:	2) Ative o botão Pesquisa Avançada.
+g2q3a3:	3) Digite a palavra grega ou hebraica na caixa de pesquisa, clique em pesquisar e aguarde a tabela ser preenchida.
+g2q3a4: 4) Verifique a linha correspondente para ver a tradução grega/hebraica da palavra.
+
+g2q4:	Como encontrar uma palavra relacionada a um assunto?
+g2q4a1:	1) Clique no botão pesquisar.
+g2q4a2:	2) Ative o botão Pesquisa Avançada.
+g2q4a3:	3) Digite o assunto na caixa de pesquisa, clique em pesquisar e aguarde a tabela ser preenchida.
+g2q4a4: 4) Verifique a linha: Assunto ou pessoa na Bíblia.
+
+g2q5:	Onde encontro mais informações sobre pesquisa avançada?
+g2q5a1:	Instruções detalhadas estão no guia de usuário.
+
+g3q0:   Como realizar um estudo de palavras?
+g3q1:	Que informações sobre uma palavra podem ser encontradas?
+g3q1a1:	Quando clicar em uma palavra, o léxico detalhado abre com:
+g3q1a2:	Significado: como a palavra é usada em toda a Bíblia
+g3q1a3: Dicionário: detalhes acadêmicos sobre a palavra
+g3q1a4: Palavras relacionadas: semelhantes em significado ou origem.
+g3q1a5: Gramática: (disponível para algumas Bíblias apenas)
+
+g3q2:   Por que apenas algumas Bíblias possuem palavras clicáveis?
+g3q2a1: As Bíblias com “vocabulário” ligam a tradução ao grego e ao hebraico. Até à data, apenas algumas Bíblias têm esta funcionalidade de vocabulário. No ecrã de seleção de Bíblias, estas são assinaladas com a letra 'V'.
+
+g3q3: 	O que significa “~20x” ou “Frequência”?
+g3q3a1: É o número de ocorrências de uma palavra na Bíblia. Clique nele para ver todas as ocorrências na(s) Bíblia(s) selecionada(s).
+
+g3q4:	Por que algumas palavras têm uma lista suspensa junto ao número de frequência?
+g3q4a1: Ela revela diferentes formas para algumas palavras e nomes. Estes detalhes são muitas vezes interessantes para os estudiosos. Por exemplo, a palavra “princípio” no Gênesis.
+
+g3q5:	Onde encontrar os mapas?
+g3q5a1: Método 1:
+g3q5a2:	Clique no nome de um local e depois no botão Mapa no léxico detalhado.
+g3q5a3: Método 2:
+g3q5a4: 1) Clique no ícone Recurso.
+g3q5a5: 2) Clique em “Lugares na Bíblia”
+
+g3q6:	Como obter a frequência de palavras de um capítulo ou de um livro?
+g3q6a1: 1) Clique no ícone Análise.
+g3q6a2: 2) Clique no botão “Passagem selecionada” se não for apresentada nenhuma análise.
+
+g4q0:	Como encontrar mais informações sobre as línguas originais?
+g4q1:	Como ver o vocabulário grego/hebraico na minha Bíblia?
+g4q1a1: 1) Clique no botão de traduções da Bíblia
+g4q1a2: 2) Consulte a legenda e selecione as traduções da Bíblia que tenham o recurso Vocabulário
+g4q1a3: 3) Clique no botão Opções, depois clique em "Opções de Vocabulário”, então selecione "Vocab. em Grego/Hebraico". As palavras da língua original serão exibidas.
+
+g4q2:	Como ver a transliteração grega/hebraica para minha Bíblia?
+g4q2a1:	1) Clique no botão de traduções da Bíblia
+g4q2a2:	2) Consulte a legenda e selecione as traduções da Bíblia que tenham o recurso Vocabulário
+g4q2a3:	3) Clique no botão Opções, depois clique em "Opções de Vocabulário”, então selecione "Vocab. transliterado”
+
+g4q3:	Como ver o vocabulário grego/hebraico em um versículo?
+g4q3a1:	1) Clique no número do versículo para acessar a lista de palavras e significados.
+g4q3a2:	2) Passe o mouse sobre uma palavra ou clique nela para obter mais detalhes.
+
+g4q4:	Como ver várias Bíblias juntas, como um Interlinear?
+g4q4a1:	1) Clique no botão de traduções da Bíblia
+g4q4a2:	2) Consulte a legenda e selecione duas Bíblias que tenham o recurso Vocabulário
+g4q4a3:	3) Clique no botão Opções, depois clique em "Interlinear”, então selecione. Será exibido como Interlinear
+
+g4q5:	Como ver várias versões do AT em grego?
+g4q5a1:	1) Clique no botão de traduções da Bíblia
+g4q5a2:	2) Selecione “Antigo” em Idioma
+g4q5a3:	3) Role para baixo para ver as traduções do AT em grego
+
+g4q6:	Como exibir a gramática em código de cores?
+g4q6a1:	1) Clique no botão de traduções da Bíblia
+g4q6a2:	2) Consulte a legenda e selecione as traduções da Bíblia que tenham o recurso Gramática
+g4q6a3:	3) Clique no botão Opções, depois clique em "Opções de Vocabulário”, então selecione “Gramática em código de cores”. O texto será exibido com código por cores.
+g4q6a4:	4) Para entender o código de cores, clique no botão “Configurar gramática em código de cor”
+
+g5q0:   Informações adicionais
+g5q1:   Guia do site
+
+videguide: Tutorial em Vídeo

@@ -311,7 +311,7 @@ var ExamplesView = Backbone.View.extend({
             if ((options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1)) cf.initCanvasAndCssForClrCodeGrammar();
 		}
 		var checkLangCode = step.userLanguageCode.toLowerCase();
-		if ((checkLangCode.substring(0,2) === "zh") || (checkLangCode.substring(0,2) === "ar")) {
+		if ((checkLangCode.substring(0,2) === "zh") || (checkLangCode.substring(0,2) === "ar") || (checkLangCode.substring(0,2) === "pt")) {
 			if (checkLangCode === "zh_hk")
 				checkLangCode = "zh_tw";
 			fetch("html/faq/" + checkLangCode + ".txt")

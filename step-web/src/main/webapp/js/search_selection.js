@@ -2437,7 +2437,7 @@ step.searchSelect = {
 				if (isSubResult) {
 					const wrapper = $('<div class="search-sub-suggestion">');
 					elementToAppend = wrapper
-					needLineBreak = ""
+					// needLineBreak = ""
 					if (needLineBreak.slice(0, 4) === "<br>") needLineBreak = needLineBreak.slice(4)
 				} else {
 					elementToAppend = currentSearchSuggestionElement
@@ -2446,7 +2446,7 @@ step.searchSelect = {
 						.append(newSuggestion)
 						.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
 				if (isSubResult) currentSearchSuggestionElement.append(elementToAppend)
-				if ((searchType === "strong") && (str2Search.indexOf(',') == -1)) {
+				if ((searchType === "strong") && (str2Search.indexOf(',') == -1) && !isSubResult) {
 					var nonAugStrong = str2Search;
 					if (isNaN(str2Search.slice(-1)))
 						nonAugStrong = str2Search.slice(0, -1);

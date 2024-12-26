@@ -18,6 +18,14 @@
   }
 }
 
+.search-sub-selection {
+  font-style: italic !important;
+  color: bisque !important;
+  background-color: yellow !important;
+  border: 5px solid red !important;
+  transform: rotate(10deg);
+}
+
 #searchmodalbody,
 #bookchaptermodalbody {
   h4 {

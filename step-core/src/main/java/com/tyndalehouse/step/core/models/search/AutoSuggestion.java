@@ -8,6 +8,7 @@ public class AutoSuggestion {
     private boolean grouped = false;
     private boolean maxReached = false;
     private int count;
+    private int strongHash = 0;
     private List<PopularSuggestion> extraExamples;
 
     public String getItemType() {
@@ -57,4 +58,8 @@ public class AutoSuggestion {
     public void setExtraExamples(final List<PopularSuggestion> extraExamples) {
         this.extraExamples = extraExamples;
     }
+
+    public void setStrongHash(int hash) { this.strongHash = hash; }
+
+    public int getStrongHash() { return this.strongHash; }
 }

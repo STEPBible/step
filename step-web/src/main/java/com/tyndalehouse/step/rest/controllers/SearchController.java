@@ -195,7 +195,17 @@ public class SearchController {
             else if (currentType.equals("meanings")) {
                 LexiconSuggestion meaning = (LexiconSuggestion) currentSuggestion.getSuggestion();
                 if (meaning == null) continue;
-                currentSuggestion.setCount(((SearchResult) masterSearch(context + currentType + "=" + meaning.getGloss(), true)).getTotal());
+                SearchResult meaningResult =  ((SearchResult) masterSearch(context + currentType + "=" + meaning.getGloss(), true));
+                List<String> strongHashList = meaningResult.getStrongHighlights();
+                int strongHash = 0;
+                for (String strong : strongHashList) { // Iterate through each string
+                    for (char ch : strong.toCharArray()) { // Iterate through each character in the string
+                        int charValue = (int) ch; // Convert the character to its ASCII/Unicode value
+                        strongHash += charValue * charValue; // Square the value and add to the sum
+                    }
+                }
+                currentSuggestion.setStrongHash(strongHash);
+                currentSuggestion.setCount(meaningResult.getTotal());
             }
             else if (currentType.equals("subject")) {
                 SubjectSuggestion subject = (SubjectSuggestion) currentSuggestion.getSuggestion();

@@ -2435,17 +2435,23 @@ step.searchSelect = {
 				const isSubResult = !(prefixToDisplay === "")
 				var elementToAppend
 				if (isSubResult) {
+					needLineBreak = ""
+					needLineBreak +=  "<br style='line-height:" +
+						((step.touchDevice) ? "2" : "5") +
+						"px'>";
 					const wrapper = $('<div class="search-sub-suggestion">');
-					elementToAppend = wrapper
-					// needLineBreak = ""
-					if (needLineBreak.slice(0, 4) === "<br>") needLineBreak = needLineBreak.slice(4)
+					const subWrapper1 = $('<div class="search-sub-suggestion-part">');
+					const subWrapper2 = $('<div class="search-sub-suggestion-part">');
+					subWrapper1.append("&nbsp;&nbsp;&nbsp;" + prefixToDisplay)
+					subWrapper2.append(newSuggestion)
+					.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
+					wrapper.append(subWrapper1).append(subWrapper2)
+					currentSearchSuggestionElement.append(needLineBreak).append(wrapper)
 				} else {
-					elementToAppend = currentSearchSuggestionElement
+					currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
+					.append(newSuggestion)
+					.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
 				}
-				elementToAppend.append(needLineBreak + prefixToDisplay)
-						.append(newSuggestion)
-						.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
-				if (isSubResult) currentSearchSuggestionElement.append(elementToAppend)
 				if ((searchType === "strong") && (str2Search.indexOf(',') == -1) && !isSubResult) {
 					var nonAugStrong = str2Search;
 					if (isNaN(str2Search.slice(-1)))

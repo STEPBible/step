@@ -1405,6 +1405,8 @@ step.searchSelect = {
 			for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
 				$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
 			}
+			var meaningsEntries = []
+			var meaningsEntriesMore = ""
 			var names = []
 			var namesInclusion = []
 			var thingsWithNames = ["man", "woman", "king", "queen", "judge", "place", "group", "prophet"]
@@ -1436,7 +1438,7 @@ step.searchSelect = {
 					var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
 					var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 					var suggestion = data[i].suggestion;
-					if ((suggestionType == "greekMeanings" || suggestionType == "hebrewMeanings") && thingsWithNames.includes(suggestion.type)) {
+					if ((suggestionType == GREEK_MEANINGS || suggestionType == HEBREW_MEANINGS) && thingsWithNames.includes(suggestion.type)) {
 						var mainStrong = suggestion.strongNumber
 						if (!namesInclusion.includes(mainStrong)) {
 							namesInclusion.push(mainStrong)
@@ -1516,7 +1518,12 @@ step.searchSelect = {
 												text2Display += __s.more
 											text2Display += '</b>...';
 											if (currentHTML !== "") currentSearchSuggestionElement.append("<br>");
-											currentSearchSuggestionElement.append('<a onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>");
+											var text2Append = '<a onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>"
+											if (suggestionType == MEANINGS) {
+												meaningsEntriesMore = text2Append
+											} else {
+												currentSearchSuggestionElement.append(text2Append);
+											}
 										}
 									}
 								}
@@ -1667,9 +1674,28 @@ step.searchSelect = {
 										if (data[i].count > 0)
 											suffixToDisplay = '<span class="srchFrequency"> ' + data[i].count + ' x</span>';
 									}
-									step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
-										str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
-										limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);
+									if (suggestionType == MEANINGS) {
+										var newMeaning = {}
+										newMeaning["currentSearchSuggestionElement"] = currentSearchSuggestionElement
+										newMeaning["str2Search"] = str2Search
+										newMeaning["suggestionType"] = suggestionType
+										newMeaning["text2Display"] = text2Display
+										newMeaning["prefixToDisplay"] = ""
+										newMeaning["suffixToDisplay"] = suffixToDisplay
+										newMeaning["suffixTitle"] = suffixTitle
+										newMeaning["limitType"] = limitType
+										newMeaning["augStrongSameMeaning"] = null
+										newMeaning["hasDetailLexInfo"] = false
+										newMeaning["needIndent"] = false
+										newMeaning["userInput"] = ""
+										newMeaning["allVersions"] = allVersions
+										newMeaning["strongHash"] = data[i].strongHash
+										meaningsEntries.push(newMeaning)
+									} else {
+										step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
+											str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
+											limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);
+									}
 								}
 							}
 							break;
@@ -1688,6 +1714,61 @@ step.searchSelect = {
 							break;
 					}
 				}
+				meaningsEntriesHashes = []
+				meaningsEntriesDict = {}
+				meaningsEntries.forEach(function(element) {
+					hash = element.strongHash
+					if (meaningsEntriesHashes.includes(hash)) {
+						meaningsEntriesDict[hash].push(element)
+					} else {
+						meaningsEntriesDict[hash] = [element]
+						meaningsEntriesHashes.push(hash)
+					}
+				})
+				meaningsEntries = []
+				Object.entries(meaningsEntriesDict).forEach(([key, value]) => {
+					value.sort((a, b) => {
+						if (a.text2Display < b.text2Display) return -1;
+						if (a.text2Display > b.text2Display) return 1;
+						return 0;
+					});
+					meaningsEntry = value.shift()
+					value.forEach(function(element) {
+						meaningsEntry["text2Display"] += (", " + element["text2Display"])
+					})
+					meaningsEntries.push(meaningsEntry)
+				});
+				meaningsEntries.sort((a, b) => {
+					const firstA = a.text2Display.split(",")[0].trim();
+					const firstB = b.text2Display.split(",")[0].trim();
+					if (firstA < firstB) return -1;
+					if (firstA > firstB) return 1;
+					return 0;
+				  });
+				console.log(meaningsEntries) // append each
+				meaningsEntries.forEach(function(element) {
+					var currentSearchSuggestionElement = element["currentSearchSuggestionElement"]
+					var str2Search = element["str2Search"]
+					var suggestionType = element["suggestionType"]
+					var text2Display = element["text2Display"]
+					var prefixToDisplay = element["prefixToDisplay"]
+					var suffixToDisplay = element["suffixToDisplay"]
+					var suffixTitle = element["suffixTitle"]
+					var limitType = element["limitType"]
+					var augStrongSameMeaning = element["augStrongSameMeaning"]
+					var hasDetailLexInfo = element["hasDetailLexInfo"]
+					var needIndent = element["needIndent"]
+					var userInput = element["userInput"]
+					var allVersions = element["allVersions"]
+					step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement, str2Search, suggestionType, text2Display, prefixToDisplay,
+						suffixToDisplay, suffixTitle, limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions)
+				})
+				var searchMeanings = $('#searchResultsmeanings');
+				var searchMeaningsHTML = searchMeanings.html()
+				if (searchMeaningsHTML !== "") searchMeanings.append("<br>");
+				if (meaningsEntriesMore !== "") searchMeanings.append(meaningsEntriesMore)
+				// add break to meanings element if text is not ""
+				// append meaningsEntriesMore to meanings element if it's not empty.
 				var searchNames = $('#searchResultsnames');
 				var namesConglomerate = []
 				var namesConglomerateInclusion = []
@@ -2438,7 +2519,7 @@ step.searchSelect = {
 						aTagOnClick +
 						'>' + text2Display + "</a>");
 				var isNames = ($(currentSearchSuggestionElement).is($('#searchResultsnames')))
-				if (!isNames) {	
+				if (!isNames) {
 					this.addMouseOverEvent(searchType, str2Search, prefixToDisplay, allVersions.split(',')[0], newSuggestion);
 				}
 				currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)

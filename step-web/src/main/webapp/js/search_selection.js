@@ -1713,37 +1713,38 @@ step.searchSelect = {
 							break;
 					}
 				}
-				meaningsEntriesHashes = []
-				meaningsEntriesDict = {}
+				var meaningsEntriesHashes = [];
+				var meaningsEntriesDict = {};
 				meaningsEntries.forEach(function(element) {
-					hash = element.strongHash
+					var hash = element.strongHash;
 					if (meaningsEntriesHashes.includes(hash)) {
-						meaningsEntriesDict[hash].push(element)
+						meaningsEntriesDict[hash].push(element);
 					} else {
-						meaningsEntriesDict[hash] = [element]
-						meaningsEntriesHashes.push(hash)
+						meaningsEntriesDict[hash] = [element];
+						meaningsEntriesHashes.push(hash);
 					}
 				})
-				meaningsEntries = []
-				Object.entries(meaningsEntriesDict).forEach(([key, value]) => {
-					value.sort((a, b) => {
+				meaningsEntries = [];
+				Object.entries(meaningsEntriesDict).forEach(function(entry) {
+					var value = entry[1];
+					value.sort(function(a, b) {
 						if (a.text2Display < b.text2Display) return -1;
 						if (a.text2Display > b.text2Display) return 1;
 						return 0;
 					});
-					meaningsEntry = value.shift()
+					var meaningsEntry = value.shift();
 					value.forEach(function(element) {
-						meaningsEntry["text2Display"] += (", " + element["text2Display"])
+						meaningsEntry["text2Display"] += (", " + element["text2Display"]);
 					})
-					meaningsEntries.push(meaningsEntry)
+					meaningsEntries.push(meaningsEntry);
 				});
-				meaningsEntries.sort((a, b) => {
+				meaningsEntries.sort(function(a, b) {
 					const firstA = a.text2Display.split(",")[0].trim();
 					const firstB = b.text2Display.split(",")[0].trim();
 					if (firstA < firstB) return -1;
 					if (firstA > firstB) return 1;
 					return 0;
-				  });
+				});
 				console.log(meaningsEntries) // append each
 				meaningsEntries.forEach(function(element) {
 					var currentSearchSuggestionElement = element["currentSearchSuggestionElement"]
@@ -2526,10 +2527,10 @@ step.searchSelect = {
 					const wrapper = $('<div class="search-sub-suggestion">');
 					const subWrapper1 = $('<div class="search-sub-suggestion-part">');
 					const subWrapper2 = $('<div class="search-sub-suggestion-part">');
-					subWrapper1.append("&nbsp;&nbsp;&nbsp;" + prefixToDisplay)
+					subWrapper1.append("&nbsp;&nbsp;&nbsp;" + prefixToDisplay);
 					subWrapper2.append(newSuggestion)
 					.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
-					wrapper.append(subWrapper1).append(subWrapper2)
+					wrapper.append(subWrapper1).append(subWrapper2);
 					currentSearchSuggestionElement.append(needLineBreak).append(wrapper)
 				} else {
 					currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)

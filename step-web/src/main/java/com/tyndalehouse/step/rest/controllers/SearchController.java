@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -138,6 +139,8 @@ public class SearchController {
     }
 
     private void addCountsToSuggestions(List<AutoSuggestion> autoSuggestions, final String context) {
+        int firstMeaningSugguestion = -1;
+        int lastMeaningSuggestion = -1;
         for (int i = 0; i < autoSuggestions.size(); i ++) {
             AutoSuggestion currentSuggestion = autoSuggestions.get(i);
             String currentType = currentSuggestion.getItemType();
@@ -193,18 +196,14 @@ public class SearchController {
                 currentSuggestion.setCount(((SearchResult) result).getTotal());
             }
             else if (currentType.equals("meanings")) {
+                if (firstMeaningSugguestion == -1) firstMeaningSugguestion = i;
+                lastMeaningSuggestion = i;
                 LexiconSuggestion meaning = (LexiconSuggestion) currentSuggestion.getSuggestion();
                 if (meaning == null) continue;
                 SearchResult meaningResult =  ((SearchResult) masterSearch(context + currentType + "=" + meaning.getGloss(), true));
-                List<String> strongHashList = meaningResult.getStrongHighlights();
-                int strongHash = 0;
-                for (String strong : strongHashList) { // Iterate through each string
-                    for (char ch : strong.toCharArray()) { // Iterate through each character in the string
-                        int charValue = (int) ch; // Convert the character to its ASCII/Unicode value
-                        strongHash += charValue * charValue; // Square the value and add to the sum
-                    }
-                }
-                currentSuggestion.setStrongHash(strongHash);
+                List<String> strongList = meaningResult.getStrongHighlights();
+                Collections.sort(strongList);
+                currentSuggestion.setStrongList(strongList);
                 currentSuggestion.setCount(meaningResult.getTotal());
             }
             else if (currentType.equals("subject")) {
@@ -224,6 +223,23 @@ public class SearchController {
                 }
                 if (getCount)
                     currentSuggestion.setCount( ((SearchResult) masterSearch(context + currentType + "=" + subject.getValue(), true)).getTotal() );
+            }
+        }
+        if (firstMeaningSugguestion > -1) {
+            int hashNum = 0;
+            for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i ++) {
+                AutoSuggestion currentSuggestion = autoSuggestions.get(i);
+                if ((currentSuggestion.getItemType().equals("meanings")) && (currentSuggestion.getStrongHash() == 0)) { // Hash == 0 means it has not been compared
+                    hashNum ++;
+                    currentSuggestion.setStrongHash(hashNum);
+                    List<String> currentStrongList = currentSuggestion.getStrongList();
+                    for (int j = i + 1; j <= lastMeaningSuggestion; j ++) {
+                        AutoSuggestion anotherSuggestion = autoSuggestions.get(j);
+                        if (currentStrongList.equals(anotherSuggestion.getStrongList())) {
+                            anotherSuggestion.setStrongHash(hashNum);
+                        }
+                    }
+                }
             }
         }
     }

@@ -1,0 +1,107 @@
+g1q0:   Comment choisir les Bibles et la référence à afficher ?
+g1q1:   Comment choisir la référence à afficher ?
+g1q1a1: Cliquer sur le bouton ‘Afficher une autre référence’ pour changer de livre ou de chapitre.
+
+g1q2:   Comment afficher trois Bibles en même temps ?
+g1q2a1: Cliquer sur le bouton ‘Choisir Bibles & Commentaires’ pour sélectionner la ou les Bibles à afficher.
+
+g1q3:   Comment trouver les passages parallèles dans les Évangiles  ?
+g1q3a1: 1) Cliquer sur l'icône ‘Ressources’.
+g1q3a2: 2) Cliquer sur le lien ‘Synopse des quatre Évangiles (en anglais)'.
+
+g1q4:   Où trouver des plans de lecture ?
+g1q4a1: 1) Cliquer sur l'icône ‘Ressources’.
+g1q4a2: 2 ) Cliquer sur l'un des plans proposés (en anglais).
+
+g1q5:   Où trouver des commentaires bibliques ?
+g1q5a1: 1) Cliquer sur le bouton ‘Choisir Bibles & Commentaires’.
+g1q5a2: 2) Cliquer sur l'onglet ‘Commentaires’.
+
+g2q0:   Où rechercher des mots ou des expressions ?
+g2q1:   Où effectuer une recherche sur des mots ou sur une expression ?
+g2q1a1: 1) Cliquer sur le bouton ‘Rechercher dans la Bible’.
+g2q1a2: 2) Taper dans la barre de recherche les mots ou l’expression  et valider avec la touche Entrée.
+
+g2q2:   Comment restreindre ma recherche à quelques livres ?
+g2q2a1: 1) Cliquer sur le bouton ‘Rechercher dans la Bible’.
+g2q2a2: 2) Cliquer sur le bouton ‘Chercher dans’.
+g2q2a3: 3) Sélectionner les livres à inclure dans la recherche.
+
+g2q3:   Comment chercher un mot grec ou hébreu dans les textes sources ?
+g2q3a1: 1) Cliquer sur le bouton ‘Rechercher dans la Bible’.
+g2q3a2: 2) Cliquer sur l'interrupteur pour activer la Recherche avancée (interrupteur vert sur position On).
+g2q3a3: 3) Taper directement dans la barre de recherche le mot grec ou hébreu, ou son code Strong simple (ex: H7225 ou G0746), valider avec la touche Entrée, et attendre que  le tableau des résultats se remplisse.
+g2q3a4: 4) Cliquer sur le lien approprié dans la liste des résultats..
+
+g2q4:	Comment effectuer une recherche sur un sujet particulier ?
+g2q4a1:	1) Cliquer sur le bouton ‘Rechercher dans la Bible’
+g2q4a2:	2) Cliquer sur l'interrupteur pour activer la Recherche avancée (interrupteur vert sur position On).
+g2q4a3:	3) Taper le mot-clé en anglais (ex: love, ou Abraham), valider avec la touche Entrée, et attendre que le tableau des résultats se remplisse.
+g2q4a4:	4) Cliquer sur l’un des liens proposés dans les lignes de résultats thématiques.
+
+g2q5:	Où trouver plus d’information sur la Recherche avancée ?
+g2q5a1: Se référer au Guide de l’utilisateur (en anglais).
+
+g3q0:   Comment travailler sur un mot ?
+g3q1:	Quelles sont les informations disponibles pour chaque mot ?
+g3q1a1:	Le panneau ‘Analyse des mots’ s’ouvre en cliquant sur le mot. Vous y trouverez :
+g3q1a2:	Signification : comment ce mot est utilisé dans la Bible (lexique en anglais)
+g3q1a3: Dictionnaire : la définition de ce mot dans un dictionnaire de référence
+g3q1a4: Mots liés : des mots en anglais d’origine ou de sens similaire
+g3q1a5: Grammaire : analyse grammaticale du mot (disponible seulement dans certaines Bibles)
+
+g3q2:   Pourquoi n’est-il pas possible de cliquer sur les mots dans toutes les Bibles ?
+g3q2a1: Seules les Bibles avec la fonctionnalité Vocabulaire (indiquée avec un V dans la liste de choix des Bibles) mettent en relation les mots de la traduction avec les mots correspondants dans la source en hébreu ou en grec.
+
+g3q3:   Que signifie “~20x” ou ‘fréquence’ ?
+g3q3a1: Il s’agit du nombre d’occurrences de ce mot dans la Bible. Cliquer sur le lien pour les afficher toutes dans les Bibles sélectionnées.
+
+g3q4:	Pourquoi en regard du nombre d’occurrences y a-t-il pour certains mots la possibilité d’afficher davantage d’informations ? 
+g3q4a1:	Il s’agit de mots qui ont différentes formes correspondant à différentes nuances de sens (par exemple le mot ‘commencement’ en Genèse 1,1). Ces informations présentent un intérêt pour une analyse approfondie du texte biblique.
+
+g3q5:	Où trouver des cartes ?
+g3q5a1:	1ère méthode :
+g3q5a2:	Cliquer sur un nom de lieu pour afficher le panneau ‘Analyse des mots’ puis sur le bouton ‘Cartes’ qui apparaît dans le lexique.
+g3q5a3:	2nde méthode :
+g3q5a4:	1) Cliquer sur l'icône ‘Ressources’.
+g3q5a5:	2) Cliquer sur "Atlas bibliques" (en anglais), puis taper le nom en anglais du lieu recherché.
+
+g3q6:	Où trouver le nombre d’occurrences d’un mot dans un chapitre ou un livre ?
+g3q6a1:	1a) Cliquer sur le bouton ‘Analyse’ pour afficher le panneau ‘Analyse lexicale’.
+g3q6a2:	1b) Si aucune analyse ne s’affiche, cliquer sur la référence en regard du verset (par ex. Gen 1:1) pour afficher les informations de vocabulaire disponibles.
+
+g4q0:	Où trouver plus d’informations sur les langues dans lesquelles a été écrite la Bible ?
+g4q1:	Où afficher le vocabulaire grec/hébreu correspondant à ma traduction ?
+g4q1a1:	1) Cliquer sur le bouton ‘Choisir Bibles & Commentaires’.
+g4q1a2:	2) Sélectionner les traductions qui disposent de la fonctionnalité Vocabulaire (indiquée avec un V dans la liste de choix des Bibles).
+g4q1a3:	3) Cliquer sur le bouton ‘Options’, puis cliquer sur ‘Options de vocabulaire’ et sélectionner l’option ‘Vocab. en grec / hébreu’ pour afficher le vocabulaire dans la langue source.
+
+g4q2:	Comment afficher la translittération du grec ou de l’hébreu ?
+g4q2a1:	1) Cliquer sur le bouton ‘Choisir Bibles & Commentaires’.
+g4q2a2:	2) Sélectionner les traductions qui disposent de la fonctionnalité Vocabulaire  (indiquée avec un V dans la liste de choix des Bibles).
+g4q2a3:	3) Cliquer sur le bouton ‘Options’, puis cliquer sur ‘Options de vocabulaire’ et sélectionner l’option ‘Vocab. Translittéré’.
+
+g4q3:	Où afficher le vocabulaire grec/hébreu d’un verset ?
+g4q3a1:	1) Cliquer sur la référence en regard du verset (par ex. Gen 1:1) pour afficher le vocabulaire de ce verset en anglais et en langue source.
+g4q3a2:	2) Cliquer sur un mot ou le survoler avec le curseur pour afficher plus de détails sur ce mot.
+
+g4q4:	Comment afficher plusieurs Bibles en interlinéaire ?
+g4q4a1:	1) Cliquer sur le bouton ‘Choisir Bibles & Commentaires’.
+g4q4a2:	2) Sélectionner deux Bibles qui disposent de la fonctionnalité Vocabulaire  (indiquée avec un V dans la liste de choix des Bibles).
+g4q4a3:	3) Cliquer sur le bouton ‘Options’, puis cliquer sur ‘Interlinéaire’.
+
+g4q5:	Comment afficher les différentes versions grecques de l’Ancien testament ?
+g4q5a1:	1) Cliquer sur le bouton ‘Choisir Bibles & Commentaires’.
+g4q5a2:	2) Au niveau de la sélection de la langue, cliquer sur le bouton ‘Anciennes’.
+g4q5a3:	3) Faire défiler la page pour arriver sur la liste ‘Ancien Testament grec’.
+
+g4q6:	Comment afficher les codes couleur pour la grammaire ?
+g4q6a1:	1) Cliquer sur le bouton ‘Choisir Bibles & Commentaires’.
+g4q6a2:	2) Sélectionner les traductions qui disposent de la fonctionnalité Grammaire  (indiquée avec un G dans la liste de choix des Bibles).
+g4q6a3:	3) 3) Cliquer sur le bouton ‘Options’, puis cliquer sur ‘Options de vocabulaire’ et sélectionner l’option ‘Code couleur pour la grammaire’.
+g4q6a4:	4) Pour accéder à la signification du code couleur (en anglais), cliquer sur le bouton ‘Définir le code couleur pour la grammaire’.
+
+g5q0:   Informations complémentaires
+g5q1:   Guide du site (en anglais)
+
+_videoguide: Guide vidéo

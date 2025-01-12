@@ -14,33 +14,37 @@ sub addFreqToStepLexicon {
 	my $verifyCount = 0;
 	my $curCode = "";
 	my $previousCode = "";
-	my $printNext = 0;
+	my $hasStopWord = 0;
+	my $needStopWord = 0;
     foreach (@lexiconLines) {
         my $currentLine = $_;
         if ($currentLine =~ /$findPattern/) {
 			$previousCode = $curCode;
-            $curCode = $';
-			if ($printNext) {
-				print "     next strong number: $curCode\n";
-				$printNext = 0;
+			if (($previousCode ne "") && ($needStopWord) && (!$hasStopWord)) {
+				print "Added @StopWord=true for $previousCode because frequency count is zero\n";
+				print OUT "@StopWord=\ttrue\n";	
 			}
+            $curCode = $';
+			$hasStopWord = 0;
+			$needStopWord = 0;
             print OUT $currentLine . "\n";
             if ($curCode ne "") {
                 if (exists($freqList{$curCode})) {
                     print OUT "\@StrFreqList=\t" . $freqList{$curCode} . "\n";
-					#print "$curCode  $freqList{$curCode}\n";
 					$verifyCount = $freqCount{$curCode};
                 }
 				else {
-                    print "Frequency count of $curCode is zero for all Bibles\n";
-					print "     previous strong number: $previousCode\n";
-					$printNext = 1;
+#                    print "Info: Frequency count of $curCode is zero for all Bibles\n";
 					$verifyCount = 0;
+					$needStopWord = 1;
                 }	
             }
         }
         elsif ($currentLine !~ /^\@StrFreqList=\t/) {
             print OUT $currentLine . "\n";
+			if ($currentLine !~ /^\@StopWord=\ttrue/) {
+				$hasStopWord = 1;
+			}
         }
 		elsif ($currentLine =~ /^\@StrFreqList=\t/) {
             my $curList = $';
@@ -60,7 +64,6 @@ sub addFreqToStepLexicon {
 					if ($percentage > 1.3) {
 						print "$curCode has over 30% diff. current count: $verifyCount, previous count: $countOfPrevious, percent difference: $percentage\n";
 						print "     previous strong number: $previousCode\n";
-						$printNext = 1;
 					}
 				}
 			}

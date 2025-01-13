@@ -2519,11 +2519,10 @@ step.searchSelect = {
 				const isSubResult = !(prefixToDisplay === "")
 				var elementToAppend
 				if (isSubResult) {
-					needLineBreak = ""
-					needLineBreak +=  "<br style='line-height:" +
-						// ((step.touchDevice) ? "2" : "5") +
-						((step.touchDevice) ? "2" : "2") +
-						"px'>";
+					// needLineBreak = ""
+					// needLineBreak +=  "<br style='line-height:" +
+					// 	((step.touchDevice) ? "2" : "5") +
+					// 	"px'>";
 					const wrapper = $('<div class="search-sub-suggestion">');
 					const subWrapper1 = $('<div class="search-sub-suggestion-part">');
 					const subWrapper2 = $('<div class="search-sub-suggestion-part">');
@@ -2531,7 +2530,8 @@ step.searchSelect = {
 					subWrapper2.append(newSuggestion)
 					.append(" " + this.buildSuffixTag(suffixToDisplay, suffixTitle));
 					wrapper.append(subWrapper1).append(subWrapper2);
-					currentSearchSuggestionElement.append(needLineBreak).append(wrapper)
+					// currentSearchSuggestionElement.append(wrapper).append(needLineBreak)
+					currentSearchSuggestionElement.append(wrapper)
 				} else {
 					currentSearchSuggestionElement.append(needLineBreak + prefixToDisplay)
 					.append(newSuggestion)

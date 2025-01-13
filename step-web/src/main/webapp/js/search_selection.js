@@ -1449,7 +1449,6 @@ step.searchSelect = {
 							newName["name"] = suggestion.gloss
 							var name = newName["name"]
 							var resultArray = step.searchSelect._getSuggestedFrequency(data[i].suggestion, allVersions);
-							console.log(resultArray)
 							var briefDef = suggestion.briefDef
 							newName["brief"] = briefDef
 							newName["type"] = suggestion.type
@@ -1881,7 +1880,6 @@ step.searchSelect = {
 	_getSuggestedFrequency: function(curWord, allVersions) {
 		var vocabMorphFromJson = { vocabInfos: [ curWord ] };
 		step.util.lookUpFrequencyFromMultiVersions(vocabMorphFromJson, allVersions);
-		console.log(vocabMorphFromJson)
 		var curOT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountOT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountOT : 0;
 		var curNT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountNT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountNT : 0;
 		return [curOT, curNT, vocabMorphFromJson.vocabInfos[0].notInBibleSelected];

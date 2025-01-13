@@ -1449,6 +1449,7 @@ step.searchSelect = {
 							newName["name"] = suggestion.gloss
 							var name = newName["name"]
 							var resultArray = step.searchSelect._getSuggestedFrequency(data[i].suggestion, allVersions);
+							console.log(resultArray)
 							var briefDef = suggestion.briefDef
 							newName["brief"] = briefDef
 							newName["type"] = suggestion.type
@@ -1745,7 +1746,6 @@ step.searchSelect = {
 					if (firstA > firstB) return 1;
 					return 0;
 				});
-				console.log(meaningsEntries) // append each
 				meaningsEntries.forEach(function(element) {
 					var currentSearchSuggestionElement = element["currentSearchSuggestionElement"]
 					var str2Search = element["str2Search"]
@@ -1881,6 +1881,7 @@ step.searchSelect = {
 	_getSuggestedFrequency: function(curWord, allVersions) {
 		var vocabMorphFromJson = { vocabInfos: [ curWord ] };
 		step.util.lookUpFrequencyFromMultiVersions(vocabMorphFromJson, allVersions);
+		console.log(vocabMorphFromJson)
 		var curOT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountOT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountOT : 0;
 		var curNT = (typeof vocabMorphFromJson.vocabInfos[0].versionCountNT === "number") ? vocabMorphFromJson.vocabInfos[0].versionCountNT : 0;
 		return [curOT, curNT, vocabMorphFromJson.vocabInfos[0].notInBibleSelected];
@@ -2522,7 +2523,8 @@ step.searchSelect = {
 				if (isSubResult) {
 					needLineBreak = ""
 					needLineBreak +=  "<br style='line-height:" +
-						((step.touchDevice) ? "2" : "5") +
+						// ((step.touchDevice) ? "2" : "5") +
+						((step.touchDevice) ? "2" : "2") +
 						"px'>";
 					const wrapper = $('<div class="search-sub-suggestion">');
 					const subWrapper1 = $('<div class="search-sub-suggestion-part">');

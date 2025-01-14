@@ -667,10 +667,13 @@ step.searchSelect = {
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i ++) {
 			var srchCode = this.searchTypeCode[i];
 			html += '<tr class="select2-result select2-result-selectable select-' + srchCode + '">' +
-				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" title="' + 
-				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':</td>' +
+				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" style="font-size:14px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':' +
+					'<a class="search_type_title_' +  srchCode + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
+				'</td>' +
 				'</tr><tr style="height:40px;border-bottom:solid"  class="select2-result select2-result-selectable select-' + srchCode + '">' +
-				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding-left:20px;text-align:left"><span id="searchResults' + srchCode + '"></span></td></tr>';
+				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding-left:20px;text-align:left">' +
+				'<span id="searchResults' + srchCode + '"></span>' +
+				'</td></tr>';
 		}
 		html += '</table>' +
 			'</div><br>';
@@ -732,6 +735,22 @@ step.searchSelect = {
 			else if (step.searchSelect.searchOnSpecificType === SUBJECT_SEARCH)
 				basic_search_help_text = '<p>What you can enter:</p>' +
 					'<ul><li>An English word (to find subjects related to the word)</ul>';
+			require(["qtip"], function () {
+				for (l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
+					var srchCode = step.searchSelect.searchTypeCode[l];
+					var element = $(".search_type_title_" + srchCode);
+					console.log("code: "+ srchCode);	
+					element.qtip({
+						position: { my: "top right", at: "top right", viewport: $(window) },
+						style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+						show: { event: 'mouseenter' },
+						hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+						content: {
+							text: __s["search_type_title_" + srchCode]
+						}
+					});
+				}
+			});
 		}
 		else if (language === "he" ) {
 			if ($("#searchResultshebrew").html() !== "") {
@@ -1582,7 +1601,9 @@ step.searchSelect = {
 													}
 												}
 											}
-											$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":");
+											$("td.search-type-column.select-text").html(__s.search_type_desc_text + ":" +
+												'<a class="search_type_title_text glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>'
+											);
 										}
 									}
 									if ($('textarea#userTextInput').val().indexOf("*") == -1)
@@ -1773,7 +1794,9 @@ step.searchSelect = {
 				var namesConglomerateInclusion = []
 				names = names.sort(step.util.levenshteinNameComparator(userInput))
 				names.forEach(function(element) {
-					$("td.search-type-column.select-names").html("Names:");
+					$("td.search-type-column.select-text").html(__s.search_type_desc_names + ":" +
+						'<a class="search_type_title_names glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>'
+					);
 					var name = element["name"]
 					var nameType = element["type"]
 					if (!namesConglomerateInclusion.includes(name)) {

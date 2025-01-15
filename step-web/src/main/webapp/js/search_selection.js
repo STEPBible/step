@@ -724,17 +724,17 @@ step.searchSelect = {
 				$(".select-names").show();
 				isAnythingShown = true;
 			}
-			basic_search_help_text = '<p>What you can enter:</p>' +
-			'<ul><li><strong>love</strong> → searches words that start with “love” (e.g. love, loved, lovely, …)' +
-			'<li><strong>"love"</strong> → searches the exact word love (<strong>not</strong> loved, loves, lovely)' +
-			'<li><strong>come to me</strong> → searches for "come", "to", and "me" in any order' +
-			'<li><strong>"come to me"</strong> → searches for the exact phrase in the selected translations</ul>';
+			basic_search_help_text = '<p>' + __s.basic_search_help_header + '</p>' +
+			'<ul><li>' + __s.basic_search_help_text1 +
+			'<li>' + __s.basic_search_help_text2 +
+			'<li>' + __s.basic_search_help_text3  +
+			'<li>' + __s.basic_search_help_text4 + '</ul>';
 			if (step.searchSelect.searchOnSpecificType === MEANINGS)
-				basic_search_help_text = '<p>What you can enter:</p>' +
-					'<ul><li>An English word (to find other words with the same meaning)</ul>';
+				basic_search_help_text = '<p>' + __s.related_word_search_help_header + '</p>' +
+					'<ul><li>' + __s.related_word_search_help_text + '</ul>';
 			else if (step.searchSelect.searchOnSpecificType === SUBJECT_SEARCH)
-				basic_search_help_text = '<p>What you can enter:</p>' +
-					'<ul><li>An English word (to find subjects related to the word)</ul>';
+				basic_search_help_text = '<p>' + __s.topic_search_help_header + '</p>' +
+					'<ul><li>' + __s.topic_search_help_text + '</ul>';
 			require(["qtip"], function () {
 				for (l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
 					var srchCode = step.searchSelect.searchTypeCode[l];
@@ -761,11 +761,11 @@ step.searchSelect = {
 				$(".select-hebrewMeanings").show();
 				isAnythingShown = true;
 			}
-			basic_search_help_text = '<p>What you can enter:</p><ul>';
+			basic_search_help_text = '<p>' + __s.hebrew_search_help_header + '</p><ul>';
 			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === HEBREW_MEANINGS))
-				basic_search_help_text += '<li>An English word (to find Hebrew words with the same meaning)';
+				basic_search_help_text += '<li>' + __s.hebrew_related_word_search_help_text;
 			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === HEBREW))
-				basic_search_help_text += '<li>Transliteration (type it like it sounds)<li>Hebrew text';
+				basic_search_help_text += '<li>' + __s.hebrew_transliteration_search_help_text;
 			basic_search_help_text += '</ul>';
 		}
 		else if (language === "gr") {
@@ -777,11 +777,11 @@ step.searchSelect = {
 				$(".select-greekMeanings").show();
 				isAnythingShown = true;
 			}
-			basic_search_help_text = '<p>What you can enter:</p><ul>';
+			basic_search_help_text = '<p>' + __s.greek_search_help_header + '</p><ul>';
 			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === GREEK_MEANINGS))
-				basic_search_help_text += '<li>An English word (to find Greek words with the same meaning)';
+				basic_search_help_text += '<li>' + __s.greek_related_word_search_help_text;
 			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === GREEK))
-				basic_search_help_text += '<li>Transliteration (type it like it sounds)<li>Greek text';
+				basic_search_help_text += '<li>' + __s.greek_transliteration_search_help_text;
 			basic_search_help_text += '</ul>';
 		}
 		if (isAnythingShown) {

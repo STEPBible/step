@@ -668,7 +668,7 @@ step.searchSelect = {
 			var srchCode = this.searchTypeCode[i];
 			html += '<tr class="select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" class="search-type-column select2-result select2-result-selectable select-' + srchCode + '" style="font-size:14px;text-align:left;' + (step.state.isLtR()? '">': 'text-align: right;">') + __s['search_type_desc_' + srchCode] + ':' +
-					'<a class="search_type_title_' +  srchCode + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
+					'<a class="search_type_title_' +  srchCode + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px;padding-left:0px" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
 				'</td>' +
 				'</tr><tr style="height:40px;border-bottom:solid"  class="select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td onmouseout="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding-left:20px;text-align:left">' +

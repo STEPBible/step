@@ -628,18 +628,19 @@ step.searchSelect = {
 			}
 		}
 		var fontColor = document.querySelector(':root').style.getPropertyValue('--clrText');
-		var html = '<div class="header">' +
-			'<form id="langButtonForm" role="form" class="form-inline" style="margin-top:8px;float:left">' +
+		var html = '<div class="header" style="padding:0px">' +
+			'<form id="langButtonForm" role="form" class="form-inline" style="margin-top:8px">' +
 				'<span class="form-group btn-group" data-toggle="buttons">' +
 					'<label class="btn btn-default btn-sm stepButton stepPressedButton active"><input type="radio" data-lang="en" checked="checked">English</label>' +
 					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="he">Hebrew</label>' +
 					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr">Greek</label>' +
 				'</span>' +
 			'</form>' +
-			'<span id="searchRangeButton" style="float:right;font-size:larger"><b>' + __s.search_range + ':</b> ' +
+			'</div>' +
+			'<div id="searchRangeButton" style="font-size:larger"><b>' + __s.search_range + ':</b> ' +
 				'<a onclick=step.searchSelect._buildRangeHeaderAndTable()>' + displayRange + '</a>' +
-			'</span>' +
-			'</div><br><br>' +
+			'</div><br>' +
+
 			'<span id="warningMessage" style="color:red;width:90%;float:left"></span><br>' +
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:50%" placeholder="' + __s.enter_search_word + '">' +
 				step.searchSelect.previousUserInput +

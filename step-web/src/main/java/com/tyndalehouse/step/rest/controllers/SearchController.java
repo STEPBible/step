@@ -141,7 +141,8 @@ public class SearchController {
     private void addCountsToSuggestions(List<AutoSuggestion> autoSuggestions, final String context) {
         int firstMeaningSugguestion = -1;
         int lastMeaningSuggestion = -1;
-        for (int i = 0; i < autoSuggestions.size(); i ++) {
+        int originalSize = autoSuggestions.size();
+        for (int i = 0; i < originalSize; i ++) { // Do not get count for newly added suggestion.  Counts are added when new suggestions are created.
             AutoSuggestion currentSuggestion = autoSuggestions.get(i);
             String currentType = currentSuggestion.getItemType();
             if (currentType.equals("text")) {
@@ -152,12 +153,17 @@ public class SearchController {
                 if (posOfSpace == -1) { // One word
                     if ((searchText.indexOf("\"") == -1) && // No quotes
                          searchText.substring(searchText.length() - 1).equals("*")) { // last char is a *
-                        AutoSuggestion newSuggestion = new AutoSuggestion(); // Add a suggestion to search the string with * at the end
+                        // Move the suggestion to the new one and add to the end of autoSuggestions
+                        AutoSuggestion newSuggestion = new AutoSuggestion();
                         newSuggestion.setItemType(currentType);
                         TextSuggestion newTextSuggestion = new TextSuggestion();
-                        newTextSuggestion.setText("\"" + searchText.substring(0, searchText.length() - 1) + "\"");
+                        newTextSuggestion.setText(((TextSuggestion) currentSuggestion.getSuggestion()).getText());
                         newSuggestion.setSuggestion(newTextSuggestion);
+                        AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchText, true);
+                        newSuggestion.setCount(((SearchResult) result).getTotal());
                         autoSuggestions.add(newSuggestion);
+                        searchText = "\"" + searchText.substring(0, searchText.length() - 1) + "\"";
+                        ((TextSuggestion) currentSuggestion.getSuggestion()).setText(searchText);
                     }
                 } else {
                     String firstWord = searchText.substring(0, posOfSpace);

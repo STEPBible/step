@@ -1,0 +1,2 @@
+crowdin_api_client==1.12.1
+python_dotenv==0.21.1

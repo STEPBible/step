@@ -1,2 +1,5 @@
 crowdin_api_client==1.12.1
 python_dotenv==0.21.1
+requests
+tqdm==4.67.1
+pytz==2024.2

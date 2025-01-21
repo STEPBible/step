@@ -1794,28 +1794,30 @@ step.searchSelect = {
 				var namesConglomerate = []
 				var namesConglomerateInclusion = []
 				names = names.sort(step.util.levenshteinNameComparator(userInput))
-				names.forEach(function(element) {
-					$("td.search-type-column.select-text").html(__s.search_type_desc_names + ":" +
+				if (names.length > 0) {
+					$("td.search-type-column.select-names").html(__s.search_type_desc_names + ":" +
 						'<a class="search_type_title_names glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>'
 					);
-					var name = element["name"]
-					var nameType = element["type"]
-					if (!namesConglomerateInclusion.includes(name)) {
-						var amalgamation = {}
-						amalgamation["name"] = name
-						amalgamation["type"] = nameType
-						amalgamation["conglomeration"] = [element]
-						amalgamation["count"] = element["count"]
-						namesConglomerate.push(amalgamation)
-						namesConglomerateInclusion.push(name)
-					} else {
-						namesConglomerate.forEach(function(amalgamation) {
-							if (amalgamation["name"] === name) {
-								amalgamation["conglomeration"].push(element)
-							}
-						})
-					}
-				});
+					names.forEach(function(element) {
+						var name = element["name"]
+						var nameType = element["type"]
+						if (!namesConglomerateInclusion.includes(name)) {
+							var amalgamation = {}
+							amalgamation["name"] = name
+							amalgamation["type"] = nameType
+							amalgamation["conglomeration"] = [element]
+							amalgamation["count"] = element["count"]
+							namesConglomerate.push(amalgamation)
+							namesConglomerateInclusion.push(name)
+						} else {
+							namesConglomerate.forEach(function(amalgamation) {
+								if (amalgamation["name"] === name) {
+									amalgamation["conglomeration"].push(element)
+								}
+							})
+						}
+					});
+				}
 				var alreadyDisplayedStrongsSearch = [];
 				namesConglomerate.forEach(function(amalgamation, index) {
 					var name = amalgamation["name"]

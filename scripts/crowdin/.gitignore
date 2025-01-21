@@ -4,6 +4,8 @@
 !.env.sample
 step_project.json
 all_projects.json
+tmp/*/*.properties
+tmp/unzipped/**
 
 
 # Byte-compiled / optimized / DLL files

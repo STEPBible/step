@@ -77,3 +77,7 @@ pip3 install -r requirements.txt
 # probably just `python unzip_and_move_bundle.py` should work, but it wasn't on my machine so putting down full path to the venv python. 
  ./venv/bin/python unzip_and_move_bundle.py
 ```
+
+
+# TODOs
+- [ ] See download_bundle.py and all the TODOs there

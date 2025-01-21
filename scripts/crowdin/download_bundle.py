@@ -208,20 +208,28 @@ class BuildJob:
                 langName = langName_list[0]
 
             for property_file_path in glob.iglob(f"{lang_folder_path}/*.properties"):
+                print("\n*****")
                 print("now on property file", property_file_path)
+                print("*****")
                 # TODO fix this, it's broken
-                folder2_path_list = property_file_path.split('/')
-                targetFilePrefix = folder2_path_list[2].split("_")[0]
+                folder2_path_list = Path(property_file_path).parts
+                propeties_filename = folder2_path_list[-1]
+                targetFilePrefix = propeties_filename.split("_")[0]
+
                 targetFile = targetFilePrefix + "_" + langName + ".properties"
 
                 targetPath = Path.joinpath(newPath, targetFile)
 
                 if os.path.exists(targetPath):
-                    print("already exist", targetPath, "Exit program")
-                    sys.exit()
+                    print("already exist", targetPath, "\nExiting program...")
+                    # TODO check with Patrick. Not sure what to do, due to how targetFilePrefix is defined to not use anything after the underscore, and how there is currently both zh_CN and zh_TW, these conflict and it errors out. 
+                    # I'm not sure what desired behavior should be
+                    if langName == "zh":
+                        print("moving forward with zh for now")
+                    else:
+                        sys.exit()
                 else:
-                    print("\n******")
-                    print("now trying to moving to:", targetPath)
+                    print("- moving to:", targetPath)
                     if targetFilePrefix == "LangSpecificBundle" or targetFilePrefix == "MorphologyBundle":
                         appendToFile = Path.joinpath(newPath, "InteractiveBundle_" + langName + ".properties")
                         print("Found", property_file_path, "will append to", appendToFile)
@@ -312,7 +320,9 @@ if __name__ == '__main__':
 
     else:
         # set default target bundle dir
-        # newPath = "../../step-core/src/main/resources/"
+        # TODO
+        # In the end will need to go here: "../../step-core/src/main/resources/"
+        # newPath = Path.joinpath(Path().resolve(), "..", "..", "step-core", "src", main", "resources")
         newPath = Path.joinpath(Path().resolve(), "tmp", "bundle_out")
         print("new path", newPath)
 

@@ -84,7 +84,7 @@ my $output_file_name = $ARGV[2];
 use open ':std', ':encoding(UTF-8)';
 # Read whole file in memory
 open FREQ_IN, "<", $name_of_freq_input_file or die "can't open freq file\n";
-my $outFile =  $output_file_name . '.txt';
+my $outFile =  $output_file_name;
 open (OUT, ">:encoding(UTF-8)", $outFile);
 open STEP_LEXICON_IN, '<:encoding(UTF-8)', $input_lexicon_file_from_step;
 chomp(@lexiconLines = <STEP_LEXICON_IN>);

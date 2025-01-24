@@ -227,7 +227,7 @@ class DownloadAndMoveJob:
 
             # iterate over each property file in the folder for that language, and move to target dir
             for property_file_path in sorted_property_files_in_lang_dir:
-                print("now copying .properties file", property_file_path)
+                print("now copying .properties file", property_file_path, "to target directory")
                 # Our java script is looking for a different filenaming system, so renaming when we move the file to match that. 
                 properties_filename = os.path.basename(property_file_path)
 
@@ -389,7 +389,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser("download_bundle")
     parser.add_argument("--path", 
                         dest="path",
-                        help="a string path to dir where to move files from the zip", 
+                        help="a string path to dir where to move files from the zip. Should work for relative or absolute paths", 
                         type=str)
 
     parser.add_argument("--skip-download", 
@@ -407,7 +407,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.path:
-        newPath = Path().resolve(args.path)
+        print("what got passed in", args.path)
+        # should work for absolute or relative paths.
+        newPath = Path(args.path).resolve()
 
         print("new path", newPath)
 

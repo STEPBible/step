@@ -65,18 +65,25 @@ Then install the requirements
 pip3 install -r requirements.txt
 ```
 
-## 2) Download Zip
+## 2) Run the script
 ```
 # probably just `python download.py` should work, but it wasn't on my machine so putting down full path to the venv python. 
-./venv/bin/python download.py
+./venv/bin/python download_bundle.py
 ```
 
+### Options:
+#### Option: Skip Download
+Will not download zip file, but just use existing zip file instead. If this is set, will not run a build either
+```
+./venv/bin/python download_bundle.py --skip-download
+```
 
-## 3) Unzip and Move files
+#### Option: Force Rebuild
+Will not check for existing builds, will just build a new one
 ```
-# probably just `python unzip_and_move_bundle.py` should work, but it wasn't on my machine so putting down full path to the venv python. 
- ./venv/bin/python unzip_and_move_bundle.py
+./venv/bin/python download_bundle.py --force-rebuild
 ```
+
 
 
 # TODOs

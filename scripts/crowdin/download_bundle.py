@@ -183,7 +183,7 @@ class DownloadAndMoveJob:
 
     def move(self, newPath):
         """
-        move unzipped files to target folder (final step!)
+        copy unzipped files to target folder (final step!)
         """
 
         # TODO make windows compatible
@@ -191,58 +191,57 @@ class DownloadAndMoveJob:
         print("checking", crowdin_export_path_to_glob)
 
         for lang_folder_path in glob.glob(crowdin_export_path_to_glob, recursive=False):
-            # TODO make windows compatible
-            print(lang_folder_path)
-            lang_folder_path_list = lang_folder_path.split('/')
+            lang_folder_path_list = Path(lang_folder_path).parts
 
             # skipping this precaution for now 
-            # TODO find out why it was here originally, and how to best implement now
             # if len(lang_folder_path_list) != 3:
             #     print("This folder name is not in the expected format", lang_folder_path, len(lang_folder_path_list), "Exit program")
             #     sys.exit()
 
             # gets the top level dir, and that's the langname base
-            langName_list = lang_folder_path_list[-1].split('-')
+            lang_folder_name = lang_folder_path_list[-1]
+            # print("lang_folder_name:", lang_folder_name)
 
             # change crowdin language codes to STEP Bible standards
 
-            # TODO check with patrick - how does this logic work? Doesn't match existing folder names
-            if langName_list == "zh-TW":
+            if lang_folder_name == "zh-TW":
+                # for Chinese (Taiwan), use zh_TW (for mainland mandarin, using zh) 
                 langName = "zh_TW"
-            elif langName_list == "he":
+            elif lang_folder_name == "he":
+                # for Hebrew , just use in "iw"
                 langName = "iw"
-            elif langName_list == "id":
+            elif lang_folder_name == "id":
+                # for Indian, just use in 
                 langName = "in"
             else:
-                langName = langName_list[0]
+                # for the rest, just take the first part, don't need specific dialect
+                langName = lang_folder_name.split("-")[0]
+
+            print("\n*****")
+            print("langName", langName)
+            print("*****")
 
             property_files_in_lang_dir = glob.iglob(f"{lang_folder_path}/*.properties")
             # sorting, particularly to make sure MorphologyBundle comes AFTER InteractiveBundle, since the MorphologyBundle needs to be appended onto the InteractiveBundle
             sorted_property_files_in_lang_dir = sorted(property_files_in_lang_dir, key=str.lower)
 
+            # iterate over each property file in the folder for that language, and move to target dir
             for property_file_path in sorted_property_files_in_lang_dir:
-                print("\n*****")
-                print("now on property file", property_file_path)
-                print("*****")
-                # TODO fix this, it's broken
-                folder2_path_list = Path(property_file_path).parts
-                propeties_filename = folder2_path_list[-1]
-                targetFilePrefix = propeties_filename.split("_")[0]
+                print("now copying .properties file", property_file_path)
+                # Our java script is looking for a different filenaming system, so renaming when we move the file to match that. 
+                properties_filename = os.path.basename(property_file_path)
 
-                targetFile = targetFilePrefix + "_" + langName + ".properties"
+                targetFilePrefix = properties_filename.split("_")[0]
+
+                targetFile = f"{targetFilePrefix}_{langName}.properties"
 
                 targetPath = Path.joinpath(newPath, targetFile)
 
                 if os.path.exists(targetPath):
-                    print("already exist", targetPath, "\nExiting program...")
-                    # TODO check with Patrick. Not sure what to do, due to how targetFilePrefix is defined to not use anything after the underscore, and how there is currently both zh_CN and zh_TW, these conflict and it errors out. 
-                    # I'm not sure what desired behavior should be
-                    if langName == "zh":
-                        print("moving forward with zh for now")
-                    else:
-                        sys.exit()
+                    print("ERROR !! File already exists, something went wrong", targetPath, "\nExiting program...")
+                    sys.exit()
                 else:
-                    print("- moving to:", targetPath)
+                    # print("- moving to:", targetPath)
                     if targetFilePrefix == "LangSpecificBundle" or targetFilePrefix == "MorphologyBundle":
                         appendToFile = Path.joinpath(newPath, "InteractiveBundle_" + langName + ".properties")
                         print("Found", property_file_path, "will append to", appendToFile)
@@ -258,7 +257,7 @@ class DownloadAndMoveJob:
                             print("Cannot find correspond InteractiveBundle file")
                             sys.exit()
                     else:
-                        print("copying", property_file_path, "to", targetPath)
+                        # print("copying", property_file_path, "to", targetPath)
                         shutil.copyfile(property_file_path, targetPath)
                 continue
 
@@ -318,7 +317,7 @@ class DownloadAndMoveJob:
                 print("found available build")
                 print(data)
 
-                # TODO better would be to find the latest among these and return that. This just naively returns any latest build. 
+                # TODO better would be to find the latest among these and return that. This just naively returns any build in last 30 min. 
                 return data
 
             else:
@@ -337,7 +336,6 @@ class DownloadAndMoveJob:
             downloadAndMoveJob.list_builds()
             available_build = downloadAndMoveJob.check_builds_for_existing()
 
-            # TODO add flag instead of this. 
             if available_build:
                 print("found available build", downloadAndMoveJob.buildId)
                 print("not making a new build, just using previous build")
@@ -434,9 +432,7 @@ if __name__ == '__main__':
         downloadAndMoveJob.set_build(force_build=args.force_build)
         downloadAndMoveJob.download_zip()
 
-
     downloadAndMoveJob.unzip()
-
 
     print("Files will be output to", newPath, "folder")
     downloadAndMoveJob.move(newPath)

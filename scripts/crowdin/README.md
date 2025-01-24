@@ -84,7 +84,27 @@ Will not check for existing builds, will just build a new one
 ./venv/bin/python download_bundle.py --force-rebuild
 ```
 
+#### Option: Path
+Specify a path to put `*.properties` files
 
+```
+./venv/bin/python download_bundle.py --path ../../step-core/src/main/resources/
+```
+
+(This is what we would do during our build process)
+
+#### Option: Skip Existing File Check
+Doesn't error out if there's a file in target dir already
+```
+./venv/bin/python download_bundle.py --skip-existing-file-check
+```
+
+
+### Use Case: Use updated `*.properties` files for project build
+Basically make sure to skip existing file check and specify the `resources` dir path
+```
+./venv/bin/python download_bundle.py --path ../../step-core/src/main/resources/ --skip-existing-file-check
+```
 
 # TODOs
 - [ ] See download_bundle.py and all the TODOs there

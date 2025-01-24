@@ -38,13 +38,14 @@ client = STEPCrowdinClient()
 
 
 class DownloadAndMoveJob:
-    def __init__(self): 
+    def __init__(self, skip_existing_file_check=False): 
         self.projectId = STEP_CROWDIN_PROJECT_ID
         self.buildId = None
         self.progress = None
         self.status = "not yet started"
         self.download_url = None
         self.existing_builds = None
+        self.skip_existing_file_check = skip_existing_file_check
 
     def run_build(self):
         """
@@ -237,7 +238,7 @@ class DownloadAndMoveJob:
 
                 targetPath = Path.joinpath(newPath, targetFile)
 
-                if os.path.exists(targetPath):
+                if os.path.exists(targetPath) and not self.skip_existing_file_check:
                     print("ERROR !! File already exists, something went wrong", targetPath, "\nExiting program...")
                     sys.exit()
                 else:
@@ -398,6 +399,12 @@ if __name__ == '__main__':
                         help="will not download zip file, but just use existing zip file instead. If this is set, will not run a build either",
                         )
 
+    parser.add_argument("--skip-existing-file-check", 
+                        action="store_true",
+                        dest="skip_existing_file_check",
+                        help="will not check for existing file in target directory",
+                        )
+
     parser.add_argument("--force-build", 
                         action="store_true",
                         dest="force_build",
@@ -426,7 +433,7 @@ if __name__ == '__main__':
         print("ERROR can't force build AND skip download!")
         sys.exit()
 
-    downloadAndMoveJob = DownloadAndMoveJob()
+    downloadAndMoveJob = DownloadAndMoveJob(skip_existing_file_check=args.skip_existing_file_check)
     if args.skip_download:
         downloadAndMoveJob.use_latest_zip()
 

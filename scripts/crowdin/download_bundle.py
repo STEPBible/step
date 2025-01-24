@@ -8,6 +8,10 @@ import zipfile
 import glob
 import sys
 import shutil
+import argparse
+import re
+
+
 from tqdm import tqdm
 import pytz
 utc=pytz.UTC
@@ -33,7 +37,7 @@ class STEPCrowdinClient(CrowdinClient):
 client = STEPCrowdinClient()
 
 
-class BuildJob:
+class DownloadAndMoveJob:
     def __init__(self): 
         self.projectId = STEP_CROWDIN_PROJECT_ID
         self.buildId = None
@@ -57,9 +61,14 @@ class BuildJob:
 
         build_result = client.translations.build_crowdin_project_translation(
             projectId=self.projectId,
-            #skipUntranslatedStrings=True,
+            # skipUntranslatedStrings=True,
+            # NOTE if this option is enabled, it overrides the effect of the Skip untranslated strings option.
+            # so if set this, Python lib actually requires you to not set skipUntranslatedStrings at all
             skipUntranslatedFiles=True,
-            exportApprovedOnly=True,
+            # Requires files and strings to be translated AND approved
+            # if this option is enabled, it overrides the effect of the Skip untranslated strings option.
+            #exportApprovedOnly=True,
+            #exportApprovedOnly=False,
         )
 
         print(build_result)
@@ -207,7 +216,11 @@ class BuildJob:
             else:
                 langName = langName_list[0]
 
-            for property_file_path in glob.iglob(f"{lang_folder_path}/*.properties"):
+            property_files_in_lang_dir = glob.iglob(f"{lang_folder_path}/*.properties")
+            # sorting, particularly to make sure MorphologyBundle comes AFTER InteractiveBundle, since the MorphologyBundle needs to be appended onto the InteractiveBundle
+            sorted_property_files_in_lang_dir = sorted(property_files_in_lang_dir, key=str.lower)
+
+            for property_file_path in sorted_property_files_in_lang_dir:
                 print("\n*****")
                 print("now on property file", property_file_path)
                 print("*****")
@@ -304,18 +317,100 @@ class BuildJob:
 
                 print("found available build")
                 print(data)
+
+                # TODO better would be to find the latest among these and return that. This just naively returns any latest build. 
                 return data
 
             else:
-                print("checking next build")
+                print("checking next build...")
 
-        return data
+        print("\n***\nno build found from last 30 minutes")
+        return None
 
+    def set_build(self, force_build=False):
+        """
+        either run a new build or find existing build for this run. 
+        """
+        if force_build:
+            downloadAndMoveJob.run_build()
+        else:
+            downloadAndMoveJob.list_builds()
+            available_build = downloadAndMoveJob.check_builds_for_existing()
+
+            # TODO add flag instead of this. 
+            if available_build:
+                print("found available build", downloadAndMoveJob.buildId)
+                print("not making a new build, just using previous build")
+            else:
+                downloadAndMoveJob.run_build()
+
+    def use_latest_zip(self):
+        """
+        - goes through zip files and finds teh latest one (i.e., zip with largest build number) 
+        - Main thing we need here is the build id, so we can use that and identify which zip to unzip in a later step. 
+        """
+        print("finding zips in dir using glob", f"{self.get_zip_dir_path()}/*.zip")
+        zip_files_in_download_dir = glob.iglob(f"{self.get_zip_dir_path()}/*.zip")
+
+        # The above returns a generator type, so turning into list
+        zip_files_in_download_dir_list = list(zip_files_in_download_dir)
+        if len(zip_files_in_download_dir_list) == 0:
+            print("ERROR no zips found. Try again without --skip-download")
+            sys
+
+        sorted_zips = sorted(zip_files_in_download_dir_list)
+        # get the last file in list, which should be the one with higest build id (and is therefore the latest)
+        print(sorted_zips)
+        latest_zip_path = sorted_zips[-1]
+
+        # extract the build-id from the filename
+        latest_zip_filename = os.path.basename(latest_zip_path)
+        match = re.search(r"crowdin-step.build_(\d+)", latest_zip_filename)
+        self.buildId = match.group(1)
+
+
+    def download_zip(self):
+        """
+        Either downloads the file for the given build
+        """
+        while self.build_is_done() != True:
+            print("waiting 3 seconds...")
+            time.sleep(3) # Sleep for 3 seconds
+            self.check_build_status()
+
+            if self.build_is_done():
+                break
+            else:
+                print("not yet done, waiting 3 seconds...")
+
+        self.get_download_url()
+
+        self.download()
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
-        newPath = Path().resolve(sys.argv[1])
-        # TODO need to test this
+    parser = argparse.ArgumentParser("download_bundle")
+    parser.add_argument("--path", 
+                        dest="path",
+                        help="a string path to dir where to move files from the zip", 
+                        type=str)
+
+    parser.add_argument("--skip-download", 
+                        dest="skip_download",
+                        action="store_true",
+                        help="will not download zip file, but just use existing zip file instead. If this is set, will not run a build either",
+                        )
+
+    parser.add_argument("--force-build", 
+                        action="store_true",
+                        dest="force_build",
+                        help="will not check for existing builds, will just build a new one",
+                        )
+
+    args = parser.parse_args()
+
+    if args.path:
+        newPath = Path().resolve(args.path)
+
         print("new path", newPath)
 
     else:
@@ -327,36 +422,24 @@ if __name__ == '__main__':
         print("new path", newPath)
 
 
-    buildJob = BuildJob()
+    if args.force_build and args.skip_download:
+        print("ERROR can't force build AND skip download!")
+        sys.exit()
 
-    buildJob.list_builds()
-    available_build = buildJob.check_builds_for_existing()
+    downloadAndMoveJob = DownloadAndMoveJob()
+    if args.skip_download:
+        downloadAndMoveJob.use_latest_zip()
 
-    if available_build:
-        print("found available build", buildJob.buildId)
-        print("not making a new build, just using previous build")
     else:
-        buildJob.run_build()
+        downloadAndMoveJob.set_build(force_build=args.force_build)
+        downloadAndMoveJob.download_zip()
 
 
-    while buildJob.build_is_done() != True:
-        print("waiting 3 seconds...")
-        time.sleep(3) # Sleep for 3 seconds
-        buildJob.check_build_status()
-
-        if buildJob.build_is_done():
-            break
-        else:
-            print("not yet done, waiting 3 seconds...")
-
-    buildJob.get_download_url()
-
-    buildJob.download()
-    buildJob.unzip()
+    downloadAndMoveJob.unzip()
 
 
     print("Files will be output to", newPath, "folder")
-    buildJob.move(newPath)
+    downloadAndMoveJob.move(newPath)
 
     print("\n***********")
     print("ALL DONE")

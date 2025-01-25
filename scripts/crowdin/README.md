@@ -85,7 +85,7 @@ Will not check for existing builds, will just build a new one
 ```
 
 #### Option: Path
-Specify a path to put `*.properties` files
+Specify a path to put `*.properties` files. Defaults to `step/scripts/crowdin/tmp/bundle_out` 
 
 ```
 ./venv/bin/python download_bundle.py --path ../../step-core/src/main/resources/
@@ -101,7 +101,7 @@ Doesn't error out if there's a file in target dir already
 
 
 ### Use Case: Use updated `*.properties` files for project build
-Basically make sure to skip existing file check and specify the `resources` dir path
+Basically make sure to skip existing file check and specify the `resources` dir path, and then the script will leave files that don't have replacements, but replace all `*.properties` files that do have replacements. 
 ```
 ./venv/bin/python download_bundle.py --path ../../step-core/src/main/resources/ --skip-existing-file-check
 ```

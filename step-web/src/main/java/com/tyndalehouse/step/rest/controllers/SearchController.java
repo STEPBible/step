@@ -166,28 +166,26 @@ public class SearchController {
                         ((TextSuggestion) currentSuggestion.getSuggestion()).setText(searchText);
                     }
                 } else {
-                    String firstWord = searchText.substring(0, posOfSpace);
-                    String restOfString = searchText.substring(posOfSpace + 1);
-                    if (firstWord.equals("#AND:")) {
-                        String[] multiWords = restOfString.split("\\s");
-                        searchText = multiWords[0];
-                        for (int j = 1; j < multiWords.length; j++) {
-                            searchText += "@" + currentType + "=" + multiWords[j];
-                        }
-                    } else if ((searchText.indexOf('"') == -1) &&
+                    if ((searchText.indexOf('"') == -1) &&
                             (searchText.toLowerCase().indexOf(" and ") == -1) &&
                             (searchText.toLowerCase().indexOf(" or ") == -1)) {
                         AutoSuggestion newSuggestion1 = new AutoSuggestion();
                         newSuggestion1.setItemType(currentType);
+                        String[] multiWords = searchText.split("\\s");
+                        String searchTextForAndSearch = multiWords[0];
+                        for (int j = 1; j < multiWords.length; j++) {
+                            searchTextForAndSearch += "@" + currentType + "=" + multiWords[j];
+                        }
                         TextSuggestion newTextSuggestion1 = new TextSuggestion();
                         newTextSuggestion1.setText("#AND: " + searchText);
                         newSuggestion1.setSuggestion(newTextSuggestion1);
+                        AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchTextForAndSearch, true);
+                        newSuggestion1.setCount(((SearchResult) result).getTotal());
                         autoSuggestions.add(newSuggestion1);
 
                         AutoSuggestion newSuggestion2 = new AutoSuggestion();
                         newSuggestion2.setItemType(currentType);
                         TextSuggestion newTextSuggestion2 = new TextSuggestion();
-                        String[] multiWords = searchText.split("\\s");
                         String searchTextWithoutAsterisk = "";
                         for (int j = 0; j < multiWords.length; j++) {
                             if (j > 0) searchTextWithoutAsterisk += " ";
@@ -195,6 +193,8 @@ public class SearchController {
                         }
                         newTextSuggestion2.setText('"' + searchTextWithoutAsterisk + '"');
                         newSuggestion2.setSuggestion(newTextSuggestion2);
+                        AbstractComplexSearch result2 = masterSearch(context + currentType + "=\"" + searchTextWithoutAsterisk + "\"", true);
+                        newSuggestion2.setCount(((SearchResult) result2).getTotal());
                         autoSuggestions.add(newSuggestion2);
                     }
                 }

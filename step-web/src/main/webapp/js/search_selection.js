@@ -740,7 +740,6 @@ step.searchSelect = {
 				for (l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
 					var srchCode = step.searchSelect.searchTypeCode[l];
 					var element = $(".search_type_title_" + srchCode);
-					console.log("code: "+ srchCode);	
 					element.qtip({
 						position: { my: "top right", at: "top right", viewport: $(window) },
 						style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
@@ -1458,7 +1457,8 @@ step.searchSelect = {
 					var searchResultIndex = step.searchSelect.searchTypeCode.indexOf(suggestionType);
 					var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 					var suggestion = data[i].suggestion;
-					if ((suggestionType == GREEK_MEANINGS || suggestionType == HEBREW_MEANINGS) && thingsWithNames.includes(suggestion.type)) {
+					if ((suggestionType == GREEK_MEANINGS || suggestionType == HEBREW_MEANINGS) && 
+						(typeof suggestion === "object") && thingsWithNames.includes(suggestion.type)) {
 						var mainStrong = suggestion.strongNumber
 						if (!namesInclusion.includes(mainStrong)) {
 							namesInclusion.push(mainStrong)

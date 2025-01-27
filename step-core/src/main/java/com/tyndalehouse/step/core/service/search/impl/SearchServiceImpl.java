@@ -1137,11 +1137,12 @@ public class SearchServiceImpl implements SearchService {
      * @return the result from the corresponding text search
      */
     private SearchResult runMeaningSearch(final SearchQuery sq) {
+        SearchResult result = new SearchResult();
         final Set<String> strongs = adaptQueryForMeaningSearch(sq);
-
-        final SearchResult result = runStrongTextSearch(sq, strongs, ""); // Options from user was not passed to this method
-        setDefinitionForResults(result, sq.getDefinitions(), SuggestionType.MEANING);
-
+        if (strongs.size() > 0) {
+            result = runStrongTextSearch(sq, strongs, ""); // Options from user was not passed to this method
+            setDefinitionForResults(result, sq.getDefinitions(), SuggestionType.MEANING);
+        }
         // we can now use the filter and save ourselves some effort
         return result;
     }

@@ -203,14 +203,21 @@ public class SearchController {
             }
             else if (currentType.equals("meanings")) {
                 if (firstMeaningSugguestion == -1) firstMeaningSugguestion = i;
-                lastMeaningSuggestion = i;
                 LexiconSuggestion meaning = (LexiconSuggestion) currentSuggestion.getSuggestion();
                 if (meaning == null) continue;
                 SearchResult meaningResult =  ((SearchResult) masterSearch(context + currentType + "=" + meaning.getGloss(), true));
                 List<String> strongList = meaningResult.getStrongHighlights();
-                Collections.sort(strongList);
-                currentSuggestion.setStrongList(strongList);
-                currentSuggestion.setCount(meaningResult.getTotal());
+                if (strongList != null) {
+                    Collections.sort(strongList);
+                    currentSuggestion.setStrongList(strongList);
+                    currentSuggestion.setCount(meaningResult.getTotal());
+                    lastMeaningSuggestion = i;
+                }
+                else {
+                    autoSuggestions.remove(i);
+                    i --;
+                    originalSize --;
+                }
             }
             else if (currentType.equals("subject")) {
                 SubjectSuggestion subject = (SubjectSuggestion) currentSuggestion.getSuggestion();
@@ -227,8 +234,11 @@ public class SearchController {
                         }
                     }
                 }
-                if (getCount)
-                    currentSuggestion.setCount( ((SearchResult) masterSearch(context + currentType + "=" + subject.getValue(), true)).getTotal() );
+                if (getCount) {
+                    SearchResult result2 = (SearchResult) masterSearch(context + currentType + "=" + subject.getValue(), true);
+                    int count = result2.getTotal();
+                    currentSuggestion.setCount(count);
+                }
             }
         }
         if (firstMeaningSugguestion > -1) {

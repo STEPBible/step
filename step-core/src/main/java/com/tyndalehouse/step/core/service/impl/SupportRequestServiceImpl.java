@@ -34,7 +34,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.getNonNullString;
  * Accesses JIRA to raise a support request.
  */
 @Singleton
-
 public class SupportRequestServiceImpl implements SupportRequestService {
     public static final int ERROR_START = 400;
     public static final String JIRA_USER = "jira.user";
@@ -157,11 +156,11 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         long currentTime = System.currentTimeMillis();
         int repeatedCount = 0;
         if (escapedEmail.equals("sample@email.tst")) // This is an email which was used by a robot generating hundreds of feedbacks on Jan 27, 2025
-            repeatedCount = 10;
+            repeatedCount = 4;
         else {
-            previousEmails[feedbackCounts % 10] = email;
+            previousEmails[feedbackCounts % 10] = escapedEmail;
             previousTimes[feedbackCounts % 10] = currentTime;
-            feedbackCounts++;
+            feedbackCounts ++;
             for (int i = 0; i < previousEmails.length; i++) {
                 if ((escapedEmail.equals(previousEmails[i])) && (currentTime - previousTimes[i] < 3600000)) // 1 hour
                     repeatedCount++;
@@ -170,7 +169,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
 
         try {
             if (repeatedCount > 3) {
-                log.warn("Ignored repeated feedbacks with same email: " + escapedEmail +
+                System.out.println("Ignored repeated feedbacks with same email: " + escapedEmail +
                         ", summary: " + escapedSummary + ", description: " + escapedDescription +
                         ", URL: " + escapedUrl + ", type: " + escapedType);
                 return handleHttpResponseFailure(response, null);

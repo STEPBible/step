@@ -45,6 +45,9 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     private String jiraEndpoint;
     private final javax.inject.Provider<ClientSession> clientSessionProvider;
     private final AppManagerService appManager;
+    private static String[] previousEmails = new String[10];
+    private static long[] previousTimes = new long[10];
+    private static int feedbackCounts = 0;
 
     @Inject
     public SupportRequestServiceImpl(@Named("app.jira.create.issue") final String createTemplate,
@@ -151,7 +154,23 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         BasicHttpEntity entity = null;
         HttpPost post = null;
         HttpResponse response = null;
+        long currentTime = System.currentTimeMillis();
+        int repeatedCount = 0;
+        for (int i = 0; i < previousEmails.length; i ++) {
+            if ((email.equals(previousEmails[i])) && (currentTime - previousTimes[i] < 3600000)) // 1 hour
+                repeatedCount ++;
+        }
+        previousEmails[feedbackCounts % 10] = email;
+        previousTimes[feedbackCounts % 10] = currentTime;
+        feedbackCounts ++;
+
         try {
+            if (repeatedCount > 4) {
+                System.out.println("Ignored repeated feedbacks with same email: " + escapedEmail +
+                        ", summary: " + escapedSummary + ", description: " + escapedDescription +
+                        ", URL: " + escapedUrl + ", type: " + escapedType);
+                return handleHttpResponseFailure(response, null);
+            }
             post = getJiraHttpPost(ISSUE_API, "application/json");
             entity = new BasicHttpEntity();
             

@@ -26,7 +26,6 @@ import org.apache.http.util.EntityUtils;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.getNonNullString;
 
@@ -35,6 +34,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.getNonNullString;
  * Accesses JIRA to raise a support request.
  */
 @Singleton
+
 public class SupportRequestServiceImpl implements SupportRequestService {
     public static final int ERROR_START = 400;
     public static final String JIRA_USER = "jira.user";
@@ -156,17 +156,21 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         HttpResponse response = null;
         long currentTime = System.currentTimeMillis();
         int repeatedCount = 0;
-        for (int i = 0; i < previousEmails.length; i ++) {
-            if ((email.equals(previousEmails[i])) && (currentTime - previousTimes[i] < 3600000)) // 1 hour
-                repeatedCount ++;
+        if (escapedEmail.equals("sample@email.tst")) // This is an email which was used by a robot generating hundreds of feedbacks on Jan 27, 2025
+            repeatedCount = 10;
+        else {
+            previousEmails[feedbackCounts % 10] = email;
+            previousTimes[feedbackCounts % 10] = currentTime;
+            feedbackCounts++;
+            for (int i = 0; i < previousEmails.length; i++) {
+                if ((escapedEmail.equals(previousEmails[i])) && (currentTime - previousTimes[i] < 3600000)) // 1 hour
+                    repeatedCount++;
+            }
         }
-        previousEmails[feedbackCounts % 10] = email;
-        previousTimes[feedbackCounts % 10] = currentTime;
-        feedbackCounts ++;
 
         try {
-            if (repeatedCount > 4) {
-                System.out.println("Ignored repeated feedbacks with same email: " + escapedEmail +
+            if (repeatedCount > 3) {
+                log.warn("Ignored repeated feedbacks with same email: " + escapedEmail +
                         ", summary: " + escapedSummary + ", description: " + escapedDescription +
                         ", URL: " + escapedUrl + ", type: " + escapedType);
                 return handleHttpResponseFailure(response, null);

@@ -805,11 +805,36 @@ var SidebarView = Backbone.View.extend({
     _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
-        if (typeof mainWord.shortDef === "string") {
+        var text2add = ""
+        if (typeof mainWord.shortDefMounce === "string") { 
+            if ((typeof mainWord.mediumDef !== "string") ||
+                (mainWord.shortDefMounce.length < 3) ||
+                (mainWord.mediumDef.indexOf(mainWord.shortDefMounce) == -1) )
+                text2add = mainWord.shortDefMounce
+                // this._addLinkAndAppend(panel, mainWord.shortDefMounce, currentWordLanguageCode, bibleVersion, true);
+        }
+        if (typeof mainWord.shortDef === "string") { 
             if ((typeof mainWord.mediumDef !== "string") ||
                 (mainWord.shortDef.length < 3) ||
-                (mainWord.mediumDef.indexOf(mainWord.shortDef) == -1) )
-                this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode, bibleVersion);
+                (mainWord.mediumDef.indexOf(mainWord.shortDef) == -1) ) {
+                    if (text2add === "") {
+                        text2add = mainWord.shortDef
+                    } else {
+                        text2add += "<br>" + mainWord.shortDef
+                    }
+                }
+                // this._addLinkAndAppend(panel, mainWord.shortDef, currentWordLanguageCode, bibleVersion, true);
+        }
+        if (mainWord.briefDef && typeof mainWord.briefDef === "string") {
+            if (text2add === "") {
+                text2add = mainWord.briefDef
+            } else {
+                text2add += "<br>" + mainWord.briefDef
+            }
+            // this._addLinkAndAppend(panel, mainWord.briefDef, currentWordLanguageCode, bibleVersion, true);
+        }
+        if (text2add !== "") {
+            this._addLinkAndAppend(panel, text2add, currentWordLanguageCode, bibleVersion, true);
         }
 		var detailLex = [];
 		if (mainWord._stepDetailLexicalTag) {

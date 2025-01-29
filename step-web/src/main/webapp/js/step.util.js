@@ -689,9 +689,11 @@ step.util = {
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
         newColumn.find(".argSelect").remove();
-        newColumn.find(".select-reference").text(__s.short_title_for_ref + ":");
-		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")");
-		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>');
+        newColumn.find(".select-reference").text(__s.short_title_for_ref + ":")
+			.attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")");
+		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>')
+			.attr("onclick", "step.util.searchSelectionModal(" + newPassageId + ")");
+		newColumn.find(".select-filter").remove();
         newColumn.find(".resultsLabel").html("");
         newColumn.find(".infoIcon").attr("title", "").data("content", "").hide();
         newColumn.find(".popover").remove();
@@ -1144,10 +1146,10 @@ step.util = {
 							allSelectedBibleVersions +
 						'</button>' +
 						'<span class="separator-' + VERSION + '">&nbsp;</span>');
-
+				var currentActivePassageId = step.util.activePassageId();
 				container.append(
 					'<button type="button" ' +
-						'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" ' +
+						'onclick="step.util.passageSelectionModal(' + currentActivePassageId + ')" ' +
 						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' stepButtonTriangle">' +
 						allSelectedReferences +
 					'</button>' +
@@ -1155,7 +1157,7 @@ step.util = {
 
 				container.append(
 					'<button type="button" ' +
-						'onclick="step.util.searchSelectionModal()" ' +
+						'onclick="step.util.searchSelectionModal(' + currentActivePassageId + ')" ' +
 						'title="' + __s.click_search + '" class="select-search stepButtonTriangle">' +
 						'<i style="font-size:10px" class="find glyphicon glyphicon-search"></i>' +
 						'&nbsp;' + searchWords +
@@ -1163,7 +1165,7 @@ step.util = {
 				if (searchWords !== "")
 					container.append(
 						'<button type="button" ' +
-							'onclick="step.util.searchSelectionModal(\'range_update\')" ' +
+							'onclick="step.util.searchSelectionModal(' + currentActivePassageId + ',\'range_update\')" ' +
 							'title="Search range" class="select-filter stepButtonTriangle">' +
 							'<i style="font-size:10px" class="find glyphicon glyphicon-filter"></i>' +
 							'&nbsp;' + searchRange +
@@ -2487,7 +2489,7 @@ step.util = {
 		step.util.blockBackgroundScrolling("lexFeedbackModal");
 	},
 
-	searchSelectionModal: function (isRangeUpdate) {
+	searchSelectionModal: function (currentActivePassageId, isRangeUpdate) {
 		var docWidth = $(document).width();
 		var widthCSS = "";
 		if ((docWidth > 700) && (!step.touchDevice)) { // Touch device can rotate screen so probably better to not adjust the width
@@ -2500,7 +2502,7 @@ step.util = {
 				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<script>' +
 						'$(document).ready(function () {' +
-							'step.searchSelect.initSearchSelection("' + isRangeUpdate + '");' +
+							'step.searchSelect.initSearchSelection(' + currentActivePassageId + ',"' + isRangeUpdate + '");' +
 						'});' +
 						'function showPreviousSearch() {' +
 							'var element = document.getElementById("showprevioussearchonoff");' +

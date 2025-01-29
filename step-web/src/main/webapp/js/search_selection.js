@@ -110,7 +110,9 @@ step.searchSelect = {
 	bookOrder: [],
 	idx2BookOrder: {},
 
-	initSearchSelection: function(isRangeUpdate) {
+	initSearchSelection: function(passageIdOfUserClick, isRangeUpdate) {
+		if ((typeof passageIdOfUserClick === "number") && (passageIdOfUserClick !== step.util.activePassageId()))
+			step.util.activePassageId(passageIdOfUserClick); // Switch to the passiage ID being clicked on
 		if ((typeof step.state === "undefined") || (typeof step.state.language === "undefined")) this.userLang = "en-US";
 		else this.userLang = step.state.language() || "en-US";
         this.version = "ESV_th";

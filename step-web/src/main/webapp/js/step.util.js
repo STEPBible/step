@@ -2524,23 +2524,6 @@ step.util = {
 								'$("#searchResultsmeaningsWarn").hide();' +
 							'}' +
 						'}' +
-						// 'function advanceMode() {' +
-						// 	'if (document.getElementById("advancesearchonoffswitch").checked) {' +
-						// 		'$("#select_advanced_search").addClass("checked");' +
-						// 		'$(".advanced_search_elements").show();' +
-						// 		'step.util.localStorageSetItem("advanced_search", true);' +
-						// 		'$("#basic_search_help_text").hide();' +
-						// 		'step.searchSelect.previousSearchesEnteredByUser();' +
-						// 		'step.searchSelect.checkSearchButton();' +
-						// 	'}' +
-						// 	'else {' +
-						// 		'$("#select_advanced_search").removeClass("checked");' +
-						// 		'$(".advanced_search_elements").hide();' +
-						// 		'$("#basic_search_help_text").show();' +
-						// 		'step.util.localStorageSetItem("advanced_search", false);' +
-						// 		'$("#searchButton").hide();' +
-						// 	'}' +
-						// '}' +
 					'</script>' +
 
 					'<div class="modal-header">' +

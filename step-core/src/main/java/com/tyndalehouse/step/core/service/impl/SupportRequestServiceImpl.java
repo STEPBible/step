@@ -26,7 +26,6 @@ import org.apache.http.util.EntityUtils;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.getNonNullString;
 
@@ -45,6 +44,9 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     private String jiraEndpoint;
     private final javax.inject.Provider<ClientSession> clientSessionProvider;
     private final AppManagerService appManager;
+    private static String[] previousEmails = new String[10];
+    private static long[] previousTimes = new long[10];
+    private static int feedbackCounts = 0;
 
     @Inject
     public SupportRequestServiceImpl(@Named("app.jira.create.issue") final String createTemplate,
@@ -151,7 +153,27 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         BasicHttpEntity entity = null;
         HttpPost post = null;
         HttpResponse response = null;
+        long currentTime = System.currentTimeMillis();
+        int repeatedCount = 0;
+        if (escapedEmail.equals("sample@email.tst")) // This is an email which was used by a robot generating hundreds of feedbacks on Jan 27, 2025
+            repeatedCount = 4;
+        else {
+            previousEmails[feedbackCounts % 10] = escapedEmail;
+            previousTimes[feedbackCounts % 10] = currentTime;
+            feedbackCounts ++;
+            for (int i = 0; i < previousEmails.length; i++) {
+                if ((escapedEmail.equals(previousEmails[i])) && (currentTime - previousTimes[i] < 3600000)) // 1 hour
+                    repeatedCount++;
+            }
+        }
+
         try {
+            if (repeatedCount > 3) {
+                System.out.println("Ignored repeated feedbacks with same email: " + escapedEmail +
+                        ", summary: " + escapedSummary + ", description: " + escapedDescription +
+                        ", URL: " + escapedUrl + ", type: " + escapedType);
+                return handleHttpResponseFailure(response, null);
+            }
             post = getJiraHttpPost(ISSUE_API, "application/json");
             entity = new BasicHttpEntity();
             

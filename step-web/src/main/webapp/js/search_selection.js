@@ -1423,9 +1423,6 @@ step.searchSelect = {
 				$('#srchModalBackButton').show();
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR + LIMIT + "%3D" + limitType + URL_SEPARATOR;
 			}
-			for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
-				$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
-			}
 			var meaningsEntries = []
 			var meaningsEntriesMore = ""
 			var names = []
@@ -1434,15 +1431,18 @@ step.searchSelect = {
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
 				url += "//" + searchLangSelected;
 			url += "?lang=" + step.searchSelect.userLang;
-			step["SearchCount" + GREEK] = 0;
-			step["SearchCount" + GREEK_MEANINGS] = 0;
-			step["SearchCount" + HEBREW] = 0;
-			step["SearchCount" + HEBREW_MEANINGS] = 0;
-			step["SearchCount" + MEANINGS] = 0;
-			step["SearchCount" + SUBJECT_SEARCH] = 0;
-			step["SearchCount" + TEXT_SEARCH] = 0;
-			step["SearchCount" + NAMES] = 0;
 			$.getJSON(url, function (data) {
+				for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i++) {
+					$('#searchResults' + step.searchSelect.searchTypeCode[i]).empty();
+				}
+				step["SearchCount" + GREEK] = 0;
+				step["SearchCount" + GREEK_MEANINGS] = 0;
+				step["SearchCount" + HEBREW] = 0;
+				step["SearchCount" + HEBREW_MEANINGS] = 0;
+				step["SearchCount" + MEANINGS] = 0;
+				step["SearchCount" + SUBJECT_SEARCH] = 0;
+				step["SearchCount" + TEXT_SEARCH] = 0;
+				step["SearchCount" + NAMES] = 0;
 				var alreadyShownStrong = [];
 				var activePassageData = step.util.activePassage().get("searchTokens") || [];
 				var allVersions = "";

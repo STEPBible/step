@@ -1612,7 +1612,7 @@ step.searchSelect = {
 									if ($('textarea#userTextInput').val().indexOf("*") == -1)
 										text2Display = text2Display.replaceAll("*", "");
 								}
-								else {
+								else if (searchLangSelected !== "en") { // Only run the following if it is not English search (e.g.: Greek or Hebrew search).  Do not run to reduce wait time because it will go an fetch definitions of words
 									str2Search = data[i].suggestion.strongNumber;
 									var strongWithoutAugment = str2Search;
 									var strongShownToUser = str2Search;
@@ -1670,15 +1670,33 @@ step.searchSelect = {
 									if ((suggestionType === TEXT_SEARCH) || (suggestionType === MEANINGS)) {
 										if (data[i].count == 0)
 											continue;
-										else {
-											if ((suggestionType === TEXT_SEARCH) && (str2Search.slice(-1) === "*")) {
+										if (suggestionType === TEXT_SEARCH) {
+											if (str2Search.slice(-1) === "*") {
 												var string2Show = str2Search;
 												if ($('textarea#userTextInput').val().indexOf("*") == -1)
 													string2Show = string2Show.replaceAll("*", "");
 												suffixToDisplay += "(" + __s.words_that_start_with + " " + string2Show + ")";
 											}
-											suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>';
 										}
+										else if (suggestionType === MEANINGS) {
+											var newMeaning = {}
+											newMeaning["currentSearchSuggestionElement"] = currentSearchSuggestionElement
+											newMeaning["str2Search"] = str2Search
+											newMeaning["suggestionType"] = suggestionType
+											newMeaning["text2Display"] = text2Display
+											newMeaning["prefixToDisplay"] = ""
+											newMeaning["suffixToDisplay"] = suffixToDisplay
+											newMeaning["suffixTitle"] = suffixTitle
+											newMeaning["limitType"] = limitType
+											newMeaning["augStrongSameMeaning"] = null
+											newMeaning["hasDetailLexInfo"] = false
+											newMeaning["needIndent"] = false
+											newMeaning["userInput"] = ""
+											newMeaning["allVersions"] = allVersions
+											newMeaning["strongHash"] = data[i].strongHash
+											meaningsEntries.push(newMeaning)
+										}
+										suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>'; // This is needed for both TEXT_SEARCH and MEANINGS
 									}
 									else if (suggestionType === SUBJECT_SEARCH) {
 										if ((typeof data[i].suggestion === "object") && (Array.isArray(data[i].suggestion.searchTypes))) {
@@ -1697,27 +1715,12 @@ step.searchSelect = {
 										if (data[i].count > 0)
 											suffixToDisplay = '<span class="srchFrequency"> ' + data[i].count + ' x</span>';
 									}
-									if (suggestionType == MEANINGS) {
-										var newMeaning = {}
-										newMeaning["currentSearchSuggestionElement"] = currentSearchSuggestionElement
-										newMeaning["str2Search"] = str2Search
-										newMeaning["suggestionType"] = suggestionType
-										newMeaning["text2Display"] = text2Display
-										newMeaning["prefixToDisplay"] = ""
-										newMeaning["suffixToDisplay"] = suffixToDisplay
-										newMeaning["suffixTitle"] = suffixTitle
-										newMeaning["limitType"] = limitType
-										newMeaning["augStrongSameMeaning"] = null
-										newMeaning["hasDetailLexInfo"] = false
-										newMeaning["needIndent"] = false
-										newMeaning["userInput"] = ""
-										newMeaning["allVersions"] = allVersions
-										newMeaning["strongHash"] = data[i].strongHash
-										meaningsEntries.push(newMeaning)
-									} else {
+									if (suggestionType !== MEANINGS) { // Suggestions of MEANINGS will be appended to the display later.
+										if ((searchLangSelected === "en") && ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS)))
+											continue; // If search is English, the following is not needed.  Do not run to reduce wait time because it will go an fetch definitions of words
 										step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
-											str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
-											limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);
+												str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
+												limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);
 									}
 								}
 							}

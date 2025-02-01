@@ -1427,7 +1427,6 @@ step.searchSelect = {
 			var meaningsEntriesMore = ""
 			var names = []
 			var namesInclusion = []
-			var thingsWithNames = ["man", "woman", "king", "queen", "judge", "place", "group", "prophet"]
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
 				url += "//" + searchLangSelected;
 			url += "?lang=" + step.searchSelect.userLang;
@@ -1460,7 +1459,7 @@ step.searchSelect = {
 					var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 					var suggestion = data[i].suggestion;
 					if ((suggestionType == GREEK_MEANINGS || suggestionType == HEBREW_MEANINGS) && 
-						(typeof suggestion === "object") && thingsWithNames.includes(suggestion.type)) {
+						(typeof suggestion === "object") && step.name_types.includes(suggestion.type)) {
 						var mainStrong = suggestion.strongNumber
 						if (!namesInclusion.includes(mainStrong)) {
 							namesInclusion.push(mainStrong)
@@ -1849,7 +1848,7 @@ step.searchSelect = {
 						suggestionType = "hebrewMeanings";
 						limitType = "hebrew";	
 					}
-					var text2Display = "A " + amalgamation["type"] + " named \"" + name + "\"";
+					var text2Display = step.searchSelect._composeDescription("type_of_word_named", amalgamation["type"], name);
 					var prefixToDisplay = "";
 					var suffixToDisplay = '<span class="srchFrequency"> occurs in total - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";
@@ -2306,19 +2305,11 @@ step.searchSelect = {
 					transliterationOfSameSimpleStrongAsMainStrong = data[i].suggestion.stepTransliteration;
 				}
 				if ((Array.isArray(data[i].suggestion._detailLexicalTag)) && (data[i].suggestion._detailLexicalTag.length > 0)) {
-					if ((data[i].suggestion.type === "man") || (data[i].suggestion.type === "woman") || 
-						(data[i].suggestion.type === "king") || (data[i].suggestion.type === "queen") ||
-						(data[i].suggestion.type === "judge") || (data[i].suggestion.type === "place") ||
-						(data[i].suggestion.type === "group") || (data[i].suggestion.type === "prophet")) {
-						searchExplaination += "A " + data[i].suggestion.type + " with " + data[i].suggestion._detailLexicalTag.length + " names";
-					}
-					else {
-						searchExplaination += "A " + data[i].suggestion.type + " with " + data[i].suggestion._detailLexicalTag.length + " synonyms"
-					}
-					if ((step.userLanguageCode.indexOf("en") != 0) && (__s.word_has_synonyms !== "This word has %d synonyms")) {
-						searchExplaination = sprintf(__s.word_has_synonyms, data[i].suggestion._detailLexicalTag.length);
-					}
-					searchExplaination = searchExplaination + ": " + gloss.split(":")[0] + ": ";
+					if (step.name_types.includes(data[i].suggestion.type))
+						searchExplaination = step.searchSelect._composeDescription("type_of_word_with_multiple_names", data[i].suggestion.type, data[i].suggestion._detailLexicalTag.length);
+					else
+						searchExplaination = step.searchSelect._composeDescription("type_of_word_with_multiple_synonyms", data[i].suggestion.type, data[i].suggestion._detailLexicalTag.length);
+					searchExplaination += ": " + gloss.split(":")[0] + ": ";
 					var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, data[i].suggestion._detailLexicalTag, allVersions);
 					hasBothTestaments = (hasBothTestaments || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
 					var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments,
@@ -2634,7 +2625,12 @@ step.searchSelect = {
 
 	buildHTMLFromDetailLexicalTag: function(currentSearchSuggestionElement, strongNum, detailLexicalJSON, count, allVersions, hasBothTestaments) {
 		if ((!detailLexicalJSON) || (!Array.isArray(detailLexicalJSON))) return;
-		currentSearchSuggestionElement.append("<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>");
+		var whereToAdd = currentSearchSuggestionElement.find(".search-sub-suggestion");
+		if (whereToAdd.length > 0)
+			whereToAdd = $(whereToAdd[whereToAdd.length - 1]);
+		else
+			whereToAdd = currentSearchSuggestionElement;
+		whereToAdd.append("<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>");
 		var orderList = $("<ol class='detailLex" + count + "' style='margin-bottom:0px;line-height:14px'>");
 		var allStrongs = [];
 		var addedFreqList = false;
@@ -2851,6 +2847,15 @@ step.searchSelect = {
 	handleAndOrNot: function() {
 		this.andOrNotUpdated = true;
 		$('#updateButton').show();
-	}
+	},
+
+	_composeDescription: function(key, stepType, param) {
+		if ((typeof stepType !== "string") || (typeof __s["type_of_word_" + stepType] !== "string"))
+			stepType = "word";
+        return sprintf(__s[key], __s["type_of_word_" + stepType], param);
+		// var firstWord = "A";
+		// if ("aeiou".indexOf(data[i].suggestion.type.substring(0, 1).toLowerCase()) > -1)
+		// 	firstWord = "An";
+    }
 
 };

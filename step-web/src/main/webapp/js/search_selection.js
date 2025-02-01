@@ -2852,10 +2852,12 @@ step.searchSelect = {
 	_composeDescription: function(key, stepType, param) {
 		if ((typeof stepType !== "string") || (typeof __s["type_of_word_" + stepType] !== "string"))
 			stepType = "word";
-        return sprintf(__s[key], __s["type_of_word_" + stepType], param);
-		// var firstWord = "A";
-		// if ("aeiou".indexOf(data[i].suggestion.type.substring(0, 1).toLowerCase()) > -1)
-		// 	firstWord = "An";
+		var nameType = __s["type_of_word_" + stepType];
+        var result = sprintf(__s[key], nameType, param);
+		if ((step.userLanguageCode.toLowerCase() === "en") &&
+			(result.substring(0, 2) === "A ") && // Starts with A
+			("aeiou".indexOf(nameType.substring(0,1).toLowerCase()) > -1)) // the name type starts with a vowel (e.g.: angel)
+				result = "An " + nameType.substr(2); // change from "A " to "An "
+		return result;
     }
-
 };

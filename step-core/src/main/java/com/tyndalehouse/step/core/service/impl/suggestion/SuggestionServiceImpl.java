@@ -2,10 +2,7 @@ package com.tyndalehouse.step.core.service.impl.suggestion;
 
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.models.BookName;
-import com.tyndalehouse.step.core.models.SearchToken;
-import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
-import com.tyndalehouse.step.core.models.SuggestionsSummary;
+import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
@@ -15,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
 import java.util.*;
 
 /**
@@ -30,9 +29,11 @@ public class SuggestionServiceImpl implements SuggestionService {
     private final Map<String, SingleTypeSuggestionService> queryProviders = new LinkedHashMap<String, SingleTypeSuggestionService>();
     private final Map<String, String[]> dependencies = new HashMap<String, String[]>(8);
     private final Map<String, Integer> extraSlots = new HashMap<String, Integer>(4);
+    private static String stepTypes;
 
     @Inject
-    public SuggestionServiceImpl(final HebrewAncientMeaningServiceImpl hebrewAncientMeaningService,
+    public SuggestionServiceImpl(@Named("search.name_types") final String stepTypes,
+                                 final HebrewAncientMeaningServiceImpl hebrewAncientMeaningService,
                                  final GreekAncientMeaningServiceImpl greekAncientMeaningService,
                                  final HebrewAncientLanguageServiceImpl hebrewAncientLanguageService,
                                  final GreekAncientLanguageServiceImpl greekAncientLanguageService,
@@ -41,6 +42,7 @@ public class SuggestionServiceImpl implements SuggestionService {
                                  final ReferenceSuggestionServiceImpl referenceSuggestionService,
                                  final TextSuggestionServiceImpl textSuggestionService
     ) {
+        this.stepTypes = stepTypes;
         queryProviders.put(SearchToken.REFERENCE, referenceSuggestionService);
         queryProviders.put(SearchToken.GREEK_MEANINGS, greekAncientMeaningService);
         queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);
@@ -70,7 +72,7 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public SuggestionsSummary getTopSuggestions(final SuggestionContext context, final String searchLanguage) {
+    public SuggestionsSummary getTopSuggestions(final SuggestionContext context, final String searchLangSelectedByUser) {
         final SuggestionsSummary summary = new SuggestionsSummary();
         final Map<String, SingleSuggestionsSummary> results = new LinkedHashMap<String, SingleSuggestionsSummary>();
 
@@ -82,8 +84,8 @@ public class SuggestionServiceImpl implements SuggestionService {
         //go through each search type
         for (Map.Entry<String, SingleTypeSuggestionService> query : queryProviders.entrySet()) {
             String curQueryKey = query.getKey();
-            if (searchLanguage != null) {
-                if (searchLanguage.equals("en")) {
+            if (searchLangSelectedByUser != null) {
+                if (searchLangSelectedByUser.equals("en")) {
                     if ((!curQueryKey.equals("meanings")) &&
                             (!curQueryKey.equals("subject")) &&
                             (!curQueryKey.equals("greekMeanings")) &&
@@ -100,11 +102,11 @@ public class SuggestionServiceImpl implements SuggestionService {
                                 curInput.substring(0, 1).equals("\""))
                             currentContext.setInput(curInput.substring(1, curInput.length() - 2)); // remove leading and trailing "
                     }
-                } else if (searchLanguage.equals("he")) {
+                } else if (searchLangSelectedByUser.equals("he")) {
                     if ((!curQueryKey.equals("hebrewMeanings")) &&
                             (!curQueryKey.equals("hebrew")))
                         continue;
-                } else if (searchLanguage.equals("gr")) {
+                } else if (searchLangSelectedByUser.equals("gr")) {
                     if ((!curQueryKey.equals("greekMeanings")) &&
                             (!curQueryKey.equals("greek")))
                         continue;
@@ -128,7 +130,12 @@ public class SuggestionServiceImpl implements SuggestionService {
             Object o = searchService.getNewCollector(leftToCollect, true);
             final Object[] extraDocs = searchService.collectNonExactMatches(o, currentContext, docs, leftToCollect);
             final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
-
+            if (searchLangSelectedByUser.equals("en") && (curQueryKey.equals("greekMeanings") || curQueryKey.equals("hebrewMeanings"))) {
+                for (int i = suggestions.size() - 1; i > -1; i--) {
+                    if (!this.stepTypes.contains('"' + ((LexiconSuggestion) suggestions.get(i)).getType() + '"'))
+                        suggestions.remove(i);
+                }
+            }
             final SingleSuggestionsSummary singleTypeSummary = new SingleSuggestionsSummary();
             setSuggestionsAndExamples(singleTypeSummary, suggestions, groupTotal, maxResult);
             fillInTotalHits(o, extraDocs.length, singleTypeSummary);
@@ -136,7 +143,6 @@ public class SuggestionServiceImpl implements SuggestionService {
             singleTypeSummary.setSearchType(query.getKey());
             results.put(query.getKey(), singleTypeSummary);
         }
-
         summary.setSuggestionsSummaries(new ArrayList<SingleSuggestionsSummary>(results.values()));
         return summary;
     }

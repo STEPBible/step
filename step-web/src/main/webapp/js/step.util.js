@@ -608,15 +608,6 @@ step.util = {
      * @param el
      */
     createNewLinkedColumn: function (passageId) {
-		// if ($(window).width() < 768) {
-		// 	if (step.util.localStorageGetItem("already_warned_screen_not_wide_enough") !== "true") {
-		// 		var msg = __s.screen_not_wide_enought;
-		// 	if ((step.touchDevice) && ($(window).height() > 768))
-		// 			msg += " " + __s.rotate_screen_to_landscape_mode;
-		// 	alert(msg);
-		// 		step.util.localStorageSetItem("already_warned_screen_not_wide_enough", true);
-		// 	}
-		// }
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },

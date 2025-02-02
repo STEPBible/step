@@ -571,17 +571,14 @@ var SidebarView = Backbone.View.extend({
     },
 
     _composeDescriptionOfOccurrences: function(stepType) {
-        if ((typeof stepType !== "string") || (stepType === "") ||
-            (stepType === "word") || (stepType === "verb") || (stepType === "name") ||
-            ((step.userLanguage !== "English") &                                     // If user language is not English, but it is using the English message,
-             ((__s.lexicon_search_for_person === "This person occurs about") || // there is no translation for these two new messages.  Therefore use the original message which is
-              (__s.lexicon_search_for_place === "This place occurs about"))) )   // lexicon_search_for_this_word.  That has been translated for many years.
-             return __s.lexicon_search_for_this_word;
-        if (stepType === "place") return __s.lexicon_search_for_this_place;
-        return __s.lexicon_search_for_this_person;
+        if (stepType === "person or group")
+            stepType = "person_or_group";
+		if (((typeof stepType !== "string") || (typeof __s["type_of_word_" + stepType] !== "string")) ||
+            ((step.userLanguage !== "English") && (__s.type_of_word_frequency === "This %s occurs about"))) // Not translated to user's language
+    			return __s.lexicon_search_for_this_word; // return the generic message (This word occurs about) which has been translated for many years
+        return sprintf(__s.type_of_word_frequency, __s["type_of_word_" + stepType]);
     },
-
-    _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions, bibleVersion) {
+     _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions, bibleVersion) {
         var total = mainWord.count;
         var totalOT = 0;
         var totalNT = 0;

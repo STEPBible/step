@@ -96,7 +96,7 @@ public class SearchController {
          */
     @Timed(name = "suggest", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly,
-                                        final String searchLanguage) {
+                                        final String searchLangSelectedByUser) {
         boolean onlyReferences = false;
         if (StringUtils.isNotBlank(referencesOnly)) {
             onlyReferences = Boolean.parseBoolean(referencesOnly);
@@ -132,7 +132,7 @@ public class SearchController {
         if (onlyReferences || referenceContext != null) {
             addReferenceSuggestions(limitType, input, autoSuggestions, bookContext, referenceContext);
         } else {
-            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData, searchLanguage);
+            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData, searchLangSelectedByUser);
         }
         addCountsToSuggestions(autoSuggestions, context);
         return autoSuggestions;
@@ -268,7 +268,7 @@ public class SearchController {
      * @param exampleData          example data is requested
      */
     private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType,
-                                       final String referenceBookContext, final boolean exampleData, final String searchLanguage) {
+                                       final String referenceBookContext, final boolean exampleData, final String searchLangSelectedByUser) {
         SuggestionContext context = new SuggestionContext();
         context.setMasterBook(referenceBookContext);
         context.setInput(StringUtils.trim(input));
@@ -279,7 +279,7 @@ public class SearchController {
             convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         } else if (StringUtils.isBlank(limitType)) {
             // we only return the right set of suggestions if there is a limit type
-            convert(autoSuggestions, this.suggestionService.getTopSuggestions(context, searchLanguage));
+            convert(autoSuggestions, this.suggestionService.getTopSuggestions(context, searchLangSelectedByUser));
         } else {
             convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         }

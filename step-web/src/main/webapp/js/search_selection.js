@@ -1427,7 +1427,6 @@ step.searchSelect = {
 			var meaningsEntriesMore = ""
 			var names = []
 			var namesInclusion = []
-			var thingsWithNames = ["man", "woman", "king", "queen", "judge", "place", "group", "prophet"]
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr"))
 				url += "//" + searchLangSelected;
 			url += "?lang=" + step.searchSelect.userLang;
@@ -1460,7 +1459,7 @@ step.searchSelect = {
 					var currentSearchSuggestionElement = $('#searchResults' + step.searchSelect.searchTypeCode[searchResultIndex]);
 					var suggestion = data[i].suggestion;
 					if ((suggestionType == GREEK_MEANINGS || suggestionType == HEBREW_MEANINGS) && 
-						(typeof suggestion === "object") && thingsWithNames.includes(suggestion.type)) {
+						(typeof suggestion === "object") && step.name_types.includes(suggestion.type)) {
 						var mainStrong = suggestion.strongNumber
 						if (!namesInclusion.includes(mainStrong)) {
 							namesInclusion.push(mainStrong)
@@ -1612,7 +1611,7 @@ step.searchSelect = {
 									if ($('textarea#userTextInput').val().indexOf("*") == -1)
 										text2Display = text2Display.replaceAll("*", "");
 								}
-								else {
+								else if (searchLangSelected !== "en") { // Only run the following if it is not English search (e.g.: Greek or Hebrew search).  Do not run to reduce wait time because it will go an fetch definitions of words
 									str2Search = data[i].suggestion.strongNumber;
 									var strongWithoutAugment = str2Search;
 									var strongShownToUser = str2Search;
@@ -1670,15 +1669,33 @@ step.searchSelect = {
 									if ((suggestionType === TEXT_SEARCH) || (suggestionType === MEANINGS)) {
 										if (data[i].count == 0)
 											continue;
-										else {
-											if ((suggestionType === TEXT_SEARCH) && (str2Search.slice(-1) === "*")) {
+										if (suggestionType === TEXT_SEARCH) {
+											if (str2Search.slice(-1) === "*") {
 												var string2Show = str2Search;
 												if ($('textarea#userTextInput').val().indexOf("*") == -1)
 													string2Show = string2Show.replaceAll("*", "");
 												suffixToDisplay += "(" + __s.words_that_start_with + " " + string2Show + ")";
 											}
-											suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>';
 										}
+										else if (suggestionType === MEANINGS) {
+											var newMeaning = {}
+											newMeaning["currentSearchSuggestionElement"] = currentSearchSuggestionElement
+											newMeaning["str2Search"] = str2Search
+											newMeaning["suggestionType"] = suggestionType
+											newMeaning["text2Display"] = text2Display
+											newMeaning["prefixToDisplay"] = ""
+											newMeaning["suffixToDisplay"] = suffixToDisplay
+											newMeaning["suffixTitle"] = suffixTitle
+											newMeaning["limitType"] = limitType
+											newMeaning["augStrongSameMeaning"] = null
+											newMeaning["hasDetailLexInfo"] = false
+											newMeaning["needIndent"] = false
+											newMeaning["userInput"] = ""
+											newMeaning["allVersions"] = allVersions
+											newMeaning["strongHash"] = data[i].strongHash
+											meaningsEntries.push(newMeaning)
+										}
+										suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>'; // This is needed for both TEXT_SEARCH and MEANINGS
 									}
 									else if (suggestionType === SUBJECT_SEARCH) {
 										if ((typeof data[i].suggestion === "object") && (Array.isArray(data[i].suggestion.searchTypes))) {
@@ -1697,27 +1714,12 @@ step.searchSelect = {
 										if (data[i].count > 0)
 											suffixToDisplay = '<span class="srchFrequency"> ' + data[i].count + ' x</span>';
 									}
-									if (suggestionType == MEANINGS) {
-										var newMeaning = {}
-										newMeaning["currentSearchSuggestionElement"] = currentSearchSuggestionElement
-										newMeaning["str2Search"] = str2Search
-										newMeaning["suggestionType"] = suggestionType
-										newMeaning["text2Display"] = text2Display
-										newMeaning["prefixToDisplay"] = ""
-										newMeaning["suffixToDisplay"] = suffixToDisplay
-										newMeaning["suffixTitle"] = suffixTitle
-										newMeaning["limitType"] = limitType
-										newMeaning["augStrongSameMeaning"] = null
-										newMeaning["hasDetailLexInfo"] = false
-										newMeaning["needIndent"] = false
-										newMeaning["userInput"] = ""
-										newMeaning["allVersions"] = allVersions
-										newMeaning["strongHash"] = data[i].strongHash
-										meaningsEntries.push(newMeaning)
-									} else {
+									if (suggestionType !== MEANINGS) { // Suggestions of MEANINGS will be appended to the display later.
+										if ((searchLangSelected === "en") && ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS)))
+											continue; // If search is English, the following is not needed.  Do not run to reduce wait time because it will go an fetch definitions of words
 										step.searchSelect.appendSearchSuggestionsToDisplay(currentSearchSuggestionElement,
-											str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
-											limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);
+												str2Search, suggestionType, text2Display, "", suffixToDisplay, suffixTitle,
+												limitType, null, false, false, "", allVersions); //, hasHebrew, hasGreek);
 									}
 								}
 							}
@@ -1846,7 +1848,7 @@ step.searchSelect = {
 						suggestionType = "hebrewMeanings";
 						limitType = "hebrew";	
 					}
-					var text2Display = "A " + amalgamation["type"] + " named \"" + name + "\"";
+					var text2Display = step.searchSelect._composeDescription("type_of_word_named", amalgamation["type"], name);
 					var prefixToDisplay = "";
 					var suffixToDisplay = '<span class="srchFrequency"> occurs in total - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";
@@ -2303,19 +2305,11 @@ step.searchSelect = {
 					transliterationOfSameSimpleStrongAsMainStrong = data[i].suggestion.stepTransliteration;
 				}
 				if ((Array.isArray(data[i].suggestion._detailLexicalTag)) && (data[i].suggestion._detailLexicalTag.length > 0)) {
-					if ((data[i].suggestion.type === "man") || (data[i].suggestion.type === "woman") || 
-						(data[i].suggestion.type === "king") || (data[i].suggestion.type === "queen") ||
-						(data[i].suggestion.type === "judge") || (data[i].suggestion.type === "place") ||
-						(data[i].suggestion.type === "group") || (data[i].suggestion.type === "prophet")) {
-						searchExplaination += "A " + data[i].suggestion.type + " with " + data[i].suggestion._detailLexicalTag.length + " names";
-					}
-					else {
-						searchExplaination += "A " + data[i].suggestion.type + " with " + data[i].suggestion._detailLexicalTag.length + " synonyms"
-					}
-					if ((step.userLanguageCode.indexOf("en") != 0) && (__s.word_has_synonyms !== "This word has %d synonyms")) {
-						searchExplaination = sprintf(__s.word_has_synonyms, data[i].suggestion._detailLexicalTag.length);
-					}
-					searchExplaination = searchExplaination + ": " + gloss.split(":")[0] + ": ";
+					if (step.name_types.includes(data[i].suggestion.type))
+						searchExplaination = step.searchSelect._composeDescription("type_of_word_with_multiple_names", data[i].suggestion.type, data[i].suggestion._detailLexicalTag.length);
+					else
+						searchExplaination = step.searchSelect._composeDescription("type_of_word_with_multiple_synonyms", data[i].suggestion.type, data[i].suggestion._detailLexicalTag.length);
+					searchExplaination += ": " + gloss.split(":")[0] + ": ";
 					var frequencies = step.searchSelect.getFrequencyFromDetailLexicalTag(strongNum, frequency, data[i].suggestion._detailLexicalTag, allVersions);
 					hasBothTestaments = (hasBothTestaments || ((frequencies[1] > 0) && (frequencies[2] > 0))) ? true : false;
 					var frequencyMsg = step.util.formatFrequency({strongNumber: strongNum, versionCountOT: frequencies[1], versionCountNT: frequencies[2]}, frequencies[0], hasBothTestaments,
@@ -2631,7 +2625,12 @@ step.searchSelect = {
 
 	buildHTMLFromDetailLexicalTag: function(currentSearchSuggestionElement, strongNum, detailLexicalJSON, count, allVersions, hasBothTestaments) {
 		if ((!detailLexicalJSON) || (!Array.isArray(detailLexicalJSON))) return;
-		currentSearchSuggestionElement.append("<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>");
+		var whereToAdd = currentSearchSuggestionElement.find(".search-sub-suggestion");
+		if (whereToAdd.length > 0)
+			whereToAdd = $(whereToAdd[whereToAdd.length - 1]);
+		else
+			whereToAdd = currentSearchSuggestionElement;
+		whereToAdd.append("<a id='detailLexSelect" + count + "' class='detailLexTriangle glyphicon glyphicon-triangle-bottom'></a>");
 		var orderList = $("<ol class='detailLex" + count + "' style='margin-bottom:0px;line-height:14px'>");
 		var allStrongs = [];
 		var addedFreqList = false;
@@ -2848,6 +2847,19 @@ step.searchSelect = {
 	handleAndOrNot: function() {
 		this.andOrNotUpdated = true;
 		$('#updateButton').show();
-	}
+	},
 
+	_composeDescription: function(key, stepType, param) {
+		if (stepType === "person or group")
+			stepType = "person_or_group";
+		if ((typeof stepType !== "string") || (typeof __s["type_of_word_" + stepType] !== "string"))
+			stepType = "word";
+		var nameType = __s["type_of_word_" + stepType];
+        var result = sprintf(__s[key], nameType, param);
+		if ((step.userLanguageCode.toLowerCase() === "en") &&
+			(result.substring(0, 2) === "A ") && // Starts with A
+			("aeiou".indexOf(nameType.substring(0,1).toLowerCase()) > -1)) // the name type starts with a vowel (e.g.: angel)
+				result = "An " + nameType.substr(2); // change from "A " to "An "
+		return result;
+    }
 };

@@ -2850,6 +2850,8 @@ step.searchSelect = {
 	},
 
 	_composeDescription: function(key, stepType, param) {
+		if (stepType === "person or group")
+			stepType = "person_or_group";
 		if ((typeof stepType !== "string") || (typeof __s["type_of_word_" + stepType] !== "string"))
 			stepType = "word";
 		var nameType = __s["type_of_word_" + stepType];

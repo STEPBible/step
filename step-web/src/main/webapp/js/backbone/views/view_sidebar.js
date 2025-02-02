@@ -571,6 +571,8 @@ var SidebarView = Backbone.View.extend({
     },
 
     _composeDescriptionOfOccurrences: function(stepType) {
+        if (stepType === "person or group")
+            stepType = "person_or_group";
 		if (((typeof stepType !== "string") || (typeof __s["type_of_word_" + stepType] !== "string")) ||
             ((step.userLanguage !== "English") && (__s.type_of_word_frequency === "This %s occurs about"))) // Not translated to user's language
     			return __s.lexicon_search_for_this_word; // return the generic message (This word occurs about) which has been translated for many years

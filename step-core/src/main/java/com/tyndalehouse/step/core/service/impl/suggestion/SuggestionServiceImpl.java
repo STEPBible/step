@@ -130,7 +130,8 @@ public class SuggestionServiceImpl implements SuggestionService {
             Object o = searchService.getNewCollector(leftToCollect, true);
             final Object[] extraDocs = searchService.collectNonExactMatches(o, currentContext, docs, leftToCollect);
             final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
-            if (searchLangSelectedByUser.equals("en") && (curQueryKey.equals("greekMeanings") || curQueryKey.equals("hebrewMeanings"))) {
+            if ((searchLangSelectedByUser != null) && searchLangSelectedByUser.equals("en") &&
+                    (curQueryKey.equals("greekMeanings") || curQueryKey.equals("hebrewMeanings")) ) {
                 for (int i = suggestions.size() - 1; i > -1; i--) {
                     if (!this.stepTypes.contains('"' + ((LexiconSuggestion) suggestions.get(i)).getType() + '"'))
                         suggestions.remove(i);

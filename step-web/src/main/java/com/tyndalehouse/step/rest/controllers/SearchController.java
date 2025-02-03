@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -241,42 +242,41 @@ public class SearchController {
                 }
             }
         }
+        consolidateMeaningSuggestions(firstMeaningSugguestion, lastMeaningSuggestion, autoSuggestions);
+    }
+
+    private void consolidateMeaningSuggestions(int firstMeaningSugguestion, int lastMeaningSuggestion,
+                                               List<AutoSuggestion> autoSuggestions) {
         if (firstMeaningSugguestion > -1) {
-            for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i ++) {
+            for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i++) {
                 AutoSuggestion currentSuggestion = autoSuggestions.get(i);
                 if (currentSuggestion.getItemType().equals("meanings")) {
                     List<String> currentStrongList = currentSuggestion.getStrongList();
-                    for (int j = lastMeaningSuggestion; j > i ; j --) {
+                    for (int j = lastMeaningSuggestion; j > i; j--) {
                         AutoSuggestion anotherSuggestion = autoSuggestions.get(j);
                         if (currentStrongList.equals(anotherSuggestion.getStrongList())) {
                             ((LexiconSuggestion) currentSuggestion.getSuggestion()).setGloss(
-                                    concateMeaningGloss( ((LexiconSuggestion) currentSuggestion.getSuggestion()).getGloss(), ((LexiconSuggestion) anotherSuggestion.getSuggestion()).getGloss()) );
+                                    ((LexiconSuggestion) currentSuggestion.getSuggestion()).getGloss() + "," + ((LexiconSuggestion) anotherSuggestion.getSuggestion()).getGloss());
                             autoSuggestions.remove(j);
-                            lastMeaningSuggestion --;
+                            lastMeaningSuggestion--;
                         }
                     }
                 }
             }
+            for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i++) {
+                AutoSuggestion currentSuggestion = autoSuggestions.get(i);
+                if (currentSuggestion.getItemType().equals("meanings")) {
+                    ((LexiconSuggestion) currentSuggestion.getSuggestion()).setGloss(
+                            sortMeaningGloss(((LexiconSuggestion) currentSuggestion.getSuggestion()).getGloss()));
+                }
+            }
         }
     }
-    private String concateMeaningGloss(final String first, final String second) {
-        String result = "";
-        boolean alreadyAdded = false;
-        String[] firstStrings = first.split(",");
-        for (String s: firstStrings) {
-            s = s.trim();
-            if (!alreadyAdded && (second.compareToIgnoreCase(s) <= 0)) {
-                if (result.length() > 0) result += ", ";
-                result += second;
-                alreadyAdded = true;
-            }
-            if (result.length() > 0) result += ", ";
-            result += s;
-        }
-        if (!alreadyAdded) {
-            if (result.length() > 0) result += ", ";
-            result += second;
-        }
+
+    private String sortMeaningGloss(final String gloss) {
+        String[] glosses = gloss.split(",");
+        Arrays.sort(glosses);
+        String result = String.join(", ", glosses);
         return result;
     }
 

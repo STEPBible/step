@@ -1675,7 +1675,6 @@ step.searchSelect = {
 											newMeaning["needIndent"] = false
 											newMeaning["userInput"] = ""
 											newMeaning["allVersions"] = allVersions
-											newMeaning["strongHash"] = data[i].strongHash
 											meaningsEntries.push(newMeaning)
 										}
 										suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>'; // This is needed for both TEXT_SEARCH and MEANINGS
@@ -1722,31 +1721,6 @@ step.searchSelect = {
 							break;
 					}
 				}
-				var meaningsEntriesHashes = [];
-				var meaningsEntriesDict = {};
-				meaningsEntries.forEach(function(element) {
-					var hash = element.strongHash;
-					if (meaningsEntriesHashes.includes(hash)) {
-						meaningsEntriesDict[hash].push(element);
-					} else {
-						meaningsEntriesDict[hash] = [element];
-						meaningsEntriesHashes.push(hash);
-					}
-				})
-				meaningsEntries = [];
-				Object.entries(meaningsEntriesDict).forEach(function(entry) {
-					var value = entry[1];
-					value.sort(function(a, b) {
-						if (a.text2Display < b.text2Display) return -1;
-						if (a.text2Display > b.text2Display) return 1;
-						return 0;
-					});
-					var meaningsEntry = value.shift();
-					value.forEach(function(element) {
-						meaningsEntry["text2Display"] += (", " + element["text2Display"]);
-					})
-					meaningsEntries.push(meaningsEntry);
-				});
 				meaningsEntries.sort(function(a, b) {
 					const firstA = a.text2Display.split(",")[0].trim();
 					const firstB = b.text2Display.split(",")[0].trim();
@@ -1756,7 +1730,7 @@ step.searchSelect = {
 				});
 				meaningsEntries.forEach(function(element) {
 					var currentSearchSuggestionElement = element["currentSearchSuggestionElement"]
-					var str2Search = element["str2Search"]
+					var str2Search = element["str2Search"].split(",")[0];
 					var suggestionType = element["suggestionType"]
 					var text2Display = element["text2Display"]
 					var prefixToDisplay = element["prefixToDisplay"]

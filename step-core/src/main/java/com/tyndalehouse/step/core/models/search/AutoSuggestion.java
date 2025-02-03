@@ -9,7 +9,6 @@ public class AutoSuggestion {
     private boolean maxReached = false;
     private int count;
     private List<String> strongList;
-    private int strongHash = 0;
     private List<PopularSuggestion> extraExamples;
 
     public String getItemType() {
@@ -64,7 +63,4 @@ public class AutoSuggestion {
 
     public List<String> getStrongList() { return this.strongList; }
 
-    public void setStrongHash(int hash) { this.strongHash = hash; }
-
-    public int getStrongHash() { return this.strongHash; }
 }

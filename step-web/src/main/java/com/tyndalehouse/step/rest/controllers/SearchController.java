@@ -242,22 +242,42 @@ public class SearchController {
             }
         }
         if (firstMeaningSugguestion > -1) {
-            int hashNum = 0;
             for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i ++) {
                 AutoSuggestion currentSuggestion = autoSuggestions.get(i);
-                if ((currentSuggestion.getItemType().equals("meanings")) && (currentSuggestion.getStrongHash() == 0)) { // Hash == 0 means it has not been compared
-                    hashNum ++;
-                    currentSuggestion.setStrongHash(hashNum);
+                if (currentSuggestion.getItemType().equals("meanings")) {
                     List<String> currentStrongList = currentSuggestion.getStrongList();
-                    for (int j = i + 1; j <= lastMeaningSuggestion; j ++) {
+                    for (int j = lastMeaningSuggestion; j > i ; j --) {
                         AutoSuggestion anotherSuggestion = autoSuggestions.get(j);
                         if (currentStrongList.equals(anotherSuggestion.getStrongList())) {
-                            anotherSuggestion.setStrongHash(hashNum);
+                            ((LexiconSuggestion) currentSuggestion.getSuggestion()).setGloss(
+                                    concateMeaningGloss( ((LexiconSuggestion) currentSuggestion.getSuggestion()).getGloss(), ((LexiconSuggestion) anotherSuggestion.getSuggestion()).getGloss()) );
+                            autoSuggestions.remove(j);
+                            lastMeaningSuggestion --;
                         }
                     }
                 }
             }
         }
+    }
+    private String concateMeaningGloss(final String first, final String second) {
+        String result = "";
+        boolean alreadyAdded = false;
+        String[] firstStrings = first.split(",");
+        for (String s: firstStrings) {
+            s = s.trim();
+            if (!alreadyAdded && (second.compareToIgnoreCase(s) <= 0)) {
+                if (result.length() > 0) result += ", ";
+                result += second;
+                alreadyAdded = true;
+            }
+            if (result.length() > 0) result += ", ";
+            result += s;
+        }
+        if (!alreadyAdded) {
+            if (result.length() > 0) result += ", ";
+            result += second;
+        }
+        return result;
     }
 
     /**

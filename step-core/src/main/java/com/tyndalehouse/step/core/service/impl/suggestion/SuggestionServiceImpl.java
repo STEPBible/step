@@ -84,6 +84,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         //go through each search type
         for (Map.Entry<String, SingleTypeSuggestionService> query : queryProviders.entrySet()) {
             String curQueryKey = query.getKey();
+            int maxResult = MAX_RESULTS;
             if (searchLangSelectedByUser != null) {
                 if (searchLangSelectedByUser.equals("en")) {
                     if ((!curQueryKey.equals("meanings")) &&
@@ -111,10 +112,9 @@ public class SuggestionServiceImpl implements SuggestionService {
                             (!curQueryKey.equals("greek")))
                         continue;
                 }
+                if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew") || curQueryKey.equals("greekMeanings") || curQueryKey.equals("hebrewMeanings"))
+                    maxResult = MAX_RESULTS_NON_GROUPED * 4; // Only add maxResult if user is using the search pop-up (modal)
             }
-            int maxResult = MAX_RESULTS;
-            if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew") || curQueryKey.equals("greekMeanings") || curQueryKey.equals("hebrewMeanings"))
-                maxResult = MAX_RESULTS_NON_GROUPED * 4;
             final SingleTypeSuggestionService searchService = query.getValue();
 
             //run exact query against index

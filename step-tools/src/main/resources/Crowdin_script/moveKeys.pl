@@ -9,15 +9,24 @@ sub trim {
 }
 
 my $number_args = $#ARGV + 1;  
-if ($number_args != 2) {  
+if (($number_args < 2) || ($number_args > 3)) {  
     print "Please provide\n";
     print "    1. the file with strings that need to be moved.\n";
     print "    2. the file to extract keys.\n";
+    print "    3. \"inplace\" for update in the first file\n";
     exit;  
 }
 
 my $inputKeyFile = $ARGV[0];
 my $inputExtractFile = $ARGV[1];
+my $inPlaceUpdate = 0;
+if ($number_args == 3) {
+    if ($ARGV[2] ne "inplace") {
+        print "The only acceptable 3rd parameter is \"inplace\"\n";
+        exit;
+    }
+    $inPlaceUpdate = 1;
+}
 my %keys;
 open (FH, '<', $inputKeyFile) or die "Could not open input file: $inputKeyFile";
 while (<FH>) {
@@ -26,7 +35,6 @@ while (<FH>) {
 	my $line = trim($_);
 	if ($line =~ m/=/) {
         $keys{$`} = 1;
-        print "found1 $`\n";
 	}
   	else {
         if ($line =~ m/^\#/) {
@@ -41,11 +49,14 @@ while (<FH>) {
 close (FH);
 
 open (FH, '<', $inputExtractFile) or die "Could not open input file: $inputExtractFile";
-my $output = $inputExtractFile . '.new1';
-open (OF1, '>', $output);
-$output = $inputExtractFile . '.new2';
-open (OF2, '>', $output);
-
+my $output1 = $inputExtractFile . '.new1';
+open (OF1, '>', $output1);
+my $output2 = "";
+if (!$inPlaceUpdate) {
+    $output2 = $inputExtractFile . '.new2';
+    open (OF2, '>', $output2);
+}
+my $numUpdated = 0;
 while (<FH>) {
     chomp($_);
     $_ =~ s/\r//;
@@ -55,22 +66,29 @@ while (<FH>) {
     }
 	if ($line =~ m/=/) {
         my $curKey = $`;
-        print "found $curKey\n";
         if (exists($keys{$curKey})) {
-            print OF2 "$line\n";
+            if ($inPlaceUpdate) {
+                print OF1 "# $line\n";
+                print OF1 "$curKey" . "=Please email patricksptang\@gmail.com \"$curKey\" crowdin key need to be fixed. A screenshot will help.\n";
+            }
+            else {
+                print OF2 "$line\n";
+            }
+            $numUpdated ++;
         }
         else {
             print OF1 "$line\n";
         }
 	}
-  	else {
-        if ($line =~ m/^\#/) {
-
-        }
-        else {
-            print "cannot find = char in $line in $inputExtractFile\n";
-            exit;
-        }
+  	elsif ($line !~ m/^\#/) {
+        print "cannot find = char in $line in $inputExtractFile\n";
+        exit;
     }
 }
 close (FH);
+close (OF1);
+print "Updated $numUpdated in $output1";
+if (!$inPlaceUpdate) {
+    print " and $output2";
+}
+print "\n";

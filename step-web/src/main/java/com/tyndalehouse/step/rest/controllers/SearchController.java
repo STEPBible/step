@@ -251,10 +251,11 @@ public class SearchController {
             for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i++) {
                 AutoSuggestion currentSuggestion = autoSuggestions.get(i);
                 if (currentSuggestion.getItemType().equals("meanings")) {
+                    int currentCount = currentSuggestion.getCount();
                     List<String> currentStrongList = currentSuggestion.getStrongList();
                     for (int j = lastMeaningSuggestion; j > i; j--) {
                         AutoSuggestion anotherSuggestion = autoSuggestions.get(j);
-                        if (currentStrongList.equals(anotherSuggestion.getStrongList())) {
+                        if ((currentCount == anotherSuggestion.getCount()) && (currentStrongList.equals(anotherSuggestion.getStrongList()))) {
                             ((LexiconSuggestion) currentSuggestion.getSuggestion()).setGloss(
                                     ((LexiconSuggestion) currentSuggestion.getSuggestion()).getGloss() + "," + ((LexiconSuggestion) anotherSuggestion.getSuggestion()).getGloss());
                             autoSuggestions.remove(j);
@@ -276,8 +277,7 @@ public class SearchController {
     private String sortMeaningGloss(final String gloss) {
         String[] glosses = gloss.split(",");
         Arrays.sort(glosses);
-        String result = String.join(", ", glosses);
-        return result;
+        return String.join(", ", glosses);
     }
 
     /**

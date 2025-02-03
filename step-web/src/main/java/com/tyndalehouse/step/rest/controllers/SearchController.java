@@ -86,14 +86,14 @@ public class SearchController {
         return suggest(input, context, referencesOnly, null);
     }
 
-        /**
-         * Suggests options to the user.
-         *
-         * @param input          the input from the user
-         * @param context        any specific user context, such as the selection of a book, or a particular master version
-         *                       already in the box
-         * @param referencesOnly true to indicate we only want references back
-         */
+    /**
+     * Suggests options to the user.
+     *
+     * @param input          the input from the user
+     * @param context        any specific user context, such as the selection of a book, or a particular master version
+     *                       already in the box
+     * @param referencesOnly true to indicate we only want references back
+     */
     @Timed(name = "suggest", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly,
                                         final String searchLangSelectedByUser) {

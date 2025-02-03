@@ -267,20 +267,8 @@ step.searchSelect = {
 			$("#searchButton").click();
 	},
 	updateAdvancedSearchElements: function() {
-//		var advancedSearchInStorage = step.util.localStorageGetItem("advanced_search");
-//		if ((advancedSearchInStorage != null) && (advancedSearchInStorage === "true")) {
-//			$("#basic_search_help_text").hide();
 			$(".advanced_search_elements").show();
-//			$("#select_advanced_search").addClass("checked");
-			// $("#advancesearchonoffswitch").prop( "checked", true );
 			step.searchSelect.previousSearchesEnteredByUser();
-//		}
-//		else {
-//			$("#basic_search_help_text").show();
-//			$(".advanced_search_elements").hide();
-//			$("#select_advanced_search").removeClass("checked");
-//			$("#advancesearchonoffswitch").prop( "checked", false );
-//		}
 		if (($('.passageContainer.active').width() < 500) || (step.touchDevice && !step.touchWideDevice))
 			$('#displayLocForm').hide();
 	},
@@ -663,10 +651,6 @@ step.searchSelect = {
 			'</div>' +
 			'<div id="search_table" class="advanced_search_elements">' +
 			'<table>';
-//			'<colgroup>' +
-//			'<col id="column1width" span="1" style="width:100%;">' +
-//			'<col span="1" style="width:61%;">' +
-//			'</colgroup>';
 		for (var i = 0; i < step.searchSelect.numOfSearchTypesToDisplay; i ++) {
 			var srchCode = this.searchTypeCode[i];
 			html += '<tr class="select2-result select2-result-selectable select-' + srchCode + '">' +
@@ -1371,7 +1355,6 @@ step.searchSelect = {
 		var userInput = '';
 		$('textarea#userTextInput').show();
 		$('#searchButton').show();
-//		$("#column1width").width("30%");
 		$(".search-type-column").show();
 		$('#warningMessage').text('');
 		if ((typeof lastUserInput === "undefined") || (lastUserInput === null))
@@ -2394,7 +2377,6 @@ step.searchSelect = {
 			else $('.select-' + step.searchSelect.searchTypeCode[l]).hide();
 		}
 		$(".detailLexTriangle").click(step.searchSelect._handleClickOnTriangle);
-//		$("#column1width").width("100%");
 		$(".search-type-column").hide();
 		step.searchSelect._updateDisplayBasedOnOptions();
 	},

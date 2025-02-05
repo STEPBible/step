@@ -678,8 +678,12 @@ step.searchSelect = {
 					langElmNum = 1;
 				else if (language === "gr")
 					langElmNum = 2;
+				else
+					language = "en";
 				$($("label.btn")[langElmNum]).addClass("stepPressedButton");
 			}
+			else
+				language = "en";
 		}
 		else if (typeof ev === "object") {
 			var target = $(ev.target);
@@ -1416,18 +1420,24 @@ step.searchSelect = {
 			var langCode = step.userLanguageCode.substring(0, 2).toLowerCase();
 			var foundStrong = false;
 			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr")) {
-				if ((userInput.length > 4) && (!isNaN(userInput.substring(1,5)))) {
-					var firstLetter = userInput.substring(0,1).toLowerCase();
-					if (firstLetter === "h") {
-						searchLangSelected = "he";
-						foundStrong = true;
-					}
-					if (firstLetter === "g") {
-						searchLangSelected = "gr";
-						foundStrong = true;
-					}
-					if (foundStrong)
+				var firstLetter = userInput.substring(0,1).toUpperCase();
+				var inputLength = userInput.length;
+				if (((firstLetter === "H") || (firstLetter === "G")) && // must start with H or G
+					(inputLength > 1) && (inputLength < 8) && // must be 2 to 7 characters long
+					(userInput.split(" ").length == 1)) { // No space
+					if (inputLength == 2)
+						foundStrong = !isNaN(userInput.substring(1,2));
+					else
+						foundStrong = !isNaN(userInput.substring(1,inputLength - 1));
+					if (foundStrong) {
+						if (firstLetter === "H")
+							searchLangSelected = "he";
+						else if (firstLetter === "G")
+							searchLangSelected = "gr";	
 						step.util.localStorageSetItem('lastSearchTab', searchLangSelected);
+						userInput = step.util.fixStrongNumForVocabInfo(userInput.toUpperCase(), true);
+						$('textarea#userTextInput').val(userInput);
+					}
 				}
 			}
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === "")) {

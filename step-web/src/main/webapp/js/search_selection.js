@@ -250,7 +250,7 @@ step.searchSelect = {
 		step.searchSelect._initOptions();
 		$('#searchHdrTable').append(this._buildSearchHeaderAndTable());
 		$('#searchHdrTable').find("label.btn").click(this.handleLanguageButton);
-		this.handleLanguageButton();
+		this.handleLanguageButton("init");
 		$('#srchModalBackButton').hide();
 
 		$(function(){
@@ -566,7 +566,7 @@ step.searchSelect = {
 		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
 			$('#searchHdrTable').find("label.btn").click(this.handleLanguageButton);
-			this.handleLanguageButton();
+			this.handleLanguageButton("init");
 			$('#previousSearch').show();
 			if (this.searchModalCurrentPage == 1) {
 				$('#srchModalBackButton').hide();
@@ -669,11 +669,36 @@ step.searchSelect = {
     handleLanguageButton: function (ev) {
 		var language;
 		var langOfOldButtonPressed = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
-		if (typeof ev === "object") {
+		if ((typeof ev === "string") || (ev === "init")) {
+			language = step.util.localStorageGetItem('lastSearchTab');
+			if (typeof language === "string") {
+				$("label.btn").removeClass("stepPressedButton");
+				var langElmNum = 0;
+				if (language === "he")
+					langElmNum = 1;
+				else if (language === "gr")
+					langElmNum = 2;
+				$($("label.btn")[langElmNum]).addClass("stepPressedButton");
+			}
+		}
+		else if (typeof ev === "object") {
 			var target = $(ev.target);
-    		language = target.find("input").data("lang");
+			language = target.find("input").data("lang");
 			$("label.btn").removeClass("stepPressedButton");
 			target.addClass("stepPressedButton");	
+			if (langOfOldButtonPressed !== language ) {
+				step.util.localStorageSetItem('lastSearchTab', language);
+				userInput = $('textarea#userTextInput').val().trim();
+				if ((userInput.length > 4) && (!isNaN(userInput.substring(1,5)))) {
+					var firstLetter = userInput.substring(0,1).toLowerCase();
+					if (((firstLetter === "h") && (langOfOldButtonPressed === "he")) ||
+						((firstLetter === "g") && (langOfOldButtonPressed === "gr")))
+							$('textarea#userTextInput').val("");
+				}
+				step.searchSelect.showRowsAndMessagesAccordingToSelectedLanguage(language);
+				step.searchSelect._handleEnteredSearchWord();
+				return;
+			}
 		}
 		else {
 			language = "en";
@@ -687,10 +712,10 @@ step.searchSelect = {
 				}
 			}
 		}
-		if (langOfOldButtonPressed !== language ) {
-			step.searchSelect._handleEnteredSearchWord();
-			return;
-		}
+		step.searchSelect.showRowsAndMessagesAccordingToSelectedLanguage(language);
+	},
+		
+	showRowsAndMessagesAccordingToSelectedLanguage: function(language) {
 		$(".select2-result").hide();
 		var isAnythingShown = false;
 		var basic_search_help_text = "";
@@ -1389,6 +1414,22 @@ step.searchSelect = {
 				versionsQueryString = VERSION + "%3D" + step.searchSelect.version;
 			var searchLangSelected = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
 			var langCode = step.userLanguageCode.substring(0, 2).toLowerCase();
+			var foundStrong = false;
+			if ((searchLangSelected === "en") || (searchLangSelected === "he") || (searchLangSelected === "gr")) {
+				if ((userInput.length > 4) && (!isNaN(userInput.substring(1,5)))) {
+					var firstLetter = userInput.substring(0,1).toLowerCase();
+					if (firstLetter === "h") {
+						searchLangSelected = "he";
+						foundStrong = true;
+					}
+					if (firstLetter === "g") {
+						searchLangSelected = "gr";
+						foundStrong = true;
+					}
+					if (foundStrong)
+						step.util.localStorageSetItem('lastSearchTab', searchLangSelected);
+				}
+			}
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === "")) {
 				if ((searchLangSelected === "en") && ((langCode !== "zh") && (langCode !== "ar")) &&
 					(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
@@ -1848,7 +1889,8 @@ step.searchSelect = {
 				if(searchNames[0].lastChild && searchNames[0].lastChild.tagName === "HR") {
 					searchNames[0].lastChild.remove()
 				}
-				step.searchSelect.handleLanguageButton();
+				if (foundStrong) step.searchSelect.handleLanguageButton("init");
+				else step.searchSelect.handleLanguageButton();
 				if (step.searchSelect.searchRange !== "Gen-Rev")
 					$(".srchFrequency").hide();
 			}).fail(function() {

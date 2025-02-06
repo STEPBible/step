@@ -262,7 +262,7 @@ step.searchSelect = {
 		});
 		step.searchSelect.updateAdvancedSearchElements();
 		if (isRangeUpdate === "range_update")
-			step.searchSelect._buildRangeHeaderAndTable(isRangeUpdate);
+			step.searchSelect._buildRangeHeaderAndTable();
 		else if ($('textarea#userTextInput').val() !== "") // Click on the search button if user provided a search word previously
 			$("#searchButton").click();
 	},
@@ -566,6 +566,11 @@ step.searchSelect = {
 		if (typeof $('textarea#userTextInput').val() === "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
 			$('#searchHdrTable').find("label.btn").click(this.handleLanguageButton);
+			if ((typeof step.searchInputBeforeUserClickedRange === "string") && 
+			(step.searchInputBeforeUserClickedRange !== "")) {
+				$('textarea#userTextInput').val(step.searchInputBeforeUserClickedRange);
+				step.searchInputBeforeUserClickedRange = "";
+			}
 			this.handleLanguageButton("init");
 			$('#previousSearch').show();
 			if (this.searchModalCurrentPage == 1) {
@@ -628,7 +633,7 @@ step.searchSelect = {
 			'</form>' +
 			'</div>' +
 			'<div id="searchRangeButton" style="font-size:larger"><b>' + __s.search_range + ':</b> ' +
-				'<a onclick=step.searchSelect._buildRangeHeaderAndTable()>' + displayRange + '</a>' +
+				'<a onclick=step.searchSelect._buildRangeHeaderAndTable("userClickedRangeButton")>' + displayRange + '</a>' +
 			'</div><br>' +
 
 			'<span id="warningMessage" style="color:red;width:90%;float:left"></span><br>' +
@@ -813,9 +818,19 @@ step.searchSelect = {
 			}
 		}
 	},
-	_buildRangeHeaderAndTable: function(booksToDisplay) {
+	_buildRangeHeaderAndTable: function(parameter) {
 		$('#quickLexicon').remove();
-		var onlyDisplaySpecifiedBooks = ((typeof booksToDisplay === "object") && (Array.isArray(booksToDisplay)) && (booksToDisplay.length > 0));
+		var onlyDisplaySpecifiedBooks = false;
+		var booksToDisplay;
+		if ((typeof parameter === "string") && (parameter === "userClickedRangeButton"))
+			step.searchInputBeforeUserClickedRange = $('textarea#userTextInput').val();
+		else {
+			step.searchInputBeforeUserClickedRange = "";
+			if ((typeof parameter === "object") && (Array.isArray(parameter)) && (parameter.length > 0)) {
+				onlyDisplaySpecifiedBooks = true;
+				booksToDisplay = parameter;
+			}
+		}
 		$('#searchSelectError').text("");
 		$('#updateFeedback').text("");
 		var html = this._buildRangeHeaderAndSkeleton(onlyDisplaySpecifiedBooks);

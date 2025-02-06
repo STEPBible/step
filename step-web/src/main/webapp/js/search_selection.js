@@ -1423,11 +1423,17 @@ step.searchSelect = {
 				var firstLetter = userInput.substring(0,1).toUpperCase();
 				var inputLength = userInput.length;
 				if (((firstLetter === "H") || (firstLetter === "G")) && // must start with H or G
-					(inputLength > 1) && (inputLength < 8) && // must be 2 to 7 characters long
 					(userInput.split(" ").length == 1)) { // No space
+					if ((inputLength == 6) || (inputLength == 7)) { // H01234G
+						if ((userInput.substring(1,2) === "0") && (!isNaN(userInput.substring(2,6)))) {
+							foundStrong = true;
+							userInput = firstLetter + userInput.substring(2);
+							inputLength = userInput.length;
+						}
+					}
 					if (inputLength == 2)
 						foundStrong = !isNaN(userInput.substring(1,2));
-					else
+					else if ((inputLength > 2) && (inputLength < 7))
 						foundStrong = !isNaN(userInput.substring(1,inputLength - 1));
 					if (foundStrong) {
 						if (firstLetter === "H")

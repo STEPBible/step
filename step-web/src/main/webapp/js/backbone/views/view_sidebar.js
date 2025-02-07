@@ -578,7 +578,7 @@ var SidebarView = Backbone.View.extend({
     			return __s.lexicon_search_for_this_word; // return the generic message (This word occurs about) which has been translated for many years
         return sprintf(__s.type_of_word_frequency, __s["type_of_word_" + stepType]);
     },
-     _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions, bibleVersion) {
+    _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions, bibleVersion) {
         var total = mainWord.count;
         var totalOT = 0;
         var totalNT = 0;

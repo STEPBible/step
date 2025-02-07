@@ -1583,21 +1583,28 @@ step.searchSelect = {
 												text2Display += data[i].extraExamples[k].value;
 										}
 										if (text2Display.length == 0) console.log('group, but no examples');
-										else if (currentSearchSuggestionElement.text().indexOf("list all with similar") == -1) {
-											var text2Display = '&nbsp;&nbsp;&nbsp;<b>';
-											if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS))
-												text2Display += 'list all with similar meaning...';
-											else if ((suggestionType === GREEK) || (suggestionType === HEBREW))
-												text2Display += 'list all with similar ' + suggestionType.charAt(0).toUpperCase() + suggestionType.slice(1).toLowerCase() + ' spelling...';
-											else
-												text2Display += __s.more
-											text2Display += '</b>...';
-											if (currentHTML !== "") currentSearchSuggestionElement.append("<br>");
-											var text2Append = '<a onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>"
-											if (suggestionType == MEANINGS) {
-												meaningsEntriesMore = text2Append
-											} else {
-												currentSearchSuggestionElement.append(text2Append);
+										else {
+											var curSuggestionElement = currentSearchSuggestionElement.text();
+											if ((curSuggestionElement.indexOf(__s.list_similar_meaning) == -1) &&
+												(curSuggestionElement.indexOf(__s.list_similar_hebrew_meaning) == -1) &&
+												(curSuggestionElement.indexOf(__s.list_similar_greek_meaning) == -1)) {
+												var text2Display = '&nbsp;&nbsp;&nbsp;<b>';
+												if ((suggestionType === GREEK_MEANINGS) || (suggestionType === HEBREW_MEANINGS))
+													text2Display += __s.list_similar_meaning;
+												else if (suggestionType === GREEK)
+													text2Display += __s.list_similar_greek_meaning;
+												else if (suggestionType === HEBREW)
+													text2Display += __s.list_similar_hebrew_meaning;
+												else
+													text2Display += __s.more
+												text2Display += '</b>...';
+												if (currentHTML !== "") currentSearchSuggestionElement.append("<br>");
+												var text2Append = '<a onmousemove="javascript:$(\'#quickLexicon\').remove()" onmouseover="javascript:$(\'#quickLexicon\').remove()" style="padding:0px;" href="javascript:step.searchSelect._handleEnteredSearchWord(\'' + suggestionType + '\')">' + text2Display + "</a>"
+												if (suggestionType == MEANINGS) {
+													meaningsEntriesMore = text2Append
+												} else {
+													currentSearchSuggestionElement.append(text2Append);
+												}
 											}
 										}
 									}

@@ -104,16 +104,20 @@ public class SuggestionServiceImpl implements SuggestionService {
                             currentContext.setInput(curInput.substring(1, curInput.length() - 2)); // remove leading and trailing "
                     }
                 } else if (searchLangSelectedByUser.equals("he")) {
-                    if ((!curQueryKey.equals("hebrewMeanings")) &&
-                            (!curQueryKey.equals("hebrew")))
+                    if (curQueryKey.equals("hebrewMeanings"))
+                        maxResult = MAX_RESULTS_NON_GROUPED * 2;
+                    else if (curQueryKey.equals("hebrew"))
+                        maxResult = MAX_RESULTS_NON_GROUPED * 4;
+                    else
                         continue;
                 } else if (searchLangSelectedByUser.equals("gr")) {
-                    if ((!curQueryKey.equals("greekMeanings")) &&
-                            (!curQueryKey.equals("greek")))
+                    if (curQueryKey.equals("greekMeanings"))
+                        maxResult = MAX_RESULTS_NON_GROUPED * 2;
+                    else if (curQueryKey.equals("greek"))
+                        maxResult = MAX_RESULTS_NON_GROUPED * 4;
+                    else
                         continue;
                 }
-                if (curQueryKey.equals("greek") || curQueryKey.equals("hebrew") || curQueryKey.equals("greekMeanings") || curQueryKey.equals("hebrewMeanings"))
-                    maxResult = MAX_RESULTS_NON_GROUPED * 4; // Only add maxResult if user is using the search pop-up (modal)
             }
             final SingleTypeSuggestionService searchService = query.getValue();
 
@@ -166,7 +170,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         for (String d : dependents) {
             final SingleSuggestionsSummary singleSuggestionsSummary = resultsSoFar.get(d);
             if (singleSuggestionsSummary == null) {
-                LOGGER.warn("Dependencies setup is incorrect");
+                //LOGGER.warn("Dependencies setup is incorrect");
                 continue;
             }
             final int totalMinusGroupExamples = singleSuggestionsSummary.getPopularSuggestions().size();

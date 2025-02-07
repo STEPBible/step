@@ -2514,9 +2514,9 @@ step.searchSelect = {
 		str2Search, suggestionType, text2Display, prefixToDisplay, suffixToDisplay, suffixTitle,
 		limitType, augStrongSameMeaning, hasDetailLexInfo, needIndent, userInput, allVersions) { // , hasHebrew, hasGreek) {
 		var brCount = 0;
-		var suggestionsToDisplay = 7;
-		if (($("#srchModalBackButton").is(":hidden")) || (currentSearchSuggestionElement.selector === "#searchResultsnames"))
-			suggestionsToDisplay = 40; // More entries are needed to display names.  There are 30+ Zechariah so 40 should be enough
+		var suggestionsToDisplay = 11;
+		if ((!$("#srchModalBackButton").is(":hidden")) || (currentSearchSuggestionElement.selector === "#searchResultsnames"))
+			suggestionsToDisplay = 33; // More entries are needed to display names.  There are 30+ Zechariah so 40 should be enough
 		var needLineBreak = "";
 		var isAugStrong = Array.isArray(augStrongSameMeaning);
 		var existingHTML = currentSearchSuggestionElement.html();

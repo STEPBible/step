@@ -626,9 +626,10 @@ step.searchSelect = {
 		var html = '<div class="header" style="padding:0px">' +
 			'<form id="langButtonForm" role="form" class="form-inline" style="margin-top:8px">' +
 				'<span class="form-group btn-group" data-toggle="buttons">' +
-					'<label class="btn btn-default btn-sm stepButton stepPressedButton active"><input type="radio" data-lang="en" checked="checked">English</label>' +
-					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="he">Hebrew</label>' +
-					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr">Greek</label>' +
+					'<label class="btn btn-default btn-sm stepButton stepPressedButton active"><input type="radio" data-lang="en" checked="checked">' +
+						this._getLanguagesOfBibles() + '</label>' +
+					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="he">' + __s.hebrew + '</label>' +
+					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr">' + __s.greek + '</label>' +
 				'</span>' +
 			'</form>' +
 			'</div>' +
@@ -2897,5 +2898,72 @@ step.searchSelect = {
 			("aeiou".indexOf(nameType.substring(0,1).toLowerCase()) > -1)) // the name type starts with a vowel (e.g.: angel)
 				result = "An " + nameType.substr(2); // change from "A " to "An "
 		return result;
-    }
+    },
+	_getLanguagesOfBibles: function () {
+		var langs = [];
+		var userLang = step.userLanguageCode;
+		if (userLang === "zh_TW")
+			userLang = "zh-tw";
+		var languageNames;
+		try {
+			languageNames = new Intl.DisplayNames([userLang], {
+				type: 'language'
+			});	
+		}
+		catch {
+			languageNames = new Intl.DisplayNames(["en"], {
+				type: 'language'
+			});	
+		}
+		var numOfLangs = 0;
+		var activePassageData = step.util.activePassage().get("searchTokens") || [];
+		for (var i = 0; i < activePassageData.length; i++) {
+			var actPsgeDataElm = activePassageData[i];
+			var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType;
+			if (itemType === VERSION) {
+				var bibleInitials = actPsgeDataElm.token ? actPsgeDataElm.token : actPsgeDataElm.item.initials;
+				if ((typeof bibleInitials === "string") || (bibleInitials !== "")) {
+					var bibleObj = step.keyedVersions[bibleInitials];
+					if (typeof bibleObj === "object") {
+						var langCode = bibleObj.languageCode;
+						if (typeof langCode === "string") {
+							if (" grc hbo ".indexOf(langCode) == -1) {
+								var langName = bibleObj.originalLanguage;
+								if ((typeof langName !== "string") || (langName === "") || (langName === langCode)) {
+									try {
+										langName = languageNames.of(langCode);
+									}
+									catch {
+										langName = bibleObj.languageName;
+									}
+									if (langName === langCode)
+										langName = bibleObj.languageName;
+								}
+								if (langs.indexOf(langName) == -1) {
+									numOfLangs ++;
+									if (numOfLangs > 3) {
+										langs.push("...");
+										break;
+									}
+									langs.push(langName);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if ((numOfLangs < 4) &&
+			(langs.indexOf("English") == -1)) { // If an English Bible is open by the user
+				if (numOfLangs === 3)
+					langs.push("...");
+				else {
+					try {
+						langs.push(languageNames.of("en"));
+					}
+					catch {}
+				}
+		}
+		return langs.join(", ");
+	}
 };

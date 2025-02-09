@@ -2961,7 +2961,7 @@ step.searchSelect = {
 					try {
 						langs.push(languageNames.of("en"));
 					}
-					catch {}
+					catch (err) {}
 				}
 		}
 		return langs.join(", ");

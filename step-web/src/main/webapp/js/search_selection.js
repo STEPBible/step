@@ -2910,10 +2910,10 @@ step.searchSelect = {
 				type: 'language'
 			});	
 		}
-		catch {
+		catch (err) {
 			languageNames = new Intl.DisplayNames(["en"], {
 				type: 'language'
-			});	
+			});
 		}
 		var numOfLangs = 0;
 		var activePassageData = step.util.activePassage().get("searchTokens") || [];
@@ -2933,7 +2933,7 @@ step.searchSelect = {
 									try {
 										langName = languageNames.of(langCode);
 									}
-									catch {
+									catch (err) {
 										langName = bibleObj.languageName;
 									}
 									if (langName === langCode)

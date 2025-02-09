@@ -628,8 +628,8 @@ step.searchSelect = {
 				'<span class="form-group btn-group" data-toggle="buttons">' +
 					'<label class="btn btn-default btn-sm stepButton stepPressedButton active"><input type="radio" data-lang="en" checked="checked">' +
 						this._getLanguagesOfBibles() + '</label>' +
-					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="he">' + __s.hebrew + '</label>' +
-					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr">' + __s.greek + '</label>' +
+					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="he">' + this.capitalizeFirstLetter(__s.hebrew) + '</label>' +
+					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr">' + this.capitalizeFirstLetter(__s.greek) + '</label>' +
 				'</span>' +
 			'</form>' +
 			'</div>' +
@@ -2945,7 +2945,7 @@ step.searchSelect = {
 										langs.push("...");
 										break;
 									}
-									langs.push(langName);
+									langs.push(this.capitalizeFirstLetter(langName));
 								}
 							}
 						}
@@ -2959,11 +2959,14 @@ step.searchSelect = {
 					langs.push("...");
 				else {
 					try {
-						langs.push(languageNames.of("en"));
+						langs.push(this.capitalizeFirstLetter(languageNames.of("en")));
 					}
 					catch (err) {}
 				}
 		}
 		return langs.join(", ");
+	},
+	capitalizeFirstLetter: function(val) {
+		return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 	}
 };

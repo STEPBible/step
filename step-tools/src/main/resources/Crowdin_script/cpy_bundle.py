@@ -24,7 +24,7 @@ if __name__ == '__main__':
         elif folderName[1] == "he":
             langName[0] = "iw"
         elif folderName[1] == "id":
-                langName[0] = "in"
+            langName[0] = "in"
         for filePath2 in glob.iglob(f"crowdin\\{folderName[1]}\\*.properties"):
             folderName2 = filePath2.split('\\')
             targetFilePrefix = folderName2[2].split("_")[0]

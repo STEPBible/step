@@ -815,7 +815,7 @@ step.searchSelect = {
 			var curUserInput = $('textarea#userTextInput').val();
 			if (curUserInput.length > 2) {
 				if (step.searchSelect.previousUserInput !== curUserInput)
-					$("#warningMessage").text("No result for your search word.  Please update your search word.");
+					$("#warningMessage").text(__s.no_result);
 			}
 		}
 	},
@@ -965,7 +965,7 @@ step.searchSelect = {
 			'<div id="ob_table"/>';
 			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice) && ($("#enterRange").length == 0))
 				$('.footer').prepend('<textarea id="enterRange" rows="1" class="stepFgBg" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px"' +
-					' placeholder="Optionally type in search range, e.g.: Psa.1-15"></textarea>' +
+					' placeholder=' + __s.enter_search_range + '></textarea>' +
 					'<br><span id="userEnterRangeError" style="color: red"></span>'
 				);
 		return html;
@@ -1887,7 +1887,7 @@ step.searchSelect = {
 					}
 					var text2Display = step.searchSelect._composeDescription("type_of_word_named", amalgamation["type"], name);
 					var prefixToDisplay = "";
-					var suffixToDisplay = '<span class="srchFrequency"> occurs in total - ' + grandTotal + ' x</span>';
+					var suffixToDisplay = '<span class="srchFrequency"> ' + __s.occurs_in_total + ' - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";
 					var augStrongSameMeaning = null;
 					var hasDetailLexInfo = false;

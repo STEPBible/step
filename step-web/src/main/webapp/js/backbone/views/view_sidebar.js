@@ -259,6 +259,9 @@ var SidebarView = Backbone.View.extend({
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
                 if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
+                panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                    'Report lexicon issues' +
+                    '</a>'));
                 panelBodies.push(panelBody);
                 var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target=".' + panelId +
                     '"><a>' + panelTitle;
@@ -295,6 +298,9 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             }
+            panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                'Report lexicon issues' +
+            '</a>'));
             if ((step.touchDevice) && (!step.touchWideDevice))
 	            panelBodies.push(panelBody);
 	        else
@@ -372,11 +378,6 @@ var SidebarView = Backbone.View.extend({
                 .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
-                .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + mainWord.strongNumber + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
-                    '<button type="button" class="btn btn-default btn-sm" style="padding:3px 2px;margin:0px;">' +
-                        '<i class="glyphicon glyphicon-exclamation-sign"></i>' +
-                    '</button>' +
-                '</a>'))
         );
     },
 

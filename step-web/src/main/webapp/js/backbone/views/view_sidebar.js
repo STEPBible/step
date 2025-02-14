@@ -41,6 +41,9 @@ var SidebarView = Backbone.View.extend({
         else if (data == '#help') {
             mode = 'help';
         }
+        else if (data == '#color') {
+            mode = 'color';
+        }
         this.model.save({
             mode: mode
         });
@@ -92,11 +95,14 @@ var SidebarView = Backbone.View.extend({
             var callBackLoadDefFromAPIParams = [ version, ref, strong, curMorphs, allVersions, variant, self.createDefinition, morphCount ]; 
             step.util.getVocabMorphInfoFromJson(strong, curMorphs, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
         }
-        else if (this.model.get("mode") == 'analysis') {
+        else if (this.model.get("mode") === 'analysis') {
             self.createAnalysis();
         }
-        else if (this.model.get("mode") == 'history') {
+        else if (this.model.get("mode") === 'history') {
             self.createHistory();
+        }
+        else if (this.model.get("mode") === 'color') {
+            self.createColor();
         }
         else {
             self.createHelp();
@@ -140,10 +146,12 @@ var SidebarView = Backbone.View.extend({
         this.lexicon = $("<div id='lexicon' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.analysis = $("<div id='analysis' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.history = $("<div id='history' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
+        this.color = $("<div id='color' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.help = $("<div id='help' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         tabContent.append(this.lexicon);
         tabContent.append(this.analysis);
         tabContent.append(this.history);
+        tabContent.append(this.color);
         tabContent.append(this.help);
         this.$el.append(tabContent);
         return tabContent;
@@ -174,6 +182,9 @@ var SidebarView = Backbone.View.extend({
     },
     createHelp: function () {
         this.helpView = new ExamplesView({el: this.help});
+    },
+    createColor: function () {
+        this.color = new ColorView({el: this.color});
     },
     createDefinition: function (data, parameters) {
         var ref = parameters[0];
@@ -259,6 +270,9 @@ var SidebarView = Backbone.View.extend({
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
                 if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
+                panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                    'Report lexicon issues' +
+                    '</a>'));
                 panelBodies.push(panelBody);
                 var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target=".' + panelId +
                     '"><a>' + panelTitle;
@@ -295,6 +309,9 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             }
+            panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                'Report lexicon issues' +
+            '</a>'));
             if ((step.touchDevice) && (!step.touchWideDevice))
 	            panelBodies.push(panelBody);
 	        else
@@ -372,11 +389,6 @@ var SidebarView = Backbone.View.extend({
                 .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
-                .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + mainWord.strongNumber + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
-                    '<button type="button" class="btn btn-default btn-sm" style="padding:3px 2px;margin:0px;">' +
-                        '<i class="glyphicon glyphicon-exclamation-sign"></i>' +
-                    '</button>' +
-                '</a>'))
         );
     },
 
@@ -571,14 +583,12 @@ var SidebarView = Backbone.View.extend({
     },
 
     _composeDescriptionOfOccurrences: function(stepType) {
-        if ((typeof stepType !== "string") || (stepType === "") ||
-            (stepType === "word") || (stepType === "verb") || (stepType === "name") ||
-            ((step.userLanguage !== "English") &                                     // If user language is not English, but it is using the English message,
-             ((__s.lexicon_search_for_person === "This person occurs about") || // there is no translation for these two new messages.  Therefore use the original message which is
-              (__s.lexicon_search_for_place === "This place occurs about"))) )   // lexicon_search_for_this_word.  That has been translated for many years.
-             return __s.lexicon_search_for_this_word;
-        if (stepType === "place") return __s.lexicon_search_for_this_place;
-        return __s.lexicon_search_for_this_person;
+        if (stepType === "person or group")
+            stepType = "person_or_group";
+		if (((typeof stepType !== "string") || (typeof __s["type_of_word_" + stepType] !== "string")) ||
+            ((step.userLanguage !== "English") && (__s.type_of_word_frequency === "This %s occurs about"))) // Not translated to user's language
+    			return __s.lexicon_search_for_this_word; // return the generic message (This word occurs about) which has been translated for many years
+        return sprintf(__s.type_of_word_frequency, __s["type_of_word_" + stepType]);
     },
 
     _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions, bibleVersion) {
@@ -1169,6 +1179,7 @@ var SidebarView = Backbone.View.extend({
             '<li><a class="glyphicon glyphicon-stats" title="<%= __s.passage_stats %>" data-toggle="tab" data-target="#analysis"></li>' +
             '<li><a class="glyphicon glyphicon-bookmark" title="<%= __s.bookmarks_and_recent_texts %>" data-toggle="tab" data-target="#history"></li>' +
             '<li><a class="stepglyph-help glyphicon glyphicon-question-sign" title="<%= __s.frequently_asked_questions %>" data-toggle="tab" data-target="#help"></li>' +
+            '<li><a class="stepglyph-help glyphicon glyphicon-text-color" title="<%= __s.frequently_asked_questions %>" data-toggle="tab" data-target="#color"></li>' +
             '</ul>';
 
         var tabContainer = $(_.template(template)());

@@ -1,6 +1,12 @@
-function initializeClrCodeHtmlModalPage() {
-  cf.addVerbTable(true, '#verbClrs');
-  addOTVerbTable(true, '#hVerbClrs');
+function initializeClrCodeHtmlModalPage(sidebarParam) {
+  if (sidebarParam === "sidebar") {
+    cf.addVerbTable(true, '#sideBarVerbClrs');
+    addOTVerbTable(true, '#sideBarHVerbClrs');
+  }
+  else {
+    cf.addVerbTable(true, '#verbClrs');
+    addOTVerbTable(true, '#hVerbClrs');
+  }
   addNounTable();
   updateHtmlForYAxis();
   updateHtmlForXAxis();

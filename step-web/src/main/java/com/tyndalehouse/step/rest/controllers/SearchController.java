@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -86,17 +87,17 @@ public class SearchController {
         return suggest(input, context, referencesOnly, null);
     }
 
-        /**
-         * Suggests options to the user.
-         *
-         * @param input          the input from the user
-         * @param context        any specific user context, such as the selection of a book, or a particular master version
-         *                       already in the box
-         * @param referencesOnly true to indicate we only want references back
-         */
+    /**
+     * Suggests options to the user.
+     *
+     * @param input          the input from the user
+     * @param context        any specific user context, such as the selection of a book, or a particular master version
+     *                       already in the box
+     * @param referencesOnly true to indicate we only want references back
+     */
     @Timed(name = "suggest", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly,
-                                        final String searchLanguage) {
+                                        final String searchLangSelectedByUser) {
         boolean onlyReferences = false;
         if (StringUtils.isNotBlank(referencesOnly)) {
             onlyReferences = Boolean.parseBoolean(referencesOnly);
@@ -132,7 +133,7 @@ public class SearchController {
         if (onlyReferences || referenceContext != null) {
             addReferenceSuggestions(limitType, input, autoSuggestions, bookContext, referenceContext);
         } else {
-            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData, searchLanguage);
+            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData, searchLangSelectedByUser);
         }
         addCountsToSuggestions(autoSuggestions, context);
         return autoSuggestions;
@@ -241,23 +242,42 @@ public class SearchController {
                 }
             }
         }
+        consolidateMeaningSuggestions(firstMeaningSugguestion, lastMeaningSuggestion, autoSuggestions);
+    }
+
+    private void consolidateMeaningSuggestions(int firstMeaningSugguestion, int lastMeaningSuggestion,
+                                               List<AutoSuggestion> autoSuggestions) {
         if (firstMeaningSugguestion > -1) {
-            int hashNum = 0;
-            for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i ++) {
+            for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i++) {
                 AutoSuggestion currentSuggestion = autoSuggestions.get(i);
-                if ((currentSuggestion.getItemType().equals("meanings")) && (currentSuggestion.getStrongHash() == 0)) { // Hash == 0 means it has not been compared
-                    hashNum ++;
-                    currentSuggestion.setStrongHash(hashNum);
+                if (currentSuggestion.getItemType().equals("meanings")) {
+                    int currentCount = currentSuggestion.getCount();
                     List<String> currentStrongList = currentSuggestion.getStrongList();
-                    for (int j = i + 1; j <= lastMeaningSuggestion; j ++) {
+                    for (int j = lastMeaningSuggestion; j > i; j--) {
                         AutoSuggestion anotherSuggestion = autoSuggestions.get(j);
-                        if (currentStrongList.equals(anotherSuggestion.getStrongList())) {
-                            anotherSuggestion.setStrongHash(hashNum);
+                        if ((currentCount == anotherSuggestion.getCount()) && (currentStrongList.equals(anotherSuggestion.getStrongList()))) {
+                            ((LexiconSuggestion) currentSuggestion.getSuggestion()).setGloss(
+                                    ((LexiconSuggestion) currentSuggestion.getSuggestion()).getGloss() + "," + ((LexiconSuggestion) anotherSuggestion.getSuggestion()).getGloss());
+                            autoSuggestions.remove(j);
+                            lastMeaningSuggestion--;
                         }
                     }
                 }
             }
+            for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i++) {
+                AutoSuggestion currentSuggestion = autoSuggestions.get(i);
+                if (currentSuggestion.getItemType().equals("meanings")) {
+                    ((LexiconSuggestion) currentSuggestion.getSuggestion()).setGloss(
+                            sortMeaningGloss(((LexiconSuggestion) currentSuggestion.getSuggestion()).getGloss()));
+                }
+            }
         }
+    }
+
+    private String sortMeaningGloss(final String gloss) {
+        String[] glosses = gloss.split(",");
+        Arrays.sort(glosses);
+        return String.join(", ", glosses);
     }
 
     /**
@@ -268,7 +288,7 @@ public class SearchController {
      * @param exampleData          example data is requested
      */
     private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType,
-                                       final String referenceBookContext, final boolean exampleData, final String searchLanguage) {
+                                       final String referenceBookContext, final boolean exampleData, final String searchLangSelectedByUser) {
         SuggestionContext context = new SuggestionContext();
         context.setMasterBook(referenceBookContext);
         context.setInput(StringUtils.trim(input));
@@ -279,7 +299,7 @@ public class SearchController {
             convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         } else if (StringUtils.isBlank(limitType)) {
             // we only return the right set of suggestions if there is a limit type
-            convert(autoSuggestions, this.suggestionService.getTopSuggestions(context, searchLanguage));
+            convert(autoSuggestions, this.suggestionService.getTopSuggestions(context, searchLangSelectedByUser));
         } else {
             convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         }

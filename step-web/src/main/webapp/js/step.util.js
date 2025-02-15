@@ -991,10 +991,6 @@ step.util = {
             return text.substr(0, lastSeparator) + '...';
 		},
         renderArgs: function (searchTokens, container, outputMode) {
-			if ((outputMode !== "button") && (outputMode !== "span")) {
-				console.log("called renderArgs with wrong outputMode: " + outputMode);
-				return;
-			}
             if (!container) {
                 container = $("<span>");
 				if (!searchTokens) return container.html();
@@ -1129,6 +1125,12 @@ step.util = {
 			}
 			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
 			if (outputMode === "button") {
+				if ((step.touchDevice) && (!step.touchWideDevice)) { // Screen are narrow so show less.
+					allSelectedBibleVersions = allSelectedBibleVersions.split(/,/)[0].split(/ /)[0]; // show the first Bible version (translation)
+					if (searchWords !== "")
+						searchWords = " "; // Give it a space so the search range button will be shown
+					searchRange = "";
+				}
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
 						'<button type="button" ' +

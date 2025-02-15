@@ -1,12 +1,6 @@
-function initializeClrCodeHtmlModalPage(sidebarParam) {
-  if (sidebarParam === "sidebar") {
-    cf.addVerbTable(true, '#sideBarVerbClrs');
-    addOTVerbTable(true, '#sideBarHVerbClrs');
-  }
-  else {
-    cf.addVerbTable(true, '#verbClrs');
-    addOTVerbTable(true, '#hVerbClrs');
-  }
+function initializeClrCodeHtmlModalPage() {
+  cf.addVerbTable(true, '#verbClrs');
+  addOTVerbTable(true, '#hVerbClrs');
   addNounTable();
   updateHtmlForYAxis();
   updateHtmlForXAxis();
@@ -27,7 +21,32 @@ function initializeClrCodeHtmlModalPage(sidebarParam) {
     (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
   step.util.localStorageSetItem('colorCode-PreviousSettings', JSON.stringify(c4));
 }
-  
+
+function initializeClrCodeSidebar() {
+  if (typeof c4 === "undefined") cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
+  cf.addVerbTable(true, '#sideBarVerbClrs');
+  addOTVerbTable(true, '#sideBarHVerbClrs');
+  addNounTable();
+  updateHtmlForYAxis();
+  updateHtmlForXAxis();
+  updateHtmlForGender();
+  updateHtmlForNumber();
+  updateHtmlForPassiveBkgrdClr();
+  updateHtmlForMiddleBkgrdClr();
+  enableOrDisableAxisConfigButtons('X');
+  enableOrDisableAxisConfigButtons('Y');
+  enableOrDisableAxisConfigButtons('X', 'OT');
+  enableOrDisableAxisConfigButtons('Y', 'OT');
+  enableOrDisableAdvancedToolsButtons();
+  enableOrDisableAdvancedToolsButtons('OT');
+  enableOrDisableVerbAndNounButtons();
+  cf.refreshClrGrammarCSS();
+  if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
+      ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
+    (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
+  step.util.localStorageSetItem('colorCode-PreviousSettings', JSON.stringify(c4));
+}
+
 function openClrConfig() {
   var openConfigPage = $('<div id="openClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
     '<div class="modal-dialog"><div class="modal-content">');
@@ -508,6 +527,66 @@ function saveUserClrConfig() {
 }
 
 function addNounTable() {
+  var htmlTable = '<table class="tg2">' +
+    '<tr>' +
+        '<th valign="middle" align="center" colspan="2" rowspan="2">' +
+        '<div class="onoffswitch">' +
+        '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gennumonoffswitch" onchange=\'userToggleClrGrammar("gennum")\'/>' +
+        '<label class="onoffswitch-label" for="gennumonoffswitch">' +
+        '<span class="onoffswitch-inner"></span>' +
+        '<span class="onoffswitch-switch"></span>' +
+        '</label>' +
+        '</div>' +
+        '</th>' +
+        '<th class="tg-amwm2" colspan="4">Gender</th>' +
+    '</tr><tr>' +
+        '<td class="tg-yw4l">Masculine:<br>' +
+        '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
+        '</td>' +
+        '<td class="tg-yw4l">Feminine:<br>' +
+        '<input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
+        '</td>' +
+        '<td class="tg-yw4l">Neuter:<br>' +
+        '<input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
+        '</td>' +
+    '</tr><tr>' +
+        '<td class="tg-e3zv2" rowspan="4">Number</td>' +
+        '<td><span>Singular:</span><br><br>' +
+            '<select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
+                '<option value="normal">Normal</option>' +
+                '<option value="normal_italic">Normal and Italic</option>' +
+                '<option value="bold">Bold</option>' +
+                '<option value="bold_italic">Bold and Italic</option>' +
+            '</select><br>' +
+        '</td>' +
+        '<td><span class="sing mas">Masculine singular</span><br>' +
+        '</td>' +
+        '<td><span class="sing fem">Feminine singular</span><br>' +
+        '</td>' +
+        '<td><span class="sing neut">Neuter singular</span><br>' +
+        '</td>' +
+    '</tr><tr>' +
+        '<td><span>Plural:</span><br><br>' +
+            '<select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
+                '<option value="normal">Normal</option>' +
+                '<option value="normal_italic">Normal and Italic</option>' +
+                '<option value="bold">Bold</option>' +
+                '<option value="bold_italic">Bold and Italic</option>' +
+            '</select><br>' +
+        '</td>' +
+        '<td><span class="plur mas">Masculine Plural</span><br>' +
+        '</td>' +
+        '<td><span class="plur fem">Feminine Plural</span><br>' +
+        '</td>' +
+        '<td><span class="plur neut">Neuter Plural</span><br>' +
+        '</td>' +
+    '</tr>' +
+    '</table>';
+  htmlTable = $(htmlTable);
+  htmlTable.appendTo('#nounClrs');
+}
+
+function addNounSidebar() {
   var htmlTable = '<table class="tg2">' +
     '<tr>' +
         '<th valign="middle" align="center" colspan="2" rowspan="2">' +

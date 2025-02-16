@@ -981,7 +981,13 @@ step.util = {
         selectMark: function (classes) {
             return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--clrText);background:var(--clrBackground)"></span>';
         },
-        shortenDisplayText: function (text, maxLength) {
+        shortenDisplayText: function (text, maxLength, msgType, panelWidth) {
+			if ((!isNaN(panelWidth)) && (panelWidth < 800) && (typeof msgType === "string")) { // Screen are narrow so show less
+				if (msgType === "bible")
+					return text.split(/,/)[0].split(/ /)[0]; // show the first Bible version (translation)
+				else if (msgType === "search")
+					return " ";
+			}
 			if (text.length <= maxLength) return text;
             var lastSeparator = text.substr(0, maxLength).lastIndexOf(",");
 			lastSeparator = Math.max(lastSeparator, text.substr(0, maxLength).lastIndexOf(" AND "));
@@ -1081,33 +1087,36 @@ step.util = {
 			var widthAvailable = $(".passageContainer.active").width();
 			if (foundSearch) widthAvailable -= 45; // space to show the number of occurance.  eg: 105x
 			if (widthAvailable < 400) $("#thumbsup").hide(); // Not enough space to show the thumbs up icon (Facebook or Tweeter)
-			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9)) + 5; // + 12; Twelve might be too much
+			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9));
 			if (!foundSearch) {
 				if (((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) <= (charAvailable - 9)) &&
 					(allSelectedReferences === 'Gen 1')) allSelectedReferences = __s.short_title_for_ref + ": " + allSelectedReferences;
 				else if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
 			}
-			else if (allSelectedReferences.length == 0) charAvailable -= 10; // save space for "Passage:"
+			else {
+				charAvailable -= 5; // save space for filter button
+				if (allSelectedReferences.length == 0) charAvailable -= 5; // save space for "Ref:"
+			}
 			if (outputMode === "span") {
 				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
 				allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
 				searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
 			}
 			else if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) { // outputMode should be button
-				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
+				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16, "bible", widthAvailable);
 				if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
 					allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
 					if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
-						searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
+						searchWords = step.util.ui.shortenDisplayText(searchWords, 24, "search", widthAvailable);
 						var charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 						if (charUsed > charAvailable) {
-							allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, Math.max(4, allSelectedBibleVersions.length - (charUsed - charAvailable)));
+							allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, Math.max(4, allSelectedBibleVersions.length - (charUsed - charAvailable)), "bible", widthAvailable);
 							charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 							if (charUsed > charAvailable) {
 								allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, Math.max(6, allSelectedReferences.length - (charAvailable - charUsed)));
 								charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 								if (charUsed > charAvailable)
-									searchWords = step.util.ui.shortenDisplayText(searchWords, Math.max(6, searchWords.length - (charAvailable - charUsed)));
+									searchWords = step.util.ui.shortenDisplayText(searchWords, Math.max(6, searchWords.length - (charAvailable - charUsed)), "search", widthAvailable);
 							}
 						}
 					}
@@ -1125,12 +1134,6 @@ step.util = {
 			}
 			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
 			if (outputMode === "button") {
-				if ((step.touchDevice) && (!step.touchWideDevice)) { // Screen are narrow so show less.
-					allSelectedBibleVersions = allSelectedBibleVersions.split(/,/)[0].split(/ /)[0]; // show the first Bible version (translation)
-					if (searchWords !== "")
-						searchWords = " "; // Give it a space so the search range button will be shown
-					searchRange = "";
-				}
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
 						'<button type="button" ' +
@@ -1172,8 +1175,8 @@ step.util = {
 							allSelectedBibleVersions +
 						'</span>' );
 
-				if (allSelectedReferences !== "Passage:") {
-					if (allSelectedReferences === "Passage: Gen 1") allSelectedReferences = "Gen 1";
+				if (allSelectedReferences !== "Ref:") {
+					if (allSelectedReferences === "Ref: Gen 1") allSelectedReferences = "Gen 1";
 					container.append(
 						'<span ' +
 							'title="' + __s.click_passage + '" class="' + 'argSumSpan">|&nbsp;' +

@@ -3153,17 +3153,16 @@ step.util = {
         var colorReady = !(false || !!document.documentMode); // not Internet Explorer are not compatible with out color code
 		var darkModeReady = colorReady; // Internet Explorer is not ready for dark mode
 		var ua = navigator.userAgent.toLowerCase();
-		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));
-		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os [345678]_/) > -1)) { // older versions of iOS are not compatible with out color code
-			colorReady = false;
-			darkModeReady = false;
+		if (step.appleTouchDevice) {
+			if (ua.search(/ cpu os [345678]_/) > -1) { // older versions of iOS are not compatible with out color code
+				colorReady = false;
+				darkModeReady = false;
+			}
+			if (ua.search(/ cpu os 9_/) > -1) // older versions of iOS 9 can run in dark mode, but not the best with displaying updated colors in the font modal.
+				colorReady = false;
 		}
-		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os 9_/) > -1)) { // older versions of iOS 9 can run in dark mode, but not the best with displaying updated colors in the font modal.
+		else if (ua.search(/android [1234]\./) > -1) // older versions of Android are not compatible with out color code, but compatible with dark mode
 			colorReady = false;
-		}
-		else if (ua.search(/android [1234]\./) > -1) { // older versions of Android are not compatible with out color code, but compatible with dark mode
-			colorReady = false;
-		}
 		var panelNumArg = "";
 		var styleForColorExamples = "";
 		if (typeof panelNumber === "number") {
@@ -3616,11 +3615,8 @@ step.util = {
 	},
 	showIntro: function (showAnyway) {
 		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
-		if (step.touchDevice) {
-			var ua = navigator.userAgent.toLowerCase(); 
-			if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
-				return;
-		}
+		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+			return;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
@@ -3690,11 +3686,8 @@ step.util = {
 	},
     showIntroOfMultiVersion: function () {
 		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
-		if (step.touchDevice) {
-			var ua = navigator.userAgent.toLowerCase(); 
-			if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
-				return;
-		}
+		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+			return;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.multiVersionCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;

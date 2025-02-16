@@ -4883,10 +4883,9 @@ step.util = {
 		var verticalTolerance = 35;
 		// Added the following 5 lines for Apple touch devices
 		var ua = navigator.userAgent.toLowerCase();
-		var appleTouchDevices = ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)); // iPhone need the left and right buttons
-		if (appleTouchDevices) {
-			minDistance = 47;
-			verticalTolerance = 30;
+		if (step.appleTouchDevice) {
+			minDistance = 50;  // Increase the swipe left - right distance
+			verticalTolerance = 25;
 		}
 		var touchDiffY = Math.abs(touchendY - step.touchstartY);
 		var touchDiffX = touchendX - step.touchstartX;

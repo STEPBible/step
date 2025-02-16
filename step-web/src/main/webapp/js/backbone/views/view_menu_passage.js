@@ -179,8 +179,7 @@ var PassageMenuView = Backbone.View.extend({
         if (swipeStatus == undefined)
             swipeStatus = true;
         var ua = navigator.userAgent.toLowerCase();
-        var appleTouchDevices = ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)); // iPhone need the left and right buttons
-        if (step.touchDevice && swipeCount > 6 && swipeStatus && !appleTouchDevices)
+        if (step.touchDevice && swipeCount > 6 && swipeStatus && !step.appleTouchDevice)  // iPhone need the left and right buttons
             $(".nextPreviousChapterGroup").css("display", "none");
         else {
             $(".nextPreviousChapterGroup").css("display", "block");
@@ -205,7 +204,7 @@ var PassageMenuView = Backbone.View.extend({
         // played, and hopefully the user knows what the arrows are for.
         // iPhone need the left and right buttons. Swipe right / left does not work on iPhones when the chapter
         // does not have clickable elements (e.g. strong words) and the chapter is long.
-		if (step.touchDevice && !appleTouchDevices) {
+		if (step.touchDevice && !step.appleTouchDevice) {
             var swipeIntro = step.util.localStorageGetItem("swipeIntro");
             if (swipeIntro != 1) {
                 var stepUsage = step.util.localStorageGetItem("step.usageCount");

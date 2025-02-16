@@ -103,6 +103,8 @@ public class SuggestionServiceImpl implements SuggestionService {
                                 curInput.substring(0, 1).equals("\""))
                             currentContext.setInput(curInput.substring(1, curInput.length() - 2)); // remove leading and trailing "
                     }
+                    if (curQueryKey.equals("greekMeanings") || curQueryKey.equals("hebrewMeanings"))
+                        maxResult = MAX_RESULTS_NON_GROUPED * 2;
                 } else if (searchLangSelectedByUser.equals("he")) {
                     if (curQueryKey.equals("hebrewMeanings"))
                         maxResult = MAX_RESULTS_NON_GROUPED * 2;

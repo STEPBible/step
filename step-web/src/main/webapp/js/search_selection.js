@@ -1846,6 +1846,8 @@ step.searchSelect = {
 							var amalgamation = {}
 							amalgamation["name"] = name
 							amalgamation["type"] = nameType
+							amalgamation["typeCount"] = {};
+							amalgamation["typeCount"][nameType] = 1;
 							amalgamation["conglomeration"] = [element]
 							amalgamation["count"] = element["count"]
 							namesConglomerate.push(amalgamation)
@@ -1854,6 +1856,10 @@ step.searchSelect = {
 							namesConglomerate.forEach(function(amalgamation) {
 								if (amalgamation["name"] === name) {
 									amalgamation["conglomeration"].push(element)
+									if (isNaN(amalgamation["typeCount"][nameType]))
+										amalgamation["typeCount"][nameType] = 1;
+									else 
+										amalgamation["typeCount"][nameType] ++;
 								}
 							})
 						}
@@ -1868,6 +1874,7 @@ step.searchSelect = {
 						if (allStrongs !== "") allStrongs += ",";
 						sortedAllStrongs = amalgamation["conglomeration"][count].strongs.sort().join(",");
 						if (alreadyDisplayedStrongsSearch.includes(sortedAllStrongs)) {
+							amalgamation.typeCount[amalgamation.conglomeration[count].type] --;
 							amalgamation["conglomeration"].splice(count, 1);  // remove from array, it is a duplicate
 							count --;
 							allStrongs = allStrongs.slice(0, -1)
@@ -1885,7 +1892,7 @@ step.searchSelect = {
 						suggestionType = "hebrewMeanings";
 						limitType = "hebrew";	
 					}
-					var text2Display = step.searchSelect._composeDescription("type_of_word_named", amalgamation["type"], name);
+					var text2Display = step.searchSelect._composeDescriptionForNames(amalgamation["typeCount"], name);
 					var prefixToDisplay = "";
 					var suffixToDisplay = '<span class="srchFrequency"> ' + __s.occurs_in_total + ' - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";
@@ -2885,6 +2892,39 @@ step.searchSelect = {
 		this.andOrNotUpdated = true;
 		$('#updateButton').show();
 	},
+
+	_composeDescriptionForNames: function(stepTypeCount, name) {
+		var numberOfKeys = Object.keys(stepTypeCount).length;
+		var result = "";
+		var count = 0;
+		for (var type in stepTypeCount) {
+			count ++;
+			if (stepTypeCount.hasOwnProperty(type) && stepTypeCount[type] > 0) {
+				var key = type;
+				if (type === "person or group")
+					key = "person_or_group";
+				else if ((typeof key !== "string") || (typeof __s["type_of_word_" + key] !== "string")) {
+					type = "word";
+					key = "word";
+				}
+				if (result != "") {
+					if (count == numberOfKeys)
+						result += " " + __s.and.toLowerCase() + " ";
+					else
+						result += ", ";
+				}
+				var numInThisType = stepTypeCount[type];
+				var nameType = __s["type_of_word_" + key ];
+				if ((numInThisType == 1) && (step.userLanguageCode.toLowerCase() === "en")) {
+					numInThisType = ("aeiou".indexOf(nameType.substring(0,1).toLowerCase()) > -1) ? "An" : "A";
+					if (count > 1)
+						numInThisType = numInThisType.toLowerCase();
+				}
+				result += numInThisType + " " + type;
+			}
+		}
+		return sprintf(__s.type_of_word_named, result, name);
+    },
 
 	_composeDescription: function(key, stepType, param) {
 		if (stepType === "person or group")

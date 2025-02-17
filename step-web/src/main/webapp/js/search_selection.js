@@ -757,21 +757,6 @@ step.searchSelect = {
 			else if (step.searchSelect.searchOnSpecificType === SUBJECT_SEARCH)
 				basic_search_help_text = '<p>' + __s.topic_search_help_header + '</p>' +
 					'<ul><li>' + __s.topic_search_help_text + '</ul>';
-			require(["qtip"], function () {
-				for (l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
-					var srchCode = step.searchSelect.searchTypeCode[l];
-					var element = $(".search_type_title_" + srchCode);
-					element.qtip({
-						position: { my: "top right", at: "top right", viewport: $(window) },
-						style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-						show: { event: 'mouseenter' },
-						hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-						content: {
-							text: __s["search_type_title_" + srchCode]
-						}
-					});
-				}
-			});
 		}
 		else if (language === "he" ) {
 			if ($("#searchResultshebrew").html() !== "") {
@@ -818,6 +803,21 @@ step.searchSelect = {
 					$("#warningMessage").text(__s.no_result);
 			}
 		}
+		require(["qtip"], function () {
+			for (l = 0; l < step.searchSelect.numOfSearchTypesToDisplay; l++) {
+				var srchCode = step.searchSelect.searchTypeCode[l];
+				var element = $(".search_type_title_" + srchCode);
+				element.qtip({
+					position: { my: "top right", at: "top right", viewport: $(window) },
+					style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+					show: { event: 'mouseenter' },
+					hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+					content: {
+						text: __s["search_type_title_" + srchCode]
+					}
+				});
+			}
+		});
 	},
 	_buildRangeHeaderAndTable: function(parameter) {
 		$('#quickLexicon').remove();

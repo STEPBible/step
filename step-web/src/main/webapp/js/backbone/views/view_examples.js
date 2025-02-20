@@ -5,7 +5,7 @@ var ExamplesView = Backbone.View.extend({
 				'<i class="glyphicon glyphicon-remove"></i>' +
 			'</a>' +
 			'<h3><%= __s.simple_intro_welcome %></h3>' +
-			'<span style="background-color:lightyellow;font-size:16px"><b>A simplified search is now available!</b> </span>' +
+			'<span style="background-color:lightyellow;font-size:16px"><b><%= __s.announce_search_ui %></b> </span>' +
 			'<a style="background-color:lightyellow" class="videoGuide" href="javascript:step.util.showVideoModal(\'new_search_ui.gif\', 35)">' +
 				'<span class="glyphicon glyphicon-play-circle" style="background-color:lightyellow;font-size:16px"></span></a>' +
 			'<br><br><p><%= __s.simple_intro %></p>' +
@@ -97,9 +97,9 @@ var ExamplesView = Backbone.View.extend({
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span id="g2q4a1">1) Click on the search button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_button_.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
-								'<br><span id="g2q3a2">2) Click on the English tab</span>' +
+								'<br><span id="g2q4a2">2) Click on the English tab</span>' +
 								'<br><span id="g2q4a3">3) Type in the topic in the search box, press Return, and wait for the table to fill itself.</span>' +
-								'<br><span id="g2q4a4">4) View the searches under: Find verse on topic</span>' +
+								'<br><span id="g2q4a4">4) Click to select a search under: Find verse on topic</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/topic_search.png\');width:200px;height:405px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 

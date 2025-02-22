@@ -182,10 +182,17 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
         return all;
     }
+
     @Override
-    public SearchResult search(final SearchQuery sq, final String version,  
+    public SearchResult search(final SearchQuery sq, final String version,
                                final LookupOption... options) {
-        return retrieveResultsFromKeys(sq, searchKeys(sq), version, options);
+        Key resultKeys = searchKeys(sq);
+        if (sq.getCountOnly()) { // Don't get Bible text if only the count is needed
+            SearchResult emptyResult = new SearchResult();
+            emptyResult.setTotal(resultKeys.getCardinality());
+            return emptyResult;
+        }
+        return retrieveResultsFromKeys(sq, resultKeys, version, options);
     }
 
     @Override
@@ -296,7 +303,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     private void getPassagesForResults(SearchResult result, String[] versions, final Key results, final int context,
                                                     final List<LookupOption> options, String interlinearMode) {
         final List<SearchEntry> resultPassages = new ArrayList<SearchEntry>();
-        final Iterator<Key> iterator = ((Passage) results).iterator();
+        final Iterator<Key> iterator = results.iterator();
         boolean interlinearModeCaptured = false;
         int count = 0;
         while (iterator.hasNext()) {

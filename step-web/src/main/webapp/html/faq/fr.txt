@@ -29,17 +29,17 @@ g2q2a3: 3) Sélectionner les livres à inclure dans la recherche.
 
 g2q3:   Comment chercher un mot grec ou hébreu dans les textes sources ?
 g2q3a1: 1) Cliquer sur le bouton ‘Rechercher dans la Bible’.
-g2q3a2: 2) Cliquer sur l'interrupteur pour activer la Recherche avancée (interrupteur vert sur position On).
+g2q3a2: 2) Cliquez sur l'onglet Hébreu ou Grec.
 g2q3a3: 3) Taper directement dans la barre de recherche le mot grec ou hébreu, ou son code Strong simple (ex: H7225 ou G0746), valider avec la touche Entrée, et attendre que  le tableau des résultats se remplisse.
 g2q3a4: 4) Cliquer sur le lien approprié dans la liste des résultats..
 
 g2q4:	Comment effectuer une recherche sur un sujet particulier ?
 g2q4a1:	1) Cliquer sur le bouton ‘Rechercher dans la Bible’
-g2q4a2:	2) Cliquer sur l'interrupteur pour activer la Recherche avancée (interrupteur vert sur position On).
+g2q4a2:	2) Cliquez sur l'onglet Anglais.
 g2q4a3:	3) Taper le mot-clé en anglais (ex: love, ou Abraham), valider avec la touche Entrée, et attendre que le tableau des résultats se remplisse.
 g2q4a4:	4) Cliquer sur l’un des liens proposés dans les lignes de résultats thématiques.
 
-g2q5:	Où trouver plus d’information sur la Recherche avancée ?
+g2q5:	Où trouver plus d’information sur la Recherche?
 g2q5a1: Se référer au Guide de l’utilisateur (en anglais).
 
 g3q0:   Comment travailler sur un mot ?

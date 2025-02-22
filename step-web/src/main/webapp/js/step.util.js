@@ -137,13 +137,14 @@ step.util = {
 	versionsGreekOT: ["LXX_TH"],
 	versionsGreekBoth: ["ABEN", "ABGK"],
 	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
+	// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
 	vocabKeys: ["strongNumber", "stepGloss", "stepTransliteration", "count", 
 		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
 		"shortDef", "mediumDef", "lsjDefs",
 		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
 		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
 		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-		"freqList", "defaultDStrong"],
+		"freqList", "defaultDStrong", "shortDefMounce", "briefDef"],
 
 	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
 		var bibleVersions = allVersions.split(",");
@@ -607,15 +608,6 @@ step.util = {
      * @param el
      */
     createNewLinkedColumn: function (passageId) {
-		// if ($(window).width() < 768) {
-		// 	if (step.util.localStorageGetItem("already_warned_screen_not_wide_enough") !== "true") {
-		// 		var msg = __s.screen_not_wide_enought;
-		// 	if ((step.touchDevice) && ($(window).height() > 768))
-		// 			msg += " " + __s.rotate_screen_to_landscape_mode;
-		// 	alert(msg);
-		// 		step.util.localStorageSetItem("already_warned_screen_not_wide_enough", true);
-		// 	}
-		// }
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
@@ -688,9 +680,11 @@ step.util = {
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
         newColumn.find(".argSelect").remove();
-        newColumn.find(".select-reference").text(__s.short_title_for_ref + ":");
-		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")");
-		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>');
+        newColumn.find(".select-reference").text(__s.short_title_for_ref + ":")
+			.attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")");
+		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>')
+			.attr("onclick", "step.util.searchSelectionModal(" + newPassageId + ")");
+		newColumn.find(".select-filter").remove();
         newColumn.find(".resultsLabel").html("");
         newColumn.find(".infoIcon").attr("title", "").data("content", "").hide();
         newColumn.find(".popover").remove();
@@ -987,7 +981,13 @@ step.util = {
         selectMark: function (classes) {
             return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--clrText);background:var(--clrBackground)"></span>';
         },
-        shortenDisplayText: function (text, maxLength) {
+        shortenDisplayText: function (text, maxLength, msgType, panelWidth) {
+			if ((!isNaN(panelWidth)) && (panelWidth < 800) && (typeof msgType === "string")) { // Screen are narrow so show less
+				if (msgType === "bible")
+					return text.split(/,/)[0].split(/ /)[0]; // show the first Bible version (translation)
+				else if (msgType === "search")
+					return " ";
+			}
 			if (text.length <= maxLength) return text;
             var lastSeparator = text.substr(0, maxLength).lastIndexOf(",");
 			lastSeparator = Math.max(lastSeparator, text.substr(0, maxLength).lastIndexOf(" AND "));
@@ -997,10 +997,6 @@ step.util = {
             return text.substr(0, lastSeparator) + '...';
 		},
         renderArgs: function (searchTokens, container, outputMode) {
-			if ((outputMode !== "button") && (outputMode !== "span")) {
-				console.log("called renderArgs with wrong outputMode: " + outputMode);
-				return;
-			}
             if (!container) {
                 container = $("<span>");
 				if (!searchTokens) return container.html();
@@ -1043,6 +1039,8 @@ step.util = {
                          (itemType === STRONG_NUMBER) ||
 						 (itemType === TEXT_SEARCH) ||
 						 (itemType === SUBJECT_SEARCH) ||
+						 (itemType === NAVE_SEARCH) ||
+						 (itemType === NAVE_SEARCH_EXTENDED) ||
 						 (itemType === GREEK) ||
 						 (itemType === HEBREW) ||
 						 (itemType === GREEK_MEANINGS) ||
@@ -1076,7 +1074,10 @@ step.util = {
 							if (searchWords.indexOf(word2Add) == -1) searchWords += word2Add;
 							else skipLastWord = true;
 						}
-						else if (itemType === SUBJECT_SEARCH) searchWords += word.toUpperCase();
+						else if ((itemType === SUBJECT_SEARCH) ||
+								(itemType === NAVE_SEARCH) ||
+								(itemType === NAVE_SEARCH_EXTENDED))
+							searchWords += word.toUpperCase();
 						else if (itemType === MEANINGS) searchWords += "~" + word;
 						else searchWords += word;
 					}
@@ -1086,49 +1087,52 @@ step.util = {
 			var widthAvailable = $(".passageContainer.active").width();
 			if (foundSearch) widthAvailable -= 45; // space to show the number of occurance.  eg: 105x
 			if (widthAvailable < 400) $("#thumbsup").hide(); // Not enough space to show the thumbs up icon (Facebook or Tweeter)
-			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9)) + 5; // + 12; Twelve might be too much
+			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9));
 			if (!foundSearch) {
 				if (((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) <= (charAvailable - 9)) &&
 					(allSelectedReferences === 'Gen 1')) allSelectedReferences = __s.short_title_for_ref + ": " + allSelectedReferences;
 				else if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
 			}
-			else if (allSelectedReferences.length == 0) charAvailable -= 10; // save space for "Passage:"
+			else {
+				charAvailable -= 5; // save space for filter button
+				if (allSelectedReferences.length == 0) charAvailable -= 5; // save space for "Ref:"
+			}
 			if (outputMode === "span") {
 				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
 				allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
 				searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
 			}
 			else if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) { // outputMode should be button
-				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
+				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16, "bible", widthAvailable);
 				if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
 					allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
 					if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
-						searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
+						searchWords = step.util.ui.shortenDisplayText(searchWords, 24, "search", widthAvailable);
 						var charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 						if (charUsed > charAvailable) {
-							allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, Math.max(4, allSelectedBibleVersions.length - (charUsed - charAvailable)));
+							allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, Math.max(4, allSelectedBibleVersions.length - (charUsed - charAvailable)), "bible", widthAvailable);
 							charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 							if (charUsed > charAvailable) {
 								allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, Math.max(6, allSelectedReferences.length - (charAvailable - charUsed)));
 								charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 								if (charUsed > charAvailable)
-									searchWords = step.util.ui.shortenDisplayText(searchWords, Math.max(6, searchWords.length - (charAvailable - charUsed)));
+									searchWords = step.util.ui.shortenDisplayText(searchWords, Math.max(6, searchWords.length - (charAvailable - charUsed)), "search", widthAvailable);
 							}
 						}
 					}
 				}
 			}
+			var searchRange = "";
 			if (foundSearch) {
 				searchWords = searchWords.replace(/ AND /g, "<sub> and </sub>");
 				searchWords = searchWords.replace(/ OR /g, "<sub> or </sub>");
 				searchWords = searchWords.replace(/ NOT /g, "<sub> not </sub>");
 				if (allSelectedReferences.length > 0) {
-					searchWords += " (" + allSelectedReferences + ")";
+					searchRange = allSelectedReferences;
 					allSelectedReferences = "";
 				}
 			}
 			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
-
 			if (outputMode === "button") {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
@@ -1138,10 +1142,10 @@ step.util = {
 							allSelectedBibleVersions +
 						'</button>' +
 						'<span class="separator-' + VERSION + '">&nbsp;</span>');
-
+				var currentActivePassageId = step.util.activePassageId();
 				container.append(
 					'<button type="button" ' +
-						'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" ' +
+						'onclick="step.util.passageSelectionModal(' + currentActivePassageId + ')" ' +
 						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' stepButtonTriangle">' +
 						allSelectedReferences +
 					'</button>' +
@@ -1149,11 +1153,19 @@ step.util = {
 
 				container.append(
 					'<button type="button" ' +
-						'onclick="step.util.searchSelectionModal()" ' +
+						'onclick="step.util.searchSelectionModal(' + currentActivePassageId + ')" ' +
 						'title="' + __s.click_search + '" class="select-search stepButtonTriangle">' +
 						'<i style="font-size:10px" class="find glyphicon glyphicon-search"></i>' +
 						'&nbsp;' + searchWords +
 					'</button>' );
+				if (searchWords !== "")
+					container.append(
+						'<button type="button" ' +
+							'onclick="step.util.searchSelectionModal(' + currentActivePassageId + ',\'range_update\')" ' +
+							'title="Search range" class="select-filter stepButtonTriangle">' +
+							'<i style="font-size:10px" class="find glyphicon glyphicon-filter"></i>' +
+							'&nbsp;' + searchRange +
+						'</button>' );
 			}
 			else if (outputMode === "span") {
 				if (allSelectedBibleVersions.length > 0)
@@ -1163,8 +1175,8 @@ step.util = {
 							allSelectedBibleVersions +
 						'</span>' );
 
-				if (allSelectedReferences !== "Passage:") {
-					if (allSelectedReferences === "Passage: Gen 1") allSelectedReferences = "Gen 1";
+				if (allSelectedReferences !== "Ref:") {
+					if (allSelectedReferences === "Ref: Gen 1") allSelectedReferences = "Gen 1";
 					container.append(
 						'<span ' +
 							'title="' + __s.click_passage + '" class="' + 'argSumSpan">|&nbsp;' +
@@ -2473,7 +2485,7 @@ step.util = {
 		step.util.blockBackgroundScrolling("lexFeedbackModal");
 	},
 
-	searchSelectionModal: function () {
+	searchSelectionModal: function (currentActivePassageId, isRangeUpdate) {
 		var docWidth = $(document).width();
 		var widthCSS = "";
 		if ((docWidth > 700) && (!step.touchDevice)) { // Touch device can rotate screen so probably better to not adjust the width
@@ -2486,7 +2498,7 @@ step.util = {
 				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<script>' +
 						'$(document).ready(function () {' +
-							'step.searchSelect.initSearchSelection();' +
+							'step.searchSelect.initSearchSelection(' + currentActivePassageId + ',"' + isRangeUpdate + '");' +
 						'});' +
 						'function showPreviousSearch() {' +
 							'var element = document.getElementById("showprevioussearchonoff");' +
@@ -2508,27 +2520,10 @@ step.util = {
 								'$("#searchResultsmeaningsWarn").hide();' +
 							'}' +
 						'}' +
-						'function advanceMode() {' +
-							'if (document.getElementById("advancesearchonoffswitch").checked) {' +
-								'$("#select_advanced_search").addClass("checked");' +
-								'$(".advanced_search_elements").show();' +
-								'step.util.localStorageSetItem("advanced_search", true);' +
-								'$("#basic_search_help_text").hide();' +
-								'step.searchSelect.previousSearchesEnteredByUser();' +
-								'step.searchSelect.checkSearchButton();' +
-							'}' +
-							'else {' +
-								'$("#select_advanced_search").removeClass("checked");' +
-								'$(".advanced_search_elements").hide();' +
-								'$("#basic_search_help_text").show();' +
-								'step.util.localStorageSetItem("advanced_search", false);' +
-								'$("#searchButton").hide();' +
-							'}' +
-						'}' +
 					'</script>' +
 
 					'<div class="modal-header">' +
-						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
+						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage("' + isRangeUpdate + '")><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
 							step.util.modalCloseBtn("searchSelectionModal") +
 							'<span class="pull-right advanced_search_elements">&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
@@ -2549,7 +2544,7 @@ step.util = {
 							'</span>' +
 						'</span><br>' +
 					'</div>' +
-					'<div id="searchmodalbody" class="modal-body">' +
+					'<div id="searchmodalbody" class="modal-body" style="padding-top:0px">' +
 						'<div id="searchHdrTable"></div>' +
 						'<br>' +
 						'<div id="previousSearch" class="advanced_search_elements"></div>' +
@@ -2558,7 +2553,7 @@ step.util = {
 						'<br>' +
 						'<span id="searchSelectError"></span>' +
 						'<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"' +
-						'onclick=step.searchSelect._updateRange()></button>' +
+						'onclick=step.searchSelect._updateRange("' + isRangeUpdate + '")></button>' +
 						'<button id="updateButton" style="display:none;float:right" type="button" class="stepButton"' +
 						'onclick=step.searchSelect.goSearch()><%= __s.update_search %></button><br><br><br>' +
 					'</div>' +
@@ -2935,6 +2930,7 @@ step.util = {
 				tabChptClass = 'class="active"';
 				contentChptClass = " in active";
 			}
+
             $(_.template(
                 '<div id="showBookOrChapterSummaryModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                     '<div class="modal-dialog">' +
@@ -3157,17 +3153,16 @@ step.util = {
         var colorReady = !(false || !!document.documentMode); // not Internet Explorer are not compatible with out color code
 		var darkModeReady = colorReady; // Internet Explorer is not ready for dark mode
 		var ua = navigator.userAgent.toLowerCase();
-		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));
-		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os [345678]_/) > -1)) { // older versions of iOS are not compatible with out color code
-			colorReady = false;
-			darkModeReady = false;
+		if (step.appleTouchDevice) {
+			if (ua.search(/ cpu os [345678]_/) > -1) { // older versions of iOS are not compatible with out color code
+				colorReady = false;
+				darkModeReady = false;
+			}
+			if (ua.search(/ cpu os 9_/) > -1) // older versions of iOS 9 can run in dark mode, but not the best with displaying updated colors in the font modal.
+				colorReady = false;
 		}
-		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os 9_/) > -1)) { // older versions of iOS 9 can run in dark mode, but not the best with displaying updated colors in the font modal.
+		else if (ua.search(/android [1234]\./) > -1) // older versions of Android are not compatible with out color code, but compatible with dark mode
 			colorReady = false;
-		}
-		else if (ua.search(/android [1234]\./) > -1) { // older versions of Android are not compatible with out color code, but compatible with dark mode
-			colorReady = false;
-		}
 		var panelNumArg = "";
 		var styleForColorExamples = "";
 		if (typeof panelNumber === "number") {
@@ -3620,11 +3615,8 @@ step.util = {
 	},
 	showIntro: function (showAnyway) {
 		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
-		if (step.touchDevice) {
-			var ua = navigator.userAgent.toLowerCase(); 
-			if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
-				return;
-		}
+		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+			return;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
@@ -3694,11 +3686,8 @@ step.util = {
 	},
     showIntroOfMultiVersion: function () {
 		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
-		if (step.touchDevice) {
-			var ua = navigator.userAgent.toLowerCase(); 
-			if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
-				return;
-		}
+		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+			return;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.multiVersionCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
@@ -4308,8 +4297,8 @@ step.util = {
         else return " only at " + searchResultRange;
 	},
 	unpackJson: function (origJsonVar, index) {
-
-		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss"];
+		// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
 		var duplicateStrings = origJsonVar.d;
 		var relatedNumbers = origJsonVar.r;
 		var vocabInfo = origJsonVar.v[index];
@@ -4885,6 +4874,12 @@ step.util = {
 		var touchendY = touchEvent.changedTouches[0].screenY;
 		var minDistance = 40;
 		var verticalTolerance = 35;
+		// Added the following 5 lines for Apple touch devices
+		var ua = navigator.userAgent.toLowerCase();
+		if (step.appleTouchDevice) {
+			minDistance = 50;  // Increase the swipe left - right distance
+			verticalTolerance = 25;
+		}
 		var touchDiffY = Math.abs(touchendY - step.touchstartY);
 		var touchDiffX = touchendX - step.touchstartX;
 		step.touchstartX = null;
@@ -5089,6 +5084,39 @@ step.util = {
 			}
 		}
 		return false;
+	},
+	levenshtein: function(s1, s2) {
+		var row2 = []
+		if (s1 === s2) {
+			return 0;
+		} else {
+			var s1_len = s1.length, s2_len = s2.length;
+			if (s1_len && s2_len) {
+				var i1 = 0, i2 = 0, a, b, c, c2, row = row2;
+				while (i1 < s1_len)
+					row[i1] = ++i1;
+				while (i2 < s2_len) {
+					c2 = s2.charCodeAt(i2);
+					a = i2;
+					++i2;
+					b = i2;
+					for (i1 = 0; i1 < s1_len; ++i1) {
+						c = a + (s1.charCodeAt(i1) === c2 ? 0 : 1);
+						a = row[i1];
+						b = b < a ? (b < c ? b + 1 : c) : (a < c ? a + 1 : c);
+						row[i1] = b;
+					}
+				}
+				return b;
+			} else {
+				return s1_len + s2_len;
+			}
+		}
+	},
+	levenshteinNameComparator: function(name) {
+		return function(a, b) {
+			return step.util.levenshtein(name, a["name"]) - step.util.levenshtein(name, b["name"])
+		}
 	}
 }
 ;

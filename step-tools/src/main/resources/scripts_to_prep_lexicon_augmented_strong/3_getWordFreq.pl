@@ -17,16 +17,14 @@ sub collectWordsUsedByAStrong {
 	else {
 		$testament = "";
 	}
-	my $server = "https://dev.stepbible.org";
+	my $server = "http://localhost:8080";
 	#if ( 	((($version eq "SBLG") || ($version eq "LXX")) && ($strongNum =~ m/^H\d/)) ||
 	#		((($version eq "OHB") || ($version eq "THOT")) && ($strongNum =~ m/^G\d/)) ) {
 	#		return;
 	#}
 	my $secondStrongNum = $strongNum;
-    my $strongWithoutAugment = $strongNum;
 	if ($strongNum =~ m/^([GH]\d{1,5})[A-Za-z]/) {
 		$secondStrongNum = $1 . ',' . $secondStrongNum;
-        $strongWithoutAugment = $1;
 	}
 	my $page = 1;
 	my $numOfVerseFound = 0;
@@ -67,7 +65,7 @@ sub collectWordsUsedByAStrong {
 						if ($dataToScan =~ /$quoteChar/) {
 							my $strongNumsFound = $`;
 							$dataToScan = $';
-							if (index($strongNumsFound, $strongWithoutAugment) > -1) {
+							if (index($strongNumsFound, $strongNum) > -1) {
 								if ($dataToScan =~ />([^<]+)</) {
 									my $foundWords = lc $1;
 									$foundWords =~ s/“//g;

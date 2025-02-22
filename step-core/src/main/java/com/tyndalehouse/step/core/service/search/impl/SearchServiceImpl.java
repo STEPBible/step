@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.*;
 import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
+import static com.tyndalehouse.step.core.utils.JSwordUtils.getDefaultBibleForLanguage;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static java.lang.Character.isDigit;
 
@@ -128,7 +129,8 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public AbstractComplexSearch runQuery(final List<SearchToken> searchTokens, final String options,
                                           final String display, final int page, final String filter,
-                                          final String sort, int context, final String originalItems, final String userLanguage) {
+                                          final String sort, int context, final String originalItems, 
+                                          final String userLanguage, final boolean countOnly) {
         final long timeStart = System.currentTimeMillis();
         boolean hasSearches = false;
         final List<String> versions = new ArrayList<String>(4);
@@ -157,45 +159,9 @@ public class SearchServiceImpl implements SearchService {
         if (versions.size() == 0) {
             String defaultVersion = JSwordPassageService.REFERENCE_BOOK;
             if (userLanguage != null) {
-                if (userLanguage.toLowerCase().startsWith("es")) defaultVersion = "SpaRV1909";
-                else if (userLanguage.equalsIgnoreCase("zh")) defaultVersion = "CUns";
-                else if (userLanguage.equalsIgnoreCase("zh_tw")) defaultVersion = "CUn";
-                else if (userLanguage.toLowerCase().startsWith("bg")) defaultVersion = "BulProtRev";
-                else if (userLanguage.toLowerCase().startsWith("hi")) defaultVersion = "HinULB";
-                else if (userLanguage.toLowerCase().startsWith("ar")) defaultVersion = "AraSVD";
-                else if (userLanguage.toLowerCase().startsWith("cs")) defaultVersion = "CzeCSP";
-                else if (userLanguage.toLowerCase().startsWith("cy")) defaultVersion = "CYM";
-                else if (userLanguage.toLowerCase().startsWith("da")) defaultVersion = "DanBPH";
-                else if (userLanguage.toLowerCase().startsWith("de")) defaultVersion = "GerTafel";
-                else if (userLanguage.toLowerCase().startsWith("el")) defaultVersion = "UMGreek";
-                else if (userLanguage.toLowerCase().startsWith("et")) defaultVersion = "Est";
-                else if (userLanguage.toLowerCase().startsWith("fa")) defaultVersion = "FCB";
-                else if (userLanguage.toLowerCase().startsWith("fil")) defaultVersion = "TglASD";
-                else if (userLanguage.toLowerCase().startsWith("fi")) defaultVersion = "FinPR";
-                else if (userLanguage.toLowerCase().startsWith("fr")) defaultVersion = "FreSeg21";
-                else if (userLanguage.toLowerCase().startsWith("ga")) defaultVersion = "IriODomhnuill";
-                else if (userLanguage.toLowerCase().startsWith("hr")) defaultVersion = "HrvKOK";
-                else if (userLanguage.toLowerCase().startsWith("hu")) defaultVersion = "HunKAR";
-                else if (userLanguage.toLowerCase().startsWith("id")) defaultVersion = "IndFAYH";
-                else if (userLanguage.toLowerCase().startsWith("is")) defaultVersion = "Icelandic";
-                else if (userLanguage.toLowerCase().startsWith("it")) defaultVersion = "ItaRive";
-                else if (userLanguage.toLowerCase().startsWith("ja")) defaultVersion = "JpnJCB";
-                else if (userLanguage.toLowerCase().startsWith("ko")) defaultVersion = "KorKLB";
-                else if (userLanguage.toLowerCase().startsWith("lv")) defaultVersion = "Latvian";
-                else if (userLanguage.toLowerCase().startsWith("ml")) defaultVersion = "MalMCV";
-                else if (userLanguage.toLowerCase().startsWith("nl")) defaultVersion = "NldHTB";
-                else if (userLanguage.toLowerCase().startsWith("pl")) defaultVersion = "PolPSZ";
-                else if (userLanguage.toLowerCase().startsWith("pt")) defaultVersion = "PorNVI";
-                else if (userLanguage.toLowerCase().startsWith("ro")) defaultVersion = "RonNTR";
-                else if (userLanguage.toLowerCase().startsWith("ru")) defaultVersion = "RusCARSA";
-                else if (userLanguage.toLowerCase().startsWith("sl")) defaultVersion = "SlvZNZ";
-                else if (userLanguage.toLowerCase().startsWith("sq")) defaultVersion = "Alb";
-                else if (userLanguage.toLowerCase().startsWith("sv")) defaultVersion = "SweKarlXII1873";
-                else if (userLanguage.toLowerCase().startsWith("sw")) defaultVersion = "Neno";
-                else if (userLanguage.toLowerCase().startsWith("th")) defaultVersion = "ThaTNCV";
-                else if (userLanguage.toLowerCase().startsWith("uk")) defaultVersion = "Ukrainian";
-                else if (userLanguage.toLowerCase().startsWith("ur")) defaultVersion = "UrdULB";
-                else if (userLanguage.toLowerCase().startsWith("vi")) defaultVersion = "VieKTHD";
+                String changedVersion = getDefaultBibleForLanguage(userLanguage);
+                if (changedVersion.length() > 0)
+                    defaultVersion = changedVersion;
             }
             versions.add(defaultVersion);
             searchTokens.add(new SearchToken("version", defaultVersion));
@@ -214,7 +180,7 @@ public class SearchServiceImpl implements SearchService {
         final AbstractComplexSearch complexSearch = runCorrectSearch(
                 versions, aggregatedReferences,
                 options, StringUtils.isBlank(display) ? InterlinearMode.NONE.name() : display,
-                searchTokens, page, filter, sort, context, userLanguage);
+                searchTokens, page, filter, sort, context, userLanguage, countOnly);
 
         aggregateTokenForPassageLookups(searchTokens, referenceTokens, complexSearch);
         enhanceSearchTokens(versions.get(0), searchTokens);
@@ -389,10 +355,9 @@ public class SearchServiceImpl implements SearchService {
     private AbstractComplexSearch runCorrectSearch(final List<String> versions, final String references,
                                                    final String options, final String displayMode,
                                                    final List<SearchToken> searchTokens,
-                                                   final int pageNumber,
-                                                   final String filter,
-                                                   final String sort,
-                                                   final int context, final String userLanguage) {
+                                                   final int pageNumber, final String filter,
+                                                   final String sort, final int context,
+                                                   final String userLanguage, final boolean countOnly) {
         final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
         String[] filters = null;
         if (StringUtils.isNotBlank(filter)) {
@@ -441,12 +406,12 @@ public class SearchServiceImpl implements SearchService {
         }
         //we will prefer a word search to anything else...
         if (individualSearches.size() != 0) {
-            AbstractComplexSearch result = this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options, srchJoin);
+            AbstractComplexSearch result = this.search(new SearchQuery(countOnly, pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options, srchJoin);
             if ((((SearchResult) result).getTotal() == 0) && (individualSearches.size() == 1) && (individualSearches.get(0).getType().toString().equals("TEXT"))) {
                 String curQuery = individualSearches.get(0).getOriginalQuery();
                 if (curQuery.substring(curQuery.length()-1).equals("*")) {
                     individualSearches.get(0).setQuery(curQuery.substring(0, curQuery.length() - 1) );
-                    result = this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options, srchJoin);
+                    result = this.search(new SearchQuery(countOnly, pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])), options, srchJoin);
                 }
             }
             return result;
@@ -551,6 +516,7 @@ public class SearchServiceImpl implements SearchService {
         SearchResult result;
         // if we've only got one search, we want to retrieve the keys, the page, etc. all in one go
         try {
+
 
             if (sq.isIndividualSearch()) {
                 result = executeOneSearch(sq, options);
@@ -1171,11 +1137,12 @@ public class SearchServiceImpl implements SearchService {
      * @return the result from the corresponding text search
      */
     private SearchResult runMeaningSearch(final SearchQuery sq) {
+        SearchResult result = new SearchResult();
         final Set<String> strongs = adaptQueryForMeaningSearch(sq);
-
-        final SearchResult result = runStrongTextSearch(sq, strongs, ""); // Options from user was not passed to this method
-        setDefinitionForResults(result, sq.getDefinitions(), SuggestionType.MEANING);
-
+        if (strongs.size() > 0) {
+            result = runStrongTextSearch(sq, strongs, ""); // Options from user was not passed to this method
+            setDefinitionForResults(result, sq.getDefinitions(), SuggestionType.MEANING);
+        }
         // we can now use the filter and save ourselves some effort
         return result;
     }
@@ -1821,7 +1788,11 @@ public class SearchServiceImpl implements SearchService {
      * @return the set of results
      */
     private SearchResult buildCombinedVerseBasedResults(final SearchQuery sq, final Key results, final String options) {
-
+        if (sq.getCountOnly()) { // Don't get Bible text if only the count is needed
+            SearchResult emptyResult = new SearchResult();
+            emptyResult.setTotal(results.getCardinality());
+            return emptyResult;
+        }
         // combine the results into 1 giant keyed map
         final IndividualSearch currentSearch = sq.getCurrentSearch();
 

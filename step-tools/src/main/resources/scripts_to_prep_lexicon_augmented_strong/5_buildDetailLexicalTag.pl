@@ -29,7 +29,7 @@ sub getLexTags {
             $transliteration = "";
             $searchResultRange = "";
         }
-        elsif ($line =~ m/^\@StrNo=\t/) {
+        elsif ($line =~ m/^\@dStrNo=\t/) {
             $lastStrongNum = $';
             $unitedReason = "";
             $stepGloss = "";
@@ -55,10 +55,7 @@ sub getLexTags {
         elsif ($line =~ m/^\@STEPUnicodeAccented=\t/) {
             $unicodeAccented = $';
         }
-        elsif ($line =~ m/^\@STEPTranslitOfStr=\t/) {
-            $transliteration = $';
-        }
-        elsif (($line =~ m/^\@StrTranslit=\t/) && ($transliteration eq "")) {
+        elsif ($line =~ m/^\@STEPTranslit=\t/) {
             $transliteration = $';
         }        
     }
@@ -67,15 +64,16 @@ sub getLexTags {
 # main program
 
 my $number_args = $#ARGV + 1;  
-if ($number_args != 2) {  
+if ($number_args != 3) {  
     print "Please provide the two file names as command line arguments:\n";
     print "   1. lexicon file to analyze and add DetailLexicalTag\n";
     print "   2. lexicon file of the other language to analyze.\n";
+	print "   3. Output file name.\n";
     exit;  
 }
 my $inputFile = $ARGV[0];
 open (FH, '<', $inputFile) or die "Could not open 1st input file";
-my $outputFile = $inputFile . ".out";
+my $outputFile = $ARGV[2];
 open (OUT, '>', $outputFile) or die "Could not open output file";
 
 our %lexTags = ();
@@ -118,7 +116,7 @@ while (<FH>) {
         $lexicalGroup = "";
         $stepRelatedNos2 = "";
     }
-    elsif ($line =~ m/^\@StrNo=\t/) {
+    elsif ($line =~ m/^\@dStrNo=\t/) {
         $lastStrongNum = $';
         $lexicalGroup = "";
         $stepRelatedNos2 = "";

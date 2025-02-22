@@ -36,7 +36,6 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import static com.tyndalehouse.step.core.service.TranslationTipsService.*;
-
 /**
  * Provides each strong number given a verse.
  * <p/>

@@ -141,14 +141,19 @@ sub testSearch {
 
 # main
 my $number_args = $#ARGV + 1;  
-if ($number_args != 2) {  
+if ($number_args != 3) {  
     print "Please provide the following as command line argument.\n";
     print "   1. the file name of the lexicon file (Greek or Hebrew), run the program once for Greek and then a second time for Hebrew\n";
     print "   2. the URL for the program to lookup the DStrong words\n";
+	print "   3. Output file name.\n";
     exit;  
 }
 my $inputFile = $ARGV[0];
 my $url = $ARGV[1];
+open (FH, '<', $inputFile) or die "Could not open input file";
+my $outputFile = $ARGV[2];
+open (OUT, '>', $outputFile) or die "Could not open output file";
+
 our %altBookName;
 $altBookName{"Exo"} = "Exod";
 $altBookName{"Deu"} = "Deut";
@@ -192,10 +197,6 @@ $altBookName{"Jos"} = "Josh";
 $altBookName{"Sng"} = "Song";
 $altBookName{"Jdg"} = "Judg";
 $altBookName{"Rut"} = "Ruth";
-
-open (FH, '<', $inputFile) or die "Could not open input file";
-my $outputFile = $inputFile . ".out";
-open (OUT, '>', $outputFile) or die "Could not open output file";
 
 my $lastStrongNum = "";
 my $stepGloss = '';
@@ -270,7 +271,7 @@ while (<FH>) {
             print "\n";
        }
     }
-	elsif ($line =~ m/^\@StrNo=\t/) {
+	elsif ($line =~ m/^\@dStrNo=\t/) {
         $lastStrongNum = $';
         $stepGloss = '';
         $articleGloss = "";

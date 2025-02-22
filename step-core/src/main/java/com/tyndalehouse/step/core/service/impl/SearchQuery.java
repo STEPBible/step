@@ -25,7 +25,7 @@ public class SearchQuery {
     private final String sortOrder;
     private List<EntityDoc> definitions;
     private String interlinearMode;
-    private String augmentedRange;
+    private boolean countOnly;
 
     /**
      * @param searchQuery the query to be run
@@ -85,6 +85,9 @@ public class SearchQuery {
      * @param interlinearMode the display mode used on multi version searches
      */
     public SearchQuery(final int pageNumber, int context, String interlinearMode, final String sort, final IndividualSearch... search) {
+        this(false, pageNumber, context, interlinearMode, sort, search);
+    }
+    public SearchQuery(final boolean countOnly, final int pageNumber, int context, String interlinearMode, final String sort, final IndividualSearch... search) {
         this.searches = search;
         this.pageSize = PAGE_SIZE;
         this.pageNumber = pageNumber;
@@ -104,6 +107,7 @@ public class SearchQuery {
             }
         }
         this.originalQuery = sb.toString();
+        this.countOnly = countOnly;
     }
 
     /**
@@ -274,11 +278,11 @@ public class SearchQuery {
         this.currentSearch = 0;
     }
 
-    public String getAugmentedRange() {
-        return augmentedRange;
+    public boolean getCountOnly() {
+        return countOnly;
     }
 
-    public void setAugmentedRange(String augmentedRange) {
-        this.augmentedRange = augmentedRange;
+    public void setCountOnly(boolean countOnly) {
+        this.countOnly = countOnly;
     }
 }

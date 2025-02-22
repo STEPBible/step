@@ -107,3 +107,5 @@ step.defaults = {
         }
     }
 };
+// The following line is also in step-core/src/main/resources/step.core.properties and the information should be identical
+step.name_types=["man", "woman", "king", "queen", "judge", "place", "group", "prophet", "prophetess", "person or group", "god", "location", "angel", "ruler"];

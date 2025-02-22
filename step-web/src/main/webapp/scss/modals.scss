@@ -18,6 +18,22 @@
   }
 }
 
+.search-sub-suggestion-part:first-child {
+  flex: 0 0 auto; /* Only as wide as its content */
+}
+
+.search-sub-suggestion-part:last-child {
+  flex: 1; /* Grow to fill the remaining space */
+  overflow-wrap: break-word; /* Prevent overflow of long text */
+}
+
+.search-sub-suggestion {
+  display: flex; /* Enable flex layout */
+  flex-wrap: nowrap; /* Prevent wrapping to the next line */
+  gap: 10px; /* Optional: Add space between the parts */
+  align-items: flex-start;
+}
+
 #searchmodalbody,
 #bookchaptermodalbody {
   h4 {
@@ -35,6 +51,10 @@
   table {
     width: 100%;
     text-align: center;
+
+    tbody {
+      vertical-align: top;
+    }
 
     td > a {
       display: block;

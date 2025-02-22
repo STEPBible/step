@@ -1,13 +1,13 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import com.tyndalehouse.step.core.data.processors.AugmentedStrongProcessor;
 import com.tyndalehouse.step.core.models.*;
-import com.tyndalehouse.step.core.models.search.AutoSuggestion;
-import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SubjectEntries;
+import com.tyndalehouse.step.core.models.search.*;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
+import com.tyndalehouse.step.core.service.impl.SearchType;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
 import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -78,21 +80,11 @@ public class SearchController {
      * @return
      */
     public List<AutoSuggestion> suggest(String input, final String context) {
-        /* Patrick added and commented out this code because it is probably not needed.  The fix is in StringConversionUtils.java.
-        if (input.length() > 33) {
-            int posOfChar = input.indexOf(' ');
-            if ((posOfChar == -1) || (posOfChar > 32)) {
-                posOfChar = input.indexOf('.');
-                if ((posOfChar == -1) || (posOfChar > 32)) {
-                    posOfChar = input.indexOf(':');
-                    if ((posOfChar == -1) || (posOfChar > 32)) {
-                        posOfChar = input.indexOf(';');
-                        if ((posOfChar == -1) || (posOfChar > 32)) input = input.substring(0, 33);
-                    }
-                }
-            }
-        } */
-        return suggest(input, context, null);
+        return suggest(input, context, null, null);
+    }
+
+    public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly) {
+        return suggest(input, context, referencesOnly, null);
     }
 
     /**
@@ -104,7 +96,8 @@ public class SearchController {
      * @param referencesOnly true to indicate we only want references back
      */
     @Timed(name = "suggest", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly) {
+    public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly,
+                                        final String searchLangSelectedByUser) {
         boolean onlyReferences = false;
         if (StringUtils.isNotBlank(referencesOnly)) {
             onlyReferences = Boolean.parseBoolean(referencesOnly);
@@ -140,9 +133,151 @@ public class SearchController {
         if (onlyReferences || referenceContext != null) {
             addReferenceSuggestions(limitType, input, autoSuggestions, bookContext, referenceContext);
         } else {
-            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData);
+            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData, searchLangSelectedByUser);
         }
+        addCountsToSuggestions(autoSuggestions, context);
         return autoSuggestions;
+    }
+
+    private void addCountsToSuggestions(List<AutoSuggestion> autoSuggestions, final String context) {
+        int firstMeaningSugguestion = -1;
+        int lastMeaningSuggestion = -1;
+        int originalSize = autoSuggestions.size();
+        for (int i = 0; i < originalSize; i ++) { // Do not get count for newly added suggestion.  Counts are added when new suggestions are created.
+            AutoSuggestion currentSuggestion = autoSuggestions.get(i);
+            String currentType = currentSuggestion.getItemType();
+            if (currentType.equals("text")) {
+                TextSuggestion text = (TextSuggestion) autoSuggestions.get(i).getSuggestion();
+                if (text == null) continue;
+                String searchText = text.getText().trim();
+                int posOfSpace = searchText.indexOf(" ");
+                if (posOfSpace == -1) { // One word
+                    if ((searchText.indexOf("\"") == -1) && // No quotes
+                         searchText.substring(searchText.length() - 1).equals("*")) { // last char is a *
+                        // Move the suggestion to the new one and add to the end of autoSuggestions
+                        AutoSuggestion newSuggestion = new AutoSuggestion();
+                        newSuggestion.setItemType(currentType);
+                        TextSuggestion newTextSuggestion = new TextSuggestion();
+                        newTextSuggestion.setText(((TextSuggestion) currentSuggestion.getSuggestion()).getText());
+                        newSuggestion.setSuggestion(newTextSuggestion);
+                        AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchText, true);
+                        newSuggestion.setCount(((SearchResult) result).getTotal());
+                        autoSuggestions.add(newSuggestion);
+                        searchText = "\"" + searchText.substring(0, searchText.length() - 1) + "\"";
+                        ((TextSuggestion) currentSuggestion.getSuggestion()).setText(searchText);
+                    }
+                } else {
+                    if ((searchText.indexOf('"') == -1) &&
+                            (searchText.toLowerCase().indexOf(" and ") == -1) &&
+                            (searchText.toLowerCase().indexOf(" or ") == -1)) {
+                        AutoSuggestion newSuggestion1 = new AutoSuggestion();
+                        newSuggestion1.setItemType(currentType);
+                        String[] multiWords = searchText.split("\\s");
+                        String searchTextForAndSearch = multiWords[0];
+                        for (int j = 1; j < multiWords.length; j++) {
+                            searchTextForAndSearch += "@" + currentType + "=" + multiWords[j];
+                        }
+                        TextSuggestion newTextSuggestion1 = new TextSuggestion();
+                        newTextSuggestion1.setText("#AND: " + searchText);
+                        newSuggestion1.setSuggestion(newTextSuggestion1);
+                        AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchTextForAndSearch, true);
+                        newSuggestion1.setCount(((SearchResult) result).getTotal());
+                        autoSuggestions.add(newSuggestion1);
+
+                        AutoSuggestion newSuggestion2 = new AutoSuggestion();
+                        newSuggestion2.setItemType(currentType);
+                        TextSuggestion newTextSuggestion2 = new TextSuggestion();
+                        String searchTextWithoutAsterisk = "";
+                        for (int j = 0; j < multiWords.length; j++) {
+                            if (j > 0) searchTextWithoutAsterisk += " ";
+                            searchTextWithoutAsterisk += multiWords[j].split("\\*")[0];
+                        }
+                        newTextSuggestion2.setText('"' + searchTextWithoutAsterisk + '"');
+                        newSuggestion2.setSuggestion(newTextSuggestion2);
+                        AbstractComplexSearch result2 = masterSearch(context + currentType + "=\"" + searchTextWithoutAsterisk + "\"", true);
+                        newSuggestion2.setCount(((SearchResult) result2).getTotal());
+                        autoSuggestions.add(newSuggestion2);
+                    }
+                }
+                AbstractComplexSearch result = masterSearch(context + currentType + "=" + searchText, true);
+                currentSuggestion.setCount(((SearchResult) result).getTotal());
+            }
+            else if (currentType.equals("meanings")) {
+                if (firstMeaningSugguestion == -1) firstMeaningSugguestion = i;
+                LexiconSuggestion meaning = (LexiconSuggestion) currentSuggestion.getSuggestion();
+                if (meaning == null) continue;
+                SearchResult meaningResult =  ((SearchResult) masterSearch(context + currentType + "=" + meaning.getGloss(), true));
+                List<String> strongList = meaningResult.getStrongHighlights();
+                if (strongList != null) {
+                    Collections.sort(strongList);
+                    currentSuggestion.setStrongList(strongList);
+                    currentSuggestion.setCount(meaningResult.getTotal());
+                    lastMeaningSuggestion = i;
+                }
+                else {
+                    autoSuggestions.remove(i);
+                    i --;
+                    originalSize --;
+                }
+            }
+            else if (currentType.equals("subject")) {
+                SubjectSuggestion subject = (SubjectSuggestion) currentSuggestion.getSuggestion();
+                if (subject == null) continue;
+                List<SearchType> searchTypes = ((SubjectSuggestion) currentSuggestion.getSuggestion()).getSearchTypes();
+                boolean getCount = false;
+                if (searchTypes.size() == 3)
+                    getCount = true;
+                else {
+                    for (SearchType thisSearchType: searchTypes) {
+                        if (thisSearchType.name().equals("SUBJECT_SIMPLE")) {
+                            getCount = true;
+                            continue;
+                        }
+                    }
+                }
+                if (getCount) {
+                    SearchResult result2 = (SearchResult) masterSearch(context + currentType + "=" + subject.getValue(), true);
+                    int count = result2.getTotal();
+                    currentSuggestion.setCount(count);
+                }
+            }
+        }
+        consolidateMeaningSuggestions(firstMeaningSugguestion, lastMeaningSuggestion, autoSuggestions);
+    }
+
+    private void consolidateMeaningSuggestions(int firstMeaningSugguestion, int lastMeaningSuggestion,
+                                               List<AutoSuggestion> autoSuggestions) {
+        if (firstMeaningSugguestion > -1) {
+            for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i++) {
+                AutoSuggestion currentSuggestion = autoSuggestions.get(i);
+                if (currentSuggestion.getItemType().equals("meanings")) {
+                    int currentCount = currentSuggestion.getCount();
+                    List<String> currentStrongList = currentSuggestion.getStrongList();
+                    for (int j = lastMeaningSuggestion; j > i; j--) {
+                        AutoSuggestion anotherSuggestion = autoSuggestions.get(j);
+                        if ((currentCount == anotherSuggestion.getCount()) && (currentStrongList.equals(anotherSuggestion.getStrongList()))) {
+                            ((LexiconSuggestion) currentSuggestion.getSuggestion()).setGloss(
+                                    ((LexiconSuggestion) currentSuggestion.getSuggestion()).getGloss() + "," + ((LexiconSuggestion) anotherSuggestion.getSuggestion()).getGloss());
+                            autoSuggestions.remove(j);
+                            lastMeaningSuggestion--;
+                        }
+                    }
+                }
+            }
+            for (int i = firstMeaningSugguestion; i <= lastMeaningSuggestion; i++) {
+                AutoSuggestion currentSuggestion = autoSuggestions.get(i);
+                if (currentSuggestion.getItemType().equals("meanings")) {
+                    ((LexiconSuggestion) currentSuggestion.getSuggestion()).setGloss(
+                            sortMeaningGloss(((LexiconSuggestion) currentSuggestion.getSuggestion()).getGloss()));
+                }
+            }
+        }
+    }
+
+    private String sortMeaningGloss(final String gloss) {
+        String[] glosses = gloss.split(",");
+        Arrays.sort(glosses);
+        return String.join(", ", glosses);
     }
 
     /**
@@ -152,7 +287,8 @@ public class SearchController {
      * @param referenceBookContext the reference book (i..e master book) that has already been selected by the user.
      * @param exampleData          example data is requested
      */
-    private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType, final String referenceBookContext, final boolean exampleData) {
+    private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType,
+                                       final String referenceBookContext, final boolean exampleData, final String searchLangSelectedByUser) {
         SuggestionContext context = new SuggestionContext();
         context.setMasterBook(referenceBookContext);
         context.setInput(StringUtils.trim(input));
@@ -163,7 +299,7 @@ public class SearchController {
             convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         } else if (StringUtils.isBlank(limitType)) {
             // we only return the right set of suggestions if there is a limit type
-            convert(autoSuggestions, this.suggestionService.getTopSuggestions(context));
+            convert(autoSuggestions, this.suggestionService.getTopSuggestions(context, searchLangSelectedByUser));
         } else {
             convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         }
@@ -171,18 +307,19 @@ public class SearchController {
 
     private void convert(final List<AutoSuggestion> autoSuggestions, final SuggestionsSummary topSuggestions) {
         for (SingleSuggestionsSummary summary : topSuggestions.getSuggestionsSummaries()) {
+            String currentSearchType = summary.getSearchType();
             //we render each option
             final List<? extends PopularSuggestion> popularSuggestions = summary.getPopularSuggestions();
             for (PopularSuggestion p : popularSuggestions) {
                 AutoSuggestion au = new AutoSuggestion();
-                au.setItemType(summary.getSearchType().toString());
+                au.setItemType(currentSearchType);
                 au.setSuggestion(p);
                 autoSuggestions.add(au);
             }
 
             if (summary.getMoreResults() > 0 && !SearchToken.REFERENCE.equals(summary.getSearchType())) {
                 AutoSuggestion au = new AutoSuggestion();
-                au.setItemType(summary.getSearchType().toString());
+                au.setItemType(currentSearchType);
                 au.setGrouped(true);
                 au.setCount(summary.getMoreResults());
                 au.setMaxReached(SuggestionService.MAX_RESULTS_NON_GROUPED <= summary.getMoreResults());
@@ -225,7 +362,11 @@ public class SearchController {
      * @param items the list of all items
      */
     public AbstractComplexSearch masterSearch(final String items) {
-        return this.masterSearch(items, null, null, null, null, null, null, null);
+        return this.masterSearch(items, null, null, null, null, null, null, null, false);
+    }
+
+    public AbstractComplexSearch masterSearch(final String items, final boolean countOnly) {
+        return this.masterSearch(items, null, null, null, null, null, null, null, countOnly);
     }
 
     /**
@@ -233,7 +374,7 @@ public class SearchController {
      * @param options current display options
      */
     public AbstractComplexSearch masterSearch(final String items, final String options) {
-        return this.masterSearch(items, options, null, null, null, null, null, null);
+        return this.masterSearch(items, options, null, null, null, null, null, null, false);
     }
 
     /**
@@ -242,7 +383,7 @@ public class SearchController {
      * @param display the display options
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display) {
-        return this.masterSearch(items, options, display, null, null, null, null, null);
+        return this.masterSearch(items, options, display, null, null, null, null, null, false);
     }
 
     /**
@@ -252,7 +393,7 @@ public class SearchController {
      * @param pageNumber the number of the page that is desired
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber) {
-        return this.masterSearch(items, options, display, pageNumber, null, null, null, null);
+        return this.masterSearch(items, options, display, pageNumber, null, null, null, null, false);
     }
 
     /**
@@ -263,7 +404,7 @@ public class SearchController {
      * @param filter     the type of filter required on an original word search
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter) {
-        return this.masterSearch(items, options, display, pageNumber, filter, null, null, null);
+        return this.masterSearch(items, options, display, pageNumber, filter, null, null, null, false);
     }
 
     /**
@@ -275,7 +416,7 @@ public class SearchController {
      * @param sort
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter, final String sort) {
-        return this.masterSearch(items, options, display, pageNumber, filter, sort, null, null);
+        return this.masterSearch(items, options, display, pageNumber, filter, sort, null, null, false);
     }
 
     /**
@@ -287,7 +428,7 @@ public class SearchController {
      * @param context    the amount of context to add to the verses hit by a search
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter, final String sort, final String context) {
-        return this.masterSearch(items, options, display, pageNumber, filter, sort, context, null);
+        return this.masterSearch(items, options, display, pageNumber, filter, sort, context, null, false);
     }
 
     /**
@@ -302,10 +443,15 @@ public class SearchController {
     @Timed(name = "master-search", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display,
                                               final String pageNumber, final String filter, final String sortOrder, final String context, final String userLanguage) {
+        return this.masterSearch(items, options, display, pageNumber, filter, sortOrder, context, userLanguage, false);
+    }
+
+    public AbstractComplexSearch masterSearch(final String items, final String options, final String display,
+                                              final String pageNumber, final String filter, final String sortOrder, final String context, final String userLanguage, final boolean countOnly) {
         final List<SearchToken> searchTokens = parseTokens(items);
         final int page = ConversionUtils.getValidInt(pageNumber, 1);
         final int searchContext = ConversionUtils.getValidInt(context, 0);
-        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, sortOrder, searchContext, items, userLanguage);
+        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, sortOrder, searchContext, items, userLanguage, countOnly);
     }
 
     /**

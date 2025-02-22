@@ -39,6 +39,7 @@ public final class OriginalWordUtils {
         suggestion.setStepTransliteration(def.get("stepTransliteration"));
         suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
 		suggestion.set_searchResultRange(def.get("SearchResultRange"));
+        suggestion.setBriefDef(def.get("briefDefinition"));
         if (!forRelatedWords) { // The following are not needed for related Words.  Do not include the to reduce network transmission
             suggestion.setType(def.get("STEP_Type"));
             suggestion.setDetailLexicalTag(def.get("STEP_DetailLexicalTag"));

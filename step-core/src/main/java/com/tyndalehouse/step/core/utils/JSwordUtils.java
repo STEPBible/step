@@ -37,6 +37,50 @@ public final class JSwordUtils {
         // no implementation
     }
 
+    public static String getDefaultBibleForLanguage(String lang) {
+        String userLanguage = lang.toLowerCase();
+        if ((userLanguage.equals("zh_tw")) || (userLanguage.equals("zh_hk"))) return "CUn";
+        if (userLanguage.startsWith("zh")) return "CUns";
+        if (userLanguage.startsWith("es")) return "SpaRV1909";
+        if (userLanguage.startsWith("bg")) return "BulProtRev";
+        if (userLanguage.startsWith("hi")) return "HinULB";
+        if (userLanguage.startsWith("ar")) return "AraSVD";
+        if (userLanguage.startsWith("cs")) return "CzeCSP";
+        if (userLanguage.startsWith("cy")) return "CYM";
+        if (userLanguage.startsWith("da")) return "DanBPH";
+        if (userLanguage.startsWith("de")) return "GerTafel";
+        if (userLanguage.startsWith("el")) return "UMGreek";
+        if (userLanguage.startsWith("et")) return "Est";
+        if (userLanguage.startsWith("fa")) return "FCB";
+        if (userLanguage.startsWith("fil")) return "TglASD";
+        if (userLanguage.startsWith("fi")) return "FinPR";
+        if (userLanguage.startsWith("fr")) return "FreLSG";
+        if (userLanguage.startsWith("ga")) return "IriODomhnuill";
+        if (userLanguage.startsWith("hr")) return "HrvKOK";
+        if (userLanguage.startsWith("hu")) return "HunKAR";
+        if (userLanguage.startsWith("id")) return "IndFAYH";
+        if (userLanguage.startsWith("is")) return "Icelandic";
+        if (userLanguage.startsWith("it")) return "ItaRive";
+        if (userLanguage.startsWith("ja")) return "JpnJCB";
+        if (userLanguage.startsWith("ko")) return "KorKLB";
+        if (userLanguage.startsWith("lv")) return "Latvian";
+        if (userLanguage.startsWith("ml")) return "MalMCV";
+        if (userLanguage.startsWith("nl")) return "NldHTB";
+        if (userLanguage.startsWith("pl")) return "PolPSZ";
+        if (userLanguage.startsWith("pt")) return "PorNVI";
+        if (userLanguage.startsWith("ro")) return "RonNTR";
+        if (userLanguage.startsWith("ru")) return "RusCARSA";
+        if (userLanguage.startsWith("sl")) return "SlvZNZ";
+        if (userLanguage.startsWith("sq")) return "Alb";
+        if (userLanguage.startsWith("sv")) return "SweKarlXII1873";
+        if (userLanguage.startsWith("sw")) return "Neno";
+        if (userLanguage.startsWith("th")) return "ThaTNCV";
+        if (userLanguage.startsWith("uk")) return "Ukrainian";
+        if (userLanguage.startsWith("ur")) return "UrdULB";
+        if (userLanguage.startsWith("vi")) return "VieKTHD";
+        return "";
+    }
+
     /**
      * returns a sorted list from another list, with only the required information
      * 

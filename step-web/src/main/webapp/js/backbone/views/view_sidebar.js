@@ -259,6 +259,9 @@ var SidebarView = Backbone.View.extend({
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
                 if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
+                panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                    'Report lexicon issues' +
+                    '</a>'));
                 panelBodies.push(panelBody);
                 var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target=".' + panelId +
                     '"><a>' + panelTitle;
@@ -295,6 +298,9 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             }
+            panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                'Report lexicon issues' +
+            '</a>'));
             if ((step.touchDevice) && (!step.touchWideDevice))
 	            panelBodies.push(panelBody);
 	        else
@@ -372,11 +378,6 @@ var SidebarView = Backbone.View.extend({
                 .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
-                .append($('<a style="padding-left:5px" onclick="javascript:step.util.lexFeedbackModal(\'' + mainWord.strongNumber + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
-                    '<button type="button" class="btn btn-default btn-sm" style="padding:3px 2px;margin:0px;">' +
-                        '<i class="glyphicon glyphicon-exclamation-sign"></i>' +
-                    '</button>' +
-                '</a>'))
         );
     },
 
@@ -571,16 +572,13 @@ var SidebarView = Backbone.View.extend({
     },
 
     _composeDescriptionOfOccurrences: function(stepType) {
-        if ((typeof stepType !== "string") || (stepType === "") ||
-            (stepType === "word") || (stepType === "verb") || (stepType === "name") ||
-            ((step.userLanguage !== "English") &                                     // If user language is not English, but it is using the English message,
-             ((__s.lexicon_search_for_person === "This person occurs about") || // there is no translation for these two new messages.  Therefore use the original message which is
-              (__s.lexicon_search_for_place === "This place occurs about"))) )   // lexicon_search_for_this_word.  That has been translated for many years.
-             return __s.lexicon_search_for_this_word;
-        if (stepType === "place") return __s.lexicon_search_for_this_place;
-        return __s.lexicon_search_for_this_person;
+        if (stepType === "person or group")
+            stepType = "person_or_group";
+		if (((typeof stepType !== "string") || (typeof __s["type_of_word_" + stepType] !== "string")) ||
+            ((step.userLanguage !== "English") && (__s.type_of_word_frequency === "This %s occurs about"))) // Not translated to user's language
+    			return __s.lexicon_search_for_this_word; // return the generic message (This word occurs about) which has been translated for many years
+        return sprintf(__s.type_of_word_frequency, __s["type_of_word_" + stepType]);
     },
-
     _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions, bibleVersion) {
         var total = mainWord.count;
         var totalOT = 0;
@@ -805,11 +803,34 @@ var SidebarView = Backbone.View.extend({
     _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
-        if (typeof mainWord.shortDef === "string") {
+        var text2add = ""
+        if (typeof mainWord.shortDefMounce === "string") { 
+            if ((typeof mainWord.mediumDef !== "string") ||
+                (mainWord.shortDefMounce.length < 3) ||
+                (mainWord.mediumDef.indexOf(mainWord.shortDefMounce) == -1) )
+                text2add = mainWord.shortDefMounce
+        }
+        if (typeof mainWord.shortDef === "string") { 
             if ((typeof mainWord.mediumDef !== "string") ||
                 (mainWord.shortDef.length < 3) ||
-                (mainWord.mediumDef.indexOf(mainWord.shortDef) == -1) )
-                this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode, bibleVersion);
+                (mainWord.mediumDef.indexOf(mainWord.shortDef) == -1) ) {
+                    if (text2add === "") {
+                        text2add = mainWord.shortDef
+                    } else {
+                        text2add += "<br>" + mainWord.shortDef
+                    }
+                }
+        }
+        if (mainWord.briefDef && typeof mainWord.briefDef === "string") {
+            if (text2add === "") {
+                text2add = mainWord.briefDef
+            } else {
+                text2add += "<br>" + mainWord.briefDef
+            }
+            // this._addLinkAndAppend(panel, mainWord.briefDef, currentWordLanguageCode, bibleVersion, true);
+        }
+        if (text2add !== "") {
+            this._addLinkAndAppend(panel, text2add, currentWordLanguageCode, bibleVersion, true);
         }
 		var detailLex = [];
 		if (mainWord._stepDetailLexicalTag) {
@@ -1028,6 +1049,7 @@ var SidebarView = Backbone.View.extend({
             });
         }
     },
+
     // for one-line morphology
     _createBriefMorphInfo: function (panel, info, morphCount, ref, strongNum) {
         if ((typeof info === "undefined") || (Object.keys(info).length === 0)) {

@@ -12,6 +12,7 @@ GREEK_MEANINGS = "greekMeanings";
 GREEK = "greek";
 HEBREW_MEANINGS = "hebrewMeanings";
 HEBREW = "hebrew";
+NAMES = "names";
 STRONG_NUMBER = "strong";
 MEANINGS = "meanings";
 SUBJECT_SEARCH = "subject";

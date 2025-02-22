@@ -772,6 +772,10 @@ step.searchSelect = {
 				basic_search_help_text += '<li>' + __s.hebrew_related_word_search_help_text;
 			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === HEBREW))
 				basic_search_help_text += '<li>' + __s.hebrew_transliteration_search_help_text;
+			if (step.searchSelect.searchOnSpecificType === "") {
+				basic_search_help_text += '<li>' + __s.hebrew_orig_lang_search_help_text
+				basic_search_help_text += '<li>' + __s.hebrew_strong_number_search_help_text
+			}
 			basic_search_help_text += '</ul>';
 		}
 		else if (language === "gr") {
@@ -788,6 +792,10 @@ step.searchSelect = {
 				basic_search_help_text += '<li>' + __s.greek_related_word_search_help_text;
 			if ((step.searchSelect.searchOnSpecificType === "") || (step.searchSelect.searchOnSpecificType === GREEK))
 				basic_search_help_text += '<li>' + __s.greek_transliteration_search_help_text;
+			if (step.searchSelect.searchOnSpecificType === "") {
+				basic_search_help_text += '<li>' + __s.greek_orig_lang_search_help_text
+				basic_search_help_text += '<li>' + __s.greek_strong_number_search_help_text
+			}
 			basic_search_help_text += '</ul>';
 		}
 		if (isAnythingShown) {

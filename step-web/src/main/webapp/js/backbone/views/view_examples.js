@@ -99,7 +99,7 @@ var ExamplesView = Backbone.View.extend({
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_button_.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
 								'<br><span id="g2q4a2">2) Click on the English tab</span>' +
 								'<br><span id="g2q4a3">3) Type in the topic in the search box, press Return, and wait for the table to fill itself.</span>' +
-								'<br><span id="g2q4a4">4) Click to select a search under: Find verse on topic</span>' +
+								'<br><span id="g2q4a4">4) Click on one of the words or topics listed</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/topic_search.png\');width:200px;height:405px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 

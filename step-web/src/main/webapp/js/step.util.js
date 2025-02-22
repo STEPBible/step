@@ -4874,9 +4874,7 @@ step.util = {
 		var touchendY = touchEvent.changedTouches[0].screenY;
 		var minDistance = 40;
 		var verticalTolerance = 35;
-		// Added the following 5 lines for Apple touch devices
-		var ua = navigator.userAgent.toLowerCase();
-		if (step.appleTouchDevice) {
+		if (step.appleTouchDevice) { // Added these 4 lines for Apple touch devices
 			minDistance = 50;  // Increase the swipe left - right distance
 			verticalTolerance = 25;
 		}

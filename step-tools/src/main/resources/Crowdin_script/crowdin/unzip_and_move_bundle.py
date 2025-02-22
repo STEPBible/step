@@ -1,17 +1,19 @@
+"""
+downloads the zip file from Crowdin using the v2 file api
+"""
+
 import glob
 import sys
 import shutil
 import os
 from pathlib import Path
 
-if __name__ == '__main__':
 
-    if len(sys.argv) == 2:
-        newPath = sys.argv[1]
-        print("new path", newPath)
-    else:
-        newPath = "bundle_out"
-    print("Files will be output to", newPath, "folder")
+def unzip(newPath):
+
+def move(newPath):
+    """
+    """
 
     for filePath1 in glob.glob('crowdin\\**\\', recursive=False):
         folderName = filePath1.split('\\')
@@ -52,3 +54,16 @@ if __name__ == '__main__':
                     print("copying", filePath2, "to", targetPath)
                     shutil.copyfile(filePath2, targetPath)
             continue
+
+if __name__ == '__main__':
+    if len(sys.argv) == 2:
+        newPath = sys.argv[1]
+        print("new path", newPath)
+    else:
+        # set default target bundle dir
+        newPath = "bundle_out"
+
+    print("Files will be output to", newPath, "folder")
+
+    unzip()
+    move(newPath)

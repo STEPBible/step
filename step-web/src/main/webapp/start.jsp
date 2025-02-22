@@ -601,9 +601,13 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     var ua = navigator.userAgent.toLowerCase();
     step.touchDevice = false;
     step.touchWideDevice = false;
-    if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
-        ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints > 1))) {
+    step.appleTouchDevice = false;
+    if (ua.indexOf("android") > -1)
         step.touchDevice = true;
+    else if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
+            ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints > 1)) ) { // iPad or iPhone pretenting to be a Mac
+        step.touchDevice = true;
+        step.appleTouchDevice = true;
     }
 
 </script>
@@ -665,7 +669,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <script src="js/backbone/models/model_settings.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_feedback.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_examples.js" type="text/javascript"></script>
-<script src="js/backbone/views/view_color.js" type="text/javascript"></script>
 <script src="js/state/step.state.js" type="text/javascript"></script>
 <script src="js/passage/step.passage.js" type="text/javascript"></script>
 <script src="js/defaults/step.defaults.js" type="text/javascript"></script>

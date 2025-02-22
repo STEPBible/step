@@ -516,10 +516,9 @@
             alert("Please use www.stepbible.org instead of this server which will only show examples.");
 		var ua = navigator.userAgent.toLowerCase();
 		if (ua.indexOf('firefox') > -1) $("#panel-icon").hide(); // Firefox has some issues with this.
-		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));
         if ((typeof navigator.clipboard !== "object") || (typeof navigator.clipboard.writeText !== "function"))
             $("#copy-icon").hide();
-		if ( ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os [345678]_/) > -1)) || // older versions of iOS shows a light grey color.  Probably similiar issue as Internet Explorer
+		if ( ((step.appleTouchDevice) && (ua.search(/ cpu os [345678]_/) > -1)) || // older versions of iOS shows a light grey color.  Probably similiar issue as Internet Explorer
 			(false || !!document.documentMode) ) { // Internet Explorer use the wrong css based on the <a> tag, so change it to black
 			$("#panel-icon").css("color", "black");
 			$("#stats-icon").css("color", "black");

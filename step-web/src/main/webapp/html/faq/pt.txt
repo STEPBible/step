@@ -29,17 +29,17 @@ g2q2a3:	3) Selecione os livros que deseja pesquisar.
 
 g2q3:	Como encontrar uma palavra em grego ou hebraico?
 g2q3a1:	1) Clique no botão pesquisar.
-g2q3a2:	2) Ative o botão Pesquisa Avançada.
+g2q3a2:	2) Clique no separador Hebraico ou Grego.
 g2q3a3:	3) Digite a palavra grega ou hebraica na caixa de pesquisa, clique em pesquisar e aguarde a tabela ser preenchida.
 g2q3a4: 4) Verifique a linha correspondente para ver a tradução grega/hebraica da palavra.
 
 g2q4:	Como encontrar uma palavra relacionada a um assunto?
 g2q4a1:	1) Clique no botão pesquisar.
-g2q4a2:	2) Ative o botão Pesquisa Avançada.
+g2q4a2:	2) Clique no separador Inglês.
 g2q4a3:	3) Digite o assunto na caixa de pesquisa, clique em pesquisar e aguarde a tabela ser preenchida.
 g2q4a4: 4) Verifique a linha: Assunto ou pessoa na Bíblia.
 
-g2q5:	Onde encontro mais informações sobre pesquisa avançada?
+g2q5:	Onde encontro mais informações sobre pesquisa?
 g2q5a1:	Instruções detalhadas estão no guia de usuário.
 
 g3q0:   Como realizar um estudo de palavras?

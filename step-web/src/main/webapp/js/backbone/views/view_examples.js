@@ -5,13 +5,9 @@ var ExamplesView = Backbone.View.extend({
 				'<i class="glyphicon glyphicon-remove"></i>' +
 			'</a>' +
 			'<h3><%= __s.simple_intro_welcome %></h3>' +
-			'<span style="background-color:lightyellow;font-size:16px"><b>The BibleProject</b> </span>' +
-			'<a style="background-color:lightyellow" class="videoGuide" href="javascript:step.util.showVideoModal(\'BibleProject.gif\', 23)">' +
+			'<span style="background-color:lightyellow;font-size:16px"><b><%= __s.announce_search_ui %></b> </span>' +
+			'<a style="background-color:lightyellow" class="videoGuide" href="javascript:step.util.showVideoModal(\'new_search_ui.gif\', 35)">' +
 				'<span class="glyphicon glyphicon-play-circle" style="background-color:lightyellow;font-size:16px"></span></a>' +
-			'<span style="background-color:lightyellow;font-size:16px"> and <b>ICC commentaries</b> </span>' +
-			'<a style="background-color:lightyellow" class="videoGuide" href="javascript:step.util.showVideoModal(\'ICC.gif\', 26)">' +
-				'<span class="glyphicon glyphicon-play-circle" style="background-color:lightyellow;font-size:16px"></span></a>' +
-			'<span style="background-color:lightyellow;font-size:16px"> are now available!</span>' +
 			'<br><br><p><%= __s.simple_intro %></p>' +
 			'<div class="accordion-row" data-row="0">' +
 				'<h5 class="accordion-heading stepButton"><span id="g1q0" style="float:;">How do I read passages in Bibles?</span>' +
@@ -86,28 +82,28 @@ var ExamplesView = Backbone.View.extend({
 							'</div>' +
 						'<li style="font-weight:bold"><span id="g2q3">How do I find a Greek or Hebrew word?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'search_original_language.gif\', 50)">Video guide  ' +
+								'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'Search_Greek_Hebrew.gif\', 40)">Video guide  ' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span id="g2q3a1">1) Click on the search button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_button_.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
-								'<br><span id="g2q3a2">2) Switch on the Advanced search toggle</span>' +
-								'<br><div class="faq_img" style="background-image: url(\'images\/search_advanced_mode_.png\');width:190px;height:199px;border:3px solid black;display:none"></div>' +
+								'<br><span id="g2q3a2">2) Click on the Hebrew or Greek tab</span>' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/search_hebrew_greek.png\');width:200px;height:199px;border:3px solid black;display:none"></div>' +
 								'<br><span id="g2q3a3">3) Type in the Greek/Hebrew word in the search box, press Return, and wait for the table to fill itself.</span>' +
 								'<br><span id="g2q3a4">4) View corresponding row to see Greek/Hebrew translation of the word</span>' +
 							'</div>' +
-						'<li style="font-weight:bold"><span id="g2q4">How do I find a word only where it relates to a subject?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g2q4">How do I find a word only where it relates to a topic?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
-								'<a href="javascript:step.util.showVideoModal(\'subject_search.gif\', 46)"><span  class="videoGuide">Video guide  </span>' +
+								'<a href="javascript:step.util.showVideoModal(\'topic_search.gif\', 35)"><span  class="videoGuide">Video guide  </span>' +
 									'<span class="glyphicon glyphicon-play-circle" style="font-size:16px"></span></a>' +
 								'<br><span id="g2q4a1">1) Click on the search button</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/search_button_.png\');width:176px;height:73px;border:3px solid black;display:none"></div>' +
-								'<br><span id="g2q4a2">2) Switch on the Advanced search toggle</span>' +
-								'<br><div class="faq_img" style="background-image: url(\'images\/search_advanced_mode_.png\');width:190px;height:199px;border:3px solid black;display:none"></div>' +
-								'<br><span id="g2q4a3">3) Type in the subject in the search box, press Return, and wait for the table to fill itself.</span>' +
-								'<br><span id="g2q4a4">4) View the row: Subject or a person in the Bible</span>' +
+								'<br><span id="g2q4a2">2) Click on the English tab</span>' +
+								'<br><span id="g2q4a3">3) Type in the topic in the search box, press Return, and wait for the table to fill itself.</span>' +
+								'<br><span id="g2q4a4">4) Click on one of the words or topics listed</span>' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/topic_search.png\');width:200px;height:405px;border:3px solid black;display:none"></div>' +
 							'</div>' +
 
-						'<li style="font-weight:bold"><span id="g2q5">How do I find more about advanced search?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g2q5">How do I find more about search?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
 							'<a href="https://stepbibleguide.blogspot.com/p/finding-words-and-subjects.html" id="g2q5a1">' +
 							'Detailed instructions are in the user\'s guide</a>' +

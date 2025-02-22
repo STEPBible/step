@@ -344,8 +344,7 @@ step.copyText = {
 		if (step.touchDevice) {
 			var ua = navigator.userAgent.toLowerCase();
 			if ( (ua.indexOf("android") > -1) ||
-				 (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
-					(ua.indexOf("safari/60") > -1)) ) {
+				 ((step.appleTouchDevice) && (ua.indexOf("safari/60") > -1)) ) {
 				tableColumns = 7;
 				widthPercent = 14;
 			}

@@ -981,7 +981,13 @@ step.util = {
         selectMark: function (classes) {
             return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--clrText);background:var(--clrBackground)"></span>';
         },
-        shortenDisplayText: function (text, maxLength) {
+        shortenDisplayText: function (text, maxLength, msgType, panelWidth) {
+			if ((!isNaN(panelWidth)) && (panelWidth < 800) && (typeof msgType === "string")) { // Screen are narrow so show less
+				if (msgType === "bible")
+					return text.split(/,/)[0].split(/ /)[0]; // show the first Bible version (translation)
+				else if (msgType === "search")
+					return " ";
+			}
 			if (text.length <= maxLength) return text;
             var lastSeparator = text.substr(0, maxLength).lastIndexOf(",");
 			lastSeparator = Math.max(lastSeparator, text.substr(0, maxLength).lastIndexOf(" AND "));
@@ -991,10 +997,6 @@ step.util = {
             return text.substr(0, lastSeparator) + '...';
 		},
         renderArgs: function (searchTokens, container, outputMode) {
-			if ((outputMode !== "button") && (outputMode !== "span")) {
-				console.log("called renderArgs with wrong outputMode: " + outputMode);
-				return;
-			}
             if (!container) {
                 container = $("<span>");
 				if (!searchTokens) return container.html();
@@ -1085,33 +1087,36 @@ step.util = {
 			var widthAvailable = $(".passageContainer.active").width();
 			if (foundSearch) widthAvailable -= 45; // space to show the number of occurance.  eg: 105x
 			if (widthAvailable < 400) $("#thumbsup").hide(); // Not enough space to show the thumbs up icon (Facebook or Tweeter)
-			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9)) + 5; // + 12; Twelve might be too much
+			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9));
 			if (!foundSearch) {
 				if (((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) <= (charAvailable - 9)) &&
 					(allSelectedReferences === 'Gen 1')) allSelectedReferences = __s.short_title_for_ref + ": " + allSelectedReferences;
 				else if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
 			}
-			else if (allSelectedReferences.length == 0) charAvailable -= 10; // save space for "Passage:"
+			else {
+				charAvailable -= 5; // save space for filter button
+				if (allSelectedReferences.length == 0) charAvailable -= 5; // save space for "Ref:"
+			}
 			if (outputMode === "span") {
 				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
 				allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
 				searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
 			}
 			else if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) { // outputMode should be button
-				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
+				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16, "bible", widthAvailable);
 				if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
 					allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
 					if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
-						searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
+						searchWords = step.util.ui.shortenDisplayText(searchWords, 24, "search", widthAvailable);
 						var charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 						if (charUsed > charAvailable) {
-							allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, Math.max(4, allSelectedBibleVersions.length - (charUsed - charAvailable)));
+							allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, Math.max(4, allSelectedBibleVersions.length - (charUsed - charAvailable)), "bible", widthAvailable);
 							charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 							if (charUsed > charAvailable) {
 								allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, Math.max(6, allSelectedReferences.length - (charAvailable - charUsed)));
 								charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
 								if (charUsed > charAvailable)
-									searchWords = step.util.ui.shortenDisplayText(searchWords, Math.max(6, searchWords.length - (charAvailable - charUsed)));
+									searchWords = step.util.ui.shortenDisplayText(searchWords, Math.max(6, searchWords.length - (charAvailable - charUsed)), "search", widthAvailable);
 							}
 						}
 					}
@@ -1170,8 +1175,8 @@ step.util = {
 							allSelectedBibleVersions +
 						'</span>' );
 
-				if (allSelectedReferences !== "Passage:") {
-					if (allSelectedReferences === "Passage: Gen 1") allSelectedReferences = "Gen 1";
+				if (allSelectedReferences !== "Ref:") {
+					if (allSelectedReferences === "Ref: Gen 1") allSelectedReferences = "Gen 1";
 					container.append(
 						'<span ' +
 							'title="' + __s.click_passage + '" class="' + 'argSumSpan">|&nbsp;' +
@@ -3148,17 +3153,16 @@ step.util = {
         var colorReady = !(false || !!document.documentMode); // not Internet Explorer are not compatible with out color code
 		var darkModeReady = colorReady; // Internet Explorer is not ready for dark mode
 		var ua = navigator.userAgent.toLowerCase();
-		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));
-		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os [345678]_/) > -1)) { // older versions of iOS are not compatible with out color code
-			colorReady = false;
-			darkModeReady = false;
+		if (step.appleTouchDevice) {
+			if (ua.search(/ cpu os [345678]_/) > -1) { // older versions of iOS are not compatible with out color code
+				colorReady = false;
+				darkModeReady = false;
+			}
+			if (ua.search(/ cpu os 9_/) > -1) // older versions of iOS 9 can run in dark mode, but not the best with displaying updated colors in the font modal.
+				colorReady = false;
 		}
-		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os 9_/) > -1)) { // older versions of iOS 9 can run in dark mode, but not the best with displaying updated colors in the font modal.
+		else if (ua.search(/android [1234]\./) > -1) // older versions of Android are not compatible with out color code, but compatible with dark mode
 			colorReady = false;
-		}
-		else if (ua.search(/android [1234]\./) > -1) { // older versions of Android are not compatible with out color code, but compatible with dark mode
-			colorReady = false;
-		}
 		var panelNumArg = "";
 		var styleForColorExamples = "";
 		if (typeof panelNumber === "number") {
@@ -3611,11 +3615,8 @@ step.util = {
 	},
 	showIntro: function (showAnyway) {
 		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
-		if (step.touchDevice) {
-			var ua = navigator.userAgent.toLowerCase(); 
-			if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
-				return;
-		}
+		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+			return;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
@@ -3685,11 +3686,8 @@ step.util = {
 	},
     showIntroOfMultiVersion: function () {
 		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
-		if (step.touchDevice) {
-			var ua = navigator.userAgent.toLowerCase(); 
-			if ((ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) || (ua.indexOf("macintosh") > -1)) // Only for Android.  On iPad introJS will cause the bible, reference and search buttons to be gone
-				return;
-		}
+		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+			return;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.multiVersionCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
@@ -4876,6 +4874,10 @@ step.util = {
 		var touchendY = touchEvent.changedTouches[0].screenY;
 		var minDistance = 40;
 		var verticalTolerance = 35;
+		if (step.appleTouchDevice) { // Added these 4 lines for Apple touch devices
+			minDistance = 50;  // Increase the swipe left - right distance
+			verticalTolerance = 25;
+		}
 		var touchDiffY = Math.abs(touchendY - step.touchstartY);
 		var touchDiffX = touchendX - step.touchstartX;
 		step.touchstartX = null;

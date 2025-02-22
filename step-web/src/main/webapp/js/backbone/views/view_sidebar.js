@@ -809,7 +809,6 @@ var SidebarView = Backbone.View.extend({
                 (mainWord.shortDefMounce.length < 3) ||
                 (mainWord.mediumDef.indexOf(mainWord.shortDefMounce) == -1) )
                 text2add = mainWord.shortDefMounce
-                // this._addLinkAndAppend(panel, mainWord.shortDefMounce, currentWordLanguageCode, bibleVersion, true);
         }
         if (typeof mainWord.shortDef === "string") { 
             if ((typeof mainWord.mediumDef !== "string") ||
@@ -821,7 +820,6 @@ var SidebarView = Backbone.View.extend({
                         text2add += "<br>" + mainWord.shortDef
                     }
                 }
-                // this._addLinkAndAppend(panel, mainWord.shortDef, currentWordLanguageCode, bibleVersion, true);
         }
         if (mainWord.briefDef && typeof mainWord.briefDef === "string") {
             if (text2add === "") {

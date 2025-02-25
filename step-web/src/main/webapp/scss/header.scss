@@ -2,8 +2,23 @@
 @import 'mixins';
 
 @media (max-width: 767px) {
-  .extrapad {
+  .extrapad-xs {
     padding-top: 44px !important;
+  }
+  .hidden-touch-xs {
+    display: none !important;
+  }
+}
+
+@media (hover: none) and (min-width: 768px) {
+  .extrapad-other {
+    padding-top: 44px !important;
+  }
+}
+
+@media (hover: none) {
+  .hidden-touch {
+    display: none !important;
   }
 }
 

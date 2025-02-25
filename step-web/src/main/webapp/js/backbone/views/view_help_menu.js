@@ -2,7 +2,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
     events: {
         "click .resetEverything": "resetEverything",
         "click .aboutModalTrigger": "showAbout",
-        "click .quick_tutorial": "openTutorial",
+//        "click .quick_tutorial": "openTutorial",
 		"click .classicalUI": "classicalUI"
     },
     el: ".helpMenu",
@@ -79,9 +79,9 @@ var ViewHelpMenuOptions = Backbone.View.extend({
         //set the location
         window.location.href = '/' + ($.getUrlVars() || []).indexOf("debug") != -1 ? "" : "?debug";
     },
-    openTutorial: function() {
-        step.util.ui.showTutorial();
-    },
+    // openTutorial: function() {
+    //     step.util.ui.showTutorial();
+    // },
 	classicalUI: function() {
         var classicalUISetting = step.util.localStorageGetItem('step.classicalUI');
 		var classicalUI;

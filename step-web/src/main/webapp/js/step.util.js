@@ -3602,14 +3602,14 @@ step.util = {
 			$('#top_input_area').show();
 			$('span.tmp-rm-hidden-xs.title').removeClass('tmp-rm-hidden-xs').addClass('hidden-xs');
 			$('.navbarIconDesc').hide();
-			$('.quick_tutorial').show();
+//			$('.quick_tutorial').show();
 			$('#classicalUICheck').show();
 		}
 		else {
 			$('#top_input_area').hide();
 			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
 			$('.navbarIconDesc').show();
-			$('.quick_tutorial').hide();
+//			$('.quick_tutorial').hide();
 			$('#classicalUICheck').hide();
 		}
 	},

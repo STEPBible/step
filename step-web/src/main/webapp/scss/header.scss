@@ -1,6 +1,12 @@
 @import 'template_variables';
 @import 'mixins';
 
+@media (max-width: 767px) {
+  .extrapad {
+    padding-top: 44px !important;
+  }
+}
+
 @media screen {
   .navbar {
     height: $header_height;

@@ -259,7 +259,7 @@ var SidebarView = Backbone.View.extend({
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
                 if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
-                panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     'Report lexicon issues' +
                     '</a>'));
                 panelBodies.push(panelBody);
@@ -298,7 +298,7 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             }
-            panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+            panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                 'Report lexicon issues' +
             '</a>'));
             if ((step.touchDevice) && (!step.touchWideDevice))

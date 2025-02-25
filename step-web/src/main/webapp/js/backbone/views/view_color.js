@@ -6,6 +6,7 @@ var ColorView = Backbone.View.extend({
         '<script src="libs/spectrum.js"></script>' +
 
 		'<div id="ColorCode" class="passageContainer examplesContainer">' +
+            '<div id="sideBargenderNumClrs"></div>' +
 			'<div id="sideBarVerbClrs"></div>' +
 			'<div id="sideBarHVerbClrs"></div>' +
 		'</div>' +

@@ -26,7 +26,7 @@ function initializeClrCodeSidebar() {
   if (typeof c4 === "undefined") cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
   cf.addVerbTable(true, '#sideBarVerbClrs');
   addOTVerbTable(true, '#sideBarHVerbClrs');
-  addNounTable();
+  addNounSideBar();
   updateHtmlForYAxis();
   updateHtmlForXAxis();
   updateHtmlForGender();
@@ -586,10 +586,8 @@ function addNounTable() {
   htmlTable.appendTo('#nounClrs');
 }
 
-function addNounSidebar() {
-  var htmlTable = '<table class="tg2">' +
-    '<tr>' +
-        '<th valign="middle" align="center" colspan="2" rowspan="2">' +
+function addNounSideBar() {
+  var htmlTable = 
         '<div class="onoffswitch">' +
         '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gennumonoffswitch" onchange=\'userToggleClrGrammar("gennum")\'/>' +
         '<label class="onoffswitch-label" for="gennumonoffswitch">' +
@@ -597,53 +595,34 @@ function addNounSidebar() {
         '<span class="onoffswitch-switch"></span>' +
         '</label>' +
         '</div>' +
-        '</th>' +
-        '<th class="tg-amwm2" colspan="4">Gender</th>' +
-    '</tr><tr>' +
-        '<td class="tg-yw4l">Masculine:<br>' +
+        '<span>Gender & Number</span>' +
+        '<div>Masculine:' +
         '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
-        '</td>' +
-        '<td class="tg-yw4l">Feminine:<br>' +
+        '</div>' +
+        '<div>Feminine: ' +
         '<input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
-        '</td>' +
-        '<td class="tg-yw4l">Neuter:<br>' +
+        '</div>' +
+        '<div>Neuter:<br>' +
         '<input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
-        '</td>' +
-    '</tr><tr>' +
-        '<td class="tg-e3zv2" rowspan="4">Number</td>' +
-        '<td><span>Singular:</span><br><br>' +
+        '</div>' +
+        '<div>Singular: </span>' +
             '<select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
                 '<option value="normal">Normal</option>' +
                 '<option value="normal_italic">Normal and Italic</option>' +
                 '<option value="bold">Bold</option>' +
                 '<option value="bold_italic">Bold and Italic</option>' +
             '</select><br>' +
-        '</td>' +
-        '<td><span class="sing mas">Masculine singular</span><br>' +
-        '</td>' +
-        '<td><span class="sing fem">Feminine singular</span><br>' +
-        '</td>' +
-        '<td><span class="sing neut">Neuter singular</span><br>' +
-        '</td>' +
-    '</tr><tr>' +
-        '<td><span>Plural:</span><br><br>' +
+        '</div>' +
+        '<div>'
             '<select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
                 '<option value="normal">Normal</option>' +
                 '<option value="normal_italic">Normal and Italic</option>' +
                 '<option value="bold">Bold</option>' +
                 '<option value="bold_italic">Bold and Italic</option>' +
             '</select><br>' +
-        '</td>' +
-        '<td><span class="plur mas">Masculine Plural</span><br>' +
-        '</td>' +
-        '<td><span class="plur fem">Feminine Plural</span><br>' +
-        '</td>' +
-        '<td><span class="plur neut">Neuter Plural</span><br>' +
-        '</td>' +
-    '</tr>' +
-    '</table>';
+        '</div>';
   htmlTable = $(htmlTable);
-  htmlTable.appendTo('#nounClrs');
+  htmlTable.appendTo('#sideBargenderNumClrs');
 }
 
 function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows, createUserInputs) {

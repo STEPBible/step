@@ -609,6 +609,8 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
         step.touchDevice = true;
         step.appleTouchDevice = true;
     }
+    if (step.touchDevice && screen.width <= 767)
+        document.getElementById('languages-icon').style.paddingTop  = "44px";
 
 </script>
 <%-- The following 3 were added to the step.version_num.min.js.  Keep them as comment in case we want to reverse the change --%>

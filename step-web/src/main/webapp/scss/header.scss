@@ -1,6 +1,27 @@
 @import 'template_variables';
 @import 'mixins';
 
+@media (max-width: 767px) {
+  .extrapad-xs {
+    padding-top: 44px !important;
+  }
+  .hidden-touch-xs {
+    display: none !important;
+  }
+}
+
+@media (hover: none) and (min-width: 768px) {
+  .extrapad-other {
+    padding-top: 44px !important;
+  }
+}
+
+@media (hover: none) {
+  .hidden-touch {
+    display: none !important;
+  }
+}
+
 @media screen {
   .navbar {
     height: $header_height;
@@ -250,9 +271,9 @@
         }
 
         // Use question mark when inside dropdown menu
-        .glyphicon-option-vertical:before {
-          content: "\e085";
-        }
+        // .glyphicon-option-vertical:before {
+        //   content: "\e085";
+        // }
 
         // Use question mark when inside dropdown menu
         .icon-language > svg {

@@ -270,7 +270,7 @@ var SidebarView = Backbone.View.extend({
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
                 if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
-                panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+                panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     'Report lexicon issues' +
                     '</a>'));
                 panelBodies.push(panelBody);
@@ -309,7 +309,7 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             }
-            panelBody.append($('<a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+            panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                 'Report lexicon issues' +
             '</a>'));
             if ((step.touchDevice) && (!step.touchWideDevice))
@@ -590,7 +590,6 @@ var SidebarView = Backbone.View.extend({
     			return __s.lexicon_search_for_this_word; // return the generic message (This word occurs about) which has been translated for many years
         return sprintf(__s.type_of_word_frequency, __s["type_of_word_" + stepType]);
     },
-
     _appendLexiconSearch: function (panel, mainWord, detailLex, allVersions, bibleVersion) {
         var total = mainWord.count;
         var totalOT = 0;
@@ -821,7 +820,6 @@ var SidebarView = Backbone.View.extend({
                 (mainWord.shortDefMounce.length < 3) ||
                 (mainWord.mediumDef.indexOf(mainWord.shortDefMounce) == -1) )
                 text2add = mainWord.shortDefMounce
-                // this._addLinkAndAppend(panel, mainWord.shortDefMounce, currentWordLanguageCode, bibleVersion, true);
         }
         if (typeof mainWord.shortDef === "string") { 
             if ((typeof mainWord.mediumDef !== "string") ||
@@ -833,7 +831,6 @@ var SidebarView = Backbone.View.extend({
                         text2add += "<br>" + mainWord.shortDef
                     }
                 }
-                // this._addLinkAndAppend(panel, mainWord.shortDef, currentWordLanguageCode, bibleVersion, true);
         }
         if (mainWord.briefDef && typeof mainWord.briefDef === "string") {
             if (text2add === "") {

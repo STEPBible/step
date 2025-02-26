@@ -1747,7 +1747,7 @@ step.searchSelect = {
 													string2Show = string2Show.replaceAll("*", "");
 												suffixToDisplay += "(" + __s.words_that_start_with + " " + string2Show + ")";
 											}
-											suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>'; // This is needed for both TEXT_SEARCH
+											suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>'; // This is needed for TEXT_SEARCH
 										}
 										else if (suggestionType === MEANINGS) {
 											var newMeaning = {}

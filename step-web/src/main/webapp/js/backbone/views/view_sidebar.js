@@ -92,10 +92,10 @@ var SidebarView = Backbone.View.extend({
             var callBackLoadDefFromAPIParams = [ version, ref, strong, curMorphs, allVersions, variant, self.createDefinition, morphCount ]; 
             step.util.getVocabMorphInfoFromJson(strong, curMorphs, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
         }
-        else if (this.model.get("mode") == 'analysis') {
+        else if (this.model.get("mode") === 'analysis') {
             self.createAnalysis();
         }
-        else if (this.model.get("mode") == 'history') {
+        else if (this.model.get("mode") === 'history') {
             self.createHistory();
         }
         else {

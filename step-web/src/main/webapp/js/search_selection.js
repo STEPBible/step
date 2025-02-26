@@ -1747,6 +1747,7 @@ step.searchSelect = {
 													string2Show = string2Show.replaceAll("*", "");
 												suffixToDisplay += "(" + __s.words_that_start_with + " " + string2Show + ")";
 											}
+											suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>'; // This is needed for both TEXT_SEARCH
 										}
 										else if (suggestionType === MEANINGS) {
 											var newMeaning = {}
@@ -1755,7 +1756,7 @@ step.searchSelect = {
 											newMeaning["suggestionType"] = suggestionType
 											newMeaning["text2Display"] = text2Display
 											newMeaning["prefixToDisplay"] = ""
-											newMeaning["suffixToDisplay"] = suffixToDisplay
+											newMeaning["suffixToDisplay"] = '<span class="srchFrequency"> ' + data[i].count + ' x</span>'
 											newMeaning["suffixTitle"] = suffixTitle
 											newMeaning["limitType"] = limitType
 											newMeaning["augStrongSameMeaning"] = null
@@ -1765,7 +1766,6 @@ step.searchSelect = {
 											newMeaning["allVersions"] = allVersions
 											meaningsEntries.push(newMeaning)
 										}
-										suffixToDisplay += '<span class="srchFrequency"> ' + data[i].count + ' x</span>'; // This is needed for both TEXT_SEARCH and MEANINGS
 									}
 									else if (suggestionType === SUBJECT_SEARCH) {
 										if ((typeof data[i].suggestion === "object") && (Array.isArray(data[i].suggestion.searchTypes))) {

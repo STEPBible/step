@@ -238,7 +238,7 @@
                             <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
                                 <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats" /></span>
                             </a>
-                            <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammarColor " />">
+                            <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammarColor" />">
                                 <img src="images/rainbow.png" width="20" height="20"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="display_grammarColor" /></span>
                             </a>
 

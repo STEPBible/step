@@ -239,7 +239,7 @@
                                 <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats" /></span>
                             </a>
                             <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammarColor" />">
-                                <img src="images/rainbow.png" width="20" height="25" style="padding-bottom:6px"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="display_grammarColor" /></span>
+                                <img src="images/rainbow.png" width="20" height="25" style="padding-bottom:6px"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;&nbsp;<fmt:message key="display_grammarColor" /></span>
                             </a>
 
                             <a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">

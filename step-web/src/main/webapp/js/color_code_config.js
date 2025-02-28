@@ -24,7 +24,7 @@ function initializeClrCodeHtmlModalPage() {
 
 function initializeClrCodeSidebar() {
   if (typeof c4 === "undefined") cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
-  cf.addVerbTable(true, '#sideBarVerbClrs');
+  addVerbSideBar('#sideBarVerbClrs');
   addOTVerbTable(true, '#sideBarHVerbClrs');
   addNounSideBar();
   updateHtmlForYAxis();
@@ -39,12 +39,47 @@ function initializeClrCodeSidebar() {
   enableOrDisableAxisConfigButtons('Y', 'OT');
   enableOrDisableAdvancedToolsButtons();
   enableOrDisableAdvancedToolsButtons('OT');
-  enableOrDisableVerbAndNounButtons();
+  enableOrDisableVerbAndNounButtonsSideBar();
   cf.refreshClrGrammarCSS();
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
     (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
   step.util.localStorageSetItem('colorCode-PreviousSettings', JSON.stringify(c4));
+}
+
+function addVerbSideBar(htmlElement) {
+    var r = cf.getVariablesForVerbTable();
+    var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
+    xAxisItems = r.orderOfXAxisItems;
+    yAxisItems = r.orderOfYAxisItems;
+    descOfXAxisItems = r.descOfXAxisItems;
+    descOfYAxisItems = r.descOfYAxisItems;
+    var htmlTable = '';
+    htmlTable += 
+    '<table>' +
+    '<tr><td><div class="modalonoffswitch">' +
+      '<span class="onoffswitch2 pull-left">' +
+      '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="verb2onoffswitch" onchange="userToggleClrGrammar(\'verb2\')"/>' +
+      '<label class="onoffswitch2-label" for="verb2onoffswitch">' +
+        '<span class="onoffswitch2-inner"></span>' +
+        '<span class="onoffswitch2-switch"></span>' +
+      '</label>' +
+      '</span>' +
+      '</div>' +
+    '</td>' +
+    '<td><h2>Greek Verbs</td></tr>';
+    htmlTable += cf.addTitleToXAxisSideBar(descOfXAxisItems);
+    debugger;
+    for (var i = 0; i < yAxisItems.length; i += 1) {
+      htmlTable += '<tr>';
+      htmlTable += '<td>' + descOfYAxisItems[i] + '</td>';
+      htmlTable += '<td>' + cf.htmlToAdd5(i, "", false) + '</td>';
+      htmlTable += '</tr>';
+    }
+    htmlTable += '</table><br>';
+    htmlTable += cf.htmlToAdd6();
+    htmlTable = $(htmlTable);
+    htmlTable.appendTo(htmlElement);
 }
 
 function openClrConfig() {
@@ -588,39 +623,43 @@ function addNounTable() {
 
 function addNounSideBar() {
   var htmlTable = 
-        '<div class="onoffswitch">' +
-        '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gennumonoffswitch" onchange=\'userToggleClrGrammar("gennum")\'/>' +
-        '<label class="onoffswitch-label" for="gennumonoffswitch">' +
-        '<span class="onoffswitch-inner"></span>' +
-        '<span class="onoffswitch-switch"></span>' +
-        '</label>' +
-        '</div>' +
-        '<span>Gender & Number</span>' +
-        '<div>Masculine:' +
-        '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
-        '</div>' +
-        '<div>Feminine: ' +
-        '<input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
-        '</div>' +
-        '<div>Neuter:<br>' +
-        '<input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
-        '</div>' +
-        '<div>Singular: </span>' +
-            '<select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
+      '<table>' +
+        '<tr><td><div class="modalonoffswitch">' +
+          '<span class="onoffswitch2 pull-left">' +
+          '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="gennum2onoffswitch" onchange="userToggleClrGrammar(\'gennum2\')"/>' +
+          '<label class="onoffswitch2-label" for="gennum2onoffswitch">' +
+            '<span class="onoffswitch2-inner"></span>' +
+            '<span class="onoffswitch2-switch"></span>' +
+          '</label>' +
+          '</span>' +
+          '</div>' +
+        '</td>' +
+        '<td><h2>Gender & Number</td></tr>' +
+        '<tr><td>Masculine:</td>' +
+        '<td><input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
+        '</tr>' +
+        '<tr><td>Feminine:</td>' +
+        '<td><input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
+        '</tr>' +
+        '<tr><td>Neuter:</td>' +
+        '<td><input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
+        '</tr>' +
+        '<tr><td>Singular:</td>' +
+            '<td><select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
                 '<option value="normal">Normal</option>' +
                 '<option value="normal_italic">Normal and Italic</option>' +
                 '<option value="bold">Bold</option>' +
                 '<option value="bold_italic">Bold and Italic</option>' +
-            '</select><br>' +
-        '</div>' +
-        '<div>'
-            '<select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
+            '</select></tr>' +
+        '</tr>' +
+        '<tr><td>Plural:</td>' +
+            '<td><select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
                 '<option value="normal">Normal</option>' +
                 '<option value="normal_italic">Normal and Italic</option>' +
                 '<option value="bold">Bold</option>' +
                 '<option value="bold_italic">Bold and Italic</option>' +
-            '</select><br>' +
-        '</div>';
+            '</select></td>' +
+        '</tr></table>';
   htmlTable = $(htmlTable);
   htmlTable.appendTo('#sideBargenderNumClrs');
 }
@@ -641,7 +680,7 @@ function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, num
   var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
     htmlTable += '<td class="tg-yw4l">' + descOfXAxisItems[j];
-    if (createUserInputs) htmlTable += cf.htmlToAdd3(j, 'OT');
+    if (createUserInputs) htmlTable += cf.htmlToAdd3(j, 'OT', false);
     htmlTable += '</td>';
   }
   htmlTable += '</tr>';
@@ -719,7 +758,7 @@ function addOTVerbTable(createUserInputs, htmlElement) {
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
     htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan, 'OT');
-    if (createUserInputs) htmlTable += cf.htmlToAdd5(i, 'OT');
+    if (createUserInputs) htmlTable += cf.htmlToAdd5(i, 'OT', false);
     htmlTable += '</td>';
     for (var counter = 0; counter < xAxisItems.length; counter += 1) {
       htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
@@ -824,15 +863,16 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
 }
 
 function userToggleClrGrammar(grammarFunction) {
+  debugger;
     var checkedValue;
     if (document.getElementById(grammarFunction + 'onoffswitch').checked) checkedValue = true;
     else checkedValue = false;
-    if (grammarFunction === 'verb') {
+    if ((grammarFunction === 'verb') || (grammarFunction === 'verb2')) {
       c4[C_Greek][C_enableVerbClr] = checkedValue;
       cf.updtLocalStorage();
       updateVerbInputFields(checkedValue);
     }
-    else if (grammarFunction === 'gennum') {
+    else if ((grammarFunction === 'gennum') || (grammarFunction === 'gennum2')) {
       updateNounInputFields(checkedValue);
       c4[C_enableGenderNumberClr] = checkedValue;
       cf.updtLocalStorage();
@@ -1015,6 +1055,18 @@ function enableOrDisableVerbAndNounButtons() {
     checkedValue = c4[C_OT][C_enableVerbClr];
     updateVerbInputFields(checkedValue, 'OT');
     $('#OTverbonoffswitch').prop('checked', checkedValue);
+}
+
+function enableOrDisableVerbAndNounButtonsSideBar() {
+  var checkedValue = c4[C_Greek][C_enableVerbClr];
+  $('#verb2onoffswitch').prop('checked', checkedValue);
+  updateVerbInputFields(checkedValue);
+  checkedValue = c4[C_enableGenderNumberClr];
+  $('#gennum2onoffswitch').prop('checked', checkedValue);
+  updateNounInputFields(checkedValue);
+  checkedValue = c4[C_OT][C_enableVerbClr];
+  updateVerbInputFields(checkedValue, 'OT');
+  $('#OTverbonoffswitch').prop('checked', checkedValue);
 }
 
 function enableOrDisableAxisConfigButtons(axis, ot) {
@@ -1717,6 +1769,7 @@ function updateVerbInputFields(inputOnOff, ot) {
   //  hideIndividualInputField('#advancedToolsBtn', inputOnOff);
     if (otPrefix != 'OT') {
       var showAnimationCheckbox = c4[C_enableAdvancedTools] && inputOnOff;
+      debugger;
       hideIndividualInputField('#inAnimate0', showAnimationCheckbox, true);
       hideIndividualInputField('#inAnimate1', showAnimationCheckbox, true);
       hideIndividualInputField('#inAnimate2', showAnimationCheckbox, true);

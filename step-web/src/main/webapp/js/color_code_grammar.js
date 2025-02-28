@@ -1733,12 +1733,12 @@ var cf = {
     for (var i = 0; i < yAxisItems.length; i += 1) {
       if (i > 0) htmlTable += '<tr>';
       htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan);
-      if (createUserInputs) htmlTable += cf.htmlToAdd5(i);
+      if (createUserInputs) htmlTable += cf.htmlToAdd5(i, "", true);
       htmlTable += '</td>';
       for (var counter = 0; counter < xAxisItems.length; counter += 1) {
         htmlTable += '<td>';
         var allTM = cf.getAllTenseMoodForThisGroup(r, counter, i);
-        htmlTable += cf.voicesInTenseAndMood(allTM.x, allTM.y, createUserInputs);
+        htmlTable += cf.voicesInTenseAndMood(allTM.x, allTM.y);
         htmlTable += '</td>';
       }
       htmlTable += '</tr>';
@@ -1770,16 +1770,18 @@ var cf = {
       '<span id="configSortXAxisIcon" class="glyphicon glyphicon-sort"></span></button>';
   },
 
-  htmlToAdd3: function (i, otVerb) {
+  htmlToAdd3: function (i, otVerb, toggleOnOff) {
     var otPrefix = '', result = '', c4Ref;
-    if (otVerb !== undefined) {
+    if (otVerb === "OT") {
       otPrefix = 'OT';
       c4Ref = c4[C_OT];
     }
     else c4Ref = c4[C_Greek];
-    result = '<input id="' + otPrefix + 'axisXOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptX" ' +
+    var displayStyle = (toggleOnOff) ? ' ' : ' style="display:none" ';
+    result = '<input' + displayStyle + 'id="' + otPrefix + 'axisXOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptX" ' +
       'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "X", "' + i + '")\'>';
-    result += '<br><input id="inClr' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInptC" type="color" ' +
+    if (toggleOnOff) result += '<br>';
+    result += '<input id="inClr' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInptC" type="color" ' +
       'value="' + c4Ref[C_inClrVerbItem][i] + '" ';
     return result;
   },
@@ -1793,14 +1795,14 @@ var cf = {
       '<span id="configSortYAxisIcon" class="glyphicon glyphicon-sort ' + otPrefix + 'advancedtools"></span></button>';
   },
 
-  htmlToAdd5: function (i, otVerb) {
+  htmlToAdd5: function (i, otVerb, addAnimation) {
     var otPrefix = ''; var result = '';
-    if (otVerb != undefined) otPrefix = 'OT';
+    if ((typeof otVerb === "string") && (otVerb === "OT")) otPrefix = 'OT';
     result = '<input id="' + otPrefix + 'axisYOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptY" ' +
       'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y", "' + i + '")\'><br>';
     result += '<select id="slctUl' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInpt1" ' +
       'onchange=\'userUpdate' + otPrefix +'YAxisItem("' + i + '", value)\'';
-    if (otPrefix != 'OT') result += ' style="width: 52px"';
+    if ((otPrefix != 'OT') && addAnimation)result += ' style="width: 52px"';
     result += '>' +
       '<option value="ulSolid">Underline</option>' +
       '<option value="ulDoubleSolid">2 lines</option>' +
@@ -1814,15 +1816,17 @@ var cf = {
       '<option value="ulReverseArrow">Reverse Arrow</option>' +
       '<option value="ulShortReverseArrow">Short Reverse Arrow</option>' +
       '</select>';
-    if (otVerb == undefined) result += '<br><span id="inAnimate' + i + '" class="advancedtools">' +
-      'Animate:<input id="inAnimateCheckbox' + i + '" class="advancedtools" ' +
+    var displayStyle = (addAnimation) ? ' ' : ' style="display:none" ';
+    var advancedtoolsClass = (addAnimation) ? ' class="advancedtools" ' : ' ';
+    if (otPrefix !== "OT") result += '<br><span' + displayStyle + 'id="inAnimate' + i + '"' + advancedtoolsClass + '>' +
+      'Animate:<input' + displayStyle + 'id="inAnimateCheckbox' + i + '"' + advancedtoolsClass + 
       'type="checkbox" onchange=\'userUpdateAnimation("' + i + '")\'></span>';
     return result;
   },
 
   htmlToAdd6: function (otVerb) {
     var otPrefix = ''; var c4Ref;
-    if ((otVerb != undefined) && (otVerb == 'OT')) {
+    if ((otVerb != undefined) && (otVerb === 'OT')) {
       c4Ref = c4[C_OT];
       otPrefix = 'OT';
     }
@@ -1848,8 +1852,6 @@ var cf = {
       '<input id="chkbx' + otPrefix + 'MiddleUlClr2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("middle", "' + otPrefix + '")\'>' +
       '<input id="in' + otPrefix + 'MiddleUlClr2" type="color" ' +
       'value="' + c4Ref[C_inMiddleUlClr2] + '"/>';
-  //  result += '&nbsp;<button id="' + otPrefix + 'advancedToolsBtn" class="btn btn-default btn-xs" type="button" title="Advanced tools" onclick="userToggleAdvancedTools(\'' + otPrefix + '\')">' +
-  //    '<span id="' + otPrefix + 'advancedToolsIcon" class="glyphicon glyphicon-wrench"></span></button>';
     return result;
   },
 
@@ -1872,14 +1874,29 @@ var cf = {
             descOfXAxisItems[j] += " (" + __s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
         if (descOfXAxisItems[j].length < 10) htmlTable += ' width=72';
       htmlTable += '>' + descOfXAxisItems[j];
-      if (createUserInputs) htmlTable += cf.htmlToAdd3(j);
+      if (createUserInputs) htmlTable += cf.htmlToAdd3(j, "", true);
       htmlTable += '</td>';
     }
     htmlTable += '</tr>';
     return htmlTable;
   },
 
-  voicesInTenseAndMood: function (xAxisItem, yAxisItem, createUserInputs) {
+  addTitleToXAxisSideBar: function (descOfXAxisItems) {
+    var htmlTable = '';
+    for (var j = 0; j < descOfXAxisItems.length; j += 1) {
+      htmlTable += '<tr><td>';
+        if (__s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
+            descOfXAxisItems[j] += " (" + __s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
+        else if (__s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
+            descOfXAxisItems[j] += " (" + __s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
+      htmlTable += descOfXAxisItems[j] + '</td>';
+      htmlTable += '<td>' + cf.htmlToAdd3(j, "", false) + '</td>';
+      htmlTable += '</tr>';
+    }
+    return htmlTable;
+  },
+
+  voicesInTenseAndMood: function (xAxisItem, yAxisItem) {
     var currentMoodCode, currentTenseCode;
     var highlightMiddle = c4[C_Greek][C_chkbxMiddleBkgrdColrValue] ||
       c4[C_Greek][C_chkbxMiddleUlColr1Value];

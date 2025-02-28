@@ -20,6 +20,12 @@ var ColorView = Backbone.View.extend({
         'click .closeColumn': 'onClickClose'
     },
     initialize: function () {
+        var options = $.getUrlVars().options;
+        if ((typeof options === "undefined") || ((typeof options === "string") && (options.indexOf("C") == -1))) {
+            $(".dropdown-toggle.showSettings").click();
+            $("a[data-value='C']").click();
+            $(".dropdown-toggle.showSettings").click();
+        }
         this.render();
     },
     render: function () {

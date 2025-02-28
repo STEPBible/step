@@ -6,9 +6,9 @@ var ColorView = Backbone.View.extend({
         '<script src="libs/spectrum.js"></script>' +
 
 		'<div id="ColorCode" class="passageContainer examplesContainer">' +
-            '<div id="sideBargenderNumClrs"></div>' +
-			'<div id="sideBarVerbClrs"></div>' +
-			'<div id="sideBarHVerbClrs"></div>' +
+            '<div id="sideBargenderNumClrs"></div><br>' +
+			'<div id="sideBarVerbClrs"></div><br>' +
+			'<div id="sideBarHVerbClrs"></div><br>' +
 		'</div>' +
         '<script>' +
         '$( document ).ready(function() {' +
@@ -26,9 +26,8 @@ var ColorView = Backbone.View.extend({
         var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
 
         var colorTab = $(_.template(this.colorTemplate)({ jsVersion: jsVersion }));
-
-        this.$el.append(colorTab);
-    //    initializeClrCodeHtmlModalPage("sidebar");
+        $("div#color.tab-pane.active").empty().append(colorTab);
+//        this.$el.append(colorTab);
     },
     onClickClose: function () {
         step.util.showOrHideTutorial(true);

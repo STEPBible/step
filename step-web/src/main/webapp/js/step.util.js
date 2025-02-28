@@ -2209,6 +2209,8 @@ step.util = {
     },
 	showConfigGrammarColor: function (e) {
         if (e) e.preventDefault();
+		$(".closeSidebar").click(); // close sidebar in case color configuration is shown in sidebar
+		$("#color").empty();
         var element = document.getElementById('grammarClrModal');
         if (element) element.parentNode.removeChild(element);
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";

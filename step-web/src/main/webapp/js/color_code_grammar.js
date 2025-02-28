@@ -1702,10 +1702,6 @@ var cf = {
   },
 
   addVerbTable: function (createUserInputs, htmlElement) {
-	if ($(htmlElement).length == 0) {
-		console.log("addVerbTable return without creating table, no html element: " + htmlElement + " to append to");
-		return;
-	}
     var r = cf.getVariablesForVerbTable();
     var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
     xAxisItems = r.orderOfXAxisItems;
@@ -1714,10 +1710,10 @@ var cf = {
     descOfYAxisItems = r.descOfYAxisItems;
     var htmlTable = '';
     if (!createUserInputs) {
-		var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
-		htmlTable += '<link href="css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>' +
+		  var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+		  htmlTable += '<link href="css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>' +
 					 '<h2>Color table for Greek verbs</h2>';
-	}
+	  }
     var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs);
     htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
       yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs) + '">';
@@ -1744,7 +1740,7 @@ var cf = {
       htmlTable += '</tr>';
     }
     htmlTable += '</table><br>';
-    if (createUserInputs) htmlTable += cf.htmlToAdd6();
+    if (createUserInputs) htmlTable += cf.htmlToAdd6("");
     htmlTable = $(htmlTable);
     htmlTable.appendTo(htmlElement);
   },
@@ -1799,7 +1795,9 @@ var cf = {
     var otPrefix = ''; var result = '';
     if ((typeof otVerb === "string") && (otVerb === "OT")) otPrefix = 'OT';
     result = '<input id="' + otPrefix + 'axisYOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptY" ' +
-      'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y", "' + i + '")\'><br>';
+      'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y", "' + i + '")\'>';
+    if (addAnimation)
+      result += '<br>';
     result += '<select id="slctUl' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInpt1" ' +
       'onchange=\'userUpdate' + otPrefix +'YAxisItem("' + i + '", value)\'';
     if ((otPrefix != 'OT') && addAnimation)result += ' style="width: 52px"';
@@ -1824,34 +1822,43 @@ var cf = {
     return result;
   },
 
-  htmlToAdd6: function (otVerb) {
+  htmlToAdd6: function (otVerb, callFromSidebar) {
     var otPrefix = ''; var c4Ref;
     if ((otVerb != undefined) && (otVerb === 'OT')) {
       c4Ref = c4[C_OT];
       otPrefix = 'OT';
     }
     else c4Ref = c4[C_Greek];
+    // var displayStyle = (callFromSidebar) ? ' style="display:none" ' : " ";
     var result = '<span>Passive voice: background - </span><input id="chkbx' + otPrefix + 'PassiveBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("passive", "' + otPrefix + '")\'>' +
       '<input id="in' + otPrefix + 'PassiveBkgrdClr" type="color" ' +
-      'value="' + c4Ref[C_inPassiveBkgrdClr] + '"/>' +
-      '<span>underline - </span><input id="chkbx' + otPrefix + 'PassiveUlClr1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("passive", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'PassiveUlClr1" type="color" ' +
-      'value="' + c4Ref[C_inPassiveUlClr1] + '"/>';
-    if (otVerb == undefined) result += '<span>animated underline - </span>' +
-      '<input id="chkbx' + otPrefix + 'PassiveUlClr2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("passive", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'PassiveUlClr2" type="color" ' +
-      'value="' + c4Ref[C_inPassiveUlClr2] + '"/>';
+      'value="' + c4Ref[C_inPassiveBkgrdClr] + '"/>';
+    if (!callFromSidebar) {
+      result += 
+        '<span>underline - </span><input id="chkbx' + otPrefix + 'PassiveUlClr1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("passive", "' + otPrefix + '")\'>' +
+        '<input id="in' + otPrefix + 'PassiveUlClr1" type="color" ' +
+        'value="' + c4Ref[C_inPassiveUlClr1] + '"/>';
+      if (otPrefix !== 'OT')
+        result += '<span>animated underline - </span>' +
+          '<input id="chkbx' + otPrefix + 'PassiveUlClr2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("passive", "' + otPrefix + '")\'>' +
+          '<input id="in' + otPrefix + 'PassiveUlClr2" type="color" ' +
+          'value="' + c4Ref[C_inPassiveUlClr2] + '"/>';
+    }
     result += '<br><br>' +
       '<span>Middle voice: background - </span><input id="chkbx' + otPrefix + 'MiddleBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("middle", "' + otPrefix + '")\'>' +
       '<input id="in' + otPrefix + 'MiddleBkgrdClr" type="color" ' +
-      'value="' + c4Ref[C_inMiddleBkgrdClr] + '"/>' +
-      '<span>underline - </span><input id="chkbx' + otPrefix + 'MiddleUlClr1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("middle", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'MiddleUlClr1" type="color" ' +
-      'value="' + c4Ref[C_inMiddleUlClr1] + '"/>';
-    if (otVerb == undefined) result += '<span>animated underline - </span>' +
-      '<input id="chkbx' + otPrefix + 'MiddleUlClr2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("middle", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'MiddleUlClr2" type="color" ' +
-      'value="' + c4Ref[C_inMiddleUlClr2] + '"/>';
+      'value="' + c4Ref[C_inMiddleBkgrdClr] + '"/>';
+      if (!callFromSidebar) {
+        result += 
+          '<span>underline - </span><input id="chkbx' + otPrefix + 'MiddleUlClr1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("middle", "' + otPrefix + '")\'>' +
+          '<input id="in' + otPrefix + 'MiddleUlClr1" type="color" ' +
+          'value="' + c4Ref[C_inMiddleUlClr1] + '"/>';
+        if (otPrefix !== 'OT')
+          result += '<span>animated underline - </span>' +
+            '<input id="chkbx' + otPrefix + 'MiddleUlClr2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("middle", "' + otPrefix + '")\'>' +
+            '<input id="in' + otPrefix + 'MiddleUlClr2" type="color" ' +
+            'value="' + c4Ref[C_inMiddleUlClr2] + '"/>';
+      }
     return result;
   },
 

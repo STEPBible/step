@@ -24,9 +24,9 @@ function initializeClrCodeHtmlModalPage() {
 
 function initializeClrCodeSidebar() {
   if (typeof c4 === "undefined") cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
-  addVerbSideBar('#sideBarVerbClrs');
-  addOTVerbTable(true, '#sideBarHVerbClrs');
   addNounSideBar();
+  addVerbSideBar();
+  addOTVerbSideBar();
   updateHtmlForYAxis();
   updateHtmlForXAxis();
   updateHtmlForGender();
@@ -47,7 +47,7 @@ function initializeClrCodeSidebar() {
   step.util.localStorageSetItem('colorCode-PreviousSettings', JSON.stringify(c4));
 }
 
-function addVerbSideBar(htmlElement) {
+function addVerbSideBar() {
     var r = cf.getVariablesForVerbTable();
     var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
     xAxisItems = r.orderOfXAxisItems;
@@ -69,7 +69,7 @@ function addVerbSideBar(htmlElement) {
     '</td>' +
     '<td><h2>Greek Verbs</td></tr>';
     htmlTable += cf.addTitleToXAxisSideBar(descOfXAxisItems);
-    debugger;
+    htmlTable += '<tr></tr>';
     for (var i = 0; i < yAxisItems.length; i += 1) {
       htmlTable += '<tr>';
       htmlTable += '<td>' + descOfYAxisItems[i] + '</td>';
@@ -77,9 +77,9 @@ function addVerbSideBar(htmlElement) {
       htmlTable += '</tr>';
     }
     htmlTable += '</table><br>';
-    htmlTable += cf.htmlToAdd6();
+    htmlTable += cf.htmlToAdd6('', true);
     htmlTable = $(htmlTable);
-    htmlTable.appendTo(htmlElement);
+    htmlTable.appendTo('#sideBarVerbClrs');
 }
 
 function openClrConfig() {
@@ -770,7 +770,43 @@ function addOTVerbTable(createUserInputs, htmlElement) {
   htmlTable = $(htmlTable);
   htmlTable.appendTo(htmlElement);
 }
-  
+
+function addOTVerbSideBar() {
+  var r = cf.getVariablesForOTVerbTable('H');
+  var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
+  xAxisItems = r.orderOfXAxisItems;
+  yAxisItems = r.orderOfYAxisItems;
+  descOfXAxisItems = r.descOfXAxisItems;
+  descOfYAxisItems = r.descOfYAxisItems;
+  var htmlTable = '';
+  var yAxisSpan = cf.tableAxisSpan('Y', true, 'OT');
+  htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
+  yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', true, 'OT') + '">';
+  htmlTable += cf.htmlToAdd1('OT');
+  htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
+  htmlTable += cf.htmlToAdd2(r.xAxisTitle, 'OT');
+  htmlTable += '</th></tr>';
+  htmlTable += addOtTitleToXAxis(descOfXAxisItems, cf.getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length, true);
+  htmlTable += '<tr>' +
+  '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + cf.upCaseFirst(r.yAxisTitle);
+  htmlTable += cf.htmlToAdd4(r.yAxisTitle, 'OT');
+  htmlTable += '</td>';
+  for (var i = 0; i < yAxisItems.length; i += 1) {
+    if (i > 0) htmlTable += '<tr>';
+    htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], true, yAxisSpan, 'OT');
+    htmlTable += cf.htmlToAdd5(i, 'OT', false);
+    htmlTable += '</td>';
+    for (var counter = 0; counter < xAxisItems.length; counter += 1) {
+      htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
+    }
+    htmlTable += '</tr>';
+  }
+  htmlTable += '</table><br>';
+  htmlTable += cf.htmlToAdd6('OT');
+  htmlTable = $(htmlTable);
+  htmlTable.appendTo('#sideBarHVerbClrs');
+}
+
 function voicesInFormAndStem(yAxisNum, xAxisNum) {
   yAxisNum = yAxisNum * 3;
   return '<span class="vot_' + cv[C_ulOTVbCSS][xAxisNum][yAxisNum].name + '">active</span><br>' +
@@ -1768,8 +1804,9 @@ function updateVerbInputFields(inputOnOff, ot) {
     hideIndividualInputField('.' + otPrefix + 'vrbInpt1', inputOnOff);
   //  hideIndividualInputField('#advancedToolsBtn', inputOnOff);
     if (otPrefix != 'OT') {
-      var showAnimationCheckbox = c4[C_enableAdvancedTools] && inputOnOff;
-      debugger;
+
+      var showAnimationCheckbox = c4[C_enableAdvancedTools] && inputOnOff && 
+        ($("#ColorCode").length == 0); // Sidebar is not on
       hideIndividualInputField('#inAnimate0', showAnimationCheckbox, true);
       hideIndividualInputField('#inAnimate1', showAnimationCheckbox, true);
       hideIndividualInputField('#inAnimate2', showAnimationCheckbox, true);

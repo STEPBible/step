@@ -205,6 +205,7 @@
 									<jsSourceFile>js/passage/step.passage.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_feedback.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_examples.js</jsSourceFile>
+									<jsSourceFile>js/backbone/views/view_color.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_restore.js</jsSourceFile>
 									<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
 									<jsSourceFile>js/step_ready.js</jsSourceFile>

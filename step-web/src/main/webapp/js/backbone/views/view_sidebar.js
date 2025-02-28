@@ -1176,7 +1176,7 @@ var SidebarView = Backbone.View.extend({
             '<li><a class="glyphicon glyphicon-stats" title="<%= __s.passage_stats %>" data-toggle="tab" data-target="#analysis"></li>' +
             '<li><a class="glyphicon glyphicon-bookmark" title="<%= __s.bookmarks_and_recent_texts %>" data-toggle="tab" data-target="#history"></li>' +
             '<li><a class="stepglyph-help glyphicon glyphicon-question-sign" title="<%= __s.frequently_asked_questions %>" data-toggle="tab" data-target="#help"></li>' +
-            '<li><a class="stepglyph-help glyphicon glyphicon-text-color" title="<%= __s.frequently_asked_questions %>" data-toggle="tab" data-target="#color"></li>' +
+            '<li><a title="<%= __s.display_grammarColor %>" data-toggle="tab" data-target="#color"><img src="images/rainbow.png" width="20" height="20"></a></li>' +
             '</ul>';
 
         var tabContainer = $(_.template(template)());

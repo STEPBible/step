@@ -686,7 +686,19 @@ function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, num
   htmlTable += '</tr>';
   return htmlTable;
 }
-  
+
+function addOtTitleToXAxisSideBar(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows, createUserInputs) {
+  var htmlTable = '<tr>';
+  var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
+  for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
+    htmlTable += '<tr><td  style="padding-top:22px">' + descOfXAxisItems[j] + '</td>';
+    htmlTable += '<td>' + cf.htmlToAdd3(j, 'OT', false) + '></td>';
+    htmlTable += '</tr>';
+  }
+  htmlTable += '</tr>';
+  return htmlTable;
+}
+
 function addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows) {
   var result = [], voice;
   for (var counter = 0; counter < descOfHebrewXAxisItems.length; counter++) {
@@ -745,7 +757,7 @@ function addOTVerbTable(createUserInputs, htmlElement) {
   }
   var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs, 'OT');
   htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-  yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs, 'OT') + '">';
+  (yAxisSpan + 1) + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs, 'OT') + '">';
   if (createUserInputs) htmlTable += cf.htmlToAdd1('OT');
   htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
   if (createUserInputs) htmlTable += cf.htmlToAdd2(r.xAxisTitle, 'OT');
@@ -758,7 +770,7 @@ function addOTVerbTable(createUserInputs, htmlElement) {
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
     htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan, 'OT');
-    if (createUserInputs) htmlTable += cf.htmlToAdd5(i, 'OT', false);
+    if (createUserInputs) htmlTable += '<td>' + cf.htmlToAdd5(i, 'OT', false) + '</td>';
     htmlTable += '</td>';
     for (var counter = 0; counter < xAxisItems.length; counter += 1) {
       htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
@@ -778,31 +790,30 @@ function addOTVerbSideBar() {
   yAxisItems = r.orderOfYAxisItems;
   descOfXAxisItems = r.descOfXAxisItems;
   descOfYAxisItems = r.descOfYAxisItems;
-  var htmlTable = '';
   var yAxisSpan = cf.tableAxisSpan('Y', true, 'OT');
-  htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-  yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', true, 'OT') + '">';
-  htmlTable += cf.htmlToAdd1('OT');
-  htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
-  htmlTable += cf.htmlToAdd2(r.xAxisTitle, 'OT');
-  htmlTable += '</th></tr>';
-  htmlTable += addOtTitleToXAxis(descOfXAxisItems, cf.getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length, true);
-  htmlTable += '<tr>' +
-  '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + cf.upCaseFirst(r.yAxisTitle);
-  htmlTable += cf.htmlToAdd4(r.yAxisTitle, 'OT');
-  htmlTable += '</td>';
+  var htmlTable = '';
+  var htmlTable =
+    '<table>' +
+    '<tr><td><div class="modalonoffswitch">' +
+      '<span class="onoffswitch2 pull-left">' +
+      '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="OTverb2onoffswitch" onchange="userToggleClrGrammar(\'OTverb2\')"/>' +
+      '<label class="onoffswitch2-label" for="OTverb2onoffswitch">' +
+        '<span class="onoffswitch2-inner"></span>' +
+        '<span class="onoffswitch2-switch"></span>' +
+      '</label>' +
+      '</span>' +
+      '</div>' +
+    '</td>' +
+    '<td><h2>Hebrew Verbs</td></tr>';
+  htmlTable += addOtTitleToXAxisSideBar(descOfXAxisItems, cf.getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length, true);
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
-    htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], true, yAxisSpan, 'OT');
-    htmlTable += cf.htmlToAdd5(i, 'OT', false);
-    htmlTable += '</td>';
-    for (var counter = 0; counter < xAxisItems.length; counter += 1) {
-      htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
-    }
+    htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], false, yAxisSpan, 'OT');
+    htmlTable += '<td>' + cf.htmlToAdd5(i, 'OT', false) + '</td>';
     htmlTable += '</tr>';
   }
   htmlTable += '</table><br>';
-  htmlTable += cf.htmlToAdd6('OT');
+  htmlTable += cf.htmlToAdd6('OT', true);
   htmlTable = $(htmlTable);
   htmlTable.appendTo('#sideBarHVerbClrs');
 }
@@ -899,7 +910,6 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
 }
 
 function userToggleClrGrammar(grammarFunction) {
-  debugger;
     var checkedValue;
     if (document.getElementById(grammarFunction + 'onoffswitch').checked) checkedValue = true;
     else checkedValue = false;
@@ -914,7 +924,7 @@ function userToggleClrGrammar(grammarFunction) {
       cf.updtLocalStorage();
       cv[C_userTurnGenderNumberFromOffToOn] = checkedValue;
     }
-    else if (grammarFunction === 'OTverb') {
+    else if ((grammarFunction === 'OTverb') || (grammarFunction === 'OTverb2')) {
       c4[C_OT][C_enableVerbClr] = checkedValue;
       cf.updtLocalStorage();
       updateVerbInputFields(checkedValue, 'OT');
@@ -1072,15 +1082,6 @@ function userEnablePassiveMiddleVerbsUnderline2(voice, otVerb) {
   }
 }
 
-/*function userToggleAdvancedTools(ot) {
-  var otPrefix = '';
-  if ((ot != undefined) && (ot == 'OT')) otPrefix = 'OT';
-  c4['enable' + otPrefix + 'AdvancedTools'] = !c4['enable' + otPrefix + 'AdvancedTools'];
-  cf.updtLocalStorage('enable' + otPrefix + 'AdvancedTools', c4['enable' + otPrefix + 'AdvancedTools']);
-  enableOrDisableAdvancedToolsButtons(otPrefix);
-  updateHtmlForYAxis();
-}*/
-
 function enableOrDisableVerbAndNounButtons() {
     var checkedValue = c4[C_Greek][C_enableVerbClr];
     $('#verbonoffswitch').prop('checked', checkedValue);
@@ -1102,7 +1103,7 @@ function enableOrDisableVerbAndNounButtonsSideBar() {
   updateNounInputFields(checkedValue);
   checkedValue = c4[C_OT][C_enableVerbClr];
   updateVerbInputFields(checkedValue, 'OT');
-  $('#OTverbonoffswitch').prop('checked', checkedValue);
+  $('#OTverb2onoffswitch').prop('checked', checkedValue);
 }
 
 function enableOrDisableAxisConfigButtons(axis, ot) {
@@ -1220,19 +1221,25 @@ function checkVerbClrInput() {
     cf.updtLocalStorage();
     colorForMiddleWasUpdated = true;
   }
-  currentClr = c4[C_Greek][C_inMiddleUlClr1];
-  currentClrPicker = $('#inMiddleUlClr1').spectrum("get").toHexString();
-  if (currentClr != currentClrPicker) {
-    c4[C_Greek][C_inMiddleUlClr1] = currentClrPicker;
-    cf.updtLocalStorage();
-    colorForMiddleWasUpdated = true;
+  var colorIDObj = $('#inMiddleUlClr1');
+  if (colorIDObj.length == 1) {
+    currentClr = c4[C_Greek][C_inMiddleUlClr1];
+    currentClrPicker = colorIDObj.spectrum("get").toHexString();
+    if (currentClr != currentClrPicker) {
+      c4[C_Greek][C_inMiddleUlClr1] = currentClrPicker;
+      cf.updtLocalStorage();
+      colorForMiddleWasUpdated = true;
+    }
   }
-  currentClr = c4[C_Greek][C_inMiddleUlClr2];
-  currentClrPicker = $('#inMiddleUlClr2').spectrum("get").toHexString();
-  if (currentClr != currentClrPicker) {
-    c4[C_Greek][C_inMiddleUlClr2] = currentClrPicker;
-    cf.updtLocalStorage();
-    colorForMiddleWasUpdated = true;
+  var colorIDObj = $('#inMiddleUlClr2');
+  if (colorIDObj.length == 1) {
+    currentClr = c4[C_Greek][C_inMiddleUlClr2];
+    currentClrPicker = colorIDObj.spectrum("get").toHexString();
+    if (currentClr != currentClrPicker) {
+      c4[C_Greek][C_inMiddleUlClr2] = currentClrPicker;
+      cf.updtLocalStorage();
+      colorForMiddleWasUpdated = true;
+    }
   }
   if (colorForMiddleWasUpdated) updateVerbsBkgrd('middle');
   currentClr = c4[C_Greek][C_inPassiveBkgrdClr];
@@ -1243,19 +1250,25 @@ function checkVerbClrInput() {
     cf.updtLocalStorage();
     colorForPassiveWasUpdated = true;
   }
-  currentClr = c4[C_Greek][C_inPassiveUlClr1];
-  currentClrPicker = $('#inPassiveUlClr1').spectrum("get").toHexString();
-  if (currentClr != currentClrPicker) {
-    c4[C_Greek][C_inPassiveUlClr1] = currentClrPicker;
-    cf.updtLocalStorage();
-    colorForPassiveWasUpdated = true;
+  var colorIDObj = $('#inPassiveUlClr1');
+  if (colorIDObj.length == 1) {
+    currentClr = c4[C_Greek][C_inPassiveUlClr1];
+    currentClrPicker = colorIDObj.spectrum("get").toHexString();
+    if (currentClr != currentClrPicker) {
+      c4[C_Greek][C_inPassiveUlClr1] = currentClrPicker;
+      cf.updtLocalStorage();
+      colorForPassiveWasUpdated = true;
+    }
   }
-  currentClr = c4[C_Greek][C_inPassiveUlClr2];
-  currentClrPicker = $('#inPassiveUlClr2').spectrum("get").toHexString();
-  if (currentClr != currentClrPicker) {
-    c4[C_Greek][C_inPassiveUlClr2] = currentClrPicker;
-    cf.updtLocalStorage();
-    colorForPassiveWasUpdated = true;
+  var colorIDObj = $('#inPassiveUlClr2');
+  if (colorIDObj.length == 1) {
+    currentClr = c4[C_Greek][C_inPassiveUlClr2];
+    currentClrPicker = colorIDObj.spectrum("get").toHexString();
+    if (currentClr != currentClrPicker) {
+      c4[C_Greek][C_inPassiveUlClr2] = currentClrPicker;
+      cf.updtLocalStorage();
+      colorForPassiveWasUpdated = true;
+    }
   }
   if (colorForPassiveWasUpdated) updateVerbsBkgrd('passive');
   if (colorForMiddleWasUpdated) updateVerbsBkgrd('middle');
@@ -1268,12 +1281,15 @@ function checkVerbClrInput() {
     cf.updtLocalStorage();
     colorForOTWasUpdated = true;
   }
-  currentClr = c4[C_OT][C_inMiddleUlClr1];
-  currentClrPicker = $('#inOTMiddleUlClr1').spectrum("get").toHexString();
-  if (currentClr != currentClrPicker) {
-    c4[C_OT][C_inMiddleUlClr1] = currentClrPicker;
-    cf.updtLocalStorage();
-    colorForOTWasUpdated = true;
+  var colorIDObj = $('#inOTMiddleUlClr1');
+  if (colorIDObj.length == 1) {
+    currentClr = c4[C_OT][C_inMiddleUlClr1];
+    currentClrPicker = colorIDObj.spectrum("get").toHexString();
+    if (currentClr != currentClrPicker) {
+      c4[C_OT][C_inMiddleUlClr1] = currentClrPicker;
+      cf.updtLocalStorage();
+      colorForOTWasUpdated = true;
+    }
   }
   currentClr = c4[C_OT][C_inPassiveBkgrdClr];
   currentClrPicker = $('#inOTPassiveBkgrdClr').spectrum("get").toHexString();
@@ -1282,12 +1298,15 @@ function checkVerbClrInput() {
     cf.updtLocalStorage();
     colorForOTWasUpdated = true;
   }
-  currentClr = c4[C_OT][C_inPassiveUlClr1];
-  currentClrPicker = $('#inOTPassiveUlClr1').spectrum("get").toHexString();
-  if (currentClr != currentClrPicker) {
-    c4[C_OT][C_inPassiveUlClr1] = currentClrPicker;
-    cf.updtLocalStorage();
-    colorForOTWasUpdated = true;
+  var colorIDObj = $('#inOTPassiveUlClr1');
+  if (colorIDObj.length == 1) {
+    currentClr = c4[C_OT][C_inPassiveUlClr1];
+    currentClrPicker = $('#inOTPassiveUlClr1').spectrum("get").toHexString();
+    if (currentClr != currentClrPicker) {
+      c4[C_OT][C_inPassiveUlClr1] = currentClrPicker;
+      cf.updtLocalStorage();
+      colorForOTWasUpdated = true;
+    }
   }
   if (colorForOTWasUpdated) cf.createUlFor_OT();
 }

@@ -9,6 +9,7 @@ var ColorView = Backbone.View.extend({
             '<div id="sideBargenderNumClrs"></div><br>' +
 			'<div id="sideBarVerbClrs"></div><br>' +
 			'<div id="sideBarHVerbClrs"></div><br>' +
+            '<a href="javascript:step.util.showConfigGrammarColor()">Advanced color code grammar configuration</a>' +
 		'</div>' +
         '<script>' +
         '$( document ).ready(function() {' +

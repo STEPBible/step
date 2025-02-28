@@ -1645,7 +1645,8 @@ var cf = {
         descOfYAxisItems += " (" + __s["tense_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
     else if (__s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")])
         descOfYAxisItems += " (" + __s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
-    htmlTable += '<td>' + descOfYAxisItems;
+    htmlTable += (createUserInputs) ? '<td>' : '<td style="padding-top:22">';
+    htmlTable += descOfYAxisItems + '</td>';
     return htmlTable;
   },
 
@@ -1716,7 +1717,7 @@ var cf = {
 	  }
     var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs);
     htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-      yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs) + '">';
+      (yAxisSpan + 1) + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs) + '">';
     if (createUserInputs) htmlTable += cf.htmlToAdd1();
     htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
     if (createUserInputs) htmlTable += cf.htmlToAdd2(r.xAxisTitle);
@@ -1729,7 +1730,7 @@ var cf = {
     for (var i = 0; i < yAxisItems.length; i += 1) {
       if (i > 0) htmlTable += '<tr>';
       htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan);
-      if (createUserInputs) htmlTable += cf.htmlToAdd5(i, "", true);
+      if (createUserInputs) htmlTable += '<td>' +cf.htmlToAdd5(i, "", true) + '</td>';
       htmlTable += '</td>';
       for (var counter = 0; counter < xAxisItems.length; counter += 1) {
         htmlTable += '<td>';
@@ -1792,6 +1793,7 @@ var cf = {
   },
 
   htmlToAdd5: function (i, otVerb, addAnimation) {
+    debugger;
     var otPrefix = ''; var result = '';
     if ((typeof otVerb === "string") && (otVerb === "OT")) otPrefix = 'OT';
     result = '<input id="' + otPrefix + 'axisYOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptY" ' +

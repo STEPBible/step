@@ -1793,7 +1793,6 @@ var cf = {
   },
 
   htmlToAdd5: function (i, otVerb, addAnimation) {
-    debugger;
     var otPrefix = ''; var result = '';
     if ((typeof otVerb === "string") && (otVerb === "OT")) otPrefix = 'OT';
     result = '<input id="' + otPrefix + 'axisYOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptY" ' +

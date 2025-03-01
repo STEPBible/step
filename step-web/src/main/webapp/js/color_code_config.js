@@ -1,6 +1,6 @@
 function initializeClrCodeHtmlModalPage() {
-  cf.addVerbTable('#verbClrs');
-  addOTVerbTable('#hVerbClrs');
+  cf.addVerbTable();
+  addOTVerbTable();
   addNounTable();
   updateHtmlForYAxis();
   updateHtmlForXAxis();
@@ -735,7 +735,7 @@ function addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, n
   return result;
 }
   
-function addOTVerbTable(htmlElement) {
+function addOTVerbTable() {
   var r = cf.getVariablesForOTVerbTable('H');
   var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
   xAxisItems = r.orderOfXAxisItems;
@@ -768,7 +768,7 @@ function addOTVerbTable(htmlElement) {
   htmlTable += '</table><br>';
   htmlTable += cf.htmlToAdd6('OT');
   htmlTable = $(htmlTable);
-  htmlTable.appendTo(htmlElement);
+  htmlTable.appendTo('#hVerbClrs');
 }
 
 function addOTVerbSideBar() {

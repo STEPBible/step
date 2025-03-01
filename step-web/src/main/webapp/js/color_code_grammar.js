@@ -1779,7 +1779,7 @@ var cf = {
     return result;
   },
 
-  addVerbTable: function (htmlElement) {
+  addVerbTable: function () {
     var r = cf.getVariablesForVerbTable();
     var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
     xAxisItems = r.orderOfXAxisItems;
@@ -1815,7 +1815,7 @@ var cf = {
     htmlTable += '</table><br>';
     htmlTable += cf.htmlToAdd6("");
     htmlTable = $(htmlTable);
-    htmlTable.appendTo(htmlElement);
+    htmlTable.appendTo('#verbClrs');
   },
 
   htmlToAdd1: function (otVerb) {

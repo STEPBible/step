@@ -249,7 +249,7 @@
                             <a id="examples-icon1" style="padding-left:5px" class="navbarIconDesc hidden-sm hideen-md hidden-lg" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
                                 <i class="glyphicon glyphicon-question-sign hidden-sm hidden-md hidden-lg"></i>
                             </a>
-                            <a style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammar" />">
+                            <a id="colorgrammar-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammar" />">
                                 <img src="images/rainbow.png" width="20" height="20"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="display_grammar" /></span>
                             </a>
 

@@ -187,6 +187,13 @@ var PassageDisplayView = DisplayView.extend({
                     }
                 }
             }
+            for (var i = 0; i < step.passages.models.length; i++) {
+                if (step.passages.models[i].attributes.options.indexOf('C') > -1) {
+                    $('#colorgrammar-icon').show();
+                    return;
+                }
+            }
+            $('#colorgrammar-icon').hide();
         },
 
         _addForeignLangToInterLinear: function () {

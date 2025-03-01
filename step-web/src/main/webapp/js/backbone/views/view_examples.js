@@ -268,7 +268,6 @@ var ExamplesView = Backbone.View.extend({
 					'</ul>' +
 				'</div>' +
 			'</div>' +
-			'<div id=\'colorCodeTableDiv\'></div>' +
 			'<div class="text-muted step-copyright">' +
 				'<span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank">STEPBible</a> - 2024</span>' +
 			'</div>' +

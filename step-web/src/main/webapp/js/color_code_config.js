@@ -1,6 +1,6 @@
 function initializeClrCodeHtmlModalPage() {
-  cf.addVerbTable(true, '#verbClrs');
-  addOTVerbTable(true, '#hVerbClrs');
+  cf.addVerbTable('#verbClrs');
+  addOTVerbTable('#hVerbClrs');
   addNounTable();
   updateHtmlForYAxis();
   updateHtmlForXAxis();
@@ -664,7 +664,7 @@ function addNounSideBar() {
   htmlTable.appendTo('#sideBargenderNumClrs');
 }
 
-function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows, createUserInputs) {
+function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows) {
   var htmlTable = '';
   var curXTitle = c4[C_OT][C_verbTableXHeader];
   if (curXTitle != null) {
@@ -680,14 +680,14 @@ function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, num
   var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
     htmlTable += '<td class="tg-yw4l">' + descOfXAxisItems[j];
-    if (createUserInputs) htmlTable += cf.htmlToAdd3(j, 'OT', false);
+    htmlTable += cf.htmlToAdd3(j, 'OT', false);
     htmlTable += '</td>';
   }
   htmlTable += '</tr>';
   return htmlTable;
 }
 
-function addOtTitleToXAxisSideBar(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows, createUserInputs) {
+function addOtTitleToXAxisSideBar(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows) {
   var htmlTable = '<tr>';
   var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
@@ -735,42 +735,30 @@ function addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, n
   return result;
 }
   
-function addOTVerbTable(createUserInputs, htmlElement) {
+function addOTVerbTable(htmlElement) {
   var r = cf.getVariablesForOTVerbTable('H');
   var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
-  if (createUserInputs) {
-    xAxisItems = r.orderOfXAxisItems;
-    yAxisItems = r.orderOfYAxisItems;
-    descOfXAxisItems = r.descOfXAxisItems;
-    descOfYAxisItems = r.descOfYAxisItems;
-  }
-  else {
-    xAxisItems = r.nameOfAllXAxisItems;
-    yAxisItems = r.nameOfAllYAxisItems;
-    descOfXAxisItems = r.nameOfAllXAxisItems;
-    descOfYAxisItems = r.nameOfAllYAxisItems;
-  }
+  xAxisItems = r.orderOfXAxisItems;
+  yAxisItems = r.orderOfYAxisItems;
+  descOfXAxisItems = r.descOfXAxisItems;
+  descOfYAxisItems = r.descOfYAxisItems;
   var htmlTable = '';
-  if (!createUserInputs) {
-      var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
-	  htmlTable = '<link href="css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>';
-  }
-  var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs, 'OT');
+  var yAxisSpan = cf.tableAxisSpan('Y', 'OT');
   htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-  (yAxisSpan + 1) + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs, 'OT') + '">';
-  if (createUserInputs) htmlTable += cf.htmlToAdd1('OT');
+  (yAxisSpan + 1) + '" rowspan="' + cf.tableAxisSpan('X', 'OT') + '">';
+  htmlTable += cf.htmlToAdd1('OT');
   htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
-  if (createUserInputs) htmlTable += cf.htmlToAdd2(r.xAxisTitle, 'OT');
+  htmlTable += cf.htmlToAdd2(r.xAxisTitle, 'OT');
   htmlTable += '</th></tr>';
-  htmlTable += addOtTitleToXAxis(descOfXAxisItems, cf.getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length, createUserInputs);
+  htmlTable += addOtTitleToXAxis(descOfXAxisItems, cf.getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length);
   htmlTable += '<tr>' +
   '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + cf.upCaseFirst(r.yAxisTitle);
-  if (createUserInputs) htmlTable += cf.htmlToAdd4(r.yAxisTitle, 'OT');
+  htmlTable += cf.htmlToAdd4(r.yAxisTitle, 'OT');
   htmlTable += '</td>';
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
-    htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan, 'OT');
-    if (createUserInputs) htmlTable += '<td>' + cf.htmlToAdd5(i, 'OT', false) + '</td>';
+    htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT');
+    htmlTable += '<td>' + cf.htmlToAdd5(i, 'OT', false) + '</td>';
     htmlTable += '</td>';
     for (var counter = 0; counter < xAxisItems.length; counter += 1) {
       htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
@@ -778,7 +766,7 @@ function addOTVerbTable(createUserInputs, htmlElement) {
     htmlTable += '</tr>';
   }
   htmlTable += '</table><br>';
-  if (createUserInputs) htmlTable += cf.htmlToAdd6('OT');
+  htmlTable += cf.htmlToAdd6('OT');
   htmlTable = $(htmlTable);
   htmlTable.appendTo(htmlElement);
 }
@@ -790,7 +778,7 @@ function addOTVerbSideBar() {
   yAxisItems = r.orderOfYAxisItems;
   descOfXAxisItems = r.descOfXAxisItems;
   descOfYAxisItems = r.descOfYAxisItems;
-  var yAxisSpan = cf.tableAxisSpan('Y', true, 'OT');
+  var yAxisSpan = cf.tableAxisSpan('Y', 'OT');
   var htmlTable = '';
   var htmlTable =
     '<table>' +
@@ -805,10 +793,10 @@ function addOTVerbSideBar() {
       '</div>' +
     '</td>' +
     '<td><h2>Hebrew Verbs</td></tr>';
-  htmlTable += addOtTitleToXAxisSideBar(descOfXAxisItems, cf.getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length, true);
+  htmlTable += addOtTitleToXAxisSideBar(descOfXAxisItems, cf.getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length);
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
-    htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], false, yAxisSpan, 'OT');
+    htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT', true /* paddingRequiredForSidebar */ );
     htmlTable += '<td>' + cf.htmlToAdd5(i, 'OT', false) + '</td>';
     htmlTable += '</tr>';
   }

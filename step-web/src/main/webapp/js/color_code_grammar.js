@@ -594,7 +594,6 @@ var cf = {
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
   initCanvasAndCssForClrCodeGrammar: function() {
       if (c4 === undefined) { cf.getC4(); } //c4 is currentClrCodeConfig.  It is changed to c4 to save space
-	  cf.addVerbTable(false, '#colorCodeTableDiv');
 	  cf.createUlArrow();
 	  cf.createUlShortArrow();
 	  cf.createUlReverseArrow();
@@ -1696,19 +1695,19 @@ var cf = {
     return ntCSSOnThisPage + ' ';
   },
 
-  tableAxisSpan: function (axis, createUserInputs, ot) {
+  tableAxisSpan: function (axis, ot) {
     var c4Ref = ((ot != undefined) && (ot == 'OT')) ? c4[C_OT] : c4[C_Greek];
     var curXTitle = (axis == 'X') ? c4Ref[C_verbTableXHeader] : c4Ref[C_verbTableYHeader];
     var modalWidth = $('body').width();
     if ((modalWidth != undefined) && (modalWidth != null) && (!isNaN(modalWidth)) && (modalWidth < 605) && (axis == 'Y')) return 2;
-    if ((curXTitle != null) && (createUserInputs)) return 3; // The header information is not showed if there are no user input fields which is at the help quicklinks panel
+    if (curXTitle != null) return 3; // The header information is not showed if there are no user input fields which is at the help quicklinks panel
     else return 2;
   },
 
-  addTitleToYAxis: function (rowNum, descOfYAxisItems, createUserInputs, xAxisRowSpan, ot) {
+  addTitleToYAxis: function (rowNum, descOfYAxisItems, xAxisRowSpan, ot, paddingRequiredForSideBar) {
     var htmlTable = '';
     var curYTitles = ((ot != undefined) && (ot == 'OT')) ? c4[C_OT][C_verbTableYHeader] : c4[C_Greek][C_verbTableYHeader];
-    if ((curYTitles != null) && (createUserInputs) && (xAxisRowSpan == 3)) { // screen size might not be wide enough for help quicklink
+    if ((curYTitles != null) && (xAxisRowSpan == 3)) { // screen size might not be wide enough for help quicklink
       var title_range_low = 0;
       for (var i = 0; i < curYTitles.desc.length; i ++) {
         var rowsCovered = curYTitles.repeat[i] + 1;
@@ -1723,7 +1722,7 @@ var cf = {
         descOfYAxisItems += " (" + __s["tense_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
     else if (__s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")])
         descOfYAxisItems += " (" + __s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
-    htmlTable += (createUserInputs) ? '<td>' : '<td style="padding-top:22">';
+    htmlTable += (paddingRequiredForSideBar) ? '<td style="padding-top:22">' : '<td>';
     htmlTable += descOfYAxisItems + '</td>';
     return htmlTable;
   },
@@ -1780,7 +1779,7 @@ var cf = {
     return result;
   },
 
-  addVerbTable: function (createUserInputs, htmlElement) {
+  addVerbTable: function (htmlElement) {
     var r = cf.getVariablesForVerbTable();
     var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
     xAxisItems = r.orderOfXAxisItems;
@@ -1788,27 +1787,22 @@ var cf = {
     descOfXAxisItems = r.descOfXAxisItems;
     descOfYAxisItems = r.descOfYAxisItems;
     var htmlTable = '';
-    if (!createUserInputs) {
-		  var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
-		  htmlTable += '<link href="css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>' +
-					 '<h2>Color table for Greek verbs</h2>';
-	  }
-    var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs);
+    var yAxisSpan = cf.tableAxisSpan('Y');
     htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-      (yAxisSpan + 1) + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs) + '">';
-    if (createUserInputs) htmlTable += cf.htmlToAdd1();
+      (yAxisSpan + 1) + '" rowspan="' + cf.tableAxisSpan('X') + '">';
+    htmlTable += cf.htmlToAdd1();
     htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
-    if (createUserInputs) htmlTable += cf.htmlToAdd2(r.xAxisTitle);
+    htmlTable += cf.htmlToAdd2(r.xAxisTitle);
     htmlTable += '</th></tr>';
-    htmlTable += cf.addTitleToXAxis(descOfXAxisItems, createUserInputs);
+    htmlTable += cf.addTitleToXAxis(descOfXAxisItems);
     htmlTable += '<tr>' +
       '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + cf.upCaseFirst(r.yAxisTitle);
-    if (createUserInputs) htmlTable += cf.htmlToAdd4(r.yAxisTitle);
+    htmlTable += cf.htmlToAdd4(r.yAxisTitle);
     htmlTable += '</td>';
     for (var i = 0; i < yAxisItems.length; i += 1) {
       if (i > 0) htmlTable += '<tr>';
-      htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan);
-      if (createUserInputs) htmlTable += '<td>' +cf.htmlToAdd5(i, "", true) + '</td>';
+      htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan);
+      htmlTable += '<td>' +cf.htmlToAdd5(i, "", true) + '</td>';
       htmlTable += '</td>';
       for (var counter = 0; counter < xAxisItems.length; counter += 1) {
         htmlTable += '<td>';
@@ -1819,7 +1813,7 @@ var cf = {
       htmlTable += '</tr>';
     }
     htmlTable += '</table><br>';
-    if (createUserInputs) htmlTable += cf.htmlToAdd6("");
+    htmlTable += cf.htmlToAdd6("");
     htmlTable = $(htmlTable);
     htmlTable.appendTo(htmlElement);
   },
@@ -1941,10 +1935,10 @@ var cf = {
     return result;
   },
 
-  addTitleToXAxis: function (descOfXAxisItems, createUserInputs) {
+  addTitleToXAxis: function (descOfXAxisItems) {
     var htmlTable = '';
     var curXTitle = c4[C_Greek][C_verbTableXHeader];
-    if ((curXTitle != null) && (createUserInputs)) {
+    if (curXTitle != null) {
       htmlTable += '<tr>';
       for (var i = 0; i < curXTitle.desc.length; i ++) {
         htmlTable += '<td class="tg-yw4l" align="center" colspan="' + (curXTitle.repeat[i] + 1) + '">' + curXTitle.desc[i] + '</td>';
@@ -1960,7 +1954,7 @@ var cf = {
             descOfXAxisItems[j] += " (" + __s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
         if (descOfXAxisItems[j].length < 10) htmlTable += ' width=72';
       htmlTable += '>' + descOfXAxisItems[j];
-      if (createUserInputs) htmlTable += cf.htmlToAdd3(j, "", true);
+      htmlTable += cf.htmlToAdd3(j, "", true);
       htmlTable += '</td>';
     }
     htmlTable += '</tr>';

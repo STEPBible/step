@@ -160,7 +160,7 @@ var SearchDisplayView = DisplayView.extend({
         step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"), true);
         this.doInterlinearVerseNumbers(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
 		
-		// following 10 lines were added to enhance the Colour Code Grammar  PT
+		// following 10 lines were added to enhance the Color Code Grammar  PT
 		// should be const instead of var, but not compatible with older browser
 		// This must match the definition in the color_code_grammar.js
 		// Do not take away the TBRMBR comment (to be removed by maven replacer

@@ -211,9 +211,9 @@ var cc = [ /* cc = Color code grammar const.  Changed from const to var because 
     'cohortative': 'c'
   },
   // C_defaultOrderOfOTVerbForm
-  [             'p',   'w',  'f',   'r',   's',  'v',   'i',   'q',  'n',  'u',  'j',   'c'],
+  [ 'p',   'w',  'i',   'q',  'n',  'u',  'j',   'c',  'v',   'f',   'r',   's' ],
   // C_defaultOTVerbFormToCombineWithPrevious
-  [false, true, false, false, true, false, false, true, true, true, false, true],
+  [ false, true, false, true, true, true, false, true, false, false, false, true ],
   // C_hebrewNameOfStem
   {
     // Action: Simple
@@ -566,7 +566,7 @@ var cf = {
         x[C_OT][C_chkbxMiddleUlClr1] = true;
         x[C_OT][C_chkbxMiddleUlColr1Value] = false;
         x[C_OT][C_verbTableXHeader] = { desc: ['Simple','Intensive / Resultative', 'Causative / Declarative'], repeat: [0, 0, 0]};
-        x[C_OT][C_verbTableYHeader] = { desc: ['Past or poss.<br>Present','Any time<br>or Present', 'Present or<br>Future'], repeat: [0, 2, 1] };
+        x[C_OT][C_verbTableYHeader] = { desc: ['Past or poss.<br>Present','Present or<br>Future', 'Any time<br>or Present'], repeat: [0, 1, 2] };
         x[C_OT][C_granularControlOfXAxis] = true;
         x[C_OT][C_granularControlOfYAxis] = true;
         x[C_OT][C_xAxisOnOff] = [true, true, true, true, true, true, true, true, true, true, true, true];
@@ -639,7 +639,7 @@ var cf = {
   createUlArrow: function() {
     var ulArrow = cv[C_uLBASEIMGS][0];
     ulArrow.canvas = cf.createCanvas(ulArrow.name, 18, 10);
-    ulArrow.context = ulArrow.canvas.getContext('2d');
+    ulArrow.context = ulArrow.canvas.getContext('2d', { willReadFrequently: true } );
     ulArrow.context.beginPath();
     ulArrow.context.lineJoin = 'round';
     ulArrow.context.lineWidth = 1;
@@ -661,7 +661,7 @@ var cf = {
   createUlShortArrow: function() {
     var ulArrow = cv[C_uLBASEIMGS][8];
     ulArrow.canvas = cf.createCanvas(ulArrow.name, 10, 10);
-    ulArrow.context = ulArrow.canvas.getContext('2d');
+    ulArrow.context = ulArrow.canvas.getContext('2d', { willReadFrequently: true } );
     ulArrow.context.beginPath();
     ulArrow.context.lineJoin = 'round';
     ulArrow.context.lineWidth = 2;
@@ -677,7 +677,7 @@ var cf = {
   createUlReverseArrow: function() {
     var ulArrow = cv[C_uLBASEIMGS][9];
     ulArrow.canvas = cf.createCanvas(ulArrow.name, 18, 10);
-    ulArrow.context = ulArrow.canvas.getContext('2d');
+    ulArrow.context = ulArrow.canvas.getContext('2d', { willReadFrequently: true } );
     ulArrow.context.beginPath();
     ulArrow.context.lineJoin = 'round';
     ulArrow.context.lineWidth = 1;
@@ -699,7 +699,7 @@ var cf = {
   createUlShortReverseArrow: function() {
     var ulArrow = cv[C_uLBASEIMGS][10];
     ulArrow.canvas = cf.createCanvas(ulArrow.name, 10, 10);
-    ulArrow.context = ulArrow.canvas.getContext('2d');
+    ulArrow.context = ulArrow.canvas.getContext('2d', { willReadFrequently: true } );
     ulArrow.context.beginPath();
     ulArrow.context.lineJoin = 'round';
     ulArrow.context.lineWidth = 2;
@@ -715,7 +715,7 @@ var cf = {
   createUl_Dash: function() {
     var ulDash = cv[C_uLBASEIMGS][1];
     ulDash.canvas = cf.createCanvas(ulDash.name, 13, 10);
-    ulDash.context = ulDash.canvas.getContext('2d');
+    ulDash.context = ulDash.canvas.getContext('2d', { willReadFrequently: true } );
     ulDash.context.beginPath();
     ulDash.context.lineWidth = 4;
     ulDash.context.moveTo(4, 4);
@@ -729,7 +729,7 @@ var cf = {
   createUlSolid: function() {
     var ulSolid = cv[C_uLBASEIMGS][2];
     ulSolid.canvas = cf.createCanvas(ulSolid.name, 1, 10);
-    ulSolid.context = ulSolid.canvas.getContext('2d');
+    ulSolid.context = ulSolid.canvas.getContext('2d', { willReadFrequently: true } );
     ulSolid.context.beginPath();
     ulSolid.context.lineWidth = 3;
     ulSolid.context.moveTo(0, 4);
@@ -742,7 +742,7 @@ var cf = {
   createUlDash_Dot: function() {
     var ulDashDot = cv[C_uLBASEIMGS][6];
     ulDashDot.canvas = cf.createCanvas(ulDashDot.name, 19, 10);
-    ulDashDot.context = ulDashDot.canvas.getContext('2d');
+    ulDashDot.context = ulDashDot.canvas.getContext('2d', { willReadFrequently: true } );
     ulDashDot.context.beginPath();
     ulDashDot.context.arc(5, 4, 2, 0, 2 * Math.PI);
     ulDashDot.context.fill();
@@ -761,7 +761,7 @@ var cf = {
   createUlDashDotDot: function() {
     var ulDashDotDot = cv[C_uLBASEIMGS][7];
     ulDashDotDot.canvas = cf.createCanvas(ulDashDotDot.name, 26, 10);
-    ulDashDotDot.context = ulDashDotDot.canvas.getContext('2d');
+    ulDashDotDot.context = ulDashDotDot.canvas.getContext('2d', { willReadFrequently: true } );
     ulDashDotDot.context.beginPath();
     ulDashDotDot.context.arc(5, 4, 2, 0, 2 * Math.PI);
     ulDashDotDot.context.fill();
@@ -785,14 +785,14 @@ var cf = {
   createUlNone: function() {
     var ulNone = cv[C_uLBASEIMGS][11];
     ulNone.canvas = cf.createCanvas(ulNone.name, 1, 10);
-    ulNone.context = ulNone.canvas.getContext('2d');
+    ulNone.context = ulNone.canvas.getContext('2d', { willReadFrequently: true } );
     ulNone.img.src = ulNone.canvas.toDataURL('image/png');
   },
 
   createUlDoubleSolid: function() {
     var ulDoubleSolid = cv[C_uLBASEIMGS][3];
     ulDoubleSolid.canvas = cf.createCanvas(ulDoubleSolid.name, 1, 10);
-    ulDoubleSolid.context = ulDoubleSolid.canvas.getContext('2d');
+    ulDoubleSolid.context = ulDoubleSolid.canvas.getContext('2d', { willReadFrequently: true } );
     ulDoubleSolid.context.beginPath();
     ulDoubleSolid.context.lineWidth = 2;
     ulDoubleSolid.context.moveTo(0, 2);
@@ -808,7 +808,7 @@ var cf = {
   createUlDot: function() {
     var ulDot = cv[C_uLBASEIMGS][4];
     ulDot.canvas = cf.createCanvas(ulDot.name, 10, 10);
-    ulDot.context = ulDot.canvas.getContext('2d');
+    ulDot.context = ulDot.canvas.getContext('2d', { willReadFrequently: true } );
     ulDot.context.beginPath();
     ulDot.context.arc(5, 4, 2, 0, 2 * Math.PI);
     ulDot.context.fill();
@@ -821,7 +821,7 @@ var cf = {
   createUlWave: function() {
     var ulWave = cv[C_uLBASEIMGS][5];
     ulWave.canvas = cf.createCanvas(ulWave.name, 22, 10);
-    ulWave.context = ulWave.canvas.getContext('2d');
+    ulWave.context = ulWave.canvas.getContext('2d', { willReadFrequently: true } );
     // draw sin ulWave
     ulWave.context.beginPath();
     ulWave.context.strokeStyle = 'black';
@@ -1049,7 +1049,7 @@ var cf = {
       var backgroundClr;
       destImgObj.canvas.heigth = srcImgObj.canvas.height;
       destImgObj.canvas.width = srcImgObj.canvas.width;
-      destImgObj.context = destImgObj.canvas.getContext('2d');
+      destImgObj.context = destImgObj.canvas.getContext('2d', { willReadFrequently: true } );
       destImgObj.context.drawImage(srcImgObj.canvas, 0, 0);
       var passiveVoice = false;
       var middleVoice = false;
@@ -1381,7 +1381,7 @@ var cf = {
         previousActiveForm ++;
       }
       else if (c4[C_OT][C_codeOfForm][c4[C_OT][C_orderOfForm][j]][2]) {
-        if (descOfForm[previousActiveForm].length > 0) descOfForm[previousActiveForm] += '<br>';
+        if (descOfForm[previousActiveForm].length > 0) descOfForm[previousActiveForm] += ' &<br>';
         descOfForm[previousActiveForm] += c4[C_OT][C_codeOfForm][c4[C_OT][C_orderOfForm][j]][1];
       }
       nameOfAllForm.push(c4[C_OT][C_codeOfForm][c4[C_OT][C_orderOfForm][j]][0]);

@@ -42,8 +42,7 @@ var PassageMenuView = Backbone.View.extend({
                 {initial: "T", key: "display_transliteration"},
                 {initial: "B", key: "display_spanishVocab"},
                 {initial: "Z", key: "display_chineseVocab"},
-                {initial: "M", key: "display_grammar"},
-                {initial: "C", key: "display_grammarColor"}        
+                {initial: "M", key: "display_grammar"}  
             ]
         },
         {
@@ -273,14 +272,6 @@ var PassageMenuView = Backbone.View.extend({
             var displayOption = displayOptions.eq(i);
             var displayOptionCode = displayOption.find("[data-value]").attr("data-value");
             displayOption.toggle(availableOptions.indexOf(displayOptionCode) != -1);
-            if (displayOptionCode === "C") {
-                if ((availableOptions.indexOf("C") > -1) && (displayOption.find(".glyphicon").css("visibility") != "hidden")) {
-                    this.displayOptions.find("li#grammar_list_item.noHighlight.grammarContainer")[0].hidden = false;
-                }
-                else {
-                    this.displayOptions.find("li#grammar_list_item.noHighlight.grammarContainer")[0].hidden = true;
-                }
-            }
         }
         //do we need to show the group headings...
         this.displayOptions.find(".menuGroup").each(function (i, item) {
@@ -569,7 +560,6 @@ var PassageMenuView = Backbone.View.extend({
      */
     _createItemsInDropdown: function (dropdown, items) {
         var selectedOptions = this.model.get("selectedOptions") || "";
-        var hasColorCodeGrammer = false;
         for (var i = 0; i < items.length; i++) {
             if (items[i].group) {
                 var panel = $('<div class="panel panel-default stepModalFgBg">');
@@ -600,19 +590,9 @@ var PassageMenuView = Backbone.View.extend({
                         makeVisible = selectedOptions.indexOf("P"); // If Hebrew accent is on, turn on Hebrew vowel because it automatically turned on.
                     this._setVisible(link, makeVisible);
                 }
-                if (items[i].initial === "C") hasColorCodeGrammer = true;
             }
             dropdown.append($("<li>").addClass("passage").append(link)).attr("role", "presentation");
         }
-        if (hasColorCodeGrammer) {
-            var colorCodeGrammarButton = '<li id=grammar_list_item class="noHighlight grammarContainer" style="padding-left:24"><%= __s.config_color_grammar %>' +
-                '<span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group">' +
-                '<button class="btn btn-default btn-xs grammarColor" type="button" title="<%= __s.config_color_grammar_explain %>">' +
-                '<span class="glyphicon glyphicon-cog"></span></button></span></li>';
-            dropdown.append(_.template(colorCodeGrammarButton)());
-            dropdown.find(".grammarColor").click(step.util.showConfigGrammarColor);
-        }
-
     },
     _createPassageOptions: function (dropdown) {
         this._createItemsInDropdown(dropdown, this.items);

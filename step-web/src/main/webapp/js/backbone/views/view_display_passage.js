@@ -24,6 +24,10 @@ var PassageDisplayView = DisplayView.extend({
             this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true});
             var options = this.model.get("selectedOptions") || [];
             var availableOptions = this.model.get("options") || [];
+            if (availableOptions.indexOf('C') > -1)
+                $('#colorgrammar-icon').show();
+            else
+                $('#colorgrammar-icon').hide();
             // should be const instead of var, but not compatible with older browser
             // This must match the definition in the color_code_grammar.js
             // Do not take away the TBRMBR comment (to be removed by maven replacer
@@ -145,7 +149,7 @@ var PassageDisplayView = DisplayView.extend({
                 //give focus:
                 $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();
             }
-            // following 11 lines were added to enhance the Colour Code Grammar  PT
+            // following 11 lines were added to enhance the Color Code Grammar  PT
             // should be const instead of var, but not compatible with older browser
             // This must match the definition in the color_code_grammar.js
             // Do not take away the TBRMBR comment (to be removed by maven replacer
@@ -187,13 +191,6 @@ var PassageDisplayView = DisplayView.extend({
                     }
                 }
             }
-            for (var i = 0; i < step.passages.models.length; i++) {
-                if (step.passages.models[i].attributes.options.indexOf('C') > -1) {
-                    $('#colorgrammar-icon').show();
-                    return;
-                }
-            }
-            $('#colorgrammar-icon').hide();
         },
 
         _addForeignLangToInterLinear: function () {

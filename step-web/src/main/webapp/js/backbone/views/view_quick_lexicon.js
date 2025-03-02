@@ -282,7 +282,7 @@ var QuickLexicon = Backbone.View.extend({
             //make request to server
             this.loadDefinition();
         }
-        // added for colour code grammar  Should be const instead of var, but older browser does not work
+        // added for color code grammar  Should be const instead of var, but older browser does not work
         // This must match the definition in the color_code_grammar.js
         // Do not take away the TBRMBR comment (to be removed by maven replacer)
         var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRBMR

@@ -456,7 +456,14 @@ step.util = {
 
 
             //make the new panel active
-            step.util.getPassageContainer(val).addClass("active");
+			var passageContainer = step.util.getPassageContainer(val);
+			passageContainer.addClass("active");
+			var availableOptions = step.util.activePassage().get("options");
+			if ((typeof availableOptions === "string") && (availableOptions.indexOf("C") > -1) &&  // Color grammar is available
+				(passageContainer.find(".passageContent").length > 0)) // Has passage content
+					$("#colorgrammar-icon").show();
+			else
+				$("#colorgrammar-icon").hide();
             return val;
         }
 

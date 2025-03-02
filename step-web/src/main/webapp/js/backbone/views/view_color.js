@@ -9,7 +9,7 @@ var ColorView = Backbone.View.extend({
             '<div id="sideBargenderNumClrs"></div><br>' +
 			'<div id="sideBarVerbClrs"></div><br>' +
 			'<div id="sideBarHVerbClrs"></div><br>' +
-            '<a href="javascript:step.util.showConfigGrammarColor()">Advanced color code grammar configuration</a>' +
+            '<a href="javascript:step.util.showConfigGrammarColor()">Advanced configuration</a>' +
 		'</div>' +
         '<script>' +
         '$( document ).ready(function() {' +
@@ -20,11 +20,12 @@ var ColorView = Backbone.View.extend({
         'click .closeColumn': 'onClickClose'
     },
     initialize: function () {
-        var options = $.getUrlVars().options;
-        if ((typeof options === "undefined") || ((typeof options === "string") && (options.indexOf("C") == -1))) {
-            $(".dropdown-toggle.showSettings").click();
-            $("a[data-value='C']").click();
-            $(".dropdown-toggle.showSettings").click();
+        var activePassage = step.util.activePassage();
+        var selectedOptions = activePassage.get("selectedOptions");
+        if ((typeof selectedOptions === "string") && (selectedOptions.indexOf("C") == -1)) { // Color grammar not selected
+            var availableOptions = activePassage.get("options");
+            if ((typeof availableOptions === "string") && (availableOptions.indexOf("C") > -1)) // Color grammar is available
+                activePassage.set("selectedOptions", selectedOptions + "C");
         }
         this.render();
     },

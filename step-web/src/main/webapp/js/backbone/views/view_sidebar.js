@@ -102,12 +102,13 @@ var SidebarView = Backbone.View.extend({
             self.createHistory();
         }
         else if (this.model.get("mode") === 'color') {
-            self.createColor();
+            if ($('#ColorCode').length != 1) // Only call if it is not created
+                self.createColor();
         }
         else {
             self.createHelp();
         }
-        // added for colour code grammar.  Should be const instead of var, but does not work with older browser
+        // added for color code grammar.  Should be const instead of var, but does not work with older browser
         // This must match the definition in the color_code_grammar.js
         // Do not take away the TBRMBR comment (to be removed by maven replacer)
         var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRBMR

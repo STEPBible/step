@@ -944,7 +944,7 @@ var cf = {
 
   displayVerbUlOrNot: function (indexToUlVerbCSS) {
     if ( ( ( (!c4[C_Greek][C_granularControlOfMoods] && !c4[C_Greek][C_granularControlOfTenses]) ||
-          ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood && c4[C_Greek][C_granularControlOfMoods]) ||
+          ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood && c4[C_Greek][C_granularControlOfMoods]) &&
           ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense && c4[C_Greek][C_granularControlOfTenses]) ) &&
           c4[C_Greek][C_enableVerbClr]) || (indexToUlVerbCSS == -1) ) return true; // indexToUlVerbCSS is -1 when it is OT verb.  Temp solution.
     else return false;
@@ -958,7 +958,7 @@ var cf = {
           ((!c4[C_OT][C_granularControlOfXAxis]) || (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)])) )
         display = true;
       else if (c4[C_OT][C_granularControlOfYAxis] && c4[C_OT][C_granularControlOfXAxis])
-        display = (c4[C_OT][C_yAxisOnOff][yIndex]) || (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)]);
+        display = (c4[C_OT][C_yAxisOnOff][yIndex]) && (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)]);
     }
     return display;
   },

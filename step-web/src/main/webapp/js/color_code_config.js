@@ -45,6 +45,14 @@ function initializeClrCodeSidebar() {
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
     (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
   step.util.localStorageSetItem('colorCode-PreviousSettings', JSON.stringify(c4));
+  if ($(".passageContainer.active").data("ntCSS") === "")
+    $("#sideBarVerbClrs").hide();
+  else
+    $("#sideBarVerbClrs").show();
+  if ($(".passageContainer.active").data("otCSS") === "")
+    $("#sideBarHVerbClrs").hide();
+  else
+    $("#sideBarHVerbClrs").show();
 }
 
 function addVerbSideBar() {

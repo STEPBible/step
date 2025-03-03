@@ -460,10 +460,28 @@ step.util = {
 			passageContainer.addClass("active");
 			var availableOptions = step.util.activePassage().get("options");
 			if ((typeof availableOptions === "string") && (availableOptions.indexOf("C") > -1) &&  // Color grammar is available
-				(passageContainer.find(".passageContent").length > 0)) // Has passage content
-					$("#colorgrammar-icon").show();
-			else
+				(passageContainer.find(".passageContent").length > 0)) { // Has passage content
+				$("#colorgrammar-icon").show();
+				$('#sideBargenderNumClrs').show();
+				$('#colorAdvancedConfig').show();
+				$('#noColorGrammar').hide();
+				if (passageContainer.data("ntCSS") === "")
+					$("#sideBarVerbClrs").hide();
+				else
+					$("#sideBarVerbClrs").show();
+				if (passageContainer.data("otCSS") === "")
+					$("#sideBarHVerbClrs").hide();
+				else
+					$("#sideBarHVerbClrs").show();
+			}
+			else {
 				$("#colorgrammar-icon").hide();
+				$('#colorAdvancedConfig').hide();
+				$('#sideBargenderNumClrs').hide();
+				$('#noColorGrammar').show();
+                $("#sideBarVerbClrs").hide();
+				$("#sideBarHVerbClrs").hide();
+			}
             return val;
         }
 

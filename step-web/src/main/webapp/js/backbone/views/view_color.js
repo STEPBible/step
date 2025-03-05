@@ -25,8 +25,13 @@ var ColorView = Backbone.View.extend({
         var selectedOptions = activePassage.get("selectedOptions");
         if ((typeof selectedOptions === "string") && (selectedOptions.indexOf("C") == -1)) { // Color grammar not selected
             var availableOptions = activePassage.get("options");
-            if ((typeof availableOptions === "string") && (availableOptions.indexOf("C") > -1)) // Color grammar is available
-                activePassage.set("selectedOptions", selectedOptions + "C");
+            if ((typeof availableOptions === "string") && (availableOptions.indexOf("C") > -1)) { // Color grammar is available
+                if (typeof c4 === "undefined") cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
+                if (c4[C_Greek][C_enableVerbClr] || // Enabled Greek verb color code 
+                    c4[C_enableGenderNumberClr] ||  // Or enabled noun
+                    c4[C_OT][C_enableVerbClr] )     // Or enabled OT verb color code 
+                    activePassage.set("selectedOptions", selectedOptions + "C");
+            }
         }
         this.render();
     },

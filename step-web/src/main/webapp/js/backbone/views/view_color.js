@@ -38,7 +38,6 @@ var ColorView = Backbone.View.extend({
     render: function () {
 
         var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
-
         var colorTab = $(_.template(this.colorTemplate)({ jsVersion: jsVersion }));
         $("div#color.tab-pane.active").empty().append(colorTab);
 //        this.$el.append(colorTab);

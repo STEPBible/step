@@ -2234,9 +2234,9 @@ step.util = {
     },
 	showConfigGrammarColor: function (e) {
         if (e) e.preventDefault();
-		$(".closeSidebar").click(); // close sidebar in case color configuration is shown in sidebar
-		$("#color").empty();
-//		step.sidebar = null;
+		$("#sideBargenderNumClrs").empty(); // empty the color configuration in the sidebar
+		$("#sideBarVerbClrs").empty();      // because they will conflict with the color configuration 
+		$("#sideBarHVerbClrs").empty();     // in the modal.
         var element = document.getElementById('grammarClrModal');
         if (element) element.parentNode.removeChild(element);
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";

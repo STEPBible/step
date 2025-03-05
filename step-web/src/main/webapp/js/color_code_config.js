@@ -984,7 +984,6 @@ function userUpdateAnimation(itemNumber) {
         _.find(tempIndexArray, function(obj) { return obj.name == r.nameOfItemCombinedWithCurrentItem[i]; }).array );
     }
     var indexToUlVerbCSS;
-    debugger;
     if ((document.getElementById('inAnimateCheckbox' + itemNumber).checked) &&
       (currentULForItem !== '2 lines') && (currentULForItem !== 'Underline')) {
       c4[C_Greek][C_inAnimate][itemNumber] = true;

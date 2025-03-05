@@ -40,6 +40,7 @@ function initializeClrCodeSidebar() {
   enableOrDisableAdvancedToolsButtons();
   enableOrDisableAdvancedToolsButtons('OT');
   enableOrDisableVerbAndNounButtonsSideBar();
+  $(".underlineSelect").chosen({width: "85%",disable_search:true});
   cf.refreshClrGrammarCSS();
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
@@ -77,8 +78,10 @@ function addVerbSideBar() {
     '</td>' +
     '<td><h2>Greek Verbs</td></tr>';
     for (var i = 0; i < yAxisItems.length; i += 1) {
+      var tenseMood = getAllTenseMoodForThisGroup(r, 0, i);
+      var verbClass = "v" + tenseMood.y[0] + "a" + tenseMood.x[0];
       htmlTable += '<tr>';
-      htmlTable += '<td>' + descOfYAxisItems[i] + '</td>';
+      htmlTable += '<td class="' + verbClass + '">' + descOfYAxisItems[i] + '</td>';
       htmlTable += '<td>' + htmlToAdd5(i, "", false) + '</td>';
       htmlTable += '</tr>';
     }
@@ -804,7 +807,9 @@ function addOTVerbSideBar() {
     '<td><h2>Hebrew Verbs</td></tr>';
   for (var i = 0; i < yAxisItems.length; i += 1) {
     htmlTable += '<tr>';
-    htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT', true /* paddingRequiredForSidebar */ );
+    var verbClass = voicesInFormAndStem(0, i).split('class="')[1].split('"')[0];
+    htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT', true, /* paddingRequiredForSidebar */
+      verbClass);
     htmlTable += '<td>' + htmlToAdd5(i, 'OT', false) + '</td>';
     htmlTable += '</tr>';
   }
@@ -979,6 +984,7 @@ function userUpdateAnimation(itemNumber) {
         _.find(tempIndexArray, function(obj) { return obj.name == r.nameOfItemCombinedWithCurrentItem[i]; }).array );
     }
     var indexToUlVerbCSS;
+    debugger;
     if ((document.getElementById('inAnimateCheckbox' + itemNumber).checked) &&
       (currentULForItem !== '2 lines') && (currentULForItem !== 'Underline')) {
       c4[C_Greek][C_inAnimate][itemNumber] = true;
@@ -1319,14 +1325,16 @@ function updateHtmlForYAxis() {
         return $.trim($(this).text()) == currentULForItem;
       })
       .prop('selected', true);
-    var temp = ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline') && (c4[C_enableAdvancedTools]) );
-    hideIndividualInputField('#inAnimate' + i, temp);
-    hideIndividualInputField('#inAnimateCheckbox' + i, temp);
-    if ((c4[C_Greek][C_inAnimate][i]) && (c4[C_enableAdvancedTools])) {
-      document.getElementById('inAnimateCheckbox' + i).checked = true;
-      if ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline'))
-        userUpdateAnimation(i);
-    } else document.getElementById('inAnimateCheckbox' + i).checked = false;
+    if ($('#inAnimate' + i).length == 1) {
+      var temp = ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline') && (c4[C_enableAdvancedTools]) );
+      hideIndividualInputField('#inAnimate' + i, temp);
+      hideIndividualInputField('#inAnimateCheckbox' + i, temp);
+      if ((c4[C_Greek][C_inAnimate][i]) && (c4[C_enableAdvancedTools])) {
+        document.getElementById('inAnimateCheckbox' + i).checked = true;
+        if ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline'))
+          userUpdateAnimation(i);
+      } else document.getElementById('inAnimateCheckbox' + i).checked = false;
+    }
   }
   numOfRows = cf.getVariablesForOTVerbTable('H').nameOfYAxisItems.length;
   for (var counter = 0; counter < numOfRows; counter += 1) {
@@ -1797,16 +1805,17 @@ function updateNounInputFields(inputOnOff) {
 }
 
 function hideIndividualInputField(fieldName, inputOnOff, skipShow) {
-    if (inputOnOff) {
-      $(fieldName).attr('disabled', false);
-      $(fieldName).attr('hidden', false);
-      if (skipShow == null)
-        $(fieldName).show();
-    } else {
-      $(fieldName).attr('disabled', true);
-      $(fieldName).attr('hidden', true);
-      $(fieldName).hide();
-    }
+  if ($(fieldName).length == 0) return;
+  if (inputOnOff) {
+    $(fieldName).attr('disabled', false);
+    $(fieldName).attr('hidden', false);
+    if (skipShow == null)
+      $(fieldName).show();
+  } else {
+    $(fieldName).attr('disabled', true);
+    $(fieldName).attr('hidden', true);
+    $(fieldName).hide();
+  }
 }
 
 function hideOrDisplayIndividualClrInputField(fieldName, inputOnOff) {
@@ -2028,27 +2037,29 @@ function htmlToAdd5(i, otVerb, addAnimation) {
     'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y", "' + i + '")\'>';
   if (addAnimation)
     result += '<br>';
-  result += '<select id="slctUl' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInpt1" ' +
+  result += '<select id="slctUl' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInpt1 underlineSelect" ' +
     'onchange=\'userUpdate' + otPrefix +'YAxisItem("' + i + '", value)\'';
   if ((otPrefix != 'OT') && addAnimation)result += ' style="width: 52px"';
   result += '>' +
-    '<option value="ulSolid">Underline</option>' +
-    '<option value="ulDoubleSolid">2 lines</option>' +
-    '<option value="ulDash">Dash</option>' +
-    '<option value="ulDashDot">Dash Dot</option>' +
-    '<option value="ulDashDotDot">Dash Dot Dot</option>' +
-    '<option value="ulDot">Dots</option>' +
-    '<option value="ulWave">Wave</option>' +
-    '<option value="ulArrow">Arrow</option>' +
-    '<option value="ulShortArrow">Short Arrow</option>' +
-    '<option value="ulReverseArrow">Reverse Arrow</option>' +
-    '<option value="ulShortReverseArrow">Short Reverse Arrow</option>' +
+    '<option data-img-src="images/Solid.png" value="ulSolid">Underline</option>' +
+    '<option data-img-src="images/DoubleSolid.png" value="ulDoubleSolid">2 lines</option>' +
+    '<option data-img-src="images/Dash.png" value="ulDash">Dash</option>' +
+    '<option data-img-src="images/DashDot.png" value="ulDashDot">Dash Dot</option>' +
+    '<option data-img-src="images/DashDotDot.png" value="ulDashDotDot">Dash Dot Dot</option>' +
+    '<option data-img-src="images/Dot.png" value="ulDot">Dots</option>' +
+    '<option data-img-src="images/Wave.png" value="ulWave">Wave</option>' +
+    '<option data-img-src="images/Arrow.png" value="ulArrow">Arrow</option>' +
+    '<option data-img-src="images/ShortArrow.png" value="ulShortArrow">Short Arrow</option>' +
+    '<option data-img-src="images/ReverseArrow.png" value="ulReverseArrow">Reverse Arrow</option>' +
+    '<option data-img-src="images/ShortReverseArrow.png" value="ulShortReverseArrow">Short Reverse Arrow</option>' +
     '</select>';
-  var displayStyle = (addAnimation) ? ' ' : ' style="display:none" ';
-  var advancedtoolsClass = (addAnimation) ? ' class="advancedtools" ' : ' ';
-  if (otPrefix !== "OT") result += '<br><span' + displayStyle + 'id="inAnimate' + i + '"' + advancedtoolsClass + '>' +
-    'Animate:<input' + displayStyle + 'id="inAnimateCheckbox' + i + '"' + advancedtoolsClass + 
-    'type="checkbox" onchange=\'userUpdateAnimation("' + i + '")\'></span>';
+  if (addAnimation) {
+    var displayStyle = (addAnimation) ? ' ' : ' style="display:none" ';
+    var advancedtoolsClass = (addAnimation) ? ' class="advancedtools" ' : ' ';
+    if (otPrefix !== "OT") result += '<br><span' + displayStyle + 'id="inAnimate' + i + '"' + advancedtoolsClass + '>' +
+      'Animate:<input' + displayStyle + 'id="inAnimateCheckbox' + i + '"' + advancedtoolsClass + 
+      'type="checkbox" onchange=\'userUpdateAnimation("' + i + '")\'></span>';
+  }
   return result;
 }
 
@@ -2158,7 +2169,7 @@ function addTitleToXAxisSideBar(descOfXAxisItems) {
   return htmlTable;
 }
 
-function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar) {
+function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar, verbClass) {
   var htmlTable = '';
   var curYTitles = ((ot != undefined) && (ot == 'OT')) ? c4[C_OT][C_verbTableYHeader] : c4[C_Greek][C_verbTableYHeader];
   if ((curYTitles != null) && (!forSideBar) && (xAxisRowSpan == 3)) { // screen size might not be wide enough for help quicklink
@@ -2176,7 +2187,7 @@ function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar)
       descOfYAxisItems += " (" + __s["tense_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
   else if (__s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")])
       descOfYAxisItems += " (" + __s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
-  htmlTable += (forSideBar) ? '<td style="padding-top:22">' : '<td>';
+  htmlTable += (forSideBar) ? '<td style="padding-top:22" class="' + verbClass + '">' : '<td>';
   htmlTable += descOfYAxisItems + '</td>';
   return htmlTable;
 }

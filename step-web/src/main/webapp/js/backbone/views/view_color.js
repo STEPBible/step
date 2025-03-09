@@ -48,7 +48,7 @@ var ColorView = Backbone.View.extend({
         var colorTab = $(_.template(this.colorTemplate)({ jsVersion: jsVersion }));
         if (step.touchDevice && !step.touchWideDevice) {
             step.util.showLongAlert("", "<b>" + __s.display_grammarColor + "</b>", [ colorTab ]);
-            this.closeSidebar();
+            // this.closeSidebar();
             step.sidebar = null;
             $(".closeColumn").click(function (ev) {
                 step.util.closeModal("showLongAlertModal");

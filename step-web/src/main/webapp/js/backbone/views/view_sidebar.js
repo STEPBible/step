@@ -738,40 +738,8 @@ var SidebarView = Backbone.View.extend({
 	},
 
     _prepIndentNTDef: function(mediumDef) {
-        var parts = mediumDef.split(/<ref/i);
-        var pos = parts[0].indexOf(";");
-        var addedLineBreaks = false;
-        if (pos > -1) {
-            parts[0] = parts[0].replace(/;/g, ";<br>");
-            addedLineBreaks = true;
-        }
-        for (var ii = 1; ii < parts.length; ii++ ) {
-            partsInRef = parts[ii].split("</ref>");
-            if (partsInRef.length > 2) {
-                console.log("more than 2 parts " + ii + " " + parts[ii] + " " + mainWord.mediumDef);
-                continue;
-            }
-            if (partsInRef.length == 2) {
-                var pos = partsInRef[1].indexOf(";");
-                if (pos > -1) {
-                    if (partsInRef[1].trim().length > 1) {
-                        parts[ii] = partsInRef[0] + "</ref>" + partsInRef[1].replace(/;/g, ";<br>");
-                        addedLineBreaks = true;
-                    }
-                }
-            }
-        }
-        if (addedLineBreaks) {
-            var result = "";
-            for (var jj = 0; jj < parts.length; jj++ ) {
-                if (jj > 0) 
-                    result += "<ref";
-                result += parts[jj]
-            }
-            return [ addedLineBreaks, 
-                result.replace(/<br \/>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>").replace(/<br>\s*<br>/gi, "<br>") ];
-        }
-        return [ addedLineBreaks, mediumDef ];
+        const containsBr = mediumDef.indexOf("<br") !== -1;
+        return [ containsBr, mediumDef ];
     },
 
     _indentOTDefinition: function(origMediumDef, stem) {
@@ -907,8 +875,8 @@ var SidebarView = Backbone.View.extend({
                 var def = function1ToCall(data.def);
                 var addLineBreaks = false;
                 if (data.strong.charAt(0) === "G") {
-                    def = def[1];
                     addLineBreaks = def[0];
+                    def = def[1];
                 }
                 function2ToCall(panel, def, currentWordLanguageCode, bibleVersion, addLineBreaks);
                 function3ToCall(panel, bibleVersion);

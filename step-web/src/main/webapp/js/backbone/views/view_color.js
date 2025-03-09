@@ -46,7 +46,16 @@ var ColorView = Backbone.View.extend({
 
         var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
         var colorTab = $(_.template(this.colorTemplate)({ jsVersion: jsVersion }));
-        $("div#color.tab-pane.active").empty().append(colorTab);
+        if (step.touchDevice && !step.touchWideDevice) {
+            step.util.showLongAlert("", "<b>" + __s.display_grammarColor + "</b>", [ colorTab ]);
+            this.closeSidebar();
+            step.sidebar = null;
+            $(".closeColumn").click(function (ev) {
+                step.util.closeModal("showLongAlertModal");
+            });
+        }
+        else
+            $("div#color.tab-pane.active").empty().append(colorTab);
     },
     onClickClose: function () {
         step.util.showOrHideTutorial(true);

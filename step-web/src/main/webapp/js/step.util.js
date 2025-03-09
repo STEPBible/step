@@ -1495,7 +1495,8 @@ step.util = {
                 } else if (mode == null) {
                     //simply toggle it
                     step.sidebar.trigger("toggleOpen");
-                } else if (step.sidebar.get("mode") != mode) {
+                } else if ((step.sidebar.get("mode") != mode) ||
+					((mode === "color") && step.touchDevice && !step.touchWideDevice)) {
                     step.sidebar.save({ mode: mode });
                 } else {
                     //there is a mode, which is non null, but the save wouldn't do anything, to force open
@@ -3106,7 +3107,7 @@ step.util = {
 		)()).modal("show");
 		if (panelBodies != null) {
 			if (panelBodies.length == 1) {
-				$(".modal-body").append(panelBodies[0]);
+				$("#showLongAlertModal .modal-body").append(panelBodies[0]);
 				if (typeof panelBodies[0] === "string") {
 					var pos = panelBodies[0].indexOf("id=\"welcomeExamples");
 					if (pos > 1 && pos < 10) // Reduce padding for the welcome (Q&A) modal

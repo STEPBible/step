@@ -77,8 +77,13 @@ function addVerbSideBar() {
       '</div>' +
     '</td>' +
     '<td><h2>Greek Verbs</td></tr>';
-    for (var i = 0; i < yAxisItems.length; i += 1) {
-      var tenseMood = getAllTenseMoodForThisGroup(r, 0, i);
+    var firstMoodOn;
+    for (firstMoodOn = 0; firstMoodOn < c4[C_Greek][C_moodsOnOff].length; firstMoodOn ++) {
+      if (c4[C_Greek][C_moodsOnOff][firstMoodOn])
+        break;
+    }
+    for (var i = 0; i < yAxisItems.length; i ++) {
+      var tenseMood = getAllTenseMoodForThisGroup(r, firstMoodOn, i);
       var verbClass = "v" + tenseMood.y[0] + "a" + tenseMood.x[0];
       htmlTable += '<tr>';
       htmlTable += '<td class="' + verbClass + '">' + descOfYAxisItems[i] + '</td>';
@@ -86,7 +91,7 @@ function addVerbSideBar() {
       htmlTable += '</tr>';
     }
     htmlTable += '<tr></tr>';
-    htmlTable += addTitleToXAxisSideBar(descOfXAxisItems);
+    htmlTable += addTitleToXAxisSideBar(descOfXAxisItems, r);
     htmlTable += htmlToAdd6('', true);
     htmlTable += '</table><br>';
     htmlTable = $(htmlTable);
@@ -646,13 +651,13 @@ function addNounSideBar() {
           '</div>' +
         '</td>' +
         '<td><h2>Gender & Number</td></tr>' +
-        '<tr><td>Masculine:</td>' +
+        '<tr><td class="sing mas">Masculine:</td>' +
         '<td><input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
         '</tr>' +
-        '<tr><td>Feminine:</td>' +
+        '<tr><td class="sing fem">Feminine:</td>' +
         '<td><input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
         '</tr>' +
-        '<tr><td>Neuter:</td>' +
+        '<tr><td class="sing neut">Neuter:</td>' +
         '<td><input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
         '</tr>' +
         '<tr><td>Singular:</td>' +
@@ -663,7 +668,7 @@ function addNounSideBar() {
                 '<option value="bold_italic">Bold and Italic</option>' +
             '</select></tr>' +
         '</tr>' +
-        '<tr><td>Plural:</td>' +
+        '<tr><td class="plur">Plural:</td>' +
             '<td><select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
                 '<option value="normal">Normal</option>' +
                 '<option value="normal_italic">Normal and Italic</option>' +
@@ -702,8 +707,9 @@ function addOtTitleToXAxisSideBar(descOfHebrewXAxisItems, descOfAramaicwXAxisIte
   var htmlTable = '<tr>';
   var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
+    var verbClass = voicesInFormAndStem(j, 0).split('class="')[1].split('"')[0];
     var shortenName = descOfXAxisItems[j].split("<br")[0] + " etc";
-    htmlTable += '<tr><td>' + shortenName + '</td>';
+    htmlTable += '<tr><td class="' + verbClass + '">' + shortenName + '</td>';
     htmlTable += '<td>' + htmlToAdd3(j, 'OT', false) + '</td>';
     htmlTable += '</tr>';
   }
@@ -2070,7 +2076,14 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   }
   else c4Ref = c4[C_Greek];
   var result = "";
-  if (callFromSidebar) result += "<tr><td>"
+  if (callFromSidebar) {
+    result += "<tr><td";
+    if (otPrefix === '')
+      result += ' class="vppi"';
+    else if (otPrefix === 'OT')
+      result += ' class="vot_R0C1"';
+    result += '>'
+  }
   result += '<span>Passive';
   if (callFromSidebar) 
     result += '</span></td><td>';
@@ -2093,7 +2106,14 @@ function htmlToAdd6(otVerb, callFromSidebar) {
         'value="' + c4Ref[C_inPassiveUlClr2] + '"/>';
     result += '<br><br>';
   }
-  if (callFromSidebar) result += "<tr><td>"
+  if (callFromSidebar) {
+    result += "<tr><td";
+    if (otPrefix === '')
+      result += ' class="vpmi"';
+    else if (otPrefix === 'OT')
+      result += ' class="vot_R0C2"';
+    result += '>'
+  }
   result += '<span>Middle';
   if (callFromSidebar) 
     result += '</span></td><td>';
@@ -2140,10 +2160,6 @@ function addTitleToXAxis(descOfXAxisItems) {
   htmlTable += '<tr>';
   for (var j = 0; j < descOfXAxisItems.length; j += 1) {
     htmlTable += '<td class="tg-yw4l"';
-      if (__s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
-          descOfXAxisItems[j] += " (" + __s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
-      else if (__s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
-          descOfXAxisItems[j] += " (" + __s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
       if (descOfXAxisItems[j].length < 10) htmlTable += ' width=72';
     htmlTable += '>' + descOfXAxisItems[j];
     htmlTable += htmlToAdd3(j, "", true);
@@ -2153,14 +2169,17 @@ function addTitleToXAxis(descOfXAxisItems) {
   return htmlTable;
 }
 
-function addTitleToXAxisSideBar(descOfXAxisItems) {
+function addTitleToXAxisSideBar(descOfXAxisItems, r) {
   var htmlTable = '';
+  var firstTenseOn;
+  for (firstTenseOn = 0; firstTenseOn < c4[C_Greek][C_tensesOnOff].length; firstTenseOn ++) {
+    if (c4[C_Greek][C_tensesOnOff][firstTenseOn])
+      break;
+  }
   for (var j = 0; j < descOfXAxisItems.length; j += 1) {
-    htmlTable += '<tr><td>';
-      if (__s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
-          descOfXAxisItems[j] += " (" + __s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
-      else if (__s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
-          descOfXAxisItems[j] += " (" + __s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
+    var tenseMood = getAllTenseMoodForThisGroup(r, j, firstTenseOn);
+    var verbClass = "v" + tenseMood.y[0] + "a" + tenseMood.x[0];
+    htmlTable += '<tr><td class="' + verbClass + '">';
     htmlTable += descOfXAxisItems[j] + '</td>';
     htmlTable += '<td>' + htmlToAdd3(j, "", false) + '</td>';
     htmlTable += '</tr>';
@@ -2182,10 +2201,6 @@ function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar,
       title_range_low += rowsCovered;
     }
   }
-  if (__s["tense_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")])
-      descOfYAxisItems += " (" + __s["tense_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
-  else if (__s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")])
-      descOfYAxisItems += " (" + __s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
   htmlTable += (forSideBar) ? '<td style="padding-top:22" class="' + verbClass + '">' : '<td>';
   htmlTable += descOfYAxisItems + '</td>';
   return htmlTable;

@@ -529,6 +529,7 @@
                                     <replacement><token>C_userProvidedSortOrder</token><value>18</value></replacement>
                                     <replacement><token>C_updatedGenderNumberCSS</token><value>19</value></replacement>
                                     <replacement><token>C_userTurnGenderNumberFromOffToOn</token><value>20</value></replacement>
+									<replacement><token>C_uLBASEIMGSVoice</token><value>21</value></replacement>
                                     <replacement><token>C_c4Version</token><value>9</value></replacement>
 									<replacement><token>createC4([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>calcAnimationPixelIncrement([:(])</token><value>zB$1</value></replacement>

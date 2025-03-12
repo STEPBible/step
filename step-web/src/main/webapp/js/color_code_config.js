@@ -77,21 +77,19 @@ function addVerbSideBar() {
       '</div>' +
     '</td>' +
     '<td><h2>Greek Verbs</td></tr>';
-    var firstMoodOn;
-    for (firstMoodOn = 0; firstMoodOn < c4[C_Greek][C_moodsOnOff].length; firstMoodOn ++) {
-      if (c4[C_Greek][C_moodsOnOff][firstMoodOn])
-        break;
-    }
+
     for (var i = 0; i < yAxisItems.length; i ++) {
-      var tenseMood = getAllTenseMoodForThisGroup(r, firstMoodOn, i);
-      var verbClass = "v" + tenseMood.y[0] + "a" + tenseMood.x[0];
+      var cssClass = 'class="tensePreview' + i;
+      if (c4[C_Greek][C_tensesOnOff][i])
+        cssClass += ' ul' + c4[C_Greek][C_slctUlVerbItem][i].replace(/\s/g, ""); 
+      cssClass += '"';
       htmlTable += '<tr>';
-      htmlTable += '<td class="' + verbClass + '">' + descOfYAxisItems[i] + '</td>';
+      htmlTable += '<td style="padding-bottom:12px" ' + cssClass + '>' + descOfYAxisItems[i] + '</td>';
       htmlTable += '<td>' + htmlToAdd5(i, "", false) + '</td>';
       htmlTable += '</tr>';
     }
     htmlTable += '<tr></tr>';
-    htmlTable += addTitleToXAxisSideBar(descOfXAxisItems, r);
+    htmlTable += addTitleToXAxisSideBar(descOfXAxisItems);
     htmlTable += htmlToAdd6('', true);
     htmlTable += '</table><br>';
     htmlTable = $(htmlTable);
@@ -707,9 +705,8 @@ function addOtTitleToXAxisSideBar(descOfHebrewXAxisItems, descOfAramaicwXAxisIte
   var htmlTable = '<tr>';
   var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
-    var verbClass = voicesInFormAndStem(j, 0).split('class="')[1].split('"')[0];
     var shortenName = descOfXAxisItems[j].split("<br")[0] + " etc";
-    htmlTable += '<tr><td class="' + verbClass + '">' + shortenName + '</td>';
+    htmlTable += '<tr><td style="text-decoration:underline solid 33%" class="stemPreview' + j + '">' + shortenName + '</td>';
     htmlTable += '<td>' + htmlToAdd3(j, 'OT', false) + '</td>';
     htmlTable += '</tr>';
   }
@@ -813,9 +810,11 @@ function addOTVerbSideBar() {
     '<td><h2>Hebrew Verbs</td></tr>';
   for (var i = 0; i < yAxisItems.length; i += 1) {
     htmlTable += '<tr>';
-    var verbClass = voicesInFormAndStem(0, i).split('class="')[1].split('"')[0];
+    var cssClass = 'formPreview' + i;
+    if (c4[C_OT][C_yAxisOnOff][i])
+      cssClass += ' ul' + c4[C_OT][C_slctUlVerbItem][i].replace(/\s/g, ""); 
     htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT', true, /* paddingRequiredForSidebar */
-      verbClass);
+      cssClass);
     htmlTable += '<td>' + htmlToAdd5(i, 'OT', false) + '</td>';
     htmlTable += '</tr>';
   }
@@ -839,12 +838,25 @@ function userUpdateYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
   cf.updtLocalStorage();
   cf.createUlForAllItemsInYAndX();
   updateHtmlForYAxis();
+  updatePreviewAtSideBar('tensePreview' + itemNumberOfYAxis, nameOfUnderline)
 }
   
 function userUpdateOTYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
   c4[C_OT][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
   cf.updtLocalStorage();
   cf.createUlForOTYAxis(itemNumberOfYAxis);
+  updatePreviewAtSideBar('formPreview' + itemNumberOfYAxis, nameOfUnderline)
+}
+
+function updatePreviewAtSideBar(className, nameOfUnderline) {
+  var element = $('.' + className);
+  if (element.length > 0) {
+    element.removeClass()
+      .addClass(className)
+      .addClass(nameOfUnderline);
+    var srcImgObj = _.find(cv[C_uLBASEIMGS], function(obj) { return obj.name === nameOfUnderline; });
+    $('.' + nameOfUnderline).css('background', 'url(' + srcImgObj.img.src + ') repeat-x 100% 100%');
+  }
 }
 
 function userSwapAxis() {
@@ -900,7 +912,19 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
     }
     else {
       if (axis == 'X') c4[C_OT][C_xAxisOnOff][index] = !c4[C_OT][C_xAxisOnOff][index];
-      else c4[C_OT][C_yAxisOnOff][index] = !c4[C_OT][C_yAxisOnOff][index];
+      else {
+        c4[C_OT][C_yAxisOnOff][index] = !c4[C_OT][C_yAxisOnOff][index];
+        if ($('#sideBarHVerbClrs').length > 0) {
+          if (c4[C_OT][C_yAxisOnOff][index]) {
+            var cssClass = 'ul' + c4[C_OT][C_slctUlVerbItem][index].replace(/\s/g, ""); 
+            updatePreviewAtSideBar('formPreview' + index, cssClass);
+          }
+          else {
+            $('.formPreview' + index).removeClass().addClass('formPreview' + index);
+            $('.formPreview' + index).css('background', "none");
+          }
+        }
+      }
     }
   }
   else {
@@ -910,7 +934,19 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
     }
     else {
       if (index == null) c4[C_Greek][C_granularControlOfTenses] = !c4[C_Greek][C_granularControlOfTenses];
-      else c4[C_Greek][C_tensesOnOff][index] = !c4[C_Greek][C_tensesOnOff][index];
+      else {
+        c4[C_Greek][C_tensesOnOff][index] = !c4[C_Greek][C_tensesOnOff][index];
+        if ($('#sideBarVerbClrs').length > 0) {
+          if (c4[C_Greek][C_tensesOnOff][index]) {
+            var cssClass = 'ul' + c4[C_Greek][C_slctUlVerbItem][index].replace(/\s/g, ""); 
+            updatePreviewAtSideBar('tensePreview' + index, cssClass);
+          }
+          else {
+            $('.tensePreview' + index).removeClass().addClass('tensePreview' + index);
+            $('.tensePreview' + index).css('background', "none");
+          }
+        }
+      }
     }
   }
   cf.updtLocalStorage();
@@ -919,13 +955,27 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
 }
 
 function userToggleClrGrammar(grammarFunction) {
-    var checkedValue;
-    if (document.getElementById(grammarFunction + 'onoffswitch').checked) checkedValue = true;
-    else checkedValue = false;
+    var checkedValue = document.getElementById(grammarFunction + 'onoffswitch').checked;
     if ((grammarFunction === 'verb') || (grammarFunction === 'verb2')) {
       c4[C_Greek][C_enableVerbClr] = checkedValue;
       cf.updtLocalStorage();
       updateVerbInputFields(checkedValue);
+      if (grammarFunction === 'verb2') {
+        if (!step.touchDevice || step.touchWideDevice)
+          $('.underlineSelect').hide();
+        if (checkedValue) {
+          $('.vrbInptX').show();
+          $('.vrbInptY').show();
+          $("#sideBarVerbClrs").find(".chosen-container").removeClass('chosen-disabled');
+          cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
+          cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");  
+        }
+        else {
+          $('.vrbInptX').hide();
+          $('.vrbInptY').hide();
+          $("#sideBarVerbClrs").find(".chosen-container").addClass('chosen-disabled');
+        }
+      }
     }
     else if ((grammarFunction === 'gennum') || (grammarFunction === 'gennum2')) {
       updateNounInputFields(checkedValue);
@@ -937,6 +987,22 @@ function userToggleClrGrammar(grammarFunction) {
       c4[C_OT][C_enableVerbClr] = checkedValue;
       cf.updtLocalStorage();
       updateVerbInputFields(checkedValue, 'OT');
+      if (grammarFunction === 'OTverb2') {
+        if (!step.touchDevice || step.touchWideDevice)
+          $('.underlineSelect').hide();
+        if (checkedValue) {
+          $('.OTvrbInptX').show();
+          $('.OTvrbInptY').show();
+          $("#sideBarHVerbClrs").find(".chosen-container").removeClass('chosen-disabled');
+          cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
+          cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");  
+        }
+        else {
+           $('.OTvrbInptX').hide();
+           $('.OTvrbInptY').hide();
+           $("#sideBarHVerbClrs").find(".chosen-container").addClass('chosen-disabled');
+        }
+      }
     }
     cf.refreshClrGrammarCSS();
     if ((grammarFunction === 'verb') && (checkedValue) && (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);
@@ -946,12 +1012,14 @@ function userUpdateClr(itemNumber, color) {
   c4[C_Greek][C_inClrVerbItem][itemNumber] = color;
   cf.updtLocalStorage();
   cf.createUlForAllItemsInYAndX();
+  cf.updateMoodPreview();
 }
 
 function userUpdateOTClr(itemNumber, color) {
   c4[C_OT][C_inClrVerbItem][itemNumber] = color;
   cf.updtLocalStorage();
   cf.createUlFor_OT();
+  cf.updateStemPreview();
 }
 
 function userUpdateNounClr(gender, color) {
@@ -1905,6 +1973,8 @@ function updateVerbsBkgrd(voice) {
     var srcImgObj = _.find(cv[C_uLBASEIMGS], function(obj) { return obj.name == selectedUnderline; });
     cf.updateUlForSpecificYAxis(cv[C_ulVerbCSS][indexToUlVerbCSS], srcImgObj, selectedClr, indexToUlVerbCSS);
   }
+  cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
+  cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");
 }
 
 function getVerbItemsCombinedWithCurrentItem(axis, itemNumber) {
@@ -2079,9 +2149,9 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   if (callFromSidebar) {
     result += "<tr><td";
     if (otPrefix === '')
-      result += ' class="vppi"';
+      result += ' class="passivePreview"';
     else if (otPrefix === 'OT')
-      result += ' class="vot_R0C1"';
+      result += ' class="otPassivePreview"';
     result += '>'
   }
   result += '<span>Passive';
@@ -2109,9 +2179,9 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   if (callFromSidebar) {
     result += "<tr><td";
     if (otPrefix === '')
-      result += ' class="vpmi"';
+      result += ' class="middlePreview"';
     else if (otPrefix === 'OT')
-      result += ' class="vot_R0C2"';
+      result += ' class="otMiddlePreview"';
     result += '>'
   }
   result += '<span>Middle';
@@ -2169,17 +2239,10 @@ function addTitleToXAxis(descOfXAxisItems) {
   return htmlTable;
 }
 
-function addTitleToXAxisSideBar(descOfXAxisItems, r) {
+function addTitleToXAxisSideBar(descOfXAxisItems) {
   var htmlTable = '';
-  var firstTenseOn;
-  for (firstTenseOn = 0; firstTenseOn < c4[C_Greek][C_tensesOnOff].length; firstTenseOn ++) {
-    if (c4[C_Greek][C_tensesOnOff][firstTenseOn])
-      break;
-  }
   for (var j = 0; j < descOfXAxisItems.length; j += 1) {
-    var tenseMood = getAllTenseMoodForThisGroup(r, j, firstTenseOn);
-    var verbClass = "v" + tenseMood.y[0] + "a" + tenseMood.x[0];
-    htmlTable += '<tr><td class="' + verbClass + '">';
+    htmlTable += '<tr><td style="text-decoration:underline solid 33%" class="moodPreview' + j + '">';
     htmlTable += descOfXAxisItems[j] + '</td>';
     htmlTable += '<td>' + htmlToAdd3(j, "", false) + '</td>';
     htmlTable += '</tr>';
@@ -2201,7 +2264,7 @@ function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar,
       title_range_low += rowsCovered;
     }
   }
-  htmlTable += (forSideBar) ? '<td style="padding-top:22" class="' + verbClass + '">' : '<td>';
+  htmlTable += (forSideBar) ? '<td style="padding-bottom:12" class="' + verbClass + '">' : '<td>';
   htmlTable += descOfYAxisItems + '</td>';
   return htmlTable;
 }

@@ -114,6 +114,7 @@ var C_axisUserSelectedToSort = 17; // TBRBMR
 var C_userProvidedSortOrder = 18; // TBRBMR
 var C_updatedGenderNumberCSS = 19; // TBRBMR
 var C_userTurnGenderNumberFromOffToOn = 20; // TBRBMR
+var C_uLBASEIMGSVoice = 21; // TBRBMR
 // End of const for c4 (current color code config), cc (color grammar const) and cv (color code variable) array index start
 
 /**
@@ -429,7 +430,9 @@ var cv = // cv = Color code grammar variables
   // C_updatedGenderNumberCSS
   false,
   // C_userTurnGenderNumberFromOffToOn
-  false
+  false,
+  // C_uLBASEIMGSVoice
+  [ new ULOBJ('ulPassive'), new ULOBJ('ulMiddle'), new ULOBJ('ulOTPassive'), new ULOBJ('ulOTMiddle') ]
 ];
 
 var c4;  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
@@ -599,7 +602,7 @@ var cf = {
 	  cf.createUlReverseArrow();
 	  cf.createUlShortReverseArrow();
 	  cf.createUl_Dash();
-	  cf.createUlSolid();
+	  cf.createUlSolid(cv[C_uLBASEIMGS][2]);
 	  cf.createUlDash_Dot();
 	  cf.createUlDashDotDot();
 	  cf.createUlNone();
@@ -726,8 +729,8 @@ var cf = {
     ulDash.animIncrement = cf.calcAnimationPixelIncrement(ulDash.canvas.width);
   },
 
-  createUlSolid: function() {
-    var ulSolid = cv[C_uLBASEIMGS][2];
+  createUlSolid: function(baseImage) {
+    var ulSolid = baseImage;
     ulSolid.canvas = cf.createCanvas(ulSolid.name, 1, 10);
     ulSolid.context = ulSolid.canvas.getContext('2d', { willReadFrequently: true } );
     ulSolid.context.beginPath();
@@ -893,6 +896,8 @@ var cf = {
         cv[C_aramaicStemIndex2CSS][ c4[C_OT][C_orderOfAramaicStem][counter3] ] = colIndex2;
       }
     }
+    cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
+    cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");
   },
 
   createUlForAllItemsInYAndX: function() {
@@ -937,9 +942,9 @@ var cf = {
     }
   },
 
-  createUlForOneInstanceOfTense: function (destImgObj, srcImgObj, color, ulVerbCSSIndex) {
+  createUlForOneInstanceOfTense: function (destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName) {
     destImgObj.canvas = cf.createCanvas(destImgObj.name, Math.max(srcImgObj.canvas.width, 26), srcImgObj.canvas.height); // Set width to the widest canvas.  The Dash-Dot-Dot canvas as a width of 26
-    cf.updateUlForSpecificYAxis(destImgObj, srcImgObj, color, ulVerbCSSIndex);
+    cf.updateUlForSpecificYAxis(destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName);
   },
 
   displayVerbUlOrNot: function (indexToUlVerbCSS) {
@@ -1025,7 +1030,61 @@ var cf = {
         }
       }
     }
+    var verbNTSidebar = $('#sideBarVerbClrs');
+    var verbOTSidebar = $('#sideBarHVerbClrs');
+    if ((verbNTSidebar.length > 0) || (verbOTSidebar.length > 0)) {
+      this.updateTenseOrFormPreview(verbNTSidebar, verbOTSidebar);
+      if (verbNTSidebar.length > 0) {
+        this.updateMoodPreview();
+        cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
+        cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");
+      }
+      if (verbOTSidebar.length > 0) {
+        this.updateStemPreview();
+        cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
+        cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");
+      }
+    }
     $('.primaryLightBg').css('text-shadow', 'none'); // Need to set it in the program, if not the browser will prioritize the CSS updated in this Javascript.
+  },
+
+  updateTenseOrFormPreview: function(verbNTSidebar, verbOTSidebar) {
+    for (var i = 0; i < cv[C_uLBASEIMGS].length; i++) {
+      var className = cv[C_uLBASEIMGS][i].name;
+      if (className === "ulDot") className = "ulDots";
+      else if (className === "ulSolid") className = "ulUnderline";
+      else if (className === "ulDoubleSolid") className = "ul2lines";
+      var elmntsOfCurrentClass = verbNTSidebar.find('.' + className);
+      if (elmntsOfCurrentClass.length > 0) {
+        if (c4[C_Greek][C_enableVerbClr])
+          elmntsOfCurrentClass.css('background', 'url(' + cv[C_uLBASEIMGS][i].img.src + ') repeat-x 100% 100%');
+        else
+          elmntsOfCurrentClass.css('background', 'none');
+      }
+      elmntsOfCurrentClass = verbOTSidebar.find('.' + className);
+      if (elmntsOfCurrentClass.length > 0) {
+        if (c4[C_OT][C_enableVerbClr])
+          elmntsOfCurrentClass.css('background', 'url(' + cv[C_uLBASEIMGS][i].img.src + ') repeat-x 100% 100%');
+        else
+          elmntsOfCurrentClass.css('background', 'none');
+      }
+    }
+  },
+
+  updateMoodPreview: function() {
+    for (var i = 0; i < c4[C_Greek][C_inClrVerbItem].length; i++) {
+      var color = ($("#axisXOnOffCheckbox" + i).prop('checked') && c4[C_Greek][C_enableVerbClr]) ?
+        c4[C_Greek][C_inClrVerbItem][i] : "var(--clrBackground)";
+      $('.moodPreview' + i).css('text-decoration-color', color);
+    }
+  },
+
+  updateStemPreview: function() {
+    for (var i = 0; i < c4[C_OT][C_inClrVerbItem].length; i++) {
+      var color = ($("#OTaxisXOnOffCheckbox" + i).prop('checked') && c4[C_OT][C_enableVerbClr]) ?
+        c4[C_OT][C_inClrVerbItem][i] : "var(--clrBackground)";
+      $('.stemPreview' + i).css('text-decoration-color', color);
+    }
   },
 
   getRowColNum: function (inputStr) {
@@ -1044,7 +1103,7 @@ var cf = {
     return [row, column];
   },
 
-  updateUlForSpecificYAxis: function (destImgObj, srcImgObj, color, ulVerbCSSIndex) {
+  updateUlForSpecificYAxis: function (destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName) {
     if (color !== undefined) {
       var backgroundClr;
       destImgObj.canvas.heigth = srcImgObj.canvas.height;
@@ -1056,10 +1115,17 @@ var cf = {
       var passiveStrokeStyle = '';
       var middleStrokeStyle = '';
       var otItem = false;
-      if (destImgObj.name.length === 3) {
-        var pos2 = destImgObj.name.substr(1, 1);
-        passiveVoice = ( (destImgObj.name.length === 3) && (pos2 === 'p') );
-        middleVoice = ( (destImgObj.name.length === 3) && (pos2 === 'm') );
+      var imgName = destImgObj.name;
+      if (typeof sideBarClassName === "string") {
+        if (sideBarClassName === "passivePreview") imgName = "ppi"; // pretent to be present passive to get the background color for passive.
+        else if (sideBarClassName === "middlePreview") imgName = "pmi"; // pretent to be present middle to get the background color for middle.
+        else if (sideBarClassName === "otPassivePreview") imgName = "R0C1"; // pretent to be row 0 column 1 to get the background color for passive.
+        else if (sideBarClassName === "otMiddlePreview") imgName = "R0C2"; // pretent to be row 0 column 2 to get the background color for middle.
+      }
+      if (imgName.length === 3) {
+        var pos2 = imgName.substr(1, 1);
+        passiveVoice = ( (imgName.length === 3) && (pos2 === 'p') );
+        middleVoice = ( (imgName.length === 3) && (pos2 === 'm') );
         if (passiveVoice) {
           if (c4[C_Greek][C_chkbxPassiveBkgrdColrValue])
             backgroundClr = c4[C_Greek][C_inPassiveBkgrdClr];
@@ -1073,8 +1139,8 @@ var cf = {
             middleStrokeStyle = c4[C_Greek][C_inMiddleUlClr1];
         }
       }
-      else if (destImgObj.name.length > 3) {
-        var r = cf.getRowColNum(destImgObj.name);
+      else if (imgName.length > 3) {
+        var r = cf.getRowColNum(imgName);
         var column = r[1];
         if (column != null) {
           otItem = true;
@@ -1097,7 +1163,6 @@ var cf = {
           }
         }
       }
-
       cf.changeImageClr(destImgObj, color, backgroundClr);
       if ((passiveVoice) && (passiveStrokeStyle != '')) {
         destImgObj.context.beginPath();
@@ -1118,13 +1183,22 @@ var cf = {
       }
       destImgObj.img.src = destImgObj.canvas.toDataURL('image/png');
       destImgObj.animIncrement = cf.calcAnimationPixelIncrement(destImgObj.canvas.width);
-      if ((destImgObj.name.length == 3) && (cf.displayVerbUlOrNot(ulVerbCSSIndex))) {
-        $('.v' + destImgObj.name).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+      if (typeof sideBarClassName === "string") {
+        if ((c4[C_Greek][C_enableVerbClr] && (imgName.length == 3)) ||
+            (c4[C_OT][C_enableVerbClr] && (otItem)))
+          $('.' + sideBarClassName).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+        else
+          $('.' + sideBarClassName).css('background', 'none');
       }
-      else if (otItem) {
-        var result = cf.getRowColNum(destImgObj.name);
-        if (cf.displayOTVerbUlOrNot(result[0], result[1]))
-          $('.vot_' + destImgObj.name).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+      else {
+        if ((imgName.length == 3) && (cf.displayVerbUlOrNot(ulVerbCSSIndex))) {
+          $('.v' + imgName).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+        }
+        else if (otItem) {
+          var result = cf.getRowColNum(imgName);
+          if (cf.displayOTVerbUlOrNot(result[0], result[1]))
+            $('.vot_' + imgName).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+        }
       }
     }
   },

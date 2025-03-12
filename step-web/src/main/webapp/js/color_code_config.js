@@ -967,8 +967,8 @@ function userToggleClrGrammar(grammarFunction) {
           $('.vrbInptX').show();
           $('.vrbInptY').show();
           $("#sideBarVerbClrs").find(".chosen-container").removeClass('chosen-disabled');
-          cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
-          cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");  
+          cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
+          cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");  
         }
         else {
           $('.vrbInptX').hide();
@@ -994,8 +994,8 @@ function userToggleClrGrammar(grammarFunction) {
           $('.OTvrbInptX').show();
           $('.OTvrbInptY').show();
           $("#sideBarHVerbClrs").find(".chosen-container").removeClass('chosen-disabled');
-          cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
-          cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");  
+          cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
+          cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");  
         }
         else {
            $('.OTvrbInptX').hide();
@@ -1973,8 +1973,8 @@ function updateVerbsBkgrd(voice) {
     var srcImgObj = _.find(cv[C_uLBASEIMGS], function(obj) { return obj.name == selectedUnderline; });
     cf.updateUlForSpecificYAxis(cv[C_ulVerbCSS][indexToUlVerbCSS], srcImgObj, selectedClr, indexToUlVerbCSS);
   }
-  cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
-  cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");
+  cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
+  cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");
 }
 
 function getVerbItemsCombinedWithCurrentItem(axis, itemNumber) {

@@ -114,7 +114,7 @@ var C_axisUserSelectedToSort = 17; // TBRBMR
 var C_userProvidedSortOrder = 18; // TBRBMR
 var C_updatedGenderNumberCSS = 19; // TBRBMR
 var C_userTurnGenderNumberFromOffToOn = 20; // TBRBMR
-var C_uLBASEIMGSVoice = 21; // TBRBMR
+var C_ulVoiceBaseImgs = 21; // TBRBMR
 // End of const for c4 (current color code config), cc (color grammar const) and cv (color code variable) array index start
 
 /**
@@ -431,7 +431,7 @@ var cv = // cv = Color code grammar variables
   false,
   // C_userTurnGenderNumberFromOffToOn
   false,
-  // C_uLBASEIMGSVoice
+  // C_ulVoiceBaseImgs
   [ new ULOBJ('ulPassive'), new ULOBJ('ulMiddle'), new ULOBJ('ulOTPassive'), new ULOBJ('ulOTMiddle') ]
 ];
 
@@ -896,8 +896,8 @@ var cf = {
         cv[C_aramaicStemIndex2CSS][ c4[C_OT][C_orderOfAramaicStem][counter3] ] = colIndex2;
       }
     }
-    cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
-    cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");
+    cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
+    cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");
   },
 
   createUlForAllItemsInYAndX: function() {
@@ -1036,13 +1036,13 @@ var cf = {
       this.updateTenseOrFormPreview(verbNTSidebar, verbOTSidebar);
       if (verbNTSidebar.length > 0) {
         this.updateMoodPreview();
-        cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
-        cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");
+        cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
+        cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");
       }
       if (verbOTSidebar.length > 0) {
         this.updateStemPreview();
-        cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
-        cf.createUlForOneInstanceOfTense(cv[C_uLBASEIMGSVoice][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");
+        cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
+        cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");
       }
     }
     $('.primaryLightBg').css('text-shadow', 'none'); // Need to set it in the program, if not the browser will prioritize the CSS updated in this Javascript.

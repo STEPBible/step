@@ -2,12 +2,12 @@ var ColorView = Backbone.View.extend({
 	colorTemplate:
         '<link href="css/color_code_grammar.<%= jsVersion %>css" rel="stylesheet"/>' +
         '<link rel="stylesheet" href="css/spectrum.css"/>' +
-        '<link rel="stylesheet" href="css/chosen.min.css">' +
-        '<link rel="stylesheet" href="css/ImageSelect.css">' +
+        // '<link rel="stylesheet" href="css/chosen.min.css">' +
+        // '<link rel="stylesheet" href="css/ImageSelect.css">' +
         '<script src="js/color_code_config.<%= jsVersion %>js"></script>' +
         '<script src="libs/spectrum.js"></script>' +
-        '<script src="libs/chosen.jquery.min.js"></script>' +
-        '<script src="libs/ImageSelect.jquery.js"></script>' +
+        // '<script src="libs/chosen.jquery.min.js"></script>' +
+        // '<script src="libs/ImageSelect.jquery.js"></script>' +
 
 		'<div id="ColorCode" class="passageContainer examplesContainer">' +
             '<div id="sideBargenderNumClrs"></div><br>' +

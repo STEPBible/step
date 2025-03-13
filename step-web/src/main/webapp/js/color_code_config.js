@@ -40,7 +40,7 @@ function initializeClrCodeSidebar() {
   enableOrDisableAdvancedToolsButtons();
   enableOrDisableAdvancedToolsButtons('OT');
   enableOrDisableVerbAndNounButtonsSideBar();
-  $(".underlineSelect").chosen({width: "85%",disable_search:true});
+  enableInfoIcon();
   cf.refreshClrGrammarCSS();
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
@@ -54,6 +54,200 @@ function initializeClrCodeSidebar() {
     $("#sideBarHVerbClrs").hide();
   else
     $("#sideBarHVerbClrs").show();
+}
+
+function enableInfoIcon() {
+  var greek_info = {};
+  var hebrew_info = {};
+  greek_info["masculine"]='Nominals are marked for grammatical gender, one of which is masculine.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/gender_masculine.html">ugg.readthedocs.io</a>)';
+  greek_info["feminine"]='Nouns, adjectives, finite verbs, participles, pronouns, pronominal suffixes, and some particles change their form is according to their grammatical gender, either masculine or feminine.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/gender_feminine.html">ugg.readthedocs.io</a>)';
+  greek_info["neuter"]='Nominals are marked for grammatical gender, one of which is neuter.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/gender.html">ugg.readthedocs.io</a>)';
+  greek_info["singular"]='Singular number is the grammatical feature which signifies that one participant is indicated by a word.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/number_singular.html">ugg.readthedocs.io</a>)';
+  greek_info["plural"]='The plural form of a term refers to two or more of that item.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/en_uhg/content/number_plural.html">ugg.readthedocs.io</a>)';
+  greek_info["present"]='Present is a verb tense-form which a speaker uses to describe an action as imperfective (either continuous or incomplete), and is often used to depict an action as being in process (e.g., I am running, she is reading, they are sleeping).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_present.html">ugg.readthedocs.io</a>)';
+  greek_info["future"]='Future tense is a tense-form the speaker uses to refer to an action which will take place at a point in the future from when he is speaking (e.g., she will sleep, I will run, they will eat). It can also be used to give a command (e.g., you will obey me!) &nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_future.html">ugg.readthedocs.io</a>)';
+  greek_info["aorist"]='Aorist is a verb tense-form used to express an unspecified kind of action (in other words - only that some form of action has occurred or occurs), without reference to its duration or completeness.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_aorist.html">ugg.readthedocs.io</a>)';
+  greek_info["imperfect"]='Imperfect is a verb tense-form in which the speaker describes an action as imperfective, (describing the action as a process or incomplete). The imperfect almost always describes actions which took place in the past. (e.g., he was eating, they were sleeping, she was running).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_imperfect.html">ugg.readthedocs.io</a>)';
+  greek_info["perfect"]='Perfect is the verb tense-form used to describe the present state (e.g., you are forgiven) of what is being described or to describe something which took place in the past (e.g., we have eaten, they have traveled). It is often thought of as a completed action that has results which continue into the present time of the speaker.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_perfect.html">ugg.readthedocs.io</a>)';
+  greek_info["pluperfect"]='Pluperfect is the verb tense-form a speaker can use to describe the state of a completed action that was in existance at some point in the past. (e.g., we had eaten, they had traveled).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_pluperfect.html">ugg.readthedocs.io</a>)';
+  greek_info["active"]='A verb in the active voice indicates that the subject performs the action (e.g., He washed the baby).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/voice_active.html">ugg.readthedocs.io</a>)';
+  greek_info["middle"]='Middle voice indicates that the action of a verb is done by the subject to itself, or for its benefit (e.g., He washed himself).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/voice_middle.html">ugg.readthedocs.io</a>)';
+  greek_info["passive"]='A verb in the passive voice indicates that the action of the verbs is performed on the subject (e.g., The baby was washed by the mother.)&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/voice_passive.html">ugg.readthedocs.io</a>)';
+  greek_info["indicative"]='The indicative mood indicates that the speaker is portraying or speaking as if the verbal action he is referring to is real (rather than only potential). It is the most frequently used mood and is the default mood when there is no reason to use one of the other moods.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_indicative.html">ugg.readthedocs.io</a>)';
+  greek_info["subjunctive"]='The subjunctive mood indicates that the speaker is referring to the verbal action as a possibility or probability. (e.g., he may eat, he should eat, he could eat). The subjunctive mood is also used as a mild command (let’s eat).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_subjunctive.html">ugg.readthedocs.io</a>)';
+  greek_info["optative"]='The optative mood indicates that the speaker is referring to the verbal action as a contingent possibility (even less assured than the subjunctive mood) (e.g., he might eat).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_optative.html">ugg.readthedocs.io</a>)';
+  greek_info["imperative"]='The imperative mood is is a mood of direction. It includes commands, and orders, but also requests and directions. It expresses the intentions of the speaker and appeals to the will of the hearer.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_imperative.html">ugg.readthedocs.io</a>)';
+  greek_info["infinitive"]='An infinitive is a verbal noun (e.g., to eat, to run, to go). It expresses aspect and voice like other (finite) verbs, but does not indicate person or number. It can take an object, but usually does not explicitly express a subject.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_infinitive.html">ugg.readthedocs.io</a>)';
+  greek_info["participle"]='A participle is a verbal adjective (e.g. eating, going, running). It has properties of a verb in that it expresses aspect and voice. Participles are never the main verb in the sentence. As a verbal adjective, it functions as an adverb modifying the verb.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_participle.html">ugg.readthedocs.io</a>)';
+  
+  hebrew_info["qal"]='The Qal stem is the most common and basic verbal form in Biblical Hebrew, representing simple action or state without additional nuances like causation, intensity, or reciprocity found in other stems. It serves as the foundational conjugation for verbs, making it essential for understanding the language’s structure. Verbs in the Qal often express straightforward actions (e.g., “to write,” “to eat”) or stative conditions (e.g., “to be heavy,” “to be full”).&nbsp;(<a href="https://biblicalhebrew.org/mastering-the-qal-stem-in-biblical-hebrew-a-quick-guide-with-tanakh-examples.aspx">biblicalhebrew.org</a>)';
+  hebrew_info["niphal"]='The Niphal stem in Biblical Hebrew primarily conveys passive, reflexive, or reciprocal action, often acting as the counterpart to the active Qal stem. It is used when the subject is the recipient of the action (e.g., “was written”) or when the action is self-directed (e.g., “to protect oneself”). The Niphal can also express a middle voice, where the subject is both acting and being acted upon. &nbsp;(<a href="https://biblicalhebrew.org/mastering-the-niphal-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
+  hebrew_info["hithpael"]='The Hithpael stem is related to the Piel stem formation, and it generally expresses the reflexive voice of the meaning of a verb in the Piel stem.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/stem_hithpael.html">biblicalhebrew.org</a>)';
+  hebrew_info["piel"]='The Piel stem is one of the most expressive and nuanced verb forms in Biblical Hebrew. It is often associated with intensive, factitive, or causative actions, making it a critical component for understanding the depth and richness of the Hebrew Bible (Tanakh).&nbsp;(<a href="https://biblicalhebrew.org/mastering-the-piel-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
+  hebrew_info["pual"]='The Pual stem in Biblical Hebrew is the passive counterpart of the Piel stem. It is used to express actions received by the subject in an intensive or causative manner. &nbsp;(<a href="https://biblicalhebrew.org/mastering-the-pual-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
+  hebrew_info["hithpael"]='The Hithpael stem in Biblical Hebrew is a dynamic and reflective verbal form, often used to indicate reflexive, reciprocal, or intensive actions. As a derived stem, the Hithpael frequently conveys a subject acting upon itself, performing actions in a repetitive or deliberate manner, or engaging in mutual interaction with others. &nbsp;(<a href="https://biblicalhebrew.org/mastering-the-hithpael-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
+  hebrew_info["hiphil"]='The Hiphil stem in Biblical Hebrew primarily conveys a causative action. It allows the speaker or writer to express that the subject causes someone or something else to perform an action or be in a certain state. This causative nuance makes the Hiphil one of the most dynamic and versatile verb stems in the Hebrew language.&nbsp;(<a href="https://biblicalhebrew.org/mastering-the-hiphil-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
+  hebrew_info["hophal"]='The Hophal stem in Biblical Hebrew stands out as a powerful yet subtle tool for conveying passive causation. As the passive counterpart to the Hiphil, the Hophal highlights actions where the subject is acted upon, often emphasizing divine sovereignty or the inevitability of certain outcomes. &nbsp;(<a href="https://biblicalhebrew.org/mastering-the-hophal-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
+  hebrew_info["hishtaphel"]='The Hishtaphel is an extremely rare stem formation that is similar to the Hiphil and expresses causative action in active voice.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/stem_hishtaphel.html">uhg.readthedocs.io</a>)';
+  
+  hebrew_info["perfect"]='A Perfect verb usually expresses a completed action in the past. However, the Perfect conjugation can also be used to describe other kinds of actions.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/verb_perfect.html">uhg.readthedocs.io</a>)';
+  hebrew_info["imperfect"]='An Imperfect verb is used generally to indicate an action that is not complete, or an action that either occurs in the present or will occur in the future. However, an Imperfect verb can also be used to describe other kinds of actions.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/verb_imperfect.html">uhg.readthedocs.io</a>)';
+  hebrew_info["Infinitive"]='The infinitive absolute is an extremely flexible non-finite verbal form and can function as an adverb, a finite verb, a verbal complement, or a noun. Its most common use is to express intensity or certainty of verbal action.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/infinitive_absolute.html">uhg.readthedocs.io</a>)';
+  hebrew_info["imperative"]='An imperative verb is used to express direct commands, instructions, and other similar actions with varying degrees of desirability as determined by the context.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/verb_imperative.html">uhg.readthedocs.io</a>)';
+  hebrew_info["jussive"]='A jussive verb is used to express indirect commands, direct negative commands limited by time, and other similar actions with varying degrees of desirability as determined by the context. In English, a Jussive is often translated with the helping verb “may” or “let,” depending on the context (”May he do this!” or “Let him do this!”). &nbsp;(<a href="https://uhg.readthedocs.io/en/latest/verb_jussive.html">uhg.readthedocs.io</a>)';
+  hebrew_info["participle"]='An active participle is a non-finite verbal form with active voice that can function as a verb (either a main verb or a verbal complement), an adjective, or a noun. When used verbally, an active participle most often expresses continuous or imminent action.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/participle_active.html">uhg.readthedocs.io</a>)';
+  hebrew_info["passive"]='A verb in the passive voice indicates that the action of the verbs is performed on the subject (e.g., The baby was washed by the mother.)&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/en_ugg/content/voice_passive.html">uhg.readthedocs.io</a>)';
+  hebrew_info["middle"]='Middle voice indicates that the action of a verb is done by the subject to itself, or for its benefit (e.g., He washed himself).&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/en_ugg/content/voice_middle.html">uhg.readthedocs.io</a>)';
+
+  var r = cf.getVariablesForVerbTable();
+  var greekXAxisItems = r.nameOfXAxisItems;
+  var greekYAxisItems = r.nameOfYAxisItems;
+  r = cf.getVariablesForOTVerbTable('H');
+  var hebrewXAxisItems = r.nameOfXAxisItems;
+  var hebrewYAxisItems = r.nameOfYAxisItems;
+  debugger;
+  require(["qtip"], function () {
+    for (l = 0; l < greekXAxisItems.length; l++) {
+      var element = $(".tense_info" + l);
+      element.qtip({
+        position: { my: "top left", at: "top left", viewport: $(window) },
+        style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+        show: { event: 'mouseenter' },
+        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+        content: {
+          text: greek_info[greekXAxisItems[l]]
+        }
+      });
+    }
+    for (l = 0; l < greekYAxisItems.length; l++) {
+      var element = $(".mood_info" + l);
+      element.qtip({
+        position: { my: "top left", at: "top left", viewport: $(window) },
+        style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+        show: { event: 'mouseenter' },
+        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+        content: {
+          text: greek_info[greekYAxisItems[l]]
+        }
+      });
+    }
+    for (l = 0; l < hebrewXAxisItems.length; l++) {
+      var element = $(".stem_info" + l);
+      element.qtip({
+        position: { my: "top left", at: "top left", viewport: $(window) },
+        style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+        show: { event: 'mouseenter' },
+        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+        content: {
+          text: hebrew_info[hebrewXAxisItems[l]]
+        }
+      });
+    }
+    for (l = 0; l < hebrewYAxisItems.length; l++) {
+      var element = $(".form_info" + l);
+      element.qtip({
+        position: { my: "top left", at: "top left", viewport: $(window) },
+        style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+        show: { event: 'mouseenter' },
+        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+        content: {
+          text: hebrew_info[hebrewYAxisItems[l]]
+        }
+      });
+    }
+
+    var element = $(".passive_info");
+    element.qtip({
+      position: { my: "top left", at: "top left", viewport: $(window) },
+      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+      show: { event: 'mouseenter' },
+      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+      content: {
+        text: greek_info["passive"]
+      }
+    });
+    var element = $(".middle_info");
+    element.qtip({
+      position: { my: "top left", at: "top left", viewport: $(window) },
+      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+      show: { event: 'mouseenter' },
+      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+      content: {
+        text: greek_info["middle"]
+      }
+    });
+    var element = $(".OTpassive_info");
+    element.qtip({
+      position: { my: "top left", at: "top left", viewport: $(window) },
+      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+      show: { event: 'mouseenter' },
+      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+      content: {
+        text: hebrew_info["passive"]
+      }
+    });
+    var element = $(".OTmiddle_info");
+    element.qtip({
+      position: { my: "top left", at: "top left", viewport: $(window) },
+      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+      show: { event: 'mouseenter' },
+      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+      content: {
+        text: hebrew_info["middle"]
+      }
+    });
+    var element = $(".masc_info");
+    element.qtip({
+      position: { my: "top left", at: "top left", viewport: $(window) },
+      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+      show: { event: 'mouseenter' },
+      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+      content: {
+        text: greek_info["masculine"]
+      }
+    });
+    var element = $(".fem_info");
+    element.qtip({
+      position: { my: "top left", at: "top left", viewport: $(window) },
+      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+      show: { event: 'mouseenter' },
+      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+      content: {
+        text: greek_info["feminine"]
+      }
+    });
+    var element = $(".neut_info");
+    element.qtip({
+      position: { my: "top left", at: "top left", viewport: $(window) },
+      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+      show: { event: 'mouseenter' },
+      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+      content: {
+        text: greek_info["neuter"]
+      }
+    });
+    var element = $(".singular_info");
+    element.qtip({
+      position: { my: "top left", at: "top left", viewport: $(window) },
+      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+      show: { event: 'mouseenter' },
+      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+      content: {
+        text: greek_info["singular"]
+      }
+    });
+    var element = $(".plural_info");
+    element.qtip({
+      position: { my: "top left", at: "top left", viewport: $(window) },
+      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+      show: { event: 'mouseenter' },
+      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+      content: {
+        text: greek_info["plural"]
+      }
+    });
+  });
+
 }
 
 function addVerbSideBar() {
@@ -84,9 +278,12 @@ function addVerbSideBar() {
         cssClass += ' ul' + c4[C_Greek][C_slctUlVerbItem][i].replace(/\s/g, ""); 
       cssClass += '"';
       htmlTable += '<tr>';
-      htmlTable += '<td style="padding-bottom:12px" ' + cssClass + '>' + descOfYAxisItems[i] + '</td>';
-      htmlTable += '<td>' + htmlToAdd5(i, "", false) + '</td>';
-      htmlTable += '</tr>';
+      htmlTable += '<td style="padding-bottom:12px">' + htmlToAdd5a(i, "") +
+        '<span style="padding-bottom:12px" ' + cssClass + '>' + descOfYAxisItems[i] + '</span>' +
+        '</td>';
+      htmlTable += '<td>' + htmlToAdd5b(i, "", false) +
+        '<a class="tense_info' +  i + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
+        '</td></tr>';
     }
     htmlTable += '<tr></tr>';
     htmlTable += addTitleToXAxisSideBar(descOfXAxisItems);
@@ -603,9 +800,9 @@ function addNounTable() {
         '<td><span>Singular:</span><br><br>' +
             '<select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
                 '<option value="normal">Normal</option>' +
-                '<option value="normal_italic">Normal and Italic</option>' +
+                '<option value="normal_italic">Italic</option>' +
                 '<option value="bold">Bold</option>' +
-                '<option value="bold_italic">Bold and Italic</option>' +
+                '<option value="bold_italic">Bold Italic</option>' +
             '</select><br>' +
         '</td>' +
         '<td><span class="sing mas">Masculine singular</span><br>' +
@@ -618,9 +815,9 @@ function addNounTable() {
         '<td><span>Plural:</span><br><br>' +
             '<select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
                 '<option value="normal">Normal</option>' +
-                '<option value="normal_italic">Normal and Italic</option>' +
+                '<option value="normal_italic">Italic</option>' +
                 '<option value="bold">Bold</option>' +
-                '<option value="bold_italic">Bold and Italic</option>' +
+                '<option value="bold_italic">Bold Italic</option>' +
             '</select><br>' +
         '</td>' +
         '<td><span class="plur mas">Masculine Plural</span><br>' +
@@ -650,29 +847,43 @@ function addNounSideBar() {
         '</td>' +
         '<td><h2>Gender & Number</td></tr>' +
         '<tr><td class="sing mas">Masculine:</td>' +
-        '<td><input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
+        '<td>' +
+          '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
+          '<span><a class="masc_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+        '</td>' +
         '</tr>' +
         '<tr><td class="sing fem">Feminine:</td>' +
-        '<td><input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
+        '<td>' +
+          '<input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
+          '<span><a class="fem_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+        '</td>' +
         '</tr>' +
         '<tr><td class="sing neut">Neuter:</td>' +
-        '<td><input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
+        '<td>' +
+          '<input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
+          '<span><a class="neut_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+        '</td>' +
         '</tr>' +
         '<tr><td>Singular:</td>' +
             '<td><select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
                 '<option value="normal">Normal</option>' +
-                '<option value="normal_italic">Normal and Italic</option>' +
+                '<option value="normal_italic">Italic</option>' +
                 '<option value="bold">Bold</option>' +
-                '<option value="bold_italic">Bold and Italic</option>' +
-            '</select></tr>' +
+                '<option value="bold_italic">Bold Italic</option>' +
+            '</select>' +
+            '<span><a class="singular_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+            '</td>' +
+            '</tr>' +
         '</tr>' +
         '<tr><td class="plur">Plural:</td>' +
             '<td><select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
                 '<option value="normal">Normal</option>' +
-                '<option value="normal_italic">Normal and Italic</option>' +
+                '<option value="normal_italic">Italic</option>' +
                 '<option value="bold">Bold</option>' +
-                '<option value="bold_italic">Bold and Italic</option>' +
-            '</select></td>' +
+                '<option value="bold_italic">Bold Italic</option>' +
+            '</select>' +
+            '<span><a class="plural_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+            '</td>' +
         '</tr></table>';
   htmlTable = $(htmlTable);
   htmlTable.appendTo('#sideBargenderNumClrs');
@@ -694,7 +905,8 @@ function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, num
   var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
     htmlTable += '<td class="tg-yw4l">' + descOfXAxisItems[j];
-    htmlTable += htmlToAdd3(j, 'OT', false);
+    htmlTable += htmlToAdd3a(j, 'OT', false) +
+      htmlToAdd3b(j, 'OT', false);
     htmlTable += '</td>';
   }
   htmlTable += '</tr>';
@@ -706,8 +918,11 @@ function addOtTitleToXAxisSideBar(descOfHebrewXAxisItems, descOfAramaicwXAxisIte
   var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
     var shortenName = descOfXAxisItems[j].split("<br")[0] + " etc";
-    htmlTable += '<tr><td style="text-decoration:underline solid 33%" class="stemPreview' + j + '">' + shortenName + '</td>';
-    htmlTable += '<td>' + htmlToAdd3(j, 'OT', false) + '</td>';
+    htmlTable += '<tr><td style="text-decoration:underline solid 33%" class="stemPreview' + j + '">' + 
+    htmlToAdd3a(j, 'OT', false) + shortenName + '</td>';
+    htmlTable += '<td>' + htmlToAdd3b(j, 'OT', false) +
+      '<span><a class="stem_info' +  j + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span' +
+      '</td>';
     htmlTable += '</tr>';
   }
   htmlTable += '</tr>';
@@ -773,7 +988,7 @@ function addOTVerbTable() {
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
     htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT');
-    htmlTable += '<td>' + htmlToAdd5(i, 'OT', false) + '</td>';
+    htmlTable += '<td>' +  htmlToAdd5a(i, 'OT') + htmlToAdd5b(i, 'OT', false) + '</td>';
     htmlTable += '</td>';
     for (var counter = 0; counter < xAxisItems.length; counter += 1) {
       htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
@@ -815,7 +1030,9 @@ function addOTVerbSideBar() {
       cssClass += ' ul' + c4[C_OT][C_slctUlVerbItem][i].replace(/\s/g, ""); 
     htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT', true, /* paddingRequiredForSidebar */
       cssClass);
-    htmlTable += '<td>' + htmlToAdd5(i, 'OT', false) + '</td>';
+    htmlTable += '<td>' + htmlToAdd5b(i, 'OT', false) +
+    '<a class="form_info' +  i + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
+    '</td>';
     htmlTable += '</tr>';
   }
   htmlTable += '<tr></tr>';
@@ -854,7 +1071,11 @@ function updatePreviewAtSideBar(className, nameOfUnderline) {
     element.removeClass()
       .addClass(className)
       .addClass(nameOfUnderline);
-    var srcImgObj = _.find(cv[C_uLBASEIMGS], function(obj) { return obj.name === nameOfUnderline; });
+    var altNameOfUnderline = nameOfUnderline;
+    if (nameOfUnderline === 'ul2lines') altNameOfUnderline = 'ulDoubleSolid';
+    else if (nameOfUnderline === 'ulUnderline') altNameOfUnderline = 'ulSolid';
+    else if (nameOfUnderline === 'ulDots') altNameOfUnderline = 'ulDot';
+    var srcImgObj = _.find(cv[C_uLBASEIMGS], function(obj) { return obj.name === altNameOfUnderline; });
     $('.' + nameOfUnderline).css('background', 'url(' + srcImgObj.img.src + ') repeat-x 100% 100%');
   }
 }
@@ -961,19 +1182,15 @@ function userToggleClrGrammar(grammarFunction) {
       cf.updtLocalStorage();
       updateVerbInputFields(checkedValue);
       if (grammarFunction === 'verb2') {
-        if (!step.touchDevice || step.touchWideDevice)
-          $('.underlineSelect').hide();
         if (checkedValue) {
           $('.vrbInptX').show();
           $('.vrbInptY').show();
-          $("#sideBarVerbClrs").find(".chosen-container").removeClass('chosen-disabled');
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");  
         }
         else {
           $('.vrbInptX').hide();
           $('.vrbInptY').hide();
-          $("#sideBarVerbClrs").find(".chosen-container").addClass('chosen-disabled');
         }
       }
     }
@@ -988,19 +1205,15 @@ function userToggleClrGrammar(grammarFunction) {
       cf.updtLocalStorage();
       updateVerbInputFields(checkedValue, 'OT');
       if (grammarFunction === 'OTverb2') {
-        if (!step.touchDevice || step.touchWideDevice)
-          $('.underlineSelect').hide();
         if (checkedValue) {
           $('.OTvrbInptX').show();
           $('.OTvrbInptY').show();
-          $("#sideBarHVerbClrs").find(".chosen-container").removeClass('chosen-disabled');
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");  
         }
         else {
            $('.OTvrbInptX').hide();
            $('.OTvrbInptY').hide();
-           $("#sideBarHVerbClrs").find(".chosen-container").addClass('chosen-disabled');
         }
       }
     }
@@ -1388,14 +1601,29 @@ function checkVerbClrInput() {
   if (colorForOTWasUpdated) cf.createUlFor_OT();
 }
 
+function convertEngToCharForSelectOption (optionToDisplay) {
+  if (optionToDisplay === "Underline") optionToDisplay = "____";
+  else if (optionToDisplay === "Dash") optionToDisplay = "- - -";
+  else if (optionToDisplay === "Dash Dot") optionToDisplay = "- .";
+  else if (optionToDisplay === "Dash Dot Dot") optionToDisplay = "- . .";
+  else if (optionToDisplay === "Dots") optionToDisplay = ". . .";
+  else if (optionToDisplay === "Wave") optionToDisplay = "〜〜";
+  else if (optionToDisplay === "Arrow") optionToDisplay = "→";
+  else if (optionToDisplay === "Short Arrow") optionToDisplay = ">>>";
+  else if (optionToDisplay === "Reverse Arrow") optionToDisplay = "←";
+  else if (optionToDisplay === "Short Reverse Arrow") optionToDisplay = "<<<";
+  return optionToDisplay;
+}
+
 function updateHtmlForYAxis() {
   var currentULForItem;
   var numOfRows = cf.getVariablesForVerbTable().nameOfYAxisItems.length;
   for (var i = 0; i < numOfRows; i += 1) {
     currentULForItem = c4[C_Greek][C_slctUlVerbItem][i];
+    var optionToDisplay = convertEngToCharForSelectOption(currentULForItem);
     $('#slctUlVerbItem' + i + ' option')
       .filter(function() {
-        return $.trim($(this).text()) == currentULForItem;
+        return $.trim($(this).text()) === optionToDisplay;
       })
       .prop('selected', true);
     if ($('#inAnimate' + i).length == 1) {
@@ -1411,7 +1639,7 @@ function updateHtmlForYAxis() {
   }
   numOfRows = cf.getVariablesForOTVerbTable('H').nameOfYAxisItems.length;
   for (var counter = 0; counter < numOfRows; counter += 1) {
-    currentULForItem = c4[C_OT][C_slctUlVerbItem][counter];
+    currentULForItem = convertEngToCharForSelectOption(c4[C_OT][C_slctUlVerbItem][counter]);
     $('#slctUlOTVerbItem' + counter + ' option')
       .filter(function() {
         return $.trim($(this).text()) == currentULForItem;
@@ -2043,7 +2271,7 @@ function addVerbTable() {
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
     htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan);
-    htmlTable += '<td>' + htmlToAdd5(i, "", true) + '</td>';
+    htmlTable += '<td>' + htmlToAdd5a(i, "") + htmlToAdd5b(i, "", true) + '</td>';
     htmlTable += '</td>';
     for (var counter = 0; counter < xAxisItems.length; counter += 1) {
       htmlTable += '<td>';
@@ -2080,7 +2308,7 @@ function htmlToAdd2(xAxisTitle, otVerb) {
     '<span id="configSortXAxisIcon" class="glyphicon glyphicon-sort"></span></button>';
 }
 
-function htmlToAdd3(i, otVerb, toggleOnOff) {
+function htmlToAdd3a(i, otVerb, toggleOnOff) {
   var otPrefix = '', result = '', c4Ref;
   if (otVerb === "OT") {
     otPrefix = 'OT';
@@ -2090,6 +2318,16 @@ function htmlToAdd3(i, otVerb, toggleOnOff) {
   var displayStyle = (toggleOnOff) ? ' ' : ' style="display:none" ';
   result = '<input' + displayStyle + 'id="' + otPrefix + 'axisXOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptX" ' +
     'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "X", "' + i + '")\'>';
+  return result;
+}
+
+function htmlToAdd3b(i, otVerb, toggleOnOff) {
+  var otPrefix = '', result = '', c4Ref;
+  if (otVerb === "OT") {
+    otPrefix = 'OT';
+    c4Ref = c4[C_OT];
+  }
+  else c4Ref = c4[C_Greek];
   if (toggleOnOff) result += '<br>';
   result += '<input id="inClr' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInptC" type="color" ' +
     'value="' + c4Ref[C_inClrVerbItem][i] + '" ';
@@ -2105,28 +2343,33 @@ function htmlToAdd4(yAxisTitle, otVerb) {
     '<span id="configSortYAxisIcon" class="glyphicon glyphicon-sort ' + otPrefix + 'advancedtools"></span></button>';
 }
 
-function htmlToAdd5(i, otVerb, addAnimation) {
+function htmlToAdd5a(i, otVerb) {
+  var otPrefix = '';
+  if ((typeof otVerb === "string") && (otVerb === "OT")) otPrefix = 'OT';
+  return '<input id="' + otPrefix + 'axisYOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptY" ' +
+    'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y", "' + i + '")\'>';
+}
+
+function htmlToAdd5b(i, otVerb, addAnimation) {
   var otPrefix = ''; var result = '';
   if ((typeof otVerb === "string") && (otVerb === "OT")) otPrefix = 'OT';
-  result = '<input id="' + otPrefix + 'axisYOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptY" ' +
-    'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y", "' + i + '")\'>';
   if (addAnimation)
     result += '<br>';
   result += '<select id="slctUl' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInpt1 underlineSelect" ' +
     'onchange=\'userUpdate' + otPrefix +'YAxisItem("' + i + '", value)\'';
   if ((otPrefix != 'OT') && addAnimation)result += ' style="width: 52px"';
   result += '>' +
-    '<option data-img-src="images/Solid.png" value="ulSolid">Underline</option>' +
-    '<option data-img-src="images/DoubleSolid.png" value="ulDoubleSolid">2 lines</option>' +
-    '<option data-img-src="images/Dash.png" value="ulDash">Dash</option>' +
-    '<option data-img-src="images/DashDot.png" value="ulDashDot">Dash Dot</option>' +
-    '<option data-img-src="images/DashDotDot.png" value="ulDashDotDot">Dash Dot Dot</option>' +
-    '<option data-img-src="images/Dot.png" value="ulDot">Dots</option>' +
-    '<option data-img-src="images/Wave.png" value="ulWave">Wave</option>' +
-    '<option data-img-src="images/Arrow.png" value="ulArrow">Arrow</option>' +
-    '<option data-img-src="images/ShortArrow.png" value="ulShortArrow">Short Arrow</option>' +
-    '<option data-img-src="images/ReverseArrow.png" value="ulReverseArrow">Reverse Arrow</option>' +
-    '<option data-img-src="images/ShortReverseArrow.png" value="ulShortReverseArrow">Short Reverse Arrow</option>' +
+    '<option value="ulSolid">____</option>' +
+    '<option value="ulDoubleSolid">2 lines</option>' +
+    '<option value="ulDash">- - -</option>' +
+    '<option value="ulDashDot">- .</option>' +
+    '<option value="ulDashDotDot">- . .</option>' +
+    '<option value="ulDot">. . .</option>' +
+    '<option value="ulWave">〜〜</option>' +
+    '<option value="ulArrow">→</option>' +
+    '<option value="ulShortArrow">&gt;&gt;&gt;</option>' +
+    '<option value="ulReverseArrow">←</option>' +
+    '<option value="ulShortReverseArrow">&lt;&lt;&lt;</option>' +
     '</select>';
   if (addAnimation) {
     var displayStyle = (addAnimation) ? ' ' : ' style="display:none" ';
@@ -2146,26 +2389,31 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   }
   else c4Ref = c4[C_Greek];
   var result = "";
+  var passiveOnOffCheckbox = '<input id="chkbx' + otPrefix + 'PassiveBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("passive", "' + otPrefix + '")\'>';
+  if (callFromSidebar)
+    result += "<tr><td>" + passiveOnOffCheckbox;
+  result += '<span';
   if (callFromSidebar) {
-    result += "<tr><td";
+    result += ' style="padding-bottom:12px"';
     if (otPrefix === '')
       result += ' class="passivePreview"';
     else if (otPrefix === 'OT')
       result += ' class="otPassivePreview"';
-    result += '>'
   }
-  result += '<span>Passive';
+  result += '>Passive';
   if (callFromSidebar) 
     result += '</span></td><td>';
   else
     result += ' voice: background - </span>';
-  result += '<input id="chkbx' + otPrefix + 'PassiveBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("passive", "' + otPrefix + '")\'>' +
+  result += 
     '<input id="in' + otPrefix + 'PassiveBkgrdClr" type="color" ' +
     'value="' + c4Ref[C_inPassiveBkgrdClr] + '"/>';
-  if (callFromSidebar)
-    result += "</td></tr>"
+  if (callFromSidebar) {
+    result += '<span><a class="' + otPrefix + 'passive_info' + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span';
+    result += "</td></tr>";
+  }
   else {
-    result += 
+    result += passiveOnOffCheckbox + 
       '<span>underline - </span><input id="chkbx' + otPrefix + 'PassiveUlClr1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("passive", "' + otPrefix + '")\'>' +
       '<input id="in' + otPrefix + 'PassiveUlClr1" type="color" ' +
       'value="' + c4Ref[C_inPassiveUlClr1] + '"/>';
@@ -2176,24 +2424,29 @@ function htmlToAdd6(otVerb, callFromSidebar) {
         'value="' + c4Ref[C_inPassiveUlClr2] + '"/>';
     result += '<br><br>';
   }
+  middleOnOffCheckbox = '<input id="chkbx' + otPrefix + 'MiddleBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("middle", "' + otPrefix + '")\'>';
+  if (callFromSidebar)
+    result += "<tr><td>" + middleOnOffCheckbox;
+  result += '<span';
   if (callFromSidebar) {
-    result += "<tr><td";
+    result += ' style="padding-bottom:12px"';
     if (otPrefix === '')
       result += ' class="middlePreview"';
     else if (otPrefix === 'OT')
       result += ' class="otMiddlePreview"';
-    result += '>'
-  }
-  result += '<span>Middle';
+  }  
+  result += '>Middle';
   if (callFromSidebar) 
     result += '</span></td><td>';
   else
-    result += ' voice: background - </span>';
-  result +='<input id="chkbx' + otPrefix + 'MiddleBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("middle", "' + otPrefix + '")\'>' +
+    result += ' voice: background - </span>' + passiveOnOffCheckbox;
+  result +=
     '<input id="in' + otPrefix + 'MiddleBkgrdClr" type="color" ' +
     'value="' + c4Ref[C_inMiddleBkgrdClr] + '"/>';
-  if (callFromSidebar)
+  if (callFromSidebar) {
+    result += '<span><a class="' + otPrefix + 'middle_info' + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span';
     result += "</td></tr>";
+  }
   else {
       result += 
       '<span>underline - </span><input id="chkbx' + otPrefix + 'MiddleUlClr1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("middle", "' + otPrefix + '")\'>' +
@@ -2232,7 +2485,8 @@ function addTitleToXAxis(descOfXAxisItems) {
     htmlTable += '<td class="tg-yw4l"';
       if (descOfXAxisItems[j].length < 10) htmlTable += ' width=72';
     htmlTable += '>' + descOfXAxisItems[j];
-    htmlTable += htmlToAdd3(j, "", true);
+    htmlTable += htmlToAdd3a(j, "", true) + 
+      htmlToAdd3b(j, "", true);
     htmlTable += '</td>';
   }
   htmlTable += '</tr>';
@@ -2243,8 +2497,11 @@ function addTitleToXAxisSideBar(descOfXAxisItems) {
   var htmlTable = '';
   for (var j = 0; j < descOfXAxisItems.length; j += 1) {
     htmlTable += '<tr><td style="text-decoration:underline solid 33%" class="moodPreview' + j + '">';
-    htmlTable += descOfXAxisItems[j] + '</td>';
-    htmlTable += '<td>' + htmlToAdd3(j, "", false) + '</td>';
+    htmlTable += htmlToAdd3a(j, "", false) + descOfXAxisItems[j];
+    htmlTable += '</td>';
+    htmlTable += '<td>' + htmlToAdd3b(j, "", false); 
+    htmlTable += '<span><a class="mood_info' + j + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>';
+    htmlTable += '</td>';
     htmlTable += '</tr>';
   }
   return htmlTable;
@@ -2264,8 +2521,16 @@ function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar,
       title_range_low += rowsCovered;
     }
   }
-  htmlTable += (forSideBar) ? '<td style="padding-bottom:12" class="' + verbClass + '">' : '<td>';
-  htmlTable += descOfYAxisItems + '</td>';
+  if (forSideBar) {
+    htmlTable += '<td style="padding-bottom:12" class="' + verbClass + '">' + htmlToAdd5a(rowNum, ot) + 
+    '<span>';
+  }
+  else
+    htmlTable += '<td>';
+  htmlTable += descOfYAxisItems;
+  if (forSideBar)
+    htmlTable += '</span>';
+  htmlTable += '</td>';
   return htmlTable;
 }
 

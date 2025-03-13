@@ -105,7 +105,6 @@ function enableInfoIcon() {
   r = cf.getVariablesForOTVerbTable('H');
   var hebrewXAxisItems = r.nameOfXAxisItems;
   var hebrewYAxisItems = r.nameOfYAxisItems;
-  debugger;
   require(["qtip"], function () {
     for (l = 0; l < greekXAxisItems.length; l++) {
       var element = $(".tense_info" + l);

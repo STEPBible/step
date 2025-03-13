@@ -1184,12 +1184,14 @@ function userToggleClrGrammar(grammarFunction) {
         if (checkedValue) {
           $('.vrbInptX').show();
           $('.vrbInptY').show();
+          $('#sideBarVerbClrs').find('.glyphicon-info-sign').show();
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");  
         }
         else {
           $('.vrbInptX').hide();
           $('.vrbInptY').hide();
+          $('#sideBarVerbClrs').find('.glyphicon-info-sign').hide();
         }
       }
     }
@@ -1198,6 +1200,12 @@ function userToggleClrGrammar(grammarFunction) {
       c4[C_enableGenderNumberClr] = checkedValue;
       cf.updtLocalStorage();
       cv[C_userTurnGenderNumberFromOffToOn] = checkedValue;
+      if (grammarFunction === 'gennum2') {
+        if (checkedValue)
+          $('#sideBargenderNumClrs').find('.glyphicon-info-sign').show();
+        else
+          $('#sideBargenderNumClrs').find('.glyphicon-info-sign').hide();
+      }
     }
     else if ((grammarFunction === 'OTverb') || (grammarFunction === 'OTverb2')) {
       c4[C_OT][C_enableVerbClr] = checkedValue;
@@ -1207,12 +1215,14 @@ function userToggleClrGrammar(grammarFunction) {
         if (checkedValue) {
           $('.OTvrbInptX').show();
           $('.OTvrbInptY').show();
+          $('#sideBarHVerbClrs').find('.glyphicon-info-sign').show();
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");  
         }
         else {
            $('.OTvrbInptX').hide();
            $('.OTvrbInptY').hide();
+           $('#sideBarHVerbClrs').find('.glyphicon-info-sign').hide();
         }
       }
     }

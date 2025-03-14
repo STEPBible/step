@@ -57,7 +57,6 @@ function initializeClrCodeSidebar() {
 }
 
 function convertLangInfoToHtml(langInfo) {
-  debugger;
   var result = langInfo[0] + "<br>" + langInfo[1] + "; " + langInfo[2] + "; " +
     "<br>&nbsp;&nbsp;&nbsp;<a class='langInfo' href='"+ langInfo[3] + "' target='grammarInfo'> more info...</a>";
   if ((typeof langInfo[4] === "string") && (langInfo[4].length > 0))
@@ -79,7 +78,6 @@ function addElementToQtip(elementName, langInfo) {
 }
 
 function enableInfoIcon() {
-  debugger;
   var greek_info = {};
   var hebrew_info = {};
 

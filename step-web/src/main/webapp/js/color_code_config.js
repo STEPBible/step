@@ -56,48 +56,75 @@ function initializeClrCodeSidebar() {
     $("#sideBarHVerbClrs").show();
 }
 
+function convertLangInfoToHtml(langInfo) {
+  debugger;
+  var result = langInfo[0] + "<br>" + langInfo[1] + "; " + langInfo[2] + "; " +
+    "<br>&nbsp;&nbsp;&nbsp;<a class='langInfo' href='"+ langInfo[3] + "' target='grammarInfo'> more info...</a>";
+  if ((typeof langInfo[4] === "string") && (langInfo[4].length > 0))
+    result += "&nbsp;&nbsp;<a class='langInfo' href='"+ langInfo[4] + "' target='grammarInfo'> training...</a>";
+  return result;
+}
+
+function addElementToQtip(elementName, langInfo) {
+  var element = $(elementName);
+  element.qtip({
+    position: { my: "top left", at: "top left", viewport: $(window) },
+    style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
+    show: { event: 'mouseenter' },
+    hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+    content: {
+      text: convertLangInfoToHtml(langInfo)
+    }
+  });
+}
+
 function enableInfoIcon() {
+  debugger;
   var greek_info = {};
   var hebrew_info = {};
-  greek_info["masculine"]='Nominals are marked for grammatical gender, one of which is masculine.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/gender_masculine.html">ugg.readthedocs.io</a>)';
-  greek_info["feminine"]='Nouns, adjectives, finite verbs, participles, pronouns, pronominal suffixes, and some particles change their form is according to their grammatical gender, either masculine or feminine.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/gender_feminine.html">ugg.readthedocs.io</a>)';
-  greek_info["neuter"]='Nominals are marked for grammatical gender, one of which is neuter.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/gender.html">ugg.readthedocs.io</a>)';
-  greek_info["singular"]='Singular number is the grammatical feature which signifies that one participant is indicated by a word.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/number_singular.html">ugg.readthedocs.io</a>)';
-  greek_info["plural"]='The plural form of a term refers to two or more of that item.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/en_uhg/content/number_plural.html">ugg.readthedocs.io</a>)';
-  greek_info["present"]='Present is a verb tense-form which a speaker uses to describe an action as imperfective (either continuous or incomplete), and is often used to depict an action as being in process (e.g., I am running, she is reading, they are sleeping).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_present.html">ugg.readthedocs.io</a>)';
-  greek_info["future"]='Future tense is a tense-form the speaker uses to refer to an action which will take place at a point in the future from when he is speaking (e.g., she will sleep, I will run, they will eat). It can also be used to give a command (e.g., you will obey me!) &nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_future.html">ugg.readthedocs.io</a>)';
-  greek_info["aorist"]='Aorist is a verb tense-form used to express an unspecified kind of action (in other words - only that some form of action has occurred or occurs), without reference to its duration or completeness.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_aorist.html">ugg.readthedocs.io</a>)';
-  greek_info["imperfect"]='Imperfect is a verb tense-form in which the speaker describes an action as imperfective, (describing the action as a process or incomplete). The imperfect almost always describes actions which took place in the past. (e.g., he was eating, they were sleeping, she was running).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_imperfect.html">ugg.readthedocs.io</a>)';
-  greek_info["perfect"]='Perfect is the verb tense-form used to describe the present state (e.g., you are forgiven) of what is being described or to describe something which took place in the past (e.g., we have eaten, they have traveled). It is often thought of as a completed action that has results which continue into the present time of the speaker.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_perfect.html">ugg.readthedocs.io</a>)';
-  greek_info["pluperfect"]='Pluperfect is the verb tense-form a speaker can use to describe the state of a completed action that was in existance at some point in the past. (e.g., we had eaten, they had traveled).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/tense_pluperfect.html">ugg.readthedocs.io</a>)';
-  greek_info["active"]='A verb in the active voice indicates that the subject performs the action (e.g., He washed the baby).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/voice_active.html">ugg.readthedocs.io</a>)';
-  greek_info["middle"]='Middle voice indicates that the action of a verb is done by the subject to itself, or for its benefit (e.g., He washed himself).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/voice_middle.html">ugg.readthedocs.io</a>)';
-  greek_info["passive"]='A verb in the passive voice indicates that the action of the verbs is performed on the subject (e.g., The baby was washed by the mother.)&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/voice_passive.html">ugg.readthedocs.io</a>)';
-  greek_info["indicative"]='The indicative mood indicates that the speaker is portraying or speaking as if the verbal action he is referring to is real (rather than only potential). It is the most frequently used mood and is the default mood when there is no reason to use one of the other moods.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_indicative.html">ugg.readthedocs.io</a>)';
-  greek_info["subjunctive"]='The subjunctive mood indicates that the speaker is referring to the verbal action as a possibility or probability. (e.g., he may eat, he should eat, he could eat). The subjunctive mood is also used as a mild command (let’s eat).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_subjunctive.html">ugg.readthedocs.io</a>)';
-  greek_info["optative"]='The optative mood indicates that the speaker is referring to the verbal action as a contingent possibility (even less assured than the subjunctive mood) (e.g., he might eat).&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_optative.html">ugg.readthedocs.io</a>)';
-  greek_info["imperative"]='The imperative mood is is a mood of direction. It includes commands, and orders, but also requests and directions. It expresses the intentions of the speaker and appeals to the will of the hearer.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_imperative.html">ugg.readthedocs.io</a>)';
-  greek_info["infinitive"]='An infinitive is a verbal noun (e.g., to eat, to run, to go). It expresses aspect and voice like other (finite) verbs, but does not indicate person or number. It can take an object, but usually does not explicitly express a subject.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_infinitive.html">ugg.readthedocs.io</a>)';
-  greek_info["participle"]='A participle is a verbal adjective (e.g. eating, going, running). It has properties of a verb in that it expresses aspect and voice. Participles are never the main verb in the sentence. As a verbal adjective, it functions as an adverb modifying the verb.&nbsp;(<a href="https://ugg.readthedocs.io/en/latest/mood_participle.html">ugg.readthedocs.io</a>)';
+
+  greek_info['masculine']=['male or masculine word','eg "he”','"hiereus" = priest','https://uhg.readthedocs.io/en/latest/gender_masculine.html','']
+  greek_info['feminine']=['female or feminine word','eg "she”','"heireia" = priestess','https://uhg.readthedocs.io/en/latest/gender_feminine.html','']
+  greek_info['neuter']=['neither male nor female','eg "it”','"hieron" = temple','https://ugg.readthedocs.io/en/latest/gender.html','']
+  greek_info['singular']=['only one','eg "he, she, it”','"hieros" = holy (male)','https://ugg.readthedocs.io/en/latest/en_uhg/content/number_singular.html','']
+  greek_info['plural']=['more than one','eg "they”','"hieroi" = holy (males)','https://ugg.readthedocs.io/en/latest/en_uhg/content/number_plural.html','']
+    
+  greek_info['present']=['action now or constantly','eg "he does”, "I am running", "she is cooking"','he eats','https://ugg.readthedocs.io/en/latest/tense_present.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-16-present-active-indicative']
+  greek_info['future']=['action not yet started','eg "he will do”','he will eat','https://ugg.readthedocs.io/en/latest/tense_future.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-19-future-active-middle-indicative']
+  greek_info['aorist']=['action in past or present','eg "he did/ does”','he ate','https://ugg.readthedocs.io/en/latest/tense_aorist.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-23-first-aorist-active-middle-indicative']
+  greek_info['imperfect']=['action was continuous','eg "he was doing”','he was eating','https://ugg.readthedocs.io/en/latest/tense_imperfect.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-21-imperfect-indicative']
+  greek_info['perfect']=['action is done & stays done','eg "he did & it\'s done”','he\'s eaten','https://ugg.readthedocs.io/en/latest/tense_perfect.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-25-perfect-indicative']
+  greek_info['pluperfect']=['action that was already done','eg "he had done”','he had eaten','https://ugg.readthedocs.io/en/latest/tense_pluperfect.html','']
+    
+  greek_info['active']=['doing something','eg "he hit it”','he sold cakes','https://ugg.readthedocs.io/en/latest/voice_active.html','']
+  greek_info['middle']=['doing to oneself','eg "he hit himself”','cakes sold themselves','https://ugg.readthedocs.io/en/latest/voice_middle.html','']
+  greek_info['passive']=['something is done','eg "he is hit”','cakes were sold','https://ugg.readthedocs.io/en/latest/voice_passive.html','']
+    
+  greek_info['indicative']=['it happens','eg "he does”','they sing','https://ugg.readthedocs.io/en/latest/mood_indicative.html','']
+  greek_info['subjunctive']=['it might happen','eg "he may do”','he might sing','https://ugg.readthedocs.io/en/latest/mood_subjunctive.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-31-subjunctive-mood']
+  greek_info['optative']=['it should happen','eg "may he do”','he should sing','https://ugg.readthedocs.io/en/latest/mood_optative.html','']
+  greek_info['imperative']=['an order or plea','eg "do it!”','he must sing','https://ugg.readthedocs.io/en/latest/mood_imperative.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-33-imperative']
+  greek_info['infinitive']=['about the action','eg "to do”','to learn to sing','https://ugg.readthedocs.io/en/latest/mood_infinitive.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-32-infinitive']
+  greek_info['participle']=['action as a noun or adjective . A participle is a verbal adjective (e.g. eating, going, running). Participles are never the main verb in the sentence. It can function as an adverb modifying other verbs, as an adjective modifying noun or even as a noun.','eg "the doing", "the doing of it”, "eating", "running"','the singing of a singing bird','https://ugg.readthedocs.io/en/latest/mood_participle.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-26-introduction-to-participles']
+    
+  hebrew_info['qal']=['Simple active','eg “he rises”','he dies','https://biblicalhebrew.org/mastering-the-qal-stem-in-biblical-hebrew-a-quick-guide-with-tanakh-examples.aspx','']
+  hebrew_info['niphal']=['Simple passive','eg “he is risen”','-','https://biblicalhebrew.org/mastering-the-niphal-stem-in-biblical-hebrew.aspx','']
+  hebrew_info['hithpael']=['Simple reflexive','eg “he rises himself”','-','https://uhg.readthedocs.io/en/latest/stem_hithpael.html','']
+  hebrew_info['piel']=['Intense/Transitive active','eg “he raises”','he kills','https://biblicalhebrew.org/mastering-the-piel-stem-in-biblical-hebrew.aspx','']
+  hebrew_info['pual']=['Intense/Transitive passive','eg “he is raised”','he is killed','https://biblicalhebrew.org/mastering-the-pual-stem-in-biblical-hebrew.aspx','']
+  hebrew_info['hithpael']=['Intense/Transitive reflexive','eg “he raises himself”','he kills himself','https://biblicalhebrew.org/mastering-the-hithpael-stem-in-biblical-hebrew.aspx','']
+  hebrew_info['hiphil']=['Caused/Declared active','eg “he exalts”','he destroys','https://biblicalhebrew.org/mastering-the-hiphil-stem-in-biblical-hebrew.aspx','']
+  hebrew_info['hophal']=['Caused/Declared passive','eg “he is exalted”','he is destroyed','https://biblicalhebrew.org/mastering-the-hophal-stem-in-biblical-hebrew.aspx','']
+  hebrew_info['hishtaphel']=['Caused/Declared reflexive','eg “he exalts himself”','he destroys himself','https://uhg.readthedocs.io/en/latest/stem_hishtaphel.html','']
   
-  hebrew_info["qal"]='The Qal stem is the most common and basic verbal form in Biblical Hebrew, representing simple action or state without additional nuances like causation, intensity, or reciprocity found in other stems. It serves as the foundational conjugation for verbs, making it essential for understanding the language’s structure. Verbs in the Qal often express straightforward actions (e.g., “to write,” “to eat”) or stative conditions (e.g., “to be heavy,” “to be full”).&nbsp;(<a href="https://biblicalhebrew.org/mastering-the-qal-stem-in-biblical-hebrew-a-quick-guide-with-tanakh-examples.aspx">biblicalhebrew.org</a>)';
-  hebrew_info["niphal"]='The Niphal stem in Biblical Hebrew primarily conveys passive, reflexive, or reciprocal action, often acting as the counterpart to the active Qal stem. It is used when the subject is the recipient of the action (e.g., “was written”) or when the action is self-directed (e.g., “to protect oneself”). The Niphal can also express a middle voice, where the subject is both acting and being acted upon. &nbsp;(<a href="https://biblicalhebrew.org/mastering-the-niphal-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
-  hebrew_info["hithpael"]='The Hithpael stem is related to the Piel stem formation, and it generally expresses the reflexive voice of the meaning of a verb in the Piel stem.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/stem_hithpael.html">biblicalhebrew.org</a>)';
-  hebrew_info["piel"]='The Piel stem is one of the most expressive and nuanced verb forms in Biblical Hebrew. It is often associated with intensive, factitive, or causative actions, making it a critical component for understanding the depth and richness of the Hebrew Bible (Tanakh).&nbsp;(<a href="https://biblicalhebrew.org/mastering-the-piel-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
-  hebrew_info["pual"]='The Pual stem in Biblical Hebrew is the passive counterpart of the Piel stem. It is used to express actions received by the subject in an intensive or causative manner. &nbsp;(<a href="https://biblicalhebrew.org/mastering-the-pual-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
-  hebrew_info["hithpael"]='The Hithpael stem in Biblical Hebrew is a dynamic and reflective verbal form, often used to indicate reflexive, reciprocal, or intensive actions. As a derived stem, the Hithpael frequently conveys a subject acting upon itself, performing actions in a repetitive or deliberate manner, or engaging in mutual interaction with others. &nbsp;(<a href="https://biblicalhebrew.org/mastering-the-hithpael-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
-  hebrew_info["hiphil"]='The Hiphil stem in Biblical Hebrew primarily conveys a causative action. It allows the speaker or writer to express that the subject causes someone or something else to perform an action or be in a certain state. This causative nuance makes the Hiphil one of the most dynamic and versatile verb stems in the Hebrew language.&nbsp;(<a href="https://biblicalhebrew.org/mastering-the-hiphil-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
-  hebrew_info["hophal"]='The Hophal stem in Biblical Hebrew stands out as a powerful yet subtle tool for conveying passive causation. As the passive counterpart to the Hiphil, the Hophal highlights actions where the subject is acted upon, often emphasizing divine sovereignty or the inevitability of certain outcomes. &nbsp;(<a href="https://biblicalhebrew.org/mastering-the-hophal-stem-in-biblical-hebrew.aspx">biblicalhebrew.org</a>)';
-  hebrew_info["hishtaphel"]='The Hishtaphel is an extremely rare stem formation that is similar to the Hiphil and expresses causative action in active voice.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/stem_hishtaphel.html">uhg.readthedocs.io</a>)';
-  
-  hebrew_info["perfect"]='A Perfect verb usually expresses a completed action in the past. However, the Perfect conjugation can also be used to describe other kinds of actions.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/verb_perfect.html">uhg.readthedocs.io</a>)';
-  hebrew_info["imperfect"]='An Imperfect verb is used generally to indicate an action that is not complete, or an action that either occurs in the present or will occur in the future. However, an Imperfect verb can also be used to describe other kinds of actions.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/verb_imperfect.html">uhg.readthedocs.io</a>)';
-  hebrew_info["Infinitive"]='The infinitive absolute is an extremely flexible non-finite verbal form and can function as an adverb, a finite verb, a verbal complement, or a noun. Its most common use is to express intensity or certainty of verbal action.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/infinitive_absolute.html">uhg.readthedocs.io</a>)';
-  hebrew_info["imperative"]='An imperative verb is used to express direct commands, instructions, and other similar actions with varying degrees of desirability as determined by the context.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/verb_imperative.html">uhg.readthedocs.io</a>)';
-  hebrew_info["jussive"]='A jussive verb is used to express indirect commands, direct negative commands limited by time, and other similar actions with varying degrees of desirability as determined by the context. In English, a Jussive is often translated with the helping verb “may” or “let,” depending on the context (”May he do this!” or “Let him do this!”). &nbsp;(<a href="https://uhg.readthedocs.io/en/latest/verb_jussive.html">uhg.readthedocs.io</a>)';
-  hebrew_info["participle"]='An active participle is a non-finite verbal form with active voice that can function as a verb (either a main verb or a verbal complement), an adjective, or a noun. When used verbally, an active participle most often expresses continuous or imminent action.&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/participle_active.html">uhg.readthedocs.io</a>)';
-  hebrew_info["passive"]='A verb in the passive voice indicates that the action of the verbs is performed on the subject (e.g., The baby was washed by the mother.)&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/en_ugg/content/voice_passive.html">uhg.readthedocs.io</a>)';
-  hebrew_info["middle"]='Middle voice indicates that the action of a verb is done by the subject to itself, or for its benefit (e.g., He washed himself).&nbsp;(<a href="https://uhg.readthedocs.io/en/latest/en_ugg/content/voice_middle.html">uhg.readthedocs.io</a>)';
+  hebrew_info['perfect']=['in past or present','eg "he did/ does"','he saw / sees it','https://uhg.readthedocs.io/en/latest/verb_perfect.html','']
+  hebrew_info['imperfect']=['in future or present','eg "he will do/ does"','will / does see it','https://uhg.readthedocs.io/en/latest/verb_imperfect.html','']
+  hebrew_info['infinitive']=['emphasise the action','eg "to do"','he certainly saw it','https://uhg.readthedocs.io/en/latest/infinitive_absolute.html','']
+  hebrew_info['infinitive_construct']=['purpose of the action','','in order to see it','https://uhg.readthedocs.io/en/latest/infinitive_construct.html','']
+  hebrew_info['imperative']=['an order or plea','eg "do it!"','do see it!','https://uhg.readthedocs.io/en/latest/verb_imperative.html','']
+  hebrew_info['jussive']=['a request or hope','eg "may he do it!"','may he see you!','https://uhg.readthedocs.io/en/latest/verb_jussive.html','']
+  hebrew_info['cohortative']=['a decision or encouragement','eg "may I do it!"','let us see it!','https://uhg.readthedocs.io/en/latest/verb_cohortative.html','']
+  hebrew_info['participle']=['action as a thing or description','eg "the doing of it"','a seer, a seeing man','https://uhg.readthedocs.io/en/latest/participle_active.html','']
 
   var r = cf.getVariablesForVerbTable();
   var greekXAxisItems = r.nameOfXAxisItems;
@@ -106,147 +133,24 @@ function enableInfoIcon() {
   var hebrewXAxisItems = r.nameOfXAxisItems;
   var hebrewYAxisItems = r.nameOfYAxisItems;
   require(["qtip"], function () {
-    for (l = 0; l < greekXAxisItems.length; l++) {
-      var element = $(".tense_info" + l);
-      element.qtip({
-        position: { my: "top left", at: "top left", viewport: $(window) },
-        style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-        show: { event: 'mouseenter' },
-        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-        content: {
-          text: greek_info[greekXAxisItems[l]]
-        }
-      });
-    }
-    for (l = 0; l < greekYAxisItems.length; l++) {
-      var element = $(".mood_info" + l);
-      element.qtip({
-        position: { my: "top left", at: "top left", viewport: $(window) },
-        style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-        show: { event: 'mouseenter' },
-        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-        content: {
-          text: greek_info[greekYAxisItems[l]]
-        }
-      });
-    }
-    for (l = 0; l < hebrewXAxisItems.length; l++) {
-      var element = $(".stem_info" + l);
-      element.qtip({
-        position: { my: "top left", at: "top left", viewport: $(window) },
-        style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-        show: { event: 'mouseenter' },
-        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-        content: {
-          text: hebrew_info[hebrewXAxisItems[l]]
-        }
-      });
-    }
-    for (l = 0; l < hebrewYAxisItems.length; l++) {
-      var element = $(".form_info" + l);
-      element.qtip({
-        position: { my: "top left", at: "top left", viewport: $(window) },
-        style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-        show: { event: 'mouseenter' },
-        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-        content: {
-          text: hebrew_info[hebrewYAxisItems[l]]
-        }
-      });
-    }
-
-    var element = $(".passive_info");
-    element.qtip({
-      position: { my: "top left", at: "top left", viewport: $(window) },
-      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-      show: { event: 'mouseenter' },
-      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-      content: {
-        text: greek_info["passive"]
-      }
-    });
-    var element = $(".middle_info");
-    element.qtip({
-      position: { my: "top left", at: "top left", viewport: $(window) },
-      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-      show: { event: 'mouseenter' },
-      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-      content: {
-        text: greek_info["middle"]
-      }
-    });
-    var element = $(".OTpassive_info");
-    element.qtip({
-      position: { my: "top left", at: "top left", viewport: $(window) },
-      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-      show: { event: 'mouseenter' },
-      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-      content: {
-        text: hebrew_info["passive"]
-      }
-    });
-    var element = $(".OTmiddle_info");
-    element.qtip({
-      position: { my: "top left", at: "top left", viewport: $(window) },
-      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-      show: { event: 'mouseenter' },
-      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-      content: {
-        text: hebrew_info["middle"]
-      }
-    });
-    var element = $(".masc_info");
-    element.qtip({
-      position: { my: "top left", at: "top left", viewport: $(window) },
-      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-      show: { event: 'mouseenter' },
-      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-      content: {
-        text: greek_info["masculine"]
-      }
-    });
-    var element = $(".fem_info");
-    element.qtip({
-      position: { my: "top left", at: "top left", viewport: $(window) },
-      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-      show: { event: 'mouseenter' },
-      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-      content: {
-        text: greek_info["feminine"]
-      }
-    });
-    var element = $(".neut_info");
-    element.qtip({
-      position: { my: "top left", at: "top left", viewport: $(window) },
-      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-      show: { event: 'mouseenter' },
-      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-      content: {
-        text: greek_info["neuter"]
-      }
-    });
-    var element = $(".singular_info");
-    element.qtip({
-      position: { my: "top left", at: "top left", viewport: $(window) },
-      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-      show: { event: 'mouseenter' },
-      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-      content: {
-        text: greek_info["singular"]
-      }
-    });
-    var element = $(".plural_info");
-    element.qtip({
-      position: { my: "top left", at: "top left", viewport: $(window) },
-      style: { tip: false, classes: 'draggable-tooltip xrefPopup' },
-      show: { event: 'mouseenter' },
-      hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-      content: {
-        text: greek_info["plural"]
-      }
-    });
+    for (l = 0; l < greekYAxisItems.length; l++)
+      addElementToQtip(".tense_info" + l, greek_info[greekYAxisItems[l]]);
+    for (l = 0; l < greekXAxisItems.length; l++)
+      addElementToQtip(".mood_info" + l, greek_info[greekXAxisItems[l]]);
+    for (l = 0; l < hebrewXAxisItems.length; l++)
+      addElementToQtip(".stem_info" + l, hebrew_info[hebrewXAxisItems[l]]);
+    for (l = 0; l < hebrewYAxisItems.length; l++)
+      addElementToQtip(".form_info" + l, hebrew_info[hebrewYAxisItems[l]]);
+    addElementToQtip(".passive_info", greek_info["passive"]);
+    addElementToQtip(".OTpassive_info", greek_info["passive"]);
+    addElementToQtip(".middle_info", greek_info["middle"]);
+    addElementToQtip(".OTmiddle_info", greek_info["middle"]);
+    addElementToQtip(".masc_info", greek_info["masculine"]);
+    addElementToQtip(".fem_info", greek_info["feminine"]);
+    addElementToQtip(".neut_info", greek_info["neuter"]);
+    addElementToQtip(".singular_info", greek_info["singular"]);
+    addElementToQtip(".plural_info", greek_info["plural"]);
   });
-
 }
 
 function addVerbSideBar() {

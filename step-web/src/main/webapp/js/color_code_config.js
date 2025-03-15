@@ -91,7 +91,7 @@ function enableInfoIcon() {
   greek_info['future']=['action not yet started','eg "he will do”','he will eat','https://ugg.readthedocs.io/en/latest/tense_future.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-19-future-active-middle-indicative']
   greek_info['aorist']=['action in past or present','eg "he did/ does”','he ate','https://ugg.readthedocs.io/en/latest/tense_aorist.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-23-first-aorist-active-middle-indicative']
   greek_info['imperfect']=['action was continuous','eg "he was doing”','he was eating','https://ugg.readthedocs.io/en/latest/tense_imperfect.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-21-imperfect-indicative']
-  greek_info['perfect']=['action is done & stays done','eg "he did & it\'s done”','he\'s eaten','https://ugg.readthedocs.io/en/latest/tense_perfect.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-25-perfect-indicative']
+  greek_info['perfect']=['action was done & stays done','eg "he did & it\'s done”','he\'s eaten','https://ugg.readthedocs.io/en/latest/tense_perfect.html','https://www.biblicaltraining.org/learn/institute/nt201-biblical-greek/nt201-25-perfect-indicative']
   greek_info['pluperfect']=['action that was already done','eg "he had done”','he had eaten','https://ugg.readthedocs.io/en/latest/tense_pluperfect.html','']
     
   greek_info['active']=['doing something','eg "he hit it”','he sold cakes','https://ugg.readthedocs.io/en/latest/voice_active.html','']

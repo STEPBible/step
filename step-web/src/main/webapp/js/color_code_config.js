@@ -153,8 +153,7 @@ function enableInfoIcon() {
 
 function addVerbSideBar() {
     var r = cf.getVariablesForVerbTable();
-    var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
-    xAxisItems = r.orderOfXAxisItems;
+    var yAxisItems, descOfXAxisItems, descOfYAxisItems;
     yAxisItems = r.orderOfYAxisItems;
     descOfXAxisItems = r.descOfXAxisItems;
     descOfYAxisItems = r.descOfYAxisItems;
@@ -171,7 +170,8 @@ function addVerbSideBar() {
       '</span>' +
       '</div>' +
     '</td>' +
-    '<td><h2>Greek Verbs</td></tr>';
+    '<td>&nbsp;&nbsp;&nbsp;</td>' +
+    '<td><h2>Greek Verbs</td></tr></table><table id="greekverbtable">';
 
     for (var i = 0; i < yAxisItems.length; i ++) {
       var cssClass = 'class="tensePreview' + i;
@@ -179,8 +179,8 @@ function addVerbSideBar() {
         cssClass += ' ul' + c4[C_Greek][C_slctUlVerbItem][i].replace(/\s/g, ""); 
       cssClass += '"';
       htmlTable += '<tr>';
-      htmlTable += '<td style="padding-bottom:12px">' + htmlToAdd5a(i, "") +
-        '<span style="padding-bottom:12px" ' + cssClass + '>' + descOfYAxisItems[i] + '</span>' +
+      htmlTable += '<td style="padding-bottom:12px">' + htmlToAdd5a(i, "") + '</td>' +
+        '<td><span style="padding-bottom:12px" ' + cssClass + '>' + descOfYAxisItems[i] + '</span>' +
         '</td>';
       htmlTable += '<td>' + htmlToAdd5b(i, "", false) +
         '<a class="tense_info' +  i + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
@@ -746,7 +746,10 @@ function addNounSideBar() {
           '</span>' +
           '</div>' +
         '</td>' +
+        '<td>&nbsp;&nbsp;&nbsp;</td>' +
         '<td><h2>Gender & Number</td></tr>' +
+      '</table>' +
+      '<table id="gendernumbertable">' +
         '<tr><td class="sing mas">Masculine:</td>' +
         '<td>' +
           '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
@@ -815,12 +818,13 @@ function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, num
 }
 
 function addOtTitleToXAxisSideBar(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows) {
-  var htmlTable = '<tr>';
+  var htmlTable = '';
   var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
+    htmlTable += '<tr><td>' + htmlToAdd3a(j, 'OT', false) + '</td>';
     var shortenName = descOfXAxisItems[j].split("<br")[0] + " etc";
-    htmlTable += '<tr><td style="text-decoration:underline solid 33%" class="stemPreview' + j + '">' + 
-    htmlToAdd3a(j, 'OT', false) + shortenName + '</td>';
+    htmlTable += '<td style="text-decoration:underline solid 33%" class="stemPreview' + j + '">' + 
+      shortenName + '</td>';
     htmlTable += '<td>' + htmlToAdd3b(j, 'OT', false) +
       '<span><a class="stem_info' +  j + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span' +
       '</td>';
@@ -923,7 +927,8 @@ function addOTVerbSideBar() {
       '</span>' +
       '</div>' +
     '</td>' +
-    '<td><h2>Hebrew Verbs</td></tr>';
+    '<td>&nbsp;&nbsp;&nbsp;</td>' +
+    '<td><h2>Hebrew Verbs</td></tr></table><table id="hebrewverbtable">';
   for (var i = 0; i < yAxisItems.length; i += 1) {
     htmlTable += '<tr>';
     var cssClass = 'formPreview' + i;
@@ -1084,16 +1089,12 @@ function userToggleClrGrammar(grammarFunction) {
       updateVerbInputFields(checkedValue);
       if (grammarFunction === 'verb2') {
         if (checkedValue) {
-          $('.vrbInptX').show();
-          $('.vrbInptY').show();
-          $('#sideBarVerbClrs').find('.glyphicon-info-sign').show();
+          $("#greekverbtable").show();
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");  
         }
         else {
-          $('.vrbInptX').hide();
-          $('.vrbInptY').hide();
-          $('#sideBarVerbClrs').find('.glyphicon-info-sign').hide();
+          $("#greekverbtable").hide();
         }
       }
     }
@@ -1104,9 +1105,9 @@ function userToggleClrGrammar(grammarFunction) {
       cv[C_userTurnGenderNumberFromOffToOn] = checkedValue;
       if (grammarFunction === 'gennum2') {
         if (checkedValue)
-          $('#sideBargenderNumClrs').find('.glyphicon-info-sign').show();
+          $('#gendernumbertable').show();
         else
-          $('#sideBargenderNumClrs').find('.glyphicon-info-sign').hide();
+        $('#gendernumbertable').hide();
       }
     }
     else if ((grammarFunction === 'OTverb') || (grammarFunction === 'OTverb2')) {
@@ -1115,16 +1116,12 @@ function userToggleClrGrammar(grammarFunction) {
       updateVerbInputFields(checkedValue, 'OT');
       if (grammarFunction === 'OTverb2') {
         if (checkedValue) {
-          $('.OTvrbInptX').show();
-          $('.OTvrbInptY').show();
-          $('#sideBarHVerbClrs').find('.glyphicon-info-sign').show();
+          $('#hebrewverbtable').show();
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");  
         }
         else {
-           $('.OTvrbInptX').hide();
-           $('.OTvrbInptY').hide();
-           $('#sideBarHVerbClrs').find('.glyphicon-info-sign').hide();
+           $('#hebrewverbtable').hide();
         }
       }
     }
@@ -1990,7 +1987,6 @@ function resetClrConfig() {
 }
 
 function closeClrConfig() {
-debugger;
   step.util.closeModal("grammarClrModal");
   initializeClrCodeSidebar(); // The color code configuration modal is called by a user click from the sidebar.  Assuming the user has updated the color, update the colors in the sidebar.
 }
@@ -2301,7 +2297,7 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   var result = "";
   var passiveOnOffCheckbox = '<input id="chkbx' + otPrefix + 'PassiveBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("passive", "' + otPrefix + '")\'>';
   if (callFromSidebar)
-    result += "<tr><td>" + passiveOnOffCheckbox;
+    result += "<tr><td>" + passiveOnOffCheckbox + "</td><td>";
   result += '<span';
   if (callFromSidebar) {
     result += ' style="padding-bottom:12px"';
@@ -2336,7 +2332,7 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   }
   middleOnOffCheckbox = '<input id="chkbx' + otPrefix + 'MiddleBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("middle", "' + otPrefix + '")\'>';
   if (callFromSidebar)
-    result += "<tr><td>" + middleOnOffCheckbox;
+    result += "<tr><td>" + middleOnOffCheckbox + "</td><td>";
   result += '<span';
   if (callFromSidebar) {
     result += ' style="padding-bottom:12px"';
@@ -2406,8 +2402,9 @@ function addTitleToXAxis(descOfXAxisItems) {
 function addTitleToXAxisSideBar(descOfXAxisItems) {
   var htmlTable = '';
   for (var j = 0; j < descOfXAxisItems.length; j += 1) {
-    htmlTable += '<tr><td style="text-decoration:underline solid 33%" class="moodPreview' + j + '">';
-    htmlTable += htmlToAdd3a(j, "", false) + descOfXAxisItems[j];
+    htmlTable += '<tr><td>';
+    htmlTable += htmlToAdd3a(j, "", false) + '</td>';
+    htmlTable += '<td style="text-decoration:underline solid 33%" class="moodPreview' + j + '">' + descOfXAxisItems[j];
     htmlTable += '</td>';
     htmlTable += '<td>' + htmlToAdd3b(j, "", false); 
     htmlTable += '<span><a class="mood_info' + j + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>';
@@ -2432,8 +2429,9 @@ function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar,
     }
   }
   if (forSideBar) {
-    htmlTable += '<td style="padding-bottom:12" class="' + verbClass + '">' + htmlToAdd5a(rowNum, ot) + 
-    '<span>';
+    htmlTable += '<td>' + htmlToAdd5a(rowNum, ot) + '</td>' +
+      '<td style="padding-bottom:12" class="' + verbClass + '">' +
+      '<span>';
   }
   else
     htmlTable += '<td>';

@@ -1990,9 +1990,8 @@ function resetClrConfig() {
 }
 
 function closeClrConfig() {
-  $('.sp-container').remove(); // The color selection tool is not totally removed so manually remove it. 08/19/2019
+debugger;
   step.util.closeModal("grammarClrModal");
-  $('.modal-backdrop.in').remove(); // The color selection tool is not totally removed so manually remove it. 05/15/2021
   initializeClrCodeSidebar(); // The color code configuration modal is called by a user click from the sidebar.  Assuming the user has updated the color, update the colors in the sidebar.
 }
 

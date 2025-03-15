@@ -3749,7 +3749,7 @@ step.util = {
 			});
 			if ((element.parentNode) && (modalID !== "raiseSupport")) element.parentNode.removeChild(element);
 			$('.qtip-titlebar button.close').click();
-			if ((modalID === "showLongAlertModal") || (modalID === "fontSettings")) {
+			if ((modalID === "showLongAlertModal") || (modalID === "fontSettings") || (modalID === "grammarClrModal")) {
 				$(".sp-container").remove();
 				$(".modal-backdrop.in").remove();
 			}

@@ -41,6 +41,12 @@ function initializeClrCodeSidebar() {
   enableOrDisableAdvancedToolsButtons('OT');
   enableOrDisableVerbAndNounButtonsSideBar();
   enableInfoIcon();
+  if (!c4[C_enableGenderNumberClr])
+    $('#gendernumbertable').hide();
+  if (!c4[C_Greek][C_enableVerbClr])
+    $("#greekverbtable").hide();
+  if (!c4[C_OT][C_enableVerbClr])
+    $("#hebrewverbtable").hide();
   cf.refreshClrGrammarCSS();
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&

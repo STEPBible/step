@@ -3084,8 +3084,10 @@ step.util = {
 		step.util.closeModal("showLongAlertModal");
 		$('.qtip-titlebar button.close').click();
 		var extraStyling = (panelBodies == null) ? '' : 'style="padding:25px" ';
+		var showModalUntilClose = ((headerText.toLowerCase().indexOf('color') > -1) || (headerText.toLowerCase().indexOf('font') > -1)) ?
+			' data-backdrop="static"' : ''; // The color and the font modals use the spectrum library which need to be clean up manually.
 		$(_.template(
-			'<div id="showLongAlertModal" class="modal" ' + extraStyling + 'role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div id="showLongAlertModal" class="modal" ' + extraStyling + 'role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"' + showModalUntilClose + '>' +
 				'<div class="modal-dialog">' +
 					'<div class="modal-content stepModalFgBg"">' +
 						'<script>' +
@@ -3429,9 +3431,7 @@ step.util = {
 								'if ((baseColor === "#17758F") || (baseColor === "#c58af9")) step.util.setDefaultColor("close");' +
 								'else setColor(baseColor);' +
 							'}' +
-							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
 							'step.util.closeModal("fontSettings");' +
-							'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021
 						'}' +
 					'</script>' +
 					'<div class="modal-header">' +
@@ -3749,6 +3749,10 @@ step.util = {
 			});
 			if ((element.parentNode) && (modalID !== "raiseSupport")) element.parentNode.removeChild(element);
 			$('.qtip-titlebar button.close').click();
+			if ((modalID === "showLongAlertModal") || (modalID === "fontSettings")) {
+				$(".sp-container").remove();
+				$(".modal-backdrop.in").remove();
+			}
 		}
     },
 	addTagLine: function(){

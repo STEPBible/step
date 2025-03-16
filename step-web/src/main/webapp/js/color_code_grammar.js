@@ -25,45 +25,40 @@ var C_chkbxMiddleUlClr1 = 13; // TBRBMR
 var C_chkbxMiddleUlColr1Value = 14; // TBRBMR
 var C_verbTableXHeader = 15; // TBRBMR
 var C_verbTableYHeader = 16; // TBRBMR
-var C_granularControlOfMoods = 17; // TBRBMR
-var C_granularControlOfTenses = 18; // TBRBMR
-var C_moodsOnOff = 19; // TBRBMR
-var C_tensesOnOff = 20; // TBRBMR
-var C_inAnimate = 21; // TBRBMR
-var C_orderOfTense = 22; // TBRBMR
-var C_orderOfMood = 23; // TBRBMR
-var C_tenseToCombineWithPrevious = 24; // TBRBMR
-var C_moodToCombineWithPrevious = 25; // TBRBMR
-var C_xAxisForMood = 26; // TBRBMR
-var C_inPassiveUlClr2 = 27; // TBRBMR
-var C_inMiddleUlClr2 = 28; // TBRBMR
-var C_chkbxPassiveUlClr2 = 29; // TBRBMR
-var C_chkbxPassiveUlColr2Value = 30; // TBRBMR
-var C_chkbxMiddleUlClr2 = 31; // TBRBMR
-var C_chkbxMiddleUlColr2Value = 32; // TBRBMR
+var C_moodsOnOff = 17; // TBRBMR
+var C_tensesOnOff = 18; // TBRBMR
+var C_inAnimate = 19; // TBRBMR
+var C_orderOfTense = 20; // TBRBMR
+var C_orderOfMood = 21; // TBRBMR
+var C_tenseToCombineWithPrevious = 22; // TBRBMR
+var C_moodToCombineWithPrevious = 23; // TBRBMR
+var C_xAxisForMood = 24; // TBRBMR
+var C_inPassiveUlClr2 = 25; // TBRBMR
+var C_inMiddleUlClr2 = 26; // TBRBMR
+var C_chkbxPassiveUlClr2 = 27; // TBRBMR
+var C_chkbxPassiveUlColr2Value = 28; // TBRBMR
+var C_chkbxMiddleUlClr2 = 29; // TBRBMR
+var C_chkbxMiddleUlColr2Value = 30; // TBRBMR
 var C_OT = 1; // TBRBMR
-var C_granularControlOfXAxis = 17; // TBRBMR
-var C_granularControlOfYAxis = 18; // TBRBMR
-var C_xAxisOnOff = 19; // TBRBMR
-var C_yAxisOnOff = 20; // TBRBMR
-var C_orderOfForm = 21; // TBRBMR
-var C_verbFormToCombineWithPrevious = 22; // TBRBMR
-var C_orderOfHebrewStem = 23; // TBRBMR
-var C_hebrewStemToCombineWithPrevious = 24; // TBRBMR
-var C_orderOfAramaicStem = 25; // TBRBMR
-var C_aramaicStemToCombineWithPrevious = 26; // TBRBMR
-var C_hebrewCodeOfStem = 27; // TBRBMR
-var C_aramaicCodeOfStem = 28; // TBRBMR
-var C_codeOfForm = 29; // TBRBMR
-var C_xAxisForStem = 30; // TBRBMR
-var C_enableAdvancedTools = 2; // TBRBMR
+var C_xAxisOnOff = 17; // TBRBMR
+var C_yAxisOnOff = 18; // TBRBMR
+var C_orderOfForm = 19; // TBRBMR
+var C_verbFormToCombineWithPrevious = 20; // TBRBMR
+var C_orderOfHebrewStem = 21; // TBRBMR
+var C_hebrewStemToCombineWithPrevious = 22; // TBRBMR
+var C_orderOfAramaicStem = 23; // TBRBMR
+var C_aramaicStemToCombineWithPrevious = 24; // TBRBMR
+var C_hebrewCodeOfStem = 25; // TBRBMR
+var C_aramaicCodeOfStem = 26; // TBRBMR
+var C_codeOfForm = 27; // TBRBMR
+var C_xAxisForStem = 28; // TBRBMR
+var C_c4Version = 2; // TBRBMR
 var C_enableGenderNumberClr = 3; // TBRBMR
 var C_inClrMasculine = 4; // TBRBMR
 var C_inClrFeminine = 5; // TBRBMR
 var C_inClrNeuter = 6; // TBRBMR
 var C_slctUlSingular = 7; // TBRBMR
 var C_slctUlPlural = 8; // TBRBMR
-var C_c4Version = 9; // TBRBMR
 var C_activeIndexArray = 0; // TBRBMR
 var C_middleIndexArray = 1; // TBRBMR
 var C_passiveIndexArray = 2; // TBRBMR
@@ -171,7 +166,7 @@ var cc = [ /* cc = Color code grammar const.  Changed from const to var because 
     'future': 'f'
   },
   // C_defaultOrderOfTense
-  ['p', 'f', 'a', 'i', 'r', 'l'],
+  ['p', 'i', 'a', 'r', 'l', 'f'],
   // C_defaultTenseToCombineWithPrevious
   [false, false, false, false, false, false],
   // C_robinsonCodeOfMood
@@ -193,7 +188,7 @@ var cc = [ /* cc = Color code grammar const.  Changed from const to var because 
     'participle': 'p'
   },
   // C_defaultOrderOfMood
-  ['i', 's', 'o', 'm', 'n', 'p'],
+  ['i', 'm', 's', 'o', 'n', 'p'],
   // C_defaultMoodToCombineWithPrevious
   [false, false, false, false, false, false],
   // C_otNameOfVerbForm
@@ -438,90 +433,12 @@ var cv = // cv = Color code grammar variables
 var c4;  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
 
 var cf = {
-  createOldC4: function() { // c4 is old - current color code config
-    var x = [];
-    x[C_Greek] = [];
-        x[C_Greek][C_enableVerbClr] = true;
-        x[C_Greek][C_inClrVerbItem] = ['#31ff00', '#ffa500', '#925011', '#f92d02', '#fff700', '#091bfd'];
-        x[C_Greek][C_slctUlVerbItem] = ['Short Reverse Arrow', 'Short Reverse Arrow', 'Reverse Arrow', 'Dots', 'Dash', 'Arrow'];
-        x[C_Greek][C_inPassiveBkgrdClr] = '#ffd6b8';
-        x[C_Greek][C_inPassiveUlClr1] = '#000000';
-        x[C_Greek][C_chkbxPassiveBkgrdClr] = true;
-        x[C_Greek][C_chkbxPassiveBkgrdColrValue] = false;
-        x[C_Greek][C_chkbxPassiveUlClr1] = true;
-        x[C_Greek][C_chkbxPassiveUlColr1Value] = false;
-        x[C_Greek][C_inMiddleBkgrdClr] = '#a3fefe';
-        x[C_Greek][C_inMiddleUlClr1] = '#000000';
-        x[C_Greek][C_chkbxMiddleBkgrdClr] = true;
-        x[C_Greek][C_chkbxMiddleBkgrdColrValue] = false;
-        x[C_Greek][C_chkbxMiddleUlClr1] = true;
-        x[C_Greek][C_chkbxMiddleUlColr1Value] = false;
-        x[C_Greek][C_verbTableXHeader] = null;
-        x[C_Greek][C_verbTableYHeader] = { desc: ['Past', 'Past /<br>Present', 'Present', 'Future'], repeat: [2, 0, 0, 0] };
-        x[C_Greek][C_granularControlOfMoods] = false;
-        x[C_Greek][C_granularControlOfTenses] = false;
-        x[C_Greek][C_moodsOnOff] = [false, false, false, false, false, false];
-        x[C_Greek][C_tensesOnOff] = [false, false, false, false, false, false];
-        x[C_Greek][C_inAnimate] = [false, false, false, false, false, false];
-        x[C_Greek][C_orderOfTense] = cc[C_defaultOrderOfTense];
-        x[C_Greek][C_orderOfMood] = cc[C_defaultOrderOfMood];
-        x[C_Greek][C_tenseToCombineWithPrevious] = cc[C_defaultTenseToCombineWithPrevious];
-        x[C_Greek][C_moodToCombineWithPrevious] = cc[C_defaultMoodToCombineWithPrevious];
-        x[C_Greek][C_xAxisForMood] = true;
-        x[C_Greek][C_inPassiveUlClr2] = '#ffffff';
-        x[C_Greek][C_inMiddleUlClr2] = '#ffffff';
-        x[C_Greek][C_chkbxPassiveUlClr2] = false;
-        x[C_Greek][C_chkbxPassiveUlColr2Value] = false;
-        x[C_Greek][C_chkbxMiddleUlClr2] = false;
-        x[C_Greek][C_chkbxMiddleUlColr2Value] = false;
-    x[C_OT] = [];
-        x[C_OT][C_enableVerbClr] = true;
-        x[C_OT][C_inClrVerbItem] = ['#000000', '#ff0000', '#0000ff', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000'];
-        x[C_OT][C_slctUlVerbItem] = ['Reverse Arrow', 'Dots', 'Dash', 'Dash Dot', 'Arrow', 'Short Arrow', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline'];
-        x[C_OT][C_inPassiveBkgrdClr] = '#ffd6b8';
-        x[C_OT][C_inPassiveUlClr1] = '#000000';
-        x[C_OT][C_chkbxPassiveBkgrdClr] = true;
-        x[C_OT][C_chkbxPassiveBkgrdColrValue] = true;
-        x[C_OT][C_chkbxPassiveUlClr1] = true;
-        x[C_OT][C_chkbxPassiveUlColr1Value] = false;
-        x[C_OT][C_inMiddleBkgrdClr] = '#a3fefe';
-        x[C_OT][C_inMiddleUlClr1] = '#000000';
-        x[C_OT][C_chkbxMiddleBkgrdClr] = true;
-        x[C_OT][C_chkbxMiddleBkgrdColrValue] = true;
-        x[C_OT][C_chkbxMiddleUlClr1] = true;
-        x[C_OT][C_chkbxMiddleUlColr1Value] = false;
-        x[C_OT][C_verbTableXHeader] = { desc: ['Simple','Intensive / Resultative', 'Causative / Declarative'], repeat: [0, 0, 0]};
-        x[C_OT][C_verbTableYHeader] = { desc: ['Past or poss.<br>Present','Any time<br>or Present', 'Present or<br>Future'], repeat: [0, 2, 1] };
-        x[C_OT][C_granularControlOfXAxis] = false;
-        x[C_OT][C_granularControlOfYAxis] = false;
-        x[C_OT][C_xAxisOnOff] = [false, false, false, false, false, false, false, false, false, false, false, false];
-        x[C_OT][C_yAxisOnOff] = [false, false, false, false, false, false, false, false, false, false, false, false];
-        x[C_OT][C_orderOfForm] = cc[C_defaultOrderOfOTVerbForm];
-        x[C_OT][C_verbFormToCombineWithPrevious] = cc[C_defaultOTVerbFormToCombineWithPrevious];
-        x[C_OT][C_orderOfHebrewStem] = cc[C_defaultOrderOfHebrewStem];
-        x[C_OT][C_hebrewStemToCombineWithPrevious] = cc[C_defaultHebriewStemToCombineWithPrevious];
-        x[C_OT][C_orderOfAramaicStem] = cc[C_defaultOrderOfAramaicStem];
-        x[C_OT][C_aramaicStemToCombineWithPrevious] = cc[C_defaultAramaicStemToCombineWithPrevious];
-        x[C_OT][C_hebrewCodeOfStem] = cc[C_defaultHebrewCodeOfStem];
-        x[C_OT][C_aramaicCodeOfStem] = cc[C_defaultAramaicCodeOfStem];
-        x[C_OT][C_codeOfForm] = cc[C_defaultCodeOfForm];
-        x[C_OT][C_xAxisForStem] = true;
-    x[C_enableAdvancedTools] = true;
-    x[C_enableGenderNumberClr] = true;
-    x[C_inClrMasculine] = '#000099';
-    x[C_inClrFeminine] = '#C90000';
-    x[C_inClrNeuter] = '#000000';
-    x[C_slctUlSingular] = 'normal';
-    x[C_slctUlPlural] = 'bold';
-    x[C_c4Version] = '20190905';
-    return x;
-  },
   createC4: function() { // c4 is current color code config
     var x = [];
     x[C_Greek] = [];
         x[C_Greek][C_enableVerbClr] = true;
-        x[C_Greek][C_inClrVerbItem] = ['#31ff00', '#ffa500', '#925011', '#f92d02', '#fff700', '#091bfd'];
-        x[C_Greek][C_slctUlVerbItem] = ['Dash', 'Arrow', 'Dots', 'Reverse Arrow', 'Short Reverse Arrow', 'Short Reverse Arrow'];
+        x[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
+        x[C_Greek][C_slctUlVerbItem] = ['Dash', 'Arrow', 'Underline', '2 lines', '2 lines', 'Dots', 'Underline'];
         x[C_Greek][C_inPassiveBkgrdClr] = '#ffd6b8';
         x[C_Greek][C_inPassiveUlClr1] = '#000000';
         x[C_Greek][C_chkbxPassiveBkgrdClr] = true;
@@ -535,14 +452,14 @@ var cf = {
         x[C_Greek][C_chkbxMiddleUlClr1] = true;
         x[C_Greek][C_chkbxMiddleUlColr1Value] = false;
         x[C_Greek][C_verbTableXHeader] = null;
-        x[C_Greek][C_verbTableYHeader] = { desc: ['Present', 'Future', 'Past /<br>Present', 'Past'], repeat: [0, 0, 0, 2] };
-        x[C_Greek][C_granularControlOfMoods] = true;
-        x[C_Greek][C_granularControlOfTenses] = true;
+        x[C_Greek][C_verbTableYHeader] = null;
+        
         x[C_Greek][C_moodsOnOff] = [true, true, true, true, true, true];
         x[C_Greek][C_tensesOnOff] = [true, true, true, true, true, true];
         x[C_Greek][C_inAnimate] = [false, false, false, false, false, false];
         x[C_Greek][C_orderOfTense] = cc[C_defaultOrderOfTense];
         x[C_Greek][C_orderOfMood] = cc[C_defaultOrderOfMood];
+        
         x[C_Greek][C_tenseToCombineWithPrevious] = cc[C_defaultTenseToCombineWithPrevious];
         x[C_Greek][C_moodToCombineWithPrevious] = cc[C_defaultMoodToCombineWithPrevious];
         x[C_Greek][C_xAxisForMood] = true;
@@ -570,8 +487,6 @@ var cf = {
         x[C_OT][C_chkbxMiddleUlColr1Value] = false;
         x[C_OT][C_verbTableXHeader] = { desc: ['Simple','Intensive / Resultative', 'Causative / Declarative'], repeat: [0, 0, 0]};
         x[C_OT][C_verbTableYHeader] = { desc: ['Past or poss.<br>Present','Present or<br>Future', 'Any time<br>or Present'], repeat: [0, 1, 2] };
-        x[C_OT][C_granularControlOfXAxis] = true;
-        x[C_OT][C_granularControlOfYAxis] = true;
         x[C_OT][C_xAxisOnOff] = [true, true, true, true, true, true, true, true, true, true, true, true];
         x[C_OT][C_yAxisOnOff] = [true, true, true, true, true, true, true, true, true, true, true, true];
         x[C_OT][C_orderOfForm] = cc[C_defaultOrderOfOTVerbForm];
@@ -584,14 +499,13 @@ var cf = {
         x[C_OT][C_aramaicCodeOfStem] = cc[C_defaultAramaicCodeOfStem];
         x[C_OT][C_codeOfForm] = cc[C_defaultCodeOfForm];
         x[C_OT][C_xAxisForStem] = true;
-    x[C_enableAdvancedTools] = true;
     x[C_enableGenderNumberClr] = true;
     x[C_inClrMasculine] = '#000099';
     x[C_inClrFeminine] = '#C90000';
     x[C_inClrNeuter] = '#000000';
     x[C_slctUlSingular] = 'normal';
     x[C_slctUlPlural] = 'bold';
-    x[C_c4Version] = '20190905';
+    x[C_c4Version] = '20250315';
     return x;
   },
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
@@ -934,8 +848,8 @@ var cf = {
           var indexToUlVerbCSS = arrayIndexOfCurrentTense[counter3];
           if (moodIndex.indexOf(indexToUlVerbCSS) > -1) {
             cf.createUlForOneInstanceOfTense(cv[C_ulVerbCSS][indexToUlVerbCSS], srcImgObj, colorForXAxis, indexToUlVerbCSS);
-            cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense = (!(c4[C_Greek][C_granularControlOfTenses] && !c4[C_Greek][C_tensesOnOff][tenseCounter]));
-            cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood = (!(c4[C_Greek][C_granularControlOfMoods] && !c4[C_Greek][C_moodsOnOff][moodCounter]));
+            cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense = c4[C_Greek][C_tensesOnOff][tenseCounter];
+            cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood = c4[C_Greek][C_moodsOnOff][moodCounter];
           }
         }
       }
@@ -948,9 +862,8 @@ var cf = {
   },
 
   displayVerbUlOrNot: function (indexToUlVerbCSS) {
-    if ( ( ( (!c4[C_Greek][C_granularControlOfMoods] && !c4[C_Greek][C_granularControlOfTenses]) ||
-          ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood && c4[C_Greek][C_granularControlOfMoods]) &&
-          ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense && c4[C_Greek][C_granularControlOfTenses]) ) &&
+    if ( ( ( ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood) &&
+          ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense) ) &&
           c4[C_Greek][C_enableVerbClr]) || (indexToUlVerbCSS == -1) ) return true; // indexToUlVerbCSS is -1 when it is OT verb.  Temp solution.
     else return false;
   },
@@ -959,10 +872,10 @@ var cf = {
     var display = false;
     if (c4[C_OT][C_enableVerbClr]) {
       if (yIndex == (cv[C_ulOTVbCSS].length -1)) display = true;
-      else if ( ((!c4[C_OT][C_granularControlOfYAxis]) || (c4[C_OT][C_yAxisOnOff][yIndex])) &&
-          ((!c4[C_OT][C_granularControlOfXAxis]) || (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)])) )
+      else if ( (c4[C_OT][C_yAxisOnOff][yIndex]) &&
+          (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)]) )
         display = true;
-      else if (c4[C_OT][C_granularControlOfYAxis] && c4[C_OT][C_granularControlOfXAxis])
+      else
         display = (c4[C_OT][C_yAxisOnOff][yIndex]) && (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)]);
     }
     return display;
@@ -1007,14 +920,15 @@ var cf = {
             $('.v' + cv[C_ulVerbCSS][j].name).css('background', 'url(' + cv[C_ulVerbCSS][j].img.src + ') repeat-x 100% 100%');
           }
         }
-        else if ((!c4[C_Greek][C_enableVerbClr]) || ((c4[C_Greek][C_granularControlOfMoods]) || (c4[C_Greek][C_granularControlOfTenses]))) $('.v' + cv[C_ulVerbCSS][j].name).css('background', 'none');
+        else
+          $('.v' + cv[C_ulVerbCSS][j].name).css('background', 'none');
       }
     }
     if (otCSSOnThisPage == undefined) {
       for (var j2 = 0; j2 < cv[C_ulOTVbCSS].length; j2 += 1) {
         for (var k = 0; k < cv[C_ulOTVbCSS][j2].length; k += 1) {
           if (cf.displayOTVerbUlOrNot(j2, k)) $('.vot_' + cv[C_ulOTVbCSS][j2][k].name).css('background', 'url(' + cv[C_ulOTVbCSS][j2][k].img.src + ') repeat-x 100% 100%');
-          else if ((!c4[C_OT][C_enableVerbClr]) || ((c4[C_OT][C_granularControlOfXAxis]) || (c4[C_OT][C_granularControlOfYAxis]))) $('.vot_' + cv[C_ulOTVbCSS][j2][k].name).css('background', 'none');
+          else $('.vot_' + cv[C_ulOTVbCSS][j2][k].name).css('background', 'none');
         }
       }
     }
@@ -1026,7 +940,7 @@ var cf = {
         var column = r[1];
         if ((row != null) && (column != null)) {
           if (cf.displayOTVerbUlOrNot(row, column)) $('.vot_' + cv[C_ulOTVbCSS][row][column].name).css('background', 'url(' + cv[C_ulOTVbCSS][row][column].img.src + ') repeat-x 100% 100%');
-          else if ((c4[C_OT][C_granularControlOfXAxis]) || (c4[C_OT][C_granularControlOfYAxis])) $('.vot_' + cv[C_ulOTVbCSS][row][column].name).css('background', 'none');
+          else $('.vot_' + cv[C_ulOTVbCSS][row][column].name).css('background', 'none');
         }
       }
     }
@@ -1327,10 +1241,11 @@ var cf = {
     var tmp = step.util.localStorageGetItem('colorCode-CurrentSettings');
     if (tmp) {
       var tmpC4 = c4 = JSON.parse(tmp);
-      if (tmpC4[C_c4Version] == '20190905') c4 = tmpC4;
+      if (tmpC4[C_c4Version] === '20250315') c4 = tmpC4;
       else {
         c4 = cf.createC4();
-        alert('The previously used color configuration is out of date.  The default color configuration is used.');
+        alert('We have to updated our 6 years old color scheme. The new default color configuration is used.');
+        this.updtLocalStorage();
       }
     }
     else c4 = cf.createC4();
@@ -1863,7 +1778,7 @@ var cf = {
     else if (selectedConfig === 'verb with middle and passive voices') c4 = cf.c4VerbWithMiddlePassive();
     else if (selectedConfig === 'verb, imperative mood') c4 = cf.c4ImperativesOnly();
     else if (selectedConfig === 'verb, main vs supporting verbs') c4 = cf.c4MainVsSupporingVerbs();
-    else if (selectedConfig === 'verb, without reference to time') c4 = cf.c4VerbMoodTense2();
+    else if (selectedConfig === 'original colors defined in 2019') c4 = cf.c4Color2019();
     else {
       var found = false;
       var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
@@ -1874,8 +1789,8 @@ var cf = {
           if (tmp2) {
             found = true;
             var tmpC4 = c4 = JSON.parse(tmp2);
-            if (tmpC4[C_c4Version] == '20190905') c4 = tmpC4;
-            else alert('The version of the saved color configuration is out of date.  Please define a new one.');
+            if (tmpC4[C_c4Version] === '20250315') c4 = tmpC4;
+            else alert('The version of the saved color configuration is out of date. We have to updated our 6 years old color scheme. Please customized your colors based on our new color schemes.');
           }
         }
       }
@@ -1911,21 +1826,14 @@ var cf = {
     return r;
   },
 
-  c4VerbMoodTense2: function() {
+  c4Color2019: function() {
     var r = cf.createC4();
-    r[C_Greek][C_enableVerbClr] = true;
-    r[C_Greek][C_chkbxPassiveBkgrdColrValue] = false;
-    r[C_Greek][C_chkbxMiddleBkgrdColrValue] = false;
-    r[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
-    r[C_Greek][C_slctUlVerbItem] = ['Arrow', 'Dash', '2 lines', '2 lines', 'Underline', 'Dots', 'Underline'];
-    r[C_Greek][C_orderOfTense] = ['p', 'i', 'r', 'l', 'a', 'f'];
-    r[C_Greek][C_tenseToCombineWithPrevious] = [false, false, false, false, false, false];
-    r[C_Greek][C_orderOfMood] = ['i', 'm', 's', 'o', 'n', 'p'];
-    r[C_Greek][C_moodToCombineWithPrevious] = [false, false, false, false, false, false];
-    r[C_Greek][C_verbTableYHeader] = null;
-    r[C_enableGenderNumberClr] = false;
-    r[C_OT][C_verbTableXHeader] = null;
-    r[C_OT][C_verbTableYHeader] = null;
+    r[C_Greek][C_inClrVerbItem] = ['#31ff00', '#ffa500', '#925011', '#f92d02', '#fff700', '#091bfd'];
+    r[C_Greek][C_slctUlVerbItem] = ['Dash', 'Arrow', 'Dots', 'Reverse Arrow', 'Short Reverse Arrow', 'Short Reverse Arrow'];
+    r[C_Greek][C_orderOfTense] = ['p', 'f', 'a', 'i', 'r', 'l'];
+    r[C_Greek][C_orderOfMood] =  ['i', 's', 'o', 'm', 'n', 'p'];
+    r[C_Greek][C_verbTableYHeader] = { desc: ['Present', 'Future', 'Past /<br>Present', 'Past'], repeat: [0, 0, 0, 2] };  
+    r[C_enableGenderNumberClr] = true;
     return r;
   },
 
@@ -1948,7 +1856,7 @@ var cf = {
 
   c4MainVsSupporingVerbs: function() {
     var r = cf.createC4();
-    r[C_Greek][C_inClrVerbItem] = ['#008000', '#ed12ed', '#ed12ed', '#008000', '#ed12ed', '#ed12ed'];
+    r[C_Greek][C_inClrVerbItem] = ['#008000', '#008000', '#ed12ed', '#ed12ed', '#ed12ed', '#ed12ed'];
     r[C_Greek][C_slctUlVerbItem] = ['Underline', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline'];
     r[C_Greek][C_verbTableYHeader] = null;
     r[C_enableGenderNumberClr] = false;
@@ -1959,13 +1867,10 @@ var cf = {
 
   c4ImperativesOnly: function() {
     var r = cf.createC4();
-    r[C_Greek][C_granularControlOfMoods] = true;
-    r[C_Greek][C_moodsOnOff] = [false, false, false, true, false, false];
+    r[C_Greek][C_moodsOnOff] = [false, true, false, false, false, false];
     r[C_Greek][C_slctUlVerbItem] = ['Underline', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline'];
     r[C_Greek][C_verbTableYHeader] = null;
     r[C_enableGenderNumberClr] = false;
-    r[C_OT][C_verbTableXHeader] = null;
-    r[C_OT][C_verbTableYHeader] = null;
     return r;
   }
 }

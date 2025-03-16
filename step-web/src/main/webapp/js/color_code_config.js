@@ -12,8 +12,6 @@ function initializeClrCodeHtmlModalPage() {
   enableOrDisableAxisConfigButtons('Y');
   enableOrDisableAxisConfigButtons('X', 'OT');
   enableOrDisableAxisConfigButtons('Y', 'OT');
-  enableOrDisableAdvancedToolsButtons();
-  enableOrDisableAdvancedToolsButtons('OT');
   enableOrDisableVerbAndNounButtons();
   cf.refreshClrGrammarCSS();
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
@@ -37,8 +35,6 @@ function initializeClrCodeSidebar() {
   enableOrDisableAxisConfigButtons('Y');
   enableOrDisableAxisConfigButtons('X', 'OT');
   enableOrDisableAxisConfigButtons('Y', 'OT');
-  enableOrDisableAdvancedToolsButtons();
-  enableOrDisableAdvancedToolsButtons('OT');
   enableOrDisableVerbAndNounButtonsSideBar();
   enableInfoIcon();
   if (!c4[C_enableGenderNumberClr])
@@ -201,7 +197,7 @@ function addVerbSideBar() {
 }
 
 function openClrConfig() {
-  var openConfigPage = $('<div id="openClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+  var openConfigPage = $('<div id="openClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel">' +
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('openClrModal');
   if (!temp) openConfigPage.appendTo('body');
@@ -211,7 +207,7 @@ function openClrConfig() {
 function initOpenClrCodeModal() {
   var s = $('<select id="openClrConfigDropdown"/>');
   s.append($('<option/>').html('Verb, Gender and Number'));
-  s.append($('<option/>').html('Verb, without reference to time'));
+  s.append($('<option/>').html('Original colors defined in 2019'));
   s.append($('<option/>').html('Verb only (tense-mood)'));
   s.append($('<option/>').html('Verb with Middle and Passive Voices'));
   s.append($('<option/>').html('Verb, imperative mood'));
@@ -473,14 +469,16 @@ function initSortOTVerbItem() {
 function resetSortOrder() {
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
-  element.parentNode.removeChild(element);
+  if (element)
+    element.parentNode.removeChild(element);
   userSortAxis(cv[C_axisUserSelectedToSort]);
 }
 
 function resetSortOTOrder() {
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
-  element.parentNode.removeChild(element);
+  if (element)
+    element.parentNode.removeChild(element);
   userSortOTAxis(cv[C_axisUserSelectedToSort]);
 }
 
@@ -544,7 +542,7 @@ function saveSortOTOrder() {
       c4[C_OT][C_aramaicStemToCombineWithPrevious] = [];
       for (var i = 0; i < cv[C_userProvidedSortOrder].length; i ++) {
         verbItem = cv[C_userProvidedSortOrder][i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
-        verbItem = '\n' + verbItem.replace(/(active|passive|middle)\n?/g, "").replace(/\s-\sshow\sat\stitle\sof\scolour\sconfig\sscreen:\s+voice:/g, "").replace(/\s+/g, "\n");
+        verbItem = '\n' + verbItem.replace(/(active|passive|middle)\n?/g, "").replace(/\s-\sshow\sat\stitle\sof\scolor\sconfig\sscreen:\s+voice:/g, "").replace(/\s+/g, "\n");
         var updatedString = verbItem;
         do {
           previousString = updatedString;
@@ -592,7 +590,7 @@ function saveSortOTOrder() {
       c4[C_OT][C_verbFormToCombineWithPrevious] = [];
       for (var counter4 = 0; counter4 < cv[C_userProvidedSortOrder].length; counter4 ++) {
         verbItem = cv[C_userProvidedSortOrder][counter4].replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
-        verbItem = '\n' + verbItem.replace(/\s-\sShow\sat\stitle\sof\scolour\sconfig\sscreen:\s/g, "").replace(/\s+/g, "\n");
+        verbItem = '\n' + verbItem.replace(/\s-\sShow\sat\stitle\sof\scolor\sconfig\sscreen:\s/g, "").replace(/\s+/g, "\n");
         var formsInThisGroup = verbItem.replace(/^\n/, "").replace(/\n$/, "").replace(/\s+/g, " ").replace(/[()]/g, "").split(' ');
         for (var counter5 = 0; counter5 < formsInThisGroup.length; counter5++) {
           var result = _.find(c4[C_OT][C_codeOfForm], function(obj) { return obj[1] == formsInThisGroup[counter5]; });
@@ -624,7 +622,7 @@ function saveSortOTOrder() {
 }
 
 function saveClrConfig() {
-  var saveConfigPage = $('<div id="saveClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+  var saveConfigPage = $('<div id="saveClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel">' +
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('saveClrModal');
   if (!temp) {
@@ -886,7 +884,7 @@ function addOTVerbTable() {
   var htmlTable = '';
   var yAxisSpan = tableAxisSpan('Y', 'OT');
   htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-  (yAxisSpan + 1) + '" rowspan="' + tableAxisSpan('X', 'OT') + '">';
+    yAxisSpan + '" rowspan="' + tableAxisSpan('X', 'OT') + '">';
   htmlTable += htmlToAdd1('OT');
   htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
   htmlTable += htmlToAdd2(r.xAxisTitle, 'OT');
@@ -899,7 +897,7 @@ function addOTVerbTable() {
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
     htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT');
-    htmlTable += '<td>' +  htmlToAdd5a(i, 'OT') + htmlToAdd5b(i, 'OT', false) + '</td>';
+    htmlTable += htmlToAdd5a(i, 'OT') + htmlToAdd5b(i, 'OT', false) + '</td>';
     htmlTable += '</td>';
     for (var counter = 0; counter < xAxisItems.length; counter += 1) {
       htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
@@ -1000,13 +998,14 @@ function userSwapAxis() {
   cf.updtLocalStorage();
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
-  element.parentNode.removeChild(element);
+  if (element)
+    element.parentNode.removeChild(element);
   updateAllSettingsAndInputFields();
 }
   
 function userSortAxis(axis) {
   cv[C_axisUserSelectedToSort] = axis;
-  var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+  var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel">' +
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('sortAxisModal');
   if (!temp) openConfigPage.appendTo('body');
@@ -1017,7 +1016,7 @@ function userAddHeaderInfo(axis, ot) {
   var otPrefix = 'nt';
   if ((ot != undefined) && (ot == 'OT')) otPrefix = 'ot';
   $('#addHeaderInfoModal').remove();
-  var openConfigPage = $('<div id="addHeaderInfoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+  var openConfigPage = $('<div id="addHeaderInfoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel">' +
     '<span id="uahi_testament" style="visibility:hidden">' + otPrefix + '</span>' +
     '<span id="uahi_axis" style="visibility:hidden">' + axis + '</span>' +
     '<div class="modal-dialog"><div class="modal-content">');
@@ -1028,7 +1027,7 @@ function userAddHeaderInfo(axis, ot) {
 
 function userSortOTAxis(axis) {
   cv[C_axisUserSelectedToSort] = axis;
-  var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+  var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel">' +
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('sortAxisModal');
   if (!temp) openConfigPage.appendTo('body');
@@ -1039,45 +1038,34 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
   var otPrefix = '';
   if ((ot != undefined) && (ot == 'OT')) {
     otPrefix = 'OT';
-    if (index == null) {
-      if (axis == 'X') c4[C_OT][C_granularControlOfXAxis] = !c4[C_OT][C_granularControlOfXAxis];
-      else c4[C_OT][C_granularControlOfYAxis] = !c4[C_OT][C_granularControlOfYAxis];
-    }
+    if (axis == 'X') c4[C_OT][C_xAxisOnOff][index] = !c4[C_OT][C_xAxisOnOff][index];
     else {
-      if (axis == 'X') c4[C_OT][C_xAxisOnOff][index] = !c4[C_OT][C_xAxisOnOff][index];
-      else {
-        c4[C_OT][C_yAxisOnOff][index] = !c4[C_OT][C_yAxisOnOff][index];
-        if ($('#sideBarHVerbClrs').length > 0) {
-          if (c4[C_OT][C_yAxisOnOff][index]) {
-            var cssClass = 'ul' + c4[C_OT][C_slctUlVerbItem][index].replace(/\s/g, ""); 
-            updatePreviewAtSideBar('formPreview' + index, cssClass);
-          }
-          else {
-            $('.formPreview' + index).removeClass().addClass('formPreview' + index);
-            $('.formPreview' + index).css('background', "none");
-          }
+      c4[C_OT][C_yAxisOnOff][index] = !c4[C_OT][C_yAxisOnOff][index];
+      if ($('#sideBarHVerbClrs').length > 0) {
+        if (c4[C_OT][C_yAxisOnOff][index]) {
+          var cssClass = 'ul' + c4[C_OT][C_slctUlVerbItem][index].replace(/\s/g, ""); 
+          updatePreviewAtSideBar('formPreview' + index, cssClass);
+        }
+        else {
+          $('.formPreview' + index).removeClass().addClass('formPreview' + index);
+          $('.formPreview' + index).css('background', "none");
         }
       }
     }
   }
   else {
-    if ((c4[C_Greek][C_xAxisForMood] && axis == 'X') || (!c4[C_Greek][C_xAxisForMood] && axis == 'Y')) {
-      if (index == null) c4[C_Greek][C_granularControlOfMoods] = !c4[C_Greek][C_granularControlOfMoods];
-      else c4[C_Greek][C_moodsOnOff][index] = !c4[C_Greek][C_moodsOnOff][index];
-    }
+    if ((c4[C_Greek][C_xAxisForMood] && axis == 'X') || (!c4[C_Greek][C_xAxisForMood] && axis == 'Y'))
+      c4[C_Greek][C_moodsOnOff][index] = !c4[C_Greek][C_moodsOnOff][index];
     else {
-      if (index == null) c4[C_Greek][C_granularControlOfTenses] = !c4[C_Greek][C_granularControlOfTenses];
-      else {
-        c4[C_Greek][C_tensesOnOff][index] = !c4[C_Greek][C_tensesOnOff][index];
-        if ($('#sideBarVerbClrs').length > 0) {
-          if (c4[C_Greek][C_tensesOnOff][index]) {
-            var cssClass = 'ul' + c4[C_Greek][C_slctUlVerbItem][index].replace(/\s/g, ""); 
-            updatePreviewAtSideBar('tensePreview' + index, cssClass);
-          }
-          else {
-            $('.tensePreview' + index).removeClass().addClass('tensePreview' + index);
-            $('.tensePreview' + index).css('background', "none");
-          }
+      c4[C_Greek][C_tensesOnOff][index] = !c4[C_Greek][C_tensesOnOff][index];
+      if ($('#sideBarVerbClrs').length > 0) {
+        if (c4[C_Greek][C_tensesOnOff][index]) {
+          var cssClass = 'ul' + c4[C_Greek][C_slctUlVerbItem][index].replace(/\s/g, ""); 
+          updatePreviewAtSideBar('tensePreview' + index, cssClass);
+        }
+        else {
+          $('.tensePreview' + index).removeClass().addClass('tensePreview' + index);
+          $('.tensePreview' + index).css('background', "none");
         }
       }
     }
@@ -1311,9 +1299,8 @@ function enableOrDisableVerbAndNounButtonsSideBar() {
 }
 
 function enableOrDisableAxisConfigButtons(axis, ot) {
-  var otPrefix = '', granularControlOfAxis, itemInAxisOnOff, ulVerbCSSArrayOfAxis, itemToCombineWithPrevious;
+  var otPrefix = '', itemInAxisOnOff, ulVerbCSSArrayOfAxis, itemToCombineWithPrevious;
   if ((ot != undefined) && (ot == 'OT')) otPrefix = 'OT';
-  var iconName = '#' + otPrefix + 'config' + axis + 'AxisIcon';
   var onOffClassName = '.' + otPrefix + 'vrbInpt' + axis;
   var onOffCheckBox = otPrefix + 'axis' + axis + 'OnOffCheckbox';
   if (otPrefix == '') {
@@ -1324,73 +1311,41 @@ function enableOrDisableAxisConfigButtons(axis, ot) {
     var orderOfItemsInAxis = r['orderOf' + axis + 'AxisItems'];
     var nameOfAllItemsInAxis = r['nameOfAll' + axis + 'AxisItems'];
     if (moodOrTense == 'mood') {
-      granularControlOfAxis = c4[C_Greek][C_granularControlOfMoods];
       itemInAxisOnOff = c4[C_Greek][C_moodsOnOff];
       ulVerbCSSArrayOfAxis = cc[C_moodIndexArray];
       itemToCombineWithPrevious = c4[C_Greek][C_moodToCombineWithPrevious];
     }
     else {
-      granularControlOfAxis = c4[C_Greek][C_granularControlOfTenses];
       itemInAxisOnOff = c4[C_Greek][C_tensesOnOff];
       ulVerbCSSArrayOfAxis = cc[C_tenseIndexArray];
       itemToCombineWithPrevious = c4[C_Greek][C_tenseToCombineWithPrevious];
     }
-    highlightIcon(iconName, granularControlOfAxis);
-    hideIndividualInputField(onOffClassName, granularControlOfAxis);
+    hideIndividualInputField(onOffClassName, true);
     for (var i = 0; i < orderOfItemsInAxis.length; i += 1) {
-      $('#' + onOffCheckBox + i).prop('checked', granularControlOfAxis && itemInAxisOnOff[i]);
+      $('#' + onOffCheckBox + i).prop('checked', itemInAxisOnOff[i]);
     }
-    if (granularControlOfAxis) {
-      var k = -1;
-      for (var counter = 0; counter < nameOfAllItemsInAxis.length; counter ++) {
-        if (!itemToCombineWithPrevious[counter]) k++;
-        var currentItemInAxisOnOff = itemInAxisOnOff[k];
-        var index2 = _.find(ulVerbCSSArrayOfAxis, function(obj) { return obj.name == nameOfAllItemsInAxis[counter]; }).array;
-        for (var j = 0; j < index2.length; j += 1) {
-          cv[C_ulVerbCSS][index2[j]]['displayStatusBy' + ucMoodOrTense] = currentItemInAxisOnOff;
-        }
-      }
-    }
-    else {
-      for (var counter2 = 0; counter2 < cv[C_ulVerbCSS].length; counter2 ++) {
-        cv[C_ulVerbCSS][counter2]['displayStatusBy' + ucMoodOrTense] = true;
+    var k = -1;
+    for (var counter = 0; counter < nameOfAllItemsInAxis.length; counter ++) {
+      if (!itemToCombineWithPrevious[counter]) k++;
+      var currentItemInAxisOnOff = itemInAxisOnOff[k];
+      var index2 = _.find(ulVerbCSSArrayOfAxis, function(obj) { return obj.name == nameOfAllItemsInAxis[counter]; }).array;
+      for (var j = 0; j < index2.length; j += 1) {
+        cv[C_ulVerbCSS][index2[j]]['displayStatusBy' + ucMoodOrTense] = currentItemInAxisOnOff;
       }
     }
   }
   else if (otPrefix == 'OT') {
-    if (axis == 'X') {
-      granularControlOfAxis = c4[C_OT][C_granularControlOfXAxis];
-    }
-    else {
-      granularControlOfAxis = c4[C_OT][C_granularControlOfYAxis];
-    }
-    highlightIcon(iconName, granularControlOfAxis);
-    hideIndividualInputField(onOffClassName, granularControlOfAxis);
+    hideIndividualInputField(onOffClassName, true);
     if (axis == 'Y')
       for (var counter3 = 0; counter3 < cv[C_ulOTVbCSS].length; counter3 += 1) {
-        $('#' + onOffCheckBox + counter3).prop('checked', granularControlOfAxis && c4[C_OT][C_yAxisOnOff][counter3]);
+        $('#' + onOffCheckBox + counter3).prop('checked', c4[C_OT][C_yAxisOnOff][counter3]);
       }
     else if (axis == 'X') {
       for (var counter4 = 0; counter4 < cv[C_ulOTVbCSS][0].length; counter4 += 1) {
-        if ((counter4 % 3) == 0) $('#' + onOffCheckBox + (counter4/3)).prop('checked', granularControlOfAxis && c4[C_OT][C_xAxisOnOff][counter4/3]);
+        if ((counter4 % 3) == 0) $('#' + onOffCheckBox + (counter4/3)).prop('checked', c4[C_OT][C_xAxisOnOff][counter4/3]);
       }
     }
   }
-}
-
-function highlightIcon(idOrClass, highlight) {
-  if (highlight) {
-    $(idOrClass).removeClass('icon-not-highlighted');
-    $(idOrClass).addClass('icon-highlighted');
-  }
-  else {
-    $(idOrClass).removeClass('icon-highlighted');
-    $(idOrClass).addClass('icon-not-highlighted');
-  }
-}
-
-function enableOrDisableAdvancedToolsButtons(ot) {
-  hideIndividualInputField('.' + ot + 'advancedtools', c4[C_enableAdvancedTools]);
 }
 
 function checkNounClr() {
@@ -1541,10 +1496,10 @@ function updateHtmlForYAxis() {
       })
       .prop('selected', true);
     if ($('#inAnimate' + i).length == 1) {
-      var temp = ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline') && (c4[C_enableAdvancedTools]) );
+      var temp = ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline') );
       hideIndividualInputField('#inAnimate' + i, temp);
       hideIndividualInputField('#inAnimateCheckbox' + i, temp);
-      if ((c4[C_Greek][C_inAnimate][i]) && (c4[C_enableAdvancedTools])) {
+      if (c4[C_Greek][C_inAnimate][i]) {
         document.getElementById('inAnimateCheckbox' + i).checked = true;
         if ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline'))
           userUpdateAnimation(i);
@@ -2042,11 +1997,9 @@ function updateVerbInputFields(inputOnOff, ot) {
 
     hideOrDisplayIndividualClrInputField('.' + otPrefix + 'vrbInptC', inputOnOff);
     hideIndividualInputField('.' + otPrefix + 'vrbInpt1', inputOnOff);
-  //  hideIndividualInputField('#advancedToolsBtn', inputOnOff);
     if (otPrefix != 'OT') {
 
-      var showAnimationCheckbox = c4[C_enableAdvancedTools] && inputOnOff && 
-        ($("#ColorCode").length == 0); // Sidebar is not on
+      var showAnimationCheckbox = inputOnOff && ($("#grammarClrModal").length > 0); // Advanced color config modal is on
       hideIndividualInputField('#inAnimate0', showAnimationCheckbox, true);
       hideIndividualInputField('#inAnimate1', showAnimationCheckbox, true);
       hideIndividualInputField('#inAnimate2', showAnimationCheckbox, true);
@@ -2060,12 +2013,12 @@ function updateVerbInputFields(inputOnOff, ot) {
       hideIndividualInputField('#inAnimateCheckbox4', showAnimationCheckbox, true);
       hideIndividualInputField('#inAnimateCheckbox5', showAnimationCheckbox, true);
       if (c4[C_Greek][C_xAxisForMood]) {
-        hideIndividualInputField('.vrbInptX', c4[C_Greek][C_granularControlOfMoods] && inputOnOff);
-        hideIndividualInputField('.vrbInptY', c4[C_Greek][C_granularControlOfTenses] && inputOnOff);
+        hideIndividualInputField('.vrbInptX', inputOnOff);
+        hideIndividualInputField('.vrbInptY', inputOnOff);
       }
       else {
-        hideIndividualInputField('.vrbInptX', c4[C_Greek][C_granularControlOfTenses] && inputOnOff);
-        hideIndividualInputField('.vrbInptY', c4[C_Greek][C_granularControlOfMoods] && inputOnOff);
+        hideIndividualInputField('.vrbInptX', inputOnOff);
+        hideIndividualInputField('.vrbInptY', inputOnOff);
       }
       hideOrShowHtmlForPassiveBkgrdClr('PassiveUlClr2');
       hideOrShowHtmlForPassiveBkgrdClr('MiddleUlClr2');
@@ -2170,7 +2123,7 @@ function addVerbTable() {
   var htmlTable = '';
   var yAxisSpan = tableAxisSpan('Y');
   htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-    (yAxisSpan + 1) + '" rowspan="' + tableAxisSpan('X') + '">';
+    yAxisSpan + '" rowspan="' + tableAxisSpan('X') + '">';
   htmlTable += htmlToAdd1();
   htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
   htmlTable += htmlToAdd2(r.xAxisTitle);
@@ -2183,7 +2136,7 @@ function addVerbTable() {
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
     htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan);
-    htmlTable += '<td>' + htmlToAdd5a(i, "") + htmlToAdd5b(i, "", true) + '</td>';
+    htmlTable += htmlToAdd5a(i, "") + htmlToAdd5b(i, "", true) + '</td>';
     htmlTable += '</td>';
     for (var counter = 0; counter < xAxisItems.length; counter += 1) {
       htmlTable += '<td>';
@@ -2213,10 +2166,8 @@ function htmlToAdd1(otVerb) {
 function htmlToAdd2(xAxisTitle, otVerb) {
   var otPrefix = '';
   if (otVerb !== undefined) otPrefix = 'OT';
-  return '&nbsp;<button id="' + otPrefix + 'configXAxisBtn" class="' + otPrefix + 'vrbInpt1 btn btn-default btn-xs" type="button" title="Select ' +
-    xAxisTitle + '" onclick=\'userToggleXOrYAxisConfig("' + otPrefix + '", "X")\'>' +
-    '<span id="' + otPrefix + 'configXAxisIcon" class="' + otPrefix + 'vrbInpt1 glyphicon glyphicon-cog"></span></button>' +
-    '&nbsp;<button id="' + otPrefix + 'configSortXAxisBtn" class="btn btn-default btn-xs ' + otPrefix + 'advancedtools ' + otPrefix + 'vrbInpt1" type="button" title="Sort ' +  xAxisTitle + '" onclick="userSort' + otPrefix + 'Axis(\'X\')">' +
+  return '&nbsp;&nbsp;<button id="' + otPrefix + 'configSortXAxisBtn" class="btn btn-default btn-xs ' +
+    otPrefix + 'vrbInpt1" type="button" title="Sort ' +  xAxisTitle + '" onclick="userSort' + otPrefix + 'Axis(\'X\')">' +
     '<span id="configSortXAxisIcon" class="glyphicon glyphicon-sort"></span></button>';
 }
 
@@ -2249,10 +2200,10 @@ function htmlToAdd3b(i, otVerb, toggleOnOff) {
 function htmlToAdd4(yAxisTitle, otVerb) {
   var otPrefix = '';
   if (otVerb !== undefined) otPrefix = 'OT';
-  return '<button id="' + otPrefix + 'configYAxisBtn" class="' + otPrefix + 'vrbInpt1 btn btn-default btn-xs" type="button" title="Select ' + yAxisTitle + '" onclick=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y")\'>' +
-    '<span id="' + otPrefix + 'configYAxisIcon" class="' + otPrefix + 'vrbInpt1 glyphicon glyphicon-cog"></span></button>' +
-    '<br><br><button id="' + otPrefix + 'configSortYAxisBtn" class="btn btn-default btn-xs ' + otPrefix + 'advancedtools ' + otPrefix + 'vrbInpt1" type="button" title="Sort ' +  yAxisTitle + '" onclick="userSort' + otPrefix + 'Axis(\'Y\')">' +
-    '<span id="configSortYAxisIcon" class="glyphicon glyphicon-sort ' + otPrefix + 'advancedtools"></span></button>';
+  return  '<button id="' + otPrefix + 'configSortYAxisBtn" class="btn btn-default btn-xs ' +
+    otPrefix + 'vrbInpt1" type="button" title="Sort ' +  yAxisTitle + '" onclick="userSort' +
+    otPrefix + 'Axis(\'Y\')">' +
+    '<span id="configSortYAxisIcon" class="glyphicon glyphicon-sort"></span></button>';
 }
 
 function htmlToAdd5a(i, otVerb) {
@@ -2285,9 +2236,8 @@ function htmlToAdd5b(i, otVerb, addAnimation) {
     '</select>';
   if (addAnimation) {
     var displayStyle = (addAnimation) ? ' ' : ' style="display:none" ';
-    var advancedtoolsClass = (addAnimation) ? ' class="advancedtools" ' : ' ';
-    if (otPrefix !== "OT") result += '<br><span' + displayStyle + 'id="inAnimate' + i + '"' + advancedtoolsClass + '>' +
-      'Animate:<input' + displayStyle + 'id="inAnimateCheckbox' + i + '"' + advancedtoolsClass + 
+    if (otPrefix !== "OT") result += '<br><span' + displayStyle + 'id="inAnimate' + i + '">' +
+      'Animate:<input' + displayStyle + 'id="inAnimateCheckbox' + i + '" ' + 
       'type="checkbox" onchange=\'userUpdateAnimation("' + i + '")\'></span>';
   }
   return result;
@@ -2316,7 +2266,7 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   if (callFromSidebar) 
     result += '</span></td><td>';
   else
-    result += ' voice: background - </span>';
+    result += ' voice: background - </span>' + passiveOnOffCheckbox;
   result += 
     '<input id="in' + otPrefix + 'PassiveBkgrdClr" type="color" ' +
     'value="' + c4Ref[C_inPassiveBkgrdClr] + '"/>';
@@ -2325,7 +2275,7 @@ function htmlToAdd6(otVerb, callFromSidebar) {
     result += "</td></tr>";
   }
   else {
-    result += passiveOnOffCheckbox + 
+    result += 
       '<span>underline - </span><input id="chkbx' + otPrefix + 'PassiveUlClr1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("passive", "' + otPrefix + '")\'>' +
       '<input id="in' + otPrefix + 'PassiveUlClr1" type="color" ' +
       'value="' + c4Ref[C_inPassiveUlClr1] + '"/>';
@@ -2336,7 +2286,7 @@ function htmlToAdd6(otVerb, callFromSidebar) {
         'value="' + c4Ref[C_inPassiveUlClr2] + '"/>';
     result += '<br><br>';
   }
-  middleOnOffCheckbox = '<input id="chkbx' + otPrefix + 'MiddleBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("middle", "' + otPrefix + '")\'>';
+  var middleOnOffCheckbox = '<input id="chkbx' + otPrefix + 'MiddleBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("middle", "' + otPrefix + '")\'>';
   if (callFromSidebar)
     result += "<tr><td>" + middleOnOffCheckbox + "</td><td>";
   result += '<span';
@@ -2351,7 +2301,7 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   if (callFromSidebar) 
     result += '</span></td><td>';
   else
-    result += ' voice: background - </span>' + passiveOnOffCheckbox;
+    result += ' voice: background - </span>' + middleOnOffCheckbox;
   result +=
     '<input id="in' + otPrefix + 'MiddleBkgrdClr" type="color" ' +
     'value="' + c4Ref[C_inMiddleBkgrdClr] + '"/>';
@@ -2443,8 +2393,7 @@ function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar,
     htmlTable += '<td>';
   htmlTable += descOfYAxisItems;
   if (forSideBar)
-    htmlTable += '</span>';
-  htmlTable += '</td>';
+    htmlTable += '</span></td>';
   return htmlTable;
 }
 

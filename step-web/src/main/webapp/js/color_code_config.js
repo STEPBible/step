@@ -181,8 +181,9 @@ function addVerbSideBar() {
         cssClass += ' ul' + c4[C_Greek][C_slctUlVerbItem][i].replace(/\s/g, ""); 
       cssClass += '"';
       htmlTable += '<tr>';
-      htmlTable += '<td style="padding-bottom:12px">' + htmlToAdd5a(i, "") + '</td>' +
-        '<td><span style="padding-bottom:12px" ' + cssClass + '>' + descOfYAxisItems[i] + '</span>' +
+      htmlTable += '<td style="padding-top:9px;padding-bottom:9px">' + htmlToAdd5a(i, "") + '</td>' +
+        '<td style="padding-top:9px;padding-bottom:9px">' +
+        '<span style="padding-top:9px;padding-bottom:9px" ' + cssClass + '>' + descOfYAxisItems[i] + '</span>' +
         '</td>';
       htmlTable += '<td>' + htmlToAdd5b(i, "", false) +
         '<a class="tense_info' +  i + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
@@ -755,25 +756,25 @@ function addNounSideBar() {
         '<td><h2>Gender & Number</td></tr>' +
       '</table>' +
       '<table id="gendernumbertable">' +
-        '<tr><td class="sing mas">Masculine:</td>' +
+        '<tr><td style="padding-top:9px;padding-bottom:9px" class="sing mas">Masculine:</td>' +
         '<td>' +
           '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
           '<span><a class="masc_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
         '</td>' +
         '</tr>' +
-        '<tr><td class="sing fem">Feminine:</td>' +
+        '<tr><td style="padding-top:9px;padding-bottom:9px" class="sing fem">Feminine:</td>' +
         '<td>' +
           '<input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
           '<span><a class="fem_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
         '</td>' +
         '</tr>' +
-        '<tr><td class="sing neut">Neuter:</td>' +
+        '<tr><td style="padding-top:9px;padding-bottom:9px" class="sing neut">Neuter:</td>' +
         '<td>' +
           '<input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
           '<span><a class="neut_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
         '</td>' +
         '</tr>' +
-        '<tr><td>Singular:</td>' +
+        '<tr><td style="padding-top:9px;padding-bottom:9px">Singular:</td>' +
             '<td><select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
                 '<option value="normal">Normal</option>' +
                 '<option value="normal_italic">Italic</option>' +
@@ -784,7 +785,7 @@ function addNounSideBar() {
             '</td>' +
             '</tr>' +
         '</tr>' +
-        '<tr><td class="plur">Plural:</td>' +
+        '<tr><td style="padding-top:9px;padding-bottom:9px" class="plur">Plural:</td>' +
             '<td><select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
                 '<option value="normal">Normal</option>' +
                 '<option value="normal_italic">Italic</option>' +
@@ -828,7 +829,7 @@ function addOtTitleToXAxisSideBar(descOfHebrewXAxisItems, descOfAramaicwXAxisIte
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
     htmlTable += '<tr><td>' + htmlToAdd3a(j, 'OT', false) + '</td>';
     var shortenName = descOfXAxisItems[j].split("<br")[0] + " etc";
-    htmlTable += '<td style="text-decoration:underline solid 33%" class="stemPreview' + j + '">' + 
+    htmlTable += '<td style="padding-top:9px;padding-bottom:9px;text-decoration:underline solid 33%" class="stemPreview' + j + '">' + 
       shortenName + '</td>';
     htmlTable += '<td>' + htmlToAdd3b(j, 'OT', false) +
       '<span><a class="stem_info' +  j + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span' +
@@ -2254,10 +2255,10 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   var result = "";
   var passiveOnOffCheckbox = '<input id="chkbx' + otPrefix + 'PassiveBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("passive", "' + otPrefix + '")\'>';
   if (callFromSidebar)
-    result += "<tr><td>" + passiveOnOffCheckbox + "</td><td>";
+    result += '<tr><td style="padding-top:9px;padding-bottom:9px">' + passiveOnOffCheckbox + "</td><td>";
   result += '<span';
   if (callFromSidebar) {
-    result += ' style="padding-bottom:12px"';
+    result += ' style="padding-top:9px;padding-bottom:9px"';
     if (otPrefix === '')
       result += ' class="passivePreview"';
     else if (otPrefix === 'OT')
@@ -2289,10 +2290,10 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   }
   var middleOnOffCheckbox = '<input id="chkbx' + otPrefix + 'MiddleBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("middle", "' + otPrefix + '")\'>';
   if (callFromSidebar)
-    result += "<tr><td>" + middleOnOffCheckbox + "</td><td>";
+    result += '<tr><td style="padding-top:9px;padding-bottom:9px">' + middleOnOffCheckbox + "</td><td>";
   result += '<span';
   if (callFromSidebar) {
-    result += ' style="padding-bottom:12px"';
+    result += ' style="padding-top:9px;padding-bottom:9px"';
     if (otPrefix === '')
       result += ' class="middlePreview"';
     else if (otPrefix === 'OT')
@@ -2361,7 +2362,7 @@ function addTitleToXAxisSideBar(descOfXAxisItems) {
   for (var j = 0; j < descOfXAxisItems.length; j += 1) {
     htmlTable += '<tr><td>';
     htmlTable += htmlToAdd3a(j, "", false) + '</td>';
-    htmlTable += '<td style="text-decoration:underline solid 33%" class="moodPreview' + j + '">' + descOfXAxisItems[j];
+    htmlTable += '<td style="padding-top:9px;padding-bottom:9px;text-decoration:underline solid 33%" class="moodPreview' + j + '">' + descOfXAxisItems[j];
     htmlTable += '</td>';
     htmlTable += '<td>' + htmlToAdd3b(j, "", false); 
     htmlTable += '<span><a class="mood_info' + j + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>';
@@ -2387,7 +2388,7 @@ function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar,
   }
   if (forSideBar) {
     htmlTable += '<td>' + htmlToAdd5a(rowNum, ot) + '</td>' +
-      '<td style="padding-bottom:12" class="' + verbClass + '">' +
+      '<td style="padding-top:9px;padding-bottom:9px" class="' + verbClass + '">' +
       '<span>';
   }
   else

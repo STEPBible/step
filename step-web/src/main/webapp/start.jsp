@@ -250,7 +250,8 @@
                                 <i class="glyphicon glyphicon-question-sign hidden-sm hidden-md hidden-lg"></i>
                             </a>
                             <a id="colorgrammar-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammar" />">
-                                <img src="images/rainbow.png" width="20" height="20"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;&nbsp;<fmt:message key="display_grammar" /></span>
+                                <img src="images/grammar.png" width="40" height="20"></i>
+                                <!-- <span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;&nbsp;<fmt:message key="display_grammar" /></span> -->
                             </a>
 
                             <span class="navbar-collapse collapse">

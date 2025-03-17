@@ -4985,7 +4985,6 @@ step.util = {
 	loadTOS: function() {
 		var C_otMorph = 1; // TBRBMR
 		if (cv[C_otMorph] == null) {
-//			$.ajaxSetup({async: false});
 			var callback = step.util.addGrammar;
 			jQuery.ajax({
 				dataType: "script",
@@ -4995,11 +4994,9 @@ step.util = {
 					console.log('load tos_morph.js Failed: ' + exception);
 				},
 				complete: function (jqXHR, status) {
-//				    console.log('finish loading');
 				    callback();
 				}
 			});
-//			$.ajaxSetup({async: true});
 			return true;
 		}
 		return false;

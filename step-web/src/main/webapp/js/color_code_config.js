@@ -1483,6 +1483,7 @@ function convertEngToCharForSelectOption (optionToDisplay) {
   else if (optionToDisplay === "Short Arrow") optionToDisplay = ">>>";
   else if (optionToDisplay === "Reverse Arrow") optionToDisplay = "←";
   else if (optionToDisplay === "Short Reverse Arrow") optionToDisplay = "<<<";
+  else if (optionToDisplay === "2 lines") optionToDisplay = "════";
   return optionToDisplay;
 }
 
@@ -2225,7 +2226,7 @@ function htmlToAdd5b(i, otVerb, addAnimation) {
   if ((otPrefix != 'OT') && addAnimation)result += ' style="width: 52px"';
   result += '>' +
     '<option value="ulSolid">____</option>' +
-    '<option value="ulDoubleSolid">2 lines</option>' +
+    '<option value="ulDoubleSolid">════</option>' +
     '<option value="ulDash">- - -</option>' +
     '<option value="ulDashDot">- .</option>' +
     '<option value="ulDashDotDot">- . .</option>' +

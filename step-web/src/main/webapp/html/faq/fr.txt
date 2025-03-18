@@ -98,8 +98,7 @@ g4q5a3:	3) Faire défiler la page pour arriver sur la liste ‘Ancien Testament 
 g4q6:	Comment afficher les codes couleur pour la grammaire ?
 g4q6a1:	1) Cliquer sur le bouton ‘Choisir Bibles & Commentaires’.
 g4q6a2:	2) Sélectionner les traductions qui disposent de la fonctionnalité Grammaire  (indiquée avec un G dans la liste de choix des Bibles).
-g4q6a3:	3) 3) Cliquer sur le bouton ‘Options’, puis cliquer sur ‘Options de vocabulaire’ et sélectionner l’option ‘Code couleur pour la grammaire’.
-g4q6a4:	4) Pour accéder à la signification du code couleur (en anglais), cliquer sur le bouton ‘Définir le code couleur pour la grammaire’.
+g4q6a3:	3) Cliquer sur le bouton 'G' ou 'Grammar'.
 
 g5q0:   Informations complémentaires
 g5q1:   Guide du site (en anglais)

@@ -98,8 +98,7 @@ g4q5a3: 3) Desplázate hacia abajo para ver las traducciones del Antiguo Testame
 g4q6：Cómo muestro la gramática codificada por colores?
 g4q6a1: 1) Haz clic en el botón de traducción de la Biblia.
 g4q6a2: 2) Consulta la leyenda y selecciona las traducciones de la Biblia con la función de gramática.
-g4q6a3: 3) Haz clic en el botón de Opciones, luego en “Opciones interlineales” y después en “Código de colores para gramática”. El texto se mostrará con código de colores.
-g4q6a4: 4) Para entender el código de colores, haz clic en el botón “Configurar código de colores para gramática”.
+g4q6a3: 3) Haz clic en el botón "G" o "Grammar"
 
 g5q0：Información adicional
 g5q1: Guía del sitio (en inglés)

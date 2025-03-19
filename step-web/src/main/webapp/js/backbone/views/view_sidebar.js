@@ -739,6 +739,7 @@ var SidebarView = Backbone.View.extend({
 
     _prepIndentNTDef: function(mediumDef) {
         const containsBr = mediumDef.indexOf("<br") !== -1;
+        mediumDef = mediumDef.replace(/<br \/>/gi, "<br>")
         return [ containsBr, mediumDef ];
     },
 

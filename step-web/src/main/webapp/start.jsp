@@ -246,9 +246,8 @@
                                 <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font" /></span>
                             </a>
                             <a id="colorgrammar-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammar" />">
-                                <img class="hidden-xs" src="images/grammar.png" width="41" height="22"></i>
-                                <img class="hidden-sm hidden-md hidden-lg"  height="27" width="19" src="images/G.png"></i>
-                                <!-- <span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;&nbsp;<fmt:message key="display_grammar" /></span> -->
+                                <span class="largerFont" style="background:url(/images/wave.png) repeat-x 100% 100%;font-size:22px;padding-bottom:7px">G</span>
+                                <span class="largerFont hidden-xs hidden-sm navbarIconDesc" style="margin-left:-2">rammar</span>
                             </a>
                             <a id="examples-icon1" style="padding-left:5px" class="navbarIconDesc hidden-sm hideen-md hidden-lg" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
                                 <i style="vertical-align:middle" class="glyphicon glyphicon-question-sign hidden-sm hidden-md hidden-lg"></i>

@@ -1,3 +1,17 @@
+var underLineChars = {
+  "Underline": "___",
+  "Dash": "- - -",
+  "Dash Dot": "-.-.",
+  "Dash Dot Dot": "-..",
+  "Dots": "......",
+  "Wave": "〜",
+  "Arrow": "→",
+  "Short Arrow": "> >",
+  "Reverse Arrow": "←",
+  "Short Reverse Arrow": "< <",
+  "2 lines": "══"
+}
+
 function initializeClrCodeHtmlModalPage() {
   addVerbTable();
   addOTVerbTable();
@@ -1472,30 +1486,15 @@ function checkVerbClrInput() {
   if (colorForOTWasUpdated) cf.createUlFor_OT();
 }
 
-function convertEngToCharForSelectOption (optionToDisplay) {
-  if (optionToDisplay === "Underline") optionToDisplay = "____";
-  else if (optionToDisplay === "Dash") optionToDisplay = "- - -";
-  else if (optionToDisplay === "Dash Dot") optionToDisplay = "- .";
-  else if (optionToDisplay === "Dash Dot Dot") optionToDisplay = "- . .";
-  else if (optionToDisplay === "Dots") optionToDisplay = ". . .";
-  else if (optionToDisplay === "Wave") optionToDisplay = "〜〜";
-  else if (optionToDisplay === "Arrow") optionToDisplay = "→";
-  else if (optionToDisplay === "Short Arrow") optionToDisplay = ">>>";
-  else if (optionToDisplay === "Reverse Arrow") optionToDisplay = "←";
-  else if (optionToDisplay === "Short Reverse Arrow") optionToDisplay = "<<<";
-  else if (optionToDisplay === "2 lines") optionToDisplay = "════";
-  return optionToDisplay;
-}
-
 function updateHtmlForYAxis() {
   var currentULForItem;
   var numOfRows = cf.getVariablesForVerbTable().nameOfYAxisItems.length;
   for (var i = 0; i < numOfRows; i += 1) {
     currentULForItem = c4[C_Greek][C_slctUlVerbItem][i];
-    var optionToDisplay = convertEngToCharForSelectOption(currentULForItem);
+
     $('#slctUlVerbItem' + i + ' option')
       .filter(function() {
-        return $.trim($(this).text()) === optionToDisplay;
+        return $.trim($(this).text()) === underLineChars[currentULForItem];
       })
       .prop('selected', true);
     if ($('#inAnimate' + i).length == 1) {
@@ -1511,10 +1510,10 @@ function updateHtmlForYAxis() {
   }
   numOfRows = cf.getVariablesForOTVerbTable('H').nameOfYAxisItems.length;
   for (var counter = 0; counter < numOfRows; counter += 1) {
-    currentULForItem = convertEngToCharForSelectOption(c4[C_OT][C_slctUlVerbItem][counter]);
+    currentULForItem = c4[C_OT][C_slctUlVerbItem][counter];
     $('#slctUlOTVerbItem' + counter + ' option')
       .filter(function() {
-        return $.trim($(this).text()) == currentULForItem;
+        return $.trim($(this).text()) == underLineChars[currentULForItem];
       })
       .prop('selected', true);
   }
@@ -2225,17 +2224,17 @@ function htmlToAdd5b(i, otVerb, addAnimation) {
     'onchange=\'userUpdate' + otPrefix +'YAxisItem("' + i + '", value)\'';
   if ((otPrefix != 'OT') && addAnimation)result += ' style="width: 52px"';
   result += '>' +
-    '<option value="ulSolid">____</option>' +
-    '<option value="ulDoubleSolid">════</option>' +
-    '<option value="ulDash">- - -</option>' +
-    '<option value="ulDashDot">- .</option>' +
-    '<option value="ulDashDotDot">- . .</option>' +
-    '<option value="ulDot">. . .</option>' +
-    '<option value="ulWave">〜〜</option>' +
-    '<option value="ulArrow">→</option>' +
-    '<option value="ulShortArrow">&gt;&gt;&gt;</option>' +
-    '<option value="ulReverseArrow">←</option>' +
-    '<option value="ulShortReverseArrow">&lt;&lt;&lt;</option>' +
+    '<option value="ulSolid">' + underLineChars["Underline"] + '</option>' +
+    '<option value="ulDoubleSolid">' + underLineChars["2 lines"] + '</option>' +
+    '<option value="ulDash">' + underLineChars["Dash"] + '</option>' +
+    '<option value="ulDashDot">' + underLineChars["Dash Dot"] + '</option>' +
+    '<option value="ulDashDotDot">' + underLineChars["Dash Dot Dot"] + '</option>' +
+    '<option value="ulDot">' + underLineChars["Dots"] + '</option>' +
+    '<option value="ulWave">' + underLineChars["Wave"] + '</option>' +
+    '<option value="ulArrow">' + underLineChars["Arrow"] + '</option>' +
+    '<option value="ulShortArrow">' + underLineChars["Short Arrow"] + '</option>' +
+    '<option value="ulReverseArrow">' + underLineChars["Reverse Arrow"] + '</option>' +
+    '<option value="ulShortReverseArrow">' + underLineChars["Short Reverse Arrow"] + '</option>' +
     '</select>';
   if (addAnimation) {
     var displayStyle = (addAnimation) ? ' ' : ' style="display:none" ';

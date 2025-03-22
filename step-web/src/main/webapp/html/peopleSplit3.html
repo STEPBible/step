@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+  <!-- ================================================================================
+       Multi-frame layout: This caters for a layout where multiple frames appear
+       together on a wide screen, but appear on separate tabs on a smaller screen.
+
+       To save making this page into an unncessarily large download, I have added
+       detailed comments into step.multiframeController.js.  There are still some
+       important comments below, however.  And in the HTML, I have added notes which
+       cross-refer to step.multiframeController.js.
+
+       Much of this you should retain as-is, or modify only in a very limited manner.
+       However, this isn't just a template: it's a working web page, and therefore
+       contains things specific to the genealogy application for which it was
+       originally designed.  These I have highlighted below with '*** CHANGE ME ***'
+       to highlight bits you will need to change for your application.
+       ================================================================================ -->
+       
+<html lang="en">
+<head>
+  <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+  <script src="/js/step.multiframeController.js" type="text/javascript"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      /*----------------------------------------------------------------------*/
+      /* General settings.  You probably don't want to play around with these
+         too much, apart from perhaps changing colours. */
+
+      * {
+          margin: 0;
+          padding: 0;
+	  box-sizing: border-box;
+      }
+        
+      body, html {
+          height: 100%;
+          width: 100%;
+          display: flex;
+      }
+
+      iframe {
+	  border: none;
+      }
+
+      .bigEmoji { /* Used on the names which appear on tabbed dialogue box tabs. */
+	  font-size: x-large;
+      }
+
+
+
+      /*----------------------------------------------------------------------*/
+      /* Used by both wide and tabbed layouts.  Don't change.
+
+        iframePlaceHolder's are there purely to mark places in the HTML
+        where I may want to place iframes, and need to be permanently
+        invisible. */
+      
+      iframePlaceHolder {
+	  height: 100%;
+	  width: 100%;
+      }
+      
+      .layoutSensitiveIFrame {
+	  display: flex;
+	  flex-grow: 1;
+	  overflow-y: auto;
+	  height: 100%;
+	  width: 100%;
+      }
+
+      .tabbedLayoutIframeHolder {
+	  height: 100%;
+	  width: 100%;
+      }
+
+
+
+      /*----------------------------------------------------------------------*/
+      /* Tab buttons used on the tabbed dialogue layout.  You shouldn't need to
+	 change any of this. */
+      
+      .tabButton {
+	  background: #555;
+	  color: white;
+	  float: left;
+	  border-left: 2px solid black;
+	  border-top: 2px solid black;
+	  border-right: 2px solid black;
+	  outline: none;
+	  cursor: pointer;
+	  padding: 5px 10px;
+	  font-size: medium;
+	  font-weight: bold;
+	  border-radius: 20px 20px 0px 0px;
+	  margin-bottom: 12px;
+      }
+
+      .tabButtonSelected {
+	  background: white !important;
+	  color: black !important;
+	  border-bottom: 1px solid white !important;
+      }
+
+      .tabButton:hover {
+	  background-color: #777;
+      }
+
+      .tabButton:active {
+	  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4), inset -2px -2px 5px rgba(255, 255, 255, 0.6); /* Pressed effect */
+	  background: yellow;
+	  color: black;
+      }
+
+
+
+      /*----------------------------------------------------------------------*/
+      /* Columns.  These are the default settings for a 2-column display with more than one iframe in the column.
+	 There should be no need to override them: the processing will do that if it finds a need to do so. */
+
+      .leftColumn {
+	  display: flex;
+	  flex-direction: column;
+	  flex: none;
+	  height: 100%;
+      }
+
+
+
+      /* Horizontal resizer between left and right columns.  This is a dotted line which you can drag to change column widths. */
+      .widthResizer {
+	  height: 100vh;
+          width: 5px;
+          cursor: ew-resize;
+          background: transparent;
+	  border-right: 2px dotted gray;
+          position: relative;
+      }
+
+      /* Vertical resizer between two iframes.  This is a dotted line which you can drag to change column widths. */
+      .heightResizer {
+          height: 5px;
+          cursor: ns-resize;
+          background: transparent;
+	  border-top: 2px dotted gray;
+	  margin-top: 5px;
+	  margin-bottom: 5px;
+      }
+    </style>
+</head>
+
+<body>
+  <!-- ========== *** CHANGE ME *** You need to create a #frameList as below and configure it.  See step.multiframeController.js Note 1. -->
+  <span id='iframeList' style='display:none'>
+    <iframe id='peopleIndex' wantSrc='peopleIndex.html' scrolling='yes'></iframe><tabLegend><span class='bigEmoji'>&#128203;</span>&nbsp;Index</tabLegend>
+    <iframe id='scripture'   suppressStepHeader='yes'   scrolling='yes'></iframe><tabLegend><span class='bigEmoji'>&#128218;</span>&nbsp;Scripture</tabLegend>
+    <iframe id='genealogy'   wantSrc='genealogy.html'   scrolling='no' ></iframe><tabLegend><span class='bigEmoji'>&#x1F46A;</span>&nbsp;Genealogy</tabLegend>
+  </span>
+
+
+
+
+
+  <!-- ========== *** CHANGE ME *** You need to configure the content of #wideLayoutContentContainer.  See step.multiframeController.js Note 2. ========== -->
+  <div id='wideLayoutVisibilityController' style='display:none; width:100%; height:100%; margin-left:10px; margin-bottom:10px;'>
+    <div id='wideLayoutContentContainer'   style='display:flex; flex-direction: row; flex:1; justify-content:center; align-items:center;'>
+
+      
+      <div class='leftColumn'>
+	<iframePlaceHolder iframeId='peopleIndex'></iframePlaceHolder>
+	<div class='heightResizer horizontalSeparator'></div>
+	<iframePlaceHolder iframeId='scripture'></iframePlaceHolder>
+      </div>
+
+      <div class='widthResizer verticalSeparator'></div>
+
+      <div class='rightColumn' style='display:flex; height:100%; flex-grow:1;'>
+	<iframePlaceHolder iframeId='genealogy'></iframePlaceHolder>
+      </div>
+
+
+    </div>
+  </div>
+
+
+
+  
+  <!-- ========== Don't alter this section.  See step.multiframeController.js Note 3. ========== -->
+  <div id='tabbedLayoutVisibilityController' style='display:none; height:100%; width:100%; flex-direction:column; margin-left:10px; margin-bottom:10px; margin-right: 10px;'>
+      <div id='tabbedLayoutButtonBar' style='display:flex; flex-direction:row;'>
+	<!-- Buttons will be generated here. -->
+      </div>
+
+      <div id='tabbedLayoutContent' style='height:100%; width=100%;'>
+	<!-- iframes and associated content will be generated here. -->
+      </div>
+  </div>
+
+  <script>
+    /* Note 4 */
+    function onLoad ()
+    {
+	const strong = new URLSearchParams(new URL(window.location.href).search).get("strong");
+	if (strong)
+	{
+	    const peopleIndex = document.getElementById('peopleIndex');
+	    peopleIndex.setAttribute('wantSrc', peopleIndex.getAttribute('wantSrc') + '?strong=' + strong);
+	}
+	MultiframeController.onload();
+    }
+	
+    window.onload = onLoad;
+    window.onresize = MultiframeController.resize.bind(MultiframeController);
+    window.dataStoreForIframes = new Map();
+  </script>
+</body>
+</html>

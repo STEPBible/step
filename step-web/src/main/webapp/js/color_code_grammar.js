@@ -1747,9 +1747,9 @@ var cf = {
     } else if (fontHighlight === 'normal') {
       $(cssName).css('font-style', 'normal');
       $(cssName).css('font-weight', 'normal');
-    } else if (fontHighlight === 'bold_italic') {
-      $(cssName).css('font-style', 'italic');
-      $(cssName).css('font-weight', 'bold');
+    // } else if (fontHighlight === 'bold_italic') {
+    //   $(cssName).css('font-style', 'italic');
+    //   $(cssName).css('font-weight', 'bold');
     } else if (fontHighlight === 'normal_italic') {
       $(cssName).css('font-style', 'italic');
       $(cssName).css('font-weight', 'normal');

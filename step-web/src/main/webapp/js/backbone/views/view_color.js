@@ -43,7 +43,6 @@ var ColorView = Backbone.View.extend({
         var colorTab = $(_.template(this.colorTemplate)({ jsVersion: jsVersion }));
         if (step.touchDevice && !step.touchWideDevice) {
             step.util.showLongAlert("", "<b>" + __s.display_grammarColor + "</b>", [ colorTab ]);
-            // this.closeSidebar();
             step.sidebar = null;
             $(".closeColumn").click(function (ev) {
                 step.util.closeModal("showLongAlertModal");
@@ -51,6 +50,12 @@ var ColorView = Backbone.View.extend({
         }
         else
             $("div#color.tab-pane.active").empty().append(colorTab);
+        var colorWidth = $('#ColorCode').width();
+        if (colorWidth > 200) {
+            var extraSpace = (colorWidth > 220) ? '10px' : '6px';
+            $('.grmChkBx').css('padding-right', extraSpace);
+            $('.grmSlctBx').css('padding-left', extraSpace);
+        }
     },
     onClickClose: function () {
         step.util.showOrHideTutorial(true);

@@ -53,8 +53,10 @@ function initializeClrCodeSidebar() {
   enableInfoIcon();
   if (!c4[C_enableGenderNumberClr])
     $('#gendernumbertable').hide();
-  if (!c4[C_Greek][C_enableVerbClr])
+  if (!c4[C_Greek][C_enableVerbClr]) {
     $("#greekverbtable").hide();
+    $("#greekverbexplaindoc").hide();
+  }
   if (!c4[C_OT][C_enableVerbClr])
     $("#hebrewverbtable").hide();
   cf.refreshClrGrammarCSS();
@@ -207,7 +209,7 @@ function addVerbSideBar() {
     htmlTable += addTitleToXAxisSideBar(descOfXAxisItems);
     htmlTable += htmlToAdd6('', true);
     htmlTable += '</table><br>';
-    htmlTable += '<br><p>What <a href="images/greek_verbs.pdf" target="grammarInfo">colors and underlines</a> are selected for Greek verbs</p>';
+    htmlTable += '<br><p id="greekverbexplaindoc">What <a href="images/greek_verbs.pdf" target="grammarInfo">colors and underlines</a> are selected for Greek verbs</p>';
     htmlTable = $(htmlTable);
     htmlTable.appendTo('#sideBarVerbClrs');
 }
@@ -1100,11 +1102,13 @@ function userToggleClrGrammar(grammarFunction) {
       if (grammarFunction === 'verb2') {
         if (checkedValue) {
           $("#greekverbtable").show();
+          $("#greekverbexplaindoc").show();
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");  
         }
         else {
           $("#greekverbtable").hide();
+          $("#greekverbexplaindoc").hide();
         }
       }
     }

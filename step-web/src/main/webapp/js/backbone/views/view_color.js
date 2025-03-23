@@ -4,7 +4,7 @@ var ColorView = Backbone.View.extend({
         '<link rel="stylesheet" href="css/spectrum.css"/>' +
         '<script src="js/color_code_config.<%= jsVersion %>js"></script>' +
         '<script src="libs/spectrum.js"></script>' +
-		'<div id="ColorCode" class="passageContainer examplesContainer">' +
+		'<div id="ColorCode" class="passageContainer examplesContainer colorCodeContainer">' +
             '<div id="sideBargenderNumClrs"></div><br>' +
 			'<div id="sideBarVerbClrs"></div><br>' +
 			'<div id="sideBarHVerbClrs"></div><br>' +
@@ -50,12 +50,6 @@ var ColorView = Backbone.View.extend({
         }
         else
             $("div#color.tab-pane.active").empty().append(colorTab);
-        var colorWidth = $('#ColorCode').width();
-        if (colorWidth > 200) {
-            var extraSpace = (colorWidth > 220) ? '10px' : '6px';
-            $('.grmChkBx').css('padding-right', extraSpace);
-            $('.grmSlctBx').css('padding-left', extraSpace);
-        }
     },
     onClickClose: function () {
         step.util.showOrHideTutorial(true);

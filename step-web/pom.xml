@@ -504,6 +504,7 @@
                                     <replacement><token>C_defaultCodeOfForm</token><value>26</value></replacement>
                                     <replacement><token>C_defaultHebrewCodeOfStem</token><value>27</value></replacement>
                                     <replacement><token>C_defaultAramaicCodeOfStem</token><value>28</value></replacement>
+									<replacement><token>C_underlineCharsInSelectDropdown</token><value>29</value></replacement>
                                     <replacement><token>C_colorCodeGrammarAvailableAndSelected</token><value>0</value></replacement>
                                     <replacement><token>C_otMorph</token><value>1</value></replacement>
                                     <replacement><token>C_displayQuickTryoutAccordion1</token><value>2</value></replacement>

@@ -94,29 +94,3 @@ li, span {
     font-style: italic;
   }
 }
-
-.colorCodeContainer {
-  container-type: inline-size;
-}
-
-@container (min-width: 200px) and (max-width: 220px) {
-  .grmChkBx {
-    padding-right: 6px;
-  }
-  .grmSlctBx {
-    padding-left: 6px;
-  }
-}
-
-@container (min-width: 221px) {
-  .grmChkBx {
-    padding-right: 10px;
-  }
-  .grmSlctBx {
-    padding-left: 10px;
-  }
-}
-
-.grmSlctBx {
-  text-align: right;
-}

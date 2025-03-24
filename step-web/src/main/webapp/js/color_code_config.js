@@ -1,17 +1,3 @@
-var underLineChars = {
-  "Underline": "___",
-  "Dash": "- - -",
-  "Dash Dot": "-.-.",
-  "Dash Dot Dot": "-..",
-  "Dots": "......",
-  "Wave": "〜",
-  "Arrow": "→",
-  "Short Arrow": "> >",
-  "Reverse Arrow": "←",
-  "Short Reverse Arrow": "< <",
-  "2 lines": "══"
-}
-
 function initializeClrCodeHtmlModalPage() {
   addVerbTable();
   addOTVerbTable();
@@ -189,7 +175,7 @@ function addVerbSideBar() {
       '</div>' +
     '</td>' +
     '<td>&nbsp;&nbsp;&nbsp;</td>' +
-    '<td><h2>Greek Verbs</td></tr></table><table id="greekverbtable" style="width:100%">';
+    '<td><h2>Greek Verbs</td></tr></table><table id="greekverbtable" class="clrTblWidth">';
 
     for (var i = 0; i < yAxisItems.length; i ++) {
       var cssClass = 'class="tensePreview' + i;
@@ -209,7 +195,7 @@ function addVerbSideBar() {
     htmlTable += addTitleToXAxisSideBar(descOfXAxisItems);
     htmlTable += htmlToAdd6('', true);
     htmlTable += '</table>';
-    htmlTable += '<br><p id="greekverbexplaindoc">What <a href="images/greek_verbs.pdf" target="grammarInfo">colors and underlines</a> are selected for Greek verbs</p>';
+    htmlTable += '<br><p id="greekverbexplaindoc"><a href="images/greek_verbs.pdf" target="grammarInfo">Information on colors and underlines</a> selected for Greek verbs</p>';
     htmlTable = $(htmlTable);
     htmlTable.appendTo('#sideBarVerbClrs');
 }
@@ -771,7 +757,7 @@ function addNounSideBar() {
         '<td>&nbsp;&nbsp;&nbsp;</td>' +
         '<td><h2>Gender & Number</td></tr>' +
       '</table>' +
-      '<table id="gendernumbertable" style="width:100%">' +
+      '<table id="gendernumbertable" class="clrTblWidth">' +
         '<tr><td style="padding-top:9px;padding-bottom:9px" class="sing mas">Masculine:</td>' +
         '<td style="text-align:right">' +
           '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
@@ -950,7 +936,7 @@ function addOTVerbSideBar() {
       '</div>' +
     '</td>' +
     '<td>&nbsp;&nbsp;&nbsp;</td>' +
-    '<td><h2>Hebrew Verbs</td></tr></table><table id="hebrewverbtable" style="width:100%">';
+    '<td><h2>Hebrew Verbs</td></tr></table><table id="hebrewverbtable" class="clrTblWidth">';
   for (var i = 0; i < yAxisItems.length; i += 1) {
     htmlTable += '<tr>';
     var cssClass = 'formPreview' + i;
@@ -1498,7 +1484,7 @@ function updateHtmlForYAxis() {
 
     $('#slctUlVerbItem' + i + ' option')
       .filter(function() {
-        return $.trim($(this).text()) === underLineChars[currentULForItem];
+        return $.trim($(this).text()) === cc[C_underlineCharsInSelectDropdown][currentULForItem];
       })
       .prop('selected', true);
     if ($('#inAnimate' + i).length == 1) {
@@ -1517,7 +1503,7 @@ function updateHtmlForYAxis() {
     currentULForItem = c4[C_OT][C_slctUlVerbItem][counter];
     $('#slctUlOTVerbItem' + counter + ' option')
       .filter(function() {
-        return $.trim($(this).text()) == underLineChars[currentULForItem];
+        return $.trim($(this).text()) == cc[C_underlineCharsInSelectDropdown][currentULForItem];
       })
       .prop('selected', true);
   }
@@ -2228,17 +2214,17 @@ function htmlToAdd5b(i, otVerb, addAnimation) {
     'onchange=\'userUpdate' + otPrefix +'YAxisItem("' + i + '", value)\'';
   if ((otPrefix != 'OT') && addAnimation)result += ' style="width: 52px"';
   result += '>' +
-    '<option value="ulSolid">' + underLineChars["Underline"] + '</option>' +
-    '<option value="ulDoubleSolid">' + underLineChars["2 lines"] + '</option>' +
-    '<option value="ulDash">' + underLineChars["Dash"] + '</option>' +
-    '<option value="ulDashDot">' + underLineChars["Dash Dot"] + '</option>' +
-    '<option value="ulDashDotDot">' + underLineChars["Dash Dot Dot"] + '</option>' +
-    '<option value="ulDot">' + underLineChars["Dots"] + '</option>' +
-    '<option value="ulWave">' + underLineChars["Wave"] + '</option>' +
-    '<option value="ulArrow">' + underLineChars["Arrow"] + '</option>' +
-    '<option value="ulShortArrow">' + underLineChars["Short Arrow"] + '</option>' +
-    '<option value="ulReverseArrow">' + underLineChars["Reverse Arrow"] + '</option>' +
-    '<option value="ulShortReverseArrow">' + underLineChars["Short Reverse Arrow"] + '</option>' +
+    '<option value="ulSolid">' + cc[C_underlineCharsInSelectDropdown]["Underline"] + '</option>' +
+    '<option value="ulDoubleSolid">' + cc[C_underlineCharsInSelectDropdown]["2 lines"] + '</option>' +
+    '<option value="ulDash">' + cc[C_underlineCharsInSelectDropdown]["Dash"] + '</option>' +
+    '<option value="ulDashDot">' + cc[C_underlineCharsInSelectDropdown]["Dash Dot"] + '</option>' +
+    '<option value="ulDashDotDot">' + cc[C_underlineCharsInSelectDropdown]["Dash Dot Dot"] + '</option>' +
+    '<option value="ulDot">' + cc[C_underlineCharsInSelectDropdown]["Dots"] + '</option>' +
+    '<option value="ulWave">' + cc[C_underlineCharsInSelectDropdown]["Wave"] + '</option>' +
+    '<option value="ulArrow">' + cc[C_underlineCharsInSelectDropdown]["Arrow"] + '</option>' +
+    '<option value="ulShortArrow">' + cc[C_underlineCharsInSelectDropdown]["Short Arrow"] + '</option>' +
+    '<option value="ulReverseArrow">' + cc[C_underlineCharsInSelectDropdown]["Reverse Arrow"] + '</option>' +
+    '<option value="ulShortReverseArrow">' + cc[C_underlineCharsInSelectDropdown]["Short Reverse Arrow"] + '</option>' +
     '</select>';
   if (addAnimation) {
     var displayStyle = (addAnimation) ? ' ' : ' style="display:none" ';

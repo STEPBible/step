@@ -88,6 +88,7 @@ var C_tenseIndexArray = 25; // TBRBMR
 var C_defaultCodeOfForm = 26; // TBRBMR
 var C_defaultHebrewCodeOfStem = 27; // TBRBMR
 var C_defaultAramaicCodeOfStem = 28; // TBRBMR
+var C_underlineCharsInSelectDropdown = 29; // TBRBMR
 var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
 var C_otMorph = 1; // TBRBMR
 var C_displayQuickTryoutAccordion1 = 2; // TBRBMR
@@ -342,6 +343,20 @@ var cc = [ /* cc = Color code grammar const.  Changed from const to var because 
     a: ['aphel', 'a', false], h: ['haphel', 'a', false], e: ['shaphel', 'a', false], // Voice: Active
     H: ['hophal', 'p', false],              // Voice: Passive
     v: ['ishtaphel', 'm', false]           // Voice: Middle
+  },
+  // C_underlineCharsInSelectDropdown
+  {
+    "Underline": "___",
+    "Dash": "- - -",
+    "Dash Dot": "-.-.",
+    "Dash Dot Dot": "-..",
+    "Dots": "......",
+    "Wave": "〜",
+    "Arrow": "→",
+    "Short Arrow": "> >",
+    "Reverse Arrow": "←",
+    "Short Reverse Arrow": "< <",
+    "2 lines": "══"  
   }
 ];
 

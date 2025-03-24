@@ -521,8 +521,8 @@ function doInitialisation ()
 function accommodateToEnvironment ()
 {
     if (MultiframeController.isLargeScreen())
-    {
 	window.parent.document.getElementById('genealogy').src = "genealogy.html";
-        //$('#controlButtonsHolder').html(`&nbsp;&nbsp;<button title='Swap family tree and scripture panes' class='btn blue' ><span style='font-size:x-large' onclick='UiUpdater.swapPanes()'>&#x1F4D7;&#x2194;&#x1F46A;</span></button>`);
-    }
+    else
+        $('#smallScreenInfo').html('<br>For help, use the green button on the Genealogy tab.');
+	
 }

@@ -341,6 +341,14 @@
     .manSpouse { fill: gray; }
     .womanSpouse { fill: gray; }
 
+
+    /*--- Miscellaneous --- */
+    .helpImage {
+	width: 100%;
+	max-width: min(40em, 80vh);
+	border: 1px solid black;
+    }
+
   </style>
 </head>
 
@@ -392,7 +400,7 @@
 
 
   <!-- Help modal -->
-  <div class='modalDialog draggableContainer' id='help' style='max-width:50em'>
+  <div class='modalDialog draggableContainer' id='help' style='max-width:min(90vh, 50em)'>
     <div class='modalDialogHeader draggableHeader' style='background: rgb(198, 89, 17)'>
       About the genealogy information <button class='modalDialogCloseBtn' onclick='document.getElementById("help").style.display = "none";'>✖</button>
     </div>
@@ -457,61 +465,74 @@
 
 
       <h4>Overview</h4>
-	<p style='background:var(--clrInfoAndPopUpBackground);border:1px solid #ccc'>The top (yellow) area of the screen tells you about the <i>selected</i> person.</p>
-	<p style='background:white;border:1px solid #ccc'>Below the yellow area, the bottom (white) area shows a family tree.</p>
-	<p>At the top left of the screen (on large screens) or on a separate tab (on small ones) there is a full list of all the people in the Bible.</p>
-	<p>And at the bottom left of the screen (on large screens) or on a separate tab (on small ones) there is a list of all the scriptures which make reference to the selected person.</p>
-	<p>To begin with, the selected person is the person who appears at the top of the tree &mdash; so you are seeing the family tree for that person and information about them.</p>
-      </ul>
+        <p>On a wide screen, you see a screen layout as below.  (On a small screen, you get the same information, but the vaious numbered areas are split across separate tabs.)</p>
+        <p style='text-align:center'><img src='../images/genealogyFullScreen.jpg' alt='Widescreen layout' class='helpImage'></p>
+	<p>Area <b>1</b> lists all of the people mentioned in the Bible.  You can choose a person of interest from here.</p>
+	<p>Area <b>2</b> shows all of the scripture references where this person is mentioned.</p>
+	<p>Area <b>3</b> gives detailed information about the person and about people who are related to them.</p>
+        <p>Area <b>4</b> shows a family tree.</p>
+	<br>
+        <p>You can change the current person by clicking on an entry in area 1, by clicking on any link in area 3, or be clicking on someone who appears on the family tree.
+           When you do this, all four areas are updated accordingly.  More details about each of these appear in the next sections.</p>
       <p>&nbsp;</p>
       <p>&nbsp;</p>
 
 
-      <h4>Navigating</h4>
-      <p>
-        You can move to see other parts of the family tree by dragging the tree with the mouse.  Alternatively, you can use the <img src='../images/genealogyTvRemote.png' alt='TV remote button' width='25px'>
-	button to move more quickly.
-      </p>
-
-      <p>
-        You can also resize the family tree using the scroll wheel on the mouse (pinch and stretch on a touch screen).  If you do this, the whole tree is scaled, including the text nodes.
-	This may sometimes make it difficult to read them.  There are menu options which can alter the layout without changing the text size.  We look at these below.
-      </p>
-      <table>
-	<tr>
-	  <td style='padding-right: 20px'><img src='../images/genealogyChangeSelection.jpg' alt='Selecting a node' width='100px' style='border: 1px solid black'></td>
-	  <td>You can change the selected person by clicking on a person in the family tree.  Doing this alters the information in the yellow box.  It does not change the family tree.</td>
-	</tr>
-	<tr style='bottom-margin:10px'>
-	  <td style='padding-right: 20px;'><img src='../images/genealogyParentButton.png' alt='Moving to a parent' width='50px'></td>
-	  <td>Sometimes an up-arrow button appears at the top left of the screen.  If the father of the person at the top of the family tree is known, you will see a blue button.
-	    If the mother is known, you'll see a pink button.  If both parents are known, you will see both.  Clicking one of these buttons alters the display so that the parent
-	    appears at the top, and the parent becomes the selected person.</td>
-	</tr>
-	<tr style='height:10px'><td colspan="2"></td></tr>
-	<tr>
-	  <td style='padding-right: 20px'><img src='../images/genealogyPeopleList.jpg' alt='Moving to a parent' width='100px' style='border: 1px solid black'></td>
-	  <td>You can also choose a new person by clicking on a person in the full list of people (top left of large screens, separate tab on small ones).  This redraws the family tree with that
-	      person at the top, and makes them the selected person.</td>
-	</tr>
-	<tr>
-      </table>
-      <br>
-      <p>And finally the yellow box may contain scripture references or the names of people which are formatted as links.  If you click on a scripture reference, it will appear in the
-	pane at the bottom left of the screen (on large screens) or on a separate tab (on small ones).  And if you click on a person, the program will show the family tree for that
-	person, and they will become the selected person.
-      </p>
+      <h4>Navigating using the full list of people</h4>
+        <p>Here is a close-up of the full list of people (area 1 in the earlier picture:</p>
+        <p style='text-align:center'><img src='../images/genealogyPeopleIndex.jpg' alt='People list' class='helpImage'></p>
+        <p>You can choose a person by scrolling to the appropriate entry i the table, or by typing the start of their name into the search box.  If someone is known by more than
+	   one name, you can use any of their names.  (Note that the spellings are those which appear in the English Standard Version of the Bible.</p>
+	<p>Once you have chosen someone, all of the areaas of the screen are updated accordingly.</p>
       <p>&nbsp;</p>
       <p>&nbsp;</p>
 
 
-       <h4>The menu</h4>
+      <h4>Navigating using the detailed biographical information</h4>
+        <p>Here is a close-up of the detailed biographical information for a person (area 3 in the earlier picture):</p>
+        <p style='text-align:center'><img src='../images/genealogyDetailBox.jpg' alt='People list' class='helpImage'></p>
+        <p>If something here looks like a link, it is one.  If the link is a person&rapos;s name, that person will be selected, and all areas of the screen will be updated accordingly.</p>
+	<p>If the link is a scripture reference, area 2 of the screen will be updated to hold that reference.</p>
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+
+
+      <h4>Navigating using the family tree</h4>
+        <p>Here is a close-up of a family tree (area 4 of the earlier picture):</p>
+        <p style='text-align:center'><img src='../images/genealogyFamilyTree.jpg' alt='Family tree' class='helpImage'></p>
+          You can move to see other parts of the family tree by dragging the tree with the mouse.  Alternatively, you can use the <img src='../images/genealogyTvRemote.png' alt='TV remote button' width='25px'>
+	  button to move more quickly.
+        </p>
+
+        <p>
+          You can also resize the family tree using the scroll wheel on the mouse (pinch and stretch on a touch screen).  If you do this, the whole tree is scaled, including the text nodes.
+	  This is easy to to, but may sometimes make it difficult to read them.  There are menu options which can alter the layout without changing the text size.  We look at these shortly.
+        </p>
+        <table>
+	  <tr>
+	    <td style='padding-right: 20px'><img src='../images/genealogyChangeSelection.jpg' alt='Selecting a node' width='100px' style='border: 1px solid black'></td>
+	    <td>Note on the picture above that one person is highlighted in red.  This is the selected person &mdash the one whose details are displayed on the rest of the screen.
+	        You can change the selected person by clicking on another person in the family tree.  Changing the selected person does not alter the content of the family tree.</td>
+	  </tr>
+	  <tr style='height:10px'><td colspan="2"></td></tr>
+	  <tr style='bottom-margin:10px'>
+	    <td style='padding-right: 20px;'><img src='../images/genealogyParentButton.png' alt='Moving to a parent' width='50px'></td>
+	    <td>Sometimes an up-arrow button appears at the top left of the screen.  If the father of the person at the top of the family tree is known, you will see a blue button.
+	        If the mother is known, you'll see a pink button.  If both parents are known, you will see both.  Clicking one of these buttons alters the display so that the parent
+	        appears at the top, and the parent becomes the selected person.</td>
+	    </tr>
+        </table>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+
+
+       <h4>The main menu</h4>
         <p>The <img src='../images/genealogyMenuButton.png' alt='Menu button' width='25px'> button displays a menu which lets you display certain built-in family trees (the green buttons below).</p>
         <p>The menu also contains sliders which let you change the horizontal and vertical spacing of the family tree without altering the size of the text; and a slider which lets you control how
 	  many generations of the family tree are displayed when you next change the tree.  And there is also a tick box which highights the siblings and children of the selected person.  This may be
 	  useful if you cannot see all of them on the screen at once.
 	</p>
-	<p style='text-align:center'><img src='../images/genealogyMenu.png' alt='Menu'></p>
+	<p style='text-align:center'><img src='../images/genealogyMenu.png' alt='Menu' class='helpImage'></p>
       <p>&nbsp;</p>
       <p>&nbsp;</p>
 
@@ -520,17 +541,20 @@
         <p>Right-clicking on a person selects them and shows a menu (long press on a touch screen).<p>
         <p>If the person has descendants, you can turn on and off the display of their descendants.</p>
         <p>You can also turn off the family tree below the person if the screen is becoming too cluttered.</p>
-	<p>And the menu lets you highpght the family tree to a selected descendant of the person.</li>
-	<p style='text-align:center'><img src='../images/genealogyRightMouseButtonMenu.png' alt='Menu' style='border:1px solid black'></p>
+	<p>And the menu lets you extend the family tree to a selected descendant of the person.</li>
+	<p style='text-align:center'><img src='../images/genealogyRightMouseButtonMenu.png' alt='Menu' class='helpImage'></p>
       <p>&nbsp;</p>
       <p>&nbsp;</p>
 
+
       <h4>Highlighting</h4>
-      <ul>
-	<li>If you select a person, the line from the person at the top of the screen to the selected person is highlighted in blue.</li>
-	<li>If the family line for Jesus overlaps with the family tree being displayed, the family line for Jesus is highlighted in red.</li>
-	<li>In Old Testament times, emphasis was given to the male line.  We reflect this by using a solid line for the male line, and a dotted line for the female line.</li>
-      </ul>
+        <p>If the family line for Jesus overlaps with the family tree being displayed, the family line for Jesus is highlighted in <span style='color:red'>red</span>:</p>
+	<p style='text-align:center'><img src='../images/genealogyMessianicHighlighting.jpg' alt='Messianic line highlighting' class='helpImage'></p>
+	<p>In ancient times, particular emphasis was given to the male line.  We reflect this by showing the line as solid.  The female line is shown dotted.  Note that there may be more
+	   than one female line, as in the example above, to account for all of the various parents / grandparents / great grandparents etc.</p>
+	<br>
+	<p>If you select a person, the line from the person at the top of the screen to the selected person is highlighted in blue.</p>
+	<p style='text-align:center'><img src='../images/genealogySelectedHighlighting.jpg' alt='Highlighting the selected person' class='helpImage'></p>
       <p>&nbsp;</p>
       <p>&nbsp;</p>
 
@@ -680,7 +704,7 @@
       <div>Select a descendant from the list below in order to have the family line to that person added to the display.</div>
       <textarea id='descendantSearchBox'
                 style='width:100%; height: 30px; line-height: 30px; overflow: hidden; font-size: 16px; border: 2px solid black; background: white; resize:none; padding: 0 10px; color: black;'
-	        placeholder='&#x1F50D; Select descendant by first few letters ...'></textarea>
+	        placeholder='&#x1F50D; To find a name, start typing here ...'></textarea>
       
       <div id='descendantTableContainer' style='border: 2px solid black; height:20vh; overflow-y:auto;'>
 	<table style='background:white;width:100%'>

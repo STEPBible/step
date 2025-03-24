@@ -189,7 +189,7 @@ function addVerbSideBar() {
       '</div>' +
     '</td>' +
     '<td>&nbsp;&nbsp;&nbsp;</td>' +
-    '<td><h2>Greek Verbs</td></tr></table><table id="greekverbtable">';
+    '<td><h2>Greek Verbs</td></tr></table><table id="greekverbtable" style="width:100%">';
 
     for (var i = 0; i < yAxisItems.length; i ++) {
       var cssClass = 'class="tensePreview' + i;
@@ -771,7 +771,7 @@ function addNounSideBar() {
         '<td>&nbsp;&nbsp;&nbsp;</td>' +
         '<td><h2>Gender & Number</td></tr>' +
       '</table>' +
-      '<table id="gendernumbertable">' +
+      '<table id="gendernumbertable" style="width:100%">' +
         '<tr><td style="padding-top:9px;padding-bottom:9px" class="sing mas">Masculine:</td>' +
         '<td style="text-align:right">' +
           '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
@@ -950,7 +950,7 @@ function addOTVerbSideBar() {
       '</div>' +
     '</td>' +
     '<td>&nbsp;&nbsp;&nbsp;</td>' +
-    '<td><h2>Hebrew Verbs</td></tr></table><table id="hebrewverbtable">';
+    '<td><h2>Hebrew Verbs</td></tr></table><table id="hebrewverbtable" style="width:100%">';
   for (var i = 0; i < yAxisItems.length; i += 1) {
     htmlTable += '<tr>';
     var cssClass = 'formPreview' + i;

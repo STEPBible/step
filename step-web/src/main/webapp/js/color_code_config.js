@@ -208,7 +208,7 @@ function addVerbSideBar() {
     htmlTable += '<tr></tr>';
     htmlTable += addTitleToXAxisSideBar(descOfXAxisItems);
     htmlTable += htmlToAdd6('', true);
-    htmlTable += '</table><br>';
+    htmlTable += '</table>';
     htmlTable += '<br><p id="greekverbexplaindoc">What <a href="images/greek_verbs.pdf" target="grammarInfo">colors and underlines</a> are selected for Greek verbs</p>';
     htmlTable = $(htmlTable);
     htmlTable.appendTo('#sideBarVerbClrs');

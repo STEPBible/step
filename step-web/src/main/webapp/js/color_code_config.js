@@ -178,17 +178,17 @@ function addVerbSideBar() {
     '<td><h2>Greek Verbs</td></tr></table><table id="greekverbtable" class="clrTblWidth">';
 
     for (var i = 0; i < yAxisItems.length; i ++) {
-      var cssClass = 'class="tensePreview' + i;
+      var cssClass = 'tensePreview' + i;
       if (c4[C_Greek][C_tensesOnOff][i])
         cssClass += ' ul' + c4[C_Greek][C_slctUlVerbItem][i].replace(/\s/g, ""); 
-      cssClass += '"';
+      cssClass += ' sdBrRow';
       htmlTable += '<tr>';
-      htmlTable += '<td style="padding-top:9px;padding-bottom:9px">' + htmlToAdd5a(i, "") + '</td>' +
-        '<td style="padding-top:9px;padding-bottom:9px">' +
-        '<span style="padding-top:9px;padding-bottom:9px" ' + cssClass + '>' + descOfYAxisItems[i] + '</span>' +
+      htmlTable += '<td class="sdBrRow">' + htmlToAdd5a(i, "") + '</td>' +
+        '<td class="sdBrRow">' +
+        '<span class="' + cssClass + '">' + descOfYAxisItems[i] + '</span>' +
         '</td>';
       htmlTable += '<td class="grmSlctBx">' + htmlToAdd5b(i, "", false) +
-        '<a class="tense_info' +  i + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
+        '<a class="tense_info' +  i + ' glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
         '</td></tr>';
     }
     htmlTable += '<tr></tr>';
@@ -758,43 +758,43 @@ function addNounSideBar() {
         '<td><h2>Gender & Number</td></tr>' +
       '</table>' +
       '<table id="gendernumbertable" class="clrTblWidth">' +
-        '<tr><td style="padding-top:9px;padding-bottom:9px" class="sing mas">Masculine:</td>' +
-        '<td style="text-align:right">' +
+        '<tr><td class="sing mas sdBrRow">Masculine:</td>' +
+        '<td class="grmSlctBx">' +
           '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
-          '<span><a class="masc_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+          '<span><a class="masc_info glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
         '</td>' +
         '</tr>' +
-        '<tr><td style="padding-top:9px;padding-bottom:9px" class="sing fem">Feminine:</td>' +
-        '<td style="text-align:right">' +
+        '<tr><td class="sing fem sdBrRow">Feminine:</td>' +
+        '<td class="grmSlctBx">' +
           '<input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
-          '<span><a class="fem_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+          '<span><a class="fem_info glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
         '</td>' +
         '</tr>' +
-        '<tr><td style="padding-top:9px;padding-bottom:9px" class="sing neut">Neuter:</td>' +
-        '<td style="text-align:right">' +
+        '<tr><td class="sing neut sdBrRow">Neuter:</td>' +
+        '<td class="grmSlctBx">' +
           '<input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
-          '<span><a class="neut_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+          '<span><a class="neut_info glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
         '</td>' +
         '</tr>' +
-        '<tr><td style="padding-top:9px;padding-bottom:9px">Singular:</td>' +
-            '<td style="text-align:right"><select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
+        '<tr><td class="sdBrRow">Singular:</td>' +
+            '<td class="grmSlctBx"><select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
                 '<option value="normal">Normal</option>' +
                 '<option value="normal_italic">Italic</option>' +
                 '<option value="bold">Bold</option>' +
                 // '<option value="bold_italic">Bold Italic</option>' +
             '</select>' +
-            '<span><a class="singular_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+            '<span><a class="singular_info glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
             '</td>' +
             '</tr>' +
         '</tr>' +
-        '<tr><td style="padding-top:9px;padding-bottom:9px" class="plur">Plural:</td>' +
-            '<td style="text-align:right"><select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
+        '<tr><td class="plur sdBrRow">Plural:</td>' +
+            '<td class="grmSlctBx"><select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
                 '<option value="normal">Normal</option>' +
                 '<option value="normal_italic">Italic</option>' +
                 '<option value="bold">Bold</option>' +
                 // '<option value="bold_italic">Bold Italic</option>' +
             '</select>' +
-            '<span><a class="plural_info glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
+            '<span><a class="plural_info glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a></span>' +
             '</td>' +
         '</tr></table>';
   htmlTable = $(htmlTable);
@@ -831,10 +831,10 @@ function addOtTitleToXAxisSideBar(descOfHebrewXAxisItems, descOfAramaicwXAxisIte
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
     htmlTable += '<tr><td>' + htmlToAdd3a(j, 'OT', false) + '</td>';
     var shortenName = descOfXAxisItems[j].split("<br")[0] + " etc";
-    htmlTable += '<td style="padding-top:9px;padding-bottom:9px;text-decoration:underline solid 33%" class="stemPreview' + j + '">' + 
+    htmlTable += '<td style="text-decoration:underline solid 33%" class="stemPreview' + j + ' sdBrRow">' + 
       shortenName + '</td>';
     htmlTable += '<td class="grmSlctBx">' + htmlToAdd3b(j, 'OT', false) +
-      '<span><a class="stem_info' +  j + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span' +
+      '<span><a class="stem_info' +  j + ' glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a></span' +
       '</td>';
     htmlTable += '</tr>';
   }
@@ -945,7 +945,7 @@ function addOTVerbSideBar() {
     htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT', true, /* paddingRequiredForSidebar */
       cssClass);
     htmlTable += '<td class="grmSlctBx">' + htmlToAdd5b(i, 'OT', false) +
-    '<a class="form_info' +  i + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
+    '<a class="form_info' +  i + ' glyphicon glyphicon-info-sig sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
     '</td>';
     htmlTable += '</tr>';
   }
@@ -2245,14 +2245,15 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   var result = "";
   var passiveOnOffCheckbox = '<input id="chkbx' + otPrefix + 'PassiveBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("passive", "' + otPrefix + '")\'>';
   if (callFromSidebar)
-    result += '<tr><td style="padding-top:9px;padding-bottom:9px" class="grmChkBx">' + passiveOnOffCheckbox + "</td><td>";
+    result += '<tr><td class="grmChkBx sdBrRow">' + passiveOnOffCheckbox + "</td><td>";
   result += '<span';
   if (callFromSidebar) {
-    result += ' style="padding-top:9px;padding-bottom:9px"';
-    if (otPrefix === '')
-      result += ' class="passivePreview"';
-    else if (otPrefix === 'OT')
-      result += ' class="otPassivePreview"';
+    result += ' class="';
+    if (otPrefix === 'OT')
+      result += 'otP';
+    else
+      result += 'p';
+    result += 'assivePreview sdBrRow"';
   }
   result += '>Passive';
   if (callFromSidebar) 
@@ -2263,7 +2264,7 @@ function htmlToAdd6(otVerb, callFromSidebar) {
     '<input id="in' + otPrefix + 'PassiveBkgrdClr" type="color" ' +
     'value="' + c4Ref[C_inPassiveBkgrdClr] + '"/>';
   if (callFromSidebar) {
-    result += '<span><a class="' + otPrefix + 'passive_info' + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span';
+    result += '<span><a class="' + otPrefix + 'passive_info' + ' glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a></span';
     result += "</td></tr>";
   }
   else {
@@ -2280,14 +2281,15 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   }
   var middleOnOffCheckbox = '<input id="chkbx' + otPrefix + 'MiddleBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("middle", "' + otPrefix + '")\'>';
   if (callFromSidebar)
-    result += '<tr><td style="padding-top:9px;padding-bottom:9px" class="grmChkBx">' + middleOnOffCheckbox + "</td><td>";
+    result += '<tr><td class="grmChkBx sdBrRow">' + middleOnOffCheckbox + "</td><td>";
   result += '<span';
   if (callFromSidebar) {
-    result += ' style="padding-top:9px;padding-bottom:9px"';
-    if (otPrefix === '')
-      result += ' class="middlePreview"';
-    else if (otPrefix === 'OT')
-      result += ' class="otMiddlePreview"';
+    result += ' class="';
+    if (otPrefix === 'OT')
+      result += 'M';
+    else
+      result += 'm';
+    result += 'iddlePreview sdBrRow"';
   }  
   result += '>Middle';
   if (callFromSidebar) 
@@ -2298,7 +2300,7 @@ function htmlToAdd6(otVerb, callFromSidebar) {
     '<input id="in' + otPrefix + 'MiddleBkgrdClr" type="color" ' +
     'value="' + c4Ref[C_inMiddleBkgrdClr] + '"/>';
   if (callFromSidebar) {
-    result += '<span><a class="' + otPrefix + 'middle_info' + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span';
+    result += '<span><a class="' + otPrefix + 'middle_info' + ' glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a></span';
     result += "</td></tr>";
   }
   else {
@@ -2352,10 +2354,10 @@ function addTitleToXAxisSideBar(descOfXAxisItems) {
   for (var j = 0; j < descOfXAxisItems.length; j += 1) {
     htmlTable += '<tr><td>';
     htmlTable += htmlToAdd3a(j, "", false) + '</td>';
-    htmlTable += '<td style="padding-top:9px;padding-bottom:9px;text-decoration:underline solid 33%" class="moodPreview' + j + '">' + descOfXAxisItems[j];
+    htmlTable += '<td style="text-decoration:underline solid 33%" class="moodPreview' + j + ' sdBrRow">' + descOfXAxisItems[j];
     htmlTable += '</td>';
     htmlTable += '<td class="grmSlctBx">' + htmlToAdd3b(j, "", false); 
-    htmlTable += '<span><a class="mood_info' + j + ' glyphicon glyphicon-info-sign" style="font-size:11px;display:inline;margin-left:8px" data-hasqtip="true" aria-describedby="qtip-60"></a></span>';
+    htmlTable += '<span><a class="mood_info' + j + ' glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a></span>';
     htmlTable += '</td>';
     htmlTable += '</tr>';
   }
@@ -2378,7 +2380,7 @@ function addTitleToYAxis(rowNum, descOfYAxisItems, xAxisRowSpan, ot, forSideBar,
   }
   if (forSideBar) {
     htmlTable += '<td>' + htmlToAdd5a(rowNum, ot) + '</td>' +
-      '<td style="padding-top:9px;padding-bottom:9px" class="' + verbClass + '">' +
+      '<td class="' + verbClass + ' sdBrRow">' +
       '<span>';
   }
   else

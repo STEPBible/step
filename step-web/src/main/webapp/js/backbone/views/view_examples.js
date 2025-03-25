@@ -308,7 +308,7 @@ var ExamplesView = Backbone.View.extend({
 		}
 		var checkLangCode = step.userLanguageCode.toLowerCase();
 		var checkLangCode2Ch = checkLangCode.substring(0,2);
-		if ((checkLangCode2Ch === "zh") || (checkLangCode2Ch === "fr") || (checkLangCode2Ch === "ar") || (checkLangCode2Ch === "pt")) {
+		if ((checkLangCode2Ch === "zh") || (checkLangCode2Ch === "fr") || (checkLangCode2Ch === "ar") || (checkLangCode2Ch === "pt")  || (checkLangCode2Ch === "es")) {
 			if (checkLangCode === "zh_hk")
 				checkLangCode = "zh_tw";
 			fetch("html/faq/" + checkLangCode + ".txt")

@@ -286,6 +286,7 @@ var SidebarView = Backbone.View.extend({
         }
         else {
             allStrongsForNextBackButton += data.vocabInfos[0].strongNumber;
+            strong = allStrongsForNextBackButton
             var panelBody = $('<div class="panel-body"></div>');
             this._createBriefWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, ref);
             if (variant[0] !== "")
@@ -880,6 +881,10 @@ var SidebarView = Backbone.View.extend({
                     def = def[1];
                 }
                 function2ToCall(panel, def, currentWordLanguageCode, bibleVersion, addLineBreaks);
+                var crowdinLink = "<a href=\"https://crowdin.com/editor/step/24214/engb-fr?view=comfortable&filter=basic&value=3#q=" + 
+                    data.strong + "\" target=\"_blank\">Suggest Translation Update</a>"
+                panel.append(crowdinLink)
+                // TODO put the link here to make translation updates
                 function3ToCall(panel, bibleVersion);
             });
         }

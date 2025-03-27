@@ -2412,6 +2412,7 @@ step.util = {
 		var headerMessage = "";
 		if (typeof version === "string") {
 			if (version !== "")
+				var version = version.split(",")[0].trim()
 				headerMessage += "Bible: " + version;
 		}
 		else version = "";

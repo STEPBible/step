@@ -456,7 +456,32 @@ step.util = {
 
 
             //make the new panel active
-            step.util.getPassageContainer(val).addClass("active");
+			var passageContainer = step.util.getPassageContainer(val);
+			passageContainer.addClass("active");
+			var availableOptions = step.util.activePassage().get("options");
+			if ((typeof availableOptions === "string") && (availableOptions.indexOf("C") > -1) &&  // Color grammar is available
+				(passageContainer.find(".passageContent").length > 0)) { // Has passage content
+				$("#colorgrammar-icon").show();
+				$('#sideBargenderNumClrs').show();
+				$('#colorAdvancedConfig').show();
+				$('#noColorGrammar').hide();
+				if (passageContainer.data("ntCSS") === "")
+					$("#sideBarVerbClrs").hide();
+				else
+					$("#sideBarVerbClrs").show();
+				if (passageContainer.data("otCSS") === "")
+					$("#sideBarHVerbClrs").hide();
+				else
+					$("#sideBarHVerbClrs").show();
+			}
+			else {
+				$("#colorgrammar-icon").hide();
+				$('#colorAdvancedConfig').hide();
+				$('#sideBargenderNumClrs').hide();
+				$('#noColorGrammar').show();
+                $("#sideBarVerbClrs").hide();
+				$("#sideBarHVerbClrs").hide();
+			}
             return val;
         }
 
@@ -1470,7 +1495,8 @@ step.util = {
                 } else if (mode == null) {
                     //simply toggle it
                     step.sidebar.trigger("toggleOpen");
-                } else if (step.sidebar.get("mode") != mode) {
+                } else if ((step.sidebar.get("mode") != mode) ||
+					((mode === "color") && step.touchDevice && !step.touchWideDevice)) {
                     step.sidebar.save({ mode: mode });
                 } else {
                     //there is a mode, which is non null, but the save wouldn't do anything, to force open
@@ -2209,6 +2235,9 @@ step.util = {
     },
 	showConfigGrammarColor: function (e) {
         if (e) e.preventDefault();
+		$("#sideBargenderNumClrs").empty(); // empty the color configuration in the sidebar
+		$("#sideBarVerbClrs").empty();      // because they will conflict with the color configuration 
+		$("#sideBarHVerbClrs").empty();     // in the modal.
         var element = document.getElementById('grammarClrModal');
         if (element) element.parentNode.removeChild(element);
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
@@ -3055,8 +3084,10 @@ step.util = {
 		step.util.closeModal("showLongAlertModal");
 		$('.qtip-titlebar button.close').click();
 		var extraStyling = (panelBodies == null) ? '' : 'style="padding:25px" ';
+		var showModalUntilClose = ((headerText.toLowerCase().indexOf('color') > -1) || (headerText.toLowerCase().indexOf('font') > -1)) ?
+			' data-backdrop="static"' : ''; // The color and the font modals use the spectrum library which need to be clean up manually.
 		$(_.template(
-			'<div id="showLongAlertModal" class="modal" ' + extraStyling + 'role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div id="showLongAlertModal" class="modal" ' + extraStyling + 'role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"' + showModalUntilClose + '>' +
 				'<div class="modal-dialog">' +
 					'<div class="modal-content stepModalFgBg"">' +
 						'<script>' +
@@ -3078,7 +3109,7 @@ step.util = {
 		)()).modal("show");
 		if (panelBodies != null) {
 			if (panelBodies.length == 1) {
-				$(".modal-body").append(panelBodies[0]);
+				$("#showLongAlertModal .modal-body").append(panelBodies[0]);
 				if (typeof panelBodies[0] === "string") {
 					var pos = panelBodies[0].indexOf("id=\"welcomeExamples");
 					if (pos > 1 && pos < 10) // Reduce padding for the welcome (Q&A) modal
@@ -3400,9 +3431,7 @@ step.util = {
 								'if ((baseColor === "#17758F") || (baseColor === "#c58af9")) step.util.setDefaultColor("close");' +
 								'else setColor(baseColor);' +
 							'}' +
-							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
 							'step.util.closeModal("fontSettings");' +
-							'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021
 						'}' +
 					'</script>' +
 					'<div class="modal-header">' +
@@ -3720,6 +3749,10 @@ step.util = {
 			});
 			if ((element.parentNode) && (modalID !== "raiseSupport")) element.parentNode.removeChild(element);
 			$('.qtip-titlebar button.close').click();
+			if ((modalID === "showLongAlertModal") || (modalID === "fontSettings") || (modalID === "grammarClrModal")) {
+				$(".sp-container").remove();
+				$(".modal-backdrop.in").remove();
+			}
 		}
     },
 	addTagLine: function(){
@@ -4952,7 +4985,6 @@ step.util = {
 	loadTOS: function() {
 		var C_otMorph = 1; // TBRBMR
 		if (cv[C_otMorph] == null) {
-//			$.ajaxSetup({async: false});
 			var callback = step.util.addGrammar;
 			jQuery.ajax({
 				dataType: "script",
@@ -4962,11 +4994,9 @@ step.util = {
 					console.log('load tos_morph.js Failed: ' + exception);
 				},
 				complete: function (jqXHR, status) {
-//				    console.log('finish loading');
 				    callback();
 				}
 			});
-//			$.ajaxSetup({async: true});
 			return true;
 		}
 		return false;

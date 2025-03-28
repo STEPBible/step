@@ -25,45 +25,40 @@ var C_chkbxMiddleUlClr1 = 13; // TBRBMR
 var C_chkbxMiddleUlColr1Value = 14; // TBRBMR
 var C_verbTableXHeader = 15; // TBRBMR
 var C_verbTableYHeader = 16; // TBRBMR
-var C_granularControlOfMoods = 17; // TBRBMR
-var C_granularControlOfTenses = 18; // TBRBMR
-var C_moodsOnOff = 19; // TBRBMR
-var C_tensesOnOff = 20; // TBRBMR
-var C_inAnimate = 21; // TBRBMR
-var C_orderOfTense = 22; // TBRBMR
-var C_orderOfMood = 23; // TBRBMR
-var C_tenseToCombineWithPrevious = 24; // TBRBMR
-var C_moodToCombineWithPrevious = 25; // TBRBMR
-var C_xAxisForMood = 26; // TBRBMR
-var C_inPassiveUlClr2 = 27; // TBRBMR
-var C_inMiddleUlClr2 = 28; // TBRBMR
-var C_chkbxPassiveUlClr2 = 29; // TBRBMR
-var C_chkbxPassiveUlColr2Value = 30; // TBRBMR
-var C_chkbxMiddleUlClr2 = 31; // TBRBMR
-var C_chkbxMiddleUlColr2Value = 32; // TBRBMR
+var C_moodsOnOff = 17; // TBRBMR
+var C_tensesOnOff = 18; // TBRBMR
+var C_inAnimate = 19; // TBRBMR
+var C_orderOfTense = 20; // TBRBMR
+var C_orderOfMood = 21; // TBRBMR
+var C_tenseToCombineWithPrevious = 22; // TBRBMR
+var C_moodToCombineWithPrevious = 23; // TBRBMR
+var C_xAxisForMood = 24; // TBRBMR
+var C_inPassiveUlClr2 = 25; // TBRBMR
+var C_inMiddleUlClr2 = 26; // TBRBMR
+var C_chkbxPassiveUlClr2 = 27; // TBRBMR
+var C_chkbxPassiveUlColr2Value = 28; // TBRBMR
+var C_chkbxMiddleUlClr2 = 29; // TBRBMR
+var C_chkbxMiddleUlColr2Value = 30; // TBRBMR
 var C_OT = 1; // TBRBMR
-var C_granularControlOfXAxis = 17; // TBRBMR
-var C_granularControlOfYAxis = 18; // TBRBMR
-var C_xAxisOnOff = 19; // TBRBMR
-var C_yAxisOnOff = 20; // TBRBMR
-var C_orderOfForm = 21; // TBRBMR
-var C_verbFormToCombineWithPrevious = 22; // TBRBMR
-var C_orderOfHebrewStem = 23; // TBRBMR
-var C_hebrewStemToCombineWithPrevious = 24; // TBRBMR
-var C_orderOfAramaicStem = 25; // TBRBMR
-var C_aramaicStemToCombineWithPrevious = 26; // TBRBMR
-var C_hebrewCodeOfStem = 27; // TBRBMR
-var C_aramaicCodeOfStem = 28; // TBRBMR
-var C_codeOfForm = 29; // TBRBMR
-var C_xAxisForStem = 30; // TBRBMR
-var C_enableAdvancedTools = 2; // TBRBMR
+var C_xAxisOnOff = 17; // TBRBMR
+var C_yAxisOnOff = 18; // TBRBMR
+var C_orderOfForm = 19; // TBRBMR
+var C_verbFormToCombineWithPrevious = 20; // TBRBMR
+var C_orderOfHebrewStem = 21; // TBRBMR
+var C_hebrewStemToCombineWithPrevious = 22; // TBRBMR
+var C_orderOfAramaicStem = 23; // TBRBMR
+var C_aramaicStemToCombineWithPrevious = 24; // TBRBMR
+var C_hebrewCodeOfStem = 25; // TBRBMR
+var C_aramaicCodeOfStem = 26; // TBRBMR
+var C_codeOfForm = 27; // TBRBMR
+var C_xAxisForStem = 28; // TBRBMR
+var C_c4Version = 2; // TBRBMR
 var C_enableGenderNumberClr = 3; // TBRBMR
 var C_inClrMasculine = 4; // TBRBMR
 var C_inClrFeminine = 5; // TBRBMR
 var C_inClrNeuter = 6; // TBRBMR
 var C_slctUlSingular = 7; // TBRBMR
 var C_slctUlPlural = 8; // TBRBMR
-var C_c4Version = 9; // TBRBMR
 var C_activeIndexArray = 0; // TBRBMR
 var C_middleIndexArray = 1; // TBRBMR
 var C_passiveIndexArray = 2; // TBRBMR
@@ -93,6 +88,7 @@ var C_tenseIndexArray = 25; // TBRBMR
 var C_defaultCodeOfForm = 26; // TBRBMR
 var C_defaultHebrewCodeOfStem = 27; // TBRBMR
 var C_defaultAramaicCodeOfStem = 28; // TBRBMR
+var C_underlineCharsInSelectDropdown = 29; // TBRBMR
 var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
 var C_otMorph = 1; // TBRBMR
 var C_displayQuickTryoutAccordion1 = 2; // TBRBMR
@@ -114,6 +110,7 @@ var C_axisUserSelectedToSort = 17; // TBRBMR
 var C_userProvidedSortOrder = 18; // TBRBMR
 var C_updatedGenderNumberCSS = 19; // TBRBMR
 var C_userTurnGenderNumberFromOffToOn = 20; // TBRBMR
+var C_ulVoiceBaseImgs = 21; // TBRBMR
 // End of const for c4 (current color code config), cc (color grammar const) and cv (color code variable) array index start
 
 /**
@@ -170,7 +167,7 @@ var cc = [ /* cc = Color code grammar const.  Changed from const to var because 
     'future': 'f'
   },
   // C_defaultOrderOfTense
-  ['r', 'l', 'i', 'a', 'p', 'f'],
+  ['p', 'i', 'a', 'r', 'l', 'f'],
   // C_defaultTenseToCombineWithPrevious
   [false, false, false, false, false, false],
   // C_robinsonCodeOfMood
@@ -192,7 +189,7 @@ var cc = [ /* cc = Color code grammar const.  Changed from const to var because 
     'participle': 'p'
   },
   // C_defaultOrderOfMood
-  ['i', 's', 'o', 'm', 'n', 'p'],
+  ['i', 'm', 's', 'o', 'n', 'p'],
   // C_defaultMoodToCombineWithPrevious
   [false, false, false, false, false, false],
   // C_otNameOfVerbForm
@@ -211,9 +208,9 @@ var cc = [ /* cc = Color code grammar const.  Changed from const to var because 
     'cohortative': 'c'
   },
   // C_defaultOrderOfOTVerbForm
-  [             'p',   'w',  'f',   'r',   's',  'v',   'i',   'q',  'n',  'u',  'j',   'c'],
+  [ 'p',   'w',  'i',   'q',  'n',  'u',  'j',   'c',  'v',   'f',   'r',   's' ],
   // C_defaultOTVerbFormToCombineWithPrevious
-  [false, true, false, false, true, false, false, true, true, true, false, true],
+  [ false, true, false, true, true, true, false, true, false, false, false, true ],
   // C_hebrewNameOfStem
   {
     // Action: Simple
@@ -346,6 +343,20 @@ var cc = [ /* cc = Color code grammar const.  Changed from const to var because 
     a: ['aphel', 'a', false], h: ['haphel', 'a', false], e: ['shaphel', 'a', false], // Voice: Active
     H: ['hophal', 'p', false],              // Voice: Passive
     v: ['ishtaphel', 'm', false]           // Voice: Middle
+  },
+  // C_underlineCharsInSelectDropdown
+  {
+    "Underline": "___",
+    "Dash": "- - -",
+    "Dash Dot": "-.-.",
+    "Dash Dot Dot": "-..",
+    "Dots": "......",
+    "Wave": "〜",
+    "Arrow": "→",
+    "Short Arrow": "> >",
+    "Reverse Arrow": "←",
+    "Short Reverse Arrow": "< <",
+    "2 lines": "══"  
   }
 ];
 
@@ -429,7 +440,9 @@ var cv = // cv = Color code grammar variables
   // C_updatedGenderNumberCSS
   false,
   // C_userTurnGenderNumberFromOffToOn
-  false
+  false,
+  // C_ulVoiceBaseImgs
+  [ new ULOBJ('ulPassive'), new ULOBJ('ulMiddle'), new ULOBJ('ulOTPassive'), new ULOBJ('ulOTMiddle') ]
 ];
 
 var c4;  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
@@ -439,8 +452,8 @@ var cf = {
     var x = [];
     x[C_Greek] = [];
         x[C_Greek][C_enableVerbClr] = true;
-        x[C_Greek][C_inClrVerbItem] = ['#31ff00', '#ffa500', '#925011', '#f92d02', '#fff700', '#091bfd'];
-        x[C_Greek][C_slctUlVerbItem] = ['Short Reverse Arrow', 'Short Reverse Arrow', 'Reverse Arrow', 'Dots', 'Dash', 'Arrow'];
+        x[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
+        x[C_Greek][C_slctUlVerbItem] = ['Dash', 'Arrow', 'Underline', '2 lines', '2 lines', 'Dots', 'Underline'];
         x[C_Greek][C_inPassiveBkgrdClr] = '#ffd6b8';
         x[C_Greek][C_inPassiveUlClr1] = '#000000';
         x[C_Greek][C_chkbxPassiveBkgrdClr] = true;
@@ -454,14 +467,14 @@ var cf = {
         x[C_Greek][C_chkbxMiddleUlClr1] = true;
         x[C_Greek][C_chkbxMiddleUlColr1Value] = false;
         x[C_Greek][C_verbTableXHeader] = null;
-        x[C_Greek][C_verbTableYHeader] = { desc: ['Past', 'Past /<br>Present', 'Present', 'Future'], repeat: [2, 0, 0, 0] };
-        x[C_Greek][C_granularControlOfMoods] = false;
-        x[C_Greek][C_granularControlOfTenses] = false;
-        x[C_Greek][C_moodsOnOff] = [false, false, false, false, false, false];
-        x[C_Greek][C_tensesOnOff] = [false, false, false, false, false, false];
+        x[C_Greek][C_verbTableYHeader] = null;
+        
+        x[C_Greek][C_moodsOnOff] = [true, true, true, true, true, true];
+        x[C_Greek][C_tensesOnOff] = [true, true, true, true, true, true];
         x[C_Greek][C_inAnimate] = [false, false, false, false, false, false];
         x[C_Greek][C_orderOfTense] = cc[C_defaultOrderOfTense];
         x[C_Greek][C_orderOfMood] = cc[C_defaultOrderOfMood];
+        
         x[C_Greek][C_tenseToCombineWithPrevious] = cc[C_defaultTenseToCombineWithPrevious];
         x[C_Greek][C_moodToCombineWithPrevious] = cc[C_defaultMoodToCombineWithPrevious];
         x[C_Greek][C_xAxisForMood] = true;
@@ -488,11 +501,9 @@ var cf = {
         x[C_OT][C_chkbxMiddleUlClr1] = true;
         x[C_OT][C_chkbxMiddleUlColr1Value] = false;
         x[C_OT][C_verbTableXHeader] = { desc: ['Simple','Intensive / Resultative', 'Causative / Declarative'], repeat: [0, 0, 0]};
-        x[C_OT][C_verbTableYHeader] = { desc: ['Past or poss.<br>Present','Any time<br>or Present', 'Present or<br>Future'], repeat: [0, 2, 1] };
-        x[C_OT][C_granularControlOfXAxis] = false;
-        x[C_OT][C_granularControlOfYAxis] = false;
-        x[C_OT][C_xAxisOnOff] = [false, false, false, false, false, false, false, false, false, false, false, false];
-        x[C_OT][C_yAxisOnOff] = [false, false, false, false, false, false, false, false, false, false, false, false];
+        x[C_OT][C_verbTableYHeader] = { desc: ['Past or poss.<br>Present','Present or<br>Future', 'Any time<br>or Present'], repeat: [0, 1, 2] };
+        x[C_OT][C_xAxisOnOff] = [true, true, true, true, true, true, true, true, true, true, true, true];
+        x[C_OT][C_yAxisOnOff] = [true, true, true, true, true, true, true, true, true, true, true, true];
         x[C_OT][C_orderOfForm] = cc[C_defaultOrderOfOTVerbForm];
         x[C_OT][C_verbFormToCombineWithPrevious] = cc[C_defaultOTVerbFormToCombineWithPrevious];
         x[C_OT][C_orderOfHebrewStem] = cc[C_defaultOrderOfHebrewStem];
@@ -503,26 +514,24 @@ var cf = {
         x[C_OT][C_aramaicCodeOfStem] = cc[C_defaultAramaicCodeOfStem];
         x[C_OT][C_codeOfForm] = cc[C_defaultCodeOfForm];
         x[C_OT][C_xAxisForStem] = true;
-    x[C_enableAdvancedTools] = true;
     x[C_enableGenderNumberClr] = true;
     x[C_inClrMasculine] = '#000099';
     x[C_inClrFeminine] = '#C90000';
     x[C_inClrNeuter] = '#000000';
     x[C_slctUlSingular] = 'normal';
     x[C_slctUlPlural] = 'bold';
-    x[C_c4Version] = '20190905';
+    x[C_c4Version] = '20250315';
     return x;
   },
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
   initCanvasAndCssForClrCodeGrammar: function() {
       if (c4 === undefined) { cf.getC4(); } //c4 is currentClrCodeConfig.  It is changed to c4 to save space
-	  cf.addVerbTable(false, '#colorCodeTableDiv');
 	  cf.createUlArrow();
 	  cf.createUlShortArrow();
 	  cf.createUlReverseArrow();
 	  cf.createUlShortReverseArrow();
 	  cf.createUl_Dash();
-	  cf.createUlSolid();
+	  cf.createUlSolid(cv[C_uLBASEIMGS][2]);
 	  cf.createUlDash_Dot();
 	  cf.createUlDashDotDot();
 	  cf.createUlNone();
@@ -562,7 +571,7 @@ var cf = {
   createUlArrow: function() {
     var ulArrow = cv[C_uLBASEIMGS][0];
     ulArrow.canvas = cf.createCanvas(ulArrow.name, 18, 10);
-    ulArrow.context = ulArrow.canvas.getContext('2d');
+    ulArrow.context = ulArrow.canvas.getContext('2d', { willReadFrequently: true } );
     ulArrow.context.beginPath();
     ulArrow.context.lineJoin = 'round';
     ulArrow.context.lineWidth = 1;
@@ -584,7 +593,7 @@ var cf = {
   createUlShortArrow: function() {
     var ulArrow = cv[C_uLBASEIMGS][8];
     ulArrow.canvas = cf.createCanvas(ulArrow.name, 10, 10);
-    ulArrow.context = ulArrow.canvas.getContext('2d');
+    ulArrow.context = ulArrow.canvas.getContext('2d', { willReadFrequently: true } );
     ulArrow.context.beginPath();
     ulArrow.context.lineJoin = 'round';
     ulArrow.context.lineWidth = 2;
@@ -600,7 +609,7 @@ var cf = {
   createUlReverseArrow: function() {
     var ulArrow = cv[C_uLBASEIMGS][9];
     ulArrow.canvas = cf.createCanvas(ulArrow.name, 18, 10);
-    ulArrow.context = ulArrow.canvas.getContext('2d');
+    ulArrow.context = ulArrow.canvas.getContext('2d', { willReadFrequently: true } );
     ulArrow.context.beginPath();
     ulArrow.context.lineJoin = 'round';
     ulArrow.context.lineWidth = 1;
@@ -622,7 +631,7 @@ var cf = {
   createUlShortReverseArrow: function() {
     var ulArrow = cv[C_uLBASEIMGS][10];
     ulArrow.canvas = cf.createCanvas(ulArrow.name, 10, 10);
-    ulArrow.context = ulArrow.canvas.getContext('2d');
+    ulArrow.context = ulArrow.canvas.getContext('2d', { willReadFrequently: true } );
     ulArrow.context.beginPath();
     ulArrow.context.lineJoin = 'round';
     ulArrow.context.lineWidth = 2;
@@ -638,7 +647,7 @@ var cf = {
   createUl_Dash: function() {
     var ulDash = cv[C_uLBASEIMGS][1];
     ulDash.canvas = cf.createCanvas(ulDash.name, 13, 10);
-    ulDash.context = ulDash.canvas.getContext('2d');
+    ulDash.context = ulDash.canvas.getContext('2d', { willReadFrequently: true } );
     ulDash.context.beginPath();
     ulDash.context.lineWidth = 4;
     ulDash.context.moveTo(4, 4);
@@ -649,10 +658,10 @@ var cf = {
     ulDash.animIncrement = cf.calcAnimationPixelIncrement(ulDash.canvas.width);
   },
 
-  createUlSolid: function() {
-    var ulSolid = cv[C_uLBASEIMGS][2];
+  createUlSolid: function(baseImage) {
+    var ulSolid = baseImage;
     ulSolid.canvas = cf.createCanvas(ulSolid.name, 1, 10);
-    ulSolid.context = ulSolid.canvas.getContext('2d');
+    ulSolid.context = ulSolid.canvas.getContext('2d', { willReadFrequently: true } );
     ulSolid.context.beginPath();
     ulSolid.context.lineWidth = 3;
     ulSolid.context.moveTo(0, 4);
@@ -665,7 +674,7 @@ var cf = {
   createUlDash_Dot: function() {
     var ulDashDot = cv[C_uLBASEIMGS][6];
     ulDashDot.canvas = cf.createCanvas(ulDashDot.name, 19, 10);
-    ulDashDot.context = ulDashDot.canvas.getContext('2d');
+    ulDashDot.context = ulDashDot.canvas.getContext('2d', { willReadFrequently: true } );
     ulDashDot.context.beginPath();
     ulDashDot.context.arc(5, 4, 2, 0, 2 * Math.PI);
     ulDashDot.context.fill();
@@ -684,7 +693,7 @@ var cf = {
   createUlDashDotDot: function() {
     var ulDashDotDot = cv[C_uLBASEIMGS][7];
     ulDashDotDot.canvas = cf.createCanvas(ulDashDotDot.name, 26, 10);
-    ulDashDotDot.context = ulDashDotDot.canvas.getContext('2d');
+    ulDashDotDot.context = ulDashDotDot.canvas.getContext('2d', { willReadFrequently: true } );
     ulDashDotDot.context.beginPath();
     ulDashDotDot.context.arc(5, 4, 2, 0, 2 * Math.PI);
     ulDashDotDot.context.fill();
@@ -708,14 +717,14 @@ var cf = {
   createUlNone: function() {
     var ulNone = cv[C_uLBASEIMGS][11];
     ulNone.canvas = cf.createCanvas(ulNone.name, 1, 10);
-    ulNone.context = ulNone.canvas.getContext('2d');
+    ulNone.context = ulNone.canvas.getContext('2d', { willReadFrequently: true } );
     ulNone.img.src = ulNone.canvas.toDataURL('image/png');
   },
 
   createUlDoubleSolid: function() {
     var ulDoubleSolid = cv[C_uLBASEIMGS][3];
     ulDoubleSolid.canvas = cf.createCanvas(ulDoubleSolid.name, 1, 10);
-    ulDoubleSolid.context = ulDoubleSolid.canvas.getContext('2d');
+    ulDoubleSolid.context = ulDoubleSolid.canvas.getContext('2d', { willReadFrequently: true } );
     ulDoubleSolid.context.beginPath();
     ulDoubleSolid.context.lineWidth = 2;
     ulDoubleSolid.context.moveTo(0, 2);
@@ -731,7 +740,7 @@ var cf = {
   createUlDot: function() {
     var ulDot = cv[C_uLBASEIMGS][4];
     ulDot.canvas = cf.createCanvas(ulDot.name, 10, 10);
-    ulDot.context = ulDot.canvas.getContext('2d');
+    ulDot.context = ulDot.canvas.getContext('2d', { willReadFrequently: true } );
     ulDot.context.beginPath();
     ulDot.context.arc(5, 4, 2, 0, 2 * Math.PI);
     ulDot.context.fill();
@@ -744,7 +753,7 @@ var cf = {
   createUlWave: function() {
     var ulWave = cv[C_uLBASEIMGS][5];
     ulWave.canvas = cf.createCanvas(ulWave.name, 22, 10);
-    ulWave.context = ulWave.canvas.getContext('2d');
+    ulWave.context = ulWave.canvas.getContext('2d', { willReadFrequently: true } );
     // draw sin ulWave
     ulWave.context.beginPath();
     ulWave.context.strokeStyle = 'black';
@@ -816,6 +825,8 @@ var cf = {
         cv[C_aramaicStemIndex2CSS][ c4[C_OT][C_orderOfAramaicStem][counter3] ] = colIndex2;
       }
     }
+    cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
+    cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");
   },
 
   createUlForAllItemsInYAndX: function() {
@@ -852,23 +863,22 @@ var cf = {
           var indexToUlVerbCSS = arrayIndexOfCurrentTense[counter3];
           if (moodIndex.indexOf(indexToUlVerbCSS) > -1) {
             cf.createUlForOneInstanceOfTense(cv[C_ulVerbCSS][indexToUlVerbCSS], srcImgObj, colorForXAxis, indexToUlVerbCSS);
-            cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense = (!(c4[C_Greek][C_granularControlOfTenses] && !c4[C_Greek][C_tensesOnOff][tenseCounter]));
-            cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood = (!(c4[C_Greek][C_granularControlOfMoods] && !c4[C_Greek][C_moodsOnOff][moodCounter]));
+            cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense = c4[C_Greek][C_tensesOnOff][tenseCounter];
+            cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood = c4[C_Greek][C_moodsOnOff][moodCounter];
           }
         }
       }
     }
   },
 
-  createUlForOneInstanceOfTense: function (destImgObj, srcImgObj, color, ulVerbCSSIndex) {
+  createUlForOneInstanceOfTense: function (destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName) {
     destImgObj.canvas = cf.createCanvas(destImgObj.name, Math.max(srcImgObj.canvas.width, 26), srcImgObj.canvas.height); // Set width to the widest canvas.  The Dash-Dot-Dot canvas as a width of 26
-    cf.updateUlForSpecificYAxis(destImgObj, srcImgObj, color, ulVerbCSSIndex);
+    cf.updateUlForSpecificYAxis(destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName);
   },
 
   displayVerbUlOrNot: function (indexToUlVerbCSS) {
-    if ( ( ( (!c4[C_Greek][C_granularControlOfMoods] && !c4[C_Greek][C_granularControlOfTenses]) ||
-          ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood && c4[C_Greek][C_granularControlOfMoods]) ||
-          ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense && c4[C_Greek][C_granularControlOfTenses]) ) &&
+    if ( ( ( ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood) &&
+          ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense) ) &&
           c4[C_Greek][C_enableVerbClr]) || (indexToUlVerbCSS == -1) ) return true; // indexToUlVerbCSS is -1 when it is OT verb.  Temp solution.
     else return false;
   },
@@ -877,11 +887,11 @@ var cf = {
     var display = false;
     if (c4[C_OT][C_enableVerbClr]) {
       if (yIndex == (cv[C_ulOTVbCSS].length -1)) display = true;
-      else if ( ((!c4[C_OT][C_granularControlOfYAxis]) || (c4[C_OT][C_yAxisOnOff][yIndex])) &&
-          ((!c4[C_OT][C_granularControlOfXAxis]) || (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)])) )
+      else if ( (c4[C_OT][C_yAxisOnOff][yIndex]) &&
+          (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)]) )
         display = true;
-      else if (c4[C_OT][C_granularControlOfYAxis] && c4[C_OT][C_granularControlOfXAxis])
-        display = (c4[C_OT][C_yAxisOnOff][yIndex]) || (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)]);
+      else
+        display = (c4[C_OT][C_yAxisOnOff][yIndex]) && (c4[C_OT][C_xAxisOnOff][Math.floor(xIndex/3)]);
     }
     return display;
   },
@@ -925,14 +935,15 @@ var cf = {
             $('.v' + cv[C_ulVerbCSS][j].name).css('background', 'url(' + cv[C_ulVerbCSS][j].img.src + ') repeat-x 100% 100%');
           }
         }
-        else if ((!c4[C_Greek][C_enableVerbClr]) || ((c4[C_Greek][C_granularControlOfMoods]) || (c4[C_Greek][C_granularControlOfTenses]))) $('.v' + cv[C_ulVerbCSS][j].name).css('background', 'none');
+        else
+          $('.v' + cv[C_ulVerbCSS][j].name).css('background', 'none');
       }
     }
     if (otCSSOnThisPage == undefined) {
       for (var j2 = 0; j2 < cv[C_ulOTVbCSS].length; j2 += 1) {
         for (var k = 0; k < cv[C_ulOTVbCSS][j2].length; k += 1) {
           if (cf.displayOTVerbUlOrNot(j2, k)) $('.vot_' + cv[C_ulOTVbCSS][j2][k].name).css('background', 'url(' + cv[C_ulOTVbCSS][j2][k].img.src + ') repeat-x 100% 100%');
-          else if ((!c4[C_OT][C_enableVerbClr]) || ((c4[C_OT][C_granularControlOfXAxis]) || (c4[C_OT][C_granularControlOfYAxis]))) $('.vot_' + cv[C_ulOTVbCSS][j2][k].name).css('background', 'none');
+          else $('.vot_' + cv[C_ulOTVbCSS][j2][k].name).css('background', 'none');
         }
       }
     }
@@ -944,11 +955,65 @@ var cf = {
         var column = r[1];
         if ((row != null) && (column != null)) {
           if (cf.displayOTVerbUlOrNot(row, column)) $('.vot_' + cv[C_ulOTVbCSS][row][column].name).css('background', 'url(' + cv[C_ulOTVbCSS][row][column].img.src + ') repeat-x 100% 100%');
-          else if ((c4[C_OT][C_granularControlOfXAxis]) || (c4[C_OT][C_granularControlOfYAxis])) $('.vot_' + cv[C_ulOTVbCSS][row][column].name).css('background', 'none');
+          else $('.vot_' + cv[C_ulOTVbCSS][row][column].name).css('background', 'none');
         }
       }
     }
+    var verbNTSidebar = $('#sideBarVerbClrs');
+    var verbOTSidebar = $('#sideBarHVerbClrs');
+    if ((verbNTSidebar.length > 0) || (verbOTSidebar.length > 0)) {
+      this.updateTenseOrFormPreview(verbNTSidebar, verbOTSidebar);
+      if (verbNTSidebar.length > 0) {
+        this.updateMoodPreview();
+        cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
+        cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");
+      }
+      if (verbOTSidebar.length > 0) {
+        this.updateStemPreview();
+        cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][2], cv[C_uLBASEIMGS][2], "#000000", 0, "otPassivePreview");
+        cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");
+      }
+    }
     $('.primaryLightBg').css('text-shadow', 'none'); // Need to set it in the program, if not the browser will prioritize the CSS updated in this Javascript.
+  },
+
+  updateTenseOrFormPreview: function(verbNTSidebar, verbOTSidebar) {
+    for (var i = 0; i < cv[C_uLBASEIMGS].length; i++) {
+      var className = cv[C_uLBASEIMGS][i].name;
+      if (className === "ulDot") className = "ulDots";
+      else if (className === "ulSolid") className = "ulUnderline";
+      else if (className === "ulDoubleSolid") className = "ul2lines";
+      var elmntsOfCurrentClass = verbNTSidebar.find('.' + className);
+      if (elmntsOfCurrentClass.length > 0) {
+        if (c4[C_Greek][C_enableVerbClr])
+          elmntsOfCurrentClass.css('background', 'url(' + cv[C_uLBASEIMGS][i].img.src + ') repeat-x 100% 100%');
+        else
+          elmntsOfCurrentClass.css('background', 'none');
+      }
+      elmntsOfCurrentClass = verbOTSidebar.find('.' + className);
+      if (elmntsOfCurrentClass.length > 0) {
+        if (c4[C_OT][C_enableVerbClr])
+          elmntsOfCurrentClass.css('background', 'url(' + cv[C_uLBASEIMGS][i].img.src + ') repeat-x 100% 100%');
+        else
+          elmntsOfCurrentClass.css('background', 'none');
+      }
+    }
+  },
+
+  updateMoodPreview: function() {
+    for (var i = 0; i < c4[C_Greek][C_inClrVerbItem].length; i++) {
+      var color = ($("#axisXOnOffCheckbox" + i).prop('checked') && c4[C_Greek][C_enableVerbClr]) ?
+        c4[C_Greek][C_inClrVerbItem][i] : "var(--clrBackground)";
+      $('.moodPreview' + i).css('text-decoration-color', color);
+    }
+  },
+
+  updateStemPreview: function() {
+    for (var i = 0; i < c4[C_OT][C_inClrVerbItem].length; i++) {
+      var color = ($("#OTaxisXOnOffCheckbox" + i).prop('checked') && c4[C_OT][C_enableVerbClr]) ?
+        c4[C_OT][C_inClrVerbItem][i] : "var(--clrBackground)";
+      $('.stemPreview' + i).css('text-decoration-color', color);
+    }
   },
 
   getRowColNum: function (inputStr) {
@@ -967,22 +1032,29 @@ var cf = {
     return [row, column];
   },
 
-  updateUlForSpecificYAxis: function (destImgObj, srcImgObj, color, ulVerbCSSIndex) {
+  updateUlForSpecificYAxis: function (destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName) {
     if (color !== undefined) {
       var backgroundClr;
       destImgObj.canvas.heigth = srcImgObj.canvas.height;
       destImgObj.canvas.width = srcImgObj.canvas.width;
-      destImgObj.context = destImgObj.canvas.getContext('2d');
+      destImgObj.context = destImgObj.canvas.getContext('2d', { willReadFrequently: true } );
       destImgObj.context.drawImage(srcImgObj.canvas, 0, 0);
       var passiveVoice = false;
       var middleVoice = false;
       var passiveStrokeStyle = '';
       var middleStrokeStyle = '';
       var otItem = false;
-      if (destImgObj.name.length === 3) {
-        var pos2 = destImgObj.name.substr(1, 1);
-        passiveVoice = ( (destImgObj.name.length === 3) && (pos2 === 'p') );
-        middleVoice = ( (destImgObj.name.length === 3) && (pos2 === 'm') );
+      var imgName = destImgObj.name;
+      if (typeof sideBarClassName === "string") {
+        if (sideBarClassName === "passivePreview") imgName = "ppi"; // pretent to be present passive to get the background color for passive.
+        else if (sideBarClassName === "middlePreview") imgName = "pmi"; // pretent to be present middle to get the background color for middle.
+        else if (sideBarClassName === "otPassivePreview") imgName = "R0C1"; // pretent to be row 0 column 1 to get the background color for passive.
+        else if (sideBarClassName === "otMiddlePreview") imgName = "R0C2"; // pretent to be row 0 column 2 to get the background color for middle.
+      }
+      if (imgName.length === 3) {
+        var pos2 = imgName.substr(1, 1);
+        passiveVoice = ( (imgName.length === 3) && (pos2 === 'p') );
+        middleVoice = ( (imgName.length === 3) && (pos2 === 'm') );
         if (passiveVoice) {
           if (c4[C_Greek][C_chkbxPassiveBkgrdColrValue])
             backgroundClr = c4[C_Greek][C_inPassiveBkgrdClr];
@@ -996,8 +1068,8 @@ var cf = {
             middleStrokeStyle = c4[C_Greek][C_inMiddleUlClr1];
         }
       }
-      else if (destImgObj.name.length > 3) {
-        var r = cf.getRowColNum(destImgObj.name);
+      else if (imgName.length > 3) {
+        var r = cf.getRowColNum(imgName);
         var column = r[1];
         if (column != null) {
           otItem = true;
@@ -1020,7 +1092,6 @@ var cf = {
           }
         }
       }
-
       cf.changeImageClr(destImgObj, color, backgroundClr);
       if ((passiveVoice) && (passiveStrokeStyle != '')) {
         destImgObj.context.beginPath();
@@ -1041,13 +1112,22 @@ var cf = {
       }
       destImgObj.img.src = destImgObj.canvas.toDataURL('image/png');
       destImgObj.animIncrement = cf.calcAnimationPixelIncrement(destImgObj.canvas.width);
-      if ((destImgObj.name.length == 3) && (cf.displayVerbUlOrNot(ulVerbCSSIndex))) {
-        $('.v' + destImgObj.name).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+      if (typeof sideBarClassName === "string") {
+        if ((c4[C_Greek][C_enableVerbClr] && (imgName.length == 3)) ||
+            (c4[C_OT][C_enableVerbClr] && (otItem)))
+          $('.' + sideBarClassName).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+        else
+          $('.' + sideBarClassName).css('background', 'none');
       }
-      else if (otItem) {
-        var result = cf.getRowColNum(destImgObj.name);
-        if (cf.displayOTVerbUlOrNot(result[0], result[1]))
-          $('.vot_' + destImgObj.name).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+      else {
+        if ((imgName.length == 3) && (cf.displayVerbUlOrNot(ulVerbCSSIndex))) {
+          $('.v' + imgName).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+        }
+        else if (otItem) {
+          var result = cf.getRowColNum(imgName);
+          if (cf.displayOTVerbUlOrNot(result[0], result[1]))
+            $('.vot_' + imgName).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
+        }
       }
     }
   },
@@ -1176,10 +1256,11 @@ var cf = {
     var tmp = step.util.localStorageGetItem('colorCode-CurrentSettings');
     if (tmp) {
       var tmpC4 = c4 = JSON.parse(tmp);
-      if (tmpC4[C_c4Version] == '20190905') c4 = tmpC4;
+      if (tmpC4[C_c4Version] === '20250315') c4 = tmpC4;
       else {
         c4 = cf.createC4();
-        alert('The previously used color configuration is out of date.  The default color configuration is used.');
+        alert('We have to updated our 6 years old color scheme. The new default color configuration is used.');
+        this.updtLocalStorage();
       }
     }
     else c4 = cf.createC4();
@@ -1304,7 +1385,7 @@ var cf = {
         previousActiveForm ++;
       }
       else if (c4[C_OT][C_codeOfForm][c4[C_OT][C_orderOfForm][j]][2]) {
-        if (descOfForm[previousActiveForm].length > 0) descOfForm[previousActiveForm] += '<br>';
+        if (descOfForm[previousActiveForm].length > 0) descOfForm[previousActiveForm] += ' &<br>';
         descOfForm[previousActiveForm] += c4[C_OT][C_codeOfForm][c4[C_OT][C_orderOfForm][j]][1];
       }
       nameOfAllForm.push(c4[C_OT][C_codeOfForm][c4[C_OT][C_orderOfForm][j]][0]);
@@ -1618,37 +1699,6 @@ var cf = {
     return ntCSSOnThisPage + ' ';
   },
 
-  tableAxisSpan: function (axis, createUserInputs, ot) {
-    var c4Ref = ((ot != undefined) && (ot == 'OT')) ? c4[C_OT] : c4[C_Greek];
-    var curXTitle = (axis == 'X') ? c4Ref[C_verbTableXHeader] : c4Ref[C_verbTableYHeader];
-    var modalWidth = $('body').width();
-    if ((modalWidth != undefined) && (modalWidth != null) && (!isNaN(modalWidth)) && (modalWidth < 605) && (axis == 'Y')) return 2;
-    if ((curXTitle != null) && (createUserInputs)) return 3; // The header information is not showed if there are no user input fields which is at the help quicklinks panel
-    else return 2;
-  },
-
-  addTitleToYAxis: function (rowNum, descOfYAxisItems, createUserInputs, xAxisRowSpan, ot) {
-    var htmlTable = '';
-    var curYTitles = ((ot != undefined) && (ot == 'OT')) ? c4[C_OT][C_verbTableYHeader] : c4[C_Greek][C_verbTableYHeader];
-    if ((curYTitles != null) && (createUserInputs) && (xAxisRowSpan == 3)) { // screen size might not be wide enough for help quicklink
-      var title_range_low = 0;
-      for (var i = 0; i < curYTitles.desc.length; i ++) {
-        var rowsCovered = curYTitles.repeat[i] + 1;
-        if (rowNum == title_range_low) {
-          htmlTable += '<td class="tg-yw4l" rowspan="' + rowsCovered + '">' + curYTitles.desc[i] + '</td>';
-          break;
-        }
-        title_range_low += rowsCovered;
-      }
-    }
-    if (__s["tense_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")])
-        descOfYAxisItems += " (" + __s["tense_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
-    else if (__s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")])
-        descOfYAxisItems += " (" + __s["mood_" + descOfYAxisItems.toLowerCase().replace(/ /g, "_")] + ")";
-    htmlTable += '<td>' + descOfYAxisItems;
-    return htmlTable;
-  },
-
   morph2CSS: function (origMorphCode, isOSHM) {
     var result = '';
     if (typeof origMorphCode === "string") {
@@ -1701,270 +1751,6 @@ var cf = {
     return result;
   },
 
-  addVerbTable: function (createUserInputs, htmlElement) {
-	if ($(htmlElement).length == 0) {
-		console.log("addVerbTable return without creating table, no html element: " + htmlElement + " to append to");
-		return;
-	}
-    var r = cf.getVariablesForVerbTable();
-    var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
-    xAxisItems = r.orderOfXAxisItems;
-    yAxisItems = r.orderOfYAxisItems;
-    descOfXAxisItems = r.descOfXAxisItems;
-    descOfYAxisItems = r.descOfYAxisItems;
-    var htmlTable = '';
-    if (!createUserInputs) {
-		var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
-		htmlTable += '<link href="css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>' +
-					 '<h2>Color table for Greek verbs</h2>';
-	}
-    var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs);
-    htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-      yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs) + '">';
-    if (createUserInputs) htmlTable += cf.htmlToAdd1();
-    htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
-    if (createUserInputs) htmlTable += cf.htmlToAdd2(r.xAxisTitle);
-    htmlTable += '</th></tr>';
-    htmlTable += cf.addTitleToXAxis(descOfXAxisItems, createUserInputs);
-    htmlTable += '<tr>' +
-      '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + cf.upCaseFirst(r.yAxisTitle);
-    if (createUserInputs) htmlTable += cf.htmlToAdd4(r.yAxisTitle);
-    htmlTable += '</td>';
-    for (var i = 0; i < yAxisItems.length; i += 1) {
-      if (i > 0) htmlTable += '<tr>';
-      htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan);
-      if (createUserInputs) htmlTable += cf.htmlToAdd5(i);
-      htmlTable += '</td>';
-      for (var counter = 0; counter < xAxisItems.length; counter += 1) {
-        htmlTable += '<td>';
-        var allTM = cf.getAllTenseMoodForThisGroup(r, counter, i);
-        htmlTable += cf.voicesInTenseAndMood(allTM.x, allTM.y, createUserInputs);
-        htmlTable += '</td>';
-      }
-      htmlTable += '</tr>';
-    }
-    htmlTable += '</table><br>';
-    if (createUserInputs) htmlTable += cf.htmlToAdd6();
-    htmlTable = $(htmlTable);
-    htmlTable.appendTo(htmlElement);
-  },
-
-  htmlToAdd1: function (otVerb) {
-    var otPrefix = '';
-    if (otVerb !== undefined) otPrefix = 'OT';
-    return '<div class="onoffswitch">' +
-    '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="' + otPrefix + 'verbonoffswitch" onchange=\'userToggleClrGrammar("' + otPrefix + 'verb")\'/>' +
-    '<label class="onoffswitch-label" for="' + otPrefix + 'verbonoffswitch">' +
-        '<span class="onoffswitch-inner"></span>' +
-        '<span class="onoffswitch-switch"></span>' +
-    '</label></div>';
-  },
-
-  htmlToAdd2: function (xAxisTitle, otVerb) {
-    var otPrefix = '';
-    if (otVerb !== undefined) otPrefix = 'OT';
-    return '&nbsp;<button id="' + otPrefix + 'configXAxisBtn" class="' + otPrefix + 'vrbInpt1 btn btn-default btn-xs" type="button" title="Select ' +
-      xAxisTitle + '" onclick=\'userToggleXOrYAxisConfig("' + otPrefix + '", "X")\'>' +
-      '<span id="' + otPrefix + 'configXAxisIcon" class="' + otPrefix + 'vrbInpt1 glyphicon glyphicon-cog"></span></button>' +
-      '&nbsp;<button id="' + otPrefix + 'configSortXAxisBtn" class="btn btn-default btn-xs ' + otPrefix + 'advancedtools ' + otPrefix + 'vrbInpt1" type="button" title="Sort ' +  xAxisTitle + '" onclick="userSort' + otPrefix + 'Axis(\'X\')">' +
-      '<span id="configSortXAxisIcon" class="glyphicon glyphicon-sort"></span></button>';
-  },
-
-  htmlToAdd3: function (i, otVerb) {
-    var otPrefix = '', result = '', c4Ref;
-    if (otVerb !== undefined) {
-      otPrefix = 'OT';
-      c4Ref = c4[C_OT];
-    }
-    else c4Ref = c4[C_Greek];
-    result = '<input id="' + otPrefix + 'axisXOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptX" ' +
-      'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "X", "' + i + '")\'>';
-    result += '<br><input id="inClr' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInptC" type="color" ' +
-      'value="' + c4Ref[C_inClrVerbItem][i] + '" ';
-    return result;
-  },
-
-  htmlToAdd4: function (yAxisTitle, otVerb) {
-    var otPrefix = '';
-    if (otVerb !== undefined) otPrefix = 'OT';
-    return '<button id="' + otPrefix + 'configYAxisBtn" class="' + otPrefix + 'vrbInpt1 btn btn-default btn-xs" type="button" title="Select ' + yAxisTitle + '" onclick=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y")\'>' +
-      '<span id="' + otPrefix + 'configYAxisIcon" class="' + otPrefix + 'vrbInpt1 glyphicon glyphicon-cog"></span></button>' +
-      '<br><br><button id="' + otPrefix + 'configSortYAxisBtn" class="btn btn-default btn-xs ' + otPrefix + 'advancedtools ' + otPrefix + 'vrbInpt1" type="button" title="Sort ' +  yAxisTitle + '" onclick="userSort' + otPrefix + 'Axis(\'Y\')">' +
-      '<span id="configSortYAxisIcon" class="glyphicon glyphicon-sort ' + otPrefix + 'advancedtools"></span></button>';
-  },
-
-  htmlToAdd5: function (i, otVerb) {
-    var otPrefix = ''; var result = '';
-    if (otVerb != undefined) otPrefix = 'OT';
-    result = '<input id="' + otPrefix + 'axisYOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptY" ' +
-      'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y", "' + i + '")\'><br>';
-    result += '<select id="slctUl' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInpt1" ' +
-      'onchange=\'userUpdate' + otPrefix +'YAxisItem("' + i + '", value)\'';
-    if (otPrefix != 'OT') result += ' style="width: 52px"';
-    result += '>' +
-      '<option value="ulSolid">Underline</option>' +
-      '<option value="ulDoubleSolid">2 lines</option>' +
-      '<option value="ulDash">Dash</option>' +
-      '<option value="ulDashDot">Dash Dot</option>' +
-      '<option value="ulDashDotDot">Dash Dot Dot</option>' +
-      '<option value="ulDot">Dots</option>' +
-      '<option value="ulWave">Wave</option>' +
-      '<option value="ulArrow">Arrow</option>' +
-      '<option value="ulShortArrow">Short Arrow</option>' +
-      '<option value="ulReverseArrow">Reverse Arrow</option>' +
-      '<option value="ulShortReverseArrow">Short Reverse Arrow</option>' +
-      '</select>';
-    if (otVerb == undefined) result += '<br><span id="inAnimate' + i + '" class="advancedtools">' +
-      'Animate:<input id="inAnimateCheckbox' + i + '" class="advancedtools" ' +
-      'type="checkbox" onchange=\'userUpdateAnimation("' + i + '")\'></span>';
-    return result;
-  },
-
-  htmlToAdd6: function (otVerb) {
-    var otPrefix = ''; var c4Ref;
-    if ((otVerb != undefined) && (otVerb == 'OT')) {
-      c4Ref = c4[C_OT];
-      otPrefix = 'OT';
-    }
-    else c4Ref = c4[C_Greek];
-    var result = '<span>Passive voice: background - </span><input id="chkbx' + otPrefix + 'PassiveBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("passive", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'PassiveBkgrdClr" type="color" ' +
-      'value="' + c4Ref[C_inPassiveBkgrdClr] + '"/>' +
-      '<span>underline - </span><input id="chkbx' + otPrefix + 'PassiveUlClr1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("passive", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'PassiveUlClr1" type="color" ' +
-      'value="' + c4Ref[C_inPassiveUlClr1] + '"/>';
-    if (otVerb == undefined) result += '<span>animated underline - </span>' +
-      '<input id="chkbx' + otPrefix + 'PassiveUlClr2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("passive", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'PassiveUlClr2" type="color" ' +
-      'value="' + c4Ref[C_inPassiveUlClr2] + '"/>';
-    result += '<br><br>' +
-      '<span>Middle voice: background - </span><input id="chkbx' + otPrefix + 'MiddleBkgrdClr" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBkgrd("middle", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'MiddleBkgrdClr" type="color" ' +
-      'value="' + c4Ref[C_inMiddleBkgrdClr] + '"/>' +
-      '<span>underline - </span><input id="chkbx' + otPrefix + 'MiddleUlClr1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("middle", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'MiddleUlClr1" type="color" ' +
-      'value="' + c4Ref[C_inMiddleUlClr1] + '"/>';
-    if (otVerb == undefined) result += '<span>animated underline - </span>' +
-      '<input id="chkbx' + otPrefix + 'MiddleUlClr2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("middle", "' + otPrefix + '")\'>' +
-      '<input id="in' + otPrefix + 'MiddleUlClr2" type="color" ' +
-      'value="' + c4Ref[C_inMiddleUlClr2] + '"/>';
-  //  result += '&nbsp;<button id="' + otPrefix + 'advancedToolsBtn" class="btn btn-default btn-xs" type="button" title="Advanced tools" onclick="userToggleAdvancedTools(\'' + otPrefix + '\')">' +
-  //    '<span id="' + otPrefix + 'advancedToolsIcon" class="glyphicon glyphicon-wrench"></span></button>';
-    return result;
-  },
-
-  addTitleToXAxis: function (descOfXAxisItems, createUserInputs) {
-    var htmlTable = '';
-    var curXTitle = c4[C_Greek][C_verbTableXHeader];
-    if ((curXTitle != null) && (createUserInputs)) {
-      htmlTable += '<tr>';
-      for (var i = 0; i < curXTitle.desc.length; i ++) {
-        htmlTable += '<td class="tg-yw4l" align="center" colspan="' + (curXTitle.repeat[i] + 1) + '">' + curXTitle.desc[i] + '</td>';
-      }
-      htmlTable += '</tr>';
-    }
-    htmlTable += '<tr>';
-    for (var j = 0; j < descOfXAxisItems.length; j += 1) {
-      htmlTable += '<td class="tg-yw4l"';
-        if (__s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
-            descOfXAxisItems[j] += " (" + __s["mood_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
-        else if (__s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")])
-            descOfXAxisItems[j] += " (" + __s["tense_" + descOfXAxisItems[j].toLowerCase().replace(/ /g, "_")] + ")";
-        if (descOfXAxisItems[j].length < 10) htmlTable += ' width=72';
-      htmlTable += '>' + descOfXAxisItems[j];
-      if (createUserInputs) htmlTable += cf.htmlToAdd3(j);
-      htmlTable += '</td>';
-    }
-    htmlTable += '</tr>';
-    return htmlTable;
-  },
-
-  voicesInTenseAndMood: function (xAxisItem, yAxisItem, createUserInputs) {
-    var currentMoodCode, currentTenseCode;
-    var highlightMiddle = c4[C_Greek][C_chkbxMiddleBkgrdColrValue] ||
-      c4[C_Greek][C_chkbxMiddleUlColr1Value];
-    var highlightPassive = c4[C_Greek][C_chkbxPassiveBkgrdColrValue] ||
-      c4[C_Greek][C_chkbxPassiveUlColr1Value];
-    var htmlTable = '';
-    if (c4[C_Greek][C_xAxisForMood]) {
-      currentMoodCode = xAxisItem;
-      currentTenseCode = yAxisItem;
-    }
-    else {
-      currentMoodCode = yAxisItem;
-      currentTenseCode = xAxisItem;
-    }
-    var arrayIndexOfCurrentTense = [];
-    for (var j = 0; j < currentTenseCode.length; j ++) {
-      arrayIndexOfCurrentTense = arrayIndexOfCurrentTense.concat(_.find(cc[C_tenseIndexArray], function(obj) { return obj.name == cc[C_robinsonCodeOfTense][currentTenseCode[j]]; }).array);
-    }
-    var arrayIndexOfCurrentTenseAndMood = arrayIndexOfCurrentTense.filter(function(code) { return currentMoodCode.indexOf(cv[C_ulVerbCSS][code].name.substr(2,1)) > -1; });
-    var foundCSS = arrayIndexOfCurrentTenseAndMood.filter(function(code) { return cv[C_ulVerbCSS][code].name.substr(1,1) === 'a'; });
-    if (foundCSS.length > 0) htmlTable += '<span class="v' + cv[C_ulVerbCSS][foundCSS[0]].name + '">active</span>';
-    htmlTable += '<br>';
-    foundCSS = arrayIndexOfCurrentTenseAndMood.filter(function(code) { return cv[C_ulVerbCSS][code].name.substr(1,1) === 'p'; });
-    if (foundCSS.length > 0) htmlTable += '<span class="v' + cv[C_ulVerbCSS][foundCSS[0]].name + '">passive</span>';
-    htmlTable += '<br>';
-    foundCSS = arrayIndexOfCurrentTenseAndMood.filter(function(code) { return cv[C_ulVerbCSS][code].name.substr(1,1) === 'm'; });
-    if (foundCSS.length > 0) htmlTable += '<span class="v' + cv[C_ulVerbCSS][foundCSS[0]].name + '">middle</span>';
-    else htmlTable += '<br>';
-    return htmlTable;
-  },
-
-  getAllTenseMoodForThisGroup: function (r, x, y) {
-    var currentMoodCodes, currentTenseCodes, moodIndex, tenseIndex, allMoods, allTenses, allInXAxis, allInYAxis;
-    var allMoodsCdInThisGroup = [], allTensesCdInThisGroup = [];
-    if (c4[C_Greek][C_xAxisForMood]) {
-      currentMoodCodes = r.orderOfXAxisItems;
-      moodIndex = x;
-      allMoods = r.nameOfAllXAxisItems;
-      currentTenseCodes = r.orderOfYAxisItems;
-      tenseIndex = y;
-      allTenses = r.nameOfAllYAxisItems;
-    }
-    else {
-      currentMoodCodes = r.orderOfYAxisItems;
-      moodIndex = y;
-      allMoods = r.nameOfAllYAxisItems;
-      currentTenseCodes = r.orderOfXAxisItems;
-      tenseIndex = x;
-      allTenses = r.nameOfAllXAxisItems;
-    }
-    var currentMoodName = cc[C_robinsonCodeOfMood][ currentMoodCodes[moodIndex] ];
-    var indexOfCurrentMood = allMoods.indexOf(currentMoodName);
-    var currentTenseName = cc[C_robinsonCodeOfTense][currentTenseCodes[tenseIndex]];
-    var indexOfCurrentTense = allTenses.indexOf(currentTenseName);
-    var indexToEndOfCurrentMoodGroup, indexToEndOfCurrentTenseGroup;
-    if (currentMoodCodes.length > (moodIndex + 1)) {
-      var nextMoodName = cc[C_robinsonCodeOfMood][ currentMoodCodes[moodIndex+1]];
-      indexToEndOfCurrentMoodGroup = allMoods.indexOf(nextMoodName) - 1;
-    }
-    else indexToEndOfCurrentMoodGroup = allMoods.length - 1;
-    if (currentTenseCodes.length > (tenseIndex + 1)) {
-      var nextTenseName = cc[C_robinsonCodeOfTense][ currentTenseCodes[tenseIndex+1]];
-      indexToEndOfCurrentTenseGroup = allTenses.indexOf(nextTenseName) - 1;
-    }
-    else indexToEndOfCurrentTenseGroup = allTenses.length - 1;
-    for (var j = indexOfCurrentMood; j <= indexToEndOfCurrentMoodGroup; j ++) {
-      allMoodsCdInThisGroup.push( cc[C_robinsonNameOfMood][allMoods[j]] );
-    }
-    for (var k = indexOfCurrentTense; k <= indexToEndOfCurrentTenseGroup; k ++) {
-      allTensesCdInThisGroup.push( cc[C_robinsonNameOfTense][allTenses[k]] );
-    }
-    if (c4[C_Greek][C_xAxisForMood]) {
-      allInXAxis = allMoodsCdInThisGroup;
-      allInYAxis = allTensesCdInThisGroup;
-    }
-    else {
-      allInXAxis = allTensesCdInThisGroup;
-      allInYAxis = allMoodsCdInThisGroup;
-    }
-    return {
-      x: allInXAxis,
-      y: allInYAxis
-    };
-  },
-
   updateCssForNumber: function (type, fontHighlight) {
     var cssName = '';
     if (type === 'singular') cssName = '.sing';
@@ -1976,9 +1762,9 @@ var cf = {
     } else if (fontHighlight === 'normal') {
       $(cssName).css('font-style', 'normal');
       $(cssName).css('font-weight', 'normal');
-    } else if (fontHighlight === 'bold_italic') {
-      $(cssName).css('font-style', 'italic');
-      $(cssName).css('font-weight', 'bold');
+    // } else if (fontHighlight === 'bold_italic') {
+    //   $(cssName).css('font-style', 'italic');
+    //   $(cssName).css('font-weight', 'bold');
     } else if (fontHighlight === 'normal_italic') {
       $(cssName).css('font-style', 'italic');
       $(cssName).css('font-weight', 'normal');
@@ -2007,7 +1793,7 @@ var cf = {
     else if (selectedConfig === 'verb with middle and passive voices') c4 = cf.c4VerbWithMiddlePassive();
     else if (selectedConfig === 'verb, imperative mood') c4 = cf.c4ImperativesOnly();
     else if (selectedConfig === 'verb, main vs supporting verbs') c4 = cf.c4MainVsSupporingVerbs();
-    else if (selectedConfig === 'verb, without reference to time') c4 = cf.c4VerbMoodTense2();
+    else if (selectedConfig === 'original colors defined in 2019') c4 = cf.c4Color2019();
     else {
       var found = false;
       var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
@@ -2018,8 +1804,8 @@ var cf = {
           if (tmp2) {
             found = true;
             var tmpC4 = c4 = JSON.parse(tmp2);
-            if (tmpC4[C_c4Version] == '20190905') c4 = tmpC4;
-            else alert('The version of the saved color configuration is out of date.  Please define a new one.');
+            if (tmpC4[C_c4Version] === '20250315') c4 = tmpC4;
+            else alert('The version of the saved color configuration is out of date. We have to updated our 6 years old color scheme. Please customized your colors based on our new color schemes.');
           }
         }
       }
@@ -2055,21 +1841,14 @@ var cf = {
     return r;
   },
 
-  c4VerbMoodTense2: function() {
+  c4Color2019: function() {
     var r = cf.createC4();
-    r[C_Greek][C_enableVerbClr] = true;
-    r[C_Greek][C_chkbxPassiveBkgrdColrValue] = false;
-    r[C_Greek][C_chkbxMiddleBkgrdColrValue] = false;
-    r[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
-    r[C_Greek][C_slctUlVerbItem] = ['Arrow', 'Dash', '2 lines', '2 lines', 'Underline', 'Dots', 'Underline'];
-    r[C_Greek][C_orderOfTense] = ['p', 'i', 'r', 'l', 'a', 'f'];
-    r[C_Greek][C_tenseToCombineWithPrevious] = [false, false, false, false, false, false];
-    r[C_Greek][C_orderOfMood] = ['i', 'm', 's', 'o', 'n', 'p'];
-    r[C_Greek][C_moodToCombineWithPrevious] = [false, false, false, false, false, false];
-    r[C_Greek][C_verbTableYHeader] = null;
-    r[C_enableGenderNumberClr] = false;
-    r[C_OT][C_verbTableXHeader] = null;
-    r[C_OT][C_verbTableYHeader] = null;
+    r[C_Greek][C_inClrVerbItem] = ['#31ff00', '#ffa500', '#925011', '#f92d02', '#fff700', '#091bfd'];
+    r[C_Greek][C_slctUlVerbItem] = ['Dash', 'Arrow', 'Dots', 'Reverse Arrow', 'Short Reverse Arrow', 'Short Reverse Arrow'];
+    r[C_Greek][C_orderOfTense] = ['p', 'f', 'a', 'i', 'r', 'l'];
+    r[C_Greek][C_orderOfMood] =  ['i', 's', 'o', 'm', 'n', 'p'];
+    r[C_Greek][C_verbTableYHeader] = { desc: ['Present', 'Future', 'Past /<br>Present', 'Past'], repeat: [0, 0, 0, 2] };  
+    r[C_enableGenderNumberClr] = true;
     return r;
   },
 
@@ -2092,7 +1871,7 @@ var cf = {
 
   c4MainVsSupporingVerbs: function() {
     var r = cf.createC4();
-    r[C_Greek][C_inClrVerbItem] = ['#008000', '#ed12ed', '#ed12ed', '#008000', '#ed12ed', '#ed12ed'];
+    r[C_Greek][C_inClrVerbItem] = ['#008000', '#008000', '#ed12ed', '#ed12ed', '#ed12ed', '#ed12ed'];
     r[C_Greek][C_slctUlVerbItem] = ['Underline', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline'];
     r[C_Greek][C_verbTableYHeader] = null;
     r[C_enableGenderNumberClr] = false;
@@ -2103,13 +1882,10 @@ var cf = {
 
   c4ImperativesOnly: function() {
     var r = cf.createC4();
-    r[C_Greek][C_granularControlOfMoods] = true;
-    r[C_Greek][C_moodsOnOff] = [false, false, false, true, false, false];
+    r[C_Greek][C_moodsOnOff] = [false, true, false, false, false, false];
     r[C_Greek][C_slctUlVerbItem] = ['Underline', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline'];
     r[C_Greek][C_verbTableYHeader] = null;
     r[C_enableGenderNumberClr] = false;
-    r[C_OT][C_verbTableXHeader] = null;
-    r[C_OT][C_verbTableYHeader] = null;
     return r;
   }
 }

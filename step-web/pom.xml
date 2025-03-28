@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>25.3.2</version>
+		<version>25.3.14</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -205,6 +205,7 @@
 									<jsSourceFile>js/passage/step.passage.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_feedback.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_examples.js</jsSourceFile>
+									<jsSourceFile>js/backbone/views/view_color.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_restore.js</jsSourceFile>
 									<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
 									<jsSourceFile>js/step_ready.js</jsSourceFile>
@@ -440,38 +441,34 @@
                                     <replacement><token>C_chkbxMiddleUlColr1Value</token><value>14</value></replacement>
                                     <replacement><token>C_verbTableXHeader</token><value>15</value></replacement>
                                     <replacement><token>C_verbTableYHeader</token><value>16</value></replacement>
-                                    <replacement><token>C_granularControlOfMoods</token><value>17</value></replacement>
-                                    <replacement><token>C_granularControlOfTenses</token><value>18</value></replacement>
-                                    <replacement><token>C_moodsOnOff</token><value>19</value></replacement>
-                                    <replacement><token>C_tensesOnOff</token><value>20</value></replacement>
-                                    <replacement><token>C_inAnimate</token><value>21</value></replacement>
-                                    <replacement><token>C_orderOfTense</token><value>22</value></replacement>
-                                    <replacement><token>C_orderOfMood</token><value>23</value></replacement>
-                                    <replacement><token>C_tenseToCombineWithPrevious</token><value>24</value></replacement>
-                                    <replacement><token>C_moodToCombineWithPrevious</token><value>25</value></replacement>
-                                    <replacement><token>C_xAxisForMood</token><value>26</value></replacement>
-                                    <replacement><token>C_inPassiveUlClr2</token><value>27</value></replacement>
-                                    <replacement><token>C_inMiddleUlClr2</token><value>28</value></replacement>
-                                    <replacement><token>C_chkbxPassiveUlClr2</token><value>29</value></replacement>
-                                    <replacement><token>C_chkbxPassiveUlColr2Value</token><value>30</value></replacement>
-                                    <replacement><token>C_chkbxMiddleUlClr2</token><value>31</value></replacement>
-                                    <replacement><token>C_chkbxMiddleUlColr2Value</token><value>32</value></replacement>
+                                    <replacement><token>C_moodsOnOff</token><value>17</value></replacement>
+                                    <replacement><token>C_tensesOnOff</token><value>18</value></replacement>
+                                    <replacement><token>C_inAnimate</token><value>19</value></replacement>
+                                    <replacement><token>C_orderOfTense</token><value>20</value></replacement>
+                                    <replacement><token>C_orderOfMood</token><value>21</value></replacement>
+                                    <replacement><token>C_tenseToCombineWithPrevious</token><value>22</value></replacement>
+                                    <replacement><token>C_moodToCombineWithPrevious</token><value>23</value></replacement>
+                                    <replacement><token>C_xAxisForMood</token><value>24</value></replacement>
+                                    <replacement><token>C_inPassiveUlClr2</token><value>25</value></replacement>
+                                    <replacement><token>C_inMiddleUlClr2</token><value>26</value></replacement>
+                                    <replacement><token>C_chkbxPassiveUlClr2</token><value>27</value></replacement>
+                                    <replacement><token>C_chkbxPassiveUlColr2Value</token><value>28</value></replacement>
+                                    <replacement><token>C_chkbxMiddleUlClr2</token><value>29</value></replacement>
+                                    <replacement><token>C_chkbxMiddleUlColr2Value</token><value>30</value></replacement>
                                     <replacement><token>C_OT</token><value>1</value></replacement>
-                                    <replacement><token>C_granularControlOfXAxis</token><value>17</value></replacement>
-                                    <replacement><token>C_granularControlOfYAxis</token><value>18</value></replacement>
-                                    <replacement><token>C_xAxisOnOff</token><value>19</value></replacement>
-                                    <replacement><token>C_yAxisOnOff</token><value>20</value></replacement>
-                                    <replacement><token>C_orderOfForm</token><value>21</value></replacement>
-                                    <replacement><token>C_verbFormToCombineWithPrevious</token><value>22</value></replacement>
-                                    <replacement><token>C_orderOfHebrewStem</token><value>23</value></replacement>
-                                    <replacement><token>C_hebrewStemToCombineWithPrevious</token><value>24</value></replacement>
-                                    <replacement><token>C_orderOfAramaicStem</token><value>25</value></replacement>
-                                    <replacement><token>C_aramaicStemToCombineWithPrevious</token><value>26</value></replacement>
-                                    <replacement><token>C_hebrewCodeOfStem</token><value>27</value></replacement>
-                                    <replacement><token>C_aramaicCodeOfStem</token><value>28</value></replacement>
-                                    <replacement><token>C_codeOfForm</token><value>29</value></replacement>
-                                    <replacement><token>C_xAxisForStem</token><value>30</value></replacement>
-                                    <replacement><token>C_enableAdvancedTools</token><value>2</value></replacement>
+                                    <replacement><token>C_xAxisOnOff</token><value>17</value></replacement>
+                                    <replacement><token>C_yAxisOnOff</token><value>18</value></replacement>
+                                    <replacement><token>C_orderOfForm</token><value>19</value></replacement>
+                                    <replacement><token>C_verbFormToCombineWithPrevious</token><value>20</value></replacement>
+                                    <replacement><token>C_orderOfHebrewStem</token><value>21</value></replacement>
+                                    <replacement><token>C_hebrewStemToCombineWithPrevious</token><value>22</value></replacement>
+                                    <replacement><token>C_orderOfAramaicStem</token><value>23</value></replacement>
+                                    <replacement><token>C_aramaicStemToCombineWithPrevious</token><value>24</value></replacement>
+                                    <replacement><token>C_hebrewCodeOfStem</token><value>25</value></replacement>
+                                    <replacement><token>C_aramaicCodeOfStem</token><value>26</value></replacement>
+                                    <replacement><token>C_codeOfForm</token><value>27</value></replacement>
+                                    <replacement><token>C_xAxisForStem</token><value>28</value></replacement>
+									<replacement><token>C_c4Version</token><value>2</value></replacement>
                                     <replacement><token>C_enableGenderNumberClr</token><value>3</value></replacement>
                                     <replacement><token>C_inClrMasculine</token><value>4</value></replacement>
                                     <replacement><token>C_inClrFeminine</token><value>5</value></replacement>
@@ -507,6 +504,7 @@
                                     <replacement><token>C_defaultCodeOfForm</token><value>26</value></replacement>
                                     <replacement><token>C_defaultHebrewCodeOfStem</token><value>27</value></replacement>
                                     <replacement><token>C_defaultAramaicCodeOfStem</token><value>28</value></replacement>
+									<replacement><token>C_underlineCharsInSelectDropdown</token><value>29</value></replacement>
                                     <replacement><token>C_colorCodeGrammarAvailableAndSelected</token><value>0</value></replacement>
                                     <replacement><token>C_otMorph</token><value>1</value></replacement>
                                     <replacement><token>C_displayQuickTryoutAccordion1</token><value>2</value></replacement>
@@ -528,7 +526,7 @@
                                     <replacement><token>C_userProvidedSortOrder</token><value>18</value></replacement>
                                     <replacement><token>C_updatedGenderNumberCSS</token><value>19</value></replacement>
                                     <replacement><token>C_userTurnGenderNumberFromOffToOn</token><value>20</value></replacement>
-                                    <replacement><token>C_c4Version</token><value>9</value></replacement>
+									<replacement><token>C_ulVoiceBaseImgs</token><value>21</value></replacement>
 									<replacement><token>createC4([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>calcAnimationPixelIncrement([:(])</token><value>zB$1</value></replacement>
 									<replacement><token>createCanvas([:(])</token><value>zC$1</value></replacement>
@@ -583,7 +581,7 @@
 									<replacement><token>getAllTenseMoodForThisGroup([:(])</token><value>zz$1</value></replacement>
 									<replacement><token>c4VerbTenseMood([:(])</token><value>zAA$1</value></replacement>
 									<replacement><token>c4NounOnly([:(])</token><value>zAB$1</value></replacement>
-									<replacement><token>c4VerbMoodTense2([:(])</token><value>zAC$1</value></replacement>
+									<replacement><token>c4Color2019([:(])</token><value>zAC$1</value></replacement>
 									<replacement><token>c4VerbWithMiddlePassive([:(])</token><value>zAD$1</value></replacement>
 									<replacement><token>c4MainVsSupporingVerbs([:(])</token><value>zAE$1</value></replacement>
 									<replacement><token>c4ImperativesOnly([:(])</token><value>zAF$1</value></replacement>

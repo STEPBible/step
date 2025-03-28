@@ -240,10 +240,8 @@ var ExamplesView = Backbone.View.extend({
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span id="g4q6a2">2) Refer to the legend and select the Bible translations with the grammar feature</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/grammar_feature_.png\');width:190px;height:221px;border:3px solid black;display:none"></div>' +
-								'<br><span id="g4q6a3">3) Click on the Option button, then click "Interlinear options", then click “Colour code grammar”. The text will then be colour coded.</span>' +
-								'<br><div class="faq_img" style="background-image: url(\'images\/color_code_grammar_.png\');width:190px;height:273px;border:3px solid black;display:none"></div>' +
-								'<br><span id="g4q6a4">4) To understand the colour code, click on the button “Configure colour code grammar”.</span>' +
-								'<br><div class="faq_img" style="background-image: url(\'images\/configure_color_code_grammar_.png\');width:170px;height:78px;border:3px solid black;display:none"></div>' +
+								'<br><span id="g4q6a3">3) Click on "G" or "Grammar" at the navigation bar. The text will then be color coded.</span>' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/color_code_grammar_.png\');width:190px;height:60px;border:3px solid black;display:none"></div>' +
 								// Use https://examples.stepbible.org for color code examples because the examples will change the user's color code configuration
 								// and then store it in local storage of the browser.  Using a different DNS name will have a separate copy of the local storage
 								'<br><br><a id="colorcodeexamples" target="_blank" href="https://examples.stepbible.org/html/additional_examples.html?exampleType=colorCode&langFile=<%= step.userLanguageCode %>.<%= step.state.getCurrentVersion() %>.js"><%= __s.examples %></a>' +
@@ -268,7 +266,6 @@ var ExamplesView = Backbone.View.extend({
 					'</ul>' +
 				'</div>' +
 			'</div>' +
-			'<div id=\'colorCodeTableDiv\'></div>' +
 			'<div class="text-muted step-copyright">' +
 				'<span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank">STEPBible</a> - 2024</span>' +
 			'</div>' +

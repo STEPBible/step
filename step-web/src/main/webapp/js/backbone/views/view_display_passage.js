@@ -30,22 +30,45 @@ var PassageDisplayView = DisplayView.extend({
             var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
             cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
             if ((cv[C_colorCodeGrammarAvailableAndSelected]) && (typeof c4 === "undefined")) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
-            var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', pch, hasTOS = false, hasNTMorph = false;
+            var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', pch, hasTOS = false, hasGreekMorph = false;
             var reference = this.model.get("osisId");
             var version = this.model.get("masterVersion");
             var extraVersions = this.model.get("extraVersions");
             var bibleVersions = version.toUpperCase() + "," + extraVersions.toUpperCase();
             var r = step.util.getTestamentAndPassagesOfTheReferences(reference.split(" "));
             var justLoadedTOS = false;
-            if (((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) || (bibleVersions.indexOf('OHB') > -1) || (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf('NET2FULL') > -1) || (bibleVersions.indexOf("CUN") > -1)) &&
-                (r[1])) { // r[1] is a boolean for reference OT
-                justLoadedTOS = step.util.loadTOS();
-                hasTOS = true;
+            if (availableOptions.indexOf('C') > -1) {
+                $('#colorgrammar-icon').show();
+                if (options.indexOf("C") == -1) { // Color grammar not selected
+                    if ($('#sideBargenderNumClrs').length == 1)
+                        this.model.set("selectedOptions", options + "C");      
+                }
+                $('#sideBargenderNumClrs').show();
+                $('#colorAdvancedConfig').show();
+                $('#noColorGrammar').hide();
+                if (r[1]) { // r[1] is a boolean for reference OT
+                    if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) ||
+                        (bibleVersions.indexOf('OHB') > -1) || (bibleVersions.indexOf('NASB2020') > -1) ||
+                        (bibleVersions.indexOf('NET2FULL') > -1) || (bibleVersions.indexOf("CUN") > -1)) {                   
+                        justLoadedTOS = step.util.loadTOS();
+                        hasTOS = true;
+                    }
+                    if (bibleVersions.indexOf('LXX') > -1)
+                        hasGreekMorph = true;
+                }
+                if ((r[0]) && // r[0] is a boolean for references with NT
+                    ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
+                    (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || 
+                    (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf('NET2FULL') > -1) ||
+                    (bibleVersions.indexOf('CUN') > -1)))
+                    hasGreekMorph = true;
             }
-            if (((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
-                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1) || (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf('NET2FULL') > -1)) &&
-                (r[0])) // r[0] is a boolean for references with NT
-                hasNTMorph = true;
+            else {
+                $('#colorgrammar-icon').hide();
+                $('#sideBargenderNumClrs').hide();
+                $('#colorAdvancedConfig').hide();
+                $('#noColorGrammar').show();
+            }
             if (this.partRendered) {
                 if (cv[C_colorCodeGrammarAvailableAndSelected]) {
                     if (hasTOS) {
@@ -54,7 +77,7 @@ var PassageDisplayView = DisplayView.extend({
                         pch[0].outerHTML = r[0];
                         otCSSOnThisPage = r[1];
                     }
-                    if (hasNTMorph) {
+                    if (hasGreekMorph) {
                         if (pch == null) pch = document.getElementsByClassName('passageContentHolder');
                         ntCSSOnThisPage = cf.getClassesForNT(pch[0].outerHTML);
                     }
@@ -68,10 +91,20 @@ var PassageDisplayView = DisplayView.extend({
                         this.model.attributes.value = r[0];
                         otCSSOnThisPage = r[1];
                     }
-                    if (hasNTMorph) ntCSSOnThisPage = cf.getClassesForNT(this.model.attributes.value);
+                    if (hasGreekMorph) ntCSSOnThisPage = cf.getClassesForNT(this.model.attributes.value);
                 }
                 passageHtml = $(this.model.get("value"));
             }
+            $(".passageContainer.active").data("otCSS",otCSSOnThisPage);
+            $(".passageContainer.active").data("ntCSS",ntCSSOnThisPage);
+            if (otCSSOnThisPage === "")
+                $("#sideBarHVerbClrs").hide();
+            else
+                $("#sideBarHVerbClrs").show();
+            if (ntCSSOnThisPage === "")
+                $("#sideBarVerbClrs").hide();
+            else
+                $("#sideBarVerbClrs").show();
             var passageId = this.model.get("passageId");
             var interlinearMode = this.model.get("interlinearMode");
             var languages = this.model.get("languageCode");
@@ -141,11 +174,10 @@ var PassageDisplayView = DisplayView.extend({
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 this.scrollToTargetLocation(passageContainer);
                 step.util.setupGesture();
-
                 //give focus:
                 $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();
             }
-            // following 11 lines were added to enhance the Colour Code Grammar  PT
+            // following 11 lines were added to enhance the Color Code Grammar  PT
             // should be const instead of var, but not compatible with older browser
             // This must match the definition in the color_code_grammar.js
             // Do not take away the TBRMBR comment (to be removed by maven replacer
@@ -159,8 +191,6 @@ var PassageDisplayView = DisplayView.extend({
                     if (cv[C_handleOfRequestedAnimation] == -1) cf.goAnimate();
                 }
             }
-//            if (((languages[0].indexOf("en") == 0) ||
-//				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode === "en"))) &&
 		    if (step.util.bookOrderInBible(reference) > -1) { // }) {
                 var xgenObj = passageHtml.find('.xgen');
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text().trim().length < 2))) // sometimes there is a \n so length == 1 is OK

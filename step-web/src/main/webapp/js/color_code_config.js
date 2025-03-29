@@ -945,7 +945,7 @@ function addOTVerbSideBar() {
     htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], yAxisSpan, 'OT', true, /* paddingRequiredForSidebar */
       cssClass);
     htmlTable += '<td class="grmSlctBx">' + htmlToAdd5b(i, 'OT', false) +
-    '<a class="form_info' +  i + ' glyphicon glyphicon-info-sig sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
+    '<a class="form_info' +  i + ' glyphicon glyphicon-info-sign sdBrIcon" data-hasqtip="true" aria-describedby="qtip-60"></a>' +
     '</td>';
     htmlTable += '</tr>';
   }

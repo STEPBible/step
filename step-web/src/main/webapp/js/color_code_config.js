@@ -984,7 +984,8 @@ function updatePreviewAtSideBar(className, nameOfUnderline) {
   if (element.length > 0) {
     element.removeClass()
       .addClass(className)
-      .addClass(nameOfUnderline);
+      .addClass(nameOfUnderline)
+      .addClass('sdBrRow');
     var altNameOfUnderline = nameOfUnderline;
     if (nameOfUnderline === 'ul2lines') altNameOfUnderline = 'ulDoubleSolid';
     else if (nameOfUnderline === 'ulUnderline') altNameOfUnderline = 'ulSolid';

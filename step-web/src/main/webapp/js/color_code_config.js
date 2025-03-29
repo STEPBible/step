@@ -1052,7 +1052,7 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
           updatePreviewAtSideBar('formPreview' + index, cssClass);
         }
         else {
-          $('.formPreview' + index).removeClass().addClass('formPreview' + index);
+          $('.formPreview' + index).removeClass().addClass('sdBrRow').addClass('formPreview' + index);
           $('.formPreview' + index).css('background', "none");
         }
       }
@@ -1069,7 +1069,7 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
           updatePreviewAtSideBar('tensePreview' + index, cssClass);
         }
         else {
-          $('.tensePreview' + index).removeClass().addClass('tensePreview' + index);
+          $('.tensePreview' + index).removeClass().addClass('sdBrRow').addClass('tensePreview' + index);
           $('.tensePreview' + index).css('background', "none");
         }
       }

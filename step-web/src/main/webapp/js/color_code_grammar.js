@@ -520,7 +520,7 @@ var cf = {
     x[C_inClrNeuter] = '#000000';
     x[C_slctUlSingular] = 'normal';
     x[C_slctUlPlural] = 'bold';
-    x[C_c4Version] = '20250315';
+    x[C_c4Version] = '20250331';
     return x;
   },
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
@@ -1256,7 +1256,7 @@ var cf = {
     var tmp = step.util.localStorageGetItem('colorCode-CurrentSettings');
     if (tmp) {
       var tmpC4 = c4 = JSON.parse(tmp);
-      if (tmpC4[C_c4Version] === '20250315') c4 = tmpC4;
+      if (tmpC4[C_c4Version] === '20250331') c4 = tmpC4;
       else {
         c4 = cf.createC4();
         alert('We have to updated our 6 years old color scheme. The new default color configuration is used.');
@@ -1803,7 +1803,7 @@ var cf = {
           if (tmp2) {
             found = true;
             var tmpC4 = c4 = JSON.parse(tmp2);
-            if (tmpC4[C_c4Version] === '20250315') c4 = tmpC4;
+            if (tmpC4[C_c4Version] === '20250331') c4 = tmpC4;
             else alert('The version of the saved color configuration is out of date. We have to updated our 6 years old color scheme. Please customized your colors based on our new color schemes.');
           }
         }

@@ -1787,13 +1787,12 @@ var cf = {
     else selectedConfig = document.getElementById('openClrConfigDropdown').value.toLowerCase();
     var previousEnableGenderNumberClr = true;
     if (c4 != undefined) previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
-    if (selectedConfig === 'verb, gender and number') c4 = cf.createC4();
-    else if (selectedConfig === 'verb only (tense-mood)') c4 = cf.c4VerbTenseMood();
+    if (selectedConfig === 'color based on verb aspect') c4 = cf.createC4();
+    else if (selectedConfig === 'color based on verb tense') c4 = cf.c4ColorTense();
+    else if (selectedConfig === 'original colors defined in 2019') c4 = cf.c4Color2019();
     else if (selectedConfig === 'gender and number') c4 = cf.c4NounOnly();
-    else if (selectedConfig === 'verb with middle and passive voices') c4 = cf.c4VerbWithMiddlePassive();
     else if (selectedConfig === 'verb, imperative mood') c4 = cf.c4ImperativesOnly();
     else if (selectedConfig === 'verb, main vs supporting verbs') c4 = cf.c4MainVsSupporingVerbs();
-    else if (selectedConfig === 'original colors defined in 2019') c4 = cf.c4Color2019();
     else {
       var found = false;
       var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
@@ -1820,21 +1819,10 @@ var cf = {
     if (name == null) updateAllSettingsAndInputFields();
   },
 
-  c4VerbTenseMood: function() {
-    var r = cf.createC4();
-    r[C_Greek][C_verbTableYHeader] = null;
-    r[C_Greek][C_xAxisForMood] = false;
-    r[C_enableGenderNumberClr] = false;
-    r[C_OT][C_verbTableXHeader] = null;
-    r[C_OT][C_verbTableYHeader] = null;
-    return r;
-  },
-
   c4NounOnly: function() {
     var r = cf.createC4();
     r[C_Greek][C_enableVerbClr] = false;
     r[C_Greek][C_verbTableYHeader] = null;
-    r[C_enableGenderNumberClr] = true;
     r[C_OT][C_enableVerbClr] = false;
     r[C_OT][C_verbTableXHeader] = null;
     r[C_OT][C_verbTableYHeader] = null;
@@ -1848,24 +1836,12 @@ var cf = {
     r[C_Greek][C_orderOfTense] = ['p', 'f', 'a', 'i', 'r', 'l'];
     r[C_Greek][C_orderOfMood] =  ['i', 's', 'o', 'm', 'n', 'p'];
     r[C_Greek][C_verbTableYHeader] = { desc: ['Present', 'Future', 'Past /<br>Present', 'Past'], repeat: [0, 0, 0, 2] };  
-    r[C_enableGenderNumberClr] = true;
     return r;
   },
 
-  c4VerbWithMiddlePassive: function() {
+  c4ColorTense: function() {
     var r = cf.createC4();
-    r[C_Greek][C_chkbxPassiveBkgrdClr] = true;
-    r[C_Greek][C_chkbxPassiveBkgrdColrValue] = true;
-    r[C_Greek][C_chkbxPassiveUlColr1Value] = true;
-    r[C_Greek][C_chkbxPassiveUlClr2] = true;
-    r[C_Greek][C_chkbxMiddleBkgrdClr] = true;
-    r[C_Greek][C_chkbxMiddleBkgrdColrValue] = true;
-    r[C_Greek][C_chkbxMiddleUlColr1Value] = true;
-    r[C_Greek][C_chkbxMiddleUlClr2] = true;
-    r[C_Greek][C_chkbxMiddleUlColr2Value] = true;
-    r[C_Greek][C_verbTableYHeader] = null;
-    r[C_OT][C_verbTableXHeader] = null;
-    r[C_OT][C_verbTableYHeader] = null;
+    r[C_Greek][C_slctUlVerbItem] = ['Dash', 'Reverse Arrow', 'Underline', 'Short Reverse Arrow', '2 lines', 'Short Arrow'];
     return r;
   },
 

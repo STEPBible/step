@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>25.3.15</version>
+		<version>25.4.1</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -579,10 +579,8 @@
 									<replacement><token>morph2CSS([:(])</token><value>zx$1</value></replacement>
 									<replacement><token>addTitleToXAxis([:(])</token><value>zy$1</value></replacement>
 									<replacement><token>getAllTenseMoodForThisGroup([:(])</token><value>zz$1</value></replacement>
-									<replacement><token>c4VerbTenseMood([:(])</token><value>zAA$1</value></replacement>
 									<replacement><token>c4NounOnly([:(])</token><value>zAB$1</value></replacement>
 									<replacement><token>c4Color2019([:(])</token><value>zAC$1</value></replacement>
-									<replacement><token>c4VerbWithMiddlePassive([:(])</token><value>zAD$1</value></replacement>
 									<replacement><token>c4MainVsSupporingVerbs([:(])</token><value>zAE$1</value></replacement>
 									<replacement><token>c4ImperativesOnly([:(])</token><value>zAF$1</value></replacement>
                                     <replacement><token>^\s*var\s+\d+\s*=\s*\d+\s*\;\s*\/\/\s*TBRBMR\s*\n</token><value></value></replacement>

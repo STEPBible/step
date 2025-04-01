@@ -210,13 +210,12 @@ function openClrConfig() {
 
 function initOpenClrCodeModal() {
   var s = $('<select id="openClrConfigDropdown"/>');
-  s.append($('<option/>').html('Verb, Gender and Number'));
+  s.append($('<option/>').html('Color based on verb aspect'));
+  s.append($('<option/>').html('Color based on verb tense'));
   s.append($('<option/>').html('Original colors defined in 2019'));
-  s.append($('<option/>').html('Verb only (tense-mood)'));
-  s.append($('<option/>').html('Verb with Middle and Passive Voices'));
-  s.append($('<option/>').html('Verb, imperative mood'));
-  s.append($('<option/>').html('Verb, main vs supporting verbs'));
-  s.append($('<option/>').html('Gender and Number'));
+  // s.append($('<option/>').html('Verb, imperative mood'));  // These are defined for examples under FAQ so no need to show them
+  // s.append($('<option/>').html('Verb, main vs supporting verbs'));
+  // s.append($('<option/>').html('Gender and Number'));
   var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
   if (tmp) {
     var UserClrConfigNames = JSON.parse(tmp);
@@ -916,8 +915,7 @@ function addOTVerbTable() {
 
 function addOTVerbSideBar() {
   var r = cf.getVariablesForOTVerbTable('H');
-  var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
-  xAxisItems = r.orderOfXAxisItems;
+  var yAxisItems, descOfXAxisItems, descOfYAxisItems;
   yAxisItems = r.orderOfYAxisItems;
   descOfXAxisItems = r.descOfXAxisItems;
   descOfYAxisItems = r.descOfYAxisItems;

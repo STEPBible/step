@@ -3676,41 +3676,60 @@ step.util = {
 			}).start();
 		}
 		else {
-		    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
+			var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.colorgrammar");
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
-			if ((introCount < 1) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
+			if ((introCount < 1) && (window.innerWidth > 499) && ($("#colorgrammar-icon").is(":visible"))) {
 				var introJsSteps = [
 				{
-					element: document.querySelector('#copy-icon'),
-					intro: __s.copy_intro,
+					element: document.querySelector('#colorgrammar-icon'),
+					intro: 'Color code grammar is available with a new user interface.',
 					position: 'left'
 				}
-         	   ];
+				];
 				introJs().setOptions({
 					steps: introJsSteps
 				}).start();
 				introCount ++;
-				step.util.localStorageSetItem("step.copyIntro", introCount);
+				step.util.localStorageSetItem("step.colorgrammar", introCount);
 			}
 			else {
-				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.userSurvey");
-				var introCount = parseInt(introCountFromStorageOrCookie, 10);
+				introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
+				introCount = parseInt(introCountFromStorageOrCookie, 10);
 				if (isNaN(introCount)) introCount = 0;
-				if (introCount < 1) {
+				if ((introCount < 1) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
 					var introJsSteps = [
 					{
-						intro: '<a href="https://docs.google.com/forms/d/1jgFiiOnpIjGIjuEvLGA8Rl9Zecy5yEHrNlOys1G0x0A/edit?usp=sharing_eip_se_dm&ts=671c1301" target="_blank">Sign up here</a> (30 seconds!) to participate in future interface design studies and help us improve our site\'s user experience.',
-						position: 'center'
+						element: document.querySelector('#copy-icon'),
+						intro: __s.copy_intro,
+						position: 'left'
 					}
-					];
+				];
 					introJs().setOptions({
 						steps: introJsSteps
 					}).start();
 					introCount ++;
-					step.util.localStorageSetItem("step.userSurvey", introCount);
+					step.util.localStorageSetItem("step.copyIntro", introCount);
 				}
-			}	
+				else {
+					introCountFromStorageOrCookie = step.util.localStorageGetItem("step.userSurvey");
+					introCount = parseInt(introCountFromStorageOrCookie, 10);
+					if (isNaN(introCount)) introCount = 0;
+					if (introCount < 1) {
+						var introJsSteps = [
+						{
+							intro: '<a href="https://docs.google.com/forms/d/1jgFiiOnpIjGIjuEvLGA8Rl9Zecy5yEHrNlOys1G0x0A/edit?usp=sharing_eip_se_dm&ts=671c1301" target="_blank">Sign up here</a> (30 seconds!) to participate in future interface design studies and help us improve our site\'s user experience.',
+							position: 'center'
+						}
+						];
+						introJs().setOptions({
+							steps: introJsSteps
+						}).start();
+						introCount ++;
+						step.util.localStorageSetItem("step.userSurvey", introCount);
+					}
+				}
+			}
 		}
 	},
     showIntroOfMultiVersion: function () {

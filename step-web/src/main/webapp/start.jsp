@@ -219,7 +219,10 @@
                 <div class="navbar-brand col-xs-12">
                     <span class="hidden-xs title" title="Reset to default configuration">
                         <a href="/?noredirect" id="logo">
-                            <img src="/step.png" alt="STEP" width="90px" height="22px">
+                            <img class="hidden-narrow" src="/step.png" alt="STEP" width="90px" height="22px">
+                        </a>
+                        <a href="/?noredirect" id="logo2">
+                            <img class="hidden-not-narrow" src="/images/step-top-left-logo.png" alt="STEP" width="36px" height="36px">
                         </a>
                     </span>
                     <span class="help">

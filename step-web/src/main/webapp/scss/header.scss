@@ -10,6 +10,18 @@
   }
 }
 
+@media (max-width: 450px) {
+  .hidden-narrow {
+    display: none !important;
+  }
+}
+
+@media (min-width: 451px) {
+  .hidden-not-narrow {
+    display: none !important;
+  }
+}
+
 @media (hover: none) and (min-width: 768px) {
   .extrapad-other {
     padding-top: 44px !important;
@@ -66,10 +78,8 @@
       }
     }
 
-    #logo {
+    #logo, #logo2 {
       display: inline-block;
-      width: 90px;
-      height: 21px;
       margin-bottom: 6px;
       margin-top: 6px;
 
@@ -384,3 +394,4 @@
 .navbarIconDesc {
   vertical-align: super;
 }
+

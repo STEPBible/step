@@ -97,14 +97,7 @@ var PassageDisplayView = DisplayView.extend({
             }
             $(".passageContainer.active").data("otCSS",otCSSOnThisPage);
             $(".passageContainer.active").data("ntCSS",ntCSSOnThisPage);
-            if (otCSSOnThisPage === "")
-                $("#sideBarHVerbClrs").hide();
-            else
-                $("#sideBarHVerbClrs").show();
-            if (ntCSSOnThisPage === "")
-                $("#sideBarVerbClrs").hide();
-            else
-                $("#sideBarVerbClrs").show();
+            step.util.showOrHideColorSideBarItem();
             var passageId = this.model.get("passageId");
             var interlinearMode = this.model.get("interlinearMode");
             var languages = this.model.get("languageCode");

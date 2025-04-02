@@ -50,14 +50,7 @@ function initializeClrCodeSidebar() {
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
     (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
   step.util.localStorageSetItem('colorCode-PreviousSettings', JSON.stringify(c4));
-  if ($(".passageContainer.active").data("ntCSS") === "")
-    $("#sideBarVerbClrs").hide();
-  else
-    $("#sideBarVerbClrs").show();
-  if ($(".passageContainer.active").data("otCSS") === "")
-    $("#sideBarHVerbClrs").hide();
-  else
-    $("#sideBarHVerbClrs").show();
+  step.util.showOrHideColorSideBarItem();
 }
 
 function convertLangInfoToHtml(langInfo) {
@@ -1080,6 +1073,7 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
 
 function userToggleClrGrammar(grammarFunction) {
     var checkedValue = document.getElementById(grammarFunction + 'onoffswitch').checked;
+    var wereAllColorCodeSelectionOff = ((typeof c4 === "object") && !c4[C_Greek][C_enableVerbClr] && !c4[C_enableGenderNumberClr] && !c4[C_OT][C_enableVerbClr]);
     if ((grammarFunction === 'verb') || (grammarFunction === 'verb2')) {
       c4[C_Greek][C_enableVerbClr] = checkedValue;
       cf.updtLocalStorage();
@@ -1124,6 +1118,9 @@ function userToggleClrGrammar(grammarFunction) {
         }
       }
     }
+    var actPassage = step.util.activePassage();
+    if (wereAllColorCodeSelectionOff && step.util.isColorOptionEnabled(actPassage))
+      actPassage.set("selectedOptions", currentOptions + "C"); // Need to enable color in the URL options
     cf.refreshClrGrammarCSS();
     if ((grammarFunction === 'verb') && (checkedValue) && (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);
 }

@@ -465,14 +465,7 @@ step.util = {
 				$('#sideBargenderNumClrs').show();
 				$('#colorAdvancedConfig').show();
 				$('#noColorGrammar').hide();
-				if (passageContainer.data("ntCSS") === "")
-					$("#sideBarVerbClrs").hide();
-				else
-					$("#sideBarVerbClrs").show();
-				if (passageContainer.data("otCSS") === "")
-					$("#sideBarHVerbClrs").hide();
-				else
-					$("#sideBarHVerbClrs").show();
+				step.util.showOrHideColorSideBarItem();
 			}
 			else {
 				$("#colorgrammar-icon").hide();
@@ -4561,17 +4554,47 @@ step.util = {
 		var ntPassages = [];
 		var otPassages = [];
 		for (var i = 0; i < osisIds.length; i ++) {
-			var bookOrder = step.util.bookOrderInBible(osisIds[i]);
-			if (bookOrder > 38) {
-				ntPassages.push(osisIds[i]);
-				hasNT = true;
-			}
-			else if (bookOrder > -1) {
-				otPassages.push(osisIds[i]);
-				hasOT = true;
+			var singleOsisId = osisIds[i].split(" ");
+			for (var j = 0; j < singleOsisId.length; j ++) {
+				var bookOrder = step.util.bookOrderInBible(singleOsisId[j]);
+				if (bookOrder > 38) {
+					ntPassages.push(singleOsisId[j]);
+					hasNT = true;
+				}
+				else if (bookOrder > -1) {
+					otPassages.push(singleOsisId[j]);
+					hasOT = true;
+				}
 			}
 		}
 		return [hasNT, hasOT, ntPassages, otPassages];
+	},
+	isColorOptionEnabled: function(activePassage) {
+		var urlFragment = activePassage.get("urlFragment");
+		var pos = urlFragment.indexOf("options=");
+		if (pos == -1)
+			return false;
+		var options = urlFragment.substring(pos+8).split('&')[0];
+		return options.indexOf("C") > -1;
+	},
+	showOrHideColorSideBarItem: function() {
+		var sbVC = $("#sideBarVerbClrs");
+		var sbHVC = $("#sideBarHVerbClrs");
+		if ((sbVC.length == 0) && (sbHVC.length == 0))
+			return;
+		var actPassage = step.util.activePassage();
+		var r = step.util.getTestamentAndPassagesOfTheReferences([ actPassage.get("osisId") ]);
+		var hasNT = r[0];
+		var hasOT = r[1];
+		var colorOptionWasEnabled = step.util.isColorOptionEnabled(actPassage);
+		if (!hasNT || (colorOptionWasEnabled && ($(".passageContainer.active").data("ntCSS") === "")))
+		  sbVC.hide();
+		else
+		  sbVC.show();
+		if (!hasOT || (colorOptionWasEnabled && ($(".passageContainer.active").data("otCSS") === "")))
+		  sbHVC.hide();
+		else
+		  sbHVC.show();
 	},
 	checkBibleHasTheTestament: function(versionToCheck, hasNTPassage, hasOTPassage) {
 		versionToCheck = " " + versionToCheck.toLowerCase() + " ";

@@ -29,6 +29,7 @@ var ColorView = Backbone.View.extend({
                 var C_Greek = 0; // This need to match definition in color_code_grammar.js
                 var C_enableVerbClr = 0; // This need to match definition in color_code_grammar.js
                 var C_enableGenderNumberClr = 3; // This need to match definition in color_code_grammar.js
+                var C_OT = 1; // This need to match definition in color_code_grammar.js
                 if (c4[C_Greek][C_enableVerbClr] || // Enabled Greek verb color code 
                     c4[C_enableGenderNumberClr] ||  // Or enabled noun
                     c4[C_OT][C_enableVerbClr] )     // Or enabled OT verb color code 

@@ -242,11 +242,11 @@
                                 <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="bookmarks" /></span>
                             </a>
                             <a id="fonts-icon" style="padding-left:5px" href="javascript:step.util.showFontSettings();" title="<fmt:message key="font_sizes" />">
-                                <span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px"><fmt:message key="passage_font_size_symbol" /></span>
+                                <span class="largerFont" style="color:white;background:#5E5E5E;font-size:18px"><fmt:message key="passage_font_size_symbol" /></span>
                                 <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font" /></span>
                             </a>
                             <a id="colorgrammar-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammar" />">
-                                <span class="largerFont" style="background:url(/images/wave.png) repeat-x 100% 100%;font-size:22px;padding-bottom:7px">G</span>
+                                <span class="largerFont" style="background:url(/images/wave.png) repeat-x 100% 100%;font-size:18px;padding-bottom:7px">G</span>
                                 <span class="largerFont hidden-xs hidden-sm navbarIconDesc" style="margin-left:-2">rammar</span>
                             </a>
                             <a id="examples-icon1" style="padding-left:5px" class="navbarIconDesc hidden-sm hideen-md hidden-lg" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">

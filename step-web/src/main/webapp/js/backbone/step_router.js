@@ -92,6 +92,10 @@ var StepRouter = Backbone.Router.extend({
                             break;
                         }
                 }
+                var C_Greek = 0;
+                var C_enableVerbClr = 0;
+                var C_enableGenderNumberClr = 3;
+                var C_OT = 1;
                 if ((typeof c4 === "object") && !c4[C_Greek][C_enableVerbClr] && !c4[C_enableGenderNumberClr] && !c4[C_OT][C_enableVerbClr])
                     options = options.replace("C", ""); // Don't color code to server if user disabled it.
                 if (!hasMorphology) // If there is no morphology, the grammar and color code grammar are not relevant

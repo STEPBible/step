@@ -1119,8 +1119,8 @@ function userToggleClrGrammar(grammarFunction) {
       }
     }
     var actPassage = step.util.activePassage();
-    if (wereAllColorCodeSelectionOff && step.util.isColorOptionEnabled(actPassage))
-      actPassage.set("selectedOptions", currentOptions + "C"); // Need to enable color in the URL options
+    if (wereAllColorCodeSelectionOff && !step.util.isColorOptionEnabled(actPassage))
+      actPassage.set("selectedOptions", actPassage.get("selectedOptions") + "C"); // Need to enable color in the URL options
     cf.refreshClrGrammarCSS();
     if ((grammarFunction === 'verb') && (checkedValue) && (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);
 }

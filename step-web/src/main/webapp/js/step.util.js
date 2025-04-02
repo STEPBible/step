@@ -2264,7 +2264,7 @@ step.util = {
 						'<button id="saveButton" class="stepButton" onclick=saveClrConfig()><label>Save</label></button>' +
 						'<button id="cancelButton" class="stepButton" onclick=cancelClrChanges()><label>Cancel</label></button>' +
 						'<button id="resetButton" class="stepButton" onclick=resetClrConfig()><label>Reset</label></button>' +
-						'<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>' +
+						'<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Apply</label></button>' +
 					'</div>' +
 				'</div>' +
 			'</div>' +
@@ -5187,6 +5187,9 @@ step.util = {
 		return function(a, b) {
 			return step.util.levenshtein(name, a["name"]) - step.util.levenshtein(name, b["name"])
 		}
+	},
+	capitalizeFirstLetter: function(val) {
+		return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 	}
 }
 ;

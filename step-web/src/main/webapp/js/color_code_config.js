@@ -203,13 +203,10 @@ function openClrConfig() {
 
 function initOpenClrCodeModal() {
   var s = $('<select id="openClrConfigDropdown"/>');
-  s.append($('<option/>').html('Color based on verb aspect'));
-  s.append($('<option/>').html('Color based on verb tense'));
-  s.append($('<option/>').html('Original colors defined in 2019'));
-  // s.append($('<option/>').html('Verb, imperative mood'));  // These are defined for examples under FAQ so no need to show them
-  // s.append($('<option/>').html('Verb, main vs supporting verbs'));
-  // s.append($('<option/>').html('Gender and Number'));
-  var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
+  s.append($('<option/>').html(step.util.capitalizeFirstLetter(C_AspectDesc)));
+  s.append($('<option/>').html(step.util.capitalizeFirstLetter(C_TenseDesc)));
+  s.append($('<option/>').html(step.util.capitalizeFirstLetter(C_OrigDesc)));
+   var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
   if (tmp) {
     var UserClrConfigNames = JSON.parse(tmp);
     for (var i in UserClrConfigNames) {

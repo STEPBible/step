@@ -7,6 +7,9 @@
 // Do not take away the comment: TBRMBR (abbreviation of To Be Removed By Maven Replacer)
 // The maven replacer look for these patterns and remove them from the minify code.
 // should use const instead of var, but older browser does not support const
+var C_AspectDesc = "underlining based on verb aspect";
+var C_TenseDesc = "underlining based on verb tense";
+var C_OrigDesc = "original colors defined in 2019";
 var C_Greek = 0; // TBRBMR
 var C_enableVerbClr = 0; // TBRBMR
 var C_inClrVerbItem = 1; // TBRBMR
@@ -1787,9 +1790,9 @@ var cf = {
     else selectedConfig = document.getElementById('openClrConfigDropdown').value.toLowerCase();
     var previousEnableGenderNumberClr = true;
     if (c4 != undefined) previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
-    if (selectedConfig === 'color based on verb aspect') c4 = cf.createC4();
-    else if (selectedConfig === 'color based on verb tense') c4 = cf.c4ColorTense();
-    else if (selectedConfig === 'original colors defined in 2019') c4 = cf.c4Color2019();
+    if (selectedConfig === C_AspectDesc) c4 = cf.createC4();
+    else if (selectedConfig === C_TenseDesc) c4 = cf.c4ColorTense();
+    else if (selectedConfig === C_OrigDesc) c4 = cf.c4Color2019();
     else if (selectedConfig === 'gender and number') c4 = cf.c4NounOnly();
     else if (selectedConfig === 'verb, imperative mood') c4 = cf.c4ImperativesOnly();
     else if (selectedConfig === 'verb, main vs supporting verbs') c4 = cf.c4MainVsSupporingVerbs();

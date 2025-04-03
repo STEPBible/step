@@ -236,9 +236,16 @@ public class SearchController {
                     }
                 }
                 if (getCount) {
-                    SearchResult result2 = (SearchResult) masterSearch(context + currentType + "=" + subject.getValue(), true);
-                    int count = result2.getTotal();
-                    currentSuggestion.setCount(count);
+                    try {
+                        SearchResult result2 = (SearchResult) masterSearch(context + currentType + "=" + subject.getValue(), true);
+                        int count = result2.getTotal();
+                        currentSuggestion.setCount(count);
+                    }
+                    catch (Exception e) {
+                        autoSuggestions.remove(i);
+                        i --;
+                        originalSize --;
+                    }
                 }
             }
         }

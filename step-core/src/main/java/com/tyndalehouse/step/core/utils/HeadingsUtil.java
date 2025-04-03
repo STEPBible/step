@@ -74,8 +74,10 @@ public final class HeadingsUtil {
                     LOGGER.trace("Unable to remove verse, but continuing.", ex);
                 }
             }
-
-            return key.getName().replace(v11n.getShortName(book), v11n.getLongName(book));
+            String longBookName = v11n.getLongName(book);
+            if (longBookName == null)
+                return "";
+            return key.getName().replace(v11n.getShortName(book), longBookName);
         } catch (ArrayIndexOutOfBoundsException ex) {
             //occurs for a zero-sized key
             return "";

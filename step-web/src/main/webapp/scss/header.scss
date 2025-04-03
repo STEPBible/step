@@ -78,15 +78,10 @@
       }
     }
 
-    #logo, #logo2 {
+    .logo {
       display: inline-block;
       margin-bottom: 6px;
       margin-top: 6px;
-
-      & > svg {
-        fill: $brand-primary;
-      }
-
     }
 
     a, .subtitle, .subtitle:hover {
@@ -123,7 +118,6 @@
 
     .title {
       line-height: 25px;
-      margin-right: 20px;
       float: left;
       & > a {
         color: white !important;

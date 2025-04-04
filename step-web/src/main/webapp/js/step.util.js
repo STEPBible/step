@@ -4348,7 +4348,7 @@ step.util = {
 		var relatedNumbers = origJsonVar.r;
 		var vocabInfo = origJsonVar.v[index];
 		var vocabInfoEntry = {};
-		for (var j = 0; j < step.util.vocabKeys.length - 1; j ++) {
+		for (var j = 0; j < step.util.vocabKeys.length; j ++) {
 			if (vocabInfo[j] === "") continue;
 			if (step.util.vocabKeys[j] === "relatedNos") {
 				var allRelatedNumbersResult = [];

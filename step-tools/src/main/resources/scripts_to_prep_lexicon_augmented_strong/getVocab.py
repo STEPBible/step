@@ -20,13 +20,14 @@ from requests.packages.urllib3.util.retry import Retry
 import json
 
 # The following line is also defined in step.util.js.  The array of keys in step.util.js and the following line must match.
-vocabKeys = ["strongNumber", "stepGloss", "stepTransliteration", "count", 
+vocabKeys = [   "defaultDStrong", # defaultDStrong must be the first
+                "strongNumber", "stepGloss", "stepTransliteration", "count", 
                 "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
                 "shortDef", "mediumDef", "lsjDefs",
                 "_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
                 "accentedUnicode", "rawRelatedNumbers", "relatedNos", 
                 "_stepDetailLexicalTag", "_step_Link", "_step_Type", "_stepSearchResultRange", 
-                "freqList", "defaultDStrong", "shortDefMounce", "briefDef"
+                "freqList", "shortDefMounce", "briefDef"
                 ]
 # The following line is also defined in step.util.js.  The array of keys in step.util.js and the following line must match.
 relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"]

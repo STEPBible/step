@@ -138,14 +138,14 @@ step.util = {
 	versionsGreekBoth: ["ABEN", "ABGK"],
 	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
 	// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
-	vocabKeys: ["strongNumber", "stepGloss", "stepTransliteration", "count", 
+	vocabKeys: ["defaultDStrong", // defaultDStrong has to be the first one
+		"strongNumber", "stepGloss", "stepTransliteration", "count", 
 		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
 		"shortDef", "mediumDef", "lsjDefs",
 		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
 		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
 		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-		"freqList", "defaultDStrong", "shortDefMounce", "briefDef"],
-	indexToDefaultDStrong: 22,
+		"freqList", "shortDefMounce", "briefDef"],
 
 	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
 		var bibleVersions = allVersions.split(",");
@@ -4349,7 +4349,7 @@ step.util = {
 		var relatedNumbers = origJsonVar.r;
 		var vocabInfo = origJsonVar.v[index];
 		var vocabInfoEntry = {};
-		for (var j = 0; j < step.util.vocabKeys.length; j ++) {
+		for (var j = 1; j < step.util.vocabKeys.length; j ++) { // The first one is defaultDStrong so it does not need to be unpacked
 			if (vocabInfo[j] === "") continue;
 			if (step.util.vocabKeys[j] === "relatedNos") {
 				var allRelatedNumbersResult = [];
@@ -4439,9 +4439,9 @@ step.util = {
 							break;
 						}
 					}
-					if (origJsonVar.v[i][step.util.indexToDefaultDStrong].indexOf("*") > -1)
+					if (origJsonVar.v[i][0].indexOf("*") > -1) // index 0 is the defaultDStrong in vocabKeys array
 						defaultDStrong = i; // Default DStrong
-					if (origJsonVar.v[i][step.util.indexToDefaultDStrong].indexOf("L") > -1)
+					if (origJsonVar.v[i][0].indexOf("L") > -1) // index 0 is the defaultDStrong in vocabKeys array
 						lxxDefaultDstrong = i;
 				}
 				if (augStrongIndex == -1) {

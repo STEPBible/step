@@ -75,9 +75,10 @@ public final class HeadingsUtil {
                 }
             }
             String longBookName = v11n.getLongName(book);
-            if (longBookName == null)
-                return "";
-            return key.getName().replace(v11n.getShortName(book), longBookName);
+            if (longBookName == null) return "";
+            String shortBookName = v11n.getShortName(book);
+            if (shortBookName == null) return "";
+            return key.getName().replace(shortBookName, longBookName);
         } catch (ArrayIndexOutOfBoundsException ex) {
             //occurs for a zero-sized key
             return "";

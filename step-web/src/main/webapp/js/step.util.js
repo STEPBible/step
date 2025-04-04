@@ -145,6 +145,7 @@ step.util = {
 		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
 		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
 		"freqList", "defaultDStrong", "shortDefMounce", "briefDef"],
+	indexToDefaultDStrong: 22,
 
 	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
 		var bibleVersions = allVersions.split(",");
@@ -4407,7 +4408,6 @@ step.util = {
 		}
 		var additionalPath = step.state.getCurrentVersion();
 		if (additionalPath !== "") additionalPath += "/";
-		var indexToDefaultDStrong = step.util.vocabKeys.length - 1;
 		var numOfResponse = 0;
 		resultJson.vocabInfos = new Array(uniqueStrongArray.length);
 		for (var j = 0; j < uniqueStrongArray.length; j++) {
@@ -4439,9 +4439,9 @@ step.util = {
 							break;
 						}
 					}
-					if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("*") > -1)
+					if (origJsonVar.v[i][step.util.indexToDefaultDStrong].indexOf("*") > -1)
 						defaultDStrong = i; // Default DStrong
-					if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("L") > -1)
+					if (origJsonVar.v[i][step.util.indexToDefaultDStrong].indexOf("L") > -1)
 						lxxDefaultDstrong = i;
 				}
 				if (augStrongIndex == -1) {

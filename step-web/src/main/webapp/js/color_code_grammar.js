@@ -546,7 +546,7 @@ var cf = {
 	  cf.goAnimate(0);
   },
 
-  calcAnimationPixelIncrement: function (width) {
+  calcAnimationPixelIncrement: function(width) {
     var increment = Math.round(width / 5);
     // increment has to be an odd number so that the underline to highligh passive
     // and middle voice can change to alternate between two colors in goAnimate()
@@ -557,7 +557,7 @@ var cf = {
     return increment;
   },
 
-  createCanvas: function (canvasId, width, height) {
+  createCanvas: function(canvasId, width, height) {
     var canvas = document.getElementById(canvasId);
     if (canvas == undefined) {
       canvas = document.createElement('canvas');
@@ -774,7 +774,7 @@ var cf = {
     ulWave.animIncrement = cf.calcAnimationPixelIncrement(ulWave.canvas.width);
   },
 
-  createUlForOTYAxis: function (rowNum, numOfRows, numOfColumns) {
+  createUlForOTYAxis: function(rowNum, numOfRows, numOfColumns) {
     var currentUL;
     if ((numOfRows != null) && (rowNum == numOfRows)) currentUL = 'ulNone';
     else currentUL = cc[C_underlineCanvasName][c4[C_OT][C_slctUlVerbItem][rowNum]];
@@ -874,19 +874,19 @@ var cf = {
     }
   },
 
-  createUlForOneInstanceOfTense: function (destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName) {
+  createUlForOneInstanceOfTense: function(destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName) {
     destImgObj.canvas = cf.createCanvas(destImgObj.name, Math.max(srcImgObj.canvas.width, 26), srcImgObj.canvas.height); // Set width to the widest canvas.  The Dash-Dot-Dot canvas as a width of 26
     cf.updateUlForSpecificYAxis(destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName);
   },
 
-  displayVerbUlOrNot: function (indexToUlVerbCSS) {
+  displayVerbUlOrNot: function(indexToUlVerbCSS) {
     if ( ( ( ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByMood) &&
           ((indexToUlVerbCSS != null) && cv[C_ulVerbCSS][indexToUlVerbCSS].displayStatusByTense) ) &&
           c4[C_Greek][C_enableVerbClr]) || (indexToUlVerbCSS == -1) ) return true; // indexToUlVerbCSS is -1 when it is OT verb.  Temp solution.
     else return false;
   },
 
-  displayOTVerbUlOrNot: function (yIndex, xIndex) {
+  displayOTVerbUlOrNot: function(yIndex, xIndex) {
     var display = false;
     if (c4[C_OT][C_enableVerbClr]) {
       if (yIndex == (cv[C_ulOTVbCSS].length -1)) display = true;
@@ -899,7 +899,7 @@ var cf = {
     return display;
   },
 // Do not shorten name of this function.  It is called by view_display_passage.js
-  refreshClrGrammarCSS: function (ntCSSOnThisPage, otCSSOnThisPage) {
+  refreshClrGrammarCSS: function(ntCSSOnThisPage, otCSSOnThisPage) {
     if (c4[C_enableGenderNumberClr]) {
       if (cv[C_userTurnGenderNumberFromOffToOn]) {
         cv[C_userTurnGenderNumberFromOffToOn] = false;
@@ -1019,7 +1019,7 @@ var cf = {
     }
   },
 
-  getRowColNum: function (inputStr) {
+  getRowColNum: function(inputStr) {
     var row = null, column = null;
     var lng = inputStr.length;
     if ((lng >= 4) && (lng <= 6) && (inputStr.substr(0,1) == 'R')) {
@@ -1035,7 +1035,7 @@ var cf = {
     return [row, column];
   },
 
-  updateUlForSpecificYAxis: function (destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName) {
+  updateUlForSpecificYAxis: function(destImgObj, srcImgObj, color, ulVerbCSSIndex, sideBarClassName) {
     if (color !== undefined) {
       var backgroundClr;
       destImgObj.canvas.heigth = srcImgObj.canvas.height;
@@ -1140,7 +1140,7 @@ var cf = {
  * @param {number} givenTime
  *     givenTime is provided by callback which is passed one single argument, a DOMHighResTimeStamp similar to the one returned by performance.now(), indicating the point in time when requestAnimationFrame() starts to execute callback functions.
  */
-  goAnimate: function (givenTime) {
+  goAnimate: function(givenTime) {
     var animateUlForPassive = c4[C_Greek][C_chkbxPassiveUlColr1Value] &&
       c4[C_Greek][C_chkbxPassiveUlColr2Value];
     var animateUlForMiddle = c4[C_Greek][C_chkbxMiddleUlColr1Value] &&
@@ -1178,7 +1178,7 @@ var cf = {
     else cv[C_handleOfRequestedAnimation] = -1; // No animation required so don't requestAnimationFrame() and set it to -1 so that other function will know when to requestAnimationFrame()
   },
 
-  animateCanvas: function (curImg, animateUlForPassive, animateUlForMiddle) { // curImg is the current image object
+  animateCanvas: function(curImg, animateUlForPassive, animateUlForMiddle) { // curImg is the current image object
     if (curImg.canvas.width > 1) {
       curImg.context.clearRect(0, 0, curImg.canvas.width, curImg.canvas.height); // clear the canvas
       if (curImg.animCount > curImg.canvas.width) // reset, start from beginning
@@ -1196,14 +1196,14 @@ var cf = {
     $('.v' + curImg.name).css('background', 'url(' + dataURL + ') repeat-x 100% 100%');
   },
 
-  animateCanvasBottomLine: function (curImg, voice) {
+  animateCanvasBottomLine: function(curImg, voice) {
     cf.updateBottomLineOnly(curImg, voice);
     curImg.animCount = curImg.animCount + curImg.animIncrement;
     var dataURL = curImg.canvas.toDataURL('image/png');
     $('.v' + curImg.name).css('background', 'url(' + dataURL + ') repeat-x 100% 100%');
   },
 
-  updateBottomLineOnly: function (curImg, voice) {
+  updateBottomLineOnly: function(curImg, voice) {
     var color1, color2;
     if (voice === 'middle') {
       color1 = c4[C_Greek][C_inMiddleUlClr1];
@@ -1222,7 +1222,7 @@ var cf = {
     curImg.context.closePath();
   },
 
-  changeImageClr: function (curImg, newClr, backgroundClr) {
+  changeImageClr: function(curImg, newClr, backgroundClr) {
     var rgb = cf.hex2Rgb(newClr);
     var backgroundRGB = null;
     var imageData = curImg.context.getImageData(0, 0, curImg.canvas.width, curImg.canvas.height);
@@ -1246,7 +1246,7 @@ var cf = {
     curImg.context.putImageData(imageData, 0, 0);
   },
 
-  hex2Rgb: function (hex) {
+  hex2Rgb: function(hex) {
     var result = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
       r: parseInt(result[1], 16),
@@ -1338,7 +1338,7 @@ var cf = {
     };
   },
 
-  getVariablesForOTVerbTable: function (language) {
+  getVariablesForOTVerbTable: function(language) {
     var nameOfXAxisItems = [], nameOfYAxisItems = [], descOfXAxisItems = [], descOfYAxisItems = [];
     var orderOfXAxisItems, orderOfYAxisItems, xAxisTitle, yAxisTitle, nameOfAllXAxisItems, nameOfAllYAxisItems;
     var orderOfStem = [], orderOfForm = [], nameOfStem = [], nameOfForm = [], descOfStem = [], descOfForm = [];
@@ -1431,11 +1431,11 @@ var cf = {
     };
   },
 
-  upCaseFirst: function (string) {
+  upCaseFirst: function(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   },
 // Do not shorten name, called by view_examples.js
-  setNextPageURL: function (url, configName, infoMsg) {
+  setNextPageURL: function(url, configName, infoMsg) {
     if (configName !== "")
       cf.openUserSelectedConfig(configName);
     if (infoMsg !== "")
@@ -1443,7 +1443,7 @@ var cf = {
     window.location.assign(url);
   },
 
-  getSpecificMorphologyInfo: function (morphCode, morphName, result) {
+  getSpecificMorphologyInfo: function(morphCode, morphName, result) {
     var index;
     var ot_var = cv[C_otMorph][morphName];
     for (var count = morphCode.length; ((count > 0) && (index == undefined)); count --) {
@@ -1459,7 +1459,7 @@ var cf = {
     }
   },
   // Called by other javascript (view_quick_lexicon view_sidebar) in Step.  Do not shorten the name.
-  getTOSMorphologyInfo: function (morphCode) {
+  getTOSMorphologyInfo: function(morphCode) {
     var resultArray = [];
     if ((morphCode.indexOf('TOS:') == 0) && (cv[C_otMorph] != null)) {
       var morphs = morphCode.split(" ");
@@ -1563,7 +1563,7 @@ var cf = {
     return resultArray;
   },
 
-  getExplanationOfMorph: function (code, result) {
+  getExplanationOfMorph: function(code, result) {
     var resultString = '';
     if (code.search(/^[HA]V[a-zA-Z](fc|fa)$/) > -1)
       resultString = cf.assembleDescriptionsOfMorph(result, ['ot_actionDesc', 'functionDesc', 'ot_moodDesc', 'formDesc', 'ot_voiceDesc', 'stateDesc']);
@@ -1589,7 +1589,7 @@ var cf = {
     }
   },
 
-  assembleDescriptionsOfMorph: function (morphObj, keys) {
+  assembleDescriptionsOfMorph: function(morphObj, keys) {
     var result = '';
     for (var counter = 0; counter < keys.length; counter++) {
       if ((morphObj[keys[counter]] != undefined) || (morphObj[keys[counter]] != null) && (morphObj[keys[counter]].length > 0))
@@ -1598,7 +1598,7 @@ var cf = {
     return result.replace(/\s\s+/, ' ').replace(/^\s/, '').replace(/\s$/, '');
   },
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
-  addClassForTHOT: function (passageHTML, bibleVersions) {
+  addClassForTHOT: function(passageHTML, bibleVersions) {
     var result = '', pLength = passageHTML.length, currentPos = 0, lastCopyPos = 0;
     var otCSSOnThisPage = '';
     while (currentPos < pLength) {
@@ -1670,7 +1670,7 @@ var cf = {
   },
 
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
-  getClassesForNT: function (passageHTML) {
+  getClassesForNT: function(passageHTML) {
     var pLength = passageHTML.length;
     var currentPos = 0;
     var ntCSSOnThisPage = '';
@@ -1702,7 +1702,7 @@ var cf = {
     return ntCSSOnThisPage + ' ';
   },
 
-  morph2CSS: function (origMorphCode, isOSHM) {
+  morph2CSS: function(origMorphCode, isOSHM) {
     var result = '';
     if (typeof origMorphCode === "string") {
       var morphCode = origMorphCode.split(" ")[0];
@@ -1754,7 +1754,7 @@ var cf = {
     return result;
   },
 
-  updateCssForNumber: function (type, fontHighlight) {
+  updateCssForNumber: function(type, fontHighlight) {
     var cssName = '';
     if (type === 'singular') cssName = '.sing';
     else if (type === 'plural') cssName = '.plur';
@@ -1775,7 +1775,7 @@ var cf = {
     cv[C_updatedGenderNumberCSS] = true;
   },
 
-  getAxisOrderOfItem: function (moodOrTense, itemNumber) {
+  getAxisOrderOfItem: function(moodOrTense, itemNumber) {
     var orderInAxis = itemNumber;
     var c4Ref = (moodOrTense == 'mood') ? c4[C_Greek][C_moodToCombineWithPrevious] : c4[C_Greek][C_tenseToCombineWithPrevious];
     for (var i = 1; i <= itemNumber; i++) {
@@ -1784,7 +1784,7 @@ var cf = {
     return orderInAxis;
   },
 // Do not shorten name, called by open_color_code_grammar.html
-  openUserSelectedConfig: function (name) {
+  openUserSelectedConfig: function(name) {
     var selectedConfig;
     if (name != null) selectedConfig = name;
     else selectedConfig = document.getElementById('openClrConfigDropdown').value.toLowerCase();

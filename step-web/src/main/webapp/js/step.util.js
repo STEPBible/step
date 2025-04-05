@@ -1442,7 +1442,7 @@ step.util = {
             } else {
                 var s = $(source);
                 strong = s.attr("strong");
-                morph = step.util.convertMorphOSHM2TOS (s.attr("morph") );
+                morph = step.util.convertMorphOSHM2TOS(s.attr("morph") );
 				variant = s.attr("var") || "";
 				var verseAndVersion = step.util.ui.getVerseNumberAndVersion(s);
 				ref = verseAndVersion[0];

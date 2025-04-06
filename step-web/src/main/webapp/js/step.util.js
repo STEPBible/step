@@ -251,7 +251,7 @@ step.util = {
 		if (msg[0] === "") {
 			if (msg[1] === "") {
 				msg[0] = msg[2];
-				msg[2] = "":
+				msg[2] = "";
 			}
 			else if (msg[1].indexOf("<br>") == 0)
 				msg[1] = msg[1].substring(4);

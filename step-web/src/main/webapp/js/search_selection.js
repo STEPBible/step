@@ -293,7 +293,7 @@ step.searchSelect = {
 		}
 		$(".searchOptions").click(step.searchSelect._handleOptions);
 	},
-	_handleOptions: function(ev, optionNameArg) {
+	_handleOptions: function(ev, optionNameArg) { // Do not shorten
 		var optionName = (ev !== null) ? ev.target.id.substring(9): optionNameArg;
         var localStorageSetting = step.util.localStorageGetItem("step.srchOptn" + optionName);
 		var currentSetting = false;
@@ -335,7 +335,7 @@ step.searchSelect = {
 	 	$("#previousSearchWords").empty().append(searchWordsHTML);
 	 	$(".searchWords").click(step.searchSelect._displayPreviousSearchWord);
 	},
-	_displayPreviousSearchWord: function(ev) {
+	_displayPreviousSearchWord: function(ev) { // Do not shorten
 	 	if ((ev == null) || (typeof ev.target.id !== "string") ||
 	 		(ev.target.id.substring(0, 11) !== "searchWords")) return;
 	 	var wordIndex = ev.target.id.substring(11);
@@ -672,7 +672,7 @@ step.searchSelect = {
 			'</div><br>';
 		return html;
 	},
-    handleLanguageButton: function (ev) {
+    handleLanguageButton: function (ev) { // Do not shorten
 		var language;
 		var langOfOldButtonPressed = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
 		if ((typeof ev === "string") || (ev === "init")) {
@@ -2198,7 +2198,7 @@ step.searchSelect = {
 		}
 	},
 
-	_addFreqListQTip: function(augStrongSameMeaning, allVersions, freqList, element) {
+	_addFreqListQTip: function(augStrongSameMeaning, allVersions, freqList, element) { // Do not shorten
 		if ((element) && (augStrongSameMeaning.length == 1)) {
 			var freqListElm = step.util.freqListQTip(augStrongSameMeaning[0], freqList, allVersions, "", "");
 			element.append('&nbsp;').append(freqListElm);
@@ -2896,7 +2896,7 @@ step.searchSelect = {
 		}
 	},
 
-	handleAndOrNot: function() {
+	handleAndOrNot: function() { // Do not shorten
 		this.andOrNotUpdated = true;
 		$('#updateButton').show();
 	},

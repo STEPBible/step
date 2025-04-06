@@ -1,4 +1,4 @@
-function initializeClrCodeHtmlModalPage() {
+function initializeClrCodeHtmlModalPage() { // Do not shorten name
   addVerbTable();
   addOTVerbTable();
   addNounTable();
@@ -20,7 +20,7 @@ function initializeClrCodeHtmlModalPage() {
   step.util.localStorageSetItem('colorCode-PreviousSettings', JSON.stringify(c4));
 }
 
-function initializeClrCodeSidebar() {
+function initializeClrCodeSidebar() { // Do not shorten name
   if (typeof c4 === "undefined") cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
   addNounSideBar();
   addVerbSideBar();
@@ -193,7 +193,7 @@ function addVerbSideBar() {
     htmlTable.appendTo('#sideBarVerbClrs');
 }
 
-function openClrConfig() {
+function openClrConfig() { // Do not shorten name
   var openConfigPage = $('<div id="openClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel">' +
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('openClrModal');
@@ -201,7 +201,7 @@ function openClrConfig() {
   $('#openClrModal').modal('show').find('.modal-content').load('/html/open_color_code_grammar.html');
 }
 
-function initOpenClrCodeModal() {
+function initOpenClrCodeModal() { // Do not shorten name
   var s = $('<select id="openClrConfigDropdown"/>');
   s.append($('<option/>').html(step.util.capitalizeFirstLetter(C_AspectDesc)));
   s.append($('<option/>').html(step.util.capitalizeFirstLetter(C_TenseDesc)));
@@ -216,7 +216,7 @@ function initOpenClrCodeModal() {
   $('#openClrModalSelectArea').append(s);
 }
 
-function initSortVerbItem() {
+function initSortVerbItem() { // Do not shorten name
   var r = cf.getVariablesForVerbTable();
   var sortType = r[cv[C_axisUserSelectedToSort].toLowerCase() + 'AxisTitle'];
   var moodOrTense = sortType.substr(0,sortType.length - 1);
@@ -277,7 +277,7 @@ function initSortVerbItem() {
   }
 }
 
-function initAddHeaderInfo() {
+function initAddHeaderInfo() { // Do not shorten name
   var arrayDesc = [];
   var testament = $('#uahi_testament')[0].innerHTML;
   var axis = $('#uahi_axis')[0].innerHTML;
@@ -322,7 +322,7 @@ function initAddHeaderInfo() {
   $('#addHeaderInfoArea').append($(s));
 }
 
-function saveHeaderInfo() {
+function saveHeaderInfo() { // Do not shorten name
   var testament = $('#uahi_testament')[0].innerHTML;
   var axis = $('#uahi_axis')[0].innerHTML;
   var numOfInput = $('#uahi_num_of_input')[0].innerHTML;
@@ -353,7 +353,7 @@ function saveHeaderInfo() {
   updateAllSettingsAndInputFields();
 }
 
-function initSortOTVerbItem() {
+function initSortOTVerbItem() { // Do not shorten name
   var r1 = cf.getVariablesForOTVerbTable('H');
   var r2 = cf.getVariablesForOTVerbTable('A');
   var sortType = r1[cv[C_axisUserSelectedToSort].toLowerCase() + 'AxisTitle'];
@@ -459,7 +459,7 @@ function initSortOTVerbItem() {
   }
 }
 
-function resetSortOrder() {
+function resetSortOrder() { // Do not shorten name
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
   if (element)
@@ -467,7 +467,7 @@ function resetSortOrder() {
   userSortAxis(cv[C_axisUserSelectedToSort]);
 }
 
-function resetSortOTOrder() {
+function resetSortOTOrder() { // Do not shorten name
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
   if (element)
@@ -475,7 +475,7 @@ function resetSortOTOrder() {
   userSortOTAxis(cv[C_axisUserSelectedToSort]);
 }
 
-function saveSortOrder() {
+function saveSortOrder() { // Do not shorten name
   var currentItem, sortType, orderOfUserProvidedItems = [], itemsToCombineWithPrevious = [false, false, false, false, false, false];
   var j = 0;
   if (cv[C_axisUserSelectedToSort] == 'X') sortType = cf.getVariablesForVerbTable().xAxisTitle;
@@ -521,7 +521,7 @@ function saveSortOrder() {
   updateAllSettingsAndInputFields();
 }
 
-function saveSortOTOrder() {
+function saveSortOTOrder() { // Do not shorten name
   var sortType, previousString, currentStemCode, currentStem, verbItem;
   if (cv[C_userProvidedSortOrder].length > 0) {
     if (cv[C_axisUserSelectedToSort] == 'X')
@@ -614,7 +614,7 @@ function saveSortOTOrder() {
   updateAllSettingsAndInputFields();
 }
 
-function saveClrConfig() {
+function saveClrConfig() { // Do not shorten name
   var saveConfigPage = $('<div id="saveClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel">' +
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('saveClrModal');
@@ -624,7 +624,7 @@ function saveClrConfig() {
   $('#saveClrModal').modal('show').find('.modal-content').load('/html/save_color_code_grammar.html');
 }
 
-function initSaveClrCodeModal() {
+function initSaveClrCodeModal() { // Do not shorten name
   var tmp = step.util.localStorageGetItem('colorCode-UserClrConfigNames');
   if (tmp) {
     $('#saveClrModalPromptForDropdownList').show();
@@ -638,7 +638,7 @@ function initSaveClrCodeModal() {
   } else $('#saveClrModalPromptForDropdownList').hide();
 }
 
-function saveUserClrConfig() {
+function saveUserClrConfig() { // Do not shorten name
   var userClrConfigNames = [];
   var inTxt = document.getElementById('saveClrModalInputArea').value.trim();
   var selectedConfig = document.getElementById('saveClrConfigDropdown');
@@ -952,20 +952,20 @@ function voicesInFormAndStem(yAxisNum, xAxisNum) {
           '<span class="vot_' + cv[C_ulOTVbCSS][xAxisNum][yAxisNum+2].name + '">middle</span>';
 }
   
-function userUpdateYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
-  c4[C_Greek][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
-  cf.updtLocalStorage();
-  cf.createUlForAllItemsInYAndX();
-  updateHtmlForYAxis();
-  updatePreviewAtSideBar('tensePreview' + itemNumberOfYAxis, nameOfUnderline)
-}
+// function userUpdateYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
+//   c4[C_Greek][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
+//   cf.updtLocalStorage();
+//   cf.createUlForAllItemsInYAndX();
+//   updateHtmlForYAxis();
+//   updatePreviewAtSideBar('tensePreview' + itemNumberOfYAxis, nameOfUnderline)
+// }
   
-function userUpdateOTYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
-  c4[C_OT][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
-  cf.updtLocalStorage();
-  cf.createUlForOTYAxis(itemNumberOfYAxis);
-  updatePreviewAtSideBar('formPreview' + itemNumberOfYAxis, nameOfUnderline)
-}
+// function userUpdateOTYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
+//   c4[C_OT][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
+//   cf.updtLocalStorage();
+//   cf.createUlForOTYAxis(itemNumberOfYAxis);
+//   updatePreviewAtSideBar('formPreview' + itemNumberOfYAxis, nameOfUnderline)
+// }
 
 function updatePreviewAtSideBar(className, nameOfUnderline) {
   var element = $('.' + className);
@@ -983,7 +983,7 @@ function updatePreviewAtSideBar(className, nameOfUnderline) {
   }
 }
 
-function userSwapAxis() {
+function userSwapAxis() { // Do not shorten name
   var tmp = c4[C_Greek][C_verbTableXHeader];
   c4[C_Greek][C_verbTableXHeader] = c4[C_Greek][C_verbTableYHeader];
   c4[C_Greek][C_verbTableYHeader] = tmp;
@@ -1027,7 +1027,7 @@ function userSortOTAxis(axis) {
   $('#sortAxisModal').modal('show').find('.modal-content').load('/html/sort_ot_verb_item.html');
 }
 
-function userToggleXOrYAxisConfig(ot, axis, index) {
+function userToggleXOrYAxisConfig(ot, axis, index) { // Do not shorten
   var otPrefix = '';
   if ((ot != undefined) && (ot == 'OT')) {
     otPrefix = 'OT';
@@ -1068,7 +1068,7 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
   cf.refreshClrGrammarCSS();
 }
 
-function userToggleClrGrammar(grammarFunction) {
+function userToggleClrGrammar(grammarFunction) { // Do not shorten
     var checkedValue = document.getElementById(grammarFunction + 'onoffswitch').checked;
     var wereAllColorCodeSelectionOff = ((typeof c4 === "object") && !c4[C_Greek][C_enableVerbClr] && !c4[C_enableGenderNumberClr] && !c4[C_OT][C_enableVerbClr]);
     if ((grammarFunction === 'verb') || (grammarFunction === 'verb2')) {
@@ -1152,7 +1152,7 @@ function userUpdateNounClr(gender, color) {
   cv[C_updatedGenderNumberCSS] = true;
 }
 
-function userUpdateNumber(type, fontHighlight) {
+function userUpdateNumber(type, fontHighlight) { // Do not shorten
   if (type == 'singular') c4[C_slctUlSingular] = fontHighlight;
   else if (type == 'plural') c4[C_slctUlPlural] = fontHighlight;
   else alert('Error: userUpdateNumber, cannot identify number type');
@@ -1160,7 +1160,7 @@ function userUpdateNumber(type, fontHighlight) {
   cf.updateCssForNumber(type, fontHighlight);
 }
 
-function userUpdateAnimation(itemNumber) {
+function userUpdateAnimation(itemNumber) { // Do not shorten
     var arrayIndexOfCSSRelatedToItemSelected = [];
     var currentULForItem = c4[C_Greek][C_slctUlVerbItem][itemNumber];
     var tempIndexArray;
@@ -1202,7 +1202,7 @@ function userUpdateAnimation(itemNumber) {
       cf.goAnimate(0);
 }
 
-function userUpdatePassiveMiddleVoiceBkgrd(voice, otVerb) {
+function userUpdatePassiveMiddleVoiceBkgrd(voice, otVerb) { // Do not shorten
   var otPrefix = ''; var c4Ref;
   if ((otVerb != undefined) && (otVerb != '')) {
     otPrefix = otVerb;
@@ -1222,7 +1222,7 @@ function userUpdatePassiveMiddleVoiceBkgrd(voice, otVerb) {
   else updateVerbsBkgrd(voice);
 }
 
-function userEnablePassiveMiddleVerbsUnderline1(voice, otVerb) {
+function userEnablePassiveMiddleVerbsUnderline1(voice, otVerb) { // Do not shorten
   var otPrefix = '', c4Ref, checkedValue;
   if ((otVerb != undefined) && (otVerb != '')) {
     otPrefix = otVerb;
@@ -1257,7 +1257,7 @@ function userEnablePassiveMiddleVerbsUnderline1(voice, otVerb) {
   else updateVerbsBkgrd(voice);
 }
 
-function userEnablePassiveMiddleVerbsUnderline2(voice, otVerb) {
+function userEnablePassiveMiddleVerbsUnderline2(voice, otVerb) { // Do not shorten name
   var otPrefix = '';
   if ((otVerb != undefined) && (otVerb != '')) return;
   var ucVoice = cf.upCaseFirst(voice);
@@ -1912,7 +1912,7 @@ function hideOrShowHtmlForPassiveBkgrdClr(passiveBkgrdName, otPrefix) {
   }
 }
 
-function cancelClrChanges() {
+function cancelClrChanges() { // Do not shorten
   var previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
   var tmp = step.util.localStorageGetItem('colorCode-PreviousSettings');
   if (tmp) c4 = JSON.parse(tmp);
@@ -1923,7 +1923,7 @@ function cancelClrChanges() {
   updateAllSettingsAndInputFields();
 }
 
-function resetClrConfig() {
+function resetClrConfig() { // Do not shorten
   var previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
   c4 = cf.createC4();
   cf.updtLocalStorage();
@@ -1932,7 +1932,7 @@ function resetClrConfig() {
   updateAllSettingsAndInputFields();
 }
 
-function closeClrConfig() {
+function closeClrConfig() { // Do not shorten
   step.util.closeModal("grammarClrModal");
   initializeClrCodeSidebar(); // The color code configuration modal is called by a user click from the sidebar.  Assuming the user has updated the color, update the colors in the sidebar.
 }
@@ -2310,7 +2310,7 @@ function htmlToAdd6(otVerb, callFromSidebar) {
   return result;
 }
 
-function tableAxisSpan (axis, ot) {
+function tableAxisSpan(axis, ot) {
   var c4Ref = ((ot != undefined) && (ot == 'OT')) ? c4[C_OT] : c4[C_Greek];
   var curXTitle = (axis == 'X') ? c4Ref[C_verbTableXHeader] : c4Ref[C_verbTableYHeader];
   var modalWidth = $('body').width();

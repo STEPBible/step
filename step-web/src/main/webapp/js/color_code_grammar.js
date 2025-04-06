@@ -1140,7 +1140,7 @@ var cf = {
  * @param {number} givenTime
  *     givenTime is provided by callback which is passed one single argument, a DOMHighResTimeStamp similar to the one returned by performance.now(), indicating the point in time when requestAnimationFrame() starts to execute callback functions.
  */
-  goAnimate: function(givenTime) {
+  goAnimate: function(givenTime) { // Do not shorten.  Used by multiple JS
     var animateUlForPassive = c4[C_Greek][C_chkbxPassiveUlColr1Value] &&
       c4[C_Greek][C_chkbxPassiveUlColr2Value];
     var animateUlForMiddle = c4[C_Greek][C_chkbxMiddleUlColr1Value] &&

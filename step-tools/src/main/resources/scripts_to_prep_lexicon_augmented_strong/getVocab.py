@@ -21,7 +21,8 @@ import json
 
 # The following line is also defined in step.util.js.  The array of keys in step.util.js and the following line must match.
 vocabKeys = [   "defaultDStrong", # defaultDStrong must be the first
-                "strongNumber", "stepGloss", "stepTransliteration", "count", 
+                "count", # count must be the second one
+                "strongNumber", "stepGloss", "stepTransliteration",
                 "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
                 "shortDef", "mediumDef", "lsjDefs",
                 "_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",

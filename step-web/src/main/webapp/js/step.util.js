@@ -127,7 +127,6 @@
         }
     });
 })(jQuery);
-
 window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
@@ -138,14 +137,41 @@ step.util = {
 	versionsGreekBoth: ["ABEN", "ABGK"],
 	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
 	// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
+	// When this is updated, check (and update if necessary) the following two:
+	//   unpackVocabJSON() in search_selection.js and 
+	//   relatedKeys in unpackJson() in this file.
+
+
+
+
+
+
+
 	vocabKeys: ["defaultDStrong", // defaultDStrong has to be the first one
-		"strongNumber", "stepGloss", "stepTransliteration", "count", 
-		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
-		"shortDef", "mediumDef", "lsjDefs",
-		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
-		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
-		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-		"freqList", "shortDefMounce", "briefDef"],
+		"count", // count has to be the second one
+		"strongNumber", 
+		"stepGloss",
+		"stepTransliteration", 
+		"_es_Gloss",
+		"_zh_Gloss",
+		"_zh_tw_Gloss",
+		"shortDef",
+		"mediumDef",
+		"lsjDefs",
+		"_es_Definition",
+		"_vi_Definition",
+		"_zh_Definition",
+		"_zh_tw_Definition",
+		"accentedUnicode",
+		"rawRelatedNumbers",
+		"relatedNos", 
+		"_stepDetailLexicalTag",
+		"_step_Link",
+		"_step_Type",
+		"_searchResultRange",
+		"freqList",
+		"shortDefMounce",
+		"briefDef"],
 
 	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
 		var bibleVersions = allVersions.split(",");
@@ -222,14 +248,23 @@ step.util = {
 		}
 		if ((accentedUnicode === "") && (msg[0].indexOf("<br>") == 0))
 			msg[0] = msg[0].substring(4);
-		if ((msg[0] === "") && (msg[1].indexOf("<br>") == 0))
-			msg[1] = msg[1].substring(4);
-		return "<span>" + __s.frequencies_vary + " </span><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#bookmark=id.11g1a0zd07wd' target='_blank'>(" + __s.why + ")</a>" +
-			"<br>" + msg[0] + msg[1] + "<br>" +
-			"<a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
-			"<span class='detailFreqList' style='display:none'>" +
+		if (msg[0] === "") {
+			if (msg[1] === "") {
+				msg[0] = msg[2];
+				msg[2] = "";
+			}
+			else if (msg[1].indexOf("<br>") == 0)
+				msg[1] = msg[1].substring(4);
+		}
+		var result = "<span>" + __s.frequencies_vary + " </span><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#bookmark=id.11g1a0zd07wd' target='_blank'>(" + __s.why + ")</a>" +
+			"<br>" + msg[0] + msg[1];
+		if (msg[2] !== "") 
+			result += "<br>" +
+				"<a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
+				"<span class='detailFreqList' style='display:none'>" +
 				msg[2] +
-			"</span>";
+				"</span>";
+		return result;
 	},
 	suppressHighlight: function(strongNumber) {
 		if (strongNumber === "") return false;
@@ -4344,7 +4379,8 @@ step.util = {
 	},
 	unpackJson: function (origJsonVar, index) {
 		// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
-		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", 
+			"matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
 		var duplicateStrings = origJsonVar.d;
 		var relatedNumbers = origJsonVar.r;
 		var vocabInfo = origJsonVar.v[index];

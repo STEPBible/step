@@ -248,8 +248,14 @@ step.util = {
 		}
 		if ((accentedUnicode === "") && (msg[0].indexOf("<br>") == 0))
 			msg[0] = msg[0].substring(4);
-		if ((msg[0] === "") && (msg[1].indexOf("<br>") == 0))
-			msg[1] = msg[1].substring(4);
+		if (msg[0] === "") {
+			if (msg[1] === "") {
+				msg[0] = msg[2];
+				msg[2] = "":
+			}
+			else if (msg[1].indexOf("<br>") == 0)
+				msg[1] = msg[1].substring(4);
+		}
 		return "<span>" + __s.frequencies_vary + " </span><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#bookmark=id.11g1a0zd07wd' target='_blank'>(" + __s.why + ")</a>" +
 			"<br>" + msg[0] + msg[1] + "<br>" +
 			"<a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +

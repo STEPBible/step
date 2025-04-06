@@ -140,6 +140,13 @@ step.util = {
 	// When this is updated, check (and update if necessary) the following two:
 	//   unpackVocabJSON() in search_selection.js and 
 	//   relatedKeys in unpackJson() in this file.
+
+
+
+
+
+
+
 	vocabKeys: ["defaultDStrong", // defaultDStrong has to be the first one
 		"count", // count has to be the second one
 		"strongNumber", 
@@ -148,7 +155,8 @@ step.util = {
 		"_es_Gloss",
 		"_zh_Gloss",
 		"_zh_tw_Gloss",
-		"shortDef","mediumDef",
+		"shortDef",
+		"mediumDef",
 		"lsjDefs",
 		"_es_Definition",
 		"_vi_Definition",

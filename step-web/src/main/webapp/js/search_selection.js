@@ -2074,12 +2074,12 @@ step.searchSelect = {
 		suggestion['_es_Gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 5, duplicateStrings);
 		suggestion['_zh_Gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 6, duplicateStrings);
 		suggestion['_zh_tw_Gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 7, duplicateStrings);
-		suggestion['matchingForm'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 14, duplicateStrings);
-		suggestion['_detailLexicalTag'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 17, duplicateStrings);
-		suggestion['type'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 19, duplicateStrings);
-		suggestion['_searchResultRange'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 20, duplicateStrings);
-		suggestion['popularityList'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 21, duplicateStrings);
-		suggestion['briefDef'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 23, duplicateStrings);
+		suggestion['matchingForm'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 15, duplicateStrings);
+		suggestion['_detailLexicalTag'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 18, duplicateStrings);
+		suggestion['type'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 20, duplicateStrings);
+		suggestion['_searchResultRange'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 21, duplicateStrings);
+		suggestion['popularityList'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 22, duplicateStrings);
+		suggestion['briefDef'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 24, duplicateStrings);
 		result['suggestion'] = suggestion;
 		return result;
 	},

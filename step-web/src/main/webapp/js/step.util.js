@@ -127,7 +127,6 @@
         }
     });
 })(jQuery);
-
 window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
@@ -138,14 +137,33 @@ step.util = {
 	versionsGreekBoth: ["ABEN", "ABGK"],
 	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
 	// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
+	// When this is updated, check (and update if necessary) the following two:
+	//   unpackVocabJSON() in search_selection.js and 
+	//   relatedKeys in unpackJson() in this file.
 	vocabKeys: ["defaultDStrong", // defaultDStrong has to be the first one
-		"strongNumber", "stepGloss", "stepTransliteration", "count", 
-		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
-		"shortDef", "mediumDef", "lsjDefs",
-		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
-		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
-		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-		"freqList", "shortDefMounce", "briefDef"],
+		"count", // count has to be the second one
+		"strongNumber", 
+		"stepGloss",
+		"stepTransliteration", 
+		"_es_Gloss",
+		"_zh_Gloss",
+		"_zh_tw_Gloss",
+		"shortDef","mediumDef",
+		"lsjDefs",
+		"_es_Definition",
+		"_vi_Definition",
+		"_zh_Definition",
+		"_zh_tw_Definition",
+		"accentedUnicode",
+		"rawRelatedNumbers",
+		"relatedNos", 
+		"_stepDetailLexicalTag",
+		"_step_Link",
+		"_step_Type",
+		"_searchResultRange",
+		"freqList",
+		"shortDefMounce",
+		"briefDef"],
 
 	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
 		var bibleVersions = allVersions.split(",");
@@ -4344,7 +4362,8 @@ step.util = {
 	},
 	unpackJson: function (origJsonVar, index) {
 		// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
-		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", 
+			"matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
 		var duplicateStrings = origJsonVar.d;
 		var relatedNumbers = origJsonVar.r;
 		var vocabInfo = origJsonVar.v[index];

@@ -2054,9 +2054,9 @@ step.searchSelect = {
 		}
 		return currentNotInBibleSelected;
 	},
-	valueInDuplicatStrongOrNot: function(vocabInfo, index, duplicateStrings) {
-		// index of 3 is count
-		return ((Number.isInteger(vocabInfo[index])) && (index != 3)) ?
+	valueInDuplicateStrongOrNot: function(vocabInfo, index, duplicateStrings) {
+		// index of 1 is count
+		return ((index != 1) && Number.isInteger(vocabInfo[index])) ?
 				duplicateStrings[vocabInfo[index]] : vocabInfo[index];
 	},
 
@@ -2067,18 +2067,19 @@ step.searchSelect = {
 		result['grouped'] = false;
 		result['maxReached'] = false;
 		var suggestion = {};
-		suggestion['strongNumber'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 0, duplicateStrings);
-		suggestion['gloss'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 1, duplicateStrings);
-		suggestion['stepTransliteration'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 2, duplicateStrings);
-		suggestion['popularity'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 3, duplicateStrings);
-		suggestion['_es_Gloss'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 4, duplicateStrings);
-		suggestion['_zh_Gloss'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 5, duplicateStrings);
-		suggestion['_zh_tw_Gloss'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 6, duplicateStrings);
-		suggestion['matchingForm'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 14, duplicateStrings);
-		suggestion['_detailLexicalTag'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 17, duplicateStrings);
-		suggestion['type'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 19, duplicateStrings);
-		suggestion['_searchResultRange'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 20, duplicateStrings);
-		suggestion['popularityList'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 21, duplicateStrings);
+		suggestion['popularity'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 1, duplicateStrings);
+		suggestion['strongNumber'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 2, duplicateStrings);
+		suggestion['gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 3, duplicateStrings);
+		suggestion['stepTransliteration'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 4, duplicateStrings);
+		suggestion['_es_Gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 5, duplicateStrings);
+		suggestion['_zh_Gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 6, duplicateStrings);
+		suggestion['_zh_tw_Gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 7, duplicateStrings);
+		suggestion['matchingForm'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 14, duplicateStrings);
+		suggestion['_detailLexicalTag'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 17, duplicateStrings);
+		suggestion['type'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 19, duplicateStrings);
+		suggestion['_searchResultRange'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 20, duplicateStrings);
+		suggestion['popularityList'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 21, duplicateStrings);
+		suggestion['briefDef'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 23, duplicateStrings);
 		result['suggestion'] = suggestion;
 		return result;
 	},

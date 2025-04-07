@@ -581,54 +581,7 @@
 									<replacement><token>getAllTenseMoodForThisGroup\s?([:(])</token><value>zz$1</value></replacement>
 									<replacement><token>c4NounOnly\s?([:(])</token><value>zAB$1</value></replacement>
 									<replacement><token>c4Color2019\s?([:(])</token><value>zAC$1</value></replacement>
-									<replacement><token>updateTenseOrFormPreview\s?([:(])</token><value>zAD$1</value></replacement>
 									<replacement><token>c4MainVsSupporingVerbs\s?([:(])</token><value>zAE$1</value></replacement>
-									<replacement><token>c4ImperativesOnly\s?([:(])</token><value>zAF$1</value></replacement>
-									<replacement><token>updateMoodPreview\s?([:(])</token><value>zAG$1</value></replacement>
-									<replacement><token>updateStemPreview\s?([:(])</token><value>zAH$1</value></replacement>
-									<replacement><token>c4ColorTense\s?([:(])</token><value>zAI$1</value></replacement>
-									<replacement><token>enableOrDisableAxisConfigButtons\s?([:(])</token><value>zAJ$1</value></replacement>
-									<replacement><token>updateHtmlForYAxis\s?([:(])</token><value>zAK$1</value></replacement>
-									<replacement><token>addElementToQtip\s?([:(])</token><value>zAL$1</value></replacement>
-									<replacement><token>updateHtmlForPassiveBkgrdClr\s?([:(])</token><value>zAM$1</value></replacement>
-									<replacement><token>enableOrDisableVerbAndNounButtonsSideBar\s?([:(])</token><value>zAN$1</value></replacement>
-									<replacement><token>addOtTitleToXAxisSideBar\s?([:(])</token><value>zAO$1</value></replacement>
-									<replacement><token>addOtTitleToXAxis\s?([:(])</token><value>zAP$1</value></replacement>
-									<replacement><token>addTitleToXAxisSideBar\s?([:(])</token><value>zAQ$1</value></replacement>
-									<replacement><token>convertLangInfoToHtml\s?([:(])</token><value>zAR$1</value></replacement>
-									<replacement><token>addVerbSideBar\s?([:(])</token><value>zAS$1</value></replacement>
-									<replacement><token>htmlToAdd3b\s?([:(])</token><value>zAT$1</value></replacement>
-									<replacement><token>htmlToAdd5b\s?([:(])</token><value>zAU$1</value></replacement>
-									<replacement><token>enableInfoIcon\s?([:(])</token><value>zAV$1</value></replacement>
-									<replacement><token>addNounTable\s?([:(])</token><value>zAW$1</value></replacement>
-									<replacement><token>addNounSideBar\s?([:(])</token><value>zAX$1</value></replacement>
-									<replacement><token>addCssToXAxisHeader\s?([:(])</token><value>zAY$1</value></replacement>
-									<replacement><token>addOTVerbTable\s?([:(])</token><value>zAZ$1</value></replacement>
-									<replacement><token>addOTVerbSideBar\s?([:(])</token><value>zA0$1</value></replacement>
-									<replacement><token>voicesInFormAndStem\s?([:(])</token><value>zA1$1</value></replacement>
-									<replacement><token>updatePreviewAtSideBar\s?([:(])</token><value>zA2$1</value></replacement>
-									<replacement><token>userSortAxis\s?([:(])</token><value>zA3$1</value></replacement>
-									<replacement><token>userAddHeaderInfo\s?([:(])</token><value>zA4$1</value></replacement>
-									<replacement><token>userSortOTAxis\s?([:(])</token><value>zA5$1</value></replacement>
-									<replacement><token>userUpdateClr\s?([:(])</token><value>zA6$1</value></replacement>
-									<replacement><token>userUpdateOTClr\s?([:(])</token><value>zA7$1</value></replacement>
-									<replacement><token>userUpdateNounClr\s?([:(])</token><value>zA8$1</value></replacement>
-									<replacement><token>enableOrDisableVerbAndNounButtons\s?([:(])</token><value>zA9$1</value></replacement>
-									<replacement><token>checkVerbClrInput\s?([:(])</token><value>zAa$1</value></replacement>
-									<replacement><token>updateHtmlForXAxis\s?([:(])</token><value>zAb$1</value></replacement>
-									<replacement><token>updateHtmlForGender\s?([:(])</token><value>zAc$1</value></replacement>
-									<replacement><token>updateHtmlForNumber\s?([:(])</token><value>zAd$1</value></replacement>
-									<replacement><token>updateHtmlForMiddleBkgrdClr\s?([:(])</token><value>zAe$1</value></replacement>
-									<replacement><token>hideOrShowHtmlForPassiveBkgrdClr\s?([:(])</token><value>zAf$1</value></replacement>
-									<replacement><token>updateAllSettingsAndInputFields\s?([:(])</token><value>zAg$1</value></replacement>
-									<replacement><token>hideIndividualInputField\s?([:(])</token><value>zAh$1</value></replacement>
-									<replacement><token>hideOrDisplayIndividualClrInputField\s?([:(])</token><value>zAi$1</value></replacement>
-									<replacement><token>updateVerbInputFields\s?([:(])</token><value>zAj$1</value></replacement>
-									<replacement><token>updateVerbsBkgrd\s?([:(])</token><value>zAk$1</value></replacement>
-									<replacement><token>getVerbItemsCombinedWithCurrentItem\s?([:(])</token><value>zAl$1</value></replacement>
-									<replacement><token>getAxisOrderOfCSS\s?([:(])</token><value>zAm$1</value></replacement>
-									<replacement><token>updateNounInputFields\s?([:(])</token><value>zAn$1</value></replacement>
-									<replacement><token>checkNounClr\s?([:(])</token><value>zAo$1</value></replacement>
                                     <replacement><token>^\s*var\s+\d+\s*=\s*\d+\s*\;\s*\/\/\s*TBRBMR\s*\n</token><value></value></replacement>
                                     <replacement><token>\s*var\s+\d+\s*=\s*\d+\s*\;</token><value></value></replacement>
                                 </replacements>
@@ -650,7 +603,6 @@
                                 <replacements>
 									<!-- variables in multiple js files -->
 									<replacement><token>idx2osisChapterJsword</token><value>vMA</value></replacement>
-									<replacement><token>keepQuickLexiconOpen</token><value>vMB</value></replacement>	
 									<!-- for function with same name in multiple js files-->
 									<replacement><token>_buildBookTableHeader\s?([:(])</token><value>MA$1</value></replacement>
 									<replacement><token>_buildBookTable\s?([:(])</token><value>MB$1</value></replacement>
@@ -667,15 +619,6 @@
 									<replacement><token>_doSideNotes\s?([:(])</token><value>MM$1</value></replacement>
 									<replacement><token>_makeSideNoteQtipHandler\s?([:(])</token><value>MN$1</value></replacement>
 									<replacement><token>_makeSideNoteQtip\s?([:(])</token><value>MO$1</value></replacement>
-									<replacement><token>raiseInfo\s?([:(])</token><value>MP$1</value></replacement>
-									<replacement><token>showOrHideColorSideBarItem\s?([:(])</token><value>MQ$1</value></replacement>
-									<replacement><token>updateWhenRendered\s?([:(])</token><value>MR$1</value></replacement>
-									<replacement><token>capitalizeFirstLetter\s?([:(])</token><value>MS$1</value></replacement>
-									<replacement><token>convertMorphOSHM2TOS\s?([:(])</token><value>MT$1</value></replacement>
-									<replacement><token>highlightPhrase\s?([:(])</token><value>MU$1</value></replacement>
-									<replacement><token>showConfigGrammarColor\s?([:(])</token><value>MV$1</value></replacement>
-									<replacement><token>blockBackgroundScrolling\s?([:(])</token><value>MW$1</value></replacement>
-									<replacement><token>unpackVocabJSON\s?([:(])</token><value>MX$1</value></replacement>
 									<!--  for step.util -->
 									<replacement><token>msgForFrequencyOnAllBibles\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>showHideFreqList\s?([:(])</token><value>zB$1</value></replacement>
@@ -743,10 +686,6 @@
 									<replacement><token>getVersionIndex\s?([:(])</token><value>AN$1</value></replacement>
 									<replacement><token>getFrequency\s?([:(])</token><value>AO$1</value></replacement>
 									<replacement><token>formatFrequency\s?([:(])</token><value>AP$1</value></replacement>
-									<replacement><token>lexFeedbackModal\s?([:(])</token><value>AQ$1</value></replacement>
-									<replacement><token>buildBibleProjectVideo\s?([:(])</token><value>AR$1</value></replacement>
-									<replacement><token>valueInDuplicateStrongOrNot\s?([:(])</token><value>AS$1</value></replacement>
-
 									<!--  for step.util.ui -->
 									<replacement><token>freqListQTip\s?([:(])</token><value>Aa$1</value></replacement>
 									<replacement><token>selectMark\s?([:(])</token><value>zA$1</value></replacement>
@@ -777,8 +716,6 @@
 									<replacement><token>showListOfVersesInQLexArea\s?([:(])</token><value>zb$1</value></replacement>
 									<replacement><token>getFontForStrong\s?([:(])</token><value>zc$1</value></replacement>
 									<replacement><token>addCollapsiblePanel\s?([:(])</token><value>ze$1</value></replacement>
-									<replacement><token>_showVerseWithStrongInBookPopup\s?([:(])</token><value>zf$1</value></replacement>
-									<replacement><token>_showVerseWithStrongInBiblePopup\s?([:(])</token><value>zg$1</value></replacement>
 									<!-- for step.passage -->
 									<replacement><token>getPassageId\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>higlightStrongs\s?([:(])</token><value>zB$1</value></replacement>
@@ -818,44 +755,6 @@
 									<replacement><token>initSearchSelection\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>updateAdvancedSearchElements\s?([:(])</token><value>zB$1</value></replacement>
 									<replacement><token>_initOptions\s?([:(])</token><value>zC$1</value></replacement>
-									<replacement><token>checkSearchButton\s?([:(])</token><value>zD$1</value></replacement>
-									<replacement><token>previousSearchesEnteredByUser\s?([:(])</token><value>zE$1</value></replacement>
-									<replacement><token>showRowsAndMessagesAccordingToSelectedLanguage\s?([:(])</token><value>zF$1</value></replacement>
-									<replacement><token>_updateDisplayBasedOnOptions\s?([:(])</token><value>zG$1</value></replacement>
-									<replacement><token>createPreviousSearchList\s?([:(])</token><value>zH$1</value></replacement>
-									<replacement><token>_find_onclick_and_go\s?([:(])</token><value>zI$1</value></replacement>
-									<replacement><token>_buildSearchHeaderAndTable\s?([:(])</token><value>zJ$1</value></replacement>
-									<replacement><token>_buildRangeHeaderAndTable\s?([:(])</token><value>zK$1</value></replacement>
-									<replacement><token>_buildRangeHeaderAndSkeleton\s?([:(])</token><value>zL$1</value></replacement>
-									<replacement><token>_buildRangeKeyboard\s?([:(])</token><value>zM$1</value></replacement>
-									<replacement><token>_updateRange\s?([:(])</token><value>zN$1</value></replacement>
-									<replacement><token>_createSingleRange\s?([:(])</token><value>zO$1</value></replacement>
-									<replacement><token>_isBookInGroup\s?([:(])</token><value>zP$1</value></replacement>
-									<replacement><token>_getBookDisplayName\s?([:(])</token><value>zQ$1</value></replacement>
-									<replacement><token>_fillBooksTable\s?([:(])</token><value>zR$1</value></replacement>
-									<replacement><token>_userClickedTestament\s?([:(])</token><value>zS$1</value></replacement>
-									<replacement><token>_userClickedCategory\s?([:(])</token><value>zT$1</value></replacement>
-									<replacement><token>_userClickedBook\s?([:(])</token><value>zU$1</value></replacement>
-									<replacement><token>_checkHeaderButton\s?([:(])</token><value>zV$1</value></replacement>
-									<replacement><token>wordsWithNoInflection\s?([:(])</token><value>zW$1</value></replacement>
-									<replacement><token>_handleEnteredSearchWord\s?([:(])</token><value>zX$1</value></replacement>
-									<replacement><token>_getSuggestedFrequency\s?([:(])</token><value>zY$1</value></replacement>
-									<replacement><token>_getSuggestedWordsInfo\s?([:(])</token><value>zZ$1</value></replacement>
-									<replacement><token>addNotInBibleSelected\s?([:(])</token><value>za$1</value></replacement>
-									<replacement><token>_composeDescription\s?([:(])</token><value>zb$1</value></replacement>
-									<replacement><token>_getLanguagesOfBibles\s?([:(])</token><value>zc$1</value></replacement>
-									<replacement><token>getVocabInfoFromSuggestAPI\s?([:(])</token><value>zd$1</value></replacement>
-									<replacement><token>getVocabInfoForShowAugStrong\s?([:(])</token><value>ze$1</value></replacement>
-									<replacement><token>processVocabInfoForShowAugStrong\s?([:(])</token><value>zf$1</value></replacement>
-									<replacement><token>_getAdditionalInformationOnStrong\s?([:(])</token><value>zg$1</value></replacement>
-									<replacement><token>_processAdditionalInfoOnStrong\s?([:(])</token><value>zi$1</value></replacement>
-									<replacement><token>createFirstLineForAugmentedStrong\s?([:(])</token><value>zj$1</value></replacement>
-									<replacement><token>createSubsequentLineForAugmentedStrong\s?([:(])</token><value>zk$1</value></replacement>
-									<replacement><token>createDisplayForAugmentedStrong\s?([:(])</token><value>zl$1</value></replacement>
-									<replacement><token>_showAugmentedStrong\s?([:(])</token><value>zm$1</value></replacement>
-									<replacement><token>buildSuffixTag\s?([:(])</token><value>zn$1</value></replacement>
-									<replacement><token>checkDuplicates\s?([:(])</token><value>zo$1</value></replacement>
-									<replacement><token>addMouseOverEvent\s?([:(])</token><value>zp$1</value></replacement>
 									<replacement><token>appendSearchSuggestionsToDisplay\s?([:(])</token><value>zq$1</value></replacement>
 									<replacement><token>extractStrongFromDetailLexicalTag\s?([:(])</token><value>zr$1</value></replacement>
 									<replacement><token>getFrequencyFromDetailLexicalTag\s?([:(])</token><value>zs$1</value></replacement>
@@ -865,10 +764,6 @@
 									<replacement><token>addSearchWords\s?([:(])</token><value>zw$1</value></replacement>
 									<replacement><token>goSearch\s?([:(])</token><value>zx$1</value></replacement>
 									<replacement><token>removePreviousSearch\s?([:(])</token><value>zy$1</value></replacement>
-									<replacement><token>_checkKeyboardEntered\s?([:(])</token><value>zz$1</value></replacement>
-									<replacement><token>getGlossInUserLanguage\s?([:(])</token><value>z0$1</value></replacement>
-									<replacement><token>_composeDescriptionForNames\s?([:(])</token><value>z1$1</value></replacement>
-
 									<!-- for search_selection variables -->
 									<replacement><token>searchOnSpecificType</token><value>vA</value></replacement>
 									<replacement><token>searchTypeCode</token><value>vB</value></replacement>

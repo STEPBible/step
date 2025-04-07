@@ -15,7 +15,7 @@ import re
 from tqdm import tqdm
 import pytz
 utc=pytz.UTC
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from pathlib import Path
 
@@ -297,7 +297,7 @@ class DownloadAndMoveJob:
         """
 
         # a build that is done, and not yet expired
-        now = utc.localize(datetime.now())
+        now = datetime.now(timezone.utc)
         thirty_min_ago = now + timedelta(minutes = -30)
 
         for build in self.existing_builds:

@@ -675,7 +675,7 @@
 									<replacement><token>highlightPhrase\s?([:(])</token><value>MU$1</value></replacement>
 									<replacement><token>showConfigGrammarColor\s?([:(])</token><value>MV$1</value></replacement>
 									<replacement><token>blockBackgroundScrolling\s?([:(])</token><value>MW$1</value></replacement>
-
+									<replacement><token>unpackVocabJSON\s?([:(])</token><value>MX$1</value></replacement>
 									<!--  for step.util -->
 									<replacement><token>msgForFrequencyOnAllBibles\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>showHideFreqList\s?([:(])</token><value>zB$1</value></replacement>
@@ -745,6 +745,7 @@
 									<replacement><token>formatFrequency\s?([:(])</token><value>AP$1</value></replacement>
 									<replacement><token>lexFeedbackModal\s?([:(])</token><value>AQ$1</value></replacement>
 									<replacement><token>buildBibleProjectVideo\s?([:(])</token><value>AR$1</value></replacement>
+									<replacement><token>valueInDuplicateStrongOrNot\s?([:(])</token><value>AS$1</value></replacement>
 
 									<!--  for step.util.ui -->
 									<replacement><token>freqListQTip\s?([:(])</token><value>Aa$1</value></replacement>
@@ -841,8 +842,8 @@
 									<replacement><token>_getSuggestedFrequency\s?([:(])</token><value>zY$1</value></replacement>
 									<replacement><token>_getSuggestedWordsInfo\s?([:(])</token><value>zZ$1</value></replacement>
 									<replacement><token>addNotInBibleSelected\s?([:(])</token><value>za$1</value></replacement>
-									<replacement><token>valueInDuplicatStrongOrNot\s?([:(])</token><value>zb$1</value></replacement>
-									<replacement><token>unpackVocabJSON\s?([:(])</token><value>zc$1</value></replacement>
+									<replacement><token>_composeDescription\s?([:(])</token><value>zb$1</value></replacement>
+									<replacement><token>_getLanguagesOfBibles\s?([:(])</token><value>zc$1</value></replacement>
 									<replacement><token>getVocabInfoFromSuggestAPI\s?([:(])</token><value>zd$1</value></replacement>
 									<replacement><token>getVocabInfoForShowAugStrong\s?([:(])</token><value>ze$1</value></replacement>
 									<replacement><token>processVocabInfoForShowAugStrong\s?([:(])</token><value>zf$1</value></replacement>
@@ -867,8 +868,6 @@
 									<replacement><token>_checkKeyboardEntered\s?([:(])</token><value>zz$1</value></replacement>
 									<replacement><token>getGlossInUserLanguage\s?([:(])</token><value>z0$1</value></replacement>
 									<replacement><token>_composeDescriptionForNames\s?([:(])</token><value>z1$1</value></replacement>
-									<replacement><token>_composeDescription\s?([:(])</token><value>z2$1</value></replacement>
-									<replacement><token>_getLanguagesOfBibles\s?([:(])</token><value>z3$1</value></replacement>
 
 									<!-- for search_selection variables -->
 									<replacement><token>searchOnSpecificType</token><value>vA</value></replacement>

@@ -138,41 +138,95 @@ step.util = {
 	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
 	// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
 	// When this is updated, check (and update if necessary) the following two:
-	//   unpackVocabJSON() in search_selection.js and 
+	//   unpackVocabJSON() below (in step.util.js) and 
 	//   relatedKeys in unpackJson() in this file.
-
-
-
-
-
-
-
-	vocabKeys: ["defaultDStrong", // defaultDStrong has to be the first one
-		"count", // count has to be the second one
-		"strongNumber", 
-		"stepGloss",
-		"stepTransliteration", 
-		"_es_Gloss",
-		"_zh_Gloss",
-		"_zh_tw_Gloss",
-		"shortDef",
-		"mediumDef",
-		"lsjDefs",
-		"_es_Definition",
-		"_vi_Definition",
-		"_zh_Definition",
-		"_zh_tw_Definition",
-		"accentedUnicode",
-		"rawRelatedNumbers",
-		"relatedNos", 
-		"_stepDetailLexicalTag",
-		"_step_Link",
-		"_step_Type",
-		"_searchResultRange",
-		"freqList",
-		"shortDefMounce",
-		"briefDef"],
-
+	vocabKeys: ["defaultDStrong",	// 0, defaultDStrong has to be the first one
+		"count",					// 1, count has to be the second one
+		"strongNumber",				// 2
+		"stepGloss",				// 3
+		"stepTransliteration",		// 4
+		"_es_Gloss",				// 5
+		"_zh_Gloss",				// 6
+		"_zh_tw_Gloss",				// 7
+		"shortDef",					// 8
+		"mediumDef",				// 9
+		"lsjDefs",					// 10
+		"_es_Definition",			// 11
+		"_vi_Definition",			// 12
+		"_zh_Definition",			// 13
+		"_zh_tw_Definition",		// 14
+		"accentedUnicode",			// 15
+		"rawRelatedNumbers",		// 16
+		"relatedNos",				// 17
+		"_stepDetailLexicalTag",	// 18
+		"_step_Link",				// 19
+		"_step_Type",				// 20
+		"_searchResultRange",		// 21
+		"freqList",					// 22
+		"shortDefMounce",			// 23
+		"briefDef"],				// 24
+	unpackVocabJSON: function (origJsonVar, index) {
+		var duplicateStrings = origJsonVar.d;
+		var vocabInfo = origJsonVar.v[index];
+		var result = {};
+		result['grouped'] = false;
+		result['maxReached'] = false;
+		var suggestion = {};
+		suggestion['popularity'] = vocabInfo[1]; // index of 1 is count which will not be use duplicateStrings
+		suggestion['strongNumber'] = this.valueInDuplicateStrongOrNot(vocabInfo, 2, duplicateStrings);
+		suggestion['gloss'] = this.valueInDuplicateStrongOrNot(vocabInfo, 3, duplicateStrings);
+		suggestion['stepTransliteration'] = this.valueInDuplicateStrongOrNot(vocabInfo, 4, duplicateStrings);
+		suggestion['_es_Gloss'] = this.valueInDuplicateStrongOrNot(vocabInfo, 5, duplicateStrings);
+		suggestion['_zh_Gloss'] = this.valueInDuplicateStrongOrNot(vocabInfo, 6, duplicateStrings);
+		suggestion['_zh_tw_Gloss'] = this.valueInDuplicateStrongOrNot(vocabInfo, 7, duplicateStrings);
+		suggestion['matchingForm'] = this.valueInDuplicateStrongOrNot(vocabInfo, 15, duplicateStrings);
+		suggestion['_detailLexicalTag'] = this.valueInDuplicateStrongOrNot(vocabInfo, 18, duplicateStrings);
+		suggestion['type'] = this.valueInDuplicateStrongOrNot(vocabInfo, 20, duplicateStrings);
+		suggestion['_searchResultRange'] = this.valueInDuplicateStrongOrNot(vocabInfo, 21, duplicateStrings);
+		suggestion['popularityList'] = this.valueInDuplicateStrongOrNot(vocabInfo, 22, duplicateStrings);
+		suggestion['briefDef'] = this.valueInDuplicateStrongOrNot(vocabInfo, 24, duplicateStrings);
+		result['suggestion'] = suggestion;
+		return result;
+	},
+	valueInDuplicateStrongOrNot: function(vocabInfo, index, duplicateStrings) {
+		// index of 1 is count
+		return ((index != 1) && Number.isInteger(vocabInfo[index])) ?
+				duplicateStrings[vocabInfo[index]] : vocabInfo[index];
+	},
+	unpackJson: function (origJsonVar, index) {
+		// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", 
+			"matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
+		var duplicateStrings = origJsonVar.d;
+		var relatedNumbers = origJsonVar.r;
+		var vocabInfo = origJsonVar.v[index];
+		var vocabInfoEntry = {};
+		for (var j = 1; j < step.util.vocabKeys.length; j ++) { // The first one is defaultDStrong so it does not need to be unpacked
+			if (vocabInfo[j] === "") continue;
+			if (step.util.vocabKeys[j] === "relatedNos") {
+				var allRelatedNumbersResult = [];
+				relatedNumbersArray = vocabInfo[j];
+				if (Array.isArray(relatedNumbersArray)) {
+					for (var k = 0; k < relatedNumbersArray.length; k ++) {
+						var relatedNumEntry = relatedNumbers[vocabInfo[j][k]];
+						var relatedNumResult = {};
+						for (var l = 0; l < relatedKeys.length; l ++) {
+							if (relatedNumEntry[l] !== "") {
+								if (Number.isInteger(relatedNumEntry[l]))
+									relatedNumResult[relatedKeys[l]] = duplicateStrings[relatedNumEntry[l]];
+								else relatedNumResult[relatedKeys[l]] = relatedNumEntry[l];
+							}
+						}
+						allRelatedNumbersResult.push(relatedNumResult);
+					}
+					vocabInfoEntry[step.util.vocabKeys[j]] = allRelatedNumbersResult;
+				}
+			}
+			else vocabInfoEntry[step.util.vocabKeys[j]] = ((Number.isInteger(vocabInfo[j])) && (step.util.vocabKeys[j] !== "count")) ?
+					duplicateStrings[vocabInfo[j]] : vocabInfo[j];
+		}
+		return vocabInfoEntry;
+	},
 	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
 		var bibleVersions = allVersions.split(",");
 		for (var i =0; i < bibleVersions.length; i ++) {
@@ -4376,40 +4430,6 @@ step.util = {
             return " at " + searchResultRange.substring(0, pos2) + separator + secondPassage;
         }
         else return " only at " + searchResultRange;
-	},
-	unpackJson: function (origJsonVar, index) {
-		// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
-		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", 
-			"matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
-		var duplicateStrings = origJsonVar.d;
-		var relatedNumbers = origJsonVar.r;
-		var vocabInfo = origJsonVar.v[index];
-		var vocabInfoEntry = {};
-		for (var j = 1; j < step.util.vocabKeys.length; j ++) { // The first one is defaultDStrong so it does not need to be unpacked
-			if (vocabInfo[j] === "") continue;
-			if (step.util.vocabKeys[j] === "relatedNos") {
-				var allRelatedNumbersResult = [];
-				relatedNumbersArray = vocabInfo[j];
-				if (Array.isArray(relatedNumbersArray)) {
-					for (var k = 0; k < relatedNumbersArray.length; k ++) {
-						var relatedNumEntry = relatedNumbers[vocabInfo[j][k]];
-						var relatedNumResult = {};
-						for (var l = 0; l < relatedKeys.length; l ++) {
-							if (relatedNumEntry[l] !== "") {
-								if (Number.isInteger(relatedNumEntry[l]))
-									relatedNumResult[relatedKeys[l]] = duplicateStrings[relatedNumEntry[l]];
-								else relatedNumResult[relatedKeys[l]] = relatedNumEntry[l];
-							}
-						}
-						allRelatedNumbersResult.push(relatedNumResult);
-					}
-					vocabInfoEntry[step.util.vocabKeys[j]] = allRelatedNumbersResult;
-				}
-			}
-			else vocabInfoEntry[step.util.vocabKeys[j]] = ((Number.isInteger(vocabInfo[j])) && (step.util.vocabKeys[j] !== "count")) ?
-					duplicateStrings[vocabInfo[j]] : vocabInfo[j];
-		}
-		return vocabInfoEntry;
 	},
 	fixStrongNumForVocabInfo: function (strongs, removeAugment) { // NASB is like H0000A. THOT is like H0000!a
 		// fix the strong number to make them consistent

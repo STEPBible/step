@@ -2054,36 +2054,6 @@ step.searchSelect = {
 		}
 		return currentNotInBibleSelected;
 	},
-	valueInDuplicateStrongOrNot: function(vocabInfo, index, duplicateStrings) {
-		// index of 1 is count
-		return ((index != 1) && Number.isInteger(vocabInfo[index])) ?
-				duplicateStrings[vocabInfo[index]] : vocabInfo[index];
-	},
-
-	unpackVocabJSON: function (origJsonVar, index) {
-		var duplicateStrings = origJsonVar.d;
-		var vocabInfo = origJsonVar.v[index];
-		var result = {};
-		result['grouped'] = false;
-		result['maxReached'] = false;
-		var suggestion = {};
-		suggestion['popularity'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 1, duplicateStrings);
-		suggestion['strongNumber'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 2, duplicateStrings);
-		suggestion['gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 3, duplicateStrings);
-		suggestion['stepTransliteration'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 4, duplicateStrings);
-		suggestion['_es_Gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 5, duplicateStrings);
-		suggestion['_zh_Gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 6, duplicateStrings);
-		suggestion['_zh_tw_Gloss'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 7, duplicateStrings);
-		suggestion['matchingForm'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 15, duplicateStrings);
-		suggestion['_detailLexicalTag'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 18, duplicateStrings);
-		suggestion['type'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 20, duplicateStrings);
-		suggestion['_searchResultRange'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 21, duplicateStrings);
-		suggestion['popularityList'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 22, duplicateStrings);
-		suggestion['briefDef'] = step.searchSelect.valueInDuplicateStrongOrNot(vocabInfo, 24, duplicateStrings);
-		result['suggestion'] = suggestion;
-		return result;
-	},
-
 	getVocabInfoFromSuggestAPI: function (strongNum, limitType, augStrongSameMeaning, allVersions, element, 
 		callBack, titleText, text2Display, userInput, isAugStrong,
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
@@ -2127,7 +2097,7 @@ step.searchSelect = {
 		$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
 			var vocabInfos = [];
 			for (var i = 0; i < origJsonVar.v.length; i++) {
-				var jsonVar = step.searchSelect.unpackVocabJSON(origJsonVar, i);
+				var jsonVar = step.util.unpackVocabJSON(origJsonVar, i);
 				jsonVar['itemType'] = limitType;
 				vocabInfos.push(jsonVar);
 			}
@@ -2172,7 +2142,7 @@ step.searchSelect = {
 		$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
 			var vocabInfos = [];
 			for (var i = 0; i < origJsonVar.v.length; i++) {
-				var jsonVar = step.searchSelect.unpackVocabJSON(origJsonVar, i);
+				var jsonVar = step.util.unpackVocabJSON(origJsonVar, i);
 				jsonVar['itemType'] = limitType;
 				vocabInfos.push(jsonVar);
 			}

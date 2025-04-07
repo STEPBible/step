@@ -777,8 +777,6 @@
 									<replacement><token>showListOfVersesInQLexArea\s?([:(])</token><value>zb$1</value></replacement>
 									<replacement><token>getFontForStrong\s?([:(])</token><value>zc$1</value></replacement>
 									<replacement><token>addCollapsiblePanel\s?([:(])</token><value>ze$1</value></replacement>
-									<replacement><token>_showVerseWithStrongInBookPopup\s?([:(])</token><value>zf$1</value></replacement>
-									<replacement><token>_showVerseWithStrongInBiblePopup\s?([:(])</token><value>zg$1</value></replacement>
 									<!-- for step.passage -->
 									<replacement><token>getPassageId\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>higlightStrongs\s?([:(])</token><value>zB$1</value></replacement>
@@ -823,12 +821,12 @@
 									<replacement><token>showRowsAndMessagesAccordingToSelectedLanguage\s?([:(])</token><value>zF$1</value></replacement>
 									<replacement><token>_updateDisplayBasedOnOptions\s?([:(])</token><value>zG$1</value></replacement>
 									<replacement><token>createPreviousSearchList\s?([:(])</token><value>zH$1</value></replacement>
-									<replacement><token>_find_onclick_and_go\s?([:(])</token><value>zI$1</value></replacement>
+									<replacement><token>_composeDescriptionForNames\s?([:(])</token><value>zI$1</value></replacement>
 									<replacement><token>_buildSearchHeaderAndTable\s?([:(])</token><value>zJ$1</value></replacement>
-									<replacement><token>_buildRangeHeaderAndTable\s?([:(])</token><value>zK$1</value></replacement>
+									<replacement><token>getGlossInUserLanguage\s?([:(])</token><value>zK$1</value></replacement>
 									<replacement><token>_buildRangeHeaderAndSkeleton\s?([:(])</token><value>zL$1</value></replacement>
-									<replacement><token>_buildRangeKeyboard\s?([:(])</token><value>zM$1</value></replacement>
-									<replacement><token>_updateRange\s?([:(])</token><value>zN$1</value></replacement>
+									<replacement><token>removePreviousSearch\s?([:(])</token><value>zM$1</value></replacement>
+									<replacement><token>_checkKeyboardEntered\s?([:(])</token><value>zN$1</value></replacement>
 									<replacement><token>_createSingleRange\s?([:(])</token><value>zO$1</value></replacement>
 									<replacement><token>_isBookInGroup\s?([:(])</token><value>zP$1</value></replacement>
 									<replacement><token>_getBookDisplayName\s?([:(])</token><value>zQ$1</value></replacement>
@@ -837,7 +835,7 @@
 									<replacement><token>_userClickedCategory\s?([:(])</token><value>zT$1</value></replacement>
 									<replacement><token>_userClickedBook\s?([:(])</token><value>zU$1</value></replacement>
 									<replacement><token>_checkHeaderButton\s?([:(])</token><value>zV$1</value></replacement>
-									<replacement><token>wordsWithNoInflection\s?([:(])</token><value>zW$1</value></replacement>
+									<replacement><token>goSearch\s?([:(])</token><value>zW$1</value></replacement>
 									<replacement><token>_handleEnteredSearchWord\s?([:(])</token><value>zX$1</value></replacement>
 									<replacement><token>_getSuggestedFrequency\s?([:(])</token><value>zY$1</value></replacement>
 									<replacement><token>_getSuggestedWordsInfo\s?([:(])</token><value>zZ$1</value></replacement>
@@ -863,11 +861,6 @@
 									<replacement><token>_handleClickOnTriangle</token><value>zu</value></replacement>
 									<replacement><token>verifySearchJoin\s?([:(])</token><value>zv$1</value></replacement>
 									<replacement><token>addSearchWords\s?([:(])</token><value>zw$1</value></replacement>
-									<replacement><token>goSearch\s?([:(])</token><value>zx$1</value></replacement>
-									<replacement><token>removePreviousSearch\s?([:(])</token><value>zy$1</value></replacement>
-									<replacement><token>_checkKeyboardEntered\s?([:(])</token><value>zz$1</value></replacement>
-									<replacement><token>getGlossInUserLanguage\s?([:(])</token><value>z0$1</value></replacement>
-									<replacement><token>_composeDescriptionForNames\s?([:(])</token><value>z1$1</value></replacement>
 
 									<!-- for search_selection variables -->
 									<replacement><token>searchOnSpecificType</token><value>vA</value></replacement>

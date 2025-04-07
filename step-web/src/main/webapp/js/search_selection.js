@@ -454,16 +454,16 @@ step.searchSelect = {
 		return previousSearchTokensIndex + 1;
 	},
 
-	_find_onclick_and_go: function(element) {
-		var onclickInfo = $(element).attr("onclick");
-		if ((typeof onclickInfo === "string") && (onclickInfo.toLowerCase().indexOf("javascript:") == 0)) {
-			if (onclickInfo.replaceAll(" ","").indexOf("goSearch('text','','')") > -1) {
-				$('#warningMessage').text("Search word is not valid for text (word or phrase) search.");
-				return;
-			}
-			eval(onclickInfo);
-		}
-	},
+	// _find_onclick_and_go: function(element) {
+	// 	var onclickInfo = $(element).attr("onclick");
+	// 	if ((typeof onclickInfo === "string") && (onclickInfo.toLowerCase().indexOf("javascript:") == 0)) {
+	// 		if (onclickInfo.replaceAll(" ","").indexOf("goSearch('text','','')") > -1) {
+	// 			$('#warningMessage').text("Search word is not valid for text (word or phrase) search.");
+	// 			return;
+	// 		}
+	// 		eval(onclickInfo);
+	// 	}
+	// },
 
 	handleKeyboardInput: function(e) {
 		$('#quickLexicon').remove();
@@ -827,7 +827,7 @@ step.searchSelect = {
 			}
 		});
 	},
-	_buildRangeHeaderAndTable: function(parameter) {
+	_buildRangeHeaderAndTable: function(parameter) { // Do not shorten
 		$('#quickLexicon').remove();
 		var onlyDisplaySpecifiedBooks = false;
 		var booksToDisplay;
@@ -1371,15 +1371,15 @@ step.searchSelect = {
 		html += '</colgroup>';
 		return html;
 	},
-	wordsWithNoInflection: function(string) {
-		chars = string.split('');
-		for (var i = 0; i < chars.length; i++) {
-			var charCode = chars[i].charCodeAt(0);
-			if ((charCode >= 19968) && (charCode <= 40959)) // common Chinese characters 4E00-9FFF
-				return true;
-		}
-		return false;
-	},
+	// wordsWithNoInflection: function(string) {
+	// 	chars = string.split('');
+	// 	for (var i = 0; i < chars.length; i++) {
+	// 		var charCode = chars[i].charCodeAt(0);
+	// 		if ((charCode >= 19968) && (charCode <= 40959)) // common Chinese characters 4E00-9FFF
+	// 			return true;
+	// 	}
+	// 	return false;
+	// },
 	getGlossInUserLanguage: function(dataSuggestion) {
 		if (dataSuggestion.strongNumber == undefined)
 			return dataSuggestion.gloss;
@@ -1552,7 +1552,6 @@ step.searchSelect = {
 										var alternateResultArray = step.searchSelect._getSuggestedFrequency(alternateSuggestion, allVersions);
 										resultArray[0] += alternateResultArray[0]
 										resultArray[1] += alternateResultArray[1]
-										// step.searchSelect.getVocabInfoForShowAugStrongLite(otherStrong)
 									}
 									var otherName = element[2]
 									if (!alternateNames.includes(otherName) && !(otherName === name)) {

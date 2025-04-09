@@ -579,6 +579,7 @@
 									<replacement><token>morph2CSS\s?([:(])</token><value>zx$1</value></replacement>
 									<replacement><token>addTitleToXAxis\s?([:(])</token><value>zy$1</value></replacement>
 									<replacement><token>getAllTenseMoodForThisGroup\s?([:(])</token><value>zz$1</value></replacement>
+									<replacement><token>checkNounClr\s?([:(])</token><value>zAA$1</value></replacement>
 									<replacement><token>c4NounOnly\s?([:(])</token><value>zAB$1</value></replacement>
 									<replacement><token>c4Color2019\s?([:(])</token><value>zAC$1</value></replacement>
 									<replacement><token>updateTenseOrFormPreview\s?([:(])</token><value>zAD$1</value></replacement>
@@ -628,7 +629,6 @@
 									<replacement><token>getVerbItemsCombinedWithCurrentItem\s?([:(])</token><value>zAl$1</value></replacement>
 									<replacement><token>getAxisOrderOfCSS\s?([:(])</token><value>zAm$1</value></replacement>
 									<replacement><token>updateNounInputFields\s?([:(])</token><value>zAn$1</value></replacement>
-									<replacement><token>checkNounClr\s?([:(])</token><value>zAo$1</value></replacement>
                                     <replacement><token>^\s*var\s+\d+\s*=\s*\d+\s*\;\s*\/\/\s*TBRBMR\s*\n</token><value></value></replacement>
                                     <replacement><token>\s*var\s+\d+\s*=\s*\d+\s*\;</token><value></value></replacement>
                                 </replacements>
@@ -680,7 +680,7 @@
 									<replacement><token>msgForFrequencyOnAllBibles\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>showHideFreqList\s?([:(])</token><value>zB$1</value></replacement>
 									<replacement><token>highlightMultiStrongs\s?([:(])</token><value>zC$1</value></replacement>
-									<replacement><token>highlightStrong\s?([:(])</token><value>zDD$1</value></replacement>
+									<replacement><token>highlightStrong\s?([:(])</token><value>zD$1</value></replacement>
 									<replacement><token>showFrequencyOnAllBibles\s?([:(])</token><value>zE$1</value></replacement>
 									<replacement><token>suppressHighlight\s?([:(])</token><value>zF$1</value></replacement>
 									<replacement><token>refreshWaitStatus\s?([:(])</token><value>zG$1</value></replacement>
@@ -710,7 +710,7 @@
 									<replacement><token>getDetailsOfStrong\s?([:(])</token><value>ze$1</value></replacement>
 									<replacement><token>modalCloseBtn\s?([:(])</token><value>zf$1</value></replacement>
 									<replacement><token>restoreFontSize\s?([:(])</token><value>zg$1</value></replacement>
-									<replacement><token>changeSpecificFontSize\s?([:(])</token><value>zzh$1</value></replacement>
+									<replacement><token>changeSpecificFontSize\s?([:(])</token><value>zh$1</value></replacement>
 									<replacement><token>getFontSizeByName\s?([:(])</token><value>zi$1</value></replacement>
 									<replacement><token>getFontSize\s?([:(])</token><value>zj$1</value></replacement>
 									<replacement><token>normalizeVersionName\s?([:(])</token><value>zk$1</value></replacement>
@@ -719,36 +719,35 @@
 									<replacement><token>lookUpFrequencyFromMultiVersions\s?([:(])</token><value>zn$1</value></replacement>
 									<replacement><token>correctPassageNotInBible\s?([:(])</token><value>zo$1</value></replacement>
 									<replacement><token>passageSelectionModal\s?([:(])</token><value>zp$1</value></replacement>
+									<replacement><token>valueInDuplicateStrongOrNot\s?([:(])</token><value>zq$1</value></replacement>
 									<replacement><token>searchSelectionModal\s?([:(])</token><value>zr$1</value></replacement>
 									<replacement><token>showVideoModal\s?([:(])</token><value>zs$1</value></replacement>
 									<replacement><token>showSummary\s?([:(])</token><value>zt$1</value></replacement>
 									<replacement><token>showLongAlert\s?([:(])</token><value>zu$1</value></replacement>
 									<replacement><token>setDefaultColor\s?([:(])</token><value>zv$1</value></replacement>
 									<replacement><token>switchColorMode\s?([:(])</token><value>zw$1</value></replacement>
+									<replacement><token>buildBibleProjectVideo\s?([:(])</token><value>zx$1</value></replacement>
 									<replacement><token>startPickBible\s?([:(])</token><value>zy$1</value></replacement>
 									<replacement><token>setClassicalUI\s?([:(])</token><value>zz$1</value></replacement>
-									<replacement><token>showIntro\s?([:(])</token><value>AA$1</value></replacement>
-									<replacement><token>showIntroOfMultiVersion\s?([:(])</token><value>AB$1</value></replacement>
-									<replacement><token>addTagLine\s?([:(])</token><value>AC$1</value></replacement>
-									<replacement><token>showByGeo\s?([:(])</token><value>AD$1</value></replacement>
-									<replacement><token>putStrongDetails\s?([:(])</token><value>AE$1</value></replacement>
-									<replacement><token>isDarkMode\s?([:(])</token><value>AF$1</value></replacement>
-									<replacement><token>formatSearchResultRange\s?([:(])</token><value>AG$1</value></replacement>
-									<replacement><token>unpackJson\s?([:(])</token><value>AH$1</value></replacement>
-									<replacement><token>fixStrongNumForVocabInfo\s?([:(])</token><value>AI$1</value></replacement>
-									<replacement><token>bookOrderInBible\s?([:(])</token><value>AJ$1</value></replacement>
-									<replacement><token>checkBibleHasTheTestament\s?([:(])</token><value>AK$1</value></replacement>
-									<replacement><token>whichBibleIsTheBest\s?([:(])</token><value>AL$1</value></replacement>
-									<replacement><token>checkFirstBibleHasPassage\s?([:(])</token><value>AM$1</value></replacement>
-									<replacement><token>getVersionIndex\s?([:(])</token><value>AN$1</value></replacement>
-									<replacement><token>getFrequency\s?([:(])</token><value>AO$1</value></replacement>
-									<replacement><token>formatFrequency\s?([:(])</token><value>AP$1</value></replacement>
-									<replacement><token>lexFeedbackModal\s?([:(])</token><value>AQ$1</value></replacement>
-									<replacement><token>buildBibleProjectVideo\s?([:(])</token><value>AR$1</value></replacement>
-									<replacement><token>valueInDuplicateStrongOrNot\s?([:(])</token><value>AS$1</value></replacement>
+									<replacement><token>showIntro\s?([:(])</token><value>z0$1</value></replacement>
+									<replacement><token>showIntroOfMultiVersion\s?([:(])</token><value>z1$1</value></replacement>
+									<replacement><token>addTagLine\s?([:(])</token><value>z2$1</value></replacement>
+									<replacement><token>showByGeo\s?([:(])</token><value>z3$1</value></replacement>
+									<replacement><token>putStrongDetails\s?([:(])</token><value>z4$1</value></replacement>
+									<replacement><token>isDarkMode\s?([:(])</token><value>z5$1</value></replacement>
+									<replacement><token>formatSearchResultRange\s?([:(])</token><value>z6$1</value></replacement>
+									<replacement><token>unpackJson\s?([:(])</token><value>z7$1</value></replacement>
+									<replacement><token>fixStrongNumForVocabInfo\s?([:(])</token><value>z8$1</value></replacement>
+									<replacement><token>bookOrderInBible\s?([:(])</token><value>z9$1</value></replacement>
+									<replacement><token>checkBibleHasTheTestament\s?([:(])</token><value>zAA$1</value></replacement>
+									<replacement><token>whichBibleIsTheBest\s?([:(])</token><value>zAB$1</value></replacement>
+									<replacement><token>checkFirstBibleHasPassage\s?([:(])</token><value>zAC$1</value></replacement>
+									<replacement><token>getVersionIndex\s?([:(])</token><value>zAD$1</value></replacement>
+									<replacement><token>getFrequency\s?([:(])</token><value>zAE$1</value></replacement>
+									<replacement><token>formatFrequency\s?([:(])</token><value>zAF$1</value></replacement>
+									<replacement><token>lexFeedbackModal\s?([:(])</token><value>zAG$1</value></replacement>
 
 									<!--  for step.util.ui -->
-									<replacement><token>freqListQTip\s?([:(])</token><value>Aa$1</value></replacement>
 									<replacement><token>selectMark\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>shortenDisplayText\s?([:(])</token><value>zB$1</value></replacement>
 									<replacement><token>renderArgs\s?([:(])</token><value>zC$1</value></replacement>
@@ -757,7 +756,9 @@
 									<replacement><token>renderEnhancedToken\s?([:(])</token><value>zF$1</value></replacement>
 									<replacement><token>_getFontClasses\s?([:(])</token><value>zG$1</value></replacement>
 									<replacement><token>_getFontClassForLanguage\s?([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>freqListQTip\s?([:(])</token><value>zI$1</value></replacement>
 									<replacement><token>showDef\s?([:(])</token><value>zJ$1</value></replacement>
+									<replacement><token>addCollapsiblePanel\s?([:(])</token><value>zK$1</value></replacement>
 									<replacement><token>openStrongNumber\s?([:(])</token><value>zL$1</value></replacement>
 									<replacement><token>addStrongHandlers\s?([:(])</token><value>zM$1</value></replacement>
 									<replacement><token>_getStrongStringAndPrevHTML\s?([:(])</token><value>zN$1</value></replacement>
@@ -776,7 +777,7 @@
 									<replacement><token>_addSubjectAndRelatedWordsPopup([:(,])</token><value>za$1</value></replacement>
 									<replacement><token>showListOfVersesInQLexArea\s?([:(])</token><value>zb$1</value></replacement>
 									<replacement><token>getFontForStrong\s?([:(])</token><value>zc$1</value></replacement>
-									<replacement><token>addCollapsiblePanel\s?([:(])</token><value>ze$1</value></replacement>
+									
 									<!-- for step.passage -->
 									<replacement><token>getPassageId\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>higlightStrongs\s?([:(])</token><value>zB$1</value></replacement>
@@ -846,6 +847,7 @@
 									<replacement><token>getVocabInfoForShowAugStrong\s?([:(])</token><value>ze$1</value></replacement>
 									<replacement><token>processVocabInfoForShowAugStrong\s?([:(])</token><value>zf$1</value></replacement>
 									<replacement><token>_getAdditionalInformationOnStrong\s?([:(])</token><value>zg$1</value></replacement>
+									<replacement><token>addSearchWords\s?([:(])</token><value>zh$1</value></replacement>
 									<replacement><token>_processAdditionalInfoOnStrong\s?([:(])</token><value>zi$1</value></replacement>
 									<replacement><token>createFirstLineForAugmentedStrong\s?([:(])</token><value>zj$1</value></replacement>
 									<replacement><token>createSubsequentLineForAugmentedStrong\s?([:(])</token><value>zk$1</value></replacement>
@@ -860,7 +862,6 @@
 									<replacement><token>buildHTMLFromDetailLexicalTag\s?([:(])</token><value>zt$1</value></replacement>
 									<replacement><token>_handleClickOnTriangle</token><value>zu</value></replacement>
 									<replacement><token>verifySearchJoin\s?([:(])</token><value>zv$1</value></replacement>
-									<replacement><token>addSearchWords\s?([:(])</token><value>zw$1</value></replacement>
 
 									<!-- for search_selection variables -->
 									<replacement><token>searchOnSpecificType</token><value>vA</value></replacement>

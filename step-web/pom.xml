@@ -730,15 +730,15 @@
 									<replacement><token>startPickBible\s?([:(])</token><value>zy$1</value></replacement>
 									<replacement><token>setClassicalUI\s?([:(])</token><value>zz$1</value></replacement>
 									<replacement><token>showIntro\s?([:(])</token><value>z0$1</value></replacement>
-									<replacement><token>showIntroOfMultiVersion\s?([:(])</token><value>AB$1</value></replacement>
-									<replacement><token>addTagLine\s?([:(])</token><value>AC$1</value></replacement>
-									<replacement><token>showByGeo\s?([:(])</token><value>AD$1</value></replacement>
-									<replacement><token>putStrongDetails\s?([:(])</token><value>AE$1</value></replacement>
-									<replacement><token>isDarkMode\s?([:(])</token><value>AF$1</value></replacement>
-									<replacement><token>formatSearchResultRange\s?([:(])</token><value>AG$1</value></replacement>
-									<replacement><token>unpackJson\s?([:(])</token><value>AH$1</value></replacement>
-									<replacement><token>fixStrongNumForVocabInfo\s?([:(])</token><value>AI$1</value></replacement>
-									<replacement><token>bookOrderInBible\s?([:(])</token><value>AJ$1</value></replacement>
+									<replacement><token>showIntroOfMultiVersion\s?([:(])</token><value>z1$1</value></replacement>
+									<replacement><token>addTagLine\s?([:(])</token><value>z2$1</value></replacement>
+									<replacement><token>showByGeo\s?([:(])</token><value>z3$1</value></replacement>
+									<replacement><token>putStrongDetails\s?([:(])</token><value>z4$1</value></replacement>
+									<replacement><token>isDarkMode\s?([:(])</token><value>z5$1</value></replacement>
+									<replacement><token>formatSearchResultRange\s?([:(])</token><value>z6$1</value></replacement>
+									<replacement><token>unpackJson\s?([:(])</token><value>z7$1</value></replacement>
+									<replacement><token>fixStrongNumForVocabInfo\s?([:(])</token><value>z8$1</value></replacement>
+									<replacement><token>bookOrderInBible\s?([:(])</token><value>z9$1</value></replacement>
 									<replacement><token>checkBibleHasTheTestament\s?([:(])</token><value>AK$1</value></replacement>
 									<replacement><token>whichBibleIsTheBest\s?([:(])</token><value>AL$1</value></replacement>
 									<replacement><token>checkFirstBibleHasPassage\s?([:(])</token><value>AM$1</value></replacement>

@@ -726,6 +726,7 @@
 									<replacement><token>showLongAlert\s?([:(])</token><value>zu$1</value></replacement>
 									<replacement><token>setDefaultColor\s?([:(])</token><value>zv$1</value></replacement>
 									<replacement><token>switchColorMode\s?([:(])</token><value>zw$1</value></replacement>
+									<replacement><token>buildBibleProjectVideo\s?([:(])</token><value>zx$1</value></replacement>
 									<replacement><token>startPickBible\s?([:(])</token><value>zy$1</value></replacement>
 									<replacement><token>setClassicalUI\s?([:(])</token><value>zz$1</value></replacement>
 									<replacement><token>showIntro\s?([:(])</token><value>AA$1</value></replacement>
@@ -745,8 +746,6 @@
 									<replacement><token>getFrequency\s?([:(])</token><value>AO$1</value></replacement>
 									<replacement><token>formatFrequency\s?([:(])</token><value>AP$1</value></replacement>
 									<replacement><token>lexFeedbackModal\s?([:(])</token><value>AQ$1</value></replacement>
-									<replacement><token>buildBibleProjectVideo\s?([:(])</token><value>AR$1</value></replacement>
-									<replacement><token>valueInDuplicateStrongOrNot\s?([:(])</token><value>AS$1</value></replacement>
 
 									<!--  for step.util.ui -->
 									<replacement><token>freqListQTip\s?([:(])</token><value>Aa$1</value></replacement>

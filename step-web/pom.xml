@@ -739,13 +739,13 @@
 									<replacement><token>unpackJson\s?([:(])</token><value>z7$1</value></replacement>
 									<replacement><token>fixStrongNumForVocabInfo\s?([:(])</token><value>z8$1</value></replacement>
 									<replacement><token>bookOrderInBible\s?([:(])</token><value>z9$1</value></replacement>
-									<replacement><token>checkBibleHasTheTestament\s?([:(])</token><value>AK$1</value></replacement>
-									<replacement><token>whichBibleIsTheBest\s?([:(])</token><value>AL$1</value></replacement>
-									<replacement><token>checkFirstBibleHasPassage\s?([:(])</token><value>AM$1</value></replacement>
-									<replacement><token>getVersionIndex\s?([:(])</token><value>AN$1</value></replacement>
-									<replacement><token>getFrequency\s?([:(])</token><value>AO$1</value></replacement>
-									<replacement><token>formatFrequency\s?([:(])</token><value>AP$1</value></replacement>
-									<replacement><token>lexFeedbackModal\s?([:(])</token><value>AQ$1</value></replacement>
+									<replacement><token>checkBibleHasTheTestament\s?([:(])</token><value>zAA$1</value></replacement>
+									<replacement><token>whichBibleIsTheBest\s?([:(])</token><value>zAB$1</value></replacement>
+									<replacement><token>checkFirstBibleHasPassage\s?([:(])</token><value>zAC$1</value></replacement>
+									<replacement><token>getVersionIndex\s?([:(])</token><value>zAD$1</value></replacement>
+									<replacement><token>getFrequency\s?([:(])</token><value>zAE$1</value></replacement>
+									<replacement><token>formatFrequency\s?([:(])</token><value>zAF$1</value></replacement>
+									<replacement><token>lexFeedbackModal\s?([:(])</token><value>zAG$1</value></replacement>
 
 									<!--  for step.util.ui -->
 									<replacement><token>freqListQTip\s?([:(])</token><value>Aa$1</value></replacement>

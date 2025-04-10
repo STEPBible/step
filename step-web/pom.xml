@@ -729,7 +729,7 @@
 									<replacement><token>buildBibleProjectVideo\s?([:(])</token><value>zx$1</value></replacement>
 									<replacement><token>startPickBible\s?([:(])</token><value>zy$1</value></replacement>
 									<replacement><token>setClassicalUI\s?([:(])</token><value>zz$1</value></replacement>
-									<replacement><token>showIntro\s?([:(])</token><value>AA$1</value></replacement>
+									<replacement><token>showIntro\s?([:(])</token><value>z0$1</value></replacement>
 									<replacement><token>showIntroOfMultiVersion\s?([:(])</token><value>AB$1</value></replacement>
 									<replacement><token>addTagLine\s?([:(])</token><value>AC$1</value></replacement>
 									<replacement><token>showByGeo\s?([:(])</token><value>AD$1</value></replacement>

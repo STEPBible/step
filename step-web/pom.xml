@@ -680,7 +680,7 @@
 									<replacement><token>msgForFrequencyOnAllBibles\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>showHideFreqList\s?([:(])</token><value>zB$1</value></replacement>
 									<replacement><token>highlightMultiStrongs\s?([:(])</token><value>zC$1</value></replacement>
-									<replacement><token>highlightStrong\s?([:(])</token><value>zDD$1</value></replacement>
+									<replacement><token>highlightStrong\s?([:(])</token><value>zD$1</value></replacement>
 									<replacement><token>showFrequencyOnAllBibles\s?([:(])</token><value>zE$1</value></replacement>
 									<replacement><token>suppressHighlight\s?([:(])</token><value>zF$1</value></replacement>
 									<replacement><token>refreshWaitStatus\s?([:(])</token><value>zG$1</value></replacement>

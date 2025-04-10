@@ -579,6 +579,7 @@
 									<replacement><token>morph2CSS\s?([:(])</token><value>zx$1</value></replacement>
 									<replacement><token>addTitleToXAxis\s?([:(])</token><value>zy$1</value></replacement>
 									<replacement><token>getAllTenseMoodForThisGroup\s?([:(])</token><value>zz$1</value></replacement>
+									<replacement><token>checkNounClr\s?([:(])</token><value>zAA$1</value></replacement>
 									<replacement><token>c4NounOnly\s?([:(])</token><value>zAB$1</value></replacement>
 									<replacement><token>c4Color2019\s?([:(])</token><value>zAC$1</value></replacement>
 									<replacement><token>updateTenseOrFormPreview\s?([:(])</token><value>zAD$1</value></replacement>
@@ -628,7 +629,6 @@
 									<replacement><token>getVerbItemsCombinedWithCurrentItem\s?([:(])</token><value>zAl$1</value></replacement>
 									<replacement><token>getAxisOrderOfCSS\s?([:(])</token><value>zAm$1</value></replacement>
 									<replacement><token>updateNounInputFields\s?([:(])</token><value>zAn$1</value></replacement>
-									<replacement><token>checkNounClr\s?([:(])</token><value>zAo$1</value></replacement>
                                     <replacement><token>^\s*var\s+\d+\s*=\s*\d+\s*\;\s*\/\/\s*TBRBMR\s*\n</token><value></value></replacement>
                                     <replacement><token>\s*var\s+\d+\s*=\s*\d+\s*\;</token><value></value></replacement>
                                 </replacements>

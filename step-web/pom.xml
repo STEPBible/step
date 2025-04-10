@@ -710,7 +710,7 @@
 									<replacement><token>getDetailsOfStrong\s?([:(])</token><value>ze$1</value></replacement>
 									<replacement><token>modalCloseBtn\s?([:(])</token><value>zf$1</value></replacement>
 									<replacement><token>restoreFontSize\s?([:(])</token><value>zg$1</value></replacement>
-									<replacement><token>changeSpecificFontSize\s?([:(])</token><value>zzh$1</value></replacement>
+									<replacement><token>changeSpecificFontSize\s?([:(])</token><value>zh$1</value></replacement>
 									<replacement><token>getFontSizeByName\s?([:(])</token><value>zi$1</value></replacement>
 									<replacement><token>getFontSize\s?([:(])</token><value>zj$1</value></replacement>
 									<replacement><token>normalizeVersionName\s?([:(])</token><value>zk$1</value></replacement>

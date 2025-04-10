@@ -719,6 +719,7 @@
 									<replacement><token>lookUpFrequencyFromMultiVersions\s?([:(])</token><value>zn$1</value></replacement>
 									<replacement><token>correctPassageNotInBible\s?([:(])</token><value>zo$1</value></replacement>
 									<replacement><token>passageSelectionModal\s?([:(])</token><value>zp$1</value></replacement>
+									<replacement><token>valueInDuplicateStrongOrNot\s?([:(])</token><value>zq$1</value></replacement>
 									<replacement><token>searchSelectionModal\s?([:(])</token><value>zr$1</value></replacement>
 									<replacement><token>showVideoModal\s?([:(])</token><value>zs$1</value></replacement>
 									<replacement><token>showSummary\s?([:(])</token><value>zt$1</value></replacement>

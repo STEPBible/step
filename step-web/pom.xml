@@ -676,6 +676,8 @@
 									<replacement><token>showConfigGrammarColor\s?([:(])</token><value>MV$1</value></replacement>
 									<replacement><token>blockBackgroundScrolling\s?([:(])</token><value>MW$1</value></replacement>
 									<replacement><token>unpackVocabJSON\s?([:(])</token><value>MX$1</value></replacement>
+									<replacement><token>freqListQTip\s?([:(])</token><value>MY$1</value></replacement>
+
 									<!--  for step.util -->
 									<replacement><token>msgForFrequencyOnAllBibles\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>showHideFreqList\s?([:(])</token><value>zB$1</value></replacement>
@@ -756,7 +758,6 @@
 									<replacement><token>renderEnhancedToken\s?([:(])</token><value>zF$1</value></replacement>
 									<replacement><token>_getFontClasses\s?([:(])</token><value>zG$1</value></replacement>
 									<replacement><token>_getFontClassForLanguage\s?([:(])</token><value>zH$1</value></replacement>
-									<replacement><token>freqListQTip\s?([:(])</token><value>zI$1</value></replacement>
 									<replacement><token>showDef\s?([:(])</token><value>zJ$1</value></replacement>
 									<replacement><token>addCollapsiblePanel\s?([:(])</token><value>zK$1</value></replacement>
 									<replacement><token>openStrongNumber\s?([:(])</token><value>zL$1</value></replacement>

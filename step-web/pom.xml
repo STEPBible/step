@@ -748,7 +748,6 @@
 									<replacement><token>lexFeedbackModal\s?([:(])</token><value>zAG$1</value></replacement>
 
 									<!--  for step.util.ui -->
-									<replacement><token>freqListQTip\s?([:(])</token><value>Aa$1</value></replacement>
 									<replacement><token>selectMark\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>shortenDisplayText\s?([:(])</token><value>zB$1</value></replacement>
 									<replacement><token>renderArgs\s?([:(])</token><value>zC$1</value></replacement>
@@ -757,7 +756,9 @@
 									<replacement><token>renderEnhancedToken\s?([:(])</token><value>zF$1</value></replacement>
 									<replacement><token>_getFontClasses\s?([:(])</token><value>zG$1</value></replacement>
 									<replacement><token>_getFontClassForLanguage\s?([:(])</token><value>zH$1</value></replacement>
+									<replacement><token>freqListQTip\s?([:(])</token><value>zI$1</value></replacement>
 									<replacement><token>showDef\s?([:(])</token><value>zJ$1</value></replacement>
+									<replacement><token>addCollapsiblePanel\s?([:(])</token><value>zK$1</value></replacement>
 									<replacement><token>openStrongNumber\s?([:(])</token><value>zL$1</value></replacement>
 									<replacement><token>addStrongHandlers\s?([:(])</token><value>zM$1</value></replacement>
 									<replacement><token>_getStrongStringAndPrevHTML\s?([:(])</token><value>zN$1</value></replacement>
@@ -776,7 +777,6 @@
 									<replacement><token>_addSubjectAndRelatedWordsPopup([:(,])</token><value>za$1</value></replacement>
 									<replacement><token>showListOfVersesInQLexArea\s?([:(])</token><value>zb$1</value></replacement>
 									<replacement><token>getFontForStrong\s?([:(])</token><value>zc$1</value></replacement>
-									<replacement><token>addCollapsiblePanel\s?([:(])</token><value>ze$1</value></replacement>
 									<!-- for step.passage -->
 									<replacement><token>getPassageId\s?([:(])</token><value>zA$1</value></replacement>
 									<replacement><token>higlightStrongs\s?([:(])</token><value>zB$1</value></replacement>

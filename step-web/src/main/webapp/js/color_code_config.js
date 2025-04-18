@@ -1088,8 +1088,8 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
           $("#greekverbtable").hide();
           $("#greekverbexplaindoc").hide();
           if (!c4[C_enableGenderNumberClr] && c4[C_OT][C_enableVerbClr]) {
-            $("#sideBarHVerbClrs").show();
             if ($(".colorOffWarning").length == 0) {
+              $("#sideBarHVerbClrs").show();
               $($("#sideBarHVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Hebrew Verbs also.</p>");
               setTimeout(function() {
                 $('.colorOffWarning').remove();
@@ -1109,7 +1109,7 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
           $('#gendernumbertable').show();
         else {
           $('#gendernumbertable').hide();
-          if (!c4[C_Greek][C_enableVerbClr] && $("#sideBarVerbClrs").is(":visible") && c4[C_OT][C_enableVerbClr]) {
+          if (!c4[C_Greek][C_enableVerbClr] && $("#sideBarVerbClrs").is(":visible") && !$("#sideBarHVerbClrs").is(":visible") && c4[C_OT][C_enableVerbClr]) {
             $("#sideBarHVerbClrs").show();
             if ($(".colorOffWarning").length == 0) {
               $($("#sideBarHVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Hebrew Verbs also.</p>");
@@ -1118,7 +1118,7 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
               }, 4500);
             }
           }
-          if (!c4[C_OT][C_enableVerbClr] && $("#sideBarHVerbClrs").is(":visible") && c4[C_Greek][C_enableVerbClr]) {
+          else if (!c4[C_OT][C_enableVerbClr] && $("#sideBarHVerbClrs").is(":visible") && !$("#sideBarVerbClrs").is(":visible") && c4[C_Greek][C_enableVerbClr]) {
             $("#sideBarVerbClrs").show();
             if ($(".colorOffWarning").length == 0) {
               $($("#sideBarVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Greek Verbs also.</p>");
@@ -1143,8 +1143,8 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
         else {
            $('#hebrewverbtable').hide();
            if (!c4[C_enableGenderNumberClr] && c4[C_Greek][C_enableVerbClr]) {
-            $("#sideBarVerbClrs").show();
             if ($(".colorOffWarning").length == 0) {
+              $("#sideBarVerbClrs").show();
               $($("#sideBarVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Greek Verbs also.</p>");
               setTimeout(function() {
                 $('.colorOffWarning').remove();

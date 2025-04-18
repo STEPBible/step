@@ -1552,6 +1552,7 @@ step.util = {
             });
         },
         initSidebar: function (mode, data) { // Do not shorten name in pom.xml because it is called at start.jsp
+			$(".colorOffWarning").remove();
             require(["sidebar"], function (module) {
                 if (!data) {
                     data = {};

@@ -1069,6 +1069,8 @@ function userToggleXOrYAxisConfig(ot, axis, index) { // Do not shorten
 }
 
 function userToggleClrGrammar(grammarFunction) { // Do not shorten
+//    $(".colorOffWarning").closest("div").hide();
+    $(".colorOffWarning").remove();
     var checkedValue = document.getElementById(grammarFunction + 'onoffswitch').checked;
     var wereAllColorCodeSelectionOff = ((typeof c4 === "object") && !c4[C_Greek][C_enableVerbClr] && !c4[C_enableGenderNumberClr] && !c4[C_OT][C_enableVerbClr]);
     if ((grammarFunction === 'verb') || (grammarFunction === 'verb2')) {
@@ -1085,6 +1087,15 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
         else {
           $("#greekverbtable").hide();
           $("#greekverbexplaindoc").hide();
+          if (!c4[C_enableGenderNumberClr] && c4[C_OT][C_enableVerbClr]) {
+            $("#sideBarHVerbClrs").show();
+            if ($(".colorOffWarning").length == 0) {
+              $($("#sideBarHVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Hebrew Verbs also.</p>");
+              setTimeout(function() {
+                $('.colorOffWarning').remove();
+              }, 4500);
+            }
+          }
         }
       }
     }
@@ -1096,8 +1107,23 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
       if (grammarFunction === 'gennum2') {
         if (checkedValue)
           $('#gendernumbertable').show();
-        else
-        $('#gendernumbertable').hide();
+        else {
+          $('#gendernumbertable').hide();
+          if (!c4[C_Greek][C_enableVerbClr] && $("#sideBarVerbClrs").is(":visible") && c4[C_OT][C_enableVerbClr]) {
+            $("#sideBarHVerbClrs").show();
+            if ($(".colorOffWarning").length == 0)
+              $($("#sideBarHVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Hebrew Verbs also.</p>")
+          }
+          if (!c4[C_OT][C_enableVerbClr] && $("#sideBarHVerbClrs").is(":visible") && c4[C_Greek][C_enableVerbClr]) {
+            $("#sideBarVerbClrs").show();
+            if ($(".colorOffWarning").length == 0) {
+              $($("#sideBarVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Greek Verbs also.</p>");
+              setTimeout(function() {
+                $('.colorOffWarning').remove();
+              }, 4500);
+            }
+          }
+        }
       }
     }
     else if ((grammarFunction === 'OTverb') || (grammarFunction === 'OTverb2')) {
@@ -1112,6 +1138,15 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
         }
         else {
            $('#hebrewverbtable').hide();
+           if (!c4[C_enableGenderNumberClr] && c4[C_Greek][C_enableVerbClr]) {
+            $("#sideBarVerbClrs").show();
+            if ($(".colorOffWarning").length == 0) {
+              $($("#sideBarVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Greek Verbs also.</p>");
+              setTimeout(function() {
+                $('.colorOffWarning').remove();
+              }, 4500);
+            }
+          }
         }
       }
     }

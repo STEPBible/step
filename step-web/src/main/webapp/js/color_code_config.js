@@ -1111,8 +1111,12 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
           $('#gendernumbertable').hide();
           if (!c4[C_Greek][C_enableVerbClr] && $("#sideBarVerbClrs").is(":visible") && c4[C_OT][C_enableVerbClr]) {
             $("#sideBarHVerbClrs").show();
-            if ($(".colorOffWarning").length == 0)
-              $($("#sideBarHVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Hebrew Verbs also.</p>")
+            if ($(".colorOffWarning").length == 0) {
+              $($("#sideBarHVerbClrs").find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:red'>If you want to disable color code grammar, turn off Hebrew Verbs also.</p>");
+              setTimeout(function() {
+                $('.colorOffWarning').remove();
+              }, 4500);
+            }
           }
           if (!c4[C_OT][C_enableVerbClr] && $("#sideBarHVerbClrs").is(":visible") && c4[C_Greek][C_enableVerbClr]) {
             $("#sideBarVerbClrs").show();

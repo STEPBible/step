@@ -285,7 +285,7 @@ public class Loader {
         this.addUpdate("install_grammar");
 
         LOGGER.debug("Loading robinson morphology");
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("morphology");
+           final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("morphology");
         new StreamingCsvModuleLoader(writer,
                 this.coreProperties.getProperty("test.data.path.morphology.robinson")).init(this);
 

@@ -46,14 +46,18 @@ public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader
      * @param csvReader the csv reader
      */
     protected void parseCsvFile(final CSVReader csvReader) {
-        String[] line = null;
-
-        String[] headerLine;
+        String[] line;
+        String[] headerLine = null;
         try {
-            headerLine = csvReader.readNext();
             while ((line = csvReader.readNext()) != null) {
-                processFields(line, headerLine);
-                this.writer.save();
+                if ((line[0].charAt(0) == '#') || (line[0].charAt(1) == '#')) // skip lines that are a comment
+                    continue;
+                if (headerLine == null)
+                    headerLine = line;
+                else {
+                    processFields(line, headerLine);
+                    this.writer.save();
+                }
             }
         } catch (final IOException e) {
             throw new StepInternalException("Failed to read file", e);
@@ -66,6 +70,8 @@ public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader
      */
     protected void processFields(final String[] line, final String[] headerLine) {
         for (int ii = 0; ii < line.length; ii++) {
+            if (ii >= headerLine.length)
+                continue;
             this.writer.addFieldToCurrentDocument(headerLine[ii], line[ii]);
         }
     }

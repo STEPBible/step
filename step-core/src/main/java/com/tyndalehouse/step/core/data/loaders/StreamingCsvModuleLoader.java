@@ -50,10 +50,22 @@ public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader
         String[] headerLine = null;
         try {
             while ((line = csvReader.readNext()) != null) {
-                if ((line[0].charAt(0) == '#') || (line[0].charAt(1) == '#')) // skip lines that are a comment
+                if (line[0].charAt(0) == '\uFEFF') { // Unicode Byte Order Mark
+                    if (line[0].length() == 1)
+                        continue;
+                    line[0] = line[0].substring(1); // skip BOM
+                }
+                if ((line[0].length() == 0) || (line[0].charAt(0) == '#')) // skip lines that are a comment
                     continue;
-                if (headerLine == null)
-                    headerLine = line;
+                if (headerLine == null) {
+                    int lastWithData;
+                    for (lastWithData = line.length - 1; lastWithData > -1; lastWithData--) {
+                        if (line[lastWithData].length() > 0)
+                            break;
+                    }
+                    headerLine = new String[lastWithData + 1];
+                    System.arraycopy(line, 0, headerLine, 0, lastWithData + 1);
+                }
                 else {
                     processFields(line, headerLine);
                     this.writer.save();

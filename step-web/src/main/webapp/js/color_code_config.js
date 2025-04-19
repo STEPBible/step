@@ -45,6 +45,13 @@ function initializeClrCodeSidebar() { // Do not shorten name
   }
   if (!c4[C_OT][C_enableVerbClr])
     $("#hebrewverbtable").hide();
+  if (!c4[C_enableGenderNumberClr] && !c4[C_Greek][C_enableVerbClr] && !c4[C_OT][C_enableVerbClr]) {
+    $('#ColorCode').
+      after("<p class='colorOffWarning' style='color:red'>Click on the above toggle switches to enable/disable color code grammar.</p>");
+    setTimeout(function() {
+      $('.colorOffWarning').remove();
+    }, 6500);
+  }
   cf.refreshClrGrammarCSS();
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
@@ -1069,7 +1076,6 @@ function userToggleXOrYAxisConfig(ot, axis, index) { // Do not shorten
 }
 
 function userToggleClrGrammar(grammarFunction) { // Do not shorten
-//    $(".colorOffWarning").closest("div").hide();
     $(".colorOffWarning").remove();
     var checkedValue = document.getElementById(grammarFunction + 'onoffswitch').checked;
     var wereAllColorCodeSelectionOff = ((typeof c4 === "object") && !c4[C_Greek][C_enableVerbClr] && !c4[C_enableGenderNumberClr] && !c4[C_OT][C_enableVerbClr]);

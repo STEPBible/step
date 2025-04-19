@@ -46,12 +46,14 @@ function initializeClrCodeSidebar() { // Do not shorten name
   if (!c4[C_OT][C_enableVerbClr])
     $("#hebrewverbtable").hide();
   if (!c4[C_enableGenderNumberClr] && !c4[C_Greek][C_enableVerbClr] && !c4[C_OT][C_enableVerbClr]) {
+    $('#colorAdvancedConfig').hide(); // No need to show it if everything is off
     $('#ColorCode').
       after("<p class='colorOffWarning' style='color:#C85937'>Click on the above toggle switches to turn on/off color code grammar.</p>");
     setTimeout(function() {
       $('.colorOffWarning').remove();
     }, 7500);
   }
+  else $('#colorAdvancedConfig').show();
   cf.refreshClrGrammarCSS();
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
@@ -1100,7 +1102,7 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
           $("#greekverbtable").show();
           $("#greekverbexplaindoc").show();
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
-          cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");  
+          cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");
         }
         else {
           $("#greekverbtable").hide();
@@ -1148,7 +1150,12 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
     if (wereAllColorCodeSelectionOff && !step.util.isColorOptionEnabled(actPassage))
       actPassage.set("selectedOptions", actPassage.get("selectedOptions") + "C"); // Need to enable color in the URL options
     cf.refreshClrGrammarCSS();
-    if ((grammarFunction === 'verb') && (checkedValue) && (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);
+    if (checkedValue) {
+      if ((grammarFunction === 'verb') && (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);
+      $('#colorAdvancedConfig').show(); // in case it was hidden
+    }
+    else if (!c4[C_enableGenderNumberClr] && !c4[C_Greek][C_enableVerbClr] && !c4[C_OT][C_enableVerbClr])
+      $('#colorAdvancedConfig').hide(); // Don't show if everything is turn off
 }
 
 function userUpdateClr(itemNumber, color) {

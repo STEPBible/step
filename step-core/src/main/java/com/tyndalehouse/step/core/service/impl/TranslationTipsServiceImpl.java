@@ -80,6 +80,7 @@ public class TranslationTipsServiceImpl implements TranslationTipsService {
                         String fileNameFromURL = parts[1].substring(lastSlash + 1, urlLength);
                         if (fileNameFromURL.length() < 1) continue;
                         int ordinal = key.getOrdinal();
+                        if (ordinal == 0) continue; // No need to warn, there is no such verse.
                         if (fileNameFromURL.equals(bookName + "-" + chapter + verse)) {
                             if (translationTips.regularFormatedFN.store.get(ordinal)) {
                                 System.out.println("Duplicate definition regular: " + data + ", " + ordinal);

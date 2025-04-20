@@ -1083,7 +1083,8 @@ function colorOffWarning(elementName) {
     element.is(":visible")) // Already shown to the user
     return;
   element.show();
-  $(element.find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:#C85937'>If you want to disable color code grammar, turn off Hebrew Verbs also.</p>");
+  var lang = (elementName === 'sideBarHVerbClrs' ? 'Hebrew' : 'Greek';
+  $(element.find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:#C85937'>If you want to disable color code grammar, turn off ' + lang + ' Verbs also.</p>");
   setTimeout(function() {
     $('.colorOffWarning').remove();
   }, 5500);

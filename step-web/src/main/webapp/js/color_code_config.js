@@ -170,7 +170,7 @@ function addVerbSideBar() {
       '<span class="onoffswitch2 pull-left">' +
       '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="verb2onoffswitch" onchange="userToggleClrGrammar(\'verb2\')"/>' +
       '<label class="onoffswitch2-label" for="verb2onoffswitch">' +
-        '<span class="onoffswitch2-inner"></span>' +
+        '<span class="onoffswitch3-inner"></span>' +
         '<span class="onoffswitch2-switch"></span>' +
       '</label>' +
       '</span>' +
@@ -746,7 +746,7 @@ function addNounSideBar() {
           '<span class="onoffswitch2 pull-left">' +
           '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="gennum2onoffswitch" onchange="userToggleClrGrammar(\'gennum2\')"/>' +
           '<label class="onoffswitch2-label" for="gennum2onoffswitch">' +
-            '<span class="onoffswitch2-inner"></span>' +
+            '<span class="onoffswitch3-inner"></span>' +
             '<span class="onoffswitch2-switch"></span>' +
           '</label>' +
           '</span>' +
@@ -926,7 +926,7 @@ function addOTVerbSideBar() {
       '<span class="onoffswitch2 pull-left">' +
       '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="OTverb2onoffswitch" onchange="userToggleClrGrammar(\'OTverb2\')"/>' +
       '<label class="onoffswitch2-label" for="OTverb2onoffswitch">' +
-        '<span class="onoffswitch2-inner"></span>' +
+        '<span class="onoffswitch3-inner"></span>' +
         '<span class="onoffswitch2-switch"></span>' +
       '</label>' +
       '</span>' +

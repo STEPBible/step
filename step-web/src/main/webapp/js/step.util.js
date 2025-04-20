@@ -4611,6 +4611,7 @@ step.util = {
 		var ntPassages = [];
 		var otPassages = [];
 		for (var i = 0; i < osisIds.length; i ++) {
+			if (typeof osisIds[i] !== "string") continue;
 			var singleOsisId = osisIds[i].split(" ");
 			for (var j = 0; j < singleOsisId.length; j ++) {
 				var bookOrder = step.util.bookOrderInBible(singleOsisId[j]);

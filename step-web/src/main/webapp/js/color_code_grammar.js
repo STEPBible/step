@@ -454,7 +454,7 @@ var cf = {
   createC4: function() { // c4 is current color code config
     var x = [];
     x[C_Greek] = [];
-        x[C_Greek][C_enableVerbClr] = true;
+        x[C_Greek][C_enableVerbClr] = false;
         x[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
         x[C_Greek][C_slctUlVerbItem] = ['Dash', 'Arrow', 'Underline', '2 lines', '2 lines', 'Dots', 'Underline'];
         x[C_Greek][C_inPassiveBkgrdClr] = '#ffd6b8';
@@ -488,7 +488,7 @@ var cf = {
         x[C_Greek][C_chkbxMiddleUlClr2] = false;
         x[C_Greek][C_chkbxMiddleUlColr2Value] = false;
     x[C_OT] = [];
-        x[C_OT][C_enableVerbClr] = true;
+        x[C_OT][C_enableVerbClr] = false;
         x[C_OT][C_inClrVerbItem] = ['#000000', '#ff0000', '#0000ff', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000', '#000000'];
         x[C_OT][C_slctUlVerbItem] = ['Short Reverse Arrow', 'Arrow', 'Dash Dot Dot', 'Dash Dot', 'Underline', 'Dash', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline'];
         x[C_OT][C_inPassiveBkgrdClr] = '#ffd6b8';
@@ -517,13 +517,13 @@ var cf = {
         x[C_OT][C_aramaicCodeOfStem] = cc[C_defaultAramaicCodeOfStem];
         x[C_OT][C_codeOfForm] = cc[C_defaultCodeOfForm];
         x[C_OT][C_xAxisForStem] = true;
-    x[C_enableGenderNumberClr] = true;
+    x[C_enableGenderNumberClr] = false;
     x[C_inClrMasculine] = '#000099';
     x[C_inClrFeminine] = '#C90000';
     x[C_inClrNeuter] = '#000000';
     x[C_slctUlSingular] = 'normal';
     x[C_slctUlPlural] = 'bold';
-    x[C_c4Version] = '20250331';
+    x[C_c4Version] = '20250419';
     return x;
   },
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
@@ -1257,16 +1257,30 @@ var cf = {
 
   getC4: function() {
     var tmp = step.util.localStorageGetItem('colorCode-CurrentSettings');
+    var defaultC4 = cf.createC4();
     if (tmp) {
       var tmpC4 = c4 = JSON.parse(tmp);
-      if (tmpC4[C_c4Version] === '20250331') c4 = tmpC4;
+      if (tmpC4[C_c4Version] === defaultC4[C_c4Version])
+        c4 = tmpC4;
+      else if (tmpC4[C_c4Version] === '20250331') {
+        tmpC4[C_enableGenderNumberClr] = false;
+        tmpC4[C_Greek][C_enableVerbClr] = false;
+        tmpC4[C_OT][C_enableVerbClr] = false;
+        if (JSON.stringify(tmpC4) === JSON.stringify(defaultC4))
+          c4 = defaultC4;
+        else {
+          tmpC4[C_c4Version] = defaultC4[C_c4Version];
+          c4 = tmpC4;
+        }
+        this.updtLocalStorage();
+      }
       else {
-        c4 = cf.createC4();
+        c4 = defaultC4;
         alert('We have to updated our 6 years old color scheme. The new default color configuration is used.');
         this.updtLocalStorage();
       }
     }
-    else c4 = cf.createC4();
+    else c4 = defaultC4;
   },
 
   updtLocalStorage: function() {
@@ -1806,7 +1820,7 @@ var cf = {
           if (tmp2) {
             found = true;
             var tmpC4 = c4 = JSON.parse(tmp2);
-            if (tmpC4[C_c4Version] === '20250331') c4 = tmpC4;
+            if ((tmpC4[C_c4Version] === '20250419') || (tmpC4[C_c4Version] === '20250331')) c4 = tmpC4;
             else alert('The version of the saved color configuration is out of date. We have to updated our 6 years old color scheme. Please customized your colors based on our new color schemes.');
           }
         }

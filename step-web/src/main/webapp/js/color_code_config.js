@@ -45,6 +45,15 @@ function initializeClrCodeSidebar() { // Do not shorten name
   }
   if (!c4[C_OT][C_enableVerbClr])
     $("#hebrewverbtable").hide();
+  if (!c4[C_enableGenderNumberClr] && !c4[C_Greek][C_enableVerbClr] && !c4[C_OT][C_enableVerbClr]) {
+    $('#colorAdvancedConfig').hide(); // No need to show it if everything is off
+    $('#ColorCode').
+      after("<p class='colorOffWarning' style='color:#C85937'>Click on the above toggle switches to turn on/off color code grammar.</p>");
+    setTimeout(function() {
+      $('.colorOffWarning').remove();
+    }, 7500);
+  }
+  else $('#colorAdvancedConfig').show();
   cf.refreshClrGrammarCSS();
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
@@ -161,7 +170,7 @@ function addVerbSideBar() {
       '<span class="onoffswitch2 pull-left">' +
       '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="verb2onoffswitch" onchange="userToggleClrGrammar(\'verb2\')"/>' +
       '<label class="onoffswitch2-label" for="verb2onoffswitch">' +
-        '<span class="onoffswitch2-inner"></span>' +
+        '<span class="onoffswitch3-inner"></span>' +
         '<span class="onoffswitch2-switch"></span>' +
       '</label>' +
       '</span>' +
@@ -737,7 +746,7 @@ function addNounSideBar() {
           '<span class="onoffswitch2 pull-left">' +
           '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="gennum2onoffswitch" onchange="userToggleClrGrammar(\'gennum2\')"/>' +
           '<label class="onoffswitch2-label" for="gennum2onoffswitch">' +
-            '<span class="onoffswitch2-inner"></span>' +
+            '<span class="onoffswitch3-inner"></span>' +
             '<span class="onoffswitch2-switch"></span>' +
           '</label>' +
           '</span>' +
@@ -917,7 +926,7 @@ function addOTVerbSideBar() {
       '<span class="onoffswitch2 pull-left">' +
       '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="OTverb2onoffswitch" onchange="userToggleClrGrammar(\'OTverb2\')"/>' +
       '<label class="onoffswitch2-label" for="OTverb2onoffswitch">' +
-        '<span class="onoffswitch2-inner"></span>' +
+        '<span class="onoffswitch3-inner"></span>' +
         '<span class="onoffswitch2-switch"></span>' +
       '</label>' +
       '</span>' +
@@ -1067,8 +1076,21 @@ function userToggleXOrYAxisConfig(ot, axis, index) { // Do not shorten
   enableOrDisableAxisConfigButtons(axis, otPrefix);
   cf.refreshClrGrammarCSS();
 }
-
+function colorOffWarning(elementName) {
+  var element = $(elementName);
+  if ((element.length == 0) || // does not exist
+    ($(".colorOffWarning").length > 0) || // Already is showing the warning.
+    element.is(":visible")) // Already shown to the user
+    return;
+  element.show();
+  var lang = (elementName === '#sideBarHVerbClrs') ? 'Hebrew' : 'Greek';
+  $(element.find("table")[0]).find("h2").after("<p class='colorOffWarning' style='color:#C85937'>If you want to disable color code grammar, turn off " + lang + " Verbs also.</p>");
+  setTimeout(function() {
+    $('.colorOffWarning').remove();
+  }, 5500);
+}
 function userToggleClrGrammar(grammarFunction) { // Do not shorten
+    $(".colorOffWarning").remove();
     var checkedValue = document.getElementById(grammarFunction + 'onoffswitch').checked;
     var wereAllColorCodeSelectionOff = ((typeof c4 === "object") && !c4[C_Greek][C_enableVerbClr] && !c4[C_enableGenderNumberClr] && !c4[C_OT][C_enableVerbClr]);
     if ((grammarFunction === 'verb') || (grammarFunction === 'verb2')) {
@@ -1080,11 +1102,13 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
           $("#greekverbtable").show();
           $("#greekverbexplaindoc").show();
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][0], cv[C_uLBASEIMGS][2], "#000000", 0, "passivePreview");
-          cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");  
+          cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][1], cv[C_uLBASEIMGS][2], "#000000", 0, "middlePreview");
         }
         else {
           $("#greekverbtable").hide();
           $("#greekverbexplaindoc").hide();
+          if (!c4[C_enableGenderNumberClr] && c4[C_OT][C_enableVerbClr])
+            colorOffWarning('#sideBarHVerbClrs');
         }
       }
     }
@@ -1096,8 +1120,13 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
       if (grammarFunction === 'gennum2') {
         if (checkedValue)
           $('#gendernumbertable').show();
-        else
-        $('#gendernumbertable').hide();
+        else {
+          $('#gendernumbertable').hide();
+          if (!c4[C_Greek][C_enableVerbClr] && $("#sideBarVerbClrs").is(":visible") && c4[C_OT][C_enableVerbClr])
+            colorOffWarning('#sideBarHVerbClrs');
+          else if (!c4[C_OT][C_enableVerbClr] && $("#sideBarHVerbClrs").is(":visible") && c4[C_Greek][C_enableVerbClr])
+            colorOffWarning('#sideBarVerbClrs');
+        }
       }
     }
     else if ((grammarFunction === 'OTverb') || (grammarFunction === 'OTverb2')) {
@@ -1111,7 +1140,9 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
           cf.createUlForOneInstanceOfTense(cv[C_ulVoiceBaseImgs][3], cv[C_uLBASEIMGS][2], "#000000", 0, "otMiddlePreview");  
         }
         else {
-           $('#hebrewverbtable').hide();
+          $('#hebrewverbtable').hide();
+          if (!c4[C_enableGenderNumberClr] && c4[C_Greek][C_enableVerbClr])
+            colorOffWarning('#sideBarVerbClrs');
         }
       }
     }
@@ -1119,7 +1150,12 @@ function userToggleClrGrammar(grammarFunction) { // Do not shorten
     if (wereAllColorCodeSelectionOff && !step.util.isColorOptionEnabled(actPassage))
       actPassage.set("selectedOptions", actPassage.get("selectedOptions") + "C"); // Need to enable color in the URL options
     cf.refreshClrGrammarCSS();
-    if ((grammarFunction === 'verb') && (checkedValue) && (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);
+    if (checkedValue) {
+      if ((grammarFunction === 'verb') && (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);
+      $('#colorAdvancedConfig').show(); // in case it was hidden
+    }
+    else if (!c4[C_enableGenderNumberClr] && !c4[C_Greek][C_enableVerbClr] && !c4[C_OT][C_enableVerbClr])
+      $('#colorAdvancedConfig').hide(); // Don't show if everything is turn off
 }
 
 function userUpdateClr(itemNumber, color) {

@@ -200,7 +200,7 @@ var SidebarView = Backbone.View.extend({
         for(var i=0; i<keys.length; ++i) {
             var keys2 = Object.keys(data[keys[i]]);
             keys2.sort();
-            for(var j=0; j<keys2.length; ++2) {
+            for(var j=0; j<keys2.length; ++j) {
                 console.log(data[keys[i]][keys2[j]]);
             }
         }

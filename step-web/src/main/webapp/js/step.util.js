@@ -4496,9 +4496,9 @@ step.util = {
 							break;
 						}
 					}
-					if (origJsonVar.v[i][2].indexOf("*") > -1) // index 2 is the strong number in vocabKeys array
+					if (origJsonVar.v[i][0].indexOf("*") > -1) // index 0 is the defaultDStrong in vocabKeys array
 						defaultDStrong = i; // Default DStrong
-					if (origJsonVar.v[i][2].indexOf("L") > -1) // index 2 is the strong number in vocabKeys array
+					if (origJsonVar.v[i][0].indexOf("L") > -1) // index 0 is the defaultDStrong in vocabKeys array
 						lxxDefaultDstrong = i;
 				}
 				if (augStrongIndex == -1) {

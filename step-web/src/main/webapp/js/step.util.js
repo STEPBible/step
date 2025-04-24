@@ -137,9 +137,10 @@ step.util = {
 	versionsGreekBoth: ["ABEN", "ABGK"],
 	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
 	// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
-	// When this is updated, check (and update if necessary) the following two:
+	// When this is updated, check (and update if necessary) the following three:
 	//   unpackVocabJSON() below (in step.util.js) and 
 	//   relatedKeys in unpackJson() in this file.
+	//   getVocabMorphInfoFromJson()
 	vocabKeys: ["defaultDStrong",	// 0, defaultDStrong has to be the first one
 		"count",					// 1, count has to be the second one
 		"strongNumber",				// 2
@@ -4490,15 +4491,16 @@ step.util = {
 				}
 				for (var i = 0; i < origJsonVar.v.length; i++) {
 					if (uniqueStrongArray[indexToUniqueStrongArry] !== requestedStrong) { // requestedStrong does not have augment
-						var strongNumToCheck = (typeof origJsonVar.v[i][0] === "number") ? origJsonVar.d[origJsonVar.v[i][0]] : origJsonVar.v[i][0];
+						var curStrongNumOrDuplicateNume = origJsonVar.v[i][2]; // index 2 is strongNumber in step.vocabKeys
+						var strongNumToCheck = (typeof curStrongNumOrDuplicateNume === "number") ? origJsonVar.d[curStrongNumOrDuplicateNume] : curStrongNumOrDuplicateNume;
 						if (uniqueStrongArray[indexToUniqueStrongArry] === strongNumToCheck ) {
 							augStrongIndex = i;
 							break;
 						}
 					}
-					if (origJsonVar.v[i][0].indexOf("*") > -1) // index 0 is the defaultDStrong in vocabKeys array
+					if (origJsonVar.v[i][0].indexOf("*") > -1) // index 0 is the defaultDStrong in step.vocabKeys
 						defaultDStrong = i; // Default DStrong
-					if (origJsonVar.v[i][0].indexOf("L") > -1) // index 0 is the defaultDStrong in vocabKeys array
+					if (origJsonVar.v[i][0].indexOf("L") > -1) // index 0 is the defaultDStrong in step.vocabKeys
 						lxxDefaultDstrong = i;
 				}
 				if (augStrongIndex == -1) {

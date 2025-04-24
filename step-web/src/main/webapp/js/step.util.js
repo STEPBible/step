@@ -4490,15 +4490,15 @@ step.util = {
 				}
 				for (var i = 0; i < origJsonVar.v.length; i++) {
 					if (uniqueStrongArray[indexToUniqueStrongArry] !== requestedStrong) { // requestedStrong does not have augment
-						var strongNumToCheck = (typeof origJsonVar.v[i][0] === "number") ? origJsonVar.d[origJsonVar.v[i][0]] : origJsonVar.v[i][0];
+						var strongNumToCheck = (typeof origJsonVar.v[i][2] === "number") ? origJsonVar.d[origJsonVar.v[i][2]] : origJsonVar.v[i][2];
 						if (uniqueStrongArray[indexToUniqueStrongArry] === strongNumToCheck ) {
 							augStrongIndex = i;
 							break;
 						}
 					}
-					if (origJsonVar.v[i][0].indexOf("*") > -1) // index 0 is the defaultDStrong in vocabKeys array
+					if (origJsonVar.v[i][2].indexOf("*") > -1) // index 2 is the strong number in vocabKeys array
 						defaultDStrong = i; // Default DStrong
-					if (origJsonVar.v[i][0].indexOf("L") > -1) // index 0 is the defaultDStrong in vocabKeys array
+					if (origJsonVar.v[i][2].indexOf("L") > -1) // index 2 is the strong number in vocabKeys array
 						lxxDefaultDstrong = i;
 				}
 				if (augStrongIndex == -1) {

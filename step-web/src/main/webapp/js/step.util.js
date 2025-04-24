@@ -4491,16 +4491,17 @@ step.util = {
 				}
 				for (var i = 0; i < origJsonVar.v.length; i++) {
 					if (uniqueStrongArray[indexToUniqueStrongArry] !== requestedStrong) { // requestedStrong does not have augment
-						var curStrongNumOrDuplicateNume = origJsonVar.v[i][2]; // index 2 is strongNumber in step.vocabKeys
-						var strongNumToCheck = (typeof curStrongNumOrDuplicateNume === "number") ? origJsonVar.d[curStrongNumOrDuplicateNume] : curStrongNumOrDuplicateNume;
+						var strongNumber_in_vocabKeys = origJsonVar.v[i][2]; // index 2 is strongNumber in step.vocabKeys
+						var strongNumToCheck = (typeof strongNumber_in_vocabKeys === "number") ? origJsonVar.d[strongNumber_in_vocabKeys] : strongNumber_in_vocabKeys;
 						if (uniqueStrongArray[indexToUniqueStrongArry] === strongNumToCheck ) {
 							augStrongIndex = i;
 							break;
 						}
 					}
-					if (origJsonVar.v[i][0].indexOf("*") > -1) // index 0 is the defaultDStrong in step.vocabKeys
+					var defaultDStrong_in_vocabKeys = origJsonVar.v[i][0];  // index 0 is the defaultDStrong in step.vocabKeys
+					if (defaultDStrong_in_vocabKeys.indexOf("*") > -1)
 						defaultDStrong = i; // Default DStrong
-					if (origJsonVar.v[i][0].indexOf("L") > -1) // index 0 is the defaultDStrong in step.vocabKeys
+					if (defaultDStrong_in_vocabKeys.indexOf("L") > -1)
 						lxxDefaultDstrong = i;
 				}
 				if (augStrongIndex == -1) {

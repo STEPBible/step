@@ -195,16 +195,6 @@ var SidebarView = Backbone.View.extend({
         var allMorphsForBackButton;
         var allStrongsForBackButton;
 
-        var keys = Object.keys(data);
-        keys.sort();
-        for(var i=0; i<keys.length; ++i) {
-            var keys2 = Object.keys(data[keys[i]]);
-            keys2.sort();
-            for(var j=0; j<keys2.length; ++j) {
-                console.log(data[keys[i]][keys2[j]]);
-            }
-        }
-
         if (!Array.isArray(variant)) variant = [""]; // Initialize in case it is not.
         //get definition tab
 

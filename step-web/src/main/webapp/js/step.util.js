@@ -4490,7 +4490,8 @@ step.util = {
 				}
 				for (var i = 0; i < origJsonVar.v.length; i++) {
 					if (uniqueStrongArray[indexToUniqueStrongArry] !== requestedStrong) { // requestedStrong does not have augment
-						var strongNumToCheck = (typeof origJsonVar.v[i][2] === "number") ? origJsonVar.d[origJsonVar.v[i][2]] : origJsonVar.v[i][2];
+						var curStrongNumOrDuplicateNume = origJsonVar.v[i][2]
+						var strongNumToCheck = (typeof curStrongNumOrDuplicateNume === "number") ? origJsonVar.d[curStrongNumOrDuplicateNume] : curStrongNumOrDuplicateNume;
 						if (uniqueStrongArray[indexToUniqueStrongArry] === strongNumToCheck ) {
 							augStrongIndex = i;
 							break;

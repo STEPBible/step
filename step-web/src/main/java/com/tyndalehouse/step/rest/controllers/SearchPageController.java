@@ -397,7 +397,7 @@ public class SearchPageController extends HttpServlet {
             final String preview = this.bible.getPlainTextPreview(osisWrapper.getMasterVersion(), osisWrapper.getOsisId());
             final String masterVersion = osisWrapper.getMasterVersion();
             final String title = wrapTitle(osisWrapper.getReference(), masterVersion, preview);
-            final String description = "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...";
+            final String description = "Free Bible study software for Windows, Mac and Linux. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...";
             request.setAttribute("title", title);
             request.setAttribute("description", description);
             request.setAttribute("keywords", "free, bible, study, app, software, bible study, bible app, bible download, free bible, free bible download, free bible study, windows, christian, christian software, online, online bible, download, dictionary, esv, kjv, Christ, Jesus, Lord, God, search, sunday, school, sunday school, lesson, new, old, testament, sermon, notes, cross, reference, church, library, greek, lexicon, tool, resource, research, book, NT, OT, scripture, preach, teach, exegesis, theology, word");

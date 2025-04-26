@@ -60,8 +60,8 @@
 <HTML>
 <HEAD>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="description" content="Forever free Bible Study Software for your Windows, Mac, Linux, iPhone, iPad and Android. Bible study tools include search and Greek, Hebrew lexicons." />
-    <title>Free Bible study software for Windows, Mac, iPhone, Android and Linux</title>
+	<meta name="description" content="Forever free Bible Study Software for your Windows, Mac and Linux. Bible study tools include search and Greek, Hebrew lexicons." />
+    <title>Free Bible study software for Windows, Mac and Linux</title>
     <%@include file="/jsps/offlinePage.jsp" %>
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
@@ -72,7 +72,7 @@
 		"@type": "SoftwareApplication",
 		"url": "https://www.STEPBible.org",
 		"sameas": "https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible",
-		"description": "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
+		"description": "Free Bible study software for Windows, Mac and Linux. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
 		"name": "STEPBible - Download free Bible study software",
 		"author": {
 			"@type": "Person",

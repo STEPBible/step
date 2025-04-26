@@ -304,14 +304,13 @@ var SidebarView = Backbone.View.extend({
             if (variant[0] !== "")
                 panelBody.append("<div>Only in " + variant[0] + " manuscript</div>");
             // need to handle multiple morphInfo (array)
-            if (data.morphInfos.length > 0) {
+            if (data.morphInfos.length > 0)
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0], morphCount, ref, data.vocabInfos[0].strongNumber);
-            }
             this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
-            if (data.morphInfos.length > 0) {
+            if (data.morphInfos.length > 0)
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
-            }
-            panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+            panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + data.vocabInfos[0].strongNumber
+            + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                 'Report lexicon issues' +
             '</a>'));
             if ((step.touchDevice) && (!step.touchWideDevice))

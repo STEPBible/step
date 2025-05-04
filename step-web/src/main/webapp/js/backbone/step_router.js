@@ -253,7 +253,7 @@ var StepRouter = Backbone.Router.extend({
             var refs = container.find("button.select-reference").text().trim().split(" ");
             if (refs.length == 2) {
                 if (refs[1].indexOf(":")) {
-                    passageContainer.find("span.verse").after('<br><br><a href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a>');
+                    passageContainer.find("span.verse").after('<br><br><br><a href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a>');
                     return;
                 }
             }

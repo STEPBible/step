@@ -248,6 +248,16 @@ var StepRouter = Backbone.Router.extend({
 		var container = $("<span></span>").addClass("argSummary argSumSpan");
 		step.util.ui.renderArgs(searchTokens, container, "button");
 		passageOptions.append(container);
+        if ((container.find("button.select-search").text().trim() === "") &&
+            (container.find("button.select-reference").text().indexOf(":") > 0)) {
+            var refs = container.find("button.select-reference").text().trim().split(" ");
+            if (refs.length == 2) {
+                if (refs[1].indexOf(":")) {
+                    passageContainer.find("span.verse").after('<br><br><a href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a>');
+                    return;
+                }
+            }
+        }
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;

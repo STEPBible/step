@@ -2714,6 +2714,128 @@ step.util = {
 		)()).modal("show");
 		step.util.blockBackgroundScrolling("videoModal");		
     },
+	gotoCurrentChapter: function() {
+		var activePassageId = step.util.activePassageId();
+        var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
+		var osisId = activePassageModel.get('osisId') || "";
+		var parts = osisId.split(".");
+		if (parts.length !== 3)
+			return;
+		var previousChapterKey = activePassageModel.get('previousChapter');
+		var nextChapterKey = activePassageModel.get('nextChapter');
+		if ((typeof previousChapterKey.osisKeyId !== "string") || (typeof nextChapterKey.osisKeyId !== "string"))
+			return;
+		var previousParts = previousChapterKey.osisKeyId.split(".");
+		var nextParts = nextChapterKey.osisKeyId.split(".");
+		if ((previousParts.length < 2) || (nextParts.length < 2))
+			return;
+		var lastChapter = (previousParts[0] !== nextParts[0]);
+		var newOsisId = JSON.parse(JSON.stringify(previousChapterKey));
+		newOsisId.osisKeyId = parts[0] + "." + parts[1];
+		var passageView = { 'model' : activePassageModel };
+		var args = this.getArgsForSiblingChapter(passageView, newOsisId, lastChapter);
+		step.router.navigateSearch(args);
+	},
+	getArgsForSiblingChapter: function(currentPassageMenuView, key, isNext) {
+        var currentPassageId = currentPassageMenuView.model.get("passageId");
+        step.util.activePassageId(currentPassageId);
+        var args = currentPassageMenuView.model.get("args") || "";
+        args = args.replace(new RegExp('@?' + REFERENCE        + '[^@]+', "g"), "");
+        var reference = "";
+        var tmpArgs = this.removeSearchArgs(args);
+        if (tmpArgs !== args) { // There is probably search so go to current chapter instead.  
+            args = tmpArgs;
+            reference = currentPassageMenuView.model.attributes.osisId;
+            currentPassageMenuView.model.attributes.strongHighlights = "";
+        }
+        else {
+            if ((key != undefined) && (key.osisKeyId != undefined) && (key.osisKeyId != null)) reference = key.osisKeyId;
+            else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
+            if (step.touchDevice) {
+                if (!this.showUserSwipeIsAccepted(currentPassageMenuView.model.get("masterVersion"), currentPassageMenuView.model.get("previousChapter").osisKeyId,
+                    currentPassageMenuView.model.get("nextChapter").osisKeyId, currentPassageMenuView.model.get("nextChapter").lastChapter,
+                    step.util.getPassageContainer(currentPassageId), isNext)) {
+                        return; // Next or previous chapter is not available
+                }
+            }
+        }
+        args = args.replace(/&&/ig, "")
+                   .replace(/&$/ig, "");
+        if (args.length > 0) {
+            args = args .replace(/^@/, '').replace(/^\|/, '')
+                        .replace(/@@+/, URL_SEPARATOR)
+                        .replace(/\|\|+/, URL_SEPARATOR);
+            if (args[args.length - 1] !== URL_SEPARATOR) args += URL_SEPARATOR;
+        }
+        args += "reference=" + reference;
+		return args;
+	},
+	removeSearchArgs: function(args) {
+        return args.replace(new RegExp('@?' + STRONG_NUMBER    + '[^@]+', "ig"), "")
+		           .replace(new RegExp('@?' + SYNTAX           + '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + TEXT_SEARCH      + '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + SUBJECT_SEARCH   + '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + GREEK            +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + HEBREW           +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + GREEK_MEANINGS   +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + HEBREW_MEANINGS  +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + MEANINGS         +  '[^@]+', "ig"), "");
+    },
+	showUserSwipeIsAccepted: function(version, previousChapter, nextChapter, lastChapter, activePassage, isNext) {
+        var alreadyCheckedNextOrPreviousIsValid = false;
+        if (typeof previousChapter === "string") {
+            var prevChptParts = previousChapter.split(".");
+            if ((prevChptParts.length == 2) && (!isNaN(prevChptParts[1]))) {
+                if (typeof nextChapter === "string") {
+                    var nextChptParts = nextChapter.split(".");
+                    if ((nextChptParts.length == 2) && (!isNaN(prevChptParts[1]))) {
+                        alreadyCheckedNextOrPreviousIsValid = true;
+                        if ((nextChptParts[1] - prevChptParts[1] == 2))
+                            this.showDots(activePassage);
+                        else if (isNext) {
+                            if ((typeof lastChapter === "boolean") && (!lastChapter)) {
+                                if ((nextChapter === "Matt.1") &&
+                                    (step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(version.toLowerCase()) > -1)) {
+                                        step.util.tempAlert("You are at the last chapter of the " + version + ".", 3);
+                                        return false;
+                                }
+                                this.showDots(activePassage);
+                            }
+                            else if (nextChapter === "Rev.22") {
+                                step.util.tempAlert("You are at the last chapter of " + version + ".", 3);
+                                return false;                       
+                            }
+                        }
+                        else {
+                            if ((previousChapter === "Gen.1") ||
+                                ((previousChapter === "Mal.4") &&
+                                (step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(version.toLowerCase()) > -1))) {
+                                    step.util.tempAlert("You are at the first chapter of " + version + ".", 3);
+                                    return false;
+                            }
+                            this.showDots(activePassage);
+                        }
+                    }
+                }
+            }
+        }
+        if (!alreadyCheckedNextOrPreviousIsValid) {
+            var ref = activePassage.find("button.select-reference").text().split(":")[0];
+            if (isNext) {
+                if ((ref !== "Rev 22") && (ref !== "Mal 4") && (ref !== "Deu 34"))
+                this.showDots(activePassage);
+            }
+            else if ((ref !== "Ref") && (ref !== "Gen 1") && (ref !== "Matt 1"))
+            this.showDots(activePassage);
+        }
+        return true;
+    },
+    showDots: function(activePassage) {
+        var passageContent = activePassage.find(".passageContent");
+        passageContent.empty();
+        var randomDots = "..... .... .... ....... ... .... ... ........ .... ... ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ........ ... .... ... .....<br>... ..... .. .... ..... .... ..... ........ .... ...... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .... ... .... ... .....<br>...... .... ... ..... .... ..... ..... ..... ... . ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br>... ..... .... .... ..... .... ..... ........ .... ... ... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ... ... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .. ... .... ... .....<br";
+        passageContent.html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
+    },
     showSummary: function (reference, tabToShow) {
         element = document.getElementById('showBookOrChapterSummaryModal');
         if (element) element.parentNode.removeChild(element);

@@ -2719,7 +2719,7 @@ step.util = {
         var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
 		var osisId = activePassageModel.get('osisId') || "";
 		var parts = osisId.split(".");
-		if (parts.length !== 3)
+		if (parts.length < 3)
 			return;
 		var previousChapterKey = activePassageModel.get('previousChapter');
 		var nextChapterKey = activePassageModel.get('nextChapter');
@@ -2729,7 +2729,8 @@ step.util = {
 		var nextParts = nextChapterKey.osisKeyId.split(".");
 		if ((previousParts.length < 2) || (nextParts.length < 2))
 			return;
-		var lastChapter = (previousParts[0] !== nextParts[0]);
+		var lastChapter = (parts[0] !== nextParts[0]) ||
+			((parts[0] === nextParts[0]) && (parts[1] === nextParts[1]));
 		var newOsisId = JSON.parse(JSON.stringify(previousChapterKey));
 		newOsisId.osisKeyId = parts[0] + "." + parts[1];
 		var passageView = { 'model' : activePassageModel };

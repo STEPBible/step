@@ -253,8 +253,13 @@ var StepRouter = Backbone.Router.extend({
             var refs = container.find("button.select-reference").text().trim().split(" ");
             if (refs.length == 2) {
                 if (refs[1].indexOf(":")) {
-                    passageContainer.find("div.passageContentHolder").append('<div><a href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a></div>');
-                    return;
+                    var interlinear = passageContainer.find('span.interlinear.ltr');
+                    if (interlinear.length == 0)
+                        interlinear = passageContainer.find('span.interlinear.rtl');
+                    if (interlinear.length > 0)
+                        $(interlinear[interlinear.length - 1]).after('<br><span class="interlinear"><span style="clear:left"><a href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a></span></span>');
+                    else
+                        passageContainer.find("div.passageContentHolder").append('<br><div><a href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a></div>');
                 }
             }
         }

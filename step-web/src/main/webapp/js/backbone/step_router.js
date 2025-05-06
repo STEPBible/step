@@ -257,9 +257,9 @@ var StepRouter = Backbone.Router.extend({
                     if (interlinear.length == 0)
                         interlinear = passageContainer.find('span.interlinear.rtl');
                     if (interlinear.length > 0)
-                        $(interlinear[interlinear.length - 1]).after('<br><span class="interlinear"><span style="clear:left;padding:16px;text-decoration:underline"><a href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a></span></span>');
+                        $(interlinear[interlinear.length - 1]).after('<br><span class="interlinear"><span style="clear:left;padding:16px"><a style-"text-decoration:underline" href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a></span></span>');
                     else
-                        passageContainer.find("div.passageContentHolder").append('<br><div style="padding:16px;text-decoration:underline"><a href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a></div>');
+                        passageContainer.find("div.passageContentHolder").append('<br><div style="padding:16px"><a style-"text-decoration:underline" href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a></div>');
                 }
             }
         }

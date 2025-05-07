@@ -2734,10 +2734,10 @@ step.util = {
 		var newOsisId = JSON.parse(JSON.stringify(previousChapterKey));
 		newOsisId.osisKeyId = parts[0] + "." + parts[1];
 		var passageView = { 'model' : activePassageModel };
-		var args = this.getArgsForSiblingChapter(passageView, newOsisId, lastChapter);
+		var args = this.getArgsForSiblingChapter(passageView, newOsisId, lastChapter, true);
 		step.router.navigateSearch(args);
 	},
-	getArgsForSiblingChapter: function(currentPassageMenuView, key, isNext) {
+	getArgsForSiblingChapter: function(currentPassageMenuView, key, isNext, currentChapter) {
         var currentPassageId = currentPassageMenuView.model.get("passageId");
         step.util.activePassageId(currentPassageId);
         var args = currentPassageMenuView.model.get("args") || "";
@@ -2752,7 +2752,7 @@ step.util = {
         else {
             if ((key != undefined) && (key.osisKeyId != undefined) && (key.osisKeyId != null)) reference = key.osisKeyId;
             else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
-            if (step.touchDevice) {
+            if (!currentChapter && (step.touchDevice)) {
                 if (!this.showUserSwipeIsAccepted(currentPassageMenuView.model.get("masterVersion"), currentPassageMenuView.model.get("previousChapter").osisKeyId,
                     currentPassageMenuView.model.get("nextChapter").osisKeyId, currentPassageMenuView.model.get("nextChapter").lastChapter,
                     step.util.getPassageContainer(currentPassageId), isNext)) {

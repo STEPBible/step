@@ -230,7 +230,7 @@ function setupTable(urlPart1) {
             var clickText = "";
             var reference = array[i][2];
             if (reference != "") {
-                clickText = clickText1 + reference + clickText2 + reference + clickText3;
+                clickText = clickText1 + reference + clickText2 + reference.replace(/;/g, "; ") + clickText3;
             }
             tblRowHTML = 
                 '<tr><td class="tb_col">' + array[i][0] + '</td>' +

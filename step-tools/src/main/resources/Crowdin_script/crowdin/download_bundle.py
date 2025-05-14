@@ -68,7 +68,7 @@ class DownloadAndMoveJob:
             skipUntranslatedFiles=True,
             # Requires files and strings to be translated AND approved
             # if this option is enabled, it overrides the effect of the Skip untranslated strings option.
-            #exportApprovedOnly=True,
+            # exportApprovedOnly=True,
             #exportApprovedOnly=False,
         )
 

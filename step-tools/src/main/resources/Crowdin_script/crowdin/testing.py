@@ -1,6 +1,7 @@
 from crowdin_api import CrowdinClient
 from dotenv import load_dotenv
 import os
+from os.path import join, dirname
 import json
 
 dotenv_path = join(dirname(__file__), '.env')
@@ -70,7 +71,7 @@ def get_project_branches():
     """
     print("\n***********")
     print("getting STEP CrowdIn project Branches data...")
-    branches_data = client.projects.branches(STEP_CROWDIN_PROJECT_ID)
+    branches_data = client.source_files.list_branches(STEP_CROWDIN_PROJECT_ID)
 
     print("writing to step_project.json...")
     with open('branches_data.json', 'w', encoding='utf-8') as f:

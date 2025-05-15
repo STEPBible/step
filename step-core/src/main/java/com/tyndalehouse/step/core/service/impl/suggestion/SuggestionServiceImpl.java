@@ -81,6 +81,14 @@ public class SuggestionServiceImpl implements SuggestionService {
         currentContext.setInput(context.getInput());
         currentContext.setSearchType(context.getSearchType());
         currentContext.setExampleData(context.isExampleData());
+
+        ArrayList<Character> exactSearchCharacters = new ArrayList<>();
+        exactSearchCharacters.add('"');
+        String searchInput = context.getInput();
+        Character firstCharacter = searchInput.charAt(0);
+        Character lastCharacter = searchInput.charAt(searchInput.length() - 1);
+        Boolean isQuoted = firstCharacter == lastCharacter;
+
         //go through each search type
         for (Map.Entry<String, SingleTypeSuggestionService> query : queryProviders.entrySet()) {
             String curQueryKey = query.getKey();
@@ -110,14 +118,20 @@ public class SuggestionServiceImpl implements SuggestionService {
                         maxResult = MAX_RESULTS_NON_GROUPED * 2;
                     else if (curQueryKey.equals("hebrew"))
                         maxResult = MAX_RESULTS_NON_GROUPED * 4;
-                    else
+                    else if (curQueryKey.equals("text")) {
+                        if (!(isQuoted && exactSearchCharacters.contains(firstCharacter)))
+                            continue;
+                    } else
                         continue;
                 } else if (searchLangSelectedByUser.equals("gr")) {
                     if (curQueryKey.equals("greekMeanings"))
                         maxResult = MAX_RESULTS_NON_GROUPED * 2;
                     else if (curQueryKey.equals("greek"))
                         maxResult = MAX_RESULTS_NON_GROUPED * 4;
-                    else
+                    else if (curQueryKey.equals("text")) {
+                        if (!(isQuoted && exactSearchCharacters.contains(firstCharacter)))
+                            continue;
+                    } else
                         continue;
                 }
             }

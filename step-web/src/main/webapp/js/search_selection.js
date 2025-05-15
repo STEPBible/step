@@ -759,6 +759,10 @@ step.searchSelect = {
 					'<ul><li>' + __s.topic_search_help_text + '</ul>';
 		}
 		else if (language === "he" ) {
+			if ($("#searchResultstext").text() !== "") {
+				$(".select-text").show();
+				isAnythingShown = true;
+			}
 			if ($("#searchResultshebrew").html() !== "") {
 				$(".select-hebrew").show();
 				isAnythingShown = true;
@@ -779,6 +783,10 @@ step.searchSelect = {
 			basic_search_help_text += '</ul>';
 		}
 		else if (language === "gr") {
+			if ($("#searchResultstext").text() !== "") {
+				$(".select-text").show();
+				isAnythingShown = true;
+			}
 			if ($("#searchResultsgreek").html() !== "") {
 				$(".select-greek").show();
 				isAnythingShown = true;

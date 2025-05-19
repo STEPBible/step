@@ -1480,7 +1480,9 @@ step.searchSelect = {
 			}
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === "")) {
 				if ((searchLangSelected === "en") && ((langCode !== "zh") && (langCode !== "ar")) &&
-					(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
+					(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1) &&
+					(!(userInput[0] == "'" && userInput[userInput.length - 1] == "'")) &&
+					(userInput.indexOf("‘") == -1) && (userInput.indexOf("“") == -1)) {
 					userInput = userInput.split(" ").join("* ") + "*";
 				}
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR;

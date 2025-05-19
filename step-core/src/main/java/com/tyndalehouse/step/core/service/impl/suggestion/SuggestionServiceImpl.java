@@ -83,10 +83,11 @@ public class SuggestionServiceImpl implements SuggestionService {
         currentContext.setExampleData(context.isExampleData());
 
         ArrayList<Character> exactSearchCharacters = new ArrayList<>();
-        exactSearchCharacters.add('"');
         String searchInput = context.getInput();
         Character firstCharacter = searchInput.charAt(0);
         Character lastCharacter = searchInput.charAt(searchInput.length() - 1);
+        exactSearchCharacters.add('"');
+        exactSearchCharacters.add('\'');
         Boolean isQuoted = firstCharacter == lastCharacter;
 
         //go through each search type
@@ -119,6 +120,7 @@ public class SuggestionServiceImpl implements SuggestionService {
                     else if (curQueryKey.equals("hebrew"))
                         maxResult = MAX_RESULTS_NON_GROUPED * 4;
                     else if (curQueryKey.equals("text")) {
+                        currentContext.setInput(context.getInput()); // reset to original input in case it was previously changed.
                         if (!(isQuoted && exactSearchCharacters.contains(firstCharacter)))
                             continue;
                     } else

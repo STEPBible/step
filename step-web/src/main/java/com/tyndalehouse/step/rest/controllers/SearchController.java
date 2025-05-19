@@ -98,12 +98,26 @@ public class SearchController {
     @Timed(name = "suggest", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly,
                                         final String searchLangSelectedByUser) {
+
+        String searchInput = input;
+        Character firstCharacter = searchInput.charAt(0);
+        Character lastCharacter = searchInput.charAt(searchInput.length() - 1);
+        Boolean isQuoted = firstCharacter == lastCharacter;
+        if ((isQuoted && firstCharacter.equals('\'')) ||
+                (firstCharacter.equals('‘') && lastCharacter.equals('’')) ||
+                (firstCharacter.equals('“') && lastCharacter.equals('”'))) {
+            StringBuilder newSearchInput = new StringBuilder(searchInput);
+            newSearchInput.setCharAt(0, '"');
+            newSearchInput.setCharAt(searchInput.length() - 1, '"');
+            searchInput = newSearchInput.toString();
+        }
+
         boolean onlyReferences = false;
         if (StringUtils.isNotBlank(referencesOnly)) {
             onlyReferences = Boolean.parseBoolean(referencesOnly);
         }
 
-        if (input.indexOf('=') != -1) {
+        if (searchInput.indexOf('=') != -1) {
             return new ArrayList<AutoSuggestion>();
         }
 
@@ -131,9 +145,9 @@ public class SearchController {
         }
 
         if (onlyReferences || referenceContext != null) {
-            addReferenceSuggestions(limitType, input, autoSuggestions, bookContext, referenceContext);
+            addReferenceSuggestions(limitType, searchInput, autoSuggestions, bookContext, referenceContext);
         } else {
-            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData, searchLangSelectedByUser);
+            addDefaultSuggestions(searchInput, autoSuggestions, limitType, bookContext, exampleData, searchLangSelectedByUser);
         }
         addCountsToSuggestions(autoSuggestions, context);
         return autoSuggestions;

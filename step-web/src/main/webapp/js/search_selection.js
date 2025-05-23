@@ -1913,8 +1913,23 @@ step.searchSelect = {
 					var prefixToDisplay = "";
 					var suffixToDisplay = "";
 					var occurString = ""
-					if (Object.values(amalgamation["typeCount"]).filter(v => v === 1).length === 1 && 
-					Object.values(amalgamation["typeCount"]).every(v => v === 0 || v === 1)) {
+					var values = [];
+					for (var key in amalgamation["typeCount"]) {
+						if (amalgamation["typeCount"].hasOwnProperty(key)) {
+							values.push(amalgamation["typeCount"][key]);
+						}
+					}
+					var ones = 0;
+					var valid = true;
+					for (var i = 0; i < values.length; i++) {
+						if (values[i] === 1) {
+							ones++;
+						} else if (values[i] !== 0) {
+							valid = false;
+							break;
+						}
+					}
+					if (ones === 1 && valid) {
 						occurString = __s.occurs_in_total;
 					} else {
 						occurString = __s.occur_in_total;

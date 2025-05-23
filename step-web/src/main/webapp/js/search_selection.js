@@ -1911,7 +1911,15 @@ step.searchSelect = {
 					}
 					var text2Display = step.searchSelect._composeDescriptionForNames(amalgamation["typeCount"], name);
 					var prefixToDisplay = "";
-					var suffixToDisplay = '<span class="srchFrequency"> ' + __s.occurs_in_total + ' - ' + grandTotal + ' x</span>';
+					var suffixToDisplay = "";
+					var occurString = ""
+					if (Object.values(amalgamation["typeCount"]).filter(v => v === 1).length === 1 && 
+					Object.values(amalgamation["typeCount"]).every(v => v === 0 || v === 1)) {
+						occurString = __s.occurs_in_total;
+					} else {
+						occurString = __s.occur_in_total;
+					}
+					suffixToDisplay = '<span class="srchFrequency"> ' + occurString + ' - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";
 					var augStrongSameMeaning = null;
 					var hasDetailLexInfo = false;
@@ -2907,6 +2915,9 @@ step.searchSelect = {
 					numInThisType = ("aeiou".indexOf(nameType.substring(0,1).toLowerCase()) > -1) ? "An" : "A";
 					if (count > 1)
 						numInThisType = numInThisType.toLowerCase();
+				}
+				if (numInThisType > 1) {
+					type = step.plural_name_types[type]
 				}
 				result += numInThisType + " " + type;
 			}

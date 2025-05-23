@@ -107,5 +107,6 @@ step.defaults = {
         }
     }
 };
-// The following line is also in step-core/src/main/resources/step.core.properties and the information should be identical
+// The following lines are also in step-core/src/main/resources/step.core.properties and the information should be identical
 step.name_types=["man", "woman", "king", "queen", "judge", "place", "group", "prophet", "prophetess", "person or group", "god", "location", "angel", "ruler"];
+step.plural_name_types={ "man": "men", "woman": "women", "king": "kings", "queen": "queens", "judge": "judges", "place": "places", "group": "groups", "prophet": "prophets", "prophetess": "prophetesses", "person or group": "people or groups", "god": "gods", "location": "locations", "angel": "angels", "ruler": "rulers" };

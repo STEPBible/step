@@ -30,9 +30,11 @@ public class SuggestionServiceImpl implements SuggestionService {
     private final Map<String, String[]> dependencies = new HashMap<String, String[]>(8);
     private final Map<String, Integer> extraSlots = new HashMap<String, Integer>(4);
     private static String stepTypes;
+    private static String pluralStepTypes;
 
     @Inject
     public SuggestionServiceImpl(@Named("search.name_types") final String stepTypes,
+                                 @Named("search.plural_name_types") final String pluralStepTypes,
                                  final HebrewAncientMeaningServiceImpl hebrewAncientMeaningService,
                                  final GreekAncientMeaningServiceImpl greekAncientMeaningService,
                                  final HebrewAncientLanguageServiceImpl hebrewAncientLanguageService,
@@ -43,6 +45,7 @@ public class SuggestionServiceImpl implements SuggestionService {
                                  final TextSuggestionServiceImpl textSuggestionService
     ) {
         this.stepTypes = stepTypes;
+        this.pluralStepTypes = pluralStepTypes;
         queryProviders.put(SearchToken.REFERENCE, referenceSuggestionService);
         queryProviders.put(SearchToken.GREEK_MEANINGS, greekAncientMeaningService);
         queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);

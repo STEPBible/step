@@ -81,7 +81,7 @@ Will not download zip file, but just use existing zip file instead. If this is s
 #### Option: Force Rebuild
 Will not check for existing builds, will just build a new one
 ```
-./venv/bin/python download_bundle.py --force-rebuild
+./venv/bin/python download_bundle.py --force-build
 ```
 
 #### Option: Path

@@ -759,6 +759,10 @@ step.searchSelect = {
 					'<ul><li>' + __s.topic_search_help_text + '</ul>';
 		}
 		else if (language === "he" ) {
+			if ($("#searchResultstext").text() !== "") {
+				$(".select-text").show();
+				isAnythingShown = true;
+			}
 			if ($("#searchResultshebrew").html() !== "") {
 				$(".select-hebrew").show();
 				isAnythingShown = true;
@@ -779,6 +783,10 @@ step.searchSelect = {
 			basic_search_help_text += '</ul>';
 		}
 		else if (language === "gr") {
+			if ($("#searchResultstext").text() !== "") {
+				$(".select-text").show();
+				isAnythingShown = true;
+			}
 			if ($("#searchResultsgreek").html() !== "") {
 				$(".select-greek").show();
 				isAnythingShown = true;
@@ -1472,7 +1480,9 @@ step.searchSelect = {
 			}
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === "")) {
 				if ((searchLangSelected === "en") && ((langCode !== "zh") && (langCode !== "ar")) &&
-					(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
+					(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1) &&
+					(!(userInput[0] == "'" && userInput[userInput.length - 1] == "'")) &&
+					(userInput.indexOf("‘") == -1) && (userInput.indexOf("“") == -1)) {
 					userInput = userInput.split(" ").join("* ") + "*";
 				}
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR;
@@ -1901,7 +1911,30 @@ step.searchSelect = {
 					}
 					var text2Display = step.searchSelect._composeDescriptionForNames(amalgamation["typeCount"], name);
 					var prefixToDisplay = "";
-					var suffixToDisplay = '<span class="srchFrequency"> ' + __s.occurs_in_total + ' - ' + grandTotal + ' x</span>';
+					var suffixToDisplay = "";
+					var occurString = ""
+					var values = [];
+					for (var key in amalgamation["typeCount"]) {
+						if (amalgamation["typeCount"].hasOwnProperty(key)) {
+							values.push(amalgamation["typeCount"][key]);
+						}
+					}
+					var ones = 0;
+					var valid = true;
+					for (var i = 0; i < values.length; i++) {
+						if (values[i] === 1) {
+							ones++;
+						} else if (values[i] !== 0) {
+							valid = false;
+							break;
+						}
+					}
+					if (ones === 1 && valid) {
+						occurString = __s.occurs_in_total;
+					} else {
+						occurString = __s.occur_in_total;
+					}
+					suffixToDisplay = '<span class="srchFrequency"> ' + occurString + ' - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";
 					var augStrongSameMeaning = null;
 					var hasDetailLexInfo = false;
@@ -2897,6 +2930,9 @@ step.searchSelect = {
 					numInThisType = ("aeiou".indexOf(nameType.substring(0,1).toLowerCase()) > -1) ? "An" : "A";
 					if (count > 1)
 						numInThisType = numInThisType.toLowerCase();
+				}
+				if (numInThisType > 1) {
+					type = step.plural_name_types[type]
 				}
 				result += numInThisType + " " + type;
 			}

@@ -46,7 +46,7 @@ public class SetupRedirectFilter implements Filter {
                 String checkValue = value[i].replaceAll("\\s+","") .toLowerCase();
                 if (checkValue.contains("script>") &&
                         (checkValue.contains("<script>") || checkValue.contains("</script>"))) {
-                    System.out.println("XSS attack detected: " + key + "=" + value[i] + " url:" + ((HttpServletRequestWrapper) request).getRequestURI());
+                    System.out.println("XSS attack detected: " + key + "=" + value[i] + " uri: " + ((HttpServletRequestWrapper) request).getRequestURI());
 
                 }
             }

@@ -47,18 +47,20 @@ public class SetupRedirectFilter implements Filter {
             String key = entry.getKey();
             String[] value = entry.getValue();
             for (int i = 0; i < value.length; i++) {
-                String checkValue = value[i].replaceAll("\\s+","") .toLowerCase();
+                String checkValue = value[i].toLowerCase();
+                if (checkValue.contains("script")) {
+                    checkValue = checkValue.replaceAll("\\s+", "");
+                    if (checkValue.contains("<script>") || checkValue.contains("</script>")) {
+                        System.out.println("XSS attack detected: " + key + "=" + value[i] + " uri: " + ((HttpServletRequestWrapper) request).getRequestURI());
+                        return;
+                    }
+                }
+                if (checkValue.contains("<") || checkValue.contains(">"))
+                    System.out.println("XSS check: " + key + "=" + value[i] + " uri: " + ((HttpServletRequestWrapper) request).getRequestURI());
                 //String safeHTML = policy.sanitize(checkValue);
                 //if (!safeHTML.equals(checkValue)) {
                 //    System.out.println("Unmatch safe: " + safeHTML + "\n orig: " + checkValue);
                 //}
-                if (checkValue.contains("script>") &&
-                        (checkValue.contains("<script>") || checkValue.contains("</script>"))) {
-                    System.out.println("XSS attack detected: " + key + "=" + value[i] + " uri: " + ((HttpServletRequestWrapper) request).getRequestURI());
-                    return;
-                }
-                if (checkValue.contains("<") || checkValue.contains(">"))
-                    System.out.println("XSS check: " + key + "=" + value[i] + " uri: " + ((HttpServletRequestWrapper) request).getRequestURI());
             }
         }
         if (!appManager.isLocal() || (installedVersion != null && installedVersion.equals(runningAppVersion))) {

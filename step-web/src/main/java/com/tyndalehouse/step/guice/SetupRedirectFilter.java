@@ -57,7 +57,7 @@ public class SetupRedirectFilter implements Filter {
                     System.out.println("XSS attack detected: " + key + "=" + value[i] + " uri: " + ((HttpServletRequestWrapper) request).getRequestURI());
                     return;
                 }
-                if (checkValue.contains("<") || checkValue.contains("<"))
+                if (checkValue.contains("<") || checkValue.contains(">"))
                     System.out.println("XSS check: " + key + "=" + value[i] + " uri: " + ((HttpServletRequestWrapper) request).getRequestURI());
             }
         }

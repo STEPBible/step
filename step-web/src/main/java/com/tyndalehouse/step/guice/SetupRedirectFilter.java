@@ -55,7 +55,7 @@ public class SetupRedirectFilter implements Filter {
                         return;
                     }
                 }
-                if (checkValue.contains("<") || checkValue.contains(">"))
+                if (checkValue.contains("<") || checkValue.contains(">") || checkValue.contains("%3c") || checkValue.contains("%3e"))
                     System.out.println("XSS check: " + key + "=" + value[i] + " uri: " + ((HttpServletRequestWrapper) request).getRequestURI());
                 //String safeHTML = policy.sanitize(checkValue);
                 //if (!safeHTML.equals(checkValue)) {

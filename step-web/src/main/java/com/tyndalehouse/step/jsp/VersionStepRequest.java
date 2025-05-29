@@ -56,6 +56,7 @@ public class VersionStepRequest {
                 this.bundle = ResourceBundle.getBundle("HtmlBundle", injector
                         .getInstance(ClientSession.class).getLocale());
                 this.success = true;
+
             }
         } catch (final Exception e) {
             // failed to retrieve information

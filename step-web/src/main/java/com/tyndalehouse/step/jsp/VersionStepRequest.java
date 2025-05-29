@@ -47,7 +47,8 @@ public class VersionStepRequest {
 
         try {
             final String version = request.getParameter("version");
-            if (version != null) {
+            if ((version != null) && (version.length() < 22) && !version.contains("%")  &&
+                    !version.contains("<") && !version.contains(">") && !version.contains("."))  { // Filter out characters that might be used for security attacks
                 this.versification = this.injector.getInstance(JSwordVersificationService.class);
                 this.book = this.versification.getBookFromVersion(version);
                 this.globalKeyList = this.book.getGlobalKeyList();

@@ -3,8 +3,6 @@ package com.tyndalehouse.step.core.utils;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.exceptions.ValidationException;
 import com.tyndalehouse.step.core.models.SearchToken;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +101,7 @@ public final class ValidateUtils {
         final char upperBoundUC = 'Z';
         final char lowerBoundNum = '0';
         final char upperBoundNum = '9';
-        System.out.println("validateInputQ key: " + key + " value: " + value);
+//        System.out.println("validateInputQ key: " + key + " value: " + value);
         if (key.equals("version") || key.equals("options")  || key.equals("display")) {
             if ((value == null) || value.equals("") || (value.length() > 20)) {
                 System.out.println("XSS kill unexpected char key: " + key + " value length: " + value.length());
@@ -170,7 +168,7 @@ public final class ValidateUtils {
      */
     public static List<SearchToken> parseTokens(final String items) {
         String[] tokens;
-        System.out.println("parseTokens items: " + items);
+//        System.out.println("parseTokens items: " + items);
         if (!StringUtils.isBlank(items))
             tokens = SPLIT_TOKENS.split(items.replaceAll("\\|", "@").replaceAll("@@", "@"));
         else
@@ -200,7 +198,7 @@ public final class ValidateUtils {
         return searchTokens;
     }
     public static boolean checkURLParms(final Map<String, String[]> inputParms, final String requestURI) {
-        System.out.println("checkURLParms: " + requestURI);
+//        System.out.println("checkURLParms: " + requestURI);
         for (Map.Entry<String, String[]> entry : inputParms.entrySet()) {
             String key = entry.getKey();
             if (!key.equals("q") && !key.equals("options") && !key.equals("display") && !key.equals("page") &&

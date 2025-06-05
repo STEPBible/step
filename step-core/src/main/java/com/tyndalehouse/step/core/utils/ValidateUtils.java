@@ -102,8 +102,9 @@ public final class ValidateUtils {
         final char lowerBoundNum = '0';
         final char upperBoundNum = '9';
 //        System.out.println("validateInputQ key: " + key + " value: " + value);
+        if ((value == null) || value.equals("")) return true;
         if (key.equals("version") || key.equals("options")  || key.equals("display")) {
-            if ((value == null) || value.equals("") || (value.length() > 20)) {
+            if (value.length() > 20) {
                 System.out.println("XSS kill unexpected char key: " + key + " value length: " + value.length());
                 return false;
             }
@@ -119,8 +120,8 @@ public final class ValidateUtils {
             }
             return true;
         }
-        else if (key.equals("reference")) {
-            if ((value == null) || value.equals("") || (value.length() > 300)) {
+        else if (key.equals("reference") || key.equals("vocabIdentifiers") || key.equals("morphIdentifiers")) {
+            if (value.length() > 300) {
                 System.out.println("XSS kill unexpected reference length: " + value);
                 return false;
             }

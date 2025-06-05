@@ -1351,15 +1351,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                             tsep.setParameter("RemoveHebrewVowels", "false");
                         }
                         break;
-                        // Not sure if this is needed
-                    case HEADINGS:
-                    case NOTES:
-                    case VERSE_NEW_LINE:
-                    case INTERLINEAR:
-                    case CHAPTER_VERSE:
-                        break;
-                    default:
-                        System.out.println("XSS check, option: " + lookupOption);
                 }
             }
         }

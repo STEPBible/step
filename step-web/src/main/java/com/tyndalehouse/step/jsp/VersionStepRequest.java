@@ -9,6 +9,7 @@ import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.IOUtils;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
+import com.tyndalehouse.step.core.utils.ValidateUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.BibleBook;
@@ -46,9 +47,8 @@ public class VersionStepRequest {
         this.injector = injector;
 
         try {
-            final String version = request.getParameter("version");
-            if ((version != null) && (version.length() < 22) && !version.contains("%")  &&
-                    !version.contains("<") && !version.contains(">") && !version.contains("."))  { // Filter out characters that might be used for security attacks
+            String version = request.getParameter("version");
+            if ((version != null) && (ValidateUtils.validateInputQ("version", version))) {
                 this.versification = this.injector.getInstance(JSwordVersificationService.class);
                 this.book = this.versification.getBookFromVersion(version);
                 this.globalKeyList = this.book.getGlobalKeyList();
@@ -56,7 +56,6 @@ public class VersionStepRequest {
                 this.bundle = ResourceBundle.getBundle("HtmlBundle", injector
                         .getInstance(ClientSession.class).getLocale());
                 this.success = true;
-
             }
         } catch (final Exception e) {
             // failed to retrieve information

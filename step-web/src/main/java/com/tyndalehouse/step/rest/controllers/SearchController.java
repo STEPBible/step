@@ -1,6 +1,5 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import com.tyndalehouse.step.core.data.processors.AugmentedStrongProcessor;
 import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.models.search.*;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -13,6 +12,7 @@ import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
 import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 import com.tyndalehouse.step.core.utils.ConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
+import com.tyndalehouse.step.core.utils.ValidateUtils;
 import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 /**
  * Caters for searching across the data base
@@ -130,7 +129,7 @@ public class SearchController {
         if (StringUtils.isNotBlank(context)) {
             //there are some context items... Parse them
             //if there is a reference= restriction, then we will only return references, otherwise, we default
-            final List<SearchToken> searchTokens = parseTokens(context);
+            final List<SearchToken> searchTokens = ValidateUtils.parseTokens(context);
             for (SearchToken st : searchTokens) {
                 if (SearchToken.VERSION.equals(st.getTokenType())) {
                     bookContext = st.getToken();
@@ -469,45 +468,11 @@ public class SearchController {
 
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display,
                                               final String pageNumber, final String filter, final String sortOrder, final String context, final String userLanguage, final boolean countOnly) {
-        final List<SearchToken> searchTokens = parseTokens(items);
+        final List<SearchToken> searchTokens = ValidateUtils.parseTokens(items);
         final int page = ConversionUtils.getValidInt(pageNumber, 1);
         final int searchContext = ConversionUtils.getValidInt(context, 0);
+        // XSS to do Check options, display, pageNumber, ... here
         return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, sortOrder, searchContext, items, userLanguage, countOnly);
-    }
-
-    /**
-     * Parses a string in the form of a=2|c=1 into a list of search tokens
-     *
-     * @param items
-     * @return
-     */
-    private List<SearchToken> parseTokens(final String items) {
-        String[] tokens;
-        if (!StringUtils.isBlank(items))
-            tokens = SPLIT_TOKENS.split(items.replaceAll("\\|", "@").replaceAll("@@", "@"));
-        else
-            tokens = new String[0];
-
-        for (int i = 1; i < tokens.length; i++) { // Handle search parameter with @.  For example: text=morph:H2603A@*Vq*
-            if ((tokens[i].indexOf("=") == -1) && 
-                ((tokens[i-1].indexOf("text=morph:") == 0) || (tokens[i-1].indexOf("syntax=t=morph:") == 0))) {
-                tokens[i-1] += "@" + tokens[i]; // based on the above example, concatenate text=morph:H2603A with *Vq*
-                tokens[i] = ""; // based on above example, empty out the element with *Vq*
-            }
-        }
-        List<SearchToken> searchTokens = new ArrayList<SearchToken>();
-        for (String t : tokens) {
-            int indexOfPrefix = t.indexOf('=');
-            if (indexOfPrefix == -1) {
-                if (t.length() > 0)
-                    LOGGER.warn("Ignoring item: [{}]", t);
-                continue;
-            }
-
-            String text = t.substring(indexOfPrefix + 1);
-            searchTokens.add(new SearchToken(t.substring(0, indexOfPrefix), text));
-        }
-        return searchTokens;
     }
 
     /**
@@ -548,7 +513,7 @@ public class SearchController {
      */
     @Timed(name = "exact-form-lookup", group = "languages", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public List<LexiconSuggestion> getExactForms(final String form, final String greek) {
-        notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
+        ValidateUtils.notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
         return this.originalWordSuggestions.getExactForms(form, Boolean.parseBoolean(greek));
     }
 

@@ -203,7 +203,7 @@ public final class ValidateUtils {
             String key = entry.getKey();
             if (!key.equals("q") && !key.equals("options") && !key.equals("display") && !key.equals("page") &&
                     !key.equals("qFilter") && !key.equals("sort") && !key.equals("context") && !key.equals("lang") &&
-                    !key.equals("debug")) {
+                    !key.equals("debug") && !key.equals("noredirect")) {
                 System.out.println("XSS checkURLParm check: unknown key: " + key);
             }
             String[] value = entry.getValue();

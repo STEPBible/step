@@ -224,7 +224,7 @@ public final class ValidateUtils {
 
     public static boolean checkForObviousXSS(final String key, final String checkValue, final String requestURI,
                                              final boolean kill) {
-        System.out.println("checkForObviousXSS: " + key + " checkValue: " + checkValue + " requestURI: " + requestURI);
+        // System.out.println("checkForObviousXSS: " + key + " checkValue: " + checkValue + " requestURI: " + requestURI);
         if ((key.equals("options") && !(validateInputQ("options", checkValue))) ||
                 (key.equals("display") && !(validateInputQ("display", checkValue)))) {
             System.out.println("XSS check : " + key + "=" + checkValue + " uri: " + requestURI);

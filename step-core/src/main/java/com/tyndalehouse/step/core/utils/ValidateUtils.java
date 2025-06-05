@@ -157,7 +157,7 @@ public final class ValidateUtils {
             }
             return true;
         }
-        System.out.println("XSS unknown key: " + key);
+        System.out.println("XSS unknown key: " + key + " " + value);
         return true;
     }
     /**
@@ -204,7 +204,7 @@ public final class ValidateUtils {
             if (!key.equals("q") && !key.equals("options") && !key.equals("display") && !key.equals("page") &&
                     !key.equals("qFilter") && !key.equals("sort") && !key.equals("context") && !key.equals("lang") &&
                     !key.equals("debug") && !key.equals("noredirect")) {
-                System.out.println("XSS checkURLParm check: unknown key: " + key);
+                System.out.println("XSS checkURLParm check: unknown key: " + key + " value: " + entry.getValue());
             }
             String[] value = entry.getValue();
             for (int i = 0; i < value.length; i++) {

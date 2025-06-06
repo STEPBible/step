@@ -3122,17 +3122,24 @@ step.util = {
                     '<p style="margin:8px">' + summary["chapter_" + chapterNum + "_summary"] + '</p>' +
                 '</span><br>';
 
-			var jsonName = "chapter_" + chapterNum + "_icc_url";
-			if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
-				var icc_url = summary[jsonName];
-				jsonName = "chapter_" + curChapter + "_icc_page";
-				var titleTag = "";
-				if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
-					titleTag = ' title="page ' + summary[jsonName] + '"';
-				chptSummary += '<a style="margin-left:8px;font-size:14px" href="' + icc_url + '" target="icc"' + titleTag + '><b><u>ICC Commentary for chapter ' + chapterNum + '</u></b> ' +
-					'<sup class="glyphicon glyphicon-book"></sup></a>';
-			}
-			chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
+            // Add Bob Goethe's commentary link if available (English only)
+            var bobGoetheField = "bob_goethe_chapter_" + chapterNum + "_english_url";
+            if (typeof summary[bobGoetheField] === "string" && summary[bobGoetheField] !== "") {
+                chptSummary += '<a style="margin-left:8px;font-size:14px" href="' + summary[bobGoetheField] + '" target="bobgoethe"><b><u>Bob Goethe\'s Commentary for chapter ' + chapterNum + '</u></b> ' +
+                    '<sup class="glyphicon glyphicon-book"></sup></a><br>';
+            }
+
+            var jsonName = "chapter_" + chapterNum + "_icc_url";
+            if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
+                var icc_url = summary[jsonName];
+                jsonName = "chapter_" + curChapter + "_icc_page";
+                var titleTag = "";
+                if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
+                    titleTag = ' title="page ' + summary[jsonName] + '"';
+                chptSummary += '<a style="margin-left:8px;font-size:14px" href="' + icc_url + '" target="icc"' + titleTag + '><b><u>ICC Commentary for chapter ' + chapterNum + '</u></b> ' +
+                    '<sup class="glyphicon glyphicon-book"></sup></a>';
+            }
+            chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
             if (chapterNum > 1) chptSummary +=
                     '<a class="previousChapter" style="display:inline" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum - 1) + '\')">' +
                         '<i class="glyphicon glyphicon-arrow-left"></i>' +

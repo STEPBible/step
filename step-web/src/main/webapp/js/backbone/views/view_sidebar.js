@@ -38,11 +38,14 @@ var SidebarView = Backbone.View.extend({
         else if (data == '#history') {
             mode = 'history';
         }
-        else if (data == '#help') {
-            mode = 'help';
-        }
         else if (data == '#color') {
             mode = 'color';
+        }
+        else if (data == '#readingPlans') {
+            mode = 'readingPlans';
+        }
+        else if (data == '#help') {
+            mode = 'help';
         }
         this.model.save({
             mode: mode
@@ -105,6 +108,9 @@ var SidebarView = Backbone.View.extend({
             if ($('#ColorCode').length != 1) // Only call if it is not created
                 self.createColor();
         }
+        else if (this.model.get("mode") === 'readingPlans') {
+            self.createReadingPlans();
+        }
         else {
             self.createHelp();
         }
@@ -148,11 +154,13 @@ var SidebarView = Backbone.View.extend({
         this.analysis = $("<div id='analysis' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.history = $("<div id='history' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.color = $("<div id='color' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
+        this.readingPlans = $("<div id='readingPlans' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.help = $("<div id='help' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         tabContent.append(this.lexicon);
         tabContent.append(this.analysis);
         tabContent.append(this.history);
         tabContent.append(this.color);
+        tabContent.append(this.readingPlans);
         tabContent.append(this.help);
         this.$el.append(tabContent);
         return tabContent;
@@ -186,6 +194,31 @@ var SidebarView = Backbone.View.extend({
     },
     createColor: function () {
         this.color = new ColorView({el: this.color});
+    },
+    createReadingPlans: function () {
+        var plans = [
+            { href: 'html/one_year_themes_chrono.html', text: '1 yr themes collected chronologically' },
+            { href: 'html/one_year_chrono_OT_and_NT_together.html', text: '1 yr chronological OT and NT' },
+            { href: 'html/one_year_chrono_NT_related_OT.html', text: '1 yr chronological NT with related OT' },
+            { href: 'html/one_year_chrono_OT_related_NT.html', text: '1 yr chronological OT with related NT' },
+            { href: 'html/two_year_chrono_OT_related_NT.html', text: '2 yr chronological OT with related NT' },
+            { href: 'html/mcheynes_readings.html', text: "R. M. M'Cheyne's 1, 2, or 3 yr readings" },
+            { href: 'html/lectionary.html', text: '3 yr Revised Common Lectionary' },
+            { href: 'html/parashot.html', text: 'Jewish Parashot (Torah & Haftorah)' }
+        ];
+        var $container = $('<div class="reading-plans-sidebar" style="padding:16px"><h1>Reading Plans</h1><ul></ul></div>');
+        var $ul = $container.find('ul');
+        plans.forEach(function(plan) {
+            var $li = $('<li></li>');
+            var $a = $('<a></a>')
+                .attr('href', plan.href)
+                .attr('target', '_blank')
+                .attr('rel', 'noopener')
+                .text(plan.text);
+            $li.append($a);
+            $ul.append($li);
+        });
+        this.readingPlans.empty().append($container);
     },
     createDefinition: function (data, parameters) {
         var ref = parameters[0];
@@ -1178,6 +1211,7 @@ var SidebarView = Backbone.View.extend({
             '<li style="display:none"><a class="glyphicon glyphicon-bookmark" title="<%= __s.bookmarks_and_recent_texts %>" data-toggle="tab" data-target="#history"></li>' +
             '<li style="display:none"><a class="stepglyph-help glyphicon glyphicon-question-sign" title="<%= __s.frequently_asked_questions %>" data-toggle="tab" data-target="#help"></li>' +
             '<li style="display:none"><a title="<%= __s.display_grammarColor %>" data-toggle="tab" data-target="#color"></a></li>' +
+            '<li style="display:none"><a class="glyphicon glyphicon-book" title="Reading Plans" data-toggle="tab" data-target="#readingPlans"></li>' +
             '</ul>';
 
         var tabContainer = $(_.template(template)());

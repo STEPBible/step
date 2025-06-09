@@ -249,15 +249,16 @@
                                     <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;Resources</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="html/gospel_harmony.html">Harmony of the Gospels</a></li>
-                                    <li><a href="html/miracles.html">Miracles in the Bible</a></li>
-                                    <li><a href="html/nt_letters.html">New Testament Letter Structure</a></li>
-                                    <li><a href="html/ot_parallel.html">Old Testament parallels</a></li>
-                                    <li><a href="html/ot_in_nt.html">Old Testament used in the New Testament</a></li>
-                                    <li><a href="html/names.html">Names of God</a></li>
-                                    <li><a href="html/prophets.html">Prophets in the Bible</a></li>
-                                    <li><a href="html/places.html">Places in the Bible</a></li>
-                                    <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview">Create your own notes</a></li>
+                                    <li><a href="html/gospel_harmony.html" target="_blank" rel="noopener">Harmony of the Gospels</a></li>
+                                    <li><a href="html/miracles.html" target="_blank" rel="noopener">Miracles in the Bible</a></li>
+                                    <li><a href="html/nt_letters.html" target="_blank" rel="noopener">New Testament Letter Structure</a></li>
+                                    <li><a href="html/ot_parallel.html" target="_blank" rel="noopener">Old Testament parallels</a></li>
+                                    <li><a href="html/ot_in_nt.html" target="_blank" rel="noopener">Old Testament used in the New Testament</a></li>
+                                    <li><a href="html/names.html" target="_blank" rel="noopener">Names of God</a></li>
+                                    <li><a href="html/prophets.html" target="_blank" rel="noopener">Prophets in the Bible</a></li>
+                                    <li><a href="html/places.html" target="_blank" rel="noopener">Places in the Bible</a></li>
+                                    <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank" rel="noopener">Create your own notes</a></li>
+                                    <li><a href="#" onclick="step.util.ui.initSidebar('readingPlans'); return false;">Reading Plans</a></li>
                                 </ul>
                             </span>
                             <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">

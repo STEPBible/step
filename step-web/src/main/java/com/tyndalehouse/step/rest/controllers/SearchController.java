@@ -471,7 +471,6 @@ public class SearchController {
         final List<SearchToken> searchTokens = ValidateUtils.parseTokens(items);
         final int page = ConversionUtils.getValidInt(pageNumber, 1);
         final int searchContext = ConversionUtils.getValidInt(context, 0);
-        // XSS to do Check options, display, pageNumber, ... here
         return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, sortOrder, searchContext, items, userLanguage, countOnly);
     }
 

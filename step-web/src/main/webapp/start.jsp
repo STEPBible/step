@@ -244,7 +244,7 @@
                             <a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy" />">
                                 <i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="copy" /></span>
                             </a>
-                            <span class="dropdown">
+                            <div class="dropdown" style="display:inline-block">
                                 <a id="report-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="Resources powered by STEPBible">
                                     <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;Resources</span>
                                 </a>
@@ -260,7 +260,7 @@
                                     <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank" rel="noopener">Create your own notes</a></li>
                                     <li><a href="#" onclick="step.util.ui.initSidebar('readingPlans'); return false;">Reading Plans</a></li>
                                 </ul>
-                            </span>
+                            </div>
                             <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
                                 <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats" /></span>
                             </a>

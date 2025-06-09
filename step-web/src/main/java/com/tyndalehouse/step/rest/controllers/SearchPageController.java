@@ -5,7 +5,6 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.AppManagerService;
 import com.tyndalehouse.step.core.service.LanguageService;
 import com.tyndalehouse.step.core.utils.StringUtils;
-import com.tyndalehouse.step.core.utils.ValidateUtils;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.yammer.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -455,24 +454,20 @@ public class SearchPageController extends HttpServlet {
     private AbstractComplexSearch doSearch(final HttpServletRequest req, final String userLanguage) {
         AbstractComplexSearch text;
         try {
-            String q = req.getParameter("q");
-            String options = req.getParameter("options");
-            String display = req.getParameter("display");
-            String page = req.getParameter("page");
-            String qFilter = req.getParameter("qFilter");
-            String sort = req.getParameter("sort");
-            String context = req.getParameter("context");
             text = this.search.masterSearch(
-                    q,
-                    options,
-                    display,
-                    page,
-                    qFilter,
-                    sort,
-                    context,
+                    req.getParameter("q"),
+                    req.getParameter("options"),
+                    req.getParameter("display"),
+                    req.getParameter("page"),
+                    req.getParameter("qFilter"),
+                    req.getParameter("sort"),
+                    req.getParameter("context"),
                     userLanguage);
         } catch (Exception ex) {
+            //if (ex.toString().indexOf("invalid_reference_in_book") == -1) // This line might cause another exception so it is commented out.  PT 09/22/2022
                 LOGGER.warn(ex.getMessage(), ex);
+            //else // There are too many invalid reference in book exception.  No need to dump the stack in the log.
+//                LOGGER.info(ex.getMessage());
             text = getDefaultPassage();
         }
         return text;

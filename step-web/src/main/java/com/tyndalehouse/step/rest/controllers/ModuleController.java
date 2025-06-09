@@ -10,6 +10,7 @@ import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.MorphologyService;
 import com.tyndalehouse.step.core.service.SwingService;
 import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.utils.ValidateUtils;
 import com.tyndalehouse.step.models.info.Info;
 import com.tyndalehouse.step.models.info.MorphInfo;
 import com.tyndalehouse.step.models.info.VocabInfo;
@@ -25,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 /**
  * The Module Controller servicing requests for module information
@@ -49,13 +49,13 @@ public class ModuleController {
                             final MorphologyService morphology,
                             final VocabularyService vocabulary,
                             final SwingService swingService) {
-        notNull(moduleService,
+        ValidateUtils.notNull(moduleService,
                 "Initialising the module service in the module administration controller failed",
                 CONTROLLER_INITIALISATION_ERROR);
-        notNull(morphology,
+        ValidateUtils.notNull(morphology,
                 "Initialising the morphology service failed in the module administration controller",
                 CONTROLLER_INITIALISATION_ERROR);
-        notNull(swingService,
+        ValidateUtils.notNull(swingService,
                 "Initialising the swing service failed in the module administration controller",
                 CONTROLLER_INITIALISATION_ERROR);
         this.swingService = swingService;
@@ -81,8 +81,8 @@ public class ModuleController {
      * @return all versions of modules that are considered to be modules and usable by STEP.
      */
     public List<BibleVersion> getAllInstallableModules(final String installerIndex, final String types) {
-        notNull(types, "No types of modules were provided", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        notNull(installerIndex, "No index to installer", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        ValidateUtils.notNull(types, "No types of modules were provided", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        ValidateUtils.notNull(installerIndex, "No index to installer", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] values = split(types, ",");
 
         final BookCategory[] categories = new BookCategory[values.length];
@@ -146,6 +146,12 @@ public class ModuleController {
         LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[]{reference, this.vocab, morphIdentifiers});
 
         final Info i = new Info();
+        if (!ValidateUtils.validateInputQ("version", version) ||
+                !ValidateUtils.validateInputQ("reference", reference) ||
+                !ValidateUtils.validateInputQ("vocabIdentifiers", vocabIdentifiers) ||
+                !ValidateUtils.validateInputQ("morphIdentifiers", morphIdentifiers) ||
+                !ValidateUtils.validateInputQ("lang", userLanguage))
+            return i;
         i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morphIdentifiers), true));
 
         if (isNotBlank(vocabIdentifiers)) {
@@ -217,6 +223,12 @@ public class ModuleController {
                 new Object[]{this.vocab, morphIdentifiers});
 
         final Info i = new Info();
+        if (!ValidateUtils.validateInputQ("version", version) ||
+                !ValidateUtils.validateInputQ("reference", reference) ||
+                !ValidateUtils.validateInputQ("vocabIdentifiers", vocabIdentifiers) ||
+                !ValidateUtils.validateInputQ("morphIdentifiers", morphIdentifiers) ||
+                !ValidateUtils.validateInputQ("lang", userLanguage))
+            return i;
         i.setMorphInfos(translateToInfo(this.morphology.getQuickMorphology(morphIdentifiers), false));
 
         if (isNotBlank(vocabIdentifiers)) {

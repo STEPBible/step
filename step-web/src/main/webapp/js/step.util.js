@@ -3158,7 +3158,7 @@ step.util = {
                 	if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
                     	titleTag = ' title="page ' + summary[jsonName] + '"';
                 	chptSummary += '<a style="margin-left:8px;font-size:14px" href="' +
-						commentary_url + '" target="icc"' + titleTag + '><b><u>' +
+						commentary_url + '" target="ext_commentary"' + titleTag + '><b><u>' +
 						namesForCommentary[i] + ' for chapter ' + chapterNum + '</u></b> ' +
                     	'<sup class="glyphicon glyphicon-book"></sup></a><br>';
 				}

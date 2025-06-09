@@ -9,6 +9,7 @@ import com.tyndalehouse.step.core.service.AppManagerService;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tyndalehouse.step.core.utils.ValidateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +45,7 @@ public abstract class AbstractAjaxController extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) {
         // CHECKSTYLE:ON
+        if (!ValidateUtils.checkForObviousXSS("rest", request.getPathInfo(), "", false)) return;
         try {
             Object returnVal = executeRestMethod(request);
             byte[] jsonEncoded = getEncodedJsonResponse(returnVal);

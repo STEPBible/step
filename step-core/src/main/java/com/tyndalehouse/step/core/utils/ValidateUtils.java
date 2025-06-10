@@ -184,7 +184,6 @@ public final class ValidateUtils {
             System.out.println("XSS unknown key: " + key + " " + value);
             return true;
         }
-        return true; // should not get here but just in case the code change in the future.
     }
     /**
      * Parses a string in the form of a=2@c=1 into a list of search tokens
@@ -224,25 +223,31 @@ public final class ValidateUtils {
         return searchTokens;
     }
     public static boolean checkURLParms(final Map<String, String[]> inputParms, final String requestURI) {
-//        System.out.println("checkURLParms: " + requestURI);
         for (Map.Entry<String, String[]> entry : inputParms.entrySet()) {
-            String key = entry.getKey();
-            if (!key.equals("q") && !key.equals("options") && !key.equals("display") && !key.equals("page") &&
-                    !key.equals("qFilter") && !key.equals("sort") && !key.equals("context") && !key.equals("lang") &&
-                    !key.equals("debug") && !key.equals("noredirect")) {
-                System.out.println("XSS checkURLParm check: unknown key: " + key + " value: " + entry.getValue());
+            final String key = entry.getKey();
+            final String[] value = entry.getValue();
+            if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome")) {
+                if (value.length == 0) continue; // The debug and noredirect parameters do not have value so no additional checking is required.
+                System.out.println("XSS kill unexpected value with key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
+                return false;
             }
-            String[] value = entry.getValue();
-            for (int i = 0; i < value.length; i++) {
-                String checkValue = value[i];
-                if (key.equals("debug") || key.equals("noredirect")) {
-                    if (checkValue.length() == 0) continue; // The debug and noredirect parameters do not have value so no additional checking is required.
-                    System.out.println("XSS check unexpected value with " + key + ": " + checkValue);
+            final String cmpKey = " " + key + " ";
+            if (" q options display page qFilter sort context lang ".indexOf(cmpKey) > -1) {
+                for (int i = 0; i < value.length; i++) {
+                    String checkValue = value[i];
+                    if (checkValue.length() == 0) {
+                        System.out.println("XSS INFO checkURLParm unexpected: no value in parm key with no data: " + key  + " requestURI: " + requestURI);
+                        continue;
+                    }
+                    if (!checkForObviousXSS(key, checkValue, requestURI, true)) return false;
                 }
-                else if (checkValue.length() == 0) {
-                    System.out.println("XSS check unexpected: no value in parm key with no data: " + key);
-                }
-                if (!checkForObviousXSS(key, checkValue, requestURI, true)) return false;
+            }
+            else { // does not match " q options display page qFilter sort context lang "
+                if (value.length > 0)
+                    System.out.println("XSS INFO checkURLParm: unknown key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
+                else
+                    System.out.println("XSS INFO checkURLParm: unknown key: " + key + " no content in value" + " requestURI: " + requestURI);
+                continue;
             }
         }
         return true;
@@ -250,17 +255,16 @@ public final class ValidateUtils {
 
     public static boolean checkForObviousXSS(final String key, final String checkValue, final String requestURI,
                                              final boolean kill) {
-        // System.out.println("checkForObviousXSS: " + key + " checkValue: " + checkValue + " requestURI: " + requestURI);
         if ((key.equals("options") && !(validateInputParm("options", checkValue))) ||
                 (key.equals("display") && !(validateInputParm("display", checkValue)))) {
-            System.out.println("XSS check : " + key + "=" + checkValue + " uri: " + requestURI);
-            return true;
+            System.out.println("XSS kill checkForObviousXSS : " + key + "=" + checkValue + " uri: " + requestURI);
+            return false;
         }
         String checkValueLC = checkValue.toLowerCase();
         if (checkValueLC.contains("script")) {
             checkValueLC = checkValueLC.replaceAll("\\s+", "");
             if (checkValueLC.contains("<script>") || checkValueLC.contains("</script>")) {
-                System.out.println("XSS attack detected quit: " + key + "=" + checkValue + " uri: " + requestURI);
+                System.out.println("XSS kill checkForObviousXSS: " + key + "=" + checkValue + " uri: " + requestURI);
                 return false;
             }
         }
@@ -268,8 +272,11 @@ public final class ValidateUtils {
                 checkValueLC.contains("&lt") || checkValueLC.contains("&gt") ||
                 checkValueLC.contains("#6") || checkValueLC.contains("#0") || checkValueLC.contains("#x") ||
                 checkValueLC.contains("\u003c")) {
-            System.out.println("XSS kill: " + kill + " key: " + key + "=" + checkValue + " uri: " + requestURI);
-            if (kill) return false;
+            if (kill) {
+                System.out.println("XSS kill checkForObviousXSS key: " + key + "=" + checkValue + " uri: " + requestURI);
+                return false;
+            }
+            System.out.println("XSS no_kill checkForObviousXSS key: " + key + "=" + checkValue + " uri: " + requestURI);
         }
         return true;
     }

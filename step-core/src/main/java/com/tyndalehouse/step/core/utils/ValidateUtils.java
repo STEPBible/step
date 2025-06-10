@@ -94,18 +94,17 @@ public final class ValidateUtils {
         }
         return result;
     }
-    public static boolean validateInputQ(final String key, final String value) {
+    public static boolean validateInputParm(final String key, final String value) {
         final char lowerBoundLC = 'a';
         final char upperBoundLC = 'z';
         final char lowerBoundUC = 'A';
         final char upperBoundUC = 'Z';
         final char lowerBoundNum = '0';
         final char upperBoundNum = '9';
-//        System.out.println("validateInputQ key: " + key + " value: " + value);
         if ((value == null) || value.equals("")) return true;
         if (key.equals("version") || key.equals("options")  || key.equals("display")) {
             if (value.length() > 20) {
-                System.out.println("XSS kill unexpected char key: " + key + " value length: " + value.length());
+                System.out.println("XSS kill unexpected length key: " + key + " value: " + value);
                 return false;
             }
             for (int i = 0; i < value.length(); i++) {
@@ -120,8 +119,8 @@ public final class ValidateUtils {
             }
             return true;
         }
-        else if (key.equals("reference") || key.equals("vocabIdentifiers") || key.equals("morphIdentifiers") || key.equals("strong")) {
-            if (value.length() > 300) {
+        else if (key.equals("reference")) {
+            if (value.length() > 500) {
                 System.out.println("XSS kill unexpected reference length: " + value);
                 return false;
             }
@@ -132,6 +131,23 @@ public final class ValidateUtils {
                         (c >= lowerBoundNum && c <= upperBoundNum) ||
                         (c == '.') || (c == ':') || (c == '-')  || (c == ' ')  || (c == ',')  || (c == ';'))) {
                     System.out.println("XSS kill unexpected char reference: " + value);
+                    return false;
+                }
+            }
+            return true;
+        }
+        else if (key.equals("vocabIdentifiers") || key.equals("morphIdentifiers") || key.equals("strong")  || key.equals("examples") || key.equals("srchJoin")) {
+            if (value.length() > 300) {
+                System.out.println("XSS kill unexpected length key: " +key + " value: " + value);
+                return false;
+            }
+            for (int i = 0; i < value.length(); i++) {
+                char c = value.charAt(i);
+                if (!((c >= lowerBoundLC && c <= upperBoundLC) ||
+                        (c >= lowerBoundUC && c <= upperBoundUC) ||
+                        (c >= lowerBoundNum && c <= upperBoundNum) ||
+                        (c == '.') || (c == ':') || (c == '-')  || (c == ' ')  || (c == ',')  || (c == ';'))) {
+                    System.out.println("XSS kill unexpected char in key: " + key + " value: " + value);
                     return false;
                 }
             }
@@ -159,8 +175,16 @@ public final class ValidateUtils {
             }
             return true;
         }
-        System.out.println("XSS unknown key: " + key + " " + value);
-        return true;
+        else {
+            String keyForCompare = " " + key + " ";
+            if (" nave xnave greekMeanings hebrewMeanings greek hebrew topicref relatedrefs exactForm syntax ".indexOf(keyForCompare) > -1) {
+                System.out.println("XSS INFO, key: " + key + " value: " + value);
+                return true;
+            }
+            System.out.println("XSS unknown key: " + key + " " + value);
+            return true;
+        }
+        return true; // should not get here but just in case the code change in the future.
     }
     /**
      * Parses a string in the form of a=2@c=1 into a list of search tokens
@@ -193,7 +217,7 @@ public final class ValidateUtils {
             }
             String key = t.substring(0, indexOfPrefix);
             String value = t.substring(indexOfPrefix + 1);
-            if (ValidateUtils.validateInputQ(key, value)) {
+            if (ValidateUtils.validateInputParm(key, value)) {
                 searchTokens.add(new SearchToken(key, value));
             }
         }
@@ -227,8 +251,8 @@ public final class ValidateUtils {
     public static boolean checkForObviousXSS(final String key, final String checkValue, final String requestURI,
                                              final boolean kill) {
         // System.out.println("checkForObviousXSS: " + key + " checkValue: " + checkValue + " requestURI: " + requestURI);
-        if ((key.equals("options") && !(validateInputQ("options", checkValue))) ||
-                (key.equals("display") && !(validateInputQ("display", checkValue)))) {
+        if ((key.equals("options") && !(validateInputParm("options", checkValue))) ||
+                (key.equals("display") && !(validateInputParm("display", checkValue)))) {
             System.out.println("XSS check : " + key + "=" + checkValue + " uri: " + requestURI);
             return true;
         }

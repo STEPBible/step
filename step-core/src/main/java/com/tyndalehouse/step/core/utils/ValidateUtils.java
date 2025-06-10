@@ -120,7 +120,7 @@ public final class ValidateUtils {
             }
             return true;
         }
-        else if (key.equals("reference") || key.equals("vocabIdentifiers") || key.equals("morphIdentifiers")) {
+        else if (key.equals("reference") || key.equals("vocabIdentifiers") || key.equals("morphIdentifiers") || key.equals("strong")) {
             if (value.length() > 300) {
                 System.out.println("XSS kill unexpected reference length: " + value);
                 return false;
@@ -142,6 +142,7 @@ public final class ValidateUtils {
                 System.out.println("XSS too long no kill , key: " + key + " value: " + value);
                 return true;
             }
+            return true;
         }
         else if (key.equals("lang")) {
             if (value.length() > 6)  {

@@ -154,7 +154,7 @@ public final class ValidateUtils {
             return true;
         }
         else if (key.equals("text") || key.equals("meanings") || key.equals("subject")  || key.equals("limit")) {
-            if (value.length() > 50) {
+            if (value.length() > 100) {
                 System.out.println("XSS too long no kill , key: " + key + " value: " + value);
                 return true;
             }
@@ -168,7 +168,8 @@ public final class ValidateUtils {
             for (int i = 0; i < value.length(); i++) {
                 char c = value.charAt(i);
                 if (!((c >= lowerBoundLC && c <= upperBoundLC) ||
-                        (c >= lowerBoundUC && c <= upperBoundUC) )) {
+                        (c >= lowerBoundUC && c <= upperBoundUC) ||
+                        (c == '_') || (c == '-') )) {
                     System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
                     return false;
                 }
@@ -239,6 +240,25 @@ public final class ValidateUtils {
                         System.out.println("XSS INFO checkURLParm unexpected: no value in parm key with no data: " + key  + " requestURI: " + requestURI);
                         continue;
                     }
+                    if ((key.equals("options") && !(validateInputParm("options", checkValue))) ||
+                            (key.equals("display") && !(validateInputParm("display", checkValue))) ||
+                            (key.equals("lang") && !(validateInputParm("lang", checkValue))) ||
+                            (key.equals("version") && !(validateInputParm("version", checkValue))) ||
+                            (key.equals("reference") && !(validateInputParm("reference", checkValue)))
+//                            (key.equals("vocabIdentifiers") && !(validateInputParm("vocabIdentifiers", checkValue))) ||
+//                            (key.equals("morphIdentifiers") && !(validateInputParm("morphIdentifiers", checkValue))) ||
+//                            (key.equals("strong") && !(validateInputParm("strong", checkValue))) ||
+//                            (key.equals("examples") && !(validateInputParm("examples", checkValue))) ||
+//                            (key.equals("srchJoin") && !(validateInputParm("srchJoin", checkValue))) ||
+//                            (key.equals("text") && !(validateInputParm("text", checkValue))) ||
+//                            (key.equals("meanings") && !(validateInputParm("meanings", checkValue))) ||
+//                            (key.equals("subject") && !(validateInputParm("subject", checkValue))) ||
+//                            (key.equals("limit") && !(validateInputParm("limit", checkValue)))
+                    ) {
+                        System.out.println("XSS kill checkURLParms 2 : " + key + "=" + checkValue + " uri: " + requestURI);
+                        return false;
+                    }
+
                     if (!checkForObviousXSS(key, checkValue, requestURI, true)) return false;
                 }
             }
@@ -255,11 +275,6 @@ public final class ValidateUtils {
 
     public static boolean checkForObviousXSS(final String key, final String checkValue, final String requestURI,
                                              final boolean kill) {
-        if ((key.equals("options") && !(validateInputParm("options", checkValue))) ||
-                (key.equals("display") && !(validateInputParm("display", checkValue)))) {
-            System.out.println("XSS kill checkForObviousXSS : " + key + "=" + checkValue + " uri: " + requestURI);
-            return false;
-        }
         String checkValueLC = checkValue.toLowerCase();
         if (checkValueLC.contains("script")) {
             checkValueLC = checkValueLC.replaceAll("\\s+", "");

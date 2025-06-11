@@ -232,7 +232,7 @@ public final class ValidateUtils {
                 return false;
             }
             final String cmpKey = " " + key + " ";
-            if (" q options display page qFilter sort context lang ".indexOf(cmpKey) > -1) {
+            if (" q options display page qFilter sort context lang reference version ".indexOf(cmpKey) > -1) {
                 for (int i = 0; i < value.length; i++) {
                     String checkValue = value[i];
                     if (checkValue.length() == 0) {

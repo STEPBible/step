@@ -3122,17 +3122,48 @@ step.util = {
                     '<p style="margin:8px">' + summary["chapter_" + chapterNum + "_summary"] + '</p>' +
                 '</span><br>';
 
-			var jsonName = "chapter_" + chapterNum + "_icc_url";
-			if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
-				var icc_url = summary[jsonName];
-				jsonName = "chapter_" + curChapter + "_icc_page";
-				var titleTag = "";
-				if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
-					titleTag = ' title="page ' + summary[jsonName] + '"';
-				chptSummary += '<a style="margin-left:8px;font-size:14px" href="' + icc_url + '" target="icc"' + titleTag + '><b><u>ICC Commentary for chapter ' + chapterNum + '</u></b> ' +
-					'<sup class="glyphicon glyphicon-book"></sup></a>';
+			var commentary_keys = summary["commentary_keys"];
+			var commentary_names = summary["commentary_names"];
+			if (commentary_keys == null) {
+				commentary_keys = "['icc']";
+				commentary_names = "['ICC Commentary']";
 			}
-			chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
+			var keysForCommentary = JSON.parse(commentary_keys.replaceAll("'", '"').replace('\\"',"'"));
+			var namesForCommentary = JSON.parse(commentary_names.replaceAll("'", '"').replace('\\"',"'"));
+			var usrLangCode = step.userLanguageCode;
+			if (usrLangCode.substr(0,3) === 'fil')
+				usrLangCode = "fil";
+			else
+				usrLangCode = usrLangCode.substr(0,2);
+			for (var i = 0; i < keysForCommentary.length; i++) {
+				var currentKey = keysForCommentary[i];
+				var jsonName = "chapter_" + chapterNum + "_" + currentKey + "_url";
+				var parts = currentKey.split("_");
+				if ((parts.length == 2) && (parts[1] === "langcode")) { // key name ends with _langcode
+					jsonName = "chapter_" + chapterNum + "_" + parts[0] + "_" + usrLangCode + "_url";
+					if (typeof summary[jsonName] === "string")
+						currentKey = parts[0] + "_" + usrLangCode;
+					else {
+						jsonName = "chapter_" + chapterNum + "_" + parts[0] + "_en_url";
+						if (typeof summary[jsonName] == "string")
+							currentKey = parts[0] + "_en";
+						else
+							continue;
+					}
+				}
+    	        if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
+        	        var commentary_url = summary[jsonName];
+            	    jsonName = "chapter_" + chapterNum + "_" + currentKey + "_page";
+                	var titleTag = "";
+                	if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
+                    	titleTag = ' title="page ' + summary[jsonName] + '"';
+                	chptSummary += '<a style="margin-left:8px;font-size:14px" href="' +
+						commentary_url + '" target="ext_commentary"' + titleTag + '><b><u>' +
+						namesForCommentary[i] + ' for chapter ' + chapterNum + '</u></b> ' +
+                    	'<sup class="glyphicon glyphicon-book"></sup></a><br>';
+				}
+            }
+            chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
             if (chapterNum > 1) chptSummary +=
                     '<a class="previousChapter" style="display:inline" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum - 1) + '\')">' +
                         '<i class="glyphicon glyphicon-arrow-left"></i>' +

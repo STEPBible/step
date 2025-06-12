@@ -119,8 +119,8 @@ public final class ValidateUtils {
             }
             return true;
         }
-        else if (key.equals("reference")) {
-            if (value.length() > 500) {
+        else if (key.equals("reference") || key.equals("topicref") || key.equals("relatedrefs")) {
+            if (value.length() > 1000) {
                 System.out.println("XSS kill unexpected reference length: " + value);
                 return false;
             }
@@ -130,13 +130,13 @@ public final class ValidateUtils {
                         (c >= lowerBoundUC && c <= upperBoundUC) ||
                         (c >= lowerBoundNum && c <= upperBoundNum) ||
                         (c == '.') || (c == ':') || (c == '-')  || (c == ' ')  || (c == ',')  || (c == ';'))) {
-                    System.out.println("XSS kill unexpected char reference: " + value);
+                    System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
                     return false;
                 }
             }
             return true;
         }
-        else if (key.equals("vocabIdentifiers") || key.equals("morphIdentifiers") || key.equals("strong")  || key.equals("examples") || key.equals("srchJoin")) {
+        else if (key.equals("morphIdentifiers") || key.equals("strong")  || key.equals("examples") || key.equals("srchJoin")) {
             if (value.length() > 300) {
                 System.out.println("XSS kill unexpected length key: " +key + " value: " + value);
                 return false;
@@ -153,8 +153,9 @@ public final class ValidateUtils {
             }
             return true;
         }
-        else if (key.equals("text") || key.equals("meanings") || key.equals("subject")  || key.equals("limit")) {
-            if (value.length() > 100) {
+        else if (key.equals("text") || key.equals("meanings") || key.equals("subject")  || key.equals("limit") ||
+                key.equals("vocabIdentifiers") || key.equals("nave") || key.equals("xnave") || key.equals("syntax")) {
+            if (value.length() > 150) {
                 System.out.println("XSS too long no kill , key: " + key + " value: " + value);
                 return true;
             }
@@ -178,7 +179,7 @@ public final class ValidateUtils {
         }
         else {
             String keyForCompare = " " + key + " ";
-            if (" nave xnave greekMeanings hebrewMeanings greek hebrew topicref relatedrefs exactForm syntax ".indexOf(keyForCompare) > -1) {
+            if (" greekMeanings hebrewMeanings greek hebrew exactForm ".indexOf(keyForCompare) > -1) {
                 System.out.println("XSS INFO, key: " + key + " value: " + value);
                 return true;
             }
@@ -245,15 +246,6 @@ public final class ValidateUtils {
                             (key.equals("lang") && !(validateInputParm("lang", checkValue))) ||
                             (key.equals("version") && !(validateInputParm("version", checkValue))) ||
                             (key.equals("reference") && !(validateInputParm("reference", checkValue)))
-//                            (key.equals("vocabIdentifiers") && !(validateInputParm("vocabIdentifiers", checkValue))) ||
-//                            (key.equals("morphIdentifiers") && !(validateInputParm("morphIdentifiers", checkValue))) ||
-//                            (key.equals("strong") && !(validateInputParm("strong", checkValue))) ||
-//                            (key.equals("examples") && !(validateInputParm("examples", checkValue))) ||
-//                            (key.equals("srchJoin") && !(validateInputParm("srchJoin", checkValue))) ||
-//                            (key.equals("text") && !(validateInputParm("text", checkValue))) ||
-//                            (key.equals("meanings") && !(validateInputParm("meanings", checkValue))) ||
-//                            (key.equals("subject") && !(validateInputParm("subject", checkValue))) ||
-//                            (key.equals("limit") && !(validateInputParm("limit", checkValue)))
                     ) {
                         System.out.println("XSS kill checkURLParms 2 : " + key + "=" + checkValue + " uri: " + requestURI);
                         return false;

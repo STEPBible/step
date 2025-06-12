@@ -61,7 +61,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
 				'<li>Many other contributors of licensed data and texts, listed <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_new">here</a></li>' +
 				'</ul>' +
                 '<p />' +
-                '&copy; STEPBible, Cambridge <%= new Date().getYear() + 1900 %> </p>' +
+                '&copy; STEPBible, Cambridge <%= new Date().getYear() + 1900 %> &nbsp;|&nbsp; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank" style="text-decoration:underline">Copyrights & Licenses</a></p>' +
                 '</div>' +
 				'<p>' + step.state.getCurrentVersion() + '</p>' +
                 '<div class="footer"><button class="btn btn-default btn-sm closeModal stepButton" data-dismiss="modal" ><label><%= __s.ok %></label></button></div>' +

@@ -343,7 +343,6 @@
             <%
                 }
             %>
-                                        <li><a target="_new" href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" name="COPYRIGHT"><fmt:message key="copyright_info_link" /></a></li>
                                         <li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about" /></a></li>
             <%
                 if (appManager.isLocal()) {

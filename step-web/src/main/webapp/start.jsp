@@ -339,7 +339,6 @@
                 if (!appManager.isLocal()) {
             %> 
                                         <li><a href="javascript:void(0)" id="provideFeedback" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport"><fmt:message key="help_feedback" /></a></li>
-                                        <li><a href="/html/cookies_policy.html" target="_blank"><fmt:message key="help_privacy_policy" /></a></li>
             <%
                 }
             %>

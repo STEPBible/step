@@ -328,13 +328,7 @@
             <%
                 if (appManager.isLocal()) {
             %> 
-                                        <li class="available_bibles_and_commentaries"><a href="/versions.jsp" target="_blank" name="AVAILABLE_BIBLES_AND_COMMENTARIES"><fmt:message key="available_versions" /></a></li>
                                         <li><a href="/setup.jsp"><fmt:message key="tools_settings" /></a></li>
-            <%
-                }
-                else {
-            %>
-                                        <li><a href="https://stepweb.atlassian.net/wiki/display/SUG/Resources" target="_blank"><fmt:message key="available_versions" /></a></li>
             <%
                 }
             %>

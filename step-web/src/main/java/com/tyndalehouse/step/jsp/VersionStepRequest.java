@@ -48,7 +48,7 @@ public class VersionStepRequest {
 
         try {
             String version = request.getParameter("version");
-            if ((version != null) && (ValidateUtils.validateInputQ("version", version))) {
+            if ((version != null) && (ValidateUtils.validateInputParm("version", version))) {
                 this.versification = this.injector.getInstance(JSwordVersificationService.class);
                 this.book = this.versification.getBookFromVersion(version);
                 this.globalKeyList = this.book.getGlobalKeyList();

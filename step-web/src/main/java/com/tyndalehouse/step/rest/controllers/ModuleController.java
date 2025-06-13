@@ -146,11 +146,11 @@ public class ModuleController {
         LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[]{reference, this.vocab, morphIdentifiers});
 
         final Info i = new Info();
-        if (!ValidateUtils.validateInputQ("version", version) ||
-                !ValidateUtils.validateInputQ("reference", reference) ||
-                !ValidateUtils.validateInputQ("vocabIdentifiers", vocabIdentifiers) ||
-                !ValidateUtils.validateInputQ("morphIdentifiers", morphIdentifiers) ||
-                !ValidateUtils.validateInputQ("lang", userLanguage))
+        if (!ValidateUtils.validateInputParm("version", version) ||
+                !ValidateUtils.validateInputParm("reference", reference) ||
+                !ValidateUtils.validateInputParm("vocabIdentifiers", vocabIdentifiers) ||
+                !ValidateUtils.validateInputParm("morphIdentifiers", morphIdentifiers) ||
+                !ValidateUtils.validateInputParm("lang", userLanguage))
             return i;
         i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morphIdentifiers), true));
 
@@ -223,11 +223,11 @@ public class ModuleController {
                 new Object[]{this.vocab, morphIdentifiers});
 
         final Info i = new Info();
-        if (!ValidateUtils.validateInputQ("version", version) ||
-                !ValidateUtils.validateInputQ("reference", reference) ||
-                !ValidateUtils.validateInputQ("vocabIdentifiers", vocabIdentifiers) ||
-                !ValidateUtils.validateInputQ("morphIdentifiers", morphIdentifiers) ||
-                !ValidateUtils.validateInputQ("lang", userLanguage))
+        if (!ValidateUtils.validateInputParm("version", version) ||
+                !ValidateUtils.validateInputParm("reference", reference) ||
+                !ValidateUtils.validateInputParm("vocabIdentifiers", vocabIdentifiers) ||
+                !ValidateUtils.validateInputParm("morphIdentifiers", morphIdentifiers) ||
+                !ValidateUtils.validateInputParm("lang", userLanguage))
             return i;
         i.setMorphInfos(translateToInfo(this.morphology.getQuickMorphology(morphIdentifiers), false));
 

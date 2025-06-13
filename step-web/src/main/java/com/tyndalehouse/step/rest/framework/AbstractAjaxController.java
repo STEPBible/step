@@ -45,7 +45,7 @@ public abstract class AbstractAjaxController extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) {
         // CHECKSTYLE:ON
-        if (!ValidateUtils.checkForObviousXSS("rest", request.getPathInfo(), "", false)) return;
+        if (!ValidateUtils.checkForObviousXSS("rest", request.getPathInfo(), "", true)) return;
         try {
             Object returnVal = executeRestMethod(request);
             byte[] jsonEncoded = getEncodedJsonResponse(returnVal);

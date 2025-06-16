@@ -136,7 +136,7 @@ public final class ValidateUtils {
             }
             return true;
         }
-        else if (key.equals("morphIdentifiers") || key.equals("strong")  || key.equals("examples") || key.equals("srchJoin")) {
+        else if (key.equals("morphIdentifiers") || key.equals("strong")  || key.equals("examples")) {
             if (value.length() > 300) {
                 System.out.println("XSS kill unexpected length key: " +key + " value: " + value);
                 return false;
@@ -147,6 +147,22 @@ public final class ValidateUtils {
                         (c >= lowerBoundUC && c <= upperBoundUC) ||
                         (c >= lowerBoundNum && c <= upperBoundNum) ||
                         (c == '.') || (c == ':') || (c == '-')  || (c == ' ')  || (c == ',')  || (c == ';'))) {
+                    System.out.println("XSS kill unexpected char in key: " + key + " value: " + value);
+                    return false;
+                }
+            }
+            return true;
+        }
+        else if (key.equals("srchJoin")) {
+            if (value.length() > 300) {
+                System.out.println("XSS kill unexpected length key: " +key + " value: " + value);
+                return false;
+            }
+            for (int i = 0; i < value.length(); i++) {
+                char c = value.charAt(i);
+                if (!(  (c >= lowerBoundLC && c <= upperBoundLC) ||
+                        (c >= lowerBoundNum && c <= upperBoundNum) ||
+                        (c == '(') || (c == ')'))) {
                     System.out.println("XSS kill unexpected char in key: " + key + " value: " + value);
                     return false;
                 }

@@ -264,7 +264,7 @@ public final class ValidateUtils {
                 return false;
             }
             final String cmpKey = " " + key + " ";
-            if (" q options display page qFilter sort context lang reference version ".indexOf(cmpKey) > -1) {
+            if (" q options display page qFilter sort context lang reference version pos ".indexOf(cmpKey) > -1) {
                 for (int i = 0; i < value.length; i++) {
                     String checkValue = value[i];
                     if (checkValue.length() == 0) continue;
@@ -272,11 +272,15 @@ public final class ValidateUtils {
                             (key.equals("display") && !(validateInputParm("display", checkValue))) ||
                             (key.equals("lang") && !(validateInputParm("lang", checkValue))) ||
                             (key.equals("version") && !(validateInputParm("version", checkValue))) ||
-                            (key.equals("reference") && !(validateInputParm("reference", checkValue))) ) {
+                            (key.equals("reference") && !(validateInputParm("reference", checkValue))) ||
+                            (key.equals("pos") && !(validateInputParm("pos", checkValue)))) {
                         System.out.println("XSS kill checkURLParms 2 : " + key + "=" + checkValue + " uri: " + requestURI);
                         return false;
                     }
-                    if (!checkForObviousXSS(key, checkValue, requestURI, true)) return false;
+                    if (!checkForObviousXSS(key, checkValue, requestURI, true)) {
+                        System.out.println("XSS kill checkURLParms 3 : " + key + "=" + checkValue + " uri: " + requestURI);
+                        return false;
+                    }
                 }
             }
             else { // does not match " q options display page qFilter sort context lang "

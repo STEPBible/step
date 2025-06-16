@@ -193,6 +193,20 @@ public final class ValidateUtils {
             }
             return true;
         }
+        else if (key.equals("pos")) {
+            if (value.length() > 2)  {
+                System.out.println("XSS kill lang too long, key: " + key + " value: " + value);
+                return false;
+            }
+            for (int i = 0; i < value.length(); i++) {
+                char c = value.charAt(i);
+                if (!(c >= lowerBoundNum && c <= upperBoundNum)  ) {
+                    System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
+                    return false;
+                }
+            }
+            return true;
+        }
         else {
             String keyForCompare = " " + key + " ";
             if (" greekMeanings hebrewMeanings greek hebrew exactForm ".indexOf(keyForCompare) > -1) {

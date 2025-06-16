@@ -129,7 +129,7 @@ public final class ValidateUtils {
                 if (!((c >= lowerBoundLC && c <= upperBoundLC) ||
                         (c >= lowerBoundUC && c <= upperBoundUC) ||
                         (c >= lowerBoundNum && c <= upperBoundNum) ||
-                        (c == '.') || (c == ':') || (c == '-')  || (c == ' ')  || (c == ',')  || (c == ';'))) {
+                        (c == '.') || (c == ':') || (c == '-')  || (c == ' ')  || (c == ',')  || (c == ';')  || (c == '+'))) {
                     System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
                     return false;
                 }

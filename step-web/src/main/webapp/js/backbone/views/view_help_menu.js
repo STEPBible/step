@@ -51,7 +51,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
 				'<p>STEPBible.org is a UK Charitable Incorporated Organisation #1193950.  See the <a href="https://docs.google.com/document/d/1uwR2u0swmF3w1VG9Q81MCvRSt4yswhxZ/preview" target="_new">Constitution here</a>, and the <a href="https://docs.google.com/document/d/1DqyVGvsWdjV6NLlAnMeP-h3BYufec9ChR2DPl9_qT5g/preview" target="_new">Aims & Structure here</a>.' +
                 
                 ($("meta[step-local]").attr("content") === "true" ? '' : 
-                '<p>Please review our <a href="/html/cookies_policy.html" target="_blank">Privacy & Cookies Policy</a> to understand how we protect and manage your data.</p>') +
+                '<p>Please review our <a href="/html/cookies_policy.html" target="_blank">Cookies Policy</a> to understand how we protect and manage your data.</p>') +
 				
 				'<h4>Acknowledgements</h4>' +
 				

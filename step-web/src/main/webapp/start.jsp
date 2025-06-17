@@ -259,26 +259,20 @@
                                     <li><a href="html/places.html" target="_blank" rel="noopener">Places in the Bible</a></li>
                                     <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank" rel="noopener">Create your own notes</a></li>
                                     <li><a href="#" onclick="step.util.ui.initSidebar('readingPlans'); return false;">Reading Plans</a></li>
+                                    <li><a href="javascript:step.util.ui.initSidebar('analysis');"><fmt:message key="passage_stats" /></a></li>
                                 </ul>
-                            </div>
-                            <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
-                                <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats" /></span>
-                            </a>
-                            <a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
-                                <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="bookmarks" /></span>
-                            </a>
-                            <a id="fonts-icon" style="padding-left:5px" href="javascript:step.util.showFontSettings();" title="<fmt:message key="font_sizes" />">
-                                <span class="largerFont" style="color:white;background:#5E5E5E;font-size:18px"><fmt:message key="passage_font_size_symbol" /></span>
-                                <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font" /></span>
-                            </a>
-                            <a id="colorgrammar-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammar" />">
-                                <span class="largerFont" style="background:url(/images/wave.png) repeat-x 100% 100%;font-size:18px;padding-bottom:7px">G</span>
-                                <span class="largerFont hidden-xs hidden-sm navbarIconDesc" style="margin-left:-2">rammar</span>
-                            </a>
-                            <a id="examples-icon1" style="padding-left:5px" class="navbarIconDesc hidden-sm hideen-md hidden-lg" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
-                                <i style="vertical-align:middle" class="glyphicon glyphicon-question-sign hidden-sm hidden-md hidden-lg"></i>
-                            </a>
-
+                            </div>                            
+                            <span class="dropdown" style="display:inline-block">
+                                <a id="settings-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="<fmt:message key="settings" />">
+                                    <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc hidden-xs">&nbsp;<fmt:message key="settings" /></span> --%>
+                                    <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc hidden-xs">&nbsp;Settings</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a id="bookmark-menu" href="javascript:step.util.ui.initSidebar('history');"><fmt:message key="bookmarks" /></a></li>
+                                    <li><a id="font-menu" href="javascript:step.util.showFontSettings();"><fmt:message key="font" /></a></li>
+                                    <li><a id="grammar-menu" href="javascript:step.util.ui.initSidebar('color');"><fmt:message key="display_grammar" /></a></li>
+                                </ul>
+                            </span>
                             <span class="navbar-collapse collapse">
                                 <span class="dropdown">
                                     <a id="languages-icon" style="padding-left:5px" class="dropdown-toggle extrapad-xs" data-toggle="dropdown" title="<fmt:message key="installation_book_language" />">
@@ -306,12 +300,10 @@
             <%
                 }
             %>
-                                <a id="examples-icon2" class="hidden-xs" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
-                                    <i class="glyphicon glyphicon-question-sign hidden-xs"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="faq" /></span>
-                                </a>
                                 <span class="dropdown">
                                     <a id="more-icon" style="padding-left:5px" class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help" />">
-                                        <i class="glyphicon glyphicon-option-vertical"></i><span style="vertical-align:bottom;line-height:10px" class="navbarIconDesc"><fmt:message key="more" /></span>
+                                        <%-- <i class="glyphicon glyphicon-option-vertical"></i><span style="vertical-align:bottom;line-height:10px" class="navbarIconDesc"><fmt:message key="more" /></span> --%>
+                                        <i class="glyphicon glyphicon-question-sign"></i><span style="vertical-align:bottom;line-height:10px" class="navbarIconDesc">&nbsp;Help</span>
                                     </a>
                                     <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
 
@@ -343,6 +335,7 @@
             <%
                 }
             %>
+                                        <li><a id="examples-icon2" href="javascript:step.util.ui.showTutorial();"><fmt:message key="faq" /></a></li>
                                  </ul>
                                 </span>
                             </span>

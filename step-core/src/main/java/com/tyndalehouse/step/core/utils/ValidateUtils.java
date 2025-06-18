@@ -274,7 +274,7 @@ public final class ValidateUtils {
                             (key.equals("version") && !(validateInputParm("version", checkValue))) ||
                             (key.equals("reference") && !(validateInputParm("reference", checkValue))) ||
                             (key.equals("pos") && !(validateInputParm("pos", checkValue)))) {
-                        System.out.println("XSS kill checkURLParms 2 : " + key + "=" + checkValue + " uri: " + requestURI);
+// already output error in validateInputParm                        System.out.println("XSS kill checkURLParms 2 : " + key + "=" + checkValue + " uri: " + requestURI);
                         return false;
                     }
                     if (!checkForObviousXSS(key, checkValue, requestURI, true)) {

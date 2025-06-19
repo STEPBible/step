@@ -264,7 +264,7 @@
                                     <a id="report-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="Resources powered by STEPBible">
                                         <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc">&nbsp;&nbsp;Resources</span>
                                     </a>
-                                    <ul class="dropdown-menu pull-right dropdown-menu">
+                                    <ul class="kolumny pull-right dropdown-menu">
                                         <li><a href="html/gospel_harmony.html" target="_blank" rel="noopener">Harmony of the Gospels</a></li>
                                         <li><a href="html/miracles.html" target="_blank" rel="noopener">Miracles in the Bible</a></li>
                                         <li><a href="html/nt_letters.html" target="_blank" rel="noopener">New Testament Letter Structure</a></li>
@@ -283,7 +283,7 @@
                                         <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="settings" /></span> --%>
                                         <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;Settings</span>
                                     </a>
-                                    <ul class="dropdown-menu pull-right dropdown-menu">
+                                    <ul class="pull-right dropdown-menu">
                                         <li><a id="bookmark-menu" href="javascript:step.util.ui.initSidebar('history');"><fmt:message key="bookmarks" /></a></li>
                                         <li><a id="font-menu" href="javascript:step.util.showFontSettings();"><fmt:message key="font" /></a></li>
                                         <li><a id="grammar-menu" href="javascript:step.util.ui.initSidebar('color');"><fmt:message key="display_grammar" /></a></li>

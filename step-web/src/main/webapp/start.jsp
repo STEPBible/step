@@ -262,7 +262,7 @@
                             <span class="navbar-collapse collapse">
                                 <span class="dropdown">
                                     <a id="report-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="Resources powered by STEPBible">
-                                        <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;Resources</span>
+                                        <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc">&nbsp;&nbsp;Resources</span>
                                     </a>
                                     <ul class="dropdown-menu pull-right dropdown-menu">
                                         <li><a href="html/gospel_harmony.html" target="_blank" rel="noopener">Harmony of the Gospels</a></li>
@@ -280,8 +280,8 @@
                                 </span>                            
                                 <span class="dropdown">
                                     <a id="settings-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="<fmt:message key="settings" />">
-                                        <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc hidden-xs">&nbsp;<fmt:message key="settings" /></span> --%>
-                                        <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc hidden-xs">&nbsp;Settings</span>
+                                        <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="settings" /></span> --%>
+                                        <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;Settings</span>
                                     </a>
                                     <ul class="dropdown-menu pull-right dropdown-menu">
                                         <li><a id="bookmark-menu" href="javascript:step.util.ui.initSidebar('history');"><fmt:message key="bookmarks" /></a></li>
@@ -294,7 +294,7 @@
                                         <i class="glyphicon icon-language">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
                                         </i>
-                                        <span class="navbarIconDesc hidden-xs"><fmt:message key="installation_book_language" /></span>
+                                        <span class="navbarIconDesc"><fmt:message key="installation_book_language" /></span>
                                     </a>
                                     <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
                                         <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step" /></a></li>
@@ -303,7 +303,7 @@
                                 <span class="dropdown">
                                     <a id="more-icon" style="padding-left:5px" class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help" />">
                                         <%-- <i class="glyphicon glyphicon-option-vertical"></i><span style="vertical-align:bottom;line-height:10px" class="navbarIconDesc"><fmt:message key="more" /></span> --%>
-                                        <i class="glyphicon glyphicon-question-sign"></i><span class="navbarIconDesc hidden-xs">&nbsp;Help</span>
+                                        <i class="glyphicon glyphicon-question-sign"></i><span class="navbarIconDesc">&nbsp;Help</span>
                                     </a>
                                     <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
 

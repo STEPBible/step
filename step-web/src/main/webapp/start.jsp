@@ -251,7 +251,7 @@
                                     <line x1="2" y1="10" x2="16" y2="10" stroke-width="1" stroke="var(--clrBackground)" />
                                     <line x1="2" y1="12" x2="16" y2="12" stroke-width="1" stroke="var(--clrBackground)" />
                                 </svg>
-                                <span class="navbarIconDesc hidden-sm">&nbsp;<fmt:message key="help_feedback" /></span>
+                                <span class="navbarIconDesc hidden-xs">&nbsp;<fmt:message key="help_feedback" /></span>
                             </a>
             <%
                 }
@@ -259,42 +259,42 @@
                             <a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy" />">
                                 <i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="copy" /></span>
                             </a>
-                            <div class="dropdown" style="display:inline-block">
-                                <a id="report-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="Resources powered by STEPBible">
-                                    <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;Resources</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="html/gospel_harmony.html" target="_blank" rel="noopener">Harmony of the Gospels</a></li>
-                                    <li><a href="html/miracles.html" target="_blank" rel="noopener">Miracles in the Bible</a></li>
-                                    <li><a href="html/nt_letters.html" target="_blank" rel="noopener">New Testament Letter Structure</a></li>
-                                    <li><a href="html/ot_parallel.html" target="_blank" rel="noopener">Old Testament parallels</a></li>
-                                    <li><a href="html/ot_in_nt.html" target="_blank" rel="noopener">Old Testament used in the New Testament</a></li>
-                                    <li><a href="html/names.html" target="_blank" rel="noopener">Names of God</a></li>
-                                    <li><a href="html/prophets.html" target="_blank" rel="noopener">Prophets in the Bible</a></li>
-                                    <li><a href="html/places.html" target="_blank" rel="noopener">Places in the Bible</a></li>
-                                    <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank" rel="noopener">Create your own notes</a></li>
-                                    <li><a href="#" onclick="step.util.ui.initSidebar('readingPlans'); return false;">Reading Plans</a></li>
-                                    <li><a href="javascript:step.util.ui.initSidebar('analysis');"><fmt:message key="passage_stats" /></a></li>
-                                </ul>
-                            </div>                            
-                            <span class="dropdown" style="display:inline-block">
-                                <a id="settings-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="<fmt:message key="settings" />">
-                                    <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc hidden-xs">&nbsp;<fmt:message key="settings" /></span> --%>
-                                    <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc hidden-xs">&nbsp;Settings</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a id="bookmark-menu" href="javascript:step.util.ui.initSidebar('history');"><fmt:message key="bookmarks" /></a></li>
-                                    <li><a id="font-menu" href="javascript:step.util.showFontSettings();"><fmt:message key="font" /></a></li>
-                                    <li><a id="grammar-menu" href="javascript:step.util.ui.initSidebar('color');"><fmt:message key="display_grammar" /></a></li>
-                                </ul>
-                            </span>
                             <span class="navbar-collapse collapse">
+                                <span class="dropdown">
+                                    <a id="report-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="Resources powered by STEPBible">
+                                        <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;Resources</span>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right dropdown-menu">
+                                        <li><a href="html/gospel_harmony.html" target="_blank" rel="noopener">Harmony of the Gospels</a></li>
+                                        <li><a href="html/miracles.html" target="_blank" rel="noopener">Miracles in the Bible</a></li>
+                                        <li><a href="html/nt_letters.html" target="_blank" rel="noopener">New Testament Letter Structure</a></li>
+                                        <li><a href="html/ot_parallel.html" target="_blank" rel="noopener">Old Testament parallels</a></li>
+                                        <li><a href="html/ot_in_nt.html" target="_blank" rel="noopener">Old Testament used in the New Testament</a></li>
+                                        <li><a href="html/names.html" target="_blank" rel="noopener">Names of God</a></li>
+                                        <li><a href="html/prophets.html" target="_blank" rel="noopener">Prophets in the Bible</a></li>
+                                        <li><a href="html/places.html" target="_blank" rel="noopener">Places in the Bible</a></li>
+                                        <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank" rel="noopener">Create your own notes</a></li>
+                                        <li><a href="#" onclick="step.util.ui.initSidebar('readingPlans'); return false;">Reading Plans</a></li>
+                                        <li><a href="javascript:step.util.ui.initSidebar('analysis');"><fmt:message key="passage_stats" /></a></li>
+                                    </ul>
+                                </span>                            
+                                <span class="dropdown">
+                                    <a id="settings-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="<fmt:message key="settings" />">
+                                        <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc hidden-xs">&nbsp;<fmt:message key="settings" /></span> --%>
+                                        <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc hidden-xs">&nbsp;Settings</span>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right dropdown-menu">
+                                        <li><a id="bookmark-menu" href="javascript:step.util.ui.initSidebar('history');"><fmt:message key="bookmarks" /></a></li>
+                                        <li><a id="font-menu" href="javascript:step.util.showFontSettings();"><fmt:message key="font" /></a></li>
+                                        <li><a id="grammar-menu" href="javascript:step.util.ui.initSidebar('color');"><fmt:message key="display_grammar" /></a></li>
+                                    </ul>
+                                </span>
                                 <span class="dropdown">
                                     <a id="languages-icon" style="padding-left:5px" class="dropdown-toggle extrapad-xs" data-toggle="dropdown" title="<fmt:message key="installation_book_language" />">
                                         <i class="glyphicon icon-language">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
                                         </i>
-                                        <span class="navbarIconDesc"><fmt:message key="installation_book_language" /></span>
+                                        <span class="navbarIconDesc hidden-xs"><fmt:message key="installation_book_language" /></span>
                                     </a>
                                     <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
                                         <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step" /></a></li>
@@ -303,7 +303,7 @@
                                 <span class="dropdown">
                                     <a id="more-icon" style="padding-left:5px" class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help" />">
                                         <%-- <i class="glyphicon glyphicon-option-vertical"></i><span style="vertical-align:bottom;line-height:10px" class="navbarIconDesc"><fmt:message key="more" /></span> --%>
-                                        <i class="glyphicon glyphicon-question-sign"></i><span style="vertical-align:bottom;line-height:10px" class="navbarIconDesc">&nbsp;Help</span>
+                                        <i class="glyphicon glyphicon-question-sign"></i><span class="navbarIconDesc hidden-xs">&nbsp;Help</span>
                                     </a>
                                     <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
 

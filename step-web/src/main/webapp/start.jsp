@@ -306,21 +306,14 @@
                                         <i class="glyphicon glyphicon-question-sign"></i><span class="navbarIconDesc">&nbsp;Help</span>
                                     </a>
                                     <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
-
-            <%
-                if (!appManager.isLocal()) {
-            %> 
-                                        <li class="hidden-touch"><a href="/downloads.jsp" title="<fmt:message key="download_desktop_step_about" />"><fmt:message key="download_desktop_step" /></a></li>
-            <%
-                }
-            %>
                                         <!-- <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link" /></a></li> -->
+                                        <li><a id="examples-icon2" href="javascript:step.util.ui.showTutorial();"><fmt:message key="faq" /></a></li>
                                         <li class="extrapad-other"><a href="https://www.stepbible.org/videos" target="_blank"><fmt:message key="video_help" /></a></li>
                                         <li><a href="https://stepbibleguide.blogspot.com" target="_blank"><fmt:message key="help_online" /></a></li>
             <%
                 if (appManager.isLocal()) {
-            %> 
-                                        <li><a href="/setup.jsp"><fmt:message key="tools_settings" /></a></li>
+            %>
+                                         <li><a href="/setup.jsp"><fmt:message key="tools_settings" /></a></li>
             <%
                 }
             %>
@@ -331,12 +324,18 @@
             <%
                 if (appManager.isLocal()) {
             %>
-                                         <li><a href="/shutdown.jsp"><fmt:message key="tools_exit" /></a></li>
+                                        <li><a href="/shutdown.jsp"><fmt:message key="tools_exit" /></a></li>
             <%
                 }
             %>
-                                        <li><a id="examples-icon2" href="javascript:step.util.ui.showTutorial();"><fmt:message key="faq" /></a></li>
-                                 </ul>
+            <%
+                if (!appManager.isLocal()) {
+            %>
+                                        <li class="hidden-touch"><a href="/downloads.jsp" title="<fmt:message key='download_desktop_step_about' />"><fmt:message key="download_desktop_step" /></a></li>
+            <%
+                }
+            %>
+                                    </ul>
                                 </span>
                             </span>
                         </div>

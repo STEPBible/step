@@ -265,10 +265,10 @@
                                         <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc">&nbsp;&nbsp;Resources</span>
                                     </a>
                                     <ul class="kolumny pull-right dropdown-menu">
-                                        <li><a href="html/gospel_harmony.html" target="_blank" rel="noopener">Harmony of the Gospels</a></li>
+                                        <li><a href="html/gospel_harmony.html" target="_blank" rel="noopener">Gospel Parallels</a></li>
                                         <li><a href="html/miracles.html" target="_blank" rel="noopener">Miracles in the Bible</a></li>
                                         <li><a href="html/nt_letters.html" target="_blank" rel="noopener">New Testament Letter Structure</a></li>
-                                        <li><a href="html/ot_parallel.html" target="_blank" rel="noopener">Old Testament parallels</a></li>
+                                        <li><a href="html/ot_parallel.html" target="_blank" rel="noopener">Old Testament Parallels</a></li>
                                         <li><a href="html/ot_in_nt.html" target="_blank" rel="noopener">Old Testament used in the New Testament</a></li>
                                         <li><a href="html/names.html" target="_blank" rel="noopener">Names of God</a></li>
                                         <li><a href="html/prophets.html" target="_blank" rel="noopener">Prophets in the Bible</a></li>

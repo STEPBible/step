@@ -130,7 +130,8 @@ public final class ValidateUtils {
                         (c >= lowerBoundUC && c <= upperBoundUC) ||
                         (c >= lowerBoundNum && c <= upperBoundNum) ||
                         (c == '.') || (c == ':') || (c == '-')  || (c == ' ')  || (c == ',')  || (c == ';')  || (c == '+'))) {
-                    System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
+                    if (!key.equals("reference")) // stop logging because too many
+                        System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
                     return false;
                 }
             }

@@ -1,0 +1,74 @@
+/******************************************************************************/
+/* Combined search box and table. */
+/******************************************************************************/
+
+body {
+    height: auto;
+}
+
+
+/******************************************************************************/
+/* Search box. */
+
+.jframework-searchBox {
+    width: 100%;
+    height: 40px;
+    line-height: 16px;
+    overflow: hidden;
+    font-size: 16px;
+    border: 2px solid black;
+    background: var(--jframework-searchBoxBackgroundColor);
+    color: black;
+    resize: none;
+    padding: 12px 10px 12px 10px;
+}
+
+textarea::placeholder {
+    color: black;
+    opacity: 1;
+}
+
+
+
+/******************************************************************************/
+/* Search table. */
+
+.jframework-searchTable {
+    table-layout: fixed;
+    width: 100%;
+    borderCollapse: collapse;
+}
+
+.jframework-searchTableContainer {
+    overflow-y: auto;
+    border: 2px solid black;
+    background: white;
+    box-sizing: border-box;
+}
+
+.jframework-tb_col {
+    background: none;
+    padding: 4px;
+    border: 1px solid #ccc;
+    word-wrap: break-word; /* Old browsers. */
+    overflow-wrap: break-word; /* New ones. */
+    vertical-align: middle;
+    color: var(--clrText); /* Override clickable colour. */
+}
+
+
+/******************************************************************************/
+/* jframework-fakedBottomBorder is a kludge -- it seems to be almost
+   impossible to get to see the bottom margin of the container, when only a
+   single item is selected.  jframework-fakedBottomBorder is a workaround which
+   gives the appearance of the bottom margin being visible. */
+
+.NOTUSED-jframework-fakedBottomBorder::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: black;
+}

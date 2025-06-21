@@ -1,0 +1,50 @@
+/******************************************************************************/
+/*
+  Handles a dropdown menu.
+
+  Here's a typical example:
+
+  <div class='jframework-dropdownMenuContainer'>
+    <button id='hamburgerMenuButton' onclick="let m = document.getElementById('hamburgerMenu'); m.style.display = m.style.display === 'none' || m.style.display === '' ? 'block' : 'none'">&#x2630;</button>
+
+    <div id='hamburgerMenu' class='jframework-dropdownMenu'>
+      <div class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').style.display = 'none'; ControlsHandler.showBuiltInTreesMenu()">Preconfigured family trees</div>
+      <div class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').style.display = 'none'; ControlsHandler.showLayoutMenu()">Layout</div>
+      </div>
+    </div>
+
+
+  One additional issue: If you have a dropdown menu, you almost certainly want
+  to hide it automatically if the user clicks outside of it.  You can use
+  j_framework.utils.js / arrangeToHideItemsIfClickOutside to do this.
+*/
+
+.jframework-dropdownMenuContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.jframework-dropdownMenu {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #FFFDD0;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    z-index: 1000;
+    white-space: nowrap;
+    max-width: 250px;
+    overflow-x: hidden;
+}
+
+.jframework-dropdownMenuItem {
+    padding: 15px 12px;
+    cursor: pointer;
+    color: black;
+    font-size: medium;
+}
+
+.jframework-dropdownMenuItem:hover {
+    background-color: #FFE5B4;
+}

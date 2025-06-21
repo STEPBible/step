@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>People in the Bible</title>
+    <link rel="shortcut icon" href="/images/step-favicon.ico"/>
+    <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
+    <script src="/international/en.js" type="text/javascript"></script>
+    <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/libs/underscore-min.js" type="text/javascript"></script>
+    <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/libs/backbone.js" type="text/javascript"></script>
+    <script src="/libs/backbone.localStorage.js" type="text/javascript"></script>
+    <script src="/js/step_constants.js" type="text/javascript"></script>
+    <script src="/js/passage_selection.js" type="text/javascript"></script>
+    <script src="/js/search_selection.js" type="text/javascript"></script>
+    <script src="/js/backbone/models/model_settings.js" type="text/javascript"></script>
+
+    <link href="/css/J_AppsCss/J_Framework/j_framework.common.css" rel="stylesheet" media="screen"/>
+    <link href="/css/J_AppsCss/J_Framework/j_framework.tableWithSearchBox.css" rel="stylesheet" media="screen"/>
+  </head>
+
+
+<!-- ********************************************************************** -->
+
+<body>
+  <!-- Header -->
+  <div id='header'>
+    <h2 style='margin-top: 6px; margin-bottom: 0;'>
+      People in the Bible
+      <span id='smallScreenInfo' style='font-size:small'></span> <!-- Additional information is added under control of Javascript on small screens. -->
+    </h2>
+
+
+    <!-- Search box. -->
+    <div style='display: flex; align-items: center; padding-bottom: 5px;'>
+      <textarea id='peopleSearchBox' class='jframework-searchBox' placeholder='&#x1F50D; Search: Type the start of a name here ...'></textarea>
+    </div>
+  </div> <!-- End of header. -->
+
+
+  <!-- Table from which items are selected. -->
+
+  <div id='peopleTableContainer' class='jframework-searchTableContainer'>
+    <table class='jframework-searchTable jframework-standardText'>
+      <colgroup><col span='1'><col span='1'></colgroup>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script type='module'>
+    /**************************************************************************/
+    import { JFrameworkUtils }                       from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
+    import { JPeopleTableHandler, doInitialisation } from '/js/J_AppsJs/J_Genealogy/j_peopleIndex.js';
+    
+
+    
+
+    /**************************************************************************/
+    /* I _think_ it may be necessary to change the table's column-sizes
+       according to the width of the screen.  Don't be tempted to attempt this
+       in css and / or using @media -- it doesn't seem to work, and ChatGPT
+       says it's unreliable. */
+	
+    function handleDimensions ()
+    {
+	function smallScreenSettings ()
+	{
+            $('.jframework-searchTable col:first-child').css('width', '35%');
+            $('.jframework-searchTable col:last-child').css('width', '65%');
+	}
+
+	function largeScreenSettings ()
+	{
+            $('.jframework-searchTable col:first-child').css('width', '25%');
+            $('.jframework-searchTable col:last-child').css('width', '75%');
+	}
+	
+	JFrameworkUtils.doResponsive(smallScreenSettings, largeScreenSettings);
+    }
+	
+
+    /**************************************************************************/
+    /* Word of caution here.  Things may have been configured to hide the table
+       when not in use (and indeed they are configured like that presently).
+       When the user clicks in the search box, it causes the iframe to be
+       resized, which will invoke the onresize code.  You need to be very
+       careful that that code doesn't screw up the attempt to resize the
+       iframe. */
+    
+    function onresize ()
+    {
+	function f ()
+	{
+	    handleDimensions();
+	    JPeopleTableHandler.setTableSize();
+	}
+
+	JFrameworkUtils.debounce(f);
+    }
+    
+    function onload () {
+	function f()
+	{
+	    handleDimensions();
+	    doInitialisation();
+	}
+
+	f();
+	onresize(); // Just in case there's a resize activity while we're initialising and it gets missed.
+    }
+
+    JFrameworkUtils.setOnloadEtc (onload, onresize);
+  </script>
+</body>
+</html>

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<!-- Handles the genealogy display.  A lot more information in the Javascript comments below. -->
+<html>
+<head>
+  <!-- I suspect not all of the links and scripts are needed: I inherited them and haven't worked out what they all do. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Genealogical information</title>
+  <link rel="shortcut icon" href="/images/step-favicon.ico"/>
+  <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
+  <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
+  <link href="/css/select2.css" rel="stylesheet" media="screen"/>
+  <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
+  <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
+  <script src="/international/en.js" type="text/javascript"></script>
+  <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+  <script src="/libs/underscore-min.js" type="text/javascript"></script>
+  <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+  <script src="/libs/backbone.js" type="text/javascript"></script>
+  <script src="/libs/backbone.localStorage.js" type="text/javascript"></script>
+  <script src="/js/step_constants.js" type="text/javascript"></script>
+  <script src="/js/passage_selection.js" type="text/javascript"></script>
+  <script src="/js/search_selection.js" type="text/javascript"></script>
+  <script src="/js/backbone/models/model_settings.js" type="text/javascript"></script>
+
+  <script src="/libs/d3.v7.min.js" type="text/javascript"></script>
+  <link href="/css/J_AppsCss/J_Framework/j_framework.common.css" rel="stylesheet" media="screen"/>
+  <link href="/css/J_AppsCss/J_Framework/j_framework.3dButton.css" rel="stylesheet" media="screen"/>
+  <link href="/css/J_AppsCss/J_Framework/j_framework.3dCheckbox.css" rel="stylesheet" media="screen"/>
+  <link href="/css/J_AppsCss/J_Framework/j_framework.dropdownMenu.css" rel="stylesheet" media="screen"/>
+  <link href="/css/J_AppsCss/J_Framework/j_framework.modalDialog.css" rel="stylesheet" media="screen"/>
+  <link href="/css/J_AppsCss/J_Framework/j_framework.scrollRing.css" rel="stylesheet" media="screen"/>
+  <link href="/css/J_AppsCss/J_Framework/j_framework.tableWithSearchBox.css" rel="stylesheet" media="screen"/>
+
+  <style>
+    /* ----- Basic formatting ----- */
+    body {
+	width: 100%;
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 20px;
+    }
+
+    .noDisplay {
+	display: none;
+    }
+
+
+
+    /* ----- Custom font for use as icons ----- */
+
+    .iconFont {
+	font-family: 'IconFont', sans-serif;
+	font-size: x-large;
+	color: black;
+    }
+    
+    @font-face {
+	font-family: 'IconFont';
+	src: url('/fonts/J_AppsFonts/J_Genealogy/j_genealogyIcons.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+
+/*
+    @font-face {
+	font-family: 'MyOtf';
+	src: url('genealogyIcons.otf') format('opentype'),
+	     font-weight: normal;
+	font-style: normal;
+    }
+*/
+}    
+    
+
+
+
+
+    /* ----- Family tree ----- */
+    .arrowhead {
+	fill: black !important;
+	stroke: none;
+    }
+
+    .node circle { fill: #69b3a2; stroke: #333; stroke-width: 2px; }
+
+    .link { fill: none; stroke: #ccc; stroke-width: 2px; }
+
+    .linkHighlight-jesusLine {
+	stroke: red;
+    }
+    
+    .linkHighlight-selectedLine {
+	stroke: blue;
+    }
+
+    .linkHighlight-jesusLine.linkHighlight-selectedLine {
+	stroke: purple;
+    }
+    
+    .linkHighlight-femaleLineOverlay {
+	stroke-dasharray: 5, 5;
+    }
+    
+    .link:hover { stroke-width: 3px; stroke: #00FF00 !important; }
+
+    text.highlightSelectedIndividual {
+	fill: red;
+	font-weight: bold;
+    }
+      
+    tspan.retainDefaultAppearance { /* Avoids the bishop's mitre icon from turning red when highlighted. */
+	fill: black;
+	font-weight: normal;
+    }
+      
+    .highlightSiblings {
+	stroke: red;
+	animation: highlightSiblings 1s infinite; /* 2 seconds duration (1s on, 1s off), infinite loop */
+    }
+
+    @keyframes highlightSiblings {
+	  0% { fill: black; }
+	 50% { fill: red; font-weight: bold; }
+	100% { fill: black; }
+    }
+
+    .highlightChildren {
+	animation: highlightChildren 1s infinite;
+    }
+
+    @keyframes highlightChildren {
+	  0% { fill: black; }
+	 50% { fill: blue; font-weight: bold; }
+	100% { fill: black; }
+      }
+
+
+
+    /* ----- Used to confirm a URL has been copied to the clipboard ----- */
+    .fadingPopUp {
+	display: none;
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(144, 214, 144, 0.9);
+	color: black;
+	padding: 15px 25px;
+	border-radius: 5px;
+	opacity: 1;
+	transition: opacity 1s ease-in-out;
+	box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    
+
+    /* ----- Info-box (the yellow box at the top of the screen) ----- */
+    #info-box {
+        height: var(--jframework-height-of-info-box);
+        width: 100%;
+        background: var(--jframework-clrInfoAndPopUpBackground);
+        color: #333;
+	font-size: small;
+        border: 1px solid #ccc;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: left;
+	overflow-y: auto;
+        z-index: 1000;
+	margin-bottom: 10px;
+      }
+    
+    #info-box li { margin-bottom: 12px; }
+    
+    #info-box ul {
+	padding-left: 20px; /* Adjust this if needed */
+	list-style-position: outside; /* Ensures bullets align with the left margin */
+    }
+
+    #info-box .simulatedLink { text-decoration: underline; cursor: pointer; color: blue } /* Used on scripture references within the descriptive text in the info box. */
+
+	
+
+    /* ----- Used on the 'important family tree' list to have the links come out as lozenges. ----- */
+    #builtInTreesContainer a {
+	display: inline-block;
+	padding: 6px 12px;
+	margin: 4px;
+	text-decoration: none;
+/*	background-color: var(--jframework-clrHighlightLightBg); */
+	color: black;
+	font-size: 14px;
+	font-family: sans-serif;
+    }
+
+    #builtInTreesContainer a:hover {
+	background-color: #dde;
+	border-color: #88b;
+    }
+
+
+
+    /* ----- Buttons ----- */
+    .buttonContainerTopLeft {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        gap: 5px;
+	z-index: 2;
+	flex-direction: column;
+    }
+
+    .buttonContainerTopRight {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 5px;
+	z-index: 2;
+    }
+
+    .buttonRow {
+	display: flex;
+	gap: 5px;
+    }
+
+
+
+    /*--- Miscellaneous --- */
+    .man { fill: var(--jframework-clrMan); }
+    .woman { fill: var(--jframework-clrWoman); }
+
+    .manSpouse { fill: gray; }
+    .womanSpouse { fill: gray; }
+
+
+    .helpImage {
+	width: 100%;
+	max-width: min(40em, 80vh);
+	border: 1px solid black;
+    }
+
+    .jframework-3dButton { /* Override. */
+        width: 45px;
+        height: 45px;
+    }
+
+    
+    .jframework-dropdownMenuItem:hover { /* Override. */
+	background-color: var(--clrHighlight);
+	color: white;
+    }
+    
+  </style>
+</head>
+
+<body style='margin:0; background-color: white; display:flex; flex-direction: column; height:100vh; width:100vw;'>
+  <div id='popUpOverlay' style='position:absolute; top:0; left:0; width:100%; height:100%; background:none; display:none; z-index:var(--jframework-popUpOverlayZIndex);'
+       onclick='PopUpHandler.clickHandler()'>
+  </div>
+
+  <div id='header'>
+    <h2 id='pageTitle' style='display:none'>Genealogical information</h2>
+    <div id='info-box'><div id='info-box-content' style='padding:10px;'></div></div>
+  </div> <!-- #header -->
+
+  <div id='copyToClipboardConfirmation' class='fadingPopUp' style='transform:none !important; left:auto !important; right:-20px !important; top:30px !important;'>URL copied to clipboard</div>
+  
+
+  <!-- Buttons -->
+  <div style='position:relative; display:flex; flex-direction: column; flex-grow:1; background: none;'>
+    <div class='buttonContainerTopLeft'>
+      <div class="buttonRow">
+	<button class='jframework-3dButton jframework-3dButton-blue' title='Include father' id='fatherButton' style='font-weight:bold' onclick='PresentationHandler.changeRootToFather()'>&#x25B2;</button>
+	<button class='jframework-3dButton jframework-3dButton-pink' title='Include mother' id='motherButton' style='font-weight:bold' onclick='PresentationHandler.changeRootToMother()'>&#x25B2;</button>
+      </div>
+      
+      <div class="buttonRow">
+	<button class="jframework-3dButton jframework-3dButton-grey jframework-3dButton-greyedBtn" title="Back"    id="backButton"    onclick="BackAndForwardStackHandler.back   ()">&#x25C0;</button>
+	<button class="jframework-3dButton jframework-3dButton-grey jframework-3dButton-greyedBtn" title="Forward" id="forwardButton" onclick="BackAndForwardStackHandler.forward()">&#x25B6;</button>
+      </div>
+    </div>
+
+    <div class='buttonContainerTopRight'>
+      <div id='jframework-scrollRing' title='Scroll'>
+	<button id='jframework-scrollRingScrollUpButton'    title='Scroll'></button>
+	<button id='jframework-scrollRingScrollDownButton'  title='Scroll'></button>
+	<button id='jframework-scrollRingScrollLeftButton'  title='Scroll'></button>
+	<button id='jframework-scrollRingScrollRightButton' title='Scroll'></button>
+      </div>
+      
+      <div class='jframework-dropdownMenuContainer'>
+	<button class='jframework-3dButton jframework-3dButton-stepHighlight' id='hamburgerMenuButton' title='Show menu' onclick="let m = document.getElementById('hamburgerMenu'); m.style.display = m.style.display === 'none' || m.style.display === '' ? 'block' : 'none'">&#x2630;</button>
+
+	<div id='hamburgerMenu' class='jframework-dropdownMenu' style='background:var(--jframework-clrHighlightLightBg);'>
+	  <div class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').style.display = 'none'; ControlsHandler.showBuiltInTreesMenu()">Preconfigured family trees</div>
+	  <div class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').style.display = 'none'; ControlsHandler.showLayoutMenu()">Layout</div>
+	</div>
+      </div>
+
+      <button class='jframework-3dButton jframework-3dButton-green'  title='Help' onclick='ControlsHandler.showHelpMenu()'>?</button>
+    </div>
+
+    <div id='svgWrapper' style='flex-grow:1; overflow:hidden; width:100%; background: none; border: 1px solid #ccc;'>
+      <svg style='flex-grow:1; width: 100%; height: 100%; cursor: grab; background-color: none;'>
+	<style>
+	  .bigIcon { font-size:x-large; }
+	</style>
+
+	<pattern id='redAndBlueDots' width='10' height='10' patternUnits='userSpaceOnUse'>
+	  <circle cx='2.5' cy='2.5' r='2.5' fill='red' />
+	  <circle cx='7.5' cy='2.5' r='2.5' fill='blue' />
+	</pattern>
+
+      </svg>
+
+      <div id='explanationOfThereBeingOnlyASinglePerson'
+	   style='position:absolute;
+		  top:150px;
+		  max-width:50em;
+		  left: 50%;
+		  transform: translateX(-50%);
+		  display: none;'
+      </div>
+<!--
+      <div id='explanationOfThereBeingOnlyASinglePerson'
+	   style='position:absolute;
+		  top:150px;
+		  max-width:50em;
+		  padding:10px;
+		  border:2pt solid gray;
+		  border-radius:10px;
+		  font-size: medium;
+		  font-weight: bold;
+		  background: #FFFDD0;
+		  left: 50%;
+		  transform: translateX(-50%);
+		  display: none;
+		  box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.4), inset -2px -2px 3px rgba(0, 0, 0, 0.4), 1px 1px 3px rgba(0, 0, 0, 0.2);'>
+      </div>
+-->
+    </div>
+  </div>
+
+
+  <!-- Help modal -->
+  <div class='jframework-modalDialog jframework-draggableContainer' id='help' style='max-width:min(90vh, 50em)'>
+    <div class='jframework-modalDialogHeader jframework-draggableHeader' style='background: #006600;'>
+      About the genealogy information <button class='jframework-modalDialogCloseBtn' onclick='document.getElementById("help").style.display = "none";'>✖</button>
+    </div>
+
+    <div class='jframework-modalDialogBody' style='background:#ccffcc;'> <!-- Icons -->
+      <div style='padding:5px;background:var(--jframework-clrInfoAndPopUpBackground);border:1px solid brown'>
+	<h4 style='background:#006600; color:yellow; padding:3px'>Icons &mdash; Quick reference</h4>
+
+	<table>
+	  <tr>
+	    <td style='padding-right: 100px'>
+	      <span style='font-size:x-large'>&#x265D;</span>: A high priest.
+	    </td>
+	    <td>
+	      <span style='font-size:x-large'>&#x1F42B;</span>: A pharoah.
+	    </td>
+	  </tr>
+
+          <tr>
+	    <td style='padding-right: 100px'>
+	      <span style='font-size:x-large'>&#x1F64F;</span>: A priest.
+	    </td>
+	    <td>
+	      <span style='font-size:x-large'>&#x1F3B5;</span>: A singer.
+	    </td>
+	  </tr>
+
+          <tr>
+	    <td style='padding-right: 100px'>
+	      <span style='font-size:x-large'>&#x2696;</span>: A judge.
+	    </td>
+	    <td>
+	      <span style='font-size:x-large'>&#x1F30D;</span>: An apostle.
+	    </td>
+	  </tr>
+	
+          <tr>
+	    <td style='padding-right: 100px'>
+	      <span style='font-size:x-large'>&#x1F451;</span>: Royalty.
+	    </td>
+	    <td>
+	      <span style='font-size:x-large'>&#x270D;</span>: An official.
+	    </td>
+	  </tr>
+	
+	  <tr>
+	    <td style='padding-right: 100px'>
+	      <span style='font-size:x-large'>&#x1F54A;</span>: A prophet.
+	    </td>
+	    <td>
+	      <span style='font-size:x-large'>&#x1F3DB;</span>: A senior official.
+	    </td>
+	  </tr>
+	
+	  <tr>
+	    <td>
+	      <span style='font-size:x-large'>&#x1F465;</span>: A group.
+	    <td>
+	    </td>
+	  </tr>
+	</table>
+	<p>&nbsp;</p>
+
+
+	<table>
+	  <tr>
+	    <td><hr style="border: none; border-top: 5px solid red; width: 50px; padding:0px; margin:0px"></td>
+	    <td>&nbsp;&nbsp;Male line to Jesus</td>
+	  </tr>
+	  <tr>
+	    <td><hr style="border: none; border-top: 5px dashed red; width: 50px; padding:0px; margin:0px"></td>
+	    <td>&nbsp;&nbsp;Female line to Jesus</td>
+	  </tr>
+	  <tr>
+	    <td><hr style="border: none; border-top: 5px solid blue; width: 50px; padding:0px; margin:0px"></td>
+	    <td>&nbsp;&nbsp;Male line from root of display to selected person</td>
+	  </tr>
+	  <tr>
+	    <td><hr style="border: none; border-top: 5px dashed blue; width: 50px; padding:0px; margin:0px"></td>
+	    <td>&nbsp;&nbsp;Female line from root of display to selected person</td>
+	  </tr>
+	</table>
+      </div> <!-- Icons reference -->
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+
+
+      <h4>Overview</h4>
+      <p style='color:#006600; font-weight:bold;'>The best way to become familiar with the facilities is simply to try them out.  This overview should be enough to get you started.</p>
+      <p>On a wide screen, you see the layout below.  (On a small screen, you get the same information, but the various numbered areas are split across separate tabs.)</p>
+      <p style='text-align:center'><img src='/images/J_AppsImages/J_Genealogy/genealogyFullScreen.jpg' alt='Widescreen layout' class='helpImage'></p>
+      <br>
+      <ul style='list-style-type:disc; padding-left: 20px'>
+        <li>You can choose a person by typing their name in section 1.</li><br>
+        <li>Section 2 shows all the scriptures where this person is mentioned.</li><br>
+        <li>Section 3 tells you about them.  If something looks as though you might be able to click it here, you probably can &mdash; and if it&rsquo;s a person&rsquo;s name you click on, you&rsquo;ll see their details.</li><br>
+        <li>Section 4 shows their family tree.  You can click on a person to get information about them.  Try right-clicking too (long-clicking on a touch screen).</li><br>
+        <li>The blue and pink buttons let you move up to the father or mother of the person at the top of the tree.</li><br>
+        <li>Do try the <img src='/images/J_AppsImages/J_Genealogy/genealogyMenuButton.png' alt='Menu button' width='25px'> menu too.  In particular, it lets you access a collection of built-in family trees which you may find interesting.</li>
+      </ul>
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+
+
+      <h4>Selecting a person by name</h4>
+      <p>Here is a close-up of the search box (area 1 in the earlier picture):</p>
+      <p style='text-align:center'><img src='/images/J_AppsImages/J_Genealogy/genealogyPeopleIndex.jpg' alt='People list' class='helpImage'></p>
+      <p>(The yellow box gives very brief summary information about the current person.)</p>
+      <p>To choose a person, simply start typing their name.  As you do so, a list of matching names will appear.  You can either click on an entry in this list or, if there is only a single matching entry, hit RETURN.</p>
+      <p>If someone is known by more than one name, you can use any of their names.  (Note that the spellings are those which appear in the English Standard Version of the Bible.)</p>
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+
+
+      <h4>Navigating using the detailed biographical information</h4>
+      <p>Here is a close-up of the detailed biographical information for a person (area 3 in the earlier picture):</p>
+      <p style='text-align:center'><img src='/images/J_AppsImages/J_Genealogy/genealogyDetailBox.jpg' alt='People list' class='helpImage'></p>
+      <p>If something here looks like a link, it is one.  If the link is a person&rsquo;s name, clicking on it will select that person.</p>
+      <p>If the link is a scripture reference, area 2 of the screen will be updated to hold that reference.</p>
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+
+
+      <h4>Navigating using the family tree</h4>
+      <p>Here is a close-up of a family tree (area 4 of the earlier picture):</p>
+      <p style='text-align:center'><img src='/images/J_AppsImages/J_Genealogy/genealogyFamilyTree.jpg' alt='Family tree' class='helpImage'></img></p>
+        You can move to see other parts of the family tree by dragging the tree with the mouse.  Alternatively, you can use the
+        <img src='/images/J_AppsImages/J_Genealogy/genealogyTvRemote.png' alt='TV remote button' width='25px'>
+	button to move more quickly.
+     </p>
+
+     <p>
+       You can also resize the tree using the scroll wheel on the mouse (pinch and stretch on a touch screen).  If you do this, the whole tree is scaled, including the text nodes.
+       This is easy to do, but may sometimes make it difficult to read the text.  There is a menu which lets you alter the layout without changing the text size.  We look at this shortly.
+     </p>
+     <table>
+       <tr>
+	 <td style='padding-right: 20px'><img src='/images/J_AppsImages/J_Genealogy/genealogyChangeSelection.jpg' alt='Selecting a node' width='100px' style='border: 1px solid black'></td>
+	 <td>On the picture above, one person is highlighted in red.  This is the <i>selected</i> person &mdash; the one whose details are displayed on the rest of the screen.
+	     You can change the selected person by clicking on another person in the family tree.  Changing the selected person does not alter the tree.</td>
+       </tr>
+       <tr style='height:10px'><td colspan="2"></td></tr>
+       <tr style='margin-bottom:10px'>
+	 <td style='padding-right: 20px;'><img src='/images/J_AppsImages/J_Genealogy/genealogyParentButton.png' alt='Moving to a parent' width='50px'></td>
+	 <td>Sometimes an up-arrow button appears at the top left of the screen.  If the father of the person at the top of the family tree is known, you will see a blue button.
+	   If the mother is known, you'll see a pink button.  If both parents are known, you will see both.  Clicking one of these buttons alters the display so that the parent
+	   appears at the top and becomes the selected person.</td>
+       </tr>
+     </table>
+     <p>&nbsp;</p>
+     <p>&nbsp;</p>
+
+
+     <h4>The main menu</h4>
+     <p>The <img src='/images/J_AppsImages/J_Genealogy/genealogyMenuButton.png' alt='Menu button' width='25px'> button displays a menu.</p>
+     <p>From this you can show a list of built-in trees which you may find of interest.  You can also change the layout of the tree to make it easier to read.</p>
+     <p style='text-align:center'><img src='/images/J_AppsImages/J_Genealogy/genealogyMenu.png' alt='Menu' class='helpImage'></p>
+     <p>&nbsp;</p>
+     <p>&nbsp;</p>
+
+	
+     <h4>The right-click menu</h4>
+     <p>Right-clicking on a person selects them and shows a menu (long press on a touch screen).<p>
+     <p>If the person has descendants, this menu lets you turn on and off the display of their descendants.</p>
+     <p>It also lets you extend the family tree to a selected descendant of the person.</li>
+     <p style='text-align:center'><img src='/images/J_AppsImages/J_Genealogy/genealogyRightMouseButtonMenu.png' alt='Menu' class='helpImage'></p>
+     <p>&nbsp;</p>
+     <p>&nbsp;</p>
+
+
+      <h4>Highlighting</h4>
+      <p>If you are displaying anyone who is in the family tree for Jesus, the line from them to Jesus is highlighted in <span style='color:red'>red</span>:</p>
+      <p style='text-align:center'><img src='/images/J_AppsImages/J_Genealogy/genealogyMessianicHighlighting.jpg' alt='Messianic line highlighting' class='helpImage'></p>
+      <p>In ancient times, particular emphasis was given to the male line.  We reflect this by showing the line as solid.  The female line is shown dotted.</p>
+      <p>You will never see more than one <i>male</i> line, because there is only one path from Adam to Jesus which passes entirely through <i>male</i> ancestors.  Do bear in mind, though, that
+	 there may be more than one <i>female</i> line.  We all of us, for example, have eight great-grandparents.  A male line from a particular ancestor will account for one of these
+	 great-grandparents, but that still leaves seven others to account for, and all of these will appear in female lines.</p>
+      <br>
+      <p>If you <i>select</i> a person by clicking on them, the line from the person at the top of the screen to the selected person is highlighted in <span style='color:blue'>blue</span>.</p>
+      <p style='text-align:center'><img src='/images/J_AppsImages/J_Genealogy/genealogySelectedHighlighting.jpg' alt='Highlighting the selected person' class='helpImage'></p>
+      <br>
+      <p>If the person you select is also in the family tree for Jesus, the highlighting will be in <span style='color:purple'>purple</span>.
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+
+
+      <h4>Things to be aware of</h4>
+      <ul>
+	<li>The names here are the ones used in the English Standard Version of the Bible (ESV).</li>
+	<li>In some places, names include a scripture reference to help distinguish different people with the same name.  The reference gives the first verse where the person is mentioned.</li>
+	<li>Don&rsquo;t forget that different people may have the same name, and the same person may have more than one name (Abram and Abraham for instance).  This can be confusing sometimes.</li>
+	<li>In some cases, we give information about the number of generations after Adam to the given person, or the number of generations before Jesus.  These numbers are approximate:
+	    in the original texts, phrases like &lsquo;son of&rsquo; sometimes mean not &lsquo;immediate child of&rsquo; but &lsquo;descendant of&rsquo;, so it is not always clear how many generations are involved.
+	    Jesus, for example, is referred to as the &lsquo;Son of David&rsquo; even though many generations passed between David and Jesus.</li>
+	<li>Why do we talk about <i>partners</i> rather than <i>wives</i>?  This is because some people had wives, concubines, etc, and we need a term to cover all of them.</li>
+      </ul>
+    </div> <!-- jframework-modalDialogBody -->
+</div> <!-- #helpModal -->
+
+  
+  <!-- Important trees modal -->
+  <div class='jframework-modalDialog jframework-draggableContainer' id='builtInTreesMenu'>
+    <div class='jframework-modalDialogHeader jframework-draggableHeader' style='background:var(--clrHighlightBg)'>
+      Built-in family trees<button class='jframework-modalDialogCloseBtn' onclick='ControlsHandler.hideBuiltInTreesMenu()'>✖</button>
+    </div>
+
+    <div class='jframework-modalDialogBody' style='background:white;';>
+      <div style='background:var(--clrHighlightBg); color:white; padding:5px; margin:5px; border:2px solid black;'>
+	<p style=' font-size:large; font-weight: bold;'>First time here?</p>
+	<p>Try out some of the built-in family trees below.  Or alternatively, close this menu and go straight to the genealogy data.</p>
+	<p>Do make sure you check out the Help information from the '?' menu the first time you use the genealogies.</p>
+	You can get back to this list of family trees from the &#9776; menu.
+      </div>
+      <br><br>
+
+      <div id='builtInTreesContainer' style='text-align:left; font-size:large; font-weight:bold; overflow-y:auto; max-height:500px;'>
+	<table>
+          <tr>
+	    <td><a href='#' onclick='PresentationHandler.showTreeAdamToSonsOfNoah()'             >Adam to Noah &#9654;</a><br></td>
+            <td><a href='#' onclick='PresentationHandler.showTreeSaul()'                         >Saul&rsquo;s family &#9654;</a></td>
+          </tr>
+
+	  <tr>
+	    <td><a href='#' onclick='PresentationHandler.showTreeNoahToAbraham'                  >Noah to Abraham &#9654;</a></td>
+	    <td><a href='#' onclick='PresentationHandler.showTreeDavid()'                        >David&rsquo;s family &#9654;</a></td>
+	  </tr>
+
+	  <tr>
+	    <td><a href='#' onclick='PresentationHandler.showTreeTerahAbrahamAndIsrael()'        >Abraham to Israel &#9654;</a></td>
+	    <td><a href='#' onclick='PresentationHandler.showTreeJesus()'                        >Jesus&rsquo;s family &#9654;</a></td>
+	  </tr>
+
+	  <tr>
+	    <td><a href='#' onclick='PresentationHandler.showTreeIsaacIsraelAndTheTwelveTribes()'>Isaac to 12 tribes &#9654;</a></td>
+	    <td><a href='#' onclick='PresentationHandler.showTreeJesusAncestors()'               >Jesus&rsquo;s ancestors &#9654;</a></td>
+	  </tr>
+
+	  <tr>
+	    <td><a href='#' onclick='PresentationHandler.showTreeAmramMosesAndAaron()'           >Moses and Aaron &#9654;</a></td>
+	    <td><a href='#' onclick='PresentationHandler.showTreeRahabToJesus()'                 >Rahab to Jesus &#9654;</a></td>
+	  </tr>
+
+	  <tr>
+	    <td><a href='#' onclick='PresentationHandler.showTreeHighPriests()'                  >High priests &#9654;</a></td>
+	    <td><a href='#' onclick='PresentationHandler.showTreeRoyalFamily()'                  >Royal family &#9654;</a></td>
+	  </tr>
+
+	  <tr>
+	    <td><a href='#' onclick='PresentationHandler.showTreeJudahSelectedDescendants()'     >Judah to David &#9654;</a></td>
+	  </tr>
+	</table>
+      </div>
+      <br>
+    </div>
+  </div> <!-- Built-in trees menu -->
+
+
+  <div class='jframework-modalDialog jframework-draggableContainer' id='layoutMenu'>
+    <div class='jframework-modalDialogHeader jframework-draggableHeader' style='background:#aa7fbb'>
+      Layout
+      <button class='jframework-modalDialogCloseBtn' onclick='ControlsHandler.hideLayoutMenu()'>✖</button>
+    </div>
+
+    <div class='jframework-modalDialogBody' style='background:#fad4fa'>
+      <hr style='border: 2px solid black;'>
+      <h4>Layout</h4>
+      <div>Horizontal spacing:</div>
+      <div style='display: flex; align-items: center;'>
+	<input type='range' title='Controls the spacing between people at the same level' id='horizontalSpacingSlider' min='-2' max='10' value='0'>
+      </div>
+      
+      <br>
+      
+      <div>Vertical spacing:</div>
+      <div style='display: flex; align-items: center;'>
+	<input type='range' title='Controls the spacing between generations' id='verticalSpacingSlider' min='-6' max='10' value='0'>
+      </div>
+      
+      <br>
+      
+      <div>Generations added at one go (takes effect only when the family tree is next updated):<span id='numberOfGenerationsLabel' style='font-weight:bold;font-size:large'>5</span></div>
+      <div style='display: flex; align-items: center;'>
+	<input id='numberOfGenerationsSlider' type='range' title='Controls the number of generations added to the family tree each time it is expanded' id='numberOfGenerationsSlider' min='3' max='10' value='5'>
+      </div>
+      
+      <br>
+      
+      <input type='checkbox' id='highlightRelations' class='jframework-3dCheckbox' title='Highlight siblings and children of selected person' onchange='PresentationHandler.changeRelationsHighlighting(this.checked)'>
+      <label for='highlightRelations'>Highlight <span style='color:red'>siblings</span> and <span style='color:blue'>children</span> of selected person.</label>
+    </div>
+  </div>
+  <!-- Layout menu modal -->
+  
+
+
+  <!-- Context menu modal -->
+  <div class='jframework-modalDialog jframework-draggableContainer' id='personNodeContextMenu' style='max-width:30em !important'>
+    <div class='jframework-modalDialogHeader jframework-draggableHeader' style='background: rgb(198, 89, 17)'>
+      <span id='personNodeContextMenuHeader'>TBD</span>
+      <button class='jframework-modalDialogCloseBtn' onclick='ContextMenuHandler.hideMenu()'>✖</button>
+    </div>
+    <div class='jframework-modalDialogBody' style='background:rgb(248, 203, 173)'>
+      <div id='expandFamilyTreeButtonContainer' style='width:100%;margin-bottom:10px;display:none'>
+	<button id='expandFamilyTreeButton' class='jframework-3dButton jframework-3dButton-grey' style='width:auto;font-size:x-large' title='Add family tree below selected person' onclick='ContextMenuHandler.addSubtree()'>+&#x1f332;</button>
+	<label for='expandFamilyTreeButton'>&nbsp;Add tree below selected person</label>
+	<p>&nbsp;</p>
+      </div>
+      <div id='removeFamilyTreeButtonContainer' style='width:100%;margin-bottom:10px;display:none'>
+	<button id='removeFamilyTreeButton' class='jframework-3dButton jframework-3dButton-grey' style='width:auto; font-size:x-large' title='Remove family tree below selected person' onclick='ContextMenuHandler.removeSubtree()'>&ndash;&#x1f332;</button>
+	<label for='removeFamilyTreeButton'>&nbsp;Remove tree below selected person</label>
+	<p>&nbsp;</p>
+      </div>
+
+      <div style='margin-bottom:10px;'>Select a descendant from the list below in order to have the <i><b>MALE</b></i> family line to that person added to the display.</div>
+      <textarea id='descendantSearchBox' class='jframework-searchBox' style='background: white;' placeholder='&#x1F50D Search ...'></textarea>
+      
+      <div id='descendantTableContainer' class='jframework-searchTableContainer' style='border: 2px solid black; height:30vh; overflow-y:auto;'>
+	<table class='jframework-searchTable jframework-standardText'>
+	  <colgroup><col span='1' style='width:6em;'></col><col span='1' style='width:auto;'></col></colgroup>
+	  <tbody></tbody>
+	</table>
+      </div>
+    </div>
+  </div> <!-- Context menu. -->
+
+<script type='module'>
+  import { JFrameworkUtils } from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
+  import { BackAndForwardStackHandler,
+	   ControlsHandler,
+	   ContextMenuHandler,
+	   InitialisationHandler,
+	   PopUpHandler,
+	   PresentationHandler
+	 } from '/js/J_AppsJs/J_Genealogy/j_genealogy.js';
+
+  window.BackAndForwardStackHandler = BackAndForwardStackHandler;
+  window.ContextMenuHandler  = ContextMenuHandler ;
+  window.ControlsHandler = ControlsHandler;
+  window.PresentationHandler = PresentationHandler;
+  JFrameworkUtils.arrangeToHideItemsIfClickOutside(['#hamburgerMenu', '#hamburgerMenuButton']);
+  JFrameworkUtils.setOnloadEtc(InitialisationHandler.onload.bind(InitialisationHandler), PresentationHandler.resize.bind(PresentationHandler));  
+</script>
+</body>
+</html>

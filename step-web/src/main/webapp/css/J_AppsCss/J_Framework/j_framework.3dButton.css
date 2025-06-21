@@ -1,0 +1,52 @@
+/******************************************************************************/
+/*
+  A 3D button.
+
+  Use:
+    <button class='jframework-3dButton jframework-3dButton-pink' ... onclick='PresentationHandler.changeRootToMother()'>&#x25B2;</button>
+
+  The button accommodates itself to the width of the trext displayed upon it.
+  You may possibly want to force the width (and / or height) in some cases,
+  in order to have a consistent size of button.
+*/
+
+.jframework-3dButton {
+    border: none;
+    padding: 0 12px;
+    border-radius: 5px;
+    font-size: 22px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        
+    /* Bevelled effect */
+    box-shadow: inset 3px 3px 5px rgba(255, 255, 255, 0.6), 
+                inset -3px -3px 5px rgba(0, 0, 0, 0.6),
+                2px 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.jframework-3dButton-grey           { background: linear-gradient(to bottom, #c0c0c0, #808080); }
+.jframework-3dButton-green          { background: linear-gradient(to bottom, #00cc00, #006600); }
+.jframework-3dButton-blue           { background: linear-gradient(to bottom, #0099ff, #004080); }
+.jframework-3dButton-pink           { background: linear-gradient(to bottom, #ff66b2, #cc3366); }
+.jframework-3dButton-lilac          { background: linear-gradient(to bottom, #c8a2c8, #aa7fbb); }
+.jframework-3dButton-stepHighlight  { background: linear-gradient(to bottom, #1F9EC1, var(--clrHighlight)); }
+        
+.jframework-3dButton-disabled { display: none }
+
+.jframework-3dButton-greyedBtn {
+    background: linear-gradient(to bottom, #e0e0e0, #a0a0a0) !important;
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.4), 
+                inset -2px -2px 3px rgba(0, 0, 0, 0.4),
+                1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.jframework-3dButton:active { /* Button-pressed state. */
+    box-shadow: inset -3px -3px 5px rgba(255, 255, 255, 0.6), 
+                inset 3px 3px 5px rgba(0, 0, 0, 0.6);
+    transform: translateY(2px);
+}
+    

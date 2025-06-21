@@ -1,0 +1,38 @@
+/******************************************************************************/
+/*
+  Creates a 3D checkbox along with a tick mark.
+
+  Usage:
+    <input type='checkbox' class='jframework-3dCheckbox' title='...' onchange='myChnageFn(this.checked)'>
+*/
+
+input[type="checkbox"].jframework-3dCheckbox {
+    appearance: none; /* Remove default styles */
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(to bottom, #fff, #ccc);
+    border: 2px solid #888;
+    border-radius: 4px;
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), 
+		inset 2px 2px 3px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    position: relative;
+}
+
+/* Checkmark */
+input[type="checkbox"].jframework-3dCheckbox:checked::before {
+    content: "✔";
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    position: absolute;
+    left: 3px;
+    top: -1px;
+}
+
+/* Clicked effect */
+input[type="checkbox"].jframework-3dCheckbox:active {
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), 
+		inset -2px -2px 3px rgba(0, 0, 0, 0.3);
+}
+

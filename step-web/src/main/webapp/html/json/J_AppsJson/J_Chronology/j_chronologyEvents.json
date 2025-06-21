@@ -1,0 +1,9033 @@
+{
+  "-4004": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -4004,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 0,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Adam",
+    "description": "",
+    "duration": "930 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.1.26-Gen.5.5"
+    ],
+    "disambiguatedName": "Adam@Gen.2.19-Jud",
+    "dStrongs": "H0121G",
+    "visibility": 0
+  },
+  "-3874": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -3874,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -130,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Seth",
+    "description": "",
+    "duration": "912 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.4.25-Gen.4.26",
+      "Gen.5.3-Gen.5.7"
+    ],
+    "disambiguatedName": "Seth@Gen.4.25-Luk",
+    "dStrongs": "H8352",
+    "visibility": 0
+  },
+  "-3769": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -3769,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -235,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Enosh",
+    "description": "",
+    "duration": "905 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.4.26",
+      "Gen.5.6-Gen.5.11"
+    ],
+    "disambiguatedName": "Enosh@Gen.4.26-Luk",
+    "dStrongs": "H0583",
+    "visibility": 0
+  },
+  "-3679": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -3679,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -325,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Kenan",
+    "description": "",
+    "duration": "910 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.5.9-Gen.5.14"
+    ],
+    "disambiguatedName": "Kenan@Gen.5.9-Luk",
+    "dStrongs": "H7018",
+    "visibility": 0
+  },
+  "-3609": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -3609,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -395,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Mahalalel",
+    "description": "",
+    "duration": "895 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.5.12-Gen.5.17"
+    ],
+    "disambiguatedName": "Mahalalel@Gen.5.12-Luk",
+    "dStrongs": "H4111G",
+    "visibility": 0
+  },
+  "-3544": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -3544,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -460,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Jared",
+    "description": "",
+    "duration": "962 or 847 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.5.15-Gen.5.20"
+    ],
+    "disambiguatedName": "Jared@Gen.5.15-Luk",
+    "dStrongs": "H3382G",
+    "visibility": 0
+  },
+  "-3382": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -3382,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -622,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Enoch",
+    "description": "",
+    "duration": "365 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.5.18-Gen.5.24"
+    ],
+    "disambiguatedName": "Enoch@Gen.5.18-Jud",
+    "dStrongs": "H2585H",
+    "visibility": 0
+  },
+  "-3317": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -3317,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -687,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Methuselah",
+    "description": "",
+    "duration": "969 or 720 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.5.21-Gen.5.27"
+    ],
+    "disambiguatedName": "Methuselah@Gen.5.21-Luk",
+    "dStrongs": "H4968",
+    "visibility": 0
+  },
+  "-3130": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -3130,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -874,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Lamech",
+    "description": "",
+    "duration": "777, 753 or 653 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.5.25-Gen.5.31"
+    ],
+    "disambiguatedName": "Lamech@Gen.5.25-Luk",
+    "dStrongs": "H3929H",
+    "visibility": 0
+  },
+  "-3074": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -3074,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -930,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Adam",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Adam@Gen.2.19-Jud",
+    "dStrongs": "H0121G",
+    "visibility": 0
+  },
+  "-3017": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -3017,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -987,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Enoch",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Enoch@Gen.5.18-Jud",
+    "dStrongs": "H2585H",
+    "visibility": 0
+  },
+  "-2962": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -2962,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1042,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Seth",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Seth@Gen.4.25-Luk",
+    "dStrongs": "H8352",
+    "visibility": 0
+  },
+  "-2948": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2948,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1056,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Noah",
+    "description": "",
+    "duration": "950 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.5.29-Gen.10.1"
+    ],
+    "disambiguatedName": "Noah@Gen.5.29-2Pe",
+    "dStrongs": "H5146",
+    "visibility": 0
+  },
+  "-2864": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -2864,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1140,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Enosh",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Enosh@Gen.4.26-Luk",
+    "dStrongs": "H0583",
+    "visibility": 0
+  },
+  "-2769": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -2769,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1235,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Kenan",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Kenan@Gen.5.9-Luk",
+    "dStrongs": "H7018",
+    "visibility": 0
+  },
+  "-2714": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -2714,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1290,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Mahalalel",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Mahalalel@Gen.5.12-Luk",
+    "dStrongs": "H4111G",
+    "visibility": 0
+  },
+  "-2582": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -2582,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1422,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Jared",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Jared@Gen.5.15-Luk",
+    "dStrongs": "H3382G",
+    "visibility": 0
+  },
+  "-2448": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2448,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1556,
+      "era": "AM",
+      "approx": false,
+      "asterisk": true
+    },
+    "personName": "Japheth,",
+    "description": "",
+    "duration": "",
+    "academicNotes": "Ussher concludes Japheth was born first. Seder Olam has Shem as firstborn",
+    "scriptures": [
+      "Gen.5.32",
+      "Gen.10.21"
+    ],
+    "disambiguatedName": "Japheth@Gen.5.32-1Ch",
+    "dStrongs": "H3315",
+    "visibility": 0
+  },
+  "-2446": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2446,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1558,
+      "era": "AM",
+      "approx": false,
+      "asterisk": true
+    },
+    "personName": "Shem",
+    "description": "",
+    "duration": "600 years",
+    "academicNotes": "Ussher concludes Noah was 502.",
+    "scriptures": [
+      "Gen.5.32-Gen.11.11"
+    ],
+    "disambiguatedName": "Shem@Gen.5.32-Luk",
+    "dStrongs": "H8035",
+    "visibility": 0
+  },
+  "-2353": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -2353,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1651,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Lamech",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Lamech@Gen.5.25-Luk",
+    "dStrongs": "H3929H",
+    "visibility": 0
+  },
+  "-2349": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -2349,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1656,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Flood",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.6.null-Gen.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-2346": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2346,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1658,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Arphaxad",
+    "description": "",
+    "duration": "438 or 565 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.10.22-Gen.10.24",
+      "Gen.11.20-Gen.11.13"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-2311": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2311,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1693,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Salah",
+    "description": "",
+    "duration": "433 or 460 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.10.24",
+      "Gen.10.11-Gen.10.15"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-2281": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2281,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1723,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Eber",
+    "description": "",
+    "duration": "464 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.10.21-Gen.10.25",
+      "Gen.11.14-Gen.11.17"
+    ],
+    "disambiguatedName": "Eber@Gen.10.21-Luk",
+    "dStrongs": "H5677G",
+    "visibility": 0
+  },
+  "-2247": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -2247,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1757,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Babel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.1-Gen.11.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-2217": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2217,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1787,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Reu",
+    "description": "",
+    "duration": "239 or 339 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.18-Gen.11.21"
+    ],
+    "disambiguatedName": "Reu@Gen.11.18-Luk",
+    "dStrongs": "H7466",
+    "visibility": 0
+  },
+  "-2185": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2185,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1819,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Serug",
+    "description": "",
+    "duration": "230 or 330 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.20-Gen.11.23"
+    ],
+    "disambiguatedName": "Serug@Gen.11.20-Luk",
+    "dStrongs": "H8286",
+    "visibility": 0
+  },
+  "-2155": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2155,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1849,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Nahor",
+    "description": "",
+    "duration": "148 or 304 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.22-Gen.11.25"
+    ],
+    "disambiguatedName": "Nahor@Gen.11.22-Luk",
+    "dStrongs": "H5152G",
+    "visibility": 0
+  },
+  "-2126": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2126,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1878,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Terah",
+    "description": "",
+    "duration": "205, 275 or 145 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.24-Gen.11.32"
+    ],
+    "disambiguatedName": "Terah@Gen.11.24-Luk",
+    "dStrongs": "H8646G",
+    "visibility": 0
+  },
+  "-2056": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -2056,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1948,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Haran",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.26-Gen.50.13"
+    ],
+    "disambiguatedName": "Haran@Gen.11.26-",
+    "dStrongs": "H2039G",
+    "visibility": 0
+  },
+  "-2008": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -2008,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1996,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Peleg",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.19"
+    ],
+    "disambiguatedName": "Peleg@Gen.10.25-Luk",
+    "dStrongs": "H6389",
+    "visibility": 0
+  },
+  "-2007": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -2007,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1997,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Nahor",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.25"
+    ],
+    "disambiguatedName": "Nahor@Gen.11.22-Luk",
+    "dStrongs": "H5152G",
+    "visibility": 0
+  },
+  "-1998": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1998,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2006,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Noah",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.9.28-Gen.9.29"
+    ],
+    "disambiguatedName": "Noah@Gen.5.29-2Pe",
+    "dStrongs": "H5146",
+    "visibility": 0
+  },
+  "-1996": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1996,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -2008,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Abraham",
+    "description": "",
+    "duration": "175 years (?)",
+    "academicNotes": "Agree with Ussher that Terah was 130",
+    "scriptures": [
+      "Gen.11.26-Gen.50.13"
+    ],
+    "disambiguatedName": "Abraham@Gen.11.26-1Pe",
+    "dStrongs": "H0085",
+    "visibility": 0
+  },
+  "-1986": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1986,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2018,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Sarah",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.17.17"
+    ],
+    "disambiguatedName": "Sarah@Gen.11.29-1Pe",
+    "dStrongs": "H8283",
+    "visibility": 0
+  },
+  "-1978": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1978,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2026,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Reu",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.20-Gen.11.21"
+    ],
+    "disambiguatedName": "Reu@Gen.11.18-Luk",
+    "dStrongs": "H7466",
+    "visibility": 0
+  },
+  "-1955": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1955,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2049,
+      "era": "AM",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Serug",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.22-Gen.11.23"
+    ],
+    "disambiguatedName": "Serug@Gen.11.20-Luk",
+    "dStrongs": "H8286",
+    "visibility": 0
+  },
+  "-1921": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1921,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2091,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Abraham to Canaan",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.12.1-Gen.12.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1920": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1920,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2090,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Abraham goes to Egypt",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.12.10-Gen.12.20"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1918": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1918,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2088,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Abraham leaves Egypt",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.13.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1912": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1912,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2082,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Abraham's 1st covenant",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.15.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1911": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1911,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2081,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Abraham sleeps with Hagar",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.16.1-Gen.16.14"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1910": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1910,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2080,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Ishmael",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.16.15-Gen.16.16"
+    ],
+    "disambiguatedName": "Ishmael@Gen.16.11-Psa",
+    "dStrongs": "H3458G",
+    "visibility": 0
+  },
+  "-1908": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1908,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2078,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Arphaxad",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.13"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1897": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1897,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2061,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Treaty at Beersheba",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.21.22-Gen.21.34"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1896": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1896,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2066,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Isaac",
+    "description": "",
+    "duration": "180 years",
+    "academicNotes": "Ussher has =1897 when Abraham = 101yrs old. TBT has 2065",
+    "scriptures": [
+      "Gen.21.null-Gen.35"
+    ],
+    "disambiguatedName": "Isaac@Gen.17.19-Jas",
+    "dStrongs": "H3327",
+    "visibility": 0
+  },
+  "-1891": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1891,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2061,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Hagar and Ishmael sent away",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.21.8-Gen.21.21"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1878": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1878,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2048,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Shelah",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.15"
+    ],
+    "disambiguatedName": "Shelah@Gen.10.24-Luk",
+    "dStrongs": "H7974",
+    "visibility": 0
+  },
+  "-1871": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1871,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2041,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Mount Moriah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.22.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1859": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1859,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2029,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Sarah",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.23.null"
+    ],
+    "disambiguatedName": "Sarah@Gen.11.29-1Pe",
+    "dStrongs": "H8283",
+    "visibility": 0
+  },
+  "-1856": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1856,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2026,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Isaac marries Rebekah",
+    "duration": "",
+    "academicNotes": "Ussher has ~1857",
+    "scriptures": [
+      "Gen.24.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1853": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1853,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2023,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Abraham marries Keturah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.25.1-Gen.25.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1846": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1846,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2016,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Shem",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.11"
+    ],
+    "disambiguatedName": "Shem@Gen.5.32-Luk",
+    "dStrongs": "H8035",
+    "visibility": 0
+  },
+  "-1836": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1836,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -2006,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Jacob and Esau",
+    "description": "",
+    "duration": "",
+    "academicNotes": "Ussher has 1857, the year of the marriage, but she is initially thought to be barren, so a delay is needed. TBT has 2005",
+    "scriptures": [
+      "Gen.25.19-Gen.25.26"
+    ],
+    "disambiguatedName": "Jacob@Mat.1.15-",
+    "dStrongs": "G2384G",
+    "visibility": 0
+  },
+  "-1821": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1821,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1991,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Abraham",
+    "description": "",
+    "duration": "",
+    "academicNotes": "Ussher has 1822 but he dies at 175. TBT has 1990",
+    "scriptures": [
+      "Gen.25.7-Gen.25.11"
+    ],
+    "disambiguatedName": "Abraham@Gen.11.26-1Pe",
+    "dStrongs": "H0085",
+    "visibility": 0
+  },
+  "-1817": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1817,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1987,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Eber",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.11.17"
+    ],
+    "disambiguatedName": "Eber@Gen.10.21-Luk",
+    "dStrongs": "H5677G",
+    "visibility": 0
+  },
+  "-1804": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1804,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1974,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Isaac with Abimelech",
+    "duration": "",
+    "academicNotes": "made up",
+    "scriptures": [
+      "Gen.26.1-Gen.26.33"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1796": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1796,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1966,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Esau marries Judith and Basemath",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.26.34-Gen.26.35"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1773": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1773,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1943,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Ishmael",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.25.17-Gen.25.18"
+    ],
+    "disambiguatedName": "Ishmael@Gen.16.11-Psa",
+    "dStrongs": "H3458G",
+    "visibility": 0
+  },
+  "-1760": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1760,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1930,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jacob marries Leah and Rachel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.29.21-Gen.29.30",
+      "Gen.30.1",
+      "Gen.30.22-Gen.30.26"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1758": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1758,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1928,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Reuben",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.29.32"
+    ],
+    "disambiguatedName": "Reuben@Gen.29.32-Rev",
+    "dStrongs": "H7205",
+    "visibility": 0
+  },
+  "-1757": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1757,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1927,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Simeon",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.29.33"
+    ],
+    "disambiguatedName": "Simeon@Gen.29.33-Rev",
+    "dStrongs": "H8095G",
+    "visibility": 0
+  },
+  "-1756": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1756,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1926,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "LeviborntoJacob",
+    "description": "",
+    "duration": "137 years",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.29.34"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1755": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1755,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1925,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Judah",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.29.35"
+    ],
+    "disambiguatedName": "Judah@Gen.29.35-Rev",
+    "dStrongs": "H3063G",
+    "visibility": 0
+  },
+  "-1745": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1745,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1915,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Joseph",
+    "description": "",
+    "duration": "",
+    "academicNotes": "TBT has c.1913",
+    "scriptures": [
+      "Gen.30.22-Gen.30.24"
+    ],
+    "disambiguatedName": "Joseph@Gen.30.24-Rev",
+    "dStrongs": "H3130G",
+    "visibility": 0
+  },
+  "-1739": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1739,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1909,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Dinah and the Shechenites",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.34.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1732": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1732,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1902,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Benjamin",
+    "description": "",
+    "duration": "",
+    "academicNotes": "before Jacob dies, but not clear how much",
+    "scriptures": [
+      "Gen.35.16-Gen.35.20"
+    ],
+    "disambiguatedName": "Benjamin@Gen.35.18-Rev",
+    "dStrongs": "H1144G",
+    "visibility": 0
+  },
+  "-1728": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1728,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1898,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Joseph with Potiphar",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.39.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1727": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1727,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1897,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Joseph in prison",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.40.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1716": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1716,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1886,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Isaac",
+    "description": "",
+    "duration": "",
+    "academicNotes": "TBT has c.1885",
+    "scriptures": [
+      "Gen.35.23-Gen.35.29"
+    ],
+    "disambiguatedName": "Isaac@Gen.17.19-Jas",
+    "dStrongs": "H3327",
+    "visibility": 0
+  },
+  "-1715": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1715,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1885,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Joseph stores grain for 7 years",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.41.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1708": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1708,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1878,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Seven years of famine start",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.41.53-Gen.47.26"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1707": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1707,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1877,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Joseph's brothers visit Egypt twice",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.42.null-Gen.45"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1706": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1706,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1876,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jacob and family move to Egypt",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gen.46.1-Gen.47.11",
+      "Exod.1.1-Exod.1.7"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1689": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1689,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1859,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Jacob",
+    "description": "",
+    "duration": "",
+    "academicNotes": "TBT has c.1858",
+    "scriptures": [
+      "Gen.47.28-Gen.47.49",
+      "Gen.50.1-Gen.50.21"
+    ],
+    "disambiguatedName": "Jacob@Mat.1.15-",
+    "dStrongs": "G2384G",
+    "visibility": 0
+  },
+  "-1687": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1687,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1857,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jacob's entombed in Canaan",
+    "duration": "",
+    "academicNotes": "So when Exodus is 1250 and 215 yrs in Egypt, this marks the 480 yrs of 1Ki.6.1",
+    "scriptures": [
+      "Gen.50.4-Gen.50.14"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1635": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1635,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1805,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Joseph",
+    "description": "",
+    "duration": "",
+    "academicNotes": "TBT has c.1803",
+    "scriptures": [
+      "Gen.50.22-Gen.50.26"
+    ],
+    "disambiguatedName": "Joseph@Gen.30.24-Rev",
+    "dStrongs": "H3130G",
+    "visibility": 0
+  },
+  "-1619": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1619,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1789,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Levi",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Exo.6.16"
+    ],
+    "disambiguatedName": "Levi@Gen.29.34-Rev",
+    "dStrongs": "H3878",
+    "visibility": 0
+  },
+  "-1577": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1577,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1532,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Pharoah oppresses Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Exod.1.8-Exod.1.22"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1574": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1574,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1529,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Aaron",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Aaron@Exo.4.14-Heb",
+    "dStrongs": "H0175",
+    "visibility": 0
+  },
+  "-1573": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1573,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1528,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Pharoah kills male babies",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1571": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1571,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1526,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Moses",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Exod.2.1-Exod.2.10"
+    ],
+    "disambiguatedName": "Moses@Exo.2.10-Rev",
+    "dStrongs": "H4872",
+    "visibility": 0
+  },
+  "-1553": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1553,
+      "era": "BC",
+      "approx": true,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1491,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Joshua",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "Joshua@Exo.17.9-Heb",
+    "dStrongs": "H3091G",
+    "visibility": 0
+  },
+  "-1531": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1531,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1486,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Moses flees to Midian",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Exod.2.11-Exod.2.22"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1530": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1530,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1485,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Caleb",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Josh.14.7",
+      "Josh.14.10"
+    ],
+    "disambiguatedName": "Caleb@Num.13.6-1Ch",
+    "dStrongs": "H3612G",
+    "visibility": 0
+  },
+  "-1491": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1491,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1446,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Tabernacle constructed",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Exod.34.29-Exod.39.43"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1490": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1490,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1445,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Wilderness for 40 years",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Num.15.1-Num.19.22"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1471": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1471,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1426,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Rebellions against Moses",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Num.16.null-Num.17",
+      "Num.33.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1453": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1453,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1408,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Water from a rock at Kadesh (Meribah)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Num.20.1-Num.20.13"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1452": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1452,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1407,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Census of the new generation",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Num.26.1-Num.27.11"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1451": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1451,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1406,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Summaries of conquests",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Josh.12.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1450": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1450,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1405,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "First harvest & festivals",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Exo.23.10-Exo.23.11"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1445": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1445,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1400,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Dividing up Canaan",
+    "duration": "",
+    "academicNotes": "45 years after Num13-14 (vv7-10)",
+    "scriptures": [
+      "Josh.13.null-Josh.21"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1444": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1444,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1399,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Eastern tribes return home",
+    "duration": "",
+    "academicNotes": "Immediately after previous",
+    "scriptures": [
+      "Josh.22.null",
+      "Judg.2.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1443": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1443,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1381,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Joshua",
+    "description": "",
+    "duration": "",
+    "academicNotes": "Joshua 110, but this is of no use given no other dating for him. TBT date based on Josephus that he judged 25 yrs after the death of Moses",
+    "scriptures": [
+      "Josh.23.null-Josh.24",
+      "Judg.2.7-Judg.2.8"
+    ],
+    "disambiguatedName": "Joshua@Exo.17.9-Heb",
+    "dStrongs": "H3091G",
+    "visibility": 0
+  },
+  "-1442": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1442,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1380,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Various opposition",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.1.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1413": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1413,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1371,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Oppressed by Cushan-rishathaim 8 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.3.8"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1405": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1405,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1363,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judge Othniel 40 yr peace",
+    "duration": "",
+    "academicNotes": "TBT based on Josephus that this was 43 years after crossing the Jordan",
+    "scriptures": [
+      "Judg.3.9-Judg.3.11"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1343": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1343,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1327,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Oppressed by Moab/Eglon 18 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.3.12-Judg.3.14"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1325": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1325,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1309,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judges Ehud & Shamgar 80 yr peace",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.3.15-Judg.3.31"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1305": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1305,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1238,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Oppressed by Canaanites/Jabin 20 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.4.2-Judg.4.3"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1285": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1285,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1218,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judges Deborah & Barak 40 yr peace",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.4.4-Judg.5.31"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1252": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1252,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1182,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Oppressed by Midian/Oreb etc 7 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.6.1-Judg.6.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1245": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1245,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1175,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judge Gideon 40 yr peace",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.6.7-Judg.8.35"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1214": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1214,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1140,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Eli",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.14.15"
+    ],
+    "disambiguatedName": "Eli@1Sa.1.3-1Ki",
+    "dStrongs": "H5941",
+    "visibility": 0
+  },
+  "-1235": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1235,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1140,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Civil War of Abimelech for 3 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.9.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1233": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1233,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1137,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judge Tola for 23 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.10.1-Judg.10.2"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1210": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1210,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1114,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judge Jair for 22 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.10.3-Judg.10.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1206": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1206,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1111,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Oppressed by Ammon for 18 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.10.7-Judg.10.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1188": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1188,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1093,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judge Jephthtah for 6 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.10.10-Judg.12.7"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1181": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1181,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1087,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judge Ibzan for 7 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.12.8-Judg.12.10"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1157": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1157,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1082,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Eli as Priest",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.1.null-1Sam.4"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1175": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1175,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1080,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judge Elon for 10 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.12.11-Judg.12.12"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1165": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1165,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1070,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judge Abdon for 8 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.12.13-Judg.12.15"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1161": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1161,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1082,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "personName": "",
+    "description": "Oppressed by Philistines for 40 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.13.1"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1155": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1155,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1080,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Samson",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.13.24"
+    ],
+    "disambiguatedName": "Samson@Jdg.13.24-Heb",
+    "dStrongs": "H8123",
+    "visibility": 0
+  },
+  "-1151": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1151,
+      "era": "BC",
+      "approx": true,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1077,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Samuel",
+    "description": "",
+    "duration": "",
+    "academicNotes": "Age 3 seems reasonable given other events",
+    "scriptures": [
+      "1Sam.1.null-1Sam.2.11"
+    ],
+    "disambiguatedName": "Samuel@1Sa.1.20-Heb",
+    "dStrongs": "H8050G",
+    "visibility": 0
+  },
+  "-1141": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1141,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1067,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Prophecies against Eli's sons",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.2.12-1Sam.2.36"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1137": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1137,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1062,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judge Samson for 20 yr",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.16.31"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1136": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1136,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1061,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Samson marries & burns fields",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.14.null-Judg.16.31"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1117": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1117,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1042,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Samson",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Judg.16.null"
+    ],
+    "disambiguatedName": "Samson@Jdg.13.24-Heb",
+    "dStrongs": "H8123",
+    "visibility": 0
+  },
+  "-1116": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1116,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1042,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Samuel as a prophet",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.3.20-1Sam.3.21"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1085": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1085,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1040,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "David",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.16.1"
+    ],
+    "disambiguatedName": "David@Rut.4.17-Rev",
+    "dStrongs": "H1732",
+    "visibility": 0
+  },
+  "-1096": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1096,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1023,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Samuel defeats the Philistines",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.7.2-1Sam.7.17"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1095": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1095,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1022,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Saul as King; Samuel retires",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.8.null-1Sam.12"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1087": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1087,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1021,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Saul v. Philistines at Gibeah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.13.null-1Sam.14"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1079": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1079,
+      "era": "BC",
+      "approx": true,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -1019,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Saul v. Amalek; God rejects him",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.15.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1063": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1063,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1018,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David and Goliath",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.17.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1062": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1062,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1017,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David flees from Saul",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.18.null-1Sam.21"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1060": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1060,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1015,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David doesn't harm Saul",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.22.null-1Sam.26"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1056": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1056,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1011,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David flees to Gath",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Sam.27.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1055": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1055,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1010,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David as King at Hebron",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.1.null-2Sam.2.11",
+      "1Kgs.1.null-1Kgs.2.9",
+      "1Chr.11.null-1Chr.29"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1053": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1053,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1008,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Joab & Abner rivalry",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.2.null-2Sam.4"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1048": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1048,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1003,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David as king over all Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.5.1-2Sam.5.5",
+      "1Chr.11.1-1Chr.11.3",
+      "1Chr.11.10-1Chr.12.40"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1047": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1047,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1002,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David conquers Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.5.6-2Sam.5.23",
+      "1Chr.11.4-1Chr.11.9",
+      "1Chr.11.17"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1045": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1045,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -1000,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David brings the Ark to Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.6.null-2Sam.7",
+      "1Chr.13.1-1Chr.13.14",
+      "1Chr.15.null-1Chr.16"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1044": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1044,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -999,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David builds his palace",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Chr.14.1-1Chr.14.7"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1040": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1040,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -995,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David's various victories",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.8.null",
+      "1Chr.18.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1039": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1039,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -994,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David and Mephibosheth",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.9.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1036": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1036,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -991,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David defeats the Ammonites",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.10.null",
+      "1Chr.19.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1035": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1035,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -990,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David and Bathsheba",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.11.null",
+      "1Chr.20.1-1Chr.20.3"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1034": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1034,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -989,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Solomon",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Chr.22.9"
+    ],
+    "disambiguatedName": "Solomon@2Sa.5.14-Act",
+    "dStrongs": "H8010",
+    "visibility": 0
+  },
+  "-1032": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1032,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -987,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Amnon and Tamar",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.13.1-2Sam.13.22"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1030": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1030,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -985,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Absalom kills Amnon and flees",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.13.23-2Sam.13.36"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1027": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1027,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -982,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Absalom returns to Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.14.1-2Sam.14.27"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1025": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1025,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -980,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Absolom reconciled with David",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.14.28-2Sam.14.33"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1024": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1024,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -979,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Absalom's rebellion",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.15.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1023": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1023,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -978,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Absalom's death",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.16.null-2Sam.19"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1022": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1022,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -977,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Sheba rebels against David",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.20.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1021": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1021,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -976,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Famine due to Gibeonites",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.21.1-2Sam.21.2"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1018": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1018,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -973,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David's last words",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.22.null-2Sam.23"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1017": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1017,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -972,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "David's census",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Sam.24.1-2Sam.24.17",
+      "1Chr.21.1-1Chr.21.17"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1016": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -1016,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -971,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Rehoboam",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.14.21"
+    ],
+    "disambiguatedName": "Rehoboam@1Ki.11.43-Mat",
+    "dStrongs": "H7346",
+    "visibility": 0
+  },
+  "-1015": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -1015,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -970,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "David",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.1.null-1Kgs.2",
+      "1Chr.22.5-1Chr.22.19",
+      "1Chr.29.21-1Chr.29.30"
+    ],
+    "disambiguatedName": "David@Rut.4.17-Rev",
+    "dStrongs": "H1732",
+    "visibility": 0
+  },
+  "-1013": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1013,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -968,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Solomon establishes his kingdom",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.2.null-1Kgs.7",
+      "2Chr.1.null-2Chr.2"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1011": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1011,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -967,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Temple foundations laid",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kings.6.null",
+      "2Chr.3.2"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1005": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1005,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -960,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Temple finished",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.6.38"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-1004": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -1004,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -959,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Solomon dedicates the Temple",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.8.null",
+      "2Chr.5.null-2Chr.7"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-992": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -992,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -947,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Solomon builds his palace",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.7.1-1Kgs.7.12"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-984": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -984,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -939,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Solomon's further activities",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.9.1-1Kgs.11.13",
+      "2Chr.8.null-2Chr.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-980": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -980,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -935,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jeroboam rebels and flees",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.11.26-1Kgs.11.40"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-975": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -975,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -931,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Prophecies against Jeroboam",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.13.null",
+      "1Kgs.14.1-1Kgs.14.18"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-971": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -971,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -925,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Shishak of Egypt raids Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.14.25-1Kgs.14.26",
+      "2Chr.12.1-2Chr.12.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-958": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -958,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -913,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Abijah King of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.15.1-1Kgs.15.8",
+      "2Chr.13.1-2Chr.13.2"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-957": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -957,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -912,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Abijah fights Jeroboam",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.13.3-2Chr.13.22"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-955": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -955,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -911,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Asa King of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.15.9-1Kgs.15.24",
+      "2Chr.14.1-2Chr.16.14"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-954": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -954,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -910,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Nadab King of Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.15.25-1Kgs.15.32"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-953": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -953,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -909,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Baasha King of Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.15.33-1Kgs.16.7"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-941": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -941,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -897,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Prophecy by Azariah and Asa's reforms",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.15.1-2Chr.15.19"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-940": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -940,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -896,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Asa fights Baasha of Israel",
+    "duration": "",
+    "academicNotes": "Cannot be the 36th year of Asa's reign, since Baasha is dead. Usher proposed 36th year of the split kingdom.",
+    "scriptures": [
+      "1Kgs.15.16-1Kgs.15.22",
+      "2Chr.16.1-2Chr.16.10"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-930": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -930,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -885,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Tibni King of Israel",
+    "duration": "",
+    "academicNotes": "Arguable whether he counts as a king",
+    "scriptures": [
+      "1Kgs.16.21-1Kgs.16.22"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-929": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -929,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -880,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Omri King of Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.16.21-1Kgs.16.28"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-925": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -925,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -876,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Capital of Israel is Samaria",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.16.23-1Kgs.16.24"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-918": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -918,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -874,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Ahab King of Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.16.29-1Kgs.22.40"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-917": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -917,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -873,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Asa diseased",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.16.12"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-916": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -916,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -872,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Elijah prophesies a drought",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.17.1-1Kgs.17.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-914": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -914,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -872,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jehoshaphat Regent of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.22.41-1Kgs.22.50",
+      "2Chr.17.1-2Chr.21.1"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-912": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -912,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -870,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jehoshaphat teaches the Law",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.17.7-2Chr.17.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-910": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -910,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -868,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "The widow at Zarephath",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.17.7-1Kgs.17.24"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-907": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -907,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -865,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jehoram marries Athaliah of Israel",
+    "duration": "",
+    "academicNotes": "Needs to be before 864 when their son Amaziah is born!",
+    "scriptures": [
+      "2Kgs.8.16-2Kgs.8.18",
+      "2Chr.18.1"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-906": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -906,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -864,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Elijah v. the prophets of Baal",
+    "duration": "",
+    "academicNotes": "Three years after the previous",
+    "scriptures": [
+      "1Kgs.18.null-1Kgs.19.18"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-900": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -900,
+      "era": "BC",
+      "approx": true,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -859,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Elijah calls Elisha",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.19.19-1Kgs.19.21"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-901": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -901,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -858,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Ahab defeats Ben-Hadad of Aram",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.20.1-1Kgs.20.34"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-899": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -899,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -856,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Naboth's vineyard",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Kgs.21.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-897": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -897,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -854,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Ahab",
+    "description": "",
+    "duration": "",
+    "academicNotes": "Attested in Assyrian records as the battle of Qarqar, summer 853. See Finnegan S422",
+    "scriptures": [
+      "1Kgs.22.1-1Kgs.22.40",
+      "2Chr.18.1-2Chr.19.3"
+    ],
+    "disambiguatedName": "Ahab@1Ki.16.28-Mic",
+    "dStrongs": "H0256G",
+    "visibility": 0
+  },
+  "-896": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -896,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -852,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Joram King of Israel",
+    "duration": "",
+    "academicNotes": "Also called Jehoram, but not to be confused with Jehoram of Judah",
+    "scriptures": [
+      "2Kgs.3.1-2Kgs.3.27",
+      "2Kgs.9.14-2Kgs.9.26"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-895": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -895,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -851,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Moab revolts",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.3.14-2Kgs.3.27"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-893": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -893,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -849,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Elisha heals Naaman & other miracles",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.4.1-2Kgs.6.23"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-892": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -892,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -849,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Siege of Samaria",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.6.24-2Kgs.7.20"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-889": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -889,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -848,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Jehosphat",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.21.1"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-887": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -887,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -846,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Shunammite land restored",
+    "duration": "",
+    "academicNotes": "Takes seven years",
+    "scriptures": [
+      "2Kgs.8.1-2Kgs.8.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-885": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -885,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -841,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Ahaziah King of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.8.25-2Kgs.8.29",
+      "2Kgs.8.-2Kgs.8.29",
+      "2Chr.22.1-2Chr.22.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-884": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -884,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -841,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Athaliah Queen of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.11.1-2Kgs.11.20",
+      "2Chr.22.10-2Chr.23.15"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-878": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -878,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -835,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jehoash King of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.11.21-2Kgs.12.21",
+      "2Chr.23.16-2Chr.24.27"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-864": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -864,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -821,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "Amazaiah",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.24.2",
+      "2Chr.24.3",
+      "2Chr.25.1"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-857": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -857,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -815,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jehoash repairs the Temple",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.12.4-2Kgs.12.16",
+      "2Chr.24.1-2Chr.24.14"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-856": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -856,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -814,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jehoahaz King of Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.13.1-2Kgs.13.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-840": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -840,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -799,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Zechariah the priest killed",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.24.17-2Chr.24.22"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-839": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -839,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -796,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Amaziah King of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.14.1-2Kgs.14.22",
+      "2Chr.25.1-2Chr.25.28"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-836": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -836,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -793,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jeroboam Regent of Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.14.23-2Kgs.14.29"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-835": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -835,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -792,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Uzziah Regent of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.15.1-2Kgs.15.7",
+      "2Chr.26.1-2Chr.26.23"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-825": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -825,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -782,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jeroboam full King",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-810": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -810,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -767,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Uzziah full King",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-800": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -800,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -790,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Joel",
+    "duration": "",
+    "academicNotes": "some time between 800 BC and 600 BC",
+    "scriptures": [
+      "Book.ofJoel.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-795": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -795,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -780,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Amos",
+    "duration": "",
+    "academicNotes": "Probably sometime between 766 BC and 753 BC.",
+    "scriptures": [
+      "Amos.1.3",
+      "Amos.7.10-Amos.7.17"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-791": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -791,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -763,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Eclipse of the sun (15th June)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Amos.8.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-790": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -790,
+      "yearEnd": -725,
+      "era": "",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -762,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Hosea",
+    "duration": "",
+    "academicNotes": "Probably between 785 BC and 722 BC",
+    "scriptures": [
+      "Book.ofHosea.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-773": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -773,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -752,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Menahem King of Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.15.17-2Kgs.15.22"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-771": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -771,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -750,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jotham Regent of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.15.32-2Kgs.15.38",
+      "2Chr.27.1-2Chr.27.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-765": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -765,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -744,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Uzziah becomes leprous",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.26.16",
+      "2gs15.5.null-2gs15.7",
+      "Is2.7.null-Is2.16"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-761": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -761,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -742,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Pekahiah King of Israel",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.15.23-2Kgs.15.26"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-759": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -759,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -740,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jotham full King. Isaiah's prophecies.",
+    "duration": "",
+    "academicNotes": "Between 740 BC and about 680 BC.",
+    "scriptures": [
+      "Isa.2.null-Isa.5",
+      "Isa.6.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-754": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -754,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -735,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Ahaz Regent of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.16.1-2Kgs.16.20",
+      "2Chr.28.1-2Chr.28.27"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-750": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -750,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -733,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Micah's prophecies",
+    "duration": "",
+    "academicNotes": "Micah between 750 BC and 700 BC",
+    "scriptures": [
+      "Mic.1.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-742": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -742,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -732,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Ahaz full King",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.16.1-2Kgs.16.20",
+      "2Chr.28.1-2Chr.28.27"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-739": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -739,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -732,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Hoshea King of Israel.",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.17.1-2Kgs.17.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-741": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -741,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -731,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Syria conquers and captures Israelites",
+    "duration": "",
+    "academicNotes": "It isn't clear where this prophecy ends, possibly as late as chapter 12.",
+    "scriptures": [
+      "2Chr.28.6-2Chr.28.15"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-740": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -740,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -730,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Ahaz pays Assyria with Temple gold",
+    "duration": "",
+    "academicNotes": "It isn't clear where this prophecy ends, possibly as late as chapter 12.",
+    "scriptures": [
+      "Isa.7.null-Isa.8.10",
+      "2Chr.28.16-2Chr.28.25"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-730": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -730,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -730,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Micah's prophecies",
+    "duration": "",
+    "academicNotes": "Micah between 750 BC and 700 BC",
+    "scriptures": [
+      "Mic.2.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-725": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -725,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -727,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Hoshea allies with So of Egypt",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.17.4"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-723": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -723,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -725,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Siege of Samaria",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.17.4-2Kgs.17.6",
+      "Hos10.7.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-721": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -721,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -723,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Israel sent into Exile",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.17.7-2Kgs.17.41",
+      "2Kgs.18.9-2Kgs.18.12"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-727": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -727,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -716,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Hezekiah reconsecrates the Temple",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.29.3-2Chr.31.20"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-724": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -724,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -715,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Syria destroys the Moabites",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Isa.16.7-Isa.16.11"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-713": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -713,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -701,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Hezekiah's illness",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.20.1-2Kgs.20.11"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-712": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -712,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -700,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Hezekiah's message from Bablyon",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.20.12-2Kgs.20.19"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-710": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -710,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -698,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Micah's prophecies",
+    "duration": "",
+    "academicNotes": "Micah between 750 BC and 700 BC",
+    "scriptures": [
+      "Mic.3.null-7(see6.16)"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-709": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -709,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -697,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Manasseh Regent of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.21.1-2Kgs.21.18",
+      "2Chr.33.1-2Chr.33.20",
+      "Isa.56.null-Isa.66"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-698": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -698,
+      "era": "BC",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -687,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Manasseh full King",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-677": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -677,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -677,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Manasseh taken to Babylon",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-643": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -643,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -643,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Amon King of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.21.19-2Kgs.21.26",
+      "2Chr.33.21-2Chr.33.25"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-641": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -641,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -641,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Josiah King of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.22.1-2Kgs.23.30",
+      "2Chr.34.1-2Chr.35.27"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-634": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -634,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -634,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Josiah purges the Temple",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.34.3"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-630": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -630,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -630,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Josiah removes idol altars",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Chr.34.3-2Chr.34.7"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-629": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -629,
+      "era": "",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -629,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jeremiah prophesies to Josiah",
+    "duration": "",
+    "academicNotes": "Between 627 BC and 586 BC",
+    "scriptures": [
+      "Jer.1.null-Jer.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-626": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -626,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -625,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Habakkuk's prophecies",
+    "duration": "",
+    "academicNotes": "A short time before 605 BC (when the Babylonian army arrived!)",
+    "scriptures": [
+      "Book.ofHabakkuk.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-624": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -624,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -624,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Book of the Law found",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.22.3-2Kgs.23.25",
+      "2Chr.34.3-2Chr.35.19"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-623": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -623,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -623,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Passover restored",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-610": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -610,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -609,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jehoiakim King of Judah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.23.36-2Kgs.24.7",
+      "2Chr.36.5-2Chr.36.8"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-609": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -609,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -609,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Prophecies before the exile",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Jer.7.null-Jer.26"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-607": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -607,
+      "yearEnd": -534,
+      "era": "",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -607,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Daniel's prophecies and life",
+    "duration": "",
+    "academicNotes": "Roughly 605 BC to 539 BC.",
+    "scriptures": [
+      "Book.ofDaniel.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-606": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -606,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -606,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Burning Jeremiah's scroll",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Jer.36.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-604": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -604,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -604,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jehoiakim rebels",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.24.1",
+      "2Kgs.24.36"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-599": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -599,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -599,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jeremiah writes to the exiles",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Jer.29.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-595": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -595,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -595,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Ezekiel's prophecies to the exiles",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Jer.27.null-Jer.28",
+      "Jer.50.null-Jer.51"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-594": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -594,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -594,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Zedekiah allies with Hophra of Egypt",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Ezk.20.null-Ezk.23"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-590": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -590,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -590,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jerusalem under siege",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.25.1",
+      "2Kgs.25.4",
+      "2Kgs.31.31",
+      "2Kgs.32.6",
+      "2Kgs.33.15-2Kgs.33.26",
+      "2Kgs.33.34",
+      "2Kgs.37.5",
+      "2Kgs.37.17",
+      "2Kgs.37.38-2Kgs.37.39"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-588": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -588,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -586,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Gedaliah murdered. Escape to Egypt",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.25.22-2Kgs.25.26",
+      "Jer.40.null-Jer.44"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-587": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -587,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -585,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Obadiah's prophecies",
+    "duration": "",
+    "academicNotes": "about 600 BC (or about 250 years earlier)",
+    "scriptures": [
+      "Book.ofObadiah.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-570": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -570,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -570,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Nebuchadnezzar's dream",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Dan.4.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-562": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -562,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -562,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jehoiachin released",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Kgs.25.27-2Kgs.25.30",
+      "Jer.52.31-Jer.52.34"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-538": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -538,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -538,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Emperor Cyrus",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Ezra.1.null-Ezra.3.7",
+      "Neh7.3.null",
+      "2Chr36.21.null",
+      "1Chr9.3.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-536": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -536,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -536,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Cyrus sends Zerubbabel to Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Ezra.1.null-Ezra.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-535": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -535,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -535,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Daniel's vision of the future",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Dan.10.null-Dan.12",
+      "Ezra4.5.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-529": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -529,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -529,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Emperor Ahasuerus (Cambyses)  (2nd Cap.+70)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Ezra.4.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-522": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -522,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -522,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Emperor Artaxerxes (Darius)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Ezra.4.7"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-520": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -520,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -520,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Zerubbubel & Joshua work on temple",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Hag.1.null",
+      "Hag.2.null",
+      "Zech1.2.null-Zech1.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-519": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -519,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -519,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Emperor Ahasuerus (Xerxes) & Vashti",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Esther.1.null-Esther.3"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-518": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -518,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -518,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Temple building renewed",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Ezra.5.6",
+      "Zech7.5.null",
+      "Zech7.8.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-510": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -510,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -510,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Plot of Haman",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Esther.3.null-Esther.8"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-509": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -509,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -509,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Feast of Purim (3rd Cap.+70)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Esther.8.17"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-515": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -515,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -515,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Temple dedicated",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Ezra.2.36-Ezra.2.39",
+      "Ezra.6.15-Ezra.6.22"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-487": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -487,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -487,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Artaxerxes sends Ezra",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Ezra.7.null-Ezra.9"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-456": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -456,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -456,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Ezra's covenant",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Ezra.10.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-446": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -446,
+      "yearEnd": -434,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -446,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Artaxerxes sends Nehemiah",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Neh.1.null-Neh.12"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-445": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -445,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -445,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Artaxerxes' decree to rebuild walls",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Dan.9.25"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-434": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -434,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -434,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Nehemiah revisits for a year",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Neh.13.6"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-397": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -397,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -397,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Malachi's prophecies",
+    "duration": "",
+    "academicNotes": "between 440 BC and 400 BC",
+    "scriptures": [
+      "Book.ofMalachi.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-331": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -331,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -331,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Emperor Alexander the Great",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Dan.11.3-Dan.11.4"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-320": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -320,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -320,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Ptolomy 1 of Egypt captures Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-301": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -301,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -280,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "HP Simon 1 (descendant of Zadok - 'the Just' acc to Josephus)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-292": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -292,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -260,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "HP Eleazar (brother of Simon I",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-259": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -259,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -245,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "HP Manasseh (uncle of Eleazar)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-233": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -233,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -240,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "HP Onias II (son of Simon I)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-219": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -219,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -218,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "HP Simon II (son of Onias II) Repairs Temple",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.2.10",
+      "Ecclus50.2.null",
+      "2+3Macc.2.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-199": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -199,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -185,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "HP Onias III (son of Simon II)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-187": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -187,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -187,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Seleucus 4 demands Temple money",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "2Macc.3.4"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-175": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -175,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -175,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jason son of Simon II",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-171": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -171,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -171,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "High Priesthood sold to highest bidder",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-168": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -168,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -168,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Antiochus Epiphanes attacks Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Macc.1.null",
+      "2Macc5.1.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-167": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -167,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -167,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judas Maccabaeus leads revolt",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Macc.2.null",
+      "2Macc8.2.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-165": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -165,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -165,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Temple rededicated",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Macc.4.null",
+      "2Macc10.4.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-160": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -160,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -160,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jonathan Maccabaeus is ruler & priest",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Macc.7.null-1Macc.15"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-133": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -133,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -134,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "John Hyrcanus I, son of Simon",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Macc.16.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-108": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -108,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -104,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Aristobalus I - King & High Priest, Hasmonean",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-105": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -105,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -103,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Alexander Jannaeus - King & High Priest",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-78": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -78,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -67,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Alexandra rules through Hyrcanus II",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-63": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -63,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 61,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul imprisoned in Rome",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.28.17-Acts.28.31"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-40": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -40,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -40,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Antigonus - King & High Priest",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-37": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -37,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -37,
+      "era": "BC",
+      "approx": true,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Herod the Great",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-27": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -27,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 26,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jesus's temptation in the desert",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Matt.4.1-Matt.4.11",
+      "Mark.1.12-Mark.1.13",
+      "Luke.4.1-Luke.4.13"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-6": {
+    "branch": "",
+    "eventType": "Born",
+    "ussherDate": {
+      "startYear": -6,
+      "era": "BC",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -7,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "John the Baptist",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Luke.1.57-Luke.1.80"
+    ],
+    "disambiguatedName": "John@Mat.3.1-Act",
+    "dStrongs": "G2491G",
+    "visibility": 0
+  },
+  "-4": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -4,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -5,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Flight to Egypt",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Matt.2.13-Matt.2.18"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "8": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 8,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -7,
+      "startYearAdjunct": "or 8AD",
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jesus in the Temple at age 12",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Luke.2.41-Luke.2.52"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "26": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 26,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 26,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Public ministry of John the Baptist",
+    "duration": "",
+    "academicNotes": "The 15th year of Tiberias's reign, Luke 3:1. Tiberias's here was his co-regency with Augustus begining in AD 12, placing his 15th year in the year of 26/27.  Rainer Reisner, Paul's Early Period, Chronology, Mission Strategy, Theology (Grand Rapids, Michigan/Cambridge, U.K., 1998), 39-41.",
+    "scriptures": [
+      "Matt.3.1-Matt.3.12",
+      "Mark.1.1-Mark.1.8",
+      "Luke.3.1-Luke.3.20",
+      "John.1.19-John.1.28"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "27": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 27,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 26,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Jesus's baptism",
+    "duration": "",
+    "academicNotes": "Luke 3:23, Jesus was about 30 years of age when he began his ministry. Reisner, Paul's Early Period, 40",
+    "scriptures": [
+      "Matt.3.13-Matt.3.17",
+      "Mark.1.9-Mark.1.11",
+      "Luke.3.21-Luke.3.22",
+      "John.1.29-John.1.34"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "30": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 30,
+      "era": "AD",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": 27,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "John the Baptist imprisoned and beginning of Jesus's public ministry",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Matt.4.12-Matt.4.17",
+      "Mark.1.14",
+      "Luke.4.14-Luke.4.30"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "31": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 31,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -27,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Opposition at home and a new headquarters",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Matt.4.13-Matt.4.17",
+      "Mark.1.14-Mark.1.15",
+      "Luke.4.14-Luke.4.31",
+      "John.4.46-John.4.54"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-31": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -31,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -28,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Continuing opposition",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Matt.8.18",
+      "Matt.8.23-Matt.8.34",
+      "Matt.9.18-Matt.9.34",
+      "Matt.13.54-Matt.13.58",
+      "Mark.4.35-Mark.6.6",
+      "Luke.8.22-Luke.8.56"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "32": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 32,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 29,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Final Galilean campaign",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Matt.9.35-Matt.11.1",
+      "Matt.14.1-Matt.14.12",
+      "Mark.6.6-Mark.6.30",
+      "Luke.9.1-Luke.9.10"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-32": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -32,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -29,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Raising of Lazarus and a brief tour through Samaria and Galilee",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Luke.17.11-Luke.17.37",
+      "John.11.1-John.11.54"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "33": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 33,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 30,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Teaching on final journey to Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Matt.19.1-Matt.20.34",
+      "Mark.10.1-Mark.10.52",
+      "Luke.18.1-Luke.19.28"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-33": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -33,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -30,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Stephen",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.6.8-Acts.7.60"
+    ],
+    "disambiguatedName": "Stephen@Act.6.5-",
+    "dStrongs": "G4736",
+    "visibility": 0
+  },
+  "34": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 34,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 32,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Evangelism outside Jerusalem by Peter & Philip",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Act.8.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "35": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 35,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 33,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Conversion of Paul",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.9.1-Acts.9.7",
+      "Gal1.15.null-Gal1.16"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-35": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -35,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 34,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul in Damascus and Arabia",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.9.8-Acts.9.25",
+      "Gal.1.16-Gal.1.17",
+      "2Cor.11.32-2Cor.11.33"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "37": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 37,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 37,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul to Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.9.26-Acts.9.29",
+      "Gal.1.18-Gal.1.20"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "38": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 38,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 39,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Peter's ministry along Sharon Plain & to Gentiles",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.9.32-Acts.9.43"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "41": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 41,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -39,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Peter's ministry to Cornelius & Gentiles",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.10.1-Acts.10."
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-41": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -41,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 41,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Agrippa I gains Galilee",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "42": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 42,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -41,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Others preach to Gentiles",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Act.11.19-Act.11.24"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "43": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 43,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 44,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul and Barnabas's relief visit to Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.11.30"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-43": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -43,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 43,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Agabus's prediction of famine",
+    "duration": "",
+    "academicNotes": "[** when was the famine?. Suetonius, Lives of the Caesars, 18:2, there was a scarcity of grain because of long-continued droughts during the reign of Claudius (41-54); Josephus in Antiquities 20:101 says a great famine happened in Judea under the procurators, Cuspius Fadus (44-46) and Tiberius Alexander (46-48) and during that time Queen Helena of Adebene bought grain in Egypt and distributed it. So the famine may be getween 44-448.]",
+    "scriptures": [
+      "Acts.11.27-Acts.11.28"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "44": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 44,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -44,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Execution of James",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.12.1-Acts.12.2"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-44": {
+    "branch": "",
+    "eventType": "Died",
+    "ussherDate": {
+      "startYear": -44,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -44,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "Herod Agrippa I",
+    "description": "",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.12.20-Acts.12.23"
+    ],
+    "disambiguatedName": "Herod@Act.12.1-",
+    "dStrongs": "G2264I",
+    "visibility": 0
+  },
+  "45": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 45,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 46,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul's 1st journey from Antioch with Barnabus",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.13.1-Acts.13.3"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-45": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -45,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 47,
+      "startYearAdjunct": "Spring",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- visit Pisidian Antioch",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.13.14-Acts.13.52",
+      "2Tim.3.11"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "46": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 46,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 47,
+      "startYearAdjunct": "Summer",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- visit Iconium",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.14.1-Acts.14.7",
+      "2Tim.3.11"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-46": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -46,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 48,
+      "startYearAdjunct": "Spring",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul and Barnabas return to Antioch",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.14.24-Acts.14.28"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "51": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 51,
+      "era": "AD",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": 48,
+      "startYearAdjunct": "Summer",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Judaisers cause dissension",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.15.1-Acts.15.4"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "52": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 52,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 48,
+      "startYearAdjunct": "Summer",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Council of Jerusalem",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.15.5-Acts.15.21",
+      "Gal1.1.null-Gal1.11"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-52": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -52,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -48,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Confrontation of Peter and Paul in Antioch",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Gal.2.11-Gal.2.14"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "58": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 58,
+      "era": "AD",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -48,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Galatians written",
+    "duration": "",
+    "academicNotes": "written in Antioch immediately after the events",
+    "scriptures": [
+      "Gal.2.11-Gal.2.21",
+      "Acts15.30.null-Acts15.35"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "53": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 53,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 48,
+      "startYearAdjunct": "Winter",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul's 2nd journey from Antioch (without Barnabus)",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.15.36-Acts.15.40"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-53": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -53,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 49,
+      "startYearAdjunct": "Fall",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- in Berea",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.17.10-Acts.17.15"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "54": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 54,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 51,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- - 2 Thessalonians written",
+    "duration": "",
+    "academicNotes": "written in Corinth",
+    "scriptures": [
+      "2Thess.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-54": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -54,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -49,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- - Silas and Timothy join Paul",
+    "duration": "",
+    "academicNotes": "Wright, Paul, A Biography, 214 ff sees this as prompting the writing of 1 Thess. Silas/Silvanus and Timothy are co-authors with Paul.",
+    "scriptures": [
+      "Acts.18.5-Acts.18.11",
+      "1Thess1.1.null",
+      "2Thess1.1.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "55": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 55,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -51,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- - judgement of Gallio",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.18.12-Acts.18.17"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-55": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -55,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -51,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- in Ephesus",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.18.19-Acts.18.21"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "56": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 56,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 52,
+      "startYearAdjunct": "Spring",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- to Jerusalem then Antioch",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.18.22",
+      "Gal.2.1"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-56": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -56,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 53,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul's 3rd journey from Antioch through Galatia",
+    "duration": "",
+    "academicNotes": "Agrippa received Philip's territory in AD53",
+    "scriptures": [
+      "Acts.18.23"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "57": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 57,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -53,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- in Ephesus",
+    "duration": "",
+    "academicNotes": "19:8, Paul spoke boldly in the synagogue for 3 months, then moved on to the hall of Tyrannus. Paul continued for 2 years (Acts 19:9-10).",
+    "scriptures": [
+      "Acts.19.1-Acts.19.41"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "59": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 59,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -53,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "-?- 1 Corinthians written",
+    "duration": "",
+    "academicNotes": "written in Ephesus late in stay",
+    "scriptures": [
+      "1Cor.null",
+      "1Cor16.19.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-59": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -59,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 55,
+      "startYearAdjunct": "Spring",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- imprisonment in Ephesus",
+    "duration": "",
+    "academicNotes": "1Cor. 15:32 fighting with beasts may be metaphorical, 2Cor. 11:23, multiple imprisonments and beatings.",
+    "scriptures": [
+      "2Cor.1.8-2Cor.1.10",
+      "1Cor.15.32"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "64": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 64,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -62,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "-?- Hebrews written",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Heb.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "60": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 60,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 56,
+      "startYearAdjunct": "Winter",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- in Greece (Corinth)",
+    "duration": "",
+    "academicNotes": "Ἑλλάς (hellas) 'Greece' (G1671): BDAG indicates in popular usage it could also designate the Roman province officially known as Achaia Nicopolis is roughly 12,5 km from   Philippi",
+    "scriptures": [
+      "Acts.20.2-Acts.20.4"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "-60": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": -60,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -57,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- 1 Peter written",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Pet.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "61": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 61,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 58,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul tried by Felix, Festus and Agrippa II in Caesarea",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Acts.23.31-Acts.26.32"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "62": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 62,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 59,
+      "startYearAdjunct": "Winter",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "Paul sent to Rome but shipwrecked on Malta",
+    "duration": "",
+    "academicNotes": "\"even the Fast was already over\", The Fast refers to the Jewish Day of Atonement, indicating it was into October 59",
+    "scriptures": [
+      "Acts.27.1-Acts.27."
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "63": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 63,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": 60,
+      "startYearAdjunct": "Spring",
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "- to Syracuse, Rhegium, Puteoli, Rome",
+    "duration": "",
+    "academicNotes": "\"after three months we set sail in a ship that had wintered in the island\"",
+    "scriptures": [
+      "Acts.28.11-Acts.28.16"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "65": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 65,
+      "era": "AD",
+      "approx": false,
+      "asterisk": true
+    },
+    "otherDate": {
+      "startYear": -62,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "-?- 1 Timothy written",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Tim.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "66": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 66,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -62,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "-?- Jude written",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Jude.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "90": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 90,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -90,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "-?- 1, 2, 3 John written",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "1Jn.null",
+      "2Jn.null",
+      "3Jn.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  },
+  "96": {
+    "branch": "",
+    "eventType": "Event",
+    "ussherDate": {
+      "startYear": 96,
+      "era": "AD",
+      "approx": false,
+      "asterisk": false
+    },
+    "otherDate": {
+      "startYear": -96,
+      "era": "",
+      "approx": false,
+      "asterisk": false
+    },
+    "personName": "",
+    "description": "-?- Revelation written",
+    "duration": "",
+    "academicNotes": "",
+    "scriptures": [
+      "Rev.null"
+    ],
+    "disambiguatedName": "",
+    "dStrongs": "",
+    "visibility": 0
+  }
+}

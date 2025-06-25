@@ -288,15 +288,15 @@
                                     </a>
                                     <ul class="kolumny pull-right dropdown-menu" style="-webkit-column-count: 1; -moz-column-count: 1; column-count: 1;">
                                         <li><a href="html/gospel_harmony.html" target="_blank" rel="noopener">Gospel Parallels</a></li>
-                                        <li><a href="html/miracles.html" target="_blank" rel="noopener">Miracles in the Bible</a></li>
-                                        <li><a href="html/nt_letters.html" target="_blank" rel="noopener">New Testament Letter Structure</a></li>
                                         <li><a href="html/ot_parallel.html" target="_blank" rel="noopener">Old Testament Parallels</a></li>
                                         <li><a href="html/ot_in_nt.html" target="_blank" rel="noopener">Old Testament used in the New Testament</a></li>
-                                        <li><a href="html/names.html" target="_blank" rel="noopener">Names of God</a></li>
+                                        <li><a href="html/nt_letters.html" target="_blank" rel="noopener">New Testament Letter Structure</a></li>
+                                        <li><a href="html/miracles.html" target="_blank" rel="noopener">Miracles in the Bible</a></li>
                                         <li><a href="html/prophets.html" target="_blank" rel="noopener">Prophets in the Bible</a></li>
                                         <li><a href="html/places.html" target="_blank" rel="noopener">Places in the Bible</a></li>
-                                        <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank" rel="noopener">Create your own notes</a></li>
+                                        <li><a href="html/names.html" target="_blank" rel="noopener">Names of God</a></li>
                                         <li><a href="#" onclick="step.util.ui.initSidebar('readingPlans'); return false;">Reading Plans</a></li>
+                                        <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank" rel="noopener">Create your own notes</a></li>
                                         <li><a href="javascript:step.util.ui.initSidebar('analysis');"><fmt:message key="passage_stats" /></a></li>
                                     </ul>
                                 </span>

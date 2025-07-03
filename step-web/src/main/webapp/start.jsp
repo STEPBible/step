@@ -256,9 +256,6 @@
             <%
                 }
             %>
-                            <a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy" />">
-                                <i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="copy" /></span>
-                            </a>
                             <span class="navbar-collapse collapse">
                                 <span class="dropdown">
                                     <a id="languages-icon" style="padding-left:5px" class="dropdown-toggle extrapad-xs" data-toggle="dropdown" title="<fmt:message key="installation_book_language" />">
@@ -274,7 +271,7 @@
                                 <span class="dropdown">
                                     <a id="settings-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="<fmt:message key="settings" />">
                                         <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="settings" /></span> --%>
-                                        <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDe    sc">&nbsp;Options</span>
+                                        <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;Options</span>
                                     </a>
                                     <ul class="pull-right dropdown-menu">
                                         <li><a id="bookmark-menu" href="javascript:step.util.ui.initSidebar('history');"><fmt:message key="bookmarks" /></a></li>
@@ -300,6 +297,17 @@
                                         <li><a href="#" onclick="step.util.ui.initSidebar('readingPlans'); return false;">Reading Plans</a></li>
                                         <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank" rel="noopener">Create your own notes</a></li>
                                         <li><a href="javascript:step.util.ui.initSidebar('analysis');"><fmt:message key="passage_stats" /></a></li>
+                                    </ul>
+                                </span>
+                                <span class="dropdown">
+                                    <a id="share-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title='<fmt:message key="share" />'>
+                                        <i class="glyphicon glyphicon-thumbs-up"></i><span class="navbarIconDesc">&nbsp;&nbsp;Share</span>
+                                    </a>
+                                    <ul class="pull-right dropdown-menu" style="-webkit-column-count: 1; -moz-column-count: 1; column-count: 1;">
+                                        <li><a href="javascript:step.util.copyModal();"><fmt:message key="copy" /></a></li>
+                        <% if (!appManager.isLocal()) { %>
+                                        <li><a href="javascript:step.util.triggerShareDropdown();"><fmt:message key="share" /></a></li>
+                        <% } %>
                                     </ul>
                                 </span>
                                 <span class="dropdown">
@@ -362,18 +370,6 @@
                                             <i class="glyphicon glyphicon-arrow-right"></i>
                                         </a>
                                     </span>
-                                <%
-                                    if (!appManager.isLocal()) {
-                                %>
-                                <span id="thumbsup" class="dropdown hidden-xs">
-                                        <a class="dropdown-share" data-toggle="dropdown"
-                                           title="<fmt:message key="share" />">
-                                            <i class="glyphicon glyphicon-thumbs-up"></i>
-                                        </a>
-                                </span>
-                                <%
-                                    }
-                                %>
                                 <span class=" hidden-xs">
                                     <a id="resizeButton" class="resizePanel" title="Increase size of panel" style="display:none">
                                         <i class="glyphicon glyphicon-resize-full" style="display:inline"></i>

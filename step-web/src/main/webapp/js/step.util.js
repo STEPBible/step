@@ -907,6 +907,64 @@ step.util = {
 //    getMainLanguage: function (passageModel) {
 //        return (passageModel.get("languageCode") || ["en"])[0];
 //    },
+    triggerShareDropdown: function() {
+        // Do not run when STEP is hosted locally
+        if (step.state && step.state.isLocal && step.state.isLocal()) {
+            return;
+        }
+
+        // Find the top–level Share dropdown (identified via the #share-icon link in start.jsp)
+        var $dropdown = jQuery('#share-icon').closest('.dropdown');
+        if (!$dropdown.length) {
+            return;
+        }
+
+        // Ensure the dropdown is displayed
+        if (!$dropdown.hasClass('open')) {
+            $dropdown.find('.dropdown-toggle').dropdown('toggle');
+        }
+
+        // Find the existing dropdown menu and remove any previously added social buttons
+        var $menu = $dropdown.find('.dropdown-menu');
+        $menu.find('.social-share-item').remove();
+
+        // Build the URL to share (mirrors logic in view_menu_passage._doSocialButtons)
+        var activePassageId = (step.util && step.util.activePassageId) ? step.util.activePassageId() : null;
+        var url = (step.router && step.router.getShareableColumnUrl) ? step.router.getShareableColumnUrl(activePassageId, true) : null;
+        if (!url) {
+            // Fallback to current location if a shareable passage URL is not available
+            url = window.location.href;
+        }
+
+        // Twitter button - styled to match existing dropdown items
+        if (window.twttr !== undefined) {
+            var $twitterContainer = jQuery('<div style="padding: 3px 20px;"></div>');
+            var $twitter = jQuery('<a href="https://twitter.com/share" class="twitter-share-button" data-via="Tyndale_House">Tweet</a>');
+            $twitter.attr('data-url', url).attr('data-text', jQuery('title').text());
+            $twitterContainer.append($twitter);
+            var $twitterItem = jQuery('<li class="social-share-item"></li>').append($twitterContainer);
+            $menu.append($twitterItem);
+            window.twttr.widgets.load();
+        }
+
+        // Facebook share button - styled to match existing dropdown items
+        if (window.FB && window.FB.XFBML) {
+            var fbUrl = url.indexOf('-') === -1 ? url.replace(/\|/g, '@') : null;
+            if (fbUrl) {
+                var $facebookContainer = jQuery('<div style="padding: 3px 20px;"></div>');
+                var $facebook = jQuery('<fb:share-button type="button_count"></fb:share-button>').attr('href', fbUrl);
+                $facebookContainer.append($facebook);
+                var $facebookItem = jQuery('<li class="social-share-item"></li>').append($facebookContainer);
+                $menu.append($facebookItem);
+                window.FB.XFBML.parse($facebookContainer[0]);
+            } else {
+                alert('Sorry, Facebook does not accept a URL with a "-" character.');
+            }
+        }
+    },
+    capitalizeFirstLetter: function(val) {
+        return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+    },
     restoreFontSize: function (passageModel, element) {
 		var fontArray = ["defaultfont", "hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
         var passageId = passageModel.get("passageId");
@@ -2888,9 +2946,9 @@ step.util = {
 				'<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>From King David to exile</b></p>' +
 				'<a href="javascript:step.util.showSummary(\'2Sam\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">2 Samuel</a><span> - Uniting the Kingdom</span>' +
 				'<span class="vid_2sam glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'1Kgs\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">1 Kings</a><span> - Dividing the kingdom</span>' +
+				'<br><a href="javascript:step.util.showSummary(\'1Kngs\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">1 Kings</a><span> - Dividing the kingdom</span>' +
 				'<span class="vid_1kgs glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'2Kgs\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">2 Kings</a><span> - End of Israel &amp; Judah</span>' +
+				'<br><a href="javascript:step.util.showSummary(\'2Kngs\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">2 Kings</a><span> - End of Israel &amp; Judah</span>' +
 				'<span class="vid_2kgs glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'1Chr\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">1 Chronicles</a><span> - Retelling 1 &amp; 2 Samuel</span>' +
 				'<span class="vid_1chr glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
@@ -2948,10 +3006,6 @@ step.util = {
 				'<span class="vid_hab glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Zeph\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Zephaniah</a><span> - Judgement\'s remnant</span>' +
 				'<span class="vid_zeph glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'Hag\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Haggai</a><span> - Rebuilding the temple</span>' +
-				'<span class="vid_hag glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'Zech\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Zechariah</a><span> - Repentance after exile</span>' +
-				'<span class="vid_zech glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Mal\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Malachi</a><span> - God is coming</span>' +
 				'<span class="vid_mal glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'</div>' +

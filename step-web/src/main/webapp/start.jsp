@@ -241,46 +241,9 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-            <%
-                if (!appManager.isLocal()) {
-            %>
-                            <a style="padding-left:5px;vertical-align:top" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
-                                <svg viewBox="0 0 18 21" width="18" height="21">
-                                    <path d="M 0 3 L 18 3, 18 16, 16 16, 16 21, 12 16, 0 16, 0 3" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>
-                                    <line x1="2" y1="8" x2="16" y2="8" stroke-width="1" stroke="var(--clrBackground)" />
-                                    <line x1="2" y1="10" x2="16" y2="10" stroke-width="1" stroke="var(--clrBackground)" />
-                                    <line x1="2" y1="12" x2="16" y2="12" stroke-width="1" stroke="var(--clrBackground)" />
-                                </svg>
-                                <span class="navbarIconDesc">&nbsp;<fmt:message key="help_feedback" /></span>
-                            </a>
-            <%
-                }
-            %>
                             <span class="navbar-collapse collapse">
                                 <span class="dropdown">
-                                    <a id="languages-icon" style="padding-left:5px" class="dropdown-toggle extrapad-xs" data-toggle="dropdown" title="<fmt:message key="installation_book_language" />">
-                                        <i class="glyphicon icon-language">
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
-                                        </i>
-                                        <span class="navbarIconDesc"><fmt:message key="installation_book_language" /></span>
-                                    </a>
-                                    <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
-                                        <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step" /></a></li>
-                                    </ul>
-                                </span>
-                                <span class="dropdown">
-                                    <a id="settings-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="<fmt:message key="settings" />">
-                                        <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="settings" /></span> --%>
-                                        <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;Options</span>
-                                    </a>
-                                    <ul class="pull-right dropdown-menu">
-                                        <li><a id="bookmark-menu" href="javascript:step.util.ui.initSidebar('history');"><fmt:message key="bookmarks" /></a></li>
-                                        <li><a id="font-menu" href="javascript:step.util.showFontSettings();"><fmt:message key="font" /></a></li>
-                                        <li><a id="grammar-menu" href="javascript:step.util.ui.initSidebar('color');"><fmt:message key="display_grammar" /></a></li>
-                                    </ul>
-                                </span>
-                                <span class="dropdown">
-                                    <a id="report-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="Resources powered by STEPBible">
+                                    <a id="report-icon" style="padding-left:5px" class="dropdown-toggle extrapad-xs" data-toggle="dropdown" href="#" title="Resources powered by STEPBible">
                                         <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc">&nbsp;&nbsp;Resources</span>
                                     </a>
                                     <ul class="kolumny pull-right dropdown-menu" style="-webkit-column-count: 1; -moz-column-count: 1; column-count: 1;">
@@ -300,13 +263,50 @@
                                     </ul>
                                 </span>
                                 <span class="dropdown">
+                                    <a id="languages-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language" />">
+                                        <i class="glyphicon icon-language">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+                                        </i>
+                                        <span class="navbarIconDesc"><fmt:message key="installation_book_language" /></span>
+                                    </a>
+                                    <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
+                                        <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step" /></a></li>
+                                    </ul>
+                                </span>
+                <%
+                    if (!appManager.isLocal()) {
+                %>
+                                <a style="padding-left:5px;vertical-align:top" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
+                                    <svg viewBox="0 0 18 21" width="18" height="21">
+                                        <path d="M 0 3 L 18 3, 18 16, 16 16, 16 21, 12 16, 0 16, 0 3" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>
+                                        <line x1="2" y1="8" x2="16" y2="8" stroke-width="1" stroke="var(--clrBackground)" />
+                                        <line x1="2" y1="10" x2="16" y2="10" stroke-width="1" stroke="var(--clrBackground)" />
+                                        <line x1="2" y1="12" x2="16" y2="12" stroke-width="1" stroke="var(--clrBackground)" />
+                                    </svg>
+                                    <span class="navbarIconDesc">&nbsp;<fmt:message key="help_feedback" /></span>
+                                </a>
+                <%
+                    }
+                %>
+                                <span class="dropdown">
+                                    <a id="settings-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title="<fmt:message key="settings" />">
+                                        <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="settings" /></span> --%>
+                                        <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;Options</span>
+                                    </a>
+                                    <ul class="pull-right dropdown-menu">
+                                        <li><a id="bookmark-menu" href="javascript:step.util.ui.initSidebar('history');"><fmt:message key="bookmarks" /></a></li>
+                                        <li><a id="font-menu" href="javascript:step.util.showFontSettings();"><fmt:message key="font" /></a></li>
+                                        <li><a id="grammar-menu" href="javascript:step.util.ui.initSidebar('color');"><fmt:message key="display_grammar" /></a></li>
+                                    </ul>
+                                </span>
+                                <span class="dropdown">
                                     <a id="share-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title='<fmt:message key="share" />'>
                                         <i class="glyphicon glyphicon-thumbs-up"></i><span class="navbarIconDesc">&nbsp;&nbsp;Share</span>
                                     </a>
                                     <ul class="pull-right dropdown-menu" style="-webkit-column-count: 1; -moz-column-count: 1; column-count: 1;">
                                         <li><a href="javascript:step.util.copyModal();"><fmt:message key="copy" /></a></li>
                         <% if (!appManager.isLocal()) { %>
-                                        <li><a href="javascript:step.util.triggerShareDropdown();"><fmt:message key="share" /></a></li>
+                                        <li class="dropdown-share"><a href="javascript:step.util.triggerShareDropdown();"><fmt:message key="share" /></a></li>
                         <% } %>
                                     </ul>
                                 </span>

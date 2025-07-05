@@ -281,7 +281,7 @@ var SidebarView = Backbone.View.extend({
                 if (i > 0)
                     panelHeading += '<span class="clicktoview"> (click to view)</span>';
                 panelHeading += '</a></h4></div>';
-                var panel = $('<div class="panel panel-default"></div>').append(panelHeading).append(panelContentContainer);
+                var panel = $('<div class="panel panel-default" style="background:var(--clrBackground)"></div>').append(panelHeading).append(panelContentContainer);
                 panelGroup.append(panel);
             }
             this.lexicon.append(panelGroup);

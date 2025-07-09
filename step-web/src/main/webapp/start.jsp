@@ -246,7 +246,7 @@
                                     <a id="report-icon" style="padding-left:5px" class="dropdown-toggle extrapad-xs" data-toggle="dropdown" href="#" title="Resources powered by STEPBible">
                                         <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc">&nbsp;&nbsp;Resources</span>
                                     </a>
-                                    <ul class="kolumny pull-right dropdown-menu" style="-webkit-column-count: 1; -moz-column-count: 1; column-count: 1;">
+                                    <ul class="kolumny pull-right dropdown-menu" style="-webkit-column-count: 1; -moz-column-count: 1; column-count: 1; max-height: 75vh; overflow-y: auto;">
                                         <li><a href="html/gospel_harmony.html" target="_blank" rel="noopener">Gospel Parallels</a></li>
                                         <li><a href="html/ot_parallel.html" target="_blank" rel="noopener">Old Testament Parallels</a></li>
                                         <li><a href="html/ot_in_nt.html" target="_blank" rel="noopener">Old Testament used in the New Testament</a></li>

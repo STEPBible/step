@@ -581,7 +581,7 @@ function displayPassages(item, string) {
     if (!inIFrame) {
         if (string !== "") {
             var tabURL = urlPart1 + "/?skipwelcome&q=";
-            string = string.replace(/ /g, ";");
+            string = string.replace(/ /g, ";").replace(/\(/g, "").replace(/\)/g, "");
             if (string.indexOf("strong=") > -1 || string.indexOf("srchJoin=") > -1
                 || string.indexOf("text=") > -1) {
                 tabURL += string;
@@ -597,7 +597,7 @@ function displayPassages(item, string) {
     else
     {
         if (string !== "") {
-            string = string.replace(/ /g, ";");
+            string = string.replace(/ /g, ";").replace(/\(/g, "").replace(/\)/g, "");
             window.top.postMessage(string + version, '*');
         }
     }

@@ -2946,9 +2946,9 @@ step.util = {
 				'<p style="margin-left:5%;font-size:14px;text-align:left;padding:0;margin-bottom:0;margin-top:8px"><b>From King David to exile</b></p>' +
 				'<a href="javascript:step.util.showSummary(\'2Sam\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">2 Samuel</a><span> - Uniting the Kingdom</span>' +
 				'<span class="vid_2sam glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'1Kngs\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">1 Kings</a><span> - Dividing the kingdom</span>' +
+				'<br><a href="javascript:step.util.showSummary(\'1Kgs\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">1 Kings</a><span> - Dividing the kingdom</span>' +
 				'<span class="vid_1kgs glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'2Kngs\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">2 Kings</a><span> - End of Israel &amp; Judah</span>' +
+				'<br><a href="javascript:step.util.showSummary(\'2Kgs\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">2 Kings</a><span> - End of Israel &amp; Judah</span>' +
 				'<span class="vid_2kgs glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'1Chr\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">1 Chronicles</a><span> - Retelling 1 &amp; 2 Samuel</span>' +
 				'<span class="vid_1chr glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
@@ -3006,6 +3006,10 @@ step.util = {
 				'<span class="vid_hab glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Zeph\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Zephaniah</a><span> - Judgement\'s remnant</span>' +
 				'<span class="vid_zeph glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
+				'<br><a href="javascript:step.util.showSummary(\'Hag\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Haggai</a><span> - Rebuilding the temple</span>' +
+				'<span class="vid_hag glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
+				'<br><a href="javascript:step.util.showSummary(\'Zech\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Zechariah</a><span> - Repentance after exile</span>' +
+				'<span class="vid_zech glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Mal\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Malachi</a><span> - God is coming</span>' +
 				'<span class="vid_mal glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'</div>' +

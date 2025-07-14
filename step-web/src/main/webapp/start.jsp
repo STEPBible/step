@@ -293,10 +293,11 @@
                                         <%-- <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="settings" /></span> --%>
                                         <i class="glyphicon glyphicon-cog"></i><span class="navbarIconDesc">&nbsp;Options</span>
                                     </a>
-                                    <ul class="pull-right dropdown-menu">
+                                    <ul class="pull-right dropdown-menu optionsMenu">
                                         <li><a id="bookmark-menu" href="javascript:step.util.ui.initSidebar('history');"><fmt:message key="bookmarks" /></a></li>
                                         <li><a id="font-menu" href="javascript:step.util.showFontSettings();"><fmt:message key="font" /></a></li>
                                         <li><a id="grammar-menu" href="javascript:step.util.ui.initSidebar('color');"><fmt:message key="display_grammar" /></a></li>
+                                        <li class="classicalUI"><a href="javascript:void(0)"><fmt:message key="display_classical_ui" />&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:11px"></span></a></li>
                                     </ul>
                                 </span>
                                 <span class="dropdown">
@@ -323,7 +324,6 @@
 <% if (appManager.isLocal()) { %>
                                         <li><a href="/setup.jsp"><fmt:message key="tools_settings" /></a></li>
 <% } %>
-                                        <li class="classicalUI"><a href="javascript:void(0)"><fmt:message key="display_classical_ui" />&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:11px"></span></a></li>
                                         <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile" /></a></li>
                                         <li><a href="https://stepbibleguide.blogspot.com/p/volunteers.html" target="_blank"><fmt:message key="we_need_help" /></a></li>
                                         <li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about" /></a></li>

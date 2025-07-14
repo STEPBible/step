@@ -7,6 +7,7 @@ requirejs.config({
         quick_lexicon: ["js/backbone/views/view_quick_lexicon"],
         qtip : ["js/jquery-extensions/jquery-qtip"],
         view_help_menu: ["js/backbone/views/view_help_menu"],
+        view_options_menu: ["js/backbone/views/view_options_menu"],
         drag: ["libs/draggabilly"],
         search: ["js/backbone/views/view_display_word"],
         menu_extras: ["js/backbone/views/view_pick_bible"],

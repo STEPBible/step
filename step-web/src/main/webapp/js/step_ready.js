@@ -313,6 +313,12 @@
                     new ViewHelpMenuOptions({});
                 });
             });
+            // Lazy-load the options menu view the first time the Options dropdown is opened
+            $("#settings-icon").one('click', function () {
+                require(["view_options_menu"], function () {
+                    // the module instantiates itself once loaded
+                });
+            });
         }
 
         if (step.passages.length == 0) {

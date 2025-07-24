@@ -98,8 +98,7 @@ g4q5a3:	3) Role para baixo para ver as traduções do AT em grego
 g4q6:	Como exibir a gramática em código de cores?
 g4q6a1:	1) Clique no botão de traduções da Bíblia
 g4q6a2:	2) Consulte a legenda e selecione as traduções da Bíblia que tenham o recurso Gramática
-g4q6a3:	3) Clique no botão Opções, depois clique em "Opções de Vocabulário”, então selecione “Gramática em código de cores”. O texto será exibido com código por cores.
-g4q6a4:	4) Para entender o código de cores, clique no botão “Configurar gramática em código de cor”
+g4q6a3:	3) Clique no botão "G" ou "Grammar"
 
 g5q0:   Informações adicionais
 g5q1:   Guia do site

@@ -13,7 +13,7 @@
                 "@type": "WebSite",
                 "url": "https://www.STEPBible.org",
                 "sameas": "https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible",
-                "description": "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
+                "description": "Free Bible study software for Windows, Mac and Linux. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
                 "name": "STEPBible - <%= reqInitial %> ",
         <% if (reqInitial.equals("NIV")) { %>
                 "author": {

@@ -250,7 +250,8 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
         Passage total = new RangedPassage(v11n);
         for (String version : originalVersions) {
             Passage scope = KeyUtil.getPassage(this.jSwordVersificationService.getBookFromVersion(version).getBookMetaData().getScope());
-            total.addAll(VersificationsMapper.instance().map(scope, v11n));
+            if (scope != null)
+                total.addAll(VersificationsMapper.instance().map(scope, v11n));
         }
         return total;
     }

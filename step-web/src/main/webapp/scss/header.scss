@@ -10,6 +10,18 @@
   }
 }
 
+@media (max-width: 450px) {
+  .hidden-narrow {
+    display: none !important;
+  }
+}
+
+@media (min-width: 451px) {
+  .hidden-not-narrow {
+    display: none !important;
+  }
+}
+
 @media (hover: none) and (min-width: 768px) {
   .extrapad-other {
     padding-top: 44px !important;
@@ -66,17 +78,10 @@
       }
     }
 
-    #logo {
+    .logo {
       display: inline-block;
-      width: 90px;
-      height: 21px;
       margin-bottom: 6px;
       margin-top: 6px;
-
-      & > svg {
-        fill: $brand-primary;
-      }
-
     }
 
     a, .subtitle, .subtitle:hover {
@@ -113,7 +118,6 @@
 
     .title {
       line-height: 25px;
-      margin-right: 20px;
       float: left;
       & > a {
         color: white !important;
@@ -380,3 +384,8 @@
     padding: $header_height 0 0;
   }
 }
+
+.navbarIconDesc {
+  vertical-align: super;
+}
+

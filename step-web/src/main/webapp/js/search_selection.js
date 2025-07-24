@@ -293,7 +293,7 @@ step.searchSelect = {
 		}
 		$(".searchOptions").click(step.searchSelect._handleOptions);
 	},
-	_handleOptions: function(ev, optionNameArg) {
+	_handleOptions: function(ev, optionNameArg) { // Do not shorten
 		var optionName = (ev !== null) ? ev.target.id.substring(9): optionNameArg;
         var localStorageSetting = step.util.localStorageGetItem("step.srchOptn" + optionName);
 		var currentSetting = false;
@@ -335,7 +335,7 @@ step.searchSelect = {
 	 	$("#previousSearchWords").empty().append(searchWordsHTML);
 	 	$(".searchWords").click(step.searchSelect._displayPreviousSearchWord);
 	},
-	_displayPreviousSearchWord: function(ev) {
+	_displayPreviousSearchWord: function(ev) { // Do not shorten
 	 	if ((ev == null) || (typeof ev.target.id !== "string") ||
 	 		(ev.target.id.substring(0, 11) !== "searchWords")) return;
 	 	var wordIndex = ev.target.id.substring(11);
@@ -454,16 +454,16 @@ step.searchSelect = {
 		return previousSearchTokensIndex + 1;
 	},
 
-	_find_onclick_and_go: function(element) {
-		var onclickInfo = $(element).attr("onclick");
-		if ((typeof onclickInfo === "string") && (onclickInfo.toLowerCase().indexOf("javascript:") == 0)) {
-			if (onclickInfo.replaceAll(" ","").indexOf("goSearch('text','','')") > -1) {
-				$('#warningMessage').text("Search word is not valid for text (word or phrase) search.");
-				return;
-			}
-			eval(onclickInfo);
-		}
-	},
+	// _find_onclick_and_go: function(element) {
+	// 	var onclickInfo = $(element).attr("onclick");
+	// 	if ((typeof onclickInfo === "string") && (onclickInfo.toLowerCase().indexOf("javascript:") == 0)) {
+	// 		if (onclickInfo.replaceAll(" ","").indexOf("goSearch('text','','')") > -1) {
+	// 			$('#warningMessage').text("Search word is not valid for text (word or phrase) search.");
+	// 			return;
+	// 		}
+	// 		eval(onclickInfo);
+	// 	}
+	// },
 
 	handleKeyboardInput: function(e) {
 		$('#quickLexicon').remove();
@@ -628,8 +628,8 @@ step.searchSelect = {
 				'<span class="form-group btn-group" data-toggle="buttons">' +
 					'<label class="btn btn-default btn-sm stepButton stepPressedButton active"><input type="radio" data-lang="en" checked="checked">' +
 						this._getLanguagesOfBibles() + '</label>' +
-					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="he">' + this.capitalizeFirstLetter(__s.hebrew) + '</label>' +
-					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr">' + this.capitalizeFirstLetter(__s.greek) + '</label>' +
+					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="he">' + step.util.capitalizeFirstLetter(__s.hebrew) + '</label>' +
+					'<label class="btn btn-default btn-sm stepButton"><input type="radio" data-lang="gr">' + step.util.capitalizeFirstLetter(__s.greek) + '</label>' +
 				'</span>' +
 			'</form>' +
 			'</div>' +
@@ -672,7 +672,7 @@ step.searchSelect = {
 			'</div><br>';
 		return html;
 	},
-    handleLanguageButton: function (ev) {
+    handleLanguageButton: function (ev) { // Do not shorten
 		var language;
 		var langOfOldButtonPressed = $("#langButtonForm").find(".stepPressedButton").find("input").data("lang");
 		if ((typeof ev === "string") || (ev === "init")) {
@@ -759,6 +759,10 @@ step.searchSelect = {
 					'<ul><li>' + __s.topic_search_help_text + '</ul>';
 		}
 		else if (language === "he" ) {
+			if ($("#searchResultstext").text() !== "") {
+				$(".select-text").show();
+				isAnythingShown = true;
+			}
 			if ($("#searchResultshebrew").html() !== "") {
 				$(".select-hebrew").show();
 				isAnythingShown = true;
@@ -779,6 +783,10 @@ step.searchSelect = {
 			basic_search_help_text += '</ul>';
 		}
 		else if (language === "gr") {
+			if ($("#searchResultstext").text() !== "") {
+				$(".select-text").show();
+				isAnythingShown = true;
+			}
 			if ($("#searchResultsgreek").html() !== "") {
 				$(".select-greek").show();
 				isAnythingShown = true;
@@ -827,7 +835,7 @@ step.searchSelect = {
 			}
 		});
 	},
-	_buildRangeHeaderAndTable: function(parameter) {
+	_buildRangeHeaderAndTable: function(parameter) { // Do not shorten
 		$('#quickLexicon').remove();
 		var onlyDisplaySpecifiedBooks = false;
 		var booksToDisplay;
@@ -1371,15 +1379,15 @@ step.searchSelect = {
 		html += '</colgroup>';
 		return html;
 	},
-	wordsWithNoInflection: function(string) {
-		chars = string.split('');
-		for (var i = 0; i < chars.length; i++) {
-			var charCode = chars[i].charCodeAt(0);
-			if ((charCode >= 19968) && (charCode <= 40959)) // common Chinese characters 4E00-9FFF
-				return true;
-		}
-		return false;
-	},
+	// wordsWithNoInflection: function(string) {
+	// 	chars = string.split('');
+	// 	for (var i = 0; i < chars.length; i++) {
+	// 		var charCode = chars[i].charCodeAt(0);
+	// 		if ((charCode >= 19968) && (charCode <= 40959)) // common Chinese characters 4E00-9FFF
+	// 			return true;
+	// 	}
+	// 	return false;
+	// },
 	getGlossInUserLanguage: function(dataSuggestion) {
 		if (dataSuggestion.strongNumber == undefined)
 			return dataSuggestion.gloss;
@@ -1472,7 +1480,9 @@ step.searchSelect = {
 			}
 			if ((limitType === "") && (step.searchSelect.searchOnSpecificType === "")) {
 				if ((searchLangSelected === "en") && ((langCode !== "zh") && (langCode !== "ar")) &&
-					(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1)) {
+					(userInput.indexOf("*") == -1) && (userInput.indexOf("\"") == -1) &&
+					(!(userInput[0] == "'" && userInput[userInput.length - 1] == "'")) &&
+					(userInput.indexOf("‘") == -1) && (userInput.indexOf("“") == -1)) {
 					userInput = userInput.split(" ").join("* ") + "*";
 				}
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + versionsQueryString + URL_SEPARATOR;
@@ -1552,7 +1562,6 @@ step.searchSelect = {
 										var alternateResultArray = step.searchSelect._getSuggestedFrequency(alternateSuggestion, allVersions);
 										resultArray[0] += alternateResultArray[0]
 										resultArray[1] += alternateResultArray[1]
-										// step.searchSelect.getVocabInfoForShowAugStrongLite(otherStrong)
 									}
 									var otherName = element[2]
 									if (!alternateNames.includes(otherName) && !(otherName === name)) {
@@ -1902,7 +1911,30 @@ step.searchSelect = {
 					}
 					var text2Display = step.searchSelect._composeDescriptionForNames(amalgamation["typeCount"], name);
 					var prefixToDisplay = "";
-					var suffixToDisplay = '<span class="srchFrequency"> ' + __s.occurs_in_total + ' - ' + grandTotal + ' x</span>';
+					var suffixToDisplay = "";
+					var occurString = ""
+					var values = [];
+					for (var key in amalgamation["typeCount"]) {
+						if (amalgamation["typeCount"].hasOwnProperty(key)) {
+							values.push(amalgamation["typeCount"][key]);
+						}
+					}
+					var ones = 0;
+					var valid = true;
+					for (var i = 0; i < values.length; i++) {
+						if (values[i] === 1) {
+							ones++;
+						} else if (values[i] !== 0) {
+							valid = false;
+							break;
+						}
+					}
+					if (ones === 1 && valid) {
+						occurString = __s.occurs_in_total;
+					} else {
+						occurString = __s.occur_in_total;
+					}
+					suffixToDisplay = '<span class="srchFrequency"> ' + occurString + ' - ' + grandTotal + ' x</span>';
 					var suffixTitle = "";
 					var augStrongSameMeaning = null;
 					var hasDetailLexInfo = false;
@@ -2054,35 +2086,6 @@ step.searchSelect = {
 		}
 		return currentNotInBibleSelected;
 	},
-	valueInDuplicatStrongOrNot: function(vocabInfo, index, duplicateStrings) {
-		// index of 3 is count
-		return ((Number.isInteger(vocabInfo[index])) && (index != 3)) ?
-				duplicateStrings[vocabInfo[index]] : vocabInfo[index];
-	},
-
-	unpackVocabJSON: function (origJsonVar, index) {
-		var duplicateStrings = origJsonVar.d;
-		var vocabInfo = origJsonVar.v[index];
-		var result = {};
-		result['grouped'] = false;
-		result['maxReached'] = false;
-		var suggestion = {};
-		suggestion['strongNumber'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 0, duplicateStrings);
-		suggestion['gloss'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 1, duplicateStrings);
-		suggestion['stepTransliteration'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 2, duplicateStrings);
-		suggestion['popularity'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 3, duplicateStrings);
-		suggestion['_es_Gloss'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 4, duplicateStrings);
-		suggestion['_zh_Gloss'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 5, duplicateStrings);
-		suggestion['_zh_tw_Gloss'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 6, duplicateStrings);
-		suggestion['matchingForm'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 14, duplicateStrings);
-		suggestion['_detailLexicalTag'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 17, duplicateStrings);
-		suggestion['type'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 19, duplicateStrings);
-		suggestion['_searchResultRange'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 20, duplicateStrings);
-		suggestion['popularityList'] = step.searchSelect.valueInDuplicatStrongOrNot(vocabInfo, 21, duplicateStrings);
-		result['suggestion'] = suggestion;
-		return result;
-	},
-
 	getVocabInfoFromSuggestAPI: function (strongNum, limitType, augStrongSameMeaning, allVersions, element, 
 		callBack, titleText, text2Display, userInput, isAugStrong,
 		needLineBreak, prefixToDisplay, searchType, suffixToDisplay, suffixTitle, suggestionType) {
@@ -2126,7 +2129,7 @@ step.searchSelect = {
 		$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
 			var vocabInfos = [];
 			for (var i = 0; i < origJsonVar.v.length; i++) {
-				var jsonVar = step.searchSelect.unpackVocabJSON(origJsonVar, i);
+				var jsonVar = step.util.unpackVocabJSON(origJsonVar, i);
 				jsonVar['itemType'] = limitType;
 				vocabInfos.push(jsonVar);
 			}
@@ -2171,7 +2174,7 @@ step.searchSelect = {
 		$.getJSON("/html/lexicon/" + additionalPath + strongWithoutAugment + ".json", function(origJsonVar) {
 			var vocabInfos = [];
 			for (var i = 0; i < origJsonVar.v.length; i++) {
-				var jsonVar = step.searchSelect.unpackVocabJSON(origJsonVar, i);
+				var jsonVar = step.util.unpackVocabJSON(origJsonVar, i);
 				jsonVar['itemType'] = limitType;
 				vocabInfos.push(jsonVar);
 			}
@@ -2198,7 +2201,7 @@ step.searchSelect = {
 		}
 	},
 
-	_addFreqListQTip: function(augStrongSameMeaning, allVersions, freqList, element) {
+	_addFreqListQTip: function(augStrongSameMeaning, allVersions, freqList, element) { // Do not shorten
 		if ((element) && (augStrongSameMeaning.length == 1)) {
 			var freqListElm = step.util.freqListQTip(augStrongSameMeaning[0], freqList, allVersions, "", "");
 			element.append('&nbsp;').append(freqListElm);
@@ -2896,7 +2899,7 @@ step.searchSelect = {
 		}
 	},
 
-	handleAndOrNot: function() {
+	handleAndOrNot: function() { // Do not shorten
 		this.andOrNotUpdated = true;
 		$('#updateButton').show();
 	},
@@ -2927,6 +2930,9 @@ step.searchSelect = {
 					numInThisType = ("aeiou".indexOf(nameType.substring(0,1).toLowerCase()) > -1) ? "An" : "A";
 					if (count > 1)
 						numInThisType = numInThisType.toLowerCase();
+				}
+				if (numInThisType > 1) {
+					type = step.plural_name_types[type]
 				}
 				result += numInThisType + " " + type;
 			}
@@ -2993,7 +2999,7 @@ step.searchSelect = {
 										langs.push("...");
 										break;
 									}
-									langs.push(this.capitalizeFirstLetter(langName));
+									langs.push(step.util.capitalizeFirstLetter(langName));
 								}
 							}
 						}
@@ -3007,14 +3013,11 @@ step.searchSelect = {
 					langs.push("...");
 				else {
 					try {
-						langs.push(this.capitalizeFirstLetter(languageNames.of("en")));
+						langs.push(step.util.capitalizeFirstLetter(languageNames.of("en")));
 					}
 					catch (err) {}
 				}
 		}
 		return langs.join(", ");
-	},
-	capitalizeFirstLetter: function(val) {
-		return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 	}
 };

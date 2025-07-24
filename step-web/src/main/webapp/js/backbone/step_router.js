@@ -92,6 +92,12 @@ var StepRouter = Backbone.Router.extend({
                             break;
                         }
                 }
+                var C_Greek = 0;
+                var C_enableVerbClr = 0;
+                var C_enableGenderNumberClr = 3;
+                var C_OT = 1;
+                if ((typeof c4 === "object") && !c4[C_Greek][C_enableVerbClr] && !c4[C_enableGenderNumberClr] && !c4[C_OT][C_enableVerbClr])
+                    options = options.replace("C", ""); // Don't color code to server if user disabled it.
                 if (!hasMorphology) // If there is no morphology, the grammar and color code grammar are not relevant
                     options = options.replace("M", "").replace("C", "");
             }
@@ -242,6 +248,21 @@ var StepRouter = Backbone.Router.extend({
 		var container = $("<span></span>").addClass("argSummary argSumSpan");
 		step.util.ui.renderArgs(searchTokens, container, "button");
 		passageOptions.append(container);
+        if ((container.find("button.select-search").text().trim() === "") &&
+            (container.find("button.select-reference").text().indexOf(":") > 0)) {
+            var refs = container.find("button.select-reference").text().trim().split(" ");
+            if (refs.length == 2) {
+                if (refs[1].indexOf(":")) {
+                    var interlinear = passageContainer.find('span.interlinear.ltr');
+                    if (interlinear.length == 0)
+                        interlinear = passageContainer.find('span.interlinear.rtl');
+                    if (interlinear.length > 0)
+                        $(interlinear[interlinear.length - 1]).after('<br><span class="interlinear"><span style="clear:left;padding:16px"><a style="text-decoration:underline" href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a></span></span>');
+                    else
+                        passageContainer.find("div.passageContentHolder").append('<br><div style="padding:16px"><a style="text-decoration:underline" href="javascript:step.util.gotoCurrentChapter()">Read full chapter</a></div>');
+                }
+            }
+        }
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;

@@ -42,8 +42,7 @@ var PassageMenuView = Backbone.View.extend({
                 {initial: "T", key: "display_transliteration"},
                 {initial: "B", key: "display_spanishVocab"},
                 {initial: "Z", key: "display_chineseVocab"},
-                {initial: "M", key: "display_grammar"},
-                {initial: "C", key: "display_grammarColor"}        
+                {initial: "M", key: "display_grammar"}  
             ]
         },
         {
@@ -273,14 +272,6 @@ var PassageMenuView = Backbone.View.extend({
             var displayOption = displayOptions.eq(i);
             var displayOptionCode = displayOption.find("[data-value]").attr("data-value");
             displayOption.toggle(availableOptions.indexOf(displayOptionCode) != -1);
-            if (displayOptionCode === "C") {
-                if ((availableOptions.indexOf("C") > -1) && (displayOption.find(".glyphicon").css("visibility") != "hidden")) {
-                    this.displayOptions.find("li#grammar_list_item.noHighlight.grammarContainer")[0].hidden = false;
-                }
-                else {
-                    this.displayOptions.find("li#grammar_list_item.noHighlight.grammarContainer")[0].hidden = true;
-                }
-            }
         }
         //do we need to show the group headings...
         this.displayOptions.find(".menuGroup").each(function (i, item) {
@@ -569,7 +560,6 @@ var PassageMenuView = Backbone.View.extend({
      */
     _createItemsInDropdown: function (dropdown, items) {
         var selectedOptions = this.model.get("selectedOptions") || "";
-        var hasColorCodeGrammer = false;
         for (var i = 0; i < items.length; i++) {
             if (items[i].group) {
                 var panel = $('<div class="panel panel-default stepModalFgBg">');
@@ -600,19 +590,9 @@ var PassageMenuView = Backbone.View.extend({
                         makeVisible = selectedOptions.indexOf("P"); // If Hebrew accent is on, turn on Hebrew vowel because it automatically turned on.
                     this._setVisible(link, makeVisible);
                 }
-                if (items[i].initial === "C") hasColorCodeGrammer = true;
             }
             dropdown.append($("<li>").addClass("passage").append(link)).attr("role", "presentation");
         }
-        if (hasColorCodeGrammer) {
-            var colorCodeGrammarButton = '<li id=grammar_list_item class="noHighlight grammarContainer" style="padding-left:24"><%= __s.config_color_grammar %>' +
-                '<span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group">' +
-                '<button class="btn btn-default btn-xs grammarColor" type="button" title="<%= __s.config_color_grammar_explain %>">' +
-                '<span class="glyphicon glyphicon-cog"></span></button></span></li>';
-            dropdown.append(_.template(colorCodeGrammarButton)());
-            dropdown.find(".grammarColor").click(step.util.showConfigGrammarColor);
-        }
-
     },
     _createPassageOptions: function (dropdown) {
         this._createItemsInDropdown(dropdown, this.items);
@@ -747,107 +727,10 @@ var PassageMenuView = Backbone.View.extend({
         this.goToSiblingChapter(this.model.get("nextChapter"), ev, true);
     },
     goToSiblingChapter: function (key, ev, isNext) {
-        if (ev) {
+        if (ev)
             ev.preventDefault();
-        }
-        var currentPassageId = this.model.get("passageId");
-        step.util.activePassageId(currentPassageId);
-        var args = this.model.get("args") || "";
-        args = args.replace(new RegExp('@?' + REFERENCE        + '[^@]+', "g"), "");
-        var reference = "";
-        var tmpArgs = this.removeSearchArgs(args);
-        if (tmpArgs !== args) { // There is probably search so go to current chapter instead.  
-            args = tmpArgs;
-            reference = this.model.attributes.osisId;
-            this.model.attributes.strongHighlights = "";
-        }
-        else {
-            if ((key != undefined) && (key.osisKeyId != undefined) && (key.osisKeyId != null)) reference = key.osisKeyId;
-            else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
-            if (step.touchDevice) {
-                if (!this.showUserSwipeIsAccepted(this.model.get("masterVersion"), this.model.get("previousChapter").osisKeyId,
-                    this.model.get("nextChapter").osisKeyId, this.model.get("nextChapter").lastChapter,
-                    step.util.getPassageContainer(currentPassageId), isNext)) {
-                        return; // Next or previous chapter is not available
-                }
-            }
-        }
-        args = args.replace(/&&/ig, "")
-                   .replace(/&$/ig, "");
-        if (args.length > 0) {
-            args = args .replace(/^@/, '').replace(/^\|/, '')
-                        .replace(/@@+/, URL_SEPARATOR)
-                        .replace(/\|\|+/, URL_SEPARATOR);
-            if (args[args.length - 1] !== URL_SEPARATOR) args += URL_SEPARATOR;
-        }
-        args += "reference=" + reference;
+        var args = step.util.getArgsForSiblingChapter(this, key, isNext);
         step.router.navigateSearch(args);
-    },
-    showUserSwipeIsAccepted: function(version, previousChapter, nextChapter, lastChapter, activePassage, isNext) {
-        var alreadyCheckedNextOrPreviousIsValid = false;
-        if (typeof previousChapter === "string") {
-            var prevChptParts = previousChapter.split(".");
-            if ((prevChptParts.length == 2) && (!isNaN(prevChptParts[1]))) {
-                if (typeof nextChapter === "string") {
-                    var nextChptParts = nextChapter.split(".");
-                    if ((nextChptParts.length == 2) && (!isNaN(prevChptParts[1]))) {
-                        alreadyCheckedNextOrPreviousIsValid = true;
-                        if ((nextChptParts[1] - prevChptParts[1] == 2))
-                            this.showDots(activePassage);
-                        else if (isNext) {
-                            if ((typeof lastChapter === "boolean") && (!lastChapter)) {
-                                if ((nextChapter === "Matt.1") &&
-                                    (step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(version.toLowerCase()) > -1)) {
-                                        step.util.tempAlert("You are at the last chapter of the " + version + ".", 3);
-                                        return false;
-                                }
-                                this.showDots(activePassage);
-                            }
-                            else if (nextChapter === "Rev.22") {
-                                step.util.tempAlert("You are at the last chapter of " + version + ".", 3);
-                                return false;                       
-                            }
-                        }
-                        else {
-                            if ((previousChapter === "Gen.1") ||
-                                ((previousChapter === "Mal.4") &&
-                                (step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(version.toLowerCase()) > -1))) {
-                                    step.util.tempAlert("You are at the first chapter of " + version + ".", 3);
-                                    return false;
-                            }
-                            this.showDots(activePassage);
-                        }
-                    }
-                }
-            }
-        }
-        if (!alreadyCheckedNextOrPreviousIsValid) {
-            var ref = activePassage.find("button.select-reference").text().split(":")[0];
-            if (isNext) {
-                if ((ref !== "Rev 22") && (ref !== "Mal 4") && (ref !== "Deu 34"))
-                this.showDots(activePassage);
-            }
-            else if ((ref !== "Ref") && (ref !== "Gen 1") && (ref !== "Matt 1"))
-            this.showDots(activePassage);
-        }
-        return true;
-    },
-    showDots: function(activePassage) {
-        var passageContent = activePassage.find(".passageContent");
-        passageContent.empty();
-        var randomDots = "..... .... .... ....... ... .... ... ........ .... ... ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ........ ... .... ... .....<br>... ..... .. .... ..... .... ..... ........ .... ...... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .... ... .... ... .....<br>...... .... ... ..... .... ..... ..... ..... ... . ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br>... ..... .... .... ..... .... ..... ........ .... ... ... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ... ... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .. ... .... ... .....<br";
-        passageContent.html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
-    },
-    removeSearchArgs: function(args) {
-        return args.replace(new RegExp('@?' + STRONG_NUMBER    + '[^@]+', "ig"), "")
-		           .replace(new RegExp('@?' + SYNTAX           + '[^@]+', "ig"), "")
-                   .replace(new RegExp('@?' + TEXT_SEARCH      + '[^@]+', "ig"), "")
-                   .replace(new RegExp('@?' + SUBJECT_SEARCH   + '[^@]+', "ig"), "")
-                   .replace(new RegExp('@?' + GREEK            +  '[^@]+', "ig"), "")
-                   .replace(new RegExp('@?' + HEBREW           +  '[^@]+', "ig"), "")
-                   .replace(new RegExp('@?' + GREEK_MEANINGS   +  '[^@]+', "ig"), "")
-                   .replace(new RegExp('@?' + HEBREW_MEANINGS  +  '[^@]+', "ig"), "")
-                   .replace(new RegExp('@?' + MEANINGS         +  '[^@]+', "ig"), "");
     },
     /**
      * Closes the whole column by removing it from the DOM

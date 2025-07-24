@@ -20,6 +20,15 @@
 <fmt:setBundle basename="HtmlBundle" scope="request"/>
 <!DOCTYPE html">
 <html>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8RH0MQG418"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8RH0MQG418');
+</script>
 <head>
     <%
         if (request.getParameter("translate") != null) {
@@ -45,7 +54,7 @@
                     "@type": "WebSite",
                     "url": "https://www.STEPBible.org",
                     "sameas": "https://en.wikipedia.org/wiki/The_SWORD_Project#STEPBible",
-                    "description": "Free Bible study software for Windows, Mac, Linux, iPhone, iPad and Android. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
+                    "description": "Free Bible study software for Windows, Mac and Linux. Software can search and display Greek / Hebrew lexicons, interlinear Bibles...",
                 <% if (reqInitial.equals("NIV")) { %>
                     "name": "NIV - New International Version",
                     "author": {
@@ -218,8 +227,11 @@
             <div class="navbar-header search-form">
                 <div class="navbar-brand col-xs-12">
                     <span class="hidden-xs title" title="Reset to default configuration">
-                        <a href="/?noredirect" id="logo">
-                            <img src="/step.png" alt="STEP" width="90px" height="22px">
+                        <a href="/?noredirect" class="logo">
+                            <img class="hidden-narrow" src="/step.png" alt="STEP" width="90px" height="22px">
+                        </a>
+                        <a href="/?noredirect" class="logo">
+                            <img class="hidden-not-narrow" src="/images/narrow_step_logo.png" alt="STEP">
                         </a>
                     </span>
                     <span class="help">
@@ -241,13 +253,16 @@
                             <a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
                                 <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="bookmarks" /></span>
                             </a>
-                            <a id="fonts-icon" style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.showFontSettings();" title="<fmt:message key="font_sizes" />">
-                                <span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px"><fmt:message key="passage_font_size_symbol" /></span>
+                            <a id="fonts-icon" style="padding-left:5px" href="javascript:step.util.showFontSettings();" title="<fmt:message key="font_sizes" />">
+                                <span class="largerFont" style="color:white;background:#5E5E5E;font-size:18px"><fmt:message key="passage_font_size_symbol" /></span>
                                 <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font" /></span>
                             </a>
-
+                            <a id="colorgrammar-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammar" />">
+                                <span class="largerFont" style="background:url(/images/wave.png) repeat-x 100% 100%;font-size:18px;padding-bottom:7px">G</span>
+                                <span class="largerFont hidden-xs hidden-sm navbarIconDesc" style="margin-left:-2">rammar</span>
+                            </a>
                             <a id="examples-icon1" style="padding-left:5px" class="navbarIconDesc hidden-sm hideen-md hidden-lg" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
-                                <i class="glyphicon glyphicon-question-sign hidden-sm hidden-md hidden-lg"></i>
+                                <i style="vertical-align:middle" class="glyphicon glyphicon-question-sign hidden-sm hidden-md hidden-lg"></i>
                             </a>
 
                             <span class="navbar-collapse collapse">
@@ -256,7 +271,7 @@
                                         <i class="glyphicon icon-language">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
                                         </i>
-                                        <span style="vertical-align:bottom" class="navbarIconDesc"><fmt:message key="installation_book_language" /></span>
+                                        <span class="navbarIconDesc"><fmt:message key="installation_book_language" /></span>
                                     </a>
                                     <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
                                         <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step" /></a></li>
@@ -272,7 +287,7 @@
                                         <line x1="2" y1="10" x2="16" y2="10" stroke-width="1" stroke="var(--clrBackground)" />
                                         <line x1="2" y1="12" x2="16" y2="12" stroke-width="1" stroke="var(--clrBackground)" />
                                     </svg>
-                                    <span class="navbarIconDesc" style="vertical-align:bottom">&nbsp;<fmt:message key="help_feedback" /></span>
+                                    <span class="navbarIconDesc hidden-sm">&nbsp;<fmt:message key="help_feedback" /></span>
                                 </a>
             <%
                 }
@@ -669,6 +684,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <script src="js/backbone/models/model_settings.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_feedback.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_examples.js" type="text/javascript"></script>
+<script src="js/backbone/views/view_color.js" type="text/javascript"></script>
 <script src="js/state/step.state.js" type="text/javascript"></script>
 <script src="js/passage/step.passage.js" type="text/javascript"></script>
 <script src="js/defaults/step.defaults.js" type="text/javascript"></script>

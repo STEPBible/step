@@ -5,7 +5,7 @@
 .passageOptionsGroup {
   border-bottom: 1px solid $border-color;
   padding: 5px $page-padding;
-  opacity: .6;
+  opacity: .3;
   background-color: white;
   background-color: var(--clrBackground);
   @include clearfix;
@@ -174,10 +174,6 @@
     overflow: hidden;
     white-space: nowrap;
   }
-}
-
-.active .passageOptionsGroup {
-  opacity: 1;
 }
 
 .nextPreviousChapterGroup {

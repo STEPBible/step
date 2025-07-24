@@ -41,6 +41,9 @@ var SidebarView = Backbone.View.extend({
         else if (data == '#help') {
             mode = 'help';
         }
+        else if (data == '#color') {
+            mode = 'color';
+        }
         this.model.save({
             mode: mode
         });
@@ -98,10 +101,14 @@ var SidebarView = Backbone.View.extend({
         else if (this.model.get("mode") === 'history') {
             self.createHistory();
         }
+        else if (this.model.get("mode") === 'color') {
+            if ($('#ColorCode').length != 1) // Only call if it is not created
+                self.createColor();
+        }
         else {
             self.createHelp();
         }
-        // added for colour code grammar.  Should be const instead of var, but does not work with older browser
+        // added for color code grammar.  Should be const instead of var, but does not work with older browser
         // This must match the definition in the color_code_grammar.js
         // Do not take away the TBRMBR comment (to be removed by maven replacer)
         var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRBMR
@@ -140,10 +147,12 @@ var SidebarView = Backbone.View.extend({
         this.lexicon = $("<div id='lexicon' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.analysis = $("<div id='analysis' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.history = $("<div id='history' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
+        this.color = $("<div id='color' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.help = $("<div id='help' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         tabContent.append(this.lexicon);
         tabContent.append(this.analysis);
         tabContent.append(this.history);
+        tabContent.append(this.color);
         tabContent.append(this.help);
         this.$el.append(tabContent);
         return tabContent;
@@ -175,6 +184,9 @@ var SidebarView = Backbone.View.extend({
     createHelp: function () {
         this.helpView = new ExamplesView({el: this.help});
     },
+    createColor: function () {
+        this.color = new ColorView({el: this.color});
+    },
     createDefinition: function (data, parameters) {
         var ref = parameters[0];
         var allVersions = parameters[1];
@@ -182,6 +194,7 @@ var SidebarView = Backbone.View.extend({
         var morphCount = parameters[3];
         var allMorphsForBackButton;
         var allStrongsForBackButton;
+
         if (!Array.isArray(variant)) variant = [""]; // Initialize in case it is not.
         //get definition tab
 
@@ -268,7 +281,7 @@ var SidebarView = Backbone.View.extend({
                 if (i > 0)
                     panelHeading += '<span class="clicktoview"> (click to view)</span>';
                 panelHeading += '</a></h4></div>';
-                var panel = $('<div class="panel panel-default"></div>').append(panelHeading).append(panelContentContainer);
+                var panel = $('<div class="panel panel-default" style="background:var(--clrBackground)"></div>').append(panelHeading).append(panelContentContainer);
                 panelGroup.append(panel);
             }
             this.lexicon.append(panelGroup);
@@ -291,14 +304,13 @@ var SidebarView = Backbone.View.extend({
             if (variant[0] !== "")
                 panelBody.append("<div>Only in " + variant[0] + " manuscript</div>");
             // need to handle multiple morphInfo (array)
-            if (data.morphInfos.length > 0) {
+            if (data.morphInfos.length > 0)
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0], morphCount, ref, data.vocabInfos[0].strongNumber);
-            }
             this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
-            if (data.morphInfos.length > 0) {
+            if (data.morphInfos.length > 0)
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
-            }
-            panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
+            panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + data.vocabInfos[0].strongNumber
+            + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                 'Report lexicon issues' +
             '</a>'));
             if ((step.touchDevice) && (!step.touchWideDevice))
@@ -1161,10 +1173,11 @@ var SidebarView = Backbone.View.extend({
     },
     _createTabHeadersContainer: function () {
         var template = '<ul class="nav nav-tabs">' +
-            '<li class="active"><a class="glyphicon glyphicon-info-sign" title="<%= __s.original_word %>" data-toggle="tab" data-target="#lexicon"></li>' +
-            '<li><a class="glyphicon glyphicon-stats" title="<%= __s.passage_stats %>" data-toggle="tab" data-target="#analysis"></li>' +
-            '<li><a class="glyphicon glyphicon-bookmark" title="<%= __s.bookmarks_and_recent_texts %>" data-toggle="tab" data-target="#history"></li>' +
-            '<li><a class="stepglyph-help glyphicon glyphicon-question-sign" title="<%= __s.frequently_asked_questions %>" data-toggle="tab" data-target="#help"></li>' +
+            '<li style="display:none" class="active"><a class="glyphicon glyphicon-info-sign" title="<%= __s.original_word %>" data-toggle="tab" data-target="#lexicon"></li>' +
+            '<li style="display:none"><a class="glyphicon glyphicon-stats" title="<%= __s.passage_stats %>" data-toggle="tab" data-target="#analysis"></li>' +
+            '<li style="display:none"><a class="glyphicon glyphicon-bookmark" title="<%= __s.bookmarks_and_recent_texts %>" data-toggle="tab" data-target="#history"></li>' +
+            '<li style="display:none"><a class="stepglyph-help glyphicon glyphicon-question-sign" title="<%= __s.frequently_asked_questions %>" data-toggle="tab" data-target="#help"></li>' +
+            '<li style="display:none"><a title="<%= __s.display_grammarColor %>" data-toggle="tab" data-target="#color"></a></li>' +
             '</ul>';
 
         var tabContainer = $(_.template(template)());

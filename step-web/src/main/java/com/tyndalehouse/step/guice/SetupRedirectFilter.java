@@ -6,7 +6,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
+import com.tyndalehouse.step.core.utils.ValidateUtils;
 
 /**
  * Intercepts and works out whether STEP has finished the installation process
@@ -34,6 +36,8 @@ public class SetupRedirectFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
+        if (!ValidateUtils.checkURLParms(request.getParameterMap(), ((HttpServletRequestWrapper) request).getRequestURI()))
+            return;
         String installedVersion = appManager.getAppVersion();
         //server installations always going forward
         if (!appManager.isLocal() || (installedVersion != null && installedVersion.equals(runningAppVersion))) {

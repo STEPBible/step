@@ -49,8 +49,10 @@ public class StepServletConfig extends GuiceServletContextListener {
                         serve("/" + ExternalPoweredByFilter.EXTERNAL_PREFIX + "*")
                                 .with(FrontController.class);
                         serve("/rest/*").with(FrontController.class);
-                        serve("/commentary_images/*").with(ImageController.class);
-                        serve("/search*").with(SearchPageController.class);
+                        // Commented out on June 6, 2025 because there is no good usage of it.
+                        //                        serve("/commentary_images/*").with(ImageController.class);
+                        // Commented out on June 6, 2025 because there is no legitimate usage of it.
+                        //                        serve("/search*").with(SearchPageController.class);
                         serve("/index.jsp").with(IndexRedirect.class);
                         serve("/").with(SearchPageController.class);
                         serve("/international/interactive.js").with(InternationalJsonController.class);

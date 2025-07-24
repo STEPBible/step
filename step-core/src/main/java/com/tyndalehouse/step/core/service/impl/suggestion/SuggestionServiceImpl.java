@@ -30,9 +30,11 @@ public class SuggestionServiceImpl implements SuggestionService {
     private final Map<String, String[]> dependencies = new HashMap<String, String[]>(8);
     private final Map<String, Integer> extraSlots = new HashMap<String, Integer>(4);
     private static String stepTypes;
+    private static String pluralStepTypes;
 
     @Inject
     public SuggestionServiceImpl(@Named("search.name_types") final String stepTypes,
+                                 @Named("search.plural_name_types") final String pluralStepTypes,
                                  final HebrewAncientMeaningServiceImpl hebrewAncientMeaningService,
                                  final GreekAncientMeaningServiceImpl greekAncientMeaningService,
                                  final HebrewAncientLanguageServiceImpl hebrewAncientLanguageService,
@@ -43,6 +45,7 @@ public class SuggestionServiceImpl implements SuggestionService {
                                  final TextSuggestionServiceImpl textSuggestionService
     ) {
         this.stepTypes = stepTypes;
+        this.pluralStepTypes = pluralStepTypes;
         queryProviders.put(SearchToken.REFERENCE, referenceSuggestionService);
         queryProviders.put(SearchToken.GREEK_MEANINGS, greekAncientMeaningService);
         queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);
@@ -81,9 +84,19 @@ public class SuggestionServiceImpl implements SuggestionService {
         currentContext.setInput(context.getInput());
         currentContext.setSearchType(context.getSearchType());
         currentContext.setExampleData(context.isExampleData());
+
+        String searchInput = context.getInput();
+        Character firstCharacter = searchInput.charAt(0);
+        Character lastCharacter = searchInput.charAt(searchInput.length() - 1);
+        Boolean isQuoted = firstCharacter == lastCharacter && firstCharacter == '\"';
+
         //go through each search type
         for (Map.Entry<String, SingleTypeSuggestionService> query : queryProviders.entrySet()) {
             String curQueryKey = query.getKey();
+            // If the input is quoted, only process text search
+            if (isQuoted && !curQueryKey.equals("text")) {
+                continue;
+            }
             int maxResult = MAX_RESULTS;
             if (searchLangSelectedByUser != null) {
                 if (searchLangSelectedByUser.equals("en")) {
@@ -110,14 +123,21 @@ public class SuggestionServiceImpl implements SuggestionService {
                         maxResult = MAX_RESULTS_NON_GROUPED * 2;
                     else if (curQueryKey.equals("hebrew"))
                         maxResult = MAX_RESULTS_NON_GROUPED * 4;
-                    else
+                    else if (curQueryKey.equals("text")) {
+                        currentContext.setInput(context.getInput()); // reset to original input in case it was previously changed.
+                        // if (!isQuoted)
+                        //     continue;
+                    } else
                         continue;
                 } else if (searchLangSelectedByUser.equals("gr")) {
                     if (curQueryKey.equals("greekMeanings"))
                         maxResult = MAX_RESULTS_NON_GROUPED * 2;
                     else if (curQueryKey.equals("greek"))
                         maxResult = MAX_RESULTS_NON_GROUPED * 4;
-                    else
+                    else if (curQueryKey.equals("text")) {
+                        // if (!isQuoted)
+                        //     continue;
+                    } else
                         continue;
                 }
             }

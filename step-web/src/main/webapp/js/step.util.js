@@ -127,7 +127,6 @@
         }
     });
 })(jQuery);
-
 window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
@@ -138,14 +137,97 @@ step.util = {
 	versionsGreekBoth: ["ABEN", "ABGK"],
 	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
 	// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
-	vocabKeys: ["strongNumber", "stepGloss", "stepTransliteration", "count", 
-		"_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss",
-		"shortDef", "mediumDef", "lsjDefs",
-		"_es_Definition", "_vi_Definition", "_zh_Definition", "_zh_tw_Definition",
-		"accentedUnicode", "rawRelatedNumbers", "relatedNos", 
-		"_stepDetailLexicalTag", "_step_Link", "_step_Type", "_searchResultRange",
-		"freqList", "defaultDStrong", "shortDefMounce", "briefDef"],
-
+	// When this is updated, check (and update if necessary) the following three:
+	//   unpackVocabJSON() below (in step.util.js) and 
+	//   relatedKeys in unpackJson() in this file.
+	//   getVocabMorphInfoFromJson()
+	vocabKeys: ["defaultDStrong",	// 0, defaultDStrong has to be the first one
+		"count",					// 1, count has to be the second one
+		"strongNumber",				// 2
+		"stepGloss",				// 3
+		"stepTransliteration",		// 4
+		"_es_Gloss",				// 5
+		"_zh_Gloss",				// 6
+		"_zh_tw_Gloss",				// 7
+		"shortDef",					// 8
+		"mediumDef",				// 9
+		"lsjDefs",					// 10
+		"_es_Definition",			// 11
+		"_vi_Definition",			// 12
+		"_zh_Definition",			// 13
+		"_zh_tw_Definition",		// 14
+		"accentedUnicode",			// 15
+		"rawRelatedNumbers",		// 16
+		"relatedNos",				// 17
+		"_stepDetailLexicalTag",	// 18
+		"_step_Link",				// 19
+		"_step_Type",				// 20
+		"_searchResultRange",		// 21
+		"freqList",					// 22
+		"shortDefMounce",			// 23
+		"briefDef"],				// 24
+	unpackVocabJSON: function (origJsonVar, index) {
+		var duplicateStrings = origJsonVar.d;
+		var vocabInfo = origJsonVar.v[index];
+		var result = {};
+		result['grouped'] = false;
+		result['maxReached'] = false;
+		var suggestion = {};
+		suggestion['popularity'] = vocabInfo[1]; // index of 1 is count which will not be use duplicateStrings
+		suggestion['strongNumber'] = this.valueInDuplicateStrongOrNot(vocabInfo, 2, duplicateStrings);
+		suggestion['gloss'] = this.valueInDuplicateStrongOrNot(vocabInfo, 3, duplicateStrings);
+		suggestion['stepTransliteration'] = this.valueInDuplicateStrongOrNot(vocabInfo, 4, duplicateStrings);
+		suggestion['_es_Gloss'] = this.valueInDuplicateStrongOrNot(vocabInfo, 5, duplicateStrings);
+		suggestion['_zh_Gloss'] = this.valueInDuplicateStrongOrNot(vocabInfo, 6, duplicateStrings);
+		suggestion['_zh_tw_Gloss'] = this.valueInDuplicateStrongOrNot(vocabInfo, 7, duplicateStrings);
+		suggestion['matchingForm'] = this.valueInDuplicateStrongOrNot(vocabInfo, 15, duplicateStrings);
+		suggestion['_detailLexicalTag'] = this.valueInDuplicateStrongOrNot(vocabInfo, 18, duplicateStrings);
+		suggestion['type'] = this.valueInDuplicateStrongOrNot(vocabInfo, 20, duplicateStrings);
+		suggestion['_searchResultRange'] = this.valueInDuplicateStrongOrNot(vocabInfo, 21, duplicateStrings);
+		suggestion['popularityList'] = this.valueInDuplicateStrongOrNot(vocabInfo, 22, duplicateStrings);
+		suggestion['briefDef'] = this.valueInDuplicateStrongOrNot(vocabInfo, 24, duplicateStrings);
+		result['suggestion'] = suggestion;
+		return result;
+	},
+	valueInDuplicateStrongOrNot: function(vocabInfo, index, duplicateStrings) {
+		// index of 1 is count
+		return ((index != 1) && Number.isInteger(vocabInfo[index])) ?
+				duplicateStrings[vocabInfo[index]] : vocabInfo[index];
+	},
+	unpackJson: function (origJsonVar, index) {
+		// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
+		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", 
+			"matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
+		var duplicateStrings = origJsonVar.d;
+		var relatedNumbers = origJsonVar.r;
+		var vocabInfo = origJsonVar.v[index];
+		var vocabInfoEntry = {};
+		for (var j = 1; j < step.util.vocabKeys.length; j ++) { // The first one is defaultDStrong so it does not need to be unpacked
+			if (vocabInfo[j] === "") continue;
+			if (step.util.vocabKeys[j] === "relatedNos") {
+				var allRelatedNumbersResult = [];
+				relatedNumbersArray = vocabInfo[j];
+				if (Array.isArray(relatedNumbersArray)) {
+					for (var k = 0; k < relatedNumbersArray.length; k ++) {
+						var relatedNumEntry = relatedNumbers[vocabInfo[j][k]];
+						var relatedNumResult = {};
+						for (var l = 0; l < relatedKeys.length; l ++) {
+							if (relatedNumEntry[l] !== "") {
+								if (Number.isInteger(relatedNumEntry[l]))
+									relatedNumResult[relatedKeys[l]] = duplicateStrings[relatedNumEntry[l]];
+								else relatedNumResult[relatedKeys[l]] = relatedNumEntry[l];
+							}
+						}
+						allRelatedNumbersResult.push(relatedNumResult);
+					}
+					vocabInfoEntry[step.util.vocabKeys[j]] = allRelatedNumbersResult;
+				}
+			}
+			else vocabInfoEntry[step.util.vocabKeys[j]] = ((Number.isInteger(vocabInfo[j])) && (step.util.vocabKeys[j] !== "count")) ?
+					duplicateStrings[vocabInfo[j]] : vocabInfo[j];
+		}
+		return vocabInfoEntry;
+	},
 	msgForFrequencyOnAllBibles: function (bibleList, freqList, offset, strongNumber, msg, allVersions) {
 		var bibleVersions = allVersions.split(",");
 		for (var i =0; i < bibleVersions.length; i ++) {
@@ -221,14 +303,23 @@ step.util = {
 		}
 		if ((accentedUnicode === "") && (msg[0].indexOf("<br>") == 0))
 			msg[0] = msg[0].substring(4);
-		if ((msg[0] === "") && (msg[1].indexOf("<br>") == 0))
-			msg[1] = msg[1].substring(4);
-		return "<span>" + __s.frequencies_vary + " </span><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#bookmark=id.11g1a0zd07wd' target='_blank'>(" + __s.why + ")</a>" +
-			"<br>" + msg[0] + msg[1] + "<br>" +
-			"<a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
-			"<span class='detailFreqList' style='display:none'>" +
+		if (msg[0] === "") {
+			if (msg[1] === "") {
+				msg[0] = msg[2];
+				msg[2] = "";
+			}
+			else if (msg[1].indexOf("<br>") == 0)
+				msg[1] = msg[1].substring(4);
+		}
+		var result = "<span>" + __s.frequencies_vary + " </span><a href='https://docs.google.com/document/d/1PE_39moIX8dyQdfdiXUS5JkyuzCGnXrVhqBM87ePNqA/preview#bookmark=id.11g1a0zd07wd' target='_blank'>(" + __s.why + ")</a>" +
+			"<br>" + msg[0] + msg[1];
+		if (msg[2] !== "") 
+			result += "<br>" +
+				"<a onClick='step.util.showHideFreqList()'><span class='freqListSelect'>More ...</span><i class='freqListSelectIcon glyphicon glyphicon-triangle-right'></i></a>" +
+				"<span class='detailFreqList' style='display:none'>" +
 				msg[2] +
-			"</span>";
+				"</span>";
+		return result;
 	},
 	suppressHighlight: function(strongNumber) {
 		if (strongNumber === "") return false;
@@ -456,7 +547,25 @@ step.util = {
 
 
             //make the new panel active
-            step.util.getPassageContainer(val).addClass("active");
+			var passageContainer = step.util.getPassageContainer(val);
+			passageContainer.addClass("active");
+			var availableOptions = step.util.activePassage().get("options");
+			if ((typeof availableOptions === "string") && (availableOptions.indexOf("C") > -1) &&  // Color grammar is available
+				(passageContainer.find(".passageContent").length > 0)) { // Has passage content
+				$("#colorgrammar-icon").show();
+				$('#sideBargenderNumClrs').show();
+				$('#colorAdvancedConfig').show();
+				$('#noColorGrammar').hide();
+				step.util.showOrHideColorSideBarItem();
+			}
+			else {
+				$("#colorgrammar-icon").hide();
+				$('#colorAdvancedConfig').hide();
+				$('#sideBargenderNumClrs').hide();
+				$('#noColorGrammar').show();
+                $("#sideBarVerbClrs").hide();
+				$("#sideBarHVerbClrs").hide();
+			}
             return val;
         }
 
@@ -1423,7 +1532,7 @@ step.util = {
             } else {
                 var s = $(source);
                 strong = s.attr("strong");
-                morph = step.util.convertMorphOSHM2TOS (s.attr("morph") );
+                morph = step.util.convertMorphOSHM2TOS(s.attr("morph") );
 				variant = s.attr("var") || "";
 				var verseAndVersion = step.util.ui.getVerseNumberAndVersion(s);
 				ref = verseAndVersion[0];
@@ -1444,6 +1553,7 @@ step.util = {
             });
         },
         initSidebar: function (mode, data) { // Do not shorten name in pom.xml because it is called at start.jsp
+			$(".colorOffWarning").remove();
             require(["sidebar"], function (module) {
                 if (!data) {
                     data = {};
@@ -1470,7 +1580,8 @@ step.util = {
                 } else if (mode == null) {
                     //simply toggle it
                     step.sidebar.trigger("toggleOpen");
-                } else if (step.sidebar.get("mode") != mode) {
+                } else if ((step.sidebar.get("mode") != mode) ||
+					((mode === "color") && step.touchDevice && !step.touchWideDevice)) {
                     step.sidebar.save({ mode: mode });
                 } else {
                     //there is a mode, which is non null, but the save wouldn't do anything, to force open
@@ -2209,6 +2320,9 @@ step.util = {
     },
 	showConfigGrammarColor: function (e) {
         if (e) e.preventDefault();
+		$("#sideBargenderNumClrs").empty(); // empty the color configuration in the sidebar
+		$("#sideBarVerbClrs").empty();      // because they will conflict with the color configuration 
+		$("#sideBarHVerbClrs").empty();     // in the modal.
         var element = document.getElementById('grammarClrModal');
         if (element) element.parentNode.removeChild(element);
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
@@ -2242,7 +2356,7 @@ step.util = {
 						'<button id="saveButton" class="stepButton" onclick=saveClrConfig()><label>Save</label></button>' +
 						'<button id="cancelButton" class="stepButton" onclick=cancelClrChanges()><label>Cancel</label></button>' +
 						'<button id="resetButton" class="stepButton" onclick=resetClrConfig()><label>Reset</label></button>' +
-						'<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>' +
+						'<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Apply</label></button>' +
 					'</div>' +
 				'</div>' +
 			'</div>' +
@@ -2600,6 +2714,129 @@ step.util = {
 		)()).modal("show");
 		step.util.blockBackgroundScrolling("videoModal");		
     },
+	gotoCurrentChapter: function() {
+		var activePassageId = step.util.activePassageId();
+        var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
+		var osisId = activePassageModel.get('osisId') || "";
+		var parts = osisId.split(".");
+		if (parts.length < 3)
+			return;
+		var previousChapterKey = activePassageModel.get('previousChapter');
+		var nextChapterKey = activePassageModel.get('nextChapter');
+		if ((typeof previousChapterKey.osisKeyId !== "string") || (typeof nextChapterKey.osisKeyId !== "string"))
+			return;
+		var previousParts = previousChapterKey.osisKeyId.split(".");
+		var nextParts = nextChapterKey.osisKeyId.split(".");
+		if ((previousParts.length < 2) || (nextParts.length < 2))
+			return;
+		var lastChapter = (parts[0] !== nextParts[0]) ||
+			((parts[0] === nextParts[0]) && (parts[1] === nextParts[1]));
+		var newOsisId = JSON.parse(JSON.stringify(previousChapterKey));
+		newOsisId.osisKeyId = parts[0] + "." + parts[1];
+		var passageView = { 'model' : activePassageModel };
+		var args = this.getArgsForSiblingChapter(passageView, newOsisId, lastChapter, true);
+		step.router.navigateSearch(args);
+	},
+	getArgsForSiblingChapter: function(currentPassageMenuView, key, isNext, currentChapter) {
+        var currentPassageId = currentPassageMenuView.model.get("passageId");
+        step.util.activePassageId(currentPassageId);
+        var args = currentPassageMenuView.model.get("args") || "";
+        args = args.replace(new RegExp('@?' + REFERENCE        + '[^@]+', "g"), "");
+        var reference = "";
+        var tmpArgs = this.removeSearchArgs(args);
+        if (tmpArgs !== args) { // There is probably search so go to current chapter instead.  
+            args = tmpArgs;
+            reference = currentPassageMenuView.model.attributes.osisId;
+            currentPassageMenuView.model.attributes.strongHighlights = "";
+        }
+        else {
+            if ((key != undefined) && (key.osisKeyId != undefined) && (key.osisKeyId != null)) reference = key.osisKeyId;
+            else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
+            if (!currentChapter && (step.touchDevice)) {
+                if (!this.showUserSwipeIsAccepted(currentPassageMenuView.model.get("masterVersion"), currentPassageMenuView.model.get("previousChapter").osisKeyId,
+                    currentPassageMenuView.model.get("nextChapter").osisKeyId, currentPassageMenuView.model.get("nextChapter").lastChapter,
+                    step.util.getPassageContainer(currentPassageId), isNext)) {
+                        return; // Next or previous chapter is not available
+                }
+            }
+        }
+        args = args.replace(/&&/ig, "")
+                   .replace(/&$/ig, "");
+        if (args.length > 0) {
+            args = args .replace(/^@/, '').replace(/^\|/, '')
+                        .replace(/@@+/, URL_SEPARATOR)
+                        .replace(/\|\|+/, URL_SEPARATOR);
+            if (args[args.length - 1] !== URL_SEPARATOR) args += URL_SEPARATOR;
+        }
+        args += "reference=" + reference;
+		return args;
+	},
+	removeSearchArgs: function(args) {
+        return args.replace(new RegExp('@?' + STRONG_NUMBER    + '[^@]+', "ig"), "")
+		           .replace(new RegExp('@?' + SYNTAX           + '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + TEXT_SEARCH      + '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + SUBJECT_SEARCH   + '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + GREEK            +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + HEBREW           +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + GREEK_MEANINGS   +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + HEBREW_MEANINGS  +  '[^@]+', "ig"), "")
+                   .replace(new RegExp('@?' + MEANINGS         +  '[^@]+', "ig"), "");
+    },
+	showUserSwipeIsAccepted: function(version, previousChapter, nextChapter, lastChapter, activePassage, isNext) {
+        var alreadyCheckedNextOrPreviousIsValid = false;
+        if (typeof previousChapter === "string") {
+            var prevChptParts = previousChapter.split(".");
+            if ((prevChptParts.length == 2) && (!isNaN(prevChptParts[1]))) {
+                if (typeof nextChapter === "string") {
+                    var nextChptParts = nextChapter.split(".");
+                    if ((nextChptParts.length == 2) && (!isNaN(prevChptParts[1]))) {
+                        alreadyCheckedNextOrPreviousIsValid = true;
+                        if ((nextChptParts[1] - prevChptParts[1] == 2))
+                            this.showDots(activePassage);
+                        else if (isNext) {
+                            if ((typeof lastChapter === "boolean") && (!lastChapter)) {
+                                if ((nextChapter === "Matt.1") &&
+                                    (step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(version.toLowerCase()) > -1)) {
+                                        step.util.tempAlert("You are at the last chapter of the " + version + ".", 3);
+                                        return false;
+                                }
+                                this.showDots(activePassage);
+                            }
+                            else if (nextChapter === "Rev.22") {
+                                step.util.tempAlert("You are at the last chapter of " + version + ".", 3);
+                                return false;                       
+                            }
+                        }
+                        else {
+                            if ((previousChapter === "Gen.1") ||
+                                ((previousChapter === "Mal.4") &&
+                                (step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(version.toLowerCase()) > -1))) {
+                                    step.util.tempAlert("You are at the first chapter of " + version + ".", 3);
+                                    return false;
+                            }
+                            this.showDots(activePassage);
+                        }
+                    }
+                }
+            }
+        }
+        if (!alreadyCheckedNextOrPreviousIsValid) {
+            var ref = activePassage.find("button.select-reference").text().split(":")[0];
+            if (isNext) {
+                if ((ref !== "Rev 22") && (ref !== "Mal 4") && (ref !== "Deu 34"))
+                this.showDots(activePassage);
+            }
+            else if ((ref !== "Ref") && (ref !== "Gen 1") && (ref !== "Matt 1"))
+            this.showDots(activePassage);
+        }
+        return true;
+    },
+    showDots: function(activePassage) {
+        var passageContent = activePassage.find(".passageContent");
+        passageContent.empty();
+        var randomDots = "..... .... .... ....... ... .... ... ........ .... ... ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ........ ... .... ... .....<br>... ..... .. .... ..... .... ..... ........ .... ...... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .... ... .... ... .....<br>...... .... ... ..... .... ..... ..... ..... ... . ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br>... ..... .... .... ..... .... ..... ........ .... ... ... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ... ... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .. ... .... ... .....<br";
+        passageContent.html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
+    },
     showSummary: function (reference, tabToShow) {
         element = document.getElementById('showBookOrChapterSummaryModal');
         if (element) element.parentNode.removeChild(element);
@@ -2885,17 +3122,48 @@ step.util = {
                     '<p style="margin:8px">' + summary["chapter_" + chapterNum + "_summary"] + '</p>' +
                 '</span><br>';
 
-			var jsonName = "chapter_" + chapterNum + "_icc_url";
-			if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
-				var icc_url = summary[jsonName];
-				jsonName = "chapter_" + curChapter + "_icc_page";
-				var titleTag = "";
-				if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
-					titleTag = ' title="page ' + summary[jsonName] + '"';
-				chptSummary += '<a style="margin-left:8px;font-size:14px" href="' + icc_url + '" target="icc"' + titleTag + '><b><u>ICC Commentary for chapter ' + chapterNum + '</u></b> ' +
-					'<sup class="glyphicon glyphicon-book"></sup></a>';
+			var commentary_keys = summary["commentary_keys"];
+			var commentary_names = summary["commentary_names"];
+			if (commentary_keys == null) {
+				commentary_keys = "['icc']";
+				commentary_names = "['ICC Commentary']";
 			}
-			chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
+			var keysForCommentary = JSON.parse(commentary_keys.replaceAll("'", '"').replace('\\"',"'"));
+			var namesForCommentary = JSON.parse(commentary_names.replaceAll("'", '"').replace('\\"',"'"));
+			var usrLangCode = step.userLanguageCode;
+			if (usrLangCode.substr(0,3) === 'fil')
+				usrLangCode = "fil";
+			else
+				usrLangCode = usrLangCode.substr(0,2);
+			for (var i = 0; i < keysForCommentary.length; i++) {
+				var currentKey = keysForCommentary[i];
+				var jsonName = "chapter_" + chapterNum + "_" + currentKey + "_url";
+				var parts = currentKey.split("_");
+				if ((parts.length == 2) && (parts[1] === "langcode")) { // key name ends with _langcode
+					jsonName = "chapter_" + chapterNum + "_" + parts[0] + "_" + usrLangCode + "_url";
+					if (typeof summary[jsonName] === "string")
+						currentKey = parts[0] + "_" + usrLangCode;
+					else {
+						jsonName = "chapter_" + chapterNum + "_" + parts[0] + "_en_url";
+						if (typeof summary[jsonName] == "string")
+							currentKey = parts[0] + "_en";
+						else
+							continue;
+					}
+				}
+    	        if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
+        	        var commentary_url = summary[jsonName];
+            	    jsonName = "chapter_" + chapterNum + "_" + currentKey + "_page";
+                	var titleTag = "";
+                	if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
+                    	titleTag = ' title="page ' + summary[jsonName] + '"';
+                	chptSummary += '<a style="margin-left:8px;font-size:14px" href="' +
+						commentary_url + '" target="ext_commentary"' + titleTag + '><b><u>' +
+						namesForCommentary[i] + ' for chapter ' + chapterNum + '</u></b> ' +
+                    	'<sup class="glyphicon glyphicon-book"></sup></a><br>';
+				}
+            }
+            chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
             if (chapterNum > 1) chptSummary +=
                     '<a class="previousChapter" style="display:inline" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum - 1) + '\')">' +
                         '<i class="glyphicon glyphicon-arrow-left"></i>' +
@@ -3055,8 +3323,10 @@ step.util = {
 		step.util.closeModal("showLongAlertModal");
 		$('.qtip-titlebar button.close').click();
 		var extraStyling = (panelBodies == null) ? '' : 'style="padding:25px" ';
+		var showModalUntilClose = ((headerText.toLowerCase().indexOf('color') > -1) || (headerText.toLowerCase().indexOf('font') > -1)) ?
+			' data-backdrop="static"' : ''; // The color and the font modals use the spectrum library which need to be clean up manually.
 		$(_.template(
-			'<div id="showLongAlertModal" class="modal" ' + extraStyling + 'role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div id="showLongAlertModal" class="modal" ' + extraStyling + 'role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"' + showModalUntilClose + '>' +
 				'<div class="modal-dialog">' +
 					'<div class="modal-content stepModalFgBg"">' +
 						'<script>' +
@@ -3078,7 +3348,7 @@ step.util = {
 		)()).modal("show");
 		if (panelBodies != null) {
 			if (panelBodies.length == 1) {
-				$(".modal-body").append(panelBodies[0]);
+				$("#showLongAlertModal .modal-body").append(panelBodies[0]);
 				if (typeof panelBodies[0] === "string") {
 					var pos = panelBodies[0].indexOf("id=\"welcomeExamples");
 					if (pos > 1 && pos < 10) // Reduce padding for the welcome (Q&A) modal
@@ -3400,9 +3670,7 @@ step.util = {
 								'if ((baseColor === "#17758F") || (baseColor === "#c58af9")) step.util.setDefaultColor("close");' +
 								'else setColor(baseColor);' +
 							'}' +
-							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
 							'step.util.closeModal("fontSettings");' +
-							'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021
 						'}' +
 					'</script>' +
 					'<div class="modal-header">' +
@@ -3647,41 +3915,60 @@ step.util = {
 			}).start();
 		}
 		else {
-		    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
+			var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.colorgrammar");
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
-			if ((introCount < 1) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
+			if ((introCount < 1) && (window.innerWidth > 499) && ($("#colorgrammar-icon").is(":visible"))) {
 				var introJsSteps = [
 				{
-					element: document.querySelector('#copy-icon'),
-					intro: __s.copy_intro,
+					element: document.querySelector('#colorgrammar-icon'),
+					intro: 'Color code grammar is available with a new user interface.',
 					position: 'left'
 				}
-         	   ];
+				];
 				introJs().setOptions({
 					steps: introJsSteps
 				}).start();
 				introCount ++;
-				step.util.localStorageSetItem("step.copyIntro", introCount);
+				step.util.localStorageSetItem("step.colorgrammar", introCount);
 			}
 			else {
-				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.userSurvey");
-				var introCount = parseInt(introCountFromStorageOrCookie, 10);
+				introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
+				introCount = parseInt(introCountFromStorageOrCookie, 10);
 				if (isNaN(introCount)) introCount = 0;
-				if (introCount < 1) {
+				if ((introCount < 1) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
 					var introJsSteps = [
 					{
-						intro: '<a href="https://docs.google.com/forms/d/1jgFiiOnpIjGIjuEvLGA8Rl9Zecy5yEHrNlOys1G0x0A/edit?usp=sharing_eip_se_dm&ts=671c1301" target="_blank">Sign up here</a> (30 seconds!) to participate in future interface design studies and help us improve our site\'s user experience.',
-						position: 'center'
+						element: document.querySelector('#copy-icon'),
+						intro: __s.copy_intro,
+						position: 'left'
 					}
-					];
+				];
 					introJs().setOptions({
 						steps: introJsSteps
 					}).start();
 					introCount ++;
-					step.util.localStorageSetItem("step.userSurvey", introCount);
+					step.util.localStorageSetItem("step.copyIntro", introCount);
 				}
-			}	
+				// else {
+				// 	introCountFromStorageOrCookie = step.util.localStorageGetItem("step.userSurvey");
+				// 	introCount = parseInt(introCountFromStorageOrCookie, 10);
+				// 	if (isNaN(introCount)) introCount = 0;
+				// 	if (introCount < 1) {
+				// 		var introJsSteps = [
+				// 		{
+				// 			intro: '<a href="https://docs.google.com/forms/d/1jgFiiOnpIjGIjuEvLGA8Rl9Zecy5yEHrNlOys1G0x0A/edit?usp=sharing_eip_se_dm&ts=671c1301" target="_blank">Sign up here</a> (30 seconds!) to participate in future interface design studies and help us improve our site\'s user experience.',
+				// 			position: 'center'
+				// 		}
+				// 		];
+				// 		introJs().setOptions({
+				// 			steps: introJsSteps
+				// 		}).start();
+				// 		introCount ++;
+				// 		step.util.localStorageSetItem("step.userSurvey", introCount);
+				// 	}
+				// }
+			}
 		}
 	},
     showIntroOfMultiVersion: function () {
@@ -3720,6 +4007,10 @@ step.util = {
 			});
 			if ((element.parentNode) && (modalID !== "raiseSupport")) element.parentNode.removeChild(element);
 			$('.qtip-titlebar button.close').click();
+			if ((modalID === "showLongAlertModal") || (modalID === "fontSettings") || (modalID === "grammarClrModal")) {
+				$(".sp-container").remove();
+				$(".modal-backdrop.in").remove();
+			}
 		}
     },
 	addTagLine: function(){
@@ -4296,39 +4587,6 @@ step.util = {
         }
         else return " only at " + searchResultRange;
 	},
-	unpackJson: function (origJsonVar, index) {
-		// The following line is also defined in getVocab.py.  The array of keys in getVocab.py and the following line must match.
-		var relatedKeys = ["strongNumber", "gloss", "_es_Gloss", "_zh_Gloss", "_zh_tw_Gloss", "stepTransliteration", "matchingForm", "_searchResultRange", "_km_Gloss", "briefDef"];
-		var duplicateStrings = origJsonVar.d;
-		var relatedNumbers = origJsonVar.r;
-		var vocabInfo = origJsonVar.v[index];
-		var vocabInfoEntry = {};
-		for (var j = 0; j < step.util.vocabKeys.length - 1; j ++) {
-			if (vocabInfo[j] === "") continue;
-			if (step.util.vocabKeys[j] === "relatedNos") {
-				var allRelatedNumbersResult = [];
-				relatedNumbersArray = vocabInfo[j];
-				if (Array.isArray(relatedNumbersArray)) {
-					for (var k = 0; k < relatedNumbersArray.length; k ++) {
-						var relatedNumEntry = relatedNumbers[vocabInfo[j][k]];
-						var relatedNumResult = {};
-						for (var l = 0; l < relatedKeys.length; l ++) {
-							if (relatedNumEntry[l] !== "") {
-								if (Number.isInteger(relatedNumEntry[l]))
-									relatedNumResult[relatedKeys[l]] = duplicateStrings[relatedNumEntry[l]];
-								else relatedNumResult[relatedKeys[l]] = relatedNumEntry[l];
-							}
-						}
-						allRelatedNumbersResult.push(relatedNumResult);
-					}
-					vocabInfoEntry[step.util.vocabKeys[j]] = allRelatedNumbersResult;
-				}
-			}
-			else vocabInfoEntry[step.util.vocabKeys[j]] = ((Number.isInteger(vocabInfo[j])) && (step.util.vocabKeys[j] !== "count")) ?
-					duplicateStrings[vocabInfo[j]] : vocabInfo[j];
-		}
-		return vocabInfoEntry;
-	},
 	fixStrongNumForVocabInfo: function (strongs, removeAugment) { // NASB is like H0000A. THOT is like H0000!a
 		// fix the strong number to make them consistent
 		// remove augment if the second parameter is true
@@ -4362,7 +4620,6 @@ step.util = {
 		}
 		var additionalPath = step.state.getCurrentVersion();
 		if (additionalPath !== "") additionalPath += "/";
-		var indexToDefaultDStrong = step.util.vocabKeys.length - 1;
 		var numOfResponse = 0;
 		resultJson.vocabInfos = new Array(uniqueStrongArray.length);
 		for (var j = 0; j < uniqueStrongArray.length; j++) {
@@ -4388,15 +4645,17 @@ step.util = {
 				}
 				for (var i = 0; i < origJsonVar.v.length; i++) {
 					if (uniqueStrongArray[indexToUniqueStrongArry] !== requestedStrong) { // requestedStrong does not have augment
-						var strongNumToCheck = (typeof origJsonVar.v[i][0] === "number") ? origJsonVar.d[origJsonVar.v[i][0]] : origJsonVar.v[i][0];
+						var strongNumber_in_vocabKeys = origJsonVar.v[i][2]; // index 2 is strongNumber in step.vocabKeys
+						var strongNumToCheck = (typeof strongNumber_in_vocabKeys === "number") ? origJsonVar.d[strongNumber_in_vocabKeys] : strongNumber_in_vocabKeys;
 						if (uniqueStrongArray[indexToUniqueStrongArry] === strongNumToCheck ) {
 							augStrongIndex = i;
 							break;
 						}
 					}
-					if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("*") > -1)
+					var defaultDStrong_in_vocabKeys = origJsonVar.v[i][0];  // index 0 is the defaultDStrong in step.vocabKeys
+					if (defaultDStrong_in_vocabKeys.indexOf("*") > -1)
 						defaultDStrong = i; // Default DStrong
-					if (origJsonVar.v[i][indexToDefaultDStrong].indexOf("L") > -1)
+					if (defaultDStrong_in_vocabKeys.indexOf("L") > -1)
 						lxxDefaultDstrong = i;
 				}
 				if (augStrongIndex == -1) {
@@ -4509,17 +4768,48 @@ step.util = {
 		var ntPassages = [];
 		var otPassages = [];
 		for (var i = 0; i < osisIds.length; i ++) {
-			var bookOrder = step.util.bookOrderInBible(osisIds[i]);
-			if (bookOrder > 38) {
-				ntPassages.push(osisIds[i]);
-				hasNT = true;
-			}
-			else if (bookOrder > -1) {
-				otPassages.push(osisIds[i]);
-				hasOT = true;
+			if (typeof osisIds[i] !== "string") continue;
+			var singleOsisId = osisIds[i].split(" ");
+			for (var j = 0; j < singleOsisId.length; j ++) {
+				var bookOrder = step.util.bookOrderInBible(singleOsisId[j]);
+				if (bookOrder > 38) {
+					ntPassages.push(singleOsisId[j]);
+					hasNT = true;
+				}
+				else if (bookOrder > -1) {
+					otPassages.push(singleOsisId[j]);
+					hasOT = true;
+				}
 			}
 		}
 		return [hasNT, hasOT, ntPassages, otPassages];
+	},
+	isColorOptionEnabled: function(activePassage) {
+		var urlFragment = activePassage.get("urlFragment");
+		var pos = urlFragment.indexOf("options=");
+		if (pos == -1)
+			return false;
+		var options = urlFragment.substring(pos+8).split('&')[0];
+		return options.indexOf("C") > -1;
+	},
+	showOrHideColorSideBarItem: function() {
+		var sbVC = $("#sideBarVerbClrs");
+		var sbHVC = $("#sideBarHVerbClrs");
+		if ((sbVC.length == 0) && (sbHVC.length == 0))
+			return;
+		var actPassage = step.util.activePassage();
+		var r = step.util.getTestamentAndPassagesOfTheReferences([ actPassage.get("osisId") ]);
+		var hasNT = r[0];
+		var hasOT = r[1];
+		var colorOptionWasEnabled = step.util.isColorOptionEnabled(actPassage);
+		if (!hasNT || (colorOptionWasEnabled && ($(".passageContainer.active").data("ntCSS") === "")))
+		  sbVC.hide();
+		else
+		  sbVC.show();
+		if (!hasOT || (colorOptionWasEnabled && ($(".passageContainer.active").data("otCSS") === "")))
+		  sbHVC.hide();
+		else
+		  sbHVC.show();
 	},
 	checkBibleHasTheTestament: function(versionToCheck, hasNTPassage, hasOTPassage) {
 		versionToCheck = " " + versionToCheck.toLowerCase() + " ";
@@ -4952,7 +5242,6 @@ step.util = {
 	loadTOS: function() {
 		var C_otMorph = 1; // TBRBMR
 		if (cv[C_otMorph] == null) {
-//			$.ajaxSetup({async: false});
 			var callback = step.util.addGrammar;
 			jQuery.ajax({
 				dataType: "script",
@@ -4962,11 +5251,9 @@ step.util = {
 					console.log('load tos_morph.js Failed: ' + exception);
 				},
 				complete: function (jqXHR, status) {
-//				    console.log('finish loading');
 				    callback();
 				}
 			});
-//			$.ajaxSetup({async: true});
 			return true;
 		}
 		return false;
@@ -5115,6 +5402,9 @@ step.util = {
 		return function(a, b) {
 			return step.util.levenshtein(name, a["name"]) - step.util.levenshtein(name, b["name"])
 		}
+	},
+	capitalizeFirstLetter: function(val) {
+		return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 	}
 }
 ;

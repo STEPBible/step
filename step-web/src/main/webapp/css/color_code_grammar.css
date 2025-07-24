@@ -55,3 +55,94 @@
 .icon-highlighted {
   color: #34A7C1;
 }
+
+.colorCodeContainer {
+    container-type: inline-size;
+}
+
+@container (min-width: 200px) and (max-width: 219px) {
+    .grmChkBx {
+        padding-right: 6px;
+    }
+}
+
+@container (min-width: 219.1px) {
+    .grmChkBx {
+        padding-right: 10px;
+    }
+}
+
+@container (max-width: 275px) {
+    .clrTblWidth {
+        width: 100%;
+    }
+}
+
+@container (min-width: 275.1px) and (max-width: 300px) {
+    .clrTblWidth {
+        width: 80%;
+    }
+}
+
+@container (min-width: 300.1px) and (max-width: 325px) {
+    .clrTblWidth {
+        width: 74%;
+    }
+}
+
+@container (min-width: 325.1px) and (max-width: 350px) {
+    .clrTblWidth {
+        width: 68%;
+    }
+}
+
+@container (min-width: 350.1px) and (max-width: 375px) {
+    .clrTblWidth {
+        width: 63%;
+    }
+}
+
+@container (min-width: 375.1px) and (max-width: 400px) {
+    .clrTblWidth {
+        width: 59%;
+    }
+}
+
+@container (min-width: 400.1px) and (max-width: 425px) {
+    .clrTblWidth {
+        width: 55%;
+    }
+}
+
+@container (min-width: 425.1px) and (max-width: 450px) {
+    .clrTblWidth {
+        width: 52%;
+    }
+}
+
+@container (min-width: 450.1px) and (max-width: 475px) {
+    .clrTblWidth {
+        width: 49%;
+    }
+}
+
+@container (min-width: 475.1px) {
+    .clrTblWidth {
+        width: 47%;
+    }
+}
+
+.grmSlctBx {
+    text-align: right;
+}
+
+.sdBrRow {
+    padding-top:9px;
+    padding-bottom:9px;
+}
+
+.sdBrIcon {
+    font-size:11px;
+    display:inline;
+    margin-left:8px;
+}

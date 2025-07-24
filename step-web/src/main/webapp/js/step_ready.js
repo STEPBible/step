@@ -101,7 +101,7 @@
 		if (!step.touchDevice) {
 			var timer;
 			$(document).keyup(function(e) {
-                if (($('#bibleVersions:visible').length > 0) || ($('#saveClrModalInputArea:visible').length > 0)) {
+                if (($('#bibleVersions:visible').length > 0) || ($('#saveClrModalInputArea:visible').length > 0) || ($('#addHeaderInfoModal:visible').length > 0) ) {
                     e.preventDefault();
                     return false;
                 }
@@ -360,15 +360,15 @@
         else if (urlVars.indexOf("colorCode3") > -1)
             cf.setNextPageURL('/?q=version=ESV@reference=Mat.1&options=HVGUNC&skipwelcome' + debugParam, 'gender and number', 'kjv_verb_number_and_gender_explanation');
         else if (urlVars.indexOf("colorCode4") > -1)
-            cf.setNextPageURL('/?q=version=KJV@reference=Eph.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=KJV@reference=Eph.1&options=HVGUNC&skipwelcome' + debugParam, C_AspectDesc, '');
         else if (urlVars.indexOf("colorCode5") > -1)
-            cf.setNextPageURL('/?q=version=SBLG@reference=Rom.12&options=CEMVALHUN&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=SBLG@reference=Rom.12&options=CEMVALHUN&skipwelcome' + debugParam, C_AspectDesc, '');
         else if (urlVars.indexOf("colorCode6") > -1)
-            cf.setNextPageURL('/?q=version=THOT@reference=Gen.1&options=HVLUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=THOT@reference=Gen.1&options=HVLUNC&skipwelcome' + debugParam, C_AspectDesc, '');
         else if (urlVars.indexOf("colorCode7") > -1)
-            cf.setNextPageURL('/?q=version=CUn@reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=CUn@reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, C_AspectDesc, '');
         else if (urlVars.indexOf("colorCode8") > -1)
-            cf.setNextPageURL('/?q=version=SBLG@version=KJV@version=CUn@reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED&skipwelcome' + debugParam, 'verb, gender and number', '');
+            cf.setNextPageURL('/?q=version=SBLG@version=KJV@version=CUn@reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED&skipwelcome' + debugParam, C_AspectDesc, '');
         else if (urlVars.indexOf("otGreek1") > -1)
             cf.setNextPageURL('/?q=version=LXX@version=EngLXX@version=ABGk@version=ABEn@reference=Exod.31&options=VLGUHVNAT&display=INTERLEAVED&skipwelcome' + debugParam, '', '');
         else if (urlVars.indexOf("otGreek2") > -1)

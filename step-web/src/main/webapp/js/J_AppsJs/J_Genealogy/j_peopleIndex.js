@@ -6,9 +6,12 @@
   
 /******************************************************************************/
 'use strict';
+import { ClassGenealogySharedCode                     } from '/js/J_AppsJs/J_Genealogy/j_genealogySharedCode.js';
 import { ClassJFrameworkMultiframeCommunicationsSlave } from '/js/J_AppsJs/J_Framework/j_framework.multiframeCommunicationsSlave.js';
 import { ClassJFrameworkTableWithSearchBox }            from '/js/J_AppsJs/J_Framework/j_framework.tableWithSearchBox.js';
 import { JFrameworkUtils }                              from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
+
+
 
 
 /******************************************************************************/
@@ -52,39 +55,20 @@ class _ClassJPeopleTableHandler
         /**********************************************************************/
         /* Fill in name and description table. */
 
-        const tableBodyBuilder = function ()
+        function tableBodyBuilder ()
 	{
+	    const me = this;
+	    this._GenealogySharedCode = new ClassGenealogySharedCode();
+
             $.ajaxSetup({async: false});
 	    
             var tblBodyHtml = ''
             var ix = 0;
             $.getJSON(jsonPath + jsonFileName, function(array) {
 		$.each(array, function (key, val) {
-		    _PeopleData.push(new _PeopleDataEntry(val.allRefsAsRanges.join(';'), val.allDStrongs, val.dStrongs, key));
+		    _PeopleData.push(new _PeopleDataEntry(''/*val.allRefsAsRanges.join(';')*/, val.allDStrongs, val.dStrongs, key));
 		    _PersonFullyQualifiedNameToIndex.set(key, ix++);
-		    var shortDescription = val.shortDescription.split('(')[0].trim();
-		    if (!shortDescription.endsWith('.')) shortDescription += '.';
-
-		    const x = key.split('@');
-		    var displayName = x[0]; // Name portion only.
-		    if (displayName.includes('built'))
-		    {
-			const bits = displayName.split('_built_');
-			displayName = bits[0] + ' (built ' + bits[1] + ')';
-		    }
-			
-		    val.alternativeNames.shift();
-		    const alternativeNames = 0 == val.alternativeNames.length ? '' : '<br>' + val.alternativeNames.map( str => str.split('@')[0] ).join('<br>');
-		    //if (0 != val.alternativeNames.length) console.log(displayName + ": " + val.alternativeNames.join(', '));
-		    if (0 != alternativeNames.length) displayName += ' &bull; or ...';
-		    displayName += alternativeNames;
-
-		    const shortDescriptionWhere = `First mentioned at ${x[1].split('-')[0]}. `;
-			
-		    tblBodyHtml += 
-			"<tr><td class='jframework-tb_col tb_col_1 jframework-clickable'>" + displayName + '</td>' +
-			"<td class='jframework-tb_col tb_col_2 jframework-clickable'>" + shortDescriptionWhere + shortDescription + '</td>' +
-			"</tr>";
+		    tblBodyHtml += me._GenealogySharedCode.makeSearchTableRowHtml(key, val);
 		})
             });
 
@@ -95,19 +79,9 @@ class _ClassJPeopleTableHandler
 
 
         /**********************************************************************/
-        const rowMatcherFn = function (row, userInput)
+        function rowMatcherFn (row, userInput)
 	{
-	    const re = new RegExp('^' + userInput.replace('-', ''), 'i');
-	    const entries = row.find('.tb_col_1').html().split('<br>');
-		
-	    for (var ix = 0; ix < entries.length; ++ix)
-	    {
-		var matchAgainst = entries[ix];
-		matchAgainst = matchAgainst.replace('-', '');
-		if (re.test(matchAgainst)) return true;
-	    }
-
-	    return false;
+	    return this._GenealogySharedCode.rowMatcherFn(row, userInput);
 	}
 
 
@@ -117,11 +91,11 @@ class _ClassJPeopleTableHandler
 	    headerId: 'header',  
 	    searchBoxId: 'peopleSearchBox',
 	    tableContainerId: 'peopleTableContainer',
-	    bodyBuilderFn: tableBodyBuilder,
+	    bodyBuilderFn: tableBodyBuilder.bind(this),
 	    clickHandlerFn: _JEventHandlers.tableClickHandler.bind(_JEventHandlers),
-	    rowMatcherFn: rowMatcherFn,
-	    hideTableWhenNotInUse: hideTableWhenNotInUse,
-	    keepSelectedRowVisible: true
+	    rowMatcherFn: rowMatcherFn.bind(this),
+	    hideTableWhenNotInUse: true, // hideTableWhenNotInUse,
+	    keepSelectedRowVisible: false,
 	};
 	
 	this._tableHandler = new ClassJFrameworkTableWithSearchBox(this._tableHandlerArgs);
@@ -150,8 +124,8 @@ export const JPeopleTableHandler = new _ClassJPeopleTableHandler();
 export function doInitialisation ()
 {
     /**************************************************************************/
-    if (!JFrameworkUtils.isLargeScreen())
-        $('#smallScreenInfo').html('<br>For help, use the green button on the Genealogy tab.');
+    //if (!JFrameworkUtils.isLargeScreen())
+    //    $('#smallScreenInfo').html('<br>For help, use the green button on the Genealogy tab.');
 	
 
 
@@ -187,11 +161,15 @@ export function doInitialisation ()
 
 
     /**************************************************************************/
-    if (initialPersonIx >= 0)
-    {
-	JPeopleTableHandler._tableHandler.highlightSelection(document.querySelector('.jframework-searchTable').querySelectorAll('tr')[initialPersonIx]);
-	_JEventHandlers.selectPersonFollowingTableClick(initialPersonIx);
-    }
+    /* Force the genealogy window to follow the initial content of the search
+       box.  I'm now assuming we don't want to do this: the genealogy window
+       is automatically set to Aaron, so there's nothing to do. */
+    
+    //    if (initialPersonIx >= 0)
+    //    {
+    //	JPeopleTableHandler._tableHandler.highlightSelection(document.querySelector('.jframework-searchTable').querySelectorAll('tr')[initialPersonIx]);
+    //	_JEventHandlers.selectPersonFollowingTableClick(initialPersonIx);
+    //    }
 }
 
 
@@ -219,7 +197,7 @@ class _PeopleDataEntry
 {
     constructor(refs, dStrongs, masterDStrongs, disambiguatedName)
     {
-        this.refs = refs; // May not want this long term -- in which case the data could probably go from j_genealogy.json.
+//        this.refs = refs; // May not want this long term -- in which case the data could probably go from j_genealogy.json.
         this.allDStrongs = dStrongs; // All of various Strongs for this person.
         this.masterDStrongs = masterDStrongs; // The Strongs preferred for processing purposes.
 	this.disambiguatedName = disambiguatedName;
@@ -369,7 +347,7 @@ class _ClassJEventHandlers extends ClassJFrameworkMultiframeCommunicationsSlave
     tableClickHandler (cell, column)
     {
 	const row = cell.parentNode;
-	this.selectPersonFollowingTableClick(row.i);
+	this.selectPersonFollowingTableClick(row.rowIndex);
     }
 
 

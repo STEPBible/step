@@ -52,14 +52,15 @@
    ------
 
    First, you need to say what iframes you will want to have.  You must have
-   at least two, and you cannot have more than four.  You do this by modifying
-   the contents of the framework-iframeList which appears near the top of the
+   at least two.  You cannot have more than four.  And you cannot have more
+   than two in a single column.  You deal with all this by modifying the
+   contents of the framework-iframeList which appears near the top of the
    body:
 
      <jframework-iframeList>
-       <iframe id='peopleIndex' wantSrc='html/J_AppsHtml/J_Genealogy/j_peopleIndex.html' scrolling='yes'></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#128203;</span>&nbsp;Index</jframework-tabLegend>
-       <iframe id='scripture'   suppressStepHeader='yes'                                 scrolling='yes'></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#128218;</span>&nbsp;Scripture</jframework-tabLegend>
-       <iframe id='genealogy'   wantSrc='html/J_AppsHtml/J_Genealogy/j_genealogy.html'   scrolling='no' ></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#x1F46A;</span>&nbsp;Genealogy</jframework-tabLegend>
+       <iframe id='peopleIndex' wantSrc='html/J_AppsHtml/J_Genealogy/j_peopleIndex.html' scrolling='yes'           ></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#128203;</span>&nbsp;Index</jframework-tabLegend>
+       <iframe id='scripture'   suppressStepHeader='yes'                                 scrolling='yes'           ></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#128218;</span>&nbsp;Scripture</jframework-tabLegend>
+       <iframe id='genealogy'   wantSrc='html/J_AppsHtml/J_Genealogy/j_genealogy.html'   scrolling='no' show='wide'></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#x1F46A;</span>&nbsp;Genealogy</jframework-tabLegend>
      </jframework-iframeList>
 
 
@@ -91,6 +92,13 @@
      particularly nice, and is highly reliant upon the way the STEP
      scripture pages work at present.)
 
+   - Probably you will want all iframes to be displayed regardless of whether the
+     functionality is running in wide screen or narrow screen (tabbed dialog)
+     mode.  However, you can add a 'show' attribute to the iframe tag to limit
+     this.  The options for this are 'wide' (show in wide mode only); 'narrow'
+     (show in narrow mode only); or 'wideNarrow' (show in both).  The value is
+     not case-sensitive.  The default is wideNarrow.
+
    Immediately after each iframe definition you need a jframework-tabLegend tag.
    This says how that frame will be named if the tabbed dialogue layout is
    adopted.  The example above is slightly complicated, because I wanted to
@@ -98,6 +106,9 @@
    large in order to be legible.  You don't _have_ to do anything that
    complicated, however -- just putting a text string within the
    jframework-tabLegend tag is perfectly sufficient.
+
+   (That really does _mean_ immediately after: don't have spaces or blanks between
+   the </iframe> and the jframework-tabLegend.)
 
    The order in which you define the frames determines the order in which the
    tabs appear in the tabbed dialogue box when that is being used.  The first
@@ -123,7 +134,7 @@
 
      - It can be applied only to the _top_ frame of a column containing
        more than one frame.  (Again, there is no harm in calling it
-       regardless -- it will simply be ignored.
+       regardless -- it will simply be ignored.)
 
      To use the feature, the application running in the top frame must
      be using JFrameworkMultiframeCommunicationsSlave, and must call
@@ -694,6 +705,21 @@ class _ClassJFrameworkMultiframeLayoutController
     
 
     /**************************************************************************/
+    /* Forces the named tab to be opened, while hiding everything else. */
+    
+    openDialogTab (name)
+    {
+	try
+	{
+	    this._openDialogTab(this._frameIndexToNameMapping.get(name));
+	}
+	catch (e)
+	{
+	}
+    }
+
+    
+    /**************************************************************************/
     /* Handles open-dialog-tab clicks.  I was ensuring that only one tab was
        visible by manipulating the display settings (none vs flex).  However,
        ChatGPT recommended adding or removing jframework-invisible-offscreen
@@ -704,7 +730,7 @@ class _ClassJFrameworkMultiframeLayoutController
        not update correctly.  With the expedient suggested here, they
        continue to have their normal width. */       
 
-    _openDialogTab (event, index)
+    _openDialogTab (index)
     {
 	const tabbedLayoutContent = document.getElementsByClassName('jframework-tabbedLayoutIframeHolder');
 	for (var i = 0; i < tabbedLayoutContent.length; i++)
@@ -774,7 +800,7 @@ class _ClassJFrameworkMultiframeLayoutController
 	var newLayout = JFrameworkUtils.isLargeScreen() ? 'wideLayout' : 'tabbedLayout';
 
 	if ('undefined' == currentLayout) // Need full initialisation if we haven't set anything up at all yet.
-	    this._selectLayoutCommonInitialisation();
+	    this._selectLayoutCommonInitialisation(newLayout);
 
 	if (currentLayout == newLayout) // If we are already using the intended layout, nothing to do.
 	    return;
@@ -801,14 +827,16 @@ class _ClassJFrameworkMultiframeLayoutController
        necessary, but to make later programming more consistent it will be
        useful to do it even if, later, we determine it is not necessary. */
     
-    _selectLayoutCommonInitialisation ()
+    _selectLayoutCommonInitialisation (layout)
     {
         /**********************************************************************/
 	/* The list of frames which are required, and associated information. */
-	
+
+	const selector = 'wideLayout' === layout ? 'wide' : 'narrow';
 	var iframeList = $('jframework-iframeList').eq(0);
 	var iframes = iframeList.children('iframe');
 	const tabButtonContents = iframeList.children('jframework-tabLegend');
+	const me = this;
 
 
 
@@ -818,7 +846,7 @@ class _ClassJFrameworkMultiframeLayoutController
            layout, and we need to flag the fact that they are indeed intended
            for that layout. */
 	
-        iframes.each(function(index) { $(this).attr('ix', index); $(this).addClass('jframework-layoutSensitiveIFrame'); });
+        iframes.each(function(index) { $(this).attr('ix', index); $(this).addClass('jframework-layoutSensitiveIFrame'); me._frameIndexToNameMapping.set($(this).attr('id'), index); });
         $('jframework-iframePlaceHolder').each(function (index) { $(this).addClass('jframework-wideLayout'); });
 
 
@@ -857,7 +885,7 @@ class _ClassJFrameworkMultiframeLayoutController
 	
         const buttons = document.querySelectorAll('jframework-tabbedLayoutButtonBar .jframework-tabButton');
         buttons.forEach((button, index) => {
-            button.onclick = (event) => this._openDialogTab(event, index);
+            button.onclick = (event) => this._openDialogTab(index);
         });
     }
 
@@ -903,9 +931,16 @@ class _ClassJFrameworkMultiframeLayoutController
 
 	for (var i = 0; i < targets.length; ++i)
 	{
-	    var $target = targets.eq(i);
-	    var $iframe = $('#' + $target.attr('iframeId'));
-	    $target.html($iframe);
+	    const $target = targets.eq(i);
+	    const $iframe = $('#' + $target.attr('iframeId'));
+	    var show = $iframe.attr('show')
+	    if (show)
+		show = (layout.includes('wideLayout') && 'wide' === show.toLowerCase()) || 'wide' !== show.toLowerCase()
+	    else
+		show = true;
+
+	    if (show)
+		$target.html($iframe);
 	}
 
 	this._selectLayoutSetSources(iframes);
@@ -924,15 +959,37 @@ class _ClassJFrameworkMultiframeLayoutController
         var tabbedLayout = document.querySelector('jframework-tabbedLayoutVisibilityController');
 	this._hideContainerWhichShouldRemainFullSizeIfPossible(wideLayout);
 	this._showContainerWhichShouldRemainFullSizeIfPossible(tabbedLayout, 'flex');
-	this._selectLayoutMoveFramesTo('jframework-tabbedLayout');
 	document.getElementById('jframework-tabbedLayoutTabSelectorButton_0').click();
+
+	var iframes = $('.jframework-layoutSensitiveIFrame');
+	var clickOn = -1;
+
+	for (var i = 0; i < iframes.length; ++i)
+	{
+	    const $iframe = iframes.eq(i);
+	    var show = $iframe.attr('show')
+	    if (show)
+		show = show.toLowerCase().includes('narrow');
+	    else
+		show = true;
+
+	    if (show)
+	    {
+		if (clickOn < 0)
+		    clickOn = i;
+	    }
+	    else
+		document.getElementById('jframework-tabbedLayoutTabSelectorButton_' + i).style.display = 'none';
+	}
+
+	this._selectLayoutMoveFramesTo('jframework-tabbedLayout');
+	document.getElementById('jframework-tabbedLayoutTabSelectorButton_' + clickOn).click();
     }
 
     
     /**************************************************************************/
     _hideContainerWhichShouldRemainFullSizeIfPossible (container)
     {
-	//container.style.display = 'none';
 	container.classList.add('jframework-invisible-offscreen');
     }
 
@@ -940,7 +997,6 @@ class _ClassJFrameworkMultiframeLayoutController
     /**************************************************************************/
     _showContainerWhichShouldRemainFullSizeIfPossible (container, displaySetting)
     {
-	//container.style.display = displaySetting;
 	container.classList.remove('jframework-invisible-offscreen');
     }
 
@@ -1090,6 +1146,10 @@ class _ClassJFrameworkMultiframeLayoutController
 	paneAFrame.src = paneBSrc;
 	paneBFrame.src = paneASrc;
     }
+    
+
+    /**************************************************************************/
+    _frameIndexToNameMapping = new Map();
 }
 
 export const JFrameworkMultiframeLayoutController = new _ClassJFrameworkMultiframeLayoutController();

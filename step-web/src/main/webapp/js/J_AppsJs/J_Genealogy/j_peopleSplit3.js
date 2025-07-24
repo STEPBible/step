@@ -15,6 +15,8 @@
 /******************************************************************************/
 'use strict';
 import { ClassJFrameworkMultiframeCommunicationsMaster } from '/js/J_AppsJs/J_Framework/j_framework.multiframeCommunicationsMaster.js';
+import { JFrameworkMultiframeLayoutController          } from '/js/J_AppsJs/J_Framework/j_framework.multiframeLayoutController.js';
+import { JFrameworkUtils                               } from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
 
 
 
@@ -42,7 +44,7 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
     {
 	super();
 	this._previousScriptureUrl = '';
-	this._previousStrong = '';
+	this._previousAllStrongs = '';
 	this._firstTime = false;
     }
 
@@ -55,17 +57,21 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
     
     sendMessageTo (targetFrame, data, callingFrameId)
     {
-	if ('resizeIframe' in data)
+	if ('resizeIframe' in data) // Does the obvious.
 	{
 	    this._processResizeIframe(data, callingFrameId);
 	    return;
 	}
 
-	if ('strong' in data)
+	if ('allStrongs' in data) // Changes the content of windows after a revised selection.
 	{
 	    this._processNewStrong(data, callingFrameId);
 	    return;
 	}
+
+	if ('forceTagVisible' in data && !JFrameworkUtils.isLargeScreen())
+	    JFrameworkMultiframeLayoutController.openDialogTab(data.forceTagVisible);
+	    
     }
 
 
@@ -89,8 +95,7 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
     /**************************************************************************/
     _makeScriptureUrl (data)
     {
-	var allStrongs = 'allStrongs' in data ? data.allStrongs : data.strong;
-	allStrongs = allStrongs.split('|');
+	var allStrongs = data.allStrongs.split('|');
 	
 	const partialUrl = '@strong=' + allStrongs.join('@strong=');
 
@@ -113,14 +118,14 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
     /* This is intended to weed out multiple calls for the same Strong number.
        In particular, I want to avoid some sort of chain whereby the peopleIndex
        selects a person, which information is then passed to the genealogy, and
-       that responds by sending a message back to the peopleIndex ... which
-       in turn responds by sending a message back to the peopleIndex.
+       that responds by sending a message back to the peopleIndex informing it
+       of the change, and this then sets about informing things all over again.
 
-       There is, however, one special case to cater for.  The user can change
-       the selection in the genealogy window without changing the root (ie
-       they can just change which person is highlighted).  The peopleIndex
-       hears about this, and will update accordingly -- and at this point,
-       we want the suppression processing to do its stuff.
+       The normal situation of interest arises where the user changes the
+       _selected_ person in the genealogy window without changing the root (ie
+       theyjust change which person is highlighted).  The peopleIndex hears about
+       this, and will update accordingly -- and at this point, we want the
+       suppression processing to do its stuff.
 
        However, if the user subsequently clicks on the visible item in the
        peopleIndex, we take that as implying that rather than that person
@@ -128,21 +133,39 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
        the root of the tree.  In that case, therefore, we need to forward
        the message to the genealogy app come what may.
 
-       The this._previousStrong = '' statement below ensures that the
-       normal filtering is turned off while handling that message. */
-    
+       The this._previousAllStrongs = '' statement below ensures that the
+       normal filtering is turned off while handling that message.
+
+       Note A: Originally this was set up so as to keep absolutely
+       everything mutually in step.  In particular, that meant that if
+       a new person was selected in the genealogy window, I endeavoured to
+       change the content of the search window.
+
+       This was fiddly, and I believe is now going, in fact, to be confusing,
+       since the requirements have recently changed, such that I'm required
+       to retain the most recent search string, and default any new search
+       to use that (the rationale being that perhaps you were searching for
+       a name which is shared by a number of different people, and want to
+       be able to step through them).
+
+       Remove the 'if' statement marked Note A below if you want to
+       reinstate the full synchronisation -- although if you do that, you
+       may have to do a little debugging, since I'm not sure it was fully
+       working. */
+
     _processNewStrong (data, callingFrameId)
     {
 	if ('peopleIndex' == callingFrameId)
-	    this._previousStrong = '';
+	    this._previousAllStrongs = '';
 	
-	if (data.strong != this._previousStrong || this._firstTime)
+	
+	if (data.allStrongs !== this._previousAllStrongs || this._firstTime)
 	{	
 	    const targetFrameId = 'peopleIndex' == callingFrameId ? 'genealogy' : 'peopleIndex';
-	    this._previousStrong = data.strong;
-	    super.sendMessageTo(targetFrameId, data, callingFrameId);
+	    this._previousAllStrongs = data.allStrongs;
+	    if (targetFrameId !== 'peopleIndex') // See note A above.
+		super.sendMessageTo(targetFrameId, data, callingFrameId);
 	}
-
 	
 	const url = this._makeScriptureUrl(data);
 	this.sendSetUrlForce('scripture', url);

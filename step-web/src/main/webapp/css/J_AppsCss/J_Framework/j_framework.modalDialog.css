@@ -68,3 +68,21 @@
     color: #000;
 }
 
+.jframework-modalDialogOverlay { /* A semi-opaque layer positioned behind modal dialogues to prevent underlying things from being clicked whle the modal is visible. */
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25); /* semi-opaque black */
+    z-index: var(--jframework-modalDialogOverlayZIndex); /* Behind the modalDialog but above everything else */
+}
+
+.jframework-modalDialog.jframework-modalDialogDisplayFlex {
+  display: flex;
+}
+
+.jframework-modalDialogOverlay.jframework-modalDialogDisplayFlex {
+  display: flex;
+}

@@ -4,14 +4,15 @@
 
   Here's a typical example:
 
-  <div class='jframework-dropdownMenuContainer'>
-    <button id='hamburgerMenuButton' onclick="let m = document.getElementById('hamburgerMenu'); m.style.display = m.style.display === 'none' || m.style.display === '' ? 'block' : 'none'">&#x2630;</button>
+    <div class='jframework-dropdownMenuContainer'>
+      <button class='jframework-3dButton jframework-3dButton-stepHighlight' id='hamburgerMenuButton' title='Show menu' onclick="document.getElementById('hamburgerMenu').classList.add('jframework-show')">&#x2630;</button>
 
-    <div id='hamburgerMenu' class='jframework-dropdownMenu'>
-      <div class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').style.display = 'none'; ControlsHandler.showBuiltInTreesMenu()">Preconfigured family trees</div>
-      <div class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').style.display = 'none'; ControlsHandler.showLayoutMenu()">Layout</div>
+      <div id='hamburgerMenu' class='jframework-dropdownMenu'>
+        <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showBuiltInTreesDialog()">Important family trees</button>
+	<button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showLayoutMenu()">Layout</button>
+        <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showHelpMenu()">Help</button>
       </div>
-    </div>
+   </div>
 
 
   One additional issue: If you have a dropdown menu, you almost certainly want
@@ -24,27 +25,40 @@
     display: inline-block;
 }
 
+.jframework-dropdownMenu.jframework-dropdownMenu-show {
+    display: flex !important;
+}
+
 .jframework-dropdownMenu {
     display: none;
     position: absolute;
     top: 0;
     right: 0;
-    background: #FFFDD0;
-    border: 1px solid #ccc;
+    background: var(--jframework-clrPopUpMenuItemBackgroundUnselected);
+    /* border: 1px solid #ccc; */
     box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-    z-index: 1000;
+    z-index: var(--jframework-popUpZIndex);
     white-space: nowrap;
-    max-width: 250px;
     overflow-x: hidden;
+    flex-direction: column;
 }
 
+
 .jframework-dropdownMenuItem {
+    all: unset;
     padding: 15px 12px;
     cursor: pointer;
-    color: black;
-    font-size: medium;
+    color: var(--jframework-clrPopUpMenuItemTextUnselected);
+    font-size: var(--jframework-fontSizePopUpMenuItem);
+    font-family: var(--jframework-fontFamilyPopUpMenuItem);
+    border: none;
+    text-align: left;
+    display: block;
+    border: none;
+    width: 100%;
 }
 
 .jframework-dropdownMenuItem:hover {
-    background-color: #FFE5B4;
+    background-color: var(--jframework-clrPopUpMenuItemBackgroundSelected);
+    color: var(--jframework-clrPopUpMenuItemTextSelected);
 }

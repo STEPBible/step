@@ -59,7 +59,7 @@ class _ClassJFrameworkUtils
 
        Or suppose you pass ['#myMenu', '#myMenuButton'].  In this case it
        starts by looking at items identified by the _second_ selector.  Let's
-       assume that there _is_ actually something within id = 'myMenuButton',
+       assume that there _is_ actually something with id = 'myMenuButton',
        so this selects that single item.  Only if the event did _not_ occur
        within that item does it check the first item (the #myMenu).  If it
        _does_ check it, and if the event fell outside of it, again the item
@@ -82,18 +82,27 @@ class _ClassJFrameworkUtils
 		{
 		    dontHideIfWithin = selector[1];
 		    for (var el of document.querySelectorAll(dontHideIfWithin))
-			if (el.style.display !== "none" && el.contains(event.target))
+		    {
+			const showClass = Array.from(el.classList).find(className => /^jframework.*-show$/.test(className));
+			if ((showClass || el.style.display !== "none") && el.contains(event.target))
 			    return;
 		    
-		    document.querySelectorAll(selector[0]).forEach(el => {
-			if (el.style.display !== "none" && !el.contains(event.target))
-			    el.style.display = "none";
-		    });
+			document.querySelectorAll(selector[0]).forEach(el => {
+			    const showClass = Array.from(el.classList).find(className => /^jframework.*-show$/.test(className));
+			    if (showClass)
+				el.classList.remove(showClass);
+			    else if (el.style.display !== "none" && !el.contains(event.target))
+				el.style.display = "none";
+			});
+		    }
 		}
 		
 		else
 		    document.querySelectorAll(selector).forEach(el => {
-			if (el.style.display !== "none" && !el.contains(event.target))
+			const showClass = Array.from(el.classList).find(className => /^jframework.*-show$/.test(className));
+			if (showClass)
+			    el.classList.remove(showClass);
+			else if (el.style.display !== "none" && !el.contains(event.target))
 			    el.style.display = "none";
 		});
 	    });

@@ -17,7 +17,7 @@ body {
     overflow: hidden;
     font-size: 16px;
     border: 2px solid black;
-    background: var(--jframework-searchBoxBackgroundColor);
+    background: var(--jframework-clrSearchBoxBackground);
     color: black;
     resize: none;
     padding: 12px 10px 12px 10px;
@@ -59,7 +59,7 @@ textarea::placeholder {
 
 /******************************************************************************/
 /* jframework-fakedBottomBorder is a kludge -- it seems to be almost
-   impossible to get to see the bottom margin of the container, when only a
+   impossible to get to see the bottom margin of the container when only a
    single item is selected.  jframework-fakedBottomBorder is a workaround which
    gives the appearance of the bottom margin being visible. */
 

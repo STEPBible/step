@@ -3,7 +3,7 @@
 /******************************************************************************/
 
 :root {
-    /* System-wide definitions.  Should probably be picking these up from elsewhere. */
+    /* STEPBible system-wide definitions which I've seen in other files.  Probably I should be picking these up from somewhere else, but I haven't worked out where. */
     --clrHighlight: #17758F;
     --clrHighlightBg: #17758F;
     --clrStrongText: #447888;
@@ -19,17 +19,30 @@
 
     
     /* Definitions common to framework applications. */
-    --jframework-searchBoxBackgroundColor: #eef9fc; /* #c8e6c9; */
-    
-    --jframework-clrInfoAndPopUpBackground: rgb(255, 255, 192);
-    --jframework-height-of-info-box: 200px;
-    --jframework-clrMan: blue;
-    --jframework-clrWoman: salmon;
-    
-    --jframework-popUpOverlayZIndex: 100;
-    --jframework-popUpZIndex: 101;
+    --jframework-clrPopUpMenuItemBackgroundUnselected: rgb(255, 255, 192);
+    --jframework-clrPopUpMenuItemBackgroundSelected:   var(--clrHighlight);
 
-    --jframework-clrHighlightLightBg: #eef9fc;
+    --jframework-clrSsearchBoxBackground: #eef9fc;
+
+    --jframework-clrStandardBorder: var(--clrHighlight);
+    --jframework-clrButtonText: var(--clrHighlight);
+    --jframework-clrButtonHover: var(--jframework-clrPopUpMenuItemBackgroundUnselected);
+    --jframework-clrGreyedBtnText: rgb(128, 128, 128);
+    
+    --jframework-clrStandoutText: var(--clrHighlight);
+
+    --jframework-clrPopUpMenuItemTextSelected: white;
+    --jframework-clrPopUpMenuItemTextUnselected: black;
+
+    --jframework-fontFamilyPopUpMenuItem: sans-serif;
+    --jframework-fontSizePopUpMenuItem: medium;
+    
+    --jframework-popUpOverlayZIndex: 999;
+    --jframework-popUpZIndex: 1000;
+
+    --jframework-clrLink: blue;
+    --jframework-clrLinkHighlightBackground: red;
+    --jframework-clrLinkHighlightForeground: yellow;
 }
     
 
@@ -46,15 +59,35 @@ body, html {
 }
 
 
-/* Clickable text. */
-.jframework-clickable {
+
+/*--- ChatGPT recommends using buttons in place of <a> as making things more accessible. ---*/
+
+.jframework-linkAsButton jframework-clickable {
     color: var(--clrHighlight);
     cursor: pointer;
 }
 
+.jframework-linkAsButton {
+    background: none;
+    color: var(--jframework-clrLink);
+    text-decoration: underline;
+    border: none;
+    cursor: pointer;
+}
+
+
+.jframework-linkAsButton:hover {
+    background: var(--jframework-clrLinkHighlightBackground);
+    color: var(--jframework-clrLinkHighlightForeground) !important;
+}
+
+
+
+/*--- Text. ---*/
 .jframework-standardText {
     font-family: Georgia, serif;
     font-size: 15px;
 }
+
 
 

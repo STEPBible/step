@@ -128,10 +128,14 @@
 
 /******************************************************************************/
 'use strict';
+import { ClassGenealogySharedCode }                     from '/js/J_AppsJs/J_Genealogy/j_genealogySharedCode.js';
 import { JFrameworkUtils }                              from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
+import { ClassJFrameworkModalDialog }                   from '/js/J_AppsJs/J_Framework/j_framework.modalDialog.js';
 import { ClassJFrameworkMultiframeCommunicationsSlave } from '/js/J_AppsJs/J_Framework/j_framework.multiframeCommunicationsSlave.js';
 import { ClassJFrameworkTableWithSearchBox }            from '/js/J_AppsJs/J_Framework/j_framework.tableWithSearchBox.js';
 
+export const ModalDialogHandler = new ClassJFrameworkModalDialog();
+window.ModalDialogHandler = ModalDialogHandler;
 
 
   
@@ -228,71 +232,50 @@ function u (charCode)
 
 /******************************************************************************/
 const GenderOrGroupIndicators = [
-    ['Male', ''],
-    ['Female', ' ' + u(0x2640) ],
-    ['Group', ' ' + u(0x2642) + u(0x2642) + u(0x2640) + u(0x2640) ],
+    ['Male'     , ''],
+    ['Female'   , ' ' + u(0x2640) ],
+    ['Ancestors', ' ' + u(0x2642) + u(0x2642) + u(0x2640) + u(0x2640) ],
+    ['Group'    , ' ' + u(0x2642) + u(0x2642) + u(0x2640) + u(0x2640) ],
+    ['People'   , ' ' + u(0x2642) + u(0x2642) + u(0x2640) + u(0x2640) ],
     ['PseudoEntry', '']
 ];
 
 
 /******************************************************************************/
-/*
-const RoleDetails = [
-    [ /\W+a\s+man\W+/i,          ''                     , null                  ],
-    [ /\W+group\W+/i,            u(0x1F465)             , 'A group or people'   ], // Two profile heads as a single symbol.
-    [ /\W+people\W+/i,           u(0x1F465)             , 'A group or people'   ], // Two profile heads as a single symbol.
-    [ /\W+emperor\W+/i,          u(0x1F451)             , 'An emperor'          ], // Crown.
-    [ /\W+high\s+priest\W+/i,    u(0x265d)              , 'A high priest'       ], // Chess bishop.
-    [ /\W+judge\w+/i,            u(0x2696)              , 'A judge'             ], // Scales.
-    [ /\W+king\W+/i,             u(0x1F451)             , 'A king'              ], // Crown.
-    [ /\W+prophet\W+/i,          u(0x1F54A)             , 'A prophet'           ], // Dove.
-    [ /\W+official\W+/i,         u(0x270D)              , 'An official'         ], // Hand, writing.
-    [ /\W+priest\W+/i,           u(0x1F64F)             , 'A priest'            ], // One pair of praying hands.
-    [ /\W+prince\W+/i,           u(0x1F451)             , 'A prince'            ], // One crown.
-    [ /\W+singer\W+/i,           u(0x1F3B5)             , 'A singer'            ], // Musical notes.
-    [ /\W+apostle\W+/i,          u(0x1F30D),            , 'An apostle'          ], // Globe.
-    [ /\W+queen\W+/i,            u(0x1F451)             , 'A queen'             ], // Two crowns.
-    [ /\W+governor\W+/i,         u(0x1F3DB)             , 'A governor'          ], // Classical building.
-    [ /\W+ruler\W+/i,            u(0x1F3DB)             , 'A ruler'             ], // Classical building.
-    [ /\W+ethnarch\W+/i,         u(0x1F3DB)             , 'An ethnarch'         ], // Classical building.
-    [ /\W+tetrarch\W+/i,         u(0x1F3DB)             , 'A tetrarch'          ], // Classical building.
-    [ /\W+Egyptian pharaoh\W+/i, u(0x1F42B)             , 'An Egyptian pharoah' ], // Camel.
-    [ /\W+ancestors\W+/i,        u(0x1F465)             , 'A group of ancestors'], // Two profile heads as a single symbol.
-    [ /\W+warrior\W+/i,          u(0x00000),            , 'A warrior'           ]
-];
-*/
+/* We're using a homebrew font for icons.  This is a list of the roles and the
+   letters in the font which represent them. */
 
-const C_Apostle = 'G';
-const C_Group = 'B';
+const C_Apostle    = 'H';
+const C_Group      = 'B';
 const C_HighPriest = 'I';
-const C_Judge = 'F';
-const C_Priest = 'A';
-const C_Prophet = 'J';
-const C_Royal = 'D';
-const C_Singer = 'E';
-const C_Warrior = 'C';
+const C_Judge      = 'F';
+const C_Musician   = 'E';
+const C_Priest     = 'A';
+const C_Prophet    = 'J';
+const C_Royal      = 'D';
+const C_Warrior    = 'C';
 
-const RoleDetails = [
-    [ /\W+a\s+man\W+/i,          '',           null                  ],
-    [ /\W+group\W+/i,            C_Group,      'A group or people'   ],
-    [ /\W+people\W+/i,           C_Group,      'A group or people'   ],
-    [ /\W+emperor\W+/i,          C_Royal,      'An emperor'          ],
-    [ /\W+high\s+priest\W+/i,    C_HighPriest, 'A high priest'       ],
-    [ /\W+judge\w+/i,            C_Judge,      'A judge'             ],
-    [ /\W+king\W+/i,             C_Royal,      'A king'              ],
-    [ /\W+prophet\W+/i,          C_Prophet,    'A prophet'           ],
-    [ /\W+priest\W+/i,           C_Priest,     'A priest'            ],
-    [ /\W+prince\W+/i,           C_Royal,      'A prince'            ],
-    [ /\W+singer\W+/i,           C_Singer,     'A singer'            ],
-    [ /\W+apostle\W+/i,          C_Apostle,    'An apostle'          ],
-    [ /\W+queen\W+/i,            C_Royal,      'A queen'             ],
-    [ /\W+governor\W+/i,         C_Royal,      'A governor'          ],
-    [ /\W+ruler\W+/i,            C_Royal,      'A ruler'             ],
-    [ /\W+ethnarch\W+/i,         C_Royal,      'An ethnarch'         ],
-    [ /\W+tetrarch\W+/i,         C_Royal,      'A tetrarch'          ],
-    [ /\W+ancestors\W+/i,        C_Group,      'A group of ancestors'],
-    [ /\W+warrior\W+/i,          C_Warrior,    'A warrior'           ]
-];
+const RoleDetails = new Map([
+    [ 'Ancestors'  , [C_Group     , 'Ancestors'    ]],
+    [ 'Apostle'    , [C_Apostle   , 'An apostle'   ]],
+//  [ 'Concubine'  , [null        , null           ]],
+    [ 'Emperor'    , [C_Royal     , 'An emperor'   ]],
+    [ 'Ethnarch'   , [C_Royal     , 'An ethnarch'  ]],
+    [ 'Governor'   , [C_Royal     , 'A governor'   ]],
+    [ 'Group'      , [C_Group     , 'A group'      ]],
+    [ 'High Priest', [C_HighPriest, 'A High Priest']],
+    [ 'Judge'      , [C_Judge     , 'A judge'      ]],
+    [ 'King'       , [C_Royal     , 'A King'       ]],
+    [ 'People'     , [C_Group     , 'A people'     ]],
+    [ 'Musician'   , [C_Musician  , 'A people'     ]],
+    [ 'Priest'     , [C_Priest    , 'A priest'     ]],
+    [ 'Prince'     , [C_Royal     , 'A prince'     ]],
+    [ 'Prophet'    , [C_Prophet   , 'A prophet'    ]],
+    [ 'Queen'      , [C_Royal     , 'A queen'      ]],
+    [ 'Ruler'      , [C_Royal     , 'A ruler'      ]],
+    [ 'Tetrarch'   , [C_Royal     , 'A tetrarch'   ]],
+    [ 'Warrior'    , [C_Warrior   , 'A warrior'    ]]
+]);
 
 
 
@@ -351,6 +334,7 @@ class _ClassInitialisationHandler extends ClassJFrameworkMultiframeCommunication
 	this._initialiseSvg();
 	DraggableHandler.initialise();
 	ControlsHandler.setupSliders();
+	ModalDialogHandler.addModalCloseButtonHandlers();
     }
 
 
@@ -415,6 +399,9 @@ class _ClassInitialisationHandler extends ClassJFrameworkMultiframeCommunication
 		}
 	    }
 	}
+
+
+	this.sendMessageTo(null, { forceTagVisible: 'genealogy'}); // On narrow layout, after a selection change we need to ensure the genealogy window is visible.
     }
 
     
@@ -588,15 +575,25 @@ class _ClassInitialisationHandler extends ClassJFrameworkMultiframeCommunication
 
 	if (savedData)
 	    PresentationHandler.refreshFromDataSavedInParentWindow(savedData);
-	    
-	const rootIx = strong ? DataHandler.lookupStrongs(strong) : 0;
+
+	var rootIx = 0;
+	var selectedIx = 0;
+	if (strong)
+	{
+	    const x = strong.split(':');
+	    rootIx = DataHandler.lookupStrongs(x[0]);
+	    selectedIx = 1 == x.length ? rootIx : DataHandler.lookupStrongs(x[1]);
+	}
 
 	renderTreeForName(nameFromIndex(rootIx));
+
 	if (savedData && rootIx == savedData.rootPersonIx)
 	    PresentationHandler.changeSelectedPerson(savedData.selectedPersonIx);
+	else if (rootIx != selectedIx)
+	    PresentationHandler.changeSelectedPerson(selectedIx);
 
 	if (showBuiltInTrees)
-	    ControlsHandler.showBuiltInTreesMenu();
+	    ControlsHandler.showBuiltInTreesDialog();
     }
 
     _suppressSendMessage = false;
@@ -1391,7 +1388,8 @@ class ClassDataHandler
     /**************************************************************************/
     getRoleDescription (personRecord)
     {
-	return (-1 == personRecord.roleDataIx) ? null : RoleDetails[personRecord.roleDataIx][2];
+	const entry = RoleDetails.get(personRecord.role);
+	return entry ? entry[1] : null;
     }
 
 	
@@ -1404,8 +1402,8 @@ class ClassDataHandler
     
     getSummaryIcon (personRecord)
     {
-	const ix = personRecord.roleDataIx;
-	return -1 == ix ? "" : RoleDetails[ix][1];
+	const entry = RoleDetails.get(personRecord.role);
+	return entry ? entry[0] : '';
     }
 
     
@@ -1424,8 +1422,13 @@ class ClassDataHandler
 
     
     /**************************************************************************/
-    /* See comments for isMale. */
+    isConcubine (personRecord)
+    {
+	return 'Concubine' === personRecord.role;
+    }
+
 	    
+    /**************************************************************************/
     isFemale (personRecord)
     {
 	return 'Female' === personRecord.type;
@@ -1433,14 +1436,9 @@ class ClassDataHandler
 
 	    
     /**************************************************************************/
-    /* I've hived this off to a separate method because I'm not entirely sure
-       what should constitute a male in this context.  Is it someone overtly
-       marked as male, or is it anyone not marked as female (which would then
-       include things like tribes etc)?  I've opted for the latter. */
-	    
     isMale (personRecord)
     {
-	return !this.isFemale(personRecord);
+	return 'Male' === personRecord.type;
     }
 
 
@@ -1567,11 +1565,6 @@ class ClassDataHandler
 	    this.QualifiedNamesList.push(dName);
 	    personRecord.ix = ix;
 
-	    delete personRecord.tribeOrNation;
-	    delete personRecord.allRefsAsRanges;
-	    delete personRecord.briefestDescription;
-	    delete personRecord.briefDescription;
-	
 	    personRecord.display = false;
 	    
             personRecord.summaryDescription = 'summaryDescription' in personRecord ? personRecord.summaryDescription.split(',')[0].substring(1) : '';
@@ -1579,7 +1572,6 @@ class ClassDataHandler
 	    personRecord.longDescription = personRecord.longDescription.replaceAll('¶', '<p>');
 	    personRecord.genderOrGroupIndicator = genderOrGroupIndicator(personRecord);
 	    personRecord.allDStrongs.forEach((entry) => { this._StrongsMap.set(entry, ix) });
-	    personRecord.roleDataIx = this._getRoleDataIndex(personRecord);
 	
 	    const x = dName.split('@');
 	    personRecord.disambiguatingRefs = x[1];
@@ -1597,21 +1589,6 @@ class ClassDataHandler
 	    else
 		personRecord.simpleName = x[0];
 	}
-    }
-
-
-    /**************************************************************************/
-    _getRoleDataIndex (personRecord)
-    {
-	var ix = -1;
-	for (const [regex, icon, description] of RoleDetails)
-	{
-	    ++ix;
-	    if (regex.test(personRecord.summaryDescription))
-		return ix;
-	}
-
-	return -1;
     }
 
 
@@ -1735,24 +1712,28 @@ class ClassVerticalLayoutHandler
 	    const owningTextNodeX = Number(textNode.attr('x')) + 5;
 
 
-	    // If you want to list _all_ of the spouses, remove the 'if' clause,
-	    // along with the word 'else'.
-
-	    if (personRecord.partners.length > 1)
+	    var showNSpouses = 2;
+	    for (const partner of personRecord.partners)
+	    {
 		textNode.append('tspan')
-		.attr('x', owningTextNodeX)
-		.attr('dy', +15)
-	        .classed('manSpouse', !isMan)
-	        .classed('womanSpouse', isMan)
-		.text('\u2764 +Partners');
-	    else
-		for (const partner of personRecord.partners)
+		    .attr('x', owningTextNodeX)
+		    .attr('dy', +15)
+	            .classed('manSpouse', !isMan)
+	            .classed('womanSpouse', isMan)
+		    .text('\u2764 ' + nameForDisplayAsSpouse(personRecordFromName(partner.disambiguatedName)))
+
+		if (--showNSpouses <= 0)
+		{
 		    textNode.append('tspan')
-		            .attr('x', owningTextNodeX)
-		            .attr('dy', +15)
-	                    .classed('manSpouse', !isMan)
-	                    .classed('womanSpouse', isMan)
-		            .text('\u2764 ' + nameForDisplayAsSpouse(personRecordFromName(partner.disambiguatedName)))
+			.attr('x', owningTextNodeX)
+			.attr('dy', +15)
+			.classed('manSpouse', !isMan)
+			.classed('womanSpouse', isMan)
+			.text('\u2764 etc.')
+		    break;
+		}
+		
+	    }
 	}
     }
 
@@ -2174,7 +2155,9 @@ class _ClassBackAndForwardStackHandler
     {
         if (this._currentIndex > 0)
 	{
+	    DetailsForIndividualTrees.updateCurrent(); // Make sure the current item's transformation is up to date.
             this._currentIndex--;
+	    DetailsForIndividualTrees.setCurrent(this._history[this._currentIndex].individualTreesIx);
 	    this._updateButtons();
 	    this._suppressNewSelection = true;
             this._activateSelection(this._history[this._currentIndex]);
@@ -2188,7 +2171,9 @@ class _ClassBackAndForwardStackHandler
     {
         if (this._currentIndex < this._history.length - 1)
 	{
+	    DetailsForIndividualTrees.updateCurrent(); // Make sure the current item's transformation is up to date.
             this._currentIndex++;
+	    DetailsForIndividualTrees.setCurrent(this._history[this._currentIndex].individualTreesIx);
 	    this._updateButtons();
 	    this._suppressNewSelection = true;
             this._activateSelection(this._history[this._currentIndex]);
@@ -2230,8 +2215,8 @@ class _ClassBackAndForwardStackHandler
  	    name: personRecordFromIndex(PresentationHandler.getRootPersonIx()).simpleName,
 	    rootIx: PresentationHandler.getRootPersonIx(),
 	    selectedIx: PresentationHandler.getSelectedPersonIx(),
+	    individualTreesIx: DetailsForIndividualTrees.getCurrentIx(),
 	    selectedRecords: new Set( [...PresentationHandler.getSelectedRecords()] ),
-	    transform: d3.zoomTransform(svg.node())
 	}
     }
     
@@ -2242,12 +2227,12 @@ class _ClassBackAndForwardStackHandler
 	const backButton = document.getElementById('backButton');
 	if (this._currentIndex > 0)
 	{
-	    backButton.classList.remove('jframework-3dButton-greyedBtn');
+	    backButton.classList.remove('jframework-greyedBtn');
 	    backButton.title = 'Back to ' + this._history[this._currentIndex - 1].name + '.';
 	}
 	else
 	{
-	    backButton.classList.add('jframework-3dButton-greyedBtn');
+	    backButton.classList.add('jframework-greyedBtn');
 	    backButton.title = '';
 	}
 
@@ -2255,12 +2240,12 @@ class _ClassBackAndForwardStackHandler
 	const fwdButton = document.getElementById('forwardButton');
 	if (this._currentIndex < this._history.length - 1)
 	{
-	    fwdButton.classList.remove('jframework-3dButton-greyedBtn');
+	    fwdButton.classList.remove('jframework-greyedBtn');
 	    fwdButton.title = 'Forward to ' + this._history[this._currentIndex + 1].name + '.';
 	}
 	else
 	{
-	    fwdButton.classList.add('jframework-3dButton-greyedBtn');
+	    fwdButton.classList.add('jframework-greyedBtn');
 	    fwdButton.title = '';
 	}
     }
@@ -2275,6 +2260,168 @@ export const BackAndForwardStackHandler = new _ClassBackAndForwardStackHandler()
 window.BackAndForwardStackHandler = BackAndForwardStackHandler;
 
 
+
+
+
+/*!****************************************************************************/
+/******************************************************************************/
+/**                                                                          **/
+/**                Retention for details of individual trees                 **/
+/**                                                                          **/
+/******************************************************************************/
+/******************************************************************************/
+
+/******************************************************************************/
+/* Yet another hairy bit of code ...
+
+   This was set up mainly to support transformation matrices, although it could
+   certainly be pressed into use for other purposes too.
+
+   In summary, whenever I draw an entirely new tree, I do so against the
+   initial transformation matrix (x:0, y:0, k:1).  In fact, by the time I've
+   finished drawing the tree, the matrix will have changed somewhat, because
+   that default would have the root of the tree absolutely at the top left
+   of the screen, with the left hand side of the tree outside of the window.
+
+   Once I've drawn a tree, though, there is nothing to stop the user from
+   panning and zooming it, which will change the transformation matrix.
+
+   If now a new tree is added, we also support back and forward buttons to work
+   through the extant list of trees.  And here I presume that if we go back to
+   an earlier tree whose transformation matrix has been altered, the user will
+   want to see it as it then looked.
+
+   This implies that I need to keep track of the transformation matrix, and
+   this turns out to be rather difficult.  If the user scrolls or zooms, the
+   matrix is updated, but you can't readily get to find out.  In fact it
+   _is_ possible to add an event handler which gets told about the change,
+   but there are apparently insurmountable problems in doing so.  Just in case
+   you're tempted to try it again, here are a few of the issues:
+
+   - _Without_ an event handler, D3 itself updates the screen to reflect panning
+     and zooming.  _With_ an event handler, the transform event is trapped, so
+     you have to apply the updates yourself.
+
+   - If you use svg.call(D3Support.zoom.transform, t) to apply the updates,
+     that generates new zoom events, which are then picked up by the event
+     handler, and you end up in an infinite loop.  You therefore have to take
+     steps to avoid having the event handler respond to something which it has
+     itself instigated.  Even with this, there are problems -- apparently
+     events are likely to hit the event handler in such a way that you cannot
+     rely upon seeing all of them.
+
+   - ChatGPT suggested using something like d3.select("#something").attr("transform", event.transform);
+     rather than svg.call(D3Support.zoom.transform, t), because this doesn't
+     give rise to the kind of looping just mentioned.  However, this doesn't
+     work -- trees are initially drawn at the left of the window and then
+     repositioned, but with this approach, the left-hand side of the tree is
+     actually completely absent, so when the tree is repositioned you only
+     get to see the right half of the tree.
+
+
+   In view of these issues I have had (reluctantly) to give up the idea of
+   using an event handler to track panning and zooming.  Instead I have to
+   arrange to update my stored records any time when I move away from the
+   existing tree (which I _think_ means any time I draw a completely new
+   tree or use the forward or back buttons).
+
+   I kind of felt that in fact I could store the transformation matrix as
+   part of the data used to support the back and forward buttons, and probably
+   I could, but it was turning out to be rather complicated and error prone.
+
+   Hence the present class.  Every time we have a _new_ tree I assign it a
+   unique integer index, and associate that index with a transformation
+   matrix.  _New_ here means that we have been given a 'new' root and have
+   been asked to draw a tree for it.  This raises the question, though, of
+   what counts as new:
+
+   - Using the back and forward buttons does not give us a new tree -- it
+     simply activated a previously existing one.
+
+   - Changing the _selection_ does not of itself give us a new tree --
+     normally it simply highlights something in the existing tree.
+
+   - Changing the root node _does_ give us a new tree.  There is one wrinkle
+     here, though.  Imagine you start out with a tree for Aaron.  You then
+     select, say, Jochebed from the info box.  This gives us a new tree.
+     If you use the Back button to return to Aaron, that does not give a
+     new tree.  But if, having gone to Jochebed you then select Aaron as one
+     of her children from the info box, this gives you an entirely new copy
+     of Aaron, and this _does_ count as a new tree.
+*/
+
+/******************************************************************************/
+class _ClassDetailsForIndividualTrees
+{
+
+    /**************************************************************************/
+    applyTransformationDetails (ixOrDetails = this._current)
+    {
+	const transform = Number.isInteger(ixOrDetails) ? this._transformation.get(ixOrDetails) : ixOrDetails;
+	const t = d3.zoomIdentity.translate(transform.x, transform.y).scale(transform.k);
+	svg.call(D3Support.zoom.transform, t);
+    }
+
+    
+    /**************************************************************************/
+    getCurrentIx ()
+    {
+	return this._current;
+    }
+
+    
+    /**************************************************************************/
+    /* Called to add details of a new tree.  See head-of-class for
+       discussion. */
+    
+    newTreeA ()
+    {
+	this.updateCurrent(); // Before we lose the present tree, make sure its transformation matrix is up to date.
+	svg.call(D3Support.zoom.transform, d3.zoomIdentity); // Default settings for new tree: no translate, no scale.
+    }
+
+    newTreeB ()
+    {
+	this._transformation.set(++this._counter, this._getTransformationDetails()); // Create an entry for a new tree and record its transformation matrix.
+	this._current = this._counter;
+    }
+    
+
+    /**************************************************************************/
+    setCurrent (ix)
+    {
+	this._current = ix;
+    }
+
+    
+    /**************************************************************************/
+    updateCurrent ()
+    {
+	if (this._current >= 0)
+	    this._transformation.set(this._current, this._getTransformationDetails());
+    }
+    
+    
+    /**************************************************************************/
+    /* Obtains the current transformation details in the form { x:0, y:0, k:1 }.
+       I do this rather than save a reference to the transformation matrix
+       itself, since that may change under my feet. */
+
+    _getTransformationDetails ()
+    {
+	const transform = d3.zoomTransform(svg.node());
+	return { x: transform.x, y: transform.y, k: transform.k };
+    }
+
+    
+    /**************************************************************************/
+    _counter = -1;
+    _current = -1;
+    _transformation = new Map();
+}
+
+const DetailsForIndividualTrees = new _ClassDetailsForIndividualTrees();
+    
 
 /******************************************************************************/
 /* This is instantiated here, and is therefore available for use by the HTML. */
@@ -2336,39 +2483,51 @@ class _ClassPresentationHandler
 	this._refreshRelationsHighlighting(ix);
 	this._changeOrRefreshSelectedPerson(ix);
 	this.SubtreeHighlightHandler.newSelection(ix, this.getRootPersonIx(), 'S');
-	BackAndForwardStackHandler.newSelection();
+//	DetailsForIndividualTrees.update();
+//	BackAndForwardStackHandler.newSelection();
     }
 
     
     /**************************************************************************/
     copyLinkToClipboard ()
     {
-	const dStrongs = personRecordFromIndex(this.getSelectedPersonIx()).dStrongs;
-	const url = JFrameworkUtils.getFullUrl('html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?strong=' + dStrongs);
+	const dStrongsRoot = personRecordFromIndex(this.getRootPersonIx()).dStrongs;
+	const dStrongsSelected = personRecordFromIndex(this.getSelectedPersonIx()).dStrongs;
+	const url = JFrameworkUtils.getFullUrl('html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?strong=' + dStrongsRoot + ':' + dStrongsSelected);
 	navigator.clipboard.writeText(url);
 	this.showPopUp('URL copied to clipboard', 'copyToClipboardConfirmation');
     }
 
 	
     /**************************************************************************/
-    getRootPersonIx     () { return this._rootPersonIx;     }
-    getSelectedPersonIx () { return this._selectedPersonIx; }
+    getRootPersonIx      () { return this._rootPersonIx;      }
+    getSelectedPersonIx  () { return this._selectedPersonIx;  }
 
     getDuplicatedRecords () { return this._duplicatedRecords; }
-    getSelectedRecords () { return this._selectedRecords; }
+    getSelectedRecords   () { return this._selectedRecords;   }
 
     
     /**************************************************************************/
     /* Replaces the entire tree with a new one, at the same time removing
-       highlighting etc. */
+       highlighting etc.  Slightly sneaky stuff to do with transforms ...
+
+       The first time we draw anything at all, I record the transform
+       matrix, for use later.  I then reapply this any time I draw a
+       new tree, thus guaranteeing that each new tree starts off with no
+       transformation (or more strictly that it is centred with the root
+       at the top of the window, and with no scaling or translation). */
     
     newTree (ix)
     {
+	DetailsForIndividualTrees.newTreeA();
+
 	const rootPerson = personRecordFromIndex(ix);
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(rootPerson, this._selectedRecords);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redraw(root, ix, ix);
 	this.SubtreeHighlightHandler.newSelection(ix, ix, 'T');
+
+	DetailsForIndividualTrees.newTreeB();
 	BackAndForwardStackHandler.newSelection();
     }
 
@@ -2466,11 +2625,13 @@ class _ClassPresentationHandler
 
     reviseTreeNewRoot (ix)
     {
+	DetailsForIndividualTrees.newTreeA();
 	const rootPerson = personRecordFromIndex(ix);
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(rootPerson, this._selectedRecords, this._NOT_USED_excludedRecords);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redraw(root, ix, this.getSelectedPersonIx());
 	this.SubtreeHighlightHandler.newSelection(-1, ix, 'S');
+	DetailsForIndividualTrees.newTreeB();
 	BackAndForwardStackHandler.newSelection();
     }
 	
@@ -2498,12 +2659,12 @@ class _ClassPresentationHandler
     /**************************************************************************/
     revisitEarlierDisplay (details)
     {
-	const { rootIx, selectedIx, selectedRecords, transform } = details;
+	const { name, rootIx, selectedIx, individualTreesIx, selectedRecords } = details;
 	const [newSelectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByRetentionOnly(personRecordFromIndex(rootIx), selectedRecords);
 	this._setSelectedAndDuplicated(newSelectedRecords, duplicatedRecords);
 	requestAnimationFrame(() => {
 	    this._redrawUsingJustSelectedRecords(root, personRecordFromIndex(rootIx), selectedIx);
-	    svg.call(D3Support.zoom.transform, transform);
+	    DetailsForIndividualTrees.applyTransformationDetails(individualTreesIx);
 	});
     }
 
@@ -2853,7 +3014,7 @@ class _ClassPresentationHandler
            appropriate. */
 	
 	if (ix != this.getSelectedPersonIx())
-	    InitialisationHandler.sendMessageWithSuppression(null, { strong: strongsFromIndex(ix), disambiguatedName: nameFromIndex(ix) });
+	    InitialisationHandler.sendMessageWithSuppression(null, { allStrongs: strongsFromIndex(ix), disambiguatedName: nameFromIndex(ix) });
 
 
 
@@ -2870,7 +3031,6 @@ class _ClassPresentationHandler
 	/************************************************************************/
 	var personRecord = personRecordFromIndex(ix)
 	const infoBoxContent = d3.select('#info-box-content')
-	const personName = personRecord.simpleName + '@' + personRecord.referenceFromUnifiedName;
 
 
 
@@ -2887,40 +3047,87 @@ class _ClassPresentationHandler
 	const ambiguity = EmptyFieldMarker == personRecord.ambiguity ? '' :
 	      `<p><b>Differing interpretations exist here.</b>  Click <a href='${personRecord.ambiguity}' target='_blank'>here</a> for details.</p>`;
 
-	const partnerList = 0 == partners.length ? '' :
-	      `<p><b>Partners:</b>  ${partners.length  > 0 ? partners.map (partner => `<span class="partner-link simulatedLink">${nameForDisplayInBodyOfInfoBoxGivenNameKey(partner.disambiguatedName)}</span>`).join(", ") : "-" }</p>`;
-
 	const siblingList = 0 == siblings.length ? '' :
-	      `<p><b>Siblings:</b>  ${siblings.length  > 0 ? siblings.map (sibling => `<span class="sibling-link simulatedLink">${nameForDisplayInBodyOfInfoBoxGivenNameKey(sibling.disambiguatedName)}</span>`).join(", ") : "-" }</p>`;
+	      `<p><b>Siblings:</b>  ${siblings.length  > 0 ? siblings.map (sibling => `<button class="sibling-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenNameKey(sibling.disambiguatedName)}</button>`).join(", ") : "-" }</p>`;
     
 	const childrenList = 0 == children.length ? '' :
-	      `<p><b>Children:</b> ${children.length > 0 ? children.map(kid     => `<span class="children-link simulatedLink">${nameForDisplayInBodyOfInfoBoxGivenNameKey(kid.disambiguatedName)}</span>`).join(", ") : "-" }</p>`;
+	      `<p><b>Children:</b> ${children.length > 0 ? children.map(kid     => `<span class="children-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenNameKey(kid.disambiguatedName)}</span>`).join(", ") : "-" }</p>`;
+
+	const explanation = '<button class="jframework-linkAsButton" title="We rely here upon statements like &lsquo;a is the son of b&rsquo;.  Sometimes, though, &lsquo;son of&rsquo; actually just means &lsquo;descendant of&rsquo;.">(This may only be approximate.)</button>';
 
 	const generationsFromAdam = -1 == personRecord.generationsFromAdam ? '' :
-	      `<p><b>Generations after Adam:</b> ${personRecord.generationsFromAdam} or more (see help for explanation).</p>`;
+	      `<p><b>Generations after Adam:</b> ${personRecord.generationsFromAdam} or more ${explanation}</p>`;
 
 	const generationsToJesus = personRecord.generationsToJesus <= 0 ? '' :
-	      `<p><b>Generations before Jesus:</b> ${personRecord.generationsToJesus} or more (see help for explanation).</p>`;
+	      `<p><b>Generations before Jesus:</b> ${personRecord.generationsToJesus} or more ${explanation}</p>`;
 
 	const summaryDescriptionX = '' == summaryDescription ? '' : '<p>' + summaryDescription + '</p>';
 
 	const longDescriptionX    = '' == longDescription    ? '' : '<p>' + longDescription    + '</p>';
-    
+
+
+
+	/************************************************************************/
+	var partnerList = '';
+	if (DataHandler.isFemale(personRecord))
+	{
+	    if (0 === partners.length)
+		partnerList = '<p><b>Husband:</b> -</p>';
+	    else
+	    {
+		const x = partners.map (partner => `<span class="partner-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenNameKey(partner.disambiguatedName)}</span>`).join(', ');
+		partnerList = `<p><b>Husband:</b> ${x}</p>`;
+	    }
+	} // Female
+	
+	else if (DataHandler.isMale(personRecord))
+	{
+	    if (0 === partners.length)
+		partnerList = '<p><b>Wife:</b> -</p>';
+	    else
+	    {
+		const x = partners.map (partner => `<span class="partner-link jframework-linkAsButton ${DataHandler.isConcubine(personRecordFromName(partner.disambiguatedName)) ? 'concubine' : 'wife'}">${nameForDisplayInBodyOfInfoBoxGivenNameKey(partner.disambiguatedName)}</span>`).join(', ');
+		const hasConcubines = x.includes('concubine');
+		const hasWives = x.includes('wife');
+		if (1 == partners.length)
+		{
+		    if (hasConcubines)
+			partnerList = `<p><b>Concubine:</b> ${x}</p>`;
+		    else
+			partnerList = `<p><b>Wife:</b> ${x}</p>`;
+		}
+		else if (hasConcubines && !hasWives)
+		    partnerList = `<p><b>Concubines:</b> ${x.replace('concubines', '')}</p>`;
+		else if (!hasConcubines && hasWives)
+		    partnerList = `<p><b>Wives:</b> ${x.replace('wife', '')}</p>`;
+		else // Has both wives and concubines.
+		    partnerList = `<p><b><span class='wife'>Wives</span> and <span class='concubine'>concubines</span>: ${x}</p>`;
+		    
+	    }
+	}
+	    
+
+
+
+	/************************************************************************/
+	const summaryIcon = DataHandler.getSummaryIcon(personRecord);
+	const spacer = summaryIcon ? '&nbsp;' : '';
 	infoBoxContent
 	    .html(`
-              <div style='display:flex; align-items:center'><span class='iconFont'>${DataHandler.getSummaryIcon(personRecord)}</span>
+              <div style='display:flex; align-items:center'><span class='iconFont'>${summaryIcon}</span>
                 <span>
-                  <span class="person-link simulatedLink">${nameForDisplayInBodyOfInfoBoxGivenPersonRecord(personRecord)}</span>
-                  <span>&nbsp;(first mentioned at ${firstScriptureReference(personRecord)})</span>
+                  ${spacer}
+                  <span class="person-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenPersonRecord(personRecord)}</span>
+                  <span>&nbsp;(${"" === personRecord.role ? "" : (personRecord.role + " ")}first mentioned at ${firstScriptureReference(personRecord)})</span>
                   <span>${alternativeNames}</span>
                 </span>
-                <span id='shareableLink' class='simulatedLink' style='margin-left:auto' title='Copy to clipboard a URL for this family tree'>Shareable link</span>
+                <span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree'>Shareable link</span>
               </div>
 
              <br>${partnerList}
 
-              <p><b>Father:</b> ${fatherName !== EmptyFieldMarker ? `<span class="father-link simulatedLink">${nameForDisplayInBodyOfInfoBoxGivenNameKey(fatherName)}</span>` : '-' }
-              &nbsp;&nbsp;&nbsp;<b>Mother:</b> ${motherName !== EmptyFieldMarker ? `<span class="mother-link simulatedLink">${nameForDisplayInBodyOfInfoBoxGivenNameKey(motherName)}</span>` : '-' }
+              <p><b>Father:</b> ${fatherName !== EmptyFieldMarker ? `<span class="father-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenNameKey(fatherName)}</span>` : '-' }
+              &nbsp;&nbsp;&nbsp;<b>Mother:</b> ${motherName !== EmptyFieldMarker ? `<span class="mother-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenNameKey(motherName)}</span>` : '-' }
               ${siblingList}
               ${childrenList}
               ${generationsFromAdam}
@@ -2937,8 +3144,29 @@ class _ClassPresentationHandler
 	siblings .forEach((sibling, index) => { infoBoxContent.selectAll('.sibling-link') .filter((d, i) => i === index).on('click', () => { PresentationHandler.changeRootToGivenPersonByName(sibling.disambiguatedName); }); });
 	partners .forEach((partner, index) => { infoBoxContent.selectAll('.partner-link') .filter((d, i) => i === index).on('click', () => { PresentationHandler.changeRootToGivenPersonByName(partner.disambiguatedName); }); });
 	children .forEach((kid,     index) => { infoBoxContent.selectAll('.children-link').filter((d, i) => i === index).on('click', () => { PresentationHandler.changeRootToGivenPersonByName(kid.disambiguatedName); }); });
-	
 
+
+
+	/************************************************************************/
+	/* Accessibility -- make the links available via the keyboard. */
+	/*
+	infoBoxContent
+	    .selectAll('.jframework-linkAsButton')
+	    .attr('role', 'link')
+	    .attr('tabindex', 0)
+	    .attr('aria-label', function () {
+		const text = d3.select(this).text();
+		return `Draw tree for ${text}`;
+	    })
+	    .on('keydown', function (event) {
+		if (event.key === 'Enter' || event.key === ' ') {
+		    event.preventDefault();
+		    this.click(); // Trigger the same click handler
+		}
+	    });
+	*/
+
+	
 
 	/************************************************************************/
 	/* If we're in an iframe, change all scripture refs to pseudo links which
@@ -2998,8 +3226,14 @@ class _ClassPresentationHandler
 	}
 	
 	var useLinks = '';
-	if (hasFather) useLinks += '.  Press the blue button to see their father.';
-	if (hasMother) useLinks += '.  Press the pink button to see their mother.';
+	if (hasFather) useLinks += `. Press the &lsquo;Father&rsquo; button to see ${personName}&rsquo;s father.`;
+	if (hasMother)
+	{
+	    if (!useLinks.endsWith('.')) useLinks += '.';
+	    useLinks += ' ';
+	    useLinks += `Press the &lsquo;Mother&rsquo; button to see ${personName}&rsquo;s mother.`;
+	}
+	
 	if (hasLinks)
 	{
 	    if (hasParents)
@@ -3008,7 +3242,7 @@ class _ClassPresentationHandler
 		useLinks += ' &mdash; click on links in the information box.';
 	}
 
-	document.getElementById('explanationOfThereBeingOnlyASinglePerson').innerHTML = `The Bible does not record ${personName} as having any children, so we can&rsquo;t show you their descendants.  However, you can still see other people related to them${useLinks}`;
+	document.getElementById('explanationOfThereBeingOnlyASinglePerson').innerHTML = `The Bible does not record ${personName} as having any children, so we can&rsquo;t show you any descendants.  However, you can still see other related people${useLinks}`;
 	explanationOfThereBeingOnlyASinglePerson.show();
     }
 
@@ -3019,7 +3253,6 @@ class _ClassPresentationHandler
     
     _redrawUsingJustSelectedRecords (root, rootPersonRecord, selectedPersonIx = null)
     {
-	ControlsHandler.hideBuiltInTreesMenu();
 	const rootPersonIx = indexFromPersonRecord(rootPersonRecord);
 	const selectedIx = selectedPersonIx ? selectedPersonIx : rootPersonIx;
 	this._redraw(root, rootPersonIx, selectedIx);
@@ -3087,14 +3320,14 @@ class _ClassPresentationHandler
     {
 	const person = personRecordFromIndex(ix);
 	if (DataHandler.hasFather(person))
-	    $('#fatherButton').removeClass('jframework-3dButton-disabled');
+	    $('#fatherButton').removeClass('jframework-greyedBtn');
 	else
-	    $('#fatherButton').addClass('jframework-3dButton-disabled');
+	    $('#fatherButton').addClass('jframework-greyedBtn');
     
 	if (DataHandler.hasMother(person))
-	    $('#motherButton').removeClass('jframework-3dButton-disabled');
+	    $('#motherButton').removeClass('jframework-greyedBtn');
 	else
-	    $('#motherButton').addClass('jframework-3dButton-disabled');
+	    $('#motherButton').addClass('jframework-greyedBtn');
     }
 
 
@@ -3184,7 +3417,7 @@ class ClassGraphicsHandler
 	nodes.style('cursor', 'pointer');
 	const textNodes = svg.selectAll('text');
 	textNodes.style('font-size', LayoutHandler.getFontSizeForNames());
-	const repositioned = LayoutHandler.adjustPositionOfRootNode();
+	const repositioned = LayoutHandler.adjustPositionOfRootNode(true);
 
 
 
@@ -3228,52 +3461,71 @@ class _ClassControlsHandler
     /**************************************************************************/
     showHelpMenu ()
     {
-	const menu = document.getElementById('help');
-	menu.style.display = 'block'; // Seems I need to have block in order to set scrollTop; but then I need flex or else I don't get a scroll bar.
-	menu.scrollTop = 0;
-	menu.style.display = 'flex';
-	menu.style.top = '20px';
-	menu.style.left = (window.innerWidth - menu.offsetWidth) / 2 + 'px';
+	const modal = document.getElementById('help');
+	ModalDialogHandler.showModalDialog(modal);
+	modal.scrollTop = 0;
+	modal.style.top = '20px';
+	modal.style.left = (window.innerWidth - modal.offsetWidth) / 2 + 'px';
     }
 
   
     /**************************************************************************/
-    showBuiltInTreesMenu ()
+    _wantBuiltInTreesMenuIndividualSearchBox = false;
+    showBuiltInTreesDialog ()
     {
-	const me = this;
+	const modal = document.getElementById('builtInTreesMenu');
 
-	PopUpHandler.popUpIsVisible(function () { me.hideBuiltInTreesMenu() });
-	
-	document.getElementById('builtInTreesMenu').style.display = 'block';
+	if (this._wantBuiltInTreesMenuIndividualSearchBox)
+	{
+	    document.getElementById('builtInTreesFirstPartWithoutSearchBox').style.display = 'none';
+	    document.getElementById('builtInTreesFirstPartWithSearchBox').style.display = 'block';
+	}
+	else
+	{
+	    document.getElementById('builtInTreesFirstPartWithoutSearchBox').style.display = 'block';
+	    document.getElementById('builtInTreesFirstPartWithSearchBox').style.display = 'none';
+	}
+	    
 
-	const menu = document.getElementById('builtInTreesMenu');
-	menu.style.top = '20px';
-	menu.style.left = (window.innerWidth - menu.offsetWidth) / 2 + 'px';
+	ModalDialogHandler.showModalDialog(modal);
+
+	modal.style.top = '20px';
+	modal.style.left = (window.innerWidth - modal.offsetWidth) / 2 + 'px';
 
 	document.getElementById('builtInTreesContainer').scrollTop = 0;
+
+	this._showBuiltInTreesDialog_fillTable()
     }
 
   
-    /**************************************************************************/
-    hideBuiltInTreesMenu ()
+    /**********************************************************************/
+    _showBuiltInTreesDialog_clickHandlerFn (ix)
     {
-	PopUpHandler.popUpIsInvisible();
-	document.getElementById('builtInTreesMenu').style.display = 'none';
+	renderTreeForName(nameFromIndex(ix))
+	ModalDialogHandler.closeTopModalDialog();
     }
 
-    
+
+    /**************************************************************************/
+    _showBuiltInTreesDialog_fillTable ()
+    {
+	if (this._wantBuiltInTreesMenuIndividualSearchBox)
+	    this._builtInTreesDialogSearchTable = new _ClassSearchTableCommonProcessing(Object.values(DataHandler.GenealogyData),
+											'builtInTreesMenuSearchBoxTableContainer',
+											this._showBuiltInTreesDialog_clickHandlerFn.bind(this),
+											'builtInTreesMenuSearchBox');
+    }
+
+
     /**************************************************************************/
     showLayoutMenu ()
     {
-	const me = this;
+	const modal = document.getElementById('layoutMenu')
 
-	PopUpHandler.popUpIsVisible(function () { me.hideLayoutMenu() });
-	
-	document.getElementById('layoutMenu').style.display = 'block';
+	ModalDialogHandler.showModalDialog(modal);
 
-	const menu = document.getElementById('layoutMenu');
-	menu.style.top = '20px';
-	menu.style.left = (window.innerWidth - menu.offsetWidth) / 2 + 'px';
+	modal.style.top = '20px';
+	modal.style.left = (window.innerWidth - modal.offsetWidth) / 2 + 'px';
 
 	document.getElementById('horizontalSpacingSlider').value = CurrentHorizontalSpacingTicks;
 	document.getElementById('verticalSpacingSlider').value = CurrentVerticalSpacingTicks;
@@ -3281,14 +3533,6 @@ class _ClassControlsHandler
     }
 
   
-    /**************************************************************************/
-    hideLayoutMenu ()
-    {
-	PopUpHandler.popUpIsInvisible();
-	document.getElementById('layoutMenu').style.display = 'none';
-    }
-
-    
     /****************************************************************************/
     /* Handles the sliders which determine spacing and number of generations. */
   
@@ -3322,37 +3566,7 @@ window.ControlsHandler = ControlsHandler;
 
 
   
-/******************************************************************************/
-class ClassPopUpHandler
-{
-    /*************************************************************************/
-    clickHandler (event)
-    {
-	this._popUpHideFn();
-    }
-
-
-    /*************************************************************************/
-    popUpIsVisible (popUpHideFn)
-    {
-	this._popUpHideFn = popUpHideFn;
-	document.getElementById('popUpOverlay').style.display = 'block';
-    }
-
-
-    /*************************************************************************/
-    popUpIsInvisible ()
-    {
-	document.getElementById('popUpOverlay').style.display = 'none';
-    }
-
-
-    /*************************************************************************/
-    _popUpHideFn = null;
-}
-
-export const PopUpHandler = new ClassPopUpHandler();
-window.PopUpHandler = PopUpHandler;
+//window.ModalDialogHandler = ModalDialogHandler;
     
 
 
@@ -3441,16 +3655,6 @@ class ClassContextMenuHandler
 
 
     /**************************************************************************/
-    /* Hides the context menu on a click outside of the area it covers. */
-
-    hideMenu ()
-    {
-	PopUpHandler.popUpIsInvisible();
-	document.getElementById('personNodeContextMenu').style.display = 'none';
-    }
-
-
-    /**************************************************************************/
     removeSubtree ()
     {
 	PresentationHandler.reviseTreeRemoveSubtree(personRecordFromTreeNode(this._contextMenuTarget.node()).ix);
@@ -3515,7 +3719,7 @@ class ClassContextMenuHandler
 	const windowWidth = window.innerWidth;
 	const windowHeight = window.innerHeight;
 
-	this._contextMenu.style('display', 'block'); // Need to show in order to measure size.
+	ModalDialogHandler.showModalDialog(document.getElementById('personNodeContextMenu')); // Need to show in order to measure size.
 	const menuWidth = this._contextMenu.node().offsetWidth;
 	const menuHeight = this._contextMenu.node().offsetHeight;
 
@@ -3529,8 +3733,6 @@ class ClassContextMenuHandler
 	if (posY < 0) posY = (windowHeight - menuHeight) / 2;
     
 	this._contextMenu.style('top', `${posY}px`).style('left', `${posX}px`);
-	const me = this;
-	PopUpHandler.popUpIsVisible(function () { me.hideMenu() });
     }
 
 
@@ -3539,102 +3741,111 @@ class ClassContextMenuHandler
     _contextMenu = d3.select('#personNodeContextMenu');
   
 
+    /**********************************************************************/
+    _clickHandlerFn (leafNodeIx)
+    {
+	PresentationHandler.reviseTreeAddBranchDownAsFarAsIndividual(leafNodeIx);
+	ModalDialogHandler.closeTopModalDialog();
+    }
+
+
     /**************************************************************************/
     _fillDescendantsTable (ix)
     {
-	/**********************************************************************/
-	/* Fill in table. */
-
-	const tableBodyBuilder = function ()
-	{
-	    const namesAsSet = new Set();
-	    iterateOverDescendants(personRecordFromIndex(ix), function (personRecord, level) {
-		const shortDescription = personRecord.shortDescription.split('(')[0].trim();
-
-		var displayName = nameFromPersonRecord(personRecord);
-		const x = displayName.split('@');
-		var displayName = x[0]; // Name portion only.
-		if (displayName.includes('built'))
-		{
-		    const bits = displayName.split('_built_');
-		    displayName = bits[0] + ' (built ' + bits[1] + ')';
-		}
-			
-		const alternativeNames = 0 == personRecord.alternativeNames.length ? '' : '<br>' + personRecord.alternativeNames.map( str => str.split('@')[0] ).join('<br>');
-		if (0 != alternativeNames.length) displayName += ' &bull; or ...';
-		displayName += alternativeNames;
-
-		namesAsSet.add(displayName + '\u0001' + personRecord.ix + '\u0001' + shortDescription);
-	    });
-
-	    return [...namesAsSet].sort()
-		.map ( function (x) {
-		    const split = x.split('\u0001');
-		    return "<tr>" +
-			"<td ix='" + split[1].replace('.', '') + "' class='jframework-tb_col jframework-tb_col_1 jframework-clickable'>" + split[0] + "</td>" +
-			"<td class='jframework-tb_col jframework-tb_col_2 jframework-clickable'>" + split[2] + "</td>" +
-			"</tr>";
-		})
-		.join('');
-	}
-
-
-
-	/**********************************************************************/
-	const tableClickHandler = function (cell, column) {
-	    const row = cell.closest("tr");
-            const firstCell = row.cells[0];
-	    const leafNodeIx = firstCell.getAttribute('ix');
-	    PresentationHandler.reviseTreeAddBranchDownAsFarAsIndividual(leafNodeIx);
-	    ContextMenuHandler.hideMenu();
-	}
-
-
-    
-	/**********************************************************************/
-	const rowMatcherFn = function (row, userInput)
-	{
-	    const re = new RegExp('^' + userInput.replace('-', '').replace('+', '\\+'), 'i');
-	    const matchAgainst = row.find('.jframework-tb_col_1').text()
-	    return re.test(matchAgainst);
-	}
-
-
-
-	/**********************************************************************/
-	const tableRowHighlighter = function (selection)
-	{
-	    const row = 'tr' == selection.tagName ? selection : selection.closest('tr');
-	    
-	    // Remove any existing highlighting.
-	    for (var i = 1; i <= row.cells.length; ++i)
-		$('.tb_col_' + i).css('background', 'white');
-
-	    // Highlight target row.
-	    for (var i = 0; i < row.cells.length; ++i)
-		$(row.cells[i]).css('background', '#FFFFC0');
-	}
-
-
-
-	/**********************************************************************/
-	const tableHandlerArgs =
-	      {
-		  tableContainerId: 'descendantTableContainer',
-		  bodyBuilderFn: tableBodyBuilder,
-		  clickHandlerFn: tableClickHandler,
-		  selectionHighlighterFn: tableRowHighlighter,
-		  searchBoxId: 'descendantSearchBox',
-		  rowMatcherFn: rowMatcherFn
-	      };
-	
-	const tableHandler = new ClassJFrameworkTableWithSearchBox(tableHandlerArgs);
-	tableHandler.initialise();
+	const records = []; iterateOverDescendants(personRecordFromIndex(ix), function (personRecord, level) { records.push(personRecord) });
+	this._tableHandler = new _ClassSearchTableCommonProcessing(records, 'descendantTableContainer', this._clickHandlerFn.bind(this), 'descendantSearchBox');
     }
 }
 
 export const ContextMenuHandler = new ClassContextMenuHandler()
 window.ContextMenuHandler = ContextMenuHandler;
+
+
+
+
+
+/*!****************************************************************************/
+/******************************************************************************/
+/**                                                                          **/
+/**        Common processing for filling and monitoring search tables        **/
+/**                                                                          **/
+/******************************************************************************/
+/******************************************************************************/
+
+/******************************************************************************/
+class _ClassSearchTableCommonProcessing
+{
+    /**************************************************************************/
+    constructor (records, tableContainerId, callerClickHandlerFn, searchBoxId)
+    {
+	this._records = records;
+	this._callerClickHandlerFn = callerClickHandlerFn;
+	this._GenealogySharedCode = new ClassGenealogySharedCode();
+
+	const tableHandlerArgs =
+	{
+	    tableContainerId: tableContainerId,
+	    bodyBuilderFn: this._tableBodyBuilder.bind(this),
+	    clickHandlerFn: this._tableClickHandlerFn.bind(this),
+	    selectionHighlighterFn: this._tableRowHighlighter.bind(this),
+	    searchBoxId: searchBoxId,
+	    rowMatcherFn: this._rowMatcherFn.bind(this),
+	    hideTableWhenNotInUse: true,
+	    keepSelectedRowVisible: false,
+	};
+	
+	const tableHandler = new ClassJFrameworkTableWithSearchBox(tableHandlerArgs);
+	tableHandler.initialise();
+    }
+
+    
+    /**********************************************************************/
+    _rowMatcherFn (row, userInput)
+    {
+	return this._GenealogySharedCode.rowMatcherFn(row, userInput);
+    }
+
+
+    /**********************************************************************/
+    /* Fill in table. */
+
+    _tableBodyBuilder ()
+    {
+	const me = this;
+	var tblBodyHtml = '';
+	this._records.forEach(function (personRecord) {
+	    if ('Dummy' !== personRecord.simpleName && !personRecord.simpleName.startsWith('+'))
+		tblBodyHtml += me._GenealogySharedCode.makeSearchTableRowHtml(nameFromPersonRecord(personRecord), personRecord);
+	});
+
+	return tblBodyHtml;
+    }
+
+
+
+
+    /**********************************************************************/
+    _tableClickHandlerFn (cell, column)
+    {
+	const row = cell.closest("tr");
+	this._callerClickHandlerFn(row.rowIndex);
+    }
+
+    
+    /**********************************************************************/
+    _tableRowHighlighter (selection)
+    {
+	const row = 'tr' == selection.tagName ? selection : selection.closest('tr');
+	    
+	// Remove any existing highlighting.
+	for (var i = 1; i <= row.cells.length; ++i)
+	    $('.tb_col_' + i).css('background', 'white');
+
+	// Highlight target row.
+	for (var i = 0; i < row.cells.length; ++i)
+	    $(row.cells[i]).css('background', '#FFFFC0');
+    }
+}
 
 
 
@@ -3801,7 +4012,7 @@ function personRecordFromTreeNode (treeNode)
 /******************************************************************************/
 function strongsFromIndex (ix)
 {
-    return personRecordFromIndex(ix).dStrongs;
+    return personRecordFromIndex(ix).allDStrongs.join('|');
 }
 
 /******************************************************************************/
@@ -4040,11 +4251,22 @@ function prettifyName (uglyName)
 /******************************************************************************/
 
 /******************************************************************************/
+/* This handles a thing a bit like a TV remote which I was originally using to
+   make it easier to scroll through very large trees when using a mouse --
+   otherwise you have to repeat a lot of relatively small individual scrolls to
+   achieve the same end.
+
+   At the time of writing, we've decided to drop this, but I want to retain the
+   code in case we decide to reinstate it. */
+
 class ClassScrollButtonHandler
 {		   
     /**************************************************************************/
     constructor ()
     {
+	this._haveScrollButton = null !== document.getElementById('jframework-scrollRingScrollUpButton')
+	if (!this._haveScrollButton) return;
+	
 	document.getElementById('jframework-scrollRingScrollUpButton')   .addEventListener('mousedown', () => this._startScrolling(0, +this._scrollSpeed));
 	document.getElementById('jframework-scrollRingScrollDownButton') .addEventListener('mousedown', () => this._startScrolling(0, -this._scrollSpeed));
 	document.getElementById('jframework-scrollRingScrollLeftButton') .addEventListener('mousedown', () => this._startScrolling(+this._scrollSpeed, 0));

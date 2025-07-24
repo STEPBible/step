@@ -27,7 +27,10 @@
 
 
 <body>
-  <!-- ========== *** CHANGE ME *** You need to create a jframework-frameList as below and configure it.  See j_framework.multiframeLayoutController.js Note 1. -->
+  <!-- ========== *** CHANGE ME *** You need to create a jframework-frameList as below and configure it.  See j_framework.multiframeLayoutController.js Note 1.
+
+       MAKE SURE you put the jframework-tabLegend tag immediately after the </iframe>: don't have a newline or space between them.
+    -->
   <jframework-iframeList>
     <iframe id='genealogy'   wantSrc='html/J_AppsHtml/J_Genealogy/j_genealogy.html'   scrolling='no' ></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#x1F46A;</span>&nbsp;Genealogy</jframework-tabLegend>
     <iframe id='scripture'   suppressStepHeader='yes'                                 scrolling='yes'></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#128218;</span>&nbsp;Scripture</jframework-tabLegend>

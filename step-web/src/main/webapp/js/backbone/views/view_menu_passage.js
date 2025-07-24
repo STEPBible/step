@@ -673,48 +673,6 @@ var PassageMenuView = Backbone.View.extend({
         link.find(".glyphicon").css("visibility", visible ? "visible" : "hidden");
         link.attr("data-selected", visible);
     },
-
-    _doSocialButtons: function () {
-        step.util.activePassageId(this.model.get("passageId"));
-        if (step.state.isLocal()) {
-            return;
-        }
-
-        var element = this.$el.find(".dropdown-share").closest(".dropdown").find(".dropdown-menu");
-        if (!this.sharingBar) {
-            this.sharingBar = $("<ul>");
-            element.append(this.sharingBar);
-        }
-        else {
-            this.sharingBar.empty();
-        }
-
-        var url = step.router.getShareableColumnUrl(this.model.get("passageId"), true);
-		
-        //do twitter
-        if (window.twttr != undefined) {
-            var twitter = $('<a href="https://twitter.com/share" class="twitter-share-button" data-via="Tyndale_House">Tweet</a>')
-            twitter.attr("data-url", url);
-            twitter.attr("data-text", $("title").text());
-            this.sharingBar.append($("<li>").append(twitter));
-            window.twttr.widgets.load();
-        }
-
-        //do facebook share
-        if (window.FB && window.FB.XFBML) {
-			if (url != null) {
-				if (url.indexOf('-') > -1) {
-					alert("Sorry, Facebook does not accept a URL with a '-' character.  The passage selected has a '-' chaaracter.");
-				}
-				else {
-					url = url.replace(/\|/g, "@");
-					var facebook = $('<fb:share-button type="button_count"></fb:share-button>').attr("href", url);
-					this.sharingBar.append($("<li>").append(facebook));
-					window.FB.XFBML.parse(facebook.parent().get(0));
-				}
-			}
-        }
-    },
     changeFontSizeInThisPanel: function (ev) {
         ev.stopPropagation();
         step.util.showFontSettings(this.model.get("passageId"));

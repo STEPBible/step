@@ -303,7 +303,7 @@
                                 </span>
                                 <span class="dropdown">
                                     <a id="share-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" href="#" title='<fmt:message key="share" />'>
-                                        <i class="glyphicon glyphicon-thumbs-up"></i><span class="navbarIconDesc">&nbsp;&nbsp;Share <i class="glyphicon glyphicon-menu-down" style="font-size:75%;vertical-align:baseline"></i></span>
+                                        <i class="glyphicon glyphicon-send"></i><span class="navbarIconDesc">&nbsp;&nbsp;Share <i class="glyphicon glyphicon-menu-down" style="font-size:75%;vertical-align:baseline"></i></span>
                                     </a>
                                     <ul class="pull-right dropdown-menu" style="-webkit-column-count: 1; -moz-column-count: 1; column-count: 1;">
                                         <li><a href="javascript:step.util.copyModal();"><fmt:message key="copy" /></a></li>

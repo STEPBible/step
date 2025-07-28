@@ -3005,10 +3005,6 @@ step.util = {
 				'<br><a href="javascript:step.util.showSummary(\'Hab\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Habakkuk</a><span> - Judgement on evil</span>' +
 				'<span class="vid_hab glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Zeph\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Zephaniah</a><span> - Judgement\'s remnant</span>' +
-				'<span class="vid_zeph glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'Hag\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Haggai</a><span> - Rebuilding the temple</span>' +
-				'<span class="vid_hag glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
-				'<br><a href="javascript:step.util.showSummary(\'Zech\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Zechariah</a><span> - Repentance after exile</span>' +
 				'<span class="vid_zech glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
 				'<br><a href="javascript:step.util.showSummary(\'Mal\', \'book\')" style="margin-left:10%;height:14px;font-size:14px">Malachi</a><span> - God is coming</span>' +
 				'<span class="vid_mal glyphicon glyphicon-play-circle" style="margin-left:10px;display:none"></span>' +
@@ -3474,6 +3470,29 @@ step.util = {
 		else step.colorUpdateMode = true;
 		step.util.showFontSettings();
 	},
+	switchDarkMode: function () {
+		// Flip between light and dark color presets using the existing helper.
+		step.util.setDefaultColor('flip');
+
+		// Reflect the change in the Options dropdown entry if present.
+		var li = document.getElementById('darkModeLi');
+		if (li) {
+			if (step.util.isDarkMode()) {
+				// Highlight when dark mode is enabled
+				li.style.backgroundColor = 'var(--clrHighlight)';
+				li.style.color = 'var(--clrBackground)';
+			} else {
+				// Revert styling when disabled
+				li.style.backgroundColor = '';
+				li.style.color = '';
+			}
+		}
+		// Ensure the Font Settings modal is closed if it was inadvertently opened.
+		if (document.getElementById('fontSettings')) {
+			step.util.closeModal('fontSettings');
+		}
+	}, // end of switchDarkMode
+
     showFontSettings: function (panelNumber) { // Do not shorten name in pom.xml because it is called at start.jsp
         var element = document.getElementById('fontSettings');
         if (element) element.parentNode.removeChild(element);

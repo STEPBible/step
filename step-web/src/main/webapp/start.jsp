@@ -299,6 +299,8 @@
                                         <li><a id="grammar-menu" href="javascript:step.util.ui.initSidebar('color');"><fmt:message key="display_grammar" /></a></li>
                                         <li class="classicalUI"><a href="javascript:void(0)"><fmt:message key="display_classical_ui" />&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:11px"></span></a></li>
                                         <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile" /></a></li>
+                                        <%-- Dark mode translation --%>
+                                        <li id="darkModeLi"><a href="javascript:step.util.switchDarkMode();">Dark mode</a></li>
                                     </ul>
                                 </span>
                                 <span class="dropdown">
@@ -376,6 +378,8 @@
                                         <i class="glyphicon glyphicon-resize-small" style="display:none"></i>
                                     </a>
                                 </span>
+
+                                <%-- NOTE: this settingsDropdown is programmatically moved to the left side of the header by step_router.js --%>
                                 <span class="dropdown settingsDropdown" style="background-color:var(--clrBackground)">
                                         <a class="dropdown-toggle showSettings" data-toggle="dropdown"
                                            title="<fmt:message key="view" />">

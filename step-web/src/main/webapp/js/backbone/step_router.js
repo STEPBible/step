@@ -245,9 +245,18 @@ var StepRouter = Backbone.Router.extend({
         var passageOptions = passageContainer.find(".passageOptionsGroup");
 			
 		passageOptions.find(".argSummary").remove();
-		var container = $("<span></span>").addClass("argSummary argSumSpan");
+		var container = $("<span></span>").addClass("argSummary argSumSpan").css({display:"inline-block", "vertical-align":"top"});
 		step.util.ui.renderArgs(searchTokens, container, "button");
 		passageOptions.append(container);
+        // Always ensure the settings dropdown sits immediately to the right of the Bible/reference/search pills
+        // Detach it from its current position (wherever it is) and re-attach right after the newly created argSummary
+        var settingsDropdown = passageOptions.find(".settingsDropdown");
+        if(settingsDropdown.length === 1) {
+            container.after(settingsDropdown.detach().css({
+                display: "inline-block",
+                "vertical-align": "top"
+            }));
+        }
         if ((container.find("button.select-search").text().trim() === "") &&
             (container.find("button.select-reference").text().indexOf(":") > 0)) {
             var refs = container.find("button.select-reference").text().trim().split(" ");

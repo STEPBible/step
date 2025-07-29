@@ -3498,7 +3498,9 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
 		$(".modal-backdrop.in").remove();
         var colorReady = !(false || !!document.documentMode); // not Internet Explorer are not compatible with out color code
-		var darkModeReady = colorReady; // Internet Explorer is not ready for dark mode
+		// Dark mode is now controlled exclusively via step.util.switchDarkMode() (Options menu).
+		// Keep the variable for compatibility but force it to false so the dark-mode row is never rendered.
+		var darkModeReady = false;
 		var ua = navigator.userAgent.toLowerCase();
 		if (step.appleTouchDevice) {
 			if (ua.search(/ cpu os [345678]_/) > -1) { // older versions of iOS are not compatible with out color code

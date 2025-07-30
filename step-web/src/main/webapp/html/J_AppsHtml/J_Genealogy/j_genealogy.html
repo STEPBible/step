@@ -38,6 +38,7 @@
 	--jframework-height-of-info-box: 200px;
 	--jframework-clrMan: blue;
 	--jframework-clrWoman: salmon;
+	--jframework-clrGroup: black;
     }    
 
 
@@ -122,26 +123,26 @@
     }
       
     .highlightSiblings {
-	stroke: red;
+	text-shadow: 1px 1px 10px black;
 	animation: highlightSiblings 1s infinite; /* 2 seconds duration (1s on, 1s off), infinite loop */
     }
 
     @keyframes highlightSiblings {
-	  0% { fill: black; }
-	 50% { fill: red; font-weight: bold; }
-	100% { fill: black; }
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
     }
 
     .highlightChildren {
-	animation: highlightChildren 1s infinite;
+	text-shadow: 1px 1px 10px green;
+	animation: highlightChildren 1s infinite; /* 2 seconds duration (1s on, 1s off), infinite loop */
     }
 
     @keyframes highlightChildren {
-	  0% { fill: black; }
-	 50% { fill: blue; font-weight: bold; }
-	100% { fill: black; }
-      }
-
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
+    }
 
 
     /* ----- Used to confirm a URL has been copied to the clipboard ----- */
@@ -232,6 +233,7 @@
     /*--- Miscellaneous --- */
     .man { fill: var(--jframework-clrMan); }
     .woman { fill: var(--jframework-clrWoman); }
+    .group { fill: var(--jframework-clrGroup); }
 
     .manSpouse { fill: var(--jframework-clrMan); }
     .womanSpouse { fill: var(--jframework-clrWoman); }
@@ -252,16 +254,20 @@
     }
     
 
+/*
     .helpImage {
 	width: 100%;
 	max-width: min(40em, 80vh);
 	border: 1px solid black;
     }
 
-    .jframework-3dButton { /* Override. */
+
+    .jframework-3dButton {
         width: 45px;
         height: 45px;
     }
+*/
+
   </style>
 </head>
 
@@ -459,7 +465,7 @@
 
       <p><b style='color:var(--jframework-clrStandoutText)'>To change the layout of the tree: </b>Use the &#9776; menu.</p>
 
-      <p><b style='color:var(--jframework-clrStandoutText)'>To pan or zoom the family tree:</b> Drag to pan.  Use the scroll wheel (or pinch ans stretch on a touchscreen) to zoom.</p>
+      <p><b style='color:var(--jframework-clrStandoutText)'>To pan or zoom the family tree:</b> Drag to pan.  Use the scroll wheel (or pinch and stretch on a touchscreen) to zoom.</p>
 
       <p>&nbsp;</p>
       <p>&nbsp;</p>
@@ -469,17 +475,12 @@
       <h4 style='width:100%;border-bottom: 1px solid black'>Things to be aware of</h4>
       <p>The names here are the ones used in the English Standard Version of the Bible (ESV).</p>
 
-      <p>Don&rsquo;t forget that different people may have the same name, and the same person may have more than one name (Abram and Abraham for instance).  This can be confusing sometimes.</p>
+      <p>Don&rsquo;t forget that different people may have the same name, and the same person may have more than one name (Abram and Abraham for instance).</p>
 
-      <p>It is not always possible to give definitive information about genealogies:
-	<ul style='list-style-type:disc; padding-left: 20px'>
-	  <li style='margin-bottom:0.5em'>
-	    We give information about the number of generations after Adam to the given person, or the number of generations before Jesus.  These numbers are approximate:
-	    in the original texts, phrases like &lsquo;son of&rsquo; sometimes mean not &lsquo;immediate child of&rsquo; but &lsquo;descendant of&rsquo;, so it is not always clear how many generations are involved.
-	    Jesus, for example, is referred to as the <i>Son</i> of David, even though many generations passed between David and Jesus.</li>
-	  
-	  <li>In some places the exact details of genealogies may be the subject of debate.  Where this is the case, we try to include in the info box a link to a discussion of the alternatives.</li>
-	</ul>
+      <p>In some places the exact details of genealogies may be the subject of debate.  Where this is the case, we try to include in the info box a link to a discussion of the alternatives.
+	 You can find the full list of ambiguities <button title='Full list of ambiguities' class='jframework-linkAsButton' onclick="window.open(`https://tinyurl.com/STEP-GenealogyDecisions`, `_blank`, `noopener,noreferrer`)">here</button>.</p>
+
+      <p>In a few places you will see names like +1, +2, etc.  We use these where we can be confident that people must have existed who are not named in the Bible.</p>
     </div> <!-- jframework-modalDialogBody -->
   </div> <!-- #helpModal -->
 
@@ -548,7 +549,7 @@
 	</div>
 	<br>
 	
-	<textarea id='builtInTreesMenuSearchBox' class='jframework-searchBox' placeholder='&#x1F50D Search ...'></textarea>
+	<textarea id='builtInTreesMenuSearchBox' class='jframework-searchBox' maxlength='100' placeholder='&#x1F50D Search ...'></textarea>
 	<div id='builtInTreesMenuSearchBoxTableContainer' class='jframework-searchTableContainer' style='border: 2px solid black; height:30vh; max-height: 30vh; overflow-y:auto;'>
 	  <table class='jframework-searchTable jframework-standardText'>
 	    <colgroup><col span='1' style='width:6em;'></col><col span='1' style='width:auto;'></col></colgroup>
@@ -635,7 +636,7 @@
       <br>
       
       <input type='checkbox' id='highlightRelations' class='jframework-3dCheckbox' title='Highlight siblings and children of selected person' onchange='PresentationHandler.changeRelationsHighlighting(this.checked)'>
-      <label for='highlightRelations'>Highlight <span style='color:red'>siblings</span> and <span style='color:blue'>children</span> of selected person.</label>
+      <label for='highlightRelations'>Highlight <span style='background:black;color:yellow'>siblings</span> and <span style='background:green;color:yellow'>children</span> of selected person.</label>
     </div>
   </div>
   <!-- Layout menu modal -->
@@ -663,7 +664,7 @@
       </div>
 
       <div style='margin-bottom:10px;'>Select a descendant from the list below in order to have the <i><b>MALE</b></i> family line to that person added to the display.</div>
-      <textarea id='descendantSearchBox' class='jframework-searchBox' style='background: white;' placeholder='&#x1F50D Search ...'></textarea>
+      <textarea id='descendantSearchBox' class='jframework-searchBox' maxlength='100' placeholder='&#x1F50D Search ...'></textarea>
       
       <div id='descendantTableContainer' class='jframework-searchTableContainer' style='border: 2px solid black; height:30vh; overflow-y:auto;'>
 	<table class='jframework-searchTable jframework-standardText'>

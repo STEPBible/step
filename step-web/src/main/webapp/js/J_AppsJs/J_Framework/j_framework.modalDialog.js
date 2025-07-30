@@ -3,7 +3,7 @@
 
    This shows and hides modals, and when visible places an opaque layer across
    the underlying window, partly to set the modal off from the background, and
-   partly so that nly clicks on the modal itself do anything (except that a
+   partly so that only clicks on the modal itself do anything (except that a
    click on the background will hide the modal).
 
    The facilities support the option of having more than one modal visible at
@@ -45,6 +45,21 @@ export class ClassJFrameworkModalDialog
 
     
     /**************************************************************************/
+    /* Closes the topmost modal dialog if there is one and it has the given
+       id. */
+    
+    closeIfTopModalDialog (popUp)
+    {
+	if (this._openModalDialogs.length === 0) return;
+
+	if (popUp === this._openModalDialogs[this._openModalDialogs.length - 1])
+	    this.closeTopModalDialog();
+    }
+
+    
+    /**************************************************************************/
+    /* Always closes the topmost modal if any are open. */
+    
     closeTopModalDialog ()
     {
 	if (this._openModalDialogs.length === 0) return;

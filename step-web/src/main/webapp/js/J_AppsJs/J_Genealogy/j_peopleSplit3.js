@@ -110,7 +110,7 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
             join = join.substring(0, join.length - 1) + ")";
         }
 
-	return window.location.origin + '/?skipwelcome&q=' + join + partialUrl; // + "&options=VHN");
+	return window.location.origin + '/?skipwelcome&q=' + join + partialUrl; // + "&options=VHN&noredirect");
     }
 
 

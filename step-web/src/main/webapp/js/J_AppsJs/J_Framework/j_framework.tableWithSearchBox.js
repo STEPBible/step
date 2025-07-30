@@ -465,13 +465,15 @@ export class ClassJFrameworkTableWithSearchBox
 
        This may be called under either of two circumstances:
 
-       - If 'reason' is _SHOW_SELECION, the method is being called because
-         the user has selected a single item, and we may or may not want to
-	 arrange things so that just that single item is visible, and resize
-         the containing frame to accommodate just the one item.
+       - If 'reason' is _SHOW_SELECTED_OPTION, the method is being
+         called because the user has selected a single item, and we
+         may or may not want to arrange things so that just that
+         single item is visible, and resize the containing frame to
+         accommodate just the one item.
 
-       - If 'reason' is _SHOW_AVAILABLE_OPTIONS_FOR_SELECTION, the method is being called
-         to show a list of items which are available for selection.
+       - If 'reason' is _SHOW_AVAILABLE_OPTIONS, the method is being
+         called to show a list of items which are available for
+         selection.
 
 
        Unless _hideTableWhenNotInUse is set, there is nothing for the method
@@ -479,12 +481,14 @@ export class ClassJFrameworkTableWithSearchBox
        is nothing to do unless the table is being shown in an iframe.
        Otherwise ...
 
-       The two alternatives differ only in whether the table is displayed or
-       not.  With _SHOW_AVAILABLE_OPTIONS it is _always_ displayed, because it needs to
-       be visible in order fo the user to make selections.
+       The two alternatives differ only in whether the table is
+       displayed or not.  With _SHOW_AVAILABLE_OPTIONS it is _always_
+       displayed, because it needs to be visible in order fo the user
+       to make selections.
 
-       With _SHOW_SELECTED_OPTION, the single selection is shown only if
-       _keepSelectedRowVisible is true -- otherwise the table is completely
+       With _SHOW_SELECTED_OPTION, the single selection is shown only
+       if _keepSelectedRowVisible is true -- otherwise the table is
+       completely
        hidden. */
     
     _accommodateOwnerToTable (reason)
@@ -737,9 +741,10 @@ export class ClassJFrameworkTableWithSearchBox
 	    {
 		tblHandler._tableContainer.style.overflowY = 'auto';
 		tblHandler._filterTable(tblHandler._searchBox[0].value, tblHandler); // Filter to select stuff in line with the content of the search box as it stood when we were last here.
-		requestAnimationFrame(() => { // Attempt to position the row so that it's in the same place vertically as before.
-		    tblHandler._tableContainer.scrollTop = tblHandler._rowLastSelected.offsetTop - tblHandler._rowLastSelectedRelativeOffset;
-		});		
+		if(tblHandler._rowLastSelected)
+		    requestAnimationFrame(() => { // Attempt to position the row so that it's in the same place vertically as before.
+			tblHandler._tableContainer.scrollTop = tblHandler._rowLastSelected.offsetTop - tblHandler._rowLastSelectedRelativeOffset;
+		    });	
 	    }
 	});
     }
@@ -796,7 +801,10 @@ export class ClassJFrameworkTableWithSearchBox
 		tblHandler._accommodateOwnerToTable(this._SHOW_SELECTED_OPTION);
 		tblHandler._searchBox.blur();
 		tblHandler._previousSearchString = tblHandler._searchBox[0].value;
+		return;
 	    }
+	    
+	    tblHandler._accommodateOwnerToTable(this._SHOW_AVAILABLE_OPTIONS);
 	}
     }
 

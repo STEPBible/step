@@ -232,11 +232,11 @@ function u (charCode)
 
 /******************************************************************************/
 const GenderOrGroupIndicators = [
-    ['Male'     , ''],
-    ['Female'   , ' ' + u(0x2640) ],
-    ['Ancestors', ' ' + u(0x2642) + u(0x2642) + u(0x2640) + u(0x2640) ],
-    ['Group'    , ' ' + u(0x2642) + u(0x2642) + u(0x2640) + u(0x2640) ],
-    ['People'   , ' ' + u(0x2642) + u(0x2642) + u(0x2640) + u(0x2640) ],
+    ['Male'       , ''],
+    ['Female'     , ' ' + u(0x2640) ],
+    ['Ancestors'  , '' ],
+    ['Group'      , '' ],
+    ['People'     , '' ],
     ['PseudoEntry', '']
 ];
 
@@ -398,6 +398,8 @@ class _ClassInitialisationHandler extends ClassJFrameworkMultiframeCommunication
 		    this._suppressSendMessage = false;
 		}
 	    }
+
+	    ControlsHandler.hideBuiltInTreesDialog();
 	}
 
 
@@ -1388,8 +1390,7 @@ class ClassDataHandler
     /**************************************************************************/
     getRoleDescription (personRecord)
     {
-	const entry = RoleDetails.get(personRecord.role);
-	return entry ? entry[1] : null;
+	return personRecord.role ? personRecord.role: null;
     }
 
 	
@@ -1435,6 +1436,13 @@ class ClassDataHandler
     }
 
 	    
+    /**************************************************************************/
+    isGroup (personRecord)
+    {
+	return !this.isMale(personRecord) && !this.isFemale(personRecord); // Not too sure about this.
+    }
+
+
     /**************************************************************************/
     isMale (personRecord)
     {
@@ -1482,7 +1490,7 @@ class ClassDataHandler
     /**************************************************************************/
     initialise ()
     {
-	const jsonPath = JFrameworkUtils.getFullUrl('html/json/J_AppsJson/J_Genealogy/j_genealogy.json');
+	const jsonPath = JFrameworkUtils.getFullUrl('html/json/J_AppsJson/J_Genealogy/j_genealogy_min.json');
 	const me = this;
 	this._acquireRawGenealogyData(jsonPath, function(text) {
             me.GenealogyData = JSON.parse(text);
@@ -1690,6 +1698,8 @@ class ClassVerticalLayoutHandler
 	    const x = d3.select(node);
 
 	    const isMan = DataHandler.isMale(personRecord);
+	    const isWoman = DataHandler.isFemale(personRecord);
+	    const isGroup = DataHandler.isGroup(personRecord);
 
 	    const textNode = x.append('text')
 		  .attr('x', +10) // Adjust position based on parent/child
@@ -1706,7 +1716,8 @@ class ClassVerticalLayoutHandler
 
 	    textNode.append('tspan')
 	        .classed('man', isMan)
-	        .classed('woman', !isMan)
+	        .classed('woman', isWoman)
+	        .classed('group', isGroup)
 		.text(name);
 	    
 	    const owningTextNodeX = Number(textNode.attr('x')) + 5;
@@ -2348,6 +2359,13 @@ window.BackAndForwardStackHandler = BackAndForwardStackHandler;
      new tree.  But if, having gone to Jochebed you then select Aaron as one
      of her children from the info box, this gives you an entirely new copy
      of Aaron, and this _does_ count as a new tree.
+
+
+   Strictly entries here need to be retained only while their id is associated
+   either with the item currently being displayed, or with anything on the
+   back and forward stack.  However, I hold only a very small amount of
+   information for each item, so we're unlikely to run out of space, and I
+   feel it's safer if I retain things forever.
 */
 
 /******************************************************************************/
@@ -3035,6 +3053,7 @@ class _ClassPresentationHandler
 
 
 	/************************************************************************/
+	const nameForDisplayInInfoBox = nameForDisplayInBodyOfInfoBoxGivenPersonRecord(personRecord);
 	const fatherName = personRecord.father.disambiguatedName;
 	const motherName = personRecord.mother.disambiguatedName;
 	const partners   = personRecord.partners || [];
@@ -3042,10 +3061,10 @@ class _ClassPresentationHandler
 	const siblings   = personRecord.siblings || [];
 	const summaryDescription = personRecord.summaryDescription;
 	const longDescription = personRecord.longDescription;
-	const alternativeNames = 0 == personRecord.alternativeNames.length ? '' : '; also known as ' + personRecord.alternativeNames.map( x => x.replace('@', ':') ) + '.';
+	const alternativeNames = 0 == personRecord.alternativeNames.length ? '' : ' Also known as ' + personRecord.alternativeNames.map( x => x.replace('@', ':') ) + '.';
 
 	const ambiguity = EmptyFieldMarker == personRecord.ambiguity ? '' :
-	      `<p><b>Differing interpretations exist here.</b>  Click <a href='${personRecord.ambiguity}' target='_blank'>here</a> for details.</p>`;
+	      `<p><b>Differing interpretations exist here.</b>  Click <button class="jframework-linkAsButton" title="Details of ambiguity" onclick="window.open('${personRecord.ambiguity}', '_blank', 'noopener,noreferrer')">here</button> for details.</p>`;
 
 	const siblingList = 0 == siblings.length ? '' :
 	      `<p><b>Siblings:</b>  ${siblings.length  > 0 ? siblings.map (sibling => `<button class="sibling-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenNameKey(sibling.disambiguatedName)}</button>`).join(", ") : "-" }</p>`;
@@ -3053,14 +3072,39 @@ class _ClassPresentationHandler
 	const childrenList = 0 == children.length ? '' :
 	      `<p><b>Children:</b> ${children.length > 0 ? children.map(kid     => `<span class="children-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenNameKey(kid.disambiguatedName)}</span>`).join(", ") : "-" }</p>`;
 
-	const explanation = '<button class="jframework-linkAsButton" title="We rely here upon statements like &lsquo;a is the son of b&rsquo;.  Sometimes, though, &lsquo;son of&rsquo; actually just means &lsquo;descendant of&rsquo;.">(This may only be approximate.)</button>';
 
-	const generationsFromAdam = -1 == personRecord.generationsFromAdam ? '' :
-	      `<p><b>Generations after Adam:</b> ${personRecord.generationsFromAdam} or more ${explanation}</p>`;
 
-	const generationsToJesus = personRecord.generationsToJesus <= 0 ? '' :
-	      `<p><b>Generations before Jesus:</b> ${personRecord.generationsToJesus} or more ${explanation}</p>`;
+	/************************************************************************/
+	/* This requires a little explanation ...
 
+	   If we go by the genealogy in Luke, there should be 77 generations from
+	   Adam to Jesus.  This means that for records which have generation
+	   details (not all do), generationsFromAdam and generationsToJesus
+	   should add to 77.  In fact, although in all cases the sum is very
+	   close to 77, it may be a few adrift, and I add the missing value to
+	   generationsFromAdam.
+
+	   I then convert this to a given number of 5%'s of 77, and draw a
+	   poor man's bar chart, grey except for a black square which
+	   roughly marks where the person comes in the overall count of
+	   generations from Adam to Jesus (or more accurately from Adam to
+	   the NT, since not all people are in the family tree to Jesus). */
+	
+	var generations = ''
+	if (-1 != personRecord.generationsFromAdam)
+	{
+	    var generationsFromAdam = personRecord.generationsFromAdam;
+	    const variance = -1 == personRecord.generationsToJesus ? 0 : 77 - (generationsFromAdam + personRecord.generationsToJesus);
+	    generationsFromAdam += variance;
+	    const fromAdamFivePercents = Math.round( (100 * (generationsFromAdam / 77)) / 5);
+	    const before = '&#x2588;'.repeat(fromAdamFivePercents);
+	    const after  = '&#x2588;'.repeat(20 - fromAdamFivePercents);
+	    generations = `<p><b>Timeline:</b> Adam &#x25C0; <span style='color:lightgray;font-size:small'>${before}</span>&#x2588;<span style='color:lightgray;font-size:small'>${after}</span> &#x25B6; NT</p>`;
+	}
+
+
+	
+	/************************************************************************/
 	const summaryDescriptionX = '' == summaryDescription ? '' : '<p>' + summaryDescription + '</p>';
 
 	const longDescriptionX    = '' == longDescription    ? '' : '<p>' + longDescription    + '</p>';
@@ -3112,13 +3156,14 @@ class _ClassPresentationHandler
 	/************************************************************************/
 	const summaryIcon = DataHandler.getSummaryIcon(personRecord);
 	const spacer = summaryIcon ? '&nbsp;' : '';
+	const multipleReferences = personRecord.allRefsAsRanges.length > 1 ? ' etc' : '';
 	infoBoxContent
 	    .html(`
               <div style='display:flex; align-items:center'><span class='iconFont'>${summaryIcon}</span>
                 <span>
                   ${spacer}
-                  <span class="person-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenPersonRecord(personRecord)}</span>
-                  <span>&nbsp;(${"" === personRecord.role ? "" : (personRecord.role + " ")}first mentioned at ${firstScriptureReference(personRecord)})</span>
+                  <span class="person-link jframework-linkAsButton">${nameForDisplayInInfoBox}</span>
+                  <span>&nbsp;${"" === personRecord.role ? "" : (personRecord.role + " ")} (at ${firstScriptureReference(personRecord)}${multipleReferences}).</span>
                   <span>${alternativeNames}</span>
                 </span>
                 <span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree'>Shareable link</span>
@@ -3130,8 +3175,7 @@ class _ClassPresentationHandler
               &nbsp;&nbsp;&nbsp;<b>Mother:</b> ${motherName !== EmptyFieldMarker ? `<span class="mother-link jframework-linkAsButton">${nameForDisplayInBodyOfInfoBoxGivenNameKey(motherName)}</span>` : '-' }
               ${siblingList}
               ${childrenList}
-              ${generationsFromAdam}
-              ${generationsToJesus}
+              ${generations}
               ${ambiguity}
               ${summaryDescriptionX}
               ${longDescriptionX}
@@ -3176,8 +3220,8 @@ class _ClassPresentationHandler
 	{
             const infoBox = document.getElementById('info-box');
             Array.from(infoBox.getElementsByTagName('xref')).forEach (element => {
-		element.style.color = 'blue';
-		element.style.cursor = 'pointer';
+		element.name = 'button'
+		element.classList.add('jframework-linkAsButton');
 		element.onclick = function() { JFrameworkMultiframeCommunicationsSlave.sendSetUrlForce('scripture', window.location.origin + '/?skipwelcome&q=' + 'reference=' + element.getAttribute('ref')) }
             });
 	}
@@ -3459,11 +3503,18 @@ const GraphicsHandler = new ClassGraphicsHandler();
 class _ClassControlsHandler
 { 
     /**************************************************************************/
+    hideBuiltInTreesDialog ()
+    {
+	ModalDialogHandler.closeIfTopModalDialog(document.getElementById('builtInTreesMenu'));
+    }
+
+    
+    /**************************************************************************/
     showHelpMenu ()
     {
 	const modal = document.getElementById('help');
 	ModalDialogHandler.showModalDialog(modal);
-	modal.scrollTop = 0;
+	modal.querySelector('.jframework-modalDialogBody').scrollTop = 0;
 	modal.style.top = '20px';
 	modal.style.left = (window.innerWidth - modal.offsetWidth) / 2 + 'px';
     }

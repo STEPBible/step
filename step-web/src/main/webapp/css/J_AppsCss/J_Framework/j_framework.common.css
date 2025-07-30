@@ -27,7 +27,7 @@
     --jframework-clrStandardBorder: var(--clrHighlight);
     --jframework-clrButtonText: var(--clrHighlight);
     --jframework-clrButtonHover: var(--jframework-clrPopUpMenuItemBackgroundUnselected);
-    --jframework-clrGreyedBtnText: rgb(128, 128, 128);
+    --jframework-clrGreyedBtnText: rgb(192, 192, 192);
     
     --jframework-clrStandoutText: var(--clrHighlight);
 

@@ -124,7 +124,7 @@
       
     .highlightSiblings {
 	text-shadow: 1px 1px 10px black;
-	animation: highlightSiblings 1s infinite; /* 2 seconds duration (1s on, 1s off), infinite loop */
+	/* animation: highlightSiblings 1s infinite; seconds duration (1s on, 1s off), infinite loop */
     }
 
     @keyframes highlightSiblings {
@@ -135,7 +135,7 @@
 
     .highlightChildren {
 	text-shadow: 1px 1px 10px green;
-	animation: highlightChildren 1s infinite; /* 2 seconds duration (1s on, 1s off), infinite loop */
+	/* animation: highlightChildren 1s infinite; 2 seconds duration (1s on, 1s off), infinite loop */
     }
 
     @keyframes highlightChildren {
@@ -636,7 +636,7 @@
       <br>
       
       <input type='checkbox' id='highlightRelations' class='jframework-3dCheckbox' title='Highlight siblings and children of selected person' onchange='PresentationHandler.changeRelationsHighlighting(this.checked)'>
-      <label for='highlightRelations'>Highlight <span style='background:black;color:yellow'>siblings</span> and <span style='background:green;color:yellow'>children</span> of selected person.</label>
+      <label for='highlightRelations'>Highlight <span style='text-shadow: 1px 1px 10px black;color:blackyellow'>siblings</span> and <span style='text-shadow: 1px 1px 10px green;color:darkgreen'>children</span> of selected person.</label>
     </div>
   </div>
   <!-- Layout menu modal -->

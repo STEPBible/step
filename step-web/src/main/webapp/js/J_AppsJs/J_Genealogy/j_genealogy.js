@@ -2715,6 +2715,7 @@ class _ClassPresentationHandler
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, adamPersonRecord);
 	this.SubtreeHighlightHandler.refresh();
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2724,6 +2725,7 @@ class _ClassPresentationHandler
     showTreeAdamToSonsOfNoah ()
     {
 	this._treeForRootToTargetAndSiblings('Adam@Gen.2.19-Jud', 'Shem@Gen.5.32-Luk');
+	BackAndForwardStackHandler.newSelection();
     }
 
 
@@ -2736,6 +2738,7 @@ class _ClassPresentationHandler
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(amramPersonRecord, null, null, 5);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, amramPersonRecord, indexFromName('Moses@Exo.2.10-Rev'));
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2750,6 +2753,7 @@ class _ClassPresentationHandler
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(rootPersonRecord, null, null, 5 + 1);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, rootPersonRecord, indexFromName('David@Rut.4.17-Rev'));
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2759,6 +2763,7 @@ class _ClassPresentationHandler
     showTreeHighPriests ()
     {
 	this._treeForRootAndNumberOfGenerations('Aaron@Exo.4.14-Heb', 9999);
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2782,6 +2787,7 @@ class _ClassPresentationHandler
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(isaacPersonRecord, new Set( [...selectedRecordsAccumulator, ...selectedRecordsIsaacToIsrael] ), null, -1);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, isaacPersonRecord);
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2796,6 +2802,7 @@ class _ClassPresentationHandler
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(judahPersonRecord, new Set( [...generalSelectedRecords, ...amminadabSelectedRecords] ), null, -1);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, judahPersonRecord);
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2815,6 +2822,7 @@ class _ClassPresentationHandler
 
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, adamPersonRecord);
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2827,6 +2835,7 @@ class _ClassPresentationHandler
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(fatherOfElizabethPersonRecord, null, null, 9999);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, fatherOfElizabethPersonRecord, indexFromName('Jesus@Isa.7.14-Rev'));
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2840,6 +2849,7 @@ class _ClassPresentationHandler
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(noahPersonRecord, new Set( [...abrahamSelectedRecords, ...generalSelectedRecords, ...cushSelectedRecords] ), null, -1);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, noahPersonRecord);
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2847,6 +2857,7 @@ class _ClassPresentationHandler
     showTreeOriginOfNations ()
     {
 	this.showTreeNoahToAbraham();
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2860,6 +2871,7 @@ class _ClassPresentationHandler
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, rahabPersonRecord);
 	this.SubtreeHighlightHandler.refresh();
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2953,6 +2965,7 @@ class _ClassPresentationHandler
 	
 	nebatPersonRecord.father.disambiguatedName = EmptyFieldMarker;
 	omriPersonRecord.father.disambiguatedName  = EmptyFieldMarker;
+	// BackAndForwardStackHandler.newSelection(); Can't do this -- we have more than one origin for the royal family tree, and that confuses things.
     }
 
     
@@ -2965,6 +2978,7 @@ class _ClassPresentationHandler
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(abielPersonRecord, null, null, 3);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, abielPersonRecord, indexFromName('Saul@1Sa.9.2-Act'));
+	BackAndForwardStackHandler.newSelection();
     }
 
     
@@ -2977,6 +2991,7 @@ class _ClassPresentationHandler
 	const [selectedRecords, root, duplicatedRecords] = SubtreeSelector.createTreeByGenerationOrRetention(terahPersonRecord, null, null, 3);
 	this._setSelectedAndDuplicated(selectedRecords, duplicatedRecords);
 	this._redrawUsingJustSelectedRecords(root, terahPersonRecord, indexFromName('Abraham@Gen.11.26-1Pe'));
+	BackAndForwardStackHandler.newSelection();
     }
 
     

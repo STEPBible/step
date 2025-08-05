@@ -1,0 +1,40 @@
+.\" ========================================================================
+.\"
+.IX Title "IMP2GBS.1 1"
+.TH IMP2GBS.1 1 "2018-11-05"
+.SH "NAME"
+imp2gbs \- general book module creation tool
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+\&\fBimp2gbs\fR [input file] [\s-1OPTIONS\s0]
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+A command line utility to convert imp (import) formatted general book into \s-1SWORD\s0
+module.
+.SH "OPTIONS"
+.IX Header "OPTIONS"
+.IP "\fB\-o [\s-1PATH\s0]\fR" 4
+.IX Item "-o [PATH]"
+Specify the output path, if different from the input file's.
+.IP "\fB\-a\fR" 4
+.IX Item "-a"
+Create augment module. Default is to create new module.
+.IP "\fB\-O\fR" 4
+.IX Item "-O"
+Overwrite entries of same key. Default is to append.
+.IP "\fB\-U\fR" 4
+.IX Item "-U"
+A key filter which converts toUpper.
+.IP "\fB\-g\fR" 4
+.IX Item "-g"
+A key filter which strips greek diacritics.
+.IP "\fB\-l [levels]\fR" 4
+.IX Item "-l [levels]"
+A key filter which uses Pseudo-Lexicon n\-level generation using first character,
+e.g. \-l 2 \*(L"Abbey\*(R" \-> \*(L"A/AB/Abbey\*(R".
+.SH "Authors"
+.IX Header "Authors"
+This manual page was written by Dmitrijs Ledkovs <dmitrij.ledkov@gmail.com> for
+Debian project but may be used by others.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"

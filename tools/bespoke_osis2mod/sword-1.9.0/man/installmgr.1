@@ -1,0 +1,76 @@
+.\" ========================================================================
+.\"
+.IX Title "INSTALLMGR.1 1"
+.TH INSTALLMGR.1 1 "2018-11-05"
+.SH "NAME"
+installmgr \- install, list, update and remove SWORD modules
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+\&\fBinstallmgr\fR \-init
+.PP
+\&\fBinstallmgr\fR \-l
+.PP
+\&\fBinstallmgr\fR \-u [ModuleName]
+.PP
+\&\fBinstallmgr\fR \-s
+.PP
+\&\fBinstallmgr\fR [\-r | \-rl | \-rd] [RemoteSrcName]
+.PP
+\&\fBinstallmgr\fR \-ri [RemoteSrcName] [ModuleName]
+.PP
+\&\fBinstallmgr\fR \-ll [\s-1PATH\s0]
+.PP
+\&\fBinstallmgr\fR \-li [\s-1PATH\s0] [ModuleName]
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+A command line utility to manipulate \s-1SWORD\s0 modules. It can be used to install,
+remove, list and update \s-1SWORD\s0 modules, from local and network locations.
+.PP
+Please note modules will be installed into /usr/share/sword without using
+\&\s-1APT.\s0 If you use this utility you will not be able to uninstall these modules
+using apt-get, aptitude, synaptic and similar tools.
+.SH "OPTIONS"
+.IX Header "OPTIONS"
+.IP "\fB\-init\fR" 4
+.IX Item "-init"
+Creates basic user configuration file. This will overwrite existing one.
+.IP "\fB\-l\fR" 4
+.IX Item "-l"
+Lists currently installed \s-1SWORD\s0 modules.
+.IP "\fB\-u [ModuleName]\fR" 4
+.IX Item "-u [ModuleName]"
+Uninstalls module.
+.IP "\fB\-s\fR" 4
+.IX Item "-s"
+Lists available remote sources
+.IP "\fB[\-r | \-rl | \-rd] [RemoteSrcName]\fR" 4
+.IX Item "[-r | -rl | -rd] [RemoteSrcName]"
+These are used to manipulate remote sources.
+.RS 4
+.IP "\-r" 4
+.IX Item "-r"
+Refreshes remote source.
+.IP "\-rl" 4
+.IX Item "-rl"
+Lists available modules from the remote source.
+.IP "\-rd" 4
+.IX Item "-rd"
+Lists new/updated modules from the remote source.
+.RE
+.RS 4
+.RE
+.IP "\fB\-ri [RemoteSrcName] [ModuleName]\fR" 4
+.IX Item "-ri [RemoteSrcName] [ModuleName]"
+Install module from remote source.
+.IP "\fB\-ll [\s-1PATH\s0]\fR" 4
+.IX Item "-ll [PATH]"
+List available modules at a specified local path.
+.IP "\fB\-li [\s-1PATH\s0] [ModuleName]\fR" 4
+.IX Item "-li [PATH] [ModuleName]"
+Install module from local path.
+.SH "Authors"
+.IX Header "Authors"
+This manual page was written by Dmitrijs Ledkovs <dmitrij.ledkov@gmail.com> for
+Debian project but may be used by others.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"

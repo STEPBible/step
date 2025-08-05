@@ -1,0 +1,50 @@
+.\" ========================================================================
+.\"
+.IX Title "VPL2MOD.1 1"
+.TH VPL2MOD.1 1 "2018-11-05"
+.SH "NAME"
+vpl2mod \- tool to convert verse per line source to SWORD module
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+\&\fBvpl2mod\fR \s-1SOURCE PATH\s0 [0|1] [0|1]
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+This utility is used to create \s-1SWORD\s0 module from the verse per line formatted
+source. The resulting module will be saved in the path specified.
+.SH "OPTIONS"
+.IX Header "OPTIONS"
+.IP "\fB[0|1] [0|1]\fR" 4
+.IX Item "[0|1] [0|1]"
+The first option indicates whether to prepend verse references or not.
+The second option is to indicate whether module is \s-1NT\s0 only or not.
+.SH "NOTE"
+.IX Header "NOTE"
+With no verse references source file must contain exactly 31102 lines. This is
+\&\s-1KJV\s0 verse count plus heading for the module, testament, book and chapter. An
+example snippet follows:
+.PP
+.Vb 5
+\& MODULE HEADER
+\& OLD TESTAMENT HEADER
+\& GENESIS HEADER
+\& CHAPTER 1 HEADER
+\& In the beginning...
+.Ve
+.PP
+This example implies there must also be a chapter 2 header, Exodus header, New
+Testament header, etc. If there is no text for the header, a black line must, at
+least, hold place.
+.PP
+With verse references, source file must simply contain any number of lines, that
+begin with the verse reference for which it is an entry, e.g.:
+.PP
+.Vb 2
+\& gen 1:0 CHPATER 1 HEADER
+\& get 1:1 In the beginning...
+.Ve
+.SH "Authors"
+.IX Header "Authors"
+This manual page was written by Dmitrijs Ledkovs <dmitrij.ledkov@gmail.com> for
+Debian project but may be used by others.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"

@@ -1,0 +1,883 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Diatheke Online Bible</title>
+</head>
+
+<body>
+
+<form method="get" action="cgi-bin/diatheke.pl">
+  <p /> <font face="Arial, Helvetica, sans-serif">Verse or Search key:</font> 
+    <input type="text" name="verse" size="20">
+    <input type="submit" name="Submit" value="Submit">
+    <input type="reset" name="Reset" value="Reset">
+    <br />
+    <br />
+    <input type="radio" name="search" checked value="" />
+    <font face="Arial, Helvetica, sans-serif">Verse/Commentary Lookup</font> <br />
+    <input type="radio" name="search" value="phrase" />
+    <font face="Arial, Helvetica, sans-serif">Phrase Search</font><br />
+    <input type="radio" name="search" value="multiword" />
+    <font face="Arial, Helvetica, sans-serif">Multiple Word Search</font><br />
+    <input type="radio" name="search" value="regex" />
+    <font face="Arial, Helvetica, sans-serif">Regular Expression Search</font> 
+    <br>
+  <p />&nbsp; 
+  <table width="100%" border="0">
+    <tr> 
+      <td width="50%"> 
+        <input type="checkbox" name="strongs" value="on" checked>
+        <font size="-1" face="Arial, Helvetica, sans-serif">Show Strong's Numbers</font></td>
+      <td width="50%"> 
+        <input type="checkbox" name="headings" value="on" checked>
+        <font size="-1" face="Arial, Helvetica, sans-serif">Show Section Headings</font></td>
+    </tr>
+    <tr> 
+      <td width="50%"> 
+        <input type="checkbox" name="footnotes" value="on" checked>
+        <font size="-1" face="Arial, Helvetica, sans-serif">Show Footnotes</font></td>
+      <td width="50%"> 
+        <input type="checkbox" name="scriprefs" value="on" checked>
+        <font size="-1" face="Arial, Helvetica, sans-serif">Show Scripture Cross-References</font></td>
+    </tr>
+    <tr> 
+      <td width="50%"> 
+        <input type="checkbox" name="morph" value="on" checked>
+        <font size="-1" face="Arial, Helvetica, sans-serif">Show Morphology</font></td>
+      <td width="50%"> 
+        <input type="checkbox" name="hebvowels" value="on" checked>
+        <font size="-1" face="Arial, Helvetica, sans-serif">Show Hebrew Vowels</font></td>
+    </tr>
+    <tr> 
+      <td width="50%"> 
+        <input type="checkbox" name="lemmas" value="on" checked>
+        <font size="-1" face="Arial, Helvetica, sans-serif">Show Lemmas</font></td>
+      <td width="50%"> 
+        <input type="checkbox" name="hebcant" value="on">
+        <font size="-1" face="Arial, Helvetica, sans-serif">Show Hebrew Cantillation 
+        Marks </font></td>
+    </tr>
+    <tr> 
+      <td width="50%"> 
+        <input type="checkbox" name="latinxlit" value="on">
+        <font face="Arial, Helvetica, sans-serif" size="-1">Latin Transliterate</font> 
+      </td>
+      <td width="50%"> 
+        <input type="checkbox" name="grkacc" value="on" checked>
+        <font size="-1" face="Arial, Helvetica, sans-serif">Show Greek Accents</font> 
+      </td>
+    </tr>
+  </table>
+  <br>
+  <table BORDER="0" WIDTH="100%">
+    <tr> 
+      <td width="48%"><font face=Times New Roman, Times, serif><b>English Biblical 
+        Texts:</b></font><br />
+      </td>
+      <td width="51%"><font face=Times New Roman, Times, serif><b>Non-English 
+        Biblical Texts:</b></font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="AKJV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>American King James 
+        Version (AKJV)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="ALB" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Albanian Bible (ALB)</font> 
+      </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="ASV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1901 American Standard 
+        Version (ASV)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="AraSVD" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Smith & Van Dyke Arabic 
+        Bible (AraSVD)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="BBE" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1965 Bible in Basic 
+        English (BBE)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="ChiGU" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Chinese Glory Union 
+        Bible (ChiGU)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Common" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>The Common Edition: 
+        New Testament (Common)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="CzeBKR" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Czech Bible Kralicka 
+        (CzeBKR)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="DR" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Douay-Rheims Bible 
+        (DR)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="CzeCEP" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Czech Ekumenicky Cesky 
+        preklad (CzeCEP)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="DRA" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Douay-Rheims 1899 American 
+        Edition (DRA)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="CzeKMS" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Czech Preklad KMS Nova 
+        smlouva (CzeKMS)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Darby" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1889 Darby Bible (Darby)</font> 
+      </td>
+      <td width="51%"> 
+        <input type="checkbox" name="CzeNKB" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Czech Nova kralicka 
+        Bible (CzeNKB)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="HNV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Hebrew Names Version 
+        of the World English Bible (HNV)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="Dan" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Danske Bibel (Dan)</font> 
+      </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="IGNT" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Interlinear Greek New 
+        Testament (IGNT)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="Esperanto" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Esperanto Bible (Esperanto)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="ISV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>International Standard 
+        Version (ISV)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="FinPR" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Finnish 1938 PhyZ Raamattu 
+        (FinPR)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="JPS" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Jewish Publication 
+        Society Old Testament (JPS)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="FreCrl" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>French Haitian Creole 
+        Version (FreCrl)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="KJV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>King James Version 
+        of 1611 w/ Strongs Numbers (KJV)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="FreLSG" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>French 1910 Louis Segond 
+        (FreLSG)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="LO" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>The Living Oracles 
+        NT (LO)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="GerBen" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>German Bengel NT (GerBen)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Montgomery" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Montgomery New Testament 
+        (Montgomery)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="GerLut" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>German 1912 Luther 
+        (GerLut)</font> </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Murdock" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>James Murdock's Translation 
+        of the Syriac Peshitta (Murdock)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="GerLut1545" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>German 1545 Luther 
+        (GerLut1545)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="ORTHJBC" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>The Orthodox Jewish 
+        Brit Chadasha (ORTHJBC)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="GerSch" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>German 1951 Schlachter 
+        Bibel (GerSch)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="RNKJV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Restored Name King 
+        James Version (RNKJV)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="GothicA" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Gothic Codex Ambr. 
+        A & Mss. (GothicA)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="RWebster" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Revised 1833 Webster 
+        Version (RWebster)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="GothicB" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Gothic Codex Ambr. 
+        B & Car. (GothicB)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Rotherham" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>The Emphasized Bible 
+        by J. B. Rotherham (Rotherham)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="HunKar" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Hungarian Karoli (HunKar)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="WEB" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>World English Bible 
+        (WEB)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Icelandic" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Icelandic Bible (Icelandic)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Websters" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Webster Bible (Websters)</font> 
+      </td>
+      <td width="51%"> 
+        <input type="checkbox" name="IndBIS" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Indonesian Bahasa Indonesia 
+        Sehari-hari (IndBIS)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Weymouth" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1912 Weymouth NT (Weymouth)</font> 
+      </td>
+      <td width="51%"> 
+        <input type="checkbox" name="IndTB" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Indonesian Terjemahan 
+        Baru (IndTB)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="YLT" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1898 Young's Literal 
+        Translation (YLT)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="IndTL" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Indonesian Terjemahan 
+        Baru (IndTL)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%">&nbsp; </td>
+      <td width="51%"> 
+        <input type="checkbox" name="ItaLND" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Italian 1991 La Nuova 
+        Diodati (ItaLND)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"><font face=Times New Roman, Times, serif><b>Unorthodox or 
+        Heretical Biblical Texts:</b></font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="ItaNRV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Italian 1994 La Sacra 
+        Bibbia Nuova Riveduta (ItaNRV)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Diaglott" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>The Emphatic Diaglott 
+        (Diaglott)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="JapKUG" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Japanese JKUG Translation 
+        (JapKUG)</font> </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="JST" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Joseph Smith Translation 
+        (JST)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="JapSNKI" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Japanese JSNKI Translation 
+        (JapSNKI)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%">&nbsp; </td>
+      <td width="51%"> 
+        <input type="checkbox" name="Ketchi" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Ketchi Bible (Ketchi)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"><font face=Times New Roman, Times, serif><b>Original Language 
+        Biblical Texts:</b></font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="Korean" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Korean Bible (Korean)</font></td>
+    </tr>
+    <tr> 
+      <td width="51%"> 
+        <input type="checkbox" name="LXX" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Septuagint (LXX)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Latvian" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Latvian New Testament 
+        (Latvian)</font> </td>
+    </tr>
+    <tr> 
+      <td width="51%"> 
+        <input type="checkbox" name="LXXM" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Septuagint, Morphologically 
+        Tagged Rahlfs' (LXXM)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="ManxGaelic" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Manx Gaelic Scripture 
+        Portions (ManxGaelic)</font></td>
+    </tr>
+    <tr> 
+      <td width="51%"> 
+        <input type="checkbox" name="BHS" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Biblia Hebraica Stuttgartensia 
+        (BHS)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="Maori" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Maori Bible (Maori)</font></td>
+    </tr>
+    <tr> 
+      <td width="51%"> 
+        <input type="checkbox" name="Byz" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1991 Byzantine/Majority 
+        Text (Byz)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Mel" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Melanesian Pidgin Bible 
+        (Mel)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Scrivner" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1894 Scrivener Textus 
+        Receptus (Scrivner)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Norsk" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Norsk Bibelen (Norsk)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Stephanus" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1550 Stephanus Textus 
+        Receptus (Stephanus)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="PorAA" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Portuguese Joao Ferreira 
+        de Almeida Atualizada (PorAA)</font> </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Tisch" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Tischendorf's Eighth 
+        Edition GNT (Tisch)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="RST" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Russian Synodal Translation 
+        (RST)</font></td>
+    </tr>
+    <tr> 
+      <td width="51%"> 
+        <input type="checkbox" name="Vulgate" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Latin Vulgate (Vulgate)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="RomCor" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Romanian Cornilescu 
+        Version (RomCor)</font></td>
+    </tr>
+    <tr> 
+      <td width="51%"> 
+        <input type="checkbox" name="Vulgate_HebPs" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Latin Vulgate Psalms 
+        from Hebrew (Vulgate_HebPs)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="ScotsGaelic" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Scots Gaelic Gospel 
+        of Mark (ScotsGaelic)</font></td>
+    </tr>
+    <tr> 
+      <td width="51%"> 
+        <input type="checkbox" name="WH" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1881 Westcott-Hort 
+        Greek Text (WH)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="SpaRV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Spanish Reina-Valera 
+        (SpaRV)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="WHNU" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Westcott-Hort with 
+        NA27U4 variants (WHNU)</font> </td>
+      <td width="51%"> 
+        <input type="checkbox" name="SpaSEV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Spanish 1569 Sagradas 
+        Escrituras Version Antigua (SpaSEV)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%">&nbsp;</td>
+      <td width="51%"> 
+        <input type="checkbox" name="SpaVNT" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Spanish 1858 Valera 
+        New Testament (SpaVNT)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"><font face=Times New Roman, Times, serif><b>Commentaries:</b></font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Swahili" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Swahili New Testament 
+        (Swahili)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Barnes" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Barnes' New Testament 
+        Notes (Barnes)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="SweSVE" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Swedish Bible 1917 
+        New Testament (SweSVE)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Clarke" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Adam Clarke's Commentary 
+        on the Bible (Clarke)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Tagalog" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Tagalog (John & James) 
+        (Tagalog)</font> </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="DTN" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Darby Translation Notes 
+        (DTN)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="ThaiKJV" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Thai KJV (ThaiKJV)</font> 
+      </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Family" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Family Bible Notes 
+        (Family)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Turkish" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Turkish NT (Turkish)</font> 
+      </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Geneva" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Geneva Bible Translation 
+        Notes (Geneva)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="UMGreek" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Unaccented Modern Greek 
+        Text (UMGreek)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="JFB" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Jamieson Fausset Brown 
+        Bible Commentary (JFB)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Ukrainian" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Ukrainian Bible (Ukrainian)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="MAK" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Matthias Ansorgs Kommentar 
+        (MAK)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Uma" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Uma New Testament (Uma)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="MHC" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Matthew Henry's Complete 
+        Commentary on the Whole Bible (MHC)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Viet" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1934 Vietnamese Bible 
+        (Viet)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="MHCC" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Matthew Henry's Concise 
+        Commentary on the Whole Bible (MHCC)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Xhosa" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Xhosa Bible (Xhosa)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="PNT" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>The People's New Testament 
+        (PNT)</font></td>
+      <td width="51%">&nbsp;</td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Personal" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Personal Commentary 
+        (Personal)</font></td>
+      <td width="51%"><font face=Times New Roman, Times, serif><b>Daily Devotionals:</b></font> 
+      </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="RWP" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Robertson's Word Pictures 
+        (RWP)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="Daily" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Jonathan Bagster's 
+        Daily Light on the Daily Path (Daily)</font> </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Rieger" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Carl Heinrich Riegers 
+        Kommentar (Rieger)</font></td>
+      <td width="51%"> 
+        <input type="checkbox" name="SME" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>C. H. Spurgeon's Morning 
+        and Evening: Daily Readins (SME)</font> </td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="TDavid" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>C. H. Spurgeon's Treasury 
+        of David (TDavid)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_89" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1989 Losung auf deutsch 
+        (losung_de_89)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="TFG" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>The Fourfold Gospel 
+        and Commentary on Acts of Apostles (TFG)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_90" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1990 Losung auf deutsch 
+        (losung_de_90)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="TSK" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Treasury of Scriptural 
+        Knowledge (TSK)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_91" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1991 Losung auf deutsch 
+        (losung_de_91)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Wesley" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>John Wesley's Notes 
+        on the Bible (Wesley)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_92" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1992 Losung auf deutsch 
+        (losung_de_92)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%">&nbsp;</td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_93" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1993 Losung auf deutsch 
+        (losung_de_93)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"><font face=Times New Roman, Times, serif><b>Dictionaries 
+        & Lexica:</b></font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_94" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1994 Losung auf deutsch 
+        (losung_de_94)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="AmTract" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>American Tract Society 
+        Bible Dictionary (AmTract)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_95" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1995 Losung auf deutsch 
+        (losung_de_95)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="BDB" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Brown-Driver-Briggs 
+        Hebrew Lexicon (BDB)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_96" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1996 Losung auf deutsch 
+        (losung_de_96)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Eastons" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Easton's Bible Dictionary 
+        (Eastons)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_97" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1997 Losung auf deutsch 
+        (losung_de_97)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Hitchcocks" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Hitchcock's Bible Names 
+        (Hitchcocks)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_98" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1998 Losung auf deutsch 
+        (losung_de_98)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="ISBE" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>International Standard 
+        Bible Encyclopedia (ISBE)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_de_99" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1999 Losung auf deutsch 
+        (losung_de_99)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Naves" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Nave's Topical Bible 
+        (Naves)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_en_96" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1996 Watchwords (Losung) 
+        in English (losung_en_96)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Packard" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Packard's Morphological 
+        Analysis Codes (Packard)</font></td>
+      <td width="48%" height="23"> 
+        <input type="checkbox" name="losung_en_97" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1997 Watchwords (Losung) 
+        in English (losung_en_97)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Smiths" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Smith's Bible Dictionary 
+        (Smiths)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_en_98" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1998 Watchwords (Losung) 
+        in English (losung_en_98)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="StrongsGreek" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Strong's Greek Bible 
+        Dictionary (StrongsGreek)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_en_99" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1999 Watchwords (Losung) 
+        in English (losung_en_99)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="StrongsHebrew" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Strong's Hebrew Bible 
+        Dictionary (StrongsHebrew)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_es_99" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1999 Watchwords (Losung) 
+        en Castellano (losung_es_99)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Thayer" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Thayer's Greek Lexicon 
+        (Thayer)</font></td>
+      <td width="48%"> 
+        <input type="checkbox" name="losung_nl_99" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>1999 Watchwords (Losung) 
+        in Dutch (losung_nl_99)</font></td>
+    </tr>
+    <tr> 
+      <td width="48%"> 
+        <input type="checkbox" name="Torrey" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>R. A. Torrey's New 
+        Topical Textbook (Torrey)</font></td>
+      <td width="51%">&nbsp;</td>
+    </tr>
+    <tr> 
+      <td width="48%" height="23"> 
+        <input type="checkbox" name="WebstersDict" value="on">
+        <font size="-1" face=Times New Roman, Times, serif>Webster's Revised Unabridged 
+        Dictionary 1913 (WebstersDict)</font> </td>
+      <td width="51%">&nbsp;</td>
+    </tr>
+  </table>
+</form>
+
+<form method="get" action="cgi-bin/dia-def.pl">
+  Select default Bible version for cross-references:&nbsp;<select name="defversion" size="1">
+  
+<option value="AKJV">American King James Version (AKJV)</option>
+<option value="ASV">1901 American Standard Version (ASV)</option>
+<option value="AraSVD">Smith & Van Dyke Arabic Bible (AraSVD)</option>
+<option value="BBE">1965 Bible in Basic English (BBE)</option>
+<option value="BHS">Biblia Hebraica Stuttgartensia (BHS)</option>
+<option value="Byz">1991 Byzantine/Majority Text (Byz)</option>
+<option value="ChiGU">Chinese Glory Union Bible (ChiGU)</option>
+<option value="Common">The Common Edition: New Testament (Common)</option>
+<option value="CzeBKR">Czech Bible Kralicka (CzeBKR)</option>
+<option value="CzeCEP">Czech Ekumenicky Cesky preklad (CzeCEP)</option>
+<option value="CzeKMS">Czech Preklad KMS Nova smlouva (CzeKMS)</option>
+<option value="CzeNKB">Czech Nova kralicka Bible (CzeNKB)</option>
+<option value="DR">Douay-Rheims Bible (DR)</option>
+<option value="DRA">Douay-Rheims 1899 American Edition (DRA)</option>
+<option value="Dan">Danske Bibel (Dan)</option>
+<option value="Darby">1889 Darby Bible (Darby)</option>
+<option value="Diaglott">The Emphatic Diaglott (Diaglott)</option>
+<option value="Esperanto">Esperanto Bible (Esperanto)</option>
+<option value="FinPR">Finnish 1938 PhyZ Raamattu (FinPR)</option>
+<option value="FreCrl">French Haitian Creole Version (FreCrl)</option>
+<option value="FreLSG">1910 Louis Segond (FreLSG)</option>
+<option value="FreNEG">French Nouvelle Edition de Geneve 1979 (FreNEG)</option>
+<option value="FreTOB">French Traduction oecumenique de la Bible (FreTOB)</option>
+<option value="GerBen">German Bengel NT (GerBen)</option>
+<option value="GerLut">German 1912 Luther (GerLut)</option>
+<option value="GerLut1545">German 1545 Luther (GerLut1545)</option>
+<option value="GerSch">German 1951 Schlachter Bibel (GerSch)</option>
+<option value="GothicA">Gothic Codex Ambr. A & Mss. (GothicA)</option>
+<option value="GothicB">Gothic Codex Ambr. B & Car. (GothicB)</option>
+<option value="HNV">Hebrew Names Version of the World English Bible (HNV)</option>
+<option value="HunKar">Hungarian Karoli (HunKar)</option>
+<option value="IGNT">Interlinear Greek New Testament (IGNT)</option>
+<option value="ISV">International Standard Version (ISV)</option>
+<option value="Icelandic">Icelandic Bible (Icelandic)</option>
+<option value="IndBIS">Indonesian Bahasa Indonesia Sehari-hari (IndBIS)</option>
+<option value="IndTB">Indonesian Terjemahan Baru (IndTB)</option>
+<option value="IndTL">Indonesian Terjemahan Baru (IndTL)</option>
+<option value="ItaLND">Italian 1991 La Nuova Diodati (ItaLND)</option>
+<option value="ItaNRV">Italian 1994 La Sacra Bibbia Nuova Riveduta (ItaNRV)</option>
+<option value="JPS">Jewish Publication Society Old Testament (JPS)</option>
+<option value="JST">Joseph Smith Translation (JST)</option>
+<option value="JapKUG">Japanese JKUG Translation (JapKUG)</option>
+<option value="JapSNKI">Japanese JSNKI Translation (JapSNKI)</option>
+<option value="KJV">King James Version of 1611 w/ Strongs Numbers (KJV)</option>
+<option value="Ketchi">Ketchi Bible (Ketchi)</option>
+<option value="Korean">Korean Bible (Korean)</option>
+<option value="LO">The Living Oracles NT (LO)</option>
+<option value="LXX">Septuagint (LXX)</option>
+<option value="LXXM">Septuagint, Morphologically Tagged Rahlfs' (LXXM)</option>
+<option value="Latvian">Latvian New Testament (Latvian)</option>
+<option value="ManxGaelic">Manx Gaelic Scripture Portions (ManxGaelic)</option>
+<option value="Maori">Maori Bible (Maori)</option>
+<option value="Mel">Melanesian Pidgin Bible (Mel)</option>
+<option value="Montgomery">Montgomery New Testament (Montgomery)</option>
+<option value="Murdock">James Murdock's Translation of the Syriac Peshitta (Murdock)</option>
+<option value="Norsk">Norsk Bibelen (Norsk)</option>
+<option value="ORTHJBC">The Orthodox Jewish Brit Chadasha (ORTHJBC)</option>
+<option value="PorAA">Portuguese Joao Ferreira de Almeida Atualizada (PorAA)</option>
+<option value="RNKJV">Restored Name King James Version (RNKJV)</option>
+<option value="RST">Russian Synodal Translation (RST)</option>
+<option value="RWebster">Revised 1833 Webster Version (RWebster)</option>
+<option value="RomCor">Romanian Cornilescu Version (RomCor)</option>
+<option value="Rotherham">The Emphasized Bible by J. B. Rotherham (Rotherham)</option>
+<option value="ScotsGaelic">Scots Gaelic Gospel of Mark (ScotsGaelic)</option>
+<option value="Scrivner">1894 Scrivener Textus Receptus (Scrivner)</option>
+<option value="SpaRV">Spanish Reina-Valera (SpaRV)</option>
+<option value="SpaSEV">Spanish 1569 Sagradas Escrituras Version Antigua (SpaSEV)</option>
+<option value="SpaVNT">Spanish 1858 Valera New Testament (SpaVNT)</option>
+<option value="Stephanus">1550 Stephanus Textus Receptus (Stephanus)</option>
+<option value="Swahili">Swahili New Testament (Swahili)</option>
+<option value="SweSVE">Swedish Bible 1917 New Testament (SweSVE)</option>
+<option value="Tagalog">Tagalog (John & James) (Tagalog)</option>
+<option value="ThaiKJV">Thai KJV (ThaiKJV)</option>
+<option value="Tisch">Tischendorf's Eighth Edition GNT (Tisch)</option>
+<option value="Turkish">Turkish NT (Turkish)</option>
+<option value="UMGreek">Unaccented Modern Greek Text (UMGreek)</option>
+<option value="Ukrainian">Ukrainian Bible (Ukrainian)</option>
+<option value="Uma">Uma New Testament (Uma)</option>
+<option value="Viet">1934 Vietnamese Bible (Viet)</option>
+<option value="Vulgate">Latin Vulgate (Vulgate)</option>
+<option value="Vulgate_HebPs">Latin Vulgate Psalms from Hebrew (Vulgate_HebPs)</option>
+<option value="WEB">World English Bible (WEB)</option>
+<option value="WH">1881 Westcott-Hort Greek Text (WH)</option>
+<option value="WHNU">Westcott-Hort with NA27U4 variants (WHNU)</option>
+<option value="Websters">Webster Bible (Websters)</option>
+<option value="Weymouth">1912 Weymouth NT (Weymouth)</option>
+<option value="Xhosa">Xhosa Bible (Xhosa)</option>
+<option value="YLT">1898 Young's Literal Translation (YLT)</option>
+</select><input type="submit" name="Submit" value="Submit"></form><br/><form method="get" action="cgi-bin/dia-def.pl">Select locale:&nbsp;
+<select name="locale" size="1"><option value="">browser default</option>
+<option value="en">en</option>
+<option value="de">de</option>
+<option value="pt">pt</option>
+<option value="sk">sk</option>
+<option value="cs">cs</option>
+<option value="da">da</option>
+<option value="no">no</option>
+</select>
+<input type="submit" name="Submit" value="Submit">
+</form>
+<font face="Arial, Helvetica, sans-serif">Many of these modules require a browser with good Unicode support such as Internet Explorer 5.0+ and a good Unicode font such as Code 2000 (available at <a href="http://home.att.net/~jameskass/">http://home.att.net/~jameskass/</a>.)</font>
+</body>
+</html>

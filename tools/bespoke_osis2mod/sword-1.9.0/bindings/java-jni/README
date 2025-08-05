@@ -1,0 +1,28 @@
+This folder contains java-jni bindings.  They are 99% generic but have
+some Android-specific code which should eventually be removed.  This
+includes setting a SWLog::setSystemLog(new AndroidLogger()) and an
+org.crosswire.android.sword.* package. This was not changed to
+org.crosswire.sword.* because there are conflicting SWMgr, et. al.
+classes from the crosswire-java project and the CORBA bindings.
+org.crosswire.jni.sword.* is an option but exposing the impl in the
+package name is bad practice.  More thought needed.
+
+A make in here should produce the JNI wrappers.
+jni/swordstub.cpp is the jni implementation
+
+This make also copies the java src/ files to the ../Android binding folder.
+The ../Android binding folder symlinks to the jni cpp file generated here.
+
+There is an Android Studio project there to build the native libs
+
+The steps to build all of this are usually:
+1) make in this folder
+2) build all in ../Android/SWORD Android Studio project
+3) a make in the ../Android/ folder, which finally copies the binary libs
+	to the ../cordova/ bindings folder to produce a working cordova
+	plugin
+
+Android java bindings can be used after step 2
+cordova javascript bindings can be used after step 3
+
+Hope this helps get you started.  Let me know your progress!

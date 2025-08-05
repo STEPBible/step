@@ -1,0 +1,25 @@
+This folder contains Android bindings based on the java-jni bindings.
+
+The first step to building these bindings is to build the java-jni/
+bindings.  These bindings use code generated from there.
+See the ../java-jni README before continuing.
+
+There is an Android Studio project here under SWORD/
+
+This Android Studio project should be used to build the NDK
+native code here.
+
+After that, a make in this folder will copy the native libs
+to the ../cordova/ bindings to produce a working cordova plugin
+
+The steps to build all of this are usually:
+1) make in the ../java-jni bindings folder
+2) build all in SWORD Android Studio project
+3) a make in this folder, which finally copies the binary libs
+	to the ../cordova/ bindings folder to produce a working
+	cordova plugin
+
+Android java bindings can be used after step 2
+cordova javascript bindings can be used after step 3
+
+Hope this helps get you started.  Let me know your progress!

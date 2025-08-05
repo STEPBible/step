@@ -1,0 +1,136 @@
+<verse osisID="John.1.1" type='test type' yeah = "stuff" />
+<verse osisID="John.1.1" type="test type" yeah="stuff"/>
+<verse addedAttribute='with a " quote' osisID="John.1.1" type="test type" yeah="stuff"/>
+Tag name: [verse]
+ - attribute: [addedAttribute] = [with a " quote]
+	4 parts:
+	with
+	a
+	"
+	quote
+ - attribute: [osisID] = [John.1.1]
+	1 parts:
+	John.1.1
+ - attribute: [type] = [test type]
+	2 parts:
+	test
+	type
+ - attribute: [yeah] = [stuff]
+	1 parts:
+	stuff
+ isEmpty: 1
+ isEndTag: 0
+
+Setting attribute 'multiPart' to: 'ABC D EF GHIJ'
+<verse addedAttribute='with a " quote' multiPart="ABC D EF GHIJ" osisID="John.1.1" type="test type" yeah="stuff"/>
+Setting part 2 to 'MMM'
+<verse addedAttribute='with a " quote' multiPart="ABC D MMM GHIJ" osisID="John.1.1" type="test type" yeah="stuff"/>
+Removing part 1
+<verse addedAttribute='with a " quote' multiPart="ABC MMM GHIJ" osisID="John.1.1" type="test type" yeah="stuff"/>
+Removing part 2
+<verse addedAttribute='with a " quote' multiPart="ABC MMM" osisID="John.1.1" type="test type" yeah="stuff"/>
+<yo mama='stuff' />
+<yo mama="stuff"/>
+<yo addedAttribute='with a " quote' mama="stuff"/>
+Tag name: [yo]
+ - attribute: [addedAttribute] = [with a " quote]
+	4 parts:
+	with
+	a
+	"
+	quote
+ - attribute: [mama] = [stuff]
+	1 parts:
+	stuff
+ isEmpty: 1
+ isEndTag: 0
+
+<yo mama='stuff'>
+<yo mama="stuff">
+<yo addedAttribute='with a " quote' mama="stuff">
+Tag name: [yo]
+ - attribute: [addedAttribute] = [with a " quote]
+	4 parts:
+	with
+	a
+	"
+	quote
+ - attribute: [mama] = [stuff]
+	1 parts:
+	stuff
+ isEmpty: 0
+ isEndTag: 0
+
+<yo mama = 'stuff'>
+<yo mama="stuff">
+<yo addedAttribute='with a " quote' mama="stuff">
+Tag name: [yo]
+ - attribute: [addedAttribute] = [with a " quote]
+	4 parts:
+	with
+	a
+	"
+	quote
+ - attribute: [mama] = [stuff]
+	1 parts:
+	stuff
+ isEmpty: 0
+ isEndTag: 0
+
+<yo mama = 'stuff' yoyoma="hohum">
+<yo mama="stuff" yoyoma="hohum">
+<yo addedAttribute='with a " quote' mama="stuff" yoyoma="hohum">
+Tag name: [yo]
+ - attribute: [addedAttribute] = [with a " quote]
+	4 parts:
+	with
+	a
+	"
+	quote
+ - attribute: [mama] = [stuff]
+	1 parts:
+	stuff
+ - attribute: [yoyoma] = [hohum]
+	1 parts:
+	hohum
+ isEmpty: 0
+ isEndTag: 0
+
+yo mama = 'stuff' yoyoma="hohum"
+<yo mama="stuff" yoyoma="hohum">
+<yo addedAttribute='with a " quote' mama="stuff" yoyoma="hohum">
+Tag name: [yo]
+ - attribute: [addedAttribute] = [with a " quote]
+	4 parts:
+	with
+	a
+	"
+	quote
+ - attribute: [mama] = [stuff]
+	1 parts:
+	stuff
+ - attribute: [yoyoma] = [hohum]
+	1 parts:
+	hohum
+ isEmpty: 0
+ isEndTag: 0
+
+yo mama = 'stuff' yoyoma="hohum"/
+<yo mama="stuff" yoyoma="hohum"/>
+<yo addedAttribute='with a " quote' mama="stuff" yoyoma="hohum"/>
+Tag name: [yo]
+ - attribute: [addedAttribute] = [with a " quote]
+	4 parts:
+	with
+	a
+	"
+	quote
+ - attribute: [mama] = [stuff]
+	1 parts:
+	stuff
+ - attribute: [yoyoma] = [hohum]
+	1 parts:
+	hohum
+ isEmpty: 1
+ isEndTag: 0
+

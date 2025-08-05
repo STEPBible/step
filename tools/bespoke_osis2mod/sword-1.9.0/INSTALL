@@ -1,0 +1,179 @@
+                       INSTALLATION NOTES
+
+
+QUICKSTART
+
+Either:
+	Obtain source via SVN with:
+		svn co http://crosswire.org/svn/sword/trunk sword
+		cd sword
+		./autogen.sh
+
+	or,
+		unpack a source package and change to that directory.
+
+Have a look at the OPTIONS in usrinst.sh to see if they suit your needs.
+Pay particular attention to libdir=/usr/lib64.  Ubuntu and many other
+systems store 64bit libraries simply in /usr/lib.  If you are building
+on a 32-bit machine, you'll almost certainly wish to change this to
+/usr/lib
+
+Then, try:
+
+	./usrinst.sh
+	make
+	sudo make install
+
+If you have never installed sword before and/or are happy with a default
+configuration, you may wish to type:
+
+	sudo make install_config
+
+for a basic configuration.  WARNING: THIS WILL OVERWRITE AN EXISTING
+CONFIGURATION.  It is OK to rerun this if you have not changed any
+parameters in /etc/sword.conf
+
+Now let's grab some content:
+
+	cd utilities/
+	sudo ./installmgr -sc
+	sudo ./installmgr -r CrossWire
+	sudo ./installmgr -ri CrossWire KJV
+
+Now lets try it out:
+
+	cd ../examples/cmdline
+	make
+	./lookup KJV Jn.3.16
+
+If the above steps do not work, or if you're particular about your
+configuration, please read on.
+
+________________________________________________________________
+
+BUILD CONFIGURATION
+
+What most people consider 'normal' user install options are saved in
+a script 'usrinst.sh', which you may run with the command './usrinst.sh'.
+You may want to have a look at the configuration options by typing
+./configure --help and also looking at what we consider 'normal'
+usage parameters by looking inside usrinst.sh
+to be sure everything is being built the way that you would like.
+
+
+BUILDING
+
+A 'make' at the top level directory of the SWORD package should build the
+libraries necessary for building any of the frontends.  The libraries will
+be built in the ./lib directory.
+
+After the libraries are built, one will probably wish to 'su' to root and
+'make install' to install the libraries systemwide.  One then may proceed to
+write and compile SWORD applications.
+
+
+MODULES
+
+To be useful the software needs to find SWORD 'modules' installed somewhere
+accessible.  These module plugins consist of Bible texts, commentaries,
+dictionaries, and the like.  New plugins are constantly being added.  They
+may be obtained from:
+http://www.crosswire.org or various mirrors.
+
+In a default SWORD configuration, the module install process may look like this:
+
+[download a module with your favourite client]
+su
+cd /usr/share/sword
+unzip ~/KJV.zip
+
+There is also an over-the-net install utility located at utilities/installmgr
+
+After modules are installed, you can create fast search indecies (if you have
+compiled with clucene support), with utilities/mkfastmod
+
+NOTE: sometimes clucene forgets to install some header files.  You might need to
+manually copy clucene-core-X/src/CLucene/clucene-config.h to your install prefix
+(e.g. /usr/local/include/CLucene/)
+
+If you want module configuration/installation details, read on...
+
+
+A directory named 'mods.d' contains all configuration information regarding
+the installed modules available to the API.  The format of a config file is
+fairly straight-forward, and most modules come with their own .conf file,
+of which the contents may be placed in the mods.d directory.
+
+
+MODULE INSTALLATION SCHEME
+
+For a recommended module configuration scheme
+On UN*X: create /etc/sword.conf with contents:
+[Install]
+DataPath=/usr/share/sword
+
+and unzip your modules to /usr/share/sword
+(or type: make install_config which should do the same)
+
+Windows users can simply unzip their modules where they installed their frontend.
+
+Otherwise, read on:
+
+
+DETAILS
+
+
+The API attempts to hunts down its primary module configuration in the
+following sequence, stopping at the first successful step:
+
+	o) ./sword.conf in the format:
+
+			[Install]
+			DataPath=/where/your/modules/are/installed
+
+		then the API will look for <DataPath>/mods.d/
+
+	o) ./mods.d
+	o) ../library/mods.d (don't ask)
+	o) $SWORD_PATH/mods.d
+	o) $HOME/.sword/sword.conf in the format:
+
+			[Install]
+			DataPath=/where/your/modules/are/installed
+
+		then the API will look for <DataPath>/mods.d/
+
+	o) /etc/sword.conf in the format:
+
+			[Install]
+			DataPath=/where/your/modules/are/installed
+
+		then the API will look for <DataPath>/mods.d/
+
+	o) $HOME/.sword/mods.d/
+
+
+In addition to the 'primary module configuration', SWORD will also
+include modules found in $HOME/.sword/mods.d/
+
+Also, when a sword.conf file is used, any number of:
+
+AugmentDataPath=/where/more/modules/are/installed
+
+entries may be included.  These are useful to tell sword to scan,
+for example, CDROM, SDCARD, or other removable media locations.
+
+
+
+LOCALE
+
+If you would like to include support for localization, you may copy the
+locales.d directory and any of the locale files contained therein into
+the directory where your mods.d exists
+(eg. to /usr/share/sword/locales.d/)
+but this is done with a 'normal' sword install.
+
+
+ENJOY!!!
+
+

@@ -1,0 +1,127 @@
+/******************************************************************************
+ *	sword.idl	- This file contains a simple idl for accessing sword
+ *
+ *
+ * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ *	CrossWire Bible Society
+ *	P. O. Box 2528
+ *	Tempe, AZ  85280-2528
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation version 2.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ */
+
+
+
+#ifndef SWORDORB_IDL
+#define SWORDORB_IDL
+
+module swordorb {
+
+typedef sequence<string> StringList;
+
+struct ModInfo {
+	string name;
+	string description;
+	string category;
+	string language;
+};
+
+typedef sequence<ModInfo> ModInfoList;
+
+struct SearchHit {
+	string modName;
+	string key;
+	long   score;
+};
+
+typedef sequence<SearchHit> SearchHitList;
+//-----------------------------------------------------------------
+// SWModule methods
+
+	enum SearchType {
+		REGEX,
+		PHRASE,
+		MULTIWORD,
+		ENTRYATTR,
+		LUCENE
+	};
+
+
+interface SWModule {
+	void          terminateSearch();
+	SearchHitList search(in string istr, in SearchType srchType, in long flags, in string scope);
+	char          error();
+	long          getEntrySize();
+	StringList    getEntryAttribute(in string level1, in string level2, in string level3, in boolean filtered);
+	StringList    parseKeyList(in string keyText);
+
+	// Special values handled for VerseKey modules:
+	//	[+-][book|chapter]	- [de|in]crement by chapter or book
+	//	(e.g.	"+chapter" will increment the VerseKey 1 chapter)
+	//	[=][key]		- position absolutely and don't normalize
+	//	(e.g.	"jn.1.0" for John Chapter 1 intro; "jn.0.0" For Book of John Intro)
+	void          setKeyText(in string key);
+
+	string        getKeyText();
+	boolean       hasKeyChildren();
+
+	// This method returns child nodes for a genbook,
+	// but has special handling if called on a VerseKey module:
+	//  [0..7] [testament, book, chapter, verse, chapterMax, verseMax, bookName, osisRef]
+	StringList    getKeyChildren();
+
+	string        getKeyParent();
+	string        getName();
+	string        getDescription();
+	string        getCategory();
+	void          previous();
+	void          next();
+	void          begin();
+	string        getStripText();
+	string        getRenderText();
+	// CSS styles associated with this text
+	string        getRenderHeader();
+	string        getRawEntry();
+	void          setRawEntry(in string entryBuffer);
+	string        getConfigEntry(in string key);
+	void          deleteSearchFramework();
+	boolean       hasSearchFramework();
+};
+
+
+//-----------------------------------------------------------------
+// SWMgr methods
+//
+interface SWMgr {
+	ModInfoList getModInfoList();
+	SWModule    getModuleByName(in string name);
+	string      getPrefixPath();
+	string      getConfigPath();
+	void        setGlobalOption(in string option, in string value);
+	string      getGlobalOption(in string option);
+	string      getGlobalOptionTip(in string option);
+	string      filterText(in string filterName, in string text);
+	StringList  getGlobalOptions();
+	StringList  getGlobalOptionValues(in string option);
+	void        setCipherKey(in string modName, in string key);
+	void        terminate();
+	boolean     testConnection();
+	void        setJavascript(in boolean val);
+	StringList  getAvailableLocales();
+	void        setDefaultLocale(in string name);
+	string      translate(in string text, in string localeName);
+	StringList  getRepos();
+	SWMgr	  getShadowMgr(in string repoName);
+};
+
+};
+
+#endif

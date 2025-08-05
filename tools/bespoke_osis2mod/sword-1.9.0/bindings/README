@@ -1,0 +1,35 @@
+Building Perl or Python (through swig)
+-------------
+
+Using autotools
+---------------
+See swig/packages/README
+
+Using CMake
+-----------
+Building the SWIG (Perl, Python) bindings with the CMake toolchain requires installing
+the CMake application appropriate to your operating system (most Linux distributions
+will have this as an existing package as CMake is integral to building many popular
+applications).
+
+Additionally you will need the development packages for the language you are targeting
+and the swig application itself. All of these should be directly available through your
+distribution's package system.
+
+Python: In Fedora you can get this with a 'yum install python-devel' and a similar call
+to apt-get in Debian/Ubuntu/etc.
+Perl: In Fedora you're looking for 'yum install perl-devel' and the equivalent package
+in Debian/Ubuntu/etc.
+
+After this, you need to add the argument -DSWORD_BINDINGS="Python" or
+-DSWORD_BINDINGS="Perl" when you invoke CMake. If you wish to build both bindings then
+just call -DSWORD_BINDINGS="Python Perl" instead. This needs to be done at the level of
+the whole SWORD library and not just here within the bindings directory. The files will
+be installed to their standard system-wide location when you run 'make install' with
+the rest of the library.
+
+If you wish to install the Python bindings to another directory instead you can specify
+the option -DSWORD_PYTHON_INSTALL_DIR="/some/other/path" at configure time. No comparable
+option is currently available for the Perl bindings because the maintainer is unaware
+of how to implement it.
+

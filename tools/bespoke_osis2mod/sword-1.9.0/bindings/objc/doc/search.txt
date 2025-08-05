@@ -1,0 +1,21 @@
+loved one
+	= search for verses that contain "loved" or "one"
+	= this is the same as loved OR one
+
+"loved one"
+	= search for verses that contain the phrase "loved one"
+	
+love*
+	= search for verses that contain a word starting with "love" (love OR loves OR loved OR etc...)
+	
+loved AND one
+	= search for verses that contains the word "loved" and the word "one"
+
++loved one
+	= search for verses that must contain "loved" and may contain "one"
+
+loved NOT one
+	= search for verses that contain "loved" but not "one"
+
+(loved one) AND God
+	= search for verses that contain "loved" or "one" and "God"

@@ -1,0 +1,87 @@
+
+BUILDING WITH CMAKE
+
+First, you'll be required to install CMake. You can get pre-built binaries here: [1]. There are versions for Linux/Unix, OS X, Windows, SunOS/Sparc, IRIX64, HPUX and AIX. Most of them have GUIs, but can also be run from the command line. If you are in Linux/Unix there is almost certainly a package available from your system. I have tested the build with versions 2.6.4 and 2.8 of CMake - if you have something from the 2.4 series and are feeling brave enough to try it, please edit the file CMakeLists.txt and, near the top of the file, change the line that reads CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0) to require a version low enough so you can test with your version. I have set the minimum at 2.6.0 because that is the minimum I have tested with and not because I am aware of any limitations of versions earlier than 2.4 which would break the system. Please report any success or failures you have as a result of changes.
+
+If you have the SWORD supporting libraries you want to use installed, and also have CMake installed, it is now time to try to configure the system. Follow the appropriate steps laid out below:
+
+
+Bash or other command-line tool, probably Unix/Linux environment
+
+    * Create a new directory where the actual configure or build will take place - this can be an empty subdirectory of SWORD (e.g. sword/cmakebuild) or a parallel directory (sword/../swordbuild) or anywhere else you would like. I personally use the parallel directory and following example commands will reflect a directory structure with cmake_sword/ as the base of the SWORD sources and a parallel directory cmake_build/ as the build directory.
+    * Change into your build directory: cd cmake_build
+    * Issue the call to CMake with any options you want to test and point it to the root of your SWORD sources: cmake <options> ../cmake_sword/
+    * Check that there are no error messages and that CMake ends with the messages "Configuring done", "Generating done", and "Build files have been written to: <object directory>"
+    * From here on out, building should be just like building with Autotools - make -j4/sudo make install 
+
+GUI users
+
+For those of you using the GUI interfaces with, for example, Windows or OS X or even the CMake GUIs for Linux:
+
+    * Open the CMake GUI.
+    * For the line where the GUI asks "Where is the source code:" browse to the directory where you checked out the SWORD source: C:\Users\Greg\Documents\Projects\cmake_sword
+    * For the line where the GUI asks "Where to build the binaries:" browse to a directory (does not need to exist yet for the GUI to operate) that is not the same as the path with the source: C:\Users\Greg\Documents\Projects\cmake_build
+    * If you wish to specify certain options (see the section on options), click the "Add Entry" button and enter the argument you wish to specify under "Name" and the value of that argument under "Value".
+    * Click "Configure"
+          o If prompted to create the build directory, say "Yes"
+          o Select the "generator" for this project... for this, select the system you wish to use to actually do the compile. Some examples are different versions of Microsoft Visual Studio, Unix Makefiles, MSYS Makefiles, Cygwin Makefiles, Xcode projects, Eclipse projects, Borland projects and more.
+          o Unless you are building for the iPhone (in which case you should skip to the section especially for iPhones!), you will probably want to leave "Use default native compilers" unless you are a power user and know what compiler you would like to use. You could use special options here if you need to select special cross-compilers or similar. 
+    * After configure is completed, if there were errors, you will have a chance to correct them. If certain libraries were not located or you wish to use other values, you can select the Advanced View or check Show Advanced and manually edit any of the cached values.
+    * If you are happy with the results and there are no errors or after you have corrected any errors, click Configure a second time.
+    * Click Generate
+    * Navigate to the directory where you specified to build the binaries and invoke your build system through its native mechanics - open the project file, execute the Makefiles, etc. 
+
+iPhone
+
+There are special steps to be taken to build for the iPhone, if you so wish. When I next get on my Mac, I will post these directions especially for you.
+
+    * alternatively, talk to me about how I do things for PocketSword. I use neither the Make system or CMake. --Niccarter 12:10, 19 April 2010 (UTC) 
+
+How can I customize my options?
+
+While not all of the options and functionality of the original SWORD automake system are necessarily supported, I would like to document those which I know about and their status. Also, I want to document the basic method of specifying these options.
+CMake Options
+
+Probably the only important CMake option for normal users is the "Generator" option. For those of you using a GUI, you will be prompted for the Generator to use the first time you click Configure. For command-line users, the default will generally be Unix Makefiles - this goes for Linux, Mac OS X and MinGW in my experience - (possibly different if you're using the DOS prompt in Windows, I haven't checked there) unless you specify otherwise. To get a list of the generators supported by your version of CMake run "cmake --help". The generators will be listed at the bottom. Select the one you would like, for example Xcode, and add the option string: -G Xcode to your invocation of CMake. Other examples might be -G "KDevelop3 - Unix Makefiles" if you wanted to use KDevelop3 but have it managing Unix Makefiles.
+SWORD Options
+
+For all of these options if you are using a GUI, you can set these options by clicking "Add Entry" before configuring and setting the Name and Value fields. For command line users, you would set an option named SWORD_OPTION to value VALUE by adding -DSWORD_OPTION=VALUE to your CMake options. This would look like cmake -DSWORD_OPTION=VALUE ../cmake_build or similar.
+
+The options are listed here by name, grouped roughly by their functioning.
+General, interesting options
+
+    * SWORD_GLOBAL_CONF - If this has a non-empty value, then the option "-DGLOBCONFPATH=${SWORD_GLOBAL_CONF}/sword.conf" is passed to the compiler. If SWORD_GLOBAL_CONF is unset or is empty, then no additional options are passed to the compiler. I believe support for this is only half implemented at the moment. I believe that, if this is set, then an actual sword.conf should be written to the directory specified. At present this is not the case. I am unsure of the correct default behavior if this is not specified.
+    * CMAKE_INSTALL_PREFIX - The location on disk where the files will be installed. If left unset this will default to /opt/local on OS X, C:\Program Files (x86)\libsword\ under Microsoft Visual Studio and /usr/local for anything else. Executables will be installed in the bin/ subdirectory, libraries under lib/ and headers under include/sword. A package config file will be installed in lib/pkgconfig. There is currently no support for installing the different components to other locations, although one could be supplied without much extra effort if it is useful.
+    * SWORD_BUILD_UTILS - If this has the value "No" then utilities will not be built. If this has any other value or is left unspecified, the Utilities will be built and installed.
+    * SWORD_BUILD_EXAMPLES - If this is given the value "Yes" then the examples/cmdline demos will be built. If this has any other value or is left blank, then demos will not be built.
+    * SWORD_BUILD_TESTS - If this is given the value "Yes" then the SWORD tests will be run. They are still run using the same system as before (or as closely as it could be replicated). If this has any other value or is left unspecified, tests will not be run. The exception to that is the simple buildtest.cpp in the root of the sword/ folder which will always be built when the library is built. 
+
+Optional dependencies
+
+    * SWORD_NO_ZLIB and SWORD_USE_INTERNAL_ZLIB - If SWORD_NO_ZLIB has value "Yes" then No ZLib support will be built into the library. If SWORD_NO_ZLIB has any other value, then ZLib support will be built into the library. If support is to be built in, and either a system-wide ZLib is not found OR SWORD_USE_INTERNAL_ZLIB is set to "Yes", then the internal version will be built. If a system library is found AND SWORD_USE_INTERNAL_ZLIB is set to anything other than "Yes" or has no value, then the system library will be linked against. If both SWORD_NO_ZLIB and SWORD_USE_INTERNAL_ZLIB are set to "Yes" then SWORD_NO_ZLIB will be used, and no ZLib support will be built.
+    * SWORD_NO_CURL - If this is set to "Yes" then cURL support will not be included regardless of whether cURL is found on the system. If this is any other value or has no value set, then cURL will be built against if it is located and ignored if it cannot be located.
+    * SWORD_NO_CLUCENE - If this is set to "Yes" then CLucene will be ignored if found. If this is set to any other value or has no value, then the library will be built against CLucene if it can be located and ignored if it cannot be located. 
+
+Developer or Packager specific options
+
+    * LIBSWORD_LIBRARY_TYPE - If this has the value "Shared" then a shared library will be build (DLL or .so) along with the exported linking stub. If this is unspecified, then a static library will be built.
+    * CMAKE_BUILD_TYPE - If this is given the value of "Debug" then the default SWORD debugging flags (-g3 -Wall -Werror -O0) will be enabled. If this is unspecified or any value other than "Debug" then the flag -O3 will be enabled.
+    * SWORD_ENABLE_WARNINGS - If this has the value "Yes" then -Werror will be passed to the compiler. This would allow independent specification of -Werror without needing to enable actual debugging. Should this also enable -Wall?
+    * SWORD_ENABLE_PROFILE - if this has the value of "Yes" then the -pg option will be passed to the compiler. I don't know what this does, but it was available with Autotools, so it has been replicated here. This defaults to off.
+    * SWORD_ENABLE_PROFILEN - if this has the value of "Yes" then the "-g -finstrument-functions" options will be passed to the compiler. The same disclaimer goes for this as goes for the previous option. This also defaults to off. 
+
+How do I hack the code?
+
+If you want to directly hack the SWORD library for reasons other than CMake, I suggest you go elsewhere on this wiki for that.
+
+If you have suggestions and edits for this system, you are welcome to create patches and submit them to the sword-devel mailing list. Also, you can find my email on the list's archives and send them directly to me (Greg Hellings) or, if you are ambitious, you are welcome to create a branch using your favorite DVCS and publish it somewhere and let me know. Bazaar has amazing support for allowing me interface with whatever system you wish, so you can publish a git, Mercurial, Bazaar, SVN or CVS repository with the code in it and I should be able to review your changes and integrate them.
+
+For a basic overview - all of the files are contained within the sword/cmake directory except for a few CMakeLists.txt files in strategic locations. CMakeLists.txt is the file that is the entry point for the system. Any calls to functions like FIND(ICU QUIET) will look for a module either included with your CMake system (ZLib) or included within the directory specified by the line SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake") CMake will try to find a file titled FindICU.cmake in one of those paths to satisfy your call to FIND(ICU).
+
+Source lists are in sword/cmake/sources.cmake. I have kept them broken out evenly into their separate base directories under sword/src. Additionally any sources which are only included for conditional reasons have their own set of variables down towards the bottom of that file with what are hopefully successfully mnemonic names.
+
+After calls to FIND(<library>), the system then has to react to which files were found and which were not. This is handled with some semi-complicated logic in sword/cmake/muxsources.cmake.
+
+Since utilities, tests and examples are all optional compilations, they have their own CMakeLists.txt files located in their own directories. These are invoked with a call to ADD_SUBDIRECTORY([path to directory]). Additional CMakeLists.txt files could also be created for things like the bindings and other self-contained paths.
+
+After build, install is handled in the sword/cmake/install.cmake file. 

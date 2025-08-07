@@ -332,6 +332,16 @@ export class ClassJFrameworkTableWithSearchBox
 
 
     /**************************************************************************/
+    /* Hides the table and blanks out the content of the search box. */
+    
+    hideTable ()
+    {
+	this._showSelectedTableRowOnly(null);
+	this._accommodateOwnerToTable(this._SHOW_SELECTED_OPTION);
+    }
+
+    
+    /**************************************************************************/
     /* Highlights a single row, and unhighlights all others.  This needs to be
        public in case there is an initial selection which has to be
        highlighted. */
@@ -775,37 +785,43 @@ export class ClassJFrameworkTableWithSearchBox
     
     _keyboardInputHandler (e)
     {
-	const enterKeyOrEquivalent = 'Enter' === e.key || 'Tab' === e.key;
-        const inputBox = this._searchBox;
-	const tblHandler = this;
-        var userInput = inputBox.val();
-	this._previousSearchString = userInput;
-
-        if ((userInput.slice(-1) === '\n') || (e.originalEvent.inputType === 'insertLineBreak'))
-        {
-	    userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
-	    this._previousSearchString = userInput;
-	    inputBox.val(userInput);
-        }
-
-        if ((typeof userInput !== 'string') || (userInput.length == 0))
-	    $('tr').show();
-        else
+	const me = this;
+	
+	function inputHandler (e)
 	{
-	    this._previousSearchString = userInput;
-            const theSingleVisibleRow = this._filterTable(userInput, tblHandler);
+	    const enterKeyOrEquivalent = 'Enter' === e.key || 'Tab' === e.key;
+            const inputBox = me._searchBox;
+	    const tblHandler = me;
+            var userInput = inputBox.val();
+	    me._previousSearchString = userInput;
+	    console.log('>' + userInput + '<');
+	    
+
+            if ((userInput.slice(-1) === '\n') || (e.originalEvent.inputType === 'insertLineBreak'))
+            {
+		userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
+		me._previousSearchString = userInput;
+		inputBox.val(userInput);
+            }
+
+	    me._previousSearchString = userInput;
+	    const theSingleVisibleRow = me._filterTable(userInput, tblHandler);
 	    if (null !== theSingleVisibleRow && enterKeyOrEquivalent)
 	    {
 		theSingleVisibleRow.cells[0].click();
 		tblHandler._showSelectedTableRowOnly(theSingleVisibleRow);
-		tblHandler._accommodateOwnerToTable(this._SHOW_SELECTED_OPTION);
+		tblHandler._accommodateOwnerToTable(me._SHOW_SELECTED_OPTION);
 		tblHandler._searchBox.blur();
 		tblHandler._previousSearchString = tblHandler._searchBox[0].value;
-		return;
+		    return;
 	    }
 	    
-	    tblHandler._accommodateOwnerToTable(this._SHOW_AVAILABLE_OPTIONS);
+	    tblHandler._accommodateOwnerToTable(me._SHOW_AVAILABLE_OPTIONS);
 	}
+
+	var debounceTimer;
+	clearTimeout(debounceTimer);
+	debounceTimer = setTimeout(() => { inputHandler(e); }, 100);
     }
 
 

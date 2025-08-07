@@ -63,14 +63,14 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
 	    return;
 	}
 
-	if ('allStrongs' in data) // Changes the content of windows after a revised selection.
+	if ('newPerson' in data) // Changes the content of windows after a revised selection.
 	{
-	    this._processNewStrong(data, callingFrameId);
+	    this._processNewPerson(data, callingFrameId);
 	    return;
 	}
 
-	if ('forceTagVisible' in data && !JFrameworkUtils.isLargeScreen())
-	    JFrameworkMultiframeLayoutController.openDialogTab(data.forceTagVisible);
+	if ('forceTabVisible' in data && !JFrameworkUtils.isLargeScreen())
+	    JFrameworkMultiframeLayoutController.openDialogTab(data.forceTabVisible);
 	    
     }
 
@@ -93,24 +93,77 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
 
     
     /**************************************************************************/
-    _makeScriptureUrl (data)
+    /* This is slightly awkward.  Originally I was simply passing Strongs
+       numbers.  This works, in so far as it selects the correct verses, but
+       it highlights the target name(s) only if the Bible text has Strongs
+       tags.  Adding names details as well seems to sort out the highlighting.
+       However, one issue will remain -- that the names available to me from
+       the genealogy data use ESV spellings, and there is no guarantee that
+       these will work with the selected Bible text.  I don't think this is
+       necessarily a _huge_ problem: I think you'll still see the correct
+       verses; it simply means that even with our best efforts, there is no
+       guarantee that the names will be highlighted.
+
+       The results here will be something like the following (which is for
+       Saul / Paul in the NT):
+
+         http://localhost:8989/?skipwelcome&q=version=ESV@srchJoin=(1o2o3o4)@strong=G3972G@strong=G4549G@strong=G4569G@strong=G4569H@text=Saul@text=Paul&options=VHN&noredirect
+
+       Note that the name(s) of the selectedperson are always correctly
+       highlighted in the scripture window if using a tagged Bible like ESV.
+       With a non-tagged Bible like NIV there is a limit to how many verses
+       contain correct tagging.  If too many verses are involved, highlighting
+       occurs in the later verses only sporadically.
+    */
+    
+    _makeScriptureUrl (personRec)
     {
-	var allStrongs = data.allStrongs.split('|');
+	/**********************************************************************/
+	function makeCommonPortion (elts, fieldName, n)
+	{
+	    const fields = fieldName + elts.join(fieldName);
+	    const srchJoin = 1 == elts.length ? n.toString() : Array.from({ length: elts.length }, (_, i) => n + i).join('o');
+	    return { srchJoin: srchJoin, fields: fields, n: elts.length };
+	}
+
+
+
+	/**********************************************************************/
+	function makeStrongsPortion (elts, fieldName, n)
+	{
+	    return makeCommonPortion(elts, fieldName, n);
+	}
+
 	
-	const partialUrl = '@strong=' + allStrongs.join('@strong=');
 
-        var join = '';
-	if (allStrongs.length > 1)
-        {
-            var join = '@srchJoin=(';
-	    
-            for (var i = 1; i <= allStrongs.length; ++i)
-                join += i + "o";
+	/**********************************************************************/
+	function makeNamesPortion (elts, fieldName, n)
+	{
+	    const fields = fieldName + elts.join(fieldName);
+	    return { srchJoin: '', fields: fields, n: 0 };
+	}
 
-            join = join.substring(0, join.length - 1) + ")";
-        }
+	
 
-	return window.location.origin + '/?skipwelcome&q=' + join + partialUrl; // + "&options=VHN&noredirect");
+	/**********************************************************************/
+	/* We're guaranteed to have at least one Strongs and at least one name,
+	   so we always need srchJoin.  The Strongs portion and the name
+	   portion need to be joined by 'a', implying that we want the
+	   Strong's criteria to be satisfied AND the names criteria.  Within
+	   each section, we need multiple elements to be joined by 'o',
+	   implying that we are content for any of the elements to be
+	   satisfied. */
+	
+	const strongsBit = makeStrongsPortion(personRec.allDStrongs, '@strong=', 1);
+	const namesBit   = makeNamesPortion  (personRec.allNames,    '@text=',   strongsBit.n + 1);
+        // var join = '@srchJoin=(_strongs_a_names_)';
+        var join = '@srchJoin=(_strongs_)';
+	join = join.replace('_strongs_', strongsBit.srchJoin);
+	join = join.replace('_names_', namesBit.srchJoin);
+
+	const res = window.location.origin + '/?skipwelcome&q=' + join + strongsBit.fields + namesBit.fields + '&options=VHN&noredirect';
+	// console.log(res);
+	return res;
     }
 
 
@@ -151,23 +204,37 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
        Remove the 'if' statement marked Note A below if you want to
        reinstate the full synchronisation -- although if you do that, you
        may have to do a little debugging, since I'm not sure it was fully
-       working. */
+       working.
 
-    _processNewStrong (data, callingFrameId)
+       'data' should be a record of the form { newPerson: rec, reason: '...' }
+       where rec is a person record containing at least the following fields:
+
+       - allDStrongs: A list of all Strongs references for this person.
+
+       - allNames = names: A list of all 'base' names for the person (ie Aaron,
+         rather than Aaron@...).
+
+       - masterDStrongs: The master Strongs number for the person.
+
+       - disambiguatedName: The disambiguated name for the person.
+    */
+
+    _processNewPerson (data, callingFrameId)
     {
 	if ('peopleIndex' == callingFrameId)
 	    this._previousAllStrongs = '';
+
+	const personRec = data.newPerson;
+	const collapsedStrongs = personRec.allDStrongs.join('|');
 	
-	
-	if (data.allStrongs !== this._previousAllStrongs || this._firstTime)
-	{	
+	if (collapsedStrongs !== this._previousAllStrongs || this._firstTime)
+	{
 	    const targetFrameId = 'peopleIndex' == callingFrameId ? 'genealogy' : 'peopleIndex';
-	    this._previousAllStrongs = data.allStrongs;
-	    if (targetFrameId !== 'peopleIndex') // See note A above.
-		super.sendMessageTo(targetFrameId, data, callingFrameId);
+	    this._previousAllStrongs = collapsedStrongs;
+	    super.sendMessageTo(targetFrameId, data, callingFrameId);
 	}
 	
-	const url = this._makeScriptureUrl(data);
+	const url = this._makeScriptureUrl(personRec);
 	this.sendSetUrlForce('scripture', url);
 
 	this._firstTime = false;

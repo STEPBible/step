@@ -32,7 +32,7 @@ export class ClassGenealogySharedCode
 	    displayName = bits[0] + ' (built ' + bits[1] + ')';
 	}
 			
-	const alternativeNames = 0 == rec.alternativeNames.length ? '' : '<br>' + rec.alternativeNames.map( str => str.split('@')[0] ).join('<br>');
+	const alternativeNames = 1 == rec.allNames.length ? '' : '<br>' + rec.allNames.slice(1).map( str => str.split('@')[0] ).join('<br>');
 	if (0 != alternativeNames.length)
 	{
 	    displayName += ' &bull; or ...';

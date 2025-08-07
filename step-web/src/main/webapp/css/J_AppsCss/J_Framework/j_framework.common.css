@@ -22,7 +22,7 @@
     --jframework-clrPopUpMenuItemBackgroundUnselected: rgb(255, 255, 192);
     --jframework-clrPopUpMenuItemBackgroundSelected:   var(--clrHighlight);
 
-    --jframework-clrSsearchBoxBackground: #eef9fc;
+    --jframework-clrSearchBoxBackground: #eef9fc;
 
     --jframework-clrStandardBorder: var(--clrHighlight);
     --jframework-clrButtonText: var(--clrHighlight);

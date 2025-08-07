@@ -66,7 +66,7 @@ class _ClassJPeopleTableHandler
             var ix = 0;
             $.getJSON(jsonPath + jsonFileName, function(array) {
 		$.each(array, function (key, val) {
-		    _PeopleData.push(new _PeopleDataEntry(''/*val.allRefsAsRanges.join(';')*/, val.allDStrongs, val.dStrongs, key));
+		    _PeopleData.push(new _PeopleDataEntry(val.allDStrongs, val.allNames, val.dStrongs, key));
 		    _PersonFullyQualifiedNameToIndex.set(key, ix++);
 		    tblBodyHtml += me._GenealogySharedCode.makeSearchTableRowHtml(key, val);
 		})
@@ -124,12 +124,6 @@ export const JPeopleTableHandler = new _ClassJPeopleTableHandler();
 export function doInitialisation ()
 {
     /**************************************************************************/
-    //if (!JFrameworkUtils.isLargeScreen())
-    //    $('#smallScreenInfo').html('<br>For help, use the green button on the Genealogy tab.');
-	
-
-
-    /**************************************************************************/
     const hideTableWhenNotInUse = true;
     JPeopleTableHandler.init(hideTableWhenNotInUse);
 
@@ -157,19 +151,6 @@ export function doInitialisation ()
     /**************************************************************************/
     if (hideTableWhenNotInUse)
 	_JEventHandlers.sendMessageTo(null, { 'resizeIframe': document.body.scrollHeight + 10 }); // Extra 10 because experience suggests that things may otherwise be cut off at the bottom of the frame.
-    
-
-
-    /**************************************************************************/
-    /* Force the genealogy window to follow the initial content of the search
-       box.  I'm now assuming we don't want to do this: the genealogy window
-       is automatically set to Aaron, so there's nothing to do. */
-    
-    //    if (initialPersonIx >= 0)
-    //    {
-    //	JPeopleTableHandler._tableHandler.highlightSelection(document.querySelector('.jframework-searchTable').querySelectorAll('tr')[initialPersonIx]);
-    //	_JEventHandlers.selectPersonFollowingTableClick(initialPersonIx);
-    //    }
 }
 
 
@@ -195,10 +176,10 @@ export function doInitialisation ()
 /******************************************************************************/
 class _PeopleDataEntry
 {
-    constructor(refs, dStrongs, masterDStrongs, disambiguatedName)
+    constructor(allDStrongs, allNames, masterDStrongs, disambiguatedName)
     {
-//        this.refs = refs; // May not want this long term -- in which case the data could probably go from j_genealogy.json.
-        this.allDStrongs = dStrongs; // All of various Strongs for this person.
+        this.allDStrongs = allDStrongs; // All of various Strongs for this person.
+        this.allNames = allNames; // All of various Strongs for this person.
         this.masterDStrongs = masterDStrongs; // The Strongs preferred for processing purposes.
 	this.disambiguatedName = disambiguatedName;
     }
@@ -274,9 +255,34 @@ class _ClassJEventHandlers extends ClassJFrameworkMultiframeCommunicationsSlave
 
     
     /**************************************************************************/
+    /* Originally this method received details of a selection made elsewhere
+       (for example by clicking on a person link in the genealogy info box)
+       and updated the search app to reflect that selection.  This became
+       difficult to manage, and I wasn't even sure it was the right thing to
+       do, given the more recent requirement that the search box remember what
+       was most recently selected by typing into the box itself.
+
+       I have therefore modified this so that it merely makes sure that if
+       the search table is visible, but is supposed to be visible only while
+       actively searching, we have a chance to hide it.
+
+       I have commented out the calls which implemented the earlier
+       behaviour, but have retained the methods they call in case we ever
+       want to revert. */
+    
     receiveMessage (data, sourceFrameId) // Overrides ClassJFrameworkMultiframeCommunicationsSlave
     {
+	JPeopleTableHandler._tableHandler.hideTable();
+
+/*	
+	var disambiguatedName = null;
 	if ('disambiguatedName' in data)
+	    disambiguatedName = data.disambiguatedName;
+	else if ('newPerson' in data)
+	    disambiguatedName = data.newPerson.disambiguatedName;
+	    
+	
+	if (null == disambiguatedName)
 	{
 	    try
 	    {
@@ -288,6 +294,7 @@ class _ClassJEventHandlers extends ClassJFrameworkMultiframeCommunicationsSlave
 		this._suppressSendMessage = false;
 	    }
 	}
+*/
     }
     
 
@@ -329,7 +336,7 @@ class _ClassJEventHandlers extends ClassJFrameworkMultiframeCommunicationsSlave
     
     selectPersonFollowingTableClick (ix)
     {
-	this.sendMessageWithSuppression('', {strong: _PeopleData[ix].masterDStrongs, allStrongs: _PeopleData[ix].allDStrongs.join('|'), disambiguatedName: _PeopleData[ix].disambiguatedName });
+	this.sendMessageWithSuppression('', { newPerson: _PeopleData[ix], source: 'peopleIndexTableClick' });
     }
 
 
@@ -338,7 +345,7 @@ class _ClassJEventHandlers extends ClassJFrameworkMultiframeCommunicationsSlave
     
     selectPersonFollowingGenealogyChange (ix)
     {
-	this.sendMessageWithSuppression('', {strong: _PeopleData[ix].masterDStrongs, allStrongs: _PeopleData[ix].allDStrongs.join('|'), disambiguatedName: _PeopleData[ix].disambiguatedName });
+	this.sendMessageWithSuppression('', { newPerson: _PeopleData[ix], source: 'genealogyChangeMediatedByPeopleIndex' });
 	this._attemptedToScrollTo = ix;
     }
 

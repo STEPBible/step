@@ -383,9 +383,9 @@ class _ClassInitialisationHandler extends ClassJFrameworkMultiframeCommunication
 
     receiveMessage (data, callingFrameId)
     {
-	if ('strong' in data)
+	if ('newPerson' in data)
 	{
-	    const requiredIx = data.strong.includes("0000") ? indexFromName(data.disambiguatedName) : indexFromStrongs(data.strong);
+	    const requiredIx = data.newPerson.allDStrongs.includes("0000") ? indexFromName(data.newPerson.disambiguatedName) : indexFromStrongs(data.newPerson.masterDStrongs);
 	    if (requiredIx != PresentationHandler.getRootPersonIx())
 	    {
 		try
@@ -403,7 +403,7 @@ class _ClassInitialisationHandler extends ClassJFrameworkMultiframeCommunication
 	}
 
 
-	this.sendMessageTo(null, { forceTagVisible: 'genealogy'}); // On narrow layout, after a selection change we need to ensure the genealogy window is visible.
+	this.sendMessageTo(null, { forceTabVisible: 'genealogy'}); // On narrow layout, after a selection change we need to ensure the genealogy window is visible.
     }
 
     
@@ -1547,7 +1547,7 @@ class ClassDataHandler
 		mother: { disambiguatedName: EmptyFieldMarker },
 		partners: [],
 		children: [],
-		alternativeNames: [],
+		allNames: [],
 		allDStrongs: [],
 		ambiguity: EmptyFieldMarker,
 		summaryDescription: EmptyFieldMarker,
@@ -3047,7 +3047,7 @@ class _ClassPresentationHandler
            appropriate. */
 	
 	if (ix != this.getSelectedPersonIx())
-	    InitialisationHandler.sendMessageWithSuppression(null, { allStrongs: strongsFromIndex(ix), disambiguatedName: nameFromIndex(ix) });
+	    InitialisationHandler.sendMessageWithSuppression(null, { newPerson: personRecordFromIndex(ix), reason: 'newSelectionInGenealogy' });
 
 
 
@@ -3076,7 +3076,7 @@ class _ClassPresentationHandler
 	const siblings   = personRecord.siblings || [];
 	const summaryDescription = personRecord.summaryDescription;
 	const longDescription = personRecord.longDescription;
-	const alternativeNames = 0 == personRecord.alternativeNames.length ? '' : ' Also known as ' + personRecord.alternativeNames.map( x => x.replace('@', ':') ) + '.';
+	const alternativeNames = 1 == personRecord.allNames.length ? '' : ' Also known as ' + personRecord.allNames.slice(1).map( x => x.replace('@', ':') ) + '.';
 
 	const ambiguity = EmptyFieldMarker == personRecord.ambiguity ? '' :
 	      `<p><b>Differing interpretations exist here.</b>  Click <button class="jframework-linkAsButton" title="Details of ambiguity" onclick="window.open('${personRecord.ambiguity}', '_blank', 'noopener,noreferrer')">here</button> for details.</p>`;
@@ -3237,7 +3237,7 @@ class _ClassPresentationHandler
             Array.from(infoBox.getElementsByTagName('xref')).forEach (element => {
 		element.name = 'button'
 		element.classList.add('jframework-linkAsButton');
-		element.onclick = function() { JFrameworkMultiframeCommunicationsSlave.sendSetUrlForce('scripture', window.location.origin + '/?skipwelcome&q=' + 'reference=' + element.getAttribute('ref')) }
+		element.onclick = function() { JFrameworkMultiframeCommunicationsSlave.sendSetUrlForce('scripture', window.location.origin + '/?skipwelcome&q=' + 'reference=' + element.getAttribute('ref') + '&options=VHN&noredirect') }
             });
 	}
 

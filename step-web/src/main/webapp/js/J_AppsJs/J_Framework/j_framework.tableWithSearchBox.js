@@ -363,7 +363,7 @@ export class ClassJFrameworkTableWithSearchBox
 	const tbody = row.closest('tbody');
 	for (const r of tbody.rows)
 	    for (const c of r.cells)
-		c.style.background = 'white';
+		c.classList.remove('jframework-tableWithSearchBox-highlightTableEntry');
 
 
 
@@ -371,7 +371,7 @@ export class ClassJFrameworkTableWithSearchBox
 	/* Highlight target row. */
 	
 	for (var i = 0; i < row.cells.length; ++i)
-	    $(row.cells[i]).css('background', '#FFFFC0');
+	    $(row.cells[i]).addClass('jframework-tableWithSearchBox-highlightTableEntry');
 
 
 
@@ -730,6 +730,8 @@ export class ClassJFrameworkTableWithSearchBox
 	    {
 		tblHandler._searchBox.blur();
 		tblHandler._previousSearchString = '';
+		tblHandler._searchBox[0].value = '';
+		tblHandler.hideTable();
 		return;
 	    }
 	    
@@ -794,7 +796,6 @@ export class ClassJFrameworkTableWithSearchBox
 	    const tblHandler = me;
             var userInput = inputBox.val();
 	    me._previousSearchString = userInput;
-	    console.log('>' + userInput + '<');
 	    
 
             if ((userInput.slice(-1) === '\n') || (e.originalEvent.inputType === 'insertLineBreak'))

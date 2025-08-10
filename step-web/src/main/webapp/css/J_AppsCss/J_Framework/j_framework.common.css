@@ -14,13 +14,15 @@
     --clr2ndHover: #d3d3d3;
     --simulated-sidebar-width: 100%;
 
+    --defaultFontSize: 15px;
 
     --minimumSizeOfBigScreens: 960;
 
     
     /* Definitions common to framework applications. */
     --jframework-clrPopUpMenuItemBackgroundUnselected: rgb(255, 255, 192);
-    --jframework-clrPopUpMenuItemBackgroundSelected:   var(--clrHighlight);
+    --jframework-clrInfoBoxBackground: rgb(255, 255, 192);
+    --jframework-clrPopUpMenuItemBackgroundSelected: var(--clrHighlight);
 
     --jframework-clrSearchBoxBackground: #eef9fc;
 
@@ -56,6 +58,8 @@
 body, html {
     height: 100%;
     width: 100%;
+    font-size: var(--defaultFontSize);
+    background: var(--clrBackground);
 }
 
 
@@ -83,10 +87,17 @@ body, html {
 
 
 
+/*--- Search box. --- */
+.jframework-tableWithSearchBox-highlightTableEntry {
+    background: var(--jframework-clrPopUpMenuItemBackgroundUnselected) !important;
+}
+
+
+
 /*--- Text. ---*/
 .jframework-standardText {
     font-family: Georgia, serif;
-    font-size: 15px;
+    font-size: var(--defaultFontSize) !important;
 }
 
 

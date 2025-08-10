@@ -58,15 +58,16 @@ jframework-iframeList {
     width: 5px;
     cursor: ew-resize;
     background: transparent;
-    border-right: 2px dotted gray;
+    border-right: 4px dotted salmon;
     position: relative;
 }
+
 
 .jframework-heightResizer {
     height: 5px;
     cursor: ns-resize;
     background: transparent;
-    border-top: 2px dotted gray;
+    border-top: 4px dotted salmon;
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -76,8 +77,8 @@ jframework-iframeList {
     margin-bottom: 20px;
 }
 
-.jframework-horizontalSeparator {
-    margin-right: 20px;
+.jframework-verticalSeparator {
+    margin-right: 5px;
 }
 
 

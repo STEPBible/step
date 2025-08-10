@@ -16,6 +16,7 @@
 'use strict';
 import { ClassJFrameworkMultiframeCommunicationsMaster } from '/js/J_AppsJs/J_Framework/j_framework.multiframeCommunicationsMaster.js';
 import { JFrameworkMultiframeLayoutController          } from '/js/J_AppsJs/J_Framework/j_framework.multiframeLayoutController.js';
+import { JFrameworkUserSettings                        } from '/js/J_AppsJs/J_Framework/j_framework.userSettings.js';
 import { JFrameworkUtils                               } from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
 
 
@@ -46,6 +47,7 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
 	this._previousScriptureUrl = '';
 	this._previousAllStrongs = '';
 	this._firstTime = false;
+	JFrameworkUserSettings.init();
     }
 
     

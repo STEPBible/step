@@ -11,6 +11,8 @@ body {
 /* Search box. */
 
 .jframework-searchBox {
+    border-radius: 8px; /* adjust px for more or less curve */
+    padding: 8px;       /* optional: makes text look less cramped */
     width: 100%;
     height: 40px;
     line-height: 16px;
@@ -34,15 +36,16 @@ textarea::placeholder {
 /* Search table. */
 
 .jframework-searchTable {
+    background: none;
     table-layout: fixed;
     width: 100%;
     borderCollapse: collapse;
 }
 
 .jframework-searchTableContainer {
+    background: none;
     overflow-y: auto;
     border: 2px solid black;
-    background: white;
     box-sizing: border-box;
 }
 
@@ -53,22 +56,5 @@ textarea::placeholder {
     word-wrap: break-word; /* Old browsers. */
     overflow-wrap: break-word; /* New ones. */
     vertical-align: middle;
-    color: var(--clrText); /* Override clickable colour. */
-}
-
-
-/******************************************************************************/
-/* jframework-fakedBottomBorder is a kludge -- it seems to be almost
-   impossible to get to see the bottom margin of the container when only a
-   single item is selected.  jframework-fakedBottomBorder is a workaround which
-   gives the appearance of the bottom margin being visible. */
-
-.NOTUSED-jframework-fakedBottomBorder::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background-color: black;
+    color: var(--clrText);
 }

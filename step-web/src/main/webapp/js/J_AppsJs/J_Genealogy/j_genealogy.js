@@ -132,6 +132,7 @@ import { ClassGenealogySharedCode }                     from '/js/J_AppsJs/J_Gen
 import { JFrameworkUtils }                              from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
 import { ClassJFrameworkModalDialog }                   from '/js/J_AppsJs/J_Framework/j_framework.modalDialog.js';
 import { ClassJFrameworkMultiframeCommunicationsSlave } from '/js/J_AppsJs/J_Framework/j_framework.multiframeCommunicationsSlave.js';
+import { JFrameworkUserSettings }                       from '/js/J_AppsJs/J_Framework/j_framework.userSettings.js';
 import { ClassJFrameworkTableWithSearchBox }            from '/js/J_AppsJs/J_Framework/j_framework.tableWithSearchBox.js';
 
 export const ModalDialogHandler = new ClassJFrameworkModalDialog();
@@ -302,12 +303,26 @@ class _ClassInitialisationHandler extends ClassJFrameworkMultiframeCommunication
     {
 	PresentationHandler.SubtreeHighlightHandler.markSpecialTrees();
 	this._makeInitialSelection();
+	
     }
 
 
     /*************************************************************************/
     onload ()
     {
+	/**********************************************************************/
+	function fn (firstTime)
+	{
+	    const background = getComputedStyle(document.documentElement).getPropertyValue("--clrBackground").trim();
+	    const isDark = JFrameworkUtils.isDark(background);
+	    const svgBackground = isDark  ? 'lightGray' : 'white';
+	    document.documentElement.style.setProperty('--svgBackground', svgBackground);
+	}
+	
+	JFrameworkUserSettings.init(fn);
+
+
+	
 	/*********************************************************************/
 	/* No need to have the text saying this is genealogy data if we're
            showing multiple frames on the same screen, because there the
@@ -1575,7 +1590,6 @@ class ClassDataHandler
 
 	    personRecord.display = false;
 	    
-            personRecord.summaryDescription = 'summaryDescription' in personRecord ? personRecord.summaryDescription.split(',')[0].substring(1) : '';
 	    if ('' != personRecord.summaryDescription) personRecord.summaryDescription += '.';
 	    personRecord.longDescription = personRecord.longDescription.replaceAll('¶', '<p>');
 	    personRecord.genderOrGroupIndicator = genderOrGroupIndicator(personRecord);

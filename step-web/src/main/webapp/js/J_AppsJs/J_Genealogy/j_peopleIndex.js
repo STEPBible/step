@@ -9,6 +9,7 @@
 import { ClassGenealogySharedCode                     } from '/js/J_AppsJs/J_Genealogy/j_genealogySharedCode.js';
 import { ClassJFrameworkMultiframeCommunicationsSlave } from '/js/J_AppsJs/J_Framework/j_framework.multiframeCommunicationsSlave.js';
 import { ClassJFrameworkTableWithSearchBox }            from '/js/J_AppsJs/J_Framework/j_framework.tableWithSearchBox.js';
+import { JFrameworkUserSettings }                       from '/js/J_AppsJs/J_Framework/j_framework.userSettings.js';
 import { JFrameworkUtils }                              from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
 
 
@@ -30,7 +31,19 @@ class _ClassJPeopleTableHandler
     /**************************************************************************/
     init (hideTableWhenNotInUse)
     {
-       /**********************************************************************/
+	/**********************************************************************/
+	function fn (firstTime)
+	{
+	    const background = getComputedStyle(document.documentElement).getPropertyValue("--clrBackground").trim();
+	    const tableHighlight = JFrameworkUtils.isDark(background) ? 'rgba(255, 0, 0, 0.4)' : 'rgb(255, 255, 192)';
+	    document.documentElement.style.setProperty('--jframework-clrPopUpMenuItemBackgroundUnselected', tableHighlight);
+	}
+	
+	JFrameworkUserSettings.init(fn);
+
+
+	
+	/**********************************************************************/
         var settings = new SettingsModelList;
         settings.fetch();
         if (settings.length > 0)

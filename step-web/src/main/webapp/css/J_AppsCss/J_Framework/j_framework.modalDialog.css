@@ -51,6 +51,7 @@
     display: block;
     padding: 10px;
     font-size: small;
+    color: black;
     overflow-y: auto;
 }
 

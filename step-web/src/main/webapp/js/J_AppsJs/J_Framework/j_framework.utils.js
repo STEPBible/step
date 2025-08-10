@@ -42,7 +42,6 @@ class _ClassJFrameworkUtils
     }
 	
 
-
     /**************************************************************************/
     /* Helper function for use when you have things like pop-up menus, which
        you wish to hide if the user clicks outside of them.  The method takes
@@ -110,6 +109,61 @@ class _ClassJFrameworkUtils
     }
 
     
+    /**************************************************************************/
+    /* Determines if a colour is dark or light. */
+
+    isDark (colour)
+    {
+	const rgb = this.toRgb(colour);
+	const luminance = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b; // sRGB luminance
+	return luminance < 128; // threshold
+    }
+
+
+    /**************************************************************************/
+    /* Converts any CSS colour designation to { r:..., g:..., b:... }. */
+    
+    toRgb (colour)
+    {
+	/*********************************************************************/
+	if (colour.startsWith("#"))
+	{
+	    let hex = colour.slice(1);
+	    if (hex.length === 3) hex = hex.split("").map(c => c + c).join("");
+	    const num = parseInt(hex, 16);
+	    return {
+		r: (num >> 16) & 255,
+		g: (num >> 8) & 255,
+		b: num & 255
+	    };
+	}
+
+
+
+	/*********************************************************************/
+	const rgbMatch = colour.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+	if (rgbMatch)
+	{
+	    return {
+		r: parseInt(rgbMatch[1], 10),
+		g: parseInt(rgbMatch[2], 10),
+		b: parseInt(rgbMatch[3], 10)
+	    };
+	}
+
+
+	/*********************************************************************/
+	/* Handle named colours by letting the browser convert them */
+
+	const temp = document.createElement("div");
+	temp.style.color = colour;
+	document.body.appendChild(temp);
+	const computed = getComputedStyle(temp).colour;
+	document.body.removeChild(temp);
+	return parseColour(computed);
+    }
+
+
     /**************************************************************************/
     _fullToAbbreviatedNameMappings = {
 	'Genesis': ['Gen', 'Gen'],

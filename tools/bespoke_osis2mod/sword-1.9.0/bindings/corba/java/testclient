@@ -1,0 +1,6 @@
+#!/bin/sh
+TOMCAT_HOME=/opt/tomcat
+#SERVLET_LIB=${TOMCAT_HOME}/common/lib/servlet-api.jar
+SERVLET_LIB=${TOMCAT_HOME}/lib/servlet-api.jar
+TOMCAT_HOME=/usr/local/tomcat
+java -cp $SERVLET_LIB:classes org.crosswire.sword.orb.SwordOrb $*

@@ -1,0 +1,689 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<PersonalityInfo>
+		<Option>
+			<Option Name="Personality">CPlusPlusBuilder.Personality</Option>
+			<Option Name="ProjectType">CppStaticLibrary</Option>
+			<Option Name="Version">1.0</Option>
+			<Option Name="GUID">{42E205EF-ACE1-43B1-B144-7CC5BFF5A26A}</Option>
+		</Option>
+	</PersonalityInfo>
+	<CPlusPlusBuilder.Personality>
+		<BCBPROJECT>
+      <project version="10.0">
+        <property category="build.config" name="active" value="0"/>
+        <property category="build.config" name="count" value="1"/>
+        <property category="build.config" name="excludedefaultforzero" value="0"/>
+        <property category="build.config.0" name="builddir" value="Debug"/>
+        <property category="build.config.0" name="key" value="Debug_Build"/>
+        <property category="build.config.0" name="name" value="Debug Build"/>
+        <property category="build.config.0" name="settings.win32b" value="default"/>
+        <property category="build.config.0" name="type" value="Toolset"/>
+        <property category="build.config.0" name="win32.win32b.builddir" value="Debug_Build"/>
+        <property category="build.config.1" name="key" value="Release_Build"/>
+        <property category="build.config.1" name="name" value="Release Build"/>
+        <property category="build.config.1" name="settings.win32b" value="default"/>
+        <property category="build.config.1" name="type" value="Toolset"/>
+        <property category="build.config.1" name="win32.win32b.builddir" value="Release_Build"/>
+        <property category="build.node" name="name" value="libsword.lib"/>
+        <property category="build.node" name="use_packages" value="0"/>
+        <property category="build.platform" name="active" value="win32"/>
+        <property category="build.platform" name="win32.Debug_Build.toolset" value="win32b"/>
+        <property category="build.platform" name="win32.Release_Build.toolset" value="win32b"/>
+        <property category="build.platform" name="win32.default" value="win32b"/>
+        <property category="build.platform" name="win32.enabled" value="1"/>
+        <property category="build.platform" name="win32.win32b.enabled" value="1"/>
+        <property category="win32.*.win32b.dcc32" name="param.filenames.merge" value="1"/>
+        <property category="win32.*.win32b.tasm32" name="param.listfile.merge" value="1"/>
+        <property category="win32.*.win32b.tasm32" name="param.objfile.merge" value="1"/>
+        <property category="win32.*.win32b.tasm32" name="param.xreffile.merge" value="1"/>
+        <property category="win32.Debug_Build.win32b.bcc32" name="option.D.arg.1" value="_DEBUG"/>
+        <property category="win32.Debug_Build.win32b.bcc32" name="option.D.arg.merge" value="1"/>
+        <property category="win32.Debug_Build.win32b.bcc32" name="option.D.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.bcc32" name="option.Od.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.bcc32" name="option.k.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.bcc32" name="option.r.enabled" value="0"/>
+        <property category="win32.Debug_Build.win32b.bcc32" name="option.v.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.bcc32" name="option.vi.enabled" value="0"/>
+        <property category="win32.Debug_Build.win32b.bcc32" name="option.y.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.dcc32" name="option.$D.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.dcc32" name="option.$O.enabled" value="0"/>
+        <property category="win32.Debug_Build.win32b.dcc32" name="option.D.arg.1" value="DEBUG"/>
+        <property category="win32.Debug_Build.win32b.dcc32" name="option.D.arg.merge" value="1"/>
+        <property category="win32.Debug_Build.win32b.dcc32" name="option.D.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.dcc32" name="option.V.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.ilink32" name="option.D.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.ilink32" name="option.Gn.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.ilink32" name="option.L.arg.1" value="$(BDS)\lib\debug"/>
+        <property category="win32.Debug_Build.win32b.ilink32" name="option.L.arg.merge" value="1"/>
+        <property category="win32.Debug_Build.win32b.ilink32" name="option.L.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.ilink32" name="option.v.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.tasm32" name="option.z.enabled" value="1"/>
+        <property category="win32.Debug_Build.win32b.tasm32" name="option.zd.enabled" value="0"/>
+        <property category="win32.Debug_Build.win32b.tasm32" name="option.zi.enabled" value="1"/>
+        <property category="win32.Release_Build.win32b.bcc32" name="option.D.arg.1" value="NDEBUG"/>
+        <property category="win32.Release_Build.win32b.bcc32" name="option.D.arg.merge" value="1"/>
+        <property category="win32.Release_Build.win32b.bcc32" name="option.D.enabled" value="1"/>
+        <property category="win32.Release_Build.win32b.bcc32" name="option.O2.enabled" value="1"/>
+        <property category="win32.Release_Build.win32b.bcc32" name="option.k.enabled" value="0"/>
+        <property category="win32.Release_Build.win32b.bcc32" name="option.r.enabled" value="1"/>
+        <property category="win32.Release_Build.win32b.bcc32" name="option.vi.enabled" value="1"/>
+        <property category="win32.Release_Build.win32b.dcc32" name="option.$D.enabled" value="0"/>
+        <property category="win32.Release_Build.win32b.dcc32" name="option.$O.enabled" value="1"/>
+        <property category="win32.Release_Build.win32b.dcc32" name="option.V.enabled" value="0"/>
+        <property category="win32.Release_Build.win32b.ilink32" name="option.L.arg.1" value="$(BDS)\lib\release"/>
+        <property category="win32.Release_Build.win32b.ilink32" name="option.L.arg.merge" value="1"/>
+        <property category="win32.Release_Build.win32b.ilink32" name="option.L.enabled" value="1"/>
+        <property category="win32.Release_Build.win32b.tasm32" name="option.z.enabled" value="0"/>
+        <property category="win32.Release_Build.win32b.tasm32" name="option.zd.enabled" value="0"/>
+        <property category="win32.Release_Build.win32b.tasm32" name="option.zi.enabled" value="0"/>
+        <property category="win32.Release_Build.win32b.tasm32" name="option.zn.enabled" value="1"/>
+        <optionset name="all_configurations">
+          <property category="node" name="displayname" value="All Configurations"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.1" value="UNICODE"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.2" value="_ICU_"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.3" value="_ICUSWORD_"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.4" value="USBINARY"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.5" value="U_HAVE_PLACEMENT_NEW=0"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.6" value="USELUCENE"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.7" value="_WIN32"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.8" value="_CL_DISABLE_MULTITHREADING"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.9" value="CURLAVAILABLE"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.arg.merge" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.D.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.1" value="..\..\src\modules\tests"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.10" value="..\..\src\modules\texts"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.11" value="..\..\src\modules\lexdict\rawld"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.12" value="..\..\src\modules\lexdict"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.13" value="..\..\src\modules\filters"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.14" value="..\..\src\modules\common"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.15" value="..\..\src\modules\comments\rawfiles"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.16" value="..\..\src\modules\comments\rawcom"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.17" value="..\..\src\modules\comments\hrefcom"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.18" value="..\..\src\modules\comments"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.19" value="..\..\src\modules"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.2" value="..\..\src\utilfuns\zlib"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.20" value="..\..\src\frontend"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.21" value="..\..\src\utilfuns"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.22" value="..\..\src\mgr"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.23" value="..\..\src\keys"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.24" value="..\..\..\icu-sword\source\common"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.25" value="..\..\apps\windoze\CBuilder5\InstallMgr\curl\include"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.26" value="..\..\include"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.27" value="$(BDS)\include"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.28" value="$(BDS)\include\vcl"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.29" value="..\..\..\icu-sword\source\i18n"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.3" value="..\..\src\modules\lexdict\zld"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.30" value="..\..\..\biblecs\clucene\src"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.31" value="..\..\..\biblecs\apps\InstallMgr\curl\include"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.32" value="$(BDS)\include\dinkumware"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.4" value="..\..\src\modules\lexdict\rawld4"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.5" value="..\..\src\modules\comments\zcom"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.6" value="..\..\src\modules\genbook\rawgenbook"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.7" value="..\..\src\modules\genbook"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.8" value="..\..\src\modules\texts\ztext"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.9" value="..\..\src\modules\texts\rawtext"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.arg.merge" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.I.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.O2.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.Vx.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.X.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.b.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.k.enabled" value="0"/>
+          <property category="win32.*.win32b.bcc32" name="option.sysdefines.arg.1" value="NO_STRICT"/>
+          <property category="win32.*.win32b.bcc32" name="option.sysdefines.arg.merge" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.sysdefines.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.tW.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.tWM.enabled" value="1"/>
+          <property category="win32.*.win32b.bcc32" name="option.vi.enabled" value="1"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.arg.1" value="UNICODE"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.arg.2" value="_ICU_"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.arg.3" value="_ICUSWORD_"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.arg.4" value="USBINARY"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.arg.5" value="U_HAVE_PLACEMENT_NEW=0"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.arg.6" value="USELUCENE"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.arg.7" value="_WIN32"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.arg.8" value="_CL_DISABLE_MULTITHREADING"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.arg.merge" value="1"/>
+          <property category="win32.*.win32b.brcc32" name="option.D.enabled" value="0"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.1" value="..\..\src\modules\tests"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.10" value="..\..\src\modules\texts"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.11" value="..\..\src\modules\lexdict\rawld"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.12" value="..\..\src\modules\lexdict"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.13" value="..\..\src\modules\filters"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.14" value="..\..\src\modules\common"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.15" value="..\..\src\modules\comments\rawfiles"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.16" value="..\..\src\modules\comments\rawcom"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.17" value="..\..\src\modules\comments\hrefcom"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.18" value="..\..\src\modules\comments"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.19" value="..\..\src\modules"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.2" value="..\..\src\utilfuns\zlib"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.20" value="..\..\src\frontend"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.21" value="..\..\src\utilfuns"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.22" value="..\..\src\mgr"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.23" value="..\..\src\keys"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.24" value="..\..\..\icu-sword\source\common"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.25" value="..\..\apps\windoze\CBuilder5\InstallMgr\curl\include"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.26" value="..\..\include"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.27" value="$(BDS)\include"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.28" value="$(BDS)\include\vcl"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.29" value="..\..\..\icu-sword\source\i18n"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.3" value="..\..\src\modules\lexdict\zld"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.30" value="..\..\..\biblecs\clucene\src"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.31" value="..\..\..\biblecs\apps\InstallMgr\curl\include"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.32" value="$(BDS)\include\dinkumware"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.4" value="..\..\src\modules\lexdict\rawld4"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.5" value="..\..\src\modules\comments\zcom"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.6" value="..\..\src\modules\genbook\rawgenbook"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.7" value="..\..\src\modules\genbook"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.8" value="..\..\src\modules\texts\ztext"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.9" value="..\..\src\modules\texts\rawtext"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.arg.merge" value="1"/>
+          <property category="win32.*.win32b.brcc32" name="option.INCLUDEPATH.enabled" value="1"/>
+          <property category="win32.*.win32b.dcc32" name="option.$.arg.1" value="Y-"/>
+          <property category="win32.*.win32b.dcc32" name="option.$.arg.merge" value="1"/>
+          <property category="win32.*.win32b.dcc32" name="option.$.enabled" value="1"/>
+          <property category="win32.*.win32b.dcc32" name="option.$D.enabled" value="0"/>
+          <property category="win32.*.win32b.dcc32" name="option.$L.enabled" value="0"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.1" value="..\..\src\frontend"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.10" value="..\..\src\modules\common"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.11" value="..\..\src\modules\filters"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.12" value="..\..\src\modules\genbook\rawgenbook"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.13" value="..\..\src\modules\genbook"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.14" value="..\..\src\modules\lexdict\rawld"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.15" value="..\..\src\modules\lexdict\rawld4"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.16" value="..\..\src\modules\lexdict\zld"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.17" value="..\..\src\modules\lexdict"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.18" value="..\..\src\modules\tests"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.19" value="..\..\src\modules\texts\rawtext"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.2" value="..\..\src\keys"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.20" value="..\..\src\modules\texts\ztext"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.21" value="..\..\src\modules\texts"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.22" value="..\..\src\modules"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.23" value="..\..\src\utilfuns\zlib"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.3" value="..\..\src\mgr"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.4" value="..\..\src\utilfuns"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.5" value="..\..\src\modules\comments\hrefcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.6" value="..\..\src\modules\comments\rawcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.7" value="..\..\src\modules\comments\rawfiles"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.8" value="..\..\src\modules\comments\zcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.9" value="..\..\src\modules\comments"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.arg.merge" value="1"/>
+          <property category="win32.*.win32b.dcc32" name="option.I.enabled" value="0"/>
+          <property category="win32.*.win32b.dcc32" name="option.M.enabled" value="1"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.1" value="..\..\src\frontend"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.10" value="..\..\src\modules\common"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.11" value="..\..\src\modules\filters"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.12" value="..\..\src\modules\genbook\rawgenbook"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.13" value="..\..\src\modules\genbook"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.14" value="..\..\src\modules\lexdict\rawld"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.15" value="..\..\src\modules\lexdict\rawld4"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.16" value="..\..\src\modules\lexdict\zld"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.17" value="..\..\src\modules\lexdict"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.18" value="..\..\src\modules\tests"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.19" value="..\..\src\modules\texts\rawtext"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.2" value="..\..\src\keys"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.20" value="..\..\src\modules\texts\ztext"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.21" value="..\..\src\modules\texts"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.22" value="..\..\src\modules"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.23" value="..\..\src\utilfuns\zlib"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.3" value="..\..\src\mgr"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.4" value="..\..\src\utilfuns"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.5" value="..\..\src\modules\comments\hrefcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.6" value="..\..\src\modules\comments\rawcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.7" value="..\..\src\modules\comments\rawfiles"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.8" value="..\..\src\modules\comments\zcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.9" value="..\..\src\modules\comments"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.arg.merge" value="1"/>
+          <property category="win32.*.win32b.dcc32" name="option.O.enabled" value="0"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.1" value="..\..\src\frontend"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.10" value="..\..\src\modules\common"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.11" value="..\..\src\modules\filters"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.12" value="..\..\src\modules\genbook\rawgenbook"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.13" value="..\..\src\modules\genbook"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.14" value="..\..\src\modules\lexdict\rawld"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.15" value="..\..\src\modules\lexdict\rawld4"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.16" value="..\..\src\modules\lexdict\zld"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.17" value="..\..\src\modules\lexdict"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.18" value="..\..\src\modules\tests"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.19" value="..\..\src\modules\texts\rawtext"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.2" value="..\..\src\keys"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.20" value="..\..\src\modules\texts\ztext"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.21" value="..\..\src\modules\texts"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.22" value="..\..\src\modules"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.23" value="..\..\src\utilfuns\zlib"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.3" value="..\..\src\mgr"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.4" value="..\..\src\utilfuns"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.5" value="..\..\src\modules\comments\hrefcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.6" value="..\..\src\modules\comments\rawcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.7" value="..\..\src\modules\comments\rawfiles"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.8" value="..\..\src\modules\comments\zcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.9" value="..\..\src\modules\comments"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.arg.merge" value="1"/>
+          <property category="win32.*.win32b.dcc32" name="option.R.enabled" value="0"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.1" value="..\..\src\frontend"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.10" value="..\..\src\modules\common"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.11" value="..\..\src\modules\filters"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.12" value="..\..\src\modules\genbook\rawgenbook"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.13" value="..\..\src\modules\genbook"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.14" value="..\..\src\modules\lexdict\rawld"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.15" value="..\..\src\modules\lexdict\rawld4"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.16" value="..\..\src\modules\lexdict\zld"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.17" value="..\..\src\modules\lexdict"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.18" value="..\..\src\modules\tests"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.19" value="..\..\src\modules\texts\rawtext"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.2" value="..\..\src\keys"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.20" value="..\..\src\modules\texts\ztext"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.21" value="..\..\src\modules\texts"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.22" value="..\..\src\modules"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.23" value="..\..\src\utilfuns\zlib"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.24" value=".\"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.25" value="$(BDS)\lib"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.26" value="$(BDS)\lib\obj"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.3" value="..\..\src\mgr"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.4" value="..\..\src\utilfuns"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.5" value="..\..\src\modules\comments\hrefcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.6" value="..\..\src\modules\comments\rawcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.7" value="..\..\src\modules\comments\rawfiles"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.8" value="..\..\src\modules\comments\zcom"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.9" value="..\..\src\modules\comments"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.arg.merge" value="1"/>
+          <property category="win32.*.win32b.dcc32" name="option.U.enabled" value="1"/>
+          <property category="win32.*.win32b.dcc32" name="param.filenames.merge" value="1"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.arg.1" value="UNICODE"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.arg.2" value="_ICU_"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.arg.3" value="_ICUSWORD_"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.arg.4" value="USBINARY"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.arg.5" value="U_HAVE_PLACEMENT_NEW=0"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.arg.6" value="USELUCENE"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.arg.7" value="_WIN32"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.arg.8" value="_CL_DISABLE_MULTITHREADING"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.arg.merge" value="1"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.D.enabled" value="1"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.1" value="..\..\src\modules\tests"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.10" value="..\..\src\modules\texts"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.11" value="..\..\src\modules\lexdict\rawld"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.12" value="..\..\src\modules\lexdict"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.13" value="..\..\src\modules\filters"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.14" value="..\..\src\modules\common"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.15" value="..\..\src\modules\comments\rawfiles"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.16" value="..\..\src\modules\comments\rawcom"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.17" value="..\..\src\modules\comments\hrefcom"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.18" value="..\..\src\modules\comments"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.19" value="..\..\src\modules"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.2" value="..\..\src\utilfuns\zlib"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.20" value="..\..\src\frontend"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.21" value="..\..\src\utilfuns"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.22" value="..\..\src\mgr"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.23" value="..\..\src\keys"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.24" value="..\..\..\icu-sword\source\common"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.25" value="..\..\apps\windoze\CBuilder5\InstallMgr\curl\include"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.26" value="..\..\include"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.27" value="$(BDS)\include"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.28" value="$(BDS)\include\vcl"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.29" value="..\..\..\icu-sword\source\i18n"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.3" value="..\..\src\modules\lexdict\zld"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.30" value="..\..\..\biblecs\clucene\src"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.31" value="..\..\..\biblecs\apps\InstallMgr\curl\include"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.4" value="..\..\src\modules\lexdict\rawld4"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.5" value="..\..\src\modules\comments\zcom"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.6" value="..\..\src\modules\genbook\rawgenbook"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.7" value="..\..\src\modules\genbook"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.8" value="..\..\src\modules\texts\ztext"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.9" value="..\..\src\modules\texts\rawtext"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.arg.merge" value="1"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.I.enabled" value="1"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.boa.enabled" value="1"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.srcsuffix.arg" value="cpp"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.srcsuffix.arg.merge" value="1"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.srcsuffix.enabled" value="1"/>
+          <property category="win32.*.win32b.idl2cpp" name="option.tie.enabled" value="0"/>
+          <property category="win32.*.win32b.ilink32" name="option.L.arg.1" value="$(BDS)\lib"/>
+          <property category="win32.*.win32b.ilink32" name="option.L.arg.2" value="$(BDS)\lib\obj"/>
+          <property category="win32.*.win32b.ilink32" name="option.L.arg.3" value="$(BDS)\lib\psdk"/>
+          <property category="win32.*.win32b.ilink32" name="option.L.arg.merge" value="1"/>
+          <property category="win32.*.win32b.ilink32" name="option.L.enabled" value="1"/>
+          <property category="win32.*.win32b.ilink32" name="option.dynamicrtl.enabled" value="1"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.arg.1" value="UNICODE"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.arg.2" value="_ICU_"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.arg.3" value="_ICUSWORD_"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.arg.4" value="USBINARY"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.arg.5" value="U_HAVE_PLACEMENT_NEW=0"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.arg.6" value="USELUCENE"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.arg.7" value="_WIN32"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.arg.8" value="_CL_DISABLE_MULTITHREADING"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.arg.merge" value="1"/>
+          <property category="win32.*.win32b.tasm32" name="option.d.enabled" value="1"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.1" value="..\..\src\modules\tests"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.10" value="..\..\src\modules\texts"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.11" value="..\..\src\modules\lexdict\rawld"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.12" value="..\..\src\modules\lexdict"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.13" value="..\..\src\modules\filters"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.14" value="..\..\src\modules\common"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.15" value="..\..\src\modules\comments\rawfiles"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.16" value="..\..\src\modules\comments\rawcom"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.17" value="..\..\src\modules\comments\hrefcom"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.18" value="..\..\src\modules\comments"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.19" value="..\..\src\modules"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.2" value="..\..\src\utilfuns\zlib"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.20" value="..\..\src\frontend"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.21" value="..\..\src\utilfuns"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.22" value="..\..\src\mgr"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.23" value="..\..\src\keys"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.24" value="..\..\..\icu-sword\source\common"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.25" value="..\..\apps\windoze\CBuilder5\InstallMgr\curl\include"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.26" value="..\..\include"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.27" value="$(BDS)\include"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.28" value="$(BDS)\include\vcl"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.29" value="..\..\..\icu-sword\source\i18n"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.3" value="..\..\src\modules\lexdict\zld"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.30" value="..\..\..\biblecs\clucene\src"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.31" value="..\..\..\biblecs\apps\InstallMgr\curl\include"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.32" value="$(BDS)\include\dinkumware"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.4" value="..\..\src\modules\lexdict\rawld4"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.5" value="..\..\src\modules\comments\zcom"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.6" value="..\..\src\modules\genbook\rawgenbook"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.7" value="..\..\src\modules\genbook"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.8" value="..\..\src\modules\texts\ztext"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.9" value="..\..\src\modules\texts\rawtext"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.arg.merge" value="1"/>
+          <property category="win32.*.win32b.tasm32" name="option.i.enabled" value="1"/>
+          <property category="win32.*.win32b.tasm32" name="option.w2.enabled" value="1"/>
+          <property category="win32.*.win32b.tasm32" name="option.zn.enabled" value="1"/>
+          <property category="win32.*.win32b.tasm32" name="param.listfile.merge" value="1"/>
+          <property category="win32.*.win32b.tasm32" name="param.objfile.merge" value="1"/>
+          <property category="win32.*.win32b.tasm32" name="param.xreffile.merge" value="1"/>
+          <property category="win32.*.win32b.tlib" name="option.P.arg" value="512"/>
+          <property category="win32.*.win32b.tlib" name="option.P.arg.merge" value="1"/>
+          <property category="win32.*.win32b.tlib" name="option.P.enabled" value="1"/>
+          <property category="win32.*.win32b.tlib" name="option.outputdir.arg.1" value="..\"/>
+          <property category="win32.*.win32b.tlib" name="option.outputdir.arg.merge" value="1"/>
+          <property category="win32.*.win32b.tlib" name="option.outputdir.enabled" value="1"/>
+        </optionset>
+      </project>
+      <FILELIST>
+        <FILE FILENAME="libsword.bpf" CONTAINERID="BPF" LOCALCOMMAND="" UNITNAME="libsword" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\frontend\swdisp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swdisp" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\frontend\swlog.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swlog" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\keys\versekey.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="versekey" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\keys\strkey.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="strkey" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\keys\swkey.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swkey" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\keys\treekey.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="treekey" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\keys\treekeyidx.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="treekeyidx" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\keys\listkey.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="listkey" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\swsearchable.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swsearchable" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\encfiltmgr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="encfiltmgr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\filemgr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="filemgr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\ftptrans.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ftptrans" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\installmgr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="installmgr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\localemgr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="localemgr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\markupfiltmgr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="markupfiltmgr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\stringmgr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="stringmgr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\swcacher.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swcacher" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\swconfig.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swconfig" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\swfiltermgr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swfiltermgr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\swlocale.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swlocale" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\swmgr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swmgr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\mgr\curlftpt.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="curlftpt" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\utilxml.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utilxml" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\roman.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="roman" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\swbuf.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swbuf" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\swobject.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swobject" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\swversion.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swversion" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\url.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="url" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\utilstr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utilstr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\Greek2Greek.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Greek2Greek" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\comments\hrefcom\hrefcom.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="hrefcom" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\comments\rawcom\rawcom.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rawcom" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\comments\rawfiles\rawfiles.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rawfiles" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\comments\zcom\zcom.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="zcom" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\comments\swcom.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swcom" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\zverse.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="zverse" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\entriesblk.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="entriesblk" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\lzsscomprs.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="lzsscomprs" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\rawstr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rawstr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\rawstr4.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rawstr4" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\rawverse.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rawverse" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\sapphire.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="sapphire" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\swcipher.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swcipher" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\swcomprs.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swcomprs" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\zipcomprs.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="zipcomprs" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\common\zstr.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="zstr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8utf16.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8utf16" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbffootnotes.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbffootnotes" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfheadings.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfheadings" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfhtml.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfhtml" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfhtmlhref.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfhtmlhref" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfmorph.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfmorph" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfosis.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfosis" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfplain.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfplain" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfredletterwords.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfredletterwords" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfrtf.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfrtf" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfstrongs.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfstrongs" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfthml.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfthml" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\gbfwebif.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gbfwebif" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\greeklexattribs.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="greeklexattribs" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\latin1utf16.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="latin1utf16" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\latin1utf8.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="latin1utf8" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osisfootnotes.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osisfootnotes" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osisheadings.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osisheadings" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osishtmlhref.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osishtmlhref" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osislemma.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osislemma" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osismorph.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osismorph" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osisosis.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osisosis" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osisplain.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osisplain" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osisredletterwords.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osisredletterwords" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osisrtf.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osisrtf" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osisscripref.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osisscripref" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osisstrongs.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osisstrongs" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osiswebif.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osiswebif" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osiswordjs.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osiswordjs" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\plainfootnotes.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="plainfootnotes" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\plainhtml.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="plainhtml" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\rtfhtml.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rtfhtml" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\swbasicfilter.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swbasicfilter" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\swoptfilter.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swoptfilter" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlfootnotes.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlfootnotes" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlgbf.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlgbf" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlheadings.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlheadings" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlhtml.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlhtml" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlhtmlhref.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlhtmlhref" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmllemma.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmllemma" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlmorph.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlmorph" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlosis.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlosis" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlplain.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlplain" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlrtf.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlrtf" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlscripref.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlscripref" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlstrongs.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlstrongs" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlvariants.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlvariants" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlwebif.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlwebif" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\thmlwordjs.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="thmlwordjs" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\unicodertf.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="unicodertf" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf16utf8.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf16utf8" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8arshaping.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8arshaping" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8bidireorder.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8bidireorder" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8cantillation.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8cantillation" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8greekaccents.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8greekaccents" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8hebrewpoints.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8hebrewpoints" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8arabicpoints.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8arabicpoints" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8html.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8html" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8latin1.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8latin1" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8nfc.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8nfc" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8nfkd.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8nfkd" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\utf8transliterator.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="utf8transliterator" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\cipherfil.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="cipherfil" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\genbook\rawgenbook\rawgenbook.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rawgenbook" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\genbook\swgenbook.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swgenbook" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\lexdict\rawld\rawld.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rawld" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\lexdict\rawld4\rawld4.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rawld4" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\lexdict\zld\zld.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="zld" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\lexdict\swld.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swld" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\tests\echomod.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="echomod" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\texts\rawtext\rawtext.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="rawtext" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\texts\ztext\ztext.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ztext" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\texts\swtext.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swtext" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\swmodule.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="swmodule" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\zutil.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="zutil" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\compress.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="compress" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\crc32.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="crc32" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\deflate.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="deflate" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\gzio.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="gzio" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\infblock.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="infblock" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\infcodes.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="infcodes" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\inffast.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="inffast" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\inflate.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="inflate" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\inftrees.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="inftrees" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\infutil.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="infutil" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\maketree.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="maketree" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\trees.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="trees" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\uncompr.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="uncompr" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\untgz.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="untgz" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\zlib\adler32.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="adler32" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\papyriplain.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="papyriplain" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\utilfuns\ftpparse.c" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="ftpparse" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\osismorphsegmentation.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="osismorphsegmentation" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\keys\versetreekey.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="versetreekey" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\teiplain.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="teiplain" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\..\src\modules\filters\teirtf.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="teirtf" FORMNAME="" DESIGNCLASS=""/>
+      </FILELIST>
+      <IDEOPTIONS>
+        <VersionInfo>
+          <VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+          <VersionInfo Name="AutoIncBuild">False</VersionInfo>
+          <VersionInfo Name="MajorVer">1</VersionInfo>
+          <VersionInfo Name="MinorVer">0</VersionInfo>
+          <VersionInfo Name="Release">0</VersionInfo>
+          <VersionInfo Name="Build">0</VersionInfo>
+          <VersionInfo Name="Debug">False</VersionInfo>
+          <VersionInfo Name="PreRelease">False</VersionInfo>
+          <VersionInfo Name="Special">False</VersionInfo>
+          <VersionInfo Name="Private">False</VersionInfo>
+          <VersionInfo Name="DLL">False</VersionInfo>
+          <VersionInfo Name="Locale">1033</VersionInfo>
+          <VersionInfo Name="CodePage">1252</VersionInfo>
+        </VersionInfo>
+        <VersionInfoKeys>
+          <VersionInfoKeys Name="CompanyName"></VersionInfoKeys>
+          <VersionInfoKeys Name="FileDescription"></VersionInfoKeys>
+          <VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+          <VersionInfoKeys Name="InternalName"></VersionInfoKeys>
+          <VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys>
+          <VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys>
+          <VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys>
+          <VersionInfoKeys Name="ProductName"></VersionInfoKeys>
+          <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+          <VersionInfoKeys Name="Comments"></VersionInfoKeys>
+        </VersionInfoKeys>
+        <HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Count">20</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item0">..\..\src\modules\tests;..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\source\common;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\i18n;..\..\..\biblecs\clucene\src;..\..\..\biblecs\apps\InstallMgr\curl\include</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item1">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\source\common;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\i18n;..\..\..\biblecs\clucene\src;..\..\..\biblecs\apps\InstallMgr\curl\include</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item2">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\source\common;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\i18n;..\..\..\biblecs\clucene\src</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item3">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\source\common;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\i18n;..\..\..\biblecs\clucene\src</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item4">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\source\common;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\i18n</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item5">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\source\common;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item6">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\include;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item7">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\include;..\..\apps\windoze\CBuilder5\InstallMgr;..\..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item8">..\..\..\icu-sword\include;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item9">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item10">..\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item11">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common;..\..\..\icu-sword\source\i18n</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item12">..\..\apps\windoze;..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common;..\..\..\icu-sword\source\i18n</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item13">..\..\apps\windoze;..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common;..\..\..\icu-sword\source\i18n</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item14">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item15">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item16">..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item17">..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item18">..\include;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+          <HistoryLists_hlIncludePath Name="Item19">..\src\modules\texts\rawtext;..\src\modules\texts;..\src\modules\lexdict\rawld;..\src\modules\lexdict;..\src\modules\filters;..\src\modules\common;..\src\modules\comments\rawfiles;..\src\modules\comments\rawcom;..\src\modules\comments\hrefcom;..\src\modules\comments;..\src\modules;..\src\frontend;..\src\utilfuns;..\src\mgr;..\src\keys;$(BCB)\include;$(BCB)\include\vcl</HistoryLists_hlIncludePath>
+        </HistoryLists_hlIncludePath>
+        <HistoryLists_hlLibraryPath>
+          <HistoryLists_hlLibraryPath Name="Count">7</HistoryLists_hlLibraryPath>
+          <HistoryLists_hlLibraryPath Name="Item0">..\..\src\modules\tests;..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib</HistoryLists_hlLibraryPath>
+          <HistoryLists_hlLibraryPath Name="Item1">..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib</HistoryLists_hlLibraryPath>
+          <HistoryLists_hlLibraryPath Name="Item2">$(BCB)\lib\obj;$(BCB)\lib</HistoryLists_hlLibraryPath>
+          <HistoryLists_hlLibraryPath Name="Item3">..\..\apps\windoze;..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib</HistoryLists_hlLibraryPath>
+          <HistoryLists_hlLibraryPath Name="Item4">..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib</HistoryLists_hlLibraryPath>
+          <HistoryLists_hlLibraryPath Name="Item5">..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib</HistoryLists_hlLibraryPath>
+          <HistoryLists_hlLibraryPath Name="Item6">..\src\modules\texts\rawtext;..\src\modules\texts;..\src\modules\lexdict\rawld;..\src\modules\lexdict;..\src\modules\filters;..\src\modules\common;..\src\modules\comments\rawfiles;..\src\modules\comments\rawcom;..\src\modules\comments\hrefcom;..\src\modules\comments;..\src\modules;..\src\frontend;..\src\utilfuns;..\src\mgr;..\src\keys;$(BCB)\lib\obj;$(BCB)\lib</HistoryLists_hlLibraryPath>
+        </HistoryLists_hlLibraryPath>
+        <HistoryLists_hlDebugSourcePath>
+          <HistoryLists_hlDebugSourcePath Name="Count">1</HistoryLists_hlDebugSourcePath>
+          <HistoryLists_hlDebugSourcePath Name="Item0">$(BCB)\source\vcl</HistoryLists_hlDebugSourcePath>
+        </HistoryLists_hlDebugSourcePath>
+        <HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Count">22</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item0">UNICODE;_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;USELUCENE;_WIN32;_CL_DISABLE_MULTITHREADING</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item1">UNICODE;_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;USELUCENE;_WIN32;_CL_DISABLE_MULTITHREADING;_DEBUG</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item2">_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;USELUCENE;_WIN32;_CL_DISABLE_MULTITHREADING</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item3">_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;USELUCENE;_WIN32;_CL_DISABLE_MULTITHREADING;UNICODE</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item4">_UCS2;_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;USELUCENE;_WIN32;_CL_DISABLE_MULTITHREADING</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item5">_ASCII;_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;USELUCENE;_WIN32;_CL_DISABLE_MULTITHREADING</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item6">__ASCII;_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;USELUCENE;_WIN32;_CL_DISABLE_MULTITHREADING</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item7">_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;USELUCENE;LUCENE_DISABLE_MULTITHREADING;_WIN32;HAVE_DIRENT</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item8">_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;USELUCENE;LUCENE_DISABLE_MULTITHREADING;_WIN32;HAVE_DIRENT;_DEBUG</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item9">_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;_DEBUG;USELUCENE;LUCENE_DISABLE_MULTITHREADING;_WIN32;HAVE_DIRENT</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item10">_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;_DEBUG;USELUCENE</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item11">_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0;_DEBUG</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item12">_ICU_;_ICUSWORD_;USBINARY;U_HAVE_PLACEMENT_NEW=0</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item13">_ICU_;_ICUSWORD_;USBINARY;_DEBUG;U_HAVE_PLACEMENT_NEW=0</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item14">_ICU_;_ICUSWORD_;USBINARY;_DEBUG</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item15">_ICU_;_ICUSWORD_;USBINARY</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item16">_ICU_;_ICUSWORD_;USBINARY;CURLAVAILABLE;_DEBUG</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item17">_ICU_;_ICUSWORD_;USBINARY;CURLAVAILABLE</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item18">;USBINARY;_DEBUG</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item19">_ICU_;_ICUSWORD_</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item20">_ICU_;_ICUSWORD_;_DEBUG</HistoryLists_hlConditionals>
+          <HistoryLists_hlConditionals Name="Item21">_DEBUG</HistoryLists_hlConditionals>
+        </HistoryLists_hlConditionals>
+        <HistoryLists_hlFinalOutputDir>
+          <HistoryLists_hlFinalOutputDir Name="Count">3</HistoryLists_hlFinalOutputDir>
+          <HistoryLists_hlFinalOutputDir Name="Item0">..\</HistoryLists_hlFinalOutputDir>
+          <HistoryLists_hlFinalOutputDir Name="Item1">../\</HistoryLists_hlFinalOutputDir>
+          <HistoryLists_hlFinalOutputDir Name="Item2">../</HistoryLists_hlFinalOutputDir>
+        </HistoryLists_hlFinalOutputDir>
+        <HistoryLists_hlTlibPageSize>
+          <HistoryLists_hlTlibPageSize Name="Count">5</HistoryLists_hlTlibPageSize>
+          <HistoryLists_hlTlibPageSize Name="Item0">0x0200</HistoryLists_hlTlibPageSize>
+          <HistoryLists_hlTlibPageSize Name="Item1">0x0080</HistoryLists_hlTlibPageSize>
+          <HistoryLists_hlTlibPageSize Name="Item2">0x0040</HistoryLists_hlTlibPageSize>
+          <HistoryLists_hlTlibPageSize Name="Item3">0x0020</HistoryLists_hlTlibPageSize>
+          <HistoryLists_hlTlibPageSize Name="Item4">0x0010</HistoryLists_hlTlibPageSize>
+        </HistoryLists_hlTlibPageSize>
+        <Debugging>
+          <Debugging Name="DebugSourceDirs">$(BCB)\source\vcl</Debugging>
+        </Debugging>
+        <Parameters>
+          <Parameters Name="RunParams"></Parameters>
+          <Parameters Name="Launcher"></Parameters>
+          <Parameters Name="UseLauncher">False</Parameters>
+          <Parameters Name="DebugCWD"></Parameters>
+          <Parameters Name="HostApplication"></Parameters>
+          <Parameters Name="RemoteHost"></Parameters>
+          <Parameters Name="RemotePath"></Parameters>
+          <Parameters Name="RemoteParams"></Parameters>
+          <Parameters Name="RemoteLauncher"></Parameters>
+          <Parameters Name="UseRemoteLauncher">False</Parameters>
+          <Parameters Name="RemoteCWD"></Parameters>
+          <Parameters Name="RemoteDebug">False</Parameters>
+          <Parameters Name="Debug Symbols Search Path"></Parameters>
+          <Parameters Name="LoadAllSymbols">True</Parameters>
+          <Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+        </Parameters>
+        <Language>
+          <Language Name="ActiveLang"></Language>
+          <Language Name="ProjectLang">$00000000</Language>
+          <Language Name="RootDir"></Language>
+        </Language>
+        <Linker>
+          <Linker Name="LibPrefix"></Linker>
+          <Linker Name="LibSuffix"></Linker>
+          <Linker Name="LibVersion"></Linker>
+        </Linker>
+      </IDEOPTIONS>
+    </BCBPROJECT>
+		<Source>
+			<Source Name="MainSource">libsword.bpf</Source>
+		</Source>  <buildevents/>
+  </CPlusPlusBuilder.Personality>
+</BorlandProject>

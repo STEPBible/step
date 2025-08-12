@@ -1,0 +1,35 @@
+Also see the directions in the README file in the parent directory from this
+file (<sword-root>/bindings/README) for directions on building with CMake.
+
+Building the SWIG Bindings
+==========================
+
+You may need to do the following to get this to work. From this directory:
+
+cd package
+
+# Special step for BSD-liks (e.g. Mac OS X):
+# edit autogen.sh to remove the "-a" option from cp
+
+./autogen.sh
+./configure
+make
+
+# Rather than make, you probably only care about one of the languages bindings.
+# So you might try one of these pairs of commands instead:
+# 
+make perlswig
+make perl_make
+cd perl
+sudo make install
+
+#
+# or
+#
+
+make pythonswig
+make python_make
+cd python
+sudo python setup.py install
+
+

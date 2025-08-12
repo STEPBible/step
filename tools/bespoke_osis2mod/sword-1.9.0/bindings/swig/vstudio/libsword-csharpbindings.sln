@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsword", "..\..\..\lib\vcppmake\vc8\libsword.vcproj", "{97449E5E-F880-4D22-933A-0D2FC32034D4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsword_csharpsword", "libsword_csharpsword.vcproj", "{0BD1471F-07D9-441C-9210-40A52770F2A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug with ICU|Win32 = Debug with ICU|Win32
+		Debug|Win32 = Debug|Win32
+		Release with ICU|Win32 = Release with ICU|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{97449E5E-F880-4D22-933A-0D2FC32034D4}.Debug with ICU|Win32.ActiveCfg = Debug with ICU|Win32
+		{97449E5E-F880-4D22-933A-0D2FC32034D4}.Debug with ICU|Win32.Build.0 = Debug with ICU|Win32
+		{97449E5E-F880-4D22-933A-0D2FC32034D4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{97449E5E-F880-4D22-933A-0D2FC32034D4}.Debug|Win32.Build.0 = Debug|Win32
+		{97449E5E-F880-4D22-933A-0D2FC32034D4}.Release with ICU|Win32.ActiveCfg = Release with ICU|Win32
+		{97449E5E-F880-4D22-933A-0D2FC32034D4}.Release with ICU|Win32.Build.0 = Release with ICU|Win32
+		{97449E5E-F880-4D22-933A-0D2FC32034D4}.Release|Win32.ActiveCfg = Release|Win32
+		{97449E5E-F880-4D22-933A-0D2FC32034D4}.Release|Win32.Build.0 = Release|Win32
+		{0BD1471F-07D9-441C-9210-40A52770F2A1}.Debug with ICU|Win32.ActiveCfg = Debug with ICU|Win32
+		{0BD1471F-07D9-441C-9210-40A52770F2A1}.Debug with ICU|Win32.Build.0 = Debug with ICU|Win32
+		{0BD1471F-07D9-441C-9210-40A52770F2A1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0BD1471F-07D9-441C-9210-40A52770F2A1}.Debug|Win32.Build.0 = Debug|Win32
+		{0BD1471F-07D9-441C-9210-40A52770F2A1}.Release with ICU|Win32.ActiveCfg = Release with ICU|Win32
+		{0BD1471F-07D9-441C-9210-40A52770F2A1}.Release with ICU|Win32.Build.0 = Release with ICU|Win32
+		{0BD1471F-07D9-441C-9210-40A52770F2A1}.Release|Win32.ActiveCfg = Release|Win32
+		{0BD1471F-07D9-441C-9210-40A52770F2A1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

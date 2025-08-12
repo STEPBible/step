@@ -1,0 +1,11 @@
+USEUNIT("..\mod2imp.cpp");
+USELIB("..\..\..\icu-sword\as_is\borland\icuin.lib");
+USELIB("..\..\..\icu-sword\as_is\borland\icudatab.lib");
+USELIB("..\..\..\icu-sword\as_is\borland\icuuc.lib");
+USELIB("..\..\lib\libsword.lib");
+USELIB("..\..\..\biblecs\clucene\clucene.lib");
+//---------------------------------------------------------------------------
+This file is used by the project manager only and should be treated like the project file
+
+
+main

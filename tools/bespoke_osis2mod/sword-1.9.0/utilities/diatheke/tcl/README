@@ -1,0 +1,53 @@
+Diatheke/Tcl by Chris Little <chrislit@crosswire.org>
+Based on code schema of <cking@acy.digex.net>
+
+#######################################################################
+Copyright 1999-2009 CrossWire Bible Society (http://www.crosswire.org)
+	CrossWire Bible Society
+	P. O. Box 2528
+	Tempe, AZ  85280-2528
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation version 2.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+#######################################################################
+
+This script is intended for use with libraries and modules from
+The SWORD Project, available at http://www.crosswire.org/
+
+This script requires the Diatheke command line front end to The SWORD
+Project. You should really install this first, including all optional
+components: zlib, CLucene, ICU (preferrably icu-sword), and cURL. Then
+install any modules you want to make available to users.
+
+Modify the file biblebot-diatheke.tcl as necessary so that the two
+variables "diatheke" and "dict" point to the copies of the diatheke
+and dict programs on your system.
+
+Finally, run the Perl script makebooklist.pl, which will
+create/overwrite the file biblebot-diatheke-books.tcl. This includes
+all books installed on the system, so remove any entries you want to
+hide from users, as necessary.
+
+To install Diatheke/Tcl, install an eggdrop IRC bot, copy the
+Diatheke/Tcl .tcl files (biblebot-diatheke.tcl and 
+biblebot-diatheke-books.tcl) to your eggdrop scripts directory, and
+add a line to the end of your bot startup script to load the two
+Diatheke/Tcl scripts, for example:
+ 
+source /usr/share/eggdrop/scripts/biblebot-diatheke.tcl
+source /usr/share/eggdrop/scripts/biblebot-diatheke-books.tcl
+
+This script has been tested with eggdrop 1.3.23 & 1.6.19, but should
+function fine in later versions.
+
+When you get the script loaded, type !biblehelp in a channel where
+the bot is present and it will give you a full list of commands.
+More commands will appear to you depending upon which mode the bot is
+in and whether you are an op on the bot or voiced in the channel.

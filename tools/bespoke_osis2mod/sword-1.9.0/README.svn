@@ -1,0 +1,7 @@
+SVN trunk repository URL:
+
+https://crosswire.org/svn/sword/trunk/
+
+To generate the configure script you must run 
+
+./autogen.sh

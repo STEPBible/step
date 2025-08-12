@@ -1,0 +1,44 @@
+#!/bin/sh
+# This script was used for making loki install swordbase.tar.gz
+# component.  Not likely we'll use this again, but keep around for now.
+mkdir /tmp/$$
+cd /tmp/$$
+mkdir etc
+echo [Install] > etc/sword.conf
+echo DataPath=/usr/share/sword >> etc/sword.conf
+echo >> etc/sword.conf
+
+mkdir usr
+mkdir usr/include
+cp -r /usr/include/sword usr/include/sword
+
+mkdir usr/lib
+cp -r /usr/lib/libsword.a /usr/lib/libsword.la usr/lib
+
+mkdir usr/share
+mkdir usr/share/sword
+mkdir usr/share/sword/mods.d
+
+echo [Globals] > usr/share/sword/mods.d/globals.conf
+echo >> usr/share/sword/mods.d/globals.conf
+echo >> usr/share/sword/mods.d/globals.conf
+
+cp -r /usr/share/sword/locales.d usr/share/sword/locales.d
+
+mkdir usr/share/doc
+mkdir usr/share/doc/sword
+
+cd -
+cd ..
+cp -r doc/* /tmp/$$/usr/share/doc/sword/
+cp -r ChangeLog README INSTALL LICENSE examples samples /tmp/$$/usr/share/doc/sword/
+cd -
+cd /tmp/$$
+find . -name CVS -type d -exec rm -rf {} \;
+tar czfv swordbase.tar.gz *
+cd -
+mv /tmp/$$/swordbase.tar.gz ../../
+rm -rf /tmp/$$
+
+cd ../..
+echo swordbase.tar.gz in `pwd`

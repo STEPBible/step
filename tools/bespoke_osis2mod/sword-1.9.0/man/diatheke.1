@@ -1,0 +1,218 @@
+.TH DIATHEKE 1 "2018-11-08" "diatheke 4.8" "Diatheke man page"
+.SH NAME
+diatheke \- a command line Bible reader
+.SH SYNOPSIS
+.\" for synopsis format see man man
+.B diatheke
+.B \-b
+.I module_name
+[\fB\-o \fIoption_filters\fR]
+[\fB\-m \fImaximum_verses\fR]
+[\fB\-f \fIoutput_format\fR]
+[\fB\-e \fIoutput_encoding\fR]
+[\fB\-t \fIscript\fR]
+[\fB\-v \fIvariant_number\fR]
+[\fB\-l \fIlocale\fR]
+.B \-k
+.I query_key
+
+.B diatheke
+.B \-b
+.I module_name
+\fB\-s regex\fR|\fBmultiword\fR|\fBphrase\fR
+[\fB\-r \fIsearch_range\fR]
+[\fB\-l \fIlocale\fR]
+.B \-k
+.I search_string
+
+.B diatheke
+.B \-b system
+.B \-k modulelist\fR|\fBmodulelistnames\fR|\fBlocalelist\fR|\fBbibliography
+modulelist will return a list of the names and descriptions of all installed modules
+modulelistnames will return a list of the names of all installed modules
+localelist will return a list of all installed libsword locales
+bibliography will return a list of all installed modules and their BibTex bibliographical entry 
+.B diatheke
+.B \-b info
+.B \-k
+.I module_name
+.SH DESCRIPTION
+.I diatheke
+prints Bible verses or other text from the modules which the Sword library uses.
+.SH OPTIONS
+.TP
+.B \-b
+Module name. May be "system" or "info" (see QUERY KEYS) or one of the names obtained by
+using "diatheke \-b system \-k modulelist".
+.TP
+.B \-s
+Search type. One of
+regex
+(regular expression, see regex(7)),
+multiword
+(like "word [AND word]..."),
+phrase
+(exact text).
+.TP
+.B \-r
+Search range. A valid Bible key range value (see \-k). For example: Matt-John, Rom,
+gen-psalms, 1Thess 1:5-2:6.
+.TP
+.B \-o
+Module option filters. A combination of "fmhcvalsrbwgeixtM". See MODULE OPTIONS.
+.TP
+.B \-m
+Maximum number of verses returned. Any integer value.
+.TP
+.B \-f
+Output format.One of CGI, GBF, HTML, HTMLHREF, LaTeX, OSIS, RTF,
+  ThML, WEBIF, XHTML, plain, and internal (def)
+
+This currently works only if there is a Sword library filter from the original format to
+the specified output format. XHTML, HTML and CGI are for generating text for a webpage.
+.TP
+.B \-e
+Output character encoding. One of Latin1, UTF16, HTML, RTF, UTF8 (default).
+This currently works only for module contents, not for system key contents
+or key texts.
+.TP
+.B \-v
+Variant. The text may contain variant readings. One of \-1 (all), 0, 1.
+.TP
+.B \-l
+Locale. Sword may have different locales installed. Default is en. Localization
+affects input and output keys.
+.TP
+.B \-k
+Query key. It must be the last argument because all following
+arguments are added to the key. See QUERY KEYS for different kinds of keys.
+.SH MODULE OPTIONS
+By default the optional features of modules are not shown in the returned
+text. These options make them visible if the module supports them.
+.TP
+.B n
+Strong's numbers. These numbers refer to the Strong's dictionaries of the New and
+Old Testaments. Some Bible texts attach these numbers to words.
+.TP
+.B f
+Footnotes.
+.TP
+.B m
+Morphology of the Greek/Hebrew words. Morphology is shown as a code which refers
+to an entry in some dictionary-type module.
+.TP
+.B h
+Section headings.
+.TP
+.B c
+Hebrew cantillation.
+.TP
+.B v
+Hebrew vowels.
+.TP
+.B a
+Greek accents.
+.TP
+.B p
+Arabic vowels
+.TP
+.B l
+Lemmas (the base forms of the words).
+.TP
+.B s
+Scripture cross-references.
+.TP
+.B r
+Arabic shaping.
+.TP
+.B b
+Bi-directional reordering.
+.TP
+.B w
+Red Words of Christ.
+.TP
+.B g 
+Glosses/Ruby
+.TP
+.B e
+Word Enumerations
+.TP
+.B i
+Intros
+.TP
+.B x
+Encoded transliterations, i.e. transliterations provided by the module (currently few modules have any such information)
+.TP
+.B t
+Algorithmic Transliterations via ICU
+.TP
+.B M
+morpheme segmentation
+
+.SH QUERY KEYS
+.TP
+.B Bible texts and Commentaries
+use verse keys. Examples: john 1:1, j1:1 jh1 (the first chapter of John), jh
+(the whole book of Gospel of John), joh 1:1-3 ( a verse range), joh 1:0
+(one verse backwards from
+1:1, which is the last verse of the previous book or possibly an introduction to John),
+joh 1:100 (which is 100 verses
+forward from the first verse of John 1:1), 1234 (which is the 1234th verse from
+the beginning of the Bible).
+.TP
+.B Lexicons and Dictionaries
+use word keys. Any word can be used and similar or next entry alphabetically is returned.
+Some dictionaries like Strong's use numbered entries.
+.TP
+.B system
+is not a module but when used with \-b allows one of these keys:
+modulelist
+(list of the available modules with short descriptions),
+modulelistnames
+(list of the names of the available modules),
+localelist
+(list of the available Sword locales).
+.TP
+.B info
+is not a module but when used with \-b allows a module name as a key
+and gives some information about that module.
+.SH EXAMPLES
+.TP
+diatheke \-b KJV \-k joh1:1
+Shows John 1:1 in King James Version.
+.TP
+diatheke \-b RWP \-k Matthew 2:2
+Shows Matthew 2:2 in Robertson's Word Pictures commentary.
+.TP
+diatheke \-b WebstersDict \-k bible
+Show entry "bible" in Websters Dictionary.
+.TP
+diatheke \-b system \-k modulelist
+Shows the list of available modules.
+.TP
+diatheke \-b KJV \-o fmslx \-f OSIS \-e Latin1 \-k john 1:1-3
+Shows John 1:1-3 from KJV in OSIS XML format in iso8859-1 encoding with footnotes,
+morphology, cross-references, lemmas and words of Christ in red. (The module may  not
+support all options and those have no effect. KJV includes only ASCII characters so
+encoding has no effect.)
+.TP
+diatheke \-b GerLut \-l de \-m 10 \-k Offenbarung
+Shows the first 10 verses of Revelation in German GerLut version,
+both input and output keys are localized.
+.TP
+diatheke \-b KJV \-s phrase \-r Mt \-k love
+Shows those verse keys which include phrase "love" in Gospel of Matthew in KJV module.
+.SH DIAGNOSTICS
+Currently diatheke exits always with status 0. If only Bible verse key and
+module name are shown it means that the module did not have any content in
+that range. If only module name is shown the key may have been bad. If
+nothing is shown the book name may have been bad. If Segmentation fault
+is shown diatheke has been bad.
+.SH SEE ALSO
+.I http://www.crosswire.org/sword/
+.SH COPYRIGHT
+Sword library: \(co 1994-2018 Crosswire Bible Society,
+released under GPL licence.
+Diatheke: written by Chris Little, Peter von Kaehne, Troy Griffitts
+Manpage: written by Eeli Kaikkonen, Peter von Kaehne
+\(co 1999-2018 Crosswire Bible Society, released under GPL licence.

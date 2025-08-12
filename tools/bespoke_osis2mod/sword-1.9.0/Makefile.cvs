@@ -1,0 +1,13 @@
+all: aclocal automake autoheader autoconf
+
+aclocal:
+	./autotools/bin/aclocal --acdir=./autotools/share/aclocal
+
+automake:
+	-./autotools/bin/automake --libdir=./autotools/share/automake
+
+autoheader:
+	./autotools/bin/autoheader -A ./autotools/share/autoconf
+
+autoconf:
+	./autotools/bin/autoconf -A ./autotools/share/autoconf

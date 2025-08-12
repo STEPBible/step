@@ -1,0 +1,1590 @@
+API ChangeLog
+
+* Release 1.9.0 *
+03-Nov-2020	Troy A. Griffitts <scribe@crosswire.org>
+	Added new compile option USECXX11TIME which will provide a default
+		SWLog::logTimedInformation impl using C++11 facilities
+	Added new compile options STRIPLOGD and STRIPLOGI which will compile
+		out engine calles to SWLog::logDebug and SWLog::logInformation
+		and SWLog::logTimedInformation for runtime optimization
+	Extended Cordova plugin to include SWModule::setEntry,
+	SWMgr::getPrefixPath
+	Isolated all File IO calls to FileMgr
+	Merged in Xiphos' Windows patch to FileMgr to allow full legal Unicode
+		range in file path names.
+	Improved TEI -> HTML output path
+	Completed camelCase of all public non-deprecated API methods
+	Added the concept of Utility Modules to engine which are intended to
+		assist clients in building a robust user experience but are not
+		intended for exposure to the end user in the same way as
+		traditional SWORD modules.
+	Added the concept of [Pref Abbrevs] to locale files to assist mobile
+		developers choose a localized abbreviation for Bible book
+		names.
+	Added facility to set timeouts for SWTransport classes
+	Many locale updates and new locales added
+	Improved support for many markup tags
+	Many bug fixes
+	Changes to promote safe multi-threaded use
+	Expanded examples
+
+
+25-Jul-2020	Troy A. Griffitts <scribe@crosswire.org>
+	Added ZipCompress::unTarGZ to provide a library facility to untargz
+		a file on all supported platforms.
+	
+07-Jul-2020	Troy A. Griffitts <scribe@crosswire.org>
+	Renamed __[su][8,16,32,64] defines to SW_[su][8,16,32,64]
+
+20-Apr-2020	Troy A. Griffitts <scribe@crosswire.org>
+	Extended StringMgr to include lowerUTF8, isUpper, isLower, isDigit,
+		isAlpha
+	Added personalization facility for cipher keys
+
+10-Sep-2018	Troy A. Griffitts <scribe@crosswire.org>
+	Added intra-verse search support
+
+01-Nov-2017	Troy A. Griffitts <scribe@crosswire.org>
+	Added bindings: Android and cordova
+
+01-Sep-2017	Troy A. Griffitts <scribe@crosswire.org>
+	Adding French mapping data.
+		Patch submitted by domcox <dominique@corbex.org>
+
+21-May-2017	Troy A. Griffitts <scribe@crosswire.org>
+	Added --with-icuregex option to use ICU regex engine
+
+* Release 1.8.0 *
+24-Apr-2017	Troy A. Griffitts <scribe@crosswire.org>
+	Branching 1.8.x
+
+16-Apr-2016	Troy A. Griffitts <scribe@crosswire.org>
+	Added working --chapter --verse decrementors across Testament
+	Added handling of more odd double colon verse reference texts
+	Removed deprecated utility cipherraw; use mod2zmod w/ cipherkey
+		or osis2mod -c instead.
+	Added new tests to testsuite for mod2zmod and osis2mod with cipher
+
+18-Dec-2015     Peter von Kaehne <refdoc@crosswire.org>
+	Added image and table handling to TEI latex
+	Added image handling to TEI RTF
+
+18-Dec-2015	Peter von Kaehne <refdoc@crosswire.org>
+	Added image and table handling to TEI xhtml and htmlhref filters
+		contributed by Dominique Corbex <dominique.corbex@gmail.com> 
+	
+15-Dec-2014	DM Smith <dmsmith@crosswire.org>
+	Fixed endless loop in osis2mod for some inputs.
+
+15-Dec-2014	DM Smith <dmsmith@crosswire.org>
+	Added support for Psalm Book divisions using <div type=majorSection>
+		from GHellings
+
+03-Dec-2014	Karl Kleinpaste <charcoal@users.sf.net>
+	Corrected anomalous OSIS highlighting output w/GHellings' patches in
+		src/modules/filters/osis{plain,xhtml}.cpp
+
+12-Jul-2014	Костя Маслюк <kostyamaslyuk@gmail.com>
+	Versification mapping implementation and example at
+		examples/tasks/parallelbibles.cpp
+
+27-Apr-2014	Troy A. Griffitts <scribe@crosswire.org>
+	Added C# bindings contributed by Daniel Hughes <trampster@gmail.com>
+
+17-Mar-2014	Chris Little <chrislit@crosswire.org>
+	Added zVerse4, zText4, & zCom4 classes to support compressed text/
+		commentary modules with entry sizes > 64k
+
+3-Mar-2014	Chris Little <chrislit@crosswire.org>
+	Added support for bzip2 (Burrows-Wheeler) module compression via libbz2
+	Added support for xz (LZMA2) module compression via liblzma
+
+30-Dec-2013 	Peter von Kaehne <refdoc@crosswire.org>
+	Added LaTeX output filters
+
+
+* Release 1.7.0 *
+
+5-Oct-2013	Troy A. Griffitts <scribe@crosswire.org>
+	Add a new Option filter, OSISReferenceLinks, based on work submitted
+		by "John Austin", which allows removal of references based on
+		a type/subtype combination. .conf usage is:
+		GlobalOptionFilter=OSISReferenceLinks|Option Name|Option Tip
+			|OSIS Reference Type|OSIS Reference SubType
+			|Default Value
+		e.g,
+		GlobalOptionFilter=OSISReferenceLinks|Reference Material Links
+			|Hide or show links in the Biblical text to study helps
+			|x-glossary||On
+
+14-Aug-2013	Troy A. Griffitts <scribe@crosswire.org>
+	Added new version macros in swversion.h and removed
+		config.h as a packaged and included entity
+
+2-Aug-2013	Chris Little <chrislit@crosswire.org>
+	Added basic bibliography method to SWModule
+		(mostly from refdoc's patch)
+
+16-July-2013	Troy A. Griffitts <scribe@crosswire.org>
+	Many classes have had class and method names normalized, including:
+		VerseMgr renamed to VersificationMgr
+		SWKey
+		ListKey
+		SWModule
+
+13-July-2013	Chris Little <chrislit@crosswire.org>
+	Added LXX & Orthodox versifications
+
+13-July-2013	Troy A. Griffitts <scribe@crosswire.org>
+	InstallMgr FTP now has a 45 second timeout
+
+11-July-2013	Troy A. Griffitts <scribe@crosswire.org>
+	SWIG bindings updated to build and work with autotools
+
+8-Jul-2013	Chris Little <chrislit@crosswire.org>
+	Applied submitted UTF8ArabicPoints code
+	Plugged Bzip2Compress & XzCompress into the API, though these
+		remain clones of the ZipCompress class and will not be
+		supported in 1.7.0
+
+6-July-2013	Jaak Ristioja <jaak@ristioja.ee>
+	InstallMgr HTTP transport, fix for buffer overrun in non-standard
+		Apache dir list output
+
+29-Jun=2013	Chris Little <chrislit@crosswire.org>
+	Removed PLAINHTML and PLAINFootnotes filters
+
+19-Jun-2013	Gregory S. Hellings <greg.hellings@gmail.com>
+	Introduced CMake options to specify exact install locations
+		of subcomponents
+
+11-Jun-2013	Troy A. Griffitts <scribe@crosswire.org>
+	Changed SWBuf append methods to return *this, so they can be chained
+	Added a new method SWBuf::indexOf
+	New XHTML Filters based on HTMLHREF but now support:
+		tables, sub, and super elements, hi rend attribute for
+		overline of nom sac
+		better whitespace processing for:
+			block tags by supressing multiple vspace
+			poetry lines
+
+10-Jun-2013	Chris Little <chrislit@crosswire.org>
+	Added basic OSISEnum & OSISXlit filters
+	Renamed OSISRuby to the more general OSISGlosses
+
+7-Jun-2013	Troy A. Griffitts <scribe@crosswire.org>
+	Enhanced regex searches to return result which cross a single
+		verse boundaries
+
+30-May-2013	Troy A. Griffitts <scribe@crosswire.org>
+	Generalized Transport interface from 'FTP' to 'Remote' to better
+		accommodate HTTP, SFTP, etc.
+
+11-April-2013	Troy A. Griffitts <scribe@crosswire.org>
+	Verse parser updates, including:
+		Fixed parsing of Ps.V
+		Added parsing of special 'inscriptio' and 'subscriptio' entries
+			resolving to special Book 0:0 and Book 1:0
+			respectively
+			e.g., Matt.Inscr -> Matt.0.0; Matt.Subscrip -> Matt.1.0
+		Better handling of verse suffix, e.g., John.1.3b
+		Handle comma verses properly after range which spans chapters,
+			e.g., jn.1.1-2.5,9
+
+12-Mar-2013	Troy A. Griffitts <scribe@crosswire.org>
+	More examples, including: show a chapter, verse range
+
+24-Feb-2013	Troy A. Griffitts <scribe@crosswire.org>
+	Greatly improved navigation with intros and normalization turned
+		on/off
+
+1-Feb-2013	Troy A. Griffitts <scribe@crosswire.org>
+	New .conf entries honored:
+		StrongsPadding=false, which turns off
+			logic to detect strongs numbers and add padding
+		CaseSensitiveKeys=true, which makes a lexicon case sensitive
+
+29-Jan-2013	Jaak Ristioja <jaak@ristioja.ee>
+	Removed warnings in header files for unused variables
+
+06-Jan-2013	Gregory S. Hellings <greg.hellings@gmail.com>
+	Added support to install from SFTP sources using username/password
+		authentication in places where cURL has SFTP support (no support
+		for public-key auth yet)
+
+19-Dec-2012	Manfred Bergmann <manfred.bergmann@me.com>
+	Added ObjC wrappers for the SWORD filter classes. Mainly because in
+		Eloquent project it is not possible to access any of the plain
+		C++ SWORD stuff. Wrappers are necessary
+	Added FilterProvider and FilterProviderFactory. They have been
+		created to add the possibility for application to override
+		the default filters (render/strip). To add a custom
+		FilterProvider, subclass DefaultFilterProvider and override the
+		methods that are required to return other filter instances.
+		Then initialize the Factory with this provider
+		+[FilterProviderFactory initWithImpl:<your impl>]
+
+07-Nov-2012	Chris Little <chrislit@crosswire.org>
+	Starting (very minimal) support for TEI in xml2gbs
+	Generalizing ruby as glosses (for use in non-Japanese texts or
+		even Japanese texts with non-ruby glosses)
+
+14-Sep-2012	Troy A. Griffitts <scribe@crosswire.org>
+	Changed default log level to WARN from INFO
+
+29-Aug-2012	Gregory S. Hellings <greg.hellings@gmail.com>
+	Swig bindings may now be built against shared or static libraries.
+	Cleaned up almost all gcc 4.7 warnings from the swig bindings and
+		eliminated errors which packagers had discovered.
+	Swig bindings are now installed by the normal 'make install' under
+		CMake
+
+11-Jul-2012	Troy A. Griffitts <scribe@crosswire.org>
+	New Lucene index field for searching 'morph' (lemma@morphology)
+
+21-Jun-2012 	Peter von Kaehne <refdoc@crosswire.org>
+	Added Pohnpeian language locale
+
+25-Apr-2012	Gregory S. Hellings <greg.hellings@gmail.com>
+	InstallMgr now supports HTTPS connections where cURL has support
+		for that transport
+
+24-Mar-2012	DM Smith <dmsmith@crosswire.org>
+	osis2mod: Allow comments to be in osis document and to be stripped out.
+		From John Zaitseff
+	osis2mod: Allow div in header of osis document. From John Zaitseff
+
+
+21-Feb-2012	Troy A. Griffitts <scribe@crosswire.org>
+	Added constants for module types:
+		SWMgr::MODTYPE_BIBLES, MODTYPE_COMMENTARIES, MODTYPE_LEXDICTS,
+		MODTYPE_GENBOOKS, MODTYPE_DAILYDEVOS
+
+14-Feb-2012	Gregory S. Hellings <greg.hellings@gmail.com>
+	Added cross-compile support to CMake, including sample Toolchain files.
+
+13-Feb-2012	Karl Kleinpaste <karl@kleinpaste.org>
+	Added ability for *HTML* wrappers to render n attribute from notes
+
+30-Jan-2012	Manfred Bergmann <manfred.bergmann@me.com>
+	Update to Lion Project. All SWORD utils are now in Xcode project and can
+		be built from there. They are however prepared to be used from
+		with Eloquent
+
+07-Dec-2011	Chris Little <chrislit@crosswire.org>
+	Removed SynodalP v11n from library
+
+12-Nov-2011	DM Smith <dmsmith@crosswire.org>
+	osis2mod: re-added the preverse div markers
+
+02-Nov-2011	Gregory S. Hellings <greg.hellings@gmail.com>
+	Improved handling of CLucene and included support for CLucene 2
+
+29-Oct-2011	Troy A. Griffitts <scribe@crosswire.org>
+	Added RTFHTML parsing of rtf \\number codes to facilitate .conf files
+	Adjusted abuser detection in SwordOrb and made orbs cycle when max is
+		reached for an IP (probably a server using us as a service)
+	Added translate and InstallMgr functions to orb
+
+29-Sep-2011	Troy A. Griffitts <scribe@crosswire.org>
+	Added sane parameter parsing to imp2ld
+	Added methods for utf8 / wchar conversion to help clucene
+
+07-Aug-2011	Manfred Bergmann <manfred.bergmann@me.com>
+	Added new Lion Xcode project where the SWORD stuff is compiled in Xcode
+		project. Changed -setClass: and instead added a protocol
+		implementation based setting of configuration
+	ObjC: Re-added ppc archiecture for Xcode project
+
+14-Jul-2011	Gregory S. Hellings <greg.hellings@gmail.com>
+	Added a sample Python script that demonstrates the bindings and compares
+		osisIDs in an XML file to known Versification schemes
+
+10-Jul-2011	Manfred Bergmann <manfred.bergmann@me.com>
+	ObjC: Fix and simplification for -
+		(id)attributeValueForParsedLinkData:(NSDictionary *)data
+		withTextRenderType:(TextPullType)textType
+
+10-Jul-2011	Manfred Bergmann <manfred.bergmann@me.com>
+	ObjC: Added option to retrieve texts for link data as rendered or
+		stripped.
+		Minor changes to SwordInstallSource and Controller.
+		Adaption of ModuleType "All" to modulesForType: method.
+		Added additional "All" enum ModuleType
+		Changed visibility of swordManager.
+		Added listModulesForType: method.
+		Added convenience constructor for SwordInstallSourceController.
+		SwordLocaleManager can be initialized with a given path to
+		locales.d. Swordbible decodeRef class method will now only pass
+		back values where not NULL was delivered.
+
+16-Mar-2011 Peter von Kaehne <refdoc@crosswire.org>
+	Introducing localised keys to imp2vs.cpp
+
+15-Mar-2011 Peter von Kaehne <refdoc@crosswire.org>
+	Faroese Locale
+
+10-Jul-2011	Manfred Bergmann <manfred.bergmann@me.com>
+	Module names are stored as lower case string in SwordManagers module
+		cache. -moduleForName: now als uses a lower case string to pull
+		the module from the cache
+
+
+
+* Release 1.6.2 *
+
+18-Oct-2010	Troy A. Griffitts <scribe@crosswire.org>
+	Fixed parsing book names containing the letter 'f'
+		from Ben Morgan
+	Fixed imp2vs not flushing cache before exiting when
+		creating compressed modules
+	Fixed LZSS compression
+
+14-Oct-2010	Troy A. Griffitts <scribe@crosswire.org>
+	Allow <hi> to be nested in any order in OSIS markup
+	Updates to allow hyphenated book names
+
+15-Aug-2010	Gregory S. Hellings <greg.hellings@gmail.com>
+	Added a file to SWIG bindings to enable compilation
+		of Perl bindings, which lacked stl_multimap.i
+	Added support for building Python and Perl with CMake
+	Updated demo Perl script to reflect new API changes
+
+25-Jun-2010	Troy A. Griffitts <scribe@crosswire.org>
+	Added CMake build system, contributed by GHellings
+
+29-Mar-2010	Troy A. Griffitts <scribe@crosswire.org>
+	Set verse to 1 when changing chapter and book in VerseKey
+	Fixed a bug where book designations ending in 'f' would
+		trigger the verse+'f'/'ff' feature.
+	Fixed curl bug which seems to hold on to progress
+		object even after scope of data retrival
+
+
+* Release 1.6.1 *
+
+01-Jan-2010	Troy A. Griffitts <scribe@crosswire.org>
+	Added locales.d/locales.conf - a special locale which
+		can be queried for localized and English lang names
+	New supported v11n systems: german kjva leningrad luther
+		mt nrsva nrsv synodal vulg <chrislit@crosswire.org>
+
+02-Dec-2009	Troy A. Griffitts <scribe@crosswire.org>
+	Updated installmgr util to allow multiple
+		commands and update dl progress
+	Added progress reporting to FtpLib transport
+	Added ability to cancel during file transport,
+		per Eeli's suggestion
+	Increased clucene buffer size - mwtalbert
+	On clucene index creation, error out on no
+		write perms - mwtalbert
+
+12-Oct-2009	Troy A. Griffitts <scribe@crosswire.org>
+	Added initial impl for CurlHTTPTransport submitted
+		by Nic Carter <niccarter@mac.com>
+	Added initial Android ifdefs to get things compiling
+		under the Android NDK
+	Added bindings/java-jni for Android development
+
+09-Aug-2009	Troy A. Griffitts <scribe@crosswire.org>
+	Added checks for Hebrew and Arabic when stripping
+		for searching
+
+
+* Release 1.6.0 *
+
+14-May-2009	Troy A. Griffitts <scribe@crosswire.org>
+	General cleanup and prep for release
+
+04-May-2009	Troy A. Griffitts <scribe@crosswire.org>
+	Added ability for (SWBuf("xxx") == (const char *)0) to
+		return false;
+	Added OSIS Header logic to accept:
+		<div subType="x-preverse" sID="xyz"/>
+	Added initial set of v11n schemes (Chris Little):
+		KJV, Leningrad, MT, KJVA, NRSV, NRSVA
+
+12-Apr-2009	Troy A. Griffitts <scribe@crosswire.org>
+	Added '.' feature for entryAttrib search, e.g,
+		Word//Lemma./G932/ will find in Lemma, Lemma.1, etc.
+	Added LocalePath feature in sword.conf
+
+06-Apr-2009	Joachim A. <jansorg@crosswire.org>
+	Added Maltese bookname translation prepared by C. S.
+
+30-Mar-2009	Ben Morgan
+	Added new methods to SWModule:
+		bool isLinked(SWKey *k1, SWKey *k2)
+			- are two entries linked
+		bool hasEntry(SWKey *k1)
+			- does an entry for the given key exist?
+	Added new methods to SWLD:
+		long getEntryCount()
+			- number of entries in the dictionary
+		getKeyForEntry(long entry)
+			- get the key for the nth entry
+		getEntryForKey(const char *key)
+			- get the index for the given key
+	Updated strongsPad to work with keys with a prefix of G or H
+	Fixed a bug in SWMgr which would load certain files in the
+		mods.d directory which shouldn't have been loaded.
+	Fix for divineName with non-ascii text in OSISHTMLHREF filter
+
+07-Feb-2009	Troy A. Griffitts <scribe@crosswire.org>
+	Added fallback checks for OS specific module
+		locations:
+			$ALLUSERSPROFILE/Application Data/sword
+
+			~ additionally looked for at:
+			$HOMEDRIVE$HOMEPATH/Application Data
+
+			added ~/sword (note the absense of '.')
+
+26-Dec-2008	Troy A. Griffitts <scribe@crosswire.org>
+	Added list support in OSIS HTML conversion (ghellings)
+
+23-Dec-2008	Troy A. Griffitts <scribe@crosswire.org>
+	Added ignore of comment lines starting with '#'
+		in SWConfig processing
+	Added requirement to call setUserDisclaimerConfirmed
+		in InstallMgr before remote functions operate
+	Added refreshRemoteSourceConfiguration to sync a
+		local InstallMgr.conf with a master remote list
+	Added ability for InstallMgr to use username/passwd
+		supplied by either .conf or globally in c-tor
+	Added VerseMgr to abstract versification scheme
+		functionality
+	Included 1 versification scheme: KJV
+	Added param on SWBuf::stripPrefix to allow use more
+		like a safe string tokenizer to replace strtok
+
+16-Dec-2008	Joachim A. <jansorg@crosswire.org>
+	Added two Chinese bookname translations provided by
+		F. Lee
+
+03-Sep-2008	Troy A. Griffitts <scribe@crosswire.org>
+	Added getOSISRefRangeText to SWKey- not yetimplemented
+		ideally or even correctly for all SWKey types
+
+* Release 1.5.11 *
+
+14-May-2008	Troy A. Griffitts <scribe@crosswire.org>
+	Added ability for lexicon drivers to accept
+		####![a-z] as strong number.
+
+13-May-2008	Chris Little <chrislit@crosswire.org>
+	Added basic TEIRTF filters
+	Added tei2mod utility
+	Added Japanese locale from http://bible.50webs.org/en/
+	Applied Ben Morgan's TEIHTMLHREF filter
+	Added TEIHTMLHREF filter to BCB5 project
+
+11-May-2008	Troy A. Griffitts <scribe@crosswire.org>
+	Applied patch to better handle x-refs in notes
+		-Ben Morgan <benpmorgan at gmail dot com>
+	Applied patch to better output OSIS in plaintext
+		-Ben Morgan <benpmorgan at gmail dot com>
+	Updated rawstr and rawstr4 to work consistently
+		with buffer sizes
+	Updated French locales and added french abbrev
+		locales from Dominique Corbex
+		<dominique dot corbex at gmail dot com>
+	Updated Farsi locales from Peter von Kaehne
+		<refdoc at gmx dot net>
+
+16-Oct-2007	Troy A. Griffitts <scribe@crosswire.org>
+	Implemented a basic TreeKeyIdx::remove() method
+
+* Release 1.5.10 *
+
+16-Oct-2007	Troy A. Griffitts <scribe@crosswire.org>
+	Added new vi-utf8.conf Vietnamese locale submitted
+		by Daniel Owens <dhowens at pmbx dot net>
+
+11-Oct-2007	Troy A. Griffitts <scribe@crosswire.org>
+	Added new FileMgr::openFileReadOnly to help centralize
+		all file io details
+
+11-Oct-2007	Troy A. Griffitts <scribe@crosswire.org>
+	Added new RawText4 and RawCom4 drivers which allow
+		for a 4 byte record size.  Patch submitted by
+		Doug Rintoul <doug_rintoul at sil dot org>
+
+6-Oct-2007	Troy A. Griffitts <scribe@crosswire.org>
+	Added SWBuf::stripPrefix method which works nice
+		for returning and stripping stuff like
+		'lemma' from "lemma:G1234"
+	Added part params to XMLTag::setAttribute
+	Changed OSISStrongs to only strip lemma parts with
+		strong prefix
+	Applied fix for newer version of gcc which errors if
+		create perms are not passed to ::open
+		(Deji Akingunola <dakingun at gmail dot com>)
+	Modified OSISLemma to only strip lemma parts with
+		lemma.* prefix or no prefix
+	Added UTF-8 processing for case insensitive unindexed
+		searching
+
+13-Sep-2007	Troy A. Griffitts <scribe@crosswire.org>
+	Added InstallMgr::getModuleStatus to return a list
+		of differences between the modules of two SWMgr
+		objects
+
+03-Mar-2007 	Joachim Ansorg <jansorg@crosswire.org>
+	Added osis morph segments filter include file to the dist
+	Fixed wrong stricmp in SWObject
+
+10-Dec-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Added example: examples/cmdline/verserangeparse.cpp
+
+2-Dec-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Added example: examples/cmdline/listoptions.cpp
+	Added entryAttributes processing for morph segs
+
+23-Nov-2006	Daniel Glassey <dglassey@crosswire.org>
+	Use acx_clucene.m4 from CLucene contribs to detect CLucene
+	apply Debian patch for flatapi for 64-bit portability
+
+20-Nov-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Moved treekey and genbook tests to utilities
+	Finished first stable version of rewrite of imp2gbs
+	Fixed bug in treekey where didn't break on found sibling
+	Added .trim to localName segments of genbook path,
+		e.g. /this / is/a/test/  - all spaces will be removed
+	Added recognition of additional greek accent ~
+		in UTF8GreekAccents filter
+	Fixed bug in RawGenBook::setText where default size
+		is < 0, not false
+	Changed lucene indexing to actually index the key field.  This
+		allows searching within key field (e.g. key:word)
+	Fixed divineName logic
+	Fixed & handling
+
+* Release 1.5.9 *
+
+21-Sep-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Clean up and package for 1.5.9
+	Added Thai Unicode locale coutesy of
+		Adrian Korten <adrian_korten@sil.org>
+
+29-Aug-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Added recognition for the sysConfig parameter in SWMgr c-tor
+		(allow passing path to sword.conf to use for config)
+	Updated CORBA server to allow option -sysConf /path/sword.conf
+
+16-Aug-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Added new module lookup options:
+		./sword.conf
+		../library/mods.d
+	Added fix to preserve markup in headings (charcoal)
+	Fixed non-UTF8 builds (thanks berkana)
+
+1-Aug-2006	DM Smith <dmsmith@crosswire.org>
+	Fixed divineName bug
+	Updated q handling to use quote stack
+	Update to fix RLT
+	Fixed a bug in osis2mod that duplicated a chapter title in the verse
+	Normalize whitespace in xml tags
+	Updated support for more OSIS markup, including q marker
+
+21-May-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Added SWBuf::startsWith, endsWith
+	Added entry attribute exposure of multipart words
+	Added beginnings of VerseKey subclass which uses TreeKey
+
+25-Apr-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Changed SWModule::search to fill result set up with more
+		specialized SWKey objects, instead of always SWKey
+	Changed SWModule::search to use CLucene better for
+		non-VerseKey modules
+	Added basic proximity searching with CLucene searches
+	Added ListKey::sort()
+
+14-Apr-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Added EntryAttribute support to SWIG bindings (from mreimer)
+
+29-Mar-2006	Joachim Ansorg <jansorg@crosswire.org>
+	Fixed lucene code to work with 0.9.x (tested with 0.9.10)
+
+31-Jan-2006	Troy A. Griffitts <scribe@crosswire.org>
+	Added support for OSIS variants
+	Added .NET support and update to swig bindings (from lefticus)
+
+28-Nov-2005	Troy A. Griffitts <scribe@crosswire.org>
+	Fixed ICUStringMgr toUpper method
+
+19-Nov-2005	Troy A. Griffitts <scribe@crosswire.org>
+	Cleaned up headers to remove unnecessary includes
+
+26-Oct-2005	Martin Gruner <mgruner@crosswire.org>
+	Added Arabic locale (from Mina Magdy).
+
+17-Oct-2005	Joachim Ansorg <jansorg@crosswire.org>
+	Fixed the dutch locale file
+
+21-Sep-2005	Martin Gruner <mgruner@crosswire.org>
+	Added Hebrew locale for both Tanach (OT) and
+	Berit Chadashah (NT).
+
+* Release 1.5.8 *
+
+27-May-2005	Troy A. Griffitts <scribe@crosswire.org>
+	Clean up and package for 1.5.8
+
+16-May-2005	Troy A. Griffitts <scribe@crosswire.org>
+	Changed Strongs to Lemma and added LemmaClass for
+		EntryAttributes
+	Made OSIS, GBF, and ThML filters parse lemma and
+		morph
+
+2-May-2005	Troy A. Griffitts <scribe@crosswire.org>
+	Removed many tools files and added them to
+		the sword-tools repository
+	Removed the need for many #if's throughout the code
+	Added seek, read, write, O_*, S_* to filemgr.cpp
+
+11-Apr-2005	Troy A. Griffitts <scribe@crosswire.org>
+	Cleaned up unused files in preparation for release
+	Updated pkg-config to report proper required libs
+
+1-Jan-2005	Troy A. Griffitts <scribe@crosswire.org>
+	Extended InstallMgr routines to recurse directories
+	Cleaned up InstallMgr code
+	Created FTPTransport base class used by InstallMgr
+		to allow for any FTP routines to be plugged
+		into InstallMgr by overriding a new
+		createFTPTransport method to return subclass
+		(Joachim's good idea)
+	Moved all CURL and FTPLib code into FTPTransport
+		subclasses CURLFTPTransport and FTPLibFTPTransport
+		classes respectively
+	Moved status reporting methods from InstallMgr to
+		StatusReporter in FTPTransport ftptrans.(h|cpp)
+	Added CopyDir, removeDir, and isDirectory methods
+		to FileMgr
+	Added SWMgr::deleteModule to allow deleting a
+		loaded module from an SWMgr class-- needed
+		before InstallMgr deletes files involved
+		so after destruction of SWModule, all files
+		will be closes (mostly for Windows, but good
+		on any platform).
+
+13-Aug-2004	Troy A. Griffitts <scribe@crosswire.org>
+	Migrated to SVN
+
+11-May-2004	Troy A. Griffitts <scribe@crosswire.org>
+	Updated to support ARM cross-compile, and that
+		without errors
+
+03-Apr-2004	Will Thimbleby <will@thimbleby.net>
+	Added SWBuf method setFormatted()
+	Altered all remaining uses of char[127]
+		for file names to use SWBufs.
+
+06-Jan-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Changed system[Log|File|Locale]Mgr to
+		*Mgr *[get|set]System*Mgr() per Daniel Glassey's
+		discovery of potential problems from order of
+		initializing statics.
+
+	Added new prefix recognition for OSIS lemma prefix
+		"strong:"
+
+* Release 1.5.7 *
+
+28-Dec-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Updated many filters
+	Split cvs, removing apps
+	Updated OSIS importer
+
+28-Aug-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Abstracted the search interface from SWModule
+	Added experimental implementation of fast
+		search framework to zText using
+		clucene
+
+* Release 1.5.6 *
+
+26-Aug-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Packaged up 1.5.6
+	Updated CORBA services to expose a little more
+		functionality for the OSIS webapp
+
+12-Aug-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Added Enciphering code that works with SWBuf
+	Fixed appendFormatted to re-init var_args
+	Other small fixes to build on Opteron 64-bit
+
+07-Jul-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Added enough functionality to remotely install
+		into installmgr, but Daniel Glassey needs
+		to fix the linux autobuild stuff :)
+	Added SWOptionFilter and made most option filters
+		extent this class.
+
+26-Jun-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Removed all std::string references from API and
+		mostly replaced with SWBuf
+	Added int max param to SWBuf::append
+	Added some file copy functions to FileMgr
+	Moved some more install stuff to installmgr
+
+18-Jun-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Joachim added OSISFootnotes.  Added entryAttributes
+		parsing in OSISFootnotes
+	Added = operator and empty constructor to XMLTag
+	Fixed OSISHeadings to passthru non x-preverse note
+		bodies
+
+10-Jun-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Added tests/testsuite for building a good set
+		of regression tests
+	Fixed VerseKey parsing of "1. book" and osisRefs
+
+06-Jun-2003     Joachim Ansorg <junkmail@joachim.ansorgs.de>
+	Implemented encodeURL() function in utilweb.cpp
+	Converted ThMLHTML filter to XMLTag, removed handling
+		of scripRefs because this shouldn't be done
+		in FMT_HTML
+	Converted ThMLHTMLHREF to XMLTag. Fixed some things.
+	Simplified some small things in filters, nothing big.
+
+01-Jun-2003     Joachim Ansorg <junkmail@joachim.ansorgs.de>
+	Added WEBIF filters, based on HTMLHREF filters.
+	Added new utilweb stuff for working with urls etc.
+	Fixed SWORD_NAMESPACE_START and SWORD_NAMESPACE_END
+		in defs.h if NO_SWORD_NAMESPACE was defined
+
+30-May-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Added utilities/installmgr to call some of the
+		basic functionality from engine install
+		routines.
+	Added removeModule to installmgr.cpp, copied from
+		Windows InstallMgr.
+
+26-May-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Added first cut of osis2mod using the ESV as a
+		basic template.  Works with VerseKey mods
+		only and doesn't capture all data.
+	Improved verse reference parsing to include proper
+		parsing of osisRef attributes and other
+		misc. anomalies.
+	Returned canon.h back to previous state to
+		avoid locale key mismatches
+
+25-May-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Added utilfuns/utilxml.cpp and test/xmltest which
+		include basic xml utility classes
+	Added comparison operators to SWBuf so it plays
+		nicely with stl containers
+
+19-Feb-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Added utilfuns/swbuf.cpp and tests/swbuftest
+	Fixed make system to include osisrtf and osisplain
+	Started HUGE task of moving all char **buf over
+		to SWBuf &buf
+
+06-Feb-2003	Joachim Ansorg <joachim@ansorgs.de>
+	Added ro.conf (Romanian) in locales.d
+
+14-Jan-2003	Joachim Ansorg <joachim@ansorgs.de>
+	Added strip filter for the red letter words so users can
+		turn it off
+	Worked a bit on locales.d/de.conf to include some abbrevs
+
+10-Jan-2003	Terry Biggs <tbiggs@infinet.com>
+	Added new osisstrongs and osismorph support to gbfhtml*.
+
+08-Jan-2003	Troy A. Griffitts <scribe@crosswire.org>
+	Added new osisstrongs and osismorph option filters.
+	Hacked gbfrtf to support, for now:
+		the osis <w> tag,
+		Removed OSIS <note>...</note>,
+		Removed any empty strongs tags for the article.
+
+19-Dec-2002	Joachim Ansorg <joachim@ansorgs.de>
+	Removed old russian book locale file, because it wasn't
+		working in Linux AND Windows
+	Added book locale files (cp1251 and koi8-r) submitted by
+		Pavlo Bohmat bohm@ukr.net to support Windows
+		and Linux.
+
+30-Nov-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Added Finnish locale files contributed by Tero
+		Favorin <tero at favorin dot com>
+
+27-Nov-2002     Joachim Ansorg <joachim@ansorgs.de>
+	Worked on Swig bindings. They work now with latest CVS.
+
+25-Nov-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Added Chris' ThMLVariants option filter to SWMgr
+
+21-Nov-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Added support to ListKey to test for inclusion in
+		set. eg. listKey.setText("mat 2:2") will set
+		listKey.Error() to true if Matthew 2:2 is not
+		in the listkey set.  listKey will also be set
+		to the correct subKey and position if it IS
+		in the set.
+
+09-Nov-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Updated ICU headers and Thai transliterator per
+		Steven Loomis' recommendations.
+
+29-Oct-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Added SWModule *SWMgr::getModule(const char *modName);
+	Added Terry Biggs' patch to htmlref filters to
+		more consistently deal with strongs numbers
+
+23-Oct-2002	Daniel Glassey <dglassey@crosswire.org>
+	Some base work for installmgr on classes to
+		manage mods.d
+
+
+* Release 1.5.5 *
+
+22-Oct-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Updated hu locale submitted from Mentler Gyula
+	Fixed bug in Book parsing that took first matching
+		book, not best matching book.
+	Added VCL autoconf/automake files and updated to
+		compile on gcc 3.2
+
+21-Oct-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Fixed ListKey bugs dealing with TOP and BOTTOM and
+		added at least an attempt to position the
+		current element key on ListKey::setText
+
+20-Oct-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Added optimizations for ListKey persistent keys
+		in VerseKey drivers
+
+09-Oct-2002	Daniel Glassey <dglassey@crosswire.org>
+	Add debian directory so you can build debs from cvs
+
+* Release 1.5.4a *
+
+07-Oct-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Fixed rawFilter bug where entrySize was being passed
+		instead of maxBufferSize.  This problem caused
+		a number of problems with the engine.
+	Applied a few of Franklin Bratcher's critical patches
+		to diatheke.
+
+01-Oct-2002	Daniel Glassey <dglassey@crosswire.org>
+	Work on sword swig perl binding
+	Change sword to use a sword namespace
+	Fix to build with gcc3.2 again after yesterday
+
+30-Sep-2002	Daniel Glassey <dglassey@crosswire.org>
+	Remove using namespace std from all headers
+
+28-Sep-2002	Troy A. Griffitts <scribe@crosswire.org>
+	Added SWModule::Index and SWCom and SWText impls
+
+
+* Release 1.5.4 *
+
+25-Sep-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Fixed zverse zstr zcom ztext zld to work with cipher
+	Added cipher key to mod2zmod
+
+27-Aug-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added Nikolay Igotti's logic for improved non-western
+		locale functionality
+	Fixed mod2zmod to work properly with headings
+	Fixed cheatah to allow heading texts like 'Mat 0:0'
+
+08-Aug-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added support for new entry in /etc/sword.conf
+		[Install]
+			AugmentPath=/where/ever
+		multiple entries can exist.
+
+31-Jul-2002	Daniel Glassey <dglassey@crosswire.org>
+	Minor change to use iostream not iostream.h (more gcc3)
+
+31-Jul-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Fixed FileMgr::trunc if trunc should be empty was
+		leaving a 1 byte (null) file, instead of empty.
+
+30-Jul-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Fixed zLD link bug where resolving incorrectly
+		skipped IDXENTRYSIZE instead of 6 ("@LINK ").
+	Fixed RawLD link errors.
+	Allocate buffer for RawStr* drivers in readtext
+		to allow realloc if link
+
+29-Jul-2002     Victor Porton <porton@narod.ru>
+	Fixed RawLD and RawLD4 drivers not reporting errors in
+	getRawEntry()
+
+28-Jul-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added Gregor Anzelj's Slovenian (sl.conf) locale.
+
+27-Jul-2002     Troy A. Griffitts <scribe@crosswire.org>
+	lex/dict drivers use new toupperstr_utf8 to allow
+		keys to be encoded in utf8 (hopefully will
+		allow cedict to be built/work correctly.
+	Added toupperstr_utf8 to utilstr.cpp
+	Make all operators have real name methods
+	Isolated SWModule operators in define
+	Fixed RawLD and RawLD4 drivers where there was
+		a blank entry created at the beginning
+	Added test lextest
+	Consolidated setPosition for lexicons in SWLD
+
+16-Jul-2002	Daniel Glassey <dglassey@crosswire.org>
+	utf8transliterator now loads translators from local
+		sword ICU data on demand
+	SWMgr loads a UTF8Transliterator filter along with
+		other filters on Load
+
+11-Jul-2002	Daniel Glassey <dglassey@crosswire.org>
+	simple fixes to allow compiling with gcc 3.1
+	rename gettext to readtext as unobtrusively as
+		possible.
+	fix BGreek_Greek trans to work with icu2.1
+	add SWMgr::isICU for apps to check if ICU stuff is
+		available
+
+10-Jul-2002	Daniel Glassey <dglassey@crosswire.org>
+	Initial support for using sword transliterators
+	with offical ICU
+
+24-Jun-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added a few english abbrevs to better parse BW exported
+		texts.
+	Added Error() raised on improperly parsed VerseKey
+		text.
+
+22-Jun-2002	Daniel Glassey <dglassey@crosswire.org>
+	Fixes to allow compiling with gcc3
+	add configure support to libVCL and change X!/installmgr
+		to build it automatically
+	remove --enable-vcl from core sword
+
+13-Jun-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Fixed Module heading bug
+	Fixed SWConfig += bug again
+	Fixed SWModule size logic when getEntrySize returns -1
+
+06-Jun-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Fixed SWConfig += bug
+	Added Efata's Indonesian locale
+
+09-Jun-2002     Joachim Ansorg <jansorg@crosswire.org>
+       	Added Perl bindings by J. Kaiser to the CVS
+
+06-Jun-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added Dominique Corbex' fr locale updates
+	Added new resultBuffer protected member to SWBasicFilter
+
+04-Apr-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added VerseKey::getOSISRef()
+	Added the beginnings of ThMLOSIS filter
+
+02-Apr-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added gsoap bindings and test client.
+	Added gbfstrongs parsing of entry attributes
+
+30-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added mod2imp to export a sword module in 'imp'
+		format
+	Better entry attribute parsing in greekdef* and
+		thmlstrongs*
+
+22-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added Saulo Rodrigues e Silva's <saulo@jatai.ufg.br>
+		locale for pt_BR
+	Added entry attributes for Thayer and ThMLStrongs
+		(which includes morph also)
+
+
+* Release 1.5.3 *
+
+22-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Updated make system to display better user output
+	Updated 'readme'-type files
+	Added make install_config
+
+21-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Changed SWMgr::Load ONE MORE TIME (blame Osk) to return
+		signed char for mac ppc to work correctly
+
+19-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Changed SWMgr::Load to return char status to be more
+		consistent with rest of api.  Sorry guys.
+	Added Daniel Glassey's patch to build diatheke
+	Added new entryAttributes mechanism to SWModule
+	Added new LocalOptionFilter GreekLexAttribs
+
+18-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added chrislit's Diatheke, BibleCS, and InstallMgr updates
+	Fixed Joachim's bug report about TreeKeyIdx segfaulting
+		if no data at DataPath
+	Added Joachim's patch to remove throw in SWMgr::Load
+
+16-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added Martin Gruner's suggestion to swmgr to look
+		for global configuration in multiple location.
+		Set default to: /etc/sword.conf:/usr/local/etc/sword.conf
+	Added chrislit's msvc and diatheke patches
+
+15-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added SWCacher to lib and made SWModule impl it
+	Added SWModule::setSkipConsecutiveLinks
+	Fixed mod2zmod to catch links
+	Fixed TOP to position to first entry, not say Gen1:1
+	Fixed bug in rawverse in logic when index is out of bnds.
+	Added DTrotz' fix for CBuilder6
+
+14-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Changed all make system files to dglassey's ./configure
+		autotool system
+	Applied chrislit's patch for macosx
+
+12-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added new option to filemgr open to allow downgrade
+		of access from rdwr to rdonly.
+	Removed code that actually opens files from most
+		driver's constructors.
+	Changed isWritable to actually return true only if the user
+		has write permission to the files.
+
+11-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added David White's recommendation to cache strlen
+		in stdstr to improve performance.
+	Added Helmer Krämer's fix for case insensitive code
+		in SWBasicFilter
+
+04-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added new multimapwithdefault::has(K, V) method to allow
+		a call like module->getConfig().has("Feature", "HebrewDefs")
+	Fixed VerseKey parse bug that didn't work with a locale
+		other than the sysLocaleMgr locale.
+	Added VerseKey::getLocale()
+	Changed SWText subclasses to work like SWCom subclasses,
+		in that they increment to next valid entry on ++
+
+03-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added image support to thmlhtml and thmlhtmlhref
+		filters
+	Added dynamic entry "AbsoluteDataPath" to module config
+		information
+	Fixed an error in the new SWModule::getConfig*
+		methods that tbiggs pointed out with .sword
+
+01-Mar-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added Helmer Krämer's speed improvements to SWModule for
+	multiword searches
+	Fixed RawGenBook memory bugs
+	Isolated all byte swapping logic to sysdata.h
+	Changed BIGENDIAN to SWBIGENDIAN
+
+27-Feb-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Commited tbiggs' update to thmlhtmlhref.cpp
+	Commited dglassey's update to make system
+	Fixed SWModule to allow setting it's own key back to
+		itself
+
+26-Feb-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added chrislit's update imp2gbs and new imp2vs
+		and new imp2ld
+	Make mod2zmod work with modules other than verse
+		keyed modules
+	Fixed zLD
+	Added SWModule::getConfig and
+		SWModule::getConfigEntry and made SWMgr
+		call new SWModlue::setConfig
+
+25-Feb-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added chrislit's new gbs tools:
+		utilities/thml2gbs
+		utilities/imp2gbs
+
+18-Feb-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added dglassey's conditional reallocation of entrybuf to drivers
+	Added dglassey's update to makesystem for icu
+	Added other optimizations for prep of 1.5.3
+
+16-Feb-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added getBookName and getBookAbbrev to VerseKey along
+		with struct book :: prefAbbrev member and data
+
+24-Jan-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Added TreeKey and TreeKeyIdx decendants
+	Added SWGenBook, and RawGenBook general book support
+		and test programs
+
+04-Jan-2002     Troy A. Griffitts <scribe@crosswire.org>
+	Happy B-Day MOM!
+	Added new property in Makefile.cfg: globalconfdir
+		defaulted to /etc
+
+20-Dec-2001     Troy A. Griffitts <scribe@crosswire.org>
+	Added first cut of zLD
+
+13-Dec-2001     Troy A. Griffitts <scribe@crosswire.org>
+	Added __u16, __u32, and __u64 raw data types
+	Added byte swapping macros
+	Added standard swordtoarch and archtosword macros
+		in 16, 32, and 64 bit versions
+	Added remove to entriesblk
+	Added tests for byte swapping
+
+08-Dec-2001     Troy A. Griffitts <scribe@crosswire.org>
+	Added new SWInputMethod class for keyboard mapping support.
+	Added null input method which returns what it gets
+	Added Hebrew Michigan-Claremont input method
+
+02-Sep-2001     Troy A. Griffitts <scribe@crosswire.org>
+	Added new swbasicfilter.cpp that provides many common method needed
+		to make an swfilter implementation.
+	Changed ThMLHTML filter to extend SWBasicFilter to take advantage of
+		the new class.
+	Added new utilstr.cpp method toupperstr to convert a c_str to all
+		uppercase.
+	Added new methods to the key classes to provide non-operator methods
+		to access features to which there were non previously.  Makes
+		other language bindings much easier to produce.
+
+
+* Release 1.5.2 *
+
+26-Jul-2001     Troy A. Griffitts <scribe@crosswire.org>
+	Applied Tom Wildsmith's patches to cheatah: cleaned up
+		displaying of marked up texts; added nice about
+		box with module about info; handled errors better
+		on startup
+
+27-Jun-2001     Troy A. Griffitts <scribe@crosswire.org>
+	Added roman numeral support in VerseKey parsing
+	Fixed a number of memory bugs
+
+20-Jun-2001     Troy A. Griffitts <scribe@crosswire.org>
+	Packaging up for 1.5.2
+	Fixed mod2zmod linking bug
+
+11-Jun-2001     Troy A. Griffitts <scribe@crosswire.org>
+	Added limited unicode support
+	Added French locale from Dominique Corbex
+
+02-Jun-2001	Chris Little <chrislit@crosswire.org>
+	Added GBFMorph OptionFilter to handle <WT...> tags and adjusted
+		GBFStrongs & other filters to not handle <WTG/H...> as a
+		Strong's number
+
+20-May-2001	Joachim Ansorg <jansorg@gmx.de>
+	Updated the Czech translation of booknames (cs.conf)
+
+18-May-2001	Joachim Ansorg <jansorg@gmx.de>
+	Added polish translation of the booknames. It was created by Robert
+Kolatzek.
+
+06-May-2001	Chris Little <chrislit@crosswire.org>
+	Added GBFHeadings OptionFilter & support for <TS><Ts> tags to
+		all GBF filters
+	Added emptyvss utility to list empty verses in a module
+	Added warning to vpl2mod for cases where a verse is being
+		overwritten
+
+23-Mar-2001	Joachim Ansorg <jansorg@gmx.de>
+	Made some changes to the API documentation in the headers
+		(documented new classes).
+
+11-Mar-2001     Troy A. Griffitts <scribe@crosswire.org>
+	Added multimapwithdefault template and changed swconfig to use
+	Added operator [] to SWConfig
+	Added configtest
+
+25-Feb-2001     Chris Little <chirslit@crosswire.org>
+	Added roman.c for Roman Numeral conversion and made GBF to ThML
+		filter produce XML compliant text
+
+09-Feb-2001	Joachim Ansorg <jansorg@gmx.de>
+	Added beginnings of API documentation in doc/api-documemtation.
+        Formats are HTML and man
+
+08-Feb-2001     Chris Little <chrislit@crosswire.org>
+	Added embedded Visual C++ project to build DLL in
+		apps/windoze/wince/sword but it requires undistributable
+		libraries to build it currently.  MIPS, SH3, and ARM processors
+		are supported.
+
+08-Feb-2001     Chris Little <chrislit@crosswire.org>
+	Added Visual C++ 6.0 project to build DLL in apps/windoze/vc/Sword
+
+18-Jan-2001	Joachim Ansorg <jansorg@gmx.de>
+	RawText::Search: Do not check for a valid key if we don't use a
+		scope, this speeds up the normal search of indexed modules
+		(IMHO a lot for large result sets)
+	Updated examples/cmdline/threaded_search.cpp
+
+14-Jan-2001	Joachim Ansorg <jansorg@gmx.de>
+	Updated sk.conf
+
+13-Jan-2001	Chris Little <chrislit@crosswire.org>
+	Added arg to vpl2mod to work with NT-only translations
+
+30-Dec-2000	Chris Little <chrislit@crosswire.org>
+	Fixed prn2sword so that it should work with new OLBs
+
+22-Dec-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Added 'micros' a mini GUI for PDAs
+
+20-Dec-2000	Troy A. Griffitts <scribe@crosswire.org>
+    Added new compile target architecture: arm
+    Changed the simple lookup cmdline example to work with any
+        module.  Tested on iPaq SA1110.  Need to optimize
+        size/speed!
+
+15-Dec-2000	Troy A. Griffitts <scribe@crosswire.org>
+	zText compess driver working
+	Fixed ZipCompress
+	Optimized SWCompress
+	mod2zmod conversion utility working
+	Added support for zText modules in SWMgr with 2 new
+		parameters: BlockType=[VERSE|CHAPTER|BOOK]
+		CompressType=[LZSS|ZIP]
+
+10-Dec-2000     Chris Little <chrislit@crosswire.org>
+	Added addld utility for adding single entries to LD modules
+
+09-Dec-2000     Chris Little <chrislit@crosswire.org>
+	Added addvs utility for adding single verses to modules
+	Added Diatheke (and CGI/Tcl/PQA frontends to it) to source
+	        tree
+	ThML filters (all) fixed to support longer tag lengths and
+	        decode HTML ampersand codes (e.g. &nbsp;)
+	ThMLRTF filter fixed to avoid printing extra '>'s
+
+02-Dec-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Added write support for RawLD
+	Added new utility modwrite to call a write interface
+
+30-Nov-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Fixed memory leak in write methods of RawText
+	Added some initial support for writing to zText
+	Added a 'not working yet' mod2zmod utility
+
+20-Nov-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Added new utility, step2vpl, for dumping BSISG STEP module in
+		vpl format.
+	Added new make target: install_config to put a basic install on
+		a box.
+	Added a QUICKSTART section to INSTALL file
+
+17-Nov-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Added new utility, stepdump, for dumping BSISG STEP modules.
+
+11-Nov-2000	Joachim Ansorg <jansorg@crosswire.org>
+	Commited new version of the sk locale file.
+
+
+* Release 1.5.1a *
+
+06-Nov-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Added more debug for tests/mgrtest.cpp
+	Hardcoded VerseKey::NewIndex to KJV max index
+
+01-Nov-2000	Joachim Ansorg <jansorg@crosswire.org>
+	Added test program for indexes using VerseKey::NewIndex()
+
+31-Oct-2000	Joachim Ansorg <jansorg@crosswire.org>
+	Fixed vpl2mod to work correctly with headers and files without
+		references.
+
+30-Oct-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Hacked SWModule::Search to hardcode high index always to
+		32300 for now until we get NewIndex working properly.
+		This will be inaccurate for range searches but will
+		always return a value between 0-100
+	Made rawverse.cpp utility functions to not be so picky
+		about trailing '/' or '\' on path names.
+	Made vpl2mod work better when 'prepend verse ref' option
+		is turned on.  There seems to be no sense in outputting
+		blank entries in this scenerio.
+
+29-Oct-2000	Joachim Ansorg <jansorg@crosswire.org>
+	Reverted the patch from 23-Oct-2000
+	gbfhtml.cpp: Changed the HTML tag for new paragraph from <P> to <BR>
+		because it's bad HTML without a closing </P> tag.
+
+23-Oct-2000	Joachim Ansorg <jansorg@crosswire.org>
+	Changed the private section of versekey.h into a protected one
+	because we need the change for current BibleTime!
+
+15-Oct-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Normalized Writable interface to SWModule.
+	Fixed RawVerse settext to correctly append a dos nl.
+	Fixed vpl2mod to correctly strip 10s and 13s from input.
+	Added verse ref parsing functionality to vpl2mod.
+	Added new 'getRawEntry()' pure virtual to each driver.
+		Changed from operator char *().  Moved operator char *
+		to SWModule.
+	Created define FILTERPAD to replace hard coded padding in
+		each driver.
+	Added write link support in RawText.
+	Added new test introtest to test module intros.
+	Fixed abbrev parsing to see Phil as Php.
+
+05-Sep-2000	Joachim Ansorg <jansorg@gmx.de>
+	Fixed a problem in Makefile.cfg with profiler support and
+		non-debugging lib (-s removes the profiler support,
+		changed it)
+
+30-Aug-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Fixed mod2vpl to strip any existing \n's from data before
+		writing the data.
+	Added new utility which reads a verse per line (vpl) file
+		and creates a new module.
+	Fixed RawVerse::CreateModule.
+	Implimented write functionality in RawText with a call to
+		RawVerse::settext.
+	Changed write functionality in RawVerse driver which appends
+		the new entry to the end of the data file and resets
+		the index to this new location.
+
+28-Aug-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Added new utility to output a verse module one line per
+		verse (utilities/mod2vpl)
+
+22-Aug-2000	Joachim Ansorg <jansorg@gmx.de>
+	Added Slovak translation of booknames made by Zdeno <zdpo@post.sk>
+
+16-Aug-2000	Joachim Ansorg <jansorg@gmx.de>
+	Fixed utilities/mkfastmod.cpp
+	Added a template for translations of international booknames
+		(doc/translation-template.conf).
+
+14-Aug-2000	Troy A. Griffitts <scribe@crosswire.org>
+	Added beginnings of search framework support.
+	Added some optimized searches for RawText driver
+
+07-Apr-2000 	Joachim Ansorg <jansorg@crosswire.org>
+	Added the THML filters (thmlrtf,thmlplain,thmlhtml and thmlgbf)
+		to the Makefile.
+
+15-Mar-2000
+	Added buildvcl option to Makefile.cfg to allow exclusion of
+		the VCL libraries from the build.
+	Changed the install for the include directory to OBTAIN the
+		file list instead of specifying each include file
+	Included cs Czech locale submitted by Kri¹tof Petr
+	Included da Dutch locale submitted by Birger Langkjer
+
+13-Mar-2000
+	Added SWLocale and LocaleMgr classes to support localization
+	Made GBFPlain filter support plain text parsing of strongs
+		numbers to allow searching for such.
+	Added VCL library port to support porting of InstallMgr to gtk
+	Added basic InstallMgr gtk port.
+	Included Chris Little's initial cut of ThML filters
+	Added Torsten's Uhlmann's plainfootnotes, an option filter for
+		footnotes in plain format Biblical texts.
+	Added Torsten's rtfhtml filter (at the moment only usable for
+		the About comment)
+
+19-Jan-2000
+	Added zText, zVerse, etc. code utilizing Daniel Glassey's comp
+		drivers
+	Fixed alloc bug in RawLD
+
+25-Nov-1999
+	Fixed double // bug in swmgr
+	Fixed /./ bug in swmgr
+	Applied Joachim's patch to fix UpperBound bug
+	Fixed Makefile bugs
+
+17-Oct-1999
+	Fixed bug in rawstr.cpp that would overwrite buffer size if
+		idxkey info was larger than buffer size
+	Added sparc support
+	Enhanced and debugged build and install system
+	added spec file for building RPMs
+	Added updated GBFHTML and PLAINHTML filters from bibletime team
+	Fixed bug in SWMgr on exit when can't find any config info
+
+15-Oct-1999
+	Changed sig of ProcessText to include SWKey *, and calls approp.
+	Changed SWMgr::optionFilters security to protected
+
+05-Sep-1999
+	Why is it always the 5th?
+	Added RawFilters to facilitate on-the-fly deciphering of entries
+	Added SWCipher which uses Michael Paul Johnson's SapphireII cipher
+	Added CipherFilter which uses SWCipher and .conf CipherKey= entry
+
+05-Jul-1999
+	Added MAXCHAPTER and MAXVERSE as POSITIONs in VerseKey
+	Added Key() method for setting / getting key on SWModule
+	Added kludge to UpperBound for setting verse and chapter to max
+		values if not specified
+	Fixed bugs where error was not being set correctly for some
+		traversals of SWModule
+
+05-Jun-1999
+	Sorry for not keeping the ChangeLog current
+	Lots of other stuff I'm sure I forgot
+	New mods.d configuration
+	Begin phase out of RawGBF.  Move to RawText with SourceType=GBF
+	Added OptionFilters
+	Added scoped searches
+	More bug fixes, as always
+	Profiling to speed up some sections of code
+
+09-Jan-1999
+	Various API bug fixes.
+	Added navigation support for all module types
+	Added search support for all module types
+	Added standard mods.conf location lookups to SWMgr
+
+15-Dec-1999
+	Added cheatah, a simple lookup and search gtk GUI
+
+12-Nov-1998
+	1.3.1 release.
+	Started making entries in ChangeLog again! :)
+	Moved directory structure.
+	Added Luis Cortes' wxSword frontend to apps tree. GREAT START!
+	Fixed bug in canon.h that incorrectly assumed static structures were
+		allocated on the heap sequential if they were in the source
+		sequentially.
+	Changed SWModule::Search(char *... to SWModule::Search(const char *
+	Removed -Werror from Makefile.cfg to avoid problems with different
+		warnings that get displayed with different versions of egcs
+
+12-Dec-1997
+	Fixed typo in about box of BibleCS
+	Changed font copyright notice in n27u4
+
+09-Dec-1997
+	Fixed Search window in BibleCS to search currently focused Bible Text
+		module and report such in the title bar.
+	Added ALPHA website to the CD Loader
+	Added a full report of the About section of a module when installing.
+		(BibleCS)
+	Renamed module n26u4 to n27u4.
+
+04-Dec-1997
+	Added DDE to BibleCS frontend.  Thanx to Franklin Bratcher for the idea.
+		Service = sword; Topic = Bible;
+		Item = [Lookup|Search]; Data = "<module name> <arg>".  E.g.:
+			sword Bible Lookup MHC "Matthew 1:1"
+			sword Bible Search WEB knee[ls]
+		WARNING: case sensitive module names
+		See ddetest program under BibleCS directory
+
+29-Nov-1997
+	Added SWFilter and modified appropriate modules to use these.
+	Added RawGBF class that automatically adds a GBFPlain filter to
+		strip GBF tags before searching.
+	Added sword/frontend/windoze/cbuilder/biblecs frontend.  To build, use
+		cmdline compiler: make -fsword  DO NOT OPEN sword.mak WITH
+		C++BUILDER
+	Added sword/frontend/windoze/cbuilder/biblecs/cdstartup for autorun
+		CDROMs.
+	Made some functions const.
+	Added sword/install/complete for install.
+	Added module 'rwp' (Robertson's Word Pictures)
+	Added module 'kjv' (King James 1611 with some RTF)
+	Added module 'n26u4' (Nestle Aland 26th ed. / UBS 4th. ed. Greek NT)
+	Added module 'orthjbc' (Orthodox Jewish Brit Chadasha)
+	Added module 'sve' (Swedish Bible 1917 New Testament)
+	Added module 'vnt' (Valera 1858 Spanish New Testament Text)
+	Added module 'web' (The World English Bible)
+	Added swmgr class for module management.
+	Added swconfig class for .conf file manipulation.
+
+05-Oct-1997
+	Added regular expression functionality to SWModule.Search() Used GNU
+		regex.h and regex.c with slight modifications to #define's
+13-Jul-1996
+	Added .Search() method to SWModule
+	Added SWListKey key type to facilitate lists of verses (used by .Search)
+	Added .Headings() boolean method to VerseKey to allow incrementor to
+		work including or excluding headers (e.g.
+		chapter/book/testm/mod)
+	Started z series of modules for compression access using the compression
+		algorithms in the STEP specs.  (These are either not done or
+		extremely unstable, be warned ;)
+	Added .Index() method to VerseKey
+	Changed VerseKey incrementors to use Index(Index() [+-] val) instead of
+		counting on Normalize();
+	Added checks and output appropriate in VerseKey.freshtext() for
+		headings. This also fixed some bugs when trying to display
+		VerseKey when indexed to a heading.
+	Added frontend/widoze/Delphi20/swtxtdsp: the beginings of a Delphi RTF
+		control.
+	Changed Makefiles slightly for more logical compiles.
+	Added search test program (currently at ./)
+	Added keytest test program (currently ./tests)
+	Various Delphi component changes.
+
+	once again.. probably many other things I forgot to list, but I'm
+		getting better! ;)  Sorry for the time lapse.
+
+8-Apr-1996
+	Fixed bug in VerseKey for old testament references!
+	Fixed VerseKey from crashing when set with text that it cannot parse.
+	Removed the need for Keys data files.  Added information instead to
+		canon.h
+	Added procedural API (frontend/windoze/bcowl25/swordapi) and 16 & 32
+		bit DLLs for windoze (sword16.dll; sword32.dll).
+	Added Delphi components (frontend/windoze/delphi20/swordvc) and
+		examples (examples/windoze/delphi/multimo[1-3])
+
+14-Mar-1996
+	Renamed RawDrv to RawVerse
+	Moved RawVerse common index files and Index() to VerseKey
+	Added StrKey, a VerseKey counterpart that accepts a string for its
+		key information (for words, cities, people, etc.)
+	Added RawStr, a RawVerse counterpart that operates on a StrKey
+	Added SWLD- a lexicon/dictionary base class
+	Added raw lexicon/dictionary support with class RawLD and utilities
+		(modules/lexdict/rawld/rawld.cpp)
+	Added module 'eastons' (Easton's Bible Dictionary)
+	Added module 'vines' (Vine's Bible Dictionary)
+	Added executable demo 'lookup' that used RawLD and the 'eastons'and
+		'vines' modules to lookup argv[1] (module decided by argv[2])
+	Moved sword/frontend/windows/bcowl25 to
+		examples/windoze/bcowl25/multimod and added lexicon/dictionary
+		support to demo. (Highligh a word and right-click for menu)
+	Fixed VerseKey post-increment bug (operator ++(int))
+	... once again: probably more that I forgot ...
+
+15-Feb-1996
+	Many small changes.
+	Moved raw file support to RawDrv class (modules/common/rawdrv.cpp)
+	Added Module/Testament/Book/Chapter intro entries in RawDrv index
+		files.  This means that YOU WILL NEED TO DOWNLOAD NEW VERSIONS
+		OF THE RAW MODULES (or at least run the new 'makeidx' programs
+		against your old texts to re-index them (new versions save
+		some space so ideally the new copies are recommended).
+	Added size field into .vss RawDrv index files
+	Added logical comparison operators to VerseKey
+	Added Error() method to SWKey and return value KEYERR_OUTOFBOUNDS
+		This is set when VerseKey tries to increment or decrement
+		past valid canonical bounds (when Normalize() is attempted).
+	Added raw commentary support with class RawCom and utilities
+		(modules/comments/rawcom/rawcom.cpp)
+	Added module 'mhc' (Matthew Henry's Commentary on the Entire Bible)
+	Added AutoNormalize() method for toggling the automatic normalization
+		feature and moved normalize() to Normalize() (public).
+	Modified existing 'makeidx' utilities to support new format.
+	Removed ^M (0x0d) from RawDrv text files (sorry DOS users if this is
+		an inconvenience but it saves bandwidth for download time.
+		If you really feel the need to have them in your files, you
+		can always resave with most nonprogramming editors and it will
+		replace them, but be sure to run makeidx on 'ot' and 'nt' again
+		or your index files will be off.
+	Almost useful .exe in frontend/windoze/bcowl25/ (at least it shows an
+		example of coding direction for use of the API)
+	... probably more that I forgot ...
+
+22-Jan-1996
+	Added chapmax and versemax information (canon.h)
+	Made sword.cpp test program accept parameters:
+		usage: sword ["Book CH:VS"] [number of verses to display]
+	Enabled normalize function (try sword "Matthew 1:-7" 12)

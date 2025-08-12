@@ -1,0 +1,31 @@
+.\" ========================================================================
+.\"
+.IX Title "XML2GBS.1 1"
+.TH XML2GBS.1 1 "2018-11-05"
+.SH "NAME"
+xml2gbs \- OSIS/TEI/ThML General Book module creation tool
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+\&\fBxml2gbs\fR [\s-1OPTIONS\s0] \s-1SOURCE\s0 [\s-1MODULENAME\s0]
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+This is a tool to create \s-1SWORD\s0 general book modules from OSIS/TEI/ThML sourse. A
+module name can be optionally specified.
+.SH "OPTIONS"
+.IX Header "OPTIONS"
+.IP "\fB\-l\fR" 4
+.IX Item "-l"
+Use long div names in the ThML files.
+.IP "\fB\-i\fR" 4
+.IX Item "-i"
+exports to \s-1IMP\s0 formal instead of creating a module.
+.IP "\fB\-fO|\-fE\-fT\fR" 4
+.IX Item "-fO|-fE|-fT"
+Set the importer to \s-1OSIS\s0, \s-1TEI\s0 or \s-1ThML\s0 format respectively. By default it attempts to
+autodetect.
+.SH "Authors"
+.IX Header "Authors"
+This manual page was written by Dmitrijs Ledkovs <dmitrij.ledkov@gmail.com>
+and Refdoc <refdoc@crosswire.org>
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"

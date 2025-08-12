@@ -1,0 +1,17 @@
+USEUNIT("..\diatheke\diatheke.cpp");
+USEUNIT("..\diatheke\thmlcgi.cpp");
+USEUNIT("..\diatheke\corediatheke.cpp");
+USEUNIT("..\diatheke\diafiltmgr.cpp");
+USEUNIT("..\diatheke\diathekemgr.cpp");
+USEUNIT("..\diatheke\gbfcgi.cpp");
+USELIB("..\..\lib\libsword.lib");
+USELIB("..\..\..\icu-sword\as_is\borland\icuin.lib");
+USELIB("..\..\..\icu-sword\as_is\borland\icuuc.lib");
+USELIB("..\..\..\icu-sword\as_is\borland\icudatab.lib");
+USEUNIT("..\diatheke\osiscgi.cpp");
+USELIB("..\..\..\biblecs\clucene\clucene.lib");
+//---------------------------------------------------------------------------
+This file is used by the project manager only and should be treated like the project file
+
+
+main

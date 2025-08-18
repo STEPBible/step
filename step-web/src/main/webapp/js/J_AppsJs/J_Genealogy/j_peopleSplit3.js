@@ -44,10 +44,13 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
     constructor ()
     {
 	super();
+	const me = this;
 	this._previousScriptureUrl = '';
 	this._previousAllStrongs = '';
 	this._firstTime = false;
-	JFrameworkUserSettings.init();
+	this._setUpToHandleUserSettingsInScriptureWindow(); // May not be required.
+	function fn () { me._updateUserSettings(); } // May not be required, in which case remove 'fn' from the next line too.
+	JFrameworkUserSettings.init(fn);
     }
 
     
@@ -71,9 +74,11 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
 	    return;
 	}
 
-	if ('forceTabVisible' in data && !JFrameworkUtils.isLargeScreen())
+	if ('forceTabVisible' in data && !JFrameworkUtils.isLargeScreen()) // Forces a given logical tab to be visible on a narrow screen where the logical tabs are all displayed on one single physical tab.
+	{
 	    JFrameworkMultiframeLayoutController.openDialogTab(data.forceTabVisible);
-	    
+	    return;
+	}
     }
 
 
@@ -248,6 +253,77 @@ class _ClassJPeopleSplit3Coordinator extends ClassJFrameworkMultiframeCommunicat
     {
 	if (window.JFrameworkMultiframeLayoutController)
 	    window.JFrameworkMultiframeLayoutController.handleExternalResizeRequest(data.resizeIframe, callingFrameId);
+    }
+
+
+
+
+
+    /**************************************************************************/
+    /**************************************************************************/
+    /**                                                                      **/
+    /**                  Interaction with scripture window                   **/
+    /**                                                                      **/
+    /**************************************************************************/
+    /**************************************************************************/
+
+    /**************************************************************************/
+    /* I'm not sure whether we're going to need this eventually or not ...
+
+       If the user uses the Font menu to change the display settings (eg to
+       choose dark mode), by default the genealogy scripture window doesn't
+       pick up those new settings.
+
+       I have no idea why this should be the case, because in the Gospel
+       Harmony window (as an example), the settings are _respected_ (although
+       admittedly so far as I can see only to the extent that they are taken
+       into account when first entering that portion of the system; so long as
+       it remains visible, any further changes are ignored).
+
+       Getting around this is a little fiddly.
+
+       _updateUserSettings below applies the user settings to the scripture
+       window.  It is called whenever those settings change.
+
+       However, of itself this is not quite enough, because without further
+       steps, it may run before the scripture window has actually been
+       rendered, in which case it has no effect; and we also need to ensure it
+       is re-run every time the content of the scripture window changes
+       (I _think_).
+
+       This is handled by _setUpToHandleUserSettingsInScriptureWindow.
+
+       It may be that at some point we can find a way of running the scripture
+       window such that it behaves 'properly', in which case the two methods
+       below can go, and references to them in init can also go.  Until then,
+       we're stuck with the code as it is. */
+    
+    /**************************************************************************/
+    _setUpToHandleUserSettingsInScriptureWindow ()
+    {
+	const me = this;
+	const iframe = document.getElementById('scripture');
+
+	iframe.addEventListener('load', () => {
+	    // apply variables once iframe finishes loading
+	    me._updateUserSettings();
+	});
+
+	// If the iframe is already loaded (cached content), force run now:
+	if (iframe.contentDocument?.readyState === 'complete') {
+	    me._updateUserSettings();
+	}
+    }
+
+    
+    /**************************************************************************/
+    _updateUserSettings ()
+    {
+	const iframe = document.getElementById('scripture');
+
+	const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+	if (!iframeDoc) return;
+	JFrameworkUserSettings.applySettings(iframeDoc.documentElement, JFrameworkUserSettings.getSettings());
     }
 }
 

@@ -174,8 +174,8 @@ step.copyText = {
 		}
 		var textToCopy = ""
 		for (var m = 0; m < copyOfPassage.length; m++) {
-			var posSearch = $(copyOfPassage[m]).html().search(/<br\s*[\/]?>/);
 			textToCopy += $(copyOfPassage[m]).text().replace(/    /g, " ")
+			.replace(/Read full chapter/, "")
 			.replace(/   /g, " ").replace(/  /g, " ").replace(/\t /g, "\t")
 			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n").replace(/\n\n\t/g, "\n\t").replace(/^\n/g, "")
 			.replace(/(\n) (\d)/g, "$1$2").replace(/\n $/, "\n").replace(/\n\n$/, "\n");

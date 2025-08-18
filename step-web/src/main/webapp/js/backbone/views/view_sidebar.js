@@ -343,6 +343,7 @@ var SidebarView = Backbone.View.extend({
         this._initExpandCollapse("GeneralRelatedWords");
         this._initExpandCollapse("GrammarInfo");
         this._isItALocation(data.vocabInfos[0], ref);
+        this._isItAPerson(data.vocabInfos[0]);
         var lexiconBackButtonElement = $("#lexicon-back-button");
         if (lexiconBackButtonElement.length != 1)
             return;
@@ -389,7 +390,7 @@ var SidebarView = Backbone.View.extend({
                 .append(" ")
                 .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
-				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
+				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span><span class="possiblePerson' + mainWord.strongNumber + '"></span>')
         );
     },
 
@@ -1309,5 +1310,32 @@ var SidebarView = Backbone.View.extend({
 
             });
         }
-    }
+    },
+
+	_lookUpPersonInfo: function(mainWord) {
+		var possiblePersonElement = $(".possiblePerson" + mainWord.strongNumber);
+		if (possiblePersonElement.length == 0) {
+			console.log ("cannot find possible Person ID in html");
+			possiblePersonElement = $(".possiblePerson" + mainWord.strongNumber);
+		}
+		possiblePersonElement.empty().html("<a href='https://test.stepbible.org/html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?strong=" + mainWord.strongNumber + "' target='_new'><button type='button' class='stepButton' ><b>People</b></button></a>");
+	},
+
+	_isItAPerson: function(mainWord) {
+		var strongNum = mainWord.strongNumber.trim();
+		var self = this;
+		if (Array.isArray(step.peopleList)) {
+			if (step.peopleList.indexOf(strongNum) > -1) {
+				self._lookUpPersonInfo(mainWord);
+			}
+			return;
+		}
+		// Load JSON asynchronously so that the initial page render is not delayed
+		$.getJSON('/html/json/J_AppsJson/J_Genealogy/j_people.json', function(data) {
+			step.peopleList = data;
+			if (data.indexOf(strongNum) > -1) {
+				self._lookUpPersonInfo(mainWord);
+			}
+		});
+	}
 });

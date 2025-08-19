@@ -1325,6 +1325,7 @@ step.util = {
 						'<i style="font-size:10px" class="find glyphicon glyphicon-search"></i>' +
 						'&nbsp;' + searchWords +
 					'</button>' );
+				searchWords = searchWords.trim();
 				if (searchWords !== "")
 					container.append(
 						'<button type="button" ' +
@@ -1332,7 +1333,7 @@ step.util = {
 							'title="Search range" class="select-filter stepButtonTriangle">' +
 							'<i style="font-size:10px" class="find glyphicon glyphicon-filter"></i>' +
 							'&nbsp;' + searchRange +
-						'</button>' );
+						'</button>');
 			}
 			else if (outputMode === "span") {
 				if (allSelectedBibleVersions.length > 0)

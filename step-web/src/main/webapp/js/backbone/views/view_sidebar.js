@@ -1318,7 +1318,9 @@ var SidebarView = Backbone.View.extend({
 			console.log ("cannot find possible Person ID in html");
 			possiblePersonElement = $(".possiblePerson" + mainWord.strongNumber);
 		}
-		possiblePersonElement.empty().html("<a href='https://test.stepbible.org/html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?strong=" + mainWord.strongNumber + "' target='_new'><button type='button' class='stepButton' ><b>People</b></button></a>");
+		// Use the current host as the root rather than the hard-coded test.stepbible.org instance
+		var root = (window.location && window.location.origin) ? window.location.origin : (window.location.protocol + "//" + window.location.host);
+		possiblePersonElement.empty().html("<a href='" + root + "/html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?strong=" + mainWord.strongNumber + "' target='_new'><button type='button' class='stepButton' ><b>People</b></button></a>");
 	},
 
 	_isItAPerson: function(mainWord) {

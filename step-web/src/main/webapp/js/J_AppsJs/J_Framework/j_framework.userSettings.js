@@ -45,33 +45,45 @@ class _ClassJFrameworkUserSettings
     }
 
     
+
+    
+    /**************************************************************************/
+    applySettings (docElt, settings)
+    {
+        for (const [key, value] of Object.entries(settings))
+	{
+	    if (key.startsWith('clr'))
+		docElt.style.setProperty(`--${key}`, value);
+        }
+
+	if ('defaultfont' in settings) // Font size.
+	    docElt.style.setProperty('--defaultFontSize', settings['defaultfont'] + 'px');
+    }
+
+
+    /**************************************************************************/
+    /* Returns the content of the local storage element which gives the user-
+       defined formatting overrides. */
+    
+    getSettings ()
+    {
+	return JSON.parse(localStorage.getItem('settings-' + localStorage.getItem('settings')));
+    }
+
+    
     /**************************************************************************/
     _reload (fn, calledDuringInitialisation)
     {
 	try
 	{
-	    const settings = JSON.parse(localStorage.getItem('settings-' + localStorage.getItem('settings')));
-	    this._applySettings(settings);
+	    const settings = this.getSettings();
+	    this.applySettings(document.documentElement, settings);
 	    if (null != fn)
 		fn(calledDuringInitialisation);
 	}
 	catch (e)
 	{
 	}
-    }
-
-    
-    /**************************************************************************/
-    _applySettings (settings)
-    {
-        for (const [key, value] of Object.entries(settings))
-	{
-	    if (key.startsWith('clr'))
-		document.documentElement.style.setProperty(`--${key}`, value);
-        }
-
-	if ('defaultfont' in settings) // Font size.
-	    document.documentElement.style.setProperty('--defaultFontSize', settings['defaultfont'] + 'px');
     }
 }
 

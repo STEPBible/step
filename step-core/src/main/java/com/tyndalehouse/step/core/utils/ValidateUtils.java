@@ -119,7 +119,13 @@ public final class ValidateUtils {
             }
             return true;
         }
-        else if (key.equals("reference") || key.equals("topicref") || key.equals("relatedrefs")) {
+        if (key.equals("reference")) {
+            if (value.length() < 2001)
+                return true;
+            else
+                return false;
+        }
+        else if (key.equals("topicref") || key.equals("relatedrefs")) {
             if (value.length() > 2000) {
                 System.out.println("XSS kill unexpected reference length: " + value);
                 return false;
@@ -130,8 +136,7 @@ public final class ValidateUtils {
                         (c >= lowerBoundUC && c <= upperBoundUC) ||
                         (c >= lowerBoundNum && c <= upperBoundNum) ||
                         (c == '.') || (c == ':') || (c == '-')  || (c == ' ')  || (c == ',')  || (c == ';')  || (c == '+'))) {
-                    if (!key.equals("reference")) // stop logging because too many
-                        System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
+                    System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
                     return false;
                 }
             }

@@ -48,8 +48,18 @@ class _ClassJFrameworkUserSettings
 
     
     /**************************************************************************/
+    /* I'm not too happy about the !settings below.  I _think_ by the time you
+       get here, you should be guaranteed to have settings available, but I've
+       occasionally found this not to be the case.  In fact I think this has
+       always been under artificial circumstances -- where I've been
+       experimenting and have flushed the cache -- but better safe than sorry,
+       since the absence of the settings causes things to crash. */
+    
     applySettings (docElt, settings)
     {
+	if (!settings) // See note above.
+	    return;
+	
         for (const [key, value] of Object.entries(settings))
 	{
 	    if (key.startsWith('clr'))

@@ -55,9 +55,33 @@ export class ClassGenealogySharedCode
     /* A function which checks what the user has typed into the text box
        against the various rows.  The match is based on the start of the input,
        and allows for the possibility that the user may be using an alternative
-       name. */
+       name.
+
+       Originally, the functionality here was that of rowMatcherFnA, which
+       looks at the left-hand (name) column of the table only, and matches
+       rows where one of the names starts with the user input, hyphens
+       ignored and case-insensitive.
+
+       I have since been asked to include _rowMatcherFnB as well.  This is
+       a blunter instrument -- it looks in the right-hand (description)
+       column which is much longer, for case-insensitive matches anywhere
+       at all in the data, again ignoring hyphens.
+
+       I'm not happy with this because this is a much bigger job -- it
+       entails doing regex matches on probably something approaching
+       0.6 Mb of text, with the processing running on the client which may
+       be a relatively low-end processor such as a mobile phone, and is
+       going to give many more false positives.  Plus where the original
+       would often give you just one row which actually named the person,
+       the new version is likely to give you lots of rows for entirely
+       different people. */
     
     rowMatcherFn (row, userInput)
+    {
+	return this.rowMatcherFnA(row, userInput) || this._rowMatcherFnB(row, userInput);
+    }
+    
+    rowMatcherFnA (row, userInput)
     {
 	const re = new RegExp('^' + userInput.replace('-', ''), 'i');
 	const entries = row.find('.tb_col_1').html().split('<br>');
@@ -70,6 +94,14 @@ export class ClassGenealogySharedCode
 	}
 
 	return false;
+    }
+
+    _rowMatcherFnB (row, userInput)
+    {
+	const re = new RegExp(userInput.replace('-', ''), 'i');
+	var entry = row.find('.tb_col_2').html();
+	entry = entry.replace('-', '');
+	return re.test(entry);
     }
 }
 

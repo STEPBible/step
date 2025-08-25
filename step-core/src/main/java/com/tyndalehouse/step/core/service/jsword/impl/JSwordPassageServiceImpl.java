@@ -597,7 +597,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final Versification v11n = this.versificationService.getVersificationForVersion(currentBook);
 
         try {
-            Key key = currentBook.getKey(reference);
+            Key key = currentBook.getKey(reference.replace("%20", " "));
             key = normalize(key, v11n);
 
             return new BookData(currentBook, key);

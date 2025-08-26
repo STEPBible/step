@@ -1590,8 +1590,9 @@ class ClassDataHandler
 
 	    personRecord.display = false;
 	    
-	    if ('' != personRecord.summaryDescription) personRecord.summaryDescription += '.';
-	    personRecord.longDescription = personRecord.longDescription.replaceAll('¶', '<p>');
+	    if ('' != personRecord.summaryDescription)
+		personRecord.summaryDescription = personRecord.summaryDescription.replaceAll('<br>', ' ');
+	    
 	    personRecord.genderOrGroupIndicator = genderOrGroupIndicator(personRecord);
 	    personRecord.allDStrongs.forEach((entry) => { this._StrongsMap.set(entry, ix) });
 	
@@ -1747,7 +1748,7 @@ class ClassVerticalLayoutHandler
 	            .classed('womanSpouse', isMan)
 		    .text('\u2764 ' + nameForDisplayAsSpouse(personRecordFromName(partner.disambiguatedName)))
 
-		if (--showNSpouses <= 0)
+		if (--showNSpouses < 0)
 		{
 		    textNode.append('tspan')
 			.attr('x', owningTextNodeX)
@@ -3135,7 +3136,6 @@ class _ClassPresentationHandler
 	
 	/************************************************************************/
 	const summaryDescriptionX = '' == summaryDescription ? '' : '<p>' + summaryDescription + '</p>';
-
 	const longDescriptionX    = '' == longDescription    ? '' : '<p>' + longDescription    + '</p>';
 
 

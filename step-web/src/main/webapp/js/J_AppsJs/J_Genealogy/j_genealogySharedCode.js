@@ -55,9 +55,42 @@ export class ClassGenealogySharedCode
     /* A function which checks what the user has typed into the text box
        against the various rows.  The match is based on the start of the input,
        and allows for the possibility that the user may be using an alternative
-       name. */
+       name.
+
+       There are two potential versions of this function.  The version
+       actually properly implemented below -- which is the original approach
+       -- looks only at the left-hand (name) column of the table.  Each
+       cell in that column may contain either a single name or a number of
+       alternatives.
+
+       The search is case-insensitive, and looks only for matches starting
+       at the beginning of each string.  (I deliberately chose to match
+       only at the _start_ of each string because quite a lot of names also
+       appear within other names.)
+
+
+       The alternative approach -- commented out below -- added to these
+       a second test based upon the second column of the table (the
+       description column).  This test is again case-insensitive, but in
+       this case is applied anywhere in the string.
+
+       It was at one time thought that this would give additional flexibility,
+       for instance looking for all entries referring to 'king', to cater for
+       the possibility that the user might remember they were looking for a
+       king, but not which one.  The trouble was that this gave a huge number
+       of false positives -- very many entries contain that word, because
+       very many people are recorded as having performed some particular
+       activity for a king.
+
+       In view of this, the code is currently commented out, but I've been
+       asked to retain it, just in case. */
     
     rowMatcherFn (row, userInput)
+    {
+	return this.rowMatcherFnA(row, userInput);    // $$$  || this._rowMatcherFnB(row, userInput);
+    }
+    
+    rowMatcherFnA (row, userInput)
     {
 	const re = new RegExp('^' + userInput.replace('-', ''), 'i');
 	const entries = row.find('.tb_col_1').html().split('<br>');
@@ -70,6 +103,14 @@ export class ClassGenealogySharedCode
 	}
 
 	return false;
+    }
+
+    _rowMatcherFnB (row, userInput)
+    {
+	const re = new RegExp(userInput.replace('-', ''), 'i');
+	var entry = row.find('.tb_col_2').html();
+	entry = entry.replace('-', '');
+	return re.test(entry);
     }
 }
 

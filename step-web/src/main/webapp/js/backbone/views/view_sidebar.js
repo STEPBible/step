@@ -1084,6 +1084,20 @@ var SidebarView = Backbone.View.extend({
         this.renderBriefMorphItem(panel, info, "gender");
         this.renderBriefMorphItem(panel, info, "state");
         this.renderBriefMorphItem(panel, info, "suffix");
+        // remove the extra space that was added after the final morph item
+        // find the last text node and trim any trailing whitespace so we do not
+        // end up with a space immediately before the closing parenthesis
+        var contents = panel.contents();
+        if (contents.length) {
+            var lastNode = contents.get(contents.length - 1);
+            if (lastNode.nodeType === 3) { // text node
+                lastNode.nodeValue = lastNode.nodeValue.replace(/\s+$/, "");
+                if (lastNode.nodeValue.length === 0) {
+                    // if it was only whitespace remove the node completely
+                    $(lastNode).remove();
+                }
+            }
+        }
         panel.append(")");
         if (morphCount > 1) {
             if ((typeof ref === "string") && (ref !== "") && (typeof strongNum === "string") &&

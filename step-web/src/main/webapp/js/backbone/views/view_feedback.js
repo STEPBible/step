@@ -71,7 +71,7 @@ var FeedbackView = Backbone.View.extend({
         if ((step.userLanguageCode.substring(0,2) !== "en") &&
             ($('.sendFeedback').text() === "Submit")) {
                 $('.sendFeedback').text(__s.help_feedback);
-            }
+        }
 
         this.feedbackForm.on("show.bs.modal", function(){
             //blank out all fields 

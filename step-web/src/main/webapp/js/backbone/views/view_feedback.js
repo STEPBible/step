@@ -41,7 +41,7 @@ var FeedbackView = Backbone.View.extend({
         '</div>' + //end body
         '<div class="modal-footer">' +
         '<button type="button" class="btn stepButton" data-dismiss="modal"><%= __s.close %></button>' +
-        '<button type="button" class="btn sendFeedback stepButton"><%= __s.help_feedback %></button>' +
+        '<button type="button" class="btn sendFeedback stepPressedButton"><%= __s.help_submit %></button>' +
         '</div>' + //end footer
         '</div>' + //end content
         '</div>' + //end dialog
@@ -68,7 +68,11 @@ var FeedbackView = Backbone.View.extend({
         var self = this;
         this.feedbackForm = $(_.template(this.template)({ email: step.settings.get("userFeedbackEmail") || "" }));
         this.$el.append(this.feedbackForm);
-    
+        if ((step.userLanguageCode.substring(0,2) !== "en") &&
+            ($('.sendFeedback').text() === "Submit")) {
+                $('.sendFeedback').text(__s.help_feedback);
+        }
+
         this.feedbackForm.on("show.bs.modal", function(){
             //blank out all fields 
             self.feedbackForm.find("#feedbackType").val("Bug");

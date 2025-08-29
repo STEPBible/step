@@ -38,6 +38,12 @@ step.lexiconFeedback = {
                 });
             });
         });
+        if (step.userLanguageCode.substring(0,2) !== "en") {
+            if ($('.sendFeedback2').text() === "Submit")
+                $('.sendFeedback2').text(__s.help_feedback);
+            if ($('.cancelFeedback2').text() === "Cancel")
+                $('.cancelFeedback2').text(__s.close);
+        }
 	},
     validate: function() {
         var success = true;

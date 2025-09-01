@@ -1,0 +1,1089 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		0A22C5171FCF26FD00C02113 /* SWORDUniversal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 0A22C5181FCF26FD00C02113 /* Build configuration list for PBXAggregateTarget "SWORDUniversal" */;
+			buildPhases = (
+				0A22C67C1FCF4D4200C02113 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = SWORDUniversal;
+			productName = SWORDUniversal;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		0A22C5111FCF26D700C02113 /* SWORD.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 0A22C50E1FCF26D700C02113 /* SWORD.h */; };
+		0A22C5281FCF295E00C02113 /* url.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C51E1FCF295D00C02113 /* url.cpp */; };
+		0A22C5291FCF295E00C02113 /* swversion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C51F1FCF295D00C02113 /* swversion.cpp */; };
+		0A22C52B1FCF295E00C02113 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5211FCF295D00C02113 /* ftplib.c */; };
+		0A22C52C1FCF295E00C02113 /* swobject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5221FCF295D00C02113 /* swobject.cpp */; };
+		0A22C52D1FCF295E00C02113 /* utilxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5231FCF295D00C02113 /* utilxml.cpp */; };
+		0A22C52E1FCF295E00C02113 /* swbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5241FCF295D00C02113 /* swbuf.cpp */; };
+		0A22C52F1FCF295E00C02113 /* ftpparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5251FCF295D00C02113 /* ftpparse.c */; };
+		0A22C5301FCF295E00C02113 /* roman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5261FCF295E00C02113 /* roman.cpp */; };
+		0A22C5311FCF295E00C02113 /* utilstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5271FCF295E00C02113 /* utilstr.cpp */; };
+		0A22C54D1FCF29A000C02113 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5321FCF299B00C02113 /* inffast.c */; };
+		0A22C54E1FCF29A000C02113 /* infback.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5371FCF299B00C02113 /* infback.c */; };
+		0A22C54F1FCF29A000C02113 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5381FCF299C00C02113 /* uncompr.c */; };
+		0A22C5501FCF29A000C02113 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5391FCF299C00C02113 /* inflate.c */; };
+		0A22C5511FCF29A000C02113 /* untgz.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C53A1FCF299C00C02113 /* untgz.c */; };
+		0A22C5521FCF29A000C02113 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C53B1FCF299C00C02113 /* inftrees.c */; };
+		0A22C5531FCF29A000C02113 /* gzlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C53C1FCF299C00C02113 /* gzlib.c */; };
+		0A22C5541FCF29A000C02113 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C53E1FCF299D00C02113 /* zutil.c */; };
+		0A22C5551FCF29A000C02113 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5421FCF299D00C02113 /* crc32.c */; };
+		0A22C5561FCF29A000C02113 /* gzread.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5431FCF299E00C02113 /* gzread.c */; };
+		0A22C5571FCF29A000C02113 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5471FCF299F00C02113 /* adler32.c */; };
+		0A22C5581FCF29A000C02113 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5481FCF299F00C02113 /* compress.c */; };
+		0A22C5591FCF29A000C02113 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5491FCF299F00C02113 /* deflate.c */; };
+		0A22C55A1FCF29A000C02113 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C54A1FCF299F00C02113 /* trees.c */; };
+		0A22C55B1FCF29A000C02113 /* gzwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C54B1FCF299F00C02113 /* gzwrite.c */; };
+		0A22C55C1FCF29A000C02113 /* gzclose.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C54C1FCF29A000C02113 /* gzclose.c */; };
+		0A22C55E1FCF29E600C02113 /* swmodule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C55D1FCF29E600C02113 /* swmodule.cpp */; };
+		0A22C5731FCF2A0E00C02113 /* encfiltmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C55F1FCF2A0A00C02113 /* encfiltmgr.cpp */; };
+		0A22C5741FCF2A0E00C02113 /* remotetrans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5601FCF2A0A00C02113 /* remotetrans.cpp */; };
+		0A22C5751FCF2A0E00C02113 /* rtranspgdrive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5611FCF2A0A00C02113 /* rtranspgdrive.cpp */; };
+		0A22C5771FCF2A0E00C02113 /* swcacher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5631FCF2A0B00C02113 /* swcacher.cpp */; };
+		0A22C5781FCF2A0E00C02113 /* swlocale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5641FCF2A0B00C02113 /* swlocale.cpp */; };
+		0A22C5791FCF2A0E00C02113 /* markupfiltmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5651FCF2A0B00C02113 /* markupfiltmgr.cpp */; };
+		0A22C57A1FCF2A0E00C02113 /* localemgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5661FCF2A0B00C02113 /* localemgr.cpp */; };
+		0A22C57B1FCF2A0E00C02113 /* stringmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5671FCF2A0B00C02113 /* stringmgr.cpp */; };
+		0A22C57C1FCF2A0E00C02113 /* curlftpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5681FCF2A0C00C02113 /* curlftpt.cpp */; };
+		0A22C57D1FCF2A0E00C02113 /* swsearchable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5691FCF2A0C00C02113 /* swsearchable.cpp */; };
+		0A22C57E1FCF2A0E00C02113 /* ftplibftpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C56A1FCF2A0C00C02113 /* ftplibftpt.cpp */; };
+		0A22C57F1FCF2A0E00C02113 /* curlhttpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C56B1FCF2A0C00C02113 /* curlhttpt.cpp */; };
+		0A22C5801FCF2A0E00C02113 /* swconfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C56C1FCF2A0D00C02113 /* swconfig.cpp */; };
+		0A22C5811FCF2A0E00C02113 /* filemgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C56D1FCF2A0D00C02113 /* filemgr.cpp */; };
+		0A22C5821FCF2A0E00C02113 /* swfiltermgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C56E1FCF2A0D00C02113 /* swfiltermgr.cpp */; };
+		0A22C5831FCF2A0E00C02113 /* versificationmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5701FCF2A0D00C02113 /* versificationmgr.cpp */; };
+		0A22C5841FCF2A0E00C02113 /* swmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5711FCF2A0E00C02113 /* swmgr.cpp */; };
+		0A22C5851FCF2A0E00C02113 /* installmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5721FCF2A0E00C02113 /* installmgr.cpp */; };
+		0A22C58E1FCF2A8D00C02113 /* versekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5871FCF2A8B00C02113 /* versekey.cpp */; };
+		0A22C58F1FCF2A8D00C02113 /* listkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5881FCF2A8C00C02113 /* listkey.cpp */; };
+		0A22C5901FCF2A8D00C02113 /* swkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5891FCF2A8C00C02113 /* swkey.cpp */; };
+		0A22C5911FCF2A8D00C02113 /* versetreekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C58A1FCF2A8C00C02113 /* versetreekey.cpp */; };
+		0A22C5921FCF2A8D00C02113 /* treekeyidx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C58B1FCF2A8C00C02113 /* treekeyidx.cpp */; };
+		0A22C5931FCF2A8D00C02113 /* treekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C58C1FCF2A8C00C02113 /* treekey.cpp */; };
+		0A22C5941FCF2A8D00C02113 /* strkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C58D1FCF2A8D00C02113 /* strkey.cpp */; };
+		0A22C5971FCF2ABC00C02113 /* swlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5951FCF2ABB00C02113 /* swlog.cpp */; };
+		0A22C5981FCF2ABC00C02113 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5961FCF2ABC00C02113 /* swdisp.cpp */; };
+		0A22C5A61FCF2B0D00C02113 /* zverse4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5991FCF2B0A00C02113 /* zverse4.cpp */; };
+		0A22C5A71FCF2B0D00C02113 /* zstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C59A1FCF2B0B00C02113 /* zstr.cpp */; };
+		0A22C5A81FCF2B0D00C02113 /* zipcomprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C59B1FCF2B0B00C02113 /* zipcomprs.cpp */; };
+		0A22C5A91FCF2B0D00C02113 /* zverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C59C1FCF2B0B00C02113 /* zverse.cpp */; };
+		0A22C5AA1FCF2B0D00C02113 /* lzsscomprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C59D1FCF2B0B00C02113 /* lzsscomprs.cpp */; };
+		0A22C5AB1FCF2B0D00C02113 /* rawverse4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C59E1FCF2B0B00C02113 /* rawverse4.cpp */; };
+		0A22C5AC1FCF2B0D00C02113 /* rawverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C59F1FCF2B0C00C02113 /* rawverse.cpp */; };
+		0A22C5AD1FCF2B0D00C02113 /* swcomprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5A01FCF2B0C00C02113 /* swcomprs.cpp */; };
+		0A22C5AE1FCF2B0D00C02113 /* swcipher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5A11FCF2B0C00C02113 /* swcipher.cpp */; };
+		0A22C5AF1FCF2B0D00C02113 /* rawstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5A21FCF2B0C00C02113 /* rawstr.cpp */; };
+		0A22C5B01FCF2B0D00C02113 /* rawstr4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5A31FCF2B0C00C02113 /* rawstr4.cpp */; };
+		0A22C5B11FCF2B0D00C02113 /* sapphire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5A41FCF2B0C00C02113 /* sapphire.cpp */; };
+		0A22C5B21FCF2B0D00C02113 /* entriesblk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5A51FCF2B0D00C02113 /* entriesblk.cpp */; };
+		0A22C6051FCF2B5600C02113 /* latin1utf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5B31FCF2B4400C02113 /* latin1utf8.cpp */; };
+		0A22C6061FCF2B5600C02113 /* thmlhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5B41FCF2B4400C02113 /* thmlhtml.cpp */; };
+		0A22C6071FCF2B5600C02113 /* gbfthml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5B51FCF2B4500C02113 /* gbfthml.cpp */; };
+		0A22C6081FCF2B5600C02113 /* thmllatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5B61FCF2B4500C02113 /* thmllatex.cpp */; };
+		0A22C6091FCF2B5600C02113 /* thmlrtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5B71FCF2B4500C02113 /* thmlrtf.cpp */; };
+		0A22C60A1FCF2B5600C02113 /* utf8cantillation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5B81FCF2B4500C02113 /* utf8cantillation.cpp */; };
+		0A22C60B1FCF2B5600C02113 /* osisscripref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5B91FCF2B4600C02113 /* osisscripref.cpp */; };
+		0A22C60C1FCF2B5600C02113 /* osismorphsegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5BA1FCF2B4600C02113 /* osismorphsegmentation.cpp */; };
+		0A22C60D1FCF2B5600C02113 /* swoptfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5BB1FCF2B4600C02113 /* swoptfilter.cpp */; };
+		0A22C60E1FCF2B5600C02113 /* teiplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5BC1FCF2B4600C02113 /* teiplain.cpp */; };
+		0A22C60F1FCF2B5600C02113 /* thmlgbf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5BD1FCF2B4700C02113 /* thmlgbf.cpp */; };
+		0A22C6101FCF2B5600C02113 /* gbfrtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5BE1FCF2B4700C02113 /* gbfrtf.cpp */; };
+		0A22C6111FCF2B5600C02113 /* utf8transliterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5BF1FCF2B4700C02113 /* utf8transliterator.cpp */; };
+		0A22C6121FCF2B5600C02113 /* utf16utf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C01FCF2B4700C02113 /* utf16utf8.cpp */; };
+		0A22C6131FCF2B5600C02113 /* thmlmorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C11FCF2B4800C02113 /* thmlmorph.cpp */; };
+		0A22C6141FCF2B5600C02113 /* osisheadings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C21FCF2B4800C02113 /* osisheadings.cpp */; };
+		0A22C6151FCF2B5600C02113 /* gbfwordjs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C31FCF2B4800C02113 /* gbfwordjs.cpp */; };
+		0A22C6161FCF2B5600C02113 /* gbfwebif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C41FCF2B4800C02113 /* gbfwebif.cpp */; };
+		0A22C6171FCF2B5600C02113 /* gbfplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C51FCF2B4900C02113 /* gbfplain.cpp */; };
+		0A22C6181FCF2B5600C02113 /* gbfredletterwords.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C61FCF2B4900C02113 /* gbfredletterwords.cpp */; };
+		0A22C6191FCF2B5600C02113 /* osiswebif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C71FCF2B4900C02113 /* osiswebif.cpp */; };
+		0A22C61A1FCF2B5600C02113 /* teilatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C81FCF2B4900C02113 /* teilatex.cpp */; };
+		0A22C61B1FCF2B5600C02113 /* gbfhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5C91FCF2B4A00C02113 /* gbfhtml.cpp */; };
+		0A22C61C1FCF2B5600C02113 /* thmlhtmlhref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5CA1FCF2B4A00C02113 /* thmlhtmlhref.cpp */; };
+		0A22C61D1FCF2B5600C02113 /* osisglosses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5CB1FCF2B4A00C02113 /* osisglosses.cpp */; };
+		0A22C61E1FCF2B5600C02113 /* thmlxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5CC1FCF2B4A00C02113 /* thmlxhtml.cpp */; };
+		0A22C61F1FCF2B5600C02113 /* utf8utf16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5CD1FCF2B4B00C02113 /* utf8utf16.cpp */; };
+		0A22C6201FCF2B5600C02113 /* gbflatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5CE1FCF2B4B00C02113 /* gbflatex.cpp */; };
+		0A22C6211FCF2B5600C02113 /* scsuutf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5CF1FCF2B4B00C02113 /* scsuutf8.cpp */; };
+		0A22C6221FCF2B5600C02113 /* osisredletterwords.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D01FCF2B4B00C02113 /* osisredletterwords.cpp */; };
+		0A22C6231FCF2B5600C02113 /* osisrtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D11FCF2B4B00C02113 /* osisrtf.cpp */; };
+		0A22C6241FCF2B5600C02113 /* osisvariants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D21FCF2B4C00C02113 /* osisvariants.cpp */; };
+		0A22C6251FCF2B5600C02113 /* thmlscripref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D31FCF2B4C00C02113 /* thmlscripref.cpp */; };
+		0A22C6261FCF2B5600C02113 /* osisstrongs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D41FCF2B4C00C02113 /* osisstrongs.cpp */; };
+		0A22C6271FCF2B5600C02113 /* utf8arabicpoints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D51FCF2B4C00C02113 /* utf8arabicpoints.cpp */; };
+		0A22C6281FCF2B5600C02113 /* osishtmlhref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D61FCF2B4C00C02113 /* osishtmlhref.cpp */; };
+		0A22C6291FCF2B5600C02113 /* utf8html.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D71FCF2B4D00C02113 /* utf8html.cpp */; };
+		0A22C62A1FCF2B5600C02113 /* thmllemma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D81FCF2B4D00C02113 /* thmllemma.cpp */; };
+		0A22C62B1FCF2B5600C02113 /* thmlfootnotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5D91FCF2B4D00C02113 /* thmlfootnotes.cpp */; };
+		0A22C62C1FCF2B5600C02113 /* swbasicfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5DA1FCF2B4D00C02113 /* swbasicfilter.cpp */; };
+		0A22C62D1FCF2B5600C02113 /* utf8nfkd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5DB1FCF2B4D00C02113 /* utf8nfkd.cpp */; };
+		0A22C62E1FCF2B5600C02113 /* gbfmorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5DC1FCF2B4E00C02113 /* gbfmorph.cpp */; };
+		0A22C62F1FCF2B5600C02113 /* utf8bidireorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5DD1FCF2B4E00C02113 /* utf8bidireorder.cpp */; };
+		0A22C6301FCF2B5600C02113 /* greeklexattribs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5DE1FCF2B4E00C02113 /* greeklexattribs.cpp */; };
+		0A22C6311FCF2B5600C02113 /* osisplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5DF1FCF2B4E00C02113 /* osisplain.cpp */; };
+		0A22C6321FCF2B5600C02113 /* osiswordjs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E01FCF2B4E00C02113 /* osiswordjs.cpp */; };
+		0A22C6331FCF2B5600C02113 /* utf8nfc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E11FCF2B4F00C02113 /* utf8nfc.cpp */; };
+		0A22C6341FCF2B5600C02113 /* thmlwordjs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E21FCF2B4F00C02113 /* thmlwordjs.cpp */; };
+		0A22C6351FCF2B5600C02113 /* gbffootnotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E31FCF2B4F00C02113 /* gbffootnotes.cpp */; };
+		0A22C6361FCF2B5600C02113 /* utf8latin1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E41FCF2B4F00C02113 /* utf8latin1.cpp */; };
+		0A22C6371FCF2B5600C02113 /* osislemma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E51FCF2B4F00C02113 /* osislemma.cpp */; };
+		0A22C6381FCF2B5600C02113 /* osisxlit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E61FCF2B5000C02113 /* osisxlit.cpp */; };
+		0A22C6391FCF2B5600C02113 /* osisreferencelinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E71FCF2B5000C02113 /* osisreferencelinks.cpp */; };
+		0A22C63A1FCF2B5600C02113 /* osismorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E81FCF2B5000C02113 /* osismorph.cpp */; };
+		0A22C63B1FCF2B5600C02113 /* papyriplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5E91FCF2B5000C02113 /* papyriplain.cpp */; };
+		0A22C63C1FCF2B5600C02113 /* osisosis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5EA1FCF2B5000C02113 /* osisosis.cpp */; };
+		0A22C63D1FCF2B5600C02113 /* thmlheadings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5EB1FCF2B5100C02113 /* thmlheadings.cpp */; };
+		0A22C63E1FCF2B5600C02113 /* utf8scsu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5EC1FCF2B5100C02113 /* utf8scsu.cpp */; };
+		0A22C63F1FCF2B5600C02113 /* gbfxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5ED1FCF2B5100C02113 /* gbfxhtml.cpp */; };
+		0A22C6401FCF2B5600C02113 /* latin1utf16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5EE1FCF2B5100C02113 /* latin1utf16.cpp */; };
+		0A22C6411FCF2B5600C02113 /* teirtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5EF1FCF2B5100C02113 /* teirtf.cpp */; };
+		0A22C6421FCF2B5600C02113 /* thmlplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F01FCF2B5200C02113 /* thmlplain.cpp */; };
+		0A22C6431FCF2B5600C02113 /* gbfosis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F11FCF2B5200C02113 /* gbfosis.cpp */; };
+		0A22C6441FCF2B5600C02113 /* unicodertf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F21FCF2B5200C02113 /* unicodertf.cpp */; };
+		0A22C6451FCF2B5600C02113 /* thmlstrongs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F31FCF2B5200C02113 /* thmlstrongs.cpp */; };
+		0A22C6461FCF2B5600C02113 /* gbfhtmlhref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F41FCF2B5200C02113 /* gbfhtmlhref.cpp */; };
+		0A22C6471FCF2B5600C02113 /* thmlwebif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F51FCF2B5300C02113 /* thmlwebif.cpp */; };
+		0A22C6481FCF2B5600C02113 /* osisenum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F61FCF2B5300C02113 /* osisenum.cpp */; };
+		0A22C6491FCF2B5600C02113 /* rtfhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F71FCF2B5300C02113 /* rtfhtml.cpp */; };
+		0A22C64A1FCF2B5600C02113 /* osisfootnotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F81FCF2B5300C02113 /* osisfootnotes.cpp */; };
+		0A22C64B1FCF2B5600C02113 /* teixhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5F91FCF2B5300C02113 /* teixhtml.cpp */; };
+		0A22C64C1FCF2B5600C02113 /* thmlosis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5FA1FCF2B5400C02113 /* thmlosis.cpp */; };
+		0A22C64D1FCF2B5600C02113 /* gbfheadings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5FB1FCF2B5400C02113 /* gbfheadings.cpp */; };
+		0A22C64E1FCF2B5600C02113 /* thmlvariants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5FC1FCF2B5400C02113 /* thmlvariants.cpp */; };
+		0A22C64F1FCF2B5600C02113 /* utf8greekaccents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5FD1FCF2B5400C02113 /* utf8greekaccents.cpp */; };
+		0A22C6501FCF2B5600C02113 /* utf8hebrewpoints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5FE1FCF2B5400C02113 /* utf8hebrewpoints.cpp */; };
+		0A22C6511FCF2B5600C02113 /* teihtmlhref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C5FF1FCF2B5500C02113 /* teihtmlhref.cpp */; };
+		0A22C6521FCF2B5600C02113 /* gbfstrongs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6001FCF2B5500C02113 /* gbfstrongs.cpp */; };
+		0A22C6531FCF2B5600C02113 /* utf8arshaping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6011FCF2B5500C02113 /* utf8arshaping.cpp */; };
+		0A22C6541FCF2B5600C02113 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6021FCF2B5500C02113 /* osisxhtml.cpp */; };
+		0A22C6551FCF2B5600C02113 /* cipherfil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6031FCF2B5500C02113 /* cipherfil.cpp */; };
+		0A22C6561FCF2B5600C02113 /* osislatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6041FCF2B5600C02113 /* osislatex.cpp */; };
+		0A22C6581FCF2B7700C02113 /* swcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6571FCF2B7700C02113 /* swcom.cpp */; };
+		0A22C65A1FCF2BAB00C02113 /* rawcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6591FCF2BAA00C02113 /* rawcom.cpp */; };
+		0A22C65D1FCF2C3200C02113 /* hrefcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C65C1FCF2C3200C02113 /* hrefcom.cpp */; };
+		0A22C65F1FCF2C5000C02113 /* rawcom4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C65E1FCF2C5000C02113 /* rawcom4.cpp */; };
+		0A22C6611FCF2C7700C02113 /* rawfiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6601FCF2C7700C02113 /* rawfiles.cpp */; };
+		0A22C6631FCF2CA100C02113 /* zcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6621FCF2CA100C02113 /* zcom.cpp */; };
+		0A22C6651FCF2CE500C02113 /* zcom4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6641FCF2CE400C02113 /* zcom4.cpp */; };
+		0A22C6671FCF2E0F00C02113 /* swgenbook.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6661FCF2E0F00C02113 /* swgenbook.cpp */; };
+		0A22C6691FCF2E1F00C02113 /* rawgenbook.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6681FCF2E1F00C02113 /* rawgenbook.cpp */; };
+		0A22C66E1FCF2E5300C02113 /* rawld4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C66A1FCF2E5200C02113 /* rawld4.cpp */; };
+		0A22C66F1FCF2E5300C02113 /* rawld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C66B1FCF2E5200C02113 /* rawld.cpp */; };
+		0A22C6701FCF2E5300C02113 /* swld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C66C1FCF2E5300C02113 /* swld.cpp */; };
+		0A22C6711FCF2E5300C02113 /* zld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C66D1FCF2E5300C02113 /* zld.cpp */; };
+		0A22C6771FCF2E8500C02113 /* rawtext4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6721FCF2E8400C02113 /* rawtext4.cpp */; };
+		0A22C6781FCF2E8500C02113 /* swtext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6731FCF2E8400C02113 /* swtext.cpp */; };
+		0A22C6791FCF2E8500C02113 /* rawtext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6741FCF2E8400C02113 /* rawtext.cpp */; };
+		0A22C67A1FCF2E8500C02113 /* ztext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6751FCF2E8500C02113 /* ztext.cpp */; };
+		0A22C67B1FCF2E8500C02113 /* ztext4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A22C6761FCF2E8500C02113 /* ztext4.cpp */; };
+		0AC2147D1FCF9D000058DE8C /* flatapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2147C1FCF9CFF0058DE8C /* flatapi.cpp */; };
+		0AD80317203BE1710080C00C /* biblesync.cc in Sources */ = {isa = PBXBuildFile; fileRef = 0AD80316203BE1710080C00C /* biblesync.cc */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0A22C5091FCF26D700C02113 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				0A22C5111FCF26D700C02113 /* SWORD.h in Copy Files */,
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0A22C50B1FCF26D700C02113 /* libSWORD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSWORD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A22C50E1FCF26D700C02113 /* SWORD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWORD.h; sourceTree = "<group>"; };
+		0A22C50F1FCF26D700C02113 /* SWORD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWORD.m; sourceTree = "<group>"; };
+		0A22C51B1FCF272F00C02113 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = ../../../../include; sourceTree = "<group>"; };
+		0A22C51E1FCF295D00C02113 /* url.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = url.cpp; path = ../../../src/utilfuns/url.cpp; sourceTree = "<group>"; };
+		0A22C51F1FCF295D00C02113 /* swversion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swversion.cpp; path = ../../../src/utilfuns/swversion.cpp; sourceTree = "<group>"; };
+		0A22C5211FCF295D00C02113 /* ftplib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ftplib.c; path = ../../../src/utilfuns/ftplib.c; sourceTree = "<group>"; };
+		0A22C5221FCF295D00C02113 /* swobject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swobject.cpp; path = ../../../src/utilfuns/swobject.cpp; sourceTree = "<group>"; };
+		0A22C5231FCF295D00C02113 /* utilxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utilxml.cpp; path = ../../../src/utilfuns/utilxml.cpp; sourceTree = "<group>"; };
+		0A22C5241FCF295D00C02113 /* swbuf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swbuf.cpp; path = ../../../src/utilfuns/swbuf.cpp; sourceTree = "<group>"; };
+		0A22C5251FCF295D00C02113 /* ftpparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ftpparse.c; path = ../../../src/utilfuns/ftpparse.c; sourceTree = "<group>"; };
+		0A22C5261FCF295E00C02113 /* roman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = roman.cpp; path = ../../../src/utilfuns/roman.cpp; sourceTree = "<group>"; };
+		0A22C5271FCF295E00C02113 /* utilstr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utilstr.cpp; path = ../../../src/utilfuns/utilstr.cpp; sourceTree = "<group>"; };
+		0A22C5321FCF299B00C02113 /* inffast.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = inffast.c; path = ../../../src/utilfuns/zlib/inffast.c; sourceTree = "<group>"; };
+		0A22C5331FCF299B00C02113 /* trees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = trees.h; path = ../../../src/utilfuns/zlib/trees.h; sourceTree = "<group>"; };
+		0A22C5341FCF299B00C02113 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crc32.h; path = ../../../src/utilfuns/zlib/crc32.h; sourceTree = "<group>"; };
+		0A22C5351FCF299B00C02113 /* inffixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = inffixed.h; path = ../../../src/utilfuns/zlib/inffixed.h; sourceTree = "<group>"; };
+		0A22C5361FCF299B00C02113 /* inftrees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = inftrees.h; path = ../../../src/utilfuns/zlib/inftrees.h; sourceTree = "<group>"; };
+		0A22C5371FCF299B00C02113 /* infback.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = infback.c; path = ../../../src/utilfuns/zlib/infback.c; sourceTree = "<group>"; };
+		0A22C5381FCF299C00C02113 /* uncompr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uncompr.c; path = ../../../src/utilfuns/zlib/uncompr.c; sourceTree = "<group>"; };
+		0A22C5391FCF299C00C02113 /* inflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = inflate.c; path = ../../../src/utilfuns/zlib/inflate.c; sourceTree = "<group>"; };
+		0A22C53A1FCF299C00C02113 /* untgz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = untgz.c; path = ../../../src/utilfuns/zlib/untgz.c; sourceTree = "<group>"; };
+		0A22C53B1FCF299C00C02113 /* inftrees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = inftrees.c; path = ../../../src/utilfuns/zlib/inftrees.c; sourceTree = "<group>"; };
+		0A22C53C1FCF299C00C02113 /* gzlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gzlib.c; path = ../../../src/utilfuns/zlib/gzlib.c; sourceTree = "<group>"; };
+		0A22C53D1FCF299C00C02113 /* gzguts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gzguts.h; path = ../../../src/utilfuns/zlib/gzguts.h; sourceTree = "<group>"; };
+		0A22C53E1FCF299D00C02113 /* zutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zutil.c; path = ../../../src/utilfuns/zlib/zutil.c; sourceTree = "<group>"; };
+		0A22C53F1FCF299D00C02113 /* deflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = deflate.h; path = ../../../src/utilfuns/zlib/deflate.h; sourceTree = "<group>"; };
+		0A22C5401FCF299D00C02113 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlib.h; path = ../../../src/utilfuns/zlib/zlib.h; sourceTree = "<group>"; };
+		0A22C5411FCF299D00C02113 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zutil.h; path = ../../../src/utilfuns/zlib/zutil.h; sourceTree = "<group>"; };
+		0A22C5421FCF299D00C02113 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = crc32.c; path = ../../../src/utilfuns/zlib/crc32.c; sourceTree = "<group>"; };
+		0A22C5431FCF299E00C02113 /* gzread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gzread.c; path = ../../../src/utilfuns/zlib/gzread.c; sourceTree = "<group>"; };
+		0A22C5441FCF299E00C02113 /* inflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = inflate.h; path = ../../../src/utilfuns/zlib/inflate.h; sourceTree = "<group>"; };
+		0A22C5451FCF299E00C02113 /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zconf.h; path = ../../../src/utilfuns/zlib/zconf.h; sourceTree = "<group>"; };
+		0A22C5461FCF299E00C02113 /* inffast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = inffast.h; path = ../../../src/utilfuns/zlib/inffast.h; sourceTree = "<group>"; };
+		0A22C5471FCF299F00C02113 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = adler32.c; path = ../../../src/utilfuns/zlib/adler32.c; sourceTree = "<group>"; };
+		0A22C5481FCF299F00C02113 /* compress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compress.c; path = ../../../src/utilfuns/zlib/compress.c; sourceTree = "<group>"; };
+		0A22C5491FCF299F00C02113 /* deflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = deflate.c; path = ../../../src/utilfuns/zlib/deflate.c; sourceTree = "<group>"; };
+		0A22C54A1FCF299F00C02113 /* trees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = trees.c; path = ../../../src/utilfuns/zlib/trees.c; sourceTree = "<group>"; };
+		0A22C54B1FCF299F00C02113 /* gzwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gzwrite.c; path = ../../../src/utilfuns/zlib/gzwrite.c; sourceTree = "<group>"; };
+		0A22C54C1FCF29A000C02113 /* gzclose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gzclose.c; path = ../../../src/utilfuns/zlib/gzclose.c; sourceTree = "<group>"; };
+		0A22C55D1FCF29E600C02113 /* swmodule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swmodule.cpp; path = ../../../src/modules/swmodule.cpp; sourceTree = "<group>"; };
+		0A22C55F1FCF2A0A00C02113 /* encfiltmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = encfiltmgr.cpp; path = ../../../src/mgr/encfiltmgr.cpp; sourceTree = "<group>"; };
+		0A22C5601FCF2A0A00C02113 /* remotetrans.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = remotetrans.cpp; path = ../../../src/mgr/remotetrans.cpp; sourceTree = "<group>"; };
+		0A22C5611FCF2A0A00C02113 /* rtranspgdrive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rtranspgdrive.cpp; path = ../../../src/mgr/rtranspgdrive.cpp; sourceTree = "<group>"; };
+		0A22C5631FCF2A0B00C02113 /* swcacher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swcacher.cpp; path = ../../../src/mgr/swcacher.cpp; sourceTree = "<group>"; };
+		0A22C5641FCF2A0B00C02113 /* swlocale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swlocale.cpp; path = ../../../src/mgr/swlocale.cpp; sourceTree = "<group>"; };
+		0A22C5651FCF2A0B00C02113 /* markupfiltmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = markupfiltmgr.cpp; path = ../../../src/mgr/markupfiltmgr.cpp; sourceTree = "<group>"; };
+		0A22C5661FCF2A0B00C02113 /* localemgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = localemgr.cpp; path = ../../../src/mgr/localemgr.cpp; sourceTree = "<group>"; };
+		0A22C5671FCF2A0B00C02113 /* stringmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stringmgr.cpp; path = ../../../src/mgr/stringmgr.cpp; sourceTree = "<group>"; };
+		0A22C5681FCF2A0C00C02113 /* curlftpt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = curlftpt.cpp; path = ../../../src/mgr/curlftpt.cpp; sourceTree = "<group>"; };
+		0A22C5691FCF2A0C00C02113 /* swsearchable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swsearchable.cpp; path = ../../../src/mgr/swsearchable.cpp; sourceTree = "<group>"; };
+		0A22C56A1FCF2A0C00C02113 /* ftplibftpt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftplibftpt.cpp; path = ../../../src/mgr/ftplibftpt.cpp; sourceTree = "<group>"; };
+		0A22C56B1FCF2A0C00C02113 /* curlhttpt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = curlhttpt.cpp; path = ../../../src/mgr/curlhttpt.cpp; sourceTree = "<group>"; };
+		0A22C56C1FCF2A0D00C02113 /* swconfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swconfig.cpp; path = ../../../src/mgr/swconfig.cpp; sourceTree = "<group>"; };
+		0A22C56D1FCF2A0D00C02113 /* filemgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = filemgr.cpp; path = ../../../src/mgr/filemgr.cpp; sourceTree = "<group>"; };
+		0A22C56E1FCF2A0D00C02113 /* swfiltermgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swfiltermgr.cpp; path = ../../../src/mgr/swfiltermgr.cpp; sourceTree = "<group>"; };
+		0A22C5701FCF2A0D00C02113 /* versificationmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = versificationmgr.cpp; path = ../../../src/mgr/versificationmgr.cpp; sourceTree = "<group>"; };
+		0A22C5711FCF2A0E00C02113 /* swmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swmgr.cpp; path = ../../../src/mgr/swmgr.cpp; sourceTree = "<group>"; };
+		0A22C5721FCF2A0E00C02113 /* installmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = installmgr.cpp; path = ../../../src/mgr/installmgr.cpp; sourceTree = "<group>"; };
+		0A22C5871FCF2A8B00C02113 /* versekey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = versekey.cpp; path = ../../../src/keys/versekey.cpp; sourceTree = "<group>"; };
+		0A22C5881FCF2A8C00C02113 /* listkey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = listkey.cpp; path = ../../../src/keys/listkey.cpp; sourceTree = "<group>"; };
+		0A22C5891FCF2A8C00C02113 /* swkey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swkey.cpp; path = ../../../src/keys/swkey.cpp; sourceTree = "<group>"; };
+		0A22C58A1FCF2A8C00C02113 /* versetreekey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = versetreekey.cpp; path = ../../../src/keys/versetreekey.cpp; sourceTree = "<group>"; };
+		0A22C58B1FCF2A8C00C02113 /* treekeyidx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = treekeyidx.cpp; path = ../../../src/keys/treekeyidx.cpp; sourceTree = "<group>"; };
+		0A22C58C1FCF2A8C00C02113 /* treekey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = treekey.cpp; path = ../../../src/keys/treekey.cpp; sourceTree = "<group>"; };
+		0A22C58D1FCF2A8D00C02113 /* strkey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = strkey.cpp; path = ../../../src/keys/strkey.cpp; sourceTree = "<group>"; };
+		0A22C5951FCF2ABB00C02113 /* swlog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swlog.cpp; path = ../../../src/frontend/swlog.cpp; sourceTree = "<group>"; };
+		0A22C5961FCF2ABC00C02113 /* swdisp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swdisp.cpp; path = ../../../src/frontend/swdisp.cpp; sourceTree = "<group>"; };
+		0A22C5991FCF2B0A00C02113 /* zverse4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zverse4.cpp; path = ../../../src/modules/common/zverse4.cpp; sourceTree = "<group>"; };
+		0A22C59A1FCF2B0B00C02113 /* zstr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zstr.cpp; path = ../../../src/modules/common/zstr.cpp; sourceTree = "<group>"; };
+		0A22C59B1FCF2B0B00C02113 /* zipcomprs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zipcomprs.cpp; path = ../../../src/modules/common/zipcomprs.cpp; sourceTree = "<group>"; };
+		0A22C59C1FCF2B0B00C02113 /* zverse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zverse.cpp; path = ../../../src/modules/common/zverse.cpp; sourceTree = "<group>"; };
+		0A22C59D1FCF2B0B00C02113 /* lzsscomprs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lzsscomprs.cpp; path = ../../../src/modules/common/lzsscomprs.cpp; sourceTree = "<group>"; };
+		0A22C59E1FCF2B0B00C02113 /* rawverse4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawverse4.cpp; path = ../../../src/modules/common/rawverse4.cpp; sourceTree = "<group>"; };
+		0A22C59F1FCF2B0C00C02113 /* rawverse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawverse.cpp; path = ../../../src/modules/common/rawverse.cpp; sourceTree = "<group>"; };
+		0A22C5A01FCF2B0C00C02113 /* swcomprs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swcomprs.cpp; path = ../../../src/modules/common/swcomprs.cpp; sourceTree = "<group>"; };
+		0A22C5A11FCF2B0C00C02113 /* swcipher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swcipher.cpp; path = ../../../src/modules/common/swcipher.cpp; sourceTree = "<group>"; };
+		0A22C5A21FCF2B0C00C02113 /* rawstr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawstr.cpp; path = ../../../src/modules/common/rawstr.cpp; sourceTree = "<group>"; };
+		0A22C5A31FCF2B0C00C02113 /* rawstr4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawstr4.cpp; path = ../../../src/modules/common/rawstr4.cpp; sourceTree = "<group>"; };
+		0A22C5A41FCF2B0C00C02113 /* sapphire.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sapphire.cpp; path = ../../../src/modules/common/sapphire.cpp; sourceTree = "<group>"; };
+		0A22C5A51FCF2B0D00C02113 /* entriesblk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = entriesblk.cpp; path = ../../../src/modules/common/entriesblk.cpp; sourceTree = "<group>"; };
+		0A22C5B31FCF2B4400C02113 /* latin1utf8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = latin1utf8.cpp; path = ../../../src/modules/filters/latin1utf8.cpp; sourceTree = "<group>"; };
+		0A22C5B41FCF2B4400C02113 /* thmlhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlhtml.cpp; path = ../../../src/modules/filters/thmlhtml.cpp; sourceTree = "<group>"; };
+		0A22C5B51FCF2B4500C02113 /* gbfthml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfthml.cpp; path = ../../../src/modules/filters/gbfthml.cpp; sourceTree = "<group>"; };
+		0A22C5B61FCF2B4500C02113 /* thmllatex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmllatex.cpp; path = ../../../src/modules/filters/thmllatex.cpp; sourceTree = "<group>"; };
+		0A22C5B71FCF2B4500C02113 /* thmlrtf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlrtf.cpp; path = ../../../src/modules/filters/thmlrtf.cpp; sourceTree = "<group>"; };
+		0A22C5B81FCF2B4500C02113 /* utf8cantillation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8cantillation.cpp; path = ../../../src/modules/filters/utf8cantillation.cpp; sourceTree = "<group>"; };
+		0A22C5B91FCF2B4600C02113 /* osisscripref.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisscripref.cpp; path = ../../../src/modules/filters/osisscripref.cpp; sourceTree = "<group>"; };
+		0A22C5BA1FCF2B4600C02113 /* osismorphsegmentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osismorphsegmentation.cpp; path = ../../../src/modules/filters/osismorphsegmentation.cpp; sourceTree = "<group>"; };
+		0A22C5BB1FCF2B4600C02113 /* swoptfilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swoptfilter.cpp; path = ../../../src/modules/filters/swoptfilter.cpp; sourceTree = "<group>"; };
+		0A22C5BC1FCF2B4600C02113 /* teiplain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = teiplain.cpp; path = ../../../src/modules/filters/teiplain.cpp; sourceTree = "<group>"; };
+		0A22C5BD1FCF2B4700C02113 /* thmlgbf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlgbf.cpp; path = ../../../src/modules/filters/thmlgbf.cpp; sourceTree = "<group>"; };
+		0A22C5BE1FCF2B4700C02113 /* gbfrtf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfrtf.cpp; path = ../../../src/modules/filters/gbfrtf.cpp; sourceTree = "<group>"; };
+		0A22C5BF1FCF2B4700C02113 /* utf8transliterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8transliterator.cpp; path = ../../../src/modules/filters/utf8transliterator.cpp; sourceTree = "<group>"; };
+		0A22C5C01FCF2B4700C02113 /* utf16utf8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf16utf8.cpp; path = ../../../src/modules/filters/utf16utf8.cpp; sourceTree = "<group>"; };
+		0A22C5C11FCF2B4800C02113 /* thmlmorph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlmorph.cpp; path = ../../../src/modules/filters/thmlmorph.cpp; sourceTree = "<group>"; };
+		0A22C5C21FCF2B4800C02113 /* osisheadings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisheadings.cpp; path = ../../../src/modules/filters/osisheadings.cpp; sourceTree = "<group>"; };
+		0A22C5C31FCF2B4800C02113 /* gbfwordjs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfwordjs.cpp; path = ../../../src/modules/filters/gbfwordjs.cpp; sourceTree = "<group>"; };
+		0A22C5C41FCF2B4800C02113 /* gbfwebif.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfwebif.cpp; path = ../../../src/modules/filters/gbfwebif.cpp; sourceTree = "<group>"; };
+		0A22C5C51FCF2B4900C02113 /* gbfplain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfplain.cpp; path = ../../../src/modules/filters/gbfplain.cpp; sourceTree = "<group>"; };
+		0A22C5C61FCF2B4900C02113 /* gbfredletterwords.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfredletterwords.cpp; path = ../../../src/modules/filters/gbfredletterwords.cpp; sourceTree = "<group>"; };
+		0A22C5C71FCF2B4900C02113 /* osiswebif.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osiswebif.cpp; path = ../../../src/modules/filters/osiswebif.cpp; sourceTree = "<group>"; };
+		0A22C5C81FCF2B4900C02113 /* teilatex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = teilatex.cpp; path = ../../../src/modules/filters/teilatex.cpp; sourceTree = "<group>"; };
+		0A22C5C91FCF2B4A00C02113 /* gbfhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfhtml.cpp; path = ../../../src/modules/filters/gbfhtml.cpp; sourceTree = "<group>"; };
+		0A22C5CA1FCF2B4A00C02113 /* thmlhtmlhref.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlhtmlhref.cpp; path = ../../../src/modules/filters/thmlhtmlhref.cpp; sourceTree = "<group>"; };
+		0A22C5CB1FCF2B4A00C02113 /* osisglosses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisglosses.cpp; path = ../../../src/modules/filters/osisglosses.cpp; sourceTree = "<group>"; };
+		0A22C5CC1FCF2B4A00C02113 /* thmlxhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlxhtml.cpp; path = ../../../src/modules/filters/thmlxhtml.cpp; sourceTree = "<group>"; };
+		0A22C5CD1FCF2B4B00C02113 /* utf8utf16.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8utf16.cpp; path = ../../../src/modules/filters/utf8utf16.cpp; sourceTree = "<group>"; };
+		0A22C5CE1FCF2B4B00C02113 /* gbflatex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbflatex.cpp; path = ../../../src/modules/filters/gbflatex.cpp; sourceTree = "<group>"; };
+		0A22C5CF1FCF2B4B00C02113 /* scsuutf8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scsuutf8.cpp; path = ../../../src/modules/filters/scsuutf8.cpp; sourceTree = "<group>"; };
+		0A22C5D01FCF2B4B00C02113 /* osisredletterwords.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisredletterwords.cpp; path = ../../../src/modules/filters/osisredletterwords.cpp; sourceTree = "<group>"; };
+		0A22C5D11FCF2B4B00C02113 /* osisrtf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisrtf.cpp; path = ../../../src/modules/filters/osisrtf.cpp; sourceTree = "<group>"; };
+		0A22C5D21FCF2B4C00C02113 /* osisvariants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisvariants.cpp; path = ../../../src/modules/filters/osisvariants.cpp; sourceTree = "<group>"; };
+		0A22C5D31FCF2B4C00C02113 /* thmlscripref.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlscripref.cpp; path = ../../../src/modules/filters/thmlscripref.cpp; sourceTree = "<group>"; };
+		0A22C5D41FCF2B4C00C02113 /* osisstrongs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisstrongs.cpp; path = ../../../src/modules/filters/osisstrongs.cpp; sourceTree = "<group>"; };
+		0A22C5D51FCF2B4C00C02113 /* utf8arabicpoints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8arabicpoints.cpp; path = ../../../src/modules/filters/utf8arabicpoints.cpp; sourceTree = "<group>"; };
+		0A22C5D61FCF2B4C00C02113 /* osishtmlhref.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osishtmlhref.cpp; path = ../../../src/modules/filters/osishtmlhref.cpp; sourceTree = "<group>"; };
+		0A22C5D71FCF2B4D00C02113 /* utf8html.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8html.cpp; path = ../../../src/modules/filters/utf8html.cpp; sourceTree = "<group>"; };
+		0A22C5D81FCF2B4D00C02113 /* thmllemma.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmllemma.cpp; path = ../../../src/modules/filters/thmllemma.cpp; sourceTree = "<group>"; };
+		0A22C5D91FCF2B4D00C02113 /* thmlfootnotes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlfootnotes.cpp; path = ../../../src/modules/filters/thmlfootnotes.cpp; sourceTree = "<group>"; };
+		0A22C5DA1FCF2B4D00C02113 /* swbasicfilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swbasicfilter.cpp; path = ../../../src/modules/filters/swbasicfilter.cpp; sourceTree = "<group>"; };
+		0A22C5DB1FCF2B4D00C02113 /* utf8nfkd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8nfkd.cpp; path = ../../../src/modules/filters/utf8nfkd.cpp; sourceTree = "<group>"; };
+		0A22C5DC1FCF2B4E00C02113 /* gbfmorph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfmorph.cpp; path = ../../../src/modules/filters/gbfmorph.cpp; sourceTree = "<group>"; };
+		0A22C5DD1FCF2B4E00C02113 /* utf8bidireorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8bidireorder.cpp; path = ../../../src/modules/filters/utf8bidireorder.cpp; sourceTree = "<group>"; };
+		0A22C5DE1FCF2B4E00C02113 /* greeklexattribs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = greeklexattribs.cpp; path = ../../../src/modules/filters/greeklexattribs.cpp; sourceTree = "<group>"; };
+		0A22C5DF1FCF2B4E00C02113 /* osisplain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisplain.cpp; path = ../../../src/modules/filters/osisplain.cpp; sourceTree = "<group>"; };
+		0A22C5E01FCF2B4E00C02113 /* osiswordjs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osiswordjs.cpp; path = ../../../src/modules/filters/osiswordjs.cpp; sourceTree = "<group>"; };
+		0A22C5E11FCF2B4F00C02113 /* utf8nfc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8nfc.cpp; path = ../../../src/modules/filters/utf8nfc.cpp; sourceTree = "<group>"; };
+		0A22C5E21FCF2B4F00C02113 /* thmlwordjs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlwordjs.cpp; path = ../../../src/modules/filters/thmlwordjs.cpp; sourceTree = "<group>"; };
+		0A22C5E31FCF2B4F00C02113 /* gbffootnotes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbffootnotes.cpp; path = ../../../src/modules/filters/gbffootnotes.cpp; sourceTree = "<group>"; };
+		0A22C5E41FCF2B4F00C02113 /* utf8latin1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8latin1.cpp; path = ../../../src/modules/filters/utf8latin1.cpp; sourceTree = "<group>"; };
+		0A22C5E51FCF2B4F00C02113 /* osislemma.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osislemma.cpp; path = ../../../src/modules/filters/osislemma.cpp; sourceTree = "<group>"; };
+		0A22C5E61FCF2B5000C02113 /* osisxlit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisxlit.cpp; path = ../../../src/modules/filters/osisxlit.cpp; sourceTree = "<group>"; };
+		0A22C5E71FCF2B5000C02113 /* osisreferencelinks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisreferencelinks.cpp; path = ../../../src/modules/filters/osisreferencelinks.cpp; sourceTree = "<group>"; };
+		0A22C5E81FCF2B5000C02113 /* osismorph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osismorph.cpp; path = ../../../src/modules/filters/osismorph.cpp; sourceTree = "<group>"; };
+		0A22C5E91FCF2B5000C02113 /* papyriplain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = papyriplain.cpp; path = ../../../src/modules/filters/papyriplain.cpp; sourceTree = "<group>"; };
+		0A22C5EA1FCF2B5000C02113 /* osisosis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisosis.cpp; path = ../../../src/modules/filters/osisosis.cpp; sourceTree = "<group>"; };
+		0A22C5EB1FCF2B5100C02113 /* thmlheadings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlheadings.cpp; path = ../../../src/modules/filters/thmlheadings.cpp; sourceTree = "<group>"; };
+		0A22C5EC1FCF2B5100C02113 /* utf8scsu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8scsu.cpp; path = ../../../src/modules/filters/utf8scsu.cpp; sourceTree = "<group>"; };
+		0A22C5ED1FCF2B5100C02113 /* gbfxhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfxhtml.cpp; path = ../../../src/modules/filters/gbfxhtml.cpp; sourceTree = "<group>"; };
+		0A22C5EE1FCF2B5100C02113 /* latin1utf16.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = latin1utf16.cpp; path = ../../../src/modules/filters/latin1utf16.cpp; sourceTree = "<group>"; };
+		0A22C5EF1FCF2B5100C02113 /* teirtf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = teirtf.cpp; path = ../../../src/modules/filters/teirtf.cpp; sourceTree = "<group>"; };
+		0A22C5F01FCF2B5200C02113 /* thmlplain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlplain.cpp; path = ../../../src/modules/filters/thmlplain.cpp; sourceTree = "<group>"; };
+		0A22C5F11FCF2B5200C02113 /* gbfosis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfosis.cpp; path = ../../../src/modules/filters/gbfosis.cpp; sourceTree = "<group>"; };
+		0A22C5F21FCF2B5200C02113 /* unicodertf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unicodertf.cpp; path = ../../../src/modules/filters/unicodertf.cpp; sourceTree = "<group>"; };
+		0A22C5F31FCF2B5200C02113 /* thmlstrongs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlstrongs.cpp; path = ../../../src/modules/filters/thmlstrongs.cpp; sourceTree = "<group>"; };
+		0A22C5F41FCF2B5200C02113 /* gbfhtmlhref.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfhtmlhref.cpp; path = ../../../src/modules/filters/gbfhtmlhref.cpp; sourceTree = "<group>"; };
+		0A22C5F51FCF2B5300C02113 /* thmlwebif.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlwebif.cpp; path = ../../../src/modules/filters/thmlwebif.cpp; sourceTree = "<group>"; };
+		0A22C5F61FCF2B5300C02113 /* osisenum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisenum.cpp; path = ../../../src/modules/filters/osisenum.cpp; sourceTree = "<group>"; };
+		0A22C5F71FCF2B5300C02113 /* rtfhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rtfhtml.cpp; path = ../../../src/modules/filters/rtfhtml.cpp; sourceTree = "<group>"; };
+		0A22C5F81FCF2B5300C02113 /* osisfootnotes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisfootnotes.cpp; path = ../../../src/modules/filters/osisfootnotes.cpp; sourceTree = "<group>"; };
+		0A22C5F91FCF2B5300C02113 /* teixhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = teixhtml.cpp; path = ../../../src/modules/filters/teixhtml.cpp; sourceTree = "<group>"; };
+		0A22C5FA1FCF2B5400C02113 /* thmlosis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlosis.cpp; path = ../../../src/modules/filters/thmlosis.cpp; sourceTree = "<group>"; };
+		0A22C5FB1FCF2B5400C02113 /* gbfheadings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfheadings.cpp; path = ../../../src/modules/filters/gbfheadings.cpp; sourceTree = "<group>"; };
+		0A22C5FC1FCF2B5400C02113 /* thmlvariants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thmlvariants.cpp; path = ../../../src/modules/filters/thmlvariants.cpp; sourceTree = "<group>"; };
+		0A22C5FD1FCF2B5400C02113 /* utf8greekaccents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8greekaccents.cpp; path = ../../../src/modules/filters/utf8greekaccents.cpp; sourceTree = "<group>"; };
+		0A22C5FE1FCF2B5400C02113 /* utf8hebrewpoints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8hebrewpoints.cpp; path = ../../../src/modules/filters/utf8hebrewpoints.cpp; sourceTree = "<group>"; };
+		0A22C5FF1FCF2B5500C02113 /* teihtmlhref.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = teihtmlhref.cpp; path = ../../../src/modules/filters/teihtmlhref.cpp; sourceTree = "<group>"; };
+		0A22C6001FCF2B5500C02113 /* gbfstrongs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gbfstrongs.cpp; path = ../../../src/modules/filters/gbfstrongs.cpp; sourceTree = "<group>"; };
+		0A22C6011FCF2B5500C02113 /* utf8arshaping.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8arshaping.cpp; path = ../../../src/modules/filters/utf8arshaping.cpp; sourceTree = "<group>"; };
+		0A22C6021FCF2B5500C02113 /* osisxhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osisxhtml.cpp; path = ../../../src/modules/filters/osisxhtml.cpp; sourceTree = "<group>"; };
+		0A22C6031FCF2B5500C02113 /* cipherfil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cipherfil.cpp; path = ../../../src/modules/filters/cipherfil.cpp; sourceTree = "<group>"; };
+		0A22C6041FCF2B5600C02113 /* osislatex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osislatex.cpp; path = ../../../src/modules/filters/osislatex.cpp; sourceTree = "<group>"; };
+		0A22C6571FCF2B7700C02113 /* swcom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swcom.cpp; path = ../../../src/modules/comments/swcom.cpp; sourceTree = "<group>"; };
+		0A22C6591FCF2BAA00C02113 /* rawcom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawcom.cpp; path = ../../../src/modules/comments/rawcom/rawcom.cpp; sourceTree = "<group>"; };
+		0A22C65C1FCF2C3200C02113 /* hrefcom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hrefcom.cpp; path = ../../../src/modules/comments/hrefcom/hrefcom.cpp; sourceTree = "<group>"; };
+		0A22C65E1FCF2C5000C02113 /* rawcom4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawcom4.cpp; path = ../../../src/modules/comments/rawcom4/rawcom4.cpp; sourceTree = "<group>"; };
+		0A22C6601FCF2C7700C02113 /* rawfiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawfiles.cpp; path = ../../../src/modules/comments/rawfiles/rawfiles.cpp; sourceTree = "<group>"; };
+		0A22C6621FCF2CA100C02113 /* zcom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zcom.cpp; path = ../../../src/modules/comments/zcom/zcom.cpp; sourceTree = "<group>"; };
+		0A22C6641FCF2CE400C02113 /* zcom4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zcom4.cpp; path = ../../../src/modules/comments/zcom4/zcom4.cpp; sourceTree = "<group>"; };
+		0A22C6661FCF2E0F00C02113 /* swgenbook.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swgenbook.cpp; path = ../../../src/modules/genbook/swgenbook.cpp; sourceTree = "<group>"; };
+		0A22C6681FCF2E1F00C02113 /* rawgenbook.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawgenbook.cpp; path = ../../../src/modules/genbook/rawgenbook/rawgenbook.cpp; sourceTree = "<group>"; };
+		0A22C66A1FCF2E5200C02113 /* rawld4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawld4.cpp; path = ../../../src/modules/lexdict/rawld4/rawld4.cpp; sourceTree = "<group>"; };
+		0A22C66B1FCF2E5200C02113 /* rawld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawld.cpp; path = ../../../src/modules/lexdict/rawld/rawld.cpp; sourceTree = "<group>"; };
+		0A22C66C1FCF2E5300C02113 /* swld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swld.cpp; path = ../../../src/modules/lexdict/swld.cpp; sourceTree = "<group>"; };
+		0A22C66D1FCF2E5300C02113 /* zld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zld.cpp; path = ../../../src/modules/lexdict/zld/zld.cpp; sourceTree = "<group>"; };
+		0A22C6721FCF2E8400C02113 /* rawtext4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawtext4.cpp; path = ../../../src/modules/texts/rawtext4/rawtext4.cpp; sourceTree = "<group>"; };
+		0A22C6731FCF2E8400C02113 /* swtext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = swtext.cpp; path = ../../../src/modules/texts/swtext.cpp; sourceTree = "<group>"; };
+		0A22C6741FCF2E8400C02113 /* rawtext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawtext.cpp; path = ../../../src/modules/texts/rawtext/rawtext.cpp; sourceTree = "<group>"; };
+		0A22C6751FCF2E8500C02113 /* ztext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ztext.cpp; path = ../../../src/modules/texts/ztext/ztext.cpp; sourceTree = "<group>"; };
+		0A22C6761FCF2E8500C02113 /* ztext4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ztext4.cpp; path = ../../../src/modules/texts/ztext4/ztext4.cpp; sourceTree = "<group>"; };
+		0AC2147C1FCF9CFF0058DE8C /* flatapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = flatapi.cpp; path = ../../flatapi.cpp; sourceTree = "<group>"; };
+		0AD80314203BE13C0080C00C /* biblesync-version.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = "biblesync-version.hh"; path = "../../../../biblesync/include/biblesync-version.hh"; sourceTree = "<group>"; };
+		0AD80315203BE13D0080C00C /* biblesync.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = biblesync.hh; path = ../../../../biblesync/include/biblesync.hh; sourceTree = "<group>"; };
+		0AD80316203BE1710080C00C /* biblesync.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = biblesync.cc; path = ../../../../biblesync/src/biblesync.cc; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0A22C5081FCF26D700C02113 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0A22C5021FCF26D700C02113 = {
+			isa = PBXGroup;
+			children = (
+				0AD80316203BE1710080C00C /* biblesync.cc */,
+				0AD80314203BE13C0080C00C /* biblesync-version.hh */,
+				0AD80315203BE13D0080C00C /* biblesync.hh */,
+				0AC2147C1FCF9CFF0058DE8C /* flatapi.cpp */,
+				0A22C5471FCF299F00C02113 /* adler32.c */,
+				0A22C6031FCF2B5500C02113 /* cipherfil.cpp */,
+				0A22C5481FCF299F00C02113 /* compress.c */,
+				0A22C5421FCF299D00C02113 /* crc32.c */,
+				0A22C5341FCF299B00C02113 /* crc32.h */,
+				0A22C5681FCF2A0C00C02113 /* curlftpt.cpp */,
+				0A22C56B1FCF2A0C00C02113 /* curlhttpt.cpp */,
+				0A22C5491FCF299F00C02113 /* deflate.c */,
+				0A22C53F1FCF299D00C02113 /* deflate.h */,
+				0A22C55F1FCF2A0A00C02113 /* encfiltmgr.cpp */,
+				0A22C5A51FCF2B0D00C02113 /* entriesblk.cpp */,
+				0A22C56D1FCF2A0D00C02113 /* filemgr.cpp */,
+				0A22C5211FCF295D00C02113 /* ftplib.c */,
+				0A22C56A1FCF2A0C00C02113 /* ftplibftpt.cpp */,
+				0A22C5251FCF295D00C02113 /* ftpparse.c */,
+				0A22C5E31FCF2B4F00C02113 /* gbffootnotes.cpp */,
+				0A22C5FB1FCF2B5400C02113 /* gbfheadings.cpp */,
+				0A22C5C91FCF2B4A00C02113 /* gbfhtml.cpp */,
+				0A22C5F41FCF2B5200C02113 /* gbfhtmlhref.cpp */,
+				0A22C5CE1FCF2B4B00C02113 /* gbflatex.cpp */,
+				0A22C5DC1FCF2B4E00C02113 /* gbfmorph.cpp */,
+				0A22C5F11FCF2B5200C02113 /* gbfosis.cpp */,
+				0A22C5C51FCF2B4900C02113 /* gbfplain.cpp */,
+				0A22C5C61FCF2B4900C02113 /* gbfredletterwords.cpp */,
+				0A22C5BE1FCF2B4700C02113 /* gbfrtf.cpp */,
+				0A22C6001FCF2B5500C02113 /* gbfstrongs.cpp */,
+				0A22C5B51FCF2B4500C02113 /* gbfthml.cpp */,
+				0A22C5C41FCF2B4800C02113 /* gbfwebif.cpp */,
+				0A22C5C31FCF2B4800C02113 /* gbfwordjs.cpp */,
+				0A22C5ED1FCF2B5100C02113 /* gbfxhtml.cpp */,
+				0A22C5DE1FCF2B4E00C02113 /* greeklexattribs.cpp */,
+				0A22C54C1FCF29A000C02113 /* gzclose.c */,
+				0A22C53D1FCF299C00C02113 /* gzguts.h */,
+				0A22C53C1FCF299C00C02113 /* gzlib.c */,
+				0A22C5431FCF299E00C02113 /* gzread.c */,
+				0A22C54B1FCF299F00C02113 /* gzwrite.c */,
+				0A22C65C1FCF2C3200C02113 /* hrefcom.cpp */,
+				0A22C5371FCF299B00C02113 /* infback.c */,
+				0A22C5321FCF299B00C02113 /* inffast.c */,
+				0A22C5461FCF299E00C02113 /* inffast.h */,
+				0A22C5351FCF299B00C02113 /* inffixed.h */,
+				0A22C5391FCF299C00C02113 /* inflate.c */,
+				0A22C5441FCF299E00C02113 /* inflate.h */,
+				0A22C53B1FCF299C00C02113 /* inftrees.c */,
+				0A22C5361FCF299B00C02113 /* inftrees.h */,
+				0A22C5721FCF2A0E00C02113 /* installmgr.cpp */,
+				0A22C5B31FCF2B4400C02113 /* latin1utf8.cpp */,
+				0A22C5EE1FCF2B5100C02113 /* latin1utf16.cpp */,
+				0A22C5881FCF2A8C00C02113 /* listkey.cpp */,
+				0A22C5661FCF2A0B00C02113 /* localemgr.cpp */,
+				0A22C59D1FCF2B0B00C02113 /* lzsscomprs.cpp */,
+				0A22C5651FCF2A0B00C02113 /* markupfiltmgr.cpp */,
+				0A22C5F61FCF2B5300C02113 /* osisenum.cpp */,
+				0A22C5F81FCF2B5300C02113 /* osisfootnotes.cpp */,
+				0A22C5CB1FCF2B4A00C02113 /* osisglosses.cpp */,
+				0A22C5C21FCF2B4800C02113 /* osisheadings.cpp */,
+				0A22C5D61FCF2B4C00C02113 /* osishtmlhref.cpp */,
+				0A22C6041FCF2B5600C02113 /* osislatex.cpp */,
+				0A22C5E51FCF2B4F00C02113 /* osislemma.cpp */,
+				0A22C5E81FCF2B5000C02113 /* osismorph.cpp */,
+				0A22C5BA1FCF2B4600C02113 /* osismorphsegmentation.cpp */,
+				0A22C5EA1FCF2B5000C02113 /* osisosis.cpp */,
+				0A22C5DF1FCF2B4E00C02113 /* osisplain.cpp */,
+				0A22C5D01FCF2B4B00C02113 /* osisredletterwords.cpp */,
+				0A22C5E71FCF2B5000C02113 /* osisreferencelinks.cpp */,
+				0A22C5D11FCF2B4B00C02113 /* osisrtf.cpp */,
+				0A22C5B91FCF2B4600C02113 /* osisscripref.cpp */,
+				0A22C5D41FCF2B4C00C02113 /* osisstrongs.cpp */,
+				0A22C5D21FCF2B4C00C02113 /* osisvariants.cpp */,
+				0A22C5C71FCF2B4900C02113 /* osiswebif.cpp */,
+				0A22C5E01FCF2B4E00C02113 /* osiswordjs.cpp */,
+				0A22C6021FCF2B5500C02113 /* osisxhtml.cpp */,
+				0A22C5E61FCF2B5000C02113 /* osisxlit.cpp */,
+				0A22C5E91FCF2B5000C02113 /* papyriplain.cpp */,
+				0A22C50C1FCF26D700C02113 /* Products */,
+				0A22C6591FCF2BAA00C02113 /* rawcom.cpp */,
+				0A22C65E1FCF2C5000C02113 /* rawcom4.cpp */,
+				0A22C6601FCF2C7700C02113 /* rawfiles.cpp */,
+				0A22C6681FCF2E1F00C02113 /* rawgenbook.cpp */,
+				0A22C66B1FCF2E5200C02113 /* rawld.cpp */,
+				0A22C66A1FCF2E5200C02113 /* rawld4.cpp */,
+				0A22C5A21FCF2B0C00C02113 /* rawstr.cpp */,
+				0A22C5A31FCF2B0C00C02113 /* rawstr4.cpp */,
+				0A22C6741FCF2E8400C02113 /* rawtext.cpp */,
+				0A22C6721FCF2E8400C02113 /* rawtext4.cpp */,
+				0A22C59F1FCF2B0C00C02113 /* rawverse.cpp */,
+				0A22C59E1FCF2B0B00C02113 /* rawverse4.cpp */,
+				0A22C5601FCF2A0A00C02113 /* remotetrans.cpp */,
+				0A22C5261FCF295E00C02113 /* roman.cpp */,
+				0A22C5F71FCF2B5300C02113 /* rtfhtml.cpp */,
+				0A22C5611FCF2A0A00C02113 /* rtranspgdrive.cpp */,
+				0A22C5A41FCF2B0C00C02113 /* sapphire.cpp */,
+				0A22C5CF1FCF2B4B00C02113 /* scsuutf8.cpp */,
+				0A22C5671FCF2A0B00C02113 /* stringmgr.cpp */,
+				0A22C58D1FCF2A8D00C02113 /* strkey.cpp */,
+				0A22C5DA1FCF2B4D00C02113 /* swbasicfilter.cpp */,
+				0A22C5241FCF295D00C02113 /* swbuf.cpp */,
+				0A22C5631FCF2A0B00C02113 /* swcacher.cpp */,
+				0A22C5A11FCF2B0C00C02113 /* swcipher.cpp */,
+				0A22C6571FCF2B7700C02113 /* swcom.cpp */,
+				0A22C5A01FCF2B0C00C02113 /* swcomprs.cpp */,
+				0A22C56C1FCF2A0D00C02113 /* swconfig.cpp */,
+				0A22C5961FCF2ABC00C02113 /* swdisp.cpp */,
+				0A22C56E1FCF2A0D00C02113 /* swfiltermgr.cpp */,
+				0A22C6661FCF2E0F00C02113 /* swgenbook.cpp */,
+				0A22C5891FCF2A8C00C02113 /* swkey.cpp */,
+				0A22C66C1FCF2E5300C02113 /* swld.cpp */,
+				0A22C5641FCF2A0B00C02113 /* swlocale.cpp */,
+				0A22C5951FCF2ABB00C02113 /* swlog.cpp */,
+				0A22C5711FCF2A0E00C02113 /* swmgr.cpp */,
+				0A22C55D1FCF29E600C02113 /* swmodule.cpp */,
+				0A22C5221FCF295D00C02113 /* swobject.cpp */,
+				0A22C5BB1FCF2B4600C02113 /* swoptfilter.cpp */,
+				0A22C50D1FCF26D700C02113 /* SWORD */,
+				0A22C5691FCF2A0C00C02113 /* swsearchable.cpp */,
+				0A22C6731FCF2E8400C02113 /* swtext.cpp */,
+				0A22C51F1FCF295D00C02113 /* swversion.cpp */,
+				0A22C5FF1FCF2B5500C02113 /* teihtmlhref.cpp */,
+				0A22C5C81FCF2B4900C02113 /* teilatex.cpp */,
+				0A22C5BC1FCF2B4600C02113 /* teiplain.cpp */,
+				0A22C5EF1FCF2B5100C02113 /* teirtf.cpp */,
+				0A22C5F91FCF2B5300C02113 /* teixhtml.cpp */,
+				0A22C5D91FCF2B4D00C02113 /* thmlfootnotes.cpp */,
+				0A22C5BD1FCF2B4700C02113 /* thmlgbf.cpp */,
+				0A22C5EB1FCF2B5100C02113 /* thmlheadings.cpp */,
+				0A22C5B41FCF2B4400C02113 /* thmlhtml.cpp */,
+				0A22C5CA1FCF2B4A00C02113 /* thmlhtmlhref.cpp */,
+				0A22C5B61FCF2B4500C02113 /* thmllatex.cpp */,
+				0A22C5D81FCF2B4D00C02113 /* thmllemma.cpp */,
+				0A22C5C11FCF2B4800C02113 /* thmlmorph.cpp */,
+				0A22C5FA1FCF2B5400C02113 /* thmlosis.cpp */,
+				0A22C5F01FCF2B5200C02113 /* thmlplain.cpp */,
+				0A22C5B71FCF2B4500C02113 /* thmlrtf.cpp */,
+				0A22C5D31FCF2B4C00C02113 /* thmlscripref.cpp */,
+				0A22C5F31FCF2B5200C02113 /* thmlstrongs.cpp */,
+				0A22C5FC1FCF2B5400C02113 /* thmlvariants.cpp */,
+				0A22C5F51FCF2B5300C02113 /* thmlwebif.cpp */,
+				0A22C5E21FCF2B4F00C02113 /* thmlwordjs.cpp */,
+				0A22C5CC1FCF2B4A00C02113 /* thmlxhtml.cpp */,
+				0A22C58C1FCF2A8C00C02113 /* treekey.cpp */,
+				0A22C58B1FCF2A8C00C02113 /* treekeyidx.cpp */,
+				0A22C54A1FCF299F00C02113 /* trees.c */,
+				0A22C5331FCF299B00C02113 /* trees.h */,
+				0A22C5381FCF299C00C02113 /* uncompr.c */,
+				0A22C5F21FCF2B5200C02113 /* unicodertf.cpp */,
+				0A22C53A1FCF299C00C02113 /* untgz.c */,
+				0A22C51E1FCF295D00C02113 /* url.cpp */,
+				0A22C5D51FCF2B4C00C02113 /* utf8arabicpoints.cpp */,
+				0A22C6011FCF2B5500C02113 /* utf8arshaping.cpp */,
+				0A22C5DD1FCF2B4E00C02113 /* utf8bidireorder.cpp */,
+				0A22C5B81FCF2B4500C02113 /* utf8cantillation.cpp */,
+				0A22C5FD1FCF2B5400C02113 /* utf8greekaccents.cpp */,
+				0A22C5FE1FCF2B5400C02113 /* utf8hebrewpoints.cpp */,
+				0A22C5D71FCF2B4D00C02113 /* utf8html.cpp */,
+				0A22C5E41FCF2B4F00C02113 /* utf8latin1.cpp */,
+				0A22C5E11FCF2B4F00C02113 /* utf8nfc.cpp */,
+				0A22C5DB1FCF2B4D00C02113 /* utf8nfkd.cpp */,
+				0A22C5EC1FCF2B5100C02113 /* utf8scsu.cpp */,
+				0A22C5BF1FCF2B4700C02113 /* utf8transliterator.cpp */,
+				0A22C5CD1FCF2B4B00C02113 /* utf8utf16.cpp */,
+				0A22C5C01FCF2B4700C02113 /* utf16utf8.cpp */,
+				0A22C5271FCF295E00C02113 /* utilstr.cpp */,
+				0A22C5231FCF295D00C02113 /* utilxml.cpp */,
+				0A22C5871FCF2A8B00C02113 /* versekey.cpp */,
+				0A22C58A1FCF2A8C00C02113 /* versetreekey.cpp */,
+				0A22C5701FCF2A0D00C02113 /* versificationmgr.cpp */,
+				0A22C6621FCF2CA100C02113 /* zcom.cpp */,
+				0A22C6641FCF2CE400C02113 /* zcom4.cpp */,
+				0A22C5451FCF299E00C02113 /* zconf.h */,
+				0A22C59B1FCF2B0B00C02113 /* zipcomprs.cpp */,
+				0A22C66D1FCF2E5300C02113 /* zld.cpp */,
+				0A22C5401FCF299D00C02113 /* zlib.h */,
+				0A22C59A1FCF2B0B00C02113 /* zstr.cpp */,
+				0A22C6751FCF2E8500C02113 /* ztext.cpp */,
+				0A22C6761FCF2E8500C02113 /* ztext4.cpp */,
+				0A22C53E1FCF299D00C02113 /* zutil.c */,
+				0A22C5411FCF299D00C02113 /* zutil.h */,
+				0A22C59C1FCF2B0B00C02113 /* zverse.cpp */,
+				0A22C5991FCF2B0A00C02113 /* zverse4.cpp */,
+			);
+			sourceTree = "<group>";
+		};
+		0A22C50C1FCF26D700C02113 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A22C50B1FCF26D700C02113 /* libSWORD.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A22C50D1FCF26D700C02113 /* SWORD */ = {
+			isa = PBXGroup;
+			children = (
+				0A22C51B1FCF272F00C02113 /* include */,
+				0A22C50E1FCF26D700C02113 /* SWORD.h */,
+				0A22C50F1FCF26D700C02113 /* SWORD.m */,
+			);
+			path = SWORD;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0A22C50A1FCF26D700C02113 /* SWORD */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A22C5141FCF26D700C02113 /* Build configuration list for PBXNativeTarget "SWORD" */;
+			buildPhases = (
+				0A22C5071FCF26D700C02113 /* Sources */,
+				0A22C5081FCF26D700C02113 /* Frameworks */,
+				0A22C5091FCF26D700C02113 /* Copy Files */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SWORD;
+			productName = SWORD;
+			productReference = 0A22C50B1FCF26D700C02113 /* libSWORD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0A22C5031FCF26D700C02113 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1140;
+				ORGANIZATIONNAME = "CrossWire Bible Society";
+				TargetAttributes = {
+					0A22C50A1FCF26D700C02113 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+					};
+					0A22C5171FCF26FD00C02113 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0A22C5061FCF26D700C02113 /* Build configuration list for PBXProject "SWORD" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0A22C5021FCF26D700C02113;
+			productRefGroup = 0A22C50C1FCF26D700C02113 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0A22C50A1FCF26D700C02113 /* SWORD */,
+				0A22C5171FCF26FD00C02113 /* SWORDUniversal */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0A22C67C1FCF4D4200C02113 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# define output folder environment variable\nUNIVERSAL_OUTPUTFOLDER=${PROJECT_DIR}/${CONFIGURATION}-universal\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target ${PROJECT_NAME} ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos -arch x86_64 -arch armv7 -arch armv7s -arch arm64 BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\nxcodebuild -target ${PROJECT_NAME} -configuration ${CONFIGURATION} -sdk iphonesimulator -arch x86_64 -arch armv7 -arch armv7s -arch arm64 BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# Step 2. Create universal binary file using lipo\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/lib${PROJECT_NAME}.a\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/lib${PROJECT_NAME}.a\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/lib${PROJECT_NAME}.a\"\n\necho \"Universal library can be found here:\"\necho ${UNIVERSAL_OUTPUTFOLDER}/lib${PROJECT_NAME}.a\n\n# Last touch. copy the header files. Just for convenience\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/include\" \"${UNIVERSAL_OUTPUTFOLDER}/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0A22C5071FCF26D700C02113 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A22C6431FCF2B5600C02113 /* gbfosis.cpp in Sources */,
+				0A22C6531FCF2B5600C02113 /* utf8arshaping.cpp in Sources */,
+				0A22C5531FCF29A000C02113 /* gzlib.c in Sources */,
+				0A22C60B1FCF2B5600C02113 /* osisscripref.cpp in Sources */,
+				0A22C6311FCF2B5600C02113 /* osisplain.cpp in Sources */,
+				0AC2147D1FCF9D000058DE8C /* flatapi.cpp in Sources */,
+				0A22C6581FCF2B7700C02113 /* swcom.cpp in Sources */,
+				0A22C67B1FCF2E8500C02113 /* ztext4.cpp in Sources */,
+				0A22C5911FCF2A8D00C02113 /* versetreekey.cpp in Sources */,
+				0A22C6291FCF2B5600C02113 /* utf8html.cpp in Sources */,
+				0A22C5511FCF29A000C02113 /* untgz.c in Sources */,
+				0A22C66E1FCF2E5300C02113 /* rawld4.cpp in Sources */,
+				0A22C57D1FCF2A0E00C02113 /* swsearchable.cpp in Sources */,
+				0A22C64C1FCF2B5600C02113 /* thmlosis.cpp in Sources */,
+				0A22C6191FCF2B5600C02113 /* osiswebif.cpp in Sources */,
+				0A22C54E1FCF29A000C02113 /* infback.c in Sources */,
+				0A22C5291FCF295E00C02113 /* swversion.cpp in Sources */,
+				0A22C6121FCF2B5600C02113 /* utf16utf8.cpp in Sources */,
+				0A22C5581FCF29A000C02113 /* compress.c in Sources */,
+				0A22C6201FCF2B5600C02113 /* gbflatex.cpp in Sources */,
+				0A22C62C1FCF2B5600C02113 /* swbasicfilter.cpp in Sources */,
+				0A22C6471FCF2B5600C02113 /* thmlwebif.cpp in Sources */,
+				0A22C6491FCF2B5600C02113 /* rtfhtml.cpp in Sources */,
+				0A22C5A61FCF2B0D00C02113 /* zverse4.cpp in Sources */,
+				0A22C5821FCF2A0E00C02113 /* swfiltermgr.cpp in Sources */,
+				0A22C6331FCF2B5600C02113 /* utf8nfc.cpp in Sources */,
+				0A22C6341FCF2B5600C02113 /* thmlwordjs.cpp in Sources */,
+				0A22C57E1FCF2A0E00C02113 /* ftplibftpt.cpp in Sources */,
+				0A22C5931FCF2A8D00C02113 /* treekey.cpp in Sources */,
+				0A22C5841FCF2A0E00C02113 /* swmgr.cpp in Sources */,
+				0A22C5731FCF2A0E00C02113 /* encfiltmgr.cpp in Sources */,
+				0A22C6781FCF2E8500C02113 /* swtext.cpp in Sources */,
+				0A22C6451FCF2B5600C02113 /* thmlstrongs.cpp in Sources */,
+				0A22C6091FCF2B5600C02113 /* thmlrtf.cpp in Sources */,
+				0A22C6301FCF2B5600C02113 /* greeklexattribs.cpp in Sources */,
+				0A22C6771FCF2E8500C02113 /* rawtext4.cpp in Sources */,
+				0A22C6231FCF2B5600C02113 /* osisrtf.cpp in Sources */,
+				0A22C52E1FCF295E00C02113 /* swbuf.cpp in Sources */,
+				0A22C5AC1FCF2B0D00C02113 /* rawverse.cpp in Sources */,
+				0A22C6171FCF2B5600C02113 /* gbfplain.cpp in Sources */,
+				0A22C6691FCF2E1F00C02113 /* rawgenbook.cpp in Sources */,
+				0A22C5921FCF2A8D00C02113 /* treekeyidx.cpp in Sources */,
+				0A22C6441FCF2B5600C02113 /* unicodertf.cpp in Sources */,
+				0A22C5751FCF2A0E00C02113 /* rtranspgdrive.cpp in Sources */,
+				0A22C64B1FCF2B5600C02113 /* teixhtml.cpp in Sources */,
+				0A22C5791FCF2A0E00C02113 /* markupfiltmgr.cpp in Sources */,
+				0A22C5AF1FCF2B0D00C02113 /* rawstr.cpp in Sources */,
+				0A22C6101FCF2B5600C02113 /* gbfrtf.cpp in Sources */,
+				0A22C60F1FCF2B5600C02113 /* thmlgbf.cpp in Sources */,
+				0A22C62B1FCF2B5600C02113 /* thmlfootnotes.cpp in Sources */,
+				0A22C5591FCF29A000C02113 /* deflate.c in Sources */,
+				0A22C62A1FCF2B5600C02113 /* thmllemma.cpp in Sources */,
+				0A22C5851FCF2A0E00C02113 /* installmgr.cpp in Sources */,
+				0A22C6711FCF2E5300C02113 /* zld.cpp in Sources */,
+				0A22C5901FCF2A8D00C02113 /* swkey.cpp in Sources */,
+				0A22C52C1FCF295E00C02113 /* swobject.cpp in Sources */,
+				0A22C6411FCF2B5600C02113 /* teirtf.cpp in Sources */,
+				0A22C6351FCF2B5600C02113 /* gbffootnotes.cpp in Sources */,
+				0A22C61D1FCF2B5600C02113 /* osisglosses.cpp in Sources */,
+				0A22C61F1FCF2B5600C02113 /* utf8utf16.cpp in Sources */,
+				0A22C63D1FCF2B5600C02113 /* thmlheadings.cpp in Sources */,
+				0A22C58F1FCF2A8D00C02113 /* listkey.cpp in Sources */,
+				0A22C64E1FCF2B5600C02113 /* thmlvariants.cpp in Sources */,
+				0A22C57C1FCF2A0E00C02113 /* curlftpt.cpp in Sources */,
+				0A22C5B21FCF2B0D00C02113 /* entriesblk.cpp in Sources */,
+				0A22C5AD1FCF2B0D00C02113 /* swcomprs.cpp in Sources */,
+				0A22C5281FCF295E00C02113 /* url.cpp in Sources */,
+				0A22C5561FCF29A000C02113 /* gzread.c in Sources */,
+				0A22C57B1FCF2A0E00C02113 /* stringmgr.cpp in Sources */,
+				0A22C6211FCF2B5600C02113 /* scsuutf8.cpp in Sources */,
+				0A22C5541FCF29A000C02113 /* zutil.c in Sources */,
+				0A22C5A91FCF2B0D00C02113 /* zverse.cpp in Sources */,
+				0A22C6081FCF2B5600C02113 /* thmllatex.cpp in Sources */,
+				0A22C6271FCF2B5600C02113 /* utf8arabicpoints.cpp in Sources */,
+				0A22C61B1FCF2B5600C02113 /* gbfhtml.cpp in Sources */,
+				0AD80317203BE1710080C00C /* biblesync.cc in Sources */,
+				0A22C55C1FCF29A000C02113 /* gzclose.c in Sources */,
+				0A22C60A1FCF2B5600C02113 /* utf8cantillation.cpp in Sources */,
+				0A22C54D1FCF29A000C02113 /* inffast.c in Sources */,
+				0A22C6111FCF2B5600C02113 /* utf8transliterator.cpp in Sources */,
+				0A22C6361FCF2B5600C02113 /* utf8latin1.cpp in Sources */,
+				0A22C60D1FCF2B5600C02113 /* swoptfilter.cpp in Sources */,
+				0A22C6061FCF2B5600C02113 /* thmlhtml.cpp in Sources */,
+				0A22C6051FCF2B5600C02113 /* latin1utf8.cpp in Sources */,
+				0A22C6141FCF2B5600C02113 /* osisheadings.cpp in Sources */,
+				0A22C6541FCF2B5600C02113 /* osisxhtml.cpp in Sources */,
+				0A22C63F1FCF2B5600C02113 /* gbfxhtml.cpp in Sources */,
+				0A22C5301FCF295E00C02113 /* roman.cpp in Sources */,
+				0A22C6701FCF2E5300C02113 /* swld.cpp in Sources */,
+				0A22C6521FCF2B5600C02113 /* gbfstrongs.cpp in Sources */,
+				0A22C6371FCF2B5600C02113 /* osislemma.cpp in Sources */,
+				0A22C6421FCF2B5600C02113 /* thmlplain.cpp in Sources */,
+				0A22C65A1FCF2BAB00C02113 /* rawcom.cpp in Sources */,
+				0A22C5AE1FCF2B0D00C02113 /* swcipher.cpp in Sources */,
+				0A22C55B1FCF29A000C02113 /* gzwrite.c in Sources */,
+				0A22C60C1FCF2B5600C02113 /* osismorphsegmentation.cpp in Sources */,
+				0A22C5A71FCF2B0D00C02113 /* zstr.cpp in Sources */,
+				0A22C6461FCF2B5600C02113 /* gbfhtmlhref.cpp in Sources */,
+				0A22C52F1FCF295E00C02113 /* ftpparse.c in Sources */,
+				0A22C6791FCF2E8500C02113 /* rawtext.cpp in Sources */,
+				0A22C5801FCF2A0E00C02113 /* swconfig.cpp in Sources */,
+				0A22C6221FCF2B5600C02113 /* osisredletterwords.cpp in Sources */,
+				0A22C61E1FCF2B5600C02113 /* thmlxhtml.cpp in Sources */,
+				0A22C6181FCF2B5600C02113 /* gbfredletterwords.cpp in Sources */,
+				0A22C63C1FCF2B5600C02113 /* osisosis.cpp in Sources */,
+				0A22C5941FCF2A8D00C02113 /* strkey.cpp in Sources */,
+				0A22C6481FCF2B5600C02113 /* osisenum.cpp in Sources */,
+				0A22C6071FCF2B5600C02113 /* gbfthml.cpp in Sources */,
+				0A22C58E1FCF2A8D00C02113 /* versekey.cpp in Sources */,
+				0A22C6551FCF2B5600C02113 /* cipherfil.cpp in Sources */,
+				0A22C52D1FCF295E00C02113 /* utilxml.cpp in Sources */,
+				0A22C64D1FCF2B5600C02113 /* gbfheadings.cpp in Sources */,
+				0A22C5771FCF2A0E00C02113 /* swcacher.cpp in Sources */,
+				0A22C5811FCF2A0E00C02113 /* filemgr.cpp in Sources */,
+				0A22C62F1FCF2B5600C02113 /* utf8bidireorder.cpp in Sources */,
+				0A22C5551FCF29A000C02113 /* crc32.c in Sources */,
+				0A22C62D1FCF2B5600C02113 /* utf8nfkd.cpp in Sources */,
+				0A22C6611FCF2C7700C02113 /* rawfiles.cpp in Sources */,
+				0A22C6501FCF2B5600C02113 /* utf8hebrewpoints.cpp in Sources */,
+				0A22C6281FCF2B5600C02113 /* osishtmlhref.cpp in Sources */,
+				0A22C67A1FCF2E8500C02113 /* ztext.cpp in Sources */,
+				0A22C5781FCF2A0E00C02113 /* swlocale.cpp in Sources */,
+				0A22C5521FCF29A000C02113 /* inftrees.c in Sources */,
+				0A22C65D1FCF2C3200C02113 /* hrefcom.cpp in Sources */,
+				0A22C5A81FCF2B0D00C02113 /* zipcomprs.cpp in Sources */,
+				0A22C54F1FCF29A000C02113 /* uncompr.c in Sources */,
+				0A22C55E1FCF29E600C02113 /* swmodule.cpp in Sources */,
+				0A22C5AA1FCF2B0D00C02113 /* lzsscomprs.cpp in Sources */,
+				0A22C6651FCF2CE500C02113 /* zcom4.cpp in Sources */,
+				0A22C63B1FCF2B5600C02113 /* papyriplain.cpp in Sources */,
+				0A22C6261FCF2B5600C02113 /* osisstrongs.cpp in Sources */,
+				0A22C5AB1FCF2B0D00C02113 /* rawverse4.cpp in Sources */,
+				0A22C64F1FCF2B5600C02113 /* utf8greekaccents.cpp in Sources */,
+				0A22C6631FCF2CA100C02113 /* zcom.cpp in Sources */,
+				0A22C6561FCF2B5600C02113 /* osislatex.cpp in Sources */,
+				0A22C63A1FCF2B5600C02113 /* osismorph.cpp in Sources */,
+				0A22C5741FCF2A0E00C02113 /* remotetrans.cpp in Sources */,
+				0A22C6321FCF2B5600C02113 /* osiswordjs.cpp in Sources */,
+				0A22C57F1FCF2A0E00C02113 /* curlhttpt.cpp in Sources */,
+				0A22C5971FCF2ABC00C02113 /* swlog.cpp in Sources */,
+				0A22C66F1FCF2E5300C02113 /* rawld.cpp in Sources */,
+				0A22C6241FCF2B5600C02113 /* osisvariants.cpp in Sources */,
+				0A22C62E1FCF2B5600C02113 /* gbfmorph.cpp in Sources */,
+				0A22C6391FCF2B5600C02113 /* osisreferencelinks.cpp in Sources */,
+				0A22C6131FCF2B5600C02113 /* thmlmorph.cpp in Sources */,
+				0A22C63E1FCF2B5600C02113 /* utf8scsu.cpp in Sources */,
+				0A22C6511FCF2B5600C02113 /* teihtmlhref.cpp in Sources */,
+				0A22C60E1FCF2B5600C02113 /* teiplain.cpp in Sources */,
+				0A22C5311FCF295E00C02113 /* utilstr.cpp in Sources */,
+				0A22C5571FCF29A000C02113 /* adler32.c in Sources */,
+				0A22C57A1FCF2A0E00C02113 /* localemgr.cpp in Sources */,
+				0A22C5981FCF2ABC00C02113 /* swdisp.cpp in Sources */,
+				0A22C6151FCF2B5600C02113 /* gbfwordjs.cpp in Sources */,
+				0A22C5B01FCF2B0D00C02113 /* rawstr4.cpp in Sources */,
+				0A22C61C1FCF2B5600C02113 /* thmlhtmlhref.cpp in Sources */,
+				0A22C61A1FCF2B5600C02113 /* teilatex.cpp in Sources */,
+				0A22C52B1FCF295E00C02113 /* ftplib.c in Sources */,
+				0A22C5831FCF2A0E00C02113 /* versificationmgr.cpp in Sources */,
+				0A22C5B11FCF2B0D00C02113 /* sapphire.cpp in Sources */,
+				0A22C6161FCF2B5600C02113 /* gbfwebif.cpp in Sources */,
+				0A22C6381FCF2B5600C02113 /* osisxlit.cpp in Sources */,
+				0A22C6671FCF2E0F00C02113 /* swgenbook.cpp in Sources */,
+				0A22C6251FCF2B5600C02113 /* thmlscripref.cpp in Sources */,
+				0A22C55A1FCF29A000C02113 /* trees.c in Sources */,
+				0A22C64A1FCF2B5600C02113 /* osisfootnotes.cpp in Sources */,
+				0A22C5501FCF29A000C02113 /* inflate.c in Sources */,
+				0A22C6401FCF2B5600C02113 /* latin1utf16.cpp in Sources */,
+				0A22C65F1FCF2C5000C02113 /* rawcom4.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0A22C5121FCF26D700C02113 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../../include",
+					"$(PROJECT_DIR)/../dependencies/curl/include",
+					"$(PROJECT_DIR)/../../../../biblesync/include",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"-DUNIX",
+					"-Dunix",
+					"-D__unix__",
+					"-DEXCLUDEBZIP2",
+					"-DEXCLUDEXZ",
+					"-DCURLAVAILABLE",
+					"-DBIBLESYNC",
+				);
+				OTHER_LDFLAGS = (
+					"-lcurl",
+					"-lz",
+					"-licucore",
+				);
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		0A22C5131FCF26D700C02113 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../../include",
+					"$(PROJECT_DIR)/../dependencies/curl/include",
+					"$(PROJECT_DIR)/../../../../biblesync/include",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = (
+					"-DUNIX",
+					"-Dunix",
+					"-D__unix__",
+					"-DEXCLUDEBZIP2",
+					"-DEXCLUDEXZ",
+					"-DCURLAVAILABLE",
+					"-DBIBLESYNC",
+				);
+				OTHER_LDFLAGS = (
+					"-lcurl",
+					"-lz",
+					"-licucore",
+				);
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0A22C5151FCF26D700C02113 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J9J97ZC4K5;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0A22C5161FCF26D700C02113 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J9J97ZC4K5;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		0A22C5191FCF26FD00C02113 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J9J97ZC4K5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0A22C51A1FCF26FD00C02113 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J9J97ZC4K5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0A22C5061FCF26D700C02113 /* Build configuration list for PBXProject "SWORD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A22C5121FCF26D700C02113 /* Debug */,
+				0A22C5131FCF26D700C02113 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A22C5141FCF26D700C02113 /* Build configuration list for PBXNativeTarget "SWORD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A22C5151FCF26D700C02113 /* Debug */,
+				0A22C5161FCF26D700C02113 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A22C5181FCF26FD00C02113 /* Build configuration list for PBXAggregateTarget "SWORDUniversal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A22C5191FCF26FD00C02113 /* Debug */,
+				0A22C51A1FCF26FD00C02113 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0A22C5031FCF26D700C02113 /* Project object */;
+}

@@ -1,0 +1,10 @@
+#!/bin/sh
+COMMIT_REV=$1
+
+[ -z "$COMMIT_REV" ] && {
+    echo $"usage: $0 <eligible revision number to merge>" >&2
+    exit 1
+}
+
+# -r start:to does not include start (stupid? reason?)
+svn merge -c $1 ^/trunk

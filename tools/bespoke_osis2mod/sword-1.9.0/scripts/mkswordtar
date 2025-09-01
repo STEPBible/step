@@ -1,0 +1,36 @@
+#!/bin/sh
+
+echo 
+echo "*** Autogening main sword engine build system"
+echo 
+
+# quick test to see if we're at the base and cd to scripts folder
+cd scripts 2> /dev/null
+
+# rest of script assumes we're in the scripts folder
+(cd ..;./autogen.sh)
+
+REV=`cd ..;basename \`pwd ..\`|cut -d\- -f2`
+SWORDVER=`grep AC_INIT ../configure.ac|cut -f2 -d' '|cut -f1 -d,`
+
+sed -i "s/^\(PROJECT_NUMBER\).*/\1 = \"$SWORDVER\"/" ../doc/Doxyfile
+sed -i "s/^SET(SWORD_VERSION.*/SET(SWORD_VERSION $SWORDVER)/" ../CMakeLists.txt
+
+if [ "$REV" = "$SWORDVER" ]; then 
+	chmod +x *
+
+	echo 
+	echo "*** Autogening swig bindings build system"
+	echo 
+	cd ../bindings/swig/package; ./autogen.sh; cd ../../..;
+
+	echo 
+	echo "*** Tarring up" sword-$REV.tar.gz
+	echo 
+	cd ..; tar -v -c -p -z --exclude sword-$REV/bin --exclude sword-$REV/autom4te.cache --exclude sword-$REV/bindings/swig/package/autom4te.cache -X sword-$REV/distignore -f sword-$REV.tar.gz sword-$REV/*
+
+else
+	echo $"Directory version is $REV, but configure.ac has $SWORDVER"
+	exit 1
+
+fi

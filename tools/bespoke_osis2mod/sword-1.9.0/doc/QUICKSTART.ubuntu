@@ -1,0 +1,34 @@
+#!/bin/sh
+# Quickstart (tested on Ubuntu versions 9.10-13.10)
+#
+# You should probably be able to also run this QUICKSTART
+
+# For a build of the latest code directly from source control:
+
+# From a fresh Ubuntu installation, this should get you all the necessary
+# packages for a full featured install of the SWORD libs, compile and install
+# the engine, install a modules, and test with a simple command line tool:
+
+# install necessary packages for all features of SWORD to be enabled
+sudo apt-get install autoconf autogen automake subversion make g++ libtool zlib1g-dev libicu-dev libclucene-dev libcurl4-openssl-dev libbz2-dev liblzma-dev
+
+# checkout and build the source tree
+svn co https://crosswire.org/svn/sword/trunk sword
+cd sword
+./autogen.sh
+
+# you may want to review and edit usrinst.sh to see if the default options
+# meet your needs
+./usrinst.sh
+make -j
+sudo make install
+sudo make install_config
+
+# install a module
+sudo installmgr -init -sc -r CrossWire -ri CrossWire KJV
+
+# build and test a simple command line example tool
+cd examples/cmdline
+make
+./lookup KJV jn.3.16 
+

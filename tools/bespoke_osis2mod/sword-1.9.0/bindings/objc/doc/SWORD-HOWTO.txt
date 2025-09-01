@@ -1,0 +1,55 @@
+
+When updating SWORD from SVN into this project,
+
+delete all the Makefiles & other support files, leaving only the .cpp and .h files in their various folders...
+
+The following files should be "disabled" in Xcode (so that Xcode doesn't try to compile them):
+
+src/utilfuns/win32/dirent.cpp
+src/frontend/framework/femain.cpp
+src/frontend/im/hebrewmcim.cpp
+src/frontend/im/nullim.cpp
+src/frontend/im/swinputmeth.cpp
+
+AND (because they have a main() function):
+src/keys/genarray.c 
+src/utilfuns/zlib/maketree.c
+
+ie:  all the files in the following folders:
+src/frontend/im
+src/frontend/framework
+src/utilfuns/win32
+
+
+DIFFS:
+- curlhttpt.cpp:: logging info on the httpd server side
+- localemgr.cpp:: we don't wanna try to "find" the config, cause it just slows app-launch down & it won't find it!
+
+
+Index: /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/curlhttpt.cpp
+===================================================================
+--- /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/curlhttpt.cpp	(revision 8)
++++ /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/curlhttpt.cpp	(working copy)
+@@ -144,6 +144,7 @@
+ 
+ 		/* Switch on full protocol/debug output */
+ 		curl_easy_setopt(session, CURLOPT_VERBOSE, true);
++		curl_easy_setopt(session, CURLOPT_USERAGENT, p.c_str());
+ 		
+ 		/* FTP connection settings */
+ 
+
+Index: /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/localemgr.cpp
+===================================================================
+--- /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/localemgr.cpp	(revision 18)
++++ /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/localemgr.cpp	(working copy)
+@@ -80,7 +80,7 @@
+ 	
+ 	if (!iConfigPath) {
+ 		SWLog::getSystemLog()->logDebug("LOOKING UP LOCALE DIRECTORY...");
+-		SWMgr::findConfig(&configType, &prefixPath, &configPath, &augPaths, &sysConf);
++		//SWMgr::findConfig(&configType, &prefixPath, &configPath, &augPaths, &sysConf);
+ 		if (sysConf) {
+ 			if ((entry = sysConf->Sections["Install"].find("LocalePath")) != sysConf->Sections["Install"].end()) {
+ 				configType = 9;	// our own
+

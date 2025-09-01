@@ -1,0 +1,64 @@
+.\" ========================================================================
+.\"
+.IX Title "MOD2IMP.1 1"
+.TH MOD2IMP.1 1 "2018-11-05" 
+.SH "NAME"
+mod2imp, mod2osis, mod2vpl, mod2zmod \- export SWORD modules
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+\&\fBmod2imp\fR [modulename]
+.PP
+\&\fBmod2osis\fR [modulename]
+.PP
+\&\fBmod2vpl\fR [modulename] [0 |1]
+.PP
+\&\fBmod2zmod\fR [modulename] [\s-1PATH\s0] [blocktype [compressiontype [cipherkey]]]
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+These utilities export \s-1SWORD\s0 modules into various formats. \fBmod2imp\fR exports a
+module into \s-1SWORD\s0 imp (import) format. \fBmod2osis\fR exports a module into \s-1OSIS\s0
+format. \fBmod2vpl\fR exports into verse per line format. \fBmod2zmod\fR produces
+compressed \s-1SWORD\s0 modules.
+.SH "OPTIONS"
+.IX Header "OPTIONS"
+.IP "\fB[modulename]\fR" 4
+.IX Item "[modulename]"
+Specify the modulename to export.
+.IP "\fB[0 | 1]\fR" 4
+.IX Item "[0 | 1]"
+Only applies to \fBmod2vpl\fR. 1 \- prepends verse reference to each line, 0 \-
+doesn't.
+.IP "\fB[\s-1PATH\s0]\fR" 4
+.IX Item "[PATH]"
+Only applies to \fBmod2zmod\fR. Path where to create compressed module.
+.IP "\fB[blocktype [compressiontype [cipherkey]]]\fR" 4
+.IX Item "[blocktype [compressiontype [cipherkey]]]"
+Only applies to \fBmod2zmod\fR. Valid blocktypes are (default 4):
+.RS 4
+.IP "2 \- verses" 4
+.IX Item "2 - verses"
+.PD 0
+.IP "3 \- chapters" 4
+.IX Item "3 - chapters"
+.IP "4 \-books" 4
+.IX Item "4 -books"
+.RE
+.RS 4
+.PD
+.Sp
+Compression types are (default 1):
+.IP "1 \- \s-1LZSS\s0" 4
+.IX Item "1 - LZSS"
+.PD 0
+.IP "2 \- Zip" 4
+.IX Item "2 - Zip"
+.RE
+.RS 4
+.RE
+.PD
+.SH "Authors"
+.IX Header "Authors"
+This manual page was written by Dmitrijs Ledkovs <dmitrij.ledkov@gmail.com> for
+Debian project but may be used by others.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"

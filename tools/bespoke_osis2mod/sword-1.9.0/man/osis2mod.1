@@ -1,0 +1,52 @@
+.\" ========================================================================
+.\"
+.IX Title "OSIS2MOD.1 1"
+.TH OSIS2MOD.1 1 "2018-11-05"
+.SH "NAME"
+osis2mod \- create SWORD module from OSIS
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+\&\fBosis2mod\fR \s-1PATH OSISDOC\s0 [\s-1OPTIONS\s0]
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+This utility will create a \s-1SWORD\s0 module in the specified path from the
+\&\s-1OSIS\s0 formatted input.
+.SH "OPTIONS"
+.IX Header "OPTIONS"
+.IP "\fB\-a\fR" 4
+.IX Item "-a"
+Augment module if exists (default is to create a new one).
+.IP "\fB\-z | \-Z\fR" 4
+.IX Item "-z | -Z"
+Use compression. z \- for \s-1ZIP\s0; Z \- for \s-1LZSS.\s0 By default no compression is
+used.
+.IP "\fB\-b N\fR" 4
+.IX Item "-b N"
+Specify block size. Valid values are (default 4):
+.RS 4
+.IP "2 \- verses" 4
+.IX Item "2 - verses"
+.PD 0
+.IP "3 \- chapters" 4
+.IX Item "3 - chapters"
+.IP "4 \-books" 4
+.IX Item "4 -books"
+.RE
+.RS 4
+.RE
+.IP "\fB\-c \s-1CIPHER_KEY\s0\fR" 4
+.IX Item "-c CIPHER_KEY"
+.PD
+Encipher module using supplied key. By default no enciphering is used.
+.IP "\fB\-N\fR" 4
+.IX Item "-N"
+Do not convert \s-1UFT\-8\s0 no normalize \s-1UTF\-8\s0 to \s-1NFC.\s0 Default is to convert to \s-1UTF\-8,\s0
+if needed, and then normalize to \s-1NFC.\s0
+.Sp
+Note: all \s-1UTF\-8\s0 texts should be normalized to \s-1NFC.\s0
+.SH "Authors"
+.IX Header "Authors"
+This manual page was written by Dmitrijs Ledkovs <dmitrij.ledkov@gmail.com> for
+Debian project but may be used by others.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"

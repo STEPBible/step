@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:rim="http://www.blackberry.com/ns/widgets"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="cordova-plugin-crosswire-sword"
+    version="0.2.0">
+    <name>cordova-plugin-crosswire-sword</name>
+    <description>The SWORD Project Plugin</description>
+    <license>GNU 2.0</license>
+    <keywords>cordova,sword,Bible</keywords>
+    <repo>https://crosswire.org/svn/sword</repo>
+    <issue>http://crosswire.org/tracker</issue>
+
+    <js-module src="www/SWORD.js" name="SWORD">
+        <clobbers target="SWORD" />
+    </js-module>
+
+    <!-- firefoxos
+    <platform name="firefoxos">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Device">
+                <param name="firefoxos-package" value="Device" />
+            </feature>
+        </config-file>
+
+        <js-module src="src/firefoxos/DeviceProxy.js" name="DeviceProxy">
+            <runs />
+        </js-module>
+    </platform>
+ -->
+    <!-- tizen
+    <platform name="tizen">
+        <js-module src="src/tizen/DeviceProxy.js" name="DeviceProxy">
+            <runs />
+        </js-module>
+    </platform>
+ -->
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="SWORD" >
+                <param name="android-package" value="org.crosswire.sword.cordova.SWORD"/>
+            </feature>
+        </config-file>
+	<config-file target="AndroidManifest.xml" parent="/manifest">
+	    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	</config-file>
+
+        <source-file src="src/android/SWORD.java" target-dir="src/org/crosswire/sword/cordova" />
+        <source-file src="src/android/SWMgr.java" target-dir="src/org/crosswire/android/sword" />
+        <source-file src="src/android/AndroidMgr.java" target-dir="src/org/crosswire/android/sword" />
+        <source-file src="src/android/SWModule.java" target-dir="src/org/crosswire/android/sword" />
+        <source-file src="src/android/InstallMgr.java" target-dir="src/org/crosswire/android/sword" />
+        <source-file src="libs/android/arm64-v8a/libsword.so" target-dir="libs/arm64-v8a" />
+        <source-file src="libs/android/armeabi-v7a/libsword.so" target-dir="libs/armeabi-v7a" />
+        <source-file src="libs/android/x86/libsword.so" target-dir="libs/x86" />
+        <source-file src="libs/android/x86_64/libsword.so" target-dir="libs/x86_64" />
+
+<!-- no longer needed with latest ndk
+        <source-file src="libs/android/arm64-v8a/libc++_shared.so" target-dir="libs/arm64-v8a" />
+        <source-file src="libs/android/armeabi-v7a/libc++_shared.so" target-dir="libs/armeabi-v7a" />
+        <source-file src="libs/android/x86/libc++_shared.so" target-dir="libs/x86" />
+        <source-file src="libs/android/x86_64/libc++_shared.so" target-dir="libs/x86_64" />
+-->
+<!--
+        <source-file src="libs/android/arm64-v8a/libstlport_shared.so" target-dir="libs/arm64-v8a" />
+        <source-file src="libs/android/armeabi-v7a/libstlport_shared.so" target-dir="libs/armeabi-v7a" />
+        <source-file src="libs/android/x86/libstlport_shared.so" target-dir="libs/x86" />
+        <source-file src="libs/android/x86_64/libstlport_shared.so" target-dir="libs/x86_64" />
+-->
+<!-- I think these are old names
+        <source-file src="libs/android/armeabi/libsword.so" target-dir="libs/armeabi" />
+        <source-file src="libs/android/mips64/libsword.so" target-dir="libs/mips64" />
+        <source-file src="libs/android/mips/libsword.so" target-dir="libs/mips" />
+-->
+    </platform>
+
+    <!-- amazon-fireos -->
+    <platform name="amazon-fireos">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="SWORD" >
+                <param name="android-package" value="org.crosswire.sword.cordova"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/SWORD.java" target-dir="src/org/crosswire/sword/cordova" />
+        <source-file src="src/android/SWMgr.java" target-dir="src/org/crosswire/android/sword" />
+        <source-file src="src/android/AndroidMgr.java" target-dir="src/org/crosswire/android/sword" />
+        <source-file src="src/android/SWModule.java" target-dir="src/org/crosswire/android/sword" />
+        <source-file src="src/android/InstallMgr.java" target-dir="src/org/crosswire/android/sword" />
+        <source-file src="libs/android/armeabi/libsword.so" target-dir="libs/armeabi" />
+        <source-file src="libs/android/arm64-v8a/libsword.so" target-dir="libs/arm64-v8a" />
+        <source-file src="libs/android/x86/libsword.so" target-dir="libs/x86" />
+        <source-file src="libs/android/mips64/libsword.so" target-dir="libs/mips64" />
+        <source-file src="libs/android/mips/libsword.so" target-dir="libs/mips" />
+        <source-file src="libs/android/armeabi-v7a/libsword.so" target-dir="libs/armeabi-v7a" />
+        <source-file src="libs/android/x86_64/libsword.so" target-dir="libs/x86_64" />
+    </platform>
+    
+    <!-- ubuntu
+    <platform name="ubuntu">
+        <header-file src="src/ubuntu/device.h" />
+        <source-file src="src/ubuntu/device.cpp" />
+        <js-module src="src/ubuntu/device.js" name="DeviceProxy">
+            <merges target="device" />
+        </js-module>
+    </platform>
+ -->
+    <!-- ios -->
+	<platform name="ios">
+		<config-file target="config.xml" parent="/*">
+			<feature name="SWORD">
+				<param name="ios-package" value="SWORD" />
+			</feature>
+		</config-file>
+		<header-file src="src/ios/flatapi.h" />
+		<header-file src="src/ios/defs.h" />
+		<header-file src="src/ios/SWORD-Bridging-Header.h" />
+		<source-file src="src/ios/SWORD.swift" />
+		<source-file src="libs/ios/libSWORD.a" framework="true" />
+		<source-file src="libs/ios/libcurl.a" framework="true" />
+		<framework src="libstdc++.dylib" />
+		<framework src="libcurl.dylib" />
+
+		<dependency id="cordova-plugin-add-swift-support" />
+
+<!--	<source-file src="lib/ios/libSWORD.a" framework="true" /> -->
+	</platform>
+
+    <!-- blackberry10
+    <platform name="blackberry10">
+        <source-file src="src/blackberry10/index.js" target-dir="Device" />
+        <config-file target="www/config.xml" parent="/widget">
+            <feature name="Device" value="Device"/>
+        </config-file>
+        <config-file target="www/config.xml" parent="/widget/rim:permissions">
+            <rim:permit>read_device_identifying_information</rim:permit>
+        </config-file>
+    </platform>
+ -->
+    <!-- wp7
+    <platform name="wp7">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Device">
+                <param name="wp-package" value="Device"/>
+            </feature>
+        </config-file>
+
+        <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+            <Capability Name="ID_CAP_IDENTITY_DEVICE" />
+        </config-file>
+
+        <source-file src="src/wp/Device.cs" />
+    </platform>
+ -->
+    <!-- wp8
+    <platform name="wp8">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Device">
+                <param name="wp-package" value="Device"/>
+            </feature>
+        </config-file>
+
+        <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+            <Capability Name="ID_CAP_IDENTITY_DEVICE" />
+        </config-file>
+
+        <source-file src="src/wp/Device.cs" />
+    </platform>
+ -->
+    <!-- windows8
+    <platform name="windows8">
+        <js-module src="src/windows8/DeviceProxy.js" name="DeviceProxy">
+            <merges target="" />
+        </js-module>
+    </platform>
+ -->
+</plugin>

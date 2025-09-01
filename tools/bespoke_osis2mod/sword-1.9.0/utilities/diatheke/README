@@ -1,0 +1,90 @@
+Diatheke Suite
+by Chris Little <chrislit@crosswire.org>
+
+This suite is intended for use with libraries and modules from
+the SWORD Project, available at http://www.crosswire.org/
+
+The latest versions of this suite and its components are available
+at http://www.crosswire.org/sword/diatheke
+
+This suite consists of the following components:
+
+Diatheke - a command line utility, good for lots of stuff
+Diatheke/CGI - a PERL CGI module interface to Diatheke 4.0
+
+--------------------------------------------------------------------
+INSTALLING Diatheke/CGI
+
+To install Diatheke/CGI, first install PERL and a webserver such as
+Apache that is capable of running PERL CGIs.  Installing mod_perl is
+recommended for a speed improvement, but is by no means necessary.
+
+Then copy the two .pl files from the ./cgi directory of this
+distribution into your cgi-bin directory.  Modify the top of
+diatheke.pl to reflect the correct location of your your diatheke
+command line utility binary and the default font if necessary. The
+CGI is now installed and ready for access.
+
+diatheke.pl is the main lookup script.  dia-def.pl is a supplemental
+script used to set a default Bible translation (saved on the 
+user's computer as a cookie).
+
+Two sample HTML files are included as sample interfaces for an
+general Web-Bible gateway.  index-public.html includes all currently
+available free texts while index-private.html includes all currently
+available texts, including those which are encrypted because
+of copyright and distribution restrictions.  In any case, you should
+only use these as a guide, adding and subtracting modules depending
+on which modules you have installed and have permission to publish
+on the internet or your intranet.  The bottom section of each file
+includes an example call to the dia-def.pl script to set a default
+Bible version.
+
+You may also direct users directly to your perl script since it will
+present a page with all of your modules.  Or you may wish to use this
+default page to create a custom index.html for your users.
+
+----------------------------------------------------------------------
+VERSION HISTORY
+
+4.7	..., 2014
+	Updated for Sword 1.8.0.
+	Supports LaTeX, XHTML, & WEBIF output.
+	Supports outputting SCSU-encoded text.
+	Added 'internal' output format, which applies no formatting
+	      filtes--useful for debugging & diagnostics.
+
+4.6     July 16, 2013
+	Updated for Sword 1.7.0.
+
+4.5	
+
+4.0	July 8, 2001
+	Updated to Sword 1.5.2 with innumerable bug fixes.
+	Now builds properly for Win32 using VC++.
+	Diatheke/Tcl and HANDiatheke were omitted, for the moment
+	from this release, but are still available in the CVS.
+
+3.0	March 31, 2001
+	Self-generating HTML page for the lazy (Diatheke/CGI).
+	Localization support. (Diatheke and Diatheke/CGI).
+
+2.5	December 10, 2000
+	Now supports ThML.  Numerous bugfixes.
+	Includes Diatheke 3.0, Diatheke/CGI 3.0, Diatheke/Tcl 3.0,
+	and HANDiatheke 3.0 (initial version, but version-synced)
+
+2.0	October 23, 1999.
+	First public release, including Diatheke 2.0, Diatheke/CGI
+	2.0, and Diatheke/Tcl 2.5.
+
+-----------------------------------------------------------------------
+COPYRIGHT
+
+The Diatheke Suite and its components, Diatheke, Diatheke/CGI, and
+Diatheke/Tcl are Copyright 1999-2014 by CrossWire Bible Society.
+HANDiatheke is Copyright 2000-2001 by CrossWire Bible Society.
+The Diatheke Suite and all of its components are licensed through
+the GNU General Public License and are intended for free distribution.
+See http://www.gnu.org/copyleft/gpl.html for details.
+

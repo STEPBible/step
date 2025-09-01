@@ -1,0 +1,73 @@
+Be sure to read INSTALL for information on how to get the software
+built, configured, and running properly.
+___________________________________________________________________
+Get the latest source and info at:
+	http://www.crosswire.org
+
+UNIX DEVELOPERS
+	You can try a './configure' (or optionally './usrinst.sh'
+	for a useful development options configuration), then 'make' from
+	this directory.  This should compile everthing needed.  You may type
+	'./configure --help' to see a list of options.
+	If all compiles fine, a 'make install' (as root, probably) will
+	install libs to your system and you may begin using the library.
+	There are a few basic tests (tests/), start of a test suite
+	(tests/testsuite/), utilities (utilities/), and examples
+	(examples/), in the tree.
+
+	To install modules, have a look at utilities/installmgr
+
+	For some basic lookup and search utilities, see
+		examples/cmdline/search
+		examples/cmdline/lookup
+		utilities/diatheke/
+
+	If you are an end user looking for a nice SWORD, graphical Bible study
+	software suite, then you'll probably want to download one of the
+	many nice frontends found at
+
+	http://crosswire.org/applications.jsp
+
+	./buildtest.cpp compiles to the executable 'buildtest' as a test to
+	see if the libs have compiled and can be linked against successfully.
+	This is NOT the final target of the build, nor does anything useful.
+		:)
+
+CMAKE
+	Alternatively, you can try building with CMake.  CMake is an alternative
+	make system for muliple platforms.  You might have a great experience
+	using the CMake build system.  See:
+	cmake/README for more information
+
+
+LANGUAGE BINDINGS
+	Other language bindings can be found in the ./bindings directory:
+	flatapi.cpp is a useful extern "C" interface for making bindings easier.
+	Kylix bindings (and maybe Delphi bindings) may be found in sword/bindings/clx
+	CORBA (orbit-c++) bindings with Java example classes in /bindings/corba
+	Perl stuff in bindings/perl
+	SWIG stuff (Python, Perl) in bindings/swig
+
+
+C++BUILDER DEVELOPERS
+	You may find project files under lib/bcppmake
+
+VC DEVELOPERS
+	You may find project files under lib/vcppmake
+
+DELPHI DEVELOPERS
+	You will need to place sword32.dll in your winsys
+		directory or elsewhere in your path.  You can find source to
+		build the dll using ./bindings/flatapi.cpp
+		or a binary at: ftp://crosswire.org/pub/sword/utils/win32/bcdlls.zip
+		header file is include/SwordAPI.pas
+		CLX components can be found under bindings/clx/
+
+.NET DEVELOPERS
+	Have a look in bindings/swig/vstudio/
+	Binaries may be found at: ftp://crosswire.org/pub/sword/utils/win32/vcdlls.zip
+
+Enjoy!
+
+Please email any questions or comments to: sword-feedback@crosswire.org
+

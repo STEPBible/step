@@ -1,0 +1,24 @@
+All tests are represented by a <test>.sh / <test>.good file pair.
+
+To run a test:
+
+./runtest.sh test
+
+This will run test.sh > test.try and compare test.try to test.good and report any differences (failures)
+
+To run all tests:
+
+./runall.sh
+
+===================================
+
+To create a new test, do whatever you want in your new mytest.sh file,
+call, executables, do anything you'd like and output results which
+matter for a good test.
+
+When all is running fine, output your .good file with:
+
+./mytest.sh > mytest.good
+
+That's it.  Simple right?  :)  So make more unit tests!
+

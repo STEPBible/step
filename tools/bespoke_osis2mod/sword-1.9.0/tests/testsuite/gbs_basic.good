@@ -1,0 +1,66 @@
+Chapter 1
+/Chapter 2
+/Chapter 3/
+Chapter 4/
+/Chapter 4/Section 1
+Chapter 5
+/Chapter 5/Section 1/
+Chapter 5/Section 2/
+Chapter 6
+Chapter 6/Section 1
+Chapter 6/Section 2
+Chapter 6/Section 3
+Chapter 7
+Chapter 7/Section 1
+Chapter 7/Section 1/Subsection 1
+Chapter 7/Section 1/Subsection 1/Paragraph 1
+Chapter 7/Section 1/Subsection 1/Paragraph 1/Sentence 1
+Chapter 8
+
+-- Plain output
+/Chapter 7: Text of chapter 7.
+
+-- RTF output
+{\rtf1\ansi{\fonttbl{\f0\froman\fcharset0\fprq2 Times New Roman;}{\f1\fdecor\fprq2 Gentium;}{\f7\froman\fcharset2\fprq2 Symbol;}}/Chapter 8: {\f1 Text of chapter 8.}\par 
+}
+
+-- imp dump
+$$$
+
+$$$/Chapter 1
+Text of chapter 1.
+$$$/Chapter 2
+Text of chapter 2.
+$$$/Chapter 3
+Text of chapter 3.
+$$$/Chapter 4
+Text of chapter 4.
+$$$/Chapter 4/Section 1
+Text of section 1 in chapter 4.
+$$$/Chapter 5
+Text of chapter 5.
+$$$/Chapter 5/Section 1
+Text of section 1 in chapter 5.
+$$$/Chapter 5/Section 2
+Text of section 2 in chapter 5.
+$$$/Chapter 6
+Text of chapter 6.
+$$$/Chapter 6/Section 1
+Text of section 1 in chapter 6.
+$$$/Chapter 6/Section 2
+Text of section 2 in chapter 6.
+$$$/Chapter 6/Section 3
+Text of section 3 in chapter 6.
+$$$/Chapter 7
+Text of chapter 7.
+$$$/Chapter 7/Section 1
+Text of section 1 in chapter 7.
+$$$/Chapter 7/Section 1/Subsection 1
+Text of subsection 1 in section 1 of chapter 7.
+$$$/Chapter 7/Section 1/Subsection 1/Paragraph 1
+Text of paragraph 1 in subsection 1 of section 1 in chapter 7.
+$$$/Chapter 7/Section 1/Subsection 1/Paragraph 1/Sentence 1
+Text of sentence 1 in paragraph 1 of subsection 1 in section 1 of chapter 7.
+$$$/Chapter 8
+Text of chapter 8.
+

@@ -1,0 +1,52 @@
+.\" ========================================================================
+.\"
+.IX Title "TEI2MOD.1 1"
+.TH TEI2MOD.1 1 "2018-11-05"
+.SH "NAME"
+tei2mod \- tool to convert TEI P5 source into a SWORD module
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+\&\fBtei2mod\fR outputpath teisource [\s-1OPTIONS\s0]
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+This utility is used to create \s-1SWORD\s0 module from a slightly modified
+\&\s-1TEI\s0 (Text Encoding Initiative) P5 formatted \s-1XML\s0 source document. The
+resulting module will be saved in the outputpath specified.
+.SH "OPTIONS"
+.IX Header "OPTIONS"
+.IP "\fB\-z\fR" 4
+.IX Item "-z"
+Specifies use of \s-1ZIP\s0 compression.  The default is no compression.
+.IP "\fB\-Z\fR" 4
+.IX Item "-Z"
+Specifies use of \s-1LZSS\s0 compression.  The default is no compression.
+.IP "\fB\-s [2|4]\fR" 4
+.IX Item "-s [2|4]"
+Specifies maximum text size per entry.  The default is 4.
+.IP "\fB\-c cipher_key\fR" 4
+.IX Item "-c cipher_key"
+Specifies that the output will be enciphered with the supplied
+cipher_key.  The default is plain text output (no encipherment).
+.IP "\fB\-N\fR" 4
+.IX Item "-N"
+Disables conversion to \s-1UTF\-8\s0 and normalization of \s-1UTF\-8\s0 to \s-1NFC.\s0  The
+default is to convert to \s-1UTF\-8,\s0 if needed, and then normalize to \s-1NFC.\s0
+Note that all \s-1UTF\-8\s0 texts should be normalized to \s-1NFC.\s0
+.SH "NOTE"
+.IX Header "NOTE"
+The input format is a subset of \s-1TEI P5\s0 with added elements borrowed
+from \s-1OSIS\s0 for verse references.  The resulting custom \s-1TEI\s0 schema is
+available at http://www.crosswire.org/osis/teiP5osis.1.4.xsd
+.SH "AUTHORS"
+.IX Header "AUTHORS"
+This man page was written by Jonathan Marsden <jmarsden@fastmail.fm>
+for the Debian project but may be used by others.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"
+.IP "http://www.crosswire.org/wiki/TEI_Dictionaries" 4
+.IX Item "http://www.crosswire.org/wiki/TEI_Dictionaries"
+.PD 0
+.IP "http://www.crosswire.org/osis/teiP5osis.1.4.xsd" 4
+.IX Item "http://www.crosswire.org/osis/teiP5osis.1.4.xsd"
+.IP "http://www.tei\-c.org/release/doc/tei\-p5\-doc/html/index.html" 4
+.IX Item "http://www.tei-c.org/release/doc/tei-p5-doc/html/index.html"

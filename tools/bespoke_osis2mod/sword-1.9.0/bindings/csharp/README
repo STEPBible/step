@@ -1,0 +1,24 @@
+Building on debian/ubuntu the commandline way
+1. sudo apt-get install cli-common-dev
+2. sudo apt-get install mono-xbuild 
+3. navigate to bindings/csharp
+4. make or xbuild Sword.csproj to build the bindings project only
+5. xbuild Sword.sln to build everything; bindings, unit tests and LookupExample.
+
+Building on debian/ubuntu the IDE way
+1. sudo apt-get install MonoDevelop
+2. launch MonoDevelop and open sword/bindings/csharp/Sword.sln
+3. Hit the run button
+
+Unit Tests
+MonoDevelop has a unit test runner built in.
+1. launch the Sword.sln file in monodevelop
+2. View->Unit Testing
+3. Right click on top level test (Sword)
+4. Run test
+
+LookupExample
+1. Navigate to sword/bindings/csharp/examples
+2. make
+3. output will be in bin/Release
+4. mono LookupExample.exe KJV john.3.16

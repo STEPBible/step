@@ -1,0 +1,99 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F594299C-1C3B-461E-B64A-6167735DCA12}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SwigSword</RootNamespace>
+    <AssemblyName>SwigSword</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="abbrev.cs" />
+    <Compile Include="AttributeListMap.cs" />
+    <Compile Include="AttributeTypeListMap.cs" />
+    <Compile Include="AttributeValueMap.cs" />
+    <Compile Include="EncodingFilterMgr.cs" />
+    <Compile Include="ListKey.cs" />
+    <Compile Include="LocaleMgr.cs" />
+    <Compile Include="LZSSCompress.cs" />
+    <Compile Include="MarkupFilterMgr.cs" />
+    <Compile Include="ModuleMap.cs" />
+    <Compile Include="RawCom.cs" />
+    <Compile Include="RawGenBook.cs" />
+    <Compile Include="RawLD.cs" />
+    <Compile Include="RawLD4.cs" />
+    <Compile Include="RawText.cs" />
+    <Compile Include="sbook.cs" />
+    <Compile Include="StringVector.cs" />
+    <Compile Include="SWBuf.cs" />
+    <Compile Include="SWClass.cs" />
+    <Compile Include="SWCom.cs" />
+    <Compile Include="SWCompress.cs" />
+    <Compile Include="SWConfig.cs" />
+    <Compile Include="SWDisplay.cs" />
+    <Compile Include="SWFilter.cs" />
+    <Compile Include="SWFilterMgr.cs" />
+    <Compile Include="SWGenBook.cs" />
+    <Compile Include="SWKey.cs" />
+    <Compile Include="SWLD.cs" />
+    <Compile Include="SWLocale.cs" />
+    <Compile Include="SWMgr.cs" />
+    <Compile Include="SWModule.cs" />
+    <Compile Include="SWObject.cs" />
+    <Compile Include="SWOptionFilter.cs" />
+    <Compile Include="Sword.cs" />
+    <Compile Include="SwordPINVOKE.cs" />
+    <Compile Include="SWSearchable.cs" />
+    <Compile Include="SWText.cs" />
+    <Compile Include="SW_POSITION.cs" />
+    <Compile Include="TreeKey.cs" />
+    <Compile Include="TreeKeyIdx.cs" />
+    <Compile Include="URL.cs" />
+    <Compile Include="VerseKey.cs" />
+    <Compile Include="VerseTreeKey.cs" />
+    <Compile Include="zCom.cs" />
+    <Compile Include="ZipCompress.cs" />
+    <Compile Include="zLD.cs" />
+    <Compile Include="zText.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+</Project>

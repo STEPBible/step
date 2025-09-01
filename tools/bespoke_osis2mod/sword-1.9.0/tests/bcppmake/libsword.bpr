@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+  <MACROS>
+    <VERSION value="BCB.05.03"/>
+    <PROJECT value="libsword.lib"/>
+    <OBJFILES value="..\..\src\keys\versekey.obj ..\..\src\keys\strkey.obj 
+      ..\..\src\keys\swkey.obj ..\..\src\keys\listkey.obj 
+      ..\..\src\mgr\swmgr.obj ..\..\src\mgr\localemgr.obj 
+      ..\..\src\mgr\swconfig.obj ..\..\src\mgr\swlocale.obj 
+      ..\..\src\mgr\filemgr.obj ..\..\src\utilfuns\utilstr.obj 
+      ..\..\src\utilfuns\utilconf.obj ..\..\src\utilfuns\Greek2Greek.obj 
+      ..\..\src\frontend\swlog.obj ..\..\src\frontend\swdisp.obj 
+      ..\..\src\modules\swmodule.obj ..\..\src\modules\comments\swcom.obj 
+      ..\..\src\modules\comments\hrefcom\hrefcom.obj 
+      ..\..\src\modules\comments\rawcom\rawcom.obj 
+      ..\..\src\modules\comments\rawfiles\rawfiles.obj 
+      ..\..\src\modules\common\lzsscomprs.obj 
+      ..\..\src\modules\common\rawstr.obj ..\..\src\modules\common\rawverse.obj 
+      ..\..\src\modules\common\sapphire.obj 
+      ..\..\src\modules\common\swcipher.obj ..\..\src\modules\common\swcomprs.obj 
+      ..\..\src\modules\filters\thmlrtf.obj 
+      ..\..\src\modules\filters\gbffootnotes.obj 
+      ..\..\src\modules\filters\gbfhtml.obj 
+      ..\..\src\modules\filters\gbfplain.obj 
+      ..\..\src\modules\filters\gbfrtf.obj ..\..\src\modules\filters\gbfstrongs.obj 
+      ..\..\src\modules\filters\gbfthml.obj 
+      ..\..\src\modules\filters\plainfootnotes.obj 
+      ..\..\src\modules\filters\plainhtml.obj 
+      ..\..\src\modules\filters\rtfhtml.obj 
+      ..\..\src\modules\filters\rwphtml.obj ..\..\src\modules\filters\rwprtf.obj 
+      ..\..\src\modules\filters\thmlgbf.obj 
+      ..\..\src\modules\filters\thmlhtml.obj 
+      ..\..\src\modules\filters\thmlplain.obj 
+      ..\..\src\modules\filters\cipherfil.obj ..\..\src\modules\lexdict\swld.obj 
+      ..\..\src\modules\lexdict\rawld\rawld.obj 
+      ..\..\src\modules\texts\swtext.obj 
+      ..\..\src\modules\texts\rawtext\rawtext.obj 
+      ..\..\src\modules\texts\ztext\ztext.obj 
+      ..\..\src\modules\common\zverse.obj ..\..\src\keys\treekey.obj 
+      ..\..\src\keys\treekeyidx.obj ..\..\src\modules\common\rawstr4.obj 
+      ..\..\src\modules\common\zstr.obj ..\..\src\modules\genbook\swgenbook.obj 
+      ..\..\src\modules\genbook\rawgenbook\rawgenbook.obj 
+      ..\..\src\mgr\swfiltermgr.obj ..\..\src\modules\filters\utf8utf16.obj 
+      ..\..\src\modules\filters\gbfheadings.obj 
+      ..\..\src\modules\filters\gbfhtmlhref.obj 
+      ..\..\src\modules\filters\gbfmorph.obj 
+      ..\..\src\modules\filters\latin1utf16.obj 
+      ..\..\src\modules\filters\latin1utf8.obj 
+      ..\..\src\modules\filters\scsuutf8.obj 
+      ..\..\src\modules\filters\swbasicfilter.obj 
+      ..\..\src\modules\filters\thmlfootnotes.obj 
+      ..\..\src\modules\filters\thmlheadings.obj 
+      ..\..\src\modules\filters\thmlhtmlhref.obj 
+      ..\..\src\modules\filters\thmllemma.obj 
+      ..\..\src\modules\filters\thmlmorph.obj 
+      ..\..\src\modules\filters\thmlscripref.obj 
+      ..\..\src\modules\filters\thmlstrongs.obj 
+      ..\..\src\modules\filters\thmlvariants.obj 
+      ..\..\src\modules\filters\unicodertf.obj 
+      ..\..\src\modules\filters\utf16utf8.obj 
+      ..\..\src\modules\filters\utf8arshaping.obj 
+      ..\..\src\modules\filters\utf8bidireorder.obj 
+      ..\..\src\modules\filters\utf8cantillation.obj 
+      ..\..\src\modules\filters\utf8greekaccents.obj 
+      ..\..\src\modules\filters\utf8hebrewpoints.obj 
+      ..\..\src\modules\filters\utf8arabicpoints.obj 
+      ..\..\src\modules\filters\utf8html.obj 
+      ..\..\src\modules\filters\utf8latin1.obj 
+      ..\..\src\modules\filters\utf8nfc.obj 
+      ..\..\src\modules\filters\utf8nfkd.obj 
+      ..\..\src\modules\filters\utf8transliterator.obj 
+      ..\..\src\utilfuns\roman.obj ..\..\src\modules\comments\zcom\zcom.obj 
+      ..\..\src\modules\lexdict\rawld4\rawld4.obj 
+      ..\..\src\modules\common\zipcomprs.obj 
+      ..\..\src\modules\lexdict\zld\zld.obj 
+      ..\..\src\modules\common\entriesblk.obj ..\..\src\utilfuns\zlib\zutil.obj 
+      ..\..\src\utilfuns\zlib\compress.obj ..\..\src\utilfuns\zlib\crc32.obj 
+      ..\..\src\utilfuns\zlib\deflate.obj ..\..\src\utilfuns\zlib\gzio.obj 
+      ..\..\src\utilfuns\zlib\infblock.obj ..\..\src\utilfuns\zlib\infcodes.obj 
+      ..\..\src\utilfuns\zlib\inffast.obj ..\..\src\utilfuns\zlib\inflate.obj 
+      ..\..\src\utilfuns\zlib\inftrees.obj ..\..\src\utilfuns\zlib\infutil.obj 
+      ..\..\src\utilfuns\zlib\trees.obj ..\..\src\utilfuns\zlib\uncompr.obj 
+      ..\..\src\utilfuns\zlib\untgz.obj ..\..\src\utilfuns\zlib\adler32.obj 
+      ..\..\src\modules\filters\thmlosis.obj 
+      ..\..\src\modules\filters\greeklexattribs.obj ..\..\src\mgr\swcacher.obj 
+      ..\..\src\modules\filters\gbfosis.obj"/>
+    <RESFILES value=""/>
+    <DEFFILE value=""/>
+    <RESDEPEN value="$(RESFILES)"/>
+    <LIBFILES value=""/>
+    <LIBRARIES value=""/>
+    <PACKAGES value=""/>
+    <PATHCPP value=".;..\..\src\keys;..\..\src\mgr;..\..\src\utilfuns;..\..\src\frontend;..\..\src\modules;..\..\src\modules\comments;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\rawfiles;..\..\src\modules\common;..\..\src\modules\filters;..\..\src\modules\lexdict;..\..\src\modules\lexdict\rawld;..\..\src\modules\texts;..\..\src\modules\texts\rawtext;..\..\src\modules\texts\ztext;..\..\src\modules\genbook;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\comments\zcom;..\..\src\modules\lexdict\rawld4;..\..\src\modules\lexdict\zld;..\..\src\utilfuns\zlib"/>
+    <PATHPAS value=".;"/>
+    <PATHRC value=".;"/>
+    <PATHASM value=".;"/>
+    <LINKER value="TLib"/>
+    <USERDEFINES value="_DEBUG"/>
+    <SYSDEFINES value="NO_STRICT"/>
+    <MAINSOURCE value="libsword.bpf"/>
+    <INCLUDEPATH value="..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <WARNINGS value="-w-par"/>
+    <LISTFILE value=""/>
+  </MACROS>
+  <OPTIONS>
+    <CFLAG1 value="-vGc -vGt -vGd -Od -H=$(BCB)\lib\vcl50.csm -Hc -Vx -Ve -X- -r- -a8 -b- -k 
+      -y -v -vi- -c -tW -tWM"/>
+    <PFLAGS value="-$Y+ -$W -$O- -v -JPHNE -M"/>
+    <AFLAGS value="/mx /w2 /zi"/>
+    <LFLAGS value="/P512"/>
+  </OPTIONS>
+  <LINKER>
+    <ALLOBJ value="$(OBJFILES)"/>
+    <ALLLIB value="cg32.lib"/>
+  </LINKER>
+  <IDEOPTIONS>
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=1033
+CodePage=1252
+
+[Version Info Keys]
+CompanyName=
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[HistoryLists\hlIncludePath]
+Count=5
+Item0=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item1=..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item2=..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item3=..\include;$(BCB)\include;$(BCB)\include\vcl
+Item4=..\src\modules\texts\rawtext;..\src\modules\texts;..\src\modules\lexdict\rawld;..\src\modules\lexdict;..\src\modules\filters;..\src\modules\common;..\src\modules\comments\rawfiles;..\src\modules\comments\rawcom;..\src\modules\comments\hrefcom;..\src\modules\comments;..\src\modules;..\src\frontend;..\src\utilfuns;..\src\mgr;..\src\keys;$(BCB)\include;$(BCB)\include\vcl
+
+[HistoryLists\hlLibraryPath]
+Count=4
+Item0=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib
+Item1=..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib
+Item2=..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib
+Item3=..\src\modules\texts\rawtext;..\src\modules\texts;..\src\modules\lexdict\rawld;..\src\modules\lexdict;..\src\modules\filters;..\src\modules\common;..\src\modules\comments\rawfiles;..\src\modules\comments\rawcom;..\src\modules\comments\hrefcom;..\src\modules\comments;..\src\modules;..\src\frontend;..\src\utilfuns;..\src\mgr;..\src\keys;$(BCB)\lib\obj;$(BCB)\lib
+
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=$(BCB)\source\vcl
+
+[HistoryLists\hlConditionals]
+Count=1
+Item0=_DEBUG
+
+[HistoryLists\hlTlibPageSize]
+Count=5
+Item0=0x0200
+Item1=0x0080
+Item2=0x0040
+Item3=0x0020
+Item4=0x0010
+
+[Debugging]
+DebugSourceDirs=$(BCB)\source\vcl
+
+[Parameters]
+RunParams=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteDebug=0
+
+[Compiler]
+ShowInfoMsgs=0
+LinkDebugVcl=0
+LinkCGLIB=1
+
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
+  </IDEOPTIONS>
+</PROJECT>

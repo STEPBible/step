@@ -1,0 +1,2 @@
+#!/bin/sh
+svn mergeinfo --show-revs=eligible ^/trunk | tr "\\n" "," | xargs -i svn log -c {} ^/trunk

@@ -41,7 +41,7 @@ var FeedbackView = Backbone.View.extend({
         '</div>' + //end body
         '<div class="modal-footer">' +
         '<button type="button" class="btn cancelFeedback stepButton" data-dismiss="modal"><%= __s.cancel %></button>' +
-        '<button type="button" class="btn sendFeedback stepPressedButton"><%= __s.help_submit %></button>' +
+        '<button type="button" class="btn sendFeedback stepButton stepPressedButton"><%= __s.help_submit %></button>' +
         '</div>' + //end footer
         '</div>' + //end content
         '</div>' + //end dialog

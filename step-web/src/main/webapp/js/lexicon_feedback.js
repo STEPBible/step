@@ -1,7 +1,7 @@
 window.step = window.step || {};
 step.lexiconFeedback = {
 	init: function(strong, ref, bibleVersion) {
-		$(".sendFeedback").click(function (ev) {
+		$(".sendFeedback2").click(function (ev) {
             ev.preventDefault();
             if(!step.lexiconFeedback.validate()) {
                 return;

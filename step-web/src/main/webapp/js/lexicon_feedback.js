@@ -52,7 +52,7 @@ step.lexiconFeedback = {
         feedbackForm.find("input, select, textarea").each(function(i, item) {
            var el = $(this);
            var re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-           if (step.util.isBlank(el.val()) || (el.attr("id") == 'feedbackEmail' && (re.exec(el.val()) == null))) {
+           if (step.util.isBlank(el.val()) || (el.attr("id") == 'lexfeedbackEmail' && (re.exec(el.val()) == null))) {
                el.closest(".form-group").addClass("has-error");
                success = false;
            } else {

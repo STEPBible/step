@@ -26,6 +26,8 @@ import org.apache.http.util.EntityUtils;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.getNonNullString;
 
@@ -47,7 +49,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     private static String[] previousEmails = new String[10];
     private static long[] previousTimes = new long[10];
     private static int feedbackCounts = 0;
-
+    private static Pattern p = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     @Inject
     public SupportRequestServiceImpl(@Named("app.jira.create.issue") final String createTemplate,
                                      @Named("app.jira.create.endpoint") final String jiraEndpoint,
@@ -154,6 +156,14 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         HttpPost post = null;
         HttpResponse response = null;
         long currentTime = System.currentTimeMillis();
+        Matcher m = p.matcher(escapedEmail);
+        if (!m.matches()) {
+            System.out.println("Feedback has bad email: " + escapedEmail +
+                    ", summary: " + escapedSummary + ", description: " + escapedDescription +
+                    ", URL: " + escapedUrl + ", type: " + escapedType);
+            return handleHttpResponseFailure(response, null);
+        }
+
         int repeatedCount = 0;
         if (escapedEmail.equals("sample@email.tst")) // This is an email which was used by a robot generating hundreds of feedbacks on Jan 27, 2025
             repeatedCount = 4;

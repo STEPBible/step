@@ -2586,7 +2586,7 @@ step.util = {
 						'</div>' + //end body
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn cancelFeedback2 stepButton" data-dismiss="modal"><%= __s.cancel %></button>' +
-							'<button type="button" class="btn sendFeedback2 stepPressedButton"><%= __s.help_submit %></button>' +
+							'<button type="button" class="btn sendFeedback2 stepButton stepPressedButton"><%= __s.help_submit %></button>' +
 						'</div>' + //end footer
 						'<script>' +
 							'$(document).ready(function () {' +

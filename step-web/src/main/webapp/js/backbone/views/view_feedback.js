@@ -41,7 +41,7 @@ var FeedbackView = Backbone.View.extend({
         '</div>' + //end body
         '<div class="modal-footer">' +
         '<button type="button" class="btn cancelFeedback stepButton" data-dismiss="modal"><%= __s.cancel %></button>' +
-        '<button type="button" class="btn sendFeedback stepPressedButton"><%= __s.help_submit %></button>' +
+        '<button type="button" class="btn sendFeedback stepButton stepPressedButton"><%= __s.help_submit %></button>' +
         '</div>' + //end footer
         '</div>' + //end content
         '</div>' + //end dialog
@@ -55,7 +55,8 @@ var FeedbackView = Backbone.View.extend({
         //we check and add error classes if need be
         this.feedbackForm.find("input, select, textarea").each(function(i, item) {
            var el = $(this);
-           if(step.util.isBlank(el.val()) || (el.attr("id") == 'feedbackEmail' && el.val().indexOf('@') == -1)) {
+           var re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+           if (step.util.isBlank(el.val()) || (el.attr("id") == 'feedbackEmail' && (re.exec(el.val()) == null))) {
                el.closest(".form-group").addClass("has-error");
                success = false;
            } else {

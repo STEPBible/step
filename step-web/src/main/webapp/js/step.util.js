@@ -421,8 +421,10 @@ step.util = {
 			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
 
 		var updatedStrong = strong.replace(/[a-zA-Z]$/, "").replace(/\!$/, "");
-		if (updatedStrong !== strong)
-			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
+		if (updatedStrong !== strong) {
+			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass); // This or next line is probably not needed
+			$(htmlTag1 + "*='" + updatedStrong + "']" + htmlTag2, htmlObject).addClass(cssClass);
+		}
     },
     refreshWaitStatus: function () {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());

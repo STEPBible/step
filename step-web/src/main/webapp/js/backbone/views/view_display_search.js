@@ -149,7 +149,13 @@ var SearchDisplayView = DisplayView.extend({
 
             //everything is now attached, so we can add handlers
             this._doSpecificSearchHandlers();
-            this.getScrollableArea().scroll(function () {
+            var scrollableArea = this.getScrollableArea();
+            var scrollHeight = scrollableArea.prop("scrollHeight");
+            var clientHeight = scrollableArea.prop("clientHeight");
+            if ((typeof scrollHeight === "number") && (typeof clientHeight === "number") &&
+                (scrollHeight <= clientHeight))
+                self.getMoreResults();
+            scrollableArea.scroll(function () {
                 self.getMoreResults();
             });
         }
@@ -238,7 +244,6 @@ var SearchDisplayView = DisplayView.extend({
         return this.$el.closest(".passageContent").find("> span");
     },
     getMoreResults: function () {
-        var self = this;
 
         //never load new pages
         if (!this.hasPages) {
@@ -275,7 +280,6 @@ var SearchDisplayView = DisplayView.extend({
 
             //append results
             //change page number to be one more...
-            var startTime = new Date().getTime();
             this.pageNumber = newPageNumber;
 
             //we don't want to update the page URL here

@@ -1,0 +1,67 @@
+/******************************************************************************/
+/*
+  A scrolling device based upon the ring control common on TV remotes.
+
+  Typical code would be something like:
+
+    <div id='jframework-scrollRing' title='Scroll'>
+      <button id='jframework-scrollRingScrollUpButton'    title='Scroll'></button>
+      <button id='jframework-scrollRingScrollDownButton'  title='Scroll'></button>
+      <button id='jframework-scrollRingScrollLeftButton'  title='Scroll'></button>
+      <button id='jframework-scrollRingScrollRightButton' title='Scroll'></button>
+    </div>
+
+  You will need to add mousedown handlers to each of the buttons.  I haven't
+  given an example here because the functionality may well vary from one
+  application to another.  However, you may find it useful to look at
+  ClassScrollButtonHandler in j_genealogy.js.
+*/
+
+#jframework-scrollRing {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 30% 30%, #888 20%, #222 60%, #000 90%);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Stronger shadow for lift */
+    z-index: 10;
+}
+
+#jframework-scrollRing button {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.0); /* Semi-transparent */
+    border: none;
+    cursor: pointer;
+    border-radius: 50%; /* Makes them circular */
+    transition: background 0.2s;
+    opacity: 0.8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Positioning the buttons correctly */
+#jframework-scrollRingScrollUpButton { top: 5px; left: 50%; transform: translateX(-50%); }
+#jframework-scrollRingScrollDownButton { bottom: 5px; left: 50%; transform: translateX(-50%); }
+#jframework-scrollRingScrollLeftButton { left: 5px; top: 50%; transform: translateY(-50%); }
+#jframework-scrollRingScrollRightButton { right: 5px; top: 50%; transform: translateY(-50%); }
+
+
+/* Adding visible arrows inside the buttons */
+#jframework-scrollRingScrollUpButton::before { content: "▲"; font-size: 16px; color: white; }
+#jframework-scrollRingScrollDownButton::before { content: "▼"; font-size: 16px; color: white; }
+#jframework-scrollRingScrollLeftButton::before { content: "◄"; font-size: 16px; color: white; }
+#jframework-scrollRingScrollRightButton::before { content: "►"; font-size: 16px; color: white; }
+
+
+/* Hover effect */
+#jframework-scrollRing button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+

@@ -1,0 +1,104 @@
+/******************************************************************************/
+/* Common definitions. */
+/******************************************************************************/
+
+:root {
+    /* STEPBible system-wide definitions which I've seen in other files.  Probably I should be picking these up from somewhere else, but I haven't worked out where. */
+    --clrHighlight: #17758F;
+    --clrHighlightBg: #17758F;
+    --clrStrongText: #447888;
+    --clrLexiconFocusBG: #c8d8dc;
+    --clrRelatedWordBg: #b2e5f3;
+    --clrBackground: #ffffff;
+    --clrText: #5d5d5d;
+    --clr2ndHover: #d3d3d3;
+    --simulated-sidebar-width: 100%;
+
+    --defaultFontSize: medium;
+
+    --minimumSizeOfBigScreens: 960;
+
+    
+    /* Definitions common to framework applications. */
+    --jframework-clrPopUpMenuItemBackgroundUnselected: rgb(255, 255, 192);
+    --jframework-clrInfoBoxBackground: rgb(255, 255, 192);
+    --jframework-clrPopUpMenuItemBackgroundSelected: var(--clrHighlight);
+
+    --jframework-clrSearchBoxBackground: #eef9fc;
+
+    --jframework-clrStandardBorder: var(--clrHighlight);
+    --jframework-clrButtonText: var(--clrHighlight);
+    --jframework-clrButtonHover: var(--jframework-clrPopUpMenuItemBackgroundUnselected);
+    --jframework-clrGreyedBtnText: rgb(192, 192, 192);
+    
+    --jframework-clrStandoutText: var(--clrHighlight);
+
+    --jframework-clrPopUpMenuItemTextSelected: white;
+    --jframework-clrPopUpMenuItemTextUnselected: black;
+
+    --jframework-fontFamilyPopUpMenuItem: sans-serif;
+    --jframework-fontSizePopUpMenuItem: medium;
+    
+    --jframework-popUpOverlayZIndex: 999;
+    --jframework-popUpZIndex: 1000;
+
+    --jframework-clrLink: blue;
+    --jframework-clrLinkHighlightBackground: #b2e5f3;
+    --jframework-clrLinkHighlightForeground: yellow;
+}
+    
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+        
+body, html {
+    height: 100%;
+    width: 100%;
+    font-size: var(--defaultFontSize);
+    background: var(--clrBackground);
+}
+
+
+
+/*--- ChatGPT recommends using buttons in place of <a> as making things more accessible. ---*/
+
+.jframework-linkAsButton jframework-clickable {
+    color: var(--clrHighlight);
+    cursor: pointer;
+}
+
+.jframework-linkAsButton {
+    background: none;
+    color: var(--jframework-clrLink);
+    text-decoration: underline;
+    border: none;
+    cursor: pointer;
+}
+
+
+.jframework-linkAsButton:hover {
+    background: var(--jframework-clrLinkHighlightBackground);
+    color: var(--jframework-clrLinkHighlightForeground) !important;
+}
+
+
+
+/*--- Search box. --- */
+.jframework-tableWithSearchBox-highlightTableEntry {
+    background: var(--jframework-clrPopUpMenuItemBackgroundUnselected) !important;
+}
+
+
+
+/*--- Text. ---*/
+.jframework-standardText {
+    font-family: Georgia, serif;
+    font-size: var(--defaultFontSize) !important;
+}
+
+
+

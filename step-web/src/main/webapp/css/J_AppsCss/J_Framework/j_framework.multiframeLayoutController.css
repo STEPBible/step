@@ -1,0 +1,205 @@
+/******************************************************************************/
+/* Multiframe layout.
+
+   MAKE SURE YOU INCLUDE j_framework.common.css
+*/
+/******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+/* General. */
+
+body, html {
+    display: flex;
+}
+
+iframe {
+    border: none;
+    width: 100%;
+}
+
+.jframework-bigEmoji { /* Used on the names which appear on tabbed dialogue box tabs. */
+    font-size: x-large;
+}
+
+
+
+/*----------------------------------------------------------------------------*/
+/* Used by both wide and tabbed layouts.  Don't change. */
+      
+.jframework-tabLegend {
+    display: none;
+}
+
+jframework-iframePlaceHolder {
+    height: 100%;
+    width: 100%;
+}
+      
+.jframework-layoutSensitiveIFrame {
+    display: flex;
+    flex-grow: 1;
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+}
+
+jframework-iframeList {
+    display: none;
+}
+
+
+
+/*----------------------------------------------------------------------------*/
+/* Resizers -- dotted lines between left and right columns or between top and
+   bottom rows which you can drag in order to resize things. */
+
+.jframework-widthResizer {
+    height: 100vh;
+    width: 5px;
+    cursor: ew-resize;
+    background: transparent;
+    border-right: 4px dotted salmon;
+    position: relative;
+}
+
+
+.jframework-heightResizer {
+    height: 5px;
+    cursor: ns-resize;
+    background: transparent;
+    border-top: 4px dotted salmon;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+.jframework-horizontalSeparator {
+    margin-bottom: 20px;
+}
+
+.jframework-verticalSeparator {
+    margin-right: 5px;
+}
+
+
+/*----------------------------------------------------------------------------*/
+/* Wide layout.  These are the default settings for a 2-column display with
+   more than one iframe in the column.  There should be no need to override
+   them: the processing will do that if it finds a need to do so. */
+
+jframework-wideLayoutVisibilityController {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+jframework-wideLayoutContentContainer {
+    display: flex;
+    flex-direction: row;
+    flex:1;
+    justify-content: center;
+    align-items: center;
+}
+
+jframework-leftColumn {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    height: 100%;
+}
+
+jframework-rightColumn {
+    display: flex;
+    height: 100%;
+    flex-grow: 1;
+}
+
+
+/*----------------------------------------------------------------------------*/
+/* General tabbed layout. */
+
+.jframework-tabbedLayoutIframeHolder {
+    height: 100%;
+    width: 100%;
+}
+
+jframework-tabbedLayoutVisibilityController {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+jframework-tabbedLayoutButtonBar {
+    display: flex;
+    flex-direction: row;
+}
+
+jframework-tabbedLayoutContent {
+    height: 100%;
+    width: 100%;
+}
+
+
+/*----------------------------------------------------------------------------*/
+/* A nifty expedient suggested by ChatGPT.
+
+   In tabbed dialog mode, you have one tab visible, and the others invisible.
+   Quite often changes in one tab are supposed to effect changes in the others.
+   If the invisible ones have been made invisible using display:none, they are
+   given zero size, and under those circumstances, updates may not render
+   correctly.  The settings below get round this by avoiding display:none.
+   Instead, the frame is left at its normal size, and merely positioned well
+   away from sight.
+
+   You add this class when you want things to be invisible, and then remove
+   it in order to restore them to being visible and in their normal
+   position. */
+
+.jframework-invisible-offscreen {
+  visibility: hidden;
+  position: absolute;
+  left: -9999px;
+}
+
+
+/*----------------------------------------------------------------------------*/
+/* Tab buttons used on the tabbed dialogue layout.  You shouldn't need to
+   change any of this. */
+      
+.jframework-tabButton {
+    background: #555;
+    color: white;
+    float: left;
+    border-left: 2px solid black;
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+    outline: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: medium;
+    font-weight: bold;
+    border-radius: 20px 20px 0px 0px;
+    margin-bottom: 12px;
+}
+
+.jframework-tabButtonSelected {
+    background: white !important;
+    color: black !important;
+    border-bottom: 1px solid white !important;
+}
+
+.jframework-tabButton:hover {
+    background-color: #777;
+}
+
+.jframework-tabButton:active {
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4), inset -2px -2px 5px rgba(255, 255, 255, 0.6); /* Pressed effect */
+    background: yellow;
+    color: black;
+}

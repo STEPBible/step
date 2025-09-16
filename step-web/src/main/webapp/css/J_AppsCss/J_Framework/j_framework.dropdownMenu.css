@@ -1,0 +1,64 @@
+/******************************************************************************/
+/*
+  Handles a dropdown menu.
+
+  Here's a typical example:
+
+    <div class='jframework-dropdownMenuContainer'>
+      <button class='jframework-3dButton jframework-3dButton-stepHighlight' id='hamburgerMenuButton' title='Show menu' onclick="document.getElementById('hamburgerMenu').classList.add('jframework-show')">&#x2630;</button>
+
+      <div id='hamburgerMenu' class='jframework-dropdownMenu'>
+        <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showBuiltInTreesDialog()">Important family trees</button>
+	<button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showLayoutMenu()">Layout</button>
+        <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showHelpMenu()">Help</button>
+      </div>
+   </div>
+
+
+  One additional issue: If you have a dropdown menu, you almost certainly want
+  to hide it automatically if the user clicks outside of it.  You can use
+  j_framework.utils.js / arrangeToHideItemsIfClickOutside to do this.
+*/
+
+.jframework-dropdownMenuContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.jframework-dropdownMenu.jframework-dropdownMenu-show {
+    display: flex !important;
+}
+
+.jframework-dropdownMenu {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--jframework-clrPopUpMenuItemBackgroundUnselected);
+    /* border: 1px solid #ccc; */
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    z-index: var(--jframework-popUpZIndex);
+    white-space: nowrap;
+    overflow-x: hidden;
+    flex-direction: column;
+}
+
+
+.jframework-dropdownMenuItem {
+    all: unset;
+    padding: 15px 12px;
+    cursor: pointer;
+    color: var(--jframework-clrPopUpMenuItemTextUnselected);
+    font-size: var(--jframework-fontSizePopUpMenuItem);
+    font-family: var(--jframework-fontFamilyPopUpMenuItem);
+    border: none;
+    text-align: left;
+    display: block;
+    border: none;
+    width: 100%;
+}
+
+.jframework-dropdownMenuItem:hover {
+    background-color: var(--jframework-clrPopUpMenuItemBackgroundSelected);
+    color: var(--jframework-clrPopUpMenuItemTextSelected);
+}

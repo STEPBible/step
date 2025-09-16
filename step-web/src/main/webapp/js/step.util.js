@@ -421,8 +421,10 @@ step.util = {
 			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
 
 		var updatedStrong = strong.replace(/[a-zA-Z]$/, "").replace(/\!$/, "");
-		if (updatedStrong !== strong)
-			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass);
+		if (updatedStrong !== strong) {
+			$(htmlTag1 + "*='" + strong + "']" + htmlTag2, htmlObject).addClass(cssClass); // This or next line is probably not needed
+			$(htmlTag1 + "*='" + updatedStrong + "']" + htmlTag2, htmlObject).addClass(cssClass);
+		}
     },
     refreshWaitStatus: function () {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
@@ -2643,8 +2645,8 @@ step.util = {
 							'</form>' +
 						'</div>' + //end body
 						'<div class="modal-footer">' +
-							'<button type="button" class="btn stepButton" data-dismiss="modal"><%= __s.close %></button>' +
-							'<button type="button" class="btn sendFeedback stepButton"><%= __s.help_feedback %></button>' +
+							'<button type="button" class="btn cancelFeedback2 stepButton" data-dismiss="modal"><%= __s.cancel %></button>' +
+							'<button type="button" class="btn sendFeedback2 stepButton stepPressedButton"><%= __s.help_submit %></button>' +
 						'</div>' + //end footer
 						'<script>' +
 							'$(document).ready(function () {' +

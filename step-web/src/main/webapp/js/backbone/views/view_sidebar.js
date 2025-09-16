@@ -376,6 +376,7 @@ var SidebarView = Backbone.View.extend({
         this._initExpandCollapse("GeneralRelatedWords");
         this._initExpandCollapse("GrammarInfo");
         this._isItALocation(data.vocabInfos[0], ref);
+        this._isItAPerson(data.vocabInfos[0]);
         var lexiconBackButtonElement = $("#lexicon-back-button");
         if (lexiconBackButtonElement.length != 1)
             return;
@@ -422,7 +423,7 @@ var SidebarView = Backbone.View.extend({
                 .append(" ")
                 .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
-				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span>')
+				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span><span class="possiblePerson' + mainWord.strongNumber + '"></span>')
         );
     },
 
@@ -1116,6 +1117,20 @@ var SidebarView = Backbone.View.extend({
         this.renderBriefMorphItem(panel, info, "gender");
         this.renderBriefMorphItem(panel, info, "state");
         this.renderBriefMorphItem(panel, info, "suffix");
+        // remove the extra space that was added after the final morph item
+        // find the last text node and trim any trailing whitespace so we do not
+        // end up with a space immediately before the closing parenthesis
+        var contents = panel.contents();
+        if (contents.length) {
+            var lastNode = contents.get(contents.length - 1);
+            if (lastNode.nodeType === 3) { // text node
+                lastNode.nodeValue = lastNode.nodeValue.replace(/\s+$/, "");
+                if (lastNode.nodeValue.length === 0) {
+                    // if it was only whitespace remove the node completely
+                    $(lastNode).remove();
+                }
+            }
+        }
         panel.append(")");
         if (morphCount > 1) {
             if ((typeof ref === "string") && (ref !== "") && (typeof strongNum === "string") &&
@@ -1343,5 +1358,34 @@ var SidebarView = Backbone.View.extend({
 
             });
         }
-    }
+    },
+
+	_lookUpPersonInfo: function(mainWord) {
+		var possiblePersonElement = $(".possiblePerson" + mainWord.strongNumber);
+		if (possiblePersonElement.length == 0) {
+			console.log ("cannot find possible Person ID in html");
+			possiblePersonElement = $(".possiblePerson" + mainWord.strongNumber);
+		}
+		// Use the current host as the root rather than the hard-coded test.stepbible.org instance
+		var root = (window.location && window.location.origin) ? window.location.origin : (window.location.protocol + "//" + window.location.host);
+		possiblePersonElement.empty().html("<a href='" + root + "/html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?strong=" + mainWord.strongNumber + "' target='_new'><button type='button' class='stepButton' ><b>Family</b></button></a>");
+	},
+
+	_isItAPerson: function(mainWord) {
+		var strongNum = mainWord.strongNumber.trim();
+		var self = this;
+		if (Array.isArray(step.peopleList)) {
+			if (step.peopleList.indexOf(strongNum) > -1) {
+				self._lookUpPersonInfo(mainWord);
+			}
+			return;
+		}
+		// Load JSON asynchronously so that the initial page render is not delayed
+		$.getJSON('/html/json/J_AppsJson/J_Genealogy/j_people.json', function(data) {
+			step.peopleList = data;
+			if (data.indexOf(strongNum) > -1) {
+				self._lookUpPersonInfo(mainWord);
+			}
+		});
+	}
 });

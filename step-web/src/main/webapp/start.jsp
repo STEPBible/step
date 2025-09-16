@@ -256,6 +256,7 @@
                                         <li><a href="html/prophets.html" target="_blank" rel="noopener">Prophets in the Bible</a></li>
                                         <li><a href="html/places.html" target="_blank" rel="noopener">Places in the Bible</a></li>
                                         <li><a href="html/names.html" target="_blank" rel="noopener">Names of God</a></li>
+                                        <li><a href="html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?showBuiltInTrees" target="_blank" rel="noopener">People in the Bible</a></li>
                                         <li role="separator" class="divider" style="border-top:1px solid var(--clr2ndHover);"></li>
                                         <li><a href="#" onclick="step.util.ui.initSidebar('readingPlans'); return false;">Reading Plans</a></li>
                                         <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank" rel="noopener">Create your own notes</a></li>

@@ -235,7 +235,8 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         return;
     }
 
-    private void getBooksWithinRange(List<BookName> books, Iterator<BibleBook> bookIterator, Versification masterV11n, String scopeInConfig) {
+    private void getBooksWithinScope(List<BookName> books, Iterator<BibleBook> bookIterator, Versification masterV11n,
+                                     String scopeInConfig, final String masterBook) {
         if (scopeInConfig.equals("NTOnly"))
             scopeInConfig = "Matt-Rev";
         String[] parts = scopeInConfig.split(",");
@@ -270,7 +271,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         if (scopeInConfig.equals(""))
             getAllBooks(books, bookIterator, masterV11n);
         else {
-            getBooksWithinScope(books, bookIterator, masterV11n, scopeInConfig);
+            getBooksWithinScope(books, bookIterator, masterV11n, scopeInConfig, masterBook);
             if (books.size() == 0)
                 getAllBooks(books, bookIterator, masterV11n);
         }

@@ -207,55 +207,6 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         }
     }
 
-    private void getAllBooks(List<BookName> books, Iterator<BibleBook> bookIterator, Versification masterV11n) {
-        while (bookIterator.hasNext()) {
-            final BibleBook book = bookIterator.next();
-            addBookName(books, book, masterV11n);
-        }
-    }
-
-    private void getBooksWithinRange(List<BookName> books, Iterator<BibleBook> bookIterator, Versification masterV11n, String low, String high) {
-        low = low.trim();
-        high = high.trim();
-        if (low.equals("Mat")) low = "Matt";
-        if (high.equals("Mat")) high = "Matt";
-        boolean start = false;
-        while (bookIterator.hasNext()) {
-            final BibleBook book = bookIterator.next();
-            if (!start) {
-                if (book.getOSIS().equals(low))
-                    start = true;
-            }
-            if (start) {
-                addBookName(books, book, masterV11n);
-                if (book.getOSIS().equals(high))
-                    return;
-            }
-        }
-        return;
-    }
-
-    private void getBooksWithinScope(List<BookName> books, Iterator<BibleBook> bookIterator, Versification masterV11n,
-                                     String scopeInConfig, final String masterBook) {
-        if (scopeInConfig.equals("NTOnly"))
-            scopeInConfig = "Matt-Rev";
-        String[] parts = scopeInConfig.split(",");
-        for (int i = 0; i < parts.length; i ++) {
-            String[] range = parts[i].split("-");
-            if (range.length > 3)
-                System.out.println("Scope in the conf file of " + masterBook + " has too many commas: " + scopeInConfig);
-            else {
-                String high;
-                String low = range[0];
-                if (range.length == 1)
-                    high = low;
-                else
-                    high = range[1];
-                getBooksWithinRange(books, bookIterator, masterV11n, low, high);
-            }
-        }
-    }
-
     /**
      * Returns all 66 books (or more) of the Bible.
      *
@@ -267,13 +218,10 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         final String masterBook = getDefaultedVersion(context);
         final Versification masterV11n = this.versificationService.getVersificationForVersion(masterBook);
         final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
-        String scopeInConfig = this.versificationService.getBookSilently(masterBook).getBookMetaData().getScopeInConfig();
-        if (scopeInConfig.equals(""))
-            getAllBooks(books, bookIterator, masterV11n);
-        else {
-            getBooksWithinScope(books, bookIterator, masterV11n, scopeInConfig, masterBook);
-            if (books.size() == 0)
-                getAllBooks(books, bookIterator, masterV11n);
+        
+        while (bookIterator.hasNext()) {
+            final BibleBook book = bookIterator.next();
+            addBookName(books, book, masterV11n);
         }
         return books.toArray(new BookName[books.size()]);
     }

@@ -218,10 +218,15 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         final String masterBook = getDefaultedVersion(context);
         final Versification masterV11n = this.versificationService.getVersificationForVersion(masterBook);
         final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
-        
+        final Book bookForThisVersion = this.versificationService.getBookFromVersion(masterBook);
+        final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
+
         while (bookIterator.hasNext()) {
             final BibleBook book = bookIterator.next();
-            addBookName(books, book, masterV11n);
+            final Key keyToBook = bookForThisVersion.getValidKey(book.getOSIS());
+            keyToBook.retainAll(keysOfThisVersion);
+            if (keyToBook.getCardinality() != 0)
+                addBookName(books, book, masterV11n);
         }
         return books.toArray(new BookName[books.size()]);
     }

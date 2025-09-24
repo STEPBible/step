@@ -15,6 +15,7 @@ public class BibleVersion implements Serializable {
     private boolean hasStrongs;
     private boolean hasMorphology;
     private boolean hasRedLetter;
+    private String typeOfCommonBooks;
     private boolean hasNotes;
     private boolean hasHeadings;
     private boolean questionable;
@@ -154,6 +155,13 @@ public class BibleVersion implements Serializable {
         this.hasRedLetter = hasRedLetter;
     }
 
+    public void setHasCommonBooks(final String typeOfCommonBooks) {
+        this.typeOfCommonBooks = typeOfCommonBooks;
+    }
+
+    public String getHasCommonBooks() {
+        return this.typeOfCommonBooks;
+    }
     /**
      * @return the shortInitials
      */

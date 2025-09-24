@@ -2,10 +2,12 @@ package com.tyndalehouse.step.core.utils;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import org.crosswire.common.util.Language;
 import org.crosswire.common.util.Languages;
 import org.crosswire.jsword.book.*;
 import org.crosswire.jsword.book.basic.AbstractPassageBook;
+import org.crosswire.jsword.book.sword.SwordBook;
 import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.BibleNames;
@@ -29,6 +31,16 @@ public final class JSwordUtils {
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "he";
     private static final String ANCIENT_HEBREW_HBO = "hbo";
+    private static final List<String> allNT = new ArrayList<>(Arrays.asList(
+            "Matt", "Mark", "Luke", "John", "Acts", "Rom", "1Cor", "2Cor", "Gal",
+            "Eph", "Phil", "Col", "1Thess", "2Thess", "1Tim", "2Tim", "Titus", "Phlm",
+            "Heb", "Jas", "1Pet", "2Pet", "1John", "2John", "3John", "Jude", "Rev"));
+    private static final List<String> allOT = new ArrayList<>(Arrays.asList(
+            "Gen", "Exod", "Lev", "Num", "Deut", "Josh", "Judg", "Ruth", "1Sam",
+            "2Sam", "1Kgs", "2Kgs", "1Chr", "2Chr", "Ezra", "Neh", "Esth", "Job",
+            "Ps", "Prov", "Eccl", "Song", "Isa", "Jer", "Lam", "Ezek", "Dan",
+            "Hos", "Joel", "Amos", "Obad", "Jonah", "Mic", "Nah", "Hab", "Zeph",
+            "Hag", "Zech", "Mal"));
 
     /**
      * hiding implementaiton
@@ -90,7 +102,7 @@ public final class JSwordUtils {
      * @return the list of bibles
      */
     public static List<BibleVersion> getSortedSerialisableList(final Collection<Book> bibles,
-            final Locale userLocale, final VersionResolver resolver) {
+            final Locale userLocale, final VersionResolver resolver, final JSwordVersificationService versificationService) {
 //        final List<BibleVersion> versions = new ArrayList<BibleVersion>();
         final Map<String, BibleVersion> versions = new HashMap<>();
 
@@ -137,7 +149,7 @@ public final class JSwordUtils {
             v.setHasHeadings(b.hasFeature(FeatureType.HEADINGS));
             v.setHasNotes(b.hasFeature(FeatureType.FOOTNOTES) || b.hasFeature(FeatureType.SCRIPTURE_REFERENCES));
             v.setHasSeptuagintTagging(resolver.isSeptuagintTagging(b));
-
+            v.setHasCommonBooks(hasCommonBibleBooks(b, versificationService));
             //now only put the version in if
             // a- it is not in the map already
             // b- it is in the map, but the initials of the one being put in are different, meaning STEP
@@ -165,6 +177,67 @@ public final class JSwordUtils {
         });
 
         return values;
+    }
+
+    private static String hasCommonBibleBooks (final Book b, final JSwordVersificationService versificationService) {
+        Set<BibleBook> bibleBooksInThisVersion = ((SwordBook) b).getBibleBooks();
+        int booksSize = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
+        if ((booksSize != 27) && (booksSize != 39) && (booksSize != 66)) {
+            final Versification masterV11n = versificationService.getVersificationForVersion(b.getInitials());
+            final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
+            final Book bookForThisVersion = versificationService.getBookFromVersion(b.getInitials());
+            final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
+            bibleBooksInThisVersion = new LinkedHashSet<BibleBook>();
+            while (bookIterator.hasNext()) {
+                final BibleBook book = bookIterator.next();
+                final Key keyToBook = bookForThisVersion.getValidKey(book.getOSIS());
+                keyToBook.retainAll(keysOfThisVersion);
+                if (keyToBook.getCardinality() != 0) {
+                    if (!book.getOSIS().startsWith("Intro"))
+                        bibleBooksInThisVersion.add(book);
+                }
+            }
+            booksSize = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
+        }
+        if (booksSize == 66) {
+            boolean allOTNTBooks = true;
+            Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
+            while(itr.hasNext()){
+                String name = itr.next().getOSIS();
+                if ((!allOT.contains(name)) && (!allNT.contains(name))) {
+                    allOTNTBooks = false;
+                    break;
+                }
+            }
+            if (allOTNTBooks)
+                return "B"; // B for "Both"
+        }
+        else if (booksSize == 27) {
+            boolean allNTBooks = true;
+            Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
+            while(itr.hasNext()){
+                if (!allNT.contains(itr.next().getOSIS())) {
+                    allNTBooks = false;
+                    break;
+                }
+            }
+            if (allNTBooks)
+                return "N"; // N for "NT"
+        }
+        else if (booksSize == 39) {
+            boolean allOTBooks = true;
+            Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
+            while(itr.hasNext()){
+                String name = itr.next().getOSIS();
+                if (!allOT.contains(name)) {
+                    allOTBooks = false;
+                    break;
+                }
+            }
+            if (allOTBooks)
+                return "O"; // O for "OT"
+        }
+        return "";
     }
 
     /**

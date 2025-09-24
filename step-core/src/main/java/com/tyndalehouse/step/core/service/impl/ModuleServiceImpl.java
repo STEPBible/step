@@ -5,6 +5,8 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
@@ -29,6 +31,7 @@ public class ModuleServiceImpl implements ModuleService {
     private final JSwordModuleService jswordModuleService;
     private final Provider<ClientSession> clientSession;
     private final VersionResolver resolver;
+    private final JSwordVersificationService versificationService;
 
     /**
      * constructs a service to give module information and content.
@@ -38,10 +41,12 @@ public class ModuleServiceImpl implements ModuleService {
      */
     @Inject
     public ModuleServiceImpl(final JSwordModuleService jswordModuleService,
-            final Provider<ClientSession> clientSession, final VersionResolver resolver) {
+                             final Provider<ClientSession> clientSession, final VersionResolver resolver,
+                             final JSwordVersificationService versificationService) {
         this.jswordModuleService = jswordModuleService;
         this.clientSession = clientSession;
         this.resolver = resolver;
+        this.versificationService = versificationService;
     }
 
     @Override
@@ -49,7 +54,7 @@ public class ModuleServiceImpl implements ModuleService {
         LOGGER.debug("Getting bible versions");
         return getSortedSerialisableList(this.jswordModuleService.getInstalledModules(BookCategory.BIBLE,
                 BookCategory.COMMENTARY), this.clientSession.get().getLocale(),
-                this.resolver);
+                this.resolver, this.versificationService);
     }
 
     @Override
@@ -62,7 +67,7 @@ public class ModuleServiceImpl implements ModuleService {
         final List<Book> allModules = this.jswordModuleService.getAllModules(installerIndex, selected);
 
         return getSortedSerialisableList(subtract(allModules, installedVersions),
-                this.clientSession.get().getLocale(), this.resolver);
+                this.clientSession.get().getLocale(), this.resolver, this.versificationService);
     }
 
     /**

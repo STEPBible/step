@@ -209,7 +209,7 @@ public final class JSwordUtils {
             }
         }
         catch (Exception e) {
-            System.out.println("Bible: " + currintBibleName + "has an exception: " + e);
+            System.out.println("Bible: " + currintBibleName + "has an exception: ");
             return "";
         }
         if (booksSize == 66) {

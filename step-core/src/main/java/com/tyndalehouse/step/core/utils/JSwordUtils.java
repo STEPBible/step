@@ -183,25 +183,34 @@ public final class JSwordUtils {
     }
 
     private static String hasCommonBibleBooks (final Book b, final JSwordVersificationService versificationService) {
-        Set<BibleBook> bibleBooksInThisVersion = ((SwordBook) b).getBibleBooks();
-        int booksSize = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
-        if ((booksSize != 27) && (booksSize != 39) && (booksSize != 66)) {
-            final Versification masterV11n = versificationService.getVersificationForVersion(b.getInitials());
-            final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
-            final Book bookForThisVersion = versificationService.getBookFromVersion(b.getInitials());
-            final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
-            bibleBooksInThisVersion = new LinkedHashSet<BibleBook>();
-            while (bookIterator.hasNext()) {
-                final BibleBook book = bookIterator.next();
-                final Key keyToBook = bookForThisVersion.getValidKey(book.getOSIS());
-                keyToBook.retainAll(keysOfThisVersion);
-                if (keyToBook.getCardinality() != 0) {
-                    if (!book.getOSIS().startsWith("Intro"))
-                        bibleBooksInThisVersion.add(book);
-                }
-            }
+        String currintBibleName = b.getInitials();
+        int booksSize = 0;
+        Set<BibleBook> bibleBooksInThisVersion = null;
+        try {
+            bibleBooksInThisVersion = ((SwordBook) b).getBibleBooks();
             booksSize = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
-            System.out.println("Bible: " + b.getInitials() + " " + booksSize);
+            if ((booksSize != 27) && (booksSize != 39) && (booksSize != 66)) {
+                final Versification masterV11n = versificationService.getVersificationForVersion(b.getInitials());
+                final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
+                final Book bookForThisVersion = versificationService.getBookFromVersion(b.getInitials());
+                final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
+                bibleBooksInThisVersion = new LinkedHashSet<BibleBook>();
+                while (bookIterator.hasNext()) {
+                    final BibleBook book = bookIterator.next();
+                    final Key keyToBook = bookForThisVersion.getValidKey(book.getOSIS());
+                    keyToBook.retainAll(keysOfThisVersion);
+                    if (keyToBook.getCardinality() != 0) {
+                        if (!book.getOSIS().startsWith("Intro"))
+                            bibleBooksInThisVersion.add(book);
+                    }
+                }
+                booksSize = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
+                System.out.println("Bible: " + b.getInitials() + " " + booksSize);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Bible: " + currintBibleName + "has an exception: " + e);
+            return "";
         }
         if (booksSize == 66) {
             boolean allOTNTBooks = true;

@@ -184,12 +184,12 @@ public final class JSwordUtils {
 
     private static String hasCommonBibleBooks (final Book b, final JSwordVersificationService versificationService) {
         String currintBibleName = b.getInitials();
-        int booksSize = 0;
+        int numOfBooksInThisBible = 0;
         Set<BibleBook> bibleBooksInThisVersion = null;
         try {
             bibleBooksInThisVersion = ((SwordBook) b).getBibleBooks();
-            booksSize = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
-            if ((booksSize != 27) && (booksSize != 39) && (booksSize != 66)) {
+            numOfBooksInThisBible = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
+            if ((numOfBooksInThisBible != 27) && (numOfBooksInThisBible != 39) && (numOfBooksInThisBible != 66)) {
                 final Versification masterV11n = versificationService.getVersificationForVersion(b.getInitials());
                 final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
                 final Book bookForThisVersion = versificationService.getBookFromVersion(b.getInitials());
@@ -204,15 +204,16 @@ public final class JSwordUtils {
                             bibleBooksInThisVersion.add(book);
                     }
                 }
-                booksSize = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
-                System.out.println("Bible: " + b.getInitials() + " " + booksSize);
+                numOfBooksInThisBible = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
+                System.out.println("Bible: " + b.getInitials() + " " + numOfBooksInThisBible);
             }
         }
-        catch (Exception e) {
+        catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
             System.out.println("Bible: " + currintBibleName + "has an exception: ");
             return "";
         }
-        if (booksSize == 66) {
+        if (numOfBooksInThisBible == 66) {
             boolean allOTNTBooks = true;
             Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
             while(itr.hasNext()){
@@ -225,7 +226,7 @@ public final class JSwordUtils {
             if (allOTNTBooks)
                 return "B"; // B for "Both"
         }
-        else if (booksSize == 27) {
+        else if (numOfBooksInThisBible == 27) {
             boolean allNTBooks = true;
             Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
             while(itr.hasNext()){
@@ -237,7 +238,7 @@ public final class JSwordUtils {
             if (allNTBooks)
                 return "N"; // N for "NT"
         }
-        else if (booksSize == 39) {
+        else if (numOfBooksInThisBible == 39) {
             boolean allOTBooks = true;
             Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
             while(itr.hasNext()){

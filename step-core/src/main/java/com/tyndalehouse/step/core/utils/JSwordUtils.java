@@ -149,7 +149,9 @@ public final class JSwordUtils {
             v.setHasHeadings(b.hasFeature(FeatureType.HEADINGS));
             v.setHasNotes(b.hasFeature(FeatureType.FOOTNOTES) || b.hasFeature(FeatureType.SCRIPTURE_REFERENCES));
             v.setHasSeptuagintTagging(resolver.isSeptuagintTagging(b));
-            v.setHasCommonBooks(hasCommonBibleBooks(b, versificationService));
+            String commonBookTypes = hasCommonBibleBooks(b, versificationService);
+            System.out.println(b.getInitials() + ": " + commonBookTypes);
+            v.setHasCommonBooks(commonBookTypes);
             //now only put the version in if
             // a- it is not in the map already
             // b- it is in the map, but the initials of the one being put in are different, meaning STEP

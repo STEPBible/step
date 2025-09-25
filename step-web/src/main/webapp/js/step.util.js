@@ -2796,28 +2796,33 @@ step.util = {
                         alreadyCheckedNextOrPreviousIsValid = true;
                         if ((nextChptParts[1] - prevChptParts[1] == 2))
                             this.showDots(activePassage);
-                        else if (isNext) {
-                            if ((typeof lastChapter === "boolean") && (!lastChapter)) {
-                                if ((nextChapter === "Matt.1") &&
-                                    (step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(version.toLowerCase()) > -1)) {
-                                        step.util.tempAlert("You are at the last chapter of the " + version + ".", 3);
-                                        return false;
-                                }
-                                this.showDots(activePassage);
-                            }
-                            else if (nextChapter === "Rev.22") {
-                                step.util.tempAlert("You are at the last chapter of " + version + ".", 3);
-                                return false;                       
-                            }
-                        }
                         else {
-                            if ((previousChapter === "Gen.1") ||
-                                ((previousChapter === "Mal.4") &&
-                                (step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(version.toLowerCase()) > -1))) {
-                                    step.util.tempAlert("You are at the first chapter of " + version + ".", 3);
-                                    return false;
-                            }
-                            this.showDots(activePassage);
+							if ((typeof step.keyedVersions[version] !== "object") ||
+								(typeof step.keyedVersions[version].commonBookTypes !== "string"))
+								return;
+							if (isNext) {
+								if ((typeof lastChapter === "boolean") && (!lastChapter)) {
+									if ((nextChapter === "Matt.1") &&
+										(step.keyedVersions[version].commonBookTypes === "O")) {
+											step.util.tempAlert("You are at the last chapter of the " + version + ".", 3);
+											return false;
+									}
+									this.showDots(activePassage);
+								}
+								else if (nextChapter === "Rev.22") {
+									step.util.tempAlert("You are at the last chapter of " + version + ".", 3);
+									return false;                       
+								}
+							}
+							else {
+								if ((previousChapter === "Gen.1") ||
+									((previousChapter === "Mal.4") &&
+									(step.keyedVersions[version].commonBookTypes === "N"))) {
+										step.util.tempAlert("You are at the first chapter of " + version + ".", 3);
+										return false;
+								}
+								this.showDots(activePassage);
+							}
                         }
                     }
                 }
@@ -4815,43 +4820,43 @@ step.util = {
 		  sbHVC.show();
 	},
 	checkBibleHasTheTestament: function(versionToCheck, hasNTPassage, hasOTPassage) {
-		versionToCheck = " " + versionToCheck.toLowerCase() + " ";
-		if ((hasNTPassage) && 
-			((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionToCheck) > -1) ||
-			(" ohb thot alep wlc mapm ".indexOf(versionToCheck) > -1))) {
+		if (typeof step.keyedVersions[versionToCheck] !== "object") // Have no information, cannot check
+			return true;
+		var bookType = step.keyedVersions[versionToCheck].commonBookTypes;
+		if (bookType === "B") // Has both OT and NT
+			return true;
+		if (hasNTPassage && (bookType === "O"))
 			return false;
-		}
-		else if ((hasOTPassage) && 
-			((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(versionToCheck) > -1) ||
-			(" sblgnt ".indexOf(versionToCheck) > -1))) {
+		else if (hasOTPassage && (bookType === "N"))
 			return false;
-		}
 		return true;
 	},
 	whichBibleIsTheBest: function(otherVersions, hasNTPassage, hasOTPassage) {
-		var bestPosition = 9999;
+		// OT & NT with Strong: 1, without Strong: 11
+		// KJVA with Strong: 2
+		// NT or OT with Strong: 3, without Strong: 13 
+		var scoreForBestVersion = 9999;
 		var indexOfSelectedVersion = -1;
 		for (var i = 0; i < otherVersions.length; i ++) {
-			var versionToCheck = " " + otherVersions[i].toLowerCase() + " ";
-			var pos =	step.passageSelect.translationsWithPopularBooksChapters.indexOf(versionToCheck);
-			if (pos == -1) pos = " kjva ".indexOf(versionToCheck);
-			if (pos > -1)  pos += 20;
-			if (pos == -1) {
+			var versionToCheck = otherVersions[i];
+			if (typeof step.keyedVersions[versionToCheck] !== "object")
+				continue;
+			var bookType = step.keyedVersions[versionToCheck].commonBookTypes;
+			if ((bookType !== "O") && (bookType !== "N") && (bookType !== "B"))
+				continue;
+			var currentScore = 9999;
+			if (bookType === "B") currentScore = 1;
+			else if (versionToCheck === "KJVA") currentScore = 2;
+			else {
 				if (hasNTPassage && hasOTPassage) continue;
-				if (hasNTPassage) {
-					pos = step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(versionToCheck);
-					if (pos == -1) pos = " sblgnt ".indexOf(versionToCheck);
-					pos += 1000;
-				}
-				else if (hasOTPassage) {
-					pos = step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionToCheck);
-					if (pos == -1) pos = " ohb thot alep wlc mapm ".indexOf(versionToCheck);
-					else pos += 9; // This will give ohb and thot a lower position 
-					pos += 1000;
-				}
+				if (hasNTPassage && (bookType === "N"))
+					currentScore = 3;
+				else if (hasOTPassage && (bookType === "O"))
+					currentScore = 3;
 			}
-			if ((pos > -1) && (pos < bestPosition)) {
-				bestPosition = pos;
+			currentScore += (step.keyedVersions[versionToCheck].hasStrongs) ? 0 : 10;
+			if (currentScore < scoreForBestVersion) {
+				scoreForBestVersion = currentScore;
 				indexOfSelectedVersion = i;
 			}
 		}

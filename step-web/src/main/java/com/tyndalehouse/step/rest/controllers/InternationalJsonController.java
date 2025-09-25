@@ -79,7 +79,7 @@ public class InternationalJsonController extends HttpServlet {
         // In 2023, this reduced from from 190K to 68K.
         for (int i = 0; i < allMods.size(); i++) {
             BibleVersion currentMod = allMods.get(i);
-            String[] moduleInArray = new String[9];
+            String[] moduleInArray = new String[8];
             moduleInArray[0] = currentMod.getInitials();
             moduleInArray[1] = currentMod.getName();
             moduleInArray[2] = currentMod.getOriginalLanguage();
@@ -95,7 +95,7 @@ public class InternationalJsonController extends HttpServlet {
                                 (currentMod.isHasHeadings() ? "T" : "F") +
                                 (currentMod.isQuestionable() ? "T" : "F") +
                                 (currentMod.isHasSeptuagintTagging() ? "T" : "F") +
-                                currentMod.getHasCommonBooks(); // B == both OT and NT, N = NT and O = OT
+                                currentMod.getHasCommonBooks(); // "B" = both OT & NT, "N" = NT, "O" = OT, " " = not regular books
             response.getOutputStream().write(objectMapper.writeValueAsString(moduleInArray).getBytes(FrontController.UTF_8_ENCODING));
             if (i < allMods.size() - 1)
                 response.getOutputStream().write(",".getBytes(FrontController.UTF_8_ENCODING)); // separator

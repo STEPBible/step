@@ -4820,7 +4820,7 @@ step.util = {
 		  sbHVC.show();
 	},
 	checkBibleHasTheTestament: function(versionToCheck, hasNTPassage, hasOTPassage) {
-		if (typeof step.keyedVersions[versionToCheck] !== "object") // Cannot check
+		if (typeof step.keyedVersions[versionToCheck] !== "object") // Have no information, cannot check
 			return true;
 		var bookType = step.keyedVersions[versionToCheck].commonBookTypes;
 		if (bookType === "B") // Has both OT and NT
@@ -4855,7 +4855,7 @@ step.util = {
 					currentScore = 3;
 			}
 			currentScore += (step.keyedVersions[versionToCheck].hasStrongs) ? 0 : 10;
-			if ((currentScore < 9999) && (currentScore < scoreForBestVersion)) {
+			if (currentScore < scoreForBestVersion) {
 				scoreForBestVersion = currentScore;
 				indexOfSelectedVersion = i;
 			}

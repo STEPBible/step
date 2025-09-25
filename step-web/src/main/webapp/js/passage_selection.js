@@ -176,8 +176,8 @@ step.passageSelect = {
 			}
 		}
 		this.hasEnglishBible = atLeastOneEnglishBible;
-		var versionName = this.version.replace(/_sbonly$/, "").replace(/_sb$/, "").replace(/_th$/, "");
-		versionAltName = versionAltName.replace(/_sbonly$/, "").replace(/_sb$/, "").replace(/_th$/, "");
+		var versionName = this.version.replace(/_sb$/, "").replace(/_th$/, "");
+		versionAltName = versionAltName.replace(/_sb$/, "").replace(/_th$/, "");
 		var booksType = "";
 		if (typeof step.keyedVersions[versionName] === "object")
 			booksType = step.keyedVersions[versionName].commonBookTypes;

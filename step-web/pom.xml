@@ -810,7 +810,7 @@
 									<replacement><token>lastNumOfChapters</token><value>vC</value></replacement>
 									<replacement><token>arrayOfTyplicalBooksChapters</token><value>vD</value></replacement>
 									<replacement><token>osisChapterJsword</token><value>vE</value></replacement>
-\									<!-- for search_selection function -->
+									<!-- for search_selection function -->
 									<replacement><token>initSearchSelection\s?([:(])</token><value>σsA$1</value></replacement>
 									<replacement><token>updateAdvancedSearchElements\s?([:(])</token><value>σsB$1</value></replacement>
 									<replacement><token>_initOptions\s?([:(])</token><value>σsC$1</value></replacement>

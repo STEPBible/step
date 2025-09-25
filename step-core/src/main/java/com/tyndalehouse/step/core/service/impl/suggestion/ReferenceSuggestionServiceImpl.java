@@ -217,16 +217,30 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         final List<BookName> books = new ArrayList<BookName>();
         final String masterBook = getDefaultedVersion(context);
         final Versification masterV11n = this.versificationService.getVersificationForVersion(masterBook);
-        final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
-        final Book bookForThisVersion = this.versificationService.getBookFromVersion(masterBook);
-        final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
-
-        while (bookIterator.hasNext()) {
-            final BibleBook book = bookIterator.next();
-            final Key keyToBook = bookForThisVersion.getValidKey(book.getOSIS());
-            keyToBook.retainAll(keysOfThisVersion);
-            if (keyToBook.getCardinality() != 0)
+		String typeOfCommonBooks = JSwordUtils.typeOfCommonBooks.get(masterBook);
+        if ((typeOfCommonBooks != null) && !typeOfCommonBooks.equals(" ") && !typeOfCommonBooks.equals("N")) { // NT should be processed by the 2nd while loop below.
+            final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
+            while (bookIterator.hasNext()) { // faster loop to get all the books in the Bible
+                final BibleBook book = bookIterator.next();
                 addBookName(books, book, masterV11n);
+                if (typeOfCommonBooks.equals("O") && (books.size() == 39)) // Got all 39 OT books.
+                    break;
+            }
+            if ((typeOfCommonBooks.equals("B") && (books.size() != 66)) ||
+                (typeOfCommonBooks.equals("O") && (books.size() != 39)))
+                books.clear(); // Did not get 66 or 39 books so use the next look to get the list of books
+        }
+        if (books.size() == 0) {
+            final Book bookForThisVersion = this.versificationService.getBookFromVersion(masterBook);
+	        final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
+            final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
+            while (bookIterator.hasNext()) { // slower loop, but should be use if they do not have the 66 books or 39 OT boots.
+                final BibleBook book = bookIterator.next();
+                final Key keyToBook = bookForThisVersion.getValidKey(book.getOSIS());
+                keyToBook.retainAll(keysOfThisVersion);
+                if (keyToBook.getCardinality() != 0)
+                    addBookName(books, book, masterV11n);
+            }
         }
         return books.toArray(new BookName[books.size()]);
     }

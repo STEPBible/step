@@ -208,7 +208,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
     }
 
     /**
-     * Returns all 66 books (or more) of the Bible.
+     * Returns all books of the Bible.
      *
      * @param context the context
      * @return the list of all book names

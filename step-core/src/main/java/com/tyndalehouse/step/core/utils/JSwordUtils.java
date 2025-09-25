@@ -31,16 +31,26 @@ public final class JSwordUtils {
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "he";
     private static final String ANCIENT_HEBREW_HBO = "hbo";
-    private static final List<String> allNT = new ArrayList<>(Arrays.asList(
+    private static final HashSet<String> allNT = new HashSet<String>(Arrays.asList(
             "Matt", "Mark", "Luke", "John", "Acts", "Rom", "1Cor", "2Cor", "Gal",
             "Eph", "Phil", "Col", "1Thess", "2Thess", "1Tim", "2Tim", "Titus", "Phlm",
             "Heb", "Jas", "1Pet", "2Pet", "1John", "2John", "3John", "Jude", "Rev"));
-    private static final List<String> allOT = new ArrayList<>(Arrays.asList(
+    private static final HashSet<String> allOT = new HashSet<String>(Arrays.asList(
             "Gen", "Exod", "Lev", "Num", "Deut", "Josh", "Judg", "Ruth", "1Sam",
             "2Sam", "1Kgs", "2Kgs", "1Chr", "2Chr", "Ezra", "Neh", "Esth", "Job",
             "Ps", "Prov", "Eccl", "Song", "Isa", "Jer", "Lam", "Ezek", "Dan",
             "Hos", "Joel", "Amos", "Obad", "Jonah", "Mic", "Nah", "Hab", "Zeph",
             "Hag", "Zech", "Mal"));
+    private static final HashSet<String> allOTNT = new HashSet<String>(Arrays.asList(
+            "Gen", "Exod", "Lev", "Num", "Deut", "Josh", "Judg", "Ruth", "1Sam",
+            "2Sam", "1Kgs", "2Kgs", "1Chr", "2Chr", "Ezra", "Neh", "Esth", "Job",
+            "Ps", "Prov", "Eccl", "Song", "Isa", "Jer", "Lam", "Ezek", "Dan",
+            "Hos", "Joel", "Amos", "Obad", "Jonah", "Mic", "Nah", "Hab", "Zeph",
+            "Hag", "Zech", "Mal",
+            "Matt", "Mark", "Luke", "John", "Acts", "Rom", "1Cor", "2Cor", "Gal",
+            "Eph", "Phil", "Col", "1Thess", "2Thess", "1Tim", "2Tim", "Titus", "Phlm",
+            "Heb", "Jas", "1Pet", "2Pet", "1John", "2John", "3John", "Jude", "Rev"));
+    public static HashMap<String, String> typeOfCommonBooks = new HashMap<String, String>();
 
     /**
      * hiding implementaiton
@@ -149,10 +159,7 @@ public final class JSwordUtils {
             v.setHasHeadings(b.hasFeature(FeatureType.HEADINGS));
             v.setHasNotes(b.hasFeature(FeatureType.FOOTNOTES) || b.hasFeature(FeatureType.SCRIPTURE_REFERENCES));
             v.setHasSeptuagintTagging(resolver.isSeptuagintTagging(b));
-            System.out.print(b.getInitials());
-            String commonBookTypes = hasCommonBibleBooks(b, versificationService);
-            v.setHasCommonBooks(commonBookTypes);
-            System.out.println(": " + commonBookTypes);
+            v.setHasCommonBooks(hasCommonBibleBooks(b, versificationService));
             //now only put the version in if
             // a- it is not in the map already
             // b- it is in the map, but the initials of the one being put in are different, meaning STEP
@@ -182,17 +189,39 @@ public final class JSwordUtils {
         return values;
     }
 
-    private static String hasCommonBibleBooks (final Book b, final JSwordVersificationService versificationService) {
-        String currintBibleName = b.getInitials();
+    private static char verifyRegularBooksAreInBible(final Set bibleBooksInThisVersion, final HashSet allBooksInBible,
+                                                     final String currentBibleName, final char returnValue) {
+        boolean allCommonBooksInBible = true;
+        Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
+        while (itr.hasNext()) {
+            String name = itr.next().getOSIS();
+            if ((!allOT.contains(name)) && (!allNT.contains(name))) {
+                allCommonBooksInBible = false;
+                break;
+            }
+        }
+        if (allCommonBooksInBible) {
+            typeOfCommonBooks.put(currentBibleName, String.valueOf(returnValue));
+            return returnValue;
+        }
+        typeOfCommonBooks.put(currentBibleName, " ");
+        return ' ';
+    }
+
+    private static char hasCommonBibleBooks (final Book b, final JSwordVersificationService versificationService) {
+        String currentBibleName = b.getInitials();
+        String bibleType = typeOfCommonBooks.get(currentBibleName);
+        if ((bibleType != null) && (bibleType.equals("B") || bibleType.equals("N") || bibleType.equals("O") || bibleType.equals(" ")))
+            return bibleType.charAt(0);
         int numOfBooksInThisBible = 0;
         Set<BibleBook> bibleBooksInThisVersion = null;
         try {
             bibleBooksInThisVersion = ((SwordBook) b).getBibleBooks();
             numOfBooksInThisBible = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
             if ((numOfBooksInThisBible != 27) && (numOfBooksInThisBible != 39) && (numOfBooksInThisBible != 66)) {
-                final Versification masterV11n = versificationService.getVersificationForVersion(b.getInitials());
+                final Versification masterV11n = versificationService.getVersificationForVersion(currentBibleName);
                 final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
-                final Book bookForThisVersion = versificationService.getBookFromVersion(b.getInitials());
+                final Book bookForThisVersion = versificationService.getBookFromVersion(currentBibleName);
                 final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
                 bibleBooksInThisVersion = new LinkedHashSet<BibleBook>();
                 while (bookIterator.hasNext()) {
@@ -205,53 +234,22 @@ public final class JSwordUtils {
                     }
                 }
                 numOfBooksInThisBible = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
-                System.out.println("Bible: " + b.getInitials() + " " + numOfBooksInThisBible);
             }
         }
         catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
-            System.out.println("Bible: " + currintBibleName + "has an exception: ");
-            return "";
+            System.out.println("Bible: " + currentBibleName + "has an exception: ");
+            typeOfCommonBooks.put(currentBibleName, " ");
+            return ' ';
         }
-        if (numOfBooksInThisBible == 66) {
-            boolean allOTNTBooks = true;
-            Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
-            while(itr.hasNext()){
-                String name = itr.next().getOSIS();
-                if ((!allOT.contains(name)) && (!allNT.contains(name))) {
-                    allOTNTBooks = false;
-                    break;
-                }
-            }
-            if (allOTNTBooks)
-                return "B"; // B for "Both"
-        }
-        else if (numOfBooksInThisBible == 27) {
-            boolean allNTBooks = true;
-            Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
-            while(itr.hasNext()){
-                if (!allNT.contains(itr.next().getOSIS())) {
-                    allNTBooks = false;
-                    break;
-                }
-            }
-            if (allNTBooks)
-                return "N"; // N for "NT"
-        }
-        else if (numOfBooksInThisBible == 39) {
-            boolean allOTBooks = true;
-            Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
-            while(itr.hasNext()){
-                String name = itr.next().getOSIS();
-                if (!allOT.contains(name)) {
-                    allOTBooks = false;
-                    break;
-                }
-            }
-            if (allOTBooks)
-                return "O"; // O for "OT"
-        }
-        return "";
+        if (numOfBooksInThisBible == 66)
+            return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOTNT, currentBibleName, 'B');
+        else if (numOfBooksInThisBible == 27)
+            return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allNT, currentBibleName, 'N');
+        else if (numOfBooksInThisBible == 39)
+            return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOT, currentBibleName, 'O');
+        typeOfCommonBooks.put(currentBibleName, " ");
+        return ' ';
     }
 
     /**

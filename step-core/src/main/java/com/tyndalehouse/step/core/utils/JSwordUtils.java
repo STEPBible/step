@@ -195,7 +195,7 @@ public final class JSwordUtils {
         Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
         while (itr.hasNext()) {
             String name = itr.next().getOSIS();
-            if (!allBooksInBible.contains(name))) {
+            if (!allBooksInBible.contains(name)) {
                 allCommonBooksInBible = false;
                 break;
             }

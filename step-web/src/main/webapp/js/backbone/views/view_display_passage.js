@@ -425,9 +425,9 @@ var PassageDisplayView = DisplayView.extend({
                 }
                 if (typeof step.keyedVersions[masterVersion] !== "object") return "";
                 if ( ((testamentOfPassageSelected === "New") &&
-                      (step.keyedVersions[masterVersion].hasWithAllNTOTorBoth === "O")) ||
+                      (step.keyedVersions[masterVersion].hasAllNTOTorBoth === "O")) ||
                      ((testamentOfPassageSelected === "Old") &&
-                      (step.keyedVersions[masterVersion].hasWithAllNTOTorBoth === "N")) ) {
+                      (step.keyedVersions[masterVersion].hasAllNTOTorBoth === "N")) ) {
                     var alertMessage = "<br>The Bible selected, " + masterVersion + ", only has the " +
                         theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected." +
                         "<br><br>You can either:<ul>" +

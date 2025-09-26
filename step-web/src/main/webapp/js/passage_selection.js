@@ -178,16 +178,16 @@ step.passageSelect = {
 		this.hasEnglishBible = atLeastOneEnglishBible;
 		var versionName = this.version.replace(/_sb$/, "").replace(/_th$/, "");
 		versionAltName = versionAltName.replace(/_sb$/, "").replace(/_th$/, "");
-		var hasWithAllNTOTorBoth = "";
+		var hasAllNTOTorBoth = "";
 		if (typeof step.keyedVersions[versionName] === "object")
-			hasWithAllNTOTorBoth = step.keyedVersions[versionName].hasWithAllNTOTorBoth;
+			hasAllNTOTorBoth = step.keyedVersions[versionName].hasAllNTOTorBoth;
 		else if (typeof step.keyedVersions[versionAltName] === "object")
-			hasWithAllNTOTorBoth = step.keyedVersions[versionAltName].hasWithAllNTOTorBoth;
-		if (hasWithAllNTOTorBoth === "B") // Both OT and NT 66 books
+			hasAllNTOTorBoth = step.keyedVersions[versionAltName].hasAllNTOTorBoth;
+		if (hasAllNTOTorBoth === "B") // Both OT and NT 66 books
 			return "OTNT";
-		else if (hasWithAllNTOTorBoth === "N") // NT's 27 books
+		else if (hasAllNTOTorBoth === "N") // NT's 27 books
 			return "NT";
-		else if (hasWithAllNTOTorBoth === "O") // OT's 39 books
+		else if (hasAllNTOTorBoth === "O") // OT's 39 books
 			return "OT";
 		return "";
 	},

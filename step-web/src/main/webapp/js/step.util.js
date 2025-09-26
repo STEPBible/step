@@ -2798,12 +2798,12 @@ step.util = {
                             this.showDots(activePassage);
                         else {
 							if ((typeof step.keyedVersions[version] !== "object") ||
-								(typeof step.keyedVersions[version].commonBookTypes !== "string"))
+								(typeof step.keyedVersions[version].hasWithAllNTOTorBoth !== "string"))
 								return;
 							if (isNext) {
 								if ((typeof lastChapter === "boolean") && (!lastChapter)) {
 									if ((nextChapter === "Matt.1") &&
-										(step.keyedVersions[version].commonBookTypes === "O")) {
+										(step.keyedVersions[version].hasWithAllNTOTorBoth === "O")) {
 											step.util.tempAlert("You are at the last chapter of the " + version + ".", 3);
 											return false;
 									}
@@ -2817,7 +2817,7 @@ step.util = {
 							else {
 								if ((previousChapter === "Gen.1") ||
 									((previousChapter === "Mal.4") &&
-									(step.keyedVersions[version].commonBookTypes === "N"))) {
+									(step.keyedVersions[version].hasWithAllNTOTorBoth === "N"))) {
 										step.util.tempAlert("You are at the first chapter of " + version + ".", 3);
 										return false;
 								}
@@ -4822,7 +4822,7 @@ step.util = {
 	checkBibleHasTheTestament: function(versionToCheck, hasNTPassage, hasOTPassage) {
 		if (typeof step.keyedVersions[versionToCheck] !== "object") // Have no information, cannot check
 			return true;
-		var bookType = step.keyedVersions[versionToCheck].commonBookTypes;
+		var bookType = step.keyedVersions[versionToCheck].hasWithAllNTOTorBoth;
 		if (bookType === "B") // Has both OT and NT
 			return true;
 		if (hasNTPassage && (bookType === "O"))
@@ -4841,7 +4841,7 @@ step.util = {
 			var versionToCheck = otherVersions[i];
 			if (typeof step.keyedVersions[versionToCheck] !== "object")
 				continue;
-			var bookType = step.keyedVersions[versionToCheck].commonBookTypes;
+			var bookType = step.keyedVersions[versionToCheck].hasWithAllNTOTorBoth;
 			if ((bookType !== "O") && (bookType !== "N") && (bookType !== "B"))
 				continue;
 			var currentScore = 9999;

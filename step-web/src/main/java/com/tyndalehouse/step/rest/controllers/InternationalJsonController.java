@@ -95,7 +95,7 @@ public class InternationalJsonController extends HttpServlet {
                                 (currentMod.isHasHeadings() ? "T" : "F") +
                                 (currentMod.isQuestionable() ? "T" : "F") +
                                 (currentMod.isHasSeptuagintTagging() ? "T" : "F") +
-                                currentMod.getHasCommonBooks(); // "B" = both OT & NT, "N" = NT, "O" = OT, " " = not regular books
+                                currentMod.getHasAllNTOTorBoth(); // "B" = both OT & NT, "N" = NT, "O" = OT, " " = not regular books
             response.getOutputStream().write(objectMapper.writeValueAsString(moduleInArray).getBytes(FrontController.UTF_8_ENCODING));
             if (i < allMods.size() - 1)
                 response.getOutputStream().write(",".getBytes(FrontController.UTF_8_ENCODING)); // separator

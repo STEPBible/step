@@ -22,7 +22,7 @@
             tempVersion["languageName"] = currentVersion[5];
             tempVersion["shortInitials"] = currentVersion[6];
             tempVersion["hasSeptuagintTagging"] = (oneCharValues[6]) === "T" ? true : false;
-            tempVersion["commonBookTypes"] = oneCharValues[7];
+            tempVersion["hasWithAllNTOTorBoth"] = oneCharValues[7];
             var item = {item: tempVersion, itemType: 'version'};
             step.itemisedVersions.push(item);
             step.keyedVersions[tempVersion.initials] = tempVersion;

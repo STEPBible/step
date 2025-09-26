@@ -6,7 +6,6 @@ import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;

@@ -50,7 +50,7 @@ public final class JSwordUtils {
             "Matt", "Mark", "Luke", "John", "Acts", "Rom", "1Cor", "2Cor", "Gal",
             "Eph", "Phil", "Col", "1Thess", "2Thess", "1Tim", "2Tim", "Titus", "Phlm",
             "Heb", "Jas", "1Pet", "2Pet", "1John", "2John", "3John", "Jude", "Rev"));
-    public static HashMap<String, String> typeOfCommonBooks = new HashMap<String, String>();
+    public static HashMap<String, String> hasAllNTOTorBoth = new HashMap<String, String>();
 
     /**
      * hiding implementaiton
@@ -159,7 +159,7 @@ public final class JSwordUtils {
             v.setHasHeadings(b.hasFeature(FeatureType.HEADINGS));
             v.setHasNotes(b.hasFeature(FeatureType.FOOTNOTES) || b.hasFeature(FeatureType.SCRIPTURE_REFERENCES));
             v.setHasSeptuagintTagging(resolver.isSeptuagintTagging(b));
-            v.setHasCommonBooks(hasCommonBibleBooks(b, versificationService));
+            v.setHasAllNTOTorBoth(hasAllNTOTorBothInBible(b, versificationService));
             //now only put the version in if
             // a- it is not in the map already
             // b- it is in the map, but the initials of the one being put in are different, meaning STEP
@@ -201,16 +201,16 @@ public final class JSwordUtils {
             }
         }
         if (allCommonBooksInBible) {
-            typeOfCommonBooks.put(currentBibleName, String.valueOf(returnValue));
+            hasAllNTOTorBoth.put(currentBibleName, String.valueOf(returnValue));
             return returnValue;
         }
-        typeOfCommonBooks.put(currentBibleName, " ");
+        hasAllNTOTorBoth.put(currentBibleName, " ");
         return ' ';
     }
 
-    private static char hasCommonBibleBooks (final Book b, final JSwordVersificationService versificationService) {
+    private static char hasAllNTOTorBothInBible (final Book b, final JSwordVersificationService versificationService) {
         String currentBibleName = b.getInitials();
-        String bibleType = typeOfCommonBooks.get(currentBibleName);
+        String bibleType = hasAllNTOTorBoth.get(currentBibleName);
         if ((bibleType != null) && (bibleType.equals("B") || bibleType.equals("N") || bibleType.equals("O") || bibleType.equals(" ")))
             return bibleType.charAt(0);
         int numOfBooksInThisBible = 0;
@@ -239,7 +239,7 @@ public final class JSwordUtils {
         catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
             System.out.println("Bible: " + currentBibleName + "has an exception: ");
-            typeOfCommonBooks.put(currentBibleName, " ");
+            hasAllNTOTorBoth.put(currentBibleName, " ");
             return ' ';
         }
         if (numOfBooksInThisBible == 66)
@@ -248,7 +248,7 @@ public final class JSwordUtils {
             return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allNT, currentBibleName, 'N');
         else if (numOfBooksInThisBible == 39)
             return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOT, currentBibleName, 'O');
-        typeOfCommonBooks.put(currentBibleName, " ");
+        hasAllNTOTorBoth.put(currentBibleName, " ");
         return ' ';
     }
 

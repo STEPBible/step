@@ -1105,18 +1105,21 @@ step.searchSelect = {
 				break;
 			}
 		}
-		var lowerCaseVersion = ' ' + this.version.toLowerCase() + ' ';
-		versionAltName = ' ' + versionAltName.toLowerCase() + ' ';
-		var translationType = "";
-		if ((step.passageSelect.translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (step.passageSelect.translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
-		else if ((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
-		else if ((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
-		return translationType;		
+		var hasAllNTOTorBoth = "";
+		if (typeof step.keyedVersions[this.version] === "object")
+			hasAllNTOTorBoth = step.keyedVersions[this.version].hasAllNTOTorBoth;
+		else if (typeof step.keyedVersions[versionAltName] === "object")
+			hasAllNTOTorBoth = step.keyedVersions[versionAltName].hasAllNTOTorBoth;
+		if (hasAllNTOTorBoth === "B") // Both OT and NT 66 books
+			return "OTNT";
+		else if (hasAllNTOTorBoth === "N") // NT's 27 books
+			return "NT";
+		else if (hasAllNTOTorBoth === "O") // OT's 39 books
+			return "OT";
+		return "";
 	},
 
 	_buildBookHTMLTable: function(data) {
-		var counter = 0;
-		var notSeenNT = true;
 		var typlicalBooksChapters = false;
 		var start = 0;
 		var end = 0;

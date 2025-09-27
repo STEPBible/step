@@ -222,7 +222,6 @@ public final class JSwordUtils {
                 final Versification masterV11n = versificationService.getVersificationForVersion(currentBibleName);
                 final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
                 final Book bookForThisVersion = versificationService.getBookFromVersion(currentBibleName);
-                System.out.println("processing " + currentBibleName);
                 final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
                 bibleBooksInThisVersion = new LinkedHashSet<BibleBook>();
                 while (bookIterator.hasNext()) {

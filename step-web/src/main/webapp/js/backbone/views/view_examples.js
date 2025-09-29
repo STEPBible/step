@@ -305,7 +305,8 @@ var ExamplesView = Backbone.View.extend({
 			$templateRoot.find("a.glyphicon.glyphicon-chevron-right.stepExample").click(step.util.expandCollapseExample);
 
 			// Position accordion chevrons on the left and tidy the spacing
-			$templateRoot.find('.accordion-heading').each(function() {
+
+			this.$el.find('.accordion-heading').each(function() {
 				var $heading = $(this);
 				var $icon = $heading.find('.plusminus');
 				if ($icon.length) {

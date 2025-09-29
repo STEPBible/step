@@ -2669,9 +2669,6 @@ step.util = {
 					'<div class="footer">' +
 						'<br>' +
 						'<span id="searchSelectError"></span>' +
-						'<div class="searchModalLinkRow">' +
-							'<a id="searchModalBibleAiLink" class="stepButton" href="https://you.com/search?q=This+AI+answers+questions+arising+exclusively+from+the+Bible+and+always+includes+Bible+references...&cid=c1_2cfab59e-a2f8-49c8-90a2-c24d2368a5fe" target="_self">Ask a Bible AI</a>' +
-						'</div>' +
 						'<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"' +
 						'onclick=step.searchSelect._updateRange("' + isRangeUpdate + '")></button>' +
 						'<button id="updateButton" style="display:none;float:right" type="button" class="stepButton"' +

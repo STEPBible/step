@@ -10,7 +10,7 @@ var ExamplesView = Backbone.View.extend({
 				'<span class="glyphicon glyphicon-play-circle" style="background-color:lightyellow;font-size:16px"></span></a>' +
 			'<br><br><p><%= __s.simple_intro %></p>' +
 			'<div class="accordion-row" data-row="0">' +
-				'<h5 class="accordion-heading stepButton"><span id="g1q0" style="float:;">How do I read passages in Bibles?</span>' +
+				'<h5 class="accordion-heading"><span id="g1q0" style="float:;">How do I read passages in Bibles?</span>' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
@@ -56,7 +56,7 @@ var ExamplesView = Backbone.View.extend({
 			'</div>' +
 
 			'<div class="accordion-row" data-row="1">' +
-				'<h5 class="accordion-heading stepButton"><span id="g2q0">How do I find words and phrases?</span>' +
+				'<h5 class="accordion-heading"><span id="g2q0">How do I find words and phrases?</span>' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
@@ -112,7 +112,7 @@ var ExamplesView = Backbone.View.extend({
 			'</div>' +
 
 			'<div class="accordion-row" data-row="2">' +
-			'<h5 class="accordion-heading stepButton"><span id="g3q0">How do I do a word study?</span>' +
+			'<h5 class="accordion-heading"><span id="g3q0">How do I do a word study?</span>' +
 				'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 			'</h5>' +
 				'<div class="accordion-body">' +
@@ -169,7 +169,7 @@ var ExamplesView = Backbone.View.extend({
 			'</div>' +
 
 			'<div class="accordion-row" data-row="3">' +
-				'<h5 class="accordion-heading stepButton"><span id="g4q0">How do I find more information on original languages?</span>' +
+				'<h5 class="accordion-heading"><span id="g4q0">How do I find more information on original languages?</span>' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
@@ -252,7 +252,7 @@ var ExamplesView = Backbone.View.extend({
 			'</div>' +
 
 			'<div class="accordion-row keyboard_shortcut" data-row="4">' +
-				'<h5 class="accordion-heading stepButton"><span id="g5q0">Additional information</span>' +
+				'<h5 class="accordion-heading"><span id="g5q0">Additional information</span>' +
 					'<a class="plusminus glyphicon glyphicon-triangle-right"></a>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
@@ -299,6 +299,54 @@ var ExamplesView = Backbone.View.extend({
 			else
 				this.$el.append(this.exampleTemplate());
 			$("a.glyphicon.glyphicon-triangle-right.stepExample").click(step.util.expandCollapseExample);
+
+            // Move triangle icons (dropdown indicators) to the left of their accompanying text
+            // for both accordion headings and example list items, and add appropriate spacing.
+            // Accordion headings
+            this.$el.find('.accordion-heading').each(function() {
+                var $heading = $(this);
+                var $icon = $heading.find('.plusminus');
+                if ($icon.length) {
+                    $icon.detach();              // remove icon from current position
+                    $heading.prepend($icon);      // insert icon before the text span
+                    $icon.css('margin-right', '6px'); // add space after icon
+                }
+            });
+
+            // Example list items (stepExample icons)
+            this.$el.find('li').each(function() {
+                var $li = $(this);
+                // select both collapsed and expanded triangle icons if present
+                var $icon = $li.children('a.glyphicon-triangle-right.stepExample, a.glyphicon-triangle-bottom.stepExample');
+                if ($icon.length) {
+                    $icon.detach();            // remove icon from current position
+                    $li.prepend($icon);        // insert icon before the descriptive span/text
+                    $icon.css('margin-right', '6px');
+                }
+            });
+
+            // NEW: Make the entire second-level dropdown (text + triangle) clickable
+            this.$el.find('li').each(function() {
+                var $li = $(this);
+                var $icon = $li.children('a.stepExample'); // triangle icon controlling the dropdown
+                if ($icon.length) {
+                    // Change cursor to indicate clickability
+                    $li.css('cursor', 'pointer');
+                    // Delegate click from the list item (excluding the icon itself) to the icon
+                    $li.on('click', function(ev) {
+                        if (!$(ev.target).is('a.stepExample')) {
+                            ev.preventDefault();
+                            $icon.trigger('click');
+                        }
+                    });
+                    // Also ensure the descriptive span shows pointer cursor
+                    $li.children('span').css('cursor', 'pointer');
+                }
+            });
+            
+            // Remove default bullet points for second-level dropdown lists so only triangles are shown
+            // (first-level accordions already display correctly)
+            this.$el.find('.accordion-body > ul').css({'list-style-type': 'none'});
             var options = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("selectedOptions") || [];
             var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
             if ((options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1)) cf.initCanvasAndCssForClrCodeGrammar();

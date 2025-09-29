@@ -100,6 +100,19 @@
 
 }
 
+#searchSelectionModal {
+  .searchModalLinkRow {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    clear: both;
+  }
+
+  #searchModalBibleAiLink {
+    margin-left: 0;
+  }
+}
+
 .listOPSul {
   list-style-type: none;
   padding: 0;

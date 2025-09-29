@@ -300,53 +300,35 @@ var ExamplesView = Backbone.View.extend({
 				this.$el.append(this.exampleTemplate());
 			$("a.glyphicon.glyphicon-triangle-right.stepExample").click(step.util.expandCollapseExample);
 
-            // Move triangle icons (dropdown indicators) to the left of their accompanying text
-            // for both accordion headings and example list items, and add appropriate spacing.
-            // Accordion headings
-            this.$el.find('.accordion-heading').each(function() {
-                var $heading = $(this);
-                var $icon = $heading.find('.plusminus');
-                if ($icon.length) {
-                    $icon.detach();              // remove icon from current position
-                    $heading.prepend($icon);      // insert icon before the text span
-                    $icon.css('margin-right', '6px'); // add space after icon
-                }
-            });
+			if (!document.getElementById('welcomeExamplesStyles')) {
+				var styles = '' +
+					'#welcomeExamples .accordion-heading{display:flex;align-items:center;gap:8px;}' +
+					'#welcomeExamples .accordion-heading .plusminus{order:-1;margin-right:0;}' +
+					'#welcomeExamples .accordion-heading span{flex:1;}' +
+					'#welcomeExamples .accordion-body>ul{list-style:none;margin:0;padding:0 0 0 10px;}' +
+					'#welcomeExamples .accordion-body>ul li{display:flex;align-items:flex-start;gap:8px;}' +
+					'#welcomeExamples .accordion-body>ul li .stepExample{order:-1;}' +
+					'#welcomeExamples .accordion-body>ul li .stepExample + span{flex:1;}';
+				$('head').append('<style id="welcomeExamplesStyles">' + styles + '</style>');
+			}
 
-            // Example list items (stepExample icons)
-            this.$el.find('li').each(function() {
-                var $li = $(this);
-                // select both collapsed and expanded triangle icons if present
-                var $icon = $li.children('a.glyphicon-triangle-right.stepExample, a.glyphicon-triangle-bottom.stepExample');
-                if ($icon.length) {
-                    $icon.detach();            // remove icon from current position
-                    $li.prepend($icon);        // insert icon before the descriptive span/text
-                    $icon.css('margin-right', '6px');
-                }
-            });
-
-            // NEW: Make the entire second-level dropdown (text + triangle) clickable
-            this.$el.find('li').each(function() {
-                var $li = $(this);
-                var $icon = $li.children('a.stepExample'); // triangle icon controlling the dropdown
-                if ($icon.length) {
-                    // Change cursor to indicate clickability
-                    $li.css('cursor', 'pointer');
-                    // Delegate click from the list item (excluding the icon itself) to the icon
-                    $li.on('click', function(ev) {
-                        if (!$(ev.target).is('a.stepExample')) {
-                            ev.preventDefault();
-                            $icon.trigger('click');
-                        }
-                    });
-                    // Also ensure the descriptive span shows pointer cursor
-                    $li.children('span').css('cursor', 'pointer');
-                }
-            });
-            
-            // Remove default bullet points for second-level dropdown lists so only triangles are shown
-            // (first-level accordions already display correctly)
-            this.$el.find('.accordion-body > ul').css({'list-style-type': 'none'});
+			this.$el.find('.accordion-body > ul li').each(function () {
+				var $li = $(this);
+				var $icon = $li.children('a.stepExample');
+				if (!$icon.length) {
+					return;
+				}
+				$li.css('cursor', 'pointer');
+				$li.children('span').css('cursor', 'pointer');
+				$icon.css('cursor', 'pointer');
+				$li.off('click.welcomeExamples').on('click.welcomeExamples', function (ev) {
+					if ($(ev.target).is('a.stepExample')) {
+						return;
+					}
+					ev.preventDefault();
+					$icon.trigger('click');
+				});
+			});
             var options = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("selectedOptions") || [];
             var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
             if ((options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1)) cf.initCanvasAndCssForClrCodeGrammar();

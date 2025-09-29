@@ -19,6 +19,8 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 public final class ValidateUtils {
 
     private static final Pattern SPLIT_TOKENS = Pattern.compile("@");
+    private static final Pattern SUB_VERSE_SUFFIX = Pattern.compile("(?<=[^A-Za-z0-9])(\\d+)[A-Za-z]+",
+            Pattern.CASE_INSENSITIVE);
 
     /** can't instantiate */
     private ValidateUtils() {
@@ -254,11 +256,21 @@ public final class ValidateUtils {
             }
             String key = t.substring(0, indexOfPrefix);
             String value = t.substring(indexOfPrefix + 1);
+            if (SearchToken.REFERENCE.equals(key)) {
+                value = scrubReferenceSuffixes(value);
+            }
             if (ValidateUtils.validateInputParm(key, value)) {
                 searchTokens.add(new SearchToken(key, value));
             }
         }
         return searchTokens;
+    }
+
+    private static String scrubReferenceSuffixes(final String reference) {
+        if (isEmpty(reference)) {
+            return reference;
+        }
+        return SUB_VERSE_SUFFIX.matcher(reference).replaceAll("$1");
     }
     public static boolean checkURLParms(final Map<String, String[]> inputParms, final String requestURI) {
         for (Map.Entry<String, String[]> entry : inputParms.entrySet()) {

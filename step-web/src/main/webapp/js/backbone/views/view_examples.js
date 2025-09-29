@@ -318,12 +318,17 @@ var ExamplesView = Backbone.View.extend({
 				}
 			});
 
-			var $exampleLists = this.$el.find('.accordion-body > ul');
-			$exampleLists.css({
-				'list-style': 'none',
-				'margin': '0',
-				'padding': '0'
-			});
+            // Example list items (stepExample icons)
+            this.$el.find('li').each(function() {
+                var $li = $(this);
+                // select both collapsed and expanded triangle icons if present
+                var $icon = $li.children('a.glyphicon-chevron-right.stepExample, a.glyphicon-chevron-down.stepExample');
+                if ($icon.length) {
+                    $icon.detach();            // remove icon from current position
+                    $li.prepend($icon);        // insert icon before the descriptive span/text
+                    $icon.css('margin-right', '6px');
+                }
+            });
 
 			// Re-order submenu chevrons and make the whole row interactive
 			$exampleLists.children('li').each(function() {

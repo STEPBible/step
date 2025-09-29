@@ -298,10 +298,14 @@ var ExamplesView = Backbone.View.extend({
 			}
 			else
 				this.$el.append(this.exampleTemplate());
-			$("a.glyphicon.glyphicon-chevron-right.stepExample").click(step.util.expandCollapseExample);
+			var $templateRoot = this.$el.find('#welcomeExamples');
+			if (!$templateRoot.length) {
+				$templateRoot = $('#welcomeExamples');
+			}
+			$templateRoot.find("a.glyphicon.glyphicon-chevron-right.stepExample").click(step.util.expandCollapseExample);
 
 			// Position accordion chevrons on the left and tidy the spacing
-			this.$el.find('.accordion-heading').each(function() {
+			$templateRoot.find('.accordion-heading').each(function() {
 				var $heading = $(this);
 				var $icon = $heading.find('.plusminus');
 				if ($icon.length) {
@@ -318,17 +322,12 @@ var ExamplesView = Backbone.View.extend({
 				}
 			});
 
-            // Example list items (stepExample icons)
-            this.$el.find('li').each(function() {
-                var $li = $(this);
-                // select both collapsed and expanded triangle icons if present
-                var $icon = $li.children('a.glyphicon-chevron-right.stepExample, a.glyphicon-chevron-down.stepExample');
-                if ($icon.length) {
-                    $icon.detach();            // remove icon from current position
-                    $li.prepend($icon);        // insert icon before the descriptive span/text
-                    $icon.css('margin-right', '6px');
-                }
-            });
+			var $exampleLists = $templateRoot.find('.accordion-body ul');
+			$exampleLists.css({
+				'list-style': 'none',
+				'padding-left': '0',
+				'margin': '0'
+			});
 
 			// Re-order submenu chevrons and make the whole row interactive
 			$exampleLists.children('li').each(function() {

@@ -254,54 +254,6 @@
         return step.passages.at(0);
     }
 
-    function ensureInitialBookmark(passageModel) {
-        if (!passageModel || !step.router || !step.bookmarks) {
-            return;
-        }
-
-        var rawQuery = $.getUrlVar('q');
-        if (!rawQuery) {
-            var argsPieces = [];
-            var masterVersion = passageModel.get("masterVersion");
-            if (masterVersion) {
-                argsPieces.push("version=" + masterVersion);
-                var extraVersions = passageModel.get("extraVersions");
-                if (extraVersions) {
-                    var extraVersionsArray = extraVersions.split(',');
-                    for (var i = 0; i < extraVersionsArray.length; i++) {
-                        var extra = extraVersionsArray[i];
-                        if (extra) {
-                            var trimmed = extra.trim();
-                            if (trimmed) {
-                                argsPieces.push("version=" + trimmed);
-                            }
-                        }
-                    }
-                }
-            }
-
-            var osisId = passageModel.get("osisId");
-            var reference = osisId || passageModel.get("reference");
-            if (reference) {
-                argsPieces.push("reference=" + reference);
-            }
-
-            if (argsPieces.length === 0) {
-                return;
-            }
-
-            rawQuery = argsPieces.join(URL_SEPARATOR);
-        }
-
-        var encodedArgs = /%[0-9a-fA-F]{2}/.test(rawQuery) ? rawQuery : encodeURIComponent(rawQuery);
-        step.router._addBookmark({
-            args: encodedArgs,
-            searchTokens: passageModel.get("searchTokens"),
-            options: passageModel.get("options"),
-            display: passageModel.get("interlinearMode") || passageModel.get("selectedOptions")
-        });
-    }
-
     function initCoreModelsAndRouter() {
         step.router = new StepRouter();
         step.passages = new PassageModelList();
@@ -355,7 +307,6 @@
             });
 
             step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'));
-            ensureInitialBookmark(modelZero);
 
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {

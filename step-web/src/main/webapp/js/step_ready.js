@@ -308,6 +308,98 @@
 
             step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'));
 
+            // Ensure the initial passage is present in bookmarks history for new visitors.
+            var initialArgs = $.getUrlVar('q');
+            var bookmarkOptions = $.getUrlVar('options') || modelZero.get("selectedOptions") || "";
+            var bookmarkDisplay = $.getUrlVar('display') || modelZero.get("interlinearMode") || "";
+            var initialSearchTokens = modelZero.get("searchTokens") || [];
+
+            if (!initialArgs && modelZero.get("searchType") === 'PASSAGE') {
+                var versionSegments = [];
+                var referenceSegments = [];
+
+                for (var tokenIndex = 0; tokenIndex < initialSearchTokens.length; tokenIndex++) {
+                    var token = initialSearchTokens[tokenIndex] || {};
+                    var tokenType = token.itemType || token.tokenType;
+                    if (tokenType === VERSION) {
+                        var versionInfo = token.enhancedTokenInfo || token.item || {};
+                        var versionCode = (versionInfo.shortInitials || versionInfo.initials || token.token || "").trim();
+                        if (versionCode.indexOf("version=") === 0) {
+                            versionCode = versionCode.substring(8);
+                        }
+                        if (versionCode.indexOf("version:") === 0) {
+                            versionCode = versionCode.substring(8);
+                        }
+                        if (versionCode) {
+                            versionSegments.push("version=" + versionCode);
+                        }
+                    } else if (tokenType === REFERENCE) {
+                        var referenceInfo = token.enhancedTokenInfo || token.item || {};
+                        var referenceCode = (referenceInfo.osisID || referenceInfo.osisid || token.token || "").trim();
+                        if (referenceCode.indexOf("reference=") === 0) {
+                            referenceCode = referenceCode.substring(10);
+                        }
+                        if (referenceCode.indexOf("reference:") === 0) {
+                            referenceCode = referenceCode.substring(10);
+                        }
+                        if (referenceCode) {
+                            referenceSegments.push("reference=" + referenceCode);
+                        }
+                    }
+                }
+
+                if (versionSegments.length === 0) {
+                    var masterVersion = (modelZero.get("masterVersion") || "").trim();
+                    if (masterVersion) {
+                        versionSegments.push("version=" + masterVersion);
+                    }
+                    var extraVersions = modelZero.get("extraVersions") || "";
+                    if (extraVersions) {
+                        var extraVersionList = extraVersions.split(",");
+                        for (var extraIndex = 0; extraIndex < extraVersionList.length; extraIndex++) {
+                            var extraVersion = (extraVersionList[extraIndex] || "").trim();
+                            if (extraVersion) {
+                                versionSegments.push("version=" + extraVersion);
+                            }
+                        }
+                    }
+                }
+
+                if (referenceSegments.length === 0) {
+                    var osisId = modelZero.get("osisId") || "";
+                    if (osisId) {
+                        var osisParts = osisId.split(" ");
+                        for (var osisIndex = 0; osisIndex < osisParts.length; osisIndex++) {
+                            var osisPart = (osisParts[osisIndex] || "").trim();
+                            if (osisPart) {
+                                referenceSegments.push("reference=" + osisPart);
+                            }
+                        }
+                    }
+                }
+
+                if (versionSegments.length || referenceSegments.length) {
+                    initialArgs = versionSegments.concat(referenceSegments).join(URL_SEPARATOR);
+                }
+            }
+
+            if (initialArgs && typeof step.router._addBookmark === "function") {
+                var normalizedArgs = initialArgs;
+                try {
+                    normalizedArgs = decodeURIComponent(normalizedArgs);
+                } catch (decodeError) {
+                    // ignore malformed URI sequences
+                }
+                normalizedArgs = normalizedArgs.replace(/%7C/g, URL_SEPARATOR).replace(/\|/g, URL_SEPARATOR);
+                var encodedArgs = encodeURIComponent(normalizedArgs.replace(/&debug/ig, ""));
+                step.router._addBookmark({
+                    args: encodedArgs,
+                    searchTokens: initialSearchTokens,
+                    options: bookmarkOptions || "",
+                    display: bookmarkDisplay || ""
+                });
+            }
+
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {
                     new ViewHelpMenuOptions({});

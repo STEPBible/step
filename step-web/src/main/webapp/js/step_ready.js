@@ -254,74 +254,6 @@
         return step.passages.at(0);
     }
 
-    function buildArgsFromPassageModel(passageModel) {
-        if (!passageModel) {
-            return null;
-        }
-
-        var getAttr = typeof passageModel.get === "function" ? function (attr) {
-            return passageModel.get(attr);
-        } : function (attr) {
-            return passageModel[attr];
-        };
-
-        var masterVersion = getAttr("masterVersion");
-        var extraVersions = getAttr("extraVersions");
-        var osisId = getAttr("osisId") || getAttr("osisID");
-        var reference = osisId || getAttr("reference");
-        var tokens = [];
-
-        if (masterVersion) {
-            tokens.push("version=" + masterVersion);
-        }
-        if (typeof extraVersions === "string" && extraVersions.length > 0) {
-            var extras = extraVersions.split(",");
-            for (var i = 0; i < extras.length; i++) {
-                var extraVersion = extras[i];
-                if (typeof extraVersion === "string") {
-                    extraVersion = extraVersion.replace(/^\s+|\s+$/g, "");
-                }
-                if (extraVersion) {
-                    tokens.push("version=" + extraVersion);
-                }
-            }
-        }
-        if (reference) {
-            tokens.push("reference=" + reference);
-        }
-
-        return tokens.length > 0 ? tokens.join(URL_SEPARATOR) : null;
-    }
-
-    function ensureInitialBookmark(passageModel, initialQueryArg) {
-        if (!step.router || typeof step.router._addBookmark !== "function" || !passageModel) {
-            return;
-        }
-
-        var rawArgs = initialQueryArg;
-        if (!rawArgs) {
-            rawArgs = buildArgsFromPassageModel(passageModel);
-        }
-        if (!rawArgs) {
-            return;
-        }
-
-        var encodedArgs = rawArgs.indexOf("%") === -1 ? encodeURIComponent(rawArgs) : rawArgs;
-        var getAttr = typeof passageModel.get === "function" ? function (attr) {
-            return passageModel.get(attr);
-        } : function (attr) {
-            return passageModel[attr];
-        };
-        var bookmarkOptions = getAttr("options") || getAttr("selectedOptions");
-
-        step.router._addBookmark({
-            args: encodedArgs,
-            searchTokens: getAttr("searchTokens"),
-            options: bookmarkOptions,
-            display: getAttr("interlinearMode")
-        });
-    }
-
     function initCoreModelsAndRouter() {
         step.router = new StepRouter();
         step.passages = new PassageModelList();
@@ -374,9 +306,7 @@
                 model: modelZero
             });
 
-            var initialQueryArg = $.getUrlVar('q');
-            step.router.handleRenderModel(modelZero, true, initialQueryArg);
-            ensureInitialBookmark(modelZero, initialQueryArg);
+            step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'));
 
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {

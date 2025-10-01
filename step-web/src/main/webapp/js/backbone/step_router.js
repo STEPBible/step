@@ -234,6 +234,43 @@ var StepRouter = Backbone.Router.extend({
             this.handleSearchResults(passageModel, partRendered);
         }
         this._renderSummary(passageModel);
+
+        if (partRendered === true && typeof this._addBookmark === "function") {
+            var bookmarkArgs = queryArgs || passageModel.get("args") || "";
+            if (!bookmarkArgs) {
+                var generatedArgs = [];
+                var masterVersion = passageModel.get("masterVersion") || "";
+                if (masterVersion) {
+                    generatedArgs.push("version=" + masterVersion);
+                }
+                var extraVersions = passageModel.get("extraVersions") || "";
+                if (extraVersions) {
+                    var extraList = extraVersions.split(",");
+                    for (var i = 0; i < extraList.length; i++) {
+                        if (extraList[i]) {
+                            generatedArgs.push("version=" + extraList[i]);
+                        }
+                    }
+                }
+                var osisId = passageModel.get("osisId") || passageModel.get("reference") || "";
+                if (osisId) {
+                    generatedArgs.push("reference=" + osisId);
+                }
+                if (generatedArgs.length > 0) {
+                    bookmarkArgs = generatedArgs.join(URL_SEPARATOR);
+                }
+            }
+
+            bookmarkArgs = (bookmarkArgs || "").replace(/\|/g, URL_SEPARATOR);
+            if (bookmarkArgs) {
+                this._addBookmark({
+                    args: bookmarkArgs,
+                    searchTokens: passageModel.get("searchTokens"),
+                    options: passageModel.get("options") || "",
+                    display: passageModel.get("interlinearMode") || ""
+                });
+            }
+        }
         step.util.hideNavBarOnPhones(doNotScroll);
     },
 

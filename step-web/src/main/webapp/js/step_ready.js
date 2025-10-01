@@ -308,37 +308,6 @@
 
             step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'));
 
-            // Ensure the landing passage is recorded as a recent entry.
-            var initialArgs = $.getUrlVar('q');
-            if (!initialArgs) {
-                var argsParts = [];
-                var masterVersion = modelZero.get("masterVersion") || "";
-                if (masterVersion) {
-                    argsParts.push("version=" + masterVersion);
-                }
-                var extraVersions = (modelZero.get("extraVersions") || "").split(",");
-                for (var i = 0; i < extraVersions.length; i++) {
-                    if (extraVersions[i]) {
-                        argsParts.push("version=" + extraVersions[i]);
-                    }
-                }
-                var osisId = modelZero.get("osisId") || "";
-                if (osisId) {
-                    argsParts.push("reference=" + osisId);
-                }
-                if (argsParts.length > 0) {
-                    initialArgs = argsParts.join(URL_SEPARATOR);
-                }
-            }
-            if (initialArgs && step.router && step.router._addBookmark) {
-                step.router._addBookmark({
-                    args: initialArgs,
-                    searchTokens: modelZero.get("searchTokens"),
-                    options: modelZero.get("options") || "",
-                    display: modelZero.get("interlinearMode") || ""
-                });
-            }
-
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {
                     new ViewHelpMenuOptions({});

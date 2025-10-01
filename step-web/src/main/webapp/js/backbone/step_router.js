@@ -219,6 +219,43 @@ var StepRouter = Backbone.Router.extend({
             }
         );
 
+        if (partRendered === true && typeof this._addBookmark === "function") {
+            var bookmarkArgs = passageModel.get("args") || "";
+            if (!bookmarkArgs) {
+                var argsParts = [];
+                var masterVersion = passageModel.get("masterVersion") || "";
+                if (masterVersion) {
+                    argsParts.push("version=" + masterVersion);
+                }
+                var extraVersions = passageModel.get("extraVersions") || "";
+                if (extraVersions) {
+                    var extraList = extraVersions.split(",");
+                    for (var i = 0; i < extraList.length; i++) {
+                        if (extraList[i]) {
+                            argsParts.push("version=" + extraList[i]);
+                        }
+                    }
+                }
+                var osisId = passageModel.get("osisId") || passageModel.get("reference") || "";
+                if (osisId) {
+                    argsParts.push("reference=" + osisId);
+                }
+                if (argsParts.length > 0) {
+                    bookmarkArgs = argsParts.join(URL_SEPARATOR);
+                }
+            }
+
+            bookmarkArgs = (bookmarkArgs || "").replace(/\|/g, URL_SEPARATOR);
+            if (bookmarkArgs) {
+                this._addBookmark({
+                    args: bookmarkArgs,
+                    searchTokens: passageModel.get("searchTokens"),
+                    options: passageModel.get("options") || "",
+                    display: passageModel.get("interlinearMode") || ""
+                });
+            }
+        }
+
         //then trigger the refresh of menu options and such like
         passageModel.trigger("sync-update", passageModel);
 

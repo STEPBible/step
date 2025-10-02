@@ -235,7 +235,7 @@ var StepRouter = Backbone.Router.extend({
         }
         this._renderSummary(passageModel);
 
-        if (partRendered === true && typeof this._addBookmark === "function") {
+        if (partRendered === true && typeof this._addBookmark === "function")  {
             if (!this._landingBookmarkScheduled) {
                 this._landingBookmarkScheduled = true;
                 var self = this;

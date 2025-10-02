@@ -711,6 +711,179 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
         };
     }
 </script>
+<script type="text/javascript">
+(function () {
+    var attempts = 0;
+    var maxAttempts = 20;
+    var retryDelayMs = 150;
+    var retryTimer;
+
+    function getPrimaryPassage() {
+        if (!window.step || !step.passages || typeof step.passages.findWhere !== "function") {
+            return null;
+        }
+        return step.passages.findWhere({ passageId: 0 }) || null;
+    }
+
+    function getSource() {
+        var passage = getPrimaryPassage();
+        if (passage) {
+            return {
+                args: passage.get("args"),
+                options: passage.get("selectedOptions") || passage.get("options"),
+                display: passage.get("interlinearMode") || passage.get("display"),
+                searchTokens: passage.get("searchTokens")
+            };
+        }
+        if (window.tempModel) {
+            return {
+                args: window.tempModel.args,
+                options: window.tempModel.selectedOptions || window.tempModel.options,
+                display: window.tempModel.interlinearMode === "NONE" ? window.tempModel.display : (window.tempModel.interlinearMode || window.tempModel.display),
+                searchTokens: window.tempModel.searchTokens
+            };
+        }
+        return null;
+    }
+
+    function normalise(value) {
+        return typeof value === "string" ? value.replace(/%7C/gi, URL_SEPARATOR).replace(/\|/g, URL_SEPARATOR) : value;
+    }
+
+    function getUrlParam(name) {
+        if (typeof jQuery === "function" && jQuery.getUrlVar) {
+            var value = jQuery.getUrlVar(name);
+            if (typeof value === "string" && value.length) {
+                return normalise(value);
+            }
+        }
+        return null;
+    }
+
+    function buildArgsFromModel() {
+        if (!window.tempModel) {
+            return null;
+        }
+        var parts = [];
+        var master = window.tempModel.masterVersion;
+        if (typeof master === "string" && master.length) {
+            parts.push("version=" + master);
+        }
+        var extras = window.tempModel.extraVersions;
+        if (typeof extras === "string" && extras.length) {
+            extras.split(",").forEach(function (item) {
+                var trimmed = (item || "").trim();
+                if (trimmed) {
+                    parts.push("version=" + trimmed);
+                }
+            });
+        }
+        var reference = window.tempModel.reference || window.tempModel.osisId;
+        if (typeof reference === "string" && reference.length) {
+            parts.push("reference=" + reference);
+        }
+        return parts.length ? parts.join(URL_SEPARATOR) : null;
+    }
+
+    function encodeArgs(raw) {
+        return typeof raw === "string" && raw.length ? encodeURIComponent(raw.replace(/&debug/ig, "")) : null;
+    }
+
+    function resolveArgs(source) {
+        if (source && source.args) {
+            var normalized = encodeArgs(normalise(source.args));
+            if (normalized) {
+                return normalized;
+            }
+        }
+        var fromUrl = getUrlParam("q");
+        if (fromUrl) {
+            return encodeArgs(fromUrl);
+        }
+        return encodeArgs(buildArgsFromModel());
+    }
+
+    function resolveOptions(source) {
+        if (source && typeof source.options === "string" && source.options.length) {
+            return source.options;
+        }
+        var fromUrl = getUrlParam("options");
+        if (fromUrl) {
+            return fromUrl;
+        }
+        return undefined;
+    }
+
+    function resolveDisplay(source) {
+        if (source && typeof source.display === "string" && source.display.length && source.display !== "NONE") {
+            return source.display;
+        }
+        var fromUrl = getUrlParam("display");
+        if (fromUrl) {
+            return fromUrl;
+        }
+        return undefined;
+    }
+
+    function resolveTokens(source) {
+        if (source && typeof source.searchTokens !== "undefined") {
+            return source.searchTokens;
+        }
+        return window.tempModel ? window.tempModel.searchTokens : undefined;
+    }
+
+    function ready() {
+        return window.step && step.router && typeof step.router._addBookmark === "function" && step.bookmarks && typeof step.bookmarks.findWhere === "function";
+    }
+
+    function addLandingToRecent() {
+        if (!ready() || window.__stepLandingRecentApplied) {
+            return ready();
+        }
+        var source = getSource();
+        var args = resolveArgs(source);
+        if (!args) {
+            return false;
+        }
+        try {
+            step.router._addBookmark({
+                args: args,
+                searchTokens: resolveTokens(source),
+                options: resolveOptions(source),
+                display: resolveDisplay(source)
+            });
+            window.__stepLandingRecentApplied = true;
+        } catch (e) {
+            if (window.console && typeof window.console.warn === "function") {
+                console.warn("STEP: unable to add landing passage to Recent", e);
+            }
+        }
+        return true;
+    }
+
+    function scheduleRetry() {
+        if (retryTimer) {
+            return;
+        }
+        retryTimer = setInterval(function () {
+            attempts += 1;
+            if (addLandingToRecent() || attempts >= maxAttempts) {
+                clearInterval(retryTimer);
+                retryTimer = null;
+            }
+        }, retryDelayMs);
+    }
+
+    if (!addLandingToRecent()) {
+        scheduleRetry();
+        var onLoad = function () {
+            addLandingToRecent();
+            window.removeEventListener("load", onLoad);
+        };
+        window.addEventListener("load", onLoad);
+    }
+})();
+</script>
 <% if (!appManager.isLocal()) { %>
 <script>
     (function (w, d, s) {

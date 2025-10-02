@@ -259,6 +259,13 @@
         step.passages = new PassageModelList();
         step.passages.fetch();
         step.bookmarks = new HistoryModelList();
+        step.bookmarks._initialSyncDone = false;
+        step.bookmarks.once('sync', function () {
+            step.bookmarks._initialSyncDone = true;
+        });
+        step.bookmarks.once('error', function () {
+            step.bookmarks._initialSyncDone = true;
+        });
         step.bookmarks.fetch();
 
 

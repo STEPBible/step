@@ -236,39 +236,65 @@ var StepRouter = Backbone.Router.extend({
         this._renderSummary(passageModel);
 
         if (partRendered === true && typeof this._addBookmark === "function") {
-            var bookmarkArgs = queryArgs || passageModel.get("args") || "";
-            if (!bookmarkArgs) {
-                var generatedArgs = [];
-                var masterVersion = passageModel.get("masterVersion") || "";
-                if (masterVersion) {
-                    generatedArgs.push("version=" + masterVersion);
-                }
-                var extraVersions = passageModel.get("extraVersions") || "";
-                if (extraVersions) {
-                    var extraList = extraVersions.split(",");
-                    for (var i = 0; i < extraList.length; i++) {
-                        if (extraList[i]) {
-                            generatedArgs.push("version=" + extraList[i]);
+            if (!this._landingBookmarkScheduled) {
+                this._landingBookmarkScheduled = true;
+                var self = this;
+                var addLandingBookmark = function () {
+                    if (self._landingBookmarkAdded) {
+                        return;
+                    }
+
+                    var bookmarkArgs = queryArgs || passageModel.get("args") || "";
+                    if (!bookmarkArgs) {
+                        var generatedArgs = [];
+                        var masterVersion = passageModel.get("masterVersion") || "";
+                        if (masterVersion) {
+                            generatedArgs.push("version=" + masterVersion);
+                        }
+                        var extraVersions = passageModel.get("extraVersions") || "";
+                        if (extraVersions) {
+                            var extraList = extraVersions.split(",");
+                            for (var i = 0; i < extraList.length; i++) {
+                                if (extraList[i]) {
+                                    generatedArgs.push("version=" + extraList[i]);
+                                }
+                            }
+                        }
+                        var osisId = passageModel.get("osisId") || passageModel.get("reference") || "";
+                        if (osisId) {
+                            generatedArgs.push("reference=" + osisId);
+                        }
+                        if (generatedArgs.length > 0) {
+                            bookmarkArgs = generatedArgs.join(URL_SEPARATOR);
                         }
                     }
-                }
-                var osisId = passageModel.get("osisId") || passageModel.get("reference") || "";
-                if (osisId) {
-                    generatedArgs.push("reference=" + osisId);
-                }
-                if (generatedArgs.length > 0) {
-                    bookmarkArgs = generatedArgs.join(URL_SEPARATOR);
-                }
-            }
 
-            bookmarkArgs = (bookmarkArgs || "").replace(/\|/g, URL_SEPARATOR);
-            if (bookmarkArgs) {
-                this._addBookmark({
-                    args: bookmarkArgs,
-                    searchTokens: passageModel.get("searchTokens"),
-                    options: passageModel.get("options") || "",
-                    display: passageModel.get("interlinearMode") || ""
-                });
+                    bookmarkArgs = (bookmarkArgs || "").replace(/\|/g, URL_SEPARATOR);
+                    if (!bookmarkArgs) {
+                        return;
+                    }
+
+                    var encodedArgs = bookmarkArgs;
+                    if (encodedArgs.indexOf("%3D") === -1 && encodedArgs.indexOf("%40") === -1) {
+                        encodedArgs = encodeURIComponent(encodedArgs);
+                    }
+
+                    self._landingBookmarkAdded = true;
+                    self._addBookmark({
+                        args: encodedArgs,
+                        searchTokens: passageModel.get("searchTokens"),
+                        options: passageModel.get("options") || "",
+                        display: passageModel.get("interlinearMode") || ""
+                    });
+                };
+
+                var bookmarks = step.bookmarks;
+                if (bookmarks && bookmarks._initialSyncDone === false) {
+                    bookmarks.once("sync", addLandingBookmark);
+                    bookmarks.once("error", addLandingBookmark);
+                } else {
+                    addLandingBookmark();
+                }
             }
         }
         step.util.hideNavBarOnPhones(doNotScroll);

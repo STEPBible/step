@@ -308,6 +308,48 @@
 
             step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'));
 
+            if (modelZero.get("searchType") === 'PASSAGE') {
+                var landingArgs = $.getUrlVar('q') || "";
+                if (landingArgs) {
+                    landingArgs = landingArgs.replace(/%7C/g, URL_SEPARATOR).replace(/\|/g, URL_SEPARATOR);
+                } else {
+                    var argTokens = [];
+                    var masterVersion = modelZero.get("masterVersion");
+                    if (masterVersion) {
+                        argTokens.push("version=" + masterVersion);
+                    }
+                    var extraVersions = modelZero.get("extraVersions");
+                    if (extraVersions) {
+                        var extras = extraVersions.split(',');
+                        for (var ev = 0; ev < extras.length; ev++) {
+                            var extra = extras[ev];
+                            if (extra) {
+                                extra = $.trim(extra);
+                                if (extra) {
+                                    argTokens.push("version=" + extra);
+                                }
+                            }
+                        }
+                    }
+                    var osisReference = modelZero.get("osisId") || modelZero.get("reference");
+                    if (osisReference) {
+                        argTokens.push("reference=" + osisReference);
+                    }
+                    if (argTokens.length > 0) {
+                        landingArgs = argTokens.join(URL_SEPARATOR);
+                    }
+                }
+
+                if (landingArgs) {
+                    step.router._addBookmark({
+                        args: encodeURIComponent(landingArgs),
+                        searchTokens: modelZero.get("searchTokens") || [],
+                        options: $.getUrlVar('options') || modelZero.get("options") || "",
+                        display: $.getUrlVar('display') || modelZero.get("display") || ""
+                    });
+                }
+            }
+
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {
                     new ViewHelpMenuOptions({});

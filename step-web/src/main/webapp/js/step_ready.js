@@ -308,6 +308,40 @@
 
             step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'));
 
+            var landingArgs = $.getUrlVar('q');
+            if (!landingArgs) {
+                var landingTokens = [];
+                var landingMasterVersion = modelZero.get("masterVersion");
+                if (landingMasterVersion) {
+                    landingTokens.push("version=" + landingMasterVersion);
+                }
+                var landingExtraVersions = modelZero.get("extraVersions") || "";
+                if (landingExtraVersions) {
+                    var extraParts = landingExtraVersions.split(",");
+                    for (var extraIndex = 0; extraIndex < extraParts.length; extraIndex++) {
+                        var extraVersion = $.trim(extraParts[extraIndex]);
+                        if (extraVersion) {
+                            landingTokens.push("version=" + extraVersion);
+                        }
+                    }
+                }
+                var landingReference = modelZero.get("osisId") || modelZero.get("reference");
+                if (landingReference) {
+                    landingTokens.push("reference=" + landingReference.replace(/\s+/g, "%20"));
+                }
+                landingArgs = landingTokens.join(URL_SEPARATOR);
+            }
+            var landingOptions = $.getUrlVar('options') || modelZero.get("selectedOptions");
+            var landingDisplay = $.getUrlVar('display') || modelZero.get("interlinearMode");
+            if (landingArgs) {
+                step.router._addBookmark({
+                    args: landingArgs,
+                    searchTokens: modelZero.get("searchTokens"),
+                    options: landingOptions,
+                    display: landingDisplay
+                });
+            }
+
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {
                     new ViewHelpMenuOptions({});

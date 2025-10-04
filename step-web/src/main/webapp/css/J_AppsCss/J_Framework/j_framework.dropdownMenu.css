@@ -67,6 +67,11 @@
     align-items: center;
 }
 
+.jframework-dropdownMenuItem::after {
+    content: '';
+    flex: 0 0 1.75em;
+}
+
 .jframework-dropdownMenuItem:hover {
     background-color: var(--jframework-clrPopUpMenuItemBackgroundSelected);
     color: var(--jframework-clrPopUpMenuItemTextSelected);

@@ -59,6 +59,12 @@
     width: 100%;
 }
 
+@media (min-width: 768px) {
+    .jframework-dropdownMenuItem {
+        width: auto;
+    }
+}
+
 .jframework-dropdownMenuIcon {
     font-size: x-large;
     flex: 0 0 1.75em;

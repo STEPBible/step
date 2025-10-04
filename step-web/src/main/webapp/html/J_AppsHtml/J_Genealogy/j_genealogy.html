@@ -40,11 +40,7 @@
 	--jframework-clrWoman: salmon;
 	--jframework-clrGroup: black;
 	--svgBackground: lightgray;
-	--genealogy-highlight-sibling-bg: #fff2a8;
-	--genealogy-highlight-sibling-border: #c28a00;
-	--genealogy-highlight-child-bg: #d5f5c3;
-	--genealogy-highlight-child-border: #4f8f3a;
-    }   
+    }    
 
 
     /* ----- Basic formatting ----- */
@@ -127,51 +123,26 @@
 	font-weight: normal;
     }
       
-    .highlightSiblings,
-    .highlightChildren {
-	font-weight: 600;
-    }
-
     .highlightSiblings {
-	fill: #1a1a1a;
+	text-shadow: 1px 1px 10px black;
+	/* animation: highlightSiblings 1s infinite; seconds duration (1s on, 1s off), infinite loop */
+    }
+
+    @keyframes highlightSiblings {
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
     }
 
     .highlightChildren {
-	fill: #1a1a1a;
+	text-shadow: 1px 1px 10px green;
+	/* animation: highlightChildren 1s infinite; 2 seconds duration (1s on, 1s off), infinite loop */
     }
 
-    .highlightRelationBackground {
-	pointer-events: none;
-	stroke-width: 1;
-    }
-
-    .highlightRelationBackground--sibling {
-	fill: var(--genealogy-highlight-sibling-bg);
-	stroke: var(--genealogy-highlight-sibling-border);
-    }
-
-    .highlightRelationBackground--child {
-	fill: var(--genealogy-highlight-child-bg);
-	stroke: var(--genealogy-highlight-child-border);
-    }
-
-    .layoutRelationHighlight {
-	display: inline-block;
-	padding: 2px 6px;
-	border-radius: 4px;
-	border: 1px solid transparent;
-	font-weight: 600;
-	color: #1a1a1a;
-    }
-
-    .layoutRelationHighlight--sibling {
-	background: var(--genealogy-highlight-sibling-bg);
-	border-color: var(--genealogy-highlight-sibling-border);
-    }
-
-    .layoutRelationHighlight--child {
-	background: var(--genealogy-highlight-child-bg);
-	border-color: var(--genealogy-highlight-child-border);
+    @keyframes highlightChildren {
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
     }
 
 
@@ -676,7 +647,7 @@
       <br>
       
       <input type='checkbox' id='highlightRelations' class='jframework-3dCheckbox' title='Highlight siblings and children of selected person' onchange='PresentationHandler.changeRelationsHighlighting(this.checked)'>
-      <label for='highlightRelations'>Highlight <span class='layoutRelationHighlight layoutRelationHighlight--sibling'>siblings</span> and <span class='layoutRelationHighlight layoutRelationHighlight--child'>children</span> of selected person.</label>
+      <label for='highlightRelations'>Highlight <span style='text-shadow: 1px 1px 10px black;color:blackyellow'>siblings</span> and <span style='text-shadow: 1px 1px 10px green;color:darkgreen'>children</span> of selected person.</label>
     </div>
   </div>
   <!-- Layout menu modal -->

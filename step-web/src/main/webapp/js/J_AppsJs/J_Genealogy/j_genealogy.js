@@ -1716,11 +1716,19 @@ class ClassVerticalLayoutHandler
 	    const isWoman = DataHandler.isFemale(personRecord);
 	    const isGroup = DataHandler.isGroup(personRecord);
 
-	    const textNode = x.append('text')
+	    const labelGroup = x.append('g')
+		  .attr('class', 'nodeLabel')
+		  .attr('transform', 'rotate(30)');
+
+	    labelGroup.append('rect')
+		  .attr('class', 'nodeLabelBackground')
+		  .attr('rx', 6)
+		  .attr('ry', 6);
+
+	    const textNode = labelGroup.append('text')
 		  .attr('x', +10) // Adjust position based on parent/child
 		  .attr('dy', 3) // Vertical offset
 		  .attr('text-anchor', 'start') // Align text properly
-		  .attr('transform', 'rotate(30)')
 		  .attr('textNodeIx', ix)
 
 	    textNode.append('tspan')
@@ -1761,6 +1769,30 @@ class ClassVerticalLayoutHandler
 		
 	    }
 	}
+    }
+
+
+    /**************************************************************************/
+    updateLabelBackgrounds ()
+    {
+	const paddingX = 6;
+	const paddingY = 4;
+
+	svg.selectAll('g.nodeLabel').each(function ()
+	{
+	    const label = d3.select(this);
+	    const text = label.select('text');
+	    const background = label.select('rect.nodeLabelBackground');
+	    if (text.empty() || background.empty())
+		return;
+
+	    const bbox = text.node().getBBox();
+	    background
+		.attr('x', bbox.x - paddingX)
+		.attr('y', bbox.y - paddingY)
+		.attr('width', bbox.width + paddingX * 2)
+		.attr('height', bbox.height + paddingY * 2);
+	});
     }
 
 
@@ -2481,8 +2513,9 @@ class _ClassPresentationHandler
 	    const personRecord = personRecordFromName(relatedPerson.disambiguatedName);
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
-		const textNode = personRecord.treeNode.querySelector('text');
-		d3.select(textNode).classed('highlightSiblings', highlighting);
+		const labelGroup = d3.select(personRecord.treeNode).select('.nodeLabel');
+		if (!labelGroup.empty())
+		    labelGroup.classed('highlightSiblings', highlighting);
 	    }
 	    catch (e)
 	    {
@@ -2495,8 +2528,9 @@ class _ClassPresentationHandler
 	    const personRecord = personRecordFromName(relatedPerson.disambiguatedName);
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
-		const textNode = personRecord.treeNode.querySelector('text');
-		d3.select(textNode).classed('highlightChildren', highlighting);
+		const labelGroup = d3.select(personRecord.treeNode).select('.nodeLabel');
+		if (!labelGroup.empty())
+		    labelGroup.classed('highlightChildren', highlighting);
 	    }
 	    catch (e)
 	    {
@@ -3490,6 +3524,7 @@ class ClassGraphicsHandler
 	nodes.style('cursor', 'pointer');
 	const textNodes = svg.selectAll('text');
 	textNodes.style('font-size', LayoutHandler.getFontSizeForNames());
+	LayoutHandler.updateLabelBackgrounds();
 	const repositioned = LayoutHandler.adjustPositionOfRootNode(true);
 
 

@@ -124,13 +124,25 @@
     }
       
     .highlightSiblings {
-	filter: url(#highlightSiblingsBox);
-	font-weight: 600;
+	text-shadow: 1px 1px 10px black;
+	/* animation: highlightSiblings 1s infinite; seconds duration (1s on, 1s off), infinite loop */
+    }
+
+    @keyframes highlightSiblings {
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
     }
 
     .highlightChildren {
-	filter: url(#highlightChildrenBox);
-	font-weight: 600;
+	text-shadow: 1px 1px 10px green;
+	/* animation: highlightChildren 1s infinite; 2 seconds duration (1s on, 1s off), infinite loop */
+    }
+
+    @keyframes highlightChildren {
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
     }
 
 
@@ -326,23 +338,6 @@
 	<style>
 	  .bigIcon { font-size:x-large; }
 	</style>
-
-	<defs>
-	  <filter id='highlightSiblingsBox' x='-0.15' y='-0.5' width='1.3' height='2' filterUnits='objectBoundingBox' color-interpolation-filters='sRGB'>
-	    <feFlood flood-color='#fff59d' result='highlightBg'/>
-	    <feMerge>
-	      <feMergeNode in='highlightBg'/>
-	      <feMergeNode in='SourceGraphic'/>
-	    </feMerge>
-	  </filter>
-	  <filter id='highlightChildrenBox' x='-0.15' y='-0.5' width='1.3' height='2' filterUnits='objectBoundingBox' color-interpolation-filters='sRGB'>
-	    <feFlood flood-color='#c8e6c9' result='highlightBg'/>
-	    <feMerge>
-	      <feMergeNode in='highlightBg'/>
-	      <feMergeNode in='SourceGraphic'/>
-	    </feMerge>
-	  </filter>
-	</defs>
 
 	<pattern id='redAndBlueDots' width='10' height='10' patternUnits='userSpaceOnUse'>
 	  <circle cx='2.5' cy='2.5' r='2.5' fill='red' />
@@ -652,7 +647,7 @@
       <br>
       
       <input type='checkbox' id='highlightRelations' class='jframework-3dCheckbox' title='Highlight siblings and children of selected person' onchange='PresentationHandler.changeRelationsHighlighting(this.checked)'>
-      <label for='highlightRelations'>Highlight <span style='background-color:#fff59d;color:#000;padding:0 2px;border-radius:2px;'>siblings</span> and <span style='background-color:#c8e6c9;color:#000;padding:0 2px;border-radius:2px;'>children</span> of selected person.</label>
+      <label for='highlightRelations'>Highlight <span style='text-shadow: 1px 1px 10px black;color:blackyellow'>siblings</span> and <span style='text-shadow: 1px 1px 10px green;color:darkgreen'>children</span> of selected person.</label>
     </div>
   </div>
   <!-- Layout menu modal -->

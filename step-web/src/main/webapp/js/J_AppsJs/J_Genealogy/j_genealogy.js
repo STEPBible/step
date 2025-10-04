@@ -2476,75 +2476,31 @@ class _ClassPresentationHandler
 
 	const sourcePersonRecord = personRecordFromIndex(ix);
 
-	const applyHighlight = (personRecord, highlightClass, backgroundModifier) =>
-	{
-	    try
+	for (const relatedPerson of sourcePersonRecord.siblings)
+        {
+	    const personRecord = personRecordFromName(relatedPerson.disambiguatedName);
+	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
-		if (!personRecord.treeNode)
-		    return;
-
-		const treeNode = personRecord.treeNode;
-		const textNode = treeNode.querySelector('text');
-		if (!textNode)
-		    return;
-
-		d3.select(textNode).classed(highlightClass, highlighting);
-
-		const backgroundSelector = `rect.${backgroundModifier}`;
-		const existingRect = treeNode.querySelector(backgroundSelector);
-
-		if (highlighting)
-		{
-		    const rect = existingRect ? existingRect : document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-		    const paddingX = 8;
-		    const paddingY = 4;
-		    const originalTransform = textNode.getAttribute('transform');
-
-		    if (originalTransform)
-			textNode.removeAttribute('transform');
-
-		    const bbox = textNode.getBBox();
-
-		    if (originalTransform)
-			textNode.setAttribute('transform', originalTransform);
-
-		    rect.setAttribute('class', `highlightRelationBackground ${backgroundModifier}`);
-		    rect.setAttribute('x', (bbox.x - paddingX).toString());
-		    rect.setAttribute('y', (bbox.y - paddingY).toString());
-		    rect.setAttribute('width', Math.max(0, bbox.width + paddingX * 2).toString());
-		    rect.setAttribute('height', Math.max(0, bbox.height + paddingY * 2).toString());
-		    rect.setAttribute('rx', '6');
-		    rect.setAttribute('ry', '6');
-
-		    if (originalTransform)
-			rect.setAttribute('transform', originalTransform);
-		    else
-			rect.removeAttribute('transform');
-
-		    if (!existingRect)
-			treeNode.insertBefore(rect, textNode);
-		}
-		else if (existingRect)
-		{
-		    existingRect.remove();
-		}
+		const textNode = personRecord.treeNode.querySelector('text');
+		d3.select(textNode).classed('highlightSiblings', highlighting);
 	    }
 	    catch (e)
 	    {
 	    }
-	};
-
-	for (const relatedPerson of sourcePersonRecord.siblings)
-        {
-	    const personRecord = personRecordFromName(relatedPerson.disambiguatedName);
-	    applyHighlight(personRecord, 'highlightSiblings', 'highlightRelationBackground--sibling');
 	}
 
 	
 	for (const relatedPerson of sourcePersonRecord.children)
         {
 	    const personRecord = personRecordFromName(relatedPerson.disambiguatedName);
-	    applyHighlight(personRecord, 'highlightChildren', 'highlightRelationBackground--child');
+	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
+	    {
+		const textNode = personRecord.treeNode.querySelector('text');
+		d3.select(textNode).classed('highlightChildren', highlighting);
+	    }
+	    catch (e)
+	    {
+	    }
 	}
     }
 

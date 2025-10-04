@@ -123,56 +123,26 @@
 	font-weight: normal;
     }
       
-    .nodeLabelBackground {
-	fill: transparent;
-	stroke: none;
-	opacity: 0;
-	pointer-events: none;
-	transition: opacity 0.2s ease-in-out;
+    .highlightSiblings {
+	text-shadow: 1px 1px 10px black;
+	/* animation: highlightSiblings 1s infinite; seconds duration (1s on, 1s off), infinite loop */
     }
 
-    .nodeLabel.highlightSiblings .nodeLabelBackground {
-	opacity: 1;
-	fill: #ffe9a6;
-	stroke: #c48c00;
+    @keyframes highlightSiblings {
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
     }
 
-    .nodeLabel.highlightChildren .nodeLabelBackground {
-	opacity: 1;
-	fill: #c7f1d1;
-	stroke: #2e7d32;
+    .highlightChildren {
+	text-shadow: 1px 1px 10px green;
+	/* animation: highlightChildren 1s infinite; 2 seconds duration (1s on, 1s off), infinite loop */
     }
 
-    .nodeLabel.highlightSiblings text,
-    .nodeLabel.highlightChildren text {
-	font-weight: 600;
-    }
-
-    .nodeLabel.highlightSiblings text {
-	fill: #1f1f1f;
-    }
-
-    .nodeLabel.highlightChildren text {
-	fill: #0f3e1a;
-    }
-
-    .relationsHighlightSample {
-	display: inline-block;
-	padding: 0 0.35em;
-	border-radius: 4px;
-	font-weight: 600;
-    }
-
-    .relationsHighlightSample--siblings {
-	background: #ffe9a6;
-	color: #1f1f1f;
-	border: 1px solid #c48c00;
-    }
-
-    .relationsHighlightSample--children {
-	background: #c7f1d1;
-	color: #0f3e1a;
-	border: 1px solid #2e7d32;
+    @keyframes highlightChildren {
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
     }
 
 
@@ -677,7 +647,7 @@
       <br>
       
       <input type='checkbox' id='highlightRelations' class='jframework-3dCheckbox' title='Highlight siblings and children of selected person' onchange='PresentationHandler.changeRelationsHighlighting(this.checked)'>
-      <label for='highlightRelations'>Highlight <span class='relationsHighlightSample relationsHighlightSample--siblings'>siblings</span> and <span class='relationsHighlightSample relationsHighlightSample--children'>children</span> of selected person.</label>
+      <label for='highlightRelations'>Highlight <span style='text-shadow: 1px 1px 10px black;color:blackyellow'>siblings</span> and <span style='text-shadow: 1px 1px 10px green;color:darkgreen'>children</span> of selected person.</label>
     </div>
   </div>
   <!-- Layout menu modal -->

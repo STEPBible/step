@@ -53,9 +53,18 @@
     font-family: var(--jframework-fontFamilyPopUpMenuItem);
     border: none;
     text-align: left;
-    display: block;
-    border: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     width: 100%;
+}
+
+.jframework-dropdownMenuIcon {
+    font-size: x-large;
+    flex: 0 0 1.75em;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .jframework-dropdownMenuItem:hover {

@@ -121,53 +121,28 @@
     tspan.retainDefaultAppearance { /* Avoids the bishop's mitre icon from turning red when highlighted. */
 	fill: black;
 	font-weight: normal;
-	stroke: none;
-	paint-order: normal;
+    }
+      
+    .highlightSiblings {
+	text-shadow: 1px 1px 10px black;
+	/* animation: highlightSiblings 1s infinite; seconds duration (1s on, 1s off), infinite loop */
     }
 
-    text.highlightSiblings,
-    text.highlightChildren {
-	text-shadow: none;
-	font-weight: bold;
-	paint-order: stroke fill;
-	stroke-width: 6px;
-	stroke-linejoin: round;
-	stroke-linecap: round;
-	fill: white;
+    @keyframes highlightSiblings {
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
     }
 
-    text.highlightSiblings {
-	stroke: var(--clrHighlightBg);
+    .highlightChildren {
+	text-shadow: 1px 1px 10px green;
+	/* animation: highlightChildren 1s infinite; 2 seconds duration (1s on, 1s off), infinite loop */
     }
 
-    text.highlightChildren {
-	stroke: #2F7D2F;
-    }
-
-    text.highlightSiblings tspan.retainDefaultAppearance,
-    text.highlightChildren tspan.retainDefaultAppearance {
-	stroke: none;
-	fill: black;
-	font-weight: normal;
-    }
-
-    .highlightExample {
-	display: inline-block;
-	padding: 0 6px;
-	border: 1px solid black;
-	border-radius: 4px;
-	font-weight: bold;
-	text-shadow: none;
-    }
-
-    .highlightExample-siblings {
-	background: var(--clrHighlightBg);
-	color: white;
-    }
-
-    .highlightExample-children {
-	background: #2F7D2F;
-	color: white;
+    @keyframes highlightChildren {
+	  0% { font-weight: bold; }
+	  0% { font-weight: normal; }
+	  0% { font-weight: bold; }
     }
 
 
@@ -672,7 +647,7 @@
       <br>
       
       <input type='checkbox' id='highlightRelations' class='jframework-3dCheckbox' title='Highlight siblings and children of selected person' onchange='PresentationHandler.changeRelationsHighlighting(this.checked)'>
-      <label for='highlightRelations'>Highlight <span class='highlightExample highlightExample-siblings'>siblings</span> and <span class='highlightExample highlightExample-children'>children</span> of selected person.</label>
+      <label for='highlightRelations'>Highlight <span style='text-shadow: 1px 1px 10px black;color:blackyellow'>siblings</span> and <span style='text-shadow: 1px 1px 10px green;color:darkgreen'>children</span> of selected person.</label>
     </div>
   </div>
   <!-- Layout menu modal -->

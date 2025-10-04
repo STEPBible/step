@@ -417,26 +417,21 @@ var PassageDisplayView = DisplayView.extend({
             var bookOrder = step.util.bookOrderInBible(reference);
             if (bookOrder > -1) {
                 var masterVersion = step.util.activePassage().get("masterVersion");
-                var masterVersionLowerCase = masterVersion.toLowerCase();
-                var extraVersionsMsg = "";
                 var testamentOfPassageSelected = "Old";
                 var theOtherTestament = "New";
                 if (bookOrder > 38) {
                     testamentOfPassageSelected = "New";
                     theOtherTestament = "Old";
                 }
-                if ( 
-                    ((testamentOfPassageSelected === "New") &&
-                     ((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
-                      (" ohb thot alep wlc mapm ".indexOf(masterVersionLowerCase) > -1))) ||
-                    ((testamentOfPassageSelected === "Old") &&
-                     ((step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(masterVersionLowerCase) > -1) ||
-                      (" sblgnt ".indexOf(masterVersionLowerCase) > -1))) ) {
+                if (typeof step.keyedVersions[masterVersion] !== "object") return "";
+                if ( ((testamentOfPassageSelected === "New") &&
+                      (step.keyedVersions[masterVersion].hasAllNTOTorBoth === "O")) ||
+                     ((testamentOfPassageSelected === "Old") &&
+                      (step.keyedVersions[masterVersion].hasAllNTOTorBoth === "N")) ) {
                     var alertMessage = "<br>The Bible selected, " + masterVersion + ", only has the " +
                         theOtherTestament + " Testament, but an " + testamentOfPassageSelected + " Testament passage is selected." +
                         "<br><br>You can either:<ul>" +
-                        "<li><a href=\"javascript:step.util.correctPassageNotInBible(3)\">Add another Bible which has " + testamentOfPassageSelected + " Testament" + 
-                        extraVersionsMsg + ".</a>" +
+                        "<li><a href=\"javascript:step.util.correctPassageNotInBible(3)\">Add another Bible which has " + testamentOfPassageSelected + "Testament.</a>" +
                         "<li><a href=\"javascript:step.util.correctPassageNotInBible(4)\">Select a " + theOtherTestament + " Testament passage.</a>" +
                         "</ul>";
                     return alertMessage;

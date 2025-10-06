@@ -107,7 +107,7 @@
 
        <!-- Search box. -->
        <div style='display: flex; align-items: center; padding-bottom: 5px;'>
-         <textarea id='peopleSearchBox' class='jframework-searchBox' placeholder='&#x1F50D; Search: Type the start of a name here ...'></textarea>
+         <textarea id='peopleSearchBox' class='jframework-searchBox' placeholder='Search: Type the start of a name here ...'></textarea>
        </div>
      </div> <!-- End of header. -->
 

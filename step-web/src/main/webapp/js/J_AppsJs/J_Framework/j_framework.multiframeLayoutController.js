@@ -58,9 +58,9 @@
    body:
 
      <jframework-iframeList>
-       <iframe id='peopleIndex' wantSrc='html/J_AppsHtml/J_Genealogy/j_peopleIndex.html' scrolling='yes'           ></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#128203;</span>&nbsp;Index</jframework-tabLegend>
-       <iframe id='scripture'   suppressStepHeader='yes'                                 scrolling='yes'           ></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#128218;</span>&nbsp;Scripture</jframework-tabLegend>
-       <iframe id='genealogy'   wantSrc='html/J_AppsHtml/J_Genealogy/j_genealogy.html'   scrolling='no' show='wide'></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#x1F46A;</span>&nbsp;Genealogy</jframework-tabLegend>
+       <iframe id='peopleIndex' wantSrc='html/J_AppsHtml/J_Genealogy/j_peopleIndex.html' scrolling='yes'           ></iframe><jframework-tabLegend>Index</jframework-tabLegend>
+       <iframe id='scripture'   suppressStepHeader='yes'                                 scrolling='yes'           ></iframe><jframework-tabLegend>Scripture</jframework-tabLegend>
+       <iframe id='genealogy'   wantSrc='html/J_AppsHtml/J_Genealogy/j_genealogy.html'   scrolling='no' show='wide'></iframe><jframework-tabLegend>Genealogy</jframework-tabLegend>
      </jframework-iframeList>
 
 

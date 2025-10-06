@@ -3188,8 +3188,6 @@ class _ClassPresentationHandler
 	const summaryIcon = DataHandler.getSummaryIcon(personRecord);
 	const spacer = summaryIcon ? '&nbsp;' : '';
 	const multipleReferences = personRecord.allRefsAsRanges.length > 1 ? ' etc' : '';
-	const isMobileDevice = (typeof step !== 'undefined') && step.touchDevice;
-	const shareableLinkMarkup = isMobileDevice ? '' : "<span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree'>Shareable link</span>";
 	infoBoxContent
 	    .html(`
               <div style='display:flex; align-items:center'><span class='iconFont'>${summaryIcon}</span>
@@ -3199,7 +3197,7 @@ class _ClassPresentationHandler
                   <span>&nbsp;${"" === personRecord.role ? "" : (personRecord.role + " ")} (at ${firstScriptureReference(personRecord)}${multipleReferences}).</span>
                   <span>${alternativeNames}</span>
                 </span>
-                ${shareableLinkMarkup}
+                <span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree'>Shareable link</span>
               </div>
 
              <br>${partnerList}

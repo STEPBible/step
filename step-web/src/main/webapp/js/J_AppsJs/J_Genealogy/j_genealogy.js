@@ -3129,9 +3129,16 @@ class _ClassPresentationHandler
 	    const fromAdamFivePercents = Math.round( (100 * (generationsFromAdam / 77)) / 5);
 	    const before = '&#x2588;'.repeat(fromAdamFivePercents);
 	    const after  = '&#x2588;'.repeat(20 - fromAdamFivePercents);
-	    const leftChevronSvg  = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="7.5 2 4.5 6 7.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-	    const rightChevronSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="4.5 2 7.5 6 4.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-	    generations = `<p><b>Timeline:</b> Adam ${leftChevronSvg} <span style='color:lightgray;font-size:small'>${before}</span>&#x2588;<span style='color:lightgray;font-size:small'>${after}</span> ${rightChevronSvg} NT</p>`;
+	    const trackHeight = '1.1em';
+	    const trackStyle = `display:inline-flex;align-items:center;background:white;padding:1px 6px;border-radius:3px;height:${trackHeight};line-height:1;`;
+	    const segmentStyle = "color:lightgray;font-size:small;line-height:1;display:inline-flex;align-items:center;";
+	    const markerStyle = "color:#8c8c8c;font-size:small;line-height:1;display:inline-flex;align-items:center;";
+	    const timelineBar = `<span style="${trackStyle}"><span style="${segmentStyle}">${before}</span><span style="${markerStyle}" aria-hidden="true">&#x2588;</span><span style="${segmentStyle}">${after}</span></span>`;
+	    const chevronContainerStyle = `display:inline-flex;align-items:center;height:${trackHeight};`;
+	    const chevronSvgStyle = 'width:0.85em;height:0.85em;display:block;';
+	    const leftChevronSvg  = `<span style="${chevronContainerStyle}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="${chevronSvgStyle}" aria-hidden="true"><polyline points="7.5 2 4.5 6 7.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+	    const rightChevronSvg = `<span style="${chevronContainerStyle}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="${chevronSvgStyle}" aria-hidden="true"><polyline points="4.5 2 7.5 6 4.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+	    generations = `<p><b>Timeline:</b> Adam ${leftChevronSvg} ${timelineBar} ${rightChevronSvg} NT</p>`;
 	}
 
 

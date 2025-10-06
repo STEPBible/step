@@ -3131,7 +3131,7 @@ class _ClassPresentationHandler
 	    const after  = '&#x2588;'.repeat(20 - fromAdamFivePercents);
 	    const leftChevronSvg  = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="7.5 2 4.5 6 7.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 	    const rightChevronSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="4.5 2 7.5 6 4.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-	    generations = `<p><b>Timeline:</b> Adam ${leftChevronSvg} <span style='color:lightgray;font-size:small'>${before}</span>&#x2588;<span style='color:lightgray;font-size:small'>${after}</span> ${rightChevronSvg} NT</p>`;
+	    generations = `<p><b>Timeline:</b> Adam ${leftChevronSvg} <span style='color:white;font-size:small'>${before}</span><span style='color:#e0e0e0;font-size:small'>&#x2588;</span><span style='color:white;font-size:small'>${after}</span> ${rightChevronSvg} NT</p>`;
 	}
 
 

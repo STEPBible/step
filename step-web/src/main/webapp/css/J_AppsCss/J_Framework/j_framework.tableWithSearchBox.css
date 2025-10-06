@@ -25,8 +25,8 @@ body {
     padding: 12px 10px 12px 10px;
 }
 
-.jframework-searchBox::placeholder {
-    color: #888;
+textarea::placeholder {
+    color: black;
     opacity: 1;
 }
 

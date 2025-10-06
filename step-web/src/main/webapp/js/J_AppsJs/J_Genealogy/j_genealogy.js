@@ -3129,14 +3129,9 @@ class _ClassPresentationHandler
 	    const fromAdamFivePercents = Math.round( (100 * (generationsFromAdam / 77)) / 5);
 	    const before = '&#x2588;'.repeat(fromAdamFivePercents);
 	    const after  = '&#x2588;'.repeat(20 - fromAdamFivePercents);
-	    const trackHeight = '1.2em';
-	    const trackSegmentStyle = "color:lightgray;font-size:small;line-height:1;";
-	    const markerStyle = "color:black;font-size:small;line-height:1;";
-	    const timelineBar = `<span style="display:inline-flex;align-items:center;background:white;padding:0 4px;height:${trackHeight};line-height:1;border-radius:2px;"><span style="${trackSegmentStyle}">${before}</span><span style="${markerStyle}" aria-hidden="true">&#x2588;</span><span style="${trackSegmentStyle}">${after}</span></span>`;
-	    const chevronWrapperStyle = `display:inline-flex;align-items:center;height:${trackHeight};`;
-	    const leftChevronSvg  = `<span style="${chevronWrapperStyle}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;display:block;" aria-hidden="true"><polyline points="7.5 2 4.5 6 7.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
-	    const rightChevronSvg = `<span style="${chevronWrapperStyle}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;display:block;" aria-hidden="true"><polyline points="4.5 2 7.5 6 4.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
-	    generations = `<p><b>Timeline:</b> Adam ${leftChevronSvg} ${timelineBar} ${rightChevronSvg} NT</p>`;
+	    const leftChevronSvg  = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="7.5 2 4.5 6 7.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+	    const rightChevronSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="4.5 2 7.5 6 4.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+	    generations = `<p><b>Timeline:</b> Adam ${leftChevronSvg} <span style='color:lightgray;font-size:small'>${before}</span>&#x2588;<span style='color:lightgray;font-size:small'>${after}</span> ${rightChevronSvg} NT</p>`;
 	}
 
 

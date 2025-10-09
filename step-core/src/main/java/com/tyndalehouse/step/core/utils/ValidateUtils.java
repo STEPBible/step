@@ -265,7 +265,7 @@ public final class ValidateUtils {
             final String key = entry.getKey();
             final String[] value = entry.getValue();
             if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome")) {
-                if ((value.length == 1) && value[0].equals("")) continue; // The debug and noredirect parameters do not have value so no additional checking is required.
+                if (value[0].equals("")) continue; // The debug and noredirect parameters do not have value so no additional checking is required.
                 System.out.println("XSS kill unexpected value with key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
                 return false;
             }

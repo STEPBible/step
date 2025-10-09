@@ -264,30 +264,33 @@ public final class ValidateUtils {
         for (Map.Entry<String, String[]> entry : inputParms.entrySet()) {
             final String key = entry.getKey();
             final String[] value = entry.getValue();
-            if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome")) {
-                if (value[0].equals("")) continue; // The debug and noredirect parameters do not have value so no additional checking is required.
+            if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome") || key.startsWith("colorCode")) {
+                if (value[0].equals(""))
+                    continue; // The debug, noredirect and other parameters have no value so no additional checking is not required.
                 System.out.println("XSS kill unexpected value with key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
                 return false;
             }
-            final String cmpKey = " " + key + " ";
-            if (" options display lang reference version pos ".indexOf(cmpKey) > -1) {
-                for (int i = 0; i < value.length; i++) {
-                    if (value[i].length() == 0) continue;
-                    if (!(validateInputParm(key, value[i])))
-                        return false; // already output error in validateInputParm
-                }
-            }
-            else if (" q qFilter page sort context secondURL langFile ".indexOf(cmpKey) > -1) {
-                for (int i = 0; i < value.length; i++) {
-                    if (!checkForObviousXSS(key, value[i], requestURI, true)) {
-                        System.out.println("XSS kill checkURLParms 3 : " + key + "=" + value[i] + " uri: " + requestURI);
-                        return false;
+            else {
+                final String cmpKey = " " + key + " ";
+                if (" options display lang reference version pos ".indexOf(cmpKey) > -1) {
+                    for (int i = 0; i < value.length; i++) {
+                        if (value[i].length() == 0) continue;
+                        if (!(validateInputParm(key, value[i])))
+                            return false; // already output error in validateInputParm
+                    }
+                } else if (" q qFilter page sort context secondURL langFile ".indexOf(cmpKey) > -1) {
+                    for (int i = 0; i < value.length; i++) {
+                        if (value[i].length() == 0) continue;
+                        if (!checkForObviousXSS(key, value[i], requestURI, true)) {
+                            System.out.println("XSS kill checkURLParms 3 : " + key + "=" + value[i] + " uri: " + requestURI);
+                            return false;
+                        }
                     }
                 }
-            }
-            else { // does not match " q options display page qFilter sort context lang "
-                System.out.println("XSS kill checkURLParm: unknown key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
-                return false;
+                else { // does not match " q options display page qFilter sort context lang ... "
+                    System.out.println("XSS kill checkURLParm: unknown key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
+                    return false;
+                }
             }
         }
         return true;

@@ -1838,6 +1838,7 @@ var cf = {
 
   c4NounOnly: function() {
     var r = cf.createC4();
+    r[C_enableGenderNumberClr] = true;
     r[C_Greek][C_enableVerbClr] = false;
     r[C_Greek][C_verbTableYHeader] = null;
     r[C_OT][C_enableVerbClr] = false;
@@ -1848,6 +1849,7 @@ var cf = {
 
   c4Color2019: function() {
     var r = cf.createC4();
+    r[C_Greek][C_enableVerbClr] = true;
     r[C_Greek][C_inClrVerbItem] = ['#31ff00', '#ffa500', '#925011', '#f92d02', '#fff700', '#091bfd'];
     r[C_Greek][C_slctUlVerbItem] = ['Dash', 'Arrow', 'Dots', 'Reverse Arrow', 'Short Reverse Arrow', 'Short Reverse Arrow'];
     r[C_Greek][C_orderOfTense] = ['p', 'f', 'a', 'i', 'r', 'l'];
@@ -1858,12 +1860,14 @@ var cf = {
 
   c4ColorTense: function() {
     var r = cf.createC4();
+    r[C_Greek][C_enableVerbClr] = true;
     r[C_Greek][C_slctUlVerbItem] = ['Dash', 'Reverse Arrow', 'Underline', 'Short Reverse Arrow', '2 lines', 'Short Arrow'];
     return r;
   },
 
   c4MainVsSupporingVerbs: function() {
     var r = cf.createC4();
+    r[C_Greek][C_enableVerbClr] = true;
     r[C_Greek][C_inClrVerbItem] = ['#008000', '#008000', '#ed12ed', '#ed12ed', '#ed12ed', '#ed12ed'];
     r[C_Greek][C_slctUlVerbItem] = ['Underline', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline'];
     r[C_Greek][C_verbTableYHeader] = null;
@@ -1875,6 +1879,7 @@ var cf = {
 
   c4ImperativesOnly: function() {
     var r = cf.createC4();
+    x[C_Greek][C_enableVerbClr] = true;
     r[C_Greek][C_moodsOnOff] = [false, true, false, false, false, false];
     r[C_Greek][C_slctUlVerbItem] = ['Underline', 'Underline', 'Underline', 'Underline', 'Underline', 'Underline'];
     r[C_Greek][C_verbTableYHeader] = null;

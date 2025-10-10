@@ -3075,21 +3075,13 @@ step.util = {
 			var bookOrderInBible = step.searchSelect.idx2osisChapterJsword[curOsisID];
 			var keysForCommentary = JSON.parse(summary["commentary_keys"].replaceAll("'", '"').replace('\\"',"'"));
 			var namesForCommentary = JSON.parse(summary["commentary_names"].replaceAll("'", '"').replace('\\"',"'"));
-//			var svgDefs = '<svg style="height:0;width:0"><defs>';
 			var bgColors =   ["Navy", "DarkRed", "DarkOliveGreen", "Indigo", "DarkSlateGray", "Maroon"];
-			for (var i = 0; i < keysForCommentary.length; i++) {
-//				var initial = keysForCommentary[i].substr(0,1).toUpperCase();
-//				svgDefs += '<rect id="' + keysForCommentary[i] + 'rect" width="15" height="18" fill="' + bgColors[i % bgColors.length] + '" />' +
-//						   '<line id="' + keysForCommentary[i] + 'line" x1="2" y1="16" x2="15" y2="16" stroke="white" />' +
-//						   '<text id="' + keysForCommentary[i] + 'text" font-size="10px" x="5" y="12" fill="white">' + initial + '</text>';
-			}
-//			svgDefs += '</defs></svg>';
 			if (typeof bookOrderInBible === "number") {
 				var lastChapter = step.passageSelect.osisChapterJsword[bookOrderInBible][1];
 				if (typeof lastChapter === "number") {
-					bookSummary += '<h5>Icon';
+					bookSummary += '<h5>Link';
 					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
-					bookSummary += ' with link to commentar';
+					bookSummary += ' to commentar';
 					bookSummary += (keysForCommentary.length > 1) ? 'ies' : 'y';
 					bookSummary += '</h5>';
 					var commentaryIntro = "";
@@ -3097,33 +3089,27 @@ step.util = {
 					var firstLinkToCommentary = [];
 					var circles = [];
 					for (var i = 0; i < keysForCommentary.length; i++) {
-						//svgs.push('<svg style="height:18;width:15">' +
-						//	'<use href="#' + keysForCommentary[i] + 'rect" />' +
-						//	'<use href="#' + keysForCommentary[i] + 'line" />' +
-						//	'<use href="#' + keysForCommentary[i] + 'text" /></svg>');
 						circles.push('<span style="width:18px;height:18px;display:inline-flex;justify-content:center;align-items:center;color:' + 
 							bgColors[i % bgColors.length] + ';border-width: thin;border-style:solid;border-radius:50%;">' +
 							keysForCommentary[i].substr(0,1).toUpperCase() +
 							'</span>');
 						firstLinkToCommentary.push('');
 						if (typeof summary["chapter_intro_" + keysForCommentary[i] + "_url"] === "string") {
-							commentaryIntro += (commentaryIntro === "") ? '<b><u>Commentary introduction</u></b>' : '';
 							firstLinkToCommentary[i] = summary["chapter_intro_" + keysForCommentary[i] + "_url"]
 							var titleTag = "";
 							if ((typeof summary["chapter_intro_" + keysForCommentary[i] + "_page"] === "string") && (summary["chapter_intro_" + keysForCommentary[i] + "_page"] !== ""))
 								titleTag = ' title="page ' + summary["chapter_intro_" + keysForCommentary[i] + "_page"] + '"';
-							commentaryIntro += '<a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_intro_" + keysForCommentary[i] + "_url"] +
+							commentaryIntro += ' <a href="' + summary["chapter_intro_" + keysForCommentary[i] + "_url"] +
 								'" target="' + keysForCommentary[i] + '"' + titleTag + '>' +
 								circles[i] + '</a>';
 						}
 						if (typeof summary["chapter_outline_" + keysForCommentary[i] + "_url"] === "string") {
-							commentaryOutline += (commentaryOutline === "") ? '<b><u>Commentary outline</u></b>' : '';
 							if (firstLinkToCommentary[i] === "")
 								firstLinkToCommentary[i] = summary["chapter_outline_" + keysForCommentary[i] + "_url"]
 							var titleTag = "";
 							if ((typeof summary["chapter_outline_" + keysForCommentary[i] + "_page"] === "string") && (summary["chapter_outline_" + keysForCommentary[i] + "_page"] !== ""))
 								titleTag = ' title="page ' + summary["chapter_outline_" + keysForCommentary[i] + "_page"] + '"';
-							commentaryOutline += '<a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_outline_" + keysForCommentary[i] + "_url"] + 
+							commentaryOutline += ' <a href="' + summary["chapter_outline_" + keysForCommentary[i] + "_url"] + 
 								'" target="' + keysForCommentary[i] + '"' + titleTag + '>' +
 								circles[i] + '</a>';
 						}
@@ -3145,20 +3131,22 @@ step.util = {
 							' icon is a link to the ' + namesForCommentary[i] + '</div>';
 					}
 					bookSummary += '<br>';
-					var hasIntroOrOutline = false;
+					var width2 = keysForCommentary.length * 5;
+					var width1 = (lastChapter > 12) ? '12' : '10';
+					bookSummary += '<div style="margin:8px"><table><tbody><tr><th style="width:' +
+						width1 + '%">Chpt</th><th>Description</th><th style="width:' + width2 +
+						'%">Link';
+					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
+					bookSummary +=  '</th></tr>';
 					if (commentaryIntro !== "") {
-						bookSummary += commentaryIntro; 
-						hasIntroOrOutline = true;
+						bookSummary += '<tr><td></td><td>Introduction</td><td>' +
+							commentaryIntro + '</td></tr>';
 					}
 					if (commentaryOutline !== "") {
-						if (hasIntroOrOutline)
-							bookSummary += '<br>';
-						bookSummary += commentaryOutline;
-						hasIntroOrOutline = true;
+						bookSummary += '<tr><td></td><td>Outline</td><td>' +
+							commentaryOutline + '</td></tr>';
 					}
-//					if ((!hasIntroOrOutline) && (typeof summary["chapter_1_icc_url"] === "string"))
-//						bookSummary += '<p style="margin-left:8px;margin-bottom:0">The <sup class="glyphicon glyphicon-book"></sup> icons are links to the ICC commentary.</p>';
-					bookSummary += '<div style="margin:8px"><table><tbody><tr><th style="width:20%">Chapter</th><th>Description</th></tr>';
+
 					for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
 						var jsonName = "chapter_" + curChapter + "_header";
 						if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "*") && (summary[jsonName] !== "")) {
@@ -3168,12 +3156,12 @@ step.util = {
 								if (typeof summary[jsonName2] === "string")
 									endOfHeader = nextChapter - 1;
 							}
-							bookSummary += "<tr><td><b>" + osisID + " " + curChapter + "-" + endOfHeader + "</b></td><td><b>" + summary[jsonName] + "</b></td></tr>";
+							bookSummary += "<tr><td>" + curChapter + "-" + endOfHeader + "</td><td><b>" + summary[jsonName] + "</b></td></tr>";
 						}
 						jsonName = "chapter_" + curChapter + "_description";
 						if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
 							if (summary[jsonName] === "*") summary[jsonName] = "";
-							bookSummary += '<tr><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + osisID + " " + curChapter + "</a></td><td>" + summary[jsonName];
+							bookSummary += '<tr><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + curChapter + "</a></td><td>" + summary[jsonName] + '</td><td>';
 							for (var j = 0; j < keysForCommentary.length; j++) {
 								var curKey = step.util.augmentLanguageCode(keysForCommentary[j], summary, lastChapter);
 								jsonName = "chapter_" + curChapter + "_" + curKey + "_url";

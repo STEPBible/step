@@ -2845,6 +2845,17 @@ step.util = {
         var randomDots = "..... .... .... ....... ... .... ... ........ .... ... ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ........ ... .... ... .....<br>... ..... .. .... ..... .... ..... ........ .... ...... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .... ... .... ... .....<br>...... .... ... ..... .... ..... ..... ..... ... . ... .... ... .....<br> .... .. .... ... .... ........ .... ... .... ...... ... .... ... .....<br>... ..... .... .... ..... .... ..... ........ .... ... ... .... ... .....<br>.... .. .... ... .... ........ .... ... .... ... ... ... .... ... .....<br> ...... .... ... ..... .... ..... ..... ..... .. ... .... ... .....<br";
         passageContent.html(randomDots + "<br>" + randomDots + "<br>" + randomDots);
     },
+	augmentLanguageCode: function(curKey, summary, lastChapter) {
+		if (!curKey.endsWith("_langcode"))
+			return curKey;
+		var newKey = curKey.slice(0, -8) + step.userLanguageCode;
+		for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
+			jsonName = "chapter_" + curChapter + "_" + newKey + "_url";
+			if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
+				return newKey;
+		}
+		return curKey.slice(0, -8) + "en";
+	},
     showSummary: function (reference, tabToShow) {
         element = document.getElementById('showBookOrChapterSummaryModal');
         if (element) element.parentNode.removeChild(element);
@@ -3065,35 +3076,35 @@ step.util = {
 			var keysForCommentary = JSON.parse(summary["commentary_keys"].replaceAll("'", '"').replace('\\"',"'"));
 			var namesForCommentary = JSON.parse(summary["commentary_names"].replaceAll("'", '"').replace('\\"',"'"));
 			var svgDefs = '<svg style="height:0;width:0"><defs>';
-			var bgColors =   ["black", "blue", "green", "purple", "red", "orange", "black", "blue", "green", "purple", "red", "orange", ];
-			var textColors = ["white", "red", "red", "white", "white", "black", "white", "red", "red", "white", "white", "black"];
+			var bgColors =   ["Navy", "DarkRed", "DarkOliveGreen", "Indigo", "DarkSlateGray", "Maroon"];
 			for (var i = 0; i < keysForCommentary.length; i++) {
 				var initial = keysForCommentary[i].substr(0,1).toUpperCase();
-				svgDefs += '<rect id="' + keysForCommentary[i] + 'rect" width="15" height="18" fill="' + bgColors[i] + '" />' +
+				svgDefs += '<rect id="' + keysForCommentary[i] + 'rect" width="15" height="18" fill="' + bgColors[i % bgColors.length] + '" />' +
 						   '<line id="' + keysForCommentary[i] + 'line" x1="2" y1="16" x2="15" y2="16" stroke="white" />' +
-						   '<text id="' + keysForCommentary[i] + 'text" font-size="10px" x="5" y="12" fill="' + textColors[i] + '">' + initial + '</text>';
+						   '<text id="' + keysForCommentary[i] + 'text" font-size="10px" x="5" y="12" fill="white">' + initial + '</text>';
 			}
 			svgDefs += '</defs></svg>';
 			if (typeof bookOrderInBible === "number") {
 				var lastChapter = step.passageSelect.osisChapterJsword[bookOrderInBible][1];
 				if (typeof lastChapter === "number") {
-					bookSummary += '<h5>Example of ';
-					bookSummary += ' icon';
+					bookSummary += '<h5>Icon';
 					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
 					bookSummary += ' with links to commentar';
 					bookSummary += (keysForCommentary.length > 1) ? 'ies' : 'y';
 					bookSummary += '</h5>';
 					var commentaryIntro = "";
 					var commentaryOutline = "";
+					var firstLinkToCommentary = [];
 					var svgs = [];
 					for (var i = 0; i < keysForCommentary.length; i++) {
 						svgs.push('<svg style="height:18;width:15">' +
 							'<use href="#' + keysForCommentary[i] + 'rect" />' +
 							'<use href="#' + keysForCommentary[i] + 'line" />' +
 							'<use href="#' + keysForCommentary[i] + 'text" /></svg>');
-						bookSummary += '<div style="margin-left:8px">' + namesForCommentary[i] + ': ' + svgs[i] + '</div>';
+						firstLinkToCommentary.push('');
 						if (typeof summary["chapter_intro_" + keysForCommentary[i] + "_url"] === "string") {
 							commentaryIntro += (commentaryIntro === "") ? '<b><u>Commentary introduction</u></b>' : '';
+							firstLinkToCommentary[i] = summary["chapter_intro_" + keysForCommentary[i] + "_url"]
 							var titleTag = "";
 							if ((typeof summary["chapter_intro_" + keysForCommentary[i] + "_page"] === "string") && (summary["chapter_intro_" + keysForCommentary[i] + "_page"] !== ""))
 								titleTag = ' title="page ' + summary["chapter_intro_" + keysForCommentary[i] + "_page"] + '"';
@@ -3102,12 +3113,30 @@ step.util = {
 						}
 						if (typeof summary["chapter_outline_" + keysForCommentary[i] + "_url"] === "string") {
 							commentaryOutline += (commentaryOutline === "") ? '<b><u>Commentary outline</u></b>' : '';
+							if (firstLinkToCommentary[i] === "")
+								firstLinkToCommentary[i] = summary["chapter_outline_" + keysForCommentary[i] + "_url"]
 							var titleTag = "";
 							if ((typeof summary["chapter_outline_" + keysForCommentary[i] + "_page"] === "string") && (summary["chapter_outline_" + keysForCommentary[i] + "_page"] !== ""))
 								titleTag = ' title="page ' + summary["chapter_outline_" + keysForCommentary[i] + "_page"] + '"';
 							commentaryOutline += ' <a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_outline_" + keysForCommentary[i] + "_url"] + '" target="' + keysForCommentary[i] + '"' + titleTag + '> ' +
 								svgs[i] + '</a>';
 						}
+					}
+					for (var i = 0; i < keysForCommentary.length; i++) {
+						var curKey = step.util.augmentLanguageCode(keysForCommentary[i], summary, lastChapter);
+						if (firstLinkToCommentary[i] === "") {
+							for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
+								jsonName = "chapter_" + curChapter + "_" + curKey + "_url";
+								if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
+									firstLinkToCommentary[i] = summary[jsonName];
+									break;
+								}
+							}
+						}
+						bookSummary += '<div style="margin-left:8px">The ' + 
+							'<a href="' + firstLinkToCommentary[i] + '" target="' + curKey + '">' +
+							svgs[i] + '</a>' +
+							' icon is a link to the ' + namesForCommentary[i] + '</div>';
 					}
 					bookSummary += '<br>';
 					var hasIntroOrOutline = false;
@@ -3139,19 +3168,17 @@ step.util = {
 						if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
 							if (summary[jsonName] === "*") summary[jsonName] = "";
 							bookSummary += '<tr><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + osisID + " " + curChapter + "</a></td><td>" + summary[jsonName];
-							for (var i = 0; i < keysForCommentary.length; i++) {
-								var curKey = keysForCommentary[i];
-								if (curKey.endsWith("_langcode"))
-									curKey = curKey.slice(0, -8) + step.userLanguageCode;
+							for (var j = 0; j < keysForCommentary.length; j++) {
+								var curKey = step.util.augmentLanguageCode(keysForCommentary[j], summary, lastChapter);
 								jsonName = "chapter_" + curChapter + "_" + curKey + "_url";
 								if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
-									var icc_url = summary[jsonName];
+									var commentary_url = summary[jsonName];
 									jsonName = "chapter_" + curChapter + "_" + curKey + "_page";
 									var titleTag = "";
 									if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
 										titleTag = ' title="page ' + summary[jsonName] + '"';
-									bookSummary += ' <a href="' + icc_url + '" target="icc"' + titleTag + '>' +
-									svgs[i] + '</a>';
+									bookSummary += ' <a href="' + commentary_url + '" target="' + curKey + '"' + titleTag + '>' +
+									svgs[j] + '</a>';
 								}
 							}
 							bookSummary += "</td></tr>";

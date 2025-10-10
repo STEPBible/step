@@ -3089,7 +3089,7 @@ step.util = {
 				if (typeof lastChapter === "number") {
 					bookSummary += '<h5>Icon';
 					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
-					bookSummary += ' with links to commentar';
+					bookSummary += ' with link to commentar';
 					bookSummary += (keysForCommentary.length > 1) ? 'ies' : 'y';
 					bookSummary += '</h5>';
 					var commentaryIntro = "";
@@ -3228,8 +3228,8 @@ step.util = {
                 	if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
                     	titleTag = ' title="page ' + summary[jsonName] + '"';
                 	chptSummary += '<a style="margin-left:8px;font-size:14px" href="' +
-						commentary_url + '" target="ext_commentary"' + titleTag + '><b><u>' +
-						namesForCommentary[i] + ' for chapter ' + chapterNum + '</u></b> ';
+						commentary_url + '" target="' + currentKey + '"' + titleTag + '><b><u>' +
+						namesForCommentary[i] + ' for chapter ' + chapterNum + '</u></b><br>';
 //                    	'<sup class="glyphicon glyphicon-book"></sup></a><br>';
 				}
             }
@@ -4021,24 +4021,6 @@ step.util = {
 					introCount ++;
 					step.util.localStorageSetItem("step.copyIntro", introCount);
 				}
-				// else {
-				// 	introCountFromStorageOrCookie = step.util.localStorageGetItem("step.userSurvey");
-				// 	introCount = parseInt(introCountFromStorageOrCookie, 10);
-				// 	if (isNaN(introCount)) introCount = 0;
-				// 	if (introCount < 1) {
-				// 		var introJsSteps = [
-				// 		{
-				// 			intro: '<a href="https://docs.google.com/forms/d/1jgFiiOnpIjGIjuEvLGA8Rl9Zecy5yEHrNlOys1G0x0A/edit?usp=sharing_eip_se_dm&ts=671c1301" target="_blank">Sign up here</a> (30 seconds!) to participate in future interface design studies and help us improve our site\'s user experience.',
-				// 			position: 'center'
-				// 		}
-				// 		];
-				// 		introJs().setOptions({
-				// 			steps: introJsSteps
-				// 		}).start();
-				// 		introCount ++;
-				// 		step.util.localStorageSetItem("step.userSurvey", introCount);
-				// 	}
-				// }
 			}
 		}
 	},

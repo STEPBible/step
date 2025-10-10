@@ -21,5 +21,12 @@
 "chapter_2_icc_url" : "https://archive.org/details/criticalexegetic39lockuoft/criticalexegetic39lockuoft/page/137/mode/2up",
 "chapter_2_icc_page" : "137",
 "chapter_3_icc_url" : "https://archive.org/details/criticalexegetic39lockuoft/criticalexegetic39lockuoft/page/150/mode/2up",
-"chapter_3_icc_page" : "150"
+"chapter_3_icc_page" : "150",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/titus/titus.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/titus/titus.htm#head7",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/titus/titus.htm#head9",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/titus/titus.htm#head14",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/titus/titus.htm#head24",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

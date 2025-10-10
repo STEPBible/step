@@ -16,5 +16,11 @@
 "chapter_1_icc_url" : "https://archive.org/details/criticalexegetic25mitcuoft/criticalexegetic25mitcuoft/page/n71/mode/2up",
 "chapter_1_icc_page" : "40",
 "chapter_2_icc_url" : "https://archive.org/details/criticalexegetic25mitcuoft/criticalexegetic25mitcuoft/page/n89/mode/2up",
-"chapter_2_icc_page" : "58"
+"chapter_2_icc_page" : "58",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/haggai/haggai.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/haggai/haggai.htm#head13",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/haggai/haggai.htm#head16",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/haggai/haggai.htm#head20",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

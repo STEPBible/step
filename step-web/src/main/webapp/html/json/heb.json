@@ -75,5 +75,22 @@
 "chapter_12_icc_url" : "https://archive.org/details/criticalexegetic40moffuoft/criticalexegetic40moffuoft/page/192/mode/2up",
 "chapter_12_icc_page" : "192",
 "chapter_13_icc_url" : "https://archive.org/details/criticalexegetic40moffuoft/criticalexegetic40moffuoft/page/224/mode/2up",
-"chapter_13_icc_page" : "224"
+"chapter_13_icc_page" : "224",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head12",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head15",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head18",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head21",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head24",
+"chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head27",
+"chapter_6_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head31",
+"chapter_7_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head35",
+"chapter_8_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head46",
+"chapter_9_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head50",
+"chapter_10_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head54",
+"chapter_11_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head63",
+"chapter_12_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head69",
+"chapter_13_constable_url": "https://soniclight.com/tcon/notes/html/hebrews/hebrews.htm#head78",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

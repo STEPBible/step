@@ -68,5 +68,21 @@
 "chapter_11_icc_url" : "https://archive.org/details/criticalexegetic22montuoft/criticalexegetic22montuoft/page/416/mode/2up",
 "chapter_11_icc_page" : "416",
 "chapter_12_icc_url" : "https://archive.org/details/criticalexegetic22montuoft/criticalexegetic22montuoft/page/470/mode/2up",
-"chapter_12_icc_page" : "470"
+"chapter_12_icc_page" : "470",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head12",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head15",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head22",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head38",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head45",
+"chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head52",
+"chapter_6_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head60",
+"chapter_7_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head67",
+"chapter_8_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head75",
+"chapter_9_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head86",
+"chapter_10_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head94",
+"chapter_11_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head103",
+"chapter_12_constable_url": "https://soniclight.com/tcon/notes/html/daniel/daniel.htm#head111",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

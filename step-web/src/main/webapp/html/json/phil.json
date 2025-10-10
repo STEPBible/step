@@ -28,5 +28,13 @@
 "chapter_3_icc_url" : "https://archive.org/details/criticalexegetic0000vinc_n4o4/page/90/mode/2up",
 "chapter_3_icc_page" : "90",
 "chapter_4_icc_url" : "https://archive.org/details/criticalexegetic0000vinc_n4o4/page/129/mode/2up",
-"chapter_4_icc_page" : "129"
+"chapter_4_icc_page" : "129",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/philippians/philippians.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/philippians/philippians.htm#head9",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/philippians/philippians.htm#head12",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/philippians/philippians.htm#head21",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/philippians/philippians.htm#head29",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/philippians/philippians.htm#head39",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

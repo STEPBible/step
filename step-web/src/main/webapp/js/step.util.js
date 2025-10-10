@@ -3061,26 +3061,64 @@ step.util = {
 			bookSummary +=
 					'<p style="margin:8px">ESV Introduction:<br>' + summary.ESV_introduction + '</p>' +
                     '<p style="margin:8px">ESV Summary:<br>' + summary.ESV_summary + '</p>';
-
 			var bookOrderInBible = step.searchSelect.idx2osisChapterJsword[curOsisID];
+			var keysForCommentary = JSON.parse(summary["commentary_keys"].replaceAll("'", '"').replace('\\"',"'"));
+			var namesForCommentary = JSON.parse(summary["commentary_names"].replaceAll("'", '"').replace('\\"',"'"));
+			var svgDefs = '<svg style="height:0;width:0"><defs>';
+			var bgColors =   ["black", "blue", "green", "purple", "red", "orange", "black", "blue", "green", "purple", "red", "orange", ];
+			var textColors = ["white", "red", "red", "white", "white", "black", "white", "red", "red", "white", "white", "black"];
+			for (var i = 0; i < keysForCommentary.length; i++) {
+				var initial = keysForCommentary[i].substr(0,1).toUpperCase();
+				svgDefs += '<rect id="' + keysForCommentary[i] + 'rect" width="15" height="18" fill="' + bgColors[i] + '" />' +
+						   '<line id="' + keysForCommentary[i] + 'line" x1="2" y1="16" x2="15" y2="16" stroke="white" />' +
+						   '<text id="' + keysForCommentary[i] + 'text" font-size="10px" x="5" y="12" fill="' + textColors[i] + '">' + initial + '</text>';
+			}
+			svgDefs += '</defs></svg>';
 			if (typeof bookOrderInBible === "number") {
 				var lastChapter = step.passageSelect.osisChapterJsword[bookOrderInBible][1];
 				if (typeof lastChapter === "number") {
+					bookSummary += '<h5>Example of ';
+					bookSummary += ' icon';
+					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
+					bookSummary += ' with links to commentar';
+					bookSummary += (keysForCommentary.length > 1) ? 'ies' : 'y';
+					bookSummary += '</h5>';
+					var commentaryIntro = "";
+					var commentaryOutline = "";
+					var svgs = [];
+					for (var i = 0; i < keysForCommentary.length; i++) {
+						svgs.push('<svg style="height:18;width:15">' +
+							'<use href="#' + keysForCommentary[i] + 'rect" />' +
+							'<use href="#' + keysForCommentary[i] + 'line" />' +
+							'<use href="#' + keysForCommentary[i] + 'text" /></svg>');
+						bookSummary += '<div style="margin-left:8px">' + namesForCommentary[i] + ': ' + svgs[i] + '</div>';
+						if (typeof summary["chapter_intro_" + keysForCommentary[i] + "_url"] === "string") {
+							commentaryIntro += (commentaryIntro === "") ? '<b><u>Commentary introduction</u></b>' : '';
+							var titleTag = "";
+							if ((typeof summary["chapter_intro_" + keysForCommentary[i] + "_page"] === "string") && (summary["chapter_intro_" + keysForCommentary[i] + "_page"] !== ""))
+								titleTag = ' title="page ' + summary["chapter_intro_" + keysForCommentary[i] + "_page"] + '"';
+							commentaryIntro += ' <a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_intro_" + keysForCommentary[i] + "_url"] + '" target="' + keysForCommentary[i] + '"' + titleTag + '> ' +
+								svgs[i] + '</a>';
+						}
+						if (typeof summary["chapter_outline_" + keysForCommentary[i] + "_url"] === "string") {
+							commentaryOutline += (commentaryOutline === "") ? '<b><u>Commentary outline</u></b>' : '';
+							var titleTag = "";
+							if ((typeof summary["chapter_outline_" + keysForCommentary[i] + "_page"] === "string") && (summary["chapter_outline_" + keysForCommentary[i] + "_page"] !== ""))
+								titleTag = ' title="page ' + summary["chapter_outline_" + keysForCommentary[i] + "_page"] + '"';
+							commentaryOutline += ' <a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_outline_" + keysForCommentary[i] + "_url"] + '" target="' + keysForCommentary[i] + '"' + titleTag + '> ' +
+								svgs[i] + '</a>';
+						}
+					}
+					bookSummary += '<br>';
 					var hasIntroOrOutline = false;
-					if (typeof summary["chapter_intro_icc_url"] === "string") {
-						var titleTag = "";
-						if ((typeof summary["chapter_intro_icc_page"] === "string") && (summary["chapter_intro_icc_page"] !== ""))
-							titleTag = ' title="page ' + summary["chapter_intro_icc_page"] + '"';
-						bookSummary += ' <a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_intro_icc_url"] + '" target="icc"' + titleTag + '><b><u>ICC commentary introduction</u></b> <sup class="glyphicon glyphicon-book"></sup></a>';
+					if (commentaryIntro !== "") {
+						bookSummary += commentaryIntro; 
 						hasIntroOrOutline = true;
 					}
-					if (typeof summary["chapter_outline_icc_url"] === "string") {
+					if (commentaryOutline !== "") {
 						if (hasIntroOrOutline)
 							bookSummary += '<br>';
-						var titleTag = "";
-						if ((typeof summary["chapter_outline_icc_page"] === "string") && (summary["chapter_outline_icc_page"] !== ""))
-							titleTag = ' title="page ' + summary["chapter_outline_icc_page"] + '"';
-						bookSummary += ' <a style="margin-left:8px;margin-bottom:0" href="' + summary["chapter_outline_icc_url"] + '" target="icc"' + titleTag + '><b><u>ICC commentary outline</u></b> <sup class="glyphicon glyphicon-book"></sup></a>';
+						bookSummary += commentaryOutline;
 						hasIntroOrOutline = true;
 					}
 					if ((!hasIntroOrOutline) && (typeof summary["chapter_1_icc_url"] === "string"))
@@ -3101,14 +3139,20 @@ step.util = {
 						if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
 							if (summary[jsonName] === "*") summary[jsonName] = "";
 							bookSummary += '<tr><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + osisID + " " + curChapter + "</a></td><td>" + summary[jsonName];
-							jsonName = "chapter_" + curChapter + "_icc_url";
-							if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
-								var icc_url = summary[jsonName];
-								jsonName = "chapter_" + curChapter + "_icc_page";
-								var titleTag = "";
-								if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
-									titleTag = ' title="page ' + summary[jsonName] + '"';
-								bookSummary += ' <a href="' + icc_url + '" target="icc"' + titleTag + '><sup class="glyphicon glyphicon-book"></sup></a>';
+							for (var i = 0; i < keysForCommentary.length; i++) {
+								var curKey = keysForCommentary[i];
+								if (curKey.endsWith("_langcode"))
+									curKey = curKey.slice(0, -8) + step.userLanguageCode;
+								jsonName = "chapter_" + curChapter + "_" + curKey + "_url";
+								if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
+									var icc_url = summary[jsonName];
+									jsonName = "chapter_" + curChapter + "_" + curKey + "_page";
+									var titleTag = "";
+									if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
+										titleTag = ' title="page ' + summary[jsonName] + '"';
+									bookSummary += ' <a href="' + icc_url + '" target="icc"' + titleTag + '>' +
+									svgs[i] + '</a>';
+								}
 							}
 							bookSummary += "</td></tr>";
 						}
@@ -3129,15 +3173,6 @@ step.util = {
                     summary["chapter_" + chapterNum + "_overview"] + '</p>' +
                     '<p style="margin:8px">' + summary["chapter_" + chapterNum + "_summary"] + '</p>' +
                 '</span><br>';
-
-			var commentary_keys = summary["commentary_keys"];
-			var commentary_names = summary["commentary_names"];
-			if (commentary_keys == null) {
-				commentary_keys = "['icc']";
-				commentary_names = "['ICC Commentary']";
-			}
-			var keysForCommentary = JSON.parse(commentary_keys.replaceAll("'", '"').replace('\\"',"'"));
-			var namesForCommentary = JSON.parse(commentary_names.replaceAll("'", '"').replace('\\"',"'"));
 			var usrLangCode = step.userLanguageCode;
 			if (usrLangCode.substr(0,3) === 'fil')
 				usrLangCode = "fil";
@@ -3223,6 +3258,7 @@ step.util = {
                             '</div>' +
                             '<div class="modal-body" style="text-align:left font-size:16px">' +
                                 '<div>' +
+									svgDefs +
                                     '<ul class="nav nav-tabs">' +
                                         '<li ' + tabChptClass + '><a href="#chptSummary" data-toggle="tab">Chapter summary</a></li>' +
                                         '<li ' + tabBookClass + '><a href="#bookSummary" data-toggle="tab">Book summary</a></li>' +

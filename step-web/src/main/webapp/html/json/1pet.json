@@ -34,5 +34,14 @@
 "chapter_4_icc_url" : "https://archive.org/details/acriticalandexeg00bigguoft/page/n186/mode/2up",
 "chapter_4_icc_page" : "167",
 "chapter_5_icc_url" : "https://archive.org/details/acriticalandexeg00bigguoft/page/n201/mode/2up",
-"chapter_5_icc_page" : "182"
+"chapter_5_icc_page" : "182",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/1peter/1peter.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/1peter/1peter.htm#head8",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/1peter/1peter.htm#head11",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/1peter/1peter.htm#head21",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/1peter/1peter.htm#head31",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/1peter/1peter.htm#head37",
+"chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/1peter/1peter.htm#head43",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

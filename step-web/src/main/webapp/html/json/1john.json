@@ -29,5 +29,14 @@
 "chapter_4_icc_url" : "https://archive.org/details/criticalexegetic43broouoft/criticalexegetic43broouoft/page/106/mode/2up",
 "chapter_4_icc_page" : "106",
 "chapter_5_icc_url" : "https://archive.org/details/criticalexegetic43broouoft/criticalexegetic43broouoft/page/128/mode/2up",
-"chapter_5_icc_page" : "128"
+"chapter_5_icc_page" : "128",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/1john/1john.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/1john/1john.htm#head8",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/1john/1john.htm#head11",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/1john/1john.htm#head14",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/1john/1john.htm#head28",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/1john/1john.htm#head35",
+"chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/1john/1john.htm#head41",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

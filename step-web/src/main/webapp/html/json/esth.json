@@ -59,5 +59,19 @@
 "chapter_9_icc_url" : "https://archive.org/details/criticalexesther00patouoft/page/282/mode/2up",
 "chapter_9_icc_page" : "282",
 "chapter_10_icc_url" : "https://archive.org/details/criticalexesther00patouoft/page/303/mode/2up",
-"chapter_10_icc_page" : "303"
+"chapter_10_icc_page" : "303",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head12",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head15",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head19",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head26",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head31",
+"chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head34",
+"chapter_6_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head38",
+"chapter_7_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head42",
+"chapter_8_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head45",
+"chapter_9_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head50",
+"chapter_10_constable_url": "https://soniclight.com/tcon/notes/html/esther/esther.htm#head57",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

@@ -53,5 +53,18 @@
 "chapter_8_icc_url" : "https://archive.org/details/criticalexegetic00harpuoft/page/175/mode/2up",
 "chapter_8_icc_page" : "175",
 "chapter_9_icc_url" : "https://archive.org/details/criticalexegetic00harpuoft/page/188/mode/2up",
-"chapter_9_icc_page" : "188"
+"chapter_9_icc_page" : "188",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head11",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head14",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head24",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head31",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head37",
+"chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head42",
+"chapter_6_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head56",
+"chapter_7_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head60",
+"chapter_8_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head68",
+"chapter_9_constable_url": "https://soniclight.com/tcon/notes/html/amos/amos.htm#head74",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

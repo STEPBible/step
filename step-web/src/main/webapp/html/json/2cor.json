@@ -74,5 +74,22 @@
 "chapter_12_icc_url" : "https://archive.org/details/criticalexegetic34plumuoft/criticalexegetic34plumuoft/page/336/mode/2up",
 "chapter_12_icc_page" : "336",
 "chapter_13_icc_url" : "https://archive.org/details/criticalexegetic34plumuoft/criticalexegetic34plumuoft/page/366/mode/2up",
-"chapter_13_icc_page" : "366"
+"chapter_13_icc_page" : "366",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head8",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head11",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head21",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head26",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head32",
+"chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head36",
+"chapter_6_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head41",
+"chapter_7_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head46",
+"chapter_8_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head50",
+"chapter_9_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head54",
+"chapter_10_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head57",
+"chapter_11_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head61",
+"chapter_12_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head65",
+"chapter_13_constable_url": "https://soniclight.com/tcon/notes/html/2corinthians/2corinthians.htm#head71",
+"commentary_keys":"['icc', 'constable']",
+"commentary_names":"['ICC Commentary', 'Constable\\'s notes']"
 }

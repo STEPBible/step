@@ -3132,20 +3132,18 @@ step.util = {
 					}
 					bookSummary += '<br>';
 					var width2 = keysForCommentary.length * 5;
-					var width1 = (lastChapter > 12) ? '12' : '10';
+					var width1 = (lastChapter > 12) ? '17' : '12';
 					bookSummary += '<div style="margin:8px"><table><tbody><tr><th style="width:' +
 						width1 + '%">Chpt</th><th>Description</th><th style="width:' + width2 +
 						'%">Link';
 					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
 					bookSummary +=  '</th></tr>';
-					if (commentaryIntro !== "") {
+					if (commentaryIntro !== "")
 						bookSummary += '<tr><td></td><td>Introduction</td><td>' +
 							commentaryIntro + '</td></tr>';
-					}
-					if (commentaryOutline !== "") {
+					if (commentaryOutline !== "")
 						bookSummary += '<tr><td></td><td>Outline</td><td>' +
 							commentaryOutline + '</td></tr>';
-					}
 
 					for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
 						var jsonName = "chapter_" + curChapter + "_header";

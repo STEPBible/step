@@ -264,7 +264,7 @@ public final class ValidateUtils {
         for (Map.Entry<String, String[]> entry : inputParms.entrySet()) {
             final String key = entry.getKey();
             final String[] value = entry.getValue();
-            if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome") || key.startsWith("colorCode") || key.startsWith("otGreek")) {
+            if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome") || key.equals("clickvocab") || key.startsWith("colorCode") || key.startsWith("otGreek")) {
                 if (value[0].equals(""))
                     continue; // The debug, noredirect and other parameters have no value so no additional checking is not required.
                 System.out.println("XSS kill unexpected value with key: " + key + " value: " + value[0] + " requestURI: " + requestURI);

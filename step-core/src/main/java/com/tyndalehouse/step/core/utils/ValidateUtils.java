@@ -184,7 +184,7 @@ public final class ValidateUtils {
             return true;
         }
         else if (key.equals("lang")) {
-            if (value.length() > 6)  {
+            if (value.length() > 14)  { // Needed due to an error in the Chrome extension
                 System.out.println("XSS kill lang too long, key: " + key + " value: " + value);
                 return false;
             }
@@ -192,7 +192,9 @@ public final class ValidateUtils {
                 char c = value.charAt(i);
                 if (!((c >= lowerBoundLC && c <= upperBoundLC) ||
                         (c >= lowerBoundUC && c <= upperBoundUC) ||
-                        (c == '_') || (c == '-') )) {
+                        (c == '_') || (c == '-') ||
+                        (c == '>') // Needed due to an error in the Chrome extension
+                        )) {
                     System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
                     return false;
                 }
@@ -306,7 +308,10 @@ public final class ValidateUtils {
                 return false;
             }
         }
-        if (checkValueLC.contains("<") || checkValueLC.contains(">") || checkValueLC.contains("%3c") || checkValueLC.contains("%3e") ||
+        if (checkValueLC.contains("<") ||
+                checkValueLC.contains(">") ||
+                checkValueLC.contains("%3c") ||
+                //checkValueLC.contains("%3e") || // Needed due to an error in the Chrome extension
                 checkValueLC.contains("&lt") || checkValueLC.contains("&gt") ||
                 checkValueLC.contains("#6") || checkValueLC.contains("#0") || checkValueLC.contains("#x") ||
                 checkValueLC.contains("\u003c")) {

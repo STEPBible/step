@@ -3073,8 +3073,8 @@ step.util = {
 					'<p style="margin:8px">ESV Introduction:<br>' + summary.ESV_introduction + '</p>' +
                     '<p style="margin:8px">ESV Summary:<br>' + summary.ESV_summary + '</p>';
 			var bookOrderInBible = step.searchSelect.idx2osisChapterJsword[curOsisID];
-			var keysForCommentary = JSON.parse(summary["commentary_keys"].replaceAll("'", '"').replace('\\"',"'"));
-			var namesForCommentary = JSON.parse(summary["commentary_names"].replaceAll("'", '"').replace('\\"',"'"));
+			var keysForCommentary = JSON.parse(summary["commentary_keys"].replaceAll("'", '"').replaceAll('\\"',"'"));
+			var namesForCommentary = JSON.parse(summary["commentary_names"].replaceAll("'", '"').replaceAll('\\"',"'"));
 			var bgColors =   ["Navy", "DarkRed", "DarkOliveGreen", "Indigo", "DarkSlateGray", "Maroon"];
 			if (typeof bookOrderInBible === "number") {
 				var lastChapter = step.passageSelect.osisChapterJsword[bookOrderInBible][1];
@@ -3197,6 +3197,11 @@ step.util = {
 				usrLangCode = "fil";
 			else
 				usrLangCode = usrLangCode.substr(0,2);
+			if (keysForCommentary.length > 0) {
+				chptSummary += '<h5>Commentar';
+				chptSummary += (keysForCommentary.length == 1) ? 'y' : 'ies';
+				chptSummary += ' for chapter ' + chapterNum + ':</h5>';
+			}
 			for (var i = 0; i < keysForCommentary.length; i++) {
 				var currentKey = keysForCommentary[i];
 				var jsonName = "chapter_" + chapterNum + "_" + currentKey + "_url";
@@ -3219,10 +3224,9 @@ step.util = {
                 	var titleTag = "";
                 	if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
                     	titleTag = ' title="page ' + summary[jsonName] + '"';
-                	chptSummary += '<a style="margin-left:8px;font-size:14px" href="' +
+                	chptSummary += '<a style="margin-left:12px;font-size:14px" href="' +
 						commentary_url + '" target="' + currentKey + '"' + titleTag + '><b><u>' +
-						namesForCommentary[i] + ' for chapter ' + chapterNum + '</u></b><br>';
-//                    	'<sup class="glyphicon glyphicon-book"></sup></a><br>';
+						namesForCommentary[i] + '</u></b><br>';
 				}
             }
             chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
@@ -3233,7 +3237,7 @@ step.util = {
             if ((posOfBook > -1) &&
 				(chapterNum < step.passageSelect.osisChapterJsword[posOfBook][1]))
 					chptSummary +=
-						'<a class="nextChapter" style="display:inline" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum + 1) + '\')">' +
+						'                  <a class="nextChapter" style="display:inline" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum + 1) + '\')">' +
                         '<i class="glyphicon glyphicon-arrow-right"></i>' +
 						'</a>';
             chptSummary += 

@@ -184,7 +184,7 @@ public final class ValidateUtils {
             return true;
         }
         else if (key.equals("lang")) {
-            if (value.length() > 14)  { // Needed due to an error in the Chrome extension
+            if (value.length() > 6)  {
                 System.out.println("XSS kill lang too long, key: " + key + " value: " + value);
                 return false;
             }
@@ -192,9 +192,7 @@ public final class ValidateUtils {
                 char c = value.charAt(i);
                 if (!((c >= lowerBoundLC && c <= upperBoundLC) ||
                         (c >= lowerBoundUC && c <= upperBoundUC) ||
-                        (c == '_') || (c == '-') ||
-                        (c == '>') // Needed due to an error in the Chrome extension
-                        )) {
+                        (c == '_') || (c == '-'))) {
                     System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
                     return false;
                 }
@@ -308,10 +306,16 @@ public final class ValidateUtils {
                 return false;
             }
         }
+        // The following 5 lines are needed due to a bug in the Chrome extension (Bible vocab) discovered in 2025. Remove in about 2027.
+        if (checkValue.indexOf("%3E") > -1) {
+            if (!checkValue.startsWith("/module/getQuickInfo/ESV") ||
+                !checkValue.endsWith("/en%3Elang-en-US") || (checkValue.length() > 65))
+                return false;
+        }
         if (checkValueLC.contains("<") ||
                 checkValueLC.contains(">") ||
                 checkValueLC.contains("%3c") ||
-                //checkValueLC.contains("%3e") || // Needed due to an error in the Chrome extension
+                //checkValueLC.contains("%3e") || // Needed due to an error in the Chrome extension.  Restore this line when the above code for the Chrome extension is removed 
                 checkValueLC.contains("&lt") || checkValueLC.contains("&gt") ||
                 checkValueLC.contains("#6") || checkValueLC.contains("#0") || checkValueLC.contains("#x") ||
                 checkValueLC.contains("\u003c")) {

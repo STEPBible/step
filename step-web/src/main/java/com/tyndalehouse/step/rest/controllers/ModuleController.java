@@ -218,10 +218,12 @@ public class ModuleController {
      * @return the definition(s) that can be resolved from the reference provided
      */
     @Timed(name = "quick-vocab", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers, final String userLanguage) {
+    public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers, String userLanguage) {
         LOGGER.debug("Getting quick information for [{}], [{}]",
                 new Object[]{this.vocab, morphIdentifiers});
-
+        // The following 2 lines are needed due to a bug in the Chrome extension (Bible vocab) discovered in 2025. Remove in about 2027.
+        if (userLanguage.equals("en>lang-en-US"))
+            userLanguage = "en";
         final Info i = new Info();
         if (!ValidateUtils.validateInputParm("version", version) ||
                 !ValidateUtils.validateInputParm("reference", reference) ||

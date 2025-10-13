@@ -3281,7 +3281,6 @@ step.util = {
                             '</div>' +
                             '<div class="modal-body" style="text-align:left font-size:16px">' +
                                 '<div>' +
-//									svgDefs +
                                     '<ul class="nav nav-tabs">' +
                                         '<li ' + tabChptClass + '><a href="#chptSummary" data-toggle="tab">Chapter summary</a></li>' +
                                         '<li ' + tabBookClass + '><a href="#bookSummary" data-toggle="tab">Book summary</a></li>' +

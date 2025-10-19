@@ -227,12 +227,6 @@
             <div class="navbar-header search-form">
                 <div class="navbar-brand col-xs-12">
                     <span class="hidden-xs title" title="Reset to default configuration">
-                        <a href="/?noredirect" class="logo">
-                            <img class="hidden-narrow" src="/step.png" alt="STEP" width="90px" height="22px">
-                        </a>
-                        <a href="/?noredirect" class="logo">
-                            <img class="hidden-not-narrow" src="/images/narrow_step_logo.png" alt="STEP">
-                        </a>
                     </span>
                     <span class="help">
                         <div class="headerButtons pull-right">

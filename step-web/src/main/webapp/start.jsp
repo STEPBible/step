@@ -170,8 +170,6 @@
     <meta name="step.version" content="${project.version}"/>
     <meta name="description" content="${ description }"/>
     <meta name="keywords" content="${ keywords }"/>
-    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.5/dist/styles/webawesome.css"/>
-    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.5/dist/webawesome.loader.js"></script>
     <link rel="shortcut icon" href="images/step-favicon.ico"/>
     <c:choose>
         <c:when test="${ empty canonicalUrl }">

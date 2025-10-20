@@ -58,7 +58,7 @@ jframework-iframeList {
     width: 5px;
     cursor: ew-resize;
     background: transparent;
-    border-right: 4px dotted salmon;
+    border-right: 1px solid #000;
     position: relative;
 }
 

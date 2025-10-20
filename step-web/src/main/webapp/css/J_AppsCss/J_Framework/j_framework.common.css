@@ -44,7 +44,7 @@
 
     --jframework-clrLink: blue;
     --jframework-clrLinkHighlightBackground: #b2e5f3;
-    --jframework-clrLinkHighlightForeground: yellow;
+    --jframework-clrLinkHighlightForeground: var(--jframework-clrLink);
 }
     
 

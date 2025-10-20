@@ -123,8 +123,14 @@
 	font-weight: normal;
     }
       
-    .highlightSiblings {
-	text-shadow: 1px 1px 10px black;
+    text.highlightSiblings,
+    text.highlightSiblings tspan {
+	text-decoration-line: underline;
+	text-decoration-style: solid;
+	text-decoration-color: black;
+	text-decoration-thickness: 0.18em;
+	text-underline-offset: 0.25em;
+	font-weight: 600;
 	/* animation: highlightSiblings 1s infinite; seconds duration (1s on, 1s off), infinite loop */
     }
 
@@ -134,8 +140,14 @@
 	  0% { font-weight: bold; }
     }
 
-    .highlightChildren {
-	text-shadow: 1px 1px 10px green;
+    text.highlightChildren,
+    text.highlightChildren tspan {
+	text-decoration-line: underline;
+	text-decoration-style: solid;
+	text-decoration-color: var(--clrHighlightBg);
+	text-decoration-thickness: 0.18em;
+	text-underline-offset: 0.25em;
+	font-weight: 600;
 	/* animation: highlightChildren 1s infinite; 2 seconds duration (1s on, 1s off), infinite loop */
     }
 

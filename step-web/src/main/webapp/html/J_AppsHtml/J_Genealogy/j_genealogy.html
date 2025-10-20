@@ -123,26 +123,21 @@
 	font-weight: normal;
     }
       
-    .highlightSiblings {
-	text-shadow: 1px 1px 10px black;
-	/* animation: highlightSiblings 1s infinite; seconds duration (1s on, 1s off), infinite loop */
+    .highlightSiblings,
+    .highlightChildren {
+	text-decoration-line: underline;
+	text-decoration-style: solid;
+	text-decoration-thickness: 0.18em;
+	text-underline-offset: 0.25em;
+	text-decoration-skip-ink: auto;
     }
 
-    @keyframes highlightSiblings {
-	  0% { font-weight: bold; }
-	  0% { font-weight: normal; }
-	  0% { font-weight: bold; }
+    .highlightSiblings {
+	text-decoration-color: black;
     }
 
     .highlightChildren {
-	text-shadow: 1px 1px 10px green;
-	/* animation: highlightChildren 1s infinite; 2 seconds duration (1s on, 1s off), infinite loop */
-    }
-
-    @keyframes highlightChildren {
-	  0% { font-weight: bold; }
-	  0% { font-weight: normal; }
-	  0% { font-weight: bold; }
+	text-decoration-color: var(--clrHighlightBg);
     }
 
     .layoutMenuHighlightExample {

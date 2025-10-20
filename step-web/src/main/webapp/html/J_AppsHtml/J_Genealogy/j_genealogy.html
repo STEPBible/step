@@ -145,6 +145,24 @@
 	  0% { font-weight: bold; }
     }
 
+    .layoutMenuHighlightExample {
+	text-decoration-line: underline;
+	text-decoration-style: solid;
+	text-decoration-thickness: 0.18em;
+	text-underline-offset: 0.25em;
+	font-weight: 600;
+    }
+
+    .layoutMenuHighlightExample--siblings {
+	color: inherit;
+	text-decoration-color: black;
+    }
+
+    .layoutMenuHighlightExample--children {
+	color: inherit;
+	text-decoration-color: var(--clrHighlightBg);
+    }
+
 
     /* ----- Used to confirm a URL has been copied to the clipboard ----- */
     .fadingPopUp {
@@ -651,7 +669,7 @@
       <br>
       
       <input type='checkbox' id='highlightRelations' class='jframework-3dCheckbox' title='Highlight siblings and children of selected person' onchange='PresentationHandler.changeRelationsHighlighting(this.checked)'>
-      <label for='highlightRelations'>Highlight <span style='text-shadow: 1px 1px 10px black;color:blackyellow'>siblings</span> and <span style='text-shadow: 1px 1px 10px green;color:darkgreen'>children</span> of selected person.</label>
+      <label for='highlightRelations'>Highlight <span class='layoutMenuHighlightExample layoutMenuHighlightExample--siblings'>siblings</span> and <span class='layoutMenuHighlightExample layoutMenuHighlightExample--children'>children</span> of selected person.</label>
     </div>
   </div>
   <!-- Layout menu modal -->

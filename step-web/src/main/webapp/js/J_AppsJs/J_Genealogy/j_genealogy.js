@@ -2475,6 +2475,20 @@ class _ClassPresentationHandler
 	    return;
 
 	const sourcePersonRecord = personRecordFromIndex(ix);
+	let childrenUnderlineColor = '#b2e5f3';
+	try
+	{
+	    const rawColour = getComputedStyle(document.documentElement).getPropertyValue('--clrRelatedWordBg');
+	    if (rawColour)
+	    {
+		const trimmedColour = rawColour.trim();
+		if (trimmedColour.length > 0)
+		    childrenUnderlineColor = trimmedColour;
+	    }
+	}
+	catch (e)
+	{
+	}
 
 	for (const relatedPerson of sourcePersonRecord.siblings)
         {
@@ -2496,7 +2510,18 @@ class _ClassPresentationHandler
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
 		const textNode = personRecord.treeNode.querySelector('text');
-		d3.select(textNode).classed('highlightChildren', highlighting);
+		const selection = d3.select(textNode);
+		selection.classed('highlightChildren', highlighting);
+		if (highlighting)
+		{
+		    selection.style('text-decoration-color', childrenUnderlineColor);
+		    selection.style('fill', childrenUnderlineColor);
+		}
+		else
+		{
+		    selection.style('text-decoration-color', null);
+		    selection.style('fill', null);
+		}
 	    }
 	    catch (e)
 	    {

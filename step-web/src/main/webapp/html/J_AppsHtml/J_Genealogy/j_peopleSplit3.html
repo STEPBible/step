@@ -23,6 +23,20 @@
   <link href="/css/J_AppsCss/J_Framework/j_framework.common.css" rel="stylesheet" media="screen"/>
   <link href="/css/J_AppsCss/J_Framework/j_framework.multiframeLayoutController.css" rel="stylesheet" media="screen"/>
   <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+  <style>
+    body[jframework-layout='wideLayout'] .genealogy-leftColumn {
+      padding: 20px 20px 20px 10px;
+      gap: 20px;
+    }
+
+    body[jframework-layout='wideLayout'] .genealogy-leftColumn .jframework-horizontalSeparator {
+      margin: 0;
+    }
+
+    body[jframework-layout='wideLayout'] .genealogy-divider {
+      margin-left: 5px;
+    }
+  </style>
 </head>
 
 
@@ -46,14 +60,14 @@
     <jframework-wideLayoutContentContainer>
 
       
-      <jframework-leftColumn>
+      <jframework-leftColumn class='genealogy-leftColumn'>
 	<jframework-iframePlaceHolder iframeId='peopleIndex'></jframework-iframePlaceHolder>
 	<!-- <div class='jframework-heightResizer jframework-horizontalSeparator'></div> --><!-- Optional: This gives you space between the rows, and a line which you can drag to resize things. -->
 	<div class='jframework-horizontalSeparator'></div>
 	<jframework-iframePlaceHolder iframeId='scripture'></jframework-iframePlaceHolder>
       </jframework-leftColumn>
 
-      <div class='jframework-widthResizer jframework-verticalSeparator'></div> <!-- Optional: This gives you space between the columns, and a line which you can drag to resize things. -->
+      <div class='jframework-widthResizer jframework-verticalSeparator genealogy-divider'></div> <!-- Optional: This gives you space between the columns, and a line which you can drag to resize things. -->
 
       <jframework-rightColumn>
 	<jframework-iframePlaceHolder iframeId='genealogy'></jframework-iframePlaceHolder>

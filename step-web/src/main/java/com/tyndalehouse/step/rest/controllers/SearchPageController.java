@@ -133,6 +133,7 @@ public class SearchPageController extends HttpServlet {
                 }
             }
             request.getRequestDispatcher("/start.jsp").include(request, response);
+            Runtime.getRuntime().gc();
         }
     }
 
@@ -361,8 +362,9 @@ public class SearchPageController extends HttpServlet {
             try {
                 keyInfo.append(ResourceBundle.getBundle("ErrorBundle", clientSessionProvider.get().getLocale()).getString(results.getSearchType().getLanguageSearchKey()));
             } catch (MissingResourceException ex) {
-                //swallow
-                LOGGER.warn("Missing resource for {}", results.getSearchType().getLanguageSearchKey(), ex);
+                // This is probably cause by a search like https://www.stepbible.org/?q=version=NIV@version=ESV@syntax=t=Wedding
+                // A warning is not needed because appending a "Search" seems to work.  PT 2025-10-22
+                // LOGGER.warn("Missing resource for {}", results.getSearchType().getLanguageSearchKey(), ex);
                 keyInfo.append("Search");
             }
             String title;

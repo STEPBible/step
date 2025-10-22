@@ -47,6 +47,7 @@ public class SetupRedirectFilter implements Filter {
             appManager.setAndSaveAppVersion(runningAppVersion);
         }
         chain.doFilter(request, response);
+        Runtime.getRuntime().gc();
     }
 
     @Override

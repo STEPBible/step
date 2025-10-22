@@ -464,8 +464,12 @@ public class SearchPageController extends HttpServlet {
                     req.getParameter("context"),
                     userLanguage);
         } catch (Exception ex) {
-            //if (ex.toString().indexOf("invalid_reference_in_book") == -1) // This line might cause another exception so it is commented out.  PT 09/22/2022
-                LOGGER.warn(ex.getMessage(), ex);
+            String msg = ex.getMessage();
+            if ((msg != null) &&
+                    ((!msg.startsWith("Index out of range")) &&
+                            (!msg.startsWith("book_not_found")) &&
+                            (!msg.startsWith("invalid_reference_in_book")) ))
+                LOGGER.warn(msg, ex);
             //else // There are too many invalid reference in book exception.  No need to dump the stack in the log.
 //                LOGGER.info(ex.getMessage());
             text = getDefaultPassage();

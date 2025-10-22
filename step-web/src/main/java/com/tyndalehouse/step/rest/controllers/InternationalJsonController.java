@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
@@ -125,9 +126,17 @@ public class InternationalJsonController extends HttpServlet {
         response.flushBuffer();
         response.getOutputStream().close();
         long freeMemory1 = runtime.freeMemory();
-        runtime.gc();
-        long freeMemory2 = runtime.freeMemory();
-        System.out.printf("1: %,d 2: %,d%n", freeMemory1, freeMemory2);
+        Date now = new Date();
+        TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
+        System.out.print(now);
+        if (langParameter.equals("cl")) {
+            runtime.gc();
+            long freeMemory2 = runtime.freeMemory();
+            System.out.printf(" 1: %,d 2: %,d%n", freeMemory1, freeMemory2);
+        }
+        else {
+            System.out.printf(" 1: %,d%n", freeMemory1);
+        }
     }
 
     /**

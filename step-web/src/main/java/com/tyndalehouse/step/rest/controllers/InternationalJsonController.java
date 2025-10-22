@@ -124,8 +124,10 @@ public class InternationalJsonController extends HttpServlet {
         response.getOutputStream().write(qualifiedResponse.getBytes(FrontController.UTF_8_ENCODING));
         response.flushBuffer();
         response.getOutputStream().close();
-        long freeMemory = runtime.freeMemory();
-        System.out.println(freeMemory + " " + pathInfo);
+        long freeMemory1 = runtime.freeMemory();
+        runtime.gc();
+        long freeMemory2 = runtime.freeMemory();
+        System.out.printf("1: %,d 2: %,d%n", freeMemory1, freeMemory2);
     }
 
     /**

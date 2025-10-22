@@ -100,6 +100,7 @@ public class InternationalJsonController extends HttpServlet {
             if (i < allMods.size() - 1)
                 response.getOutputStream().write(",".getBytes(FrontController.UTF_8_ENCODING)); // separator
         }
+        allMods = null;
         response.getOutputStream().write("];".getBytes(FrontController.UTF_8_ENCODING));
         response.getOutputStream().write("window.availLangs=[".getBytes(FrontController.UTF_8_ENCODING));
         List<Language> allLanguages = this.languageService.getAvailableLanguages();

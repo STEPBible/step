@@ -1836,9 +1836,9 @@ public class SearchServiceImpl implements SearchService {
             final VerseKey resultVerses = (VerseKey) results;
             final VerseKey searchVerses = (VerseKey) searchKeys;
 
-            if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace("Full results: [{}], secondary search [{}]", resultVerses.getOsisRef(), searchVerses.getOsisRef());
-            }
+            // if (LOGGER.isTraceEnabled()) {
+            //     LOGGER.trace("Full results: [{}], secondary search [{}]", resultVerses.getOsisRef(), searchVerses.getOsisRef());
+            // }
 
             Versification v11nResults = resultVerses.getVersification();
             Versification v11nSearchKeys = searchVerses.getVersification();
@@ -1855,9 +1855,9 @@ public class SearchServiceImpl implements SearchService {
         else
             results.retainAll(versifiedSearchKeys);
 
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("Results after ", searchJoinType, " of results: ", results.getOsisRef());
-        }
+        // if (LOGGER.isTraceEnabled()) {
+        //     LOGGER.trace("Results after ", searchJoinType, " of results: ", results.getOsisRef());
+        // }
         return results;
     }
 }

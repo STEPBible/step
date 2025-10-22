@@ -3213,6 +3213,24 @@ class _ClassPresentationHandler
 	const summaryIcon = DataHandler.getSummaryIcon(personRecord);
 	const spacer = summaryIcon ? '&nbsp;' : '';
 	const multipleReferences = personRecord.allRefsAsRanges.length > 1 ? ' etc' : '';
+	const useIconForShareableLink = (() => {
+		if (typeof step !== 'undefined' && typeof step.touchDevice === 'boolean') {
+			return step.touchDevice;
+		}
+		const ua = navigator.userAgent.toLowerCase();
+		if (ua.indexOf('android') > -1) {
+			return true;
+		}
+		if ((ua.indexOf('iphone') > -1) || (ua.indexOf('ipad') > -1) ||
+			((ua.indexOf('macintosh') > -1) && (navigator.maxTouchPoints > 1))) {
+			return true;
+		}
+		return false;
+	})();
+	const shareableLinkContent = useIconForShareableLink ?
+		"<span class='glyphicon glyphicon-send' aria-hidden='true'></span>" :
+		'Shareable link';
+	const shareableLinkMarkup = `<span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree' aria-label='Copy to clipboard a URL for this family tree'>${shareableLinkContent}</span>`;
 	infoBoxContent
 	    .html(`
               <div style='display:flex; align-items:center'><span class='iconFont'>${summaryIcon}</span>
@@ -3222,7 +3240,7 @@ class _ClassPresentationHandler
                   <span>&nbsp;${"" === personRecord.role ? "" : (personRecord.role + " ")} (at ${firstScriptureReference(personRecord)}${multipleReferences}).</span>
                   <span>${alternativeNames}</span>
                 </span>
-                <span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree'>Shareable link</span>
+                ${shareableLinkMarkup}
               </div>
 
              <br>${partnerList}

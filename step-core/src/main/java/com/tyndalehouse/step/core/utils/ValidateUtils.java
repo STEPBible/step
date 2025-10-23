@@ -248,8 +248,8 @@ public final class ValidateUtils {
         for (String t : tokens) {
             int indexOfPrefix = t.indexOf('=');
             if (indexOfPrefix == -1) {
-                if (t.length() > 0)
-                    System.out.println("Ignoring item: " + t);
+//                if (t.length() > 0)
+//                    System.out.println("Ignoring item: " + t);
                 continue;
             }
             String key = t.substring(0, indexOfPrefix);

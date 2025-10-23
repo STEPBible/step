@@ -32,6 +32,7 @@ public class InternationalJsonController extends HttpServlet {
     private final Provider<ClientSession> clientSessionProvider;
     private final ModuleController modules;
     private final LanguageService languageService;
+    private final Runtime runtime;
 
     @Inject
     public InternationalJsonController(final Provider<ObjectMapper> objectMapperProvider,
@@ -42,6 +43,7 @@ public class InternationalJsonController extends HttpServlet {
         this.objectMapper = objectMapperProvider.get();
         this.modules = modules;
         this.languageService = languageService;
+        runtime = Runtime.getRuntime();
     }
     
     @Override
@@ -123,6 +125,18 @@ public class InternationalJsonController extends HttpServlet {
         response.getOutputStream().write(qualifiedResponse.getBytes(FrontController.UTF_8_ENCODING));
         response.flushBuffer();
         response.getOutputStream().close();
+        long freeMemory1 = runtime.freeMemory();
+        Date now = new Date();
+        TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
+        System.out.print(now);
+        if (langParameter.equals("cl")) {
+            runtime.gc();
+            long freeMemory2 = runtime.freeMemory();
+            System.out.printf(" 1: %,d 2: %,d%n", freeMemory1, freeMemory2);
+        }
+        else {
+            System.out.printf(" 1: %,d%n", freeMemory1);
+        }
     }
 
     /**

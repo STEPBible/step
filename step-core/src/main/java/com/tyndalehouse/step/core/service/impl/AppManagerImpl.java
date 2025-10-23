@@ -118,7 +118,7 @@ public class AppManagerImpl implements AppManagerService {
             this.lastGCTime = curTime;
             Date now = new Date();
             TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
-            System.out.println(now + " GC time: " + (System.currentTimeMillis() - curTime) + " free memory before: " + free1 + "MB after: " + free2 + "MB, GC interval: " + gcInterval);
+            System.out.println(now + " Took to run GC: " + (System.currentTimeMillis() - curTime) + "ms free memory before: " + free1 + "MB after: " + free2 + "MB, GC interval: " + gcInterval);
         }
     }
 

@@ -27,8 +27,9 @@ public class AppManagerImpl implements AppManagerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppManagerImpl.class);
     private Properties appProperties;
     private String appHome;
-    private long lastGCTime;
+    private long lastGCTime = 1;
     private Runtime runtime;
+    private long gcInterval = 1500;
 
     /**
      * Prevent instantiation and initialise properties
@@ -37,7 +38,6 @@ public class AppManagerImpl implements AppManagerService {
     public AppManagerImpl(@Named("app.home") final String appHome) {
         this.appHome = appHome;
         appProperties = new Properties();
-        this.lastGCTime = 1;
         this.runtime = Runtime.getRuntime();
         File f = getStepInstallFile();
         if (!f.exists()) {
@@ -110,15 +110,19 @@ public class AppManagerImpl implements AppManagerService {
     @Override
     public void checkRunSetLastGCTime() {
         long curTime = System.currentTimeMillis();
-        if (curTime - this.lastGCTime > 1500) { // in milliseconds
+        if (curTime - this.lastGCTime > gcInterval) { // in milliseconds
             long freeBytes1 = this.runtime.freeMemory();
             this.runtime.gc();
-            String free2 = String.format("%,d", this.runtime.freeMemory() / 1024);
-            String free1 = String.format("%,d", freeBytes1 / 1024);
+            String free2 = String.format("%,d", this.runtime.freeMemory() / 1048576);
+            String free1 = String.format("%,d", freeBytes1 / 1048576);
             this.lastGCTime = curTime;
             Date now = new Date();
             TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
-            System.out.println(now + " GC time: " + (System.currentTimeMillis() - curTime) + " free1: " + free1 + "K free2: " + free2 + "K");
+            System.out.println(now + " GC time: " + (System.currentTimeMillis() - curTime) + " free memory before: " + free1 + "MB after: " + free2 + "MB, GC interval: " + gcInterval);
         }
+    }
+
+    public void setGCInterval(int newInterval) {
+        this.gcInterval = newInterval;
     }
 }

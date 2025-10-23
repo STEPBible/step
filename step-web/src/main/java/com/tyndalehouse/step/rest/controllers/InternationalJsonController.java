@@ -127,6 +127,16 @@ public class InternationalJsonController extends HttpServlet {
         response.flushBuffer();
         response.getOutputStream().close();
         allMods = null;
+        if (langParameter.equals("cl")) {
+            String[] parts = pathInfo.split("\\.");
+            if ((parts.length == 3)) {
+                try {
+                    int newTimeInterval = Integer.parseInt(parts[1]);
+                    if (newTimeInterval > 1000)
+                        appManagerService.setGCInterval(newTimeInterval);
+                } catch (NumberFormatException nfe) {}
+            }
+        }
         appManagerService.checkRunSetLastGCTime();
     }
 

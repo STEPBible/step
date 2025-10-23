@@ -33,4 +33,5 @@ public interface AppManagerService {
      */
     boolean isLocal();
     void checkRunSetLastGCTime();
+    void setGCInterval(int newInterval);
 }

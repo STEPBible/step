@@ -3087,9 +3087,9 @@ step.util = {
 					var commentaryIntro = "";
 					var commentaryOutline = "";
 					var firstLinkToCommentary = [];
-					var circles = [];
+					var rectangles = [];
 					for (var i = 0; i < keysForCommentary.length; i++) {
-						circles.push('<span style="width:15px;height:18px;display:inline-flex;justify-content:center;align-items:center;color:' + 
+						rectangles.push('<span style="width:15px;height:18px;display:inline-flex;justify-content:center;align-items:center;color:' + 
 							bgColors[i % bgColors.length] + ';border-width: thin;border-style:solid;border-radius:20%;vertical-align:middle">' +
 							keysForCommentary[i].substr(0,1).toUpperCase() +
 							'</span>');
@@ -3101,7 +3101,7 @@ step.util = {
 								titleTag = ' title="page ' + summary["chapter_intro_" + keysForCommentary[i] + "_page"] + '"';
 							commentaryIntro += ' <a href="' + summary["chapter_intro_" + keysForCommentary[i] + "_url"] +
 								'" target="' + keysForCommentary[i] + '"' + titleTag + '>' +
-								circles[i] + '</a>';
+								rectangles[i] + '</a>';
 						}
 						if (typeof summary["chapter_outline_" + keysForCommentary[i] + "_url"] === "string") {
 							if (firstLinkToCommentary[i] === "")
@@ -3111,7 +3111,7 @@ step.util = {
 								titleTag = ' title="page ' + summary["chapter_outline_" + keysForCommentary[i] + "_page"] + '"';
 							commentaryOutline += ' <a href="' + summary["chapter_outline_" + keysForCommentary[i] + "_url"] + 
 								'" target="' + keysForCommentary[i] + '"' + titleTag + '>' +
-								circles[i] + '</a>';
+								rectangles[i] + '</a>';
 						}
 						if (typeof summary["chapter_toc_" + keysForCommentary[i] + "_url"] === "string") {
 							if (firstLinkToCommentary[i] === "")
@@ -3134,7 +3134,7 @@ step.util = {
 						if (curKey === "tgc")
 							bookSummary += 'table of content of ' + namesForCommentary[i] + ' on TGC</a>';
 						else
-							bookSummary += circles[i] + '</a>' +
+							bookSummary += rectangles[i] + '</a>' +
 							' icon links to ' + namesForCommentary[i];
 						bookSummary += '</div>';
 					}
@@ -3178,7 +3178,7 @@ step.util = {
 									if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
 										titleTag = ' title="page ' + summary[jsonName] + '"';
 									bookSummary += ' <a href="' + commentary_url + '" target="' + curKey + '"' + titleTag + '>' +
-									circles[j] + '</a>';
+									rectangles[j] + '</a>';
 								}
 							}
 							bookSummary += "</td></tr>";

@@ -121,6 +121,7 @@ public class AppManagerImpl implements AppManagerService {
             System.out.println(now + " Took to run GC: " + (afterTime - beforeTime) + "ms free memory before: " + free1 + "MB after: " + free2 + "MB, GC interval: " + gcInterval);
             this.lastGCTime = afterTime;
         }
+        else System.out.println("Skip GC");
     }
 
     public void setGCInterval(int newInterval) {

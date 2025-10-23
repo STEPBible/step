@@ -3132,7 +3132,7 @@ step.util = {
 						bookSummary += '<div style="margin-left:8px">The ' + 
 							'<a href="' + firstLinkToCommentary[i] + '" target="' + curKey + '">';
 						if (curKey === "tgc")
-							bookSummary += 'table of content of ' + namesForCommentary[i] + ' on TGC</a>';
+							bookSummary += 'table of contents for ' + namesForCommentary[i] + "'s at TGC</a>";
 						else
 							bookSummary += rectangles[i] + '</a>' +
 							' icon links to ' + namesForCommentary[i];

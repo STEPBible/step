@@ -83,6 +83,7 @@
 "chapter_10_constable_url": "https://soniclight.com/tcon/notes/html/ecclesiastes/ecclesiastes.htm#head55",
 "chapter_11_constable_url": "https://soniclight.com/tcon/notes/html/ecclesiastes/ecclesiastes.htm#head57",
 "chapter_12_constable_url": "https://soniclight.com/tcon/notes/html/ecclesiastes/ecclesiastes.htm#head61",
-"commentary_keys":"['icc', 'constable']",
-"commentary_names":"['ICC commentary', 'Constable\\'s notes']"
+"chapter_toc_tgc_url": "https://www.thegospelcoalition.org/commentary/Ecclesiastes/",
+"commentary_keys":"['icc', 'constable', 'tgc']",
+"commentary_names":"['ICC', 'Constable', 'Richard Belcher']"
 }

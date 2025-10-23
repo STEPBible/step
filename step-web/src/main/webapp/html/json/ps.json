@@ -914,6 +914,7 @@
 "chapter_148_constable_url": "https://soniclight.com/tcon/notes/html/psalms/psalms.htm#head629",
 "chapter_149_constable_url": "https://soniclight.com/tcon/notes/html/psalms/psalms.htm#head632",
 "chapter_150_constable_url": "https://soniclight.com/tcon/notes/html/psalms/psalms.htm#head637",
-"commentary_keys":"['icc', 'constable']",
-"commentary_names":"['ICC commentary', 'Constable\\'s notes']"
+"chapter_toc_tgc_url": "/html/psalms_commentary.html",
+"commentary_keys":"['icc', 'constable', 'tgc']",
+"commentary_names":"['ICC', 'Constable', 'Bruce K. Waltke']"
 }

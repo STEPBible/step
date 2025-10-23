@@ -3113,6 +3113,12 @@ step.util = {
 								'" target="' + keysForCommentary[i] + '"' + titleTag + '>' +
 								circles[i] + '</a>';
 						}
+						if (typeof summary["chapter_toc_" + keysForCommentary[i] + "_url"] === "string") {
+							if (firstLinkToCommentary[i] === "")
+								firstLinkToCommentary[i] = summary["chapter_toc_" + keysForCommentary[i] + "_url"]
+							namesForCommentary[i] = '<a href="' + firstLinkToCommentary[i] + '" target="' + keysForCommentary[i] + '">' +
+								"TOC of " + namesForCommentary[i] + " on TGC</a>";
+						}
 					}
 					for (var i = 0; i < keysForCommentary.length; i++) {
 						var curKey = step.util.augmentLanguageCode(keysForCommentary[i], summary, lastChapter);
@@ -3128,7 +3134,7 @@ step.util = {
 						bookSummary += '<div style="margin-left:8px">The ' + 
 							'<a href="' + firstLinkToCommentary[i] + '" target="' + curKey + '">' +
 							circles[i] + '</a>' +
-							' icon is a link to the ' + namesForCommentary[i] + '</div>';
+							' icon links to ' + namesForCommentary[i] + '</div>';
 					}
 					bookSummary += '<br>';
 					var width2 = keysForCommentary.length * 5;

@@ -221,7 +221,6 @@ public class ModuleController {
     public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers, String userLanguage) {
         LOGGER.debug("Getting quick information for [{}], [{}]",
                 new Object[]{this.vocab, morphIdentifiers});
-
         // The following 2 lines are needed due to a bug in the Chrome extension (Bible vocab) discovered in 2025. Remove in about 2027.
         if ((userLanguage != null) && userLanguage.equals("en>lang-en-US"))
             userLanguage = "en";

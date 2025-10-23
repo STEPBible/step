@@ -3089,8 +3089,8 @@ step.util = {
 					var firstLinkToCommentary = [];
 					var circles = [];
 					for (var i = 0; i < keysForCommentary.length; i++) {
-						circles.push('<span style="width:18px;height:18px;display:inline-flex;justify-content:center;align-items:center;color:' + 
-							bgColors[i % bgColors.length] + ';border-width: thin;border-style:solid;border-radius:50%;">' +
+						circles.push('<span style="width:15px;height:18px;display:inline-flex;justify-content:center;align-items:center;color:' + 
+							bgColors[i % bgColors.length] + ';border-width: thin;border-style:solid;border-radius:20%;">' +
 							keysForCommentary[i].substr(0,1).toUpperCase() +
 							'</span>');
 						firstLinkToCommentary.push('');

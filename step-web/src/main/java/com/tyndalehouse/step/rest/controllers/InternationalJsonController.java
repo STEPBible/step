@@ -7,6 +7,7 @@ import com.tyndalehouse.step.core.models.Language;
 import com.tyndalehouse.step.core.service.LanguageService;
 import com.tyndalehouse.step.rest.framework.FrontController;
 import com.tyndalehouse.step.rest.framework.JsonResourceBundle;
+import com.tyndalehouse.step.core.service.AppManagerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.inject.Inject;
@@ -32,18 +33,19 @@ public class InternationalJsonController extends HttpServlet {
     private final Provider<ClientSession> clientSessionProvider;
     private final ModuleController modules;
     private final LanguageService languageService;
-    private final Runtime runtime;
+    private final AppManagerService appManagerService;
 
     @Inject
     public InternationalJsonController(final Provider<ObjectMapper> objectMapperProvider,
                                        final Provider<ClientSession> clientSessionProvider,
                                        final ModuleController modules,
-                                       final LanguageService languageService) {
+                                       final LanguageService languageService,
+                                       final AppManagerService appManagerService) {
         this.clientSessionProvider = clientSessionProvider;
         this.objectMapper = objectMapperProvider.get();
         this.modules = modules;
         this.languageService = languageService;
-        runtime = Runtime.getRuntime();
+        this.appManagerService = appManagerService;
     }
     
     @Override
@@ -124,20 +126,8 @@ public class InternationalJsonController extends HttpServlet {
         response.getOutputStream().write(qualifiedResponse.getBytes(FrontController.UTF_8_ENCODING));
         response.flushBuffer();
         response.getOutputStream().close();
-        long freeMemory1 = runtime.freeMemory();
-        Date now = new Date();
-        TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
-        System.out.print(now);
-        if (langParameter.equals("cl")) {
-            runtime.gc();
-            long freeMemory2 = runtime.freeMemory();
-            System.out.printf(" 1: %,d 2: %,d%n", freeMemory1, freeMemory2);
-        }
-        else {
-            System.out.printf(" 1: %,d%n", freeMemory1);
-        }
         allMods = null;
-        Runtime.getRuntime().gc();
+        appManagerService.checkRunSetLastGCTime();
     }
 
     /**

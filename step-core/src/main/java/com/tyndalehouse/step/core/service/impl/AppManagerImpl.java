@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.TimeZone;
 
 /**
  * Allows querying of app-specific properties, such as the installation properties
@@ -26,6 +27,8 @@ public class AppManagerImpl implements AppManagerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppManagerImpl.class);
     private Properties appProperties;
     private String appHome;
+    private long lastGCTime;
+    private Runtime runtime;
 
     /**
      * Prevent instantiation and initialise properties
@@ -34,6 +37,8 @@ public class AppManagerImpl implements AppManagerService {
     public AppManagerImpl(@Named("app.home") final String appHome) {
         this.appHome = appHome;
         appProperties = new Properties();
+        this.lastGCTime = 1;
+        this.runtime = Runtime.getRuntime();
         File f = getStepInstallFile();
         if (!f.exists()) {
             return;
@@ -99,6 +104,21 @@ public class AppManagerImpl implements AppManagerService {
             LOGGER.error("Unable to save properties to file", ex);
         } finally {
             IOUtils.closeQuietly(fos);
+        }
+    }
+
+    @Override
+    public void checkRunSetLastGCTime() {
+        long curTime = System.currentTimeMillis();
+        if (curTime - this.lastGCTime > 1500) { // in milliseconds
+            long freeBytes1 = this.runtime.freeMemory();
+            this.runtime.gc();
+            String free2 = String.format("%,d", this.runtime.freeMemory() / 1024);
+            String free1 = String.format("%,d", freeBytes1 / 1024);
+            this.lastGCTime = curTime;
+            Date now = new Date();
+            TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
+            System.out.println(now + " GC time: " + (System.currentTimeMillis() - curTime) + " free1: " + free1 + "K free2: " + free2 + "K");
         }
     }
 }

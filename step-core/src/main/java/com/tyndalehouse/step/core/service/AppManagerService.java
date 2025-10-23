@@ -32,4 +32,5 @@ public interface AppManagerService {
      * @return true to indicate this is hosted by the Step-Server app
      */
     boolean isLocal();
+    void checkRunSetLastGCTime();
 }

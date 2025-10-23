@@ -132,19 +132,8 @@ public class SearchPageController extends HttpServlet {
                     }
                 }
             }
-
             request.getRequestDispatcher("/start.jsp").include(request, response);
-            Thread t1 = new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        Thread.sleep(500);
-                        Runtime.getRuntime().gc();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            t1.start();
+            appManagerService.checkRunSetLastGCTime();
         }
     }
 

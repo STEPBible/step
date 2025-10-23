@@ -46,18 +46,19 @@ public class SetupRedirectFilter implements Filter {
             //set the version up one - installer will have taken care of upgrades... hopefully.
             appManager.setAndSaveAppVersion(runningAppVersion);
         }
-        Thread t1 = new Thread(new Runnable() {
-            public void run()
-            {
-                try {
-                    Thread.sleep(500);
-                    Runtime.getRuntime().gc();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }});
-        t1.start();
+//        Thread t1 = new Thread(new Runnable() {
+//            public void run()
+//            {
+//                try {
+//                    Thread.sleep(500);
+//                    Runtime.getRuntime().gc();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }});
+//        t1.start();
         chain.doFilter(request, response);
+        Runtime.getRuntime().gc();
     }
 
     @Override

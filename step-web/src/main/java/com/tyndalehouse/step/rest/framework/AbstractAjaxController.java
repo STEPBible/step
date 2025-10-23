@@ -51,8 +51,9 @@ public abstract class AbstractAjaxController extends HttpServlet {
             byte[] jsonEncoded = getEncodedJsonResponse(returnVal);
             setupHeaders(response, jsonEncoded.length);
             response.getOutputStream().write(jsonEncoded);
-//            returnVal = null;
-//            jsonEncoded = null;
+            returnVal = null;
+            jsonEncoded = null;
+            Runtime.getRuntime().gc();
             // CHECKSTYLE:OFF We allow catching errors here, since we are at the top of the structure
         } catch (final Exception e) {
             // CHECKSTYLE:ON

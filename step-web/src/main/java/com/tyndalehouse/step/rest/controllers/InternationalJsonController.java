@@ -102,7 +102,6 @@ public class InternationalJsonController extends HttpServlet {
             if (i < allMods.size() - 1)
                 response.getOutputStream().write(",".getBytes(FrontController.UTF_8_ENCODING)); // separator
         }
-        // allMods = null;
         response.getOutputStream().write("];".getBytes(FrontController.UTF_8_ENCODING));
         response.getOutputStream().write("window.availLangs=[".getBytes(FrontController.UTF_8_ENCODING));
         List<Language> allLanguages = this.languageService.getAvailableLanguages();
@@ -137,6 +136,8 @@ public class InternationalJsonController extends HttpServlet {
         else {
             System.out.printf(" 1: %,d%n", freeMemory1);
         }
+        allMods = null;
+        Runtime.getRuntime().gc();
     }
 
     /**

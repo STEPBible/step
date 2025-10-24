@@ -29,7 +29,7 @@ public class AppManagerImpl implements AppManagerService {
     private String appHome;
     private long lastGCTime = 1;
     private Runtime runtime;
-    private long gcInterval = 200;
+    private long gcInterval = 60000;
 
     /**
      * Prevent instantiation and initialise properties
@@ -112,14 +112,18 @@ public class AppManagerImpl implements AppManagerService {
         long beforeTime = System.currentTimeMillis();
         if (beforeTime - this.lastGCTime > gcInterval) { // in milliseconds
             long freeBytes1 = this.runtime.freeMemory();
-            this.runtime.gc();
-            String free2 = String.format("%,d", this.runtime.freeMemory() / 1048576);
-            String free1 = String.format("%,d", freeBytes1 / 1048576);
-            long afterTime = System.currentTimeMillis();
             Date now = new Date();
             TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
-            System.out.println(now + " Took to run GC: " + (afterTime - beforeTime) + "ms free memory before: " + free1 + "MB after: " + free2 + "MB, GC interval: " + gcInterval);
-            this.lastGCTime = afterTime;
+            String free1 = String.format("%,d", freeBytes1 / 1048576);
+            System.out.println(free1 + "MB, time: " + now + " GC interval: " + gcInterval);
+//            this.runtime.gc();
+//            String free2 = String.format("%,d", this.runtime.freeMemory() / 1048576);
+//            String free1 = String.format("%,d", freeBytes1 / 1048576);
+//            long afterTime = System.currentTimeMillis();
+//            Date now = new Date();
+//            TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
+//            System.out.println(now + " Took to run GC: " + (afterTime - beforeTime) + "ms free memory before: " + free1 + "MB after: " + free2 + "MB, GC interval: " + gcInterval);
+            this.lastGCTime = beforeTime;
         }
     }
 

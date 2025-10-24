@@ -132,7 +132,7 @@ public class InternationalJsonController extends HttpServlet {
             if ((parts.length == 3)) {
                 try {
                     int newTimeInterval = Integer.parseInt(parts[1]);
-                    if (newTimeInterval > 349)
+                    if (newTimeInterval > 15)
                         appManagerService.setGCInterval(newTimeInterval);
                 } catch (NumberFormatException nfe) {}
             }

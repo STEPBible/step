@@ -29,7 +29,7 @@ public class AppManagerImpl implements AppManagerService {
     private String appHome;
     private long lastGCTime = 1;
     private Runtime runtime;
-    private long gcInterval = 500;
+    private long gcInterval = 200;
 
     /**
      * Prevent instantiation and initialise properties

@@ -3147,10 +3147,10 @@ step.util = {
 					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
 					bookSummary +=  '</th></tr>';
 					if (commentaryIntro !== "")
-						bookSummary += '<tr><td></td><td>Introduction</td><td>' +
+						bookSummary += '<tr style="height:26px"><td></td><td>Introduction</td><td>' +
 							commentaryIntro + '</td></tr>';
 					if (commentaryOutline !== "")
-						bookSummary += '<tr><td></td><td>Outline</td><td>' +
+						bookSummary += '<tr style="height:26px"><td></td><td>Outline</td><td>' +
 							commentaryOutline + '</td></tr>';
 
 					for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
@@ -3162,12 +3162,12 @@ step.util = {
 								if (typeof summary[jsonName2] === "string")
 									endOfHeader = nextChapter - 1;
 							}
-							bookSummary += "<tr><td>" + curChapter + "-" + endOfHeader + "</td><td><b>" + summary[jsonName] + "</b></td></tr>";
+							bookSummary += '<tr><td>' + curChapter + "-" + endOfHeader + "</td><td><b>" + summary[jsonName] + "</b></td></tr>";
 						}
 						jsonName = "chapter_" + curChapter + "_description";
 						if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
 							if (summary[jsonName] === "*") summary[jsonName] = "";
-							bookSummary += '<tr><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + curChapter + "</a></td><td>" + summary[jsonName] + '</td><td>';
+							bookSummary += '<tr style="height:26px"><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + curChapter + "</a></td><td>" + summary[jsonName] + '</td><td>';
 							for (var j = 0; j < keysForCommentary.length; j++) {
 								var curKey = step.util.augmentLanguageCode(keysForCommentary[j], summary, lastChapter);
 								jsonName = "chapter_" + curChapter + "_" + curKey + "_url";

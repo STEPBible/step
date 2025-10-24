@@ -133,7 +133,7 @@ public class SearchPageController extends HttpServlet {
                 }
             }
             request.getRequestDispatcher("/start.jsp").include(request, response);
-            appManagerService.checkRunSetLastGCTime();
+//            appManagerService.checkRunSetLastGCTime();
         }
     }
 

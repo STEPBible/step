@@ -253,5 +253,24 @@
   
 }
 
+.tocdots {
+  overflow-x:hidden
+}
+
+.tocdotsspan {
+  background: white;
+  padding-left: 0.33em;
+  padding-right: 0.33em;
+}
+
+.tocdots:before {
+  float: left;
+  width: 0;
+  white-space: nowrap;
+  content:
+ " - - - - - - - - - - - - - - - - - - - "
+ " - - - - - - - - - - - - - - - - - - - "
+}
+
 @import 'bible_versions';
 @import 'advanced_search';

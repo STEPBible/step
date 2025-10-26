@@ -119,12 +119,10 @@ public class AppManagerImpl implements AppManagerService {
             if (beforeTime - this.lastGCTime > 1000) {
                 this.runtime.gc();
                 this.lastGCTime = beforeTime;
-                if (freeBytes1 > 100000000)
-                    return;
                 String free2 = String.format("%,d", this.runtime.freeMemory() / 1048576);
                 String free1 = String.format("%,d", freeBytes1 / 1048576);
                 long afterTime = System.currentTimeMillis();
-                this.lastMemCheckTime = afterTime;
+                this.lastGCTime = this.lastMemCheckTime = afterTime;
                 Date now = new Date();
                 TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
                 System.out.println(free1 + "MB, after: " + free2 + ", time: " + now + " GC elapse time: " + (afterTime - beforeTime) + ", GC interval: " + gcInterval);

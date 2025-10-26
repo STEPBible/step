@@ -27,6 +27,7 @@ public class AppManagerImpl implements AppManagerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppManagerImpl.class);
     private Properties appProperties;
     private String appHome;
+    private long lastMemCheckTime = 1;
     private long lastGCTime = 1;
     private Runtime runtime;
     private long gcInterval = 250;
@@ -110,22 +111,24 @@ public class AppManagerImpl implements AppManagerService {
     @Override
     public void checkRunSetLastGCTime() {
         long beforeTime = System.currentTimeMillis();
-        if (beforeTime - this.lastGCTime > gcInterval) { // in milliseconds
+        if (beforeTime - this.lastMemCheckTime > gcInterval) { // in milliseconds
             long freeBytes1 = this.runtime.freeMemory();
-            this.lastGCTime = beforeTime;
-            if (freeBytes1 > 100000000)
+            this.lastMemCheckTime = beforeTime;
+            if (freeBytes1 > 200000000)
                 return;
+            this.runtime.gc();
+            String free2 = String.format("%,d", this.runtime.freeMemory() / 1048576);
+            String free1 = String.format("%,d", freeBytes1 / 1048576);
+            long afterTime = System.currentTimeMillis();
+            this.lastMemCheckTime = afterTime;
             Date now = new Date();
             TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
-            String free1 = String.format("%,d", freeBytes1 / 1048576);
-            System.out.println(free1 + "MB, time: " + now + " GC interval: " + gcInterval);
-//            this.runtime.gc();
-//            String free2 = String.format("%,d", this.runtime.freeMemory() / 1048576);
-//            String free1 = String.format("%,d", freeBytes1 / 1048576);
-//            long afterTime = System.currentTimeMillis();
+            System.out.println(free1 + "MB, after: " + free2 + ", time: " + now + " GC elapse time: " + (afterTime - beforeTime) + ", GC interval: " + gcInterval);
+            return;
 //            Date now = new Date();
 //            TimeZone.setDefault( TimeZone.getTimeZone("GMT"));
-//            System.out.println(now + " Took to run GC: " + (afterTime - beforeTime) + "ms free memory before: " + free1 + "MB after: " + free2 + "MB, GC interval: " + gcInterval);
+//            String free1 = String.format("%,d", freeBytes1 / 1048576);
+//            System.out.println(free1 + "MB, time: " + now + " GC interval: " + gcInterval);
         }
     }
 

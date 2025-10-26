@@ -47,7 +47,14 @@
 "chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/1timothy/1timothy.htm#head25",
 "chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/1timothy/1timothy.htm#head28",
 "chapter_6_constable_url": "https://soniclight.com/tcon/notes/html/1timothy/1timothy.htm#head32",
-"chapter_toc_tgc_url": "https://www.thegospelcoalition.org/commentary/1-timothy/",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/1-timothy/",
+"chapter_outline_tgc_url": "#section-6",
+"chapter_1_tgc_url": "#section-7",
+"chapter_2_tgc_url": "#section-10",
+"chapter_3_tgc_url": "#section-11",
+"chapter_4_tgc_url": "#section-12",
+"chapter_5_tgc_url": "#section-14",
+"chapter_6_tgc_url": "#section-14",
 "commentary_keys": "['icc', 'constable', 'tgc']",
 "commentary_names":"['ICC', 'Constable', 'Paul Jeon']"
 }

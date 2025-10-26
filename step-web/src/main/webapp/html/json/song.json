@@ -39,7 +39,16 @@
 "chapter_6_constable_url": "https://soniclight.com/tcon/notes/html/song/song.htm#head41",
 "chapter_7_constable_url": "https://soniclight.com/tcon/notes/html/song/song.htm#head43",
 "chapter_8_constable_url": "https://soniclight.com/tcon/notes/html/song/song.htm#head48",
-"chapter_toc_tgc_url": "https://www.thegospelcoalition.org/commentary/song-of-solomon/",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/song-of-solomon/",
+"chapter_outline_tgc_url": "#section-4",
+"chapter_1_tgc_url": "#section-5",
+"chapter_2_tgc_url": "#section-6",
+"chapter_3_tgc_url": "#section-8",
+"chapter_4_tgc_url": "#section-9",
+"chapter_5_tgc_url": "#section-9",
+"chapter_6_tgc_url": "#section-10",
+"chapter_7_tgc_url": "#section-11",
+"chapter_8_tgc_url": "#section-11",
 "commentary_keys":"['icc', 'constable', 'tgc']",
 "commentary_names":"['ICC', 'Constable', 'Douglas O\\'Donnell']"
 }

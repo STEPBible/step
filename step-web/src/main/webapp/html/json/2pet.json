@@ -27,7 +27,11 @@
 "chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/2peter/2peter.htm#head11",
 "chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/2peter/2peter.htm#head20",
 "chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/2peter/2peter.htm#head25",
-"chapter_toc_tgc_url": "https://www.thegospelcoalition.org/commentary/2-peter/",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/2-peter/",
+"chapter_outline_tgc_url": "#section-6",
+"chapter_1_tgc_url": "#section-7",
+"chapter_2_tgc_url": "#section-13",
+"chapter_3_tgc_url": "#section-14",
 "commentary_keys": "['icc', 'constable', 'tgc']",
 "commentary_names": "['ICC', 'Constable', 'Matthew Harmon & John Sloat']"
 }

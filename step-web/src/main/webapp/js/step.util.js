@@ -3094,7 +3094,7 @@ step.util = {
 					for (var i = 0; i < keysForCommentary.length; i++) {
 						firstLinkToCommentary.push('');
 						if (typeof summary["chapter_intro_" + keysForCommentary[i] + "_url"] === "string") {
-							firstLinkToCommentary[i] = summary["chapter_intro_" + keysForCommentary[i] + "_url"]
+							firstLinkToCommentary[i] = summary["chapter_intro_" + keysForCommentary[i] + "_url"];
 							var titleTag = "";
 							if ((typeof summary["chapter_intro_" + keysForCommentary[i] + "_page"] === "string") && (summary["chapter_intro_" + keysForCommentary[i] + "_page"] !== ""))
 								titleTag = ' title="page ' + summary["chapter_intro_" + keysForCommentary[i] + "_page"] + '"';
@@ -3104,17 +3104,13 @@ step.util = {
 						}
 						if (typeof summary["chapter_outline_" + keysForCommentary[i] + "_url"] === "string") {
 							if (firstLinkToCommentary[i] === "")
-								firstLinkToCommentary[i] = summary["chapter_outline_" + keysForCommentary[i] + "_url"]
+								firstLinkToCommentary[i] = summary["chapter_outline_" + keysForCommentary[i] + "_url"];
 							var titleTag = "";
 							if ((typeof summary["chapter_outline_" + keysForCommentary[i] + "_page"] === "string") && (summary["chapter_outline_" + keysForCommentary[i] + "_page"] !== ""))
 								titleTag = ' title="page ' + summary["chapter_outline_" + keysForCommentary[i] + "_page"] + '"';
 							commentaryOutline += ' <a href="' + summary["chapter_outline_" + keysForCommentary[i] + "_url"] + 
 								'" target="' + keysForCommentary[i] + '"' + titleTag + '>' +
 								icons[i] + '</a>';
-						}
-						if (typeof summary["chapter_toc_" + keysForCommentary[i] + "_url"] === "string") {
-							if (firstLinkToCommentary[i] === "")
-								firstLinkToCommentary[i] = summary["chapter_toc_" + keysForCommentary[i] + "_url"]
 						}
 					}
 					for (var i = 0; i < keysForCommentary.length; i++) {
@@ -3130,11 +3126,10 @@ step.util = {
 						}
 						bookSummary += '<div style="margin-left:8px">The ' + 
 							'<a href="' + firstLinkToCommentary[i] + '" target="' + curKey + '">';
-						if (curKey === "tgc")
-							bookSummary += 'table of contents for ' + namesForCommentary[i] + "'s at TGC</a>";
-						else
-							bookSummary += icons[i] + '</a>' +
+						bookSummary += icons[i] + '</a>' +
 							' icon links to ' + namesForCommentary[i];
+						if (keysForCommentary[i] === "tgc")
+							bookSummary += " (hosted at TGC)";
 						bookSummary += '</div>';
 					}
 					bookSummary += '<br>';
@@ -3171,7 +3166,7 @@ step.util = {
 								var curKey = step.util.augmentLanguageCode(keysForCommentary[j], summary, lastChapter);
 								jsonName = "chapter_" + curChapter + "_" + curKey + "_url";
 								if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
-									var commentary_url = summary[jsonName];
+									var commentary_url = step.util._expandShortedURL(summary[jsonName], summary["chapter_intro_" + curKey + "_url"]);
 									jsonName = "chapter_" + curChapter + "_" + curKey + "_page";
 									var titleTag = "";
 									if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
@@ -3226,14 +3221,17 @@ step.util = {
 					}
 				}
     	        if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
-        	        var commentary_url = summary[jsonName];
+        	        var commentary_url = step.util._expandShortedURL(summary[jsonName], summary["chapter_intro_" + currentKey + "_url"]);
             	    jsonName = "chapter_" + chapterNum + "_" + currentKey + "_page";
                 	var titleTag = "";
+					var commentaryName = namesForCommentary[i];
+					if (currentKey === "tgc")
+						commentaryName += " (hosted at TGC)";
                 	if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== ""))
                     	titleTag = ' title="page ' + summary[jsonName] + '"';
                 	chptSummary += '<a style="margin-left:12px;font-size:14px" href="' +
 						commentary_url + '" target="' + currentKey + '"' + titleTag + '><b><u>' +
-						namesForCommentary[i] + '</u></b><br>';
+						commentaryName + '</u></b><br>';
 				}
             }
             chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
@@ -3326,6 +3324,12 @@ step.util = {
 			}
         });
     },
+	_expandShortedURL: function (commentary_url, chapter_intro_url) {
+		if ((commentary_url.substr(0,1) === "#") && 
+			(typeof chapter_intro_url === "string"))
+				return chapter_intro_url + commentary_url;
+		return commentary_url;
+	},
 	buildBibleProjectVideo: function(lang, secondLang) {
 		lang = lang.toLowerCase();
 		if (!secondLang) {

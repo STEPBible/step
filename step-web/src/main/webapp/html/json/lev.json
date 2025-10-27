@@ -202,6 +202,6 @@
 "chapter_25_tgc_url": "#section-8",
 "chapter_26_tgc_url": "#section-9",
 "chapter_27_tgc_url": "#section-10",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Peter Y. Lee']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Peter Y. Lee', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

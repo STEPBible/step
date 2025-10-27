@@ -37,6 +37,6 @@
 "chapter_2_tgc_url": "#section-17",
 "chapter_3_tgc_url": "#section-20",
 "chapter_4_tgc_url": "#section-21",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Alistair I. Wilson']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Alistair I. Wilson', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

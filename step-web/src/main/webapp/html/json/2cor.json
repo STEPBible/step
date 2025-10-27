@@ -105,6 +105,6 @@
 "chapter_11_tgc_url": "#section-19",
 "chapter_12_tgc_url": "#section-21",
 "chapter_13_tgc_url": "#section-22",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Peter Balla']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Peter Balla', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

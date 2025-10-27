@@ -42,6 +42,6 @@
 "chapter_10_tgc_url": "#section-28",
 "chapter_11_tgc_url": "#section-28",
 "chapter_12_tgc_url": "#section-29",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Michael P. V. Barrett']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Michael P. V. Barrett', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

@@ -312,6 +312,6 @@
 "chapter_40_tgc_url": "#section-20",
 "chapter_41_tgc_url": "#section-20",
 "chapter_42_tgc_url": "#section-20",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Christopher Ash']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Christopher Ash', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

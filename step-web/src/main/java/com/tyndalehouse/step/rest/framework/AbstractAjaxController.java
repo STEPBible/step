@@ -67,13 +67,23 @@ public abstract class AbstractAjaxController extends HttpServlet {
     }
 
     private Object executeRestMethod(final HttpServletRequest request) {
-        Object returnVal;
+        Object returnVal = null;
         try {
             returnVal = invokeMethod(request);
 
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
-            LOGGER.warn(e.getMessage());
+            String exceptionMsg = e.getMessage();
+//            if (exceptionMsg == null) {
+//                Throwable cause = e.getCause();
+//                if (cause != null) {
+//                    String causeMsg = cause.getMessage();
+//                    if ((causeMsg != null) && (causeMsg.equals("book_not_found")))
+//                        return returnVal;
+//                }
+//            }
+            if (exceptionMsg != null)
+                LOGGER.warn(exceptionMsg);
             returnVal = convertExceptionToJson(e);
         }
         return returnVal;
@@ -188,8 +198,13 @@ public abstract class AbstractAjaxController extends HttpServlet {
 
         if (e instanceof TranslatedException) {
             final TranslatedException translatedException = (TranslatedException) e;
-            LOGGER.warn(e.getMessage());
-            LOGGER.debug(e.getMessage(), e);
+            String eMessage = e.getMessage();
+            if (eMessage != null) {
+                if (!eMessage.equals("book_not_found")) {
+                    LOGGER.warn(e.getMessage());
+                    LOGGER.debug(e.getMessage(), e);
+                }
+            }
             return format(bundle.getString(translatedException.getMessage()), translatedException.getArgs());
         }
 

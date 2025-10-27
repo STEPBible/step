@@ -76,6 +76,6 @@
 "chapter_7_tgc_url": "#section-22",
 "chapter_8_tgc_url": "#section-25",
 "chapter_9_tgc_url": "#section-26",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Andrew E. Hill']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Andrew E. Hill', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

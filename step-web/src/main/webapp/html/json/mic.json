@@ -60,6 +60,6 @@
 "chapter_5_tgc_url": "#section-26",
 "chapter_6_tgc_url": "#section-29",
 "chapter_7_tgc_url": "#section-32",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Bruce K. Waltke']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Bruce K. Waltke', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

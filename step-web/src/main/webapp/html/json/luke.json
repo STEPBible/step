@@ -184,6 +184,6 @@
 "chapter_22_tgc_url": "#section-19",
 "chapter_23_tgc_url": "#section-19",
 "chapter_24_tgc_url": "#section-20",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Peter G. Bolt']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Peter G. Bolt', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

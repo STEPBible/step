@@ -106,6 +106,6 @@
 "chapter_11_tgc_url": "#section-22",
 "chapter_12_tgc_url": "#section-23",
 "chapter_13_tgc_url": "#section-25",
-"commentary_keys": "['icc', 'constable', 'tgc']",
-"commentary_names": "['Intl Critical Commentary', 'Constable\\'s notes', 'Dennis Johnson']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Dennis Johnson', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

@@ -264,6 +264,6 @@
 "chapter_33_tgc_url": "#section-28",
 "chapter_34_tgc_url": "#section-30",
 "chapter_36_tgc_url": "#section-31",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Winfried Corduan']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Winfried Corduan', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

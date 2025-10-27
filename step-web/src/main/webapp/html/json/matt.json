@@ -214,6 +214,6 @@
 "chapter_26_tgc_url": "#section-70",
 "chapter_27_tgc_url": "#section-74",
 "chapter_28_tgc_url": "#section-82",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Douglas O\\'Donnell']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Douglas O\\'Donnell', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

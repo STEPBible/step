@@ -272,6 +272,6 @@
 "chapter_50_tgc_url": "#section-30",
 "chapter_51_tgc_url": "#section-30",
 "chapter_52_tgc_url": "#section-31",
-"commentary_keys":"['icc', 'constable', 'tgc']",
-"commentary_names":"['Intl Critical Commentary', 'Constable\\'s notes', 'Matthew H. Patton']"
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Matthew H. Patton', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

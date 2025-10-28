@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    // ---- Layout ----
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // ---- Target & Module ----
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "moduleResolution": "node",
+    "verbatimModuleSyntax": true,
+
+    // ---- Type Safety ----
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+
+    // ---- Clean Code & Correctness ----
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": true,
+    "isolatedModules": true,
+    "skipLibCheck": false,
+
+    // ---- Output ----
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true,
+
+    // ---- JSX ----
+    "jsx": "react-jsx",
+
+    // ---- Environment ----
+    "allowJs": false,
+    "esModuleInterop": true,
+    "moduleDetection": "force"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+

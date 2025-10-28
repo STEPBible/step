@@ -1,0 +1,22 @@
+{
+  "name": "splitter",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "lint": "npx eslint"
+  },
+  "dependencies": {
+    "@awesome.me/webawesome": "^3.0.0-beta.6"
+  },
+  "devDependencies": {
+    "eslint": "^9.38.0",
+    "globals": "^16.4.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2"
+  }
+}

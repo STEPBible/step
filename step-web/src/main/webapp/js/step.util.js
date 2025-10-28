@@ -3071,7 +3071,11 @@ step.util = {
 			}
 			bookSummary +=
 					'<p style="margin:8px">ESV Introduction:<br>' + summary.ESV_introduction + '</p>' +
-                    '<p style="margin:8px">ESV Summary:<br>' + summary.ESV_summary + '</p>';
+                    '<p style="margin:8px">ESV Summary:<br>' + summary.ESV_summary + '</p>' +
+					'<div class="copyrightInfo">' +
+						'Copyright information for <a href="/version.jsp?version=ESV" target="_new">ESV</a>' +
+					'</div>' +
+					'<br>';
 			var bookOrderInBible = step.searchSelect.idx2osisChapterJsword[curOsisID];
 			var keysForCommentary = JSON.parse(summary["commentary_keys"].replaceAll("'", '"').replaceAll('\\"',"'"));
 			var namesForCommentary = JSON.parse(summary["commentary_names"].replaceAll("'", '"').replaceAll('\\"',"'"));
@@ -3080,9 +3084,7 @@ step.util = {
 				var lastChapter = step.passageSelect.osisChapterJsword[bookOrderInBible][1];
 				var bgColors =   ["Navy", "DarkRed", "DarkOliveGreen", "Indigo", "DarkSlateGray", "Maroon"];
 				if (typeof lastChapter === "number") {
-					bookSummary += '<h5>Link';
-					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
-					bookSummary += ' to commentar';
+					bookSummary += '<h5>Links to chapters in commentar';
 					bookSummary += (keysForCommentary.length > 1) ? 'ies' : 'y';
 					bookSummary += '</h5>';
 					var commentaryIntro = "";
@@ -3159,11 +3161,11 @@ step.util = {
 					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
 					bookSummary +=  '</th></tr>';
 					if (commentaryIntro !== "")
-						bookSummary += '<tr style="height:26px"><td></td><td class="tocdots"><span class="tocdotsspan">Introduction</span></td><td>' +
-							commentaryIntro + '</td></tr>';
+						bookSummary += '<tr style="height:26px"><td></td><td class="tocdots"><span class="tocdotsspan">Introduction</span></td><td><span class="tocdotsspan">' +
+							commentaryIntro + '</span></td></tr>';
 					if (commentaryOutline !== "")
-						bookSummary += '<tr style="height:26px"><td></td><td class="tocdots"><span class="tocdotsspan">Outline</span></td><td>' +
-							commentaryOutline + '</td></tr>';
+						bookSummary += '<tr style="height:26px"><td></td><td class="tocdots"><span class="tocdotsspan">Outline</span></td><td><span class="tocdotsspan">' +
+							commentaryOutline + '</span></td></tr>';
 
 					for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
 						var jsonName = "chapter_" + curChapter + "_header";
@@ -3179,7 +3181,8 @@ step.util = {
 						jsonName = "chapter_" + curChapter + "_description";
 						if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
 							if (summary[jsonName] === "*") summary[jsonName] = "";
-							bookSummary += '<tr style="height:26px"><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + curChapter + '</a></td><td class="tocdots"><span class="tocdotsspan">' + summary[jsonName] + '</span></td><td>';
+							bookSummary += '<tr style="height:26px"><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + 
+								curChapter + '</a></td><td class="tocdots"><span class="tocdotsspan">' + summary[jsonName] + '</span></td><td><span class="tocdotsspan">';
 							for (var j = 0; j < keysForCommentary.length; j++) {
 								var curKey = step.util.augmentLanguageCode(keysForCommentary[j], summary, lastChapter);
 								jsonName = "chapter_" + curChapter + "_" + curKey + "_url";
@@ -3199,12 +3202,20 @@ step.util = {
 					bookSummary += "</tbody></table></div>";
 				}
 			}
-			bookSummary +=
-				'</span>' +
-                '<div class="copyrightInfo">' +
-                    'Copyright information for <a href="/version.jsp?version=ESV" target="_new">ESV</a>' +
-                '</div>' +
-                '<br>';
+			if ((typeof summary["other_commentary_name"] === "string") && (typeof summary["other_commentary_url"] === "string")) {
+				var otherCommentaryNames = JSON.parse(summary["other_commentary_name"].replaceAll("'", '"').replaceAll('\\"',"'"));
+				var otherCommentaryURLs = JSON.parse(summary["other_commentary_url"].replaceAll("'", '"').replaceAll('\\"',"'"));
+				bookSummary += '<h5>Link';
+				bookSummary += (otherCommentaryNames.length > 1) ? 's' : '';
+				bookSummary += ' to additional commentar';
+				bookSummary += (otherCommentaryNames.length > 1) ? 'ies' : 'y';
+				bookSummary += '</h5>';
+				for (var i = 0; i < otherCommentaryNames.length; i++) {
+					bookSummary += '<a style="margin-left:12px;font-size:14px" href="' +
+						otherCommentaryURLs[i] + '" target="othercomm"><b><u>' +
+						otherCommentaryNames[i] + '</u></b><br>';
+				}
+			}
             var chptSummary =
                 '<br><span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
                 '<span style="font-size:16px">' +

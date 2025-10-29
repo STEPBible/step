@@ -3091,14 +3091,9 @@ step.util = {
 					var commentaryOutline = "";
 					var firstLinkToCommentary = [];
 					var icons = [];
-					// var icons = [
-					// 	'<svg height="22px" width="22px" viewBox="0 0 51 48" style="fill:blue"> <path d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z" /> </svg>',
-					// 	'<svg fill="red" width="22px" height="22px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"> <path d="M208.8584,144a15.85626,15.85626,0,0,1-10.46778,15.01367l-52.16015,19.2168-19.2168,52.16015a16.00075,16.00075,0,0,1-30.02734,0l-19.2168-52.16015-52.16015-19.2168a16.00075,16.00075,0,0,1,0-30.02734l52.16015-19.2168,19.2168-52.16015a16.00075,16.00075,0,0,1,30.02734,0l19.2168,52.16015,52.16015,19.2168A15.85626,15.85626,0,0,1,208.8584,144ZM152,48h16V64a8,8,0,0,0,16,0V48h16a8,8,0,0,0,0-16H184V16a8,8,0,0,0-16,0V32H152a8,8,0,0,0,0,16Zm88,32h-8V72a8,8,0,0,0-16,0v8h-8a8,8,0,0,0,0,16h8v8a8,8,0,0,0,16,0V96h8a8,8,0,0,0,0-16Z"/> </svg>',
-					// 	'<svg width="22px" height="22px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M8.23129 2.24048C9.24338 1.78695 10.1202 2.81145 9.80357 3.70098C8.72924 6.71928 9.38932 10.1474 11.6193 12.3765C13.8606 14.617 17.3114 15.2755 20.3395 14.1819C21.2206 13.8637 22.2173 14.7319 21.7817 15.7199C21.7688 15.7491 21.7558 15.7782 21.7427 15.8074C20.9674 17.5266 19.7272 19.1434 18.1227 20.2274C16.4125 21.3828 14.3957 22.0001 12.3316 22.0001H12.3306C9.93035 21.9975 7.6057 21.1603 5.75517 19.6321C3.90463 18.1039 2.64345 15.9797 2.18793 13.6237C1.73241 11.2677 2.11094 8.82672 3.2586 6.71917C4.34658 4.72121 6.17608 3.16858 8.20153 2.25386L8.23129 2.24048Z" fill="orange"/> </svg>',
-					// 	'<svg height="22px" width="22px" viewBox="0 0 51 48" style="fill:green"> <path d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z" /> </svg>'];
 					for (var i = 0; i < keysForCommentary.length; i++) {
-						icons.push('<span style="font-size:11px;width:15px;height:19px;display:inline-flex;justify-content:center;align-items:center;color:' + 
-							bgColors[i % bgColors.length] + ';border-width: thin;border-style:solid;border-radius:20%;">' +
+						icons.push('<span class="commicon" style="color:' + 
+							bgColors[i % bgColors.length] + '">' +
 							keysForCommentary[i].substr(0,1).toUpperCase() +
 							'</span>');
 						firstLinkToCommentary.push('');
@@ -3153,18 +3148,14 @@ step.util = {
 						bookSummary += '</div>';
 					}
 					bookSummary += '<br>';
-					var width2 = keysForCommentary.length * 5;
-					var width1 = (lastChapter > 12) ? '17' : '12';
-					bookSummary += '<div style="margin:8px"><table><tbody><tr><th style="width:' +
-						width1 + '%">Chpt</th><th>Description</th><th style="width:' + width2 +
-						'%">Link';
+					bookSummary += '<div style="margin:8px"><table class="commtoc"><tbody><tr><th>Chpt</th><th>Description</th><th>Link';
 					bookSummary += (keysForCommentary.length > 1) ? 's' : '';
 					bookSummary +=  '</th></tr>';
 					if (commentaryIntro !== "")
-						bookSummary += '<tr style="height:26px"><td></td><td class="tocdots"><span class="tocdotsspan">Introduction</span></td><td><span class="tocdotsspan">' +
+						bookSummary += '<tr><td></td><td class="dash"><span>Introduction</span></td><td><span style="padding-left:6px">' +
 							commentaryIntro + '</span></td></tr>';
 					if (commentaryOutline !== "")
-						bookSummary += '<tr style="height:26px"><td></td><td class="tocdots"><span class="tocdotsspan">Outline</span></td><td><span class="tocdotsspan">' +
+						bookSummary += '<tr><td></td><td class="dash"><span>Outline</span></td><td><span style="padding-left:6px">' +
 							commentaryOutline + '</span></td></tr>';
 
 					for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
@@ -3181,8 +3172,9 @@ step.util = {
 						jsonName = "chapter_" + curChapter + "_description";
 						if ((typeof summary[jsonName] === "string") && (summary[jsonName] !== "")) {
 							if (summary[jsonName] === "*") summary[jsonName] = "";
-							bookSummary += '<tr style="height:26px"><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + 
-								curChapter + '</a></td><td class="tocdots"><span class="tocdotsspan">' + summary[jsonName] + '</span></td><td><span class="tocdotsspan">';
+							bookSummary += '<tr><td><a href="javascript:step.util.showSummary(\'' + osisID + '.' + curChapter + '\')">' + 
+								curChapter + '</a></td><td class="dash"><span>' + summary[jsonName] + '</span></td>' +
+								'<td><span style="padding-left:6px">';
 							for (var j = 0; j < keysForCommentary.length; j++) {
 								var curKey = step.util.augmentLanguageCode(keysForCommentary[j], summary, lastChapter);
 								jsonName = "chapter_" + curChapter + "_" + curKey + "_url";

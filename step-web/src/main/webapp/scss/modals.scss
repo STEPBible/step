@@ -253,22 +253,56 @@
   
 }
 
-.tocdots {
-  overflow-x:hidden
+.commtoc {
+  .dash {
+    overflow-x:hidden
+  }
+
+  .dash:before {
+    float: left;
+    width: 0;
+    white-space: nowrap;
+    content:
+  " - - - - - - - - - - - - - - - - - - - "
+  " - - - - - - - - - - - - - - - - - - - "
+  }
+
+  th, td {
+    padding-top: 2px;
+    padding-bottom: 7px;
+  }
+
+  th:nth-child(1), td:nth-child(1) {
+    width:fit-content;
+    white-space:nowrap;
+    padding-right:4px;
+  }
+
+  th:nth-child(2), td:nth-child(2) {
+    span {
+      background: white;
+    }
+  }
+
+  th:nth-child(3), td:nth-child(3) {
+    width:fit-content;
+    white-space:nowrap;
+    span:nth-child(1) {
+      background: white;
+    }
+  }
 }
 
-.tocdotsspan {
-  background: white;
-  padding-right: 0.33em;
-}
-
-.tocdots:before {
-  float: left;
-  width: 0;
-  white-space: nowrap;
-  content:
- " - - - - - - - - - - - - - - - - - - - "
- " - - - - - - - - - - - - - - - - - - - "
+.commicon {
+  font-size:11px;
+  width:15px;
+  height:19px;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  border-width: thin;
+  border-style:solid;
+  border-radius:20%;
 }
 
 @import 'bible_versions';

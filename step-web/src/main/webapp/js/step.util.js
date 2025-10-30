@@ -3148,7 +3148,6 @@ step.util = {
 						}
 						commentarySummary += '</div>';
 					}
-					commentarySummary += '<br>';
 					commentarySummary += '<div style="margin:8px"><table class="commtoc"><tbody><tr><th>Chpt</th><th>Description</th><th>Link';
 					commentarySummary += (keysForCommentary.length > 1) ? 's' : '';
 					commentarySummary +=  '</th></tr>';

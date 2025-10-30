@@ -290,6 +290,12 @@
     white-space:nowrap;
     span:nth-child(1) {
       background: white;
+      padding-left:6px;
+      a {
+        span {
+          padding-left:0px;
+        }
+      }
     }
   }
 }
@@ -304,6 +310,33 @@
   border-width: thin;
   border-style:solid;
   border-radius:20%;
+}
+
+#biblesummary {
+  p {
+    margin-left:5%;
+    font-size:14px;
+    text-align:left;
+    padding:0;
+    margin-bottom:0;
+    margin-top:8px;
+    font-weight:bold;
+  }
+  .lnkattr {
+    margin-left:10%;
+    height:14px;
+    font-size:14px;
+  }
+  .glyphicon-play-circle {
+    margin-left:10px;
+    display:none;
+  }
+}
+.singlecomm {
+  margin-left:12px;
+  font-size:14px;
+  font-weight:bold;
+  text-decoration:underline;
 }
 
 @import 'bible_versions';

@@ -3329,7 +3329,7 @@ step.util = {
                                     '<div class="tab-content">' +
                                         '<div class="tab-pane fade' + contentChptClass + '" id="chptSummary">' + chptSummary + '</div>' +
                                         '<div class="tab-pane fade' + contentBookClass + '" id="bookSummary">' + bookSummary + '</div>' +
-                                        '<div class="tab-pane fade' + contentBookClass + '" id="commentarySummary">' + commentarySummary + '</div>' +
+                                        '<div class="tab-pane fade' + contentCommentaryClass + '" id="commentarySummary">' + commentarySummary + '</div>' +
 										'<div class="tab-pane fade' + contentBibleClass + '" id="bibleSummary">' + bibleSummary + '</div>' +
                                     '</div>' +
                                 '</div>' +

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>25.10.13</version>
+		<version>25.10.14</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>

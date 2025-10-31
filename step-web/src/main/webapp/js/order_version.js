@@ -51,7 +51,7 @@ function saveVersionOrder() {
     var allReferences = URL_SEPARATOR + 'reference=';
     numOfReferences = 0;
     for (var i = 0; i < activePassageData.length; i++) {
-        if (activePassageData[i].itemType == 'reference') {
+        if (activePassageData[i].itemType === 'reference') {
             if (numOfReferences > 0) allReferences += URL_SEPARATOR + 'reference=';
             allReferences += activePassageData[i].item.osisID;
             osisIds.push(activePassageData[i].item.osisID);

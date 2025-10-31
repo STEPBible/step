@@ -3211,8 +3211,18 @@ step.util = {
 						otherCommentaryNames[i] + '<br>';
 				}
 			}
+		    var activePassageData = step.util.activePassage().get("searchTokens") || [];
+			var bookChapter = longBookName + ' ' + chapterNum;
+			for (var i = 0; i < activePassageData.length; i++) {
+				if ((activePassageData[i].itemType === 'reference') &&
+					(reference !== activePassageData[i].item.osisID)) {
+					bookChapter = '<a href="javascript:step.util.closeModal(\'showBookOrChapterSummaryModal\');step.router.navigatePreserveVersions(\'reference=' + reference + '\', false, true, true);">' +
+						bookChapter + '</a>';
+					break;
+				}
+			}
             var chptSummary =
-                '<br><span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
+                '<br><span style="font-size:18px"><b>Chapter summary of ' + bookChapter + '</b></span><br>' +
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary["chapter_" + chapterNum + "_description"] + '<br><br>' +
                     summary["chapter_" + chapterNum + "_overview"] + '</p>' +

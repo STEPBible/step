@@ -3216,8 +3216,8 @@ step.util = {
 			for (var i = 0; i < activePassageData.length; i++) {
 				if ((activePassageData[i].itemType === 'reference') &&
 					(reference !== activePassageData[i].item.osisID)) {
-					bookChapter = '<a href="javascript:step.util.closeModal(\'showBookOrChapterSummaryModal\');step.router.navigatePreserveVersions(\'reference=' + reference + '\', false, true, true);">' +
-						bookChapter + '</a>';
+					bookChapter = '<a href="javascript:step.util.closeModal(\'showBookOrChapterSummaryModal\');step.router.navigatePreserveVersions(\'reference=' + reference + '\', false, true, true);" ' +
+						'title="Read ' + bookChapter +'">' + '<u>' + bookChapter + '</u></a>';
 					break;
 				}
 			}

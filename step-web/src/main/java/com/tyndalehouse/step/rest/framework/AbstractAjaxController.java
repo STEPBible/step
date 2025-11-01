@@ -74,14 +74,6 @@ public abstract class AbstractAjaxController extends HttpServlet {
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
             String exceptionMsg = e.getMessage();
-//            if (exceptionMsg == null) {
-//                Throwable cause = e.getCause();
-//                if (cause != null) {
-//                    String causeMsg = cause.getMessage();
-//                    if ((causeMsg != null) && (causeMsg.equals("book_not_found")))
-//                        return returnVal;
-//                }
-//            }
             if (exceptionMsg != null)
                 LOGGER.warn(exceptionMsg);
             returnVal = convertExceptionToJson(e);
@@ -199,11 +191,9 @@ public abstract class AbstractAjaxController extends HttpServlet {
         if (e instanceof TranslatedException) {
             final TranslatedException translatedException = (TranslatedException) e;
             String eMessage = e.getMessage();
-            if (eMessage != null) {
-                if (!eMessage.equals("book_not_found")) {
-                    LOGGER.warn(e.getMessage());
-                    LOGGER.debug(e.getMessage(), e);
-                }
+            if ((eMessage != null) && (!eMessage.equals("book_not_found"))) {
+                LOGGER.warn(e.getMessage());
+                LOGGER.debug(e.getMessage(), e);
             }
             return format(bundle.getString(translatedException.getMessage()), translatedException.getArgs());
         }

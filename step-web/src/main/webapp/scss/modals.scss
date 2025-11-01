@@ -253,5 +253,92 @@
   
 }
 
+.commtoc {
+  .dash {
+    overflow-x:hidden
+  }
+
+  .dash:before {
+    float: left;
+    width: 0;
+    white-space: nowrap;
+    content:
+  " - - - - - - - - - - - - - - - - - - - "
+  " - - - - - - - - - - - - - - - - - - - "
+  }
+
+  th, td {
+    padding-top: 2px;
+    padding-bottom: 7px;
+  }
+
+  th:nth-child(1), td:nth-child(1) {
+    width:fit-content;
+    white-space:nowrap;
+    padding-right:4px;
+  }
+
+  th:nth-child(2), td:nth-child(2) {
+    span {
+      background: white;
+      padding-right:5px;
+    }
+  }
+
+  th:nth-child(3), td:nth-child(3) {
+    width:fit-content;
+    white-space:nowrap;
+    span:nth-child(1) {
+      background: white;
+      padding-left:6px;
+      a {
+        span {
+          padding-left:0px;
+        }
+      }
+    }
+  }
+}
+
+.commicon {
+  font-size:14px;
+  width:18px;
+  height:22px;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  border-width: thin;
+  border-style:solid;
+  border-radius:20%;
+  margin:3px;
+}
+
+#commentarysummary {
+  p {
+    margin-left:5%;
+    font-size:14px;
+    text-align:left;
+    padding:0;
+    margin-bottom:0;
+    margin-top:8px;
+    font-weight:bold;
+  }
+  .lnkattr {
+    margin-left:10%;
+    height:14px;
+    font-size:14px;
+  }
+  .glyphicon-play-circle {
+    margin-left:10px;
+    display:none;
+  }
+}
+.singlecomm {
+  margin-left:12px;
+  font-size:14px;
+  font-weight:bold;
+  text-decoration:underline;
+}
+
 @import 'bible_versions';
 @import 'advanced_search';

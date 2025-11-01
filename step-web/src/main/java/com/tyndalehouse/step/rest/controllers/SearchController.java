@@ -98,9 +98,8 @@ public class SearchController {
     public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly,
                                         final String searchLangSelectedByUser) {
 
-        if (input.equals("")) { // nothing to search
+        if (input.equals("")) // nothing to search
             return new ArrayList<AutoSuggestion>();
-        }
         String searchInput = input;
         Character firstCharacter = searchInput.charAt(0);
         Character lastCharacter = searchInput.charAt(searchInput.length() - 1);

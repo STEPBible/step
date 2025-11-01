@@ -21,5 +21,17 @@
 "chapter_2_icc_url" : "https://archive.org/details/acriticalandexeg00bigguoft/page/n290/mode/2up",
 "chapter_2_icc_page" : "271",
 "chapter_3_icc_url" : "https://archive.org/details/acriticalandexeg00bigguoft/page/n307/mode/2up",
-"chapter_3_icc_page" : "288"
+"chapter_3_icc_page" : "288",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/2peter/2peter.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/2peter/2peter.htm#head8",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/2peter/2peter.htm#head11",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/2peter/2peter.htm#head20",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/2peter/2peter.htm#head25",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/2-peter/",
+"chapter_outline_tgc_url": "#section-6",
+"chapter_1_tgc_url": "#section-7",
+"chapter_2_tgc_url": "#section-13",
+"chapter_3_tgc_url": "#section-14",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Matthew Harmon & John Sloat', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

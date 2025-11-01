@@ -38,5 +38,22 @@
 "chapter_5_icc_url" : "https://archive.org/details/criticalexegetic36abbouoft/criticalexegetic36abbouoft/page/146/mode/2up",
 "chapter_5_icc_page" : "146",
 "chapter_6_icc_url" : "https://archive.org/details/criticalexegetic36abbouoft/criticalexegetic36abbouoft/page/176/mode/2up",
-"chapter_6_icc_page" : "176"
+"chapter_6_icc_page" : "176",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/ephesians/ephesians.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/ephesians/ephesians.htm#head8",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/ephesians/ephesians.htm#head11",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/ephesians/ephesians.htm#head22",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/ephesians/ephesians.htm#head32",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/ephesians/ephesians.htm#head35",
+"chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/ephesians/ephesians.htm#head43",
+"chapter_6_constable_url": "https://soniclight.com/tcon/notes/html/ephesians/ephesians.htm#head49",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/Ephesians/",
+"chapter_outline_tgc_url": "#section-7",
+"chapter_1_tgc_url": "#section-8",
+"chapter_2_tgc_url": "#section-11",
+"chapter_3_tgc_url": "#section-13",
+"chapter_4_tgc_url": "#section-15",
+"chapter_6_tgc_url": "#section-23",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['S. M. Baugh', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

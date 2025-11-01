@@ -19,5 +19,17 @@
 "chapter_2_icc_url" : "https://archive.org/details/criticalcommenta00framuoft/page/n257/mode/2up",
 "chapter_2_icc_page" : "242",
 "chapter_3_icc_url" : "https://archive.org/details/criticalcommenta00framuoft/page/n303/mode/2up",
-"chapter_3_icc_page" : "288"
+"chapter_3_icc_page" : "288",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/2thessalonians/2thessalonians.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/2thessalonians/2thessalonians.htm#head6",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/2thessalonians/2thessalonians.htm#head9",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/2thessalonians/2thessalonians.htm#head14",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/2thessalonians/2thessalonians.htm#head20",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/2-thessalonians/",
+"chapter_outline_tgc_url": "#section-7",
+"chapter_1_tgc_url": "#section-8",
+"chapter_2_tgc_url": "#section-13",
+"chapter_3_tgc_url": "#section-17",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['David W. Chapman', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

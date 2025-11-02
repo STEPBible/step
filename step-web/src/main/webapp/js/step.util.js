@@ -4075,16 +4075,16 @@ step.util = {
 					introCount = parseInt(introCountFromStorageOrCookie, 10);
 					if (isNaN(introCount)) introCount = 0;
 					if ((introCount < 1) && (window.innerWidth > 499) && $("#summbutton").is(":visible")) {
-						var introJsSteps = [
-							{
-								element: document.querySelector('#summbutton'),
-								intro: "For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
-								position: 'bottom'
-							}
-						];
 					    setTimeout(function() {
 							if (!$("#summbutton").is(":visible"))
 								return;
+							var introJsSteps = [
+								{
+									element: document.querySelector('#summbutton'),
+									intro: "For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
+									position: 'bottom'
+								}
+							];
 							introJs().setOptions({
 								steps: introJsSteps
 							}).start();

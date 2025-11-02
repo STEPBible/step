@@ -186,9 +186,18 @@ var PassageDisplayView = DisplayView.extend({
             }
 		    if (step.util.bookOrderInBible(reference) > -1) { // }) {
                 var xgenObj = passageHtml.find('.xgen');
+                var buttonHtml = '<button id="summbutton" style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
+                    reference + '\')" title="Show summary information and commentaries" class="stepButton">' + __s.book_summary + '</button>';
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text().trim().length < 2))) // sometimes there is a \n so length == 1 is OK
-                    $(xgenObj[xgenObj.length - 1]).append('<button id="summbutton" style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
-                        reference + '\')" title="Show summary information and commentaries" class="stepButton">' + __s.book_summary + '</button>');
+                    $(xgenObj[xgenObj.length - 1]).append(buttonHtml);
+                else {
+                    var h4Headings = passageHtml.find('h4.heading');
+                    if (h4Headings.length > 0) {
+                        var h4Heading1stElmnt = $(h4Headings[0]);
+                        if (h4Heading1stElmnt.find('a.verseLink').length > 0)
+                            h4Heading1stElmnt.append(buttonHtml);
+                    }
+                }
             }
             if (!justLoadedTOS) step.util.addGrammar();
             var elmntsWithCaretChar = $("span:contains(^)");

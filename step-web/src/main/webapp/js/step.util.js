@@ -4051,8 +4051,7 @@ step.util = {
 				introJs().setOptions({
 					steps: introJsSteps
 				}).start();
-				introCount ++;
-				step.util.localStorageSetItem("step.colorgrammar", introCount);
+				step.util.localStorageSetItem("step.colorgrammar", 1);
 			}
 			else {
 				introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
@@ -4069,8 +4068,7 @@ step.util = {
 					introJs().setOptions({
 						steps: introJsSteps
 					}).start();
-					introCount ++;
-					step.util.localStorageSetItem("step.copyIntro", introCount);
+					step.util.localStorageSetItem("step.copyIntro", 1);
 				}
 				else {
 					introCountFromStorageOrCookie = step.util.localStorageGetItem("step.commentaryIntro");
@@ -4085,13 +4083,14 @@ step.util = {
 							}
 						];
 					    setTimeout(function() {
-							if ($("#summbutton").is(":visible"))
-								introJs().setOptions({
-									steps: introJsSteps
-								}).start();
+							if (!$("#summbutton").is(":visible"))
+								return;
+							introJs().setOptions({
+								steps: introJsSteps
+							}).start();
+							step.util.localStorageSetItem("step.commentaryIntro", 1);
 						}, 2500);
-						introCount ++;
-						step.util.localStorageSetItem("step.commentaryIntro", introCount);
+
 					}
 				}
 			}

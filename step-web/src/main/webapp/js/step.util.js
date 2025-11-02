@@ -4072,6 +4072,25 @@ step.util = {
 					introCount ++;
 					step.util.localStorageSetItem("step.copyIntro", introCount);
 				}
+				else {
+					introCountFromStorageOrCookie = step.util.localStorageGetItem("step.commentaryIntro");
+					introCount = parseInt(introCountFromStorageOrCookie, 10);
+					if (isNaN(introCount)) introCount = 0;
+					if ((introCount < 1) && (window.innerWidth > 499) && ($("#summbutton").is(":visible"))) {
+						var introJsSteps = [
+							{
+								element: document.querySelector('#summbutton'),
+								intro: "For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
+								position: 'bottom'
+							}
+						];
+						introJs().setOptions({
+							steps: introJsSteps
+						}).start();
+						introCount ++;
+						step.util.localStorageSetItem("step.commentaryIntro", introCount);
+					}
+				}
 			}
 		}
 	},

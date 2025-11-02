@@ -197,6 +197,17 @@ var PassageDisplayView = DisplayView.extend({
                         if (h4Heading1stElmnt.find('a.verseLink').length > 0)
                             h4Heading1stElmnt.append(buttonHtml);
                     }
+                    else {
+                        var spanInterlinear = passageHtml.find('span.interlinear');
+                        if (spanInterlinear.length > 0) {
+                            buttonHtml = '<button id="summbutton" style="font-family:Helvetica Neue;font-weight:bold;float:left;font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
+                            reference + '\')" title="Show summary information and commentaries" class="stepButton">' + __s.book_summary + '</button>';
+                            $(spanInterlinear[0]).before(buttonHtml);
+                        }
+                        else {
+                            $(passageHtml.find(".comparingTable").find(".headingVerseNumber")[0]).append(buttonHtml);
+                        }
+                    }
                 }
             }
             if (!justLoadedTOS) step.util.addGrammar();

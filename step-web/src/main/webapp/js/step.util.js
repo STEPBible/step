@@ -4090,7 +4090,6 @@ step.util = {
 							}).start();
 							step.util.localStorageSetItem("step.commentaryIntro", 1);
 						}, 2500);
-
 					}
 				}
 			}

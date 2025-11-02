@@ -4084,9 +4084,11 @@ step.util = {
 								position: 'bottom'
 							}
 						];
-						introJs().setOptions({
-							steps: introJsSteps
-						}).start();
+					    setTimeout(function() {
+							introJs().setOptions({
+								steps: introJsSteps
+							}).start();
+						}, 1500);
 						introCount ++;
 						step.util.localStorageSetItem("step.commentaryIntro", introCount);
 					}

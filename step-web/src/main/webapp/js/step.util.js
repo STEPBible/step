@@ -4076,7 +4076,7 @@ step.util = {
 					introCountFromStorageOrCookie = step.util.localStorageGetItem("step.commentaryIntro");
 					introCount = parseInt(introCountFromStorageOrCookie, 10);
 					if (isNaN(introCount)) introCount = 0;
-					if ((introCount < 1) && (window.innerWidth > 499) && ($("#summbutton").is(":visible"))) {
+					if ((introCount < 1) && (window.innerWidth > 499) && $("#summbutton").is(":visible")) {
 						var introJsSteps = [
 							{
 								element: document.querySelector('#summbutton'),
@@ -4085,10 +4085,11 @@ step.util = {
 							}
 						];
 					    setTimeout(function() {
-							introJs().setOptions({
-								steps: introJsSteps
-							}).start();
-						}, 1500);
+							if ($("#summbutton").is(":visible"))
+								introJs().setOptions({
+									steps: introJsSteps
+								}).start();
+						}, 2500);
 						introCount ++;
 						step.util.localStorageSetItem("step.commentaryIntro", introCount);
 					}

@@ -186,26 +186,29 @@ var PassageDisplayView = DisplayView.extend({
             }
 		    if (step.util.bookOrderInBible(reference) > -1) { // }) {
                 var xgenObj = passageHtml.find('.xgen');
-                var buttonHtml = '<button id="summbutton" style="font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
-                    reference + '\')" title="Show summary information and commentaries" class="stepButton">' + __s.book_summary + '</button>';
+                var buttonHtml1 = '<button id="summbutton" style="font-family:Helvetica Neue;font-weight:bold;font-size:10px;line-height:10px;vertical-align:middle';
+                var buttonHtml2 = '" ' + reference + '\')" title="Show summary information and commentaries" class="stepButton">' + __s.book_summary + '</button>';
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text().trim().length < 2))) // sometimes there is a \n so length == 1 is OK
-                    $(xgenObj[xgenObj.length - 1]).append(buttonHtml);
+                    $(xgenObj[xgenObj.length - 1]).append(buttonHtml1 + buttonHtml2);
                 else {
                     var h4Headings = passageHtml.find('h4.heading');
                     if (h4Headings.length > 0) {
                         var h4Heading1stElmnt = $(h4Headings[0]);
                         if (h4Heading1stElmnt.find('a.verseLink').length > 0)
-                            h4Heading1stElmnt.append(buttonHtml);
+                            h4Heading1stElmnt.append(buttonHtml1 + buttonHtml2);
                     }
                     else {
                         var spanInterlinear = passageHtml.find('span.interlinear');
                         if (spanInterlinear.length > 0) {
-                            buttonHtml = '<button id="summbutton" style="font-family:Helvetica Neue;font-weight:bold;float:left;font-size:10px;line-height:10px;vertical-align:middle" type="button" onclick="step.util.showSummary(\'' +
-                            reference + '\')" title="Show summary information and commentaries" class="stepButton">' + __s.book_summary + '</button>';
-                            $(spanInterlinear[0]).before(buttonHtml);
+                            $(spanInterlinear[0]).before(buttonHtml1 + ';float:left' + buttonHtml2);
                         }
                         else {
-                            $(passageHtml.find(".comparingTable").find(".headingVerseNumber")[0]).append(buttonHtml);
+                            var cmpTable = passageHtml.find(".comparingTable");
+                            if (cmpTable.length > 0) {
+                                var hdngVerseN = $(cmpTable[0]).find(".headingVerseNumber");
+                                if (hdngVerseN.length > 0)
+                                    $(hdngVerseN[0]).append(buttonHtml1 + buttonHtml2);
+                            }
                         }
                     }
                 }

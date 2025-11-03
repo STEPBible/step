@@ -187,7 +187,7 @@ var PassageDisplayView = DisplayView.extend({
 		    if (step.util.bookOrderInBible(reference) > -1) { // }) {
                 var xgenObj = passageHtml.find('.xgen');
                 var buttonHtml1 = '<button id="summbutton" style="font-family:Helvetica Neue;font-weight:bold;font-size:10px;line-height:10px;vertical-align:middle';
-                var buttonHtml2 = ' type="button" onclick="step.util.showSummary(\'' + reference + '\')" title="Show summary information and commentaries" class="stepButton">' + __s.book_summary + '</button>';
+                var buttonHtml2 = '" type="button" onclick="step.util.showSummary(\'' + reference + '\')" title="Show summary information and commentaries" class="stepButton">' + __s.book_summary + '</button>';
                 if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text().trim().length < 2))) // sometimes there is a \n so length == 1 is OK
                     $(xgenObj[xgenObj.length - 1]).append(buttonHtml1 + buttonHtml2);
                 else {

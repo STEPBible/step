@@ -340,5 +340,15 @@
   text-decoration:underline;
 }
 
+#biblesummary {
+  div {
+    p {
+      margin-bottom:0;
+      margin-top:5px;
+      font-weight:bold;
+    }
+  }
+}
+
 @import 'bible_versions';
 @import 'advanced_search';

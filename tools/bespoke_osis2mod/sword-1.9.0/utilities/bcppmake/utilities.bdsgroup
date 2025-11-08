@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <PersonalityInfo>
+    <Option>
+      <Option Name="Personality">Default.Personality</Option>
+      <Option Name="ProjectType"></Option>
+      <Option Name="Version">1.0</Option>
+      <Option Name="GUID">{9922D349-DBA7-45A7-A547-F2DD34E7E460}</Option>
+    </Option>
+  </PersonalityInfo>
+  <Default.Personality>
+    
+    <Projects>
+      <Projects Name="icuuc.lib">..\..\..\icu-sword\as_is\borland\icuuc.bdsproj</Projects>
+      <Projects Name="icuin.lib">..\..\..\icu-sword\as_is\borland\icuin.bdsproj</Projects>
+      <Projects Name="libcurl.lib">..\..\..\biblecs\apps\InstallMgr\libcurl.bdsproj</Projects>
+      <Projects Name="clucene.lib">..\..\..\biblecs\clucene\clucene.bdsproj</Projects>
+      <Projects Name="libsword.lib">..\..\lib\bcppmake\libsword.bdsproj</Projects>
+      <Projects Name="osis2mod.exe">osis2mod.bdsproj</Projects>
+      <Projects Name="mod2zmod.exe">mod2zmod.bdsproj</Projects>
+      <Projects Name="mod2vpl.exe">mod2vpl.bdsproj</Projects>
+      <Projects Name="mkfastmod.exe">mkfastmod.bdsproj</Projects>
+      <Projects Name="imp2gbs.exe">imp2gbs.bdsproj</Projects>
+      <Projects Name="vpl2mod.exe">vpl2mod.bdsproj</Projects>
+      <Projects Name="imp2ld.exe">imp2ld.bdsproj</Projects>
+      <Projects Name="imp2vs.exe">imp2vs.bdsproj</Projects>
+      <Projects Name="mod2imp.exe">mod2imp.bdsproj</Projects>
+      <Projects Name="cipherraw.exe">cipherraw.bdsproj</Projects>
+      <Projects Name="step2vpl.exe">step2vpl.bdsproj</Projects>
+      <Projects Name="stepdump.exe">stepdump.bdsproj</Projects>
+      <Projects Name="mod2osis.exe">mod2osis.bdsproj</Projects>
+      <Projects Name="vs2osisref.exe">vs2osisref.bdsproj</Projects>
+      <Projects Name="diatheke.exe">diatheke.bdsproj</Projects>
+      <Projects Name="xml2gbs.exe">xml2gbs.bdsproj</Projects>
+      <Projects Name="installmgr.exe">installmgr.bdsproj</Projects>
+      <Projects Name="Targets">icuuc.lib icuin.lib libcurl.lib clucene.lib libsword.lib osis2mod.exe mod2zmod.exe mod2vpl.exe mkfastmod.exe imp2gbs.exe vpl2mod.exe imp2ld.exe imp2vs.exe mod2imp.exe cipherraw.exe step2vpl.exe stepdump.exe mod2osis.exe vs2osisref.exe diatheke.exe xml2gbs.exe installmgr.exe</Projects>
+    </Projects>
+    <Dependencies/>
+  </Default.Personality>
+</BorlandProject>

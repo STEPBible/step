@@ -1,0 +1,81 @@
+recommended:
+	tab = 5
+	shiftwidth = 5
+
+required:
+	use tab character for indents
+
+	for (init; condition; increment) {
+		statement;
+	}
+
+	switch (variable) {
+	case 1:
+		statement;
+		statement;
+		break;
+	case 2: statement; break;
+	case 3: statement; break;
+	case 4:
+		statement;
+		break;
+	default:
+		statement;
+		break;
+	}
+
+	if (condition)
+		statement;
+	else	statement;
+
+	if (condition) {
+		statement;
+		statement;
+	}
+	else {
+		statement;
+		statement;
+	}
+
+	class ClassDef {
+	private:
+	protected:
+
+		/** This method does something
+		 * @param paramName1 the first parameter name
+		 * @param param2 the second parameter name
+		 * @return error status
+		 */
+		char methodName(int paramName1, char param2 = -1);
+
+		/** This method does something too
+		 */
+		void anotherMethodName() { someShortExpression; }
+
+	public:
+		ClassDef();
+	};
+
+	char ClassDef::methodName(int paramName1, char param2) {
+		char retVal = 0;
+		// do something;
+		return retVal;
+	}
+
+	ClassDef classDef;
+	classDef.methodName(1, '2');
+
+	if (((reallyLongCondition) && (moreLogic)) ||
+			(otherCondition)) {
+		expression;
+	}
+
+	int   varName1  = 1;
+	char *variable2 = "2";
+	int  &var3      = varName1;
+	int   variable4, variable5, var6, var7;
+
+	variable4 = 4;
+	variable5 = 5;
+	var6      = 6;
+	var7      = 7;

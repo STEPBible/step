@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>25.7.1</version>
+		<version>25.11.9</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -810,9 +810,6 @@
 									<replacement><token>lastNumOfChapters</token><value>vC</value></replacement>
 									<replacement><token>arrayOfTyplicalBooksChapters</token><value>vD</value></replacement>
 									<replacement><token>osisChapterJsword</token><value>vE</value></replacement>
-									<replacement><token>translationsWithPopularBooksChapters</token><value>vF</value></replacement>
-									<replacement><token>translationsWithPopularNTBooksChapters</token><value>vG</value></replacement>
-									<replacement><token>translationsWithPopularOTBooksChapters</token><value>vH</value></replacement>
 									<!-- for search_selection function -->
 									<replacement><token>initSearchSelection\s?([:(])</token><value>σsA$1</value></replacement>
 									<replacement><token>updateAdvancedSearchElements\s?([:(])</token><value>σsB$1</value></replacement>

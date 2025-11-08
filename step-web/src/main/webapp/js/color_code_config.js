@@ -961,20 +961,20 @@ function voicesInFormAndStem(yAxisNum, xAxisNum) {
           '<span class="vot_' + cv[C_ulOTVbCSS][xAxisNum][yAxisNum+2].name + '">middle</span>';
 }
   
-// function userUpdateYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
-//   c4[C_Greek][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
-//   cf.updtLocalStorage();
-//   cf.createUlForAllItemsInYAndX();
-//   updateHtmlForYAxis();
-//   updatePreviewAtSideBar('tensePreview' + itemNumberOfYAxis, nameOfUnderline)
-// }
+function userUpdateYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
+  c4[C_Greek][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
+  cf.updtLocalStorage();
+  cf.createUlForAllItemsInYAndX();
+  updateHtmlForYAxis();
+  updatePreviewAtSideBar('tensePreview' + itemNumberOfYAxis, nameOfUnderline)
+}
   
-// function userUpdateOTYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
-//   c4[C_OT][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
-//   cf.updtLocalStorage();
-//   cf.createUlForOTYAxis(itemNumberOfYAxis);
-//   updatePreviewAtSideBar('formPreview' + itemNumberOfYAxis, nameOfUnderline)
-// }
+function userUpdateOTYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
+  c4[C_OT][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
+  cf.updtLocalStorage();
+  cf.createUlForOTYAxis(itemNumberOfYAxis);
+  updatePreviewAtSideBar('formPreview' + itemNumberOfYAxis, nameOfUnderline)
+}
 
 function updatePreviewAtSideBar(className, nameOfUnderline) {
   var element = $('.' + className);

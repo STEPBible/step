@@ -26,5 +26,19 @@
 "chapter_3_icc_url" : "https://archive.org/details/criticalexegetic39lockuoft/criticalexegetic39lockuoft/page/103/mode/2up",
 "chapter_3_icc_page" : "103",
 "chapter_4_icc_url" : "https://archive.org/details/criticalexegetic39lockuoft/criticalexegetic39lockuoft/page/111/mode/2up",
-"chapter_4_icc_page" : "111"
+"chapter_4_icc_page" : "111",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/2timothy/2timothy.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/2timothy/2timothy.htm#head6",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/2timothy/2timothy.htm#head9",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/2timothy/2timothy.htm#head16",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/2timothy/2timothy.htm#head25",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/2timothy/2timothy.htm#head31",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/2-timothy/",
+"chapter_outline_tgc_url": "#section-5",
+"chapter_1_tgc_url": "#section-6",
+"chapter_2_tgc_url": "#section-8",
+"chapter_3_tgc_url": "#section-9",
+"chapter_4_tgc_url": "#section-10",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Paul Jeon', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

@@ -51,6 +51,8 @@ public abstract class AbstractAjaxController extends HttpServlet {
             byte[] jsonEncoded = getEncodedJsonResponse(returnVal);
             setupHeaders(response, jsonEncoded.length);
             response.getOutputStream().write(jsonEncoded);
+            returnVal = null;
+            jsonEncoded = null;
             // CHECKSTYLE:OFF We allow catching errors here, since we are at the top of the structure
         } catch (final Exception e) {
             // CHECKSTYLE:ON
@@ -70,7 +72,9 @@ public abstract class AbstractAjaxController extends HttpServlet {
 
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
-            LOGGER.warn(e.getMessage());
+            String exceptionMsg = e.getMessage();
+            if (exceptionMsg != null)
+                LOGGER.warn(exceptionMsg);
             returnVal = convertExceptionToJson(e);
         }
         return returnVal;
@@ -185,8 +189,11 @@ public abstract class AbstractAjaxController extends HttpServlet {
 
         if (e instanceof TranslatedException) {
             final TranslatedException translatedException = (TranslatedException) e;
-            LOGGER.warn(e.getMessage());
-            LOGGER.debug(e.getMessage(), e);
+            String eMessage = e.getMessage();
+            if ((eMessage != null) && (!eMessage.equals("book_not_found"))) {
+                LOGGER.warn(e.getMessage());
+                LOGGER.debug(e.getMessage(), e);
+            }
             return format(bundle.getString(translatedException.getMessage()), translatedException.getArgs());
         }
 

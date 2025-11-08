@@ -1,0 +1,499 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{97449E5E-F880-4D22-933A-0D2FC32034D4}</ProjectGuid>
+    <RootNamespace>libsword</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)Debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)Release\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>
+    </LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/D _CRT_SECURE_NO_DEPRECATE %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../include;../../include/internal/regex;../../../icu-sword/common;../../../icu-sword/i18n;../../src/utilfuns/win32;../../../curl/include;../../../xz/src/liblzma/api;../../../xz/include;../../../bzip2;../../../icu-sword/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_ICU_;_ICUSWORD_;WIN32;_LIB;REGEX_MALLOC;SWMAKINGDLL;CURLAVAILABLE;CURL_STATICLIB;USBINARY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\Debug/libsword.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level1</WarningLevel>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>libcurl_a.lib;ws2_32.lib;winmm.lib;wldap32.lib;icuuc.lib;icuin.lib;icudt.lib;libbz2.lib;liblzma.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../curl/builds/libcurl-vc-x86-release-static-ipv6-sspi-spnego-winssl/lib;../../../icu-sword/lib;../../../bzip2/Release;../../../xz/bin_i486;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImageHasSafeExceptionHandlers>
+      </ImageHasSafeExceptionHandlers>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <IgnoreSpecificDefaultLibraries>MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../include;../../include/internal/regex;../../../icu-sword/common;../../../icu-sword/i18n;../../src/utilfuns/win32;../../../curl/include;../../../xz/src/liblzma/api;../../../xz/include;../../../bzip2;../../../icu-sword/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_ICU_;_ICUSWORD_;WIN32;_LIB;REGEX_MALLOC;SWMAKINGDLL;CURLAVAILABLE;CURL_STATICLIB;USBINARY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>
+      </StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\Release/libsword.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level1</WarningLevel>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>libcurl_a.lib;ws2_32.lib;winmm.lib;wldap32.lib;icuuc.lib;icuin.lib;icudt.lib;libbz2.lib;liblzma.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../curl/builds/libcurl-vc-x86-release-static-ipv6-sspi-spnego-winssl/lib;../../../icu-sword/lib;../../../bzip2/Release;../../../xz/bin_i486;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\mgr\remotetrans.cpp" />
+    <ClCompile Include="..\..\src\mgr\versificationmgr.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\cipherfil.cpp" />
+    <ClCompile Include="..\..\src\mgr\curlftpt.cpp" />
+    <ClCompile Include="..\..\src\mgr\curlhttpt.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbflatex.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisenum.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisglosses.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osislatex.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisxlit.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisreferencelinks.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\scsuutf8.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\teilatex.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmllatex.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8scsu.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\win32\dirent.cpp" />
+    <ClCompile Include="..\..\src\mgr\encfiltmgr.cpp" />
+    <ClCompile Include="..\..\src\modules\common\entriesblk.cpp" />
+    <ClCompile Include="..\..\src\mgr\filemgr.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\ftpparse.c" />
+    <ClCompile Include="..\..\src\modules\filters\gbffootnotes.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfheadings.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfhtml.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfhtmlhref.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfmorph.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfosis.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfplain.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfredletterwords.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfrtf.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfstrongs.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfthml.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfwebif.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfwordjs.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\gbfxhtml.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\greeklexattribs.cpp" />
+    <ClCompile Include="..\..\src\modules\comments\hrefcom\hrefcom.cpp" />
+    <ClCompile Include="..\..\src\mgr\installmgr.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\latin1utf16.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\latin1utf8.cpp" />
+    <ClCompile Include="..\..\src\keys\listkey.cpp" />
+    <ClCompile Include="..\..\src\mgr\localemgr.cpp" />
+    <ClCompile Include="..\..\src\modules\common\lzsscomprs.cpp" />
+    <ClCompile Include="..\..\src\mgr\markupfiltmgr.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisfootnotes.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisheadings.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osishtmlhref.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osislemma.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osismorph.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osismorphsegmentation.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisosis.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisplain.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisredletterwords.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisrtf.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisscripref.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisstrongs.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisvariants.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osiswebif.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osiswordjs.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\osisxhtml.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\papyriplain.cpp" />
+    <ClCompile Include="..\..\src\modules\comments\rawcom\rawcom.cpp" />
+    <ClCompile Include="..\..\src\modules\comments\rawcom4\rawcom4.cpp" />
+    <ClCompile Include="..\..\src\modules\comments\rawfiles\rawfiles.cpp" />
+    <ClCompile Include="..\..\src\modules\genbook\rawgenbook\rawgenbook.cpp" />
+    <ClCompile Include="..\..\src\modules\lexdict\rawld\rawld.cpp" />
+    <ClCompile Include="..\..\src\modules\lexdict\rawld4\rawld4.cpp" />
+    <ClCompile Include="..\..\src\modules\common\rawstr.cpp" />
+    <ClCompile Include="..\..\src\modules\common\rawstr4.cpp" />
+    <ClCompile Include="..\..\src\modules\texts\rawtext\rawtext.cpp" />
+    <ClCompile Include="..\..\src\modules\texts\rawtext4\rawtext4.cpp" />
+    <ClCompile Include="..\..\src\modules\common\rawverse.cpp" />
+    <ClCompile Include="..\..\src\modules\common\rawverse4.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\regex.c" />
+    <ClCompile Include="..\..\src\utilfuns\roman.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\rtfhtml.cpp" />
+    <ClCompile Include="..\..\src\modules\common\sapphire.cpp" />
+    <ClCompile Include="..\..\src\mgr\stringmgr.cpp" />
+    <ClCompile Include="..\..\src\keys\strkey.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\swbasicfilter.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\swbuf.cpp" />
+    <ClCompile Include="..\..\src\mgr\swcacher.cpp" />
+    <ClCompile Include="..\..\src\modules\common\swcipher.cpp" />
+    <ClCompile Include="..\..\src\modules\comments\swcom.cpp" />
+    <ClCompile Include="..\..\src\modules\common\swcomprs.cpp" />
+    <ClCompile Include="..\..\src\mgr\swconfig.cpp" />
+    <ClCompile Include="..\..\src\frontend\swdisp.cpp" />
+    <ClCompile Include="..\..\src\mgr\swfiltermgr.cpp" />
+    <ClCompile Include="..\..\src\modules\genbook\swgenbook.cpp" />
+    <ClCompile Include="..\..\src\keys\swkey.cpp" />
+    <ClCompile Include="..\..\src\modules\lexdict\swld.cpp" />
+    <ClCompile Include="..\..\src\mgr\swlocale.cpp" />
+    <ClCompile Include="..\..\src\frontend\swlog.cpp" />
+    <ClCompile Include="..\..\src\mgr\swmgr.cpp" />
+    <ClCompile Include="..\..\src\modules\swmodule.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\swobject.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\swoptfilter.cpp" />
+    <ClCompile Include="..\..\src\mgr\swsearchable.cpp" />
+    <ClCompile Include="..\..\src\modules\texts\swtext.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\swversion.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\teixhtml.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\teihtmlhref.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\teiplain.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\teirtf.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlfootnotes.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlgbf.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlheadings.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlhtml.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlhtmlhref.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmllemma.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlmorph.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlosis.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlplain.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlrtf.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlscripref.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlstrongs.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlvariants.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlwebif.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlwordjs.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\thmlxhtml.cpp" />
+    <ClCompile Include="..\..\src\keys\treekey.cpp" />
+    <ClCompile Include="..\..\src\keys\treekeyidx.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\unicodertf.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\adler32.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\compress.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\crc32.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\deflate.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\gzclose.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\gzlib.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\gzread.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\gzwrite.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\infback.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\inffast.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\inflate.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\inftrees.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\trees.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\uncompr.c" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\untgz.c" />
+    <ClCompile Include="..\..\src\utilfuns\url.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf16utf8.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8arabicpoints.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8arshaping.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8bidireorder.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8cantillation.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8greekaccents.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8hebrewpoints.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8html.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8latin1.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8nfc.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8nfkd.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8transliterator.cpp" />
+    <ClCompile Include="..\..\src\modules\filters\utf8utf16.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\utilstr.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\utilxml.cpp" />
+    <ClCompile Include="..\..\src\keys\versekey.cpp" />
+    <ClCompile Include="..\..\src\keys\versetreekey.cpp" />
+    <ClCompile Include="..\..\src\modules\comments\zcom\zcom.cpp" />
+    <ClCompile Include="..\..\src\modules\comments\zcom4\zcom4.cpp" />
+    <ClCompile Include="..\..\src\modules\common\zipcomprs.cpp" />
+    <ClCompile Include="..\..\src\modules\common\bz2comprs.cpp" />
+    <ClCompile Include="..\..\src\modules\common\xzcomprs.cpp" />
+    <ClCompile Include="..\..\src\modules\lexdict\zld\zld.cpp" />
+    <ClCompile Include="..\..\src\modules\common\zstr.cpp" />
+    <ClCompile Include="..\..\src\modules\texts\ztext\ztext.cpp" />
+    <ClCompile Include="..\..\src\modules\texts\ztext4\ztext4.cpp" />
+    <ClCompile Include="..\..\src\modules\common\zverse.cpp" />
+    <ClCompile Include="..\..\src\modules\common\zverse4.cpp" />
+    <ClCompile Include="..\..\src\utilfuns\zlib\zutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\canon.h" />
+    <ClInclude Include="..\..\include\canon_abbrevs.h" />
+    <ClInclude Include="..\..\include\canon_catholic.h" />
+    <ClInclude Include="..\..\include\canon_catholic2.h" />
+    <ClInclude Include="..\..\include\canon_german.h" />
+    <ClInclude Include="..\..\include\canon_kjva.h" />
+    <ClInclude Include="..\..\include\canon_leningrad.h" />
+    <ClInclude Include="..\..\include\canon_luther.h" />
+    <ClInclude Include="..\..\include\canon_lxx.h" />
+    <ClInclude Include="..\..\include\canon_mt.h" />
+    <ClInclude Include="..\..\include\canon_nrsv.h" />
+    <ClInclude Include="..\..\include\canon_nrsva.h" />
+    <ClInclude Include="..\..\include\canon_null.h" />
+    <ClInclude Include="..\..\include\canon_orthodox.h" />
+    <ClInclude Include="..\..\include\canon_synodal.h" />
+    <ClInclude Include="..\..\include\canon_synodalprot.h" />
+    <ClInclude Include="..\..\include\canon_vulg.h" />
+    <ClInclude Include="..\..\include\cipherfil.h" />
+    <ClInclude Include="..\..\include\curlftpt.h" />
+    <ClInclude Include="..\..\include\curlhttpt.h" />
+    <ClInclude Include="..\..\include\defs.h" />
+    <ClInclude Include="..\..\include\encfiltmgr.h" />
+    <ClInclude Include="..\..\include\entriesblk.h" />
+    <ClInclude Include="..\..\include\filemgr.h" />
+    <ClInclude Include="..\..\include\flatapi.h" />
+    <ClInclude Include="..\..\include\ftplib.h" />
+    <ClInclude Include="..\..\include\ftplibftpt.h" />
+    <ClInclude Include="..\..\include\ftpparse.h" />
+    <ClInclude Include="..\..\include\gbffootnotes.h" />
+    <ClInclude Include="..\..\include\gbfheadings.h" />
+    <ClInclude Include="..\..\include\gbfhtml.h" />
+    <ClInclude Include="..\..\include\gbfhtmlhref.h" />
+    <ClInclude Include="..\..\include\gbflatex.h" />
+    <ClInclude Include="..\..\include\gbfmorph.h" />
+    <ClInclude Include="..\..\include\gbfosis.h" />
+    <ClInclude Include="..\..\include\gbfplain.h" />
+    <ClInclude Include="..\..\include\gbfredletterwords.h" />
+    <ClInclude Include="..\..\include\gbfrtf.h" />
+    <ClInclude Include="..\..\include\gbfstrongs.h" />
+    <ClInclude Include="..\..\include\gbfthml.h" />
+    <ClInclude Include="..\..\include\gbfwebif.h" />
+    <ClInclude Include="..\..\include\gbfwordjs.h" />
+    <ClInclude Include="..\..\include\gbfxhtml.h" />
+    <ClInclude Include="..\..\include\greeklexattribs.h" />
+    <ClInclude Include="..\..\include\hrefcom.h" />
+    <ClInclude Include="..\..\include\installmgr.h" />
+    <ClInclude Include="..\..\include\latin1utf16.h" />
+    <ClInclude Include="..\..\include\latin1utf8.h" />
+    <ClInclude Include="..\..\include\listkey.h" />
+    <ClInclude Include="..\..\include\localemgr.h" />
+    <ClInclude Include="..\..\include\lzsscomprs.h" />
+    <ClInclude Include="..\..\include\markupfiltmgr.h" />
+    <ClInclude Include="..\..\include\multimapwdef.h" />
+    <ClInclude Include="..\..\include\osisenum.h" />
+    <ClInclude Include="..\..\include\osisfootnotes.h" />
+    <ClInclude Include="..\..\include\osisglosses.h" />
+    <ClInclude Include="..\..\include\osisheadings.h" />
+    <ClInclude Include="..\..\include\osishtmlhref.h" />
+    <ClInclude Include="..\..\include\osislatex.h" />
+    <ClInclude Include="..\..\include\osislemma.h" />
+    <ClInclude Include="..\..\include\osismorph.h" />
+    <ClInclude Include="..\..\include\osismorphsegmentation.h" />
+    <ClInclude Include="..\..\include\osisosis.h" />
+    <ClInclude Include="..\..\include\osisplain.h" />
+    <ClInclude Include="..\..\include\osisredletterwords.h" />
+    <ClInclude Include="..\..\include\osisrtf.h" />
+    <ClInclude Include="..\..\include\osisscripref.h" />
+    <ClInclude Include="..\..\include\osisstrongs.h" />
+    <ClInclude Include="..\..\include\osisvariants.h" />
+    <ClInclude Include="..\..\include\osiswebif.h" />
+    <ClInclude Include="..\..\include\osiswordjs.h" />
+    <ClInclude Include="..\..\include\osisxhtml.h" />
+    <ClInclude Include="..\..\include\osisxlit.h" />
+    <ClInclude Include="..\..\include\osisreferencelinks.h" />
+    <ClInclude Include="..\..\include\papyriplain.h" />
+    <ClInclude Include="..\..\include\rawcom.h" />
+    <ClInclude Include="..\..\include\rawcom4.h" />
+    <ClInclude Include="..\..\include\rawfiles.h" />
+    <ClInclude Include="..\..\include\rawgenbook.h" />
+    <ClInclude Include="..\..\include\rawld.h" />
+    <ClInclude Include="..\..\include\rawld4.h" />
+    <ClInclude Include="..\..\include\rawstr.h" />
+    <ClInclude Include="..\..\include\rawstr4.h" />
+    <ClInclude Include="..\..\include\rawtext.h" />
+    <ClInclude Include="..\..\include\rawtext4.h" />
+    <ClInclude Include="..\..\include\rawverse.h" />
+    <ClInclude Include="..\..\include\rawverse4.h" />
+    <ClInclude Include="..\..\include\remotetrans.h" />
+    <ClInclude Include="..\..\include\roman.h" />
+    <ClInclude Include="..\..\include\rtfhtml.h" />
+    <ClInclude Include="..\..\include\sapphire.h" />
+    <ClInclude Include="..\..\include\scsuutf8.h" />
+    <ClInclude Include="..\..\include\stringmgr.h" />
+    <ClInclude Include="..\..\include\strkey.h" />
+    <ClInclude Include="..\..\include\swbasicfilter.h" />
+    <ClInclude Include="..\..\include\swbuf.h" />
+    <ClInclude Include="..\..\include\swcacher.h" />
+    <ClInclude Include="..\..\include\swcipher.h" />
+    <ClInclude Include="..\..\include\swcom.h" />
+    <ClInclude Include="..\..\include\swcomprs.h" />
+    <ClInclude Include="..\..\include\swconfig.h" />
+    <ClInclude Include="..\..\include\swdisp.h" />
+    <ClInclude Include="..\..\include\swfilter.h" />
+    <ClInclude Include="..\..\include\swfiltermgr.h" />
+    <ClInclude Include="..\..\include\swgenbook.h" />
+    <ClInclude Include="..\..\include\swkey.h" />
+    <ClInclude Include="..\..\include\swld.h" />
+    <ClInclude Include="..\..\include\swlocale.h" />
+    <ClInclude Include="..\..\include\swlog.h" />
+    <ClInclude Include="..\..\include\swmacs.h" />
+    <ClInclude Include="..\..\include\swmgr.h" />
+    <ClInclude Include="..\..\include\swmodule.h" />
+    <ClInclude Include="..\..\include\swobject.h" />
+    <ClInclude Include="..\..\include\swoptfilter.h" />
+    <ClInclude Include="..\..\include\swsearchable.h" />
+    <ClInclude Include="..\..\include\swtext.h" />
+    <ClInclude Include="..\..\include\swversion.h" />
+    <ClInclude Include="..\..\include\sysdata.h" />
+    <ClInclude Include="..\..\include\teilatex.h" />
+    <ClInclude Include="..\..\include\teixhtml.h" />
+    <ClInclude Include="..\..\include\teihtmlhref.h" />
+    <ClInclude Include="..\..\include\teiplain.h" />
+    <ClInclude Include="..\..\include\teirtf.h" />
+    <ClInclude Include="..\..\include\thmlfootnotes.h" />
+    <ClInclude Include="..\..\include\thmlgbf.h" />
+    <ClInclude Include="..\..\include\thmlheadings.h" />
+    <ClInclude Include="..\..\include\thmlhtml.h" />
+    <ClInclude Include="..\..\include\thmlhtmlhref.h" />
+    <ClInclude Include="..\..\include\thmllatex.h" />
+    <ClInclude Include="..\..\include\thmllemma.h" />
+    <ClInclude Include="..\..\include\thmlmorph.h" />
+    <ClInclude Include="..\..\include\thmlosis.h" />
+    <ClInclude Include="..\..\include\thmlplain.h" />
+    <ClInclude Include="..\..\include\thmlrtf.h" />
+    <ClInclude Include="..\..\include\thmlscripref.h" />
+    <ClInclude Include="..\..\include\thmlstrongs.h" />
+    <ClInclude Include="..\..\include\thmlvariants.h" />
+    <ClInclude Include="..\..\include\thmlwebif.h" />
+    <ClInclude Include="..\..\include\thmlwordjs.h" />
+    <ClInclude Include="..\..\include\thmlxhtml.h" />
+    <ClInclude Include="..\..\include\treekey.h" />
+    <ClInclude Include="..\..\include\treekeyidx.h" />
+    <ClInclude Include="..\..\include\unicodertf.h" />
+    <ClInclude Include="..\..\include\untgz.h" />
+    <ClInclude Include="..\..\include\url.h" />
+    <ClInclude Include="..\..\include\utf16utf8.h" />
+    <ClInclude Include="..\..\include\utf8arabicpoints.h" />
+    <ClInclude Include="..\..\include\utf8arshaping.h" />
+    <ClInclude Include="..\..\include\utf8bidireorder.h" />
+    <ClInclude Include="..\..\include\utf8cantillation.h" />
+    <ClInclude Include="..\..\include\utf8greekaccents.h" />
+    <ClInclude Include="..\..\include\utf8hebrewpoints.h" />
+    <ClInclude Include="..\..\include\utf8html.h" />
+    <ClInclude Include="..\..\include\utf8latin1.h" />
+    <ClInclude Include="..\..\include\utf8nfc.h" />
+    <ClInclude Include="..\..\include\utf8nfkd.h" />
+    <ClInclude Include="..\..\include\utf8scsu.h" />
+    <ClInclude Include="..\..\include\utf8transliterator.h" />
+    <ClInclude Include="..\..\include\utf8utf16.h" />
+    <ClInclude Include="..\..\include\utilstr.h" />
+    <ClInclude Include="..\..\include\utilxml.h" />
+    <ClInclude Include="..\..\include\versekey.h" />
+    <ClInclude Include="..\..\include\versetreekey.h" />
+    <ClInclude Include="..\..\include\versificationmgr.h" />
+    <ClInclude Include="..\..\include\zcom.h" />
+    <ClInclude Include="..\..\include\zcom4.h" />
+    <ClInclude Include="..\..\include\zconf.h" />
+    <ClInclude Include="..\..\include\zipcomprs.h" />
+    <ClInclude Include="..\..\include\bz2comprs.h" />
+    <ClInclude Include="..\..\include\xzcomprs.h" />
+    <ClInclude Include="..\..\include\zld.h" />
+    <ClInclude Include="..\..\include\zlib.h" />
+    <ClInclude Include="..\..\include\zstr.h" />
+    <ClInclude Include="..\..\include\ztext.h" />
+    <ClInclude Include="..\..\include\ztext4.h" />
+    <ClInclude Include="..\..\include\zverse.h" />
+    <ClInclude Include="..\..\include\zverse4.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\crc32.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\deflate.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\gzguts.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\inffast.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\inffixed.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\inflate.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\inftrees.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\trees.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\zconf.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\zlib.h" />
+    <ClInclude Include="..\..\src\utilfuns\zlib\zutil.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

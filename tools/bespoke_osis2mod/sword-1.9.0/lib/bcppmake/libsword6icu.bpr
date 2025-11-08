@@ -1,0 +1,351 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+  <MACROS>
+    <VERSION value="BCB.06.00"/>
+    <PROJECT value="..\libsword6icu.lib"/>
+    <OBJFILES value="..\..\obj\versekey.obj ..\..\obj\strkey.obj ..\..\obj\swkey.obj 
+      ..\..\obj\listkey.obj ..\..\obj\swmgr.obj ..\..\obj\localemgr.obj 
+      ..\..\obj\swconfig.obj ..\..\obj\swlocale.obj ..\..\obj\filemgr.obj 
+      ..\..\obj\utilstr.obj ..\..\obj\Greek2Greek.obj ..\..\obj\swlog.obj 
+      ..\..\obj\swdisp.obj ..\..\obj\swmodule.obj ..\..\obj\swcom.obj 
+      ..\..\obj\hrefcom.obj ..\..\obj\rawcom.obj ..\..\obj\rawfiles.obj 
+      ..\..\obj\lzsscomprs.obj ..\..\obj\rawstr.obj ..\..\obj\rawverse.obj 
+      ..\..\obj\sapphire.obj ..\..\obj\swcipher.obj ..\..\obj\swcomprs.obj 
+      ..\..\obj\thmlrtf.obj ..\..\obj\gbffootnotes.obj ..\..\obj\gbfhtml.obj 
+      ..\..\obj\gbfplain.obj ..\..\obj\gbfrtf.obj ..\..\obj\gbfstrongs.obj 
+      ..\..\obj\gbfthml.obj ..\..\obj\plainfootnotes.obj ..\..\obj\plainhtml.obj 
+      ..\..\obj\rtfhtml.obj ..\..\obj\thmlgbf.obj ..\..\obj\thmlhtml.obj 
+      ..\..\obj\thmlplain.obj ..\..\obj\cipherfil.obj ..\..\obj\swld.obj 
+      ..\..\obj\rawld.obj ..\..\obj\swtext.obj ..\..\obj\rawtext.obj 
+      ..\..\obj\ztext.obj ..\..\obj\zverse.obj ..\..\obj\treekey.obj 
+      ..\..\obj\treekeyidx.obj ..\..\obj\rawstr4.obj ..\..\obj\zstr.obj 
+      ..\..\obj\swgenbook.obj ..\..\obj\rawgenbook.obj ..\..\obj\swfiltermgr.obj 
+      ..\..\obj\utf8utf16.obj ..\..\obj\gbfheadings.obj 
+      ..\..\obj\gbfhtmlhref.obj ..\..\obj\gbfmorph.obj ..\..\obj\latin1utf16.obj 
+      ..\..\obj\latin1utf8.obj 
+      ..\..\obj\swbasicfilter.obj ..\..\obj\thmlfootnotes.obj 
+      ..\..\obj\thmlheadings.obj ..\..\obj\thmlhtmlhref.obj 
+      ..\..\obj\thmllemma.obj ..\..\obj\thmlmorph.obj ..\..\obj\thmlscripref.obj 
+      ..\..\obj\thmlstrongs.obj ..\..\obj\thmlvariants.obj 
+      ..\..\obj\unicodertf.obj ..\..\obj\utf16utf8.obj 
+      ..\..\obj\utf8arshaping.obj ..\..\obj\utf8bidireorder.obj 
+      ..\..\obj\utf8cantillation.obj ..\..\obj\utf8greekaccents.obj 
+      ..\..\obj\utf8hebrewpoints.obj ..\..\obj\utf8html.obj 
+      ...\..\obj\utf8arabicpoints.obj 
+      ..\..\obj\utf8latin1.obj ..\..\obj\utf8nfc.obj ..\..\obj\utf8nfkd.obj 
+      ..\..\obj\utf8transliterator.obj ..\..\obj\zcom.obj ..\..\obj\rawld4.obj 
+      ..\..\obj\zipcomprs.obj ..\..\obj\zld.obj ..\..\obj\entriesblk.obj 
+      ..\..\obj\zutil.obj ..\..\obj\compress.obj ..\..\obj\crc32.obj 
+      ..\..\obj\deflate.obj ..\..\obj\gzio.obj ..\..\obj\infblock.obj 
+      ..\..\obj\infcodes.obj ..\..\obj\inffast.obj ..\..\obj\inflate.obj 
+      ..\..\obj\inftrees.obj ..\..\obj\infutil.obj ..\..\obj\trees.obj 
+      ..\..\obj\uncompr.obj ..\..\obj\untgz.obj ..\..\obj\adler32.obj 
+      ..\..\obj\greeklexattribs.obj ..\..\obj\swcacher.obj ..\..\obj\gbfosis.obj 
+      ..\..\obj\thmlosis.obj ..\..\obj\encfiltmgr.obj 
+      ..\..\obj\markupfiltmgr.obj ..\..\obj\roman.obj ..\..\obj\ftpparse.obj 
+      ..\..\obj\osisstrongs.obj ..\..\obj\osismorph.obj 
+      ..\..\obj\gbfredletterwords.obj ..\..\obj\osisheadings.obj 
+      ..\..\obj\swbuf.obj ..\..\obj\utilxml.obj ..\..\obj\osisplain.obj 
+      ..\..\obj\osisrtf.obj ..\..\obj\thmlwebif.obj ..\..\obj\gbfwebif.obj 
+      ..\..\obj\osisfootnotes.obj ..\..\obj\osisscripref.obj 
+      ..\..\obj\swoptfilter.obj ..\..\obj\osislemma.obj 
+      ..\..\obj\osisredletterwords.obj ..\..\obj\osishtmlhref.obj 
+      ..\..\obj\swsearchable.obj ..\..\obj\osiswebif.obj ..\..\obj\osisosis.obj 
+      ..\..\obj\stringmgr.obj ..\..\obj\swversion.obj ..\..\obj\url.obj 
+      ..\..\obj\swobject.obj"/>
+    <RESFILES value=""/>
+    <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
+    <DEFFILE value=""/>
+    <RESDEPEN value="$(RESFILES)"/>
+    <LIBFILES value=""/>
+    <LIBRARIES value=""/>
+    <SPARELIBS value=""/>
+    <PACKAGES value=""/>
+    <PATHCPP value=".;..\..\src\keys;..\..\src\mgr;..\..\src\utilfuns;..\..\src\frontend;..\..\src\modules;..\..\src\modules\comments;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\rawfiles;..\..\src\modules\common;..\..\src\modules\filters;..\..\src\modules\lexdict;..\..\src\modules\lexdict\rawld;..\..\src\modules\texts;..\..\src\modules\texts\rawtext;..\..\src\modules\texts\ztext;..\..\src\modules\genbook;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\comments\zcom;..\..\src\modules\lexdict\rawld4;..\..\src\modules\lexdict\zld;..\..\src\utilfuns\zlib"/>
+    <PATHPAS value=".;"/>
+    <PATHRC value=".;"/>
+    <PATHASM value=".;"/>
+    <LINKER value="TLib"/>
+    <USERDEFINES value="_ICU_;_ICUSWORD_;USBINARY;_USE_OLD_RW_STL;U_HAVE_PLACEMENT_NEW=0;_DEBUG"/>
+    <SYSDEFINES value="NO_STRICT"/>
+    <MAINSOURCE value="libsword6icu.bpf"/>
+    <INCLUDEPATH value="..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common;..\..\..\icu-sword\source\i18n"/>
+    <LIBPATH value="..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <WARNINGS value="-w-par"/>
+    <LISTFILE value=""/>
+    <OTHERFILES value=""/>
+  </MACROS>
+  <OPTIONS>
+    <IDLCFLAGS value="-I..\..\src\utilfuns\zlib -I..\..\src\modules\lexdict\zld 
+      -I..\..\src\modules\lexdict\rawld4 -I..\..\src\modules\comments\zcom 
+      -I..\..\src\modules\genbook\rawgenbook -I..\..\src\modules\genbook 
+      -I..\..\src\modules\texts\ztext -I..\..\src\modules\texts\rawtext 
+      -I..\..\src\modules\texts -I..\..\src\modules\lexdict\rawld 
+      -I..\..\src\modules\lexdict -I..\..\src\modules\filters 
+      -I..\..\src\modules\common -I..\..\src\modules\comments\rawfiles 
+      -I..\..\src\modules\comments\rawcom -I..\..\src\modules\comments\hrefcom 
+      -I..\..\src\modules\comments -I..\..\src\modules -I..\..\src\frontend 
+      -I..\..\src\utilfuns -I..\..\src\mgr -I..\..\src\keys 
+      -I..\..\..\icu-sword\include 
+      -I..\..\apps\windoze\CBuilder5\InstallMgr\curl\include -I..\..\include 
+      -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp -D_ICU_ -D_ICUSWORD_ 
+      -DUSBINARY -boa"/>
+    <CFLAG1 value="-Od -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -c -tW -tWM"/>
+    <PFLAGS value="-N2..\..\obj -N0..\..\obj -$Y+ -$W -$O- -$A8 -v -JPHNE -M"/>
+    <AFLAGS value="/mx /w2 /zn"/>
+    <LFLAGS value="/P512"/>
+    <OTHERFILES value=""/>
+  </OPTIONS>
+  <LINKER>
+    <ALLOBJ value="$(OBJFILES)"/>
+    <ALLLIB value="cg32.lib"/>
+    <OTHERFILES value=""/>
+  </LINKER>
+  <FILELIST>
+      <FILE FILENAME="libsword6icu.bpf" FORMNAME="" UNITNAME="libsword" CONTAINERID="BPF" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\keys\versekey.cpp" FORMNAME="" UNITNAME="versekey" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\keys\strkey.cpp" FORMNAME="" UNITNAME="strkey" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\keys\swkey.cpp" FORMNAME="" UNITNAME="swkey" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\keys\listkey.cpp" FORMNAME="" UNITNAME="listkey" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\swmgr.cpp" FORMNAME="" UNITNAME="swmgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\localemgr.cpp" FORMNAME="" UNITNAME="localemgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\swconfig.cpp" FORMNAME="" UNITNAME="swconfig" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\swlocale.cpp" FORMNAME="" UNITNAME="swlocale" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\filemgr.cpp" FORMNAME="" UNITNAME="filemgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\utilstr.cpp" FORMNAME="" UNITNAME="utilstr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\Greek2Greek.cpp" FORMNAME="" UNITNAME="Greek2Greek" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\frontend\swlog.cpp" FORMNAME="" UNITNAME="swlog" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\frontend\swdisp.cpp" FORMNAME="" UNITNAME="swdisp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\swmodule.cpp" FORMNAME="" UNITNAME="swmodule" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\comments\swcom.cpp" FORMNAME="" UNITNAME="swcom" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\comments\hrefcom\hrefcom.cpp" FORMNAME="" UNITNAME="hrefcom" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\comments\rawcom\rawcom.cpp" FORMNAME="" UNITNAME="rawcom" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\comments\rawfiles\rawfiles.cpp" FORMNAME="" UNITNAME="rawfiles" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\lzsscomprs.cpp" FORMNAME="" UNITNAME="lzsscomprs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\rawstr.cpp" FORMNAME="" UNITNAME="rawstr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\rawverse.cpp" FORMNAME="" UNITNAME="rawverse" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\sapphire.cpp" FORMNAME="" UNITNAME="sapphire" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\swcipher.cpp" FORMNAME="" UNITNAME="swcipher" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\swcomprs.cpp" FORMNAME="" UNITNAME="swcomprs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlrtf.cpp" FORMNAME="" UNITNAME="thmlrtf" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbffootnotes.cpp" FORMNAME="" UNITNAME="gbffootnotes" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfhtml.cpp" FORMNAME="" UNITNAME="gbfhtml" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfplain.cpp" FORMNAME="" UNITNAME="gbfplain" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfrtf.cpp" FORMNAME="" UNITNAME="gbfrtf" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfstrongs.cpp" FORMNAME="" UNITNAME="gbfstrongs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfthml.cpp" FORMNAME="" UNITNAME="gbfthml" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\plainfootnotes.cpp" FORMNAME="" UNITNAME="plainfootnotes" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\plainhtml.cpp" FORMNAME="" UNITNAME="plainhtml" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\rtfhtml.cpp" FORMNAME="" UNITNAME="rtfhtml" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlgbf.cpp" FORMNAME="" UNITNAME="thmlgbf" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlhtml.cpp" FORMNAME="" UNITNAME="thmlhtml" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlplain.cpp" FORMNAME="" UNITNAME="thmlplain" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\cipherfil.cpp" FORMNAME="" UNITNAME="cipherfil" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\lexdict\swld.cpp" FORMNAME="" UNITNAME="swld" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\lexdict\rawld\rawld.cpp" FORMNAME="" UNITNAME="rawld" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\texts\swtext.cpp" FORMNAME="" UNITNAME="swtext" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\texts\rawtext\rawtext.cpp" FORMNAME="" UNITNAME="rawtext" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\texts\ztext\ztext.cpp" FORMNAME="" UNITNAME="ztext" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\zverse.cpp" FORMNAME="" UNITNAME="zverse" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\keys\treekey.cpp" FORMNAME="" UNITNAME="treekey" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\keys\treekeyidx.cpp" FORMNAME="" UNITNAME="treekeyidx" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\rawstr4.cpp" FORMNAME="" UNITNAME="rawstr4" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\zstr.cpp" FORMNAME="" UNITNAME="zstr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\genbook\swgenbook.cpp" FORMNAME="" UNITNAME="swgenbook" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\genbook\rawgenbook\rawgenbook.cpp" FORMNAME="" UNITNAME="rawgenbook" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\swfiltermgr.cpp" FORMNAME="" UNITNAME="swfiltermgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8utf16.cpp" FORMNAME="" UNITNAME="utf8utf16" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfheadings.cpp" FORMNAME="" UNITNAME="gbfheadings" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfhtmlhref.cpp" FORMNAME="" UNITNAME="gbfhtmlhref" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfmorph.cpp" FORMNAME="" UNITNAME="gbfmorph" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\latin1utf16.cpp" FORMNAME="" UNITNAME="latin1utf16" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\latin1utf8.cpp" FORMNAME="" UNITNAME="latin1utf8" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\swbasicfilter.cpp" FORMNAME="" UNITNAME="swbasicfilter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlfootnotes.cpp" FORMNAME="" UNITNAME="thmlfootnotes" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlheadings.cpp" FORMNAME="" UNITNAME="thmlheadings" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlhtmlhref.cpp" FORMNAME="" UNITNAME="thmlhtmlhref" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmllemma.cpp" FORMNAME="" UNITNAME="thmllemma" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlmorph.cpp" FORMNAME="" UNITNAME="thmlmorph" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlscripref.cpp" FORMNAME="" UNITNAME="thmlscripref" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlstrongs.cpp" FORMNAME="" UNITNAME="thmlstrongs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlvariants.cpp" FORMNAME="" UNITNAME="thmlvariants" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\unicodertf.cpp" FORMNAME="" UNITNAME="unicodertf" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf16utf8.cpp" FORMNAME="" UNITNAME="utf16utf8" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8arshaping.cpp" FORMNAME="" UNITNAME="utf8arshaping" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8bidireorder.cpp" FORMNAME="" UNITNAME="utf8bidireorder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8cantillation.cpp" FORMNAME="" UNITNAME="utf8cantillation" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8greekaccents.cpp" FORMNAME="" UNITNAME="utf8greekaccents" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8hebrewpoints.cpp" FORMNAME="" UNITNAME="utf8hebrewpoints" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8arabicpoints.cpp" FORMNAME="" UNITNAME="utf8arabicpoints" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8html.cpp" FORMNAME="" UNITNAME="utf8html" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8latin1.cpp" FORMNAME="" UNITNAME="utf8latin1" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8nfc.cpp" FORMNAME="" UNITNAME="utf8nfc" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8nfkd.cpp" FORMNAME="" UNITNAME="utf8nfkd" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\utf8transliterator.cpp" FORMNAME="" UNITNAME="utf8transliterator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\comments\zcom\zcom.cpp" FORMNAME="" UNITNAME="zcom" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\lexdict\rawld4\rawld4.cpp" FORMNAME="" UNITNAME="rawld4" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\zipcomprs.cpp" FORMNAME="" UNITNAME="zipcomprs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\lexdict\zld\zld.cpp" FORMNAME="" UNITNAME="zld" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\common\entriesblk.cpp" FORMNAME="" UNITNAME="entriesblk" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\zutil.c" FORMNAME="" UNITNAME="zutil" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\compress.c" FORMNAME="" UNITNAME="compress" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\crc32.c" FORMNAME="" UNITNAME="crc32" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\deflate.c" FORMNAME="" UNITNAME="deflate" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\gzio.c" FORMNAME="" UNITNAME="gzio" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\infblock.c" FORMNAME="" UNITNAME="infblock" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\infcodes.c" FORMNAME="" UNITNAME="infcodes" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\inffast.c" FORMNAME="" UNITNAME="inffast" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\inflate.c" FORMNAME="" UNITNAME="inflate" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\inftrees.c" FORMNAME="" UNITNAME="inftrees" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\infutil.c" FORMNAME="" UNITNAME="infutil" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\trees.c" FORMNAME="" UNITNAME="trees" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\uncompr.c" FORMNAME="" UNITNAME="uncompr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\untgz.c" FORMNAME="" UNITNAME="untgz" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\zlib\adler32.c" FORMNAME="" UNITNAME="adler32" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\greeklexattribs.cpp" FORMNAME="" UNITNAME="greeklexattribs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\swcacher.cpp" FORMNAME="" UNITNAME="swcacher" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfosis.cpp" FORMNAME="" UNITNAME="gbfosis" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlosis.cpp" FORMNAME="" UNITNAME="thmlosis" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\encfiltmgr.cpp" FORMNAME="" UNITNAME="encfiltmgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\markupfiltmgr.cpp" FORMNAME="" UNITNAME="markupfiltmgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\roman.cpp" FORMNAME="" UNITNAME="roman" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\ftpparse.c" FORMNAME="" UNITNAME="ftpparse" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osisstrongs.cpp" FORMNAME="" UNITNAME="osisstrongs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osismorph.cpp" FORMNAME="" UNITNAME="osismorph" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfredletterwords.cpp" FORMNAME="" UNITNAME="gbfredletterwords" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osisheadings.cpp" FORMNAME="" UNITNAME="osisheadings" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\swbuf.cpp" FORMNAME="" UNITNAME="swbuf" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\utilxml.cpp" FORMNAME="" UNITNAME="utilxml" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osisplain.cpp" FORMNAME="" UNITNAME="osisplain" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osisrtf.cpp" FORMNAME="" UNITNAME="osisrtf" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\thmlwebif.cpp" FORMNAME="" UNITNAME="thmlwebif" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\gbfwebif.cpp" FORMNAME="" UNITNAME="gbfwebif" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osisfootnotes.cpp" FORMNAME="" UNITNAME="osisfootnotes.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osisscripref.cpp" FORMNAME="" UNITNAME="osisscripref.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\swoptfilter.cpp" FORMNAME="" UNITNAME="swoptfilter.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osislemma.cpp" FORMNAME="" UNITNAME="osislemma.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osisredletterwords.cpp" FORMNAME="" UNITNAME="osisredletterwords.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osishtmlhref.cpp" FORMNAME="" UNITNAME="osishtmlhref" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\swsearchable.cpp" FORMNAME="" UNITNAME="swsearchable" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osiswebif.cpp" FORMNAME="" UNITNAME="osiswebif" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\modules\filters\osisosis.cpp" FORMNAME="" UNITNAME="osisosis" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\mgr\stringmgr.cpp" FORMNAME="" UNITNAME="stringmgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\swversion.cpp" FORMNAME="" UNITNAME="swversion" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\url.cpp" FORMNAME="" UNITNAME="url" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\src\utilfuns\swobject.cpp" FORMNAME="" UNITNAME="swobject" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
+  <IDEOPTIONS>
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=1033
+CodePage=1252
+
+[Version Info Keys]
+CompanyName=
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[HistoryLists\hlIncludePath]
+Count=15
+Item0=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common;..\..\..\icu-sword\source\i18n
+Item1=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\include;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item2=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\..\icu-sword\include;..\..\apps\windoze\CBuilder5\InstallMgr;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item3=..\..\..\icu-sword\include;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item4=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item5=..\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item6=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common;..\..\..\icu-sword\source\i18n
+Item7=..\..\apps\windoze;..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\apps\windoze\CBuilder5\InstallMgr\curl\include;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common;..\..\..\icu-sword\source\i18n
+Item8=..\..\apps\windoze;..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common;..\..\..\icu-sword\source\i18n
+Item9=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl;..\..\..\icu-sword\source\common
+Item10=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item11=..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item12=..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;..\..\include;$(BCB)\include;$(BCB)\include\vcl
+Item13=..\include;$(BCB)\include;$(BCB)\include\vcl
+Item14=..\src\modules\texts\rawtext;..\src\modules\texts;..\src\modules\lexdict\rawld;..\src\modules\lexdict;..\src\modules\filters;..\src\modules\common;..\src\modules\comments\rawfiles;..\src\modules\comments\rawcom;..\src\modules\comments\hrefcom;..\src\modules\comments;..\src\modules;..\src\frontend;..\src\utilfuns;..\src\mgr;..\src\keys;$(BCB)\include;$(BCB)\include\vcl
+
+[HistoryLists\hlLibraryPath]
+Count=6
+Item0=..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib
+Item1=$(BCB)\lib\obj;$(BCB)\lib
+Item2=..\..\apps\windoze;..\..\src\utilfuns\zlib;..\..\src\modules\lexdict\zld;..\..\src\modules\lexdict\rawld4;..\..\src\modules\comments\zcom;..\..\src\modules\genbook\rawgenbook;..\..\src\modules\genbook;..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib
+Item3=..\..\src\modules\texts\ztext;..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib
+Item4=..\..\src\modules\texts\rawtext;..\..\src\modules\texts;..\..\src\modules\lexdict\rawld;..\..\src\modules\lexdict;..\..\src\modules\filters;..\..\src\modules\common;..\..\src\modules\comments\rawfiles;..\..\src\modules\comments\rawcom;..\..\src\modules\comments\hrefcom;..\..\src\modules\comments;..\..\src\modules;..\..\src\frontend;..\..\src\utilfuns;..\..\src\mgr;..\..\src\keys;$(BCB)\lib\obj;$(BCB)\lib
+Item5=..\src\modules\texts\rawtext;..\src\modules\texts;..\src\modules\lexdict\rawld;..\src\modules\lexdict;..\src\modules\filters;..\src\modules\common;..\src\modules\comments\rawfiles;..\src\modules\comments\rawcom;..\src\modules\comments\hrefcom;..\src\modules\comments;..\src\modules;..\src\frontend;..\src\utilfuns;..\src\mgr;..\src\keys;$(BCB)\lib\obj;$(BCB)\lib
+
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=$(BCB)\source\vcl
+
+[HistoryLists\hlConditionals]
+Count=9
+Item0=_ICU_;_ICUSWORD_;USBINARY;_USE_OLD_RW_STL;U_HAVE_PLACEMENT_NEW=0;_DEBUG
+Item1=_ICU_;_ICUSWORD_;USBINARY;_USE_OLD_RW_STL;U_HAVE_PLACEMENT_NEW=0
+Item2=_ICU_;_ICUSWORD_;USBINARY;_USE_OLD_RW_STL
+Item3=_ICU_;_ICUSWORD_;USBINARY
+Item4=_ICU_;_ICUSWORD_;USBINARY;_DEBUG
+Item5=;USBINARY;_DEBUG
+Item6=_ICU_;_ICUSWORD_
+Item7=_ICU_;_ICUSWORD_;_DEBUG
+Item8=_DEBUG
+
+[HistoryLists\hlIntOutputDir]
+Count=2
+Item0=..\..\obj
+Item1=obj
+
+[HistoryLists\hlFinalOutputDir]
+Count=3
+Item0=..\
+Item1=../\
+Item2=../
+
+[HistoryLists\hlTlibPageSize]
+Count=5
+Item0=0x0200
+Item1=0x0080
+Item2=0x0040
+Item3=0x0020
+Item4=0x0010
+
+[Debugging]
+DebugSourceDirs=$(BCB)\source\vcl
+
+[Parameters]
+RunParams=
+Launcher=
+UseLauncher=0
+DebugCWD=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteLauncher=
+RemoteCWD=
+RemoteDebug=0
+
+[Compiler]
+ShowInfoMsgs=0
+LinkDebugVcl=0
+  </IDEOPTIONS>
+</PROJECT>

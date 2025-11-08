@@ -1,0 +1,205 @@
+DEBUG(LINK MASTER): Gen.1.6
+DEBUG(LINK MASTER): Acts.2.21
+SUCCESS: ../../utilities/osis2mod: has finished its work and will now rest
+INFO(LINK): Linking Gen.1.7 to Gen.1.6
+INFO(LINK): Linking Gen.1.8 to Gen.1.6
+INFO(LINK): Linking Acts.2.22 to Acts.2.21
+Key:
+Psalms 3:1
+-------
+Preverse Header 0:
+Raw:
+<div sID="gen16" type="section"/> <title canonical="true" type="psalm">A Psalm of David<note n="A" osisID="Ps.3.xref.A" swordFootnote="1" type="crossReference"></note>, when he fled from Absalom his son.</title> <div sID="gen17" type="x-p"/> <lg sID="gen18"/> 
+-------
+Rendered Header:
+ <h3 class="title psalm canonical">A Psalm of David<a class="noteMarker crossReference" href="passagestudy.jsp?action=showNote&type=x&value=1&module=OSISReference&passage=Psalms+3%3A1"><small><sup class="x">*x</sup></small></a>, when he fled from Absalom his son.</h3>
+
+<br />
+ 
+-------
+CSS:
+		.divineName { font-variant: small-caps; }
+		.wordsOfJesus { color: red; }
+		.transChange { font-style: italic; }
+		.transChange.transChange-supplied { font-style: italic; }
+		.transChange.transChange-added { font-style: italic; }
+		.transChange.transChange-tenseChange::before { content: '*'; }
+		.transChange.transChange-tenseChange { font-style: normal; }
+		.transChange:lang(zh) { font-style: normal; text-decoration: dotted underline; }
+		.overline { text-decoration: overline; }
+		.indent1 { margin-left: 1em; }
+		.indent2 { margin-left: 2em; }
+		.indent3 { margin-left: 3em; }
+		.indent4 { margin-left: 4em; }
+		abbr { &:hover{ &:before{ content: attr(title); } } }
+		.small-caps { font-variant: small-caps; }
+		.otPassage { font-variant: small-caps; }
+		.selah { text-align: right; width: 50%; margin: 0; padding: 0; }
+		.acrostic { text-align: center; }
+		.colophon {font-style: italic; font-size: small; display: block; }
+		.rdg { font-style: italic; }
+		.inscription {font-variant: small-caps; }
+		.catchWord {font-style: bold; }
+		.x-p-indent {text-indent: 1em; }
+	
+-------
+RenderText:
+ <span class="line indent0"><span class=""><span class="divineName">Lord</span></span>, how are they increased that trouble me!</span><br />
+<span class="line indent0">many <span class="transChange transChange-added">are</span> they that rise up against me.</span><br />
+
+-------
+-------
+
+Key:
+Matthew 2:6
+-------
+Preverse Header 0:
+Raw:
+<div></div>
+-------
+Rendered Header:
+<div class=""></div>
+-------
+CSS:
+		.divineName { font-variant: small-caps; }
+		.wordsOfJesus { color: red; }
+		.transChange { font-style: italic; }
+		.transChange.transChange-supplied { font-style: italic; }
+		.transChange.transChange-added { font-style: italic; }
+		.transChange.transChange-tenseChange::before { content: '*'; }
+		.transChange.transChange-tenseChange { font-style: normal; }
+		.transChange:lang(zh) { font-style: normal; text-decoration: dotted underline; }
+		.overline { text-decoration: overline; }
+		.indent1 { margin-left: 1em; }
+		.indent2 { margin-left: 2em; }
+		.indent3 { margin-left: 3em; }
+		.indent4 { margin-left: 4em; }
+		abbr { &:hover{ &:before{ content: attr(title); } } }
+		.small-caps { font-variant: small-caps; }
+		.otPassage { font-variant: small-caps; }
+		.selah { text-align: right; width: 50%; margin: 0; padding: 0; }
+		.acrostic { text-align: center; }
+		.colophon {font-style: italic; font-size: small; display: block; }
+		.rdg { font-style: italic; }
+		.inscription {font-variant: small-caps; }
+		.catchWord {font-style: bold; }
+		.x-p-indent {text-indent: 1em; }
+	
+-------
+RenderText:
+<span class="line indent0">‘<a class="noteMarker crossReference" href="passagestudy.jsp?action=showNote&type=x&value=1&module=OSISReference&passage=Matthew+2%3A6"><small><sup class="x">*x</sup></small></a><span class="small-caps">And you, Bethlehem, land of Judah</span>, </span><br />
+<span class="line indent0"><span class="small-caps">Are by no means least among the leaders of Judah</span>; </span><br />
+<span class="line indent0"><span class="small-caps">For out of you shall come forth a Ruler</span> </span><br />
+<span class="line indent0"><span class="small-caps">Who will</span> <a class="noteMarker crossReference" href="passagestudy.jsp?action=showNote&type=x&value=2&module=OSISReference&passage=Matthew+2%3A6"><small><sup class="x">*x</sup></small></a><span class="small-caps">shepherd My people Israel</span>.’” <br />
+  
+-------
+-------
+
+Key:
+Mark 1:14
+-------
+Preverse Header 0:
+Raw:
+<div sID="gen29" type="section"/> <title>The Beginning of the Ministry of Jesus</title> <title type="parallel">(<reference osisRef="Matt.4.12-Matt.4.22">Matt 4:12–22</reference>; <reference osisRef="Luke.4.14">Luke 4:14</reference>, <reference osisRef="Luke.4.15">15</reference>; <reference osisRef="Luke.5.1-Luke.5.11">5:1-11</reference>) </title> <div sID="gen30" type="x-p"/> 
+-------
+Rendered Header:
+ <h3 class="title">The Beginning of the Ministry of Jesus</h3>
+
+<h3 class="title parallel">(<a class="" href="passagestudy.jsp?action=showRef&type=scripRef&value=Matt.4.12-Matt.4.22&module=">Matt 4:12–22</a>; <a class="" href="passagestudy.jsp?action=showRef&type=scripRef&value=Luke.4.14&module=">Luke 4:14</a>, <a class="" href="passagestudy.jsp?action=showRef&type=scripRef&value=Luke.4.15&module=">15</a>; <a class="" href="passagestudy.jsp?action=showRef&type=scripRef&value=Luke.5.1-Luke.5.11&module=">5:1-11</a>) </h3>
+
+<br />
+
+-------
+CSS:
+		.divineName { font-variant: small-caps; }
+		.wordsOfJesus { color: red; }
+		.transChange { font-style: italic; }
+		.transChange.transChange-supplied { font-style: italic; }
+		.transChange.transChange-added { font-style: italic; }
+		.transChange.transChange-tenseChange::before { content: '*'; }
+		.transChange.transChange-tenseChange { font-style: normal; }
+		.transChange:lang(zh) { font-style: normal; text-decoration: dotted underline; }
+		.overline { text-decoration: overline; }
+		.indent1 { margin-left: 1em; }
+		.indent2 { margin-left: 2em; }
+		.indent3 { margin-left: 3em; }
+		.indent4 { margin-left: 4em; }
+		abbr { &:hover{ &:before{ content: attr(title); } } }
+		.small-caps { font-variant: small-caps; }
+		.otPassage { font-variant: small-caps; }
+		.selah { text-align: right; width: 50%; margin: 0; padding: 0; }
+		.acrostic { text-align: center; }
+		.colophon {font-style: italic; font-size: small; display: block; }
+		.rdg { font-style: italic; }
+		.inscription {font-variant: small-caps; }
+		.catchWord {font-style: bold; }
+		.x-p-indent {text-indent: 1em; }
+	
+-------
+RenderText:
+ Now after that John was put in prison, Jesus came into Galilee, preaching the gospel of the kingdom of God, 
+-------
+-------
+
+
+Whitespace tests around headings:
+
+
+ <h1 class="bookHeader">Old Testament</h1>
+
+ <h1 class="bookHeader main">THE FIRST BOOK OF MOSES CALLED GENESIS</h1>
+
+ <h1 class="bookHeader">Introduction and Outline</h1>
+
+<br />
+This is the <b>Book of Genesis</b>, the <i>first</i> book in the Bible. It may be outlined as follows: <br />
+<br />
+<ul>
+ 	<li><sup>1</sup>Creation of Heaven and Earth, 1:1-2:4a</li>
+	<li><sup>2</sup>Creation of Man and Woman, 2:4b-25</li>
+	<li><sub>3</sub>Fall, 3:1-24</li>
+	<li>...</li>
+</ul>
+ <br />
+Tables work like this: <table><tbody>
+ 	<tr> <td><b>Column 1 Label</b></td> <td><b>Column 2 Label</b></td> </tr>
+ 	<tr> <td>Column 1, Row 1</td> <td>Column 2, Row 1</td> </tr>
+ 	<tr> <td>Column 1, Row 2</td> <td>Column 2, Row 2</td> </tr>
+ </tbody></table>
+<br />
+
+  <h2 class="chapterHeader">From Creation to Abraham (1:1–11:9)</h2>
+
+
+ <h3 class="title">Creation of the Heavens and the Earth</h3>
+
+<br />
+
+[ Genesis 1:1 ]  In the beginning God created the heaven and the earth.  <br />
+
+<br />
+
+[ Genesis 1:2 ] Text of verse 2.
+
+-- Plain output
+Acts 2:19: ‘* And I will grant wonders in the sky above *
+* And signs on the earth below *,
+* Blood, and fire, and vapor of smoke *.
+
+Acts 2:20: ‘* The sun will be turned into darkness *
+* And the moon into blood *,
+* Before the great and glorious day of the Lord shall come *.
+
+
+-- RTF output
+{\rtf1\ansi{\fonttbl{\f0\froman\fcharset0\fprq2 Times New Roman;}{\f1\fdecor\fprq2 Gentium;}{\f7\froman\fcharset2\fprq2 Symbol;}}Acts 2:19: {\f1 ‘{\i1 {And I will grant} {wonders} {in the sky} {above}}{\par} {\i1 {And signs} {on the earth} {below}},{\par} {\i1 {Blood}, {and fire}, {and vapor} {of smoke}}.{\par}}\par 
+Acts 2:20: {\f1 ‘{\i1 {The sun} {will be turned} {into darkness}}{\par} {\i1 {And the moon} {into blood}},{\par} {\i1 {Before} {the great} {and glorious} {day} {of the Lord} {shall come}}.{\par}}\par 
+}
+-- Verse osisID list Link test
+{\rtf1\ansi{\fonttbl{\f0\froman\fcharset0\fprq2 Times New Roman;}{\f1\fdecor\fprq2 Gentium;}{\f7\froman\fcharset2\fprq2 Symbol;}}Acts 2:21: {\f1 {And} {it shall come to pass}, {\i1 that} {whosoever} {shall call on} {the name} {of the Lord} {shall be saved}. (22) {Ye men} {of Israel}, {hear} {these} {words}; {Jesus} {of Nazareth}, {a man} {approved} {of} {God} {among} {you} {by} {miracles} {and} {wonders} {and} {signs}, {which} {God} {did} {by} {him} {in} {the midst} {of you}, {as} {ye yourselves} {also} {know}: }\par 
+Acts 2:22: {\f1 {And} {it shall come to pass}, {\i1 that} {whosoever} {shall call on} {the name} {of the Lord} {shall be saved}. (22) {Ye men} {of Israel}, {hear} {these} {words}; {Jesus} {of Nazareth}, {a man} {approved} {of} {God} {among} {you} {by} {miracles} {and} {wonders} {and} {signs}, {which} {God} {did} {by} {him} {in} {the midst} {of you}, {as} {ye yourselves} {also} {know}: }\par 
+}
+-- Div osisReference range Link test
+{\rtf1\ansi{\fonttbl{\f0\froman\fcharset0\fprq2 Times New Roman;}{\f1\fdecor\fprq2 Gentium;}{\f7\froman\fcharset2\fprq2 Symbol;}}Genesis 1:6: {\f1  {\fi200\par}{\b1 La création de l'univers}{\par}{\fi200\par}Avant que rien n'existe………{\par}{\fi200\par}Ce récit, à la fois majestueux et simple………{\par} }\par 
+Genesis 1:7: {\f1  {\fi200\par}{\b1 La création de l'univers}{\par}{\fi200\par}Avant que rien n'existe………{\par}{\fi200\par}Ce récit, à la fois majestueux et simple………{\par} }\par 
+}

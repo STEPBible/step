@@ -75,10 +75,7 @@ step.passageSelect = {
 		["Jude", 1, [25]],
 		["Rev", 22, [20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,21,15,27,21]]
 	],
-    // The Bible at the beginning of the list have vocabulary.  The are listed first so they will be suggested when user select a NT passage with an OT Bible or vice versa.
-	translationsWithPopularBooksChapters: " esv nasb2020 kjv bsb nasb1995 cun cuns hcsb sparv1909 abgk aben niv nav sparv chincvs acv akjv alb arasvd asmulb asv bbe benulb bulprotrev burjudson ccb clarke cym czebkr dan1871 darby ee esperanto fcb frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hinulb hrvcb icelandic itadio itarive jub kanulb korhkjv korrv lbla luther malulb maori marulb mhc mhcc nbla ndebele neno nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs serdke sparvg spasev swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian urdulb viet webm webs ylt arbkeh cebapd ckbkss danbph deu1912eb hilapd hinhss ibobiu japkougo jpnjcb kikgky korklb lsb lugeeee malmcv ndeben nirv nivuk nldhtb nyaccl pornvi thatncv twiakna viekthd zomziv yorbmyo tglasd swhnen spanvi snabdsc ronntr gertextbibel leb net2full ",
-	translationsWithPopularNTBooksChapters: ' sblg thgnt 20c ant armwestern barnes bashautin burkitt byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss elz eth godb hauulb indulb khmkcb latvian lo mont murd nepulb nestle pesh pltulb portb rkjn rwp spavnt swaulb tisch tnt tr ukrkulish uma weym whnu wors shona ',
-	translationsWithPopularOTBooksChapters: ' lxx ab kd wlc lees ',
+
 	initPassageSelect: function(summaryMode) {
         this.version = "ESV_th";
 		this.userLang = step.state.language() || "en-US";
@@ -178,14 +175,21 @@ step.passageSelect = {
 									  (step.keyedVersions[data[i].item.initials].languageCode === "en"));
 			}
 		}
-		var lowerCaseVersion = ' ' + this.version.toLowerCase().replace(/_sbonly$/, "").replace(/_sb$/, "").replace(/_th$/, "") + ' ';
-		versionAltName = ' ' + versionAltName.toLowerCase().replace(/_sbonly$/, "").replace(/_sb$/, "").replace(/_th$/, "") + ' ';
-		var translationType = "";
-		if ((this.translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (this.translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
-		else if ((this.translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (this.translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
-		else if ((this.translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (this.translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
 		this.hasEnglishBible = atLeastOneEnglishBible;
-		return translationType;
+		var versionName = this.version.replace(/_sb$/, "").replace(/_th$/, "");
+		versionAltName = versionAltName.replace(/_sb$/, "").replace(/_th$/, "");
+		var hasAllNTOTorBoth = "";
+		if (typeof step.keyedVersions[versionName] === "object")
+			hasAllNTOTorBoth = step.keyedVersions[versionName].hasAllNTOTorBoth;
+		else if (typeof step.keyedVersions[versionAltName] === "object")
+			hasAllNTOTorBoth = step.keyedVersions[versionAltName].hasAllNTOTorBoth;
+		if (hasAllNTOTorBoth === "B") // Both OT and NT 66 books
+			return "OTNT";
+		else if (hasAllNTOTorBoth === "N") // NT's 27 books
+			return "NT";
+		else if (hasAllNTOTorBoth === "O") // OT's 39 books
+			return "OT";
+		return "";
 	},
 
 	_buildBookHTMLTable: function(data, summaryMode) {

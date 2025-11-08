@@ -1,0 +1,39 @@
+.IX Title "ADDLD.1 1"
+.TH ADDLD.1 1 "2018-11-05" 
+.SH "NAME"
+addld \- Lexicon & Dictionary module creation tool for SWORD Project
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+\&\fBaddld\fR \-a \s-1FILE\s0 key [\s-1PATH\s0]
+\&\fBaddld\fR \-d \s-1FILE\s0 key
+\&\fBaddld\fR \-l \s-1FILE\s0 target_key link_name
+\&\fBaddld\fR \-c \s-1FILE\s0
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+A command line utility to create and manipule Lexicon & Dictionary \s-1SWORD\s0
+modules. It can be used to add, delete and link L&D keys within module.
+It can also be used to create new L&D modules.
+.IP "\fB\-a \s-1FILE\s0 key [\s-1PATH\s0]\fR" 4
+.IX Item "-a FILE key [PATH]"
+The form is used to add a key to a L&D module. Optionally path can be
+used to the file with the entry.
+.IP "\fB\-d \s-1FILE\s0 key\fR" 4
+.IX Item "-d FILE key"
+This form is used to delete a key from a file.
+.IP "\fB\-l \s-1FILE\s0 target_key link_name\fR" 4
+.IX Item "-l FILE target_key link_name"
+This form is used to link two keys in the module.
+.IP "\fB\-c \s-1FILE\s0\fR" 4
+.IX Item "-c FILE"
+This is used to create a new module
+.SH "OPTIONS"
+.IX Header "OPTIONS"
+To use 4\-byte L&D instead of 2\-byte, insert a 4 immediately after the '\-'.
+.PP
+To use zLD instead of 2\-byte, insert a z immediately after the '\-'.
+.SH "Authors"
+.IX Header "Authors"
+This manual page was written by Dmitrijs Ledkovs <dmitrij.ledkov@gmail.com> for
+Debian project but may be used by others.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"

@@ -1,0 +1,7 @@
+This folder contains a cordova plugin which is based on the
+../Android bindings which is based on the java-jni/ bindings.
+and
+../objc bindings which is based on the flatapi bindings.
+
+Follow the README in the ../java-jni/ bindings folder.
+

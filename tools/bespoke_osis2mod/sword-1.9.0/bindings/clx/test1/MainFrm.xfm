@@ -1,0 +1,90 @@
+object Form1: TForm1
+  Left = 260
+  Top = 148
+  Width = 592
+  Height = 487
+  HorzScrollBar.Range = 185
+  VertScrollBar.Range = 41
+  Caption = 'Form1'
+  Color = clBackground
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 108
+  TextHeight = 20
+  TextWidth = 8
+  object Panel1: TPanel
+    Left = 0
+    Top = 41
+    Width = 185
+    Height = 446
+    Align = alLeft
+    Caption = 'Panel1'
+    TabOrder = 0
+    object TreeView1: TTreeView
+      Left = 1
+      Top = 1
+      Width = 183
+      Height = 444
+      Align = alClient
+      Columns = <>
+      TabOrder = 0
+      OnChange = TreeView1Change
+    end
+  end
+  object Panel2: TPanel
+    Left = 185
+    Top = 41
+    Width = 407
+    Height = 446
+    Align = alClient
+    Caption = 'Panel2'
+    TabOrder = 1
+    object TextBrowser1: TTextBrowser
+      Left = 1
+      Top = 1
+      Width = 405
+      Height = 444
+      Align = alClient
+      TabOrder = 0
+      TextFormat = tfText
+    end
+  end
+  object Panel3: TPanel
+    Left = 0
+    Top = 0
+    Width = 592
+    Height = 41
+    Align = alTop
+    TabOrder = 2
+    object Button1: TButton
+      Left = 509
+      Top = 8
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = 'Exit'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+    object Edit1: TEdit
+      Left = 136
+      Top = 8
+      Width = 177
+      Height = 28
+      TabOrder = 1
+      OnChange = Edit1Change
+    end
+    object Label1: TLabel
+      Left = 328
+      Top = 12
+      Width = 1
+      Height = 20
+      Font.Color = clBlack
+      Font.Height = 17
+      Font.Name = 'Helvetica'
+      Font.Pitch = fpVariable
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+  end
+end

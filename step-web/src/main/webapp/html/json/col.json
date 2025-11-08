@@ -24,5 +24,19 @@
 "chapter_3_icc_url" : "https://archive.org/details/criticalexegetic36abbouoft/criticalexegetic36abbouoft/page/278/mode/2up",
 "chapter_3_icc_page" : "278",
 "chapter_4_icc_url" : "https://archive.org/details/criticalexegetic36abbouoft/criticalexegetic36abbouoft/page/296/mode/2up",
-"chapter_4_icc_page" : "296"
+"chapter_4_icc_page" : "296",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/colossians/colossians.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/colossians/colossians.htm#head9",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/colossians/colossians.htm#head12",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/colossians/colossians.htm#head28",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/colossians/colossians.htm#head34",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/colossians/colossians.htm#head43",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/Colossians/",
+"chapter_outline_tgc_url": "#section-8",
+"chapter_1_tgc_url": "#section-9",
+"chapter_2_tgc_url": "#section-17",
+"chapter_3_tgc_url": "#section-20",
+"chapter_4_tgc_url": "#section-21",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Alistair I. Wilson', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

@@ -192,7 +192,7 @@ public final class ValidateUtils {
                 char c = value.charAt(i);
                 if (!((c >= lowerBoundLC && c <= upperBoundLC) ||
                         (c >= lowerBoundUC && c <= upperBoundUC) ||
-                        (c == '_') || (c == '-') )) {
+                        (c == '_') || (c == '-'))) {
                     System.out.println("XSS kill unexpected char key: " + key + " value: " + value);
                     return false;
                 }
@@ -248,8 +248,8 @@ public final class ValidateUtils {
         for (String t : tokens) {
             int indexOfPrefix = t.indexOf('=');
             if (indexOfPrefix == -1) {
-                if (t.length() > 0)
-                    System.out.println("Ignoring item: " + t);
+//                if (t.length() > 0)
+//                    System.out.println("Ignoring item: " + t);
                 continue;
             }
             String key = t.substring(0, indexOfPrefix);
@@ -264,34 +264,33 @@ public final class ValidateUtils {
         for (Map.Entry<String, String[]> entry : inputParms.entrySet()) {
             final String key = entry.getKey();
             final String[] value = entry.getValue();
-            if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome")) {
-                if ((value.length == 1) && value[0].equals("")) continue; // The debug and noredirect parameters do not have value so no additional checking is required.
+            if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome") || key.equals("clickvocab") || key.startsWith("colorCode") || key.startsWith("otGreek")) {
+                if (value[0].equals(""))
+                    continue; // The debug, noredirect and other parameters have no value so no additional checking is not required.
                 System.out.println("XSS kill unexpected value with key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
                 return false;
             }
-            final String cmpKey = " " + key + " ";
-            if (" q options display page qFilter sort context lang reference version pos ".indexOf(cmpKey) > -1) {
-                for (int i = 0; i < value.length; i++) {
-                    String checkValue = value[i];
-                    if (checkValue.length() == 0) continue;
-                    if ((key.equals("options") && !(validateInputParm("options", checkValue))) ||
-                            (key.equals("display") && !(validateInputParm("display", checkValue))) ||
-                            (key.equals("lang") && !(validateInputParm("lang", checkValue))) ||
-                            (key.equals("version") && !(validateInputParm("version", checkValue))) ||
-                            (key.equals("reference") && !(validateInputParm("reference", checkValue))) ||
-                            (key.equals("pos") && !(validateInputParm("pos", checkValue)))) {
-// already output error in validateInputParm                        System.out.println("XSS kill checkURLParms 2 : " + key + "=" + checkValue + " uri: " + requestURI);
-                        return false;
+            else {
+                final String cmpKey = " " + key + " ";
+                if (" options display lang reference version pos ".indexOf(cmpKey) > -1) {
+                    for (int i = 0; i < value.length; i++) {
+                        if (value[i].length() == 0) continue;
+                        if (!(validateInputParm(key, value[i])))
+                            return false; // already output error in validateInputParm
                     }
-                    if (!checkForObviousXSS(key, checkValue, requestURI, true)) {
-                        System.out.println("XSS kill checkURLParms 3 : " + key + "=" + checkValue + " uri: " + requestURI);
-                        return false;
+                } else if (" q qFilter page sort context secondURL langFile ".indexOf(cmpKey) > -1) {
+                    for (int i = 0; i < value.length; i++) {
+                        if (value[i].length() == 0) continue;
+                        if (!checkForObviousXSS(key, value[i], requestURI, true)) {
+                            System.out.println("XSS kill checkURLParms 3 : " + key + "=" + value[i] + " uri: " + requestURI);
+                            return false;
+                        }
                     }
                 }
-            }
-            else { // does not match " q options display page qFilter sort context lang "
-                System.out.println("XSS kill checkURLParm: unknown key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
-                return false;
+                else { // does not match " q options display page qFilter sort context lang ... "
+                    System.out.println("XSS kill checkURLParm: unknown key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
+                    return false;
+                }
             }
         }
         return true;
@@ -307,7 +306,16 @@ public final class ValidateUtils {
                 return false;
             }
         }
-        if (checkValueLC.contains("<") || checkValueLC.contains(">") || checkValueLC.contains("%3c") || checkValueLC.contains("%3e") ||
+        // The following 5 lines are needed due to a bug in the Chrome extension (Bible vocab) discovered in 2025. Remove in about 2027.
+        if (checkValue.indexOf("%3E") > -1) {
+            if (!checkValue.startsWith("/module/getQuickInfo/ESV") ||
+                !checkValue.endsWith("/en%3Elang-en-US") || (checkValue.length() > 65))
+                return false;
+        }
+        if (checkValueLC.contains("<") ||
+                checkValueLC.contains(">") ||
+                checkValueLC.contains("%3c") ||
+                //checkValueLC.contains("%3e") || // Needed due to an error in the Chrome extension.  Restore this line when the above code for the Chrome extension is removed 
                 checkValueLC.contains("&lt") || checkValueLC.contains("&gt") ||
                 checkValueLC.contains("#6") || checkValueLC.contains("#0") || checkValueLC.contains("#x") ||
                 checkValueLC.contains("\u003c")) {

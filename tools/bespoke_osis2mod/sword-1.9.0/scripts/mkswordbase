@@ -1,0 +1,16 @@
+#!/bin/sh
+# This script was used for making loki install swordbase.tar.gz
+# component.  Not likely we'll use this again, but keep around for now.
+cd ..
+make distclean
+./usrinst.sh
+make
+
+echo
+echo Please execute the following commands
+echo su
+echo cd ..
+echo "make install; make distclean; exit"
+echo ./mkswordbase2
+echo
+

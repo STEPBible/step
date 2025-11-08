@@ -44,13 +44,20 @@ var ExamplesView = Backbone.View.extend({
 								'<br><span id="g1q4a2">2) Plans for 1/2/3 years, chronological, Jewish etc</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/bible_reading_plan_.png\');width:190px;height:286px;border:3px solid black;display:none"></div>' +
 							'</div>' +
-						'<li style="font-weight:bold"><span id="g1q5">How do I also see a commentary?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+						'<li style="font-weight:bold"><span id="g1q5">How do I see a classical commentary?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
 							'<div class="stepExample" style="display:none">' +
 								'<span id="g1q5a1">1) Click the Bible button.</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/select_bible_.png\');width:190px;height:68px;border:3px solid black;display:none"></div>' +
 								'<br><span id="g1q5a2">2) Click on Commentaries</span>' +
 								'<br><div class="faq_img" style="background-image: url(\'images\/commentaries_.png\');width:184px;height:40px;border:3px solid black;display:none"></div>' +
 							'</div>' +
+						'<li style="font-weight:bold"><span id="g1q6">How do I see a recent commentaries?</span><a style="margin-bottom:6px;font-size:14px" class="glyphicon glyphicon-triangle-right stepExample"></a></li>' +
+							'<div class="stepExample" style="display:none">' +
+								'<span id="g1q6a1">1) Click the Summary button.</span>' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/summary_button.png\');width:185px;height:140px;border:3px solid black;display:none"></div>' +
+								'<br><span id="g1q6a2">2) Click on the Commentaries tab to see commentaries from the Gospel Coalition and the ICC.</span>' +
+								'<br><div class="faq_img" style="background-image: url(\'images\/commentaries_tab.png\');width:190px;height:208px;border:3px solid black;display:none"></div>' +
+							'</div>' +							
 						'</ul>' +
 				'</div>' +
 			'</div>' +

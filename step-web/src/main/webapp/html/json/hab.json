@@ -22,5 +22,17 @@
 "chapter_2_icc_url" : "https://archive.org/details/criticalexegetic00smituoft/page/n399/mode/2up",
 "chapter_2_icc_page" : "X",
 "chapter_3_icc_url" : "https://archive.org/details/criticalexegetic00smituoft/page/n405/mode/2up",
-"chapter_3_icc_page" : "X"
+"chapter_3_icc_page" : "X",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/habakkuk/habakkuk.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/habakkuk/habakkuk.htm#head11",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/habakkuk/habakkuk.htm#head14",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/habakkuk/habakkuk.htm#head19",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/habakkuk/habakkuk.htm#head28",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/Habakkuk/",
+"chapter_outline_tgc_url": "#section-5",
+"chapter_1_tgc_url": "#section-6",
+"chapter_2_tgc_url": "#section-7",
+"chapter_3_tgc_url": "#section-14",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['David G. Firth', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

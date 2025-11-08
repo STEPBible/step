@@ -9,5 +9,13 @@
 "chapter_intro_icc_url" : "https://archive.org/details/acriticalandexeg00bigguoft/page/n324/mode/2up",
 "chapter_intro_icc_page" : "305",
 "chapter_1_icc_url" : "https://archive.org/details/acriticalandexeg00bigguoft/page/n342/mode/2up",
-"chapter_1_icc_page" : "323"
+"chapter_1_icc_page" : "323",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/jude/jude.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/jude/jude.htm#head9",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/jude/jude.htm#head12",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/Jude/",
+"chapter_outline_tgc_url": "#section-4",
+"chapter_1_tgc_url": "#section-5",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Thomas Schreiner', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

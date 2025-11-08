@@ -1,0 +1,4 @@
+These examples use a standard Makefile which exemplifies how you can compile
+your own code against the SWORD engine.
+This does, however, require SWORD to be installed before a 'make' in this
+folder will be successful.

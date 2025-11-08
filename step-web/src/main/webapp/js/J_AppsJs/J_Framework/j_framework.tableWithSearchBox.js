@@ -107,7 +107,7 @@
 
        <!-- Search box. -->
        <div style='display: flex; align-items: center; padding-bottom: 5px;'>
-         <textarea id='peopleSearchBox' class='jframework-searchBox' placeholder='&#x1F50D; Search: Type the start of a name here ...'></textarea>
+         <textarea id='peopleSearchBox' class='jframework-searchBox' placeholder='Search: Type the start of a name here ...'></textarea>
        </div>
      </div> <!-- End of header. -->
 
@@ -397,7 +397,7 @@ export class ClassJFrameworkTableWithSearchBox
 	/* The caller may populate the table themselves.  Alternatively, they
 	   may supply a function to do it. */
 	
-	if (null !== this._bodyBuilderFn())
+	if (null !== this._bodyBuilderFn) // Oct 20205: Was checking for a null being returned from calling the function, rather than checking whether the function variable itself was null.
 	{
 	    const rowsHtml = this._bodyBuilderFn();
 	    this._tableBody.innerHTML = rowsHtml;

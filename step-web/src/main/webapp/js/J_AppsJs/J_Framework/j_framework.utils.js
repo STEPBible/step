@@ -110,6 +110,28 @@ class _ClassJFrameworkUtils
 
     
     /**************************************************************************/
+    /* Tries to arrange a vertically scrolling container so that the given Y
+       position is centred within it -- doing something sensible if the height
+       of the content is not enough to make centring possible. */
+    
+    centrePointVerticallyWithinScrollingContainer (container, targetY)
+    {
+	const containerHeight = container.clientHeight;
+	const contentHeight = container.scrollHeight;
+
+	// Compute ideal scroll position so that targetY is centered
+	var desiredScrollTop = parseFloat(targetY) - containerHeight / 2;
+
+	// Clamp within scrollable range
+	desiredScrollTop = Math.max(0, Math.min(desiredScrollTop, contentHeight - containerHeight));
+
+	container.scrollTo({
+	    top: desiredScrollTop
+	});
+    }
+
+    
+    /**************************************************************************/
     /* Determines if a colour is dark or light. */
 
     isDark (colour)
@@ -121,10 +143,40 @@ class _ClassJFrameworkUtils
 
 
     /**************************************************************************/
+    /* Lightens a given colour by a given factor.  The colour can be anything
+       acceptable to toRgb, including the rgb(...) value which you get if you
+       read colours from an existing element -- getComputedStyle(elt).color or
+       whatever. */
+    
+    lightenColour (colour, factor)
+    {
+	var x = this.toRgb(colour);
+	var r = x.r;
+	var g = x.g;
+	var b = x.b;
+	
+	r = Math.round(r + (255 - r) * factor);
+	g = Math.round(g + (255 - g) * factor);
+	b = Math.round(b + (255 - b) * factor);
+
+	return `rgb(${r}, ${g}, ${b})`;	
+    }
+
+    
+    /**************************************************************************/
     /* Converts any CSS colour designation to { r:..., g:..., b:... }. */
     
     toRgb (colour)
     {
+	const match = colour.match(/rgb\s*\(\s*(\d+),\s*(\d+),\s*(\d+)\s*\)/);
+	if (match)
+	{
+	    let [_, R, G, B] = match.map(Number);
+	    return { r: R, g : G, b: B };
+	}
+
+
+
 	/*********************************************************************/
 	if (colour.startsWith("#"))
 	{

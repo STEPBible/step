@@ -2475,6 +2475,20 @@ class _ClassPresentationHandler
 	    return;
 
 	const sourcePersonRecord = personRecordFromIndex(ix);
+	let childrenUnderlineColor = '#b2e5f3';
+	try
+	{
+	    const rawColour = getComputedStyle(document.documentElement).getPropertyValue('--clrRelatedWordBg');
+	    if (rawColour)
+	    {
+		const trimmedColour = rawColour.trim();
+		if (trimmedColour.length > 0)
+		    childrenUnderlineColor = trimmedColour;
+	    }
+	}
+	catch (e)
+	{
+	}
 
 	for (const relatedPerson of sourcePersonRecord.siblings)
         {
@@ -2496,7 +2510,18 @@ class _ClassPresentationHandler
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
 		const textNode = personRecord.treeNode.querySelector('text');
-		d3.select(textNode).classed('highlightChildren', highlighting);
+		const selection = d3.select(textNode);
+		selection.classed('highlightChildren', highlighting);
+		if (highlighting)
+		{
+		    selection.style('text-decoration-color', childrenUnderlineColor);
+		    selection.style('fill', childrenUnderlineColor);
+		}
+		else
+		{
+		    selection.style('text-decoration-color', null);
+		    selection.style('fill', null);
+		}
 	    }
 	    catch (e)
 	    {
@@ -3129,7 +3154,9 @@ class _ClassPresentationHandler
 	    const fromAdamFivePercents = Math.round( (100 * (generationsFromAdam / 77)) / 5);
 	    const before = '&#x2588;'.repeat(fromAdamFivePercents);
 	    const after  = '&#x2588;'.repeat(20 - fromAdamFivePercents);
-	    generations = `<p><b>Timeline:</b> Adam &#x25C0; <span style='color:lightgray;font-size:small'>${before}</span>&#x2588;<span style='color:lightgray;font-size:small'>${after}</span> &#x25B6; NT</p>`;
+	    const leftChevronSvg  = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="7.5 2 4.5 6 7.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+	    const rightChevronSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="4.5 2 7.5 6 4.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+	    generations = `<p><b>Timeline:</b> Adam ${leftChevronSvg} <span style='color:white;font-size:small'>${before}</span><span style='color:#e0e0e0;font-size:small'>&#x2588;</span><span style='color:white;font-size:small'>${after}</span> ${rightChevronSvg} NT</p>`;
 	}
 
 
@@ -3186,6 +3213,24 @@ class _ClassPresentationHandler
 	const summaryIcon = DataHandler.getSummaryIcon(personRecord);
 	const spacer = summaryIcon ? '&nbsp;' : '';
 	const multipleReferences = personRecord.allRefsAsRanges.length > 1 ? ' etc' : '';
+	const useIconForShareableLink = (() => {
+		if (typeof step !== 'undefined' && typeof step.touchDevice === 'boolean') {
+			return step.touchDevice;
+		}
+		const ua = navigator.userAgent.toLowerCase();
+		if (ua.indexOf('android') > -1) {
+			return true;
+		}
+		if ((ua.indexOf('iphone') > -1) || (ua.indexOf('ipad') > -1) ||
+			((ua.indexOf('macintosh') > -1) && (navigator.maxTouchPoints > 1))) {
+			return true;
+		}
+		return false;
+	})();
+	const shareableLinkContent = useIconForShareableLink ?
+		"<span class='glyphicon glyphicon-send' aria-hidden='true'></span>" :
+		'Shareable link';
+	const shareableLinkMarkup = `<span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree' aria-label='Copy to clipboard a URL for this family tree'>${shareableLinkContent}</span>`;
 	infoBoxContent
 	    .html(`
               <div style='display:flex; align-items:center'><span class='iconFont'>${summaryIcon}</span>
@@ -3195,7 +3240,7 @@ class _ClassPresentationHandler
                   <span>&nbsp;${"" === personRecord.role ? "" : (personRecord.role + " ")} (at ${firstScriptureReference(personRecord)}${multipleReferences}).</span>
                   <span>${alternativeNames}</span>
                 </span>
-                <span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree'>Shareable link</span>
+                ${shareableLinkMarkup}
               </div>
 
              <br>${partnerList}
@@ -3870,7 +3915,7 @@ class _ClassSearchTableCommonProcessing
 	    selectionHighlighterFn: this._tableRowHighlighter.bind(this),
 	    searchBoxId: searchBoxId,
 	    rowMatcherFn: this._rowMatcherFn.bind(this),
-	    hideTableWhenNotInUse: true,
+	    hideTableWhenNotInUse: false, /* Oct-2025.  Was true, but that makes it difficult to place right-mouse-button menu, because we need to know its height in order to do so, and with true, the height can change after placement. */
 	    keepSelectedRowVisible: false,
 	};
 	
@@ -3908,7 +3953,7 @@ class _ClassSearchTableCommonProcessing
     _tableClickHandlerFn (cell, column)
     {
 	const row = cell.closest("tr");
-	this._callerClickHandlerFn(row.rowIndex);
+	this._callerClickHandlerFn(row.getAttribute('data-personIndexWithinOverallSearchTable')); // Was this._callerClickHandlerFn(row.rowIndex);
     }
 
     

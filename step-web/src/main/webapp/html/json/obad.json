@@ -9,5 +9,13 @@
 "chapter_intro_icc_url" : "https://archive.org/details/criticalexegetic00smituoft/page/n417/mode/2up",
 "chapter_intro_icc_page" : "X",
 "chapter_1_icc_url" : "https://archive.org/details/criticalexegetic00smituoft/page/18/mode/2up",
-"chapter_1_icc_page" : "X"
+"chapter_1_icc_page" : "X",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/obadiah/obadiah.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/obadiah/obadiah.htm#head10",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/obadiah/obadiah.htm#head13",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/Obadiah/",
+"chapter_outline_tgc_url": "#section-8",
+"chapter_1_tgc_url": "#section-9",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Irv Busenitz', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

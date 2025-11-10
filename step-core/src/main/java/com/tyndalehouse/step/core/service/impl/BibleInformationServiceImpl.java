@@ -97,7 +97,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
                                                   final Locale userLocale) {
         LOGGER.debug("Getting bible versions with locale [{}] and allVersions=[{}]", locale, allVersions);
         return getSortedSerialisableList(this.jswordModule.getInstalledModules(allVersions, locale,
-                BookCategory.BIBLE, BookCategory.COMMENTARY), userLocale, this.resolver);
+                BookCategory.BIBLE, BookCategory.COMMENTARY), userLocale, this.resolver, this.jswordVersification);
     }
 
     /**

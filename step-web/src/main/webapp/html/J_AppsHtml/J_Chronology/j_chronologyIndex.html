@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Events in the Bible</title>
+    <link rel="shortcut icon" href="/images/step-favicon.ico"/>
+    <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2.css" rel="stylesheet" media="screen"/>
+    <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/scss/step-template.css" rel="stylesheet" media="screen"/>
+    <script src="/international/en.js" type="text/javascript"></script>
+    <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/libs/underscore-min.js" type="text/javascript"></script>
+    <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/libs/backbone.js" type="text/javascript"></script>
+    <script src="/libs/backbone.localStorage.js" type="text/javascript"></script>
+    <script src="/js/step_constants.js" type="text/javascript"></script>
+    <script src="/js/passage_selection.js" type="text/javascript"></script>
+    <script src="/js/search_selection.js" type="text/javascript"></script>
+    <script src="/js/backbone/models/model_settings.js" type="text/javascript"></script>
+
+    <link href="/css/J_AppsCss/J_Framework/j_framework.common.css" rel="stylesheet" media="screen"/>
+    <link href="/css/J_AppsCss/J_Framework/j_framework.tableWithSearchBox.css" rel="stylesheet" media="screen"/>
+  </head>
+
+
+<!-- ********************************************************************** -->
+
+<body>
+  <!-- Header -->
+  <div id='header'>
+    <h2 style='margin-top: 6px; margin-bottom: 2px;'>
+      Chronology
+      <span id='smallScreenInfo' style='font-size:small'></span> <!-- Additional information is added under control of Javascript on small screens. -->
+    </h2>
+
+
+    <!-- Search box. -->
+    <div style='display: flex; align-items: center; padding-bottom: 5px;'>
+      <textarea id='chronologySearchBox' class='jframework-searchBox' maxlength='100' placeholder='&#x1F50D; Search ...'></textarea>
+    </div>
+  </div> <!-- End of header. -->
+
+
+  <!-- Table from which items are selected. -->
+
+  <div id='chronologyTableContainer' class='jframework-searchTableContainer'>
+    <table class='jframework-searchTable jframework-standardText'>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script type='module'>
+    /**************************************************************************/
+    import { JFrameworkUtils                         } from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
+    import { JChronologyTableHandler, JEventHandlers } from '/js/J_AppsJs/J_Chronology/j_chronologyIndex.js';
+
+    
+
+    /**************************************************************************/
+    const C_HideTableWhenNotInUse = true;
+
+
+
+    /**************************************************************************/
+    /* This was used by the genealogy app, where we had two columns in the
+       search table.  I have retained it here in case we need it, but have
+       set it to do nothing: the original purpose was to change the column
+       widths according to the screen size, but in the chronology application,
+       we have only one column.  The remaining comments and the bulk of the
+       code below come from the genealogy version; I have simply commented out
+       the line which actually does anything.
+
+       I _think_ it may be necessary to change the table's column-sizes
+       according to the width of the screen.  Don't be tempted to attempt this
+       in css and / or using @media -- it doesn't seem to work, and ChatGPT
+       says it's unreliable. */
+	
+    function handleDimensions ()
+    {
+/*	
+	function smallScreenSettings ()
+	{
+            $('.jframework-searchTable col:first-child').css('width', '35%');
+            $('.jframework-searchTable col:last-child').css('width', '65%');
+	}
+
+	function largeScreenSettings ()
+	{
+            $('.jframework-searchTable col:first-child').css('width', '25%');
+            $('.jframework-searchTable col:last-child').css('width', '75%');
+	}
+	
+	JFrameworkUtils.doResponsive(smallScreenSettings, largeScreenSettings);
+*/
+    }
+	
+
+    /**************************************************************************/
+    /* CAUTIONS
+       ========
+
+       It is possible for the onresize method to be called while the onload
+       method is actually running.  Equally it may fail to be called during
+       onload even though the user is actively resizing the screen.
+
+       This accounts in part for the rather fiddly code below -- I don't want
+       the onresize code doing anything until the data upon which it may
+       depend is all in place.  To this end ...
+
+       a) I set up the function upon which onresize relies only from within
+          onload.  Up to that point, onresize does nothing, even if called.
+
+       b) I always call onresize at the end of the onload processing just
+          in case it should have been called and has not.
+
+       c) onload waits for the underlying initalisation to complete before
+          kicking off any of these things.
+
+
+       In the genealogy code (upon which this is loosely based), I also
+       observed:
+
+         'Things may have been configured to hide the search table
+ 	  when not in use (and indeed they are configured like that
+ 	  presently -- see C_ideTableWhenNotInUse).  When the user
+ 	  clicks in the search box, it causes the owning iframe to be
+ 	  resized, which will invoke the onresize code.  You need to
+ 	  be very careful that that code doesn't screw up the attempt
+ 	  to resize the iframe.'
+
+      In the genealogy code, my startup code was appreciably less
+      complicated than the code below.  I'm not sure whether the more
+      complex code here might serve to avoid the sorts of problems
+      discussed above.
+    */
+
+    
+    var C_DebouncedResizerFunction = null; // This will be set to be a debounced function to handle resizing.  We want it to be null until things have been initialised.
+    
+
+
+    /**************************************************************************/
+    function onresize ()
+    {
+	if (C_DebouncedResizerFunction)
+	    C_DebouncedResizerFunction();
+    }
+
+
+    
+    /**************************************************************************/
+    function onload ()
+    {
+	/**********************************************************************/
+	/* As I understand it, JFrameworkUtils.debounce returns a function
+	   based upon the function passed to it, but wrapped in a 100ms delay,
+	   so that we don't continually attempt to update everything while a
+           resize is in progress.
+
+	   This function runs only once the main initialisation is complete.
+	   Its only real purpose is to call the onresize function, in case
+	   any resizing has occurred while the onload processing was active --
+	   and also to arrange that the panes in the owning 3-pane window are
+	   resized if necessary to accommodate the display. */
+	   	
+	function moreInitialisation ()
+	{
+	    const debouncedResizer = JFrameworkUtils.debounce(() => {
+		handleDimensions();
+		JChronologyTableHandler.setTableSize();
+	    }, 100);
+	    
+	    debouncedResizer(); // Just in case there's a resize activity while we're initialising and it gets missed.
+
+	    C_DebouncedResizerFunction = debouncedResizer; // Enable onresize.
+
+	    if (C_HideTableWhenNotInUse)
+		JEventHandlers.sendMessageTo(null, { 'resizeIframe': document.body.scrollHeight + 10 }); // Extra 10 because experience suggests that things may otherwise be cut off at the bottom of the frame.
+	}
+
+	
+
+	/**********************************************************************/
+	/* It's safe to do this straight away -- it doesn't rely upon any other
+	   initialisation.  Whether it's _necessary_, given that we later call
+	   onresize and that does it too, I don't know. */
+	
+	handleDimensions();
+	
+
+
+	/**********************************************************************/
+	/* This does a variety of things, including loading data, and we need
+	   it to complete before we continue.  I therefore kick it off and then
+	   poll for completion, at which point I can continue with the
+	   initialisation. */
+
+	JChronologyTableHandler.init(C_HideTableWhenNotInUse);
+
+	const check = setInterval(() => {
+            if (JChronologyTableHandler.initialisationComplete)
+	    {
+		clearInterval(check);
+		moreInitialisation();
+            }
+	}, 100);
+    }
+
+    JFrameworkUtils.setOnloadEtc(onload, onresize);
+  </script>
+</body>
+</html>

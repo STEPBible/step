@@ -9,8 +9,8 @@
    =============================================================================
 
    This class is intended for use in an application which controls a number of
-   separate iframes.  I will refer to this application here as the controller.
-   The other applications I will refer to as iframeApps.
+   separate iframes.  I refer to this application here as the controller.  The
+   other applications I refer to as iframeApps.
 
 
 
@@ -22,6 +22,11 @@
    In essence, this class acts as a communications coordinator, permitting the
    various iframeApps to communicate with one another and with the coordinator.
 
+   To make use of the functionality here, the iframeApps must themselves
+   instantiate ClassJFrameworkMultiframeCommunicationsSlave (or a class
+   derived from it), this providing the functionality needed to handle
+   communications in the iframeApp.
+
 
 
 
@@ -29,20 +34,30 @@
    Javascript
    =============================================================================
 
-   In the controller file, you need to instantiate either
-   ClassJFrameworkMultiframeCommunicationsMaster or a class which inherits from
-   it.
+   The controller will have its own HTML file which describes the iframes.
+   You can set that file up any way you like, although you might like to look
+   at J_Genealogy/j_peopleSplit3.html as an example which incorporates other
+   potentially useful functionality.
 
-   You need the inheriting class only if you need iframeApps to be able to
-   communicate with the controller.  If they need only to communicate with
-   one another, there is no need to bother with an inheriting class.
+   In that file (or in Javascript invoked from it), you need to instantiate
+   either ClassJFrameworkMultiframeCommunicationsMaster or a class which
+   inherits from it.
 
-   So if you don't need the inheriting class, you need:
+   Instantiate ClassJFrameworkMultiframeCommunicationsMaster itself if you
+   _don't_ need the iframeApps to be able to send messages to the controller
+   itself.  (They will still be able to communicate amongst themselves, and
+   the controller will still be able to talk to them; the only thing lacking
+   is the ability for the iframeApps to talk back to the controller.)
+
+   In this case, you would want just:
 
      import { ClassJFrameworkMultiframeCommunicationsMaster } from '/js/J_AppsJs/J_Framework/j_framework.multiframeCommunicationsMaster.js';
      new ClassJFrameworkMultiframeCommunicationsMaster();
 
-   If you _do_ need the inheriting class, you need:
+
+   If you _do_ need the iframeApps to talk to the controller itself, then
+   you need to _inherit_ from ClassJFrameworkMultiframeCommunicationsMaster,
+   and override receiveMessage with code to handle incoming messages:
 
      import { ClassJFrameworkMultiframeCommunicationsMaster } from '/js/J_AppsJs/J_Framework/j_framework.multiframeCommunicationsMaster.js';
      class MyClass extends ClassJFrameworkMultiframeCommunicationsMaster
@@ -57,9 +72,6 @@
 
      new MyClass();
 
-   In other words, the point of inheriting is so that you can override
-   receiveMessage and do something useful.
-
    Note that in neither case do you have to assign the class instance to
    anything -- the constructor here will automatically set things up so
    that all functionality works.   If you do need to be able to access
@@ -70,15 +82,64 @@
 
 
 
-  Internals
+  API
   =============================================================================
 
   On instantiation, window.JFrameworkMultiframeCommunicationsMaster is
   automatically set to point to an instance of your class.
 
+  On startup, the class automatically sends a PARENT_URL message to all
+  iframeApps which are set up to handle it (and ignores those which are not).
+
+  - availableFrameIds gives back a list of the ids for all iframes.
+
+  - sendMessageTo sends a message to a given frame.
+
+  - broadcastMessageTo sends a message to a collection of frames.
+
+  - sendActivation informs an iframe that it has been activated.
+
+  - sendSetUrlForce forcibly sets the URL in a given iframe.  It does this
+    immediately, without giving the iframeApp a chance to tidy up,
+
+  - sendSetUrlRequest requests the iframeApp to change its URL, but gives
+    it the opportunity to tidy up first.
+
+  - deleteSavedData / getSavedData / saveData: When the URL being displayed
+    in an iframe changes, any state information is lost.  These functions
+    let an iframeApp ask the present class to save state information on its
+    behalf, with a view to retrieving that data later.
+
+  - receiveMessage needs to be overridden here if iframeApps need to talk
+    back to the controller (as opposed to just talking amongst themselves).
 
 
-  'Jamie' Jamieson   STEPBible   May 2025
+  Note that most of the methods above are normally invoked from
+  ClassJFrameworkMultiframeCommunicationsSlave in the iframeApp, although
+  there is nothing to stop them from being invokved direct from the
+  processing here if appropriate.
+
+  Note also that in general failures are handled silently -- if you attempt
+  to send a message to a non-existent iframeApp, or if you send a message
+  which an iframeApp is not set up to handle, the error is simply ignored.
+  This is deliberate -- I want applications to be able to run standalone as
+  well as in the context of an iframe controller, and therefore don't want
+  to make assumptions about what message handling they support.
+
+
+
+
+
+
+
+  Change history
+  =============================================================================
+
+  2025-09-24 Pass URL parameters to all iframes on startup.
+
+
+
+  'Jamie' Jamieson   STEPBible   Sep 2025
 */
 
 
@@ -102,17 +163,68 @@ import { JFrameworkUtils } from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
 export class ClassJFrameworkMultiframeCommunicationsMaster
 {
     /**************************************************************************/
+    /**************************************************************************/
+    /**                                                                      **/
+    /**                           Initialisation                             **/
+    /**                                                                      **/
+    /**************************************************************************/
+    /**************************************************************************/
+
+    /**************************************************************************/
     constructor ()
     {
 	window.JFrameworkMultiframeCommunicationsMaster = this; // Attach the instance to the window.
 	this._dataStoreForIframes = new Map();
-	this._frameIds = Array.from(document.querySelectorAll('iframe'))
+	const iframes = Array.from(document.querySelectorAll('iframe'))
+	this._frameIds = iframes
 	    .map(iframe => iframe.id)
 	    .filter(id => id); // Remove empty or missing ids.
+
+	const me = this;
+	this._waitForIframesToLoad(iframes, me._onIframesLoaded);
     }
 
 
+    /**************************************************************************/
+    /* Pass any parameters from the URL used to invoke the parent to each
+       iframe which may be interested in them.
 
+       THIS MAY NOT BE TERRIBLY USEFUL: THE SLAVE APPS CAN ONLY PROCESS THE
+       MESSAGE IF THEY ARE READY TO DO SO, AND CHANCES ARE THAT WITHOUT A
+       FAIR BIT OF FIDDLY WORK, THEY WON'T BE. */
+
+    _onIframesLoaded (owningClass)
+    {
+	const params = new URLSearchParams(window.location.search);
+	owningClass.availableFrameIds().forEach(iframeId => {
+	    try
+	    {
+		owningClass.sendMessageTo(iframeId, { msgType: 'PARENT_URL', data: params }, 'PARENT');
+	    }
+	    catch(_)
+	    {
+	    }
+	});
+    }
+
+    
+    /**************************************************************************/
+    _waitForIframesToLoad (iframes, onIframesLoaded)
+    {
+	var loadedCount = 0;
+	const me = this;
+
+	iframes.forEach(iframe => {
+	    iframe.addEventListener("load", () => {
+		loadedCount++;
+		if (loadedCount === iframes.length)
+		    onIframesLoaded(me);
+	    });
+	});
+    }
+
+
+    
     /**************************************************************************/
     /**************************************************************************/
     /**                                                                      **/
@@ -142,13 +254,12 @@ export class ClassJFrameworkMultiframeCommunicationsMaster
     /**************************************************************************/
     /* If a window is reloaded, state information is lost.  This is sometimes
        inconvenient.  In an iframe environment, it is possible to do slightly
-       better than this, because the containing window can be set up here to
+       better than this, because the controller window can be set up here to
        store data on behalf of the iframes it contains.
 
-       To use this feature, all that is required is for the application
-       running in the iframe to call its saveData method, passing a key by
-       which it wishes to identify the data and the data itself (which can
-       be of any form).
+       To use this feature, all that is required is for the iframeApp to call
+       its saveData method, passing a key by which it wishes to identify the
+       data and whatever data it wishes to store (which can be of any form).
 
        To retrieve the data, it calls getSavesData, with the same key.
 
@@ -226,7 +337,9 @@ export class ClassJFrameworkMultiframeCommunicationsMaster
 
     broadcastMessageTo (targetFrameIdRegex, data, sourceFrameId)
     {
-	this._frameIds.filter(id => targetFrameIdRegex.test(id)).forEeach(id => { this.sendMessageTo(id, data, sourceFrameId); });
+	this._frameIds.filter(id => targetFrameIdRegex.test(id)).forEach(id => { // 08-Nov-2025: Corrected typo.
+	    this.sendMessageTo(id, data, sourceFrameId);
+	});
     }
 
     
@@ -321,8 +434,8 @@ export class ClassJFrameworkMultiframeCommunicationsMaster
     /**************************************************************************/
     /* This arranges to send a request to a target frame asking it to change
        the URL it is displaying.  Handling things this way gives the
-       application running in the iframe to do a certain amount of house-
-       keeping before making the change. */
+       application running in the iframe the chance to do a certain amount of
+       house-keeping before making the change. */
     
     sendSetUrlRequest (targetId, url)
     {

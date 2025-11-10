@@ -216,8 +216,11 @@ var QuickLexicon = Backbone.View.extend({
         var self = this;
         lastMorphCode = '';
         var strongNumbers = this.strong.split(" ");
-        if (strongNumbers.length == 1)
+        if (strongNumbers.length == 1) {
+            if (strongNumbers[0] === "")
+                return;
             strongNumbers = this.strong.split(",");
+        }
 //        if ((typeof this.morph !== "undefined") && (this.morph.indexOf('TOS:') == 0)) {
         if ((typeof this.morph === "string") && (strongNumbers.length > 0) && (strongNumbers[0].substring(0, 1) === "H")) {
             if (this.morph.substring(0, 4) !== "TOS:")

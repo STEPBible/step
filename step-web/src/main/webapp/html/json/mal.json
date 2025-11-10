@@ -21,5 +21,19 @@
 "chapter_1_icc_url" : "https://archive.org/details/criticalexegetic25mitcuoft/criticalexegetic25mitcuoft/page/n411/mode/2up",
 "chapter_2_icc_url" : "https://archive.org/details/criticalexegetic25mitcuoft/criticalexegetic25mitcuoft/page/n427/mode/2up",
 "chapter_3_icc_url" : "https://archive.org/details/criticalexegetic25mitcuoft/criticalexegetic25mitcuoft/page/n453/mode/2up",
-"chapter_4_icc_url" : "https://archive.org/details/criticalexegetic25mitcuoft/criticalexegetic25mitcuoft/page/78/mode/2up"
+"chapter_4_icc_url" : "https://archive.org/details/criticalexegetic25mitcuoft/criticalexegetic25mitcuoft/page/78/mode/2up",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/malachi/malachi.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/malachi/malachi.htm#head14",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/malachi/malachi.htm#head14",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/malachi/malachi.htm#head20",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/malachi/malachi.htm#head26",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/malachi/malachi.htm#head31",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/Malachi/",
+"chapter_outline_tgc_url": "#section-4",
+"chapter_1_tgc_url": "#section-5",
+"chapter_2_tgc_url": "#section-9",
+"chapter_3_tgc_url": "#section-12",
+"chapter_4_tgc_url": "#section-15",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Matthew P. Harmon', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

@@ -9,19 +9,20 @@
             var currentVersion = window.bibleVersions[ii];
             tempVersion["initials"] = currentVersion[0];
             tempVersion["name"] = currentVersion[1];
-            var trueFalseValues = currentVersion[7].split("");
-            tempVersion["hasStrongs"] = (trueFalseValues[0]) === "T" ? true : false;
-            tempVersion["hasMorphology"] = (trueFalseValues[1]) === "T" ? true : false;
-            tempVersion["hasRedLetter"] = (trueFalseValues[2]) === "T" ? true : false;
-            tempVersion["hasNotes"] = (trueFalseValues[3]) === "T" ? true : false;
-            tempVersion["hasHeadings"] = (trueFalseValues[4]) === "T" ? true : false;
-            tempVersion["questionable"] = (trueFalseValues[5]) === "T" ? true : false;
+            var oneCharValues = currentVersion[7].split("");
+            tempVersion["hasStrongs"] = (oneCharValues[0]) === "T" ? true : false;
+            tempVersion["hasMorphology"] = (oneCharValues[1]) === "T" ? true : false;
+            tempVersion["hasRedLetter"] = (oneCharValues[2]) === "T" ? true : false;
+            tempVersion["hasNotes"] = (oneCharValues[3]) === "T" ? true : false;
+            tempVersion["hasHeadings"] = (oneCharValues[4]) === "T" ? true : false;
+            tempVersion["questionable"] = (oneCharValues[5]) === "T" ? true : false;
             tempVersion["originalLanguage"] = currentVersion[2];
             tempVersion["languageCode"] = currentVersion[3];
             tempVersion["category"] = currentVersion[4];
             tempVersion["languageName"] = currentVersion[5];
             tempVersion["shortInitials"] = currentVersion[6];
-            tempVersion["hasSeptuagintTagging"] = (trueFalseValues[6]) === "T" ? true : false;
+            tempVersion["hasSeptuagintTagging"] = (oneCharValues[6]) === "T" ? true : false;
+            tempVersion["hasAllNTOTorBoth"] = oneCharValues[7];
             var item = {item: tempVersion, itemType: 'version'};
             step.itemisedVersions.push(item);
             step.keyedVersions[tempVersion.initials] = tempVersion;
@@ -50,9 +51,9 @@
             currentLang["code"] = curElement[0];
             currentLang["originalLanguageName"] = curElement[1];
             currentLang["userLocaleLanguageName"] = curElement[2];
-            var trueFalseValues = curElement[3].split("");
-            currentLang["complete"] = (trueFalseValues[0] === "T") ? true : false;
-            currentLang["partial"] = (trueFalseValues[1] === "T") ? true : false;
+            var oneCharValues = curElement[3].split("");
+            currentLang["complete"] = (oneCharValues[0] === "T") ? true : false;
+            currentLang["partial"] = (oneCharValues[1] === "T") ? true : false;
             var newLiElement = "<li ";
             var userLangCode = step.userLanguageCode;
             if (userLangCode === "iw") userLangCode = "he"; // iw is Modern Hebrew and he is old Hebrew
@@ -370,7 +371,7 @@
         else if (urlVars.indexOf("colorCode5") > -1)
             cf.setNextPageURL('/?q=version=SBLG@reference=Rom.12&options=CEMVALHUN&skipwelcome' + debugParam, C_AspectDesc, '');
         else if (urlVars.indexOf("colorCode6") > -1)
-            cf.setNextPageURL('/?q=version=THOT@reference=Gen.1&options=HVLUNC&skipwelcome' + debugParam, C_AspectDesc, '');
+            cf.setNextPageURL('/?q=version=THOT@reference=Gen.1&options=HVLUNC&skipwelcome' + debugParam, C_AspectDesc, '', true);
         else if (urlVars.indexOf("colorCode7") > -1)
             cf.setNextPageURL('/?q=version=CUn@reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, C_AspectDesc, '');
         else if (urlVars.indexOf("colorCode8") > -1)

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.10" transformSequenceNumber="8">
+<install4j version="9.0.6" transformSequenceNumber="9">
   <directoryPresets config="./post-install.sh" />
-  <application name="STEP - Scripture Tools for Every Person" applicationId="1068-8958-4931-1958" mediaDir="../../../target/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="stepbible" publisher="STEP Bible" publisherWeb="http://www.stepbible.org" version="2.0.29" allPathsRelative="true" macVolumeId="a99b8b185558ecf" javaMinVersion="1.8" javaMaxVersion="1.8">
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk8/jdk8u302-b08" />
+  <application name="STEP - Scripture Tools for Every Person" applicationId="1068-8958-4931-1958" mediaDir="../../../target/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="stepbible" publisher="STEP Bible" publisherWeb="http://www.stepbible.org" version="2.0.29" allPathsRelative="true" macVolumeId="a99b8b185558ecf" javaMinVersion="11" javaMaxVersion="11">
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="11/latest" />
   </application>
   <files globalExcludeSuffixes="STEP_Augment" preserveSymlinks="false">
     <roots>
@@ -15,9 +15,8 @@
       <mountPoint id="221" root="118" location=".${compiler:sys.shortName}/logs" />
     </mountPoints>
     <entries>
-	    <dirEntry mountPoint="23" file="../../../target/step-assembly-${compiler:sys.version}-package-step-standalone" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="direct" excludeSuffixes="" dirMode="755" overrideDirMode="false">
-	    </dirEntry>
-        <fileEntry mountPoint="23" file="./post-install.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <dirEntry mountPoint="23" file="../../../target/step-assembly-${compiler:sys.version}-package-step-standalone" />
+      <fileEntry mountPoint="23" file="./post-install.sh" />
     </entries>
     <components>
       <component name="Scripture Tools for Every Person" id="96" changeable="false" hidden="true">
@@ -61,7 +60,7 @@ sh /opt/step/post-install.sh</customScript>
     <applications>
       <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" actionElevationType="elevated" launchInNewProcess="false">
         <variables>
-          <variable name="variable" valueClass="string" registerForResponseFile="false" responseFileComment="" hidden="false" />
+          <variable name="variable" valueClass="string" />
         </variables>
         <startup>
           <screen id="1" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
@@ -429,11 +428,19 @@ return console.askYesNo(message, true);
           <group id="485" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
             <serializedBean>
               <property name="backgroundColor">
-                <object class="java.awt.Color">
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
+                <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                  <object class="java.awt.Color">
+                    <int>255</int>
+                    <int>255</int>
+                    <int>255</int>
+                    <int>255</int>
+                  </object>
+                  <object class="java.awt.Color">
+                    <int>49</int>
+                    <int>52</int>
+                    <int>53</int>
+                    <int>255</int>
+                  </object>
                 </object>
               </property>
               <property name="borderSides">
@@ -442,11 +449,19 @@ return console.askYesNo(message, true);
                 </object>
               </property>
               <property name="imageEdgeBackgroundColor">
-                <object class="java.awt.Color">
-                  <int>25</int>
-                  <int>143</int>
-                  <int>220</int>
-                  <int>255</int>
+                <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                  <object class="java.awt.Color">
+                    <int>25</int>
+                    <int>143</int>
+                    <int>220</int>
+                    <int>255</int>
+                  </object>
+                  <object class="java.awt.Color">
+                    <int>0</int>
+                    <int>74</int>
+                    <int>151</int>
+                    <int>255</int>
+                  </object>
                 </object>
               </property>
               <property name="imageEdgeBorder" type="boolean" value="true" />
@@ -500,11 +515,19 @@ return console.askYesNo(message, true);
               <group id="492" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize title bar" externalParametrizationMode="include">
                 <serializedBean>
                   <property name="backgroundColor">
-                    <object class="java.awt.Color">
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
+                    <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                      <object class="java.awt.Color">
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                      </object>
+                      <object class="java.awt.Color">
+                        <int>49</int>
+                        <int>52</int>
+                        <int>53</int>
+                        <int>255</int>
+                      </object>
                     </object>
                   </property>
                   <property name="borderSides">
@@ -608,17 +631,15 @@ return console.askYesNo(message, true);
   </installerGui>
   <mediaSets>
     <windows name="Windows with Java" id="25" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}" installDir="STEP" jreBitType="32" runPostProcessor="true" postProcessor="sign_stepbible $EXECUTABLE" failOnPostProcessorError="true">
-      <jreBundle jreBundleSource="generated" shared="true" />
+      <jreBundle shared="true" />
     </windows>
-    <macosFolder name="macOS Folder" id="507" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}" compressDmg="true" signLaunchers="true">
-      <jreBundle jreBundleSource="generated" />
-    </macosFolder>
+    <macosFolder name="macOS Folder" id="507" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}" compressDmg="true" signLaunchers="true" />
     <linuxRPM name="Linux RPM" id="405" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}" installDir="/opt/step">
-      <jreBundle usePack200="true" jreBundleSource="generated" />
+      <jreBundle usePack200="true" />
       <postInstallScript>sh /opt/step/post-install.sh</postInstallScript>
     </linuxRPM>
     <linuxDeb name="Linux Deb Archive" id="406" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}" installDir="/opt/step" bzip="true" description="STEP Bible ::  Scripture Tools for Every Person" maintainerEmail="feedback@stepbible.org">
-      <jreBundle usePack200="true" jreBundleSource="generated" />
+      <jreBundle usePack200="true" />
       <postInstallScript>sh /opt/step/post-install.sh</postInstallScript>
     </linuxDeb>
   </mediaSets>

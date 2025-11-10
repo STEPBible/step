@@ -33,5 +33,21 @@
 "chapter_4_icc_url" : "https://archive.org/details/criticalexegetic00ropeuoft/page/252/mode/2up",
 "chapter_4_icc_page" : "252",
 "chapter_5_icc_url" : "https://archive.org/details/criticalexegetic00ropeuoft/page/282/mode/2up",
-"chapter_5_icc_page" : "282"
+"chapter_5_icc_page" : "282",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/james/james.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/james/james.htm#head9",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/james/james.htm#head12",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/james/james.htm#head29",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/james/james.htm#head44",
+"chapter_4_constable_url": "https://soniclight.com/tcon/notes/html/james/james.htm#head55",
+"chapter_5_constable_url": "https://soniclight.com/tcon/notes/html/james/james.htm#head65",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/James/",
+"chapter_outline_tgc_url": "#section-7",
+"chapter_1_tgc_url": "#section-8",
+"chapter_2_tgc_url": "#section-11",
+"chapter_3_tgc_url": "#section-13",
+"chapter_4_tgc_url": "#section-14",
+"chapter_5_tgc_url": "#section-16",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Dan Doriani', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

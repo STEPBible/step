@@ -218,6 +218,9 @@ var StepRouter = Backbone.Router.extend({
                 silent: true
             }
         );
+        if (partRendered === true) {
+            this._maybeAddInitialBookmark(passageModel, queryArgs);
+        }
 
         //then trigger the refresh of menu options and such like
         passageModel.trigger("sync-update", passageModel);
@@ -356,6 +359,146 @@ var StepRouter = Backbone.Router.extend({
             passageId: activePassageId,
             level: 'error'
         });
+    },
+    _maybeAddInitialBookmark: function (passageModel, queryArgs) {
+        if (!step || !step.bookmarks) {
+            return;
+        }
+
+        var rawArgs = this._extractRawArgs(passageModel, queryArgs);
+        if (!rawArgs) {
+            return;
+        }
+
+        rawArgs = rawArgs.replace(/%40/ig, URL_SEPARATOR).replace(/%7C/ig, URL_SEPARATOR).replace(/\|/g, URL_SEPARATOR);
+        rawArgs = rawArgs.trim();
+        while (rawArgs.charAt(0) === URL_SEPARATOR) {
+            rawArgs = rawArgs.substring(1);
+        }
+        if (!rawArgs) {
+            return;
+        }
+
+        var normalizedRawArgs = this._normalizeArgs(rawArgs);
+        if (!normalizedRawArgs) {
+            return;
+        }
+
+        if (passageModel.get("args") !== normalizedRawArgs) {
+            passageModel.save({ args: normalizedRawArgs }, { silent: true });
+        }
+
+        var encodedArgs = this._encodeArgsForBookmark(normalizedRawArgs);
+        var searchTokens = passageModel.get("searchTokens") || [];
+        if (!searchTokens.length) {
+            return;
+        }
+
+        var options = passageModel.get("selectedOptions") || passageModel.get("options") || "";
+        var display = passageModel.get("interlinearMode") || "";
+
+        this._addBookmark({
+            args: encodedArgs,
+            searchTokens: searchTokens,
+            options: options,
+            display: display
+        });
+    },
+    _extractRawArgs: function (passageModel, queryArgs) {
+        var args = null;
+        if (typeof queryArgs === "string" && queryArgs.length > 0) {
+            try {
+                args = decodeURIComponent(queryArgs);
+            } catch (e) {
+                args = queryArgs;
+            }
+        }
+        if (!args) {
+            args = passageModel.get("args");
+        }
+        if (!args) {
+            args = this._buildArgsFromSearchTokens(passageModel.get("searchTokens"));
+        }
+        return args;
+    },
+    _buildArgsFromSearchTokens: function (tokens) {
+        if (!tokens || !tokens.length) {
+            return "";
+        }
+
+        var versionParts = [];
+        var referenceParts = [];
+        var otherParts = [];
+
+        for (var i = 0; i < tokens.length; i++) {
+            var token = tokens[i] || {};
+            var type = token.itemType || token.tokenType;
+            if (!type || type === "searchJoins") {
+                continue;
+            }
+
+            var value = this._resolveTokenValue(token, type);
+            if (!value) {
+                continue;
+            }
+
+            var part = type + "=" + value;
+            if (type === VERSION) {
+                versionParts.push(part);
+            } else if (type === REFERENCE) {
+                referenceParts.push(part);
+            } else {
+                otherParts.push(part);
+            }
+        }
+
+        var combined = versionParts.concat(referenceParts, otherParts).join(URL_SEPARATOR);
+        return combined;
+    },
+    _resolveTokenValue: function (token, type) {
+        var sources = [];
+        if (token.item) {
+            sources.push(token.item);
+        }
+        if (token.enhancedTokenInfo) {
+            sources.push(token.enhancedTokenInfo);
+        }
+
+        if (type === VERSION) {
+            for (var i = 0; i < sources.length; i++) {
+                var info = sources[i];
+                if (info && typeof info.shortInitials === "string" && info.shortInitials.length > 0) {
+                    return info.shortInitials;
+                }
+                if (info && typeof info.initials === "string" && info.initials.length > 0) {
+                    return info.initials;
+                }
+            }
+        } else if (type === REFERENCE) {
+            for (var j = 0; j < sources.length; j++) {
+                var refInfo = sources[j];
+                if (refInfo && typeof refInfo.osisID === "string" && refInfo.osisID.length > 0) {
+                    return refInfo.osisID;
+                }
+                if (refInfo && typeof refInfo.osisId === "string" && refInfo.osisId.length > 0) {
+                    return refInfo.osisId;
+                }
+            }
+        }
+
+        if (typeof token.token === "string" && token.token.length > 0) {
+            return token.token;
+        }
+        if (token.token != null) {
+            return token.token + "";
+        }
+        return "";
+    },
+    _encodeArgsForBookmark: function (rawArgs) {
+        if (!rawArgs) {
+            return rawArgs;
+        }
+        return encodeURIComponent(rawArgs);
     },
     _addBookmark: function (query) {
         var normalizedArgs = this._normalizeArgs(query.args);

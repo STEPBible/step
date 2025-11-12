@@ -5480,14 +5480,14 @@ step.util = {
 		var currentElement = $(ev.target);
 		var nextElement = currentElement.parent().next();
 		if ((nextElement.is("div")) && (nextElement.has("stepExample"))) {
-			if (ev.target.classList.contains("glyphicon-chevron-right")) {
-				currentElement.removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+			if (ev.target.classList.contains("glyphicon-triangle-right")) {
+				currentElement.removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
 				nextElement.show();
 				nextElement.find("div.faq_img").show();
 				// step.util.showVideoinExample(currentElement);
 			}
 			else {
-				currentElement.removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+				currentElement.removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
 				nextElement.hide();
 				$("#videoExample").remove();
 			}

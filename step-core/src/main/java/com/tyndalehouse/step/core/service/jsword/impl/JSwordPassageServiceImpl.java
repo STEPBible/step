@@ -596,37 +596,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final Book currentBook = this.versificationService.getBookFromVersion(version);
         final Versification v11n = this.versificationService.getVersificationForVersion(currentBook);
 
-        final String normalizedReference = reference.replace("%20", " ");
-        final StringBuilder cleanedReference = new StringBuilder(normalizedReference);
-        // Strip lowercase suffixes (e.g. 15a) from verse numbers while leaving book names intact.
-        for (int i = 1; i < cleanedReference.length(); i++) {
-            char current = cleanedReference.charAt(i);
-            if (!Character.isLowerCase(current) || !Character.isDigit(cleanedReference.charAt(i - 1))) {
-                continue;
-            }
-
-            int j = i - 1;
-            while (j >= 0 && Character.isDigit(cleanedReference.charAt(j))) {
-                j--;
-            }
-
-            char delimiter = j >= 0 ? cleanedReference.charAt(j) : ' ';
-            if (j < 0 || Character.isWhitespace(delimiter) || ":.-,;+".indexOf(delimiter) >= 0) {
-                cleanedReference.deleteCharAt(i--);
-            }
-        }
-        final String scrubbedReference = cleanedReference.toString();
-
         try {
-            Key key = currentBook.getKey(scrubbedReference);
+            Key key = currentBook.getKey(reference.replace("%20", " "));
             key = normalize(key, v11n);
 
             return new BookData(currentBook, key);
         } catch (final NoSuchKeyException e) {
-            return handlePassageLookupNSKException(scrubbedReference, currentBook, v11n, e);
+            return handlePassageLookupNSKException(reference, currentBook, v11n, e);
 
         }
     }
+
     /**
      * Gets the BookData set up for verse retrieval
      *

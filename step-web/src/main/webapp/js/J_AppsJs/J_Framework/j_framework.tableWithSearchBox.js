@@ -397,7 +397,7 @@ export class ClassJFrameworkTableWithSearchBox
 	/* The caller may populate the table themselves.  Alternatively, they
 	   may supply a function to do it. */
 	
-	if (null !== this._bodyBuilderFn) // Oct 20205: Was checking for a null being returned from calling the function, rather than checking whether the function variable itself was null.
+	if (null !== this._bodyBuilderFn())
 	{
 	    const rowsHtml = this._bodyBuilderFn();
 	    this._tableBody.innerHTML = rowsHtml;
@@ -423,17 +423,6 @@ export class ClassJFrameworkTableWithSearchBox
 	/**********************************************************************/
 	this._tableContainer.style.display = this._hideTableWhenNotInUse ? 'none' : 'block';
     }
-
-
-    /**************************************************************************/
-    /* Called if the owning app loses focus.  The main purpose of this is to
-       hide the table if we're to do so when it's not in use. */
-    
-    owningAppLostFocus ()
-    {
-	this._ditchSearchBoxContentAndHideTableIfAppropriate();
-    }
-
 
 
     /**************************************************************************/
@@ -715,6 +704,10 @@ export class ClassJFrameworkTableWithSearchBox
     /**************************************************************************/
 
     /**************************************************************************/
+    /* Arranges to respond to keystrokes, and also to make things visible if
+       the user clicks in the search box, */
+    
+    /**************************************************************************/
     _addKeyboardInputHandler ()
     {
 	/**********************************************************************/
@@ -735,7 +728,10 @@ export class ClassJFrameworkTableWithSearchBox
 
 	    if ('Escape' === e.key) // Remove focus from the box and throw away the default setting.
 	    {
-		tblHandler._ditchSearchBoxContentAndHideTableIfAppropriate();
+		tblHandler._searchBox.blur();
+		tblHandler._previousSearchString = '';
+		tblHandler._searchBox[0].value = '';
+		tblHandler.hideTable();
 		return;
 	    }
 	    
@@ -763,25 +759,6 @@ export class ClassJFrameworkTableWithSearchBox
 		    });	
 	    }
 	});
-    }
-
-
-    /**************************************************************************/
-    /* Originally this code was run only when Esc was hit in the search box,
-       which was taken as indicating that the user wanted to ditch any input,
-       and therefore was also happy for the search table to vanish (assuming
-       things are configured to make that possible).  I have hived it off to
-       a separate method so it can also be called if the search box had focus
-       and the user then clicks in an app other than the search app.  This
-       will ditch any putative input, which may not be entirely ideal, but
-       it will be a bit difficult to do better. */
-
-    _ditchSearchBoxContentAndHideTableIfAppropriate ()
-    {
-	this._searchBox[0].blur();
-	this._previousSearchString = '';
-	this._searchBox[0].value = '';
-	this.hideTable();
     }
 
 

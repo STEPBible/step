@@ -20,8 +20,8 @@
 
     
     /* Definitions common to framework applications. */
-    --jframework-clrPopUpMenuItemBackgroundUnselected: rgb(255, 255, 192);
-    --jframework-clrInfoBoxBackground: rgb(255, 255, 192);
+    --jframework-clrPopUpMenuItemBackgroundUnselected: var(--clrLexiconFocusBG);
+    --jframework-clrInfoBoxBackground: var(--clrLexiconFocusBG);
     --jframework-clrPopUpMenuItemBackgroundSelected: var(--clrHighlight);
 
     --jframework-clrSearchBoxBackground: #eef9fc;
@@ -43,8 +43,8 @@
     --jframework-popUpZIndex: 1000;
 
     --jframework-clrLink: blue;
-    --jframework-clrLinkHighlightBackground: red;
-    --jframework-clrLinkHighlightForeground: yellow;
+    --jframework-clrLinkHighlightBackground: #b2e5f3;
+    --jframework-clrLinkHighlightForeground: var(--jframework-clrLink);
 }
     
 

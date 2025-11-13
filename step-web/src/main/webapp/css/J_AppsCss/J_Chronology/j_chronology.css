@@ -1,0 +1,22 @@
+@import url('/css/commonDefinitions.css');
+
+
+/******************************************************************************/
+/* Styles for chronology layout. */
+
+/* $$$ !!! TEMPORARY ONLY -- NEED TO PICK UP PROPERLY. */
+:root {
+    --defaultfont: 15px;
+
+    --clrContainerBackground: var(--clrBackground);
+    
+   --clrEventMarkerMiscellaneous: #3498db;
+   --clrEventMarkerMiscellaneousBorder: black;
+
+   --clrDateText: var(--clrText);
+   --clrLabelText: var(--clrText);
+}
+
+.jdarkMode {
+    --clrEventMarkerMiscellaneousBorder: white;
+}

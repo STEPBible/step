@@ -123,26 +123,40 @@
 	font-weight: normal;
     }
       
-    .highlightSiblings {
-	text-shadow: 1px 1px 10px black;
-	/* animation: highlightSiblings 1s infinite; seconds duration (1s on, 1s off), infinite loop */
+    .highlightSiblings,
+    .highlightChildren {
+	text-decoration-line: underline;
+	text-decoration-style: solid;
+	text-decoration-thickness: 0.18em;
+	text-underline-offset: 0.25em;
+	text-decoration-skip-ink: auto;
     }
 
-    @keyframes highlightSiblings {
-	  0% { font-weight: bold; }
-	  0% { font-weight: normal; }
-	  0% { font-weight: bold; }
+    .highlightSiblings {
+	text-decoration-color: black;
     }
 
     .highlightChildren {
-	text-shadow: 1px 1px 10px green;
-	/* animation: highlightChildren 1s infinite; 2 seconds duration (1s on, 1s off), infinite loop */
+	text-decoration-color: var(--clrRelatedWordBg);
+	color: var(--clrRelatedWordBg);
     }
 
-    @keyframes highlightChildren {
-	  0% { font-weight: bold; }
-	  0% { font-weight: normal; }
-	  0% { font-weight: bold; }
+    .layoutMenuHighlightExample {
+	text-decoration-line: underline;
+	text-decoration-style: solid;
+	text-decoration-thickness: 0.18em;
+	text-underline-offset: 0.25em;
+	font-weight: 600;
+    }
+
+    .layoutMenuHighlightExample--siblings {
+	color: inherit;
+	text-decoration-color: black;
+    }
+
+    .layoutMenuHighlightExample--children {
+	color: inherit;
+	text-decoration-color: var(--clrRelatedWordBg);
     }
 
 
@@ -255,6 +269,10 @@
     }
     
 
+    .genealogy-button-icon {
+	margin-right: 0.4em;
+    }
+
 /*
     .helpImage {
 	width: 100%;
@@ -289,16 +307,16 @@
 <!--   <button type='button' class='jframework-3dButton jframework-3dButton-blue' title='Include father' id='fatherButton' style='font-weight:bold' onclick='PresentationHandler.changeRootToFather()'>&#x25B2; Up to father</button>
        <button type='button' class='jframework-3dButton jframework-3dButton-pink' title='Include mother' id='motherButton' style='font-weight:bold' onclick='PresentationHandler.changeRootToMother()'>&#x25B2; Up to mother</button>
  -->
-	<button type='button' class='jframework-vanillaButton' title='Include father' id='fatherButton' style='font-weight:bold' onclick='PresentationHandler.changeRootToFather()'>&#x25B2; Father&nbsp;</button>
-	<button type='button' class='jframework-vanillaButton' title='Include mother' id='motherButton' style='font-weight:bold' onclick='PresentationHandler.changeRootToMother()'>&#x25B2; Mother&nbsp;</button>
+	<button type='button' class='jframework-vanillaButton' title='Include father' id='fatherButton' style='font-weight:bold' onclick='PresentationHandler.changeRootToFather()'><span class='glyphicon glyphicon-chevron-up genealogy-button-icon' aria-hidden='true'></span>Father</button>
+	<button type='button' class='jframework-vanillaButton' title='Include mother' id='motherButton' style='font-weight:bold' onclick='PresentationHandler.changeRootToMother()'><span class='glyphicon glyphicon-chevron-up genealogy-button-icon' aria-hidden='true'></span>Mother</button>
       </div>
       
       <div class='buttonRow'>
 <!--	<button type='button' class='jframework-3dButton jframework-3dButton-grey jframework-3dButton-greyedBtn' title='Back'    id='backButton'    onclick='BackAndForwardStackHandler.back   ()'>&#x25C0; Back</button>
 	<button type='button' class='jframework-3dButton jframework-3dButton-grey jframework-3dButton-greyedBtn' title='Forward' id='forwardButton' onclick='BackAndForwardStackHandler.forward()'>&#x25B6; Forward</button>
 -->
-	<button type='button' class='jframework-vanillaButton jframework-greyedBtn' title='Back'    id='backButton'    onclick='BackAndForwardStackHandler.back   ()'><span style='font-size:large'>&#x25C0;&#xFE0E;</span></button>
-	<button type='button' class='jframework-vanillaButton jframework-greyedBtn' title='Forward' id='forwardButton' onclick='BackAndForwardStackHandler.forward()'><span style='font-size:large'>&#x25B6;&#xFE0E;</span></button>
+	<button type='button' class='jframework-vanillaButton jframework-greyedBtn' title='Back'    id='backButton'    onclick='BackAndForwardStackHandler.back   ()'><span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span></button>
+	<button type='button' class='jframework-vanillaButton jframework-greyedBtn' title='Forward' id='forwardButton' onclick='BackAndForwardStackHandler.forward()'><span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span></button>
       </div>
     </div>
 
@@ -322,13 +340,13 @@
 	      id='hamburgerMenuButton'
 	      title='Show menu'
 	      onclick="document.getElementById('hamburgerMenu').classList.add('jframework-dropdownMenu-show')">
-	<span style='font-size:x-large'>&#x2630;</span>
+	<span>&#x2630;</span>
       </button>
 
 	<div id='hamburgerMenu' class='jframework-dropdownMenu'>
-	  <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showBuiltInTreesDialog()"><span style='font-size:x-large'>&#x1F333;</span> Important family trees</button>
-	  <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showLayoutMenu()"><span style='font-size:x-large'>&#x25A6;</span> Layout</button>
-	  <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showHelpMenu()"><span style='font-size:x-large'>&#x1F6C8;</span> Help</button>
+	  <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showBuiltInTreesDialog()"><span class='jframework-dropdownMenuIcon'><span class='glyphicon glyphicon-tree-conifer' aria-hidden='true'></span></span> Important family trees</button>
+	  <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showLayoutMenu()"><span class='jframework-dropdownMenuIcon'><span class='glyphicon glyphicon-th' aria-hidden='true'></span></span> Layout</button>
+	  <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showHelpMenu()"><span class='jframework-dropdownMenuIcon'><span class='glyphicon glyphicon-info-sign' aria-hidden='true'></span></span> Help</button>
 	</div>
       </div>
     </div>
@@ -469,7 +487,7 @@
 
       <p><b style='color:var(--jframework-clrStandoutText)'>To change to a new person but keep the existing tree: </b> Left-click on a person in the family tree area (short touch on a touchscreen).</p>
 
-      <p><b style='color:var(--jframework-clrStandoutText)'>To manipulate the content of the tree: </b> Right-click on a person in the family tree area (long touch on a touchscreen).</p>
+      <p><b style='color:var(--jframework-clrStandoutText)'>To manipulate the content of the tree: </b> Right-click on a person in the family tree area.</p>
 
       <p><b style='color:var(--jframework-clrStandoutText)'>To change the layout of the tree: </b>Use the &#9776; menu.</p>
 
@@ -545,7 +563,7 @@
 	<div style='background:var(--clrHighlightBg); color:white; padding:5px; margin:5px; border:2px solid black;'>
 	  <p style=' font-size:large; font-weight: bold;'>If this is your first time here ...</p>
 	  <p>Why not try out some of the important family trees below?  Or alternatively, close this window and go straight to the genealogy data.</p>
-	  <p>Do make sure you check out the <button class='jframework-linkAsButton' style='color:yellow' onclick='ControlsHandler.showHelpMenu()'>Help</button> information if you haven&rsquo;t used the genealogy data before.</p>
+	  <p>Do make sure you check out the <button class='jframework-linkAsButton' onclick='ControlsHandler.showHelpMenu()'>Help</button> information if you haven&rsquo;t used the genealogy data before.</p>
 	  You can get back to this present window from the &#9776; menu.
 	</div>
 	<br>
@@ -555,12 +573,12 @@
 	<div style='background:var(--clrHighlightBg); color:white; padding:5px; margin:5px; border:2px solid black;'>
 	  <p style=' font-size:large; font-weight: bold;'>If this is your first time here ...</p>
 	  <p>Search for an individual using the search box, or look at some of the important family trees below.  Or alternatively, close this menu and go straight to the genealogy data.</p>
-	  <p>Do make sure you check out the <button class='jframework-linkAsButton' style='color:yellow' onclick='ControlsHandler.showHelpMenu()'>Help</button> information if you haven&rsquo;t used the genealogy data before.</p>
+	  <p>Do make sure you check out the <button class='jframework-linkAsButton' onclick='ControlsHandler.showHelpMenu()'>Help</button> information if you haven&rsquo;t used the genealogy data before.</p>
 	  You can get back to this present window from the &#9776; menu.
 	</div>
 	<br>
 	
-	<textarea id='builtInTreesMenuSearchBox' class='jframework-searchBox' maxlength='100' placeholder='&#x1F50D Search ...'></textarea>
+	<textarea id='builtInTreesMenuSearchBox' class='jframework-searchBox' maxlength='100' placeholder='Search ...'></textarea>
 	<div id='builtInTreesMenuSearchBoxTableContainer' class='jframework-searchTableContainer' style='border: 2px solid black; height:30vh; max-height: 30vh; overflow-y:auto;'>
 	  <table class='jframework-searchTable jframework-standardText'>
 	    <colgroup><col span='1' style='width:6em;'></col><col span='1' style='width:auto;'></col></colgroup>
@@ -647,7 +665,7 @@
       <br>
       
       <input type='checkbox' id='highlightRelations' class='jframework-3dCheckbox' title='Highlight siblings and children of selected person' onchange='PresentationHandler.changeRelationsHighlighting(this.checked)'>
-      <label for='highlightRelations'>Highlight <span style='text-shadow: 1px 1px 10px black;color:blackyellow'>siblings</span> and <span style='text-shadow: 1px 1px 10px green;color:darkgreen'>children</span> of selected person.</label>
+      <label for='highlightRelations'>Highlight <span class='layoutMenuHighlightExample layoutMenuHighlightExample--siblings'>siblings</span> and <span class='layoutMenuHighlightExample layoutMenuHighlightExample--children'>children</span> of selected person.</label>
     </div>
   </div>
   <!-- Layout menu modal -->
@@ -664,21 +682,21 @@
     </div>
     <div class='jframework-modalDialogBody' style='background:white'>
       <div id='expandFamilyTreeButtonContainer' style='width:100%;margin-bottom:10px;display:none'>
-	<button id='expandFamilyTreeButton' class='jframework-3dButton jframework-3dButton-grey' style='width:auto;font-size:x-large' title='Add family tree below selected person' onclick='ContextMenuHandler.addSubtree()'>+&#x1f332;</button>
+	<button id='expandFamilyTreeButton' class='jframework-3dButton jframework-3dButton-grey' style='width:auto;font-size:x-large' title='Add family tree below selected person' onclick='ContextMenuHandler.addSubtree()'>+</button>
 	<label for='expandFamilyTreeButton'>&nbsp;Add tree below selected person</label>
 	<p>&nbsp;</p>
       </div>
       <div id='removeFamilyTreeButtonContainer' style='width:100%;margin-bottom:10px;display:none'>
-	<button id='removeFamilyTreeButton' class='jframework-3dButton jframework-3dButton-grey' style='width:auto; font-size:x-large' title='Remove family tree below selected person' onclick='ContextMenuHandler.removeSubtree()'>&ndash;&#x1f332;</button>
+	<button id='removeFamilyTreeButton' class='jframework-3dButton jframework-3dButton-grey' style='width:auto; font-size:x-large' title='Remove family tree below selected person' onclick='ContextMenuHandler.removeSubtree()'>&ndash;</button>
 	<label for='removeFamilyTreeButton'>&nbsp;Remove tree below selected person</label>
 	<p>&nbsp;</p>
       </div>
 
-      <div style='margin-bottom:10px;'>Select a descendant from the list below in order to have the <i><b>MALE</b></i> family line to that person added to the display.</div>
-      <textarea id='descendantSearchBox' class='jframework-searchBox' maxlength='100' placeholder='&#x1F50D Search ...'></textarea>
+      <div style='margin-bottom:10px;'>Select a descendant from the list below to add to the display the <i><b>MALE</b></i> family line to that person.</div> <!-- Oct 2025: Simplified wording. -->
+      <textarea id='descendantSearchBox' class='jframework-searchBox' maxlength='100' placeholder='Search ...'></textarea>
       
       <div id='descendantTableContainer' class='jframework-searchTableContainer' style='border: 2px solid black; height:30vh; overflow-y:auto;'>
-	<table class='jframework-searchTable jframework-standardText'>
+	<table class='jframework-searchTable jframework-standardText' style='cursor:pointer'> <!-- Oct 2025: Added style. -->
 	  <colgroup><col span='1' style='width:6em;'></col><col span='1' style='width:auto;'></col></colgroup>
 	  <tbody></tbody>
 	</table>

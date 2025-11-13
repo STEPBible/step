@@ -13,20 +13,6 @@
 class _ClassJFrameworkUtils
 {
     /**************************************************************************/
-    amDateToBcDate (amDate)
-    {
-	return amDate - 2083 - 2091;
-    }
-
-    
-    /**************************************************************************/
-    bcDateToAmDate (bcDate)
-    {
-	return bcDate - 2091 + 2083;
-    }
-
-    
-    /**************************************************************************/
     /* Determines if the present window is in an iframe. */
 
     amInIframe ()
@@ -110,6 +96,45 @@ class _ClassJFrameworkUtils
 
     
     /**************************************************************************/
+    /* Tries to arrange a vertically scrolling container so that the given Y
+       position is centred within it -- doing something sensible if the height
+       of the content is not enough to make centring possible. */
+    
+    centrePointVerticallyWithinScrollingContainer (container, targetY)
+    {
+	const containerHeight = container.clientHeight;
+	const contentHeight = container.scrollHeight;
+
+	// Compute ideal scroll position so that targetY is centered
+	var desiredScrollTop = parseFloat(targetY) - containerHeight / 2;
+
+	// Clamp within scrollable range
+	desiredScrollTop = Math.max(0, Math.min(desiredScrollTop, contentHeight - containerHeight));
+
+	container.scrollTo({
+	    top: desiredScrollTop
+	});
+    }
+
+    
+    /**************************************************************************/
+    /* Caters for eg 1000 BC, 20 AD and AM 0.  The program which generates the
+       chronology data for use here converts all dates to an overall numbering
+       scheme.  This takes a date in raw form and converts it to that same
+       scheme. */
+    
+    convertToYearOffset (yearWithScheme)
+    {
+	if (yearWithScheme.includes('AD'))
+	    return parseInt(yearWithScheme, 10) + 2083 + 2091;
+	else if (yearWithScheme.includes('BC'))
+	    return 2091 - parseInt(yearWithScheme) + 2083;
+	else
+	    return parseInt(yearWithScheme);
+    }
+	
+    
+    /**************************************************************************/
     /* Determines if a colour is dark or light. */
 
     isDark (colour)
@@ -121,10 +146,40 @@ class _ClassJFrameworkUtils
 
 
     /**************************************************************************/
+    /* Lightens a given colour by a given factor.  The colour can be anything
+       acceptable to toRgb, including the rgb(...) value which you get if you
+       read colours from an existing element -- getComputedStyle(elt).color or
+       whatever. */
+    
+    lightenColour (colour, factor)
+    {
+	var x = this.toRgb(colour);
+	var r = x.r;
+	var g = x.g;
+	var b = x.b;
+	
+	r = Math.round(r + (255 - r) * factor);
+	g = Math.round(g + (255 - g) * factor);
+	b = Math.round(b + (255 - b) * factor);
+
+	return `rgb(${r}, ${g}, ${b})`;	
+    }
+
+    
+    /**************************************************************************/
     /* Converts any CSS colour designation to { r:..., g:..., b:... }. */
     
     toRgb (colour)
     {
+	const match = colour.match(/rgb\s*\(\s*(\d+),\s*(\d+),\s*(\d+)\s*\)/);
+	if (match)
+	{
+	    let [_, R, G, B] = match.map(Number);
+	    return { r: R, g : G, b: B };
+	}
+
+
+
 	/*********************************************************************/
 	if (colour.startsWith("#"))
 	{
@@ -165,124 +220,235 @@ class _ClassJFrameworkUtils
 
 
     /**************************************************************************/
-    _fullToAbbreviatedNameMappings = {
-	'Genesis': ['Gen', 'Gen'],
-	'Exodus': ['Exo', 'Exod'],
-	'Leviticus': ['Lev', 'Lev'],
-	'Numbers': ['Num', 'Num'],
-	'Deuteronomy': ['Deu', 'Deut'],
-	'Joshua': ['Jos', 'Josh'],
-	'Judges': ['Jdg', 'Judg'],
-	'Ruth': ['Rut', 'Ruth'],
-	'1 Samuel': ['1Sa', '1Sam'],
-	'2 Samuel': ['2Sa', '2Sam'],
-	'1 Kings': ['1Ki', '1Kgs'],
-	'2 Kings': ['2Ki', '2Kgs'],
-	'1 Chronicles': ['1Ch', '1Chr'],
-	'2 Chronicles': ['2Ch', '2Chr'],
-	'Ezra': ['Ezr', 'Ezra'],
-	'Nehemiah': ['Neh', 'Neh'],
-	'Esther': ['Est', 'Esth'],
-	'Job': ['Job', 'Job'],
-	'Psalms': ['Psa', 'Ps'],
-	'Proverbs': ['Pro', 'Prov'],
-	'Ecclesiastes': ['Ecc', 'Eccl'],
-	'Song of Solomon': ['Sng', 'Song'],
-	'Isaiah': ['Isa', 'Isa'],
-	'Jeremiah': ['Jer', 'Jer'],
-	'Lamentations': ['Lam', 'Lam'],
-	'Ezekiel': ['Ezk', 'Ezek'],
-	'Daniel': ['Dan', 'Dan'],
-	'Hosea': ['Hos', 'Hos'],
-	'Joel': ['Jol', 'Joel'],
-	'Amos': ['Amo', 'Amos'],
-	'Obadiah': ['Oba', 'Obad'],
-	'Jonah': ['Jon', 'Jonah'],
-	'Micah': ['Mic', 'Mic'],
-	'Nahum': ['Nam', 'Nah'],
-	'Habakkuk': ['Hab', 'Hab'],
-	'Zephaniah': ['Zep', 'Zeph'],
-	'Haggai': ['Hag', 'Hag'],
-	'Zechariah': ['Zec', 'Zech'],
-	'Malachi': ['Mal', 'Mal'],
-	'Matthew': ['Mat', 'Matt'],
-	'Mark': ['Mrk', 'Mark'],
-	'Luke': ['Luk', 'Luke'],
-	'John': ['Jhn', 'John'],
-	'Acts': ['Act', 'Acts'],
-	'Romans': ['Rom', 'Rom'],
-	'1 Corinthians': ['1Co', '1Cor'],
-	'2 Corinthians': ['2Co', '2Cor'],
-	'Galatians': ['Gal', 'Gal'],
-	'Ephesians': ['Eph', 'Eph'],
-	'Philippians': ['Php', 'Phil'],
-	'Colossians': ['Col', 'Col'],
-	'1 Thessalonians': ['1Th', '1Thess'],
-	'2 Thessalonians': ['2Th', '2Thess'],
-	'1 Timothy': ['1Ti', '1Tim'],
-	'2 Timothy': ['2Ti', '2Tim'],
-	'Titus': ['Tit', 'Titus'],
-	'Philemon': ['Phm', 'Phlm'],
-	'Hebrews': ['Heb', 'Heb'],
-	'James': ['Jas', 'Jas'],
-	'1 Peter': ['1Pe', '1Pet'],
-	'2 Peter': ['2Pe', '2Pet'],
-	'1 John': ['1Jn', '1John'],
-	'2 John': ['2Jn', '2John'],
-	'3 John': ['3Jn', '3John'],
-	'Jude': ['Jud', 'Jude'],
-	'Revelation': ['Rev', 'Rev'],
-	'Tobit': ['Tob', 'Tob'],
-	'Judith': ['Jdt', 'Jdt'],
-	'Additions to Esther (Greek)': ['Esg', 'EsthGr'],
-	'Wisdom of Solomon': ['Wis', 'Wis'],
-	'Sirach': ['Sir', 'Sir'],
-	'Baruch': ['Bar', 'Bar'],
-	'Epistle of Jeremiah': ['Lje', 'EpJer'],
-	'Song of the Three Young Men': ['S3y', 'PrAzar'],
-	'Susannah': ['Sus', 'Sus'],
-	'Bel and the Dragon': ['Bel', 'Bel'],
-	'1 Maccabees': ['1Ma', '1Macc'],
-	'2 Maccabees': ['2Ma', '2Macc'],
-	'3 Maccabees': ['3Ma', '3Macc'],
-	'4 Maccabees': ['4Ma', '4Macc'],
-	'1 Esdras (Greek)': ['1Es', '1Esd'],
-	'2 Esdras (Latin)': ['2Es', '2Esd'],
-	'Prayer of Manasseh': ['Man', 'PrMan'],
-	'Psalm 151': ['Ps2', 'AddPs'],
-	'Odae': ['Oda', 'Odes'],
-	'Psalms of Solomon': ['Pss', 'PssSol'],
-	'Joshua A': ['Jsa', 'JoshA'],
-	'Judges B': ['Jdb', 'JudgB'],
-	'Tobit S': ['Tbs', 'TobS'],
-	'Susannah Th': ['Sst', 'SusTh'],
-	'Daniel Th': ['Dnt', 'DanTh'],
-	'Bel and the Dragon Th': ['Blt', 'BelTh'],
-	'Epistle to the Laodiceans': ['Lao', 'EpLao'],
-	'4 Ezra': ['Eza', '4Ezra'],
-	'5 Ezra': ['5Ez', '5Ezra'],
-	'6 Ezra': ['6Ez', '6Ezra']
-    };
+    /* Full book name, USX abbreviation and OSIS abbreviation.  Dummy entries
+       are required to make the offests into the list tie up with the UBS
+       numbering scheme. */
+    
+    _bookNamesAndAbbreviations = [
+	/*   0 */ ['DUMMY0', 'AAA', 'AAA'],
+	/*   1 */ ['Genesis', 'Gen', 'Gen'],
+	/*   2 */ ['Exodus', 'Exo', 'Exod'],
+	/*   3 */ ['Leviticus', 'Lev', 'Lev'],
+	/*   4 */ ['Numbers', 'Num', 'Num'],
+	/*   5 */ ['Deuteronomy', 'Deu', 'Deut'],
+	/*   6 */ ['Joshua', 'Jos', 'Josh'],
+	/*   7 */ ['Judges', 'Jdg', 'Judg'],
+	/*   8 */ ['Ruth', 'Rut', 'Ruth'],
+	/*   9 */ ['1 Samuel', '1Sa', '1Sam'],
+	/*  10 */ ['2 Samuel', '2Sa', '2Sam'],
+	/*  11 */ ['1 Kings', '1Ki', '1Kgs'],
+	/*  12 */ ['2 Kings', '2Ki', '2Kgs'],
+	/*  13 */ ['1 Chronicles', '1Ch', '1Chr'],
+	/*  14 */ ['2 Chronicles', '2Ch', '2Chr'],
+	/*  15 */ ['Ezra', 'Ezr', 'Ezra'],
+	/*  16 */ ['Nehemiah', 'Neh', 'Neh'],
+	/*  17 */ ['Esther', 'Est', 'Esth'],
+	/*  18 */ ['Job', 'Job', 'Job'],
+	/*  19 */ ['Psalms', 'Psa', 'Ps'],
+	/*  20 */ ['Proverbs', 'Pro', 'Prov'],
+	/*  21 */ ['Ecclesiastes', 'Ecc', 'Eccl'],
+	/*  22 */ ['Song of Solomon', 'Sng', 'Song'],
+	/*  23 */ ['Isaiah', 'Isa', 'Isa'],
+	/*  24 */ ['Jeremiah', 'Jer', 'Jer'],
+	/*  25 */ ['Lamentations', 'Lam', 'Lam'],
+	/*  26 */ ['Ezekiel', 'Ezk', 'Ezek'],
+	/*  27 */ ['Daniel', 'Dan', 'Dan'],
+	/*  28 */ ['Hosea', 'Hos', 'Hos'],
+	/*  29 */ ['Joel', 'Jol', 'Joel'],
+	/*  30 */ ['Amos', 'Amo', 'Amos'],
+	/*  31 */ ['Obadiah', 'Oba', 'Obad'],
+	/*  32 */ ['Jonah', 'Jon', 'Jonah'],
+	/*  33 */ ['Micah', 'Mic', 'Mic'],
+	/*  34 */ ['Nahum', 'Nam', 'Nah'],
+	/*  35 */ ['Habakkuk', 'Hab', 'Hab'],
+	/*  36 */ ['Zephaniah', 'Zep', 'Zeph'],
+	/*  37 */ ['Haggai', 'Hag', 'Hag'],
+	/*  38 */ ['Zechariah', 'Zec', 'Zech'],
+	/*  39 */ ['Malachi', 'Mal', 'Mal'],
+	/*  40 */ ['DUMMY40', 'BBB', 'BBB'],
+	/*  41 */ ['Matthew', 'Mat', 'Matt'],
+	/*  42 */ ['Mark', 'Mrk', 'Mark'],
+	/*  43 */ ['Luke', 'Luk', 'Luke'],
+	/*  44 */ ['John', 'Jhn', 'John'],
+	/*  45 */ ['Acts', 'Act', 'Acts'],
+	/*  46 */ ['Romans', 'Rom', 'Rom'],
+	/*  47 */ ['1 Corinthians', '1Co', '1Cor'],
+	/*  48 */ ['2 Corinthians', '2Co', '2Cor'],
+	/*  49 */ ['Galatians', 'Gal', 'Gal'],
+	/*  50 */ ['Ephesians', 'Eph', 'Eph'],
+	/*  51 */ ['Philippians', 'Php', 'Phil'],
+	/*  52 */ ['Colossians', 'Col', 'Col'],
+	/*  53 */ ['1 Thessalonians', '1Th', '1Thess'],
+	/*  54 */ ['2 Thessalonians', '2Th', '2Thess'],
+	/*  55 */ ['1 Timothy', '1Ti', '1Tim'],
+	/*  56 */ ['2 Timothy', '2Ti', '2Tim'],
+	/*  57 */ ['Titus', 'Tit', 'Titus'],
+	/*  58 */ ['Philemon', 'Phm', 'Phlm'],
+	/*  59 */ ['Hebrews', 'Heb', 'Heb'],
+	/*  60 */ ['James', 'Jas', 'Jas'],
+	/*  61 */ ['1 Peter', '1Pe', '1Pet'],
+	/*  62 */ ['2 Peter', '2Pe', '2Pet'],
+	/*  63 */ ['1 John', '1Jn', '1John'],
+	/*  64 */ ['2 John', '2Jn', '2John'],
+	/*  65 */ ['3 John', '3Jn', '3John'],
+	/*  66 */ ['Jude', 'Jud', 'Jude'],
+	/*  67 */ ['Revelation', 'Rev', 'Rev'],
+	/*  68 */ ['Tobit', 'Tob', 'Tob'],
+	/*  69 */ ['Judith', 'Jdt', 'Jdt'],
+	/*  70 */ ['Additions to Esther (Greek)', 'Esg', 'EsthGr'],
+	/*  71 */ ['Wisdom of Solomon', 'Wis', 'Wis'],
+	/*  72 */ ['Sirach', 'Sir', 'Sir'],
+	/*  73 */ ['Baruch', 'Bar', 'Bar'],
+	/*  74 */ ['Epistle of Jeremiah', 'Lje', 'EpJer'],
+	/*  75 */ ['Song of the Three Young Men', 'S3y', 'PrAzar'],
+	/*  76 */ ['Susannah', 'Sus', 'Sus'],
+	/*  77 */ ['Bel and the Dragon', 'Bel', 'Bel'],
+	/*  78 */ ['1 Maccabees', '1Ma', '1Macc'],
+	/*  79 */ ['2 Maccabees', '2Ma', '2Macc'],
+	/*  80 */ ['3 Maccabees', '3Ma', '3Macc'],
+	/*  81 */ ['4 Maccabees', '4Ma', '4Macc'],
+	/*  82 */ ['1 Esdras (Greek)', '1Es', '1Esd'],
+	/*  83 */ ['2 Esdras (Latin)', '2Es', '2Esd'],
+	/*  84 */ ['Prayer of Manasseh', 'Man', 'PrMan'],
+	/*  85 */ ['Psalm 151', 'Ps2', 'AddPs'],
+	/*  86 */ ['Odae', 'Oda', 'Odes'],
+	/*  87 */ ['Psalms of Solomon', 'Pss', 'PssSol'],
+	/*  88 */ ['Joshua A', 'Jsa', 'JoshA'],
+	/*  89 */ ['Judges B', 'Jdb', 'JudgB'],
+	/*  90 */ ['Tobit S', 'Tbs', 'TobS'],
+	/*  91 */ ['Susannah Th', 'Sst', 'SusTh'],
+	/*  92 */ ['Daniel Th', 'Dnt', 'DanTh'],
+	/*  93 */ ['Bel and the Dragon Th', 'Blt', 'BelTh'],
+	/*  94 */ ['Epistle to the Laodiceans', 'Lao', 'EpLao'],
+	/*  95 */ ['DUMMY95', 'CCC', 'CCC'],
+	/*  96 */ ['DUMMY96', 'DDD', 'DDD'],
+	/*  97 */ ['DUMMY97', 'EEE', 'EEE'],
+	/*  98 */ ['DUMMY98', 'FFF', 'FFF'],
+	/*  99 */ ['DUMMY99', 'GGG', 'GGG'],
+	/* 100 */ ['DUMMY100', 'HHH', 'HHH'],
+	/* 101 */ ['DUMMY101', 'III', 'III'],
+	/* 102 */ ['DUMMY102', 'JJJ', 'JJJ'],
+	/* 103 */ ['DUMMY103', 'KKK', 'KKK'],
+	/* 104 */ ['DUMMY104', 'LLL', 'LLL'],
+	/* 105 */ ['4 Ezra', 'Eza', '4Ezra'],
+	/* 106 */ ['5 Ezra', '5Ez', '5Ezra'],
+	/* 107 */ ['6 Ezra', '6Ez', '6Ezra']
+    ];
     
     
-    convertFullNameToUsxAbbreviation (fullBookName)
+
+    /**************************************************************************/
+    /* Various conversions.  May be useful to add to the list at some point,
+       but without any overt requirement to do so, I haven't bothered at
+       present. */
+    
+    convertFullNameToOsisAbbreviation (fullName)
     {
-	var res = this._fullToAbbreviatedNameMappings[fullBookName];
-	if (null !== res)
-	    res = res[0];
-	return res;
+	const bookNo = this.convertFullNameToUsxBookNo(fullName);
+	return this._bookNamesAndAbbreviations[bookNo][2];
     }
 
 
-    convertFullNameToOsisAbbreviation (fullBookName)
+    /**************************************************************************/
+    convertFullNameToUsxAbbreviation (fullName)
     {
-	var res = this._fullToAbbreviatedNameMappings[fullBookName];
-	if (null !== res)
-	    res = res[1];
-	return res;
+	const bookNo = this.convertFullNameToUsxBookNo(fullName);
+	return this._bookNamesAndAbbreviations[bookNo][1];
     }
 
 
+    /**************************************************************************/
+    convertAnyBookIdToUsxBookNo (fullNameOrAbbreviation)
+    {
+	var       res = this.convertUsxAbbreviationToUsxBookNo (fullNameOrAbbreviation);
+	if (!res) res = this.convertOsisAbbreviationToUsxBookNo(fullNameOrAbbreviation);
+	if (!res) res = this.convertFullNameToUsxBookNo        (fullNameOrAbbreviation);
+	return res;
+    }
+
+    
+    /**************************************************************************/
+    convertFullNameToUsxBookNo (fullName)
+    {
+	if (!this._fullNameToUsxBookNo)
+	{
+	    this._fullNameToUsxBookNo = new Map();
+	    this._bookNamesAndAbbreviations.forEach((entry, i) => { this._fullNameToUsxBookNo.set(entry[0], i); });
+	}
+
+	return this._fullNameToUsxBookNo.get(fullName);
+    }
+	
+
+    /**************************************************************************/
+    convertOsisAbbreviationToUsxAbbreviation (osisAbbreviation)
+    {
+	const bookNo = this.convertOsisAbbreviationToUsxBookNo(osisAbbreviation);
+	return this._bookNamesAndAbbreviations[bookNo][1];
+    }
+
+    
+    /**************************************************************************/
+    convertOsisAbbreviationToUsxBookNo (osisAbbreviation)
+    {
+	if (!this._osisAbbreviationToUsxBookNo)
+	{
+	    this._osisAbbreviationToUsxBookNo = new Map();
+	    this._bookNamesAndAbbreviations.forEach((entry, i) => { this._osisAbbreviationToUsxBookNo.set(entry[3], i); });
+	}
+
+	return this._osisAbbreviationToUsxBookNo.get(osisAbbreviation);
+    }
+	
+
+    /**************************************************************************/
+    convertUsxAbbreviationToOsisAbbreviation (usxAbbreviation)
+    {
+	const bookNo = this.convertUsxAbbreviationToUsxBookNo(usxAbbreviation);
+	return this._bookNamesAndAbbreviations[bookNo][2];
+    }
+
+    
+    /**************************************************************************/
+    convertUsxAbbreviationToUsxBookNo (usxAbbreviation)
+    {
+	if (!this._usxAbbreviationToUsxBookNo)
+	{
+	    this._usxAbbreviationToUsxBookNo = new Map();
+	    this._bookNamesAndAbbreviations.forEach((entry, i) => { this._usxAbbreviationToUsxBookNo.set(entry[1], i); });
+	}
+
+	return this._usxAbbreviationToUsxBookNo.get(usxAbbreviation);
+    }
+	
+
+
+    /**************************************************************************/
+    /* Converts a BC refkey to something of the form Gen.1 (using USX
+       abbreviations. */
+    
+    convertBCRefKeyToStringRef (refKey)
+    {
+	const bookNo = Math.floor(refKey / 1000);
+	const chapter = refKey % 1000;
+	return this._bookNamesAndAbbreviations[bookNo] + '.' + chapter;
+    }
+
+    
+    /**************************************************************************/
+    /* Converts eg Gen.1 to the equivalent BC key.  The book portion may be a
+       full name, a USX abbreviation or an OSIS abbreviation.  Book and
+       chapter may be separated by any consecutive run of non-word
+       characters. */
+    
+    convertStringRefToBCRefKey (ref)
+    {
+	const [book, chapter] = ref.split(/\W+/);
+	const bookNo = this.convertAnyBookIdToUsxBookNo(book);
+	return 1000 * bookNo + parseInt(chapter, 10);
+    }
+
+    
     /**************************************************************************/
     /* You can use this if you have a section of code which takes a long time
        to run, and therefore risks making the web page appear sluggish. */

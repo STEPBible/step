@@ -36,7 +36,7 @@ public final class HeadingsUtil {
             return longNameFromKey(v11n, key);
         } catch (final NoSuchKeyException e) {
             // unable to convert, so return short
-            LOGGER.warn(e.getMessage(), e);
+            // LOGGER.warn(e.getMessage(), e);
             return shortHeader;
         }
     }

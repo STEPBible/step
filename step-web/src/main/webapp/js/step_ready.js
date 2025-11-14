@@ -365,7 +365,7 @@
         else if (urlVars.indexOf("colorCode5") > -1)
             cf.setNextPageURL('/?q=version=SBLG@reference=Rom.12&options=CEMVALHUN&skipwelcome' + debugParam, C_AspectDesc, '');
         else if (urlVars.indexOf("colorCode6") > -1)
-            cf.setNextPageURL('/?q=version=THOT@reference=Gen.1&options=HVLUNC&skipwelcome' + debugParam, C_AspectDesc, '');
+            cf.setNextPageURL('/?q=version=THOT@reference=Gen.1&options=HVLUNC&skipwelcome' + debugParam, C_AspectDesc, '', true);
         else if (urlVars.indexOf("colorCode7") > -1)
             cf.setNextPageURL('/?q=version=CUn@reference=Col.1&options=HVGUNC&skipwelcome' + debugParam, C_AspectDesc, '');
         else if (urlVars.indexOf("colorCode8") > -1)

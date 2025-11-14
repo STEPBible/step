@@ -122,6 +122,7 @@ public class InternationalJsonController extends HttpServlet {
         response.getOutputStream().write(qualifiedResponse.getBytes(FrontController.UTF_8_ENCODING));
         response.flushBuffer();
         response.getOutputStream().close();
+        allMods = null;
     }
 
     /**

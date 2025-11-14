@@ -112,10 +112,10 @@ public class ColorCoderProviderImpl {
 					} else if (tense.equals("indefinite tense")) {
 						tense = "indefinite";
 					}
-					if ( (voice.equals("passive")) || (voice.equals("either middle or passive")) ) {
+					if ( (voice.equals("passive")) || (voice.equals("either middle or passive")) || voice.equals("middle or passive") ) {
 						voice = "p";
 					}
-					else if (voice.equals("middle") ) {
+					else if (voice.equals("middle")) {
 						voice = "m";
 					}
 					else if ((voice.indexOf("active") > -1) || (voice.indexOf("deponent") > -1) || (voice.indexOf("indefinite") > -1) ) {

@@ -22,5 +22,17 @@
 "chapter_2_icc_url" : "https://archive.org/details/criticalexegetic00smituoft/page/210/mode/2up",
 "chapter_2_icc_page" : "X",
 "chapter_3_icc_url" : "https://archive.org/details/criticalexegetic00smituoft/page/238/mode/2up",
-"chapter_3_icc_page" : "X"
+"chapter_3_icc_page" : "X",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/zephaniah/zephaniah.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/zephaniah/zephaniah.htm#head11",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/zephaniah/zephaniah.htm#head14",
+"chapter_2_constable_url": "https://soniclight.com/tcon/notes/html/zephaniah/zephaniah.htm#head21",
+"chapter_3_constable_url": "https://soniclight.com/tcon/notes/html/zephaniah/zephaniah.htm#head27",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/zephaniah/",
+"chapter_outline_tgc_url": "#section-8",
+"chapter_1_tgc_url": "#section-9",
+"chapter_2_tgc_url": "#section-13",
+"chapter_3_tgc_url": "#section-14",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Jason S. DeRouchie', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

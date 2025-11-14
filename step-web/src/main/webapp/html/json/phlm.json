@@ -9,5 +9,13 @@
 "chapter_intro_icc_url" : "https://archive.org/details/criticalexegetic0000vinc_n4o4/page/157/mode/2up",
 "chapter_intro_icc_page" : "157",
 "chapter_1_icc_url" : "https://archive.org/details/criticalexegetic0000vinc_n4o4/page/175/mode/2up",
-"chapter_1_icc_page" : "175"
+"chapter_1_icc_page" : "175",
+"chapter_intro_constable_url": "https://soniclight.com/tcon/notes/html/philippians/philippians.htm#head2",
+"chapter_outline_constable_url": "https://soniclight.com/tcon/notes/html/philippians/philippians.htm#head9",
+"chapter_1_constable_url": "https://soniclight.com/tcon/notes/html/philippians/philippians.htm#head12",
+"chapter_intro_tgc_url": "https://www.thegospelcoalition.org/commentary/Philemon/",
+"chapter_outline_tgc_url": "#section-6",
+"chapter_1_tgc_url": "#section-7",
+"commentary_keys":"['tgc', 'constable', 'icc']",
+"commentary_names":"['Alistair I. Wilson', 'Constable\\'s notes', 'Intl Critical Commentary']"
 }

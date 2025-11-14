@@ -669,6 +669,10 @@ step.searchSelect = {
 				'</td></tr>';
 		}
 		html += '</table>' +
+			'</div>' +
+			'<div id="searchAiCta" class="stepModalFgBg" style="display:none;margin-top:16px;padding:16px;border-radius:8px;">' +
+				'<a class="stepButton primaryLightBg" style="display:inline-block;padding:10px 18px;font-weight:600;text-decoration:none;border-radius:4px;" target="_blank" rel="noopener noreferrer" href="https://you.com/search?q=This+AI+answers+questions+arising+exclusively+from+the+Bible+and+always+includes+Bible+references...&cid=c1_2cfab59e-a2f8-49c8-90a2-c24d2368a5fe">STEPBible AI</a>' +
+				'<p style="margin:10px 0 0 0;font-size:13px;line-height:1.45;">Answers based on the Bible in plain language.</p>' +
 			'</div><br>';
 		return html;
 	},
@@ -729,6 +733,8 @@ step.searchSelect = {
 		$(".select2-result").hide();
 		var isAnythingShown = false;
 		var basic_search_help_text = "";
+		var aiCta = $("#searchAiCta");
+		if (aiCta.length) aiCta.toggle(language === "en");
 		if (language === "en") {
 			if ($("#searchResultstext").text() !== "") {
 				$(".select-text").show();

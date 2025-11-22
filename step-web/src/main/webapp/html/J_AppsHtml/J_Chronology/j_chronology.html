@@ -13,7 +13,6 @@
     <link href='/css/select2-bootstrap.css' rel='stylesheet' media='screen'/>
     <link href='/scss/step-template.css' rel='stylesheet' media='screen'/>
 
-    <link href='/css/J_AppsCss/J_Chronology/j_chronology.css'            rel='stylesheet' media='screen'>
     <link href='/css/J_AppsCss/J_Framework/j_framework.buttons.css'      rel='stylesheet' media='screen'/>
     <link href='/css/J_AppsCss/J_Framework/j_framework.common.css'       rel='stylesheet' media='screen'>
     <link href='/css/J_AppsCss/J_Framework/j_framework.dropdownMenu.css' rel='stylesheet' media='screen'/>
@@ -21,20 +20,164 @@
 
     <style>
       /*----------------------------------------------------------------------*/
-      /* General */
+      /* Custom font for icons (presently only the book icon).  It's
+	 unfortunate that I've had to add this to a collection called
+	 j_genealogyIcons.woff, but that's what I happened to have
+	 available. */
+
+      .iconFont {
+	  font-family: 'IconFont', sans-serif;
+      }
       
-      :root {
-	  --jframework-clrInfoAndPopUpBackground: var(--jframework-clrInfoBoxBackground);
-	  --jframework-height-of-info-box: 200px;
-	  --mainContainerBackground: #D3D3D3;
-	  --jchronologyLineWidth: 4px;
-	  --jchronologyDurationLineWidth: 4px;
-	  --jChronologyDurationLineSeparation: 2px;
+      @font-face {
+	  font-family: 'IconFont';
+	  src: url('/fonts/J_AppsFonts/J_Genealogy/j_genealogyIcons.woff') format('woff');
+	  font-weight: normal;
+	  font-style: normal;
       }
 
+
+
+      /*----------------------------------------------------------------------*/
+      /* This section handles things like standard colours, fonts and font sizes.
+	 The idea is that eventually, these can be linked back to our standard
+	 palette (although currently very few of them are).  I am hoping it may
+	 also make it easier to respond to user-initiated format changes, like
+	 dark mode.
+
+         Note that there are also some --clr references embedded within the body portion of
+	 this file.  I believe all of these come from j_framework.common.css. */
+      
+      :root {
+	  /* Standard border colour (so I can standardise border below). */
+	  --defaultFontSize: 15px;
+
+
+	  /* Used in tick mark labels. */
+	  --tickMarkLabelFontSize: x-small;
+
+	  
+	  /* Standard border colour (so I can standardise borders below). */
+	  --clrStandardBorder: #ccc;
+			       
+
+	  /* The info box. */
+	  --clrInfoBoxBackground: var(--jframework-clrInfoBoxBackground);
+	  --clrInfoBoxText:       #333;
+	  --clrInfoBoxBorder:     var(--clrStandardBorder);
+	  --clrInfoBoxShadow:     rgba(0, 0, 0, 0.3);
+	  
+
+	  /* The overall container for everything below the info box. */
+	  --clrMainContainerBackground: none;
+	  --clrMainContainerBorder:     var(--clrStandardBorder);
+
+
+	  /* The box which contains the duration headers and buttons. */
+	  --clrDurationHeadersBackground: var(--clrAccentCream3);
+
+	  
+	  /* The lower portion of the main display (below the box with the headers and buttons). */
+	  --clrChronologyContainerBackground: var(--clrMainContainerBackground);
+	  --clrChronologyContainerBorder:     var(--clrStandardBorder);
+
+
+	  /* The circles used to mark events. */
+	  --clrEventMarkerBackground: var(--clrPrimary3, #498090); /* The fallback is there only while we're still sorting out where the standard definitions should go. */
+	  --clrEventMarkerBorder:     black;
+
+
+	  /* The overall vertical timeline. */
+	  --clrChronologyTimelineLine: grey;
+
+	  /* The fading pop-up which tells you a URL has been copied. */
+	  --clrFadingPopUpBackground: var(--clrPrimary3, #498090); /* The fallback is there only while we're still sorting out where the standard definitions should go. */
+	  --clrFadingPopUpText: white;
+
+
+	  /* Used to highlight the selected event. */
+	  --clrEventHighlight: var(--clrInfoBoxBackground); /* Deliberately the same colour as the info box. */
+	  --clrEventMarkerHighlight: yellow;
+
+	  /* Greyish, to distinguish chapters we're not too sure about. */
+	  --clrDoubtfulChapterText: var(--clrSecondary4, #5C5C5C); /* The fallback is there only while we're still sorting out where the standard definitions should go. */
+
+
+	  /* What it says on the tin. */
+	  --clrNonUssherDateText: black;
+	  --clrAlternativeDateText: var(--clrSecondary4, #5C5C5C); /* The fallback is there only while we're still sorting out where the standard definitions should go. */
+	  --clrApproximateDateText: var(--clrSecondary4, #5C5C5C); /* The fallback is there only while we're still sorting out where the standard definitions should go. */
+	  --clrDefiniteDateText: black;
+	  --clrEventDescriptionText: black;
+      }
+
+
+
+      /*----------------------------------------------------------------------*/
+      :root {
+	  --infoBoxZIndex: 1000;
+	  --circleMarkerZIndex: 1;
+      }
+
+
+
+      /*----------------------------------------------------------------------*/
+      /* Layout settings. */
+      
+      :root {
+	  --datesAndTimelineHorizontalSeparation: 16px; /* Between the right of the dates and the timeline. */
+
+	  --infoBoxHeight: 200px;
+	  --infoBoxFontSize: small;
+
+	  --timelineLineWidth: 4px;
+
+	  --durationLineWidth: 6px;
+	  --durationLinesHorizontalSeparation: 10px;
+	  --verticalGapBetweenConsecutiveDurationLines: 5px; /* Small gaps so that one line doesn't run into the next. */
+
+	  --circleMarkerSize: 14px;
+
+
+	  /* Vertical positioning of dates (and therefore of circles and labels.  The 'PerYear' settings
+	     determine the default positioning: two events which are ten years apart will be ten times
+	     this gap apart.  There are different settings for events which fall into the 'AM' portion
+	     of modern dates and the non-AM portion because events tend to be rather sparse in the AM
+	     portion.
+
+             Two consecutive events are never placed closer together than --verticalSpaceForDatesMinimumToAvoidOverlap,
+	     on the assumption that such placement might cause them to overlap.  This does mean that
+	     in some places the proportionality of the placement will be messed up.
+
+             Most of the settings below are based on calc, which is a problem, in that I need to use
+	     them in Javascript, and you can't pick up calculated values directly.  Instead, they
+	     have to be assigned to attrbutes in an actual HTML element, and picked up from there.
+
+             Here I use #dummyRootResolverfor the purpose, so all of these calc elements need to
+	     feature there. */
+	  
+	  --bottomMarginForDates: 10px;
+	  --verticalSpaceForDatesMinimumToAvoidOverlap: calc(var(--defaultFontSize) + var(--bottomMarginForDates));
+	  --verticalSpacePerYearForAmDates: calc(var(--verticalSpaceForDatesMinimumToAvoidOverlap) / 10);
+	  --verticalSpacePerYearForNonAmDates: var(--verticalSpaceForDatesMinimumToAvoidOverlap);
+      }
+
+
+      #dummyRootResolver { /* We need a div which actually does something with the calc values above if we want to pick them up in CSS. */
+	  display: hidden;
+	  margin-top: var(--verticalSpaceForDatesMinimumToAvoidOverlap);
+	  margin-right: var(--verticalSpacePerYearForAmDates);
+	  margin-bottom: var(--verticalSpacePerYearForNonAmDates);
+      }
+	  
+
+
+
+      /*----------------------------------------------------------------------*/
       * {
 	  box-sizing: border-box;
       }
+
       
       body {
 	  display: grid;
@@ -73,16 +216,16 @@
       /* Info-box (the yellow box at the top of the screen). */
 
       #info-box {
-          height: var(--jframework-height-of-info-box);
+          height: var(--infoBoxHeight);
           width: 100%;
-          background: var(--jframework-clrInfoAndPopUpBackground);
-          color: #333;
-	  font-size: small;
-          border: 1px solid #ccc;
-          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+          background: var(--clrInfoBoxBackground);
+          color: var(--clrInfoBoxText);
+	  font-size: var(--infoBoxFontSize);
+          border: 1px solid var(--clrInfoBoxBorder);
+          box-shadow: 0px 2px 5px var(--clrInfoBoxShadow);
           text-align: left;
 	  overflow-y: auto;
-          z-index: 1000;
+          z-index: var(--infoBoxZIndex);
 	  margin-bottom: 10px;
 	  padding: 1em;
       }
@@ -117,8 +260,8 @@
 	  display: none;
 	  position: absolute;
 	  right:0;
-	  background: var(--clrHighlightBg);
-	  color: white;
+	  background: var(--clrFadingPopUpBackground);
+	  color: var(--clrFadingPopUpText);
 	  padding: 15px 25px;
 	  border-radius: 5px;
 	  opacity: 1;
@@ -136,40 +279,50 @@
 	  position: relative;
 	  padding-top: 1em;          
 	  padding-bottom: 0;
-	  height: calc(4 * 1.5em + 2em);
-  	  background: var(--mainContainerBackground);
-	  border-left:  2px solid black;
-	  border-right: 2px solid black;
-	  border-top:   2px solid black;
-	  border-bottom: 2px dotted black;
-	  background: #989898;
+	  height: calc(4 * 1.5em + 5px);
+  	  background: var(--clrDurationHeadersBackground);
+	  border-left:  2px solid var(--clrMainContainerBorder);
+	  border-right: 2px solid var(--clrMainContainerBorder);
+	  border-top:   2px solid var(--clrMainContainerBorder);
+	  border-bottom: 2px dotted var(--clrMainContainerBorder);
       }
 
       #jchronologyDurationHeadersButtonOverlay { /* An overlay which appears at the left of the above box, within which I can place a help button. */
 	  position: absolute;
 	  top: 0;
 	  left: 0;
-	  bottom: 0;             /* match baseDiv’s bottom edge */
 	  width: auto;           /* width determined later in JS */
+	  height: 100px;
 	  pointer-events: none;  /* so clicks pass through if needed */
 	  z-index: 10;
       }
 
       #jchronologyDurationHeadersButtonOverlay button {
-	  position: absolute;
-	  bottom: 10px; /* a little above the bottom */
+	  position: relative;
+	  top: 5px; /* A little below the top. */
 	  left: 50%;
 	  transform: translateX(-50%);
 	  pointer-events: auto; /* allow clicking this even if parent ignores events */
       }
+
+      #activeAlternativeChronologyName {
+	  position: absolute;
+	  bottom: 10px; /* a little above the bottom */
+	  left: 50%;
+	  width: 90%;
+	  transform: translateX(-50%);
+	  font-size: small;
+	  line-height: 1.1;
+      }
+	  
 
       #jchronologyMenuButtonOverlay { /* An overlay which appears at the right of the above box, within which I can place a help button. */
 	  position: absolute;
 	  top: 0;
 	  right: 0;
 	  pointer-events: none;  /* so clicks pass through if needed */
-	  padding-top: 10px;
-	  padding-right: 10px;
+	  padding-top: 5px;
+	  padding-right: 5px;
 	  z-index: 10;
       }
 
@@ -182,8 +335,8 @@
       .jchronologyDurationHeaderLine {
 	  position: absolute;
 	  bottom: 0;
-	  border-left: var(--jchronologyDurationLineWidth) dotted red; /* Colour is always overridden by Javascript. */
-	  transform: translateX(-50%);
+	  border-left: 4px dotted red; /* Colour is always overridden by Javascript. */
+	  transform: translateX(calc((var(--durationLineWidth) - 4px) / -2));
       }
 
       /* Label above the line */
@@ -191,7 +344,7 @@
 	  position: absolute;
 	  left: 100%;                /* start at the right edge of the line */
 	  bottom: 100%;              /* move label to top of line */
-	  transform: translate(-0.1em, 0);  /* small nudge right for spacing */
+	  transform: translate(5px, 80%);  /* small nudge right for spacing */
 	  white-space: nowrap;
 	  font-weight: bold;
       }
@@ -206,14 +359,14 @@
 	  grid-template-rows: 1fr;     /* single row fills container */
 	  width: 100%;
 	  height: 100%;
-	  background: var(--mainContainerBackground);
-	  border-left: 2px solid black;
-	  border-right: 2px solid black;
-	  border-bottom: 2px solid black;
+	  background: var(--clrChronologyContainerBackground);
+	  border-left: 2px solid var(--clrChronologyContainerBorder);
+	  border-right: 2px solid var(--clrChronologyContainerBorder);
+	  border-bottom: 2px solid var(--clrChronologyContainerBorder);
       }
 
       /* Left column: fixed width, no scrolling.  Scrolling is handled programatically, synchronised with right column. */
-      #jchronologyTimeline {
+      #jchronologyDatesAndLines {
 	  height: 100%;
 	  min-height: 0;
 	  overflow: hidden;
@@ -234,17 +387,27 @@
       /* The vertical line which represents the main timeline. */
       #jchronologyTimelineLine {
 	  position: relative;
-	  width: var(--jchronologyLineWidth);
-	  background: #444;
+	  width: var(--timelineLineWidth);
+	  background: var(--clrChronologyTimelineLine);
       }
 
       /* The individual duration lines. */
       .jchronologyDurationLine {
 	  position: absolute;
-	  width: var(--jchronologyDurationLineWidth);
-	  background: pink; /* Will be overridden by Javascript. */
+	  width: var(--durationLineWidth);
+	  background: none; /* Will be overridden by Javascript. */
       }
 
+      .jchronologyDurationLine::before {
+	  content: '';
+	  position: absolute;
+	  top: 0;
+	  left: 50%;
+	  transform: translate(-50%, 0%);
+	  border-left:  calc(var(--durationLinesHorizontalSeparation, 10px) - 2px ) solid transparent;
+	  border-right: calc(var(--durationLinesHorizontalSeparation, 10px) - 2px ) solid transparent;
+	  border-top:   calc(var(--durationLinesHorizontalSeparation, 10px) + 4px ) solid var(--lineColour);
+      }
 
       /* Overlays duration lines to indicate a regency period. */
       .jchronologyDurationLine.regency::after {
@@ -252,7 +415,7 @@
 	  position: absolute;
 	  top: 0;
 	  left: 0;
-	  width: var(--jchronologyDurationLineWidth);
+	  width: var(--durationLineWidth);
 	  height: 100%;
 	  background: repeating-linear-gradient(
 	      to bottom,
@@ -273,30 +436,20 @@
       /* Used to hold and position the data for an individual event in the right column. */
       .jchronologyEventDescriptionHolder {
 	  cursor: pointer;
-	  position: relative;
+	  position: absolute;
 	  width: 100%;
 	  z-index: 1;
       }
+
 
       .jchronologyChapterEventDescription {
 	  font-style: italic;
       }
 
-      .jchronologyDateApproximate {
+      .jchronologyDateAlternative {
+	  color: var(--clrAlternativeDateText);
+	  font-weight: normal;
       }
-
-/*
-    .jchronologyDateApproximate::after {
-	content: '?';
-	color: red;
-    }
-
-
-    .jchronologyDateDisputedOrdering::after {
-	content: '\21C4';
-	color: red;
-    }
-    */
 
     /* The date label shown against the timeline. */
     .jchronologyEventDate {
@@ -305,44 +458,127 @@
     }
 
     .jchronologyDateApproximate {
-	color: var(--clrDateText);
+	color: var(--clrApproximateDateText);
     }
 
     .jchronologyDateDefinite {
-	color: black;
+	color: var(--clrDefiniteDateText);
 	font-weight: bold;
+    }
+
+    .jchronologyTickMarkDateLabel {
+	font-size: var(--tickMarkLabelFontSize);
+	background: lightgrey;
+	border: 1px solid #000;
+	border-radius: 3px;
+	padding: 1px 1px;
+	transform: translateY(-50%);
     }
 	
     
 
     /* The description of the event used on the timeline. */
     .jchronologyEventDescription {
-	color: black;
-	position: absolute;
+	color: var(--clrEventDescriptionText);
 	white-space: nowrap;
     }
 
     /* The marker circle used on the timeline. */
-    .jchronologyEventMarker {
+    .jchronologyEventMarkerCircle {
 	position: absolute;
-	width: 14px;
-	height: 14px;
-	background: var(--clrEventMarkerMiscellaneous);
+	width: var(--circleMarkerSize);
+	height: var(--circleMarkerSize);
+	background: var(--clrEventMarkerBackground);
 	border-radius: 50%;
-	border: 2px solid var(--clrEventMarkerMiscellaneousBorder);
-	transform: translateX(-2px); /* I have absolutely no idea why this is correct but it seems you need it in order to centre the circle correctly on the line. */
-	z-index: 1;
+	border: 2px solid var(--clrEventMarkerBorder);
+	transform: translate(-2px, 4px); /* I have absolutely no idea why this is correct but it seems you need it in order to centre the circle correctly on the line. */
+	z-index: var(--circleMarkerZIndex);
+    }
+
+
+    /* Used to mark a position which does not otherwise appear on the timeline. */
+    
+    .jchronologyEventMarkerDiamond {
+	position: absolute;
+	width: var(--circleMarkerSize);
+	height: var(--circleMarkerSize);
+	background: var(--clrEventMarkerBackground);
+	border: 2px solid var(--clrEventMarkerBorder);
+	transform: translate(-4.5px, 4px) rotate(45deg);
+	z-index: var(--circleMarkerZIndex);
+    }
+
+
+    .jchronologyEventMarkerLine {
+	position: absolute;
+	width: var(--lineMarkerWidth, 12px);   /* you can choose any value */
+	height: var(--lineMarkerHeight, 2px);  /* thin horizontal line */
+	background: var(--clrEventMarkerBackground);
+	border: 2px solid var(--clrEventMarkerBorder);
+    
+	/* optional rounded ends */
+	border-radius: 2px;
+
+	/* match the circle’s centering correction */
+	transform: translateX(-2px);
+
+	z-index: var(--circleMarkerZIndex);
     }
 
     .jchronologyEventMarkerHighlight {
-	background: yellow !important;
+	background: var(--clrEventMarkerHighlight);
+    }
+
+    .jchronologyEventDescription.jchronologyEventMarkerHighlight {
+        background: var(--clrEventHighlight) !important;
     }
 
     .jchronologyDurationElement {
 	visibility: hidden !important;
 	z-index: 1 !important;
     }
-    
+
+    jchronChapterDate {
+	display: inline;
+	color: inherit;
+    }
+
+    jChronChapterDate.doubtfulChapter {
+	color: var(--clrDoubtfulChapterText);
+    }
+
+
+
+    /* Stuff to do with the chronology-selection menu. */
+    .optionRow label input[type="radio"] {
+	margin-right: 5px;   /* space between circle and text */
+	margin-bottom: 20px;
+    }
+
+    .panel.flex {
+	display: flex;
+	flex-direction: column;
+	padding: 16px;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+	width: 95%;         /* percentage width */
+	margin: 0 auto;     /* <-- centers horizontally */
+    }
+
+    /* content grows and pushes actions to bottom */
+    .panel.flex .content {
+	flex: 1 1 auto;
+	overflow: auto;
+    }
+
+    /* align actions to the right and gap them */
+    .panel.flex .actions {
+	display: flex;
+	justify-content: flex-end; /* right align */
+	gap: 12px;
+	margin-top: 12px; /* space above buttons */
+    }
     </style>
   </head>
 
@@ -351,6 +587,11 @@
   
   <body>
     <!-- Fixed layout -->
+    <!-- Used to make it possible to resolve calc values in Javascript.  See references to dummyRootResolver in j_chronology.js. -->
+    <div id='dummyRootResolver' style='display:none' verticalSpaceForDatesMinimumToAvoidOverlap='margin-top' verticalSpacePerYearForAmDates='margin-right' verticalSpacePerYearForNonAmDates='margin-bottom'></div>
+    <!-- Used to work out the size of tick labels. -->
+    <div id='getLabelSizeForTickMarks' class='jchronologyTickMarkDateLabel' style='position:absolute; visibility:hidden; left:-9999px; top:-9999px;'>???</div>
+
     <div id='HEADER'>
       <h2 style='color:var(--clrText)'>Chronology</h2>
       <div id='info-box'>
@@ -360,10 +601,11 @@
       
       <div id='jchronologyDurationHeaders'>
 	<div id='jchronologyDurationHeadersButtonOverlay'>
-	  <button type='button' class='jframework-vanillaButton' title='About the dates' id='dateInfoButton' style='padding:2px; font-weight:bold; font-size:medium' onclick='ClickHandlers.showDateHelp()'>Dates?</button>
+	  <button type='button' class='jframework-vanillaButton' title='Chronology selection' id='dateInfoButton' style='padding:2px; font-weight:bold; font-size:medium' onclick='JEventHandlers.showDateHelp()'>Dates?</button>
+	  <div id='activeAlternativeChronologyName'></div>
 	</div>
 	<div id='jchronologyMenuButtonOverlay'>
-	  <button type='button' class='jframework-vanillaButton' title='Help' id='helpButton' style='padding-left:6px; padding-right:6px; padding-top:0; padding-bottom:0; font-weight:bold; font-size:x-large' onclick='ControlsHandler.showHelpMenu()'>?</button>
+	  <button type='button' class='jframework-vanillaButton button' title='Help' id='helpButton' style='padding-left:6px; padding-right:6px; padding-top:0; padding-bottom:0; font-weight:bold; font-size:x-large' onclick='JEventHandlers.showHelpMenu()'>?</button>
 	</div>
       </div>
     </div> <!-- #HEADER -->
@@ -379,10 +621,8 @@
   
     <div id='CONTENT' style='min-height:0'>
       <div id='jchronologyContainer'>
-	<div id='jchronologyTimeline'>
-	  <!-- <div id='arbitraryDateMarker' class='jchronologyEventMarker jchronologyEventMarkerHighlight' style='display:none; z-index:10'></div> Used to show the position of arbitrary dates rather than actual events. -->
-	</div>
-	<div id='jchronologyYearDescriptions'></div>
+	<div id='jchronologyDatesAndLines'></div>
+	<!-- <div id='jchronologyYearDescriptions'></div> -->
       </div>
     </div> <!-- #CONTENT -->
 
@@ -409,11 +649,11 @@
 	  </button>
 
 	  <div id='hamburgerMenu' class='jframework-dropdownMenu'>
-	    <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showLayoutMenu()">
+	    <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); JEventsHandler.showLayoutMenu()">
 	      <span style='font-size:x-large'>&#x25A6;</span>
 	      Layout
 	    </button>
-	    <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); ControlsHandler.showHelpMenu()">
+	    <button class='jframework-dropdownMenuItem' onclick="document.getElementById('hamburgerMenu').classList.remove('jframework-dropdownMenu-show'); JEventsHandler.showHelpMenu()">
 	      <span style='font-size:x-large'>&#x1F6C8;</span>
 	      Help
 	    </button>
@@ -425,40 +665,67 @@
 
 
 
-    <!-- Date help modal -->
+    <!-- Chronology selection modal -->
     <div class='jframework-modalDialog jframework-draggableContainer' id='dateHelp' style='max-width:min(90vh, 40em)'>
-      <div aria-label='Help' class='jframework-modalDialogHeader jframework-draggableHeader' style='background:var(--clrHighlightBg)'>
-	About the dates<button title='Close help window' aria-label='Close help window' class='jframework-modalDialogCloseBtn'>✖</button>
+      <div aria-label='Chronology selection' class='jframework-modalDialogHeader jframework-draggableHeader' style='background:var(--clrHighlightBg)'>
+	Chronology selection<button title='Close chronology selection window' aria-label='Close chronology selection window' class='jframework-modalDialogCloseBtn'>✖</button>
       </div>
 
       <div class='jframework-modalDialogBody' style='background:white'>
-	<div id='dateHelpIfShowingUssher' class='divShowOnWideScreenOnly'>
-	  <p style='margin-top:15px'>There are two dates against each event.</p>
-	  <p>The left hand one uses the familiar BC/AD scheme, and shows dates from the chronology drawn up by by Archbishop James Ussher in 1650.</p>
-	  <p>The right-hand one uses AM for early dates (up to part way through the life of Abraham), and BC/AD for later ones.</p>
-	  <p>AM (&lsquo;Anno Mundi&rsquo; or &lsquo;Year of the World&rsquo;) is a scheme widely used by Jews, and runs from zero for Adam.</p>
-	  <p>You may notice that BC/AD dates in the right hand column differ from those in the left.  The dates in the right hand column are taken not from Ussher, but from 
-	    <a class='jFrameworkLink' href='@biblicalTimeline' target='_blank' rel='noopener noreferrer'>TheBiblicalTimeline.org</a> which draws upon a variety of sources.</p>
-	</div>
+	<p>The right hand column of dates below is based on modern scholarship.  Early dates follow the &lsquo;Anno Mundi&rsquo; (Year of the World) scheme, which runs from AM 0.
+	   Later dates follow the familiar BC / AD scheme.</p>
+	<p>The left hand column shows a chronology of your choice.  The choices are between a) the chronology drawn up by Archbishop James Ussher in the 17th century and b), and one of a number of other schemes
+	   reflecting differences in Bible translations and scholarly opinion.</p>
+	<p>More information about all of the following options can be found in the document <a class='jFrameworkLink' href='@stepBibleChronologyDoc' target='_blank' rel='noopener noreferrer'>STEPBible&rsquo;s timeline</a>.</p>
 
-	<div id='dateHelpIfNotShowingUssher' class='divShowOnNarrowScreenOnly'>
-	  <p>We use the AM scheme for early dates here (up to part way through the life of Abraham), BC/AD for later ones.</p>
-	  <p>AM (&lsquo;Anno Mundi&rsquo; or &lsquo;Year of the World&rsquo;) is a scheme widely used by Jews, and runs from zero for Adam.</p>
-          <p>The BC/AD dates are taken from <a class='jFrameworkLink' href='@biblicalTimeline' target='_blank' rel='noopener noreferrer'>TheBiblicalTimeline.org</a> which draws upon a variety of sources.</p>
-	</div>
+	<div class='panel flex'>
+	  <div class='content'>
+	    <p style='font-weight:bold'>Make one choice from each of the lists below or click &lsquo;Select Ussher&rsquo;.</p><br>
+	    <div class='optionGroup'>
+	      <div class='optionLabel'>
+		Gen.5 and Gen.10 are different in some ancient translations, resulting in alternate dates:
+	      </div>
 
-	<p>Dates shown in black below have been calculated from information in the Bible, as explained in 
-	  <a class='jFrameworkLink' href='@ussher' target='_blank' rel='noopener noreferrer'>Ussher</a>
-	  or <a class='jFrameworkLink' href='@biblicalTimeline' target='_blank' rel='noopener noreferrer'>TheBiblicalTimeline.org</a>.</p>
-	<p> Dates shown in grey represent educated guesses derived from the biblical narrative, usually based on relative dates in Ussher’s system as applied in numerous printed Bibles.</p>
+	      <div class='optionRow'>
+		<label><input type='radio' name='DateCategory' value='Hebrew' checked>Hebrew dates</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='DateCategory' value='GreekLxx'>Greek LXX dates</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='DateCategory' value='Samaritan'>Samaritan dates</label>&nbsp;&nbsp;&nbsp;
+	      </div>
+	    </div>
 
-	<p>You can find much more information about all of this, and about biblical chronology generally, in the document
-	  &lsquo;<a class='jFrameworkLink' href='@stepBibleChronologyDoc' target='_blank' rel='noopener noreferrer'>STEPBible&rsquo;s timeline</a>.&rsquo;</p>
-      </div> <!-- jframework-modalDialogBody -->
+	    <div class='optionGroup'>
+	      <div class='optionLabel'>
+		Israel&rsquo;s &lsquo;400 years&rsquo; in Egypt (Gen.15.13) could have started when either Abraham or Jacob went there, meaning that the time may have been either 200 or 400 years:
+	      </div>
+
+	      <div class='optionRow'>
+		<label><input type='radio' name='YearsInEgypt' value='400' checked>400 years</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='YearsInEgypt' value='200'>200 years</label>&nbsp;&nbsp;&nbsp;
+	      </div>
+	    </div>
+
+	    <div class='optionGroup'>
+	      <div class='optionLabel'>
+		The Exodus is traditionally dated in the 15th century BC but many scholars date it in the 13th century BC:
+	      </div>
+
+	      <div class='optionRow'>
+		<label><input type='radio' name='ExodusDate' value='15' checked>15th century</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='ExodusDate' value='13'>13th century</label>&nbsp;&nbsp;&nbsp;
+	      </div>
+	    </div>
+	  </div> <!-- content -->
+
+	  <div class='actions'>
+	    <button class='btn alternativeChronologySelectUssher'>Select<br>Ussher</button>
+	    <button class='btn alternativeChronologySelectOther'>Select from<br>above choices</button>
+	    <button class='btn alternativeChronologyCancel'>Cancel</button>
+	  </div>
+	</div> <!-- panel flex -->
+      </div><!-- class='jframework-modalDialogBody' style='background:white' -->
     </div> <!-- dateHelp -->
 
 
-  
     <!-- Help modal -->
     <div class='jframework-modalDialog jframework-draggableContainer' id='help' style='max-width:min(90vh, 50em)'>
       <div aria-label='Help' class='jframework-modalDialogHeader jframework-draggableHeader' style='background:var(--clrHighlightBg)'>
@@ -526,7 +793,7 @@
       import { JChronology }     from '/js/J_AppsJs/J_Chronology/j_chronology.js';      // The application main class.
       import { JFrameworkUtils } from '/js/J_AppsJs/J_Framework/j_framework.utils.js';  // Utility needed to handle onload etc.
       JFrameworkUtils.arrangeToHideItemsIfClickOutside(['#hamburgerMenu', '#hamburgerMenuButton']); // We want to hide any pop ups if the user clicks outside them, with the exception of the hamburger menu.
-      function onload () { JChronology.onload(document.getElementById('jchronologyTimeline')) }; // Intermediary function so I can pass a parameter to the onload function.
+      function onload () { JChronology.onload(document.getElementById('jchronologyContainer')) }; // Intermediary function so I can pass a parameter to the onload function.
       JFrameworkUtils.setOnloadEtc(onload, null); // JChronology.resize.bind(JChronology.resize));
     </script>
   </body>

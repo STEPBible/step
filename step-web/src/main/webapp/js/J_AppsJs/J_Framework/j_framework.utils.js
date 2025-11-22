@@ -123,14 +123,14 @@ class _ClassJFrameworkUtils
        scheme.  This takes a date in raw form and converts it to that same
        scheme. */
     
-    convertToYearOffset (yearWithScheme)
+    convertToUnifiedYear (yearWithScheme)
     {
 	if (yearWithScheme.includes('AD'))
 	    return parseInt(yearWithScheme, 10) + 2083 + 2091;
 	else if (yearWithScheme.includes('BC'))
 	    return 2091 - parseInt(yearWithScheme) + 2083;
 	else
-	    return parseInt(yearWithScheme);
+	    return parseInt(yearWithScheme); // Assume AM, which starts from zero and therefore requires no conversion.
     }
 	
     
@@ -221,7 +221,7 @@ class _ClassJFrameworkUtils
 
     /**************************************************************************/
     /* Full book name, USX abbreviation and OSIS abbreviation.  Dummy entries
-       are required to make the offests into the list tie up with the UBS
+       are required to make the offsets into the list tie up with the UBS
        numbering scheme. */
     
     _bookNamesAndAbbreviations = [

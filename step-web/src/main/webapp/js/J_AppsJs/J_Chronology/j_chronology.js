@@ -950,7 +950,7 @@ class _ClassJTimelineRenderer
 	    else if (isAnnotatedYearEntry)
 	    {
 		const altDate = `<span class='jchronologyDateAlternative' data-key='${key}'>` + JChronologyData.getField(e, selectedAltChronology) + '</span>';
-		var modernDate = '<span style="color:red">&nbsp;' + padDate(JChronologyData.getAnnotatedYearModernDate(e)) + '</span>';
+		var modernDate = '<span>&nbsp;' + padDate(JChronologyData.getAnnotatedYearModernDate(e)) + '</span>';
 		dateDiv.innerHTML = altDate + modernDate;
 	    }
 	    

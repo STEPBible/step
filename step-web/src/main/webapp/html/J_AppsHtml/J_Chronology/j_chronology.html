@@ -192,9 +192,23 @@
 
 
       /*----------------------------------------------------------------------*/
+      jPara {
+	  display: block;
+	  padding-bottom: 1em;
+      }
+      
       .indentedPara {
 	  text-indent: 0.5em;
       }
+
+
+      
+      .disabledElementAndContents
+      {
+	  opacity: 0.5;
+	  pointer-events: none;
+      }
+
 
       
       /*----------------------------------------------------------------------*/
@@ -474,6 +488,11 @@
 	padding: 1px 1px;
 	transform: translateY(-50%);
     }
+
+    .jchronologyChapterDateLabel /* Don't want to see the dates on pure chapter lines. */
+    {
+	visibility: hidden;
+    }
 	
     
 
@@ -571,14 +590,6 @@
 	flex: 1 1 auto;
 	overflow: auto;
     }
-
-    /* align actions to the right and gap them */
-    .panel.flex .actions {
-	display: flex;
-	justify-content: flex-end; /* right align */
-	gap: 12px;
-	margin-top: 12px; /* space above buttons */
-    }
     </style>
   </head>
 
@@ -601,7 +612,7 @@
       
       <div id='jchronologyDurationHeaders'>
 	<div id='jchronologyDurationHeadersButtonOverlay'>
-	  <button type='button' class='jframework-vanillaButton' title='Chronology selection' id='dateInfoButton' style='padding:2px; font-weight:bold; font-size:medium' onclick='JEventHandlers.showDateHelp()'>Dates?</button>
+	  <button type='button' class='jframework-vanillaButton' title='Chronology selection' id='dateInfoButton' style='padding:2px; font-weight:bold; font-size:medium' onclick='JEventHandlers.showDateHelp()'>Alt dates</button>
 	  <div id='activeAlternativeChronologyName'></div>
 	</div>
 	<div id='jchronologyMenuButtonOverlay'>
@@ -672,18 +683,30 @@
       </div>
 
       <div class='jframework-modalDialogBody' style='background:white'>
-	<p>The right hand column of dates below is based on modern scholarship.  Early dates follow the &lsquo;Anno Mundi&rsquo; (Year of the World) scheme, which runs from AM 0.
-	   Later dates follow the familiar BC / AD scheme.</p>
-	<p>The left hand column shows a chronology of your choice.  The choices are between a) the chronology drawn up by Archbishop James Ussher in the 17th century and b), and one of a number of other schemes
-	   reflecting differences in Bible translations and scholarly opinion.</p>
-	<p>More information about all of the following options can be found in the document <a class='jFrameworkLink' href='@stepBibleChronologyDoc' target='_blank' rel='noopener noreferrer'>STEPBible&rsquo;s timeline</a>.</p>
+	<p>The right hand column of dates below is based on <a class='jFrameworkLink' href='@stepBibleChronologyDocNumberingSystemsBookmark' target='_blank' rel='noopener noreferrer'>
+	    one system of modern scholarship</a>.  Here, early dates follow the <a class='jFrameworkLink' href='@stepBibleChronologyDoc@stepBibleChronologyDocNumberingSystemsBookmark' target='_blank' rel='noopener noreferrer'>
+	    ancient Jewish <i>AM</i> (&lsquo;Anno Mundi&rsquo;, 'Year of the World')</a> scheme.
 
-	<div class='panel flex'>
+	<p>The left hand column shows a system of your choice.  You can use this to compare two schemes ...</p>
+
+	<div class='panel flex' style='background:lightgray;border:1px solid black'>
 	  <div class='content'>
-	    <p style='font-weight:bold'>Make one choice from each of the lists below or click &lsquo;Select Ussher&rsquo;.</p><br>
+	      <span style='font-weight:bold; color:var(--clrPrimary3)'>EITHER</span><br><br> Click here to select, as the left hand column, the 17th century scheme drawn up by
+	      <a class='jFrameworkLink' href='@stepBibleChronologyDoc@stepBibleChronologyDocUssherBookmark' target='_blank' rel='noopener noreferrer'>Archbishop James Ussher</a>:
+	      <div>
+		<label><input type='checkBox' id='ussherCheckbox' onChange='JEventHandlers.ussherCheckboxToggled(this)' checked>&nbsp;Ussher</label>
+	      </div>
+	  </div>
+	</div>
+
+	<br>
+	
+	<div id='modernChronologySelector' class='panel flex' style='background:lightgray;border:1px solid black'>
+	  <div class='content'>
+	    <span style='font-weight:bold; color:var(--clrPrimary3)'>OR</span><br><br>Make one choice from each of the lists below to select, as the left hand column, a scheme based upon more modern scholarship.<br><br>
 	    <div class='optionGroup'>
 	      <div class='optionLabel'>
-		Gen.5 and Gen.10 are different in some ancient translations, resulting in alternate dates:
+		Some ancient translations have different dates in the AM section:
 	      </div>
 
 	      <div class='optionRow'>
@@ -695,7 +718,8 @@
 
 	    <div class='optionGroup'>
 	      <div class='optionLabel'>
-		Israel&rsquo;s &lsquo;400 years&rsquo; in Egypt (Gen.15.13) could have started when either Abraham or Jacob went there, meaning that the time may have been either 200 or 400 years:
+		Israel&rsquo;s &lsquo;400 years&rsquo; in Egypt (Gen.15.13) could have started when either Abraham or Jacob went there, meaning that the time may have been either 200 or 400 years (see
+		<a class='jFrameworkLink' href='@stepBibleChronologyDoc@stepBibleChronologyDoc@stepBibleChronologyDocLengthOfTimeInEgyptBookmark' target='_blank' rel='noopener noreferrer'><i>Length of time in Egypt</i></a>).
 	      </div>
 
 	      <div class='optionRow'>
@@ -706,7 +730,8 @@
 
 	    <div class='optionGroup'>
 	      <div class='optionLabel'>
-		The Exodus is traditionally dated in the 15th century BC but many scholars date it in the 13th century BC:
+		Traditionally the Exodus was early, but scholars often date it later (see
+		<a class='jFrameworkLink' href='@stepBibleChronologyDoc@stepBibleChronologyDoc@stepBibleChronologyDocDateOfExodusBookmark' target='_blank' rel='noopener noreferrer'><i>Date of the Exodus</i></a>).
 	      </div>
 
 	      <div class='optionRow'>
@@ -715,13 +740,15 @@
 	      </div>
 	    </div>
 	  </div> <!-- content -->
-
-	  <div class='actions'>
-	    <button class='btn alternativeChronologySelectUssher'>Select<br>Ussher</button>
-	    <button class='btn alternativeChronologySelectOther'>Select from<br>above choices</button>
-	    <button class='btn alternativeChronologyCancel'>Cancel</button>
-	  </div>
 	</div> <!-- panel flex -->
+
+	<br>
+	
+	<div style='display: flex;justify-content: flex-end;gap: 12px;margin-top: 12px;'>
+	  <button id='alternativeChronologyOk'     class='jframework-vanillaButton button'>OK</button>
+	  <button id='alternativeChronologyCancel' class='jframework-vanillaButton button'>Cancel</button>
+	</div>
+
       </div><!-- class='jframework-modalDialogBody' style='background:white' -->
     </div> <!-- dateHelp -->
 

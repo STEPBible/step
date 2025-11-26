@@ -94,15 +94,11 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 	
 	ClassJFrameworkDraggable.initialise(); // Make any appropriate pop-ups draggable.
 
-	document.querySelector('.alternativeChronologySelectUssher').addEventListener('click', () => {
-	    JEventHandlers.alternativeChronologiesSelectorOk('Ussher');
+	document.getElementById('alternativeChronologyOk').addEventListener('click', () => {
+	    JEventHandlers.alternativeChronologiesSelectorOk();
 	});
 
-	document.querySelector('.alternativeChronologySelectOther').addEventListener('click', () => {
-	    JEventHandlers.alternativeChronologiesSelectorOk('Other');
-	});
-
-	document.querySelector('.alternativeChronologyCancel').addEventListener('click', () => {
+	document.getElementById('alternativeChronologyCancel').addEventListener('click', () => {
 	    JEventHandlers.alternativeChronologiesSelectorCancel();
 	});
     }
@@ -171,9 +167,9 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 	/**********************************************************************/
 	if (showWelcome)
 	{
-	    if (null == localStorage.getItem('JChronologyHaveShownWelcome'))
+	    if (null == localStorage.getItem('chronologyHaveShownWelcome'))
 	    {
-		localStorage.setItem('JChronologyHaveShownWelcome', 'Yes');
+		localStorage.setItem('chronologyHaveShownWelcome', 'Yes');
 		JEventsHandler.showWelcome();
 	    }
 	}
@@ -208,6 +204,7 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 	   them. */
 	
 	this._render();
+	JEventHandlers.alternativeChronologiesSelectorOk();
 
 
 
@@ -361,9 +358,9 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
     /**************************************************************************/
     _render ()
     {
-	console.time("renderTimeline");
+	//console.time("renderTimeline");
 	const durationDetails = JTimelineRenderer.renderTimeline(); // Maps start keys to the start/end divs which will demarcate the duration line.
-	console.timeEnd("renderTimeline");
+	//console.timeEnd("renderTimeline");
 
 	const durationDetailsByUnifiedYear = new Map();
 	for (const key of durationDetails.keys())
@@ -812,7 +809,7 @@ class _ClassJTimelineRenderer
 
 	/**********************************************************************/
 	/* We need to simulate the effect of separate columns when displaying
-	   both the Ussher date and the Modern one.  This is most easily
+	   both the Ussherdate and the Modern one.  This is most easily
 	   achieved by left padding the Modern date with non-breaking
            spaces. */
 	
@@ -925,16 +922,11 @@ class _ClassJTimelineRenderer
 
 	    
 	    /******************************************************************/
-	    /* Set up a div to hold the date label(s) and format it to reflect
-	       the reliability of the date. */
+	    /* Set up a div to hold the date label(s). */
 	    
 	    const dateDiv = document.createElement('div');
 	    dateDiv.classList.add('jchronologyEventDate');
-
-	    if (flags.includes('~'))
-		dateDiv.classList.add('jchronologyDateApproximate');
-	    else
-		dateDiv.classList.add('jchronologyDateDefinite');
+	    dateDiv.classList.add('jchronologyDateDefinite'); // We used to cater for approximate dates too, but the data upon which this was based turns out to be unreliable.
 		
 
 
@@ -946,7 +938,7 @@ class _ClassJTimelineRenderer
 	       Modern date.  For durations we have neither. */
 	    
 	    if (isChapterEntry)
-		dateDiv.innerHTML = JChronologyData.getAnnotatedYearModernDate(e);
+		dateDiv.innerHTML = "<span class='jchronologyChapterDateLabel'>" + JChronologyData.getAnnotatedYearModernDate(e) + '</span>';
 	    else if (isAnnotatedYearEntry)
 	    {
 		const altDate = `<span class='jchronologyDateAlternative' data-key='${key}'>` + JChronologyData.getField(e, selectedAltChronology) + '</span>';
@@ -1026,11 +1018,6 @@ class _ClassJTimelineRenderer
 		                                                                           // in the info-box, and in the event description they'll get in the way of click handling.
 		const scriptureRefs = JChronologyData.getChaptersFromChapterAndYearDataAsString(e);
 		if ('' != scriptureRefs) content += '&nbsp;&nbsp;<span class="iconFont">K&nbsp;</span>' + scriptureRefs;
-
-		if (flags.includes('↑'))
-		    content = '↑&nbsp;' + content
-		else if (flags.includes('↓'))
-		    content = '↓&nbsp;' + content
 	    }
 
 	    if (isVisibleEntry) descriptionDiv.insertAdjacentHTML('beforeend', _ClassJChronologyUtilities.withDurationColours(content)); // Colour any down arrows to follow the duration lines.
@@ -1345,16 +1332,22 @@ const JTimelineRenderer = new _ClassJTimelineRenderer();
 class _ClassJEventHandlers
 {
     /**************************************************************************/
-    alternativeChronologiesSelectorCancel (event)
+    /* No need to restore settings to the way they stood on entry to the
+       pop-up.  See _ClassAlternativeChronologies. */
+     
+   alternativeChronologiesSelectorCancel (event)
     {
 	this.hideDateHelp();
     }
 
 
     /**************************************************************************/
-    alternativeChronologiesSelectorOk (type)
+    /* No need to save settings as they stood on entry.  See
+      _ClassAlternativeChronologies. */
+    
+    alternativeChronologiesSelectorOk ()
     {
-	if ("Ussher" == type)
+	if (document.getElementById('ussherCheckbox').checked)
 	    _ClassAlternativeChronologies.selectUssher();
 	else
 	    _ClassAlternativeChronologies.selectOther();
@@ -1400,11 +1393,20 @@ class _ClassJEventHandlers
 
     
     /**************************************************************************/
+    /* Note that we need a copy of the settings as they stand on entry in case
+       the user hits Cancel.  However, there is no need to have a copy within
+       program memory, because the settings are based upon the localStorage
+       collection, and it is this which we keep up to date and use for
+       defaulting. */
+    
     showDateHelp ()
     {
 	_ClassAlternativeChronologies.init();
 	const modal = document.getElementById('dateHelp');
 	ModalDialogHandler.showModalDialog(modal);
+	const ussherCheckbox = document.getElementById('ussherCheckbox');
+	this._ussherCheckboxSettingOnEntry = ussherCheckbox.checked; // In case the user hits cancel.
+	this.ussherCheckboxToggled(ussherCheckbox);
 	modal.querySelector('.jframework-modalDialogBody').scrollTop = 0;
 	modal.style.top = '20px';
 	modal.style.left = (window.innerWidth - modal.offsetWidth) / 2 + 'px';
@@ -1450,6 +1452,16 @@ class _ClassJEventHandlers
     updateScriptureWindow (tag)
     {
 	_JChronologyPresentationHandler.setScriptureWindowContent(tag.textContent.replace('?', ''), true);
+    }
+
+    
+    /**************************************************************************/
+    ussherCheckboxToggled (checkbox)
+    {
+	if (checkbox.checked)
+	    document.getElementById('modernChronologySelector').classList.add('disabledElementAndContents');
+	else
+	    document.getElementById('modernChronologySelector').classList.remove('disabledElementAndContents');
     }
 }
 
@@ -1509,6 +1521,9 @@ class _ClassAlternativeChronologies
 	setRadioButtonsFromCache('DateCategory');
 	setRadioButtonsFromCache('YearsInEgypt');
 	setRadioButtonsFromCache('ExodusDate');
+
+	const ussherSetting = me._getValueFromCache('chronologyUssher') ?? 'y'; // Default to Ussher on first use.
+	document.getElementById('ussherCheckbox').checked = 'y' == ussherSetting.toLowerCase();
     }
 
 

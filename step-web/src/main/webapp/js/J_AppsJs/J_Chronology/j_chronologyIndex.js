@@ -198,6 +198,20 @@ class _ClassJEventHandlers extends ClassJFrameworkMultiframeCommunicationsSlave
     
 
     /****************************************************************************/
+    /* This gets called on small screens only.  On these, by default we'd see
+       only the search box until the user clics in it, at which point we'd also
+       see the search tab;e.  This (inherited) method arrnges for the search
+       table to be made visible straight away. */
+    
+    receiveActivation ()
+    {
+	const searchBox = document.getElementById('chronologySearchBox');
+	searchBox.click();
+	searchBox.focus();
+    }
+
+    
+    /****************************************************************************/
     tableClickHandler (cell, column)
     {
 	const key = cell.getAttribute('data-dataKey');

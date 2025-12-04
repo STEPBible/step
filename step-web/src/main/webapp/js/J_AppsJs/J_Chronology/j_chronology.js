@@ -30,12 +30,12 @@
      If it does not have an associated event, things are positioned
      somewhere near the element.  The date should include one of AD, BC or
      AM (but no space).  I don't mind whether the letters are placed at the
-     beginning or the end.  Dates are based upon the 'OtherDate' column of
+     beginning or the end.  Dates are based upon the 'ModernDate' column of
      the chronology data.
 
-   No year parameter: Acts as though year=3BC had been specified.  This
-     corresponds to the nearest event to what would be AD 0 if such a
-     date existed.
+   No year parameter: Acts as though year=6BC had been specified.  This
+     corresponds to the nearest populated year to what would be AD 0 if
+     such a date existed.
 
 
 
@@ -86,7 +86,7 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
     {
 	this._container = container;
 
-	JFrameworkSharedConstants.setHrefs();
+	JFrameworkSharedConstants.setHrefs(); // The document make contain jframeworkLink tags which include logical names for target URLs.  This converts the names to 'proper' addresses.
 	
 	JChronologyData.loadData(this._onload.bind(this)); // Get the data.
 	
@@ -109,15 +109,15 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 
     receiveMessage (data, callingFrameId)
     {
-	_JChronologyPresentationHandler.selectEvent(JChronologyData.getEventDateAndMarkerDivGivenKey(data.key));
+	_JChronologyPresentationHandler.selectAnnotatedYear(JChronologyData.getMarkerGivenKey(data.key));
     }
 
     
     /**************************************************************************/
     resize ()
     {
-	JTimelineRenderer.adjustPositionOfLine();
-	JChronology._checkDurationOverlaps();
+	JRenderer.adjustDimensionsAndPositions();
+	JRenderer.doDurationHeaders();
 	this._respondToFrameWidthChanges();
     }
 
@@ -152,14 +152,14 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 	if (null === selection.match) // A date not actually marked on the timeline.
 	{
 	    const unifiedYear = JFrameworkUtils.convertToUnifiedYear(year);
-	    const pos = unifiedYear < JChronologyData.getLastUyearInAm() ? JTimelineRenderer.rawPositionForAmDate(unifiedYear) : JTimelineRenderer.rawPositionForNonAmDate(unifiedYear);
-	    _JChronologyPresentationHandler.selectNonEvent(pos);
+	    const pos = unifiedYear < JChronologyData.getLastUyearInAm() ? JRenderer.rawPositionForAmDate(unifiedYear) : JRenderer.rawPositionForNonAmDate(unifiedYear);
+	    _JChronologyPresentationHandler.selectNonAnnotatedYear(pos);
 	}	    
 	else
 	{
 	    const key = JChronologyData.getKey(selection.match);
-	    const matchingDiv = JChronologyData.getEventDateAndMarkerDivGivenKey(key);
-	    _JChronologyPresentationHandler.selectEvent(matchingDiv);
+	    const matchingDiv = JChronologyData.getMarkerGivenKey(key);
+	    _JChronologyPresentationHandler.selectAnnotatedYear(matchingDiv);
 	}
 
 
@@ -182,6 +182,13 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
     _onload ()
     {
 	/**********************************************************************/
+	/* Set up the modal used to select alternative chronologies. */
+	
+	_ClassAlternativeChronologies.init();
+
+
+	
+	/**********************************************************************/
 	/* Determine the width of the frame, so that things are initialised to
 	   have the correct visibility. */
 	
@@ -203,8 +210,7 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 	   display, works out how things need to be spaced, and then positions
 	   them. */
 	
-	this._render();
-	JEventHandlers.alternativeChronologiesSelectorOk();
+	JRenderer.render('onload');
 
 
 
@@ -223,12 +229,12 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 	   contains the duration lines. */
 	
 	const me = this;
-	const container = _ClassCommon.getDatesAndLinesContainer();
+	const container = _ClassCommon.getColumnsContainer();
 	var durationScrollTimeout = null;
 	container.addEventListener("scroll", () => {
 	    if (durationScrollTimeout) return;
 	    durationScrollTimeout = requestAnimationFrame(() => {
-		me._checkDurationOverlaps();
+		JRenderer.doDurationHeaders();
 		durationScrollTimeout = null;
 	    });
 	});
@@ -242,7 +248,7 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 	
 	function fnUserSettingsChanged (firstTime)
 	{
-	    const background = getComputedStyle(document.documentElement).getPropertyValue("--clrBackground").trim();
+	    const background = _ClassCommon.getVariableSetting('--clrBackground');
 	    const isDark = JFrameworkUtils.isDark(background);
 	}
 	JFrameworkUserSettings.init(fnUserSettingsChanged);
@@ -255,199 +261,10 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 
 	
     /**************************************************************************/
-    /* We need to check when duration bars overlap the top of the graphics
-       area so as to be able to update the div which tells the user about
-       them. */
-    
-    _checkDurationOverlaps ()
-    {
-	/**********************************************************************/
-	/* Does the header for a single item. */
-	
-	const durationHeaderContainer = _ClassCommon.getDurationHeaderContainer();
-	const timeline = _ClassCommon.getTimeline();
-	const linePosition = this._linePosition;
-	var nDisplayableEntries = -1;
-	
-	function renderHeaderForItem (durationLineDiv)
-	{
-	    const entry = JChronologyData.getEntryGivenElement(durationLineDiv);
-	    const channelNo = JChronologyData.getDurStartChannelNo(entry);
-	    const line = document.createElement('div');
-	    line.className = 'jchronologyDurationHeaderLine';
-
-	    line.style.left = (2 + parseFloat(durationLineDiv.style.left)) + 'px'; // '+2' allows for left margin of some containers.
-	    line.style.height = (1 + (1.5 * --nDisplayableEntries)) + 'em';
-
-	    const label = document.createElement('div');
-	    label.className = 'jchronologyDurationHeaderLabel';
-	    label.textContent = JChronologyData.getDescription(entry);
-
-	    var colour = getComputedStyle(durationLineDiv).backgroundColor;
-	    line.style.borderLeftColor = colour;
-	    label.style.color = colour;
-
-	    const unifiedYear = JChronologyData.getUnifiedYear(entry);
-	    const bracketingEntries = JChronologyData.findBracketingEntries(unifiedYear, 'event');
-	    if (bracketingEntries.match)
-	    {
-		label.style.cursor = 'pointer';
-		label.addEventListener('click', () => {
-		    const key = JChronologyData.getKey(bracketingEntries.match);
-		    const matchingDiv = JChronologyData.getEventDateAndMarkerDivGivenKey(key);
-		    _JChronologyPresentationHandler.selectEvent(matchingDiv, true);
-		});
-	    }
-
-	    
-	    line.appendChild(label);
-	    durationHeaderContainer.appendChild(line);
-	}
-	
-
-
-	/**********************************************************************/
-	/* We need to remove any existing lines and labels, but we need to
-	   retain the overlay at the left which I use to hold the help
-	   button. */
-	
-	const container = _ClassCommon.getDatesAndLinesContainer();
-	const containerTop = container.getBoundingClientRect().top;
-
-	Array.from(durationHeaderContainer.children).forEach(child => {
-	    if (child.id !== 'jchronologyDurationHeadersButtonOverlay' && child.id !== 'jchronologyMenuButtonOverlay')
-		child.remove();
-	});
-
-
-
-	/**********************************************************************/
-	/* Find out which items, if any, need to be displayed. */
-	
-	const reports = [];
-	this._durationLines.forEach(item => {
-	    const rect = item.getBoundingClientRect();
-	    const doReport = rect.top <= containerTop && rect.bottom > containerTop;
-	    if (doReport)
-		reports.push(item);
-	});
-
-
-
-
-	/**********************************************************************/
-	/* Order elements by channel no. */
-
-	function orderFn (durationLineDiv)
-	{
-	    const entry = JChronologyData.getEntryGivenElement(durationLineDiv);
-	    return JChronologyData.getDurStartChannelNo(entry);
-	}
-
-
-	
-	/**********************************************************************/
-	nDisplayableEntries = reports.length;
-	reports.sort((a, b) => orderFn(a) - orderFn(b));
-	reports.forEach(item => {
-	    renderHeaderForItem(item);
-	});
-    }
-
-    
-    /**************************************************************************/
-    _render ()
-    {
-	//console.time("renderTimeline");
-	const durationDetails = JTimelineRenderer.renderTimeline(); // Maps start keys to the start/end divs which will demarcate the duration line.
-	//console.timeEnd("renderTimeline");
-
-	const durationDetailsByUnifiedYear = new Map();
-	for (const key of durationDetails.keys())
-	{
-	    const startAndEndDiv = durationDetails.get(key);
-	    const entry = JChronologyData.getEntryGivenElement(startAndEndDiv[0]);
-	    const unifiedYear = JChronologyData.getUnifiedYear(entry);
-
-	    if (!durationDetailsByUnifiedYear.has(unifiedYear)) // Note that while no two _events_ share the same date, more than one duration can have the same start date, so we need a multimap here.
-		durationDetailsByUnifiedYear.set(unifiedYear, []);
-	    durationDetailsByUnifiedYear.get(unifiedYear).push(startAndEndDiv);
-	}
-
-	const sortedUnifiedYears = [...durationDetailsByUnifiedYear.keys()].sort((a, b) => a - b);
-	for (const unifiedYear of sortedUnifiedYears)
-	{
-	    const startAndEndDivs = durationDetailsByUnifiedYear.get(unifiedYear);
-	    startAndEndDivs.forEach( (item, index) => { this._renderDuration(item); });
-	}
-	
-	this._checkDurationOverlaps();
-
-	_JChronologyPresentationHandler.reselectEventOrNonEvent();
-    }
-
-
-    /**************************************************************************/
-    /* There are some benefits to having these in the right hand column.
-       However, if we want the durations to remain visible even when scrolling
-       the right-hand column horizontally, it'll have to be the left. */
-    
-    _durationLines = [];
-    _renderDuration (startAndEnd)
-    {
-	/**********************************************************************/
-	/* Data from chronology database. */
-	
-	const dataEntry = JChronologyData.getEntryGivenElement(startAndEnd[0]);
-	const colour = JChronologyData.getDurStartColour(dataEntry);
-	const channelNo = JChronologyData.getDurStartChannelNo(dataEntry);
-	const isRegency = JChronologyData.getDurStartIsRegency(dataEntry);
-
-
-
-	/**********************************************************************/
-	/* Relatively fixed information. */
-	
-	const verticalStartPos = parseFloat(startAndEnd[0].style.top);
-	const verticalEndPos   = parseFloat(startAndEnd[1].style.top);
-
-
-
-	/**********************************************************************/
-	/* Create and position the div which will represent this duration. */
-	
-	const newLine = document.createElement('div'); this._durationLines.push(newLine);
-	_ClassCommon.getDatesAndLinesContainer().appendChild(newLine);
-	newLine.classList.add('jchronologyDurationLine');
-	newLine.style.left = _ClassJChronologyUtilities.getChannelLeft(_ClassCommon.getTimeline(), channelNo) + 'px';
-	newLine.style.background = colour;
-	newLine.style.setProperty('--lineColour', colour); // We need this in order for CSS to draw the down-arrow at the start of the line in the correct colour.
-	newLine.style.height = (verticalEndPos - verticalStartPos - parseFloat(_ClassCommon.getVerticalGapBetweenConsecutiveDurationLines())) + 'px'; // The parseFloat gives some space at the bottom of each line,
-	                                                                                                                                                         // so that if one line ends and another starts at the same date,
- 	                                                                                                                                                         // we can see a break between the two.
-	newLine.style.top = `${verticalStartPos}px`;
-	newLine.setAttribute('data-key', startAndEnd[0].getAttribute('data-key'));
-
-	if (isRegency)
-	    newLine.classList.add('regency');
-//	    newLine.style.background = `repeating-linear-gradient(to bottom, ${colour} 0 10px, yellow 10px 20px)`;
-
-	if (_ClassJChronologyUtilities.C_Dbg)
-	{
-	    const info = `Key: ${key}  Col: ${channelNo}  Top: ${verticalStartPos}  Bottom: ${verticalEndPos} Date: ${JChronologyData.getAnnotatedYearModernDate(dataEntry)}`;
-	    console.log(info);
-	    newLine.addEventListener('click', function (event) {
-		alert(info);
-	    });
-	}
-    }
-
-    
-    /**************************************************************************/
     _respondToFrameWidthChanges ()
     {
 	if (this._updateFrameWidth())
-	    this._render();
+	    JRenderer.render();
     }
 
 
@@ -459,7 +276,7 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
     
     _updateFrameWidth ()
     {
-	const containerWidth = parseFloat(window.getComputedStyle(_ClassCommon.getChronologyContainer()).width);
+	const containerWidth = parseFloat(window.getComputedStyle(_ClassCommon.getContentContainer()).width);
 	if (containerWidth > 500)
 	{
 	    if (document.body.classList.contains('isWideScreen')) return false;
@@ -485,13 +302,13 @@ export const JChronology = new _ClassJChronology();
 /*!****************************************************************************/
 /******************************************************************************/
 /**                                                                          **/
-/**                            Timeline renderer                             **/
+/**                               Renderering                                **/
 /**                                                                          **/
 /******************************************************************************/
 /******************************************************************************/
 
 /******************************************************************************/
-class _ClassJTimelineRenderer
+class _ClassJRenderer
 {
     /**************************************************************************/
     /* Configuration data.  This isn't intended to be changed dynamically:
@@ -508,75 +325,275 @@ class _ClassJTimelineRenderer
     
     
     /**************************************************************************/
-    /* I _think_ we want things left-aligned as far as possible, so as to give
-       plenty of room for the description of the events.  This determines the
-       maximum width required to contain the date labels, and then shifts
-       everything to the left accordingly. */
+    render (callType = '')
+    {
+	//console.time("renderYears");
+	const durationDetails = this._renderYears(); // Maps start keys to the start/end divs which will demarcate the duration line.
+	//console.timeEnd("renderYears");
+
+	this.adjustDimensionsAndPositions();
+	this._renderDurations(durationDetails);
+	if ('onload' != callType)
+	    this.doDurationHeaders();
+    }
+
+
+    /**************************************************************************/
+    /* We have a number of columns which constitute the main body of
+       the graphical part of the display.  The last soaks up whatever
+       space is available to it, but the others need to be set to be
+       just wide enough for their content.  We also need to set the
+       height of the timeline to be long enough to accommodate all of
+       the events. */
     
-    adjustPositionOfLine ()
+    adjustDimensionsAndPositions (colWidthsOnly = false)
     {
 	/**********************************************************************/
-	var maxDateWidth = 0;
-	const dates = document.querySelectorAll('.jchronologyEventDate');
-	dates.forEach(date => {
-	    maxDateWidth = Math.max(maxDateWidth, date.offsetWidth);
-	});
-
-
-
-	/**********************************************************************/
-	/* Adjust the markers to be centred on the timeline. */
+	/* Calculates the width needed to fit a column to its content. */
 	
-	const markers = document.querySelectorAll('.jchronologyEventMarkerCircle');
-	const markerStyle = window.getComputedStyle(markers[0]);
-	const markerHalfWidth = parseFloat(markerStyle.width) / 2;
-	const markerMargin = 2 * parseFloat(markerStyle.borderLeftWidth); // Not exactly sure why we need '2 *', but apparently we do.
-	const markerLeft = (markerMargin - markerHalfWidth) + 'px';
-	markers.forEach(marker => {
-	    marker.style.left = markerLeft;
-	});
+	function fitToContentRightJustified (id)
+	{
+	    const inner = _ClassCommon.getVerticalDiv(id);
+	    const children = Array.from(inner.children);
+
+	    var maxWidth = 0;
+	    
+	    children.forEach(child => {
+		if (!child.classList.contains('jchronologyTickMarkHolder')) // These are the lozenges which show regular dates.  For some reason I can't get reasonable widths for them.
+		{
+		    const style = getComputedStyle(child);		
+		    const childWidth = child.offsetWidth + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+		    if (childWidth > maxWidth)
+			maxWidth = childWidth;
+		}
+
+	    });
+
+	    return maxWidth + 5; // Extra little bit to ensure the text doesn't hit the left edge.
+	}
+
+
+	
+	/**********************************************************************/
+	/* The column widths. */
+	
+	const widths = [];
+	var ix = -1;
+	
+	for (const id of _ClassCommon.getVerticalDivIds())
+	{
+	    switch (id) // Make sure you keep this aligned with the details in _ClassCommon.
+	    {
+		case 'jchronologySelectedItemHighlighterHolder':
+		{
+		    widths.push(0);
+		    break;
+		}
+
+		case 'jchronologyOtherDates':
+		case 'jchronologyModernDates':
+		{
+		    widths.push(fitToContentRightJustified(id));
+		    break;
+		}
+
+		case 'jchronologyTimelineHolder':
+		{
+		    widths.push(_ClassJChronologyUtilities.getWidthOfTimelineHolderDiv());
+		    break;
+		}
+
+		case 'jchronologyDurationLines':
+		{
+		    widths.push(_ClassJChronologyUtilities.getWidthOfDurationLinesDiv());
+		    break;
+		}
+
+		case 'jchronologyYearDescriptions':
+		{
+		    break; // Deliberately not setting a width here.
+		}
+	    }
+	}
 
 
 
 	/**********************************************************************/
-	/* Move the line. */
-
-	const gapBetweenDateLabelsAndLine = 10;
-	this._linePosition = maxDateWidth + gapBetweenDateLabelsAndLine;
-	const line = _ClassCommon.getTimeline();
-	line.style.left = `${this._linePosition}px`;
+	/* Apply the widths. */
+	
+	const template = widths.join('px ') + 'px 1fr';
+	_ClassCommon.getColumnsContainer().style.gridTemplateColumns = template;
 
 
 
+	/**********************************************************************/
+	if (colWidthsOnly)
+	    return;
+
+
+
+	/**********************************************************************/
+	/* Sort out the height of the column container.  In theory you can do
+	   this directly in CSS, but I haven't managed to find a way to do
+	   that _and_ have a vertical scroll bar too when needed. */
+
+	const header = document.getElementById('HEADER');
+	const footer = document.getElementById('FOOTER');
+	const content = _ClassCommon.getColumnsContainer();
+
+	const headerHeight = header.offsetHeight;
+	const footerHeight = footer.offsetHeight;
+	const viewportHeight = window.innerHeight;
+
+	const contentHeight = viewportHeight - headerHeight - footerHeight;
+	content.style.height = contentHeight + 'px';
+
+	
+	
 	/**********************************************************************/
 	/* Make the width of the button overlay the same as the offset of the
 	   timeline.  This then makes it possible to position the date help
 	   button centrally over the dates. */
 	
-	_ClassCommon.getDurationHeadersButtonOverlay().style.width = line.style.left
+	// $$$ document.getElementById('jChronologyDateInfoButton').style.width = (widths[0] + widths[1]) + 'px';
 
 
 
 	/**********************************************************************/
-	/* Move the dates. */
+	/* The timeline needs to be long enough to run the entire height of the
+	   content. */
+	
+	const height = Math.max(..._ClassCommon.getVerticalDivs().map(d => d.scrollHeight))
+	const timeline = document.getElementById('jchronologyTimeline');
+	timeline.style.top = 0;
+	timeline.style.left = ((_ClassJChronologyUtilities.getWidthOfTimelineHolderDiv() - parseFloat(_ClassCommon.getVariableSetting('--timelineWidth'))) / 2) + 'px';
+	timeline.style.height = height + 'px';
+	
 
-	var separation = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--datesAndTimelineHorizontalSeparation'));
-	dates.forEach(date => {
-	    date.style.right = (gapBetweenDateLabelsAndLine + 2) + 'px'; // Not sure why the '2', bu it squares with a setting I'm using on the markers.
+
+	/**********************************************************************/
+	/* Force all columns to be the same height. */
+	
+	const abs = document.querySelector('.jchronologyAbsoluteContent');
+	const col = document.querySelector('.jchronologyBodyColumn:last-child');
+	_ClassCommon.getVerticalDivs().forEach( d => d.style.height = abs.scrollHeight + 'px' );
+
+
+
+	/**********************************************************************/
+	/* Force the overflow box to have the same width as the main body, so
+	   that horizontal scrolling works. */
+
+	const widthSetter = document.getElementById('jchronologyDurationHeadersScrollSupport');
+	widthSetter.style.width = _ClassCommon.getColumnsContainer().scrollWidth + 'px';
+	widthSetter.style.overflow = 'hidden';
+    } // adjustDimensions
+
+
+    /**************************************************************************/
+    /* We need to check when duration bars overlap the top of the graphics
+       area so as to be able to update the div which tells the user about
+       them. */
+    
+    doDurationHeaders ()
+    {
+	/**********************************************************************/
+	/* Does the header for a single item. */
+	
+	const durationHeaderContainer = _ClassCommon.getDurationHeaderContainer();
+	const timeline = _ClassCommon.getDurationLinesContainer();
+	const linePosition = this._linePosition;
+	var nDisplayableEntries = -1;
+	
+	function renderHeaderForItem (durationLineDiv)
+	{
+	    const entry = JChronologyData.getEntryGivenElement(durationLineDiv);
+	    const channelNo = JChronologyData.getDurStartChannelNo(entry);
+	    const line = document.createElement('div');
+	    line.className = 'jchronologyDurationHeaderLine';
+	    line.style.left = (_ClassCommon.getVerticalDivHorizontalPosition('jchronologyDurationLines').left + _ClassJChronologyUtilities.getChannelLeft(channelNo)) + 'px';
+	    line.style.height = (1 + (1.5 * --nDisplayableEntries)) + 'em';
+
+	    const label = document.createElement('div');
+	    label.className = 'jchronologyDurationHeaderLabel';
+	    label.textContent = JChronologyData.getDescription(entry);
+
+	    var colour = getComputedStyle(durationLineDiv).backgroundColor;
+	    line.style.borderLeftColor = colour;
+	    label.style.color = colour;
+
+	    const unifiedYear = JChronologyData.getUnifiedYear(entry);
+	    const bracketingEntries = JChronologyData.findBracketingEntries(unifiedYear, 'event');
+	    if (bracketingEntries.match)
+	    {
+		label.style.cursor = 'pointer';
+		label.addEventListener('click', () => {
+		    const key = JChronologyData.getKey(bracketingEntries.match);
+		    const matchingDiv = JChronologyData.getMarkerGivenKey(key);
+		    _JChronologyPresentationHandler.selectAnnotatedYear(matchingDiv, true);
+		});
+	    }
+
+	    
+	    line.appendChild(label);
+	    durationHeaderContainer.appendChild(line);
+	}
+	
+
+
+	/**********************************************************************/
+	/* We need to remove any existing lines and labels. */
+
+	Array.from(durationHeaderContainer.children).forEach(child => {
+	    child.remove();
 	});
 
 
 
 	/**********************************************************************/
-	/* Alter the width of the left-hand column to accommodate the dates,
-	   timeline and duration lines.  The right hand column will
-	   automatically follow. */
+	/* Find out which items, if any, need to be displayed. */
 	
-	const width = _ClassJChronologyUtilities.getChannelLeft(_ClassCommon.getTimeline(), 4);
-	document.documentElement.style.setProperty('--chronologyTimelineWidth', width + 'px');
+	const containerScrollTop = _ClassCommon.getColumnsContainer().scrollTop;
+	function spansTop (child)
+	{
+	    // Child's top within column/content (handles inline CSS or stylesheet).
+	    const childTop = parseFloat(getComputedStyle(child).top) || 0;
+	    
+	    // Element height including borders.
+	    const childBottom = childTop + child.offsetHeight;
+
+	    return (childTop <= containerScrollTop) && (childBottom > containerScrollTop);
+	}
+
+
+	const reports = [];
+	this._durationLines.forEach(item => {
+	    if (spansTop(item))
+		reports.push(item);
+	});
+
+
+
+	/**********************************************************************/
+	/* Order elements by channel no. */
+
+	function orderFn (durationLineDiv)
+	{
+	    const entry = JChronologyData.getEntryGivenElement(durationLineDiv);
+	    return JChronologyData.getDurStartChannelNo(entry);
+	}
+
+
+	
+	/**********************************************************************/
+	nDisplayableEntries = reports.length;
+	reports.sort((a, b) => orderFn(a) - orderFn(b));
+	reports.forEach(item => {
+	    renderHeaderForItem(item);
+	});
     }
 
-
+    
     /**************************************************************************/
     /* Given a unified year, works out where to position it vertically. */
     
@@ -592,33 +609,225 @@ class _ClassJTimelineRenderer
 
     
     /**************************************************************************/
-    /* The layout comprises two divs, side by side.  (One of these is created
-       in the HTML; the other (the right-hand one) is created here on the
-       fly for efficiency reasons -- see clearAndRecreateTargetElements
-       below.)
+    _addTickMarks ()
+    {
+	/**********************************************************************/
+	/* Gets a list of the tops and bottoms of all date labels. */
+	
+	const labelHeight = document.getElementById('getLabelSizeForTickMarks').offsetHeight;
+	const mainFontSize = parseFloat(_ClassCommon.getVariableSetting('--defaultFontSize'));
+	const existingDateLabelIntervals = [..._ClassCommon.getVerticalDiv('jchronologyModernDates').querySelectorAll('.jchronologyTimelineElement')]
+	      .map(el => {
+		  var parent = el.offsetParent;
+		  var top = el.offsetTop;
+		  var bottom = top + mainFontSize + 2;
+		  return { top, bottom };
+	      })
+	      .sort((a, b) => a.top - b.top);
 
-       The left-hand div contains, for each event, the date label and the
-       circle marker.  The vertical line which represents the timeline also
-       goes here.
 
-       The right-hand div contains the description of each event.
 
-       The reason for splitting things this way is that I want to be able to
-       have the description scroll horizontally if necessary, but I want the
-       date details to remain fixed horizontally.
+	/**********************************************************************/
+	/* Looks for a clash between the putative new element and any of the
+	   original date labels. */
+	
+	function clash (intervals, newTop, newBottom)
+	{
+	    var lo = 0;
+	    var hi = intervals.length - 1;
 
-       This brings with it a complication, because I want just a single
-       vertical scroll bar down the right of the right-hand div, but I have
-       to arrange for this to scroll both divs at the same time.
+	    while (lo <= hi)
+	    {
+		const mid = (lo + hi) >> 1;
+		const cur = intervals[mid];
+
+		if (newBottom < cur.top)
+		    hi = mid - 1; // new element is above this interval
+		else if (newTop > cur.bottom)
+		    lo = mid + 1; // new element is below this interval
+		else 
+		    return true; // OVERLAP FOUND
+	    }
+	    return false;
+	}
+
+
+	/**********************************************************************/
+	/* Constructs a tick mark element. */
+	
+	function makeElement (pos, label)
+	{
+	    if ('0 BC' == label) label = '&nbsp;&nbsp;0&nbsp;&nbsp;';
+	    const eventDateAndMarkerDiv = document.createElement('div');
+	    eventDateAndMarkerDiv.className = 'jchronologyTickMarkHolder';
+	    eventDateAndMarkerDiv.style.top = pos + 'px';
+	    const dateDiv = document.createElement('div');
+	    dateDiv.classList.add('jchronologyTickMarkDateLabel');
+	    dateDiv.innerHTML = label;
+	    eventDateAndMarkerDiv.appendChild(dateDiv);
+	    _ClassCommon.getVerticalDiv('jchronologyModernDates').appendChild(eventDateAndMarkerDiv);
+	    return eventDateAndMarkerDiv;
+	}
+
+
+
+	/**********************************************************************/
+	const me = this;
+	function makeAmPos (uyear)
+	{
+	    return me.rawPositionForAmDate(uyear) + labelHeight / 2;
+	}
+
+	function makeBcPos (year)
+	{
+	    const uyear = JChronologyData.getAdBcOffset() - year;
+	    return me.rawPositionForNonAmDate(uyear) + labelHeight / 2;
+	}
+
+	function makeAdPos (year)
+	{
+	    const uyear = JChronologyData.getAdBcOffset() + year;
+	    return me.rawPositionForNonAmDate(uyear) + labelHeight / 2;
+	}
+
+
+	
+	/**********************************************************************/
+	const C_AmInterval = 50;
+	var start = 0;
+	var uyear = 0;
+	while (uyear < JChronologyData.getFirstUYearBc())
+	{
+	    const pos = makeAmPos(uyear);
+	    if (!clash(existingDateLabelIntervals, pos - labelHeight, pos + labelHeight))
+		makeElement(pos, 'AM ' + uyear);
+	    uyear += C_AmInterval;
+	}
+
+
+	
+	/**********************************************************************/
+	const C_BcInterval = 5;
+	var year = Math.floor( (1 + JChronologyData.getFirstUYearBc()) / C_BcInterval) * C_BcInterval;
+	while (year >= 0)
+	{
+	    const pos = makeBcPos(year);
+	    if (!clash(existingDateLabelIntervals, pos - labelHeight, pos + labelHeight))
+		makeElement(pos, year + ' BC');
+	    year -= C_BcInterval;
+	}
+
+
+	
+	/**********************************************************************/
+	const C_AdInterval = 5;
+	var year = C_AdInterval;
+	while (year < JChronologyData.getLastAsActualYear())
+	{
+	    const pos = makeAdPos(year);
+	    if (!clash(existingDateLabelIntervals, pos - labelHeight / 2, pos + labelHeight / 2))
+		makeElement(pos, year + ' AD');
+	    year += C_AdInterval;
+	}
+    }
+
+
+    /**************************************************************************/
+    _durationLines = [];
+    _renderDuration (startAndEnd)
+    {
+	/**********************************************************************/
+	/* Data from chronology database. */
+	
+	const dataEntry = JChronologyData.getEntryGivenElement(startAndEnd[0]);
+	const colour = JChronologyData.getDurStartColour(dataEntry);
+	const channelNo = JChronologyData.getDurStartChannelNo(dataEntry);
+	const isRegency = JChronologyData.getDurStartIsRegency(dataEntry);
+
+
+
+	/**********************************************************************/
+	/* Relatively fixed information. */
+	
+	const verticalStartPos = parseFloat(startAndEnd[0].style.top);
+	const verticalEndPos   = parseFloat(startAndEnd[1].style.top);
+
+
+
+	/**********************************************************************/
+	/* Create and position the div which will represent this duration. */
+	
+	const newLine = document.createElement('div'); this._durationLines.push(newLine);
+	_ClassCommon.getDurationLinesContainer().appendChild(newLine);
+	newLine.classList.add('jchronologyDurationLine');
+	newLine.style.left = _ClassJChronologyUtilities.getChannelLeft(channelNo) + 'px';
+	newLine.style.background = colour;
+	newLine.style.setProperty('--lineColour', colour); // We need this in order for CSS to draw the down-arrow at the start of the line in the correct colour.
+	newLine.style.height = (verticalEndPos - verticalStartPos - parseFloat(_ClassCommon.getVerticalGapBetweenConsecutiveDurationLines())) + 'px'; // The parseFloat gives some space at the bottom of each line,
+	                                                                                                                                              // so that if one line ends and another starts at the same date,
+ 	                                                                                                                                              // we can see a break between the two.
+	newLine.style.top = `${verticalStartPos}px`;
+	newLine.setAttribute('data-key', startAndEnd[0].getAttribute('data-key'));
+
+	if (isRegency)
+	    newLine.classList.add('regency');
+//	    newLine.style.background = `repeating-linear-gradient(to bottom, ${colour} 0 10px, yellow 10px 20px)`;
+
+	if (_ClassJChronologyUtilities.C_Dbg)
+	{
+	    const info = `Key: ${key}  Col: ${channelNo}  Top: ${verticalStartPos}  Bottom: ${verticalEndPos} Date: ${JChronologyData.getAnnotatedYearModernDate(dataEntry)}`;
+	    console.log(info);
+	    newLine.addEventListener('click', function (event) {
+		alert(info);
+	    });
+	}
+    }
+
+    
+    /**************************************************************************/
+    _renderDurations (durationDetails)
+    {
+	const durationDetailsByUnifiedYear = new Map();
+	for (const key of durationDetails.keys())
+	{
+	    const startAndEndDiv = durationDetails.get(key);
+	    const entry = JChronologyData.getEntryGivenElement(startAndEndDiv[0]);
+	    const unifiedYear = JChronologyData.getUnifiedYear(entry);
+
+	    if (!durationDetailsByUnifiedYear.has(unifiedYear)) // Note that while no two _events_ share the same date, more than one duration can have the same start date, so we need a multimap here.
+		durationDetailsByUnifiedYear.set(unifiedYear, []);
+	    durationDetailsByUnifiedYear.get(unifiedYear).push(startAndEndDiv);
+	}
+
+	const sortedUnifiedYears = [...durationDetailsByUnifiedYear.keys()].sort((a, b) => a - b);
+	for (const unifiedYear of sortedUnifiedYears)
+	{
+	    const startAndEndDivs = durationDetailsByUnifiedYear.get(unifiedYear);
+	    startAndEndDivs.forEach( (item, index) => { this._renderDuration(item); });
+	}
+	
+	_JChronologyPresentationHandler.reselectAnnotatedOrNonAnnotatedYear();
+    }
+
+
+    /**************************************************************************/
+    /* The layout comprises four divs, side by side.  Within each of these
+       I create a sub-div to hold the content.  Which sounds weird, but this
+       way, I can create the content outside of the document and then simply
+       add these subdivs when the content is complete -- an approach which
+       speeds the initial rendering up very appreciably.
+
+       From left to right, the divs hold the 'Other' date, the 'Modern' date,
+       the markers and duration lines, and the year description.
 
        The entries which appear here are as follows:
 
-       - AnnotatedYears have a date and a description.  These cover years
-         for which we have event details (like the accession of monarchs
-	 or whatever).  These I refer to as AnnotatedYears.  Where the
-	 year in question also appears in our chapter-to-year data as
-	 being a year which is coverted by one or more scripture chapters,
-	 the scripture information also appears as part of the description.
+       - AnnotatedYears have a date and a description.  These cover
+         years for which we have event details (like the accession of
+         monarchs or whatever).  Where the year in question also
+         appears in our chapter-to-year data as being a year which is
+         coverted by one or more scripture chapters, the scripture
+         information also appears as part of the description.
 
        - There are 'chapter' lines, which indicate that a given collection
          of chapters are believed to cover a particular year.  These
@@ -674,17 +883,21 @@ class _ClassJTimelineRenderer
        to improve readability, and then position things according to
        their offset year.
 
-       Needless to say, though, it's not that simple ...
+       Needless to say, though, it's _not_ that simple ...
 
        Over the AM period, events tend to be very sparse, and we would
        therefore end up with large chunks of timeline which were totally
-       empty (but for tick marks).  And there is also the issue of what
-       to do if two consecutive visible events (ie non-duration events)
-       are so close to one another chronologically that their representations
-       would overlap.
+       empty (but for tick marks).  We therefore split the timeline
+       notionally into two parts -- the AM portion, where we assign very
+       little vertical space per year, and the BC/AD portion, where we
+       assign rather more.
 
-       The basic answer is that we do our best, and accept that at such
-       points the proportional layout will go awry.
+       This notwithstanding, it is possible to end up with consecutive
+       events which are so close together in time that positioning them
+       to reflect their date would cause them to overlap.  Here I simply
+       shift the later ones enough to avoid overlap, and accept that this
+       will result in something where some of the dates are not actually
+       proportionately spaced.
 
        The overall approach relies upon the ordering of the incoming
        data, which is by unified year, except that where several events
@@ -692,66 +905,31 @@ class _ClassJTimelineRenderer
        then any chapter entry, and then duration starts and ends.
     */
     
-    _fontSizeInPx = -1;           // Updated during processing to follow the actual font size chosen by the user.
     _lastUnifiedYearInAm = -1;    // The unified year for the last event which falls into the AM portion.
     _lastPosInAm = -1;            // The position of the last visible event which falls into the AM portion.
 
-    renderTimeline ()
+    _renderYears ()
     {
 	/**********************************************************************/
-	/* The individual elements are added to two elements -- the timeline
-	   and the year descriptions container.  It turns out to be very
-	   much quicker to do this if we create these two elements outside of
-	   the document, then add everything to them, and only then place
-	   the two elements within the document.  (Quicker by a factor of
-	   almost five.)
-
-	   clearAndRecreateTargetElements creates and records details of them.
-	   registerTargetElements is called at the end of the present method
-	   to add them to do the document and set them up. */
-
-	function clearAndRecreateTargetElements ()
-	{
-	    _ClassCommon.getTimeline()?.remove();
-	    _ClassCommon.getYearDescriptionsContainer()?.remove();
-	    document.querySelectorAll('.jchronologyDurationLine').forEach(el => el.remove());
-	    
-	    var div = document.createElement('div');
-	    div.id = 'jchronologyTimelineLine';
-	    _ClassCommon.setTimeline(div);
-
-	    var div = document.createElement('div');
-	    div.id = 'jchronologyYearDescriptions';
-	    _ClassCommon.setYearDescriptionsContainer(div);
-	}
-
-	function registerTargetElements ()
-	{
-	    _ClassCommon.getDatesAndLinesContainer().appendChild(_ClassCommon.getTimeline());
-	    document.getElementById('jchronologyContainer').appendChild(_ClassCommon.getYearDescriptionsContainer());
-
-
-	    /**********************************************************************/
-	    /* The chronology display comprises two columns.  Only the right one
-	       has a vertical scroll bar, but I need to arrange that if the user
-	       scrolls, both are affected. */
+	/* Determine font size dynamically.  This is assumes that if we want
+	   to follow user preferences, --defaultfont is indeed updated
+	   elsewhere in line with any changes the user may make. */
 	
-	    const leftCol = document.getElementById('jchronologyDatesAndLines');
-	    const rightCol = _ClassCommon.getYearDescriptionsContainer();
-
-	    rightCol.addEventListener('scroll', () => {
-		leftCol.scrollTop = rightCol.scrollTop;
-	    });
-	}
-	
-    
-
-	/**********************************************************************/
-	clearAndRecreateTargetElements();
+	const fontSizeInPx = parseFloat(_ClassCommon.getVariableSetting('--defaultFontSize'));
 
 
 	
 	/**********************************************************************/
+	this._deleteAndRecreateWorkingElements()
+	this._sortOutMutualScrolling();
+
+
+
+	
+	/**********************************************************************/
+	/* Determine what's going in the 'Other' column, and reflect this in
+	   the header. */
+	
 	const selectedAltChronology = _ClassAlternativeChronologies.makeChronologyKeyFromCache();
 	_ClassAlternativeChronologies.displayActiveAlternativeChronologyName(selectedAltChronology);
 
@@ -765,15 +943,6 @@ class _ClassJTimelineRenderer
 	
 	JChronologyData.clearKeyToElementsMapping();
 	_ClassCommon.resetRootResolver();
-
-
-	
-	/**********************************************************************/
-	/* Determine font size dynamically.  This is assumes that if we want
-	   to follow user preferences, --defaultfont is indeed updated
-	   elsewhere in line with any changes the user may make. */
-	
-	this._fontSizeInPx = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--defaultFontSize').trim());
 
 
 	
@@ -798,20 +967,9 @@ class _ClassJTimelineRenderer
 
 	
 	/**********************************************************************/
-	var mostRecentUnifiedYear = -1;
-	var mostRecentPos = -1;
-	const durationMap = new Map();
-	var rawPositionFunction = null;
-	const eventDescriptionContainerDivs = [];
-	var associatedChapterIx = -1;
-
-
-
-	/**********************************************************************/
-	/* We need to simulate the effect of separate columns when displaying
-	   both the Ussherdate and the Modern one.  This is most easily
-	   achieved by left padding the Modern date with non-breaking
-           spaces. */
+	/* We have two date columns, and want them to be aligned as though
+	   they were in a table, even though they are not.  To this end, we
+	   need to pad the right-hand date to a fixed width. */
 	
 	function padDate (s)
 	{
@@ -822,7 +980,17 @@ class _ClassJTimelineRenderer
 
 	
 	/**********************************************************************/
-        const doEvent = (e, type) =>
+	var mostRecentUnifiedYear = -1;
+	var mostRecentPos = -1;
+	const durationMap = new Map();
+	var rawPositionFunction = null;
+	const descriptionDivs = [];
+	var associatedChapterIx = -1;
+
+
+
+	/**********************************************************************/
+        const doYear = (e, type) =>
 	{
 	    /******************************************************************/
 	    const isChapterEntry = JChronologyData.isChapterEntry(e); // A pseudo event assocated with the start of a chapter.
@@ -831,6 +999,7 @@ class _ClassJTimelineRenderer
 	    const flags = isVisibleEntry ? JChronologyData.getFlags(e) : ''; // Tells us whether this is an approximate date, etc.
 	    const key = JChronologyData.getKey(e);
 	    const sameYearAsPrevious = mostRecentUnifiedYear == JChronologyData.getUnifiedYear(e);
+	    const divList = [null, null, null, null]; // The divs associated with this event.
 
 
 
@@ -885,157 +1054,113 @@ class _ClassJTimelineRenderer
 	    {
 		const unifiedYear = JChronologyData.getUnifiedYear(e);
 		pos = Math.max(rawPositionFunction(unifiedYear), mostRecentPos);
-		pos += this._fontSizeInPx / 2; // Positions the top of the duration by the vertical mid point of the text which describes it.
+		pos += fontSizeInPx / 2; // Positions the top of the duration by the vertical mid point of the text which describes it.
 	    }
 
 
 
 	    /******************************************************************/
-	    /* This next block of code is basically common for event tags
-	       and duration tags.  The only difference is that I don't add
-	       click handlers to duration events, because they are a behind-
-	       the-scenes artefact, which I want the user to be unaware of.
+	    /* We have an 'Other' entry if this is a visible non-chapter
+	       entry. */
 
-	       Here we are creating a div ('jchronologyEventDateAndMarkerHolder')
-	       to hold the date label and the marker which marks the event.
-
-	       We position the div, add a click handler if appropriate,
-	       store within it the key for the data which it represents,
-	       and record the association between that key and this div. */
-	    
-	    const eventDateAndMarkerDiv = document.createElement('div');
-	    eventDateAndMarkerDiv.className = 'jchronologyEventDateAndMarkerHolder';
-	    eventDateAndMarkerDiv.style.top = pos + 'px';
-	    if (isVisibleEntry) eventDateAndMarkerDiv.addEventListener('click', () => JEventHandlers.eventClickHandler(eventDateAndMarkerDiv));
-	    eventDateAndMarkerDiv.setAttribute('data-key', key);
-
-
-
-	    /******************************************************************/
-	    /* At one time I was potentially outputting more than one event
-	       for the same date, and wanted to suppress the date label and
-	       marker for the second and subsequent entries.  I am no longer
-	       doing this, but I've retained the code just in case. */
-	    
-	    const suppressingDateAndMarker = false; // (this._suppressRepeatedDates && sameYearAsPrevious) || (isChapterEntry && this._suppressMarkersAndDatesForChapters);
-
-
-	    
-	    /******************************************************************/
-	    /* Set up a div to hold the date label(s). */
-	    
-	    const dateDiv = document.createElement('div');
-	    dateDiv.classList.add('jchronologyEventDate');
-	    dateDiv.classList.add('jchronologyDateDefinite'); // We used to cater for approximate dates too, but the data upon which this was based turns out to be unreliable.
-		
-
-
-
-	    /******************************************************************/
-	    /* Now for the content of the dateDiv.  For AnnotatedYears we
-	       have both the secondary date (if one is selected) and the
-	       Modern date.  For chapters and tick marks we have only the
-	       Modern date.  For durations we have neither. */
-	    
-	    if (isChapterEntry)
-		dateDiv.innerHTML = "<span class='jchronologyChapterDateLabel'>" + JChronologyData.getAnnotatedYearModernDate(e) + '</span>';
-	    else if (isAnnotatedYearEntry)
+	    if (isVisibleEntry && !isChapterEntry)
 	    {
-		const altDate = `<span class='jchronologyDateAlternative' data-key='${key}'>` + JChronologyData.getField(e, selectedAltChronology) + '</span>';
-		var modernDate = '<span>&nbsp;' + padDate(JChronologyData.getAnnotatedYearModernDate(e)) + '</span>';
-		dateDiv.innerHTML = altDate + modernDate;
+		const div = document.createElement('div');
+		div.classList.add('jchronologyTimelineElement');
+		div.classList.add('jchronologyOtherDateElement');
+		div.addEventListener('click', () => JEventHandlers.eventClickHandler(div));
+		div.setAttribute('data-key', key);
+		div.style.top = pos + 'px';
+		_ClassCommon.getVerticalDiv('jchronologyOtherDates').appendChild(div);
+		div.innerHTML = JChronologyData.getField(e, selectedAltChronology);
+		divList[0] = div;
 	    }
+
 	    
-	    eventDateAndMarkerDiv.appendChild(dateDiv);
-
-
-
-	    /******************************************************************/
-	    /* Create the marker which goes on the timeline (not for
-               durations). */
-	    
-	    const marker = document.createElement('div');
-	    marker.className = 'jchronologyEventMarkerCircle';
-	    eventDateAndMarkerDiv.appendChild(marker);
 		
-	    if (suppressingDateAndMarker)
+	    /******************************************************************/
+	    /* We have a 'Modern' entry if this is a visible entry.  Strictly
+	       we have the necessary data to be able to give a date even on a
+	       pure chapter entry, but we don't trust those dates. */
+
+	    if (isVisibleEntry && !isChapterEntry)
 	    {
-		marker.style.visibility = 'hidden';
-		dateDiv.style.visibility = 'hidden';
+		const div = document.createElement('div');
+		div.classList.add('jchronologyTimelineElement');
+		div.classList.add('jchronologyModernDateElement');
+		div.addEventListener('click', () => JEventHandlers.eventClickHandler(div));
+		div.setAttribute('data-key', key);
+		div.style.top = pos + 'px';
+		_ClassCommon.getVerticalDiv('jchronologyModernDates').appendChild(div);
+		div.innerHTML = '&nbsp;' + padDate(JChronologyData.getAnnotatedYearModernDate(e));
+		divList[1] = div;
 	    }
+
+
+		
+	    /******************************************************************/
+	    /* Create the marker which goes on the timeline. */
 	    
-	    _ClassCommon.getTimeline().appendChild(eventDateAndMarkerDiv);
+	    if (isVisibleEntry)
+	    {
+		const div = document.createElement('div');
+		div.classList.add('jchronologyYearMarkerCircle');
+		_ClassCommon.getVerticalDiv('jchronologyTimelineHolder').appendChild(div);
+		div.setAttribute('data-key', key);
+		div.style.top = pos + 'px';
+		div.addEventListener('click', () => JEventHandlers.eventClickHandler(div));
+		divList[2] = div;
+	    }
 
 
 
 
 	    /******************************************************************/
-	    /* That's the content of the left-hand column pinned down.  We now
-	       turn to the right-hand column which contains the event and
-	       chapter descriptions.
+	    /* We also have a 'Year description' entry for anything which is
+	       visible.
 
-	       In theory this can be a good deal simpler, because basically
-	       all we need is text.  However, to mirror what I've done in the
-	       left-hand column, I create a container div for the details --
-	       jchronologyEventDescriptionHolder, and position that and
-	       add a click handler if appropriate, and then place the text
-	       within a div within that.
-
-	       And actually, working out the content is fairly hairy too --
-	       see below. */
-	    
-	    const eventDescriptionContainerDiv = document.createElement('div');
-	    eventDescriptionContainerDivs.push(eventDescriptionContainerDiv);
-	    
-	    eventDescriptionContainerDiv.className = 'jchronologyEventDescriptionHolder';
-	    eventDescriptionContainerDiv.style.top = pos + 'px';
-	    if (isVisibleEntry) eventDescriptionContainerDiv.addEventListener('click', () => JEventHandlers.eventClickHandler(eventDescriptionContainerDiv));
-	    eventDescriptionContainerDiv.setAttribute('data-key', key);
-	
-	    const descriptionDiv = document.createElement('div');
-	    descriptionDiv.className = 'jchronologyEventDescription';
-	    if (isChapterEntry) descriptionDiv.classList.add('jchronologyChapterEventDescription'); // Make a note if this is a chapter div.
-
-
-
-	    /******************************************************************/
-	    /* Time for the content etc.
-
-	       If this is a pure chapter event, things are relatively easy --
-	       we just want to convert it to 'pretty' form.
+	       As regards content, if this is a pure chapter event, things are
+	       relatively easy -- we just want to convert it to 'pretty' form.
 
 	       If this is a vanilla event, it's more complicated.  We want the
 	       standard content, devoid of links.  But if there is an
-	       associated chapter entry, we want the content from it to. */
+	       associated chapter entry, we want the content from it to0. */
 
-	    var content = '';
+	    if (isVisibleEntry)
+	    {
+		/**************************************************************/
+		const div = document.createElement('div');
+		div.classList.add('jchronologyTimelineElement');
+		div.classList.add(isChapterEntry ?  'jchronologyChapterEventDescription' : 'jchronologyYearDescription');
+		div.addEventListener('click', () => JEventHandlers.eventClickHandler(div));
+		div.setAttribute('data-key', key);
+		div.style.top = pos + 'px';
+		_ClassCommon.getVerticalDiv('jchronologyYearDescriptions').firstElementChild.firstElementChild.appendChild(div);
+		divList[3] = div;
 
-	    if (isChapterEntry)
-		content = '<span class="iconFont">K&nbsp;</span>' + this._convertToRanges(JChronologyData.getChapterRefs(e));
-	    else if (isAnnotatedYearEntry)
-	    {		
-		content = JChronologyData.withoutLinks(JChronologyData.getDescription(e)); // We don't want person and place links in the event description.  They will be available
-		                                                                           // in the info-box, and in the event description they'll get in the way of click handling.
-		const scriptureRefs = JChronologyData.getChaptersFromChapterAndYearDataAsString(e);
-		if ('' != scriptureRefs) content += '&nbsp;&nbsp;<span class="iconFont">K&nbsp;</span>' + scriptureRefs;
+
+		/**************************************************************/
+		var content = '';
+
+		if (isChapterEntry)
+		    content = '<span class="iconFont">K&nbsp;</span>' + this._convertToRanges(JChronologyData.getChapterRefs(e));
+		else if (isAnnotatedYearEntry)
+		{		
+		    content = JChronologyData.withoutLinks(JChronologyData.getDescription(e)); // We don't want person and place links in the event description.  They will be available
+		                                                                               // in the info-box, and in the event description they'll get in the way of click handling.
+		    var scriptureRefs = JChronologyData.getChaptersFromChapterAndYearDataAsString(e);
+		    if ('' != scriptureRefs)
+		    {
+			scriptureRefs = this._convertToRanges(scriptureRefs);
+			content += '&nbsp;&nbsp;<span class="iconFont">K&nbsp;</span>' + scriptureRefs;
+		    }
+		}
+
+		div.innerHTML = _ClassJChronologyUtilities.withDurationColours(content);
+		div.style.width = _ClassCommon.getVerticalDiv('jchronologyYearDescriptions').scrollWidth + "px";
+
+		descriptionDivs.push(div);
 	    }
-
-	    if (isVisibleEntry) descriptionDiv.insertAdjacentHTML('beforeend', _ClassJChronologyUtilities.withDurationColours(content)); // Colour any down arrows to follow the duration lines.
-
-	    eventDescriptionContainerDiv.appendChild(descriptionDiv); // Add the text container to the event container.
-	    _ClassCommon.getYearDescriptionsContainer().appendChild(eventDescriptionContainerDiv); // And add the individual event container to the overall container for the right hand column.
-	    
-	    marker.style.top = ((parseFloat(getComputedStyle(descriptionDiv).height) - parseFloat(getComputedStyle(marker).height)) / 2) + 'px'; // Centre vertically.
-
-
-
-	    /******************************************************************/
-	    /* I've been asked to highlight the selected item by setting its
-	       bacground colour.  It looks neater if the background bars are
-	       the full width of the right-hand pane. */
-	    
-	    for (const div of eventDescriptionContainerDivs)
-		div.style.width = _ClassCommon.getYearDescriptionsContainer().scrollWidth + "px";
 
 
 	    
@@ -1045,33 +1170,27 @@ class _ClassJTimelineRenderer
 	    
 	    if (!isVisibleEntry)
 	    {
-		dateDiv.classList.add('jchronologyDurationElement');
-		marker.classList.add('jchronologyDurationElement');
-		
-		eventDateAndMarkerDiv.classList.add('jchronologyDurationElement');
-		eventDescriptionContainerDiv.classList.add('jchronologyDurationElement');
-		descriptionDiv.classList.add('jchronologyDurationElement');
+		const div = document.createElement('div');
+		div.classList.add('jchronologyDurationElement');
+		div.setAttribute('data-key', key);
+		div.style.top = pos + 'px';
+		_ClassCommon.getVerticalDiv('jchronologyDurationLines').appendChild(div);
 
 		if (JChronologyData.isDurStartEntry(e))
-		    durationMap.set(JChronologyData.getKey(e), eventDateAndMarkerDiv) // Temporarily this maps the key of the duration-start to the hidden div which marks the start.
+		    durationMap.set(JChronologyData.getKey(e), div) // Temporarily this maps the key of the duration-start to the hidden div which marks the start.
 		else
 		{
 		    const key = JChronologyData.convertDurationEndKeyToStartKey(JChronologyData.getKey(e));
 		    const start = durationMap.get(key);
-		    durationMap.set(key, [start, eventDateAndMarkerDiv]); // This now replaces the temporary entry with one which maps the key of the duration-start to the pair of hidden divs which mark the start and end.
+		    durationMap.set(key, [start, div]); // This now replaces the temporary entry with one which maps the key of the duration-start to the pair of hidden divs which mark the start and end.
 		}
 	    }
 
 
 
 	    /******************************************************************/
-	    JChronologyData.recordElementsForKey(key, { eventDateAndMarkerDiv: eventDateAndMarkerDiv,
-							dateDiv: dateDiv,
-							marker: marker,
-							eventDescriptionContainerDiv: eventDescriptionContainerDiv,
-							eventDescriptionDiv: descriptionDiv
-						      });
-	} // doEvent
+	    JChronologyData.recordElementsForKey(key, divList);
+	} // doYear
 
 
 	
@@ -1085,7 +1204,7 @@ class _ClassJTimelineRenderer
 	
 	rawPositionFunction = this.rawPositionForAmDate.bind(this);
 	for (const e of amEvents)
-	    doEvent(e, 'AM')
+	    doYear(e, 'AM')
 
 
 
@@ -1101,12 +1220,25 @@ class _ClassJTimelineRenderer
 	this._lastUnifiedYearInAm = mostRecentUnifiedYear;
 	rawPositionFunction = this.rawPositionForNonAmDate.bind(this);
 	for (const e of bcAdEvents)
-	    doEvent(e, 'BCAD')
+	    doYear(e, 'BCAD')
 	
 	
 
 	/**********************************************************************/
-	registerTargetElements();
+	/* We've built things up outside of the document.  Time to remedy 
+	   that. */
+	    
+	const parent = _ClassCommon.getColumnsContainer();
+	_ClassCommon.getVerticalDivIds().forEach ( id => {
+	    parent.appendChild(_ClassCommon.getVerticalDiv(id));
+	});
+
+
+	    
+	/**********************************************************************/
+	/* You have to have added the elements to the DOM, as per the
+	   previous code para, before you can call this. */
+	
 	this._addTickMarks();
 
 
@@ -1116,198 +1248,254 @@ class _ClassJTimelineRenderer
 	   doesn't feature in the list of events. */
 	
 	const marker = document.createElement('div');
-	marker.classList.add('jchronologyEventMarkerDiamond', 'jchronologyEventMarkerHighlight');
+	marker.classList.add('jchronologyYearMarkerDiamond', 'jchronologyYearMarkerHighlight');
 	marker.style.display = 'none';
 	_ClassCommon.setArbitraryDateMarker(marker);
-	_ClassCommon.getTimeline().appendChild(marker);
-	_JChronologyPresentationHandler.reselectNonEvent();
+	_ClassCommon.getDurationLinesContainer().appendChild(marker);
+	_JChronologyPresentationHandler.reselectNonAnnotatedYear();
 
 
 
 	/**********************************************************************/
-	_ClassCommon.getTimeline().style.height = (mostRecentPos + 2 * this._headerAndTrailerHeight) + 'px';
-	this.adjustPositionOfLine();
 	return durationMap;
-    } // renderTimeline
+    } // renderYears
 
 
     /**************************************************************************/
-    _addTickMarks ()
+    /* The bottom part of the screen consists of various rows and columns
+       with special issues as regards scrolling ...
+
+       We need the duration header to scroll horizontally in sync with the
+       divs which make up the main body of the display (and vice-versa: if
+       we scroll those divs, we need to scroll the duration header).
+
+       We need the divs in the main body to scroll as though they were one
+       wide div, even though they aren't.
+
+       We need the divs in the main body to scroll vertically in sync, but
+       we want a scroll bar only on the rightmost.
+
+       And we need all this to work on touchscreens too. */
+    
+    _sortOutMutualScrolling ()
     {
 	/**********************************************************************/
-	/* Gets a list of the tops and bottoms of all date labels.  This needs
-	   some care.  You can't use .jchronologyEventDate, because the 'top'
-	   value for that is always zero.  .jchronologyEventDateAndMarkerHolder
-	   is ok for the tops, but it doesn't give the height, so I need to
-	   take a fixed value for that. */
+	/* We want the overflow header and the main content container to scroll
+	   horizontally in sync, with either driving the other.  Note that
+	   only the main container has a horizontal scroll bar. */
 	
-	const labelHeight = document.getElementById('getLabelSizeForTickMarks').offsetHeight;
-	const timeline = _ClassCommon.getTimeline();
-	const mainFontSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--defaultFontSize').trim());
-	const existingDateLabelIntervals = [...document.querySelectorAll('.jchronologyEventDateAndMarkerHolder')]
-	      .map(el => {
-		  var top = el.offsetTop;
-		  var bottom = top + mainFontSize + 2;
-		  return { top, bottom };
-	      })
-	      .sort((a, b) => a.top - b.top);
+	const scrollA = document.getElementById('jchronologyDurationHeaders');
+	const scrollB = _ClassCommon.getColumnsContainer();
+
+	var isSyncing = false;
+
+	function syncScroll(source, target)
+	{
+	    if (isSyncing) return;
+	    isSyncing = true;
+
+	    requestAnimationFrame(() => {
+		target.scrollLeft = source.scrollLeft;
+		isSyncing = false;
+	    });
+	}
+
+	scrollB.addEventListener("scroll", () => {
+	    syncScroll(scrollB, scrollA);
+	});
+
+	scrollA.addEventListener("scroll", () => {
+	    syncScroll(scrollA, scrollB);
+	});
+
+
+	
+	/**********************************************************************/
+	/* This was needed where we wanted just one of the columns to scroll.
+	   I'm reluctant to ditch in case we want to go back to that.
+	   However, as things stand, the parent container deals with all the
+	   scrolling, so we don't need the code here. */
+	
+	return;
 
 
 
 	/**********************************************************************/
-	/* Looks for a clash between the putative new element and any of the
-	   original date labels. */
-	
-	function clash (intervals, newTop, newBottom)
-	{
-	    var lo = 0;
-	    var hi = intervals.length - 1;
+	const cols = _ClassCommon.getVerticalDivs();
+	const allButRightCol = cols.slice(0, -1);
+	const rightCol = cols.at(-1);
 
-	    while (lo <= hi)
+
+
+	/**********************************************************************/
+	function syncScrollVertical (y)
+	{
+	    cols.forEach(c => c.scrollTop = y);
+	}
+
+	
+
+	/**********************************************************************/
+	/* When the right column scrolls vertically, sync the others. */
+
+	rightCol.addEventListener('scroll', () => {
+	    const y = rightCol.scrollTop;
+	    syncScrollVertical(y);
+	});
+
+
+
+	/**********************************************************************/
+	/* On a touch screen, things are more complicated, because we want
+	   scrolling to work on any of the columns. */
+
+	cols.forEach(c => {
+	    if (c !== rightCol)
 	    {
-		const mid = (lo + hi) >> 1;
-		const cur = intervals[mid];
+		c.addEventListener("wheel", e => {
+		    rightCol.scrollTop += e.deltaY;
+		    syncScrollVertical(rightCol.scrollTop);
+		    e.preventDefault();
+		});
 
-		if (newBottom < cur.top)
-		    hi = mid - 1; // new element is above this interval
-		else if (newTop > cur.bottom)
-		    lo = mid + 1; // new element is below this interval
-		else 
-		    return true; // OVERLAP FOUND
+
+		var startY;
+		c.addEventListener("touchstart", e => {
+		    startY = e.touches[0].clientY;
+		});
+		c.addEventListener("touchmove", e => {
+		    const dy = startY - e.touches[0].clientY;
+		    rightCol.scrollTop += dy;
+		    syncScrollVertical(rightCol.scrollTop); // update all columns
+		    startY = e.touches[0].clientY;
+		    e.preventDefault();
+		}, { passive: false });
 	    }
-	    return false;
-	}
-
-
-	/**********************************************************************/
-	/* Constructs a tick mark element, but does not insert it into the
-	   DOM -- the caller deals with that. */
-	
-	function makeElement (pos, label)
-	{
-	    const eventDateAndMarkerDiv = document.createElement('div');
-	    eventDateAndMarkerDiv.className = 'jchronologyEventDateAndMarkerHolder';
-	    eventDateAndMarkerDiv.style.top = pos + 'px';
-	    const dateDiv = document.createElement('div');
-	    dateDiv.classList.add('jchronologyEventDate');
-	    dateDiv.classList.add('jchronologyTickMarkDateLabel');
-	    dateDiv.innerHTML = label;
-	    eventDateAndMarkerDiv.appendChild(dateDiv);
-	    timeline.appendChild(eventDateAndMarkerDiv);
-	    return eventDateAndMarkerDiv;
-	}
-
-
-
-	/**********************************************************************/
-	const me = this;
-	function makeAmPos (uyear)
-	{
-	    return me.rawPositionForAmDate(uyear) + labelHeight / 2;
-	}
-
-	function makeBcPos (year)
-	{
-	    const uyear = JChronologyData.getAdBcOffset() - year;
-	    return me.rawPositionForNonAmDate(uyear) + labelHeight / 2;
-	}
-
-	function makeAdPos (year)
-	{
-	    const uyear = JChronologyData.getAdBcOffset() + year;
-	    return me.rawPositionForNonAmDate(uyear) + labelHeight / 2;
-	}
-
-
-	
-	/**********************************************************************/
-	const C_AmInterval = 50;
-	var start = 0;
-	var uyear = 0;
-	while (uyear < JChronologyData.getFirstUYearBc())
-	{
-	    const pos = makeAmPos(uyear);
-	    const newDiv = makeElement(pos, 'AM ' + uyear);
-	    if (clash(existingDateLabelIntervals, pos - labelHeight, pos + labelHeight))
-		newDiv.remove()
-	    uyear += C_AmInterval;
-	}
-
-
-	
-	/**********************************************************************/
-	const C_BcInterval = 5;
-	var year = Math.floor( (1 + JChronologyData.getFirstUYearBc()) / C_BcInterval) * C_BcInterval;
-	while (year >= 0)
-	{
-	    const pos = makeBcPos(year);
-	    const newDiv = makeElement(pos, year + ' BC');
-	    if (clash(existingDateLabelIntervals, pos - labelHeight, pos + labelHeight))
-		newDiv.remove()
-	    year -= C_BcInterval;
-	}
-
-
-	
-	/**********************************************************************/
-	const C_AdInterval = 5;
-	var year = C_AdInterval;
-	while (year < JChronologyData.getLastAsActualYear())
-	{
-	    const pos = makeAdPos(year);
-	    const newDiv = makeElement(pos, year + ' AD');
-	    if (clash(existingDateLabelIntervals, pos - labelHeight / 2, pos + labelHeight / 2))
-		newDiv.remove()
-	    year += C_AdInterval;
-	}
+	});
     }
 
 
-    
     /**************************************************************************/
-    /* Courtesy of ChatGPT.  This is used when displaying, on the timeline,
-       details of the chapters which refer to events in a given year.  We often
-       have several consecutive chapters, and rather than display each
+    /* This is used when displaying, on the timeline, details of the
+       chapters which refer to events in a given year.  We often have
+       several consecutive chapters, and rather than display each
        individually, I convert them to ranges. */
     
     _convertToRanges (input)
     {
-	// Split the input string into chunks
-	const chunks = input.map(sublist => sublist[0]);
+	/*********************************************************************/
+	/* Get the input into common form.  The input is assumed either to be
+	   a string of references of the form Gen.1; Gen.2; Rev.1 ... or else
+	   a list of two-element lists, where the first part of each
+	   each two-element list is a reference. */
+	
+	if ('string' === typeof input)
+	    input = input.split('; ');
+	else
+	    input = input.map(sublist => sublist[0]);
 
-	// Parse into { prefix, num }
-	const items = chunks.map(s => {
-	    const [prefix, numStr] = s.split(".");
-	    return { prefix, num: parseInt(numStr, 10) };
-	});
+	const items = input
+	      .map(s => {
+		  const [prefix, numStr] = s.split('.');
+		  return { prefix, num: parseInt(numStr, 10) };
+	      });
 
+
+
+	/*********************************************************************/
+	/* Note that '<=' in the for loop below really _is_ intended.  If we
+	   run off the end of items, cur comes back as undefined, and the
+	   code is set up to accept this and deal correctly with the end
+	   condition. */
+	
 	const result = [];
 	var start = items[0];
 	var last = items[0];
 
 	for (var i = 1; i <= items.length; i++)
 	{
-	    const curr = items[i];
-	    if (curr   &&   curr.prefix === last.prefix   &&   curr.num === last.num + 1)
-		last = curr; // Still in the same sequential run.
-	    else
+	    const cur = items[i];
+	    if (cur   &&   cur.prefix === last.prefix   &&   cur.num === last.num + 1)
 	    {
-		// End of current run
-		if (start.num === last.num)
-		    result.push(`${start.prefix}.${start.num}`);
-		else
-		    result.push(`${start.prefix}.${start.num}-${last.num}`);
-		
-		start = curr;
-		last = curr;
+		last = cur; // Still in the same sequential run.
+		continue;
 	    }
+
+	    if (start.num === last.num)
+		result.push(`${start.prefix}.${start.num}`);
+	    else
+		result.push(`${start.prefix}.${start.num}-${last.num}`);
+		
+	    start = cur;
+	    last = cur;
 	}
 
-	return result.join("; ");		
+	return result.join('; ');		
+    }
+
+
+    /**************************************************************************/
+    /* The individual dates, year descriptions, etc are held in four
+       elements, one for other dates, one for modern dates, and one for
+       year descriptions.
+
+       It turns out to be very much quicker if we create these elements
+       outside of the document, then add everything to them, and only then
+       place the two elements within the document.  (Quicker by a factor of
+       almost five.) */
+
+    _deleteAndRecreateWorkingElements ()
+    {
+	/**********************************************************************/
+	/* The columns containers. */
+	
+	function deleteAndRecreateContainer (id)
+	{
+	    document.getElementById(id)?.remove();
+	    const div = document.createElement('div');
+	    div.classList.add('jchronologyBodyColumn');
+	    div.id = id;
+	    return { id: id, div: div };
+	}
+
+	_ClassCommon.setVerticalDivs(_ClassCommon.getVerticalDivIds().map(deleteAndRecreateContainer));
+
+
+
+	/**********************************************************************/
+	/* Rather pointless, but unless I put the year descriptions inside
+	   these, the container doesn't get to find out the full width,
+	   and therefore doesn't scroll properly. */
+	
+	const wrapper = document.createElement('div'); wrapper.classList.add('jchronologyAbsoluteWrapper');
+	const content = document.createElement('div'); content.classList.add('jchronologyAbsoluteContent');
+	wrapper.appendChild(content);
+	_ClassCommon.getVerticalDiv('jchronologyYearDescriptions').appendChild(wrapper);
+
+
+
+	/**********************************************************************/
+	/* The timeline. */
+
+	const timelineId = 'jchronologyTimeline';
+	document.getElementById(timelineId)?.remove();
+	const div = document.createElement('div');
+	div.id = timelineId;
+	_ClassCommon.getVerticalDiv('jchronologyTimelineHolder').appendChild(div);
+
+
+
+	/**********************************************************************/
+	/* A marker which can be used to highlight selected items. */
+
+	const selectedItemHighlighter = document.createElement('div');
+	selectedItemHighlighter.id = 'jchronologySelectedItemHighlighter';
+	_ClassCommon.getVerticalDiv('jchronologySelectedItemHighlighterHolder').appendChild(selectedItemHighlighter);
+	_ClassCommon.setSelectedItemHighlighter(selectedItemHighlighter);
     }
 }
 
-const JTimelineRenderer = new _ClassJTimelineRenderer();
+const JRenderer = new _ClassJRenderer();
 
 
 
@@ -1342,9 +1530,6 @@ class _ClassJEventHandlers
 
 
     /**************************************************************************/
-    /* No need to save settings as they stood on entry.  See
-      _ClassAlternativeChronologies. */
-    
     alternativeChronologiesSelectorOk ()
     {
 	if (document.getElementById('ussherCheckbox').checked)
@@ -1360,7 +1545,7 @@ class _ClassJEventHandlers
     
     eventClickHandler (eventDiv)
     {
-	_JChronologyPresentationHandler.selectEvent(eventDiv, false);
+	_JChronologyPresentationHandler.selectAnnotatedYear(eventDiv, false);
     }
 
     
@@ -1481,6 +1666,10 @@ window.JEventHandlers = JEventHandlers;
 /******************************************************************************/
 
 /******************************************************************************/
+/* Settings are held in local storge, with defaults as defined by _getDflt.
+*/
+
+/******************************************************************************/
 class _ClassAlternativeChronologies
 {
     /**************************************************************************/
@@ -1488,6 +1677,9 @@ class _ClassAlternativeChronologies
 
 
     /**************************************************************************/
+    /* A human-readable string describing the alernative chronology currently
+       being displayed. */
+    
     static displayActiveAlternativeChronologyName (chronologyName)
     {
 	var s = chronologyName.replace('dt_', '');
@@ -1505,32 +1697,22 @@ class _ClassAlternativeChronologies
 
     
     /**************************************************************************/
-    /* Sets the radio buttons to reflect the cache. */
-    
     static init ()
     {
-	const me = this;
-	function setRadioButtonsFromCache (cacheKey)
-	{
-	    const cacheValue = me._getValueFromCache(cacheKey);
-	    const radio = document.querySelector(`input[type='radio'][name='${cacheKey}'][value='${cacheValue}']`);
-            radio.checked = true;
-	}
-	    
-	
-	setRadioButtonsFromCache('DateCategory');
-	setRadioButtonsFromCache('YearsInEgypt');
-	setRadioButtonsFromCache('ExodusDate');
-
-	const ussherSetting = me._getValueFromCache('chronologyUssher') ?? 'y'; // Default to Ussher on first use.
-	document.getElementById('ussherCheckbox').checked = 'y' == ussherSetting.toLowerCase();
+	this._initRadioButtonsInChronologySelector();
+	// this._setDateColumnsToReflectLocalStorageOnEntry.
     }
 
 
     /**************************************************************************/
+    /* This takes the cached values and creates a key made up of 'dt_'
+       followed by other elements to reflect what we're supposed to be
+       displaying.  This is used elsewhere to determine how to populate the
+       column. */
+    
     static makeChronologyKeyFromCache ()
     {
-	if ('y' == localStorage.getItem('chronologyUssher', 'n'))
+	if ('y' == this._getValueFromCache('Ussher'))
 	    return 'dt_Ussher';
 	else
 	    return 'dt_' + this._getValueFromCache('DateCategory') + '_' + this._getValueFromCache('YearsInEgypt') + '_' + this._getValueFromCache('ExodusDate');
@@ -1538,6 +1720,9 @@ class _ClassAlternativeChronologies
 
     
     /**************************************************************************/
+    /* Arranges to display, as the alternative chronology, something other
+       than Ussher. */
+    
     static selectOther ()
     {
 	this._saveRadioButtonsToCache();
@@ -1548,6 +1733,8 @@ class _ClassAlternativeChronologies
 
 
     /**************************************************************************/
+    /* Arranges to display Ussher as the alternative chronology. */
+    
     static selectUssher ()
     {
 	localStorage.setItem('chronologyUssher', 'y');
@@ -1563,6 +1750,7 @@ class _ClassAlternativeChronologies
 	    case 'DateCategory': return 'Hebrew';
 	    case 'YearsInEgypt': return '400';
 	    case 'ExodusDate'  : return '15';
+	    case 'Ussher'      : return 'y';
 	}
     }
 
@@ -1582,9 +1770,25 @@ class _ClassAlternativeChronologies
 
 
     /**************************************************************************/
-    static _makeChronologyKeyFromRadioButtons ()
+    /* Sets the buttons and checkbox in the modal used to select alternative
+       chronologies to reflect the cache settings. */
+    
+    static _initRadioButtonsInChronologySelector ()
     {
-	return 'dt_' + this._getRadioButtonValue('DateCategory') + '_' + this._getRadioButtonValue('YearsInEgypt') + '_' + this._getRadioButtonValue('ExodusDate');
+	const me = this;
+	function setRadioButtonsFromCache (cacheKey)
+	{
+	    const cacheValue = me._getValueFromCache(cacheKey);
+	    const radio = document.querySelector(`input[type='radio'][name='${cacheKey}'][value='${cacheValue}']`);
+            radio.checked = true;
+	}
+	    
+	setRadioButtonsFromCache('DateCategory');
+	setRadioButtonsFromCache('YearsInEgypt');
+	setRadioButtonsFromCache('ExodusDate');
+
+	const ussherSetting = me._getValueFromCache('Ussher');
+	document.getElementById('ussherCheckbox').checked = 'y' == ussherSetting.toLowerCase();
     }
 
 
@@ -1600,10 +1804,14 @@ class _ClassAlternativeChronologies
 	setCacheFromRadioButtons('DateCategory');
 	setCacheFromRadioButtons('YearsInEgypt');
 	setCacheFromRadioButtons('ExodusDate');
+
+	localStorage.setItem('chronologyUssher', document.getElementById('ussherCheckbox').checked ? 'y' : 'n');
     }
 
 
     /**************************************************************************/
+    /* Sets the alternative date column to hold the relevant chronology. */
+    
     static _updateDateColumn (chronologyKey)
     {
 	this.displayActiveAlternativeChronologyName(chronologyKey);
@@ -1617,7 +1825,7 @@ class _ClassAlternativeChronologies
 	    tag.innerHTML = revisedContent;
 	}
 	
-	JTimelineRenderer.adjustPositionOfLine();
+	JRenderer.adjustDimensionsAndPositions(true);
     }
 }
 
@@ -1645,7 +1853,7 @@ class _ClassJChronologyPresentationHandler
     /**************************************************************************/
     _selectedEventDiv = null;
     _selectedEventYear = null;
-    _selectedNonEventPos = null;
+    _selectedNonAnnotatedYearPos = null;
     
     
 
@@ -1654,29 +1862,39 @@ class _ClassJChronologyPresentationHandler
        fair bit of redrawing, and may want to ensure that the original event
        is still selected. */
     
-    reselectEventOrNonEvent ()
+    reselectAnnotatedOrNonAnnotatedYear ()
     {
 	if (null !== this._selectedEventDiv)
-	    this.selectEvent(this._selectedEventDiv);
+	    this.selectAnnotatedYear(this._selectedEventDiv);
 	else
-	    this.reselectNonEvent();
+	    this.reselectNonAnnotatedYear();
     }
     
     
     /**************************************************************************/
-    reselectNonEvent ()
+    reselectNonAnnotatedYear ()
     {
-	if (null !== this._selectedNonEventPos)
-	    this.selectNonEvent(this._selectedNonEventPos);
+	if (null !== this._selectedNonAnnotatedYearPos)
+	    this.selectNonAnnotatedYear(this._selectedNonAnnotatedYearPos);
     }
 
     
     /**************************************************************************/
     /* Updates info box, highlighting, etc, when a new selection is made. */
     
-    selectEvent (eventDiv, centreSelection = true)
+    selectAnnotatedYear (eventDiv, centreSelection = true)
     {
+	/**********************************************************************/
+	/* Make sure we aren't showing the special marker we use for years
+	   which have no associated data. */
+	
 	_ClassCommon.getArbitraryDateMarker().style.display = 'none';
+
+
+	
+	/**********************************************************************/
+	/* Deal with the side-effects of the selection -- updating the info
+	   box and the scripture window. */
 	
 	const entry = JChronologyData.getEntryGivenElement(eventDiv);
 	const isChapterEntry = JChronologyData.isChapterEntry(entry);
@@ -1695,42 +1913,64 @@ class _ClassJChronologyPresentationHandler
 	
 
 
+	/**********************************************************************/
+	/* At the time of writing, we change the colour of the selected marker,
+	   and we position a highlighting bar, both of them marking the
+	   selection.
+
+	   Note that we need to turn off any previous highlighting of the
+	   marker, or we'll end up with two things being highlighted.  But
+	   we don't need to hide the bar, because we're always going to have
+	   one _somewhere_: it's just a case of moving it to the correct
+	   position. */
+	
 	const newKey = JChronologyData.getKey(entry);
 	const thisMarker = JChronologyData.getMarkerGivenKey(newKey);
-	const thisDescription = JChronologyData.getEventDescriptionDiv(newKey);
 
 	const oldKey = null === this._selectedEventDiv ? null : this._selectedEventDiv.getAttribute('data-key');
 	const oldMarker = null === oldKey ? null : JChronologyData.getMarkerGivenKey(oldKey);
-	const oldDescription = null === oldKey ? null : JChronologyData.getEventDescriptionDiv(oldKey);
 
 	if (null !== oldKey)
-	{
-	    oldMarker.classList.remove('jchronologyEventMarkerHighlight');
-	    oldDescription.classList.remove('jchronologyEventMarkerHighlight');
-	}
+	    oldMarker.classList.remove('jchronologyYearMarkerHighlight');
 
+	thisMarker.classList.add('jchronologyYearMarkerHighlight');
+	this._positionSelectionHighlightMarker(eventDiv);
 	
-	this._selectedEventDiv = eventDiv;
-	thisMarker.classList.add('jchronologyEventMarkerHighlight');
-	thisDescription.classList.add('jchronologyEventMarkerHighlight');
-
 	this._selectedEventDiv = eventDiv;
 	this._selectedEventYear = JChronologyData.getAnnotatedYearModernDate(entry).replace(' ', '');
 
+
+	/**********************************************************************/
 	if (centreSelection)
-	    JFrameworkUtils.centrePointVerticallyWithinScrollingContainer(_ClassCommon.getYearDescriptionsContainer(), this._selectedEventDiv.style.top);
+	    JFrameworkUtils.centrePointVerticallyWithinScrollingContainer(_ClassCommon.getVerticalDiv('jchronologyYearDescriptions').parentElement, this._selectedEventDiv.style.top);
+
+	// $$$ JRenderer.doDurationHeaders();
     }
 
 
     /**************************************************************************/
-    selectNonEvent (pos)
+    _positionSelectionHighlightMarker (eventDiv)
+    {
+	const highlighter = _ClassCommon.getSelectedItemHighlighter();
+	const eventRect = eventDiv.getBoundingClientRect();
+	const containerRect = _ClassCommon.getContentContainer().getBoundingClientRect();
+	highlighter.style.height = eventRect.height + 'px';
+	highlighter.style.top = (eventRect.top - containerRect.top) + 'px';
+	highlighter.style.width = containerRect.width + 'px';
+    }	
+
+
+    /**************************************************************************/
+    selectNonAnnotatedYear (pos)
     {
 	this._selectedEventDiv = null;
-	this._selectedNonEventPos = pos;
+	this._selectedNonAnnotatedYearPos = pos;
 	const marker = _ClassCommon.getArbitraryDateMarker();
 	marker.style.top = pos + 'px';
 	marker.style.display = 'block';
-	JFrameworkUtils.centrePointVerticallyWithinScrollingContainer(_ClassCommon.getYearDescriptionsContainer(), pos);
+	this._positionSelectionHighlightMarker(marker);
+	JFrameworkUtils.centrePointVerticallyWithinScrollingContainer(_ClassCommon.getVerticalDiv('jchronologyYearDescriptions').parentElement, marker.style.top);
+	// $$$ JRenderer.doDurationHeaders();
     }
 
 
@@ -1792,7 +2032,8 @@ class _ClassJChronologyPresentationHandler
 		var associatedText = await JFrameworkChapterSummaries.instance().getChapterSummary(chapterRef);
 		if (!associatedText) associatedText = '&mdash;';
 		associatedText = JChronologyData.withLinks(associatedText);
-		associatedText = '<p>' + link + ': ' + associatedText.replaceAll('¶', '</p><p class="indentedPara">') + '</p><br>';
+		//associatedText = '<p>' + link + ': ' + associatedText.replaceAll('¶', '</p><p class="indentedPara">') + '</p><br>';
+		associatedText = '<p>' + link + ': ' + associatedText + '</p><br>';
 		content += associatedText;
 	    }
 
@@ -1908,35 +2149,55 @@ class _ClassJChronologyUtilities
 {
     /**************************************************************************/
     static C_Dbg = false;
-    static C_DurationColours = ['black', 'blue', 'green', 'red' ]; // DIB's preferred scheme, chosen to make similarities obvious.
+    static C_nChannels = 4;
 
 
     /**************************************************************************/
-    /* Each channel is of the same width, and is separated from its left
-       neighbour by a standard gap.  In addition, it may perhaps be useful to
-       have this same gap between the timeline and the first channel. Change
-       the '0' below to cater. */
+    /* There are C_nChannels channels which are used to hold durations.  Plus
+       it is convenient to treat the timeline as though it were a standard
+       channel.  The timeline is therefore channelNo zero, and the others
+       start at 1. */
     
-    static getChannelLeft (timeline, channelNo)
+    static getChannelLeft (channelNo)
     {
-	const durationLineWidth= this.getDurationLineWidth();
+	const lineWidth= this.getDurationLineWidth();
 	const durationLineSeparation = this.getDurationLinesHorizontalSeparation();
-	const horizontalBasePos = durationLineSeparation + parseFloat(getComputedStyle(timeline).left) + parseFloat(getComputedStyle(timeline).width);
-	return 0 + (horizontalBasePos + channelNo * (durationLineWidth + durationLineSeparation));
+	const left = 5;
+	return left + channelNo * (lineWidth + durationLineSeparation);
     }
 
     
     /**************************************************************************/
     static getDurationLinesHorizontalSeparation ()
     {
-	return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--durationLinesHorizontalSeparation'));
+	return parseFloat(_ClassCommon.getVariableSetting('--durationLinesHorizontalSeparation'));
     }
 
     
     /**************************************************************************/
     static getDurationLineWidth ()
     {
-	return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--durationLineWidth'));
+	return parseFloat(_ClassCommon.getVariableSetting('--durationLineWidth'));
+    }
+
+    
+    static getTimelineHolderWidth ()
+    {
+	return parseFloat(_ClassCommon.getVariableSetting('--circleMarkerSize'));
+    }
+
+    
+    /**************************************************************************/
+    static getWidthOfDurationLinesDiv ()
+    {
+	return this.getChannelLeft(this.C_nChannels);
+    }
+
+    
+    /**************************************************************************/
+    static getWidthOfTimelineHolderDiv ()
+    {
+	return parseFloat(_ClassCommon.getVariableSetting('--circleMarkerSize'));
     }
 
     
@@ -1983,38 +2244,63 @@ class _ClassJChronologyUtilities
 class _ClassCommon
 {
     /**************************************************************************/
-    static _alternativeChronologiesSelector = null;
-    static getAlternativeChronologiesSelector () // The portion of the graphics area which holds the year descriptions.
-    {
-	if (null === _ClassCommon._alternativeChronologiesSelector)
-	    _ClassCommon._alternativeChronologiesSelector = document.getElementById('alternativeChronologiesSelector');
-	return _ClassCommon._alternativeChronologiesSelector;
-    }
-
-
-    /**************************************************************************/
     static _arbitraryDateMarker = null;
     static getArbitraryDateMarker () { return _ClassCommon._arbitraryDateMarker; } // The marker used when asked to select a date which does not exist in hte events list.
     static setArbitraryDateMarker (marker) { _ClassCommon._arbitraryDateMarker = marker; }
 
 
     /**************************************************************************/
-    static _chronologyContainer = null;
-    static getChronologyContainer () // The div which holds the whole of the lower part of the screen.
+    static _contentContainer = null;
+    static getContentContainer () // The div which holds the whole of the lower part of the screen.
     {
-	if (null === _ClassCommon._chronologyContainer)
-	    _ClassCommon._chronologyContainer = document.getElementById('jchronologyContainer');
-	return _ClassCommon._chronologyContainer;
+	if (null === _ClassCommon._contentContainer)
+	    _ClassCommon._contentContainer = document.getElementById('CONTENT');
+	return _ClassCommon._contentContainer;
     }
 
 
     /**************************************************************************/
-    static _datesAndLinesContainer = null;
-    static getDatesAndLinesContainer () // The div which holds the timeline and associated graphics.
+    /* The divs into which dates, year descriptions, etc are placed.  In
+       theory there is nothing to stop these being reordered, so long as
+       jchronologySelectedItemHighlighterHolder remains as the first one,
+       and jchronologyYearDescriptions as the last.  Also columns (other than
+       the first and last) could theoretically be hidden at run-time, for
+       instance to show just one column of dates rather than two. However,
+       none of that has been tested. */
+
+    static _verticalDivIds = ['jchronologySelectedItemHighlighterHolder', 'jchronologyOtherDates', 'jchronologyModernDates', 'jchronologyTimelineHolder', 'jchronologyDurationLines', 'jchronologyYearDescriptions'];
+    static _verticalDivsAsList = null;
+    static _verticalDivsAsObject = null;
+    static getVerticalDiv (id) { return this._verticalDivsAsObject[id]; }
+    static getVerticalDivs () { return this._verticalDivsAsList.map( x => x.div ) }
+    static getVerticalDivIds () { return this._verticalDivIds; }
+    static setVerticalDivs (verticalDivs)
     {
-	if (null === _ClassCommon._datesAndLinesContainer)
-	    _ClassCommon._datesAndLinesContainer = document.getElementById('jchronologyDatesAndLines');
-	return _ClassCommon._datesAndLinesContainer;
+	this._verticalDivsAsList = verticalDivs;
+	this._verticalDivsAsObject = Object.fromEntries(verticalDivs.map(o => [o.id, o.div]));
+    }
+
+    static getVerticalDivHorizontalPosition (selector)
+    {
+	if (Number.isInteger(selector))
+	    selector = this._verticalDivIds[Number(selector)];
+
+	const div = this.getVerticalDiv(selector);
+	const parent = div.parentElement;
+	const rect = div.getBoundingClientRect()
+
+	return { left: rect.left - parent.getBoundingClientRect().left, width: rect.width };
+    }
+	
+
+    
+    /**************************************************************************/
+    static _columnsContainer = null;
+    static getColumnsContainer () // The div at the top of the graphics area which gives headers for things only partially visible.
+    {
+	if (null === _ClassCommon._columnsContainer)
+	    _ClassCommon._columnsContainer = document.getElementById('jchronologyColumnsContainer');
+	return _ClassCommon._columnsContainer;
     }
 
 
@@ -2029,35 +2315,33 @@ class _ClassCommon
 
 
     /**************************************************************************/
-    static _durationHeadersButtonOverlay = null;
-    static getDurationHeadersButtonOverlay () // An overlay to getDurationHeaderContainer which holds the help button.
+    static getDurationLinesContainer () // The div which holds the timeline and associated graphics.
     {
-	if (null === _ClassCommon._durationHeadersButtonOverlay)
-	    _ClassCommon._durationHeadersButtonOverlay = document.getElementById('jchronologyDurationHeadersButtonOverlay');
-	return _ClassCommon._durationHeadersButtonOverlay;
+	return _ClassCommon.getVerticalDiv('jchronologyDurationLines');
     }
-    
+
 
     /**************************************************************************/
-    static _timeline = null;
-    static getTimeline () { return _ClassCommon._timeline; } //  Will be set to the actual vertical line which represents the timeline.
-    static setTimeline (div) { _ClassCommon._timeline = div; }
+    static getVariableSetting (name)
+    {
+	return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
 
+    
+    /**************************************************************************/
+    static _selectedItemHighlighter = null;
+    static setSelectedItemHighlighter (div) { this._selectedItemHighlighter = div; }
+    static getSelectedItemHighlighter () { return this._selectedItemHighlighter; }
 
+    
     /**************************************************************************/
     static _verticalGapBetweenConsecutiveDurationLines = null;
     static getVerticalGapBetweenConsecutiveDurationLines ()
     {
 	if (null === this._verticalGapBetweenConsecutiveDurationLines)
-	    this._verticalGapBetweenConsecutiveDurationLines = getComputedStyle(document.documentElement).getPropertyValue('--verticalGapBetweenConsecutiveDurationLines');
+	    this._verticalGapBetweenConsecutiveDurationLines = _ClassCommon.getVariableSetting('--verticalGapBetweenConsecutiveDurationLines');
 	return this._verticalGapBetweenConsecutiveDurationLines
     }
-
-
-    /**************************************************************************/
-    static _yearDescriptionsContainer = null;
-    static getYearDescriptionsContainer () { return this._yearDescriptionsContainer; }
-    static setYearDescriptionsContainer (div) { this._yearDescriptionsContainer = div; }
 
 
     /**************************************************************************/

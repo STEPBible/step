@@ -309,23 +309,16 @@ class _ClassJChronologyData
 
     
     /**************************************************************************/
-    getEventDateAndMarkerDivGivenKey (key)
-    {
-	return this._keyToElements.get(key).eventDateAndMarkerDiv;
-    }
-
-    
-    /**************************************************************************/
     getEventDescriptionDiv (key)
     {
-	return this._keyToElements.get(key).eventDescriptionDiv;
+	return this._keyToElements.get(key)[3];
     }
 
     
     /**************************************************************************/
     getMarkerGivenKey (key)
     {
-	return this._keyToElements.get(key).marker;
+	return this._keyToElements.get(key)[2];
     }
 
     

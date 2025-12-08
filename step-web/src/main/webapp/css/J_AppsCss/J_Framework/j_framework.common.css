@@ -2,6 +2,55 @@
 /* Common definitions. */
 /******************************************************************************/
 
+:root
+{
+    /* Primary (blue) light to dark. */
+    --clrPrimary0: #DBE6E9;
+    --clrPrimary1: #B6CCD3;
+    --clrPrimary2: #80A6B1;
+    --clrPrimary3: #498090;
+    --clrPrimary4: #306777;
+    --clrPrimary5: #164D5D;
+    --clrPrimary6: #000111;
+
+
+    /* Secondary (grey) light to dark. */
+    --clrSecondary0: #FFFFFF;
+    --clrSecondary1: #EBEBEB;
+    --clrSecondary2: #C1C1C1;
+    --clrSecondary3: #757575;
+    --clrSecondary4: #5C5C5C;
+    --clrSecondary5: #292929;
+    --clrSecondary6: #0F0F0F;
+
+
+    /* Accents (light to dark in each section). */
+    --clrAccentBlue0: #99C8FF;
+    --clrAccentBlue1: #4D9EFF;
+    --clrAccentBlue2: #0075FF;
+    --clrAccentBlue3: #0042CC;
+    --clrAccentBlue4: #000F99;
+
+    --clrAccentRed0: #E9BDAF;
+    --clrAccentRed1: #D98B73;
+    --clrAccentRed2: #C85937;
+    --clrAccentRed3: #AE401E;
+    --clrAccentRed4: #7C0D00;
+    
+    --clrAccentCream0: #FFFFF6;
+    --clrAccentCream1: #FFFFE9;
+    --clrAccentCream2: #FFFFE0;
+    --clrAccentCream3: #E5E5C6;
+    --clrAccentCream4: #99997A;
+
+    --clrAccentGreen0: #B2D9B2;
+    --clrAccentGreen1: #66B366;
+    --clrAccentGreen2: #008000;
+    --clrAccentGreen3: #006700;
+    --clrAccentGreen4: #004D00;
+}
+
+
 :root {
     /* STEPBible system-wide definitions which I've seen in other files.  Probably I should be picking these up from somewhere else, but I haven't worked out where. */
     --clrHighlight: #17758F;
@@ -20,8 +69,8 @@
 
     
     /* Definitions common to framework applications. */
-    --jframework-clrPopUpMenuItemBackgroundUnselected: rgb(255, 255, 192);
-    --jframework-clrInfoBoxBackground: rgb(255, 255, 192);
+    --jframework-clrPopUpMenuItemBackgroundUnselected: var(--clrLexiconFocusBG);
+    --jframework-clrInfoBoxBackground: var(--clrLexiconFocusBG);
     --jframework-clrPopUpMenuItemBackgroundSelected: var(--clrHighlight);
 
     --jframework-clrSearchBoxBackground: #eef9fc;
@@ -43,8 +92,8 @@
     --jframework-popUpZIndex: 1000;
 
     --jframework-clrLink: blue;
-    --jframework-clrLinkHighlightBackground: red;
-    --jframework-clrLinkHighlightForeground: yellow;
+    --jframework-clrLinkHighlightBackground: #b2e5f3;
+    --jframework-clrLinkHighlightForeground: var(--jframework-clrLink);
 }
     
 

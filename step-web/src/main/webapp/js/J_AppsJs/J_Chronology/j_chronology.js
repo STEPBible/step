@@ -44,6 +44,17 @@
 
   At the time of writing, this relates purely to calls from the search frame,
   which is handled by a message containing a 'key' field.
+
+
+
+  Cookies
+  =======
+
+  The app uses the localStorage facility rather than cookies.  It uses a
+  few items, all with names starting 'stepChronology' to hold details
+  of the selected alternative date scheme and also -- should we ever wish
+  to display a welcome screen the first time the app is used -- whether we
+  have already shown the welcome screen.
 */
 /******************************************************************************/
 
@@ -51,16 +62,12 @@
 
 import { JFrameworkStepDataAccessors }                  from '/js/J_AppsJs/J_Framework/j_framework.stepDataAccessors.js';
 import { ClassJFrameworkDraggable }                     from '/js/J_AppsJs/J_Framework/j_framework.draggable.js';
-import { ClassJFrameworkModalDialog }                   from '/js/J_AppsJs/J_Framework/j_framework.modalDialog.js';
 import { ClassJFrameworkMultiframeCommunicationsSlave } from '/js/J_AppsJs/J_Framework/j_framework.multiframeCommunicationsSlave.js';
 import { JChronologyData }                              from '/js/J_AppsJs/J_Chronology/j_chronologySharedCode.js';
 import { JFrameworkSharedConstants }                    from '/js/J_AppsJs/J_Framework/j_framework.sharedConstants.js';
 import { JFrameworkUserSettings }                       from '/js/J_AppsJs/J_Framework/j_framework.userSettings.js';
 import { JFrameworkUtils }                              from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
 import { JFrameworkChapterSummaries }                   from '/js/J_AppsJs/J_Framework/j_framework.chapterSummaries.js';
-
-export const ModalDialogHandler = new ClassJFrameworkModalDialog();
-window.ModalDialogHandler = ModalDialogHandler;
 
 
 
@@ -90,17 +97,8 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 	
 	JChronologyData.loadData(this._onload.bind(this)); // Get the data.
 	
-	ModalDialogHandler.addModalCloseButtonHandlers(); // Add close handlers to everything which has a close button.
-	
+
 	ClassJFrameworkDraggable.initialise(); // Make any appropriate pop-ups draggable.
-
-	document.getElementById('alternativeChronologyOk').addEventListener('click', () => {
-	    JEventHandlers.alternativeChronologiesSelectorOk();
-	});
-
-	document.getElementById('alternativeChronologyCancel').addEventListener('click', () => {
-	    JEventHandlers.alternativeChronologiesSelectorCancel();
-	});
     }
 
 
@@ -225,24 +223,6 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 
 
 	/**********************************************************************/
-	/* Throttle to improve performance when scrolling the thing which
-	   contains the duration lines. */
-	
-	const me = this;
-	const container = _ClassCommon.getColumnsContainer();
-	var durationScrollTimeout = null;
-	container.addEventListener("scroll", () => {
-	    if (durationScrollTimeout) return;
-	    durationScrollTimeout = requestAnimationFrame(() => {
-		JRenderer.doDurationHeaders();
-		durationScrollTimeout = null;
-	    });
-	});
-
-
-
-
-	/**********************************************************************/
 	/* Arrange to respond to changes the user makes to the setting --
 	   colours, font sizes, etc. */
 	
@@ -276,7 +256,7 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
     
     _updateFrameWidth ()
     {
-	const containerWidth = parseFloat(window.getComputedStyle(_ClassCommon.getContentContainer()).width);
+	const containerWidth = parseFloat(window.getComputedStyle(_ClassCommon.getColumnsContainer()).width);
 	if (containerWidth > 500)
 	{
 	    if (document.body.classList.contains('isWideScreen')) return false;
@@ -335,6 +315,8 @@ class _ClassJRenderer
 	this._renderDurations(durationDetails);
 	if ('onload' != callType)
 	    this.doDurationHeaders();
+
+	_ClassAlternativeChronologies.selectChronology();
     }
 
 
@@ -432,32 +414,6 @@ class _ClassJRenderer
 
 
 
-	/**********************************************************************/
-	/* Sort out the height of the column container.  In theory you can do
-	   this directly in CSS, but I haven't managed to find a way to do
-	   that _and_ have a vertical scroll bar too when needed. */
-
-	const header = document.getElementById('HEADER');
-	const footer = document.getElementById('FOOTER');
-	const content = _ClassCommon.getColumnsContainer();
-
-	const headerHeight = header.offsetHeight;
-	const footerHeight = footer.offsetHeight;
-	const viewportHeight = window.innerHeight;
-
-	const contentHeight = viewportHeight - headerHeight - footerHeight;
-	content.style.height = contentHeight + 'px';
-
-	
-	
-	/**********************************************************************/
-	/* Make the width of the button overlay the same as the offset of the
-	   timeline.  This then makes it possible to position the date help
-	   button centrally over the dates. */
-	
-	// $$$ document.getElementById('jChronologyDateInfoButton').style.width = (widths[0] + widths[1]) + 'px';
-
-
 
 	/**********************************************************************/
 	/* The timeline needs to be long enough to run the entire height of the
@@ -481,12 +437,10 @@ class _ClassJRenderer
 
 
 	/**********************************************************************/
-	/* Force the overflow box to have the same width as the main body, so
-	   that horizontal scrolling works. */
+	/* Force the horizontal scroller box to have the right width so that it
+	   will indeed scroll. */
 
-	const widthSetter = document.getElementById('jchronologyDurationHeadersScrollSupport');
-	widthSetter.style.width = _ClassCommon.getColumnsContainer().scrollWidth + 'px';
-	widthSetter.style.overflow = 'hidden';
+	document.getElementById('jchronologyDurationHeadersScrollSupport').style.width = _ClassCommon.getColumnsContainer().scrollWidth + 'px';
     } // adjustDimensions
 
 
@@ -511,7 +465,7 @@ class _ClassJRenderer
 	    const channelNo = JChronologyData.getDurStartChannelNo(entry);
 	    const line = document.createElement('div');
 	    line.className = 'jchronologyDurationHeaderLine';
-	    line.style.left = (_ClassCommon.getVerticalDivHorizontalPosition('jchronologyDurationLines').left + _ClassJChronologyUtilities.getChannelLeft(channelNo)) + 'px';
+	    line.style.left = (_ClassCommon.getVerticalDivHorizontalPosition('jchronologyDurationLines').left + _ClassJChronologyUtilities.getChannelLeft(channelNo)) + durationHeaderContainer.scrollLeft + 'px';
 	    line.style.height = (1 + (1.5 * --nDisplayableEntries)) + 'em';
 
 	    const label = document.createElement('div');
@@ -545,7 +499,7 @@ class _ClassJRenderer
 	/* We need to remove any existing lines and labels. */
 
 	Array.from(durationHeaderContainer.children).forEach(child => {
-	    child.remove();
+	    if (child.id != 'jchronologyDurationHeadersScrollSupport' && child.id != 'activeAlternativeChronologyName' && child.id != 'jchronologyDateInfoButtonx') child.remove();
 	});
 
 
@@ -921,7 +875,6 @@ class _ClassJRenderer
 	
 	/**********************************************************************/
 	this._deleteAndRecreateWorkingElements()
-	this._sortOutMutualScrolling();
 
 
 
@@ -1152,12 +1105,15 @@ class _ClassJRenderer
 		    if ('' != scriptureRefs)
 		    {
 			scriptureRefs = this._convertToRanges(scriptureRefs);
+			const x = scriptureRefs.split('; ');
+			if (x.length > 1)
+			    scriptureRefs = x[0] + ' etc';
 			content += '&nbsp;&nbsp;<span class="iconFont">K&nbsp;</span>' + scriptureRefs;
 		    }
 		}
 
 		div.innerHTML = _ClassJChronologyUtilities.withDurationColours(content);
-		div.style.width = _ClassCommon.getVerticalDiv('jchronologyYearDescriptions').scrollWidth + "px";
+		div.style.width = _ClassCommon.getVerticalDiv('jchronologyYearDescriptions').scrollWidth + "px"; // Not sure what this does, but apparently we need it.
 
 		descriptionDivs.push(div);
 	    }
@@ -1236,6 +1192,29 @@ class _ClassJRenderer
 
 	    
 	/**********************************************************************/
+	/* Year descriptions have been positioned absolutely, so they
+	   don't actually contribute to the width of the year
+	   description column.  To force that column to be wide enough
+	   to hold the widest of them (and therefore force the column
+	   container to scroll properly), find the longest description
+	   and then insert into the year description column a dummy div
+	   whose width we set to the required width. */
+
+	var maxWidth = 0;
+	descriptionDivs.forEach( div => {
+	    if (div.scrollWidth > maxWidth)
+		maxWidth = div.scrollWidth;
+	});
+
+	const x = document.createElement('div')
+	x.width = maxWidth;
+	x.style.zIndex = '-1000';
+	_ClassCommon.getVerticalDiv('jchronologyYearDescriptions').appendChild(x);
+
+
+
+		
+	/**********************************************************************/
 	/* You have to have added the elements to the DOM, as per the
 	   previous code para, before you can call this. */
 	
@@ -1257,122 +1236,9 @@ class _ClassJRenderer
 
 
 	/**********************************************************************/
+	this._sortOutMutualScrolling();
 	return durationMap;
     } // renderYears
-
-
-    /**************************************************************************/
-    /* The bottom part of the screen consists of various rows and columns
-       with special issues as regards scrolling ...
-
-       We need the duration header to scroll horizontally in sync with the
-       divs which make up the main body of the display (and vice-versa: if
-       we scroll those divs, we need to scroll the duration header).
-
-       We need the divs in the main body to scroll as though they were one
-       wide div, even though they aren't.
-
-       We need the divs in the main body to scroll vertically in sync, but
-       we want a scroll bar only on the rightmost.
-
-       And we need all this to work on touchscreens too. */
-    
-    _sortOutMutualScrolling ()
-    {
-	/**********************************************************************/
-	/* We want the overflow header and the main content container to scroll
-	   horizontally in sync, with either driving the other.  Note that
-	   only the main container has a horizontal scroll bar. */
-	
-	const scrollA = document.getElementById('jchronologyDurationHeaders');
-	const scrollB = _ClassCommon.getColumnsContainer();
-
-	var isSyncing = false;
-
-	function syncScroll(source, target)
-	{
-	    if (isSyncing) return;
-	    isSyncing = true;
-
-	    requestAnimationFrame(() => {
-		target.scrollLeft = source.scrollLeft;
-		isSyncing = false;
-	    });
-	}
-
-	scrollB.addEventListener("scroll", () => {
-	    syncScroll(scrollB, scrollA);
-	});
-
-	scrollA.addEventListener("scroll", () => {
-	    syncScroll(scrollA, scrollB);
-	});
-
-
-	
-	/**********************************************************************/
-	/* This was needed where we wanted just one of the columns to scroll.
-	   I'm reluctant to ditch in case we want to go back to that.
-	   However, as things stand, the parent container deals with all the
-	   scrolling, so we don't need the code here. */
-	
-	return;
-
-
-
-	/**********************************************************************/
-	const cols = _ClassCommon.getVerticalDivs();
-	const allButRightCol = cols.slice(0, -1);
-	const rightCol = cols.at(-1);
-
-
-
-	/**********************************************************************/
-	function syncScrollVertical (y)
-	{
-	    cols.forEach(c => c.scrollTop = y);
-	}
-
-	
-
-	/**********************************************************************/
-	/* When the right column scrolls vertically, sync the others. */
-
-	rightCol.addEventListener('scroll', () => {
-	    const y = rightCol.scrollTop;
-	    syncScrollVertical(y);
-	});
-
-
-
-	/**********************************************************************/
-	/* On a touch screen, things are more complicated, because we want
-	   scrolling to work on any of the columns. */
-
-	cols.forEach(c => {
-	    if (c !== rightCol)
-	    {
-		c.addEventListener("wheel", e => {
-		    rightCol.scrollTop += e.deltaY;
-		    syncScrollVertical(rightCol.scrollTop);
-		    e.preventDefault();
-		});
-
-
-		var startY;
-		c.addEventListener("touchstart", e => {
-		    startY = e.touches[0].clientY;
-		});
-		c.addEventListener("touchmove", e => {
-		    const dy = startY - e.touches[0].clientY;
-		    rightCol.scrollTop += dy;
-		    syncScrollVertical(rightCol.scrollTop); // update all columns
-		    startY = e.touches[0].clientY;
-		    e.preventDefault();
-		}, { passive: false });
-	    }
-	});
-    }
 
 
     /**************************************************************************/
@@ -1493,6 +1359,169 @@ class _ClassJRenderer
 	_ClassCommon.getVerticalDiv('jchronologySelectedItemHighlighterHolder').appendChild(selectedItemHighlighter);
 	_ClassCommon.setSelectedItemHighlighter(selectedItemHighlighter);
     }
+
+
+    /**************************************************************************/
+    /* Trying to sort out the synchronised scrolling of the duration headers
+       and the main graphical area has proved to be horrendous.
+
+       _ClassCommon.getColumnsContainer() is set up to scroll
+       jchronologyDurationHeaders when it is, itself, scrolled.  That's the
+       easy bit.
+
+       I now have a wrapper (jchronologyDurationHeadersWrapper) around the
+       headers (jchronologyDurationHeaders).  (The wrapper is also useful
+       as a place to hold the buttons etc which we want to have placed
+       absolutely.)
+
+       The wrapper itself can scroll horizontally, and therefore gets to
+       see any of the events which can result in scrolling.  These it
+       intercepts, checks that they are for horizontal scrolling, and
+       forwards to _ClassCommon.getColumnsContainer(). */
+    
+    _sortOutMutualScrolling ()
+    {
+	/**********************************************************************/
+	/* Throttle to improve performance when scrolling the thing which
+	   contains the duration lines.
+
+	   As ever, this is complicated ...
+
+	   First off, don't forget we need to cater for both scrollbar-related
+	   scrolling and, on smaller devices, touch-screen-related scrolling.
+	   The two give rise to entirely different issues.  Touch-screen is
+	   covered shortly.
+
+	   Second, we have two different kinds of scrolling.
+
+	   _Vertical_ scrolling definitely requires us to recalculate the
+	   contents of the overflow area, because this area tells us about
+	   duration lines which cross the upper boundary of the graphics
+	   area, and these will change.
+
+	   _Horizontal_ scrolling in theory does not need such recalculation,
+	   because the lines crossing the boundary will not change -- all we
+	   have to do is scroll things to and fro.
+
+	   This, however, turns out to be incredibly complicated.  After
+	   _many_ false starts, I have ended up with something which _almost_
+	   makes this possible here, by being very careful to set the
+	   width of the support div to the scroll width of the columns
+	   container.
+
+	   And indeed this does almost work.  On a touch-screen it's fine
+	   (you can slide the top area or the bottom area to and fro, and the
+	   two move in sync).  And on a mouse-driven system you can scroll
+	   _almost_ all of the way across with the two.  Unfortunately,
+	   things go awry when you've scrolled very near as far as you can
+	   go, because the column container's scroll width has changed since
+	   the point at which it was read.
+
+	   According to ChatGPT, this is very likely something to do with
+	   scroll bars.  But also according to ChatGPT, trying to make
+	   allowance for this in a manner which will work across different
+	   browsers is likely to be nigh on impossible.
+
+	   Given this, rather than try to get it right, I have added the
+	   statement   isPurelyHorizontal = false   below, so that even
+	   if the scroll action is purely horizontal, I don't take
+	   advantage of that fact -- I just redraw the header lines.
+	   This always seems to work, famous last words -- although it
+	   does so at the expense of a lot of calculation which _should_
+	   be unnecessary. */
+	
+	var lastScrollLeft = 0;
+	var lastScrollTop = 0;
+	const container = _ClassCommon.getColumnsContainer();
+	var durationScrollTimeout = null;
+	container.addEventListener('scroll', () => {
+	    if (durationScrollTimeout) return;
+	    const newLeft = container.scrollLeft;
+	    const newTop = container.scrollTop;
+	    var isPurelyHorizontal = newLeft != lastScrollLeft && newTop == lastScrollTop;
+	    lastScrollTop = newTop;
+	    lastScrollLeft = newLeft;
+
+	    isPurelyHorizontal = false; // !!! See above.
+
+/*	    console.log('Headers scrollWidth: ' + document.getElementById('jchronologyDurationHeaders').scrollWidth);
+	    console.log('Columns scrollWidth: ' + document.getElementById('jchronologyColumnsContainer').scrollWidth);
+	    console.log('Support width      : ' + document.getElementById('jchronologyDurationHeadersScrollSupport').style.width);
+
+	    console.log('Headers scrollLeft: ' + document.getElementById('jchronologyDurationHeaders').scrollLeft);
+	    console.log('Columns scrollLeft: ' + document.getElementById('jchronologyColumnsContainer').scrollLeft);
+*/
+
+	    if (isPurelyHorizontal)
+	    {
+		document.getElementById('jchronologyDurationHeaders').scrollLeft = newLeft;
+		return;
+	    }
+
+	    durationScrollTimeout = requestAnimationFrame(() => {
+		JRenderer.doDurationHeaders();
+		durationScrollTimeout = null;
+	    });
+	});
+
+
+
+
+
+	/**********************************************************************/
+	/* The 'real' element is the column container.  We want to organise
+	   things so that if it is scrolled (and so far as I can see, you
+	   get scroll events only on non-touch screens), it scrolls the
+	   header too. */
+	
+	function syncScroll (source, target)
+	{
+	    target.scrollLeft = source.scrollLeft;
+	}
+	
+	container.addEventListener('scroll', e => {
+	    syncScroll(container, document.getElementById('jchronologyDurationHeaders'));
+	});
+
+
+
+	/**********************************************************************/
+	/* Now we deal with touch screen stuff.  Here I change the scroll
+	   position of the 'real' element, along with that for the thing
+	   actually being manipulated. */
+	
+	const proxy = document.getElementById('jchronologyDurationHeadersWrapper');
+	proxy.addEventListener('wheel', e => {
+	    if (Math.abs(e.deltaX) > Math.abs(e.deltaY))
+	    {
+		e.preventDefault(); // Block horizontal scroll on header.
+		container.scrollLeft += e.deltaX; // Forward the effect to the columns container.
+	    }
+	}, { passive:false });
+
+
+
+	/**********************************************************************/
+	// Touchmove processing. */
+	
+	var lastX = null;
+
+	proxy.addEventListener('touchstart', e => {
+	    lastX = e.touches[0].clientX; // Record initial finger position.
+	}, { passive: true });
+
+	proxy.addEventListener('touchmove', e => {
+	    e.preventDefault();
+	    const currentX = e.touches[0].clientX;
+	    const deltaX   = lastX - currentX; // Movement since last frame.
+	    lastX = currentX;
+	    container.scrollLeft += deltaX;
+	}, { passive: false });
+
+	proxy.addEventListener('touchend', () => {
+	    lastX = null;
+	});
+    }
 }
 
 const JRenderer = new _ClassJRenderer();
@@ -1532,10 +1561,7 @@ class _ClassJEventHandlers
     /**************************************************************************/
     alternativeChronologiesSelectorOk ()
     {
-	if (document.getElementById('ussherCheckbox').checked)
-	    _ClassAlternativeChronologies.selectUssher();
-	else
-	    _ClassAlternativeChronologies.selectOther();
+	_ClassAlternativeChronologies.selectChronology();
 	this.hideDateHelp();
     }
 
@@ -1566,17 +1592,10 @@ class _ClassJEventHandlers
     hideDateHelp ()
     {
 	const modal = document.getElementById('dateHelp');
-	ModalDialogHandler.closeIfTopModalDialog(modal);
+	modal.close();
     }
 
 
-    /**************************************************************************/
-    hideWelcomeDialog ()
-    {
-	ModalDialogHandler.closeIfTopModalDialog(document.getElementById('welcomeDialog'));
-    }
-
-    
     /**************************************************************************/
     /* Note that we need a copy of the settings as they stand on entry in case
        the user hits Cancel.  However, there is no need to have a copy within
@@ -1588,10 +1607,7 @@ class _ClassJEventHandlers
     {
 	_ClassAlternativeChronologies.init();
 	const modal = document.getElementById('dateHelp');
-	ModalDialogHandler.showModalDialog(modal);
-	const ussherCheckbox = document.getElementById('ussherCheckbox');
-	this._ussherCheckboxSettingOnEntry = ussherCheckbox.checked; // In case the user hits cancel.
-	this.ussherCheckboxToggled(ussherCheckbox);
+	modal.showModal();
 	modal.querySelector('.jframework-modalDialogBody').scrollTop = 0;
 	modal.style.top = '20px';
 	modal.style.left = (window.innerWidth - modal.offsetWidth) / 2 + 'px';
@@ -1602,7 +1618,7 @@ class _ClassJEventHandlers
     showHelpMenu ()
     {
 	const modal = document.getElementById('help');
-	ModalDialogHandler.showModalDialog(modal);
+	modal.showModal();
 	modal.querySelector('.jframework-modalDialogBody').scrollTop = 0;
 	modal.style.top = '20px';
 	modal.style.left = (window.innerWidth - modal.offsetWidth) / 2 + 'px';
@@ -1638,16 +1654,6 @@ class _ClassJEventHandlers
     {
 	_JChronologyPresentationHandler.setScriptureWindowContent(tag.textContent.replace('?', ''), true);
     }
-
-    
-    /**************************************************************************/
-    ussherCheckboxToggled (checkbox)
-    {
-	if (checkbox.checked)
-	    document.getElementById('modernChronologySelector').classList.add('disabledElementAndContents');
-	else
-	    document.getElementById('modernChronologySelector').classList.remove('disabledElementAndContents');
-    }
 }
 
 export const JEventHandlers = new _ClassJEventHandlers();
@@ -1666,7 +1672,12 @@ window.JEventHandlers = JEventHandlers;
 /******************************************************************************/
 
 /******************************************************************************/
-/* Settings are held in local storge, with defaults as defined by _getDflt.
+/* Settings are held in local storage, with defaults as defined by _getDflt.
+
+   All local storage keys start 'stepChronology' and mirror the names
+   assigned to optionGroups on the chronology selector modal.
+
+
 */
 
 /******************************************************************************/
@@ -1674,6 +1685,47 @@ class _ClassAlternativeChronologies
 {
     /**************************************************************************/
     static _existingChronologyKey = '';
+    static _keys = ['stepChronologyUssherOrModern', 'stepChronologyDateCategory', 'stepChronologyYearsInEgypt', 'stepChronologyExodusDate'];
+
+
+    /**************************************************************************/
+    static init ()
+    {
+	/**********************************************************************/
+	document.getElementById('alternativeChronologyOk').addEventListener('click', () => {
+	    JEventHandlers.alternativeChronologiesSelectorOk();
+	});
+
+	document.getElementById('alternativeChronologyCancel').addEventListener('click', () => {
+	    JEventHandlers.alternativeChronologiesSelectorCancel();
+	});
+
+
+
+	/**********************************************************************/
+	/* Respond to toggling between Ussher and Modern. */
+	
+	const me = this;
+	document.querySelectorAll('input[name="stepChronologyUssherOrModern"]').forEach(radio => {
+	    radio.addEventListener('change', event => {
+		me._setConditionalVisibility();
+	    });
+	});
+
+
+	
+	/**********************************************************************/
+	function setRadioButtonsFromCache (key)
+	{
+	    const cacheValue = me._getValueFromCache(key);
+	    const radio = document.querySelector(`input[type='radio'][name='${key}'][value='${cacheValue}']`);
+            radio.checked = true;
+	}
+	    
+	this._keys.forEach( key => setRadioButtonsFromCache(key) );
+
+	this._setConditionalVisibility();
+    }
 
 
     /**************************************************************************/
@@ -1697,10 +1749,9 @@ class _ClassAlternativeChronologies
 
     
     /**************************************************************************/
-    static init ()
+    static getValueFromRadioButton (key)
     {
-	this._initRadioButtonsInChronologySelector();
-	// this._setDateColumnsToReflectLocalStorageOnEntry.
+	return document.querySelector(`input[name='${key}']:checked`).value;
     }
 
 
@@ -1712,10 +1763,10 @@ class _ClassAlternativeChronologies
     
     static makeChronologyKeyFromCache ()
     {
-	if ('y' == this._getValueFromCache('Ussher'))
+	if ('Ussher' == this._getValueFromCache('stepChronologyUssherOrModern'))
 	    return 'dt_Ussher';
 	else
-	    return 'dt_' + this._getValueFromCache('DateCategory') + '_' + this._getValueFromCache('YearsInEgypt') + '_' + this._getValueFromCache('ExodusDate');
+	    return 'dt_' + this._getValueFromCache('stepChronologyDateCategory') + '_' + this._getValueFromCache('stepChronologyYearsInEgypt') + '_' + this._getValueFromCache('stepChronologyExodusDate');
     }
 
     
@@ -1723,72 +1774,31 @@ class _ClassAlternativeChronologies
     /* Arranges to display, as the alternative chronology, something other
        than Ussher. */
     
-    static selectOther ()
+    static selectChronology ()
     {
 	this._saveRadioButtonsToCache();
-	localStorage.setItem('chronologyUssher', 'n');
 	const chronologyKey = this.makeChronologyKeyFromCache();
 	this._updateDateColumn(chronologyKey);
     }
 
 
     /**************************************************************************/
-    /* Arranges to display Ussher as the alternative chronology. */
-    
-    static selectUssher ()
+    static _getDflt (key)
     {
-	localStorage.setItem('chronologyUssher', 'y');
-	this._updateDateColumn('dt_Ussher');
-    }
-
-    
-    /**************************************************************************/
-    static _getDflt (cacheKey)
-    {
-	switch (cacheKey)
+	switch (key)
 	{
-	    case 'DateCategory': return 'Hebrew';
-	    case 'YearsInEgypt': return '400';
-	    case 'ExodusDate'  : return '15';
-	    case 'Ussher'      : return 'y';
+	    case 'stepChronologyDateCategory'   : return 'Hebrew';
+	    case 'stepChronologyExodusDate'     : return '15';
+	    case 'stepChronologyUssherOrModern' : return 'Ussher';
+	    case 'stepChronologyYearsInEgypt'   : return '400';
 	}
     }
 
     
     /**************************************************************************/
-    static _getRadioButtonValue (cacheKey)
+    static _getValueFromCache (key)
     {
-	return document.querySelector(`input[name='${cacheKey}']:checked`).value;
-    }
-
-
-    /**************************************************************************/
-    static _getValueFromCache (cacheKey)
-    {
-	return localStorage.getItem(`chronology${cacheKey}`) ?? this._getDflt(cacheKey);
-    }
-
-
-    /**************************************************************************/
-    /* Sets the buttons and checkbox in the modal used to select alternative
-       chronologies to reflect the cache settings. */
-    
-    static _initRadioButtonsInChronologySelector ()
-    {
-	const me = this;
-	function setRadioButtonsFromCache (cacheKey)
-	{
-	    const cacheValue = me._getValueFromCache(cacheKey);
-	    const radio = document.querySelector(`input[type='radio'][name='${cacheKey}'][value='${cacheValue}']`);
-            radio.checked = true;
-	}
-	    
-	setRadioButtonsFromCache('DateCategory');
-	setRadioButtonsFromCache('YearsInEgypt');
-	setRadioButtonsFromCache('ExodusDate');
-
-	const ussherSetting = me._getValueFromCache('Ussher');
-	document.getElementById('ussherCheckbox').checked = 'y' == ussherSetting.toLowerCase();
+	return localStorage.getItem(key) ?? this._getDflt(key);
     }
 
 
@@ -1796,32 +1806,41 @@ class _ClassAlternativeChronologies
     static _saveRadioButtonsToCache ()
     {
 	const me = this;
-	function setCacheFromRadioButtons (buttonKey)
+	function setCacheFromRadioButtons (key)
 	{
-	    localStorage.setItem('chronology' + buttonKey, me._getRadioButtonValue(buttonKey));
+	    localStorage.setItem(key, me.getValueFromRadioButton(key));
 	}
 
-	setCacheFromRadioButtons('DateCategory');
-	setCacheFromRadioButtons('YearsInEgypt');
-	setCacheFromRadioButtons('ExodusDate');
-
-	localStorage.setItem('chronologyUssher', document.getElementById('ussherCheckbox').checked ? 'y' : 'n');
+	this._keys.forEach( key => setCacheFromRadioButtons(key) );
     }
 
 
     /**************************************************************************/
+    static _setConditionalVisibility ()
+    {
+	const ussherSetting = this.getValueFromRadioButton('stepChronologyUssherOrModern');
+	if ('Ussher' == ussherSetting)
+	    document.getElementById('modernChronologySelector').classList.add('disabledElementAndContents');
+	else
+	    document.getElementById('modernChronologySelector').classList.remove('disabledElementAndContents');
+
+    }
+
+    
+    /**************************************************************************/
     /* Sets the alternative date column to hold the relevant chronology. */
     
-    static _updateDateColumn (chronologyKey)
+    static _updateDateColumn (cacheKey)
     {
-	this.displayActiveAlternativeChronologyName(chronologyKey);
+	this.displayActiveAlternativeChronologyName(cacheKey);
 	
-	const tags = document.getElementsByClassName('jchronologyDateAlternative');
+	const tags = document.getElementsByClassName('jchronologyOtherDateElement');
 	for (const tag of tags)
 	{
-	    const key = tag.getAttribute('data-key');
-	    if (!key) continue;
-	    const revisedContent = JChronologyData.getField(JChronologyData.getEntryGivenKey(key), chronologyKey);
+	    const elementKey = tag.getAttribute('data-key');
+	    if (!elementKey) continue;
+	    const x = JChronologyData.getEntryGivenKey(elementKey);
+	    const revisedContent = JChronologyData.getField(JChronologyData.getEntryGivenKey(elementKey), cacheKey);
 	    tag.innerHTML = revisedContent;
 	}
 	
@@ -1940,23 +1959,22 @@ class _ClassJChronologyPresentationHandler
 	this._selectedEventYear = JChronologyData.getAnnotatedYearModernDate(entry).replace(' ', '');
 
 
+
 	/**********************************************************************/
 	if (centreSelection)
 	    JFrameworkUtils.centrePointVerticallyWithinScrollingContainer(_ClassCommon.getVerticalDiv('jchronologyYearDescriptions').parentElement, this._selectedEventDiv.style.top);
-
-	// $$$ JRenderer.doDurationHeaders();
     }
 
 
     /**************************************************************************/
     _positionSelectionHighlightMarker (eventDiv)
     {
-	const highlighter = _ClassCommon.getSelectedItemHighlighter();
 	const eventRect = eventDiv.getBoundingClientRect();
-	const containerRect = _ClassCommon.getContentContainer().getBoundingClientRect();
+	const containerRect = _ClassCommon.getColumnsContainer().getBoundingClientRect();
+	const highlighter = _ClassCommon.getSelectedItemHighlighter();
 	highlighter.style.height = eventRect.height + 'px';
-	highlighter.style.top = (eventRect.top - containerRect.top) + 'px';
-	highlighter.style.width = containerRect.width + 'px';
+	highlighter.style.top = (eventRect.top - containerRect.top + _ClassCommon.getColumnsContainer().scrollTop) + 'px';
+	highlighter.style.width = _ClassCommon.getColumnsContainer().scrollWidth + 'px';
     }	
 
 
@@ -1970,7 +1988,6 @@ class _ClassJChronologyPresentationHandler
 	marker.style.display = 'block';
 	this._positionSelectionHighlightMarker(marker);
 	JFrameworkUtils.centrePointVerticallyWithinScrollingContainer(_ClassCommon.getVerticalDiv('jchronologyYearDescriptions').parentElement, marker.style.top);
-	// $$$ JRenderer.doDurationHeaders();
     }
 
 
@@ -2017,7 +2034,7 @@ class _ClassJChronologyPresentationHandler
     {
 	/**********************************************************************/
 	const infoBox = this._getInfoBox();
-	const date = ''; // '<br><b>' + JChronologyData.getAnnotatedYearModernDate(entry) + ':</b> ';
+	const date = '';
 	const refs = JChronologyData.getChapterRefsAsString(entry);
 	const caveatsA = refs.includes('?') ? ' (Question marks against references highlight chapters whose dates are particularly open to debate.)' : '';
 
@@ -2066,7 +2083,8 @@ class _ClassJChronologyPresentationHandler
 	const infoBox = this._getInfoBox();
 	const date = JChronologyData.getAnnotatedYearModernDate(entry);
 	const shortDescription = JChronologyData.withLinks(JChronologyData.getDescription(entry));
-	const scriptures = JChronologyData.getAnnotatedYearScriptureRefs(entry);
+	const scripturesFromChronologyData = JChronologyData.getAnnotatedYearScriptureRefs(entry);
+	const scripturesFromChapterData = JChronologyData.getChaptersFromChapterAndYearData(entry);
 	const extraBiblicalRefs = JChronologyData.getAnnotatedYearNonScriptureRefs(entry);
 	const longDescription = JChronologyData.getAnnotatedYearArticle(entry);
 
@@ -2094,10 +2112,16 @@ class _ClassJChronologyPresentationHandler
 	    
 
 	    var content = '<b>' + date + ': ' + shortDescription + (shortDescription.endsWith('.') ? '' : '.') + '</b>' + caveatsA + '<br><br>';
-	    if ('' != scriptures) content += '<b>Scripture references:</b> ' + scriptures + '<br><br>';
+	    if ('' != scripturesFromChronologyData) content += '<b>Scripture references:</b> ' + scripturesFromChronologyData + '<br><br>';
 	    if ('' != extraBiblicalRefs) content += '<b>External references:</b> ' + extraBiblicalRefs + '<br><br>';
 	    content += longDescription;
 	    content += (chapterSummaries == '' ? '' : '<br><br>') + chapterSummaries;
+	    if (0 != scripturesFromChapterData.length)
+	    {
+		var x = scripturesFromChapterData.map(x => `<jLink data-type='S' data-ref='${x.ref}' onclick='JEventHandlers.handleLink(event)'>${x.ref}</jLink>`).join("; ");
+		x = JChronologyData.withLinks(x);
+		content += '<br><b>Chapters about this time: </b> ' + x + '.';
+	    }
 
 	    infoBox.innerHTML =
 		`<div style='display:flex; align-items:center'>
@@ -2250,12 +2274,12 @@ class _ClassCommon
 
 
     /**************************************************************************/
-    static _contentContainer = null;
-    static getContentContainer () // The div which holds the whole of the lower part of the screen.
+    static _columnsContainer = null;
+    static getColumnsContainer () // The div which holds the whole of the lower part of the screen.
     {
-	if (null === _ClassCommon._contentContainer)
-	    _ClassCommon._contentContainer = document.getElementById('CONTENT');
-	return _ClassCommon._contentContainer;
+	if (null === _ClassCommon._columnsContainer)
+	    _ClassCommon._columnsContainer = document.getElementById('jchronologyColumnsContainer');
+	return _ClassCommon._columnsContainer;
     }
 
 

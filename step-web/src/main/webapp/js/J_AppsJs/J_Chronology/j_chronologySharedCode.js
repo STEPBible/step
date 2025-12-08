@@ -80,7 +80,7 @@
 
   where the 'P' or 'L' indicates that this is a person or a location.  These
   are to serve as links to maps or genealogy data (both to be loaded in a
-  new browser tab).  xChronClick needs to be replaced by appropriate code
+  new browser tab).  clickHandler needs to be replaced by appropriate code
   to achieve this.
 
   The 'S' version makes it possible to update the scripture window instead.

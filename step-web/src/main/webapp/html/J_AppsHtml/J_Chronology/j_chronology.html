@@ -20,12 +20,15 @@
 
     <style>
       /*----------------------------------------------------------------------*/
-      /* CAUTION HERE BE DRAGONS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      /* ABANDON HOPE ALL YE WHO ENTER HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
          CSS relating to layout is likely to be extremely sensitive.  A lot of
 	 the stuff below comes from ChatGPT and to be honest I have no idea
-	 in many cases why we need this particular CSS -- all I know is that
+	 in many cases why we need this _particular_ CSS -- all I know is that
 	 even very minor changes tend to break things quite spectacularly.
+	 Most complicated of all is the area here (and in j_chronoloyg.js)
+	 which arranges for the duration headers and the main graphical area
+	 to scroll in sync.
 
          Obviously you can change things like colours with impunity.  And I
 	 have tried to arrange things such that you can change, say, font sizes
@@ -53,7 +56,7 @@
       
       @font-face {
 	  font-family: 'IconFont';
-	  src: url('/fonts/J_AppsFonts/J_Genealogy/j_genealogyIcons.woff') format('woff');
+	  src: url('/fonts/J_AppsFonts/J_Framework/j_frameworkIcons.woff') format('woff');
 	  font-weight: normal;
 	  font-style: normal;
       }
@@ -173,9 +176,13 @@
 	  --durationLinesHorizontalSeparation: 8px;
 	  --verticalGapBetweenConsecutiveDurationLines: 5px; /* Small gaps so that one line doesn't run into the next. */
 
+	  --durationHeaderLineWidth: 6px;
+
 	  --timelineWidth: 6px;
 	  
 	  --circleMarkerSize: 14px;
+
+	  --commonBorderDefinition: 2px solid var(--clrChronologyContainerBorder);
 
 
 	  /* Vertical positioning of dates (and therefore of circles and labels).  The 'PerYear' settings
@@ -238,7 +245,7 @@
       body {
 	  height: 100vh; /* Full viewport height */
 	  width: auto; /* Let width shrink/grow naturally. */
-	  margin: 10px;
+	  margin: 5px;
 	  background: var(--clrContainerBackground);
       }
 
@@ -250,9 +257,10 @@
       }
 
 
-      .horizontalSyncScroll {
-	  overflow-x: auto;
-	  white-space: nowrap;
+
+      ul.starBullet li::marker {
+	  content: "★ ";
+	  font-size: 1.2em; /* optional */
       }
 
 
@@ -346,37 +354,53 @@
 	 necessary because the box itself scrolls, but we don't want these
 	 buttons to scroll. */
       
-      #jchronologyDurationHeadersWrapper {
+      #jchronologyButtonOverlay {
 	  position: relative;
       }
 
 
       /*----------------------------------------------------------------------*/
-      /* This is the overflow box itself.  It should be tall enough that
-	 vertical overflow should never be an issue, but we do need it to
-	 scroll horizontally with the rest of the chronology area.  To handle
-	 that, I place a div 'jchronologyDurationHeadersScrollSupport' within
-	 it, and set the width under program control. */
+      /* This is the overflow box itself.  You need to ensure it is created
+	 tall enough that vertical overflow should never be an issue. */
       
-      #jchronologyDurationHeaders {
-	  overflow-x: auto;
+      #jchronologyDurationHeadersWrapper {
+	  border-left:  var(--commonBorderDefinition);
+	  border-right: var(--commonBorderDefinition);
+	  border-top:   var(--commonBorderDefinition);
+	  position: relative;
+	  overflow-x: scroll;
 	  overflow-y: hidden;
+    	  -webkit-overflow-scrolling: touch; /* I _think_ this is for iOS. */
+	  -ms-overflow-style: none;  /* hide scrollbar in IE/Edge */
+	  scrollbar-width: none;     /* hide scrollbar in Firefox */
       }
+      
+      #jchronologyDurationHeadersWrapper::-webkit-scrollbar {
+	  display: none;            /* hide scrollbar in Chrome/Safari */
+      }
+
 
 
       /*----------------------------------------------------------------------*/
       /* Buttons. */
       
-      #jchronologyHelpButton, #jChronologyDateInfoButton {
+      #jchronologyHelpButton, #jchronologyDateInfoButton {
 	  position: absolute;
 	  top: 5px;
 	  z-index: var(--buttonZIndex);
 	  pointer-events: auto;
       }
 
-      #jChronologyDateInfoButton {
+
+      #jchronologyDateInfoButtonLabel {
+	  font-size: small;
+      }
+
+
+      #jchronologyDateInfoButton {
 	  left: 5px;
       }
+
 
       #jchronologyHelpButton {
 	  right: 5px;
@@ -388,9 +412,6 @@
       /* Label which indicates which alternative chronology is being shown. */
 
       #activeAlternativeChronologyName {
-	  position: absolute;
-	  bottom: 5px;
-	  left: 5px;
 	  font-size: small;
 	  line-height: 1.1;
 	  z-index: var(--activeAlternativeChronologyNameZIndex);
@@ -402,24 +423,32 @@
       /* The actual overflow box itself. */
       
       #jchronologyDurationHeaders {
+	  overflow-x: scroll;
+
+    	  -webkit-overflow-scrolling: touch; /* I _think_ this is for iOS. */
+	  -ms-overflow-style: none;  /* hide scrollbar in IE/Edge */
+	  scrollbar-width: none;     /* hide scrollbar in Firefox */
+
 	  position: relative;
-	  padding-top: 1em;          
 	  padding-bottom: 0;
 	  height: calc(4 * 1.5em + 5px);
   	  background: var(--clrDurationHeadersBackground);
-	  border-left:  2px solid var(--clrMainContainerBorder);
-	  border-right: 2px solid var(--clrMainContainerBorder);
-	  border-top:   2px solid var(--clrMainContainerBorder);
 	  border-bottom: 2px dotted var(--clrMainContainerBorder);
-	  overflow: hidden; /* We don't want this to scroll vertically.  It will scroll horizontally in due course, but taht will be under program control. */
+
+	  min-width: 0;
       }
 
+      #jchronologyDurationHeaders::-webkit-scrollbar {
+	  display: none; /* Hide scrollbar in Chrome/Safari. */
+      }
 
+      
       /* Generic style for duration lines in the overflow box. */
       .jchronologyDurationHeaderLine {
 	  position: absolute;
 	  bottom: 0;
-	  border-left: 4px dotted red; /* Colour is always overridden by Javascript. */
+	  border-left: var(--durationHeaderLineWidth) dotted red; /* Colour is always overridden by Javascript. */
+	  transform: translateX(-2px); /* Nasty fudge factor.  This centres the lines above the duration lines. */
       }
 
       /* Label above the line */
@@ -430,6 +459,7 @@
 	  transform: translate(5px, 80%);  /* small nudge right for spacing */
 	  white-space: nowrap;
 	  font-weight: bold;
+	  pointer-events: none;
       }
 
 
@@ -457,15 +487,17 @@
       /*----------------------------------------------------------------------*/
 
       #jchronologyColumnsContainer {
+	  border-left: var(--commonBorderDefinition);
+	  border-right: var(--commonBorderDefinition);
+	  border-bottom: var(--commonBorderDefinition);
 	  display: grid;
 	  grid-auto-flow: column; /* lay out columns side by side */
 	  grid-template-columns: 200px 200px 200px 1fr; /* Altered under program control. */
-	  overflow: auto;
+	  overflow-x: hidden;
+	  overflow-y: auto;
 	  width: 100%;
 	  background: var(--clrChronologyContainerBackground);
-	  border-left: 2px solid var(--clrChronologyContainerBorder);
-	  border-right: 2px solid var(--clrChronologyContainerBorder);
-	  border-bottom: 2px solid var(--clrChronologyContainerBorder);
+	  -webkit-overflow-scrolling: touch;
       }
 
 
@@ -776,44 +808,45 @@
   
   <body>
     <!-- Fixed layout -->
+
     <!-- Used to make it possible to resolve calc values in Javascript.  See references to dummyRootResolver in j_chronology.js. -->
     <div id='dummyRootResolver' style='display:none' verticalSpaceForDatesMinimumToAvoidOverlap='margin-top' verticalSpacePerYearForAmDates='margin-right' verticalSpacePerYearForNonAmDates='margin-bottom'></div>
+
     <!-- Used to work out the size of tick labels. -->
     <div id='getLabelSizeForTickMarks' class='jchronologyTickMarkDateLabel' style='position:absolute; visibility:hidden; left:-9999px; top:-9999px;'>???</div>
 
-    <div id='HEADER'>
-      <h2 style='color:var(--clrText)'>Chronology</h2>
-      <div id='info-box'>
-	<div id='copyToClipboardConfirmation' class='fadingPopUp'>URL copied to clipboard</div>
-	<div id='info-box-content' style='padding:10px;'></div>
-      </div>
-      
-      <div id='jchronologyDurationHeadersWrapper'>
-	<button type='button' class='jframework-vanillaButton' title='Chronology selection' id='jChronologyDateInfoButton'
-		style='padding:2px; font-weight:bold; font-size:medium' onclick='JEventHandlers.showDateHelp()'>Alt dates</button>
-	<div id='activeAlternativeChronologyName'></div>
+    <div id='flexContainerOverall' style='display: flex; flex-direction: column; height: 100vh'>
+      <div id='HEADER' style='flex: 0 0 auto'>
+	<h2 style='color:var(--clrText)'>Chronology</h2>
+	<div id='info-box'>
+	  <div id='copyToClipboardConfirmation' class='fadingPopUp'>URL copied to clipboard</div>
+	  <div id='info-box-content' style='padding:10px;'></div>
+	</div>
 
-	<button type='button' class='jframework-vanillaButton button' title='Help' id='jchronologyHelpButton'
-		style='padding-left:6px; padding-right:6px; padding-top:0; padding-bottom:0; font-weight:bold; font-size:x-large'
-		onclick='JEventHandlers.showHelpMenu()'>?</button>
+	<div id='jchronologyDurationHeadersWrapper'>
+	  <button type='button' class='jframework-vanillaButton' title='Chronology selection' id='jchronologyDateInfoButton'
+		  style='padding:2px; font-weight:bold; font-size:medium;' onclick='JEventHandlers.showDateHelp()'>Alt dates</button>
+	  <button type='button' class='jframework-vanillaButton' title='Help' id='jchronologyHelpButton'
+		  style='padding-left:6px; padding-right:6px; padding-top:0; padding-bottom:0; font-weight:bold; font-size:medium'
+		  onclick='JEventHandlers.showHelpMenu()'>?</button>
+	  <div id='jchronologyDurationHeaders'>
+	    <div id='jchronologyDurationHeadersScrollSupport' style='position:relative;height:100%;display: block'>
+	      <div id='activeAlternativeChronologyName' style='position:absolute; bottom:2px; left:5px; pointer-events:none'></div>
+	    </div>
+	  </div>
+	</div> <!-- jchronologyDurationHeadersWrapper --> 
+      </div> <!-- #HEADER -->
 
-	<div id='jchronologyDurationHeaders' class='horizontalSyncScroll'>
-	  <div id='jchronologyDurationHeadersScrollSupport'></div> <!-- To make the horizontal scrolling, I need to set the scrollWidth of this element, not of jchronologyDurationHeaders.  If you want to know why, ask ChatGPT. -->
-	</div> <!-- jchronologyDurationHeaders -->
-	  
-      </div> <!-- jchronologyDurationHeadersWrapper --> 
-    </div> <!-- #HEADER -->
 
-    <div id='CONTENT'> <!-- The main body of the screen.  This is automatically sized to fill the gap between header and footer. -->
-      <div id='jchronologyColumnsContainer' class='horizontalSyncScroll'>
+      <div id='jchronologyColumnsContainer' style='flex: 1; min-height: 0; overflow: auto;'>
 	<!-- The columns O, M, T etc referred to above.  If defined here each would look something like
 	       <div id='jchronologyOtherDates' class='jchronologyBodyColumn'></div>
              but they are, in fact created by Javascript.  See above for discussion.
-	-->
+        -->
       </div>
-    </div> <!-- #CONTENT -->
 
-    <div id='FOOTER' style='height:5px;'> </div>
+      <div id='FOOTER' style='height:10px;'>&nbsp;</div>
+    </div> <!-- id='flexContainerOverall' -->
     <!-- End of fixed layout -->
     
 
@@ -826,70 +859,79 @@
     <div id='modalDialogOverlay' class='jframework-modalDialogOverlay'></div>
 
     <!-- Chronology selection modal -->
-    <div class='jframework-modalDialog jframework-draggableContainer' id='dateHelp' style='max-width:min(90vh, 40em)'>
+    <dialog class='jframework-draggableContainer' id='dateHelp' style='max-width:min(90vh, 40em)'>
       <div aria-label='Chronology selection' class='jframework-modalDialogHeader jframework-draggableHeader' style='background:var(--clrHighlightBg)'>
-	Chronology selection<button title='Close chronology selection window' aria-label='Close chronology selection window' class='jframework-modalDialogCloseBtn'>✖</button>
+	Alternative date selector<button title='Close chronology selection window' aria-label='Close chronology selection window' class='jframework-modalDialogCloseBtn' onclick='JEventHandlers.hideDateHelp()'>✖</button>
       </div>
 
       <div class='jframework-modalDialogBody' style='background:white'>
-	<p>The right hand column of dates below is based on <a class='jFrameworkLink' href='@stepBibleChronologyDocNumberingSystemsBookmark' target='_blank' rel='noopener noreferrer'>
-	    one system of modern scholarship</a>.  Here, early dates follow the <a class='jFrameworkLink' href='@stepBibleChronologyDoc@stepBibleChronologyDocNumberingSystemsBookmark' target='_blank' rel='noopener noreferrer'>
-	    ancient Jewish <i>AM</i> (&lsquo;Anno Mundi&rsquo;, 'Year of the World')</a> scheme.
+	<p>The right-hand date column represents a conservative dating scheme.
+	  Early dates employ the <button class='jframework-linkAsButton' href='@stepBibleChronologyDoc@stepBibleChronologyDocNumberingSchemesBookmark' target='_blank' rel='noopener noreferrer'>
+	    Jewish AM (&lsquo;Year of the World&rsquo;)</button>
+	  scheme.
 
-	<p>The left hand column shows a system of your choice.  You can use this to compare two schemes ...</p>
+	<p>You can choose an alternative scheme to appear in the left-hand column.  The choices are:</p>
 
 	<div class='panel flex' style='background:lightgray;border:1px solid black'>
 	  <div class='content'>
-	      <span style='font-weight:bold; color:var(--clrPrimary3)'>EITHER</span><br><br> Click here to select, as the left hand column, the 17th century scheme drawn up by
-	      <a class='jFrameworkLink' href='@stepBibleChronologyDoc@stepBibleChronologyDocUssherBookmark' target='_blank' rel='noopener noreferrer'>Archbishop James Ussher</a>:
-	      <div>
-		<label><input type='checkBox' id='ussherCheckbox' onChange='JEventHandlers.ussherCheckboxToggled(this)' checked>&nbsp;Ussher</label>
-	      </div>
+	    <label>
+	      <input type='radio' name='stepChronologyUssherOrModern' value='Ussher'>
+	      <button class='jframework-linkAsButton' href='@stepBibleChronologyDoc@stepBibleChronologyDocUssherBookmark' target='_blank' rel='noopener noreferrer'>17th C James Ussher</button>
+	    </label>
+	    <br>
+	    <br>
+	    <label>
+	      <input type='radio' name='stepChronologyUssherOrModern' value='Modern'>
+	      <button class='jframework-linkAsButton' href='@stepBibleChronologyDoc@stepBibleChronologyDocModernDatesBookmark' target='_blank' rel='noopener noreferrer'>Alternative schemes</button>
+	      <span style='font-weight:normal'>based on the following options:<sup>★</sup></span>
+	    </label>
 	  </div>
-	</div>
 
-	<br>
-	
-	<div id='modernChronologySelector' class='panel flex' style='background:lightgray;border:1px solid black'>
-	  <div class='content'>
-	    <span style='font-weight:bold; color:var(--clrPrimary3)'>OR</span><br><br>Make one choice from each of the lists below to select, as the left hand column, a scheme based upon more modern scholarship.<br><br>
+
+	  <div id='modernChronologySelector' style='margin-left:2em'>
 	    <div class='optionGroup'>
 	      <div class='optionLabel'>
-		Some ancient translations have different dates in the AM section:
+		<button class='jframework-linkAsButton' href='@stepBibleChronologyDoc@stepBibleChronologyDocAncientVersionsBookmark' target='_blank' rel='noopener noreferrer'>Ancient traditions</button> give different dates to some early events:
 	      </div>
 
 	      <div class='optionRow'>
-		<label><input type='radio' name='DateCategory' value='Hebrew' checked>Hebrew dates</label>&nbsp;&nbsp;&nbsp;
-		<label><input type='radio' name='DateCategory' value='GreekLxx'>Greek LXX dates</label>&nbsp;&nbsp;&nbsp;
-		<label><input type='radio' name='DateCategory' value='Samaritan'>Samaritan dates</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='stepChronologyDateCategory' value='Hebrew'>Hebrew dates</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='stepChronologyDateCategory' value='GreekLxx'>Greek LXX dates</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='stepChronologyDateCategory' value='Samaritan'>Samaritan dates</label>&nbsp;&nbsp;&nbsp;
+	      </div>
+
+	    </div>
+
+	    <div class='optionGroup'>
+	      <div class='optionLabel'>
+		Opinions differ as to <button class='jframework-linkAsButton' href='@stepBibleChronologyDoc@stepBibleChronologyDocLengthOfTimeInEgyptBookmark' target='_blank' rel='noopener noreferrer'>how long Isrrael spent in Egypt</button>:
+	      </div>
+
+	      <div class='optionRow'>
+		<label><input type='radio' name='stepChronologyYearsInEgypt' value='400'>400 years</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='stepChronologyYearsInEgypt' value='200'>200 years</label>
 	      </div>
 	    </div>
 
 	    <div class='optionGroup'>
 	      <div class='optionLabel'>
-		Israel&rsquo;s &lsquo;400 years&rsquo; in Egypt (Gen.15.13) could have started when either Abraham or Jacob went there, meaning that the time may have been either 200 or 400 years (see
-		<a class='jFrameworkLink' href='@stepBibleChronologyDoc@stepBibleChronologyDoc@stepBibleChronologyDocLengthOfTimeInEgyptBookmark' target='_blank' rel='noopener noreferrer'><i>Length of time in Egypt</i></a>).
+		<button class='jframework-linkAsButton' href='@stepBibleChronologyDoc@stepBibleChronologyDoc@stepBibleChronologyDocDateOfExodusBookmark' target='_blank' rel='noopener noreferrer'>The Exodus</button> is later in modern scholarship.
 	      </div>
 
 	      <div class='optionRow'>
-		<label><input type='radio' name='YearsInEgypt' value='400' checked>400 years</label>&nbsp;&nbsp;&nbsp;
-		<label><input type='radio' name='YearsInEgypt' value='200'>200 years</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='stepChronologyExodusDate' value='15'>15th century</label>&nbsp;&nbsp;&nbsp;
+		<label><input type='radio' name='stepChronologyExodusDate' value='13'>13th century</label>
 	      </div>
 	    </div>
 
-	    <div class='optionGroup'>
-	      <div class='optionLabel'>
-		Traditionally the Exodus was early, but scholars often date it later (see
-		<a class='jFrameworkLink' href='@stepBibleChronologyDoc@stepBibleChronologyDoc@stepBibleChronologyDocDateOfExodusBookmark' target='_blank' rel='noopener noreferrer'><i>Date of the Exodus</i></a>).
-	      </div>
-
-	      <div class='optionRow'>
-		<label><input type='radio' name='ExodusDate' value='15' checked>15th century</label>&nbsp;&nbsp;&nbsp;
-		<label><input type='radio' name='ExodusDate' value='13'>13th century</label>&nbsp;&nbsp;&nbsp;
-	      </div>
-	    </div>
-	  </div> <!-- content -->
-	</div> <!-- panel flex -->
+	    <ul class='starBullet'>
+	      <li style='margin-bottom:10px'>The right-hand date column is based taking the first option in each group.</li>
+	      <li class>Choosing &lsquo;400 years&rsquo; and &lsquo;13th century&rsquo; gives
+		<button class='jframework-linkAsButton' href='@stepBibleChronologyDoc@stepBibleChronologyDocConcurrentJudgesBookmark' target='_blank' rel='noopener noreferrer'>concurrent judges</button>.
+	      </li>
+	    </ul>
+	  </div> <!-- panel flex -->
+	</div> <!-- content -->
 
 	<br>
 	
@@ -898,34 +940,26 @@
 	  <button id='alternativeChronologyCancel' class='jframework-vanillaButton button'>Cancel</button>
 	</div>
 
+	<br>
+	
       </div><!-- class='jframework-modalDialogBody' style='background:white' -->
-    </div> <!-- dateHelp -->
+    </dialog> <!-- dateHelp -->
 
 
     <!-- Help modal -->
-    <div class='jframework-modalDialog jframework-draggableContainer' id='help' style='max-width:min(90vh, 50em)'>
+    <dialog class='jframework-draggableContainer' id='help' style='max-width:min(90vh, 50em)'>
       <div aria-label='Help' class='jframework-modalDialogHeader jframework-draggableHeader' style='background:var(--clrHighlightBg)'>
-	Help<button title='Close help window' aria-label='Close help window' class='jframework-modalDialogCloseBtn'>✖</button>
+	Help<button title='Close help window' aria-label='Close help window' class='jframework-modalDialogCloseBtn' onclick='document.getElementById("help").close()'>✖</button>
       </div>
 
 
       <div class='jframework-modalDialogBody' style='background:white'>
-	<div style='background: var(--jframework-clrInfoAndPopUpBackground);margin:1em;padding:1em;border:1px solid black'>
-	  <p style='color:var(--jframework-clrStandoutText); font-weight:bold;'>This box gives you enough to get started.<br><br>
-	  The information which follows this box is for interest only &mdash; you don&rsquo;t need to have read it in order to start.</p>
-	  <p>On a wide screen you will see the following:</p>
-	  <ul style='list-style-type:disc; padding-left: 20px'>
-	    <li style='margin-bottom:0.5em'><b>Top left</b>: A search box which lets you look for events.</li>
-	    <li style='margin-bottom:0.5em'><b>Bottom left</b>: A list of verses relevant to the event you have selected.</li>
-	    <li style='margin-bottom:0.5em'><b>Top right</b>: The &lsquo;information box&rsquo;, which gives detailed information about the event(s).</li>
-	    <li style='margin-bottom:0.5em'><b>Bottom right</b>: The timeline.</li>
+	<div style='background:lightGray;margin:1em;padding:1em;border:1px solid black'>
+	  <ul style='margin-left:20px;'>
+	    <li style='margin-bottom:6px;'>Click on any of the text associated with a year to select that year and see information about it.</li>
+	    <li style='margin-bottom:6px;'>You will see there are <i>two</i> dates for each year.  Opinion and tradition differs as to the precise dates of some events.  This is discussed below.</li>
+	    <li>Vertical lines show <i>durations</i> &mdash; for example, people&rsquo;s lifespans or the reigns of kings.  They are coloured as follows:</li>
 	  </ul>
-
-	  <p>On a narrow screen, this information is split across several tabs.</p>
-	  
-	  <p>To select an event, click on it, or use the search box. The display will change automatically to reflect the event you have chosen.</p>
-
-	  <p>Vertical lines show <i>durations</i> &mdash; for example, people&rsquo;s lifespans or the reigns of kings.  They are coloured as follows:</p>
 
 	<table>
 	  <tr>
@@ -957,13 +991,14 @@
 
 
 	<h4 style='width:100%;border-bottom: 1px solid black'>About the dates and chronologies</h4>
-	<p>The dates of the various events appear to the left of the timeline.</p>
-	<p>Most of them use the familiar BC/AD representation, but early dates are marked &lsquo;AM&rsquo;.</p>
-	<p>The &lsquo'Dates?&rsquo; button above the dates explains all of this.</p>
-	<p>You can find much more information about biblical chronology in the document
-	&lsquo;<a class='jFrameworkLink' href='@stepBibleChronologyDoc' target='_blank' rel='noopener noreferrer'>STEPBible&rsquo;s timeline</a>.&rsquo;</p>
+	<p>Opinion and tradition differs as to the precise dates of some events.</p>
+	<p>Because of this, we show <i>two</i> dates for each event.</p>
+	<p>The right-hand date represents a conservative dating scheme based upon modern scholarship.</p>
+	<p>You can use the &lsquo;Alt Dates&rsquo; button to choose the alternative scheme from which the left-hand date is drawn.</p>
+	<p>Most dates use the familiar BC/AD representation, but early dates use the Jewish &lsquo;AM&rsquo; (Year of the World) scheme.</p>
+	<p>You can find much more information about all of this in the document <a class='jFrameworkLink' href='@stepBibleChronologyDoc' target='_blank' rel='noopener noreferrer'>STEPBible&rsquo;s timeline</a>.</p>
       </div> <!-- .modalDialogBody -->
-    </div> <!-- #helpModal -->
+    </dialog> <!-- #helpModal -->
 
     <script type='module'>
       import { JChronology }     from '/js/J_AppsJs/J_Chronology/j_chronology.js';      // The application main class.

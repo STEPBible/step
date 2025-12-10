@@ -313,6 +313,7 @@ class _ClassJRenderer
 
 	this.adjustDimensionsAndPositions();
 	this._renderDurations(durationDetails);
+
 	if ('onload' != callType)
 	    this.doDurationHeaders();
 
@@ -725,7 +726,6 @@ class _ClassJRenderer
 
 	if (isRegency)
 	    newLine.classList.add('regency');
-//	    newLine.style.background = `repeating-linear-gradient(to bottom, ${colour} 0 10px, yellow 10px 20px)`;
 
 	if (_ClassJChronologyUtilities.C_Dbg)
 	{
@@ -1738,9 +1738,9 @@ class _ClassAlternativeChronologies
 	if (s.includes('_'))
 	{
 	    var x = s.split('_');
-	    x[0] = x[0] + ' dates'
-	    x[1] = 'Egypt yrs: ' + x[1];
-	    x[2] = 'Exodus C' + x[2] + ' BC';
+	    x[0] = x[0];
+	    x[1] = 'Egypt ' + x[1] + ' yrs';
+	    x[2] = x[2] + 'th C Exodus';
 	    s = x.join('<br>');
 	}
 	
@@ -2030,7 +2030,7 @@ class _ClassJChronologyPresentationHandler
     /* Fills the info box for a pseudo event which represents a collection of
        sceripture dates associated with the given chapter. */
     
-    _setInfoBoxContentForChapterEvent (entry, initialContent = '')
+    _setInfoBoxContentForChapterEvent (entry)
     {
 	/**********************************************************************/
 	const infoBox = this._getInfoBox();
@@ -2038,11 +2038,19 @@ class _ClassJChronologyPresentationHandler
 	const refs = JChronologyData.getChapterRefsAsString(entry);
 	const caveatsA = refs.includes('?') ? ' (Question marks against references highlight chapters whose dates are particularly open to debate.)' : '';
 
+	var scripturesFromChapterData = JChronologyData.getChapterRefs(entry);
+	if (0 != scripturesFromChapterData.length)
+	{
+	    scripturesFromChapterData = scripturesFromChapterData.map(x => `<jLink data-type='S' data-ref='${x[0]}' onclick='JEventHandlers.handleLink(event)'>${x[0]}</jLink>`).join("; ");
+	    scripturesFromChapterData = JChronologyData.withLinks(scripturesFromChapterData);
+	    scripturesFromChapterData = '<br><br>Chapters about this time: </b> ' + scripturesFromChapterData + '.<br><br>';
+	}
+
 
 	
 	/**********************************************************************/
 	(async () => {
-	    var content = initialContent + '<br>'; // date + intro + '<br><br>';
+	    var content = '';
 	    for (const chapterRef of refs.split('; '))
 	    {
 		const link = _ClassJChronologyUtilities.withChapterScriptureLinks(chapterRef);
@@ -2054,7 +2062,7 @@ class _ClassJChronologyPresentationHandler
 		content += associatedText;
 	    }
 
-	    content = content.slice(0, -4);
+	    content = scripturesFromChapterData + content.slice(0, -4);
 
 	    infoBox.innerHTML =
 		`<div style='display:flex; align-items:center'>
@@ -2084,9 +2092,16 @@ class _ClassJChronologyPresentationHandler
 	const date = JChronologyData.getAnnotatedYearModernDate(entry);
 	const shortDescription = JChronologyData.withLinks(JChronologyData.getDescription(entry));
 	const scripturesFromChronologyData = JChronologyData.getAnnotatedYearScriptureRefs(entry);
-	const scripturesFromChapterData = JChronologyData.getChaptersFromChapterAndYearData(entry);
 	const extraBiblicalRefs = JChronologyData.getAnnotatedYearNonScriptureRefs(entry);
 	const longDescription = JChronologyData.getAnnotatedYearArticle(entry);
+
+	var scripturesFromChapterData = JChronologyData.getChaptersFromChapterAndYearData(entry);
+	if (0 != scripturesFromChapterData.length)
+	{
+	    scripturesFromChapterData = scripturesFromChapterData.map(x => `<jLink data-type='S' data-ref='${x.ref}' onclick='JEventHandlers.handleLink(event)'>${x.ref}</jLink>`).join("; ");
+	    scripturesFromChapterData = JChronologyData.withLinks(scripturesFromChapterData);
+	    scripturesFromChapterData = '<br><br>hapters about this time: </b> ' + scripturesFromChapterData + '.';
+	}
 
 	var caveatsA = '';
 	var caveatsB = '';
@@ -2115,13 +2130,8 @@ class _ClassJChronologyPresentationHandler
 	    if ('' != scripturesFromChronologyData) content += '<b>Scripture references:</b> ' + scripturesFromChronologyData + '<br><br>';
 	    if ('' != extraBiblicalRefs) content += '<b>External references:</b> ' + extraBiblicalRefs + '<br><br>';
 	    content += longDescription;
+	    content += scripturesFromChapterData;
 	    content += (chapterSummaries == '' ? '' : '<br><br>') + chapterSummaries;
-	    if (0 != scripturesFromChapterData.length)
-	    {
-		var x = scripturesFromChapterData.map(x => `<jLink data-type='S' data-ref='${x.ref}' onclick='JEventHandlers.handleLink(event)'>${x.ref}</jLink>`).join("; ");
-		x = JChronologyData.withLinks(x);
-		content += '<br><b>Chapters about this time: </b> ' + x + '.';
-	    }
 
 	    infoBox.innerHTML =
 		`<div style='display:flex; align-items:center'>

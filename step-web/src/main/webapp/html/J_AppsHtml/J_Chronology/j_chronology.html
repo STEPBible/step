@@ -623,6 +623,20 @@
       }
 
 
+      /* The net two are used to cater for Ussher dates which may or may not have an arrow at their left, which may cause things not to line up.
+	 See jchronology.sj / _updateDateColumnDealWithArrows. */
+      .jchronologyArrowableDate {
+	  display: inline-block;
+	  padding-right: 1em;   /* adjust based on arrow width */
+      }
+
+      .jchronologyArrowableDate:not(.hasArrow)::after {
+	  content: "↓";    /* same arrow */
+	  visibility: hidden;
+      }
+
+
+
       /* 'TickMark' perhaps isn't a good name.  It's one of the little lozenge-ish things which mark every 50 years or whatever on the timeline. */
       .jchronologyTickMarkHolder {
 	  position: relative;
@@ -904,7 +918,7 @@
 
 	    <div class='optionGroup'>
 	      <div class='optionLabel'>
-		<button class='jframework-linkAsButton' href='@stepBibleChronologyDoc@stepBibleChronologyDocLengthOfTimeInEgyptBookmark' target='_blank' rel='noopener noreferrer'>How long was Isrrael in Egypt?</button>:
+		<button class='jframework-linkAsButton' href='@stepBibleChronologyDoc@stepBibleChronologyDocLengthOfTimeInEgyptBookmark' target='_blank' rel='noopener noreferrer'>How long was Israel in Egypt?</button>:
 	      </div>
 
 	      <div class='optionRow'>

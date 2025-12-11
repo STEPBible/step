@@ -1738,7 +1738,7 @@ class _ClassAlternativeChronologies
 	if (s.includes('_'))
 	{
 	    var x = s.split('_');
-	    x[0] = x[0];
+	    x[0] = x[0].replace('LXX', ' LXX');
 	    x[1] = 'Egypt ' + x[1] + ' yrs';
 	    x[2] = x[2] + 'th C Exodus';
 	    s = x.join('<br>');
@@ -1833,6 +1833,8 @@ class _ClassAlternativeChronologies
     static _updateDateColumn (cacheKey)
     {
 	this.displayActiveAlternativeChronologyName(cacheKey);
+
+	const isUssher = cacheKey.includes('Ussher');
 	
 	const tags = document.getElementsByClassName('jchronologyOtherDateElement');
 	for (const tag of tags)
@@ -1840,12 +1842,42 @@ class _ClassAlternativeChronologies
 	    const elementKey = tag.getAttribute('data-key');
 	    if (!elementKey) continue;
 	    const x = JChronologyData.getEntryGivenKey(elementKey);
-	    const revisedContent = JChronologyData.getField(JChronologyData.getEntryGivenKey(elementKey), cacheKey);
+	    var revisedContent = JChronologyData.getField(JChronologyData.getEntryGivenKey(elementKey), cacheKey);
+	    revisedContent = this._updateDateColumnDealWithArrows(revisedContent, isUssher);
 	    tag.innerHTML = revisedContent;
 	}
 	
 	JRenderer.adjustDimensionsAndPositions(true);
     }
+
+
+    /**************************************************************************/
+    /* Some dates (I think only in the Ussher scheme) have up- or down- arrows
+       at their right to indicate that in other chronologies they may be
+       placed differently.  Left to their own devices, these arrows mean
+       that the actual date designators themselves do not line up correctly
+       one under another.
+
+       On Ussher dates, some sneaky CSS, courtesy of ChatGPT, fixes this.
+
+       Note that (again according to ChatGPT) you can't force things to line
+       up properly simply by putting one of the various Unicode space
+       characters on the right of things which lack down arrows, because the
+       size of the down-arrow will be font- and platform- dependent. */
+    
+    static _updateDateColumnDealWithArrows (content, isUssher)
+    {
+	if (!isUssher)
+	    return content;
+	
+	if (content.includes('↑') || content.includes('↓'))
+	    content = '<span class="jchronologyArrowableDate hasArrow">' + content + '</span>';
+	else
+	    content = '<span class="jchronologyArrowableDate">' + content + '</span>';
+
+	return content;
+    }
+	
 }
 
 
@@ -2043,7 +2075,7 @@ class _ClassJChronologyPresentationHandler
 	{
 	    scripturesFromChapterData = scripturesFromChapterData.map(x => `<jLink data-type='S' data-ref='${x[0]}' onclick='JEventHandlers.handleLink(event)'>${x[0]}</jLink>`).join("; ");
 	    scripturesFromChapterData = JChronologyData.withLinks(scripturesFromChapterData);
-	    scripturesFromChapterData = '<br><br>Chapters about this time: </b> ' + scripturesFromChapterData + '.<br><br>';
+	    scripturesFromChapterData = '<br><br><b>Chapters about this time: </b> ' + scripturesFromChapterData + '.<br><br>';
 	}
 
 
@@ -2100,7 +2132,7 @@ class _ClassJChronologyPresentationHandler
 	{
 	    scripturesFromChapterData = scripturesFromChapterData.map(x => `<jLink data-type='S' data-ref='${x.ref}' onclick='JEventHandlers.handleLink(event)'>${x.ref}</jLink>`).join("; ");
 	    scripturesFromChapterData = JChronologyData.withLinks(scripturesFromChapterData);
-	    scripturesFromChapterData = '<br><br>hapters about this time: </b> ' + scripturesFromChapterData + '.';
+	    scripturesFromChapterData = '<br><br><b>Chapters about this time: </b> ' + scripturesFromChapterData + '.';
 	}
 
 	var caveatsA = '';

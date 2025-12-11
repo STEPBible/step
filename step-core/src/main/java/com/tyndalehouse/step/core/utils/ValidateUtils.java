@@ -278,7 +278,7 @@ public final class ValidateUtils {
                         if (!(validateInputParm(key, value[i])))
                             return false; // already output error in validateInputParm
                     }
-                } else if (" q qFilter page sort context secondURL langFile ".indexOf(cmpKey) > -1) {
+                } else if (" q qFilter page sort context secondURL langFile fbclid ".indexOf(cmpKey) > -1) {
                     for (int i = 0; i < value.length; i++) {
                         if (value[i].length() == 0) continue;
                         if (!checkForObviousXSS(key, value[i], requestURI, true)) {

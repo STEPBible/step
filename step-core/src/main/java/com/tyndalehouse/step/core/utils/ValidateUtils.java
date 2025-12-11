@@ -264,7 +264,8 @@ public final class ValidateUtils {
         for (Map.Entry<String, String[]> entry : inputParms.entrySet()) {
             final String key = entry.getKey();
             final String[] value = entry.getValue();
-            if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome") || key.equals("clickvocab") || key.startsWith("colorCode") || key.startsWith("otGreek")) {
+            if (key.equals("debug") || key.equals("noredirect") || key.equals("skipwelcome") || key.equals("clickvocab") ||
+                key.startsWith("colorCode") || key.startsWith("otGreek")) {
                 if (value[0].equals(""))
                     continue; // The debug, noredirect and other parameters have no value so no additional checking is not required.
                 System.out.println("XSS kill unexpected value with key: " + key + " value: " + value[0] + " requestURI: " + requestURI);
@@ -278,7 +279,7 @@ public final class ValidateUtils {
                         if (!(validateInputParm(key, value[i])))
                             return false; // already output error in validateInputParm
                     }
-                } else if (" q qFilter page sort context secondURL langFile ".indexOf(cmpKey) > -1) {
+                } else if (" q qFilter page sort context secondURL langFile fbclid ".indexOf(cmpKey) > -1) {
                     for (int i = 0; i < value.length; i++) {
                         if (value[i].length() == 0) continue;
                         if (!checkForObviousXSS(key, value[i], requestURI, true)) {

@@ -33,9 +33,17 @@
 export class JFrameworkSharedConstants
 {
     /**************************************************************************/
+    static _stepBibleChronologyDoc = 'https://docs.google.com/document/d/1RM8mtL8zfimRVTFQn7yfskQO0VxgjNrs5Y3Qd1WZ9CU/edit?tab=t.0';
+    
     static _Constants = {
 	biblicalTimeline: 'https://www.TheBiblicalTimeline.org',
-	stepBibleChronologyDoc: 'https://docs.google.com/document/d/1RM8mtL8zfimRVTFQn7yfskQO0VxgjNrs5Y3Qd1WZ9CU/edit?tab=t.0',
+
+	stepBibleChronologyDoc: JFrameworkSharedConstants._stepBibleChronologyDoc,
+	stepBibleChronologyDocNumberingSystemsBookmark: JFrameworkSharedConstants._stepBibleChronologyDoc + '#bookmark=kix.54f0d6g3nyl',
+	stepBibleChronologyDocLengthOfTimeInEgyptBookmark: JFrameworkSharedConstants._stepBibleChronologyDoc + '#bookmark=id.cgnavp5dwizl',
+	stepBibleChronologyDocDateOfExodusBookmark: JFrameworkSharedConstants._stepBibleChronologyDoc+ '#bookmark=id.r5ibwrptpdyh',
+	stepBibleChronologyDocUssherBookmark: JFrameworkSharedConstants._stepBibleChronologyDoc + '#bookmark=id.r8p47fcyjmro',
+	
 	ussher: 'https://docs.google.com/document/d/1C35-x0vSCCePlAygvmh2eciwHLv_cs8G/preview',
 
 	chapterSummariesData: 'html/json/J_AppsJson/J_Framework/J_ChapterSummaries/j_framework_chapterSummaries.tsv',
@@ -48,12 +56,22 @@ export class JFrameworkSharedConstants
 
     /**************************************************************************/
     /* Returns the value for a given key, or null if there is no associated
-       value.  The key may optionally start with '@', which is ignored. */
+       value.  You may have a single key, optionally starting with '@' (which
+       is ignored), or you may have a @-separated list entries (again optionally
+       starting with '@', which is ignored.
+
+       The result is obtained by looking up each of the values in the
+       _Constants list defined here.  If any lookup fails, the function
+       returns null. */
     
     static getValue (key)
     {
 	if (key.startsWith('@')) key = key.slice(1);
-	return JFrameworkSharedConstants._Constants[key];
+	const keys = key.split('@');
+	const res = keys.map(it => this._Constants[it]);
+	if (res.some(it => !it))
+	    return null;
+	return res.join('');
     }
     
 	

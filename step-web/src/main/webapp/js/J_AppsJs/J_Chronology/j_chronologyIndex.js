@@ -12,7 +12,7 @@ import { ClassJFrameworkMultiframeCommunicationsSlave } from '/js/J_AppsJs/J_Fra
 import { ClassJFrameworkTableWithSearchBox }            from '/js/J_AppsJs/J_Framework/j_framework.tableWithSearchBox.js';
 import { JFrameworkUserSettings }                       from '/js/J_AppsJs/J_Framework/j_framework.userSettings.js';
 import { JFrameworkUtils }                              from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
-import { JChronologyDataUrl }                           from '/js/J_AppsJs/J_Chronology/j_chronologySharedCode.js';
+import { JChronologyData }                              from '/js/J_AppsJs/J_Chronology/j_chronologySharedCode.js';
 
 
 
@@ -69,8 +69,7 @@ class _ClassJChronologyTableHandler
 
 
         /**********************************************************************/
-        const dataUrl = JFrameworkUtils.getFullUrl(JChronologyDataUrl);
-	this._load(dataUrl, this._initB.bind(this));
+	JChronologyData.loadData(this._initB.bind(this));
 	window.addEventListener('blur', () => {
 	    this.lostFocus();
 	});
@@ -80,7 +79,7 @@ class _ClassJChronologyTableHandler
     /**************************************************************************/
     /* Called after data-load is complete. */
     
-    _initB (data)
+    _initB ()
     {
         /**********************************************************************/
         /* Fill in date and description table. */
@@ -90,12 +89,13 @@ class _ClassJChronologyTableHandler
             var tblBodyHtml = '';
 	    var ix = -1;
 	    
-	    data.forEach(line => {
-		const revisedLines = this._withLinks(line.text).split('<jChronCellBreak/>');
-		revisedLines.forEach(entry => {
+	    JChronologyData.getEntries().filter ( x => JChronologyData.isAnnotatedYearEntry(x) ) .forEach(dataFileEntry => {
+		const tblData = JChronologyData.getAnnotatedYearEvents(dataFileEntry);
+		tblData.forEach(tblEntry => {
+		    tblEntry = JChronologyData.withLinks(tblEntry);
 		    tblBodyHtml +=
 			`<tr data-searchTableIx='${++ix}'>` +
- 			`<td class='jframework-tb_col tb_col_1 jframework-clickable' data-dataKey='${line.key}'>${entry}</td>` +
+ 			`<td class='jframework-tb_col tb_col_1 jframework-clickable' data-dataKey='${JChronologyData.getKey(dataFileEntry)}'>${tblEntry}</td>` +
   			'</tr>';
 		});
 	    });
@@ -156,61 +156,6 @@ class _ClassJChronologyTableHandler
 	this._tableHandler.setTableSizeOmitting(this._headerHeight);
 	this._tableHandler.redraw();
     };
-
-
-
-    /**************************************************************************/
-    /* Loads the data and then arranges for the next part of the processing to
-       do its stuff. */
-    
-    _load (dataUrl, whenLoadedFn)
-    {
-	return fetch(dataUrl)
-	    .then(response => {
-		if (!response.ok) {
-		    throw new Error(`Failed to fetch: ${response.status}`);
-		}
-		return response.text();
-	    })
-
-	    .then(text => { // Success.
-		const lines = text.split(/\r?\n/);
-		if (lines[lines.length - 1].trim() === "") // A newline at the end of the file means the processing sees a blank line, which we do not want.
-		    lines.pop();
-
-		const data = lines.map(line => {
-		    var fields = line.split('\t', 99);
-		    if (fields[0].startsWith('D') || fields[0].startsWith('EC'))
-			return null;
-		    else
-			return { key: fields[0], text: fields[9].replaceAll('jChronDescriptionDate', 'b').trim() }; // Key and extended text fields.
-		})
-
-		whenLoadedFn(data.filter(x => x !== null));
-	    })
-	
-	    .catch(err => {
-		console.error('Error in _load', err);
-		//throw err; // rethrow if you want the caller to handle it too
-	    });
-    }
-
-
-    /**************************************************************************/
-    _withLinks (s)
-    {
-	return s
-	    .replaceAll('<jLink', '<span class="jframework-linkAsButton"')
-	    .replaceAll('jLink', 'span')
-	    .replaceAll('clickHandler', "onclick='JEventHandlers.handleLink(event)'");
-    }
-
-
-    /**************************************************************************/
-    _withoutLinks (s)
-    {
-	return s.replaceAll(/<jLink[^>]*>/, '').replaceAll('</jLink>', '');
-    }
 }
 
 export const JChronologyTableHandler = new _ClassJChronologyTableHandler();
@@ -252,6 +197,20 @@ class _ClassJEventHandlers extends ClassJFrameworkMultiframeCommunicationsSlave
     }
     
 
+    /****************************************************************************/
+    /* This gets called on small screens only.  On these, by default we'd see
+       only the search box until the user clics in it, at which point we'd also
+       see the search tab;e.  This (inherited) method arrnges for the search
+       table to be made visible straight away. */
+    
+    receiveActivation ()
+    {
+	const searchBox = document.getElementById('chronologySearchBox');
+	searchBox.click();
+	searchBox.focus();
+    }
+
+    
     /****************************************************************************/
     tableClickHandler (cell, column)
     {

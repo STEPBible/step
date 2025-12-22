@@ -262,7 +262,7 @@ function goToNewRowSection(item) {
 	}
     $(".tb_col").css("background-color", "white");
     $(row.cells[0]).css("background-color","cyan")
-    passages = passages.replace(/ /g, ";");
+    passages = passages.replace(/ /g, ";").replace(/luk.Act/, "act");
 
     if (!inIFrame) {
         var tabURL = urlPart1 + "/?skipwelcome&q=";
@@ -289,11 +289,11 @@ function goToNewSection(item) {
     var rows = $("#tb_heading").find("tr");
     var passages = "";
     if (item.innerText.length > 0) {
-        passages += rows[0].cells[colNum].innerText + item.innerText.replace(/[bc]/g, "");
+        passages += rows[0].cells[colNum].innerText + item.innerText;
         $(".tb_col").css("background-color", "white");
         $(item).css("background-color","cyan")
 
-        passages = passages.replace(/ /g, ";");
+        passages = passages.replace(/ /g, ";").replace(/LukeAct/, "Act");
         if (!inIFrame) {
             var tabURL = urlPart1 + "/?skipwelcome&q=";
         	tabURL += "reference=" + passages;

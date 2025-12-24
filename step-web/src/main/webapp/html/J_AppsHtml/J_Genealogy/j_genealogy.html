@@ -58,10 +58,19 @@
 
     /* Override on/off toggle labels for highlight relations toggle */
     #highlightRelationsToggle .onoffswitch-inner:before {
-	content: "Enable";
+	content: "Disable";
+	background-color: #c8d8dc;
+	color: #333;
     }
     #highlightRelationsToggle .onoffswitch-inner:after {
-	content: "Disable";
+	content: "Enable";
+    }
+
+    #highlightRelationsToggle .onoffswitch-switch {
+	top: 50%;
+	bottom: auto;
+	transform: translateY(-50%);
+	margin: 0 6px;
     }
 
 

@@ -31,6 +31,7 @@
   <link href='/css/J_AppsCss/J_Framework/j_framework.modalDialog.css' rel='stylesheet' media='screen'/>
   <link href='/css/J_AppsCss/J_Framework/j_framework.scrollRing.css' rel='stylesheet' media='screen'/>
   <link href='/css/J_AppsCss/J_Framework/j_framework.tableWithSearchBox.css' rel='stylesheet' media='screen'/>
+  <link href='/css/color_code_grammar.css' rel='stylesheet' media='screen'/>
 
   <style>
     :root {
@@ -168,11 +169,6 @@
 	border-radius: 4px;
 	color: inherit;
 	text-decoration: none;
-	transition: background-color 0.15s ease;
-    }
-
-    .layoutMenuOption:hover {
-	background-color: var(--clr2ndHover, #d3d3d3);
     }
 
     .layoutMenuOption .glyphicon-ok {
@@ -709,15 +705,21 @@
       
       <br>
       
-      <div class='layoutMenuOption' id='highlightRelationsToggle' style='justify-content: flex-start; gap: 10px;'>
-	<input type='checkbox'
-	       class='jframework-3dCheckbox'
-	       id='highlightRelationsCheckbox'
-	       title='Highlight siblings and children of selected person'
-	       onchange='ControlsHandler.toggleHighlightRelations(this.checked)'>
-	<label for='highlightRelationsCheckbox' title='Highlight siblings and children of selected person' style='cursor: pointer;'>
-	  Highlight <span class='layoutMenuHighlightExample layoutMenuHighlightExample--siblings'>siblings</span> and <span class='layoutMenuHighlightExample layoutMenuHighlightExample--children'>children</span> of selected person.
-	</label>
+      <div id='highlightRelationsToggle' style='display: flex; align-items: center; gap: 12px; padding: 8px 0;'>
+	<div class='onoffswitch'>
+	  <input type='checkbox' name='highlightRelationsSwitch' class='onoffswitch-checkbox'
+		 id='highlightRelationsCheckbox'
+		 onchange='ControlsHandler.toggleHighlightRelations(this.checked)'/>
+	  <label class='onoffswitch-label' for='highlightRelationsCheckbox'>
+	    <span class='onoffswitch-inner'></span>
+	    <span class='onoffswitch-switch'></span>
+	  </label>
+	</div>
+	<span title='Highlight siblings and children of selected person'>
+	  Highlight <span class='layoutMenuHighlightExample layoutMenuHighlightExample--siblings'>siblings</span>
+	  and <span class='layoutMenuHighlightExample layoutMenuHighlightExample--children'>children</span>
+	  of selected person.
+	</span>
       </div>
     </div>
   </div>

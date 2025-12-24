@@ -3039,7 +3039,7 @@ class _ClassPresentationHandler
 	try // Unhighlight the existing selection -- except we won't be able to if the previously highlighted node is no longer in the tree.
 	{   // try-catch avoids the need for a test which would rely on me successfully keeping tabs on what's going on.
 	    
-	    circleNodeFromIndex(this.getSelectedPersonIx()).style('fill', 'steelblue');
+	    circleNodeFromIndex(this.getSelectedPersonIx()).style('fill', null);
 	    textNodeFromIndex  (this.getSelectedPersonIx()).classed('highlightSelectedIndividual', false);
 	}
 	catch (e)
@@ -3051,7 +3051,11 @@ class _ClassPresentationHandler
 	/**********************************************************************/
 	/* Highlight the new node and update the info box. */
 	
-	circleNodeFromIndex(ix).style('fill', 'red');
+	const personRecord = personRecordFromIndex(ix);
+	const jesusLineCollection = this.SubtreeHighlightHandler.getJesusLineCollection();
+	const isOnJesusLine = jesusLineCollection && personRecord && jesusLineCollection.has(personRecord);
+	const selectedFillColor = isOnJesusLine ? '#8B0000' : '#DC143C';
+	circleNodeFromIndex(ix).style('fill', selectedFillColor);
 	textNodeFromIndex(ix).classed('highlightSelectedIndividual', true);
 	this._fillInfoBox(ix);
 

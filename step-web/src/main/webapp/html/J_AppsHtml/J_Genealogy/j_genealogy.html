@@ -709,14 +709,16 @@
       
       <br>
       
-      <a href='javascript:void(0)'
-	 class='layoutMenuOption'
-	 id='highlightRelationsToggle'
-	 title='Highlight siblings and children of selected person'
-	 onclick='ControlsHandler.toggleHighlightRelations()'>
-	<span>Highlight <span class='layoutMenuHighlightExample layoutMenuHighlightExample--siblings'>siblings</span> and <span class='layoutMenuHighlightExample layoutMenuHighlightExample--children'>children</span> of selected person.</span>
-	<span class='glyphicon glyphicon-ok' id='highlightRelationsCheck' style='visibility: hidden'></span>
-      </a>
+      <div class='layoutMenuOption' id='highlightRelationsToggle' style='justify-content: flex-start; gap: 10px;'>
+	<input type='checkbox'
+	       class='jframework-3dCheckbox'
+	       id='highlightRelationsCheckbox'
+	       title='Highlight siblings and children of selected person'
+	       onchange='ControlsHandler.toggleHighlightRelations(this.checked)'>
+	<label for='highlightRelationsCheckbox' title='Highlight siblings and children of selected person' style='cursor: pointer;'>
+	  Highlight <span class='layoutMenuHighlightExample layoutMenuHighlightExample--siblings'>siblings</span> and <span class='layoutMenuHighlightExample layoutMenuHighlightExample--children'>children</span> of selected person.
+	</label>
+      </div>
     </div>
   </div>
   <!-- Layout menu modal -->

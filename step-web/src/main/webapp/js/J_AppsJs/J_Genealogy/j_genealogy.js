@@ -3582,13 +3582,12 @@ const GraphicsHandler = new ClassGraphicsHandler();
 class _ClassControlsHandler
 { 
     /**************************************************************************/
-    toggleHighlightRelations ()
+    toggleHighlightRelations (newState)
     {
-	const checkIcon = document.getElementById('highlightRelationsCheck');
-	const newState = !CurrentHighlightRelations;
+	if (typeof newState === 'undefined')
+	    newState = !CurrentHighlightRelations;
+
 	CurrentHighlightRelations = newState;
-	if (checkIcon)
-	    checkIcon.style.visibility = newState ? 'visible' : 'hidden';
 	PresentationHandler.changeRelationsHighlighting(newState);
     }
 
@@ -3672,9 +3671,9 @@ class _ClassControlsHandler
 	document.getElementById('verticalSpacingSlider').value = CurrentVerticalSpacingTicks;
 	document.getElementById('numberOfGenerationsSlider').value = CurrentNumberOfGenerationsToGrowByOnEachExpansion;
 
-	const checkIcon = document.getElementById('highlightRelationsCheck');
-	if (checkIcon)
-	    checkIcon.style.visibility = CurrentHighlightRelations ? 'visible' : 'hidden';
+	const highlightCheckbox = document.getElementById('highlightRelationsCheckbox');
+	if (highlightCheckbox)
+	    highlightCheckbox.checked = CurrentHighlightRelations;
     }
 
   

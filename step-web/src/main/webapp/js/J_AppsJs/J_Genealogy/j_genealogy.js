@@ -156,6 +156,7 @@ const DefaultVerticalSpacingActualValue = 150;
 var CurrentNumberOfGenerationsToGrowByOnEachExpansion = DefaultNumberOfGenerationsToGrowByOnEachExpansion;
 var CurrentHorizontalSpacingTicks = 0;
 var CurrentVerticalSpacingTicks = 0;
+var CurrentHighlightRelations = false;
       
 
 
@@ -3389,7 +3390,7 @@ class _ClassPresentationHandler
     _refreshRelationsHighlighting (ix)
     {
 	this.changeRelationsHighlighting(false, this.getSelectedPersonIx());
-	if (document.getElementById('highlightRelations').checked)
+	if (CurrentHighlightRelations)
 	    this.changeRelationsHighlighting(true, ix);
     }
 
@@ -3581,6 +3582,17 @@ const GraphicsHandler = new ClassGraphicsHandler();
 class _ClassControlsHandler
 { 
     /**************************************************************************/
+    toggleHighlightRelations ()
+    {
+	const checkIcon = document.getElementById('highlightRelationsCheck');
+	const newState = !CurrentHighlightRelations;
+	CurrentHighlightRelations = newState;
+	if (checkIcon)
+	    checkIcon.style.visibility = newState ? 'visible' : 'hidden';
+	PresentationHandler.changeRelationsHighlighting(newState);
+    }
+
+    /**************************************************************************/
     hideBuiltInTreesDialog ()
     {
 	ModalDialogHandler.closeIfTopModalDialog(document.getElementById('builtInTreesMenu'));
@@ -3659,6 +3671,10 @@ class _ClassControlsHandler
 	document.getElementById('horizontalSpacingSlider').value = CurrentHorizontalSpacingTicks;
 	document.getElementById('verticalSpacingSlider').value = CurrentVerticalSpacingTicks;
 	document.getElementById('numberOfGenerationsSlider').value = CurrentNumberOfGenerationsToGrowByOnEachExpansion;
+
+	const checkIcon = document.getElementById('highlightRelationsCheck');
+	if (checkIcon)
+	    checkIcon.style.visibility = CurrentHighlightRelations ? 'visible' : 'hidden';
     }
 
   

@@ -81,6 +81,10 @@
     --jframework-clrGreyedBtnText: rgb(192, 192, 192);
     
     --jframework-clrStandoutText: var(--clrHighlight);
+    --jframework-clrDividerGrip: var(--clrSecondary2);
+    --jframework-clrDividerGripHover: var(--clrHighlight);
+    --jframework-clrDividerGripActive: var(--clrPrimary4);
+    --jframework-clrDividerBgHover: var(--clrPrimary0);
 
     --jframework-clrPopUpMenuItemTextSelected: white;
     --jframework-clrPopUpMenuItemTextUnselected: black;

@@ -55,21 +55,63 @@ jframework-iframeList {
 
 .jframework-widthResizer {
     height: 100vh;
-    width: 5px;
+    width: 8px;
     cursor: ew-resize;
-    background: transparent;
-    border-right: 1px solid #000;
+    background-color: var(--clrSecondary1);
+    border-left: 1px solid var(--clrSecondary2);
+    border-right: 1px solid var(--clrSecondary2);
+    color: var(--jframework-clrDividerGrip);
     position: relative;
+    transition: background-color 120ms ease, color 120ms ease;
 }
 
+.jframework-widthResizer::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+    background-size: 4px 4px;
+}
 
 .jframework-heightResizer {
     height: 5px;
     cursor: ns-resize;
-    background: transparent;
-    border-top: 4px dotted salmon;
+    background-color: var(--clrSecondary1);
+    border-top: 1px solid var(--clrSecondary2);
+    border-bottom: 1px solid var(--clrSecondary2);
+    color: var(--jframework-clrDividerGrip);
+    position: relative;
+    transition: background-color 120ms ease, color 120ms ease;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.jframework-heightResizer::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 4px;
+    transform: translate(-50%, -50%);
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+    background-size: 4px 4px;
+}
+
+.jframework-widthResizer:hover,
+.jframework-heightResizer:hover {
+    color: var(--jframework-clrDividerGripHover);
+    background-color: var(--jframework-clrDividerBgHover);
+}
+
+.jframework-widthResizer:active,
+.jframework-heightResizer:active {
+    color: var(--jframework-clrDividerGripActive);
+    background-color: var(--clrLexiconFocusBG);
 }
 
 

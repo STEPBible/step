@@ -520,8 +520,19 @@ export class ClassJFrameworkMultiframeCommunicationsMaster
 	const that = this; // For debug.
 	
 	frame.addEventListener('load', function () {
-	    const resizeButton = this.contentWindow.document.getElementById('resizeButton');
-	    const navBar = this.contentWindow.document.getElementById('stepnavbar');
+	    const doc = this.contentWindow.document;
+	    if (doc && !doc.getElementById('step-suppress-header-sidebar-offset'))
+	    {
+		const style = doc.createElement('style');
+		style.id = 'step-suppress-header-sidebar-offset';
+		style.appendChild(doc.createTextNode('.row-offcanvas .sidebar-offcanvas { top: 0 !important; }'));
+		const head = doc.head || doc.getElementsByTagName('head')[0];
+		if (head)
+		    head.appendChild(style);
+	    }
+
+	    const resizeButton = doc.getElementById('resizeButton');
+	    const navBar = doc.getElementById('stepnavbar');
 
 	    if (navBar)
 		navBar.innerHTML = '<h2>Scriptures</h2>';

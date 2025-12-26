@@ -67,6 +67,9 @@
 
     --minimumSizeOfBigScreens: 960;
 
+    /* Panel edge spacing used by content pages. */
+    --jframework-panel-edge-spacing: 5px;
+
     
     /* Definitions common to framework applications. */
     --jframework-clrPopUpMenuItemBackgroundUnselected: var(--clrLexiconFocusBG);

@@ -303,7 +303,7 @@
 
             <%
                 if (!appManager.isLocal()) {
-            %> 
+            %>
                                         <li class="hidden-touch"><a href="/downloads.jsp" title="<fmt:message key="download_desktop_step_about" />"><fmt:message key="download_desktop_step" /></a></li>
             <%
                 }
@@ -313,7 +313,7 @@
                                         <li><a href="https://stepbibleguide.blogspot.com" target="_blank"><fmt:message key="help_online" /></a></li>
             <%
                 if (appManager.isLocal()) {
-            %> 
+            %>
                                         <li class="available_bibles_and_commentaries"><a href="/versions.jsp" target="_blank" name="AVAILABLE_BIBLES_AND_COMMENTARIES"><fmt:message key="available_versions" /></a></li>
                                         <li><a href="/setup.jsp"><fmt:message key="tools_settings" /></a></li>
             <%
@@ -329,7 +329,7 @@
                                         <li><a href="https://stepbibleguide.blogspot.com/p/volunteers.html" target="_blank"><fmt:message key="we_need_help" /></a></li>
             <%
                 if (!appManager.isLocal()) {
-            %> 
+            %>
                                         <li><a href="javascript:void(0)" id="provideFeedback" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport"><fmt:message key="help_feedback" /></a></li>
                                         <li><a href="/html/cookies_policy.html" target="_blank"><fmt:message key="help_privacy_policy" /></a></li>
             <%
@@ -739,6 +739,11 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
         }
     } (window, document, 'script'));
 </script>
+<script type="module">
+    import { initDyslexia11y } from "./js/dyslexia11y.js";
+
+    initDyslexia11y();
+</script>;
 <% }
 %>
 </body>

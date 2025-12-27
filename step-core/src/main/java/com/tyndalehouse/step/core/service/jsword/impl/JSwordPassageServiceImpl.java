@@ -11,6 +11,7 @@ import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.BibleUtil;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
@@ -1162,6 +1163,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
                     final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(resourceURI,
                             osissep);
+
+                    BibleUtil.setVersificationService(versificationService); // hack alert!
+                    //BibleUtil.setDebugLoggingEnabled(true);
 
                     // set parameters here
                     if (userLanguage != null) {

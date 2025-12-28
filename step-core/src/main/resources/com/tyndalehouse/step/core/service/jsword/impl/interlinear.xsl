@@ -23,18 +23,19 @@
  <!--
  * Transforms OSIS to HTML for viewing within Web browsers.
  * Note: There are custom protocols which the browser must handle.
- * 
+ *
  * @see gnu.lgpl.License for license details.
  *      The copyright to this program is held by it's authors.
  * @author Joe Walker [joe at eireneh dot com]
  * @author DM Smith [dmsmith555 at yahoo dot com]
- * @author Chris Burrell [chris at burrell dot me dot uk] 
+ * @author Chris Burrell [chris at burrell dot me dot uk]
  -->
  <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0"
   xmlns:jsword="http://xml.apache.org/xalan/java"
   xmlns:morph="xalan://com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl"
+  xmlns:util="xalan://com.tyndalehouse.step.core.utils.BibleUtil"
   xmlns:vocab="xalan://com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl"
   xmlns:conversion="xalan://com.tyndalehouse.step.core.utils.StringConversionUtils"
   extension-element-prefixes="jsword morph vocab conversion">
@@ -45,7 +46,7 @@
   <!-- Be very careful about introducing whitespace into the document.
        strip-space merely remove space between one tag and another tag.
        This may cause significant whitespace to be removed.
-       
+
        It is easy to have apply-templates on a line to itself which if
        it encounters text before anything else will introduce whitespace.
        With the browser we are using, span will introduce whitespace
@@ -70,7 +71,7 @@
 
    <!-- Whether to display Jesus' words in red or not -->
   <xsl:param name="RedLetterText" select="'false'" />
- 
+
   <!-- Whether to show non-canonical "headings" or not -->
   <xsl:param name="Headings" select="'false'"/>
 
@@ -101,7 +102,7 @@
 
   <!-- The order of display. Hebrew is rtl (right to left) -->
   <xsl:param name="direction" select="'ltr'"/>
-  
+
   <!--  true to display color coding information -->
   <xsl:param name="ColorCoding" select="'false'" />
   <xsl:param name="DivideHebrew" select="'false'" />
@@ -117,10 +118,10 @@
   <xsl:param name="vocabProvider" />
   <xsl:param name="colorCodingProvider" />
   <xsl:param name="isOTWithHebrew" select="'false'" />
- 
+
   <!--  set up interlinear provider, if we have requested it -->
   <xsl:param name="interlinearProvider" />
- 
+
   <!--  TODO: support alternate versification -->
   <xsl:variable name="v11nf" select="jsword:org.crosswire.jsword.versification.system.Versifications.instance()"/>
 
@@ -128,12 +129,13 @@
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>
   <!-- Create a global number shaper that can transform 0-9 into other number systems. -->
   <xsl:variable name="shaper" select="jsword:org.crosswire.common.icu.NumberShaper.new()"/>
-  
+
 
   <xsl:variable name="punctuation" select="'|\,./&lt;&gt;?;\#:@~[]{}-=_+`¬!£$%^&amp;*()&quot;'" />
 
 
   <!--=======================================================================-->
+
   <xsl:template match="/">
       <div class="passageContentHolder" tabindex="-1">
         <!-- If there are notes, output a table with notes in the 2nd column. -->
@@ -156,10 +158,10 @@
             </xsl:choose>
           </xsl:when>
         </xsl:choose>
-        
+
 	      <xsl:apply-templates/>
       </div>
-      
+
   </xsl:template>
 
   <!--=======================================================================-->
@@ -196,7 +198,7 @@
   <xsl:template match="osisText">
     <xsl:apply-templates select="div"/>
   </xsl:template>
-  
+
   <!-- Ignore headers and its elements -->
   <xsl:template match="header"/>
   <xsl:template match="revisionDesc"/>
@@ -232,7 +234,7 @@
   <xsl:template match="titlePage"/>
 
   <!--=======================================================================-->
-  <!-- 
+  <!--
     == Div provides the major containers for a work.
     == Divs are milestoneable.
     -->
@@ -402,7 +404,7 @@
 			<xsl:if test="$Morph = 'true'">
 				<span class="morphs">Grammar</span>
 			</xsl:if>
-		
+
 			<!--  fill up with spaces where we have extra versions shown -->
 			<xsl:if test="normalize-space($interlinearVersion) != ''">
 				<xsl:call-template name="outputVersionNames">
@@ -420,7 +422,7 @@
           <span class="w verseStart">
           	<!--  the verse number -->
           	<a name="{@osisID}" class="verseLink"><span class="text"><span class="smallHeaders interVerseNumbers verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></span></a>
-          	
+
 			<!-- output a filling gap for strongs -->
               <xsl:if test="$OriginalTransliteration = 'true'">
                   <span class="text"><span class="smallHeaders strongs">Text Trans</span></span>
@@ -448,7 +450,7 @@
 			<xsl:if test="$Morph = 'true'">
 				<span class="text"><span class="smallHeaders morphs">Grammar</span></span>
 			</xsl:if>
-		
+
 			<!--  fill up with spaces where we have extra versions shown -->
 			<xsl:if test="normalize-space($interlinearVersion) != ''">
 				<xsl:call-template name="outputVersionNames">
@@ -550,11 +552,11 @@
   <xsl:template match="p">
     <xsl:apply-templates/>
   </xsl:template>
-  
+
   <xsl:template match="p" mode="jesus">
     <xsl:apply-templates mode="jesus"/>
   </xsl:template>
-  
+
   <!--=======================================================================-->
   <xsl:template match="p" mode="print-notes">
     <!-- FIXME: This ignores text in the note. -->
@@ -585,9 +587,9 @@
 
 	<xsl:template name="outputInterlinearWord">
 		<xsl:param name="classes" select="'w'" />
-	
-		<!-- Output the content followed by all the lemmas and then all the morphs. 
-			So, we know we have a number of lines to create, therefore, we'll create 
+
+		<!-- Output the content followed by all the lemmas and then all the morphs.
+			So, we know we have a number of lines to create, therefore, we'll create
 			that many! -->
 		<xsl:variable name="innerWordText"><xsl:apply-templates /></xsl:variable>
 
@@ -600,13 +602,13 @@
 			</xsl:choose>
 		</xsl:variable>
 <!-- 		<xsl:message>nextText=<xsl:value-of select="$nextText"></xsl:value-of></xsl:message>         -->
-	
+
 <!-- 		<xsl:if test="jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric($nextText)"> -->
 <!-- 			<xsl:variable name="nextText" select="''"/> -->
 <!-- 		</xsl:if> -->
 
 		<!-- start the block only if we have english to show? -->
-		<xsl:variable name="remainingText" select="$innerWordText" />				
+		<xsl:variable name="remainingText" select="$innerWordText" />
 		<xsl:if test="$remainingText != ''">
 			<xsl:variable name="colorClass">
 				<xsl:choose>
@@ -617,9 +619,15 @@
 				<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-    
+
     	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
     	<xsl:variable name="variant" select="@var" />
+
+            <!-- Get the language code -->
+            <xsl:variable name="lang">
+                <xsl:value-of select="util:getLanguageCode($baseVersion)"/>
+            </xsl:variable>
+
 			<span class="{$classes} {$colorClass}" strong="{$lemma}" morph="{@morph}" var="{$variant}">
 				<xsl:if test="normalize-space($remainingText) != ''">
 					<!-- 1st - Output first line or a blank if no text available. -->
@@ -629,10 +637,10 @@
                                 <xsl:with-param name="nextText" select="$nextText" />
                             </xsl:call-template>
                     </xsl:variable>
-                    <span class="text"><xsl:value-of select="$outputText" /></span>
+                    <span class="text" lang="{$lang}"><xsl:value-of select="$outputText" /></span>
 
-					<!-- 2nd - Output strongs if turned on. If turned on and no Strong then 
-						we need a blank. So always call template if turned on 
+					<!-- 2nd - Output strongs if turned on. If turned on and no Strong then
+						we need a blank. So always call template if turned on
 						There are three sets of strong possibilities
 						-->
                     <xsl:if test="$OriginalTransliteration = 'true'">
@@ -660,7 +668,7 @@
 						</span>
 					</xsl:if>
 					<xsl:if test="$EnglishVocab = 'true'">
-						<span class="strongs">
+						<span class="strongs" lang="en">
 								<xsl:value-of
 									select="vocab:getEnglishVocab($vocabProvider, $baseVersion, ./ancestor::*[@osisID]/@osisID ,@lemma)" />
 						</span>
@@ -692,32 +700,37 @@
 								select="morph:getDisplayMorphology($morphologyProvider, @morph)" />
 						</span>
 					</xsl:if>
-		
+
 					<!-- 4th - We output the interlinears if provided and we do so recursively -->
 					<xsl:if test="normalize-space($interlinearVersion) != ''">
 						<xsl:call-template name="interlinear">
 							<xsl:with-param name="versions" select="$interlinearVersion" />
 						</xsl:call-template>
 					</xsl:if>
-	
+
 			</xsl:if>
-	
+
 			<!-- end the block -->
 			</span>
 		</xsl:if>
 	</xsl:template>
-  
+
   <xsl:template name="interlinear">
-  	<xsl:param name="versions" />  	
+  	<xsl:param name="versions" />
 
 	<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
     <!-- <xsl:variable name="verseNumber" select="concat(../@osisID , ../../@osisID)" /> -->
     <xsl:variable name="verseNumber" select="./ancestor::*[@osisID]/@osisID" />
-      
+
+      <!-- Get the language code -->
+      <xsl:variable name="lang">
+          <xsl:value-of select="util:getLanguageCode($nextVersion)"/>
+      </xsl:variable>
+
       <!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
 	<xsl:choose>
 		<xsl:when test="normalize-space($nextVersion) != ''">
-			<span class="interlinear">
+			<span class="interlinear" lang="{$lang}">
 				<xsl:variable name="interlinearWord">
 					<xsl:call-template name="outputNonBlank">
 						<xsl:with-param name="string">
@@ -741,7 +754,11 @@
 		<!-- otherwise, then we can use the remainder as the version, as long as version not empty (for e.g. a trailing comma) -->
 		<xsl:otherwise>
 		    <xsl:if test="normalize-space($versions) != ''" >
-				<span class="interlinear">
+                <!-- Get the language code -->
+                <xsl:variable name="lastLang">
+                    <xsl:value-of select="util:getLanguageCode($versions)"/>
+                </xsl:variable>
+				<span class="interlinear" lang="{$lastLang}">
 					<xsl:variable name="interlinearWord">
 						<xsl:call-template name="outputNonBlank">
 							<xsl:with-param name="string">
@@ -762,7 +779,7 @@
 		</xsl:otherwise>
 	</xsl:choose>
   </xsl:template>
-  
+
   <xsl:template name="outputNonBlank">
   	<xsl:param name="string" />
   	<xsl:param name="nextText" select="''" />
@@ -772,9 +789,9 @@
   		</xsl:when>
         <xsl:otherwise><xsl:value-of select="$nextText"/><xsl:value-of select="'&#160;'" /></xsl:otherwise>
   	</xsl:choose>
-  	
+
   </xsl:template>
-  
+
   <!--=======================================================================-->
   <xsl:template match="seg">
     <xsl:choose>
@@ -792,7 +809,7 @@
       <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
   <xsl:template match="seg" mode="jesus">
     <xsl:choose>
       <xsl:when test="starts-with(@type, 'color:')">
@@ -809,7 +826,7 @@
       <xsl:otherwise><xsl:apply-templates mode="jesus"/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
   <!--=======================================================================-->
   <!-- expansion is OSIS, expan is TEI -->
   <xsl:template match="abbr">
@@ -947,48 +964,48 @@
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
         <a href="javascript:void(0)" title="Click for more options" class="linkRef" xref="{$passageKey}" onclick="javascript:showOptions();"><xsl:apply-templates/></a>
   </xsl:template>
-  
+
   <xsl:template match="reference" mode="jesus">
         <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
         <a href="javascript:void(0)" title="Click for more options" xref="{$passageKey}" onclick="javascript:showOptions();"><xsl:apply-templates/></a>
   </xsl:template>
-  
+
   <!--=======================================================================-->
   <xsl:template match="caption">
     <div class="caption"><xsl:apply-templates/></div>
   </xsl:template>
-  
+
   <xsl:template match="caption" mode="jesus">
     <div class="caption"><xsl:apply-templates/></div>
   </xsl:template>
-  
+
   <xsl:template match="catchWord">
     <xsl:apply-templates/>
   </xsl:template>
-  
+
   <xsl:template match="catchWord" mode="jesus">
     <xsl:apply-templates mode="jesus"/>
   </xsl:template>
-  
+
   <!--
       <cell> is handled shortly after <table> below and thus does not appear
       here.
   -->
-  
+
   <xsl:template match="closer">
     <xsl:apply-templates/>
   </xsl:template>
-  
+
   <xsl:template match="closer" mode="jesus">
     <xsl:apply-templates mode="jesus"/>
   </xsl:template>
-  
+
   <xsl:template match="date">
     <xsl:apply-templates/>
   </xsl:template>
-  
+
   <xsl:template match="date" mode="jesus">
     <xsl:apply-templates mode="jesus"/>
   </xsl:template>
@@ -1016,11 +1033,11 @@
     <xsl:template match="divineName">
     <xsl:apply-templates mode="small-caps"/>
   </xsl:template>
-  
+
   <xsl:template match="divineName" mode="jesus">
     <xsl:apply-templates mode="small-caps"/>
   </xsl:template>
-  
+
   <xsl:template match="figure">
     <div class="figure">
       <xsl:choose>
@@ -1034,7 +1051,7 @@
       <xsl:apply-templates/>
     </div>
   </xsl:template>
-  
+
   <xsl:template match="figure" mode="jesus">
     <div class="figure">
       <xsl:choose>
@@ -1048,25 +1065,25 @@
       <xsl:apply-templates mode="jesus"/>
     </div>
   </xsl:template>
-  
+
   <xsl:template match="foreign">
     <em class="foreign"><xsl:apply-templates/></em>
   </xsl:template>
-  
+
   <xsl:template match="foreign" mode="jesus">
     <em class="foreign"><xsl:apply-templates mode="jesus"/></em>
   </xsl:template>
-  
+
   <!-- This is a subheading. -->
   <xsl:template match="head//head">
     <h5 class="head"><xsl:apply-templates/></h5>
   </xsl:template>
-  
+
   <!-- This is a top-level heading. -->
   <xsl:template match="head">
     <h4 class="head"><xsl:apply-templates/></h4>
   </xsl:template>
-  
+
   <xsl:template match="index">
     <a name="index{@id}" class="index"/>
   </xsl:template>
@@ -1086,7 +1103,7 @@
   <xsl:template match="item" mode="jesus">
     <li class="item"><xsl:apply-templates mode="jesus"/></li>
   </xsl:template>
-  
+
   <!--
       <item> and <label> are covered by <list> below and so do not appear here.
   -->
@@ -1094,11 +1111,11 @@
   <xsl:template match="lg">
     <div class="lg"><xsl:apply-templates/></div>
   </xsl:template>
-  
+
   <xsl:template match="lg" mode="jesus">
     <div class="lg"><xsl:apply-templates mode="jesus"/></div>
   </xsl:template>
-  
+
   <xsl:template match="lg[@sID or @eID]"/>
   <xsl:template match="lg[@sID or @eID]" mode="jesus"/>
 
@@ -1111,7 +1128,7 @@
   <xsl:template match="l">
     <xsl:apply-templates/><br/>
   </xsl:template>
-  
+
   <xsl:template match="l" mode="jesus">
     <xsl:apply-templates mode="jesus"/><br/>
   </xsl:template>
@@ -1216,11 +1233,11 @@
   <xsl:template match="mentioned">
     <xsl:apply-templates/>
   </xsl:template>
-  
+
   <xsl:template match="mentioned" mode="jesus">
     <xsl:apply-templates mode="jesus"/>
   </xsl:template>
-  
+
   <!-- Milestones represent characteristics of the original manuscript.
     == that are being preserved. For this reason, most are ignored.
     ==
@@ -1259,7 +1276,7 @@
     -->
   <xsl:template match="milestoneStart"/>
   <xsl:template match="milestoneEnd"/>
-  
+
   <xsl:template match="name">
     <xsl:apply-templates/>
   </xsl:template>
@@ -1414,7 +1431,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
   <xsl:template match="q[@type = 'embedded']" mode="jesus">
     <xsl:choose>
       <xsl:when test="@marker">
@@ -1427,7 +1444,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
   <!-- An alternate reading. -->
   <xsl:template match="rdg">
     <xsl:apply-templates/>
@@ -1440,11 +1457,11 @@
   <!--
       <row> is handled near <table> below and so does not appear here.
   -->
-  
+
   <xsl:template match="salute">
     <xsl:apply-templates/>
   </xsl:template>
-  
+
  <!-- Avoid adding whitespace -->
   <xsl:template match="salute" mode="jesus">
     <xsl:apply-templates mode="jesus"/>
@@ -1461,7 +1478,7 @@
   <xsl:template match="speech">
     <div class="speech"><xsl:apply-templates/></div>
   </xsl:template>
-  
+
   <xsl:template match="speech" mode="jesus">
     <div class="speech"><xsl:apply-templates mode="jesus"/></div>
   </xsl:template>
@@ -1479,7 +1496,7 @@
   <xsl:template match="row">
     <tr class="row"><xsl:apply-templates/></tr>
   </xsl:template>
-  
+
   <xsl:template match="cell">
     <xsl:variable name="element-name">
       <xsl:choose>
@@ -1609,7 +1626,7 @@
 					</xsl:call-template>
 				</span>
 			</xsl:if>
-		
+
 			<!--  fill up with spaces where we have extra versions shown -->
 			<xsl:if test="normalize-space($interlinearVersion) != ''">
 				<xsl:call-template name="blanksForVersions">
@@ -1618,13 +1635,13 @@
 			</xsl:if>
 		</span>
   </xsl:template>
-  
-  
+
+
     <xsl:template name="blanksForVersions">
-	  	<xsl:param name="versions" />  	
-	
+	  	<xsl:param name="versions" />
+
 		<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
-	
+
 		<!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
 		<xsl:choose>
 			<xsl:when test="normalize-space($nextVersion) != ''">
@@ -1653,12 +1670,12 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-  
+
 
     <xsl:template name="outputVersionNames">
-	  	<xsl:param name="versions" />  	
+	  	<xsl:param name="versions" />
 		<xsl:param name="printVersions" />
-	
+
 		<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
 
 		<!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
@@ -1683,7 +1700,7 @@
 							</a>
 						</xsl:when>
 						<xsl:otherwise>&#160;</xsl:otherwise>
-					</xsl:choose>					
+					</xsl:choose>
 				</span>
 				<xsl:call-template name="outputVersionNames">
 					<xsl:with-param name="versions" select="substring-after($versions, ',')" />
@@ -1719,7 +1736,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-  
+
   <!-- @type is OSIS, @rend is TEI -->
   <xsl:template match="hi">
     <xsl:variable name="style">
@@ -1886,13 +1903,13 @@
       </xsl:attribute>
     </xsl:if>
   </xsl:template>
-    
+
   <!-- If the parent of the text is a verse then, we need to wrap in span. This applies
   to any punctuation really, since all other words should be contained in a W  -->
   <xsl:template match="text()" mode="jesus">
   	  <xsl:call-template name="matchSimpleText" />
   </xsl:template>
-  
+
   <!-- Matching simple text when not matched elsewhere? -->
   <xsl:template match="text()" name="matchSimpleText">
   		<xsl:choose>
@@ -1911,7 +1928,7 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:variable>
-                    <span class="text"><xsl:call-template name="outputPunctuatedText"><xsl:with-param name="text" select="." /></xsl:call-template><xsl:value-of select="$nextPartOfText"/></span>
+                    <span class="text" lang="en"><xsl:call-template name="outputPunctuatedText"><xsl:with-param name="text" select="." /></xsl:call-template><xsl:value-of select="$nextPartOfText"/></span>
 	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
 
 					<!-- output a filling gap for strongs -->
@@ -1941,7 +1958,7 @@
 					<xsl:if test="$Morph = 'true'">
 						<span class="text">&#160;</span>
 					</xsl:if>
-				
+
 					<!--  fill up with spaces where we have extra versions shown -->
 					<xsl:if test="normalize-space($interlinearVersion) != ''">
 						<xsl:call-template name="outputVersionNames">
@@ -1985,7 +2002,7 @@
       </xsl:otherwise>
     </xsl:choose>
    </xsl:template>
-   
+
 	<xsl:template name="string-replace-all">
 	<xsl:param name="text" />
 	<xsl:param name="replace" />
@@ -2004,5 +2021,5 @@
 			<xsl:value-of select="$text" />
 		</xsl:otherwise>
 	</xsl:choose>
-</xsl:template>  
+</xsl:template>
 </xsl:stylesheet>

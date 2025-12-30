@@ -3155,7 +3155,7 @@ step.util = {
 							commentarySummary += '<div style="margin-left:8px">' +
 								'<a href="' + summary["constable_ko_url"] + '" target="constable_ko">' +
 								icons[constableLegendIdx] + '</a>' +
-								' links to Constable\\\'s notes (Korean PDF)' +
+								' links to Constable\'s notes (Korean PDF)' +
 								'</div>';
 						}
 					}
@@ -3172,7 +3172,7 @@ step.util = {
 						var constableIdx = keysForCommentary.indexOf("constable");
 						if (constableIdx !== -1) {
 							commentarySummary += '<tr><td></td><td class="dash"><span>한국어 PDF</span></td><td><span>' +
-								'<a href="' + summary["constable_ko_url"] + '" target="constable_ko" title="Constable\\\'s Notes in Korean">' +
+								'<a href="' + summary["constable_ko_url"] + '" target="constable_ko" title="Constable\'s Notes in Korean">' +
 								icons[constableIdx] + '</a></span></td></tr>';
 						}
 					}

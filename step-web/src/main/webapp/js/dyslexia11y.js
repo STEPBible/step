@@ -8,9 +8,9 @@ const STORAGE_TRUE_VALUE = 'true';
 const STORAGE_FALSE_VALUE = 'false';
 const LOGGER_PREFIX = '[Dyslexia11y]';
 // CSS Selector segments for dyslexic font styling
-const PRESERVE_FONT_SELECTORS = '[preserve-font], [preserve-font] *, :has([preserve-font])';
+const PRESERVE_FONT_SELECTORS = '[preserve-font], [preserve-font] *';
 const GLYPHICON_SELECTORS = '.glyphicon, .glyphicon *';
-const NON_ENGLISH_SELECTORS = ':not(:lang(en)), :not(:lang(en)) *, :has(:not(:lang(en)))';
+const NON_ENGLISH_SELECTORS = ':not(:lang(en)), :not(:lang(en)) *';
 const DEBUG_DYSLEXIA = localStorage.getItem('debugDyslexia') === 'true' || new URLSearchParams(window.location.search).has('debug');
 
 const loadedFonts = new Set();
@@ -91,27 +91,39 @@ export async function initDyslexia11y() {
         logger.info('Dyslexia-friendly font is disabled on initialization.');
     }
 
-    $(document).on('click', (event) => {
-        const targetElement = $(event.target);
+    const registerClickHandler = () => {
+        $(document).on('click', (event) => {
+            const targetElement = $(event.target);
 
-        if (targetElement.attr('id') === DYSLEXIC_BUTTON_ID) {
-            const htmlLang = htmlElement.attr('lang') ?? '';
-            const hasAnyEnglishlement = $('[lang="en"], :lang(en)').length > 5;
+            if (targetElement.attr('id') === DYSLEXIC_BUTTON_ID) {
+                const htmlLang = htmlElement.attr('lang') ?? '';
+                const hasAnyEnglishlement = $('[lang="en"], :lang(en)').length > 5;
 
-            if (htmlLang.toLowerCase() !== 'en' && !hasAnyEnglishlement) {
-                console.warn(`HTML lang "${htmlLang}" is not "en" and no element with lang="en" was found.`);
-                // Add an inline message to alert users.
+                if (htmlLang.toLowerCase() !== 'en' && !hasAnyEnglishlement) {
+                    console.warn(`HTML lang "${htmlLang}" is not "en" and no element with lang="en" was found.`);
+                    // Add an inline message to alert users.
+                } else {
+                    logger.info(htmlLang === 'en'
+                        ? `HTML lang is "en". No issue detected.`
+                        : `HTML lang "${htmlLang}" is not "en", but an element with lang="en" was found.`);
+                }
+
+                void handleDyslexiaToggleClick(targetElement, stepWindow);
             } else {
-                logger.info(htmlLang === 'en'
-                    ? `HTML lang is "en". No issue detected.`
-                    : `HTML lang "${htmlLang}" is not "en", but an element with lang="en" was found.`);
+                logger.info('Click event detected, but target is not the dyslexia toggle button.');
             }
+        });
+    };
 
-            void handleDyslexiaToggleClick(targetElement, stepWindow);
-        } else {
-            logger.info('Click event detected, but target is not the dyslexia toggle button.');
-        }
-    });
+    if (typeof $ !== 'undefined' && $.fn && $.fn.jquery) {
+        registerClickHandler();
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof $ !== 'undefined' && $.fn && $.fn.jquery) {
+                registerClickHandler();
+            }
+        });
+    }
 }
 
 function isDyslexiaFontEnabled() {

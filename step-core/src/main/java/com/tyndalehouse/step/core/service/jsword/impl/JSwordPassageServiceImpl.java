@@ -1164,7 +1164,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(resourceURI,
                             osissep);
 
-                    BibleUtil.setVersificationService(versificationService); // hack alert!
+                    BibleUtil.setVersificationService(versificationService);
                     //BibleUtil.setDebugLoggingEnabled(true);
 
                     // set parameters here

@@ -249,7 +249,7 @@ public final class JSwordUtils {
         else if (numOfBooksInThisBible == 39) {
             String versificationName = ((SwordBook) b).getVersification().getName();
             if (!versificationName.equals("MT") && !versificationName.equals("Leningrad"))
-            return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOT, currentBibleName, 'O');
+                return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOT, currentBibleName, 'O');
         }
         hasAllNTOTorBoth.put(currentBibleName, " ");
         return ' ';

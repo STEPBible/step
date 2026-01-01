@@ -246,8 +246,12 @@ public final class JSwordUtils {
             return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOTNT, currentBibleName, 'B');
         else if (numOfBooksInThisBible == 27)
             return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allNT, currentBibleName, 'N');
-        else if (numOfBooksInThisBible == 39)
+        else if (numOfBooksInThisBible == 39) {
+            if (((SwordBook) b).getVersification().getName().equals("MT") ||
+                ((SwordBook) b).getVersification().getName().equals("Leningrad"))
+                return ' ';
             return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOT, currentBibleName, 'O');
+        }
         hasAllNTOTorBoth.put(currentBibleName, " ");
         return ' ';
     }

@@ -3877,7 +3877,6 @@ step.util = {
 									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>';
-
 		if ((darkModeReady) && ((typeof panelNumber !== "number")))
 			modalHTML +=
 							'<tr>' +
@@ -3890,6 +3889,18 @@ step.util = {
                                         '</span></button>' +
 								'</td>' +
 							'</tr>';
+
+        const dyslexicApplied = localStorage.getItem('dyslexicFont') === 'true';
+        modalHTML +=
+                        '<tr>' +
+                            '<td class="passageContent defaultfont">' + 'OpenDyslexic' + '</td>' +
+                            '<td class="pull-right">' +
+                                '<button id="openDyslexicButton" class="btn btn-default btn-sm' +
+                                    ((dyslexicApplied) ? ' stepPressedButton' : '') +
+                                    '" style="font-size:10px;line-height:12px;font-weight:bold">' + ((dyslexicApplied) ? __s.disable : __s.enable) + '</button>' +
+                            '</td>' +
+                        '</tr>';
+
 		if ((colorReady) && ((typeof panelNumber !== "number")))
 			modalHTML +=
 							'<tr>' +

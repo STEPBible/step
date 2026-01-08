@@ -3153,7 +3153,7 @@ step.util = {
 						var constableLegendIdx = keysForCommentary.indexOf("constable");
 						if (constableLegendIdx !== -1) {
 							var constableKoIcon = '<span class="commicon" style="color:' +
-								bgColors[constableLegendIdx % bgColors.length] + '">씨</span>';
+								bgColors[constableLegendIdx % bgColors.length] + '">컨</span>';
 							commentarySummary += '<div style="margin-left:8px">' +
 								'<a href="' + summary["constable_ko_url"] + '" target="constable_ko">' +
 								constableKoIcon + '</a>' +
@@ -3174,7 +3174,7 @@ step.util = {
 						var constableIdx = keysForCommentary.indexOf("constable");
 						if (constableIdx !== -1) {
 							var constableKoIcon = '<span class="commicon" style="color:' +
-								bgColors[constableIdx % bgColors.length] + '">씨</span>';
+								bgColors[constableIdx % bgColors.length] + '">컨</span>';
 							commentarySummary += '<tr><td></td><td class="dash"><span>한국어 PDF</span></td><td><span>' +
 								'<a href="' + summary["constable_ko_url"] + '" target="constable_ko" title="Constable\'s Notes in Korean">' +
 								constableKoIcon + '</a></span></td></tr>';

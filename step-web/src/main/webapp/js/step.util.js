@@ -3081,6 +3081,7 @@ step.util = {
 			var namesForCommentary = JSON.parse(summary["commentary_names"].replaceAll("'", '"').replaceAll('\\"',"'"));
 			var bgColors =   ["Navy", "DarkRed", "DarkOliveGreen", "Indigo", "DarkSlateGray", "Maroon"];
 			var commentarySummary = "";
+			var isKoreanUser = ((step.userLanguageCode || "").toLowerCase().indexOf("ko") === 0);
 			if (typeof bookOrderInBible === "number") {
 				var lastChapter = step.passageSelect.osisChapterJsword[bookOrderInBible][1];
 				var bgColors =   ["Navy", "DarkRed", "DarkOliveGreen", "Indigo", "DarkSlateGray", "Maroon"];
@@ -3148,6 +3149,18 @@ step.util = {
 						}
 						commentarySummary += '</div>';
 					}
+					if (isKoreanUser && (typeof summary["constable_ko_url"] === "string")) {
+						var constableLegendIdx = keysForCommentary.indexOf("constable");
+						if (constableLegendIdx !== -1) {
+							var constableKoIcon = '<span class="commicon" style="color:' +
+								bgColors[constableLegendIdx % bgColors.length] + '">컨</span>';
+							commentarySummary += '<div style="margin-left:8px">' +
+								'<a href="' + summary["constable_ko_url"] + '" target="constable_ko">' +
+								constableKoIcon + '</a>' +
+								' links to Constable\'s notes (Korean PDF)' +
+								'</div>';
+						}
+					}
 					commentarySummary += '<div style="margin:8px"><table class="commtoc"><tbody><tr><th>Chpt</th><th>Description</th><th>Link';
 					commentarySummary += (keysForCommentary.length > 1) ? 's' : '';
 					commentarySummary +=  '</th></tr>';
@@ -3157,6 +3170,16 @@ step.util = {
 					if (commentaryOutline !== "")
 					commentarySummary += '<tr><td></td><td class="dash"><span>Outline</span></td><td><span>' +
 							commentaryOutline + '</span></td></tr>';
+					if (isKoreanUser && (typeof summary["constable_ko_url"] === "string")) {
+						var constableIdx = keysForCommentary.indexOf("constable");
+						if (constableIdx !== -1) {
+							var constableKoIcon = '<span class="commicon" style="color:' +
+								bgColors[constableIdx % bgColors.length] + '">컨</span>';
+							commentarySummary += '<tr><td></td><td class="dash"><span>한국어 PDF</span></td><td><span>' +
+								'<a href="' + summary["constable_ko_url"] + '" target="constable_ko" title="Constable\'s Notes in Korean">' +
+								constableKoIcon + '</a></span></td></tr>';
+						}
+					}
 
 					for (var curChapter = 1; curChapter <= lastChapter; curChapter ++) {
 						var jsonName = "chapter_" + curChapter + "_header";
@@ -3271,6 +3294,14 @@ step.util = {
 						commentaryName + '</a><br>';
 				}
             }
+			if (isKoreanUser && (typeof summary["constable_ko_url"] === "string")) {
+				var constableSummaryIdx = keysForCommentary.indexOf("constable");
+				if (constableSummaryIdx !== -1) {
+					var commentaryName = namesForCommentary[constableSummaryIdx] + " (Korean PDF)";
+					chptSummary += '<a class="singlecomm" href="' + summary["constable_ko_url"] +
+						'" target="constable_ko">' + commentaryName + '</a><br>';
+				}
+			}
             chptSummary += '<br><br><br><br><span class="nextPreviousChapterGroup">';
             if (chapterNum > 1) chptSummary +=
                     '<a class="previousChapter" style="display:inline" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum - 1) + '\')">' +

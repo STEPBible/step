@@ -36,6 +36,7 @@
         xmlns:jsword="http://xml.apache.org/xalan/java"
         xmlns:interleaving="xalan://com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl"
         xmlns:conversion="xalan://com.tyndalehouse.step.core.utils.StringConversionUtils"
+        xmlns:util="xalan://com.tyndalehouse.step.core.utils.BibleUtil"
         xmlns:jswordUtils="xalan://com.tyndalehouse.step.core.utils.JSwordUtils"
         xmlns:url="http://whatever/java/java.net.URLEncoder"
         xmlns:stringUtils="xalan://com.tyndalehouse.step.core.utils.StringUtils"
@@ -135,6 +136,7 @@
 
     <!--=======================================================================-->
     <xsl:template match="/">
+
         <!-- SM Verse Per Line Issue for RTL-->
         <div class="passageContentHolder" style="direction: {$direction};" tabindex="-1">
             <!-- If there are notes, output a table with notes in the 2nd column. -->
@@ -337,10 +339,22 @@
             </xsl:choose>
         </xsl:variable>
 
+        <!-- Get the language code -->
+        <xsl:variable name="lang">
+            <xsl:choose>
+                <xsl:when test="./ancestor::cell/@xml:lang">
+                    <xsl:value-of select="./ancestor::cell/@xml:lang"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="util:getLanguageCode($baseVersion)"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
         <!-- Always output the verse number -->
         <xsl:choose>
             <xsl:when test=".//cell">
-                <div class="verse l {$languageDirection}Direction containsTable" dir="{$languageDirection}">
+                <div class="verse l {$languageDirection}Direction containsTable" dir="{$languageDirection}" lang="{$lang}">
                     <a class="verseLink" name="{@osisID}">
                         <xsl:call-template name="versenum"/>
                     </a>
@@ -348,7 +362,7 @@
                 </div>
             </xsl:when>
             <xsl:when test="$VLine = 'true' or .//cell">
-                <div class="verse l {$languageDirection}Direction" dir="{$languageDirection}">
+                <div class="verse l {$languageDirection}Direction" dir="{$languageDirection}" lang="{$lang}">
                     <a class="verseLink" name="{@osisID}">
                         <xsl:call-template name="versenum"/>
                     </a>
@@ -356,7 +370,7 @@
                 </div>
             </xsl:when>
             <xsl:otherwise>
-                <span class="verse {$languageDirection}Direction" dir="{$languageDirection}">
+                <span class="verse {$languageDirection}Direction" dir="{$languageDirection}" lang="{$lang}">
                     <xsl:call-template name="versenum"/>
                     <xsl:apply-templates/>
                 </span>
@@ -2133,10 +2147,14 @@
         <xsl:param name="cell-direction"/>
         <xsl:param name="verse" select="''"/>
         <xsl:param name="classes" select="''"/>
+        <xsl:param name="lang" select="''"/>
 
         <xsl:element name="span">
             <xsl:attribute name="class">singleVerse
                 <xsl:value-of select="$classes"/><xsl:value-of select="$cell-direction"/>
+            </xsl:attribute>
+            <xsl:attribute name="lang">
+                <xsl:value-of select="$lang"/>
             </xsl:attribute>
             <xsl:call-template name="interleavedVersion">
                 <!-- <xsl:with-param name="verse" select="$verse"/> -->
@@ -2169,6 +2187,19 @@
                     <xsl:value-of select="$cell-direction"/>
                 </xsl:attribute>
             </xsl:if>
+            <xsl:variable name="lang">
+                <xsl:choose>
+                    <xsl:when test="@xml:lang">
+                        <xsl:value-of select="@xml:lang"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="cell/@xml:lang"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:attribute name="lang">
+                <xsl:value-of select="$lang"/>
+            </xsl:attribute>
             <xsl:if test="$cell-direction = 'rtl'">
                 <xsl:attribute name="align">
                     <xsl:value-of select="'right'"/>
@@ -2220,6 +2251,16 @@
                 </xsl:call-template>
             </xsl:if>
         </xsl:variable>
+        <xsl:variable name="lang">
+            <xsl:choose>
+                <xsl:when test="@xml:lang">
+                    <xsl:value-of select="@xml:lang"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="cell/@xml:lang"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
 
 
         <xsl:choose>
@@ -2229,6 +2270,7 @@
                 <xsl:if test="$comparing = false()">
                     <xsl:call-template name="interleaveVerse">
                         <xsl:with-param name="cell-direction" select="$cell-direction"/>
+                        <xsl:with-param name="lang" select="$lang"/>
                     </xsl:call-template>
                 </xsl:if>
                 <!-- output twice the cell of those diffs we have found if we are comparing -->
@@ -2237,10 +2279,12 @@
                     <xsl:call-template name="interleaveVerse">
                         <xsl:with-param name="cell-direction" select="$cell-direction"/>
                         <xsl:with-param name="classes" select="'primary '"/>
+                        <xsl:with-param name="lang" select="$lang"/>
                     </xsl:call-template>
                     <xsl:call-template name="interleaveVerse">
                         <xsl:with-param name="cell-direction" select="$cell-direction"/>
                         <xsl:with-param name="classes" select="'secondary '"/>
+                        <xsl:with-param name="lang" select="$lang"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:when>

@@ -35,6 +35,7 @@
   version="1.0"
   xmlns:jsword="http://xml.apache.org/xalan/java"
   xmlns:morph="xalan://com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl"
+  xmlns:util="xalan://com.tyndalehouse.step.core.utils.BibleUtil"
   xmlns:vocab="xalan://com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl"
   xmlns:conversion="xalan://com.tyndalehouse.step.core.utils.StringConversionUtils"
   extension-element-prefixes="jsword morph vocab conversion">
@@ -134,6 +135,7 @@
 
 
   <!--=======================================================================-->
+
   <xsl:template match="/">
       <div class="passageContentHolder" tabindex="-1">
         <!-- If there are notes, output a table with notes in the 2nd column. -->
@@ -620,6 +622,12 @@
     
     	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
     	<xsl:variable name="variant" select="@var" />
+
+            <!-- Get the language code -->
+            <xsl:variable name="lang">
+                <xsl:value-of select="util:getLanguageCode($baseVersion)"/>
+            </xsl:variable>
+
 			<span class="{$classes} {$colorClass}" strong="{$lemma}" morph="{@morph}" var="{$variant}">
 				<xsl:if test="normalize-space($remainingText) != ''">
 					<!-- 1st - Output first line or a blank if no text available. -->
@@ -629,7 +637,7 @@
                                 <xsl:with-param name="nextText" select="$nextText" />
                             </xsl:call-template>
                     </xsl:variable>
-                    <span class="text"><xsl:value-of select="$outputText" /></span>
+                    <span class="text" lang="{$lang}"><xsl:value-of select="$outputText" /></span>
 
 					<!-- 2nd - Output strongs if turned on. If turned on and no Strong then 
 						we need a blank. So always call template if turned on 
@@ -660,7 +668,7 @@
 						</span>
 					</xsl:if>
 					<xsl:if test="$EnglishVocab = 'true'">
-						<span class="strongs">
+						<span class="strongs" lang="en">
 								<xsl:value-of
 									select="vocab:getEnglishVocab($vocabProvider, $baseVersion, ./ancestor::*[@osisID]/@osisID ,@lemma)" />
 						</span>
@@ -714,10 +722,15 @@
     <!-- <xsl:variable name="verseNumber" select="concat(../@osisID , ../../@osisID)" /> -->
     <xsl:variable name="verseNumber" select="./ancestor::*[@osisID]/@osisID" />
       
+      <!-- Get the language code -->
+      <xsl:variable name="lang">
+          <xsl:value-of select="util:getLanguageCode($nextVersion)"/>
+      </xsl:variable>
+
       <!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
 	<xsl:choose>
 		<xsl:when test="normalize-space($nextVersion) != ''">
-			<span class="interlinear">
+			<span class="interlinear" lang="{$lang}">
 				<xsl:variable name="interlinearWord">
 					<xsl:call-template name="outputNonBlank">
 						<xsl:with-param name="string">
@@ -741,7 +754,11 @@
 		<!-- otherwise, then we can use the remainder as the version, as long as version not empty (for e.g. a trailing comma) -->
 		<xsl:otherwise>
 		    <xsl:if test="normalize-space($versions) != ''" >
-				<span class="interlinear">
+                <!-- Get the language code -->
+                <xsl:variable name="lastLang">
+                    <xsl:value-of select="util:getLanguageCode($versions)"/>
+                </xsl:variable>
+				<span class="interlinear" lang="{$lastLang}">
 					<xsl:variable name="interlinearWord">
 						<xsl:call-template name="outputNonBlank">
 							<xsl:with-param name="string">
@@ -1911,7 +1928,7 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:variable>
-                    <span class="text"><xsl:call-template name="outputPunctuatedText"><xsl:with-param name="text" select="." /></xsl:call-template><xsl:value-of select="$nextPartOfText"/></span>
+                    <span class="text" lang="en"><xsl:call-template name="outputPunctuatedText"><xsl:with-param name="text" select="." /></xsl:call-template><xsl:value-of select="$nextPartOfText"/></span>
 	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
 
 					<!-- output a filling gap for strongs -->

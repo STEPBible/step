@@ -69,7 +69,7 @@ var PickBibleView = Backbone.View.extend({
         '<%= view.filtersTemplate({myOtherLanguages: myOtherLanguages}) %>' +
 		'<label class="selectGeo" ' +
         'style="font-size:16px" ' +
-        'for="selectGeo">Filter languges by geography:</label>' +
+        'for="selectGeo">Filter languages by geography:</label>' +
 		'<select class="selectGeo" onchange=\'step.util.showByGeo()\'>' +
 		  '<option value="all">All</option>' +
 		  '<option value="africa">Africa</option>' +

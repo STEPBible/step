@@ -739,6 +739,11 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
         }
     } (window, document, 'script'));
 </script>
+<script type="module">
+    import { initDyslexia11y } from "./js/dyslexia11y.js";
+
+    initDyslexia11y();
+</script>
 <% }
 %>
 </body>

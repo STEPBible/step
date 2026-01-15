@@ -92,6 +92,13 @@ step.passageSelect = {
 		if (($('.passageContainer.active').width() < 500) || (step.touchDevice && !step.touchWideDevice))
 			$('#displayLocForm').hide();
 		this._displayListOfBooks(summaryMode);
+		if ((typeof step.keyedVersions[this.version] === "object") && 
+			(typeof step.keyedVersions[this.version].hasAllNTOTorBoth === "string") &&
+			(step.keyedVersions[this.version].hasAllNTOTorBoth === " ")) {
+				$("div#passageSelectionModal span#select_verse_number").hide();
+				$("div#passageSelectionModal div.onoffswitch2.append.pull-right").hide();
+
+		}
 		$("textarea#enterYourPassage").on('input', function(e){
 			step.passageSelect._handleKeyboardEntry(e);
 		});

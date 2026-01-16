@@ -1735,6 +1735,7 @@ class ClassVerticalLayoutHandler
 	        .classed('man', isMan)
 	        .classed('woman', isWoman)
 	        .classed('group', isGroup)
+	        .classed('personName', true)
 		.text(name);
 	    
 	    const owningTextNodeX = Number(textNode.attr('x')) + 5;
@@ -2498,7 +2499,9 @@ class _ClassPresentationHandler
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
 		const textNode = personRecord.treeNode.querySelector('text');
-		d3.select(textNode).classed('highlightSiblings', highlighting);
+		const nameNode = textNode ? textNode.querySelector('tspan.personName') : null;
+		if (nameNode)
+		    d3.select(nameNode).classed('highlightSiblings', highlighting);
 	    }
 	    catch (e)
 	    {
@@ -2512,17 +2515,21 @@ class _ClassPresentationHandler
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
 		const textNode = personRecord.treeNode.querySelector('text');
-		const selection = d3.select(textNode);
-		selection.classed('highlightChildren', highlighting);
-		if (highlighting)
+		const nameNode = textNode ? textNode.querySelector('tspan.personName') : null;
+		if (nameNode)
 		{
-		    selection.style('text-decoration-color', childrenUnderlineColor);
-		    selection.style('fill', childrenUnderlineColor);
-		}
-		else
-		{
-		    selection.style('text-decoration-color', null);
-		    selection.style('fill', null);
+		    const selection = d3.select(nameNode);
+		    selection.classed('highlightChildren', highlighting);
+		    if (highlighting)
+		    {
+			selection.style('text-decoration-color', childrenUnderlineColor);
+			selection.style('fill', childrenUnderlineColor);
+		    }
+		    else
+		    {
+			selection.style('text-decoration-color', null);
+			selection.style('fill', null);
+		    }
 		}
 	    }
 	    catch (e)

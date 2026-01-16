@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.tyndalehouse.step</groupId>
         <artifactId>step-mvn</artifactId>
-        <version>26.1.1</version>
+        <version>26.1.2</version>
     </parent>
 
     <groupId>com.tyndalehouse.step</groupId>
@@ -38,6 +38,7 @@
                             <target>
                                 <!-- make some default directories -->
                                 <mkdir dir="${jsword.home}/step/jsword-mods.d/"/>
+                                <mkdir dir="${jsword.home}/step/versification/"/>
 
                                 <ac:for list="${modulesToInclude}" param="version" xmlns:ac="antlib:net.sf.antcontrib">
                                     <sequential>
@@ -52,6 +53,12 @@
                                         <copy toDir="${packages}/homes/jsword/step/jsword-mods.d/">
                                             <fileset dir="${jsword.home}/step/jsword-mods.d/">
                                                 <include name="**/@{version}.conf"/>
+                                            </fileset>
+                                        </copy>
+                                        <!--<mkdir dir="${jsword.home}/homes/jsword/step/versification/"/>-->
+                                        <copy toDir="${packages}/homes/jsword/step/versification/">
+                                            <fileset dir="${jsword.home}/step/versification/">
+                                                <include name="**/@{version}.json"/>
                                             </fileset>
                                         </copy>
                                     </sequential>

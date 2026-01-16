@@ -2523,12 +2523,10 @@ class _ClassPresentationHandler
 		    if (highlighting)
 		    {
 			selection.style('text-decoration-color', childrenUnderlineColor);
-			selection.style('fill', childrenUnderlineColor);
 		    }
 		    else
 		    {
 			selection.style('text-decoration-color', null);
-			selection.style('fill', null);
 		    }
 		}
 	    }

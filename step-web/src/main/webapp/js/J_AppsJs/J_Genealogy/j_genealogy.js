@@ -2498,6 +2498,136 @@ class _ClassPresentationHandler
 	{
 	}
 
+	const createSvgPoint = function (x, y)
+	{
+	    if (typeof DOMPoint === 'function')
+		return new DOMPoint(x, y);
+	    const point = svg.node().createSVGPoint();
+	    point.x = x;
+	    point.y = y;
+	    return point;
+	};
+
+	const underlineGeometryForName = function (treeNode, nameNode)
+	{
+	    const nodeCTM = treeNode.getCTM();
+	    if (!nodeCTM)
+		return null;
+
+	    let inverseCTM = null;
+	    try
+	    {
+		inverseCTM = nodeCTM.inverse();
+	    }
+	    catch (e)
+	    {
+		return null;
+	    }
+
+	    const fontSize = parseFloat(getComputedStyle(nameNode).fontSize) || 16;
+	    const underlineOffset = underlineOffsetEm * fontSize;
+	    const underlineThickness = underlineThicknessEm * fontSize;
+
+	    const hasCharGeometry = typeof nameNode.getNumberOfChars === 'function'
+		&& typeof nameNode.getStartPositionOfChar === 'function'
+		&& typeof nameNode.getEndPositionOfChar === 'function';
+	    if (hasCharGeometry)
+	    {
+		try
+		{
+		    const numberOfChars = nameNode.getNumberOfChars();
+		    if (numberOfChars > 0)
+		    {
+			const startPoint = nameNode.getStartPositionOfChar(0);
+			const endPoint = nameNode.getEndPositionOfChar(numberOfChars - 1);
+			if (startPoint && endPoint)
+			{
+			    const startLocal = startPoint.matrixTransform(inverseCTM);
+			    const endLocal = endPoint.matrixTransform(inverseCTM);
+			    if (Number.isFinite(startLocal.x) && Number.isFinite(startLocal.y)
+				&& Number.isFinite(endLocal.x) && Number.isFinite(endLocal.y))
+			    {
+				const dx = endLocal.x - startLocal.x;
+				const dy = endLocal.y - startLocal.y;
+				const length = Math.hypot(dx, dy);
+				if (length)
+				{
+				    let nx = -dy / length;
+				    let ny = dx / length;
+				    if (ny < 0)
+				    {
+					nx = -nx;
+					ny = -ny;
+				    }
+
+				    return {
+					x1: startLocal.x + (nx * underlineOffset),
+					y1: startLocal.y + (ny * underlineOffset),
+					x2: endLocal.x + (nx * underlineOffset),
+					y2: endLocal.y + (ny * underlineOffset),
+					thickness: underlineThickness
+				    };
+				}
+			    }
+			}
+		    }
+		}
+		catch (e)
+		{
+		}
+	    }
+
+	    if (typeof nameNode.getBBox !== 'function')
+		return null;
+
+	    let bbox = null;
+	    try
+	    {
+		bbox = nameNode.getBBox();
+	    }
+	    catch (e)
+	    {
+		return null;
+	    }
+
+	    if (!bbox)
+		return null;
+
+	    const textLength = typeof nameNode.getComputedTextLength === 'function'
+		? nameNode.getComputedTextLength()
+		: 0;
+	    const bboxWidth = bbox.width || textLength;
+	    if (!bboxWidth)
+		return null;
+
+	    const bboxHeight = bbox.height || fontSize;
+	    const nameCTM = nameNode.getCTM();
+	    if (!nameCTM)
+		return null;
+
+	    let toTree = null;
+	    try
+	    {
+		toTree = inverseCTM.multiply(nameCTM);
+	    }
+	    catch (e)
+	    {
+		return null;
+	    }
+
+	    const baseline = bbox.y + bboxHeight + underlineOffset;
+	    const startLocal = createSvgPoint(bbox.x, baseline).matrixTransform(toTree);
+	    const endLocal = createSvgPoint(bbox.x + bboxWidth, baseline).matrixTransform(toTree);
+
+	    return {
+		x1: startLocal.x,
+		y1: startLocal.y,
+		x2: endLocal.x,
+		y2: endLocal.y,
+		thickness: underlineThickness
+	    };
+	};
+
 	const updateRelationUnderline = function (personRecord, highlightClass, underlineClass, underlineColor)
 	{
 	    const treeNode = personRecord.treeNode;
@@ -2518,51 +2648,18 @@ class _ClassPresentationHandler
 	    if (!highlighting)
 		return;
 
-	    const numberOfChars = nameNode.getNumberOfChars();
-	    if (0 == numberOfChars)
+	    const geometry = underlineGeometryForName(treeNode, nameNode);
+	    if (!geometry)
 		return;
-
-	    const nodeCTM = treeNode.getCTM();
-	    if (!nodeCTM)
-		return;
-
-	    const startPoint = nameNode.getStartPositionOfChar(0);
-	    const endPoint = nameNode.getEndPositionOfChar(numberOfChars - 1);
-	    const inverseCTM = nodeCTM.inverse();
-	    const startLocal = startPoint.matrixTransform(inverseCTM);
-	    const endLocal = endPoint.matrixTransform(inverseCTM);
-
-	    const dx = endLocal.x - startLocal.x;
-	    const dy = endLocal.y - startLocal.y;
-	    const length = Math.hypot(dx, dy);
-	    if (!length)
-		return;
-
-	    let nx = -dy / length;
-	    let ny = dx / length;
-	    if (ny < 0)
-	    {
-		nx = -nx;
-		ny = -ny;
-	    }
-
-	    const fontSize = parseFloat(getComputedStyle(nameNode).fontSize) || 16;
-	    const underlineOffset = underlineOffsetEm * fontSize;
-	    const underlineThickness = underlineThicknessEm * fontSize;
-
-	    const x1 = startLocal.x + (nx * underlineOffset);
-	    const y1 = startLocal.y + (ny * underlineOffset);
-	    const x2 = endLocal.x + (nx * underlineOffset);
-	    const y2 = endLocal.y + (ny * underlineOffset);
 
 	    nodeSelection.append('line')
 		.attr('class', underlineClass)
-		.attr('x1', x1)
-		.attr('y1', y1)
-		.attr('x2', x2)
-		.attr('y2', y2)
+		.attr('x1', geometry.x1)
+		.attr('y1', geometry.y1)
+		.attr('x2', geometry.x2)
+		.attr('y2', geometry.y2)
 		.attr('stroke', underlineColor)
-		.attr('stroke-width', underlineThickness)
+		.attr('stroke-width', geometry.thickness)
 		.attr('stroke-linecap', 'butt');
 	};
 

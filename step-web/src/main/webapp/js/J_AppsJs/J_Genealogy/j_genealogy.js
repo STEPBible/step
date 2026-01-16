@@ -2478,6 +2478,8 @@ class _ClassPresentationHandler
 	    return;
 
 	const sourcePersonRecord = personRecordFromIndex(ix);
+	const underlineOffsetEm = 0.25;
+	const underlineThicknessEm = 0.18;
 	let siblingsUnderlineColor = '#000';
 	let childrenUnderlineColor = '#b2e5f3';
 	try
@@ -2496,26 +2498,80 @@ class _ClassPresentationHandler
 	{
 	}
 
+	const updateRelationUnderline = function (personRecord, highlightClass, underlineClass, underlineColor)
+	{
+	    const treeNode = personRecord.treeNode;
+	    if (!treeNode)
+		return;
+
+	    const nodeSelection = d3.select(treeNode);
+	    nodeSelection.selectAll('line.' + underlineClass).remove();
+
+	    const textNode = treeNode.querySelector('text');
+	    const nameNode = textNode ? textNode.querySelector('tspan.personName') : null;
+	    if (!nameNode)
+		return;
+
+	    const selection = d3.select(nameNode);
+	    selection.classed(highlightClass, highlighting);
+
+	    if (!highlighting)
+		return;
+
+	    const numberOfChars = nameNode.getNumberOfChars();
+	    if (0 == numberOfChars)
+		return;
+
+	    const nodeCTM = treeNode.getCTM();
+	    if (!nodeCTM)
+		return;
+
+	    const startPoint = nameNode.getStartPositionOfChar(0);
+	    const endPoint = nameNode.getEndPositionOfChar(numberOfChars - 1);
+	    const inverseCTM = nodeCTM.inverse();
+	    const startLocal = startPoint.matrixTransform(inverseCTM);
+	    const endLocal = endPoint.matrixTransform(inverseCTM);
+
+	    const dx = endLocal.x - startLocal.x;
+	    const dy = endLocal.y - startLocal.y;
+	    const length = Math.hypot(dx, dy);
+	    if (!length)
+		return;
+
+	    let nx = -dy / length;
+	    let ny = dx / length;
+	    if (ny < 0)
+	    {
+		nx = -nx;
+		ny = -ny;
+	    }
+
+	    const fontSize = parseFloat(getComputedStyle(nameNode).fontSize) || 16;
+	    const underlineOffset = underlineOffsetEm * fontSize;
+	    const underlineThickness = underlineThicknessEm * fontSize;
+
+	    const x1 = startLocal.x + (nx * underlineOffset);
+	    const y1 = startLocal.y + (ny * underlineOffset);
+	    const x2 = endLocal.x + (nx * underlineOffset);
+	    const y2 = endLocal.y + (ny * underlineOffset);
+
+	    nodeSelection.append('line')
+		.attr('class', underlineClass)
+		.attr('x1', x1)
+		.attr('y1', y1)
+		.attr('x2', x2)
+		.attr('y2', y2)
+		.attr('stroke', underlineColor)
+		.attr('stroke-width', underlineThickness)
+		.attr('stroke-linecap', 'butt');
+	};
+
 	for (const relatedPerson of sourcePersonRecord.siblings)
         {
 	    const personRecord = personRecordFromName(relatedPerson.disambiguatedName);
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
-		const textNode = personRecord.treeNode.querySelector('text');
-		const nameNode = textNode ? textNode.querySelector('tspan.personName') : null;
-		if (nameNode)
-		{
-		    const selection = d3.select(nameNode);
-		    selection.classed('highlightSiblings', highlighting);
-		    if (highlighting)
-		    {
-			selection.style('text-decoration-color', siblingsUnderlineColor);
-		    }
-		    else
-		    {
-			selection.style('text-decoration-color', null);
-		    }
-		}
+		updateRelationUnderline(personRecord, 'highlightSiblings', 'siblingUnderline', siblingsUnderlineColor);
 	    }
 	    catch (e)
 	    {
@@ -2528,21 +2584,7 @@ class _ClassPresentationHandler
 	    const personRecord = personRecordFromName(relatedPerson.disambiguatedName);
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
-		const textNode = personRecord.treeNode.querySelector('text');
-		const nameNode = textNode ? textNode.querySelector('tspan.personName') : null;
-		if (nameNode)
-		{
-		    const selection = d3.select(nameNode);
-		    selection.classed('highlightChildren', highlighting);
-		    if (highlighting)
-		    {
-			selection.style('text-decoration-color', childrenUnderlineColor);
-		    }
-		    else
-		    {
-			selection.style('text-decoration-color', null);
-		    }
-		}
+		updateRelationUnderline(personRecord, 'highlightChildren', 'childUnderline', childrenUnderlineColor);
 	    }
 	    catch (e)
 	    {

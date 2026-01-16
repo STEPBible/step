@@ -590,11 +590,7 @@ class _ClassInitialisationHandler extends ClassJFrameworkMultiframeCommunication
 	const urlParms = new URLSearchParams(new URL(window.location.href).search);
 	const strong = urlParms.get('strong')
 	const showBuiltInTrees = urlParms.has('showBuiltInTrees');
-	const infoPanelHeight = urlParms.get('infoPanelHeight');
 	const savedData = JFrameworkMultiframeCommunicationsSlave.getSavedData(JFrameworkUtils.myFrameId());
-
-	if (infoPanelHeight)
-	    PresentationHandler.setInfoPanelHeight(parseInt(infoPanelHeight, 10));
 
 	if (savedData)
 	    PresentationHandler.refreshFromDataSavedInParentWindow(savedData);
@@ -2557,29 +2553,9 @@ class _ClassPresentationHandler
     {
 	const dStrongsRoot = personRecordFromIndex(this.getRootPersonIx()).dStrongs;
 	const dStrongsSelected = personRecordFromIndex(this.getSelectedPersonIx()).dStrongs;
-	const height = this.getInfoPanelHeight();
-	const infoPanelHeight = height ? Math.round(height) : null;
-	const infoPanelHeightParam = infoPanelHeight ? '&infoPanelHeight=' + infoPanelHeight : '';
-	const url = JFrameworkUtils.getFullUrl('html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?strong=' + dStrongsRoot + ':' + dStrongsSelected + infoPanelHeightParam);
+	const url = JFrameworkUtils.getFullUrl('html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?strong=' + dStrongsRoot + ':' + dStrongsSelected);
 	navigator.clipboard.writeText(url);
 	this.showPopUp('URL copied to clipboard', 'copyToClipboardConfirmation');
-    }
-
-	
-    /**************************************************************************/
-    getInfoPanelHeight ()
-    {
-	const infoBox = document.getElementById('info-box');
-	return infoBox ? infoBox.getBoundingClientRect().height : null;
-    }
-
-
-    /**************************************************************************/
-    setInfoPanelHeight (height)
-    {
-	const infoBox = document.getElementById('info-box');
-	if (infoBox && height)
-	    infoBox.style.height = `${height}px`;
     }
 
 

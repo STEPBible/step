@@ -2528,6 +2528,58 @@ class _ClassPresentationHandler
 	    const underlineOffset = underlineOffsetEm * fontSize;
 	    const underlineThickness = underlineThicknessEm * fontSize;
 
+	    const geometryFromCharPositions = function (startPoint, endPoint)
+	    {
+		if (!startPoint || !endPoint)
+		    return null;
+		const startLocal = startPoint.matrixTransform(inverseCTM);
+		const endLocal = endPoint.matrixTransform(inverseCTM);
+		if (!Number.isFinite(startLocal.x) || !Number.isFinite(startLocal.y)
+		    || !Number.isFinite(endLocal.x) || !Number.isFinite(endLocal.y))
+		    return null;
+		const dx = endLocal.x - startLocal.x;
+		const dy = endLocal.y - startLocal.y;
+		const length = Math.hypot(dx, dy);
+		if (!length)
+		    return null;
+		let nx = -dy / length;
+		let ny = dx / length;
+		if (ny < 0)
+		{
+		    nx = -nx;
+		    ny = -ny;
+		}
+
+		return {
+		    x1: startLocal.x + (nx * underlineOffset),
+		    y1: startLocal.y + (ny * underlineOffset),
+		    x2: endLocal.x + (nx * underlineOffset),
+		    y2: endLocal.y + (ny * underlineOffset),
+		    thickness: underlineThickness
+		};
+	    };
+
+	    const geometryFromCharRange = function (element, startIndex, endIndex)
+	    {
+		if (!element)
+		    return null;
+		if (typeof element.getStartPositionOfChar !== 'function'
+		    || typeof element.getEndPositionOfChar !== 'function')
+		    return null;
+		if (startIndex < 0 || endIndex < startIndex)
+		    return null;
+		try
+		{
+		    const startPoint = element.getStartPositionOfChar(startIndex);
+		    const endPoint = element.getEndPositionOfChar(endIndex);
+		    return geometryFromCharPositions(startPoint, endPoint);
+		}
+		catch (e)
+		{
+		    return null;
+		}
+	    };
+
 	    const hasCharGeometry = typeof nameNode.getNumberOfChars === 'function'
 		&& typeof nameNode.getStartPositionOfChar === 'function'
 		&& typeof nameNode.getEndPositionOfChar === 'function';
@@ -2538,42 +2590,48 @@ class _ClassPresentationHandler
 		    const numberOfChars = nameNode.getNumberOfChars();
 		    if (numberOfChars > 0)
 		    {
-			const startPoint = nameNode.getStartPositionOfChar(0);
-			const endPoint = nameNode.getEndPositionOfChar(numberOfChars - 1);
-			if (startPoint && endPoint)
-			{
-			    const startLocal = startPoint.matrixTransform(inverseCTM);
-			    const endLocal = endPoint.matrixTransform(inverseCTM);
-			    if (Number.isFinite(startLocal.x) && Number.isFinite(startLocal.y)
-				&& Number.isFinite(endLocal.x) && Number.isFinite(endLocal.y))
-			    {
-				const dx = endLocal.x - startLocal.x;
-				const dy = endLocal.y - startLocal.y;
-				const length = Math.hypot(dx, dy);
-				if (length)
-				{
-				    let nx = -dy / length;
-				    let ny = dx / length;
-				    if (ny < 0)
-				    {
-					nx = -nx;
-					ny = -ny;
-				    }
-
-				    return {
-					x1: startLocal.x + (nx * underlineOffset),
-					y1: startLocal.y + (ny * underlineOffset),
-					x2: endLocal.x + (nx * underlineOffset),
-					y2: endLocal.y + (ny * underlineOffset),
-					thickness: underlineThickness
-				    };
-				}
-			    }
-			}
+			const geometry = geometryFromCharRange(nameNode, 0, numberOfChars - 1);
+			if (geometry)
+			    return geometry;
 		    }
 		}
 		catch (e)
 		{
+		}
+	    }
+
+	    const nameText = nameNode.textContent || '';
+	    if (nameText.length > 0)
+	    {
+		const textNode = typeof nameNode.closest === 'function' ? nameNode.closest('text') : nameNode.parentNode;
+		if (textNode && textNode !== nameNode && typeof textNode.getNumberOfChars === 'function')
+		{
+		    let startIndex = 0;
+		    let found = false;
+		    const childNodes = textNode.childNodes || [];
+		    for (const child of childNodes)
+		    {
+			if (child === nameNode)
+			{
+			    found = true;
+			    break;
+			}
+			if (child && child.nodeType === 3)
+			    startIndex += (child.textContent || '').length;
+			else if (child && child.nodeType === 1)
+			    startIndex += (child.textContent || '').length;
+		    }
+		    if (found)
+		    {
+			const endIndex = startIndex + nameText.length - 1;
+			const totalChars = textNode.getNumberOfChars();
+			if (endIndex < totalChars)
+			{
+			    const geometry = geometryFromCharRange(textNode, startIndex, endIndex);
+			    if (geometry)
+				return geometry;
+			}
+		    }
 		}
 	    }
 

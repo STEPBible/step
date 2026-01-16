@@ -76,7 +76,7 @@
     --jframework-clrInfoBoxBackground: var(--clrLexiconFocusBG);
     --jframework-clrPopUpMenuItemBackgroundSelected: var(--clrHighlight);
 
-    --jframework-clrSearchBoxBackground: #eef9fc;
+    --jframework-clrSearchBoxBackground: var(--jframework-clrInfoBoxBackground);
 
     --jframework-clrStandardBorder: var(--clrHighlight);
     --jframework-clrButtonText: var(--clrHighlight);

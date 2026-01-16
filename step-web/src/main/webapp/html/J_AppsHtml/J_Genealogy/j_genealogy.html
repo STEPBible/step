@@ -41,6 +41,8 @@
 	--jframework-clrWoman: salmon;
 	--jframework-clrGroup: black;
 	--svgBackground: lightgray;
+	--genealogy-sibling-underline-color: #000;
+	--genealogy-child-underline-color: var(--clrRelatedWordBg);
     }    
 
 
@@ -161,11 +163,11 @@
     }
 
     .highlightSiblings {
-	text-decoration-color: black;
+	text-decoration-color: var(--genealogy-sibling-underline-color);
     }
 
     .highlightChildren {
-	text-decoration-color: var(--clrRelatedWordBg);
+	text-decoration-color: var(--genealogy-child-underline-color);
     }
 
     .layoutMenuHighlightExample {
@@ -178,12 +180,12 @@
 
     .layoutMenuHighlightExample--siblings {
 	color: inherit;
-	text-decoration-color: black;
+	text-decoration-color: var(--genealogy-sibling-underline-color);
     }
 
     .layoutMenuHighlightExample--children {
 	color: inherit;
-	text-decoration-color: var(--clrRelatedWordBg);
+	text-decoration-color: var(--genealogy-child-underline-color);
     }
 
     .layoutMenuOption {

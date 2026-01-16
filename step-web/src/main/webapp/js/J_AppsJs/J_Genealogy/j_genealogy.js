@@ -2478,16 +2478,19 @@ class _ClassPresentationHandler
 	    return;
 
 	const sourcePersonRecord = personRecordFromIndex(ix);
+	let siblingsUnderlineColor = '#000';
 	let childrenUnderlineColor = '#b2e5f3';
 	try
 	{
-	    const rawColour = getComputedStyle(document.documentElement).getPropertyValue('--clrRelatedWordBg');
-	    if (rawColour)
-	    {
-		const trimmedColour = rawColour.trim();
-		if (trimmedColour.length > 0)
-		    childrenUnderlineColor = trimmedColour;
-	    }
+	    const rootStyles = getComputedStyle(document.documentElement);
+	    const rawSiblingColour = rootStyles.getPropertyValue('--genealogy-sibling-underline-color').trim();
+	    if (rawSiblingColour.length > 0)
+		siblingsUnderlineColor = rawSiblingColour;
+	    let rawChildrenColour = rootStyles.getPropertyValue('--genealogy-child-underline-color').trim();
+	    if (rawChildrenColour.length == 0)
+		rawChildrenColour = rootStyles.getPropertyValue('--clrRelatedWordBg').trim();
+	    if (rawChildrenColour.length > 0)
+		childrenUnderlineColor = rawChildrenColour;
 	}
 	catch (e)
 	{
@@ -2501,7 +2504,18 @@ class _ClassPresentationHandler
 		const textNode = personRecord.treeNode.querySelector('text');
 		const nameNode = textNode ? textNode.querySelector('tspan.personName') : null;
 		if (nameNode)
-		    d3.select(nameNode).classed('highlightSiblings', highlighting);
+		{
+		    const selection = d3.select(nameNode);
+		    selection.classed('highlightSiblings', highlighting);
+		    if (highlighting)
+		    {
+			selection.style('text-decoration-color', siblingsUnderlineColor);
+		    }
+		    else
+		    {
+			selection.style('text-decoration-color', null);
+		    }
+		}
 	    }
 	    catch (e)
 	    {

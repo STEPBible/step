@@ -209,6 +209,7 @@ class _ClassJChronology extends ClassJFrameworkMultiframeCommunicationsSlave
 	   them. */
 	
 	JRenderer.render('onload');
+	InfoPanelResizerHandler.initialise();
 
 
 

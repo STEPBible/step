@@ -297,9 +297,9 @@
 	  font-size: var(--infoBoxFontSize);
           border: 1px solid var(--clrInfoBoxBorder);
           box-shadow: 0px 2px 5px var(--clrInfoBoxShadow);
-          text-align: left;
+	  text-align: left;
 	  overflow-y: auto;
-	  margin-bottom: 10px;
+	  margin-bottom: 0;
 	  padding: 1em;
       }
 
@@ -310,6 +310,53 @@
       #info-box ul {
 	  padding-left: 20px; /* Adjust this if needed */
 	  list-style-position: outside; /* Ensures bullets align with the left margin */
+      }
+
+
+      /*----------------------------------------------------------------------*/
+      /*                       Info panel height resizer                     */
+      /*----------------------------------------------------------------------*/
+
+      #infoPanelResizer {
+	  width: 100%;
+	  flex-shrink: 0;
+	  position: relative;
+	  z-index: 10;
+      }
+
+      .jframework-heightResizer {
+	  height: 5px;
+	  cursor: ns-resize;
+	  background-color: var(--clrSecondary1);
+	  border-top: 1px solid var(--clrSecondary2);
+	  border-bottom: 1px solid var(--clrSecondary2);
+	  color: var(--jframework-clrDividerGrip);
+	  position: relative;
+	  transition: background-color 120ms ease, color 120ms ease;
+	  margin-top: 5px;
+	  margin-bottom: 5px;
+      }
+
+      .jframework-heightResizer::before {
+	  content: "";
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  width: 24px;
+	  height: 4px;
+	  transform: translate(-50%, -50%);
+	  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+	  background-size: 4px 4px;
+      }
+
+      .jframework-heightResizer:hover {
+	  color: var(--jframework-clrDividerGripHover);
+	  background-color: var(--jframework-clrDividerBgHover);
+      }
+
+      .jframework-heightResizer:active {
+	  color: var(--jframework-clrDividerGripActive);
+	  background-color: var(--clrLexiconFocusBG);
       }
 
 
@@ -836,6 +883,7 @@
 	  <div id='copyToClipboardConfirmation' class='fadingPopUp'>URL copied to clipboard</div>
 	  <div id='info-box-content' style='padding:10px;'></div>
 	</div>
+	<div id='infoPanelResizer' class='jframework-heightResizer'></div>
 
 	<div id='jchronologyDurationHeadersWrapper'>
 	  <button type='button' class='jframework-vanillaButton' title='Chronology selection' id='jchronologyDateInfoButton'

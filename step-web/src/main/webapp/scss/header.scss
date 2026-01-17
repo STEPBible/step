@@ -221,6 +221,11 @@
       }
     }
 
+    .headerButtons > .dropdown {
+      display: inline-block;
+      padding-left: 15px;
+    }
+
     @media (min-width: $stepXSBootstrap) {
       .navbar-collapse {
         display: inline !important;
@@ -356,7 +361,7 @@
           }
         }
       }
-      .dropdown {
+      .navbar-collapse .dropdown {
         display: block;
       }
     }

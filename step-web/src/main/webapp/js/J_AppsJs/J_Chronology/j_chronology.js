@@ -278,6 +278,173 @@ export const JChronology = new _ClassJChronology();
 
 
 
+/*!****************************************************************************/
+/******************************************************************************/
+/**                                                                          **/
+/**                     Info panel height resizer                            **/
+/**                                                                          **/
+/******************************************************************************/
+/******************************************************************************/
+
+class ClassInfoPanelResizerHandler
+{
+    /**************************************************************************/
+    initialise ()
+    {
+	this._infoBox = document.getElementById('info-box');
+	this._resizer = document.getElementById('infoPanelResizer');
+	if (!this._infoBox || !this._resizer)
+	    return;
+
+	this._isDragging = false;
+	this._animationFrameId = null;
+
+	this._boundMouseMove = this._onMouseMove.bind(this);
+	this._boundMouseUp = this._onMouseUp.bind(this);
+	this._boundTouchMove = this._onTouchMove.bind(this);
+	this._boundTouchEnd = this._onTouchEnd.bind(this);
+
+	this._resizer.addEventListener('mousedown', this._onMouseDown.bind(this));
+	this._resizer.addEventListener('touchstart', this._onTouchStart.bind(this), { passive: false });
+    }
+
+
+    /**************************************************************************/
+    _onMouseDown (event)
+    {
+	if (event.button !== 0)
+	    return;
+
+	event.preventDefault();
+	this._beginDrag(event.clientY);
+	document.addEventListener('mousemove', this._boundMouseMove);
+	document.addEventListener('mouseup', this._boundMouseUp);
+    }
+
+
+    /**************************************************************************/
+    _onMouseMove (event)
+    {
+	this._queueResize(event.clientY);
+    }
+
+
+    /**************************************************************************/
+    _onMouseUp ()
+    {
+	this._endDrag();
+	document.removeEventListener('mousemove', this._boundMouseMove);
+	document.removeEventListener('mouseup', this._boundMouseUp);
+    }
+
+
+    /**************************************************************************/
+    _onTouchStart (event)
+    {
+	if (!event.touches.length)
+	    return;
+
+	event.preventDefault();
+	this._beginDrag(event.touches[0].clientY);
+	document.addEventListener('touchmove', this._boundTouchMove, { passive: false });
+	document.addEventListener('touchend', this._boundTouchEnd);
+	document.addEventListener('touchcancel', this._boundTouchEnd);
+    }
+
+
+    /**************************************************************************/
+    _onTouchMove (event)
+    {
+	if (!event.touches.length)
+	    return;
+
+	event.preventDefault();
+	this._queueResize(event.touches[0].clientY);
+    }
+
+
+    /**************************************************************************/
+    _onTouchEnd ()
+    {
+	this._endDrag();
+	document.removeEventListener('touchmove', this._boundTouchMove);
+	document.removeEventListener('touchend', this._boundTouchEnd);
+	document.removeEventListener('touchcancel', this._boundTouchEnd);
+    }
+
+
+    /**************************************************************************/
+    _beginDrag (clientY)
+    {
+	this._isDragging = true;
+	this._startY = clientY;
+	this._latestY = clientY;
+	this._startHeight = this._infoBox.getBoundingClientRect().height;
+	document.body.style.cursor = 'ns-resize';
+	document.body.style.userSelect = 'none';
+    }
+
+
+    /**************************************************************************/
+    _endDrag ()
+    {
+	this._isDragging = false;
+	document.body.style.cursor = '';
+	document.body.style.userSelect = '';
+	if (this._animationFrameId) {
+	    cancelAnimationFrame(this._animationFrameId);
+	    this._animationFrameId = null;
+	}
+	this._applyResize();
+    }
+
+
+    /**************************************************************************/
+    _queueResize (clientY)
+    {
+	if (!this._isDragging)
+	    return;
+
+	this._latestY = clientY;
+	if (this._animationFrameId)
+	    return;
+
+	this._animationFrameId = requestAnimationFrame(() => {
+	    this._animationFrameId = null;
+	    this._applyResize();
+	});
+    }
+
+
+    /**************************************************************************/
+    _applyResize ()
+    {
+	const delta = this._latestY - this._startY;
+	const newHeight = this._startHeight + delta;
+	const clampedHeight = this._clampInfoBoxHeight(newHeight);
+	this._infoBox.style.height = `${clampedHeight}px`;
+    }
+
+
+    /**************************************************************************/
+    _clampInfoBoxHeight (height)
+    {
+	const minInfoHeight = 50;
+	const minTreeHeight = 150;
+	const bodyHeight = document.body.getBoundingClientRect().height;
+	const resizerHeight = this._resizer.getBoundingClientRect().height;
+	const maxInfoHeight = Math.max(minInfoHeight, bodyHeight - resizerHeight - minTreeHeight);
+	return Math.min(Math.max(height, minInfoHeight), maxInfoHeight);
+    }
+}
+
+const InfoPanelResizerHandler = new ClassInfoPanelResizerHandler();
+
+
+
+
+
+
 
 
 /*!****************************************************************************/

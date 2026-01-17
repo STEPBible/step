@@ -2552,12 +2552,26 @@ class _ClassPresentationHandler
 	    const underlineOffset = underlineOffsetEm * fontSize;
 	    const underlineThickness = underlineThicknessEm * fontSize;
 
-	    const geometryFromCharPositions = function (startPoint, endPoint)
+	    const geometryFromCharPositions = function (startPoint, endPoint, element)
 	    {
 		if (!startPoint || !endPoint)
 		    return null;
-		const startLocal = startPoint.matrixTransform(inverseCTM);
-		const endLocal = endPoint.matrixTransform(inverseCTM);
+		if (!element || typeof element.getCTM !== 'function')
+		    return null;
+		const elementCTM = element.getCTM();
+		if (!elementCTM)
+		    return null;
+		let toTreeLocal = null;
+		try
+		{
+		    toTreeLocal = inverseCTM.multiply(elementCTM);
+		}
+		catch (e)
+		{
+		    return null;
+		}
+		const startLocal = startPoint.matrixTransform(toTreeLocal);
+		const endLocal = endPoint.matrixTransform(toTreeLocal);
 		if (!Number.isFinite(startLocal.x) || !Number.isFinite(startLocal.y)
 		    || !Number.isFinite(endLocal.x) || !Number.isFinite(endLocal.y))
 		    return null;
@@ -2596,7 +2610,7 @@ class _ClassPresentationHandler
 		{
 		    const startPoint = element.getStartPositionOfChar(startIndex);
 		    const endPoint = element.getEndPositionOfChar(endIndex);
-		    return geometryFromCharPositions(startPoint, endPoint);
+		    return geometryFromCharPositions(startPoint, endPoint, element);
 		}
 		catch (e)
 		{

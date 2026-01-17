@@ -8,13 +8,15 @@
   .hidden-touch-xs {
     display: none !important;
   }
+}
 
+@media (hover: none) and (max-width: 767px) {
   #stepnavbar {
     z-index: auto;
   }
 
   #report-icon + .dropdown-menu {
-    z-index: 2200;
+    z-index: 11050;
   }
 }
 

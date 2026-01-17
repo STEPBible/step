@@ -3488,7 +3488,7 @@ class _ClassPresentationHandler
 		return false;
 	})();
 	const shareableLinkContent = useIconForShareableLink ?
-		"<span class='glyphicon glyphicon-send' aria-hidden='true'></span>" :
+		"<span class='glyphicon glyphicon-link' aria-hidden='true'></span>" :
 		'Shareable link';
 	const shareableLinkMarkup = `<span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree' aria-label='Copy to clipboard a URL for this family tree'>${shareableLinkContent}</span>`;
 	infoBoxContent

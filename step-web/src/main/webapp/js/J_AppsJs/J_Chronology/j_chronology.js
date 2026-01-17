@@ -2045,6 +2045,30 @@ class _ClassJChronologyPresentationHandler
 	this._showPopUp('URL copied to clipboard', 'copyToClipboardConfirmation');
     }
 
+
+    /**************************************************************************/
+    _getShareableLinkMarkup (titleText)
+    {
+	const useIconForShareableLink = (() => {
+	    if (typeof step !== 'undefined' && typeof step.touchDevice === 'boolean') {
+		return step.touchDevice;
+	    }
+	    const ua = navigator.userAgent.toLowerCase();
+	    if (ua.indexOf('android') > -1) {
+		return true;
+	    }
+	    if ((ua.indexOf('iphone') > -1) || (ua.indexOf('ipad') > -1) ||
+		((ua.indexOf('macintosh') > -1) && (navigator.maxTouchPoints > 1))) {
+		return true;
+	    }
+	    return false;
+	})();
+	const shareableLinkContent = useIconForShareableLink ?
+	    "<span class='glyphicon glyphicon-link' aria-hidden='true'></span>" :
+	    'Shareable link';
+	return `<span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='${titleText}' aria-label='${titleText}'>${shareableLinkContent}</span>`;
+    }
+
 	
 
     /**************************************************************************/
@@ -2069,6 +2093,7 @@ class _ClassJChronologyPresentationHandler
 	const date = '';
 	const refs = JChronologyData.getChapterRefsAsString(entry);
 	const caveatsA = refs.includes('?') ? ' (Question marks against references highlight chapters whose dates are particularly open to debate.)' : '';
+	const shareableLinkMarkup = this._getShareableLinkMarkup('Copy to clipboard a URL for this event');
 
 	var scripturesFromChapterData = JChronologyData.getChapterRefs(entry);
 	if (0 != scripturesFromChapterData.length)
@@ -2098,7 +2123,7 @@ class _ClassJChronologyPresentationHandler
 
 	    infoBox.innerHTML =
 		`<div style='display:flex; align-items:center'>
-                  <span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this event'>Shareable link</span>
+                  ${shareableLinkMarkup}
                 </div>
                 ${content}`;
 	})();
@@ -2126,6 +2151,7 @@ class _ClassJChronologyPresentationHandler
 	const scripturesFromChronologyData = JChronologyData.getAnnotatedYearScriptureRefs(entry);
 	const extraBiblicalRefs = JChronologyData.getAnnotatedYearNonScriptureRefs(entry);
 	const longDescription = JChronologyData.getAnnotatedYearArticle(entry);
+	const shareableLinkMarkup = this._getShareableLinkMarkup('Copy to clipboard a URL for this event');
 
 	var scripturesFromChapterData = JChronologyData.getChaptersFromChapterAndYearData(entry);
 	if (0 != scripturesFromChapterData.length)
@@ -2167,7 +2193,7 @@ class _ClassJChronologyPresentationHandler
 
 	    infoBox.innerHTML =
 		`<div style='display:flex; align-items:center'>
-                  <span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this event'>Shareable link</span>
+                  ${shareableLinkMarkup}
                 </div>
                 ${content}`;
 

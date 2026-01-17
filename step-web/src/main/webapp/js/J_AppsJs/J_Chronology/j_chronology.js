@@ -2094,6 +2094,11 @@ class _ClassJChronologyPresentationHandler
 	const refs = JChronologyData.getChapterRefsAsString(entry);
 	const caveatsA = refs.includes('?') ? ' (Question marks against references highlight chapters whose dates are particularly open to debate.)' : '';
 	const shareableLinkMarkup = this._getShareableLinkMarkup('Copy to clipboard a URL for this event');
+	const headerText = `<span class='iconFont'>K&nbsp;</span>${this._convertToRanges(JChronologyData.getChapterRefs(entry))}`;
+	const headerMarkup = `<div style='display:flex; align-items:center'>
+                  <span>${headerText}</span>
+                  ${shareableLinkMarkup}
+                </div>`;
 
 	var scripturesFromChapterData = JChronologyData.getChapterRefs(entry);
 	if (0 != scripturesFromChapterData.length)
@@ -2122,9 +2127,7 @@ class _ClassJChronologyPresentationHandler
 	    content = scripturesFromChapterData + content.slice(0, -4);
 
 	    infoBox.innerHTML =
-		`<div style='display:flex; align-items:center'>
-                  ${shareableLinkMarkup}
-                </div>
+		`${headerMarkup}
                 ${content}`;
 	})();
 	
@@ -2152,6 +2155,11 @@ class _ClassJChronologyPresentationHandler
 	const extraBiblicalRefs = JChronologyData.getAnnotatedYearNonScriptureRefs(entry);
 	const longDescription = JChronologyData.getAnnotatedYearArticle(entry);
 	const shareableLinkMarkup = this._getShareableLinkMarkup('Copy to clipboard a URL for this event');
+	const headerText = '<b>' + date + ': ' + shortDescription + (shortDescription.endsWith('.') ? '' : '.') + '</b>';
+	const headerMarkup = `<div style='display:flex; align-items:center'>
+                  <span>${headerText}</span>
+                  ${shareableLinkMarkup}
+                </div>`;
 
 	var scripturesFromChapterData = JChronologyData.getChaptersFromChapterAndYearData(entry);
 	if (0 != scripturesFromChapterData.length)
@@ -2184,7 +2192,7 @@ class _ClassJChronologyPresentationHandler
 	    }
 	    
 
-	    var content = '<b>' + date + ': ' + shortDescription + (shortDescription.endsWith('.') ? '' : '.') + '</b>' + caveatsA + '<br><br>';
+	    var content = caveatsA + '<br><br>';
 	    if ('' != scripturesFromChronologyData) content += '<b>Scripture references:</b> ' + scripturesFromChronologyData + '<br><br>';
 	    if ('' != extraBiblicalRefs) content += '<b>External references:</b> ' + extraBiblicalRefs + '<br><br>';
 	    content += longDescription;
@@ -2192,9 +2200,7 @@ class _ClassJChronologyPresentationHandler
 	    content += (chapterSummaries == '' ? '' : '<br><br>') + chapterSummaries;
 
 	    infoBox.innerHTML =
-		`<div style='display:flex; align-items:center'>
-                  ${shareableLinkMarkup}
-                </div>
+		`${headerMarkup}
                 ${content}`;
 
 	    infoBox.querySelector('#shareableLink').addEventListener('click', () => this._copyLinkToClipboard());

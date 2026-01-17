@@ -5370,12 +5370,13 @@ step.util = {
     },
 	hideNavBarOnPhones: function(doNotScroll) {
 		if (step.touchDevice && !step.touchWideDevice) {
+			var navHeight = $("#stepnavbar").outerHeight() || 0;
 			$("body").css("overflow-y","auto");
 			$("#stepnavbar").css("position","relative");
 			$(".mainPanel.row.row-offcanvas").css("padding",0);
 			$("#columnHolder").css("overflow-y","unset");
 			$(".passageContainer").css("border","0");
-			$(".passageOptionsGroup").css("position","sticky").css("top",0).css("left",0).
+			$(".passageOptionsGroup").css("position","sticky").css("top",navHeight).css("left",0).
 				css("opacity",1).css("z-index",2145);
 			$(".previousChapter").css("top","90%").css("display","inline").css("position","fixed").
 				css("bottom","unset");

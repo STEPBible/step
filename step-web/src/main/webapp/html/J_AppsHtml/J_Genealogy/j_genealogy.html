@@ -148,20 +148,9 @@
 	font-weight: bold;
     }
 
-    tspan.highlightSiblings,
-    tspan.highlightChildren {
-	text-decoration-line: underline;
-	text-decoration-style: solid;
-	text-decoration-thickness: 0.18em;
-	text-underline-offset: 0.25em;
-    }
-
-    tspan.highlightSiblings {
-	text-decoration-color: var(--genealogy-sibling-underline-color);
-    }
-
-    tspan.highlightChildren {
-	text-decoration-color: var(--genealogy-child-underline-color);
+    svg tspan.highlightSiblings,
+    svg tspan.highlightChildren {
+	text-decoration: none;
     }
       
     tspan.retainDefaultAppearance { /* Avoids the bishop's mitre icon from turning red when highlighted. */

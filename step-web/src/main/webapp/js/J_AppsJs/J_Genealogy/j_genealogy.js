@@ -2485,14 +2485,38 @@ class _ClassPresentationHandler
 	try
 	{
 	    const rootStyles = getComputedStyle(document.documentElement);
+	    const resolveCssColor = function (value, styles, depth = 0)
+	    {
+		if (!value)
+		    return '';
+		if (depth > 5)
+		    return value.trim();
+		const trimmed = value.trim();
+		const varPattern = /var\(\s*(--[^ ,)]+)\s*(?:,\s*([^)]+))?\s*\)/;
+		const match = trimmed.match(varPattern);
+		if (!match)
+		    return trimmed;
+		let replacement = styles.getPropertyValue(match[1]).trim();
+		if (!replacement && match[2])
+		    replacement = match[2].trim();
+		if (!replacement)
+		    return '';
+		const resolved = trimmed.replace(varPattern, replacement);
+		if (resolved === trimmed)
+		    return resolved.trim();
+		return resolveCssColor(resolved, styles, depth + 1);
+	    };
+
 	    const rawSiblingColour = rootStyles.getPropertyValue('--genealogy-sibling-underline-color').trim();
-	    if (rawSiblingColour.length > 0)
-		siblingsUnderlineColor = rawSiblingColour;
+	    const resolvedSiblingColour = resolveCssColor(rawSiblingColour, rootStyles);
+	    if (resolvedSiblingColour.length > 0)
+		siblingsUnderlineColor = resolvedSiblingColour;
 	    let rawChildrenColour = rootStyles.getPropertyValue('--genealogy-child-underline-color').trim();
 	    if (rawChildrenColour.length == 0)
 		rawChildrenColour = rootStyles.getPropertyValue('--clrRelatedWordBg').trim();
-	    if (rawChildrenColour.length > 0)
-		childrenUnderlineColor = rawChildrenColour;
+	    const resolvedChildrenColour = resolveCssColor(rawChildrenColour, rootStyles);
+	    if (resolvedChildrenColour.length > 0)
+		childrenUnderlineColor = resolvedChildrenColour;
 	}
 	catch (e)
 	{

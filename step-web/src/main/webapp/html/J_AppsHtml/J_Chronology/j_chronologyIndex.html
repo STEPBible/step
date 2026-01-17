@@ -199,6 +199,8 @@
 	   initialisation. */
 
 	JChronologyTableHandler.init(C_HideTableWhenNotInUse);
+	if (C_HideTableWhenNotInUse)
+	    JEventHandlers.sendMessageTo(null, { 'resizeIframe': document.body.scrollHeight + 10 }); // Extra 10 because experience suggests that things may otherwise be cut off at the bottom of the frame.
 
 	const check = setInterval(() => {
             if (JChronologyTableHandler.initialisationComplete)

@@ -20,6 +20,12 @@
   }
 }
 
+.report-dropdown-floating {
+  position: absolute;
+  z-index: 11050;
+  display: block;
+}
+
 @media (max-width: 450px) {
   .hidden-narrow {
     display: none !important;

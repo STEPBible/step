@@ -217,6 +217,83 @@
         searchView.syncWithUrl(step.util.activePassage());
     }
 
+    function initReportDropdownPortal() {
+        if (!step.touchDevice || step.touchWideDevice) {
+            return;
+        }
+        var reportTrigger = $("#report-icon");
+        if (reportTrigger.length === 0) {
+            return;
+        }
+        var dropdown = reportTrigger.closest(".dropdown");
+        var menu = dropdown.find("> .dropdown-menu");
+        if (menu.length === 0) {
+            return;
+        }
+
+        var originalParent = menu.parent();
+        var originalNext = menu.next();
+        var originalStyle = menu.attr("style") || "";
+
+        var positionMenu = function () {
+            var triggerNode = reportTrigger.get(0);
+            if (!triggerNode) {
+                return;
+            }
+            var rect = triggerNode.getBoundingClientRect();
+            var menuWidth = menu.outerWidth();
+            var left = rect.right - menuWidth;
+            if (left < 0) {
+                left = 0;
+            }
+            menu.css({
+                left: left + window.pageXOffset,
+                top: rect.bottom + window.pageYOffset
+            });
+        };
+
+        var attachMenu = function () {
+            if (menu.hasClass("report-dropdown-floating")) {
+                return;
+            }
+            menu.data("reportDropdownOriginalStyle", originalStyle);
+            $("body").append(menu);
+            menu.addClass("report-dropdown-floating");
+        };
+
+        var restoreMenu = function () {
+            if (!menu.hasClass("report-dropdown-floating")) {
+                return;
+            }
+            menu.removeClass("report-dropdown-floating");
+            var savedStyle = menu.data("reportDropdownOriginalStyle") || "";
+            if (savedStyle) {
+                menu.attr("style", savedStyle);
+            } else {
+                menu.removeAttr("style");
+            }
+            if (originalNext.length) {
+                menu.insertBefore(originalNext);
+            } else {
+                originalParent.append(menu);
+            }
+        };
+
+        dropdown.on("show.bs.dropdown.reportDropdownPortal", function () {
+            attachMenu();
+            positionMenu();
+            $(window).on("scroll.reportDropdownPortal resize.reportDropdownPortal", positionMenu);
+        });
+
+        dropdown.on("hide.bs.dropdown.reportDropdownPortal", function () {
+            $(window).off("scroll.reportDropdownPortal resize.reportDropdownPortal");
+        });
+
+        dropdown.on("hidden.bs.dropdown.reportDropdownPortal", function () {
+            restoreMenu();
+        });
+    }
+
     function patchBackboneHistory() {
         //override history in backbone
         Backbone.history = _.extend(Backbone.history, {
@@ -396,6 +473,7 @@
         patchBackboneHistory();
         initCoreModelsAndRouter();
         initSearchDropdown();
+        initReportDropdownPortal();
 
         Backbone.history.start({pushState: true, silent: true});
 

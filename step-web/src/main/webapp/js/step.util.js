@@ -5370,13 +5370,21 @@ step.util = {
     },
 	hideNavBarOnPhones: function(doNotScroll) {
 		if (step.touchDevice && !step.touchWideDevice) {
+			var updatePassageOptionsTop = function() {
+				var navHeight = $("#stepnavbar").outerHeight() || 0;
+				var offset = Math.max(0, navHeight - (window.pageYOffset || 0));
+				$(".passageOptionsGroup").css("top", offset);
+			};
 			$("body").css("overflow-y","auto");
 			$("#stepnavbar").css("position","relative");
 			$(".mainPanel.row.row-offcanvas").css("padding",0);
 			$("#columnHolder").css("overflow-y","unset");
 			$(".passageContainer").css("border","0");
-			$(".passageOptionsGroup").css("position","sticky").css("top",0).css("left",0).
-				css("opacity",1).css("z-index",2145);
+			$(".passageOptionsGroup").css("position","sticky").css("left",0).css("opacity",1).
+				css("z-index",2145);
+			$(window).off("scroll.passageOptionsGroup resize.passageOptionsGroup").
+				on("scroll.passageOptionsGroup resize.passageOptionsGroup", updatePassageOptionsTop);
+			updatePassageOptionsTop();
 			$(".previousChapter").css("top","90%").css("display","inline").css("position","fixed").
 				css("bottom","unset");
 			$(".nextChapter").css("top","90%").css("display","inline").css("position","fixed").

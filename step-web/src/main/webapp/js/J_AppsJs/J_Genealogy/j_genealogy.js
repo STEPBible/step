@@ -156,6 +156,7 @@ const DefaultVerticalSpacingActualValue = 150;
 var CurrentNumberOfGenerationsToGrowByOnEachExpansion = DefaultNumberOfGenerationsToGrowByOnEachExpansion;
 var CurrentHorizontalSpacingTicks = 0;
 var CurrentVerticalSpacingTicks = 0;
+var CurrentHighlightRelations = false;
       
 
 
@@ -1733,6 +1734,7 @@ class ClassVerticalLayoutHandler
 	        .classed('man', isMan)
 	        .classed('woman', isWoman)
 	        .classed('group', isGroup)
+	        .classed('personName', true)
 		.text(name);
 	    
 	    const owningTextNodeX = Number(textNode.attr('x')) + 5;
@@ -2475,14 +2477,293 @@ class _ClassPresentationHandler
 	    return;
 
 	const sourcePersonRecord = personRecordFromIndex(ix);
+	const underlineOffsetEm = 0.25;
+	const underlineThicknessEm = 0.18;
+	let siblingsUnderlineColor = '#000';
+	let childrenUnderlineColor = '#b2e5f3';
+	try
+	{
+	    const rootStyles = getComputedStyle(document.documentElement);
+	    const resolveCssColor = function (value, styles, depth = 0)
+	    {
+		if (!value)
+		    return '';
+		if (depth > 5)
+		    return value.trim();
+		const trimmed = value.trim();
+		const varPattern = /var\(\s*(--[^ ,)]+)\s*(?:,\s*([^)]+))?\s*\)/;
+		const match = trimmed.match(varPattern);
+		if (!match)
+		    return trimmed;
+		let replacement = styles.getPropertyValue(match[1]).trim();
+		if (!replacement && match[2])
+		    replacement = match[2].trim();
+		if (!replacement)
+		    return '';
+		const resolved = trimmed.replace(varPattern, replacement);
+		if (resolved === trimmed)
+		    return resolved.trim();
+		return resolveCssColor(resolved, styles, depth + 1);
+	    };
+
+	    const rawSiblingColour = rootStyles.getPropertyValue('--genealogy-sibling-underline-color').trim();
+	    const resolvedSiblingColour = resolveCssColor(rawSiblingColour, rootStyles);
+	    if (resolvedSiblingColour.length > 0)
+		siblingsUnderlineColor = resolvedSiblingColour;
+	    let rawChildrenColour = rootStyles.getPropertyValue('--genealogy-child-underline-color').trim();
+	    if (rawChildrenColour.length == 0)
+		rawChildrenColour = rootStyles.getPropertyValue('--clrRelatedWordBg').trim();
+	    const resolvedChildrenColour = resolveCssColor(rawChildrenColour, rootStyles);
+	    if (resolvedChildrenColour.length > 0)
+		childrenUnderlineColor = resolvedChildrenColour;
+	}
+	catch (e)
+	{
+	}
+
+	const createSvgPoint = function (x, y)
+	{
+	    if (typeof DOMPoint === 'function')
+		return new DOMPoint(x, y);
+	    const point = svg.node().createSVGPoint();
+	    point.x = x;
+	    point.y = y;
+	    return point;
+	};
+
+	const underlineGeometryForName = function (treeNode, nameNode)
+	{
+	    const nodeCTM = treeNode.getCTM();
+	    if (!nodeCTM)
+		return null;
+
+	    let inverseCTM = null;
+	    try
+	    {
+		inverseCTM = nodeCTM.inverse();
+	    }
+	    catch (e)
+	    {
+		return null;
+	    }
+
+	    const fontSize = parseFloat(getComputedStyle(nameNode).fontSize) || 16;
+	    const underlineOffset = underlineOffsetEm * fontSize;
+	    const underlineThickness = underlineThicknessEm * fontSize;
+
+	    const geometryFromCharPositions = function (startPoint, endPoint, element)
+	    {
+		if (!startPoint || !endPoint)
+		    return null;
+		if (!element || typeof element.getCTM !== 'function')
+		    return null;
+		const elementCTM = element.getCTM();
+		if (!elementCTM)
+		    return null;
+		let toTreeLocal = null;
+		try
+		{
+		    toTreeLocal = inverseCTM.multiply(elementCTM);
+		}
+		catch (e)
+		{
+		    return null;
+		}
+		const startLocal = startPoint.matrixTransform(toTreeLocal);
+		const endLocal = endPoint.matrixTransform(toTreeLocal);
+		if (!Number.isFinite(startLocal.x) || !Number.isFinite(startLocal.y)
+		    || !Number.isFinite(endLocal.x) || !Number.isFinite(endLocal.y))
+		    return null;
+		const dx = endLocal.x - startLocal.x;
+		const dy = endLocal.y - startLocal.y;
+		const length = Math.hypot(dx, dy);
+		if (!length)
+		    return null;
+		let nx = -dy / length;
+		let ny = dx / length;
+		if (ny < 0)
+		{
+		    nx = -nx;
+		    ny = -ny;
+		}
+
+		return {
+		    x1: startLocal.x + (nx * underlineOffset),
+		    y1: startLocal.y + (ny * underlineOffset),
+		    x2: endLocal.x + (nx * underlineOffset),
+		    y2: endLocal.y + (ny * underlineOffset),
+		    thickness: underlineThickness
+		};
+	    };
+
+	    const geometryFromCharRange = function (element, startIndex, endIndex)
+	    {
+		if (!element)
+		    return null;
+		if (typeof element.getStartPositionOfChar !== 'function'
+		    || typeof element.getEndPositionOfChar !== 'function')
+		    return null;
+		if (startIndex < 0 || endIndex < startIndex)
+		    return null;
+		try
+		{
+		    const startPoint = element.getStartPositionOfChar(startIndex);
+		    const endPoint = element.getEndPositionOfChar(endIndex);
+		    return geometryFromCharPositions(startPoint, endPoint, element);
+		}
+		catch (e)
+		{
+		    return null;
+		}
+	    };
+
+	    const hasCharGeometry = typeof nameNode.getNumberOfChars === 'function'
+		&& typeof nameNode.getStartPositionOfChar === 'function'
+		&& typeof nameNode.getEndPositionOfChar === 'function';
+	    if (hasCharGeometry)
+	    {
+		try
+		{
+		    const numberOfChars = nameNode.getNumberOfChars();
+		    if (numberOfChars > 0)
+		    {
+			const geometry = geometryFromCharRange(nameNode, 0, numberOfChars - 1);
+			if (geometry)
+			    return geometry;
+		    }
+		}
+		catch (e)
+		{
+		}
+	    }
+
+	    const nameText = nameNode.textContent || '';
+	    if (nameText.length > 0)
+	    {
+		const textNode = typeof nameNode.closest === 'function' ? nameNode.closest('text') : nameNode.parentNode;
+		if (textNode && textNode !== nameNode && typeof textNode.getNumberOfChars === 'function')
+		{
+		    let startIndex = 0;
+		    let found = false;
+		    const childNodes = textNode.childNodes || [];
+		    for (const child of childNodes)
+		    {
+			if (child === nameNode)
+			{
+			    found = true;
+			    break;
+			}
+			if (child && child.nodeType === 3)
+			    startIndex += (child.textContent || '').length;
+			else if (child && child.nodeType === 1)
+			    startIndex += (child.textContent || '').length;
+		    }
+		    if (found)
+		    {
+			const endIndex = startIndex + nameText.length - 1;
+			const totalChars = textNode.getNumberOfChars();
+			if (endIndex < totalChars)
+			{
+			    const geometry = geometryFromCharRange(textNode, startIndex, endIndex);
+			    if (geometry)
+				return geometry;
+			}
+		    }
+		}
+	    }
+
+	    if (typeof nameNode.getBBox !== 'function')
+		return null;
+
+	    let bbox = null;
+	    try
+	    {
+		bbox = nameNode.getBBox();
+	    }
+	    catch (e)
+	    {
+		return null;
+	    }
+
+	    if (!bbox)
+		return null;
+
+	    const textLength = typeof nameNode.getComputedTextLength === 'function'
+		? nameNode.getComputedTextLength()
+		: 0;
+	    const bboxWidth = bbox.width || textLength;
+	    if (!bboxWidth)
+		return null;
+
+	    const bboxHeight = bbox.height || fontSize;
+	    const nameCTM = nameNode.getCTM();
+	    if (!nameCTM)
+		return null;
+
+	    let toTree = null;
+	    try
+	    {
+		toTree = inverseCTM.multiply(nameCTM);
+	    }
+	    catch (e)
+	    {
+		return null;
+	    }
+
+	    const baseline = bbox.y + bboxHeight + underlineOffset;
+	    const startLocal = createSvgPoint(bbox.x, baseline).matrixTransform(toTree);
+	    const endLocal = createSvgPoint(bbox.x + bboxWidth, baseline).matrixTransform(toTree);
+
+	    return {
+		x1: startLocal.x,
+		y1: startLocal.y,
+		x2: endLocal.x,
+		y2: endLocal.y,
+		thickness: underlineThickness
+	    };
+	};
+
+	const updateRelationUnderline = function (personRecord, highlightClass, underlineClass, underlineColor)
+	{
+	    const treeNode = personRecord.treeNode;
+	    if (!treeNode)
+		return;
+
+	    const nodeSelection = d3.select(treeNode);
+	    nodeSelection.selectAll('line.' + underlineClass).remove();
+
+	    const textNode = treeNode.querySelector('text');
+	    const nameNode = textNode ? textNode.querySelector('tspan.personName') : null;
+	    if (!nameNode)
+		return;
+
+	    const selection = d3.select(nameNode);
+	    selection.classed(highlightClass, highlighting);
+
+	    if (!highlighting)
+		return;
+
+	    const geometry = underlineGeometryForName(treeNode, nameNode);
+	    if (!geometry)
+		return;
+
+	    nodeSelection.append('line')
+		.attr('class', underlineClass)
+		.attr('x1', geometry.x1)
+		.attr('y1', geometry.y1)
+		.attr('x2', geometry.x2)
+		.attr('y2', geometry.y2)
+		.attr('stroke', underlineColor)
+		.attr('stroke-width', geometry.thickness)
+		.attr('stroke-linecap', 'butt');
+	};
 
 	for (const relatedPerson of sourcePersonRecord.siblings)
         {
 	    const personRecord = personRecordFromName(relatedPerson.disambiguatedName);
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
-		const textNode = personRecord.treeNode.querySelector('text');
-		d3.select(textNode).classed('highlightSiblings', highlighting);
+		updateRelationUnderline(personRecord, 'highlightSiblings', 'siblingUnderline', siblingsUnderlineColor);
 	    }
 	    catch (e)
 	    {
@@ -2495,8 +2776,7 @@ class _ClassPresentationHandler
 	    const personRecord = personRecordFromName(relatedPerson.disambiguatedName);
 	    try // Try means we don't need to worry if some of the related individuals are not actually displayed.
 	    {
-		const textNode = personRecord.treeNode.querySelector('text');
-		d3.select(textNode).classed('highlightChildren', highlighting);
+		updateRelationUnderline(personRecord, 'highlightChildren', 'childUnderline', childrenUnderlineColor);
 	    }
 	    catch (e)
 	    {
@@ -2531,7 +2811,7 @@ class _ClassPresentationHandler
 	this.showPopUp('URL copied to clipboard', 'copyToClipboardConfirmation');
     }
 
-	
+
     /**************************************************************************/
     getRootPersonIx      () { return this._rootPersonIx;      }
     getSelectedPersonIx  () { return this._selectedPersonIx;  }
@@ -3039,7 +3319,7 @@ class _ClassPresentationHandler
 	try // Unhighlight the existing selection -- except we won't be able to if the previously highlighted node is no longer in the tree.
 	{   // try-catch avoids the need for a test which would rely on me successfully keeping tabs on what's going on.
 	    
-	    circleNodeFromIndex(this.getSelectedPersonIx()).style('fill', 'steelblue');
+	    circleNodeFromIndex(this.getSelectedPersonIx()).style('fill', null);
 	    textNodeFromIndex  (this.getSelectedPersonIx()).classed('highlightSelectedIndividual', false);
 	}
 	catch (e)
@@ -3051,7 +3331,11 @@ class _ClassPresentationHandler
 	/**********************************************************************/
 	/* Highlight the new node and update the info box. */
 	
-	circleNodeFromIndex(ix).style('fill', 'red');
+	const personRecord = personRecordFromIndex(ix);
+	const jesusLineCollection = this.SubtreeHighlightHandler && this.SubtreeHighlightHandler.getJesusLineCollection();
+	const isOnJesusLine = jesusLineCollection && jesusLineCollection.has(personRecord);
+	const selectedFillColor = isOnJesusLine ? '#8B0000' : '#DC143C';
+	circleNodeFromIndex(ix).style('fill', selectedFillColor);
 	textNodeFromIndex(ix).classed('highlightSelectedIndividual', true);
 	this._fillInfoBox(ix);
 
@@ -3129,7 +3413,9 @@ class _ClassPresentationHandler
 	    const fromAdamFivePercents = Math.round( (100 * (generationsFromAdam / 77)) / 5);
 	    const before = '&#x2588;'.repeat(fromAdamFivePercents);
 	    const after  = '&#x2588;'.repeat(20 - fromAdamFivePercents);
-	    generations = `<p><b>Timeline:</b> Adam &#x25C0; <span style='color:lightgray;font-size:small'>${before}</span>&#x2588;<span style='color:lightgray;font-size:small'>${after}</span> &#x25B6; NT</p>`;
+	    const leftChevronSvg  = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="7.5 2 4.5 6 7.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+	    const rightChevronSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" style="width:0.9em;height:0.9em;vertical-align:middle;" aria-hidden="true"><polyline points="4.5 2 7.5 6 4.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+	    generations = `<p><b>Timeline:</b> Adam ${leftChevronSvg} <span style='color:white;font-size:small'>${before}</span><span style='color:black;font-size:small'>&#x2588;</span><span style='color:white;font-size:small'>${after}</span> ${rightChevronSvg} NT</p>`;
 	}
 
 
@@ -3186,6 +3472,24 @@ class _ClassPresentationHandler
 	const summaryIcon = DataHandler.getSummaryIcon(personRecord);
 	const spacer = summaryIcon ? '&nbsp;' : '';
 	const multipleReferences = personRecord.allRefsAsRanges.length > 1 ? ' etc' : '';
+	const useIconForShareableLink = (() => {
+		if (typeof step !== 'undefined' && typeof step.touchDevice === 'boolean') {
+			return step.touchDevice;
+		}
+		const ua = navigator.userAgent.toLowerCase();
+		if (ua.indexOf('android') > -1) {
+			return true;
+		}
+		if ((ua.indexOf('iphone') > -1) || (ua.indexOf('ipad') > -1) ||
+			((ua.indexOf('macintosh') > -1) && (navigator.maxTouchPoints > 1))) {
+			return true;
+		}
+		return false;
+	})();
+	const shareableLinkContent = useIconForShareableLink ?
+		"<span class='glyphicon glyphicon-link' aria-hidden='true'></span>" :
+		'Shareable link';
+	const shareableLinkMarkup = `<span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree' aria-label='Copy to clipboard a URL for this family tree'>${shareableLinkContent}</span>`;
 	infoBoxContent
 	    .html(`
               <div style='display:flex; align-items:center'><span class='iconFont'>${summaryIcon}</span>
@@ -3195,7 +3499,7 @@ class _ClassPresentationHandler
                   <span>&nbsp;${"" === personRecord.role ? "" : (personRecord.role + " ")} (at ${firstScriptureReference(personRecord)}${multipleReferences}).</span>
                   <span>${alternativeNames}</span>
                 </span>
-                <span id='shareableLink' class='jframework-linkAsButton' style='margin-left:auto' title='Copy to clipboard a URL for this family tree'>Shareable link</span>
+                ${shareableLinkMarkup}
               </div>
 
              <br>${partnerList}
@@ -3340,7 +3644,7 @@ class _ClassPresentationHandler
     _refreshRelationsHighlighting (ix)
     {
 	this.changeRelationsHighlighting(false, this.getSelectedPersonIx());
-	if (document.getElementById('highlightRelations').checked)
+	if (CurrentHighlightRelations)
 	    this.changeRelationsHighlighting(true, ix);
     }
 
@@ -3532,6 +3836,16 @@ const GraphicsHandler = new ClassGraphicsHandler();
 class _ClassControlsHandler
 { 
     /**************************************************************************/
+    toggleHighlightRelations (newState)
+    {
+	if (typeof newState === 'undefined')
+	    newState = !CurrentHighlightRelations;
+
+	CurrentHighlightRelations = newState;
+	PresentationHandler.changeRelationsHighlighting(newState);
+    }
+
+    /**************************************************************************/
     hideBuiltInTreesDialog ()
     {
 	ModalDialogHandler.closeIfTopModalDialog(document.getElementById('builtInTreesMenu'));
@@ -3610,6 +3924,10 @@ class _ClassControlsHandler
 	document.getElementById('horizontalSpacingSlider').value = CurrentHorizontalSpacingTicks;
 	document.getElementById('verticalSpacingSlider').value = CurrentVerticalSpacingTicks;
 	document.getElementById('numberOfGenerationsSlider').value = CurrentNumberOfGenerationsToGrowByOnEachExpansion;
+
+	const highlightCheckbox = document.getElementById('highlightRelationsCheckbox');
+	if (highlightCheckbox)
+	    highlightCheckbox.checked = CurrentHighlightRelations;
     }
 
   
@@ -3648,7 +3966,6 @@ window.ControlsHandler = ControlsHandler;
   
 //window.ModalDialogHandler = ModalDialogHandler;
     
-
 
 
 
@@ -3870,7 +4187,7 @@ class _ClassSearchTableCommonProcessing
 	    selectionHighlighterFn: this._tableRowHighlighter.bind(this),
 	    searchBoxId: searchBoxId,
 	    rowMatcherFn: this._rowMatcherFn.bind(this),
-	    hideTableWhenNotInUse: true,
+	    hideTableWhenNotInUse: false, /* Oct-2025.  Was true, but that makes it difficult to place right-mouse-button menu, because we need to know its height in order to do so, and with true, the height can change after placement. */
 	    keepSelectedRowVisible: false,
 	};
 	
@@ -3908,7 +4225,7 @@ class _ClassSearchTableCommonProcessing
     _tableClickHandlerFn (cell, column)
     {
 	const row = cell.closest("tr");
-	this._callerClickHandlerFn(row.rowIndex);
+	this._callerClickHandlerFn(row.getAttribute('data-personIndexWithinOverallSearchTable')); // Was this._callerClickHandlerFn(row.rowIndex);
     }
 
     

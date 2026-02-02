@@ -35,7 +35,7 @@ class _ClassJPeopleTableHandler
 	function fn (firstTime)
 	{
 	    const background = getComputedStyle(document.documentElement).getPropertyValue("--clrBackground").trim();
-	    const tableHighlight = JFrameworkUtils.isDark(background) ? 'rgba(255, 0, 0, 0.4)' : 'rgb(255, 255, 192)';
+	    const tableHighlight = JFrameworkUtils.isDark(background) ? 'rgba(255, 0, 0, 0.4)' : '#FFFFE9';
 	    document.documentElement.style.setProperty('--jframework-clrPopUpMenuItemBackgroundUnselected', tableHighlight);
 	}
 	

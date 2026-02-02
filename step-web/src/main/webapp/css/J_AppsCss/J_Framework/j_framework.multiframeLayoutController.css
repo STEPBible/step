@@ -55,21 +55,68 @@ jframework-iframeList {
 
 .jframework-widthResizer {
     height: 100vh;
-    width: 5px;
+    width: 10px;
     cursor: ew-resize;
-    background: transparent;
-    border-right: 4px dotted salmon;
+    background-color: transparent;
+    border: 0;
     position: relative;
 }
 
+.jframework-widthResizer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    transform: translateX(-0.5px);
+    background-color: #000;
+    transition: background-color 120ms ease, box-shadow 120ms ease;
+}
 
 .jframework-heightResizer {
     height: 5px;
     cursor: ns-resize;
-    background: transparent;
-    border-top: 4px dotted salmon;
+    background-color: var(--clrSecondary1);
+    border-top: 1px solid var(--clrSecondary2);
+    border-bottom: 1px solid var(--clrSecondary2);
+    color: var(--jframework-clrDividerGrip);
+    position: relative;
+    transition: background-color 120ms ease, color 120ms ease;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.jframework-heightResizer::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 4px;
+    transform: translate(-50%, -50%);
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+    background-size: 4px 4px;
+}
+
+.jframework-widthResizer:hover::before {
+    background-color: #7fb7f0;
+    box-shadow: 0 0 4px rgba(127, 183, 240, 0.7);
+}
+
+.jframework-heightResizer:hover {
+    color: var(--jframework-clrDividerGripHover);
+    background-color: var(--jframework-clrDividerBgHover);
+}
+
+.jframework-widthResizer:active::before {
+    background-color: #5fa3e8;
+    box-shadow: 0 0 6px rgba(95, 163, 232, 0.75);
+}
+
+.jframework-heightResizer:active {
+    color: var(--jframework-clrDividerGripActive);
+    background-color: var(--clrLexiconFocusBG);
 }
 
 
@@ -78,6 +125,7 @@ jframework-iframeList {
 }
 
 .jframework-verticalSeparator {
+    margin-left: 5px;
     margin-right: 5px;
 }
 
@@ -91,8 +139,6 @@ jframework-wideLayoutVisibilityController {
     display: flex;
     width: 100%;
     height: 100%;
-    margin-left: 10px;
-    margin-bottom: 10px;
 }
 
 jframework-wideLayoutContentContainer {
@@ -130,9 +176,6 @@ jframework-tabbedLayoutVisibilityController {
     height: 100%;
     width: 100%;
     flex-direction: column;
-    margin-left: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
 }
 
 jframework-tabbedLayoutButtonBar {
@@ -200,6 +243,6 @@ jframework-tabbedLayoutContent {
 
 .jframework-tabButton:active {
     box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4), inset -2px -2px 5px rgba(255, 255, 255, 0.6); /* Pressed effect */
-    background: yellow;
+    background: var(--jframework-clrInfoBoxBackground);
     color: black;
 }

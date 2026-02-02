@@ -244,9 +244,25 @@
                             <a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy" />">
                                 <i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="copy" /></span>
                             </a>
-                            <a id="report-icon" style="padding-left:5px" href="html/reports_by_step.html" target="_blank" title="Resources powered by STEPBible">
-                                <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;<fmt:message key="report" /></span>
-                            </a>
+                            <span class="dropdown">
+                                <a id="report-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" title="Resources powered by STEPBible">
+                                    <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;<fmt:message key="report" /></span>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a href="html/gospel_harmony.html" target="_blank">Harmony of the Gospels</a></li>
+                                    <li><a href="html/miracles.html" target="_blank">Miracles in the Bible</a></li>
+                                    <li><a href="html/nt_letters.html" target="_blank">New Testament Letter Structure</a></li>
+                                    <li><a href="html/ot_parallel.html" target="_blank">Old Testament parallels</a></li>
+                                    <li><a href="html/ot_in_nt.html" target="_blank">Old Testament used in the New Testament</a></li>
+                                    <li><a href="html/names.html" target="_blank">Names of God</a></li>
+                                    <li><a href="html/prophets.html" target="_blank">Prophets in the Bible</a></li>
+                                    <li><a href="html/places.html" target="_blank">Places in the Bible</a></li>
+                                    <li><a href="html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html?showBuiltInTrees" target="_blank">People in the Bible</a></li>
+                                    <li><a href="html/split.html?/?q=reference=Gen.1&skipwelcome&secondURL=https://docs.google.com/document/d/1hrMcTGxC1QQphh3oICwyb195gGjlctyUTs5PTlvLCkI/preview" target="_blank">Create your own notes</a></li>
+                                    <li><a href="html/J_AppsHtml/J_Chronology/j_chronologySplit3.html" target="_blank">Chronology</a></li>
+                                    <li><a href="html/reports_by_step.html" target="_blank">Reading Plans</a></li>
+                                </ul>
+                            </span>
                             <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
                                 <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats" /></span>
                             </a>

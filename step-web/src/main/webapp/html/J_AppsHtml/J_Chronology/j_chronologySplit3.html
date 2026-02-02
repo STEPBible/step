@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+  <!-- ================================================================================
+       Multi-frame layout: This caters for a layout where multiple frames appear
+       together on a wide screen, but appear on separate tabs on a smaller screen.
+
+       To save making this page into an unncessarily large download, I have added
+       detailed comments into j_framwork.multiframeController.js.  There are still
+       some important comments below, however.  And in the HTML, I have added notes
+       which cross-refer to j_framework.multiframeController.js.
+
+       Much of this you should retain as-is, or modify only in a very limited manner.
+       However, this isn't just a template: it's a working web page, and therefore
+       contains things specific to the genealogy application for which it was
+       originally designed.  These I have highlighted below with '*** CHANGE ME ***'
+       to highlight bits you will need to change for your application.
+       ================================================================================ -->
+       
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="/css/J_AppsCss/J_Framework/j_framework.common.css" rel="stylesheet" media="screen"/>
+  <link href="/css/J_AppsCss/J_Framework/j_framework.multiframeLayoutController.css" rel="stylesheet" media="screen"/>
+  <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+</head>
+
+
+<body>
+  <!-- ========== *** CHANGE ME *** You need to create a jframework-frameList as below and configure it.  See j_framework.multiframeLayoutController.js Note 1.
+
+       MAKE SURE you put the jframework-tabLegend tag immediately after the </iframe>: don't have a newline or space between them.
+    -->
+  <jframework-iframeList>
+    <iframe id='chronology'      wantSrc='html/J_AppsHtml/J_Chronology/j_chronology.html'      scrolling='no' ></iframe><jframework-tabLegend>Chronology</jframework-tabLegend>
+    <iframe id='scripture'       suppressStepHeader='yes'                                      scrolling='yes'></iframe><jframework-tabLegend>Scripture</jframework-tabLegend>
+    <iframe id='chronologyIndex' wantSrc='html/J_AppsHtml/J_Chronology/j_chronologyIndex.html' scrolling='yes'></iframe><jframework-tabLegend>Search</jframework-tabLegend>
+  </jframework-iframeList>
+
+
+
+
+
+  <!-- ========== *** CHANGE ME *** You need to configure the content of #jframework-wideLayoutContentContainer.  See j_framework.multiframeLayoutController.js Note 2. ========== -->
+  <jframework-wideLayoutVisibilityController class='jframework-invisible-offscreen'>
+    <jframework-wideLayoutContentContainer>
+
+      
+      <jframework-leftColumn>
+	<jframework-iframePlaceHolder iframeId='chronologyIndex'></jframework-iframePlaceHolder>
+	<!-- <div class='jframework-heightResizer jframework-horizontalSeparator'></div> --><!-- Optional: This gives you space between the rows, and a line which you can drag to resize things. -->
+	<div class='jframework-horizontalSeparator'></div>
+	<jframework-iframePlaceHolder iframeId='scripture'></jframework-iframePlaceHolder>
+      </jframework-leftColumn>
+
+      <div class='jframework-widthResizer jframework-verticalSeparator'></div> <!-- Optional: This gives you space between the columns, and a line which you can drag to resize things. -->
+
+      <jframework-rightColumn>
+	<jframework-iframePlaceHolder iframeId='chronology'></jframework-iframePlaceHolder>
+      </jframework-rightColumn>
+
+
+    </jframework-wideLayoutContentContainer>
+  </jframework-wideLayoutVisibilityController>
+
+
+
+  
+  <!-- ========== Don't alter this section.  See j_framework.multiframeLayoutController.js Note 3. ========== -->
+  <jframework-tabbedLayoutVisibilityController class='jframework-invisible-offscreen'>
+      <jframework-tabbedLayoutButtonBar>
+	<!-- Buttons will be generated here. -->
+      </jframework-tabbedLayoutButtonBar>
+
+      <jframework-tabbedLayoutContent>
+	<!-- iframes and associated content will be generated here. -->
+      </jframework-tabbedLayoutContent>
+  </div>
+
+
+
+
+
+  <script type='module'>
+    /**************************************************************************/
+    /* Note 4 */
+    /**************************************************************************/
+
+    /**************************************************************************/
+    import                                               '/js/J_AppsJs/J_Chronology/j_chronologySplit3.js';
+    import { JFrameworkUtils }                      from '/js/J_AppsJs/J_Framework/j_framework.utils.js';
+    import { JFrameworkMultiframeLayoutController } from '/js/J_AppsJs/J_Framework/j_framework.multiframeLayoutController.js';
+
+
+    /**************************************************************************/
+    /* The present page may be invoked with a URL containing a 'year'
+       attribute, in which case we want to organise to bring things up showing
+       details for the relevant year. */
+    
+    function onload ()
+    {
+	window.dataStoreForIframes = new Map();
+	
+	const year = new URLSearchParams(new URL(window.location.href).search).get('year');
+	if (year)
+	{
+	    const chronologyIndex = document.getElementById('chronologyIndex');
+	    chronologyIndex.setAttribute('wantSrc', chronologyIndex.getAttribute('wantSrc') + '?year=' + year);
+	}
+	JFrameworkMultiframeLayoutController.onload();
+    }
+
+    JFrameworkUtils.setOnloadEtc(onload, JFrameworkMultiframeLayoutController.resize.bind(JFrameworkMultiframeLayoutController));
+  </script>
+</body>
+</html>

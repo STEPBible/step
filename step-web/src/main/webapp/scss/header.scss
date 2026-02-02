@@ -10,6 +10,22 @@
   }
 }
 
+@media (hover: none) and (max-width: 767px) {
+  #stepnavbar {
+    z-index: auto;
+  }
+
+  #report-icon + .dropdown-menu {
+    z-index: 11050;
+  }
+}
+
+.report-dropdown-floating {
+  position: absolute;
+  z-index: 11050;
+  display: block;
+}
+
 @media (max-width: 450px) {
   .hidden-narrow {
     display: none !important;
@@ -221,6 +237,11 @@
       }
     }
 
+    .headerButtons > .dropdown {
+      display: inline-block;
+      padding-left: 0;
+    }
+
     @media (min-width: $stepXSBootstrap) {
       .navbar-collapse {
         display: inline !important;
@@ -247,6 +268,7 @@
         border-bottom: 1px solid #C8C8C8;
         white-space: nowrap;
         position: absolute;
+        z-index: 2100;
         padding: 0;
         color: black;
         top: 50px;
@@ -356,7 +378,7 @@
           }
         }
       }
-      .dropdown {
+      .navbar-collapse .dropdown {
         display: block;
       }
     }
@@ -388,4 +410,3 @@
 .navbarIconDesc {
   vertical-align: super;
 }
-

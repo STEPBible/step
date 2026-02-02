@@ -58,9 +58,9 @@
    body:
 
      <jframework-iframeList>
-       <iframe id='peopleIndex' wantSrc='html/J_AppsHtml/J_Genealogy/j_peopleIndex.html' scrolling='yes'           ></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#128203;</span>&nbsp;Index</jframework-tabLegend>
-       <iframe id='scripture'   suppressStepHeader='yes'                                 scrolling='yes'           ></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#128218;</span>&nbsp;Scripture</jframework-tabLegend>
-       <iframe id='genealogy'   wantSrc='html/J_AppsHtml/J_Genealogy/j_genealogy.html'   scrolling='no' show='wide'></iframe><jframework-tabLegend><span class='jframework-bigEmoji'>&#x1F46A;</span>&nbsp;Genealogy</jframework-tabLegend>
+       <iframe id='peopleIndex' wantSrc='html/J_AppsHtml/J_Genealogy/j_peopleIndex.html' scrolling='yes'           ></iframe><jframework-tabLegend>Index</jframework-tabLegend>
+       <iframe id='scripture'   suppressStepHeader='yes'                                 scrolling='yes'           ></iframe><jframework-tabLegend>Scripture</jframework-tabLegend>
+       <iframe id='genealogy'   wantSrc='html/J_AppsHtml/J_Genealogy/j_genealogy.html'   scrolling='no' show='wide'></iframe><jframework-tabLegend>Genealogy</jframework-tabLegend>
      </jframework-iframeList>
 
 
@@ -345,6 +345,21 @@ class _ClassJFrameworkMultiframeColumnResizer
 	return parseFloat(res < dflt ? dflt : res);
     }
 
+
+    /**********************************************************************/
+    /* Gets the total space consumed by the vertical separator. */
+
+    _getSeparatorSpace ()
+    {
+	const separator = document.querySelector('.jframework-verticalSeparator');
+	if (!separator) return 0;
+
+	const computedStyle = window.getComputedStyle(separator);
+	const marginLeft = parseFloat(computedStyle.marginLeft) || 0;
+	const marginRight = parseFloat(computedStyle.marginRight) || 0;
+	return separator.getBoundingClientRect().width + marginLeft + marginRight;
+    }
+
 	
     /**************************************************************************/
     _makeMouseMoveFn () { return this._scheduleResize.bind(this); }
@@ -358,12 +373,13 @@ class _ClassJFrameworkMultiframeColumnResizer
     {
         const newWidthLeft = this._startWidthLeft + (event.clientX - this._startX);
 	const minWidth = this._getMinWidth(100);
-        const maxWidth = this._getMaxWidth(window.innerWidth - minWidth - 5); // Keep room for right column.
+	const separatorSpace = this._getSeparatorSpace();
+        const maxWidth = this._getMaxWidth(window.innerWidth - minWidth - separatorSpace); // Keep room for right column.
 	
         if (newWidthLeft >= minWidth && newWidthLeft <= maxWidth)
         {
 	    this._leftColumn.style.width = `${newWidthLeft}px`;
-            this._rightColumn.style.width = `calc(100% - ${newWidthLeft}px - 5px)`;
+            this._rightColumn.style.width = `calc(100% - ${newWidthLeft}px - ${separatorSpace}px)`;
 	}
 
 	this._animationFrameId = null; // Allow next update
@@ -1080,7 +1096,7 @@ class _ClassJFrameworkMultiframeLayoutController
 	else
 	{
 	    const verticalSeparator = $(`jframework-wideLayoutVisibilityController .jframework-verticalSeparator`);
-	    const separatorWidth = 1 == verticalSeparator.length ? verticalSeparator.outerWidth() : 0;
+	    const separatorWidth = 1 == verticalSeparator.length ? verticalSeparator.outerWidth(true) : 0;
 	
 	    var defaultWidth = leftColumn.attr('defaultWidth');
 	    if (!defaultWidth) defaultWidth = '50%'

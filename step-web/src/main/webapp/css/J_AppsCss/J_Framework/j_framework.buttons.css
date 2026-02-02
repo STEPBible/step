@@ -37,6 +37,7 @@
 
 .jframework-vanillaButton.jframework-greyedBtn {
     color: var(--jframework-clrGreyedBtnText);
+    border-color: var(--jframework-clrGreyedBtnText);
     cursor: not-allowed;
 }
 

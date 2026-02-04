@@ -2737,7 +2737,8 @@ step.util = {
 			"3John": true,
 			"Jude": true
 		};
-		if ((nextParts.length < 2) || ((previousParts.length < 2) && !singleChapterBooks[previousParts[0]] && !singleChapterBooks[nextParts[0]]))
+		if (((nextParts.length < 2) && !singleChapterBooks[nextParts[0]]) ||
+			((previousParts.length < 2) && !singleChapterBooks[previousParts[0]]))
 			return;
 		var lastChapter = (parts[0] !== nextParts[0]) ||
 			((parts[0] === nextParts[0]) && (parts[1] === nextParts[1]));

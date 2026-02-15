@@ -4090,11 +4090,11 @@ step.util = {
 			var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.niv");
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
-			if ((introCount < 1) && (window.innerWidth > 499) && ($(".select-version.stepButtonTriangle").is(":visible"))) {
+			if ((introCount < 1) && ($(".select-version.stepButtonTriangle").is(":visible"))) {
 				var introJsSteps = [
 				{
 					element: document.querySelector('.select-version.stepButtonTriangle'),
-					intro: 'NIV is now available in USA and Anglicised version.',
+					intro: 'New Bible Edition!<br>The NIV now has two versions: "USA" and "Anglicised".',
 					position: 'bottom'
 				}
 				];
@@ -4104,59 +4104,78 @@ step.util = {
 				step.util.localStorageSetItem("step.niv", 1);
 			}
 			else {
-				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.colorgrammar");
+				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.gen_chron");
 				var introCount = parseInt(introCountFromStorageOrCookie, 10);
 				if (isNaN(introCount)) introCount = 0;
-				if ((introCount < 1) && (window.innerWidth > 499) && ($("#colorgrammar-icon").is(":visible"))) {
+				if ((introCount < 1) && ($("#report-icon").is(":visible"))) {
 					var introJsSteps = [
 					{
-						element: document.querySelector('#colorgrammar-icon'),
-						intro: 'Color code grammar is available with a new user interface.',
-						position: 'left'
+						element: document.querySelector('#report-icon'),
+						intro: 'New Features!<br><ul style="padding-left:15px"><li>Chronology of the Bible: An interactive timeline of people, places and events.<li>Genealogy of the Bible: An interactive chart of the family trees of biblecal figures.<ul>',
+						position: 'bottom'
 					}
 					];
 					introJs().setOptions({
 						steps: introJsSteps
 					}).start();
-					step.util.localStorageSetItem("step.colorgrammar", 1);
+					step.util.localStorageSetItem("step.gen_chron", 1);
 				}
+
 				else {
-					introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
-					introCount = parseInt(introCountFromStorageOrCookie, 10);
+					var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.colorgrammar");
+					var introCount = parseInt(introCountFromStorageOrCookie, 10);
 					if (isNaN(introCount)) introCount = 0;
-					if ((introCount < 1) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
+					if ((introCount < 1) && (window.innerWidth > 499) && ($("#colorgrammar-icon").is(":visible"))) {
 						var introJsSteps = [
 						{
-							element: document.querySelector('#copy-icon'),
-							intro: __s.copy_intro,
+							element: document.querySelector('#colorgrammar-icon'),
+							intro: 'Color code grammar is available with a new user interface.',
 							position: 'left'
 						}
-					];
+						];
 						introJs().setOptions({
 							steps: introJsSteps
 						}).start();
-						step.util.localStorageSetItem("step.copyIntro", 1);
+						step.util.localStorageSetItem("step.colorgrammar", 1);
 					}
 					else {
-						introCountFromStorageOrCookie = step.util.localStorageGetItem("step.commentaryIntro");
+						introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
 						introCount = parseInt(introCountFromStorageOrCookie, 10);
 						if (isNaN(introCount)) introCount = 0;
-						if ((introCount < 1) && (window.innerWidth > 499) && $("#summbutton").is(":visible")) {
-							setTimeout(function() {
-								if (!$("#summbutton").is(":visible"))
-									return;
-								var introJsSteps = [
-									{
-										element: document.querySelector('#summbutton'),
-										intro: "For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
-										position: 'bottom'
-									}
-								];
-								introJs().setOptions({
-									steps: introJsSteps
-								}).start();
-								step.util.localStorageSetItem("step.commentaryIntro", 1);
-							}, 2500);
+						if ((introCount < 1) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
+							var introJsSteps = [
+							{
+								element: document.querySelector('#copy-icon'),
+								intro: __s.copy_intro,
+								position: 'left'
+							}
+						];
+							introJs().setOptions({
+								steps: introJsSteps
+							}).start();
+							step.util.localStorageSetItem("step.copyIntro", 1);
+						}
+						else {
+							introCountFromStorageOrCookie = step.util.localStorageGetItem("step.commentaryIntro");
+							introCount = parseInt(introCountFromStorageOrCookie, 10);
+							if (isNaN(introCount)) introCount = 0;
+							if ((introCount < 1) && (window.innerWidth > 499) && $("#summbutton").is(":visible")) {
+								setTimeout(function() {
+									if (!$("#summbutton").is(":visible"))
+										return;
+									var introJsSteps = [
+										{
+											element: document.querySelector('#summbutton'),
+											intro: "For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
+											position: 'bottom'
+										}
+									];
+									introJs().setOptions({
+										steps: introJsSteps
+									}).start();
+									step.util.localStorageSetItem("step.commentaryIntro", 1);
+								}, 2500);
+							}
 						}
 					}
 				}

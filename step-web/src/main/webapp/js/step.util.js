@@ -4091,34 +4091,34 @@ step.util = {
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
 			if ((introCount < 1) && ($(".select-version.stepButtonTriangle").is(":visible"))) {
+				step.util.localStorageSetItem("step.niv", 1);
 				var introJsSteps = [
-				{
-					element: document.querySelector('.select-version.stepButtonTriangle'),
-					intro: 'New Bible Edition!<br>The NIV now has two versions: "USA" and "Anglicised".',
-					position: 'bottom'
-				}
+					{
+						element: document.querySelector('.select-version.stepButtonTriangle'),
+						intro: 'New Bible Edition!<br>The NIV now has two versions: "USA" and "Anglicised".',
+						position: 'bottom'
+					}
 				];
 				introJs().setOptions({
 					steps: introJsSteps
 				}).start();
-				step.util.localStorageSetItem("step.niv", 1);
 			}
 			else {
 				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.gen_chron");
 				var introCount = parseInt(introCountFromStorageOrCookie, 10);
 				if (isNaN(introCount)) introCount = 0;
 				if ((introCount < 1) && ($("#report-icon").is(":visible"))) {
+					step.util.localStorageSetItem("step.gen_chron", 1);
 					var introJsSteps = [
-					{
-						element: document.querySelector('#report-icon'),
-						intro: 'New Features!<br><ul style="padding-left:15px"><li>Chronology of the Bible: An interactive timeline of people, places and events.<li>Genealogy of the Bible: An interactive chart of the family trees of biblecal figures.<ul>',
-						position: 'bottom'
-					}
+						{
+							element: document.querySelector('#report-icon'),
+							intro: 'New Features!<br><ul style="padding-left:15px"><li>Chronology of the Bible: An interactive timeline of people, places and events.<li>Genealogy of the Bible: An interactive chart of the family trees of biblecal figures.<ul>',
+							position: 'bottom'
+						}
 					];
 					introJs().setOptions({
 						steps: introJsSteps
 					}).start();
-					step.util.localStorageSetItem("step.gen_chron", 1);
 				}
 
 				else {
@@ -4126,34 +4126,34 @@ step.util = {
 					var introCount = parseInt(introCountFromStorageOrCookie, 10);
 					if (isNaN(introCount)) introCount = 0;
 					if ((introCount < 1) && (window.innerWidth > 499) && ($("#colorgrammar-icon").is(":visible"))) {
+						step.util.localStorageSetItem("step.colorgrammar", 1);
 						var introJsSteps = [
-						{
-							element: document.querySelector('#colorgrammar-icon'),
-							intro: 'Color code grammar is available with a new user interface.',
-							position: 'left'
-						}
+							{
+								element: document.querySelector('#colorgrammar-icon'),
+								intro: 'Color code grammar is available with a new user interface.',
+								position: 'left'
+							}
 						];
 						introJs().setOptions({
 							steps: introJsSteps
 						}).start();
-						step.util.localStorageSetItem("step.colorgrammar", 1);
 					}
 					else {
 						introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
 						introCount = parseInt(introCountFromStorageOrCookie, 10);
 						if (isNaN(introCount)) introCount = 0;
 						if ((introCount < 1) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
+							step.util.localStorageSetItem("step.copyIntro", 1);
 							var introJsSteps = [
-							{
-								element: document.querySelector('#copy-icon'),
-								intro: __s.copy_intro,
-								position: 'left'
-							}
-						];
+								{
+									element: document.querySelector('#copy-icon'),
+									intro: __s.copy_intro,
+									position: 'left'
+								}
+							];
 							introJs().setOptions({
 								steps: introJsSteps
 							}).start();
-							step.util.localStorageSetItem("step.copyIntro", 1);
 						}
 						else {
 							introCountFromStorageOrCookie = step.util.localStorageGetItem("step.commentaryIntro");
@@ -4163,6 +4163,7 @@ step.util = {
 								setTimeout(function() {
 									if (!$("#summbutton").is(":visible"))
 										return;
+									step.util.localStorageSetItem("step.commentaryIntro", 1);
 									var introJsSteps = [
 										{
 											element: document.querySelector('#summbutton'),
@@ -4173,7 +4174,6 @@ step.util = {
 									introJs().setOptions({
 										steps: introJsSteps
 									}).start();
-									step.util.localStorageSetItem("step.commentaryIntro", 1);
 								}, 2500);
 							}
 						}

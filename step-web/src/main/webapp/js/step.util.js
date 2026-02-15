@@ -4087,11 +4087,11 @@ step.util = {
 			}).start();
 		}
 		else {
-			var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.niv");
+			var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.niv1");
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
 			if ((introCount < 1) && ($(".select-version.stepButtonTriangle").is(":visible"))) {
-				step.util.localStorageSetItem("step.niv", 1);
+				step.util.localStorageSetItem("step.niv1", 1);
 				var introJsSteps = [
 					{
 						element: document.querySelector('.select-version.stepButtonTriangle'),
@@ -4099,16 +4099,18 @@ step.util = {
 						position: 'bottom'
 					}
 				];
-				introJs().setOptions({
-					steps: introJsSteps
-				}).start();
+				setTimeout(function() {
+					introJs().setOptions({
+						steps: introJsSteps
+					}).start();
+				}, 750);
 			}
 			else {
-				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.gen_chron");
+				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.gen_chron1");
 				var introCount = parseInt(introCountFromStorageOrCookie, 10);
 				if (isNaN(introCount)) introCount = 0;
 				if ((introCount < 1) && ($("#report-icon").is(":visible"))) {
-					step.util.localStorageSetItem("step.gen_chron", 1);
+					step.util.localStorageSetItem("step.gen_chron1", 1);
 					var introJsSteps = [
 						{
 							element: document.querySelector('#report-icon'),
@@ -4116,11 +4118,12 @@ step.util = {
 							position: 'bottom'
 						}
 					];
-					introJs().setOptions({
-						steps: introJsSteps
-					}).start();
+					setTimeout(function() {
+						introJs().setOptions({
+							steps: introJsSteps
+						}).start();
+					}, 750);
 				}
-
 				else {
 					var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.colorgrammar");
 					var introCount = parseInt(introCountFromStorageOrCookie, 10);

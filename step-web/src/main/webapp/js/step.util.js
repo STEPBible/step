@@ -4042,16 +4042,38 @@ step.util = {
 			$('#top_input_area').show();
 			$('span.tmp-rm-hidden-xs.title').removeClass('tmp-rm-hidden-xs').addClass('hidden-xs');
 			$('.navbarIconDesc').hide();
-//			$('.quick_tutorial').show();
 			$('#classicalUICheck').show();
 		}
 		else {
 			$('#top_input_area').hide();
 			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
 			$('.navbarIconDesc').show();
-//			$('.quick_tutorial').hide();
 			$('#classicalUICheck').hide();
 		}
+	},
+	showIntroJS: function(element, introMsg, position, width, localStorageName, skipTouchScreen) {
+		if ((skipTouchScreen && step.touchDevice) || (window.innerWidth < width))
+			return false;
+	    var introCountFromStorageOrCookie = step.util.localStorageGetItem(localStorageName);
+		var introCount = parseInt(introCountFromStorageOrCookie, 10);
+		if (isNaN(introCount)) introCount = 0;
+		if ((introCount < 1) && ($(element).is(":visible"))) {
+			step.util.localStorageSetItem(localStorageName, 1);
+			var introJsSteps = [
+				{
+					element: element,
+					intro: introMsg,
+					position: position
+				}
+			];
+			setTimeout(function() {
+				introJs().setOptions({
+					steps: introJsSteps
+				}).start();
+			}, 600);
+			return true;
+		}
+		return false;
 	},
 	showIntro: function (showAnyway) {
 		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
@@ -4087,128 +4109,34 @@ step.util = {
 			}).start();
 		}
 		else {
-			var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.niv1");
-			var introCount = parseInt(introCountFromStorageOrCookie, 10);
-			if (isNaN(introCount)) introCount = 0;
-			if ((introCount < 1) && ($(".select-version.stepButtonTriangle").is(":visible"))) {
-				step.util.localStorageSetItem("step.niv1", 1);
-				var introJsSteps = [
-					{
-						element: document.querySelector('.select-version.stepButtonTriangle'),
-						intro: 'New Bible Edition!<br>The NIV now has two versions: "USA" and "Anglicised".',
-						position: 'bottom'
-					}
-				];
-				setTimeout(function() {
-					introJs().setOptions({
-						steps: introJsSteps
-					}).start();
-				}, 750);
-			}
-			else {
-				var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.gen_chron2");
-				var introCount = parseInt(introCountFromStorageOrCookie, 10);
-				if (isNaN(introCount)) introCount = 0;
-				if ((introCount < 1) && ($("#report-icon").is(":visible"))) {
-					step.util.localStorageSetItem("step.gen_chron2", 1);
-					if (step.touchDevice)
-						return;
-					var introJsSteps = [
-						{
-							element: document.querySelector('#report-icon'),
-							intro: 'New Features!<br><ul style="padding-left:15px"><li>Chronology of the Bible: An interactive timeline of people, places and events.<li>Genealogy of the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
-//							Click on <i class="glyphicon glyphicon-th-list" style="font-family:Glyphicons Halflings"></i> at the navigation bar.'
-							position: 'bottom'
-						}
-					];
-					setTimeout(function() {
-						introJs().setOptions({
-							steps: introJsSteps
-						}).start();
-					}, 500);
-				}
-				else {
-					var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.colorgrammar");
-					var introCount = parseInt(introCountFromStorageOrCookie, 10);
-					if (isNaN(introCount)) introCount = 0;
-					if ((introCount < 1) && (window.innerWidth > 499) && ($("#colorgrammar-icon").is(":visible"))) {
-						step.util.localStorageSetItem("step.colorgrammar", 1);
-						var introJsSteps = [
-							{
-								element: document.querySelector('#colorgrammar-icon'),
-								intro: 'Color code grammar is available with a new user interface.',
-								position: 'left'
-							}
-						];
-						introJs().setOptions({
-							steps: introJsSteps
-						}).start();
-					}
-					else {
-						introCountFromStorageOrCookie = step.util.localStorageGetItem("step.copyIntro");
-						introCount = parseInt(introCountFromStorageOrCookie, 10);
-						if (isNaN(introCount)) introCount = 0;
-						if ((introCount < 1) && (window.innerWidth > 499) && ($("#copy-icon").is(":visible"))) {
-							step.util.localStorageSetItem("step.copyIntro", 1);
-							var introJsSteps = [
-								{
-									element: document.querySelector('#copy-icon'),
-									intro: __s.copy_intro,
-									position: 'left'
-								}
-							];
-							introJs().setOptions({
-								steps: introJsSteps
-							}).start();
-						}
-						else {
-							introCountFromStorageOrCookie = step.util.localStorageGetItem("step.commentaryIntro");
-							introCount = parseInt(introCountFromStorageOrCookie, 10);
-							if (isNaN(introCount)) introCount = 0;
-							if ((introCount < 1) && (window.innerWidth > 499) && $("#summbutton").is(":visible")) {
-								setTimeout(function() {
-									if (!$("#summbutton").is(":visible"))
-										return;
-									step.util.localStorageSetItem("step.commentaryIntro", 1);
-									var introJsSteps = [
-										{
-											element: document.querySelector('#summbutton'),
-											intro: "For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
-											position: 'bottom'
-										}
-									];
-									introJs().setOptions({
-										steps: introJsSteps
-									}).start();
-								}, 2500);
-							}
-						}
-					}
-				}
-			}
+			if (!step.util.showIntroJS(document.querySelector('.select-version.stepButtonTriangle'),
+				'New Bible Edition!<br>The NIV now has two versions: "USA" and "Anglicised".',
+			 	'bottom', 0, 'step.nivusa'))
+
+				if (!step.util.showIntroJS(document.querySelector('#report-icon'),
+					'New Features!<br><ul style="padding-left:15px"><li>Chronology of the Bible: An interactive timeline of people, places and events.<li>Genealogy of the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
+				 	'bottom', 0, 'step.genchron', true))
+
+					if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),
+						'Color code grammar is available with a new user interface.',
+						'left', 499, 'step.colorgrammar'))
+
+						if (!step.util.showIntroJS(document.querySelector('#copy-icon'),
+							__s.copy_intro,
+							'left', 499, 'step.copyIntro'))
+
+								step.util.showIntroJS(document.querySelector('#summbutton'),
+									"For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
+									'bottom', 499, 'step.commentaryIntro');
 		}
 	},
     showIntroOfMultiVersion: function () {
 		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
 		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
 			return;
-	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.multiVersionCount");
-		var introCount = parseInt(introCountFromStorageOrCookie, 10);
-		if (isNaN(introCount)) introCount = 0;
-		if ((window.innerWidth > 499) && (introCount < 1)) {
-			var introJsSteps = [
-				{
-					element: document.querySelector('.passageContainer.active').querySelector('.dropdown.settingsDropdown'),
-					intro: __s.introjs_multi_version,
-					position: 'left'
-				}
-            ];
-			introJs().setOptions({
-				steps: introJsSteps
-			}).start();
-       		introCount ++;
-            step.util.localStorageSetItem("step.multiVersionCount", introCount);
-		}
+		step.util.showIntroJS(document.querySelector('.passageContainer.active').querySelector('.dropdown.settingsDropdown'),
+			__s.introjs_multi_version,
+			'left', 499, 'step.multiVersionCount');
 	},
 	closeModal: function (modalID) {
 		var modalsRequireUnfreezeOfScroll = " showLongAlertModal showBookOrChapterSummaryModal grammarClrModal passageSelectionModal searchSelectionModal copyModal videoModal fontSettings raiseSupport aboutModal bibleVersions ";

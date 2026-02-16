@@ -4111,18 +4111,21 @@ step.util = {
 				if (isNaN(introCount)) introCount = 0;
 				if ((introCount < 1) && ($("#report-icon").is(":visible"))) {
 					step.util.localStorageSetItem("step.gen_chron2", 1);
+					if (step.touchDevice)
+						return;
 					var introJsSteps = [
 						{
 							element: document.querySelector('#report-icon'),
-							intro: 'New Features!<br><ul style="padding-left:15px"><li>Chronology of the Bible: An interactive timeline of people, places and events.<li>Genealogy of the Bible: An interactive chart of the family trees of biblecal figures.</ul>Click on <i class="glyphicon glyphicon-th-list" style="font-family:Glyphicons Halflings"></i> at the navigation bar.'
-							//position: 'bottom'
+							intro: 'New Features!<br><ul style="padding-left:15px"><li>Chronology of the Bible: An interactive timeline of people, places and events.<li>Genealogy of the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
+//							Click on <i class="glyphicon glyphicon-th-list" style="font-family:Glyphicons Halflings"></i> at the navigation bar.'
+							position: 'bottom'
 						}
 					];
 					setTimeout(function() {
 						introJs().setOptions({
 							steps: introJsSteps
 						}).start();
-					}, 750);
+					}, 500);
 				}
 				else {
 					var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.colorgrammar");

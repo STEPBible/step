@@ -4114,7 +4114,7 @@ step.util = {
 			 	'bottom', 0, 'step.nivusa'))
 
 				if (!step.util.showIntroJS(document.querySelector('#report-icon'),
-					'New Features!<br><ul style="padding-left:15px"><li>Chronology of the Bible: An interactive timeline of people, places and events.<li>Genealogy of the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
+					'New Features!<br><ul style="padding-left:15px"><li>Chronology: An interactive timeline of people, places and events.<li>People in the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
 				 	'bottom', 0, 'step.genchron', true))
 
 					if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),

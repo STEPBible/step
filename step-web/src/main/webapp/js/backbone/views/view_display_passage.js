@@ -308,12 +308,15 @@ var PassageDisplayView = DisplayView.extend({
                 var linkOffset = link.offset();
                 var scroll = linkOffset == undefined ? 0 : linkOffset.top + passageContainer.scrollTop() - passageContainer.offset().top;
                 scroll -= 200;
-                if (step.touchDevice)
-                    window.scroll({
-                        top: scroll,
-                        left: 0,
-                        behavior: 'smooth'
-                    });    
+                if (step.touchDevice){
+                    setTimeout(function() {
+                        window.scroll({
+                            top: scroll,
+                            left: 0,
+                            behavior: 'smooth'
+                        });
+                    }, 800);
+                }
                 else {
                     passageContainer.find(".passageContentHolder").animate({
                         scrollTop: scroll

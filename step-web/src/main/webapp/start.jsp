@@ -31,13 +31,26 @@
 
     // Delegated click handler to capture any element with data-button-name
     document.addEventListener('click', function (e) {
-    var target = e.target.closest('[data-button-name]');
+    var node = e.target;
+    if (node && node.nodeType === 3) {
+        node = node.parentElement;
+    }
+    var target = null;
+    while (node && node.nodeType === 1) {
+        if (node.getAttribute && node.getAttribute('data-button-name') !== null) {
+            target = node;
+            break;
+        }
+        node = node.parentElement;
+    }
     if (!target) return;
     var name = target.getAttribute('data-button-name');
     var location = target.getAttribute('data-button-location') || '';
     var text = target.textContent.trim();
     // Send the custom event; parameters populate GA4 reports when registered
     gtag('event', 'button_click', {
+        send_to: 'G-8RH0MQG418',
+        transport_type: 'xhr',
         button_name: name,
         button_location: location,
         button_text: text

@@ -44,7 +44,7 @@
         // Uncomment for debugging:
         // ,debug_mode: true
     });
-    });
+    }, true);
 </script>
 <head>
     <%

@@ -307,12 +307,18 @@ var PassageDisplayView = DisplayView.extend({
                 var link = passageContainer.find("[name='" + currentTarget + "']");
                 var linkOffset = link.offset();
                 var scroll = linkOffset == undefined ? 0 : linkOffset.top + passageContainer.scrollTop() - passageContainer.offset().top;
-
-                var originalScrollTop = -200;
-                passageContainer.find(".passageContentHolder").animate({
-                    scrollTop: originalScrollTop + scroll
-                }, 500);
-
+                scroll -= 200;
+                if (step.touchDevice)
+                    window.scroll({
+                        top: scroll,
+                        left: 0,
+                        behavior: 'smooth'
+                    });    
+                else {
+                    passageContainer.find(".passageContentHolder").animate({
+                        scrollTop: scroll
+                    }, 500);
+                }                
                 $(link).closest(".verse").addClass("highlightBorder");
 
                 //also do so if we are looking at an interlinear-ed version

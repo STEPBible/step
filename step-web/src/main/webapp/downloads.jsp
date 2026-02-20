@@ -307,6 +307,21 @@
 <% if(!appManager.isLocal()) { %>
 	<script>
 	function _userDownload(clickItemID) {
+		var button = document.getElementById(clickItemID);
+		if (button && typeof gtag === "function") {
+			var name = button.getAttribute("data-button-name");
+			if (name) {
+				var location = button.getAttribute("data-button-location") || "";
+				var text = button.textContent.trim();
+				gtag("event", "button_click", {
+					send_to: "G-8RH0MQG418",
+					transport_type: "xhr",
+					button_name: name,
+					button_location: location,
+					button_text: text
+				});
+			}
+		}
 		if (clickItemID === "exeDownload") {
 			var os =  $( "#step_os option:selected" ).val();
 			var region = $('#region option:selected').val();

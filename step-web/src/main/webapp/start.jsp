@@ -280,7 +280,7 @@
                                     <li><a href="html/reports_by_step.html" target="_blank">Reading Plans</a></li>
                                 </ul>
                             </span>
-                            <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
+                            <a data-button-name="analysis" data-button-location="navbar" id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
                                 <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats" /></span>
                             </a>
                             <a data-button-name="bookmarks" data-button-location="navbar" id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">

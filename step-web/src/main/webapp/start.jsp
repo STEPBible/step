@@ -23,11 +23,28 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8RH0MQG418"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'G-8RH0MQG418');
+    gtag('config', 'G-8RH0MQG418');
+
+    // Delegated click handler to capture any element with data-button-name
+    document.addEventListener('click', function (e) {
+    var target = e.target.closest('[data-button-name]');
+    if (!target) return;
+    var name = target.getAttribute('data-button-name');
+    var location = target.getAttribute('data-button-location') || '';
+    var text = target.textContent.trim();
+    // Send the custom event; parameters populate GA4 reports when registered
+    gtag('event', 'button_click', {
+        button_name: name,
+        button_location: location,
+        button_text: text
+        // Uncomment for debugging:
+        // ,debug_mode: true
+    });
+    });
 </script>
 <head>
     <%
@@ -241,10 +258,10 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy" />">
+                            <a data-button-name="copy" data-button-location="navbar" id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy" />">
                                 <i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="copy" /></span>
                             </a>
-                            <span class="dropdown">
+                            <span data-button-name="resources" data-button-location="navbar" class="dropdown">
                                 <a id="report-icon" style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" title="Resources powered by STEPBible">
                                     <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-xs">&nbsp;&nbsp;<fmt:message key="report" /></span>
                                 </a>
@@ -266,14 +283,14 @@
                             <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
                                 <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats" /></span>
                             </a>
-                            <a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
+                            <a data-button-name="bookmarks" data-button-location="navbar" id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
                                 <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="bookmarks" /></span>
                             </a>
-                            <a id="fonts-icon" style="padding-left:5px" href="javascript:step.util.showFontSettings();" title="<fmt:message key="font_sizes" />">
+                            <a data-button-name="fonts" data-button-location="navbar" id="fonts-icon" style="padding-left:5px" href="javascript:step.util.showFontSettings();" title="<fmt:message key="font_sizes" />">
                                 <span class="largerFont" style="color:white;background:#5E5E5E;font-size:18px"><fmt:message key="passage_font_size_symbol" /></span>
                                 <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font" /></span>
                             </a>
-                            <a id="colorgrammar-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammar" />">
+                            <a data-button-name="grammar" data-button-location="navbar" id="colorgrammar-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('color');" title="<fmt:message key="display_grammar" />">
                                 <span class="largerFont" style="background:url(/images/wave.png) repeat-x 100% 100%;font-size:18px;padding-bottom:7px">G</span>
                                 <span class="largerFont hidden-xs hidden-sm navbarIconDesc" style="margin-left:-2">rammar</span>
                             </a>
@@ -281,7 +298,7 @@
                                 <i style="vertical-align:middle" class="glyphicon glyphicon-question-sign hidden-sm hidden-md hidden-lg"></i>
                             </a>
 
-                            <span class="navbar-collapse collapse">
+                            <span data-button-name="languages" data-button-location="navbar" class="navbar-collapse collapse">
                                 <span class="dropdown">
                                     <a id="languages-icon" style="padding-left:5px" class="dropdown-toggle extrapad-xs" data-toggle="dropdown" title="<fmt:message key="installation_book_language" />">
                                         <i class="glyphicon icon-language">
@@ -296,7 +313,7 @@
             <%
                 if (!appManager.isLocal()) {
             %>
-                                <a style="padding-left:5px;vertical-align:top" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
+                                <a data-button-name="feedback" data-button-location="navbar" style="padding-left:5px;vertical-align:top" id="raiseSupportTrigger" data-toggle="modal" data-backdrop="static" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
                                     <svg viewBox="0 0 18 21" width="18" height="21">
                                         <path d="M 0 3 L 18 3, 18 16, 16 16, 16 21, 12 16, 0 16, 0 3" stroke="var(--clrText)" fill="var(--clrText)" stroke-width="1"></path>
                                         <line x1="2" y1="8" x2="16" y2="8" stroke-width="1" stroke="var(--clrBackground)" />
@@ -308,7 +325,7 @@
             <%
                 }
             %>
-                                <a id="examples-icon2" class="hidden-xs" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
+                                <a data-button-name="faq" data-button-location="navbar" id="examples-icon2" class="hidden-xs" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="frequently_asked_questions" />">
                                     <i class="glyphicon glyphicon-question-sign hidden-xs"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="faq" /></span>
                                 </a>
                                 <span class="dropdown">

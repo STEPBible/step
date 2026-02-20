@@ -214,7 +214,7 @@
 
 			  <br/><br/><br/>
 
-			  <button id="exeDownload" class="button" onclick=_userDownload(this.id)>Download</button>
+			  <button data-button-name="download" data-button-location="downloads_page" id="exeDownload" class="button" onclick=_userDownload(this.id)>Download</button>
 
 			  <br/><br/>
 

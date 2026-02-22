@@ -308,7 +308,7 @@ step.copyText = {
 			   (lastCopyRightsVersions === versionsString) && 
 			   ((currentTimeInSeconds - parseInt(lastCopyRightsTimeStamp)) < 3600) )) {
 			for (var i = 0; i < versions.length; i++) {
-				if ((columnsToExclude.length > 0) && (columnsToExclude.includes(l)))
+				if ((columnsToExclude.length > 0) && (columnsToExclude.includes(i)))
 					continue;
 				currentVersion = versions[i];
 				if (currentVersion === "") continue;

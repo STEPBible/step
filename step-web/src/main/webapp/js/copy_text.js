@@ -1,14 +1,29 @@
 window.step = window.step || {};
 step.copyText = {
 	initVerseSelect: function() {
-		var verses = $('.versenumber');
 		step.util.closeModal('searchSelectionModal');
 		step.util.closeModal('passageSelectionModal');
 		this._displayVerses();
-		if (step.util.activePassage().get("extraVersions") !== "") { // notes and Xref for more than one version is confusing so don't offer the choice.
+		var extraVers = step.util.activePassage().get("extraVersions");
+		if (extraVers !== "") { // notes and Xref for more than one version is confusing so don't offer the choice.
 			$("#includeNotes").hide();
 			$("#includeXRefs").hide();
-		} 
+			if (step.util.getPassageContainer(step.util.activePassageId()).has(".interlinear").length == 0) {
+				var checkboxHTML = '<input type="checkbox" checked id="cpyver1" name="cpyver1">' +
+					'<label for="cpyver1">&nbsp;' +  step.util.activePassage().get("masterVersion") + '</label>';
+				var otherVers = extraVers.split(",");
+				for (var i = 0; i < otherVers.length; i++) {
+					var j = i + 2;
+					checkboxHTML += '&nbsp;<input type="checkbox" checked id="cpyver' + j + '" name="cpyver' + j + '">' +
+						'<label for="cpyver' + j + '">&nbsp;' +  otherVers[i] + '</label>';
+				}
+				$('#selectversionstocopy').html("<h4>Versions to copy:</h4>&nbsp;" + checkboxHTML);
+			}
+			else
+				$('#selectversionstocopy').remove();
+		}
+		else
+			$('#selectversionstocopy').remove();
 	},
 
 	_displayVerses: function() {
@@ -19,7 +34,7 @@ step.copyText = {
 	},
 
 
-	_buildHeaderAndSkeleton: function(summaryMode) {
+	_buildHeaderAndSkeleton: function() {
 		var html = '<div class="header" style="overflow-y:auto">' +
 			'<h4>' + __s.please_select_first_version_to_copy + '</h4>';
 		return html;
@@ -123,6 +138,7 @@ step.copyText = {
 			$(singleVerses).prepend("\n");
 		}
 		$(copyOfPassage).find(".stepButton").remove();
+		$(copyOfPassage).find("h3.canonicalHeading.acrostic").remove();
 		$(copyOfPassage).find(".level2").text("\t");
 		$(copyOfPassage).find(".level3").text("\t\t");
 		$(copyOfPassage).find(".level4").text("\t\t\t");
@@ -155,8 +171,31 @@ step.copyText = {
 		var versionsString = step.util.activePassage().get("masterVersion");
 		var extraVersions = step.util.activePassage().get("extraVersions");
 		var options = step.util.activePassage().get("options");
-		if (extraVersions !== "") versionsString += "," + extraVersions;
 		var versions = versionsString.split(",");
+		var columnsToExclude = [];
+		var numOfSelected = 0;
+		if (extraVersions !== "") {
+			versionsString += "," + extraVersions;
+			versions = versionsString.split(",");
+			for (var n = 0; n < versions.length; n++) {
+				if ($('#cpyver' + (n + 1)).prop('checked'))
+					numOfSelected ++;
+				else {
+					$(copyOfPassage).find('span[data-version="' + versions[n] + '"]').next().remove();
+					$(copyOfPassage).find('span[data-version="' + versions[n] + '"]').remove();
+					columnsToExclude.push(n);
+				}
+			}
+			if (numOfSelected == 0) {
+				$('#bookchaptermodalbody').empty();
+				$('#bookchaptermodalbody').append("<h2>You must select at least one version to copy.");
+				$('#copyModalFooter').empty();
+				setTimeout( function() { step.util.closeModal("copyModal")}, 3000);
+				return;
+			}
+			else if (numOfSelected == 1)
+				$(copyOfPassage).find('span[data-version]').remove();
+		}
 		var comparingTable = $(copyOfPassage).find('.comparingTable');
 		if (comparingTable.length > 0) {
 			var rows = $(comparingTable).find("tr.row");
@@ -165,14 +204,30 @@ step.copyText = {
 					var cells = $(rows[k]).find("td.cell");
 					if (cells.length == versions.length) {
 						for (var l = 0; l < cells.length; l++) {
-							$(cells[l]).prepend("\n(" + versions[l] + ") ");
+							if (columnsToExclude.includes(l))
+								$(cells[l]).empty();
+							else if (numOfSelected > 1)
+								$(cells[l]).prepend("\n(" + versions[l] + ") ");
 						}
 					}
 				}
 			}
 			$(comparingTable).find("tr").not(".row").remove();
 		}
-		var textToCopy = ""
+		var versesInPanel = $(copyOfPassage).find(".versenumber");
+		var verses = [];
+		var previousVerseName = "";
+		if (versesInPanel.length > 0) {
+			for (var i = 0; i < versesInPanel.length; i ++) {
+				var origVerseName = $(versesInPanel[i]).text();
+				var verseName = step.copyText._shortenVerseName(previousVerseName, origVerseName);
+				previousVerseName = origVerseName;
+				if (verseName !== origVerseName)
+					$(versesInPanel[i]).text(verseName);
+			}
+		}
+
+		var textToCopy = "";
 		for (var m = 0; m < copyOfPassage.length; m++) {
 			textToCopy += $(copyOfPassage[m]).text().replace(/    /g, " ")
 			.replace(/Read full chapter/, "")
@@ -253,6 +308,8 @@ step.copyText = {
 			   (lastCopyRightsVersions === versionsString) && 
 			   ((currentTimeInSeconds - parseInt(lastCopyRightsTimeStamp)) < 3600) )) {
 			for (var i = 0; i < versions.length; i++) {
+				if ((columnsToExclude.length > 0) && (columnsToExclude.includes(l)))
+					continue;
 				currentVersion = versions[i];
 				if (currentVersion === "") continue;
 				$.ajaxSetup({async: false});
@@ -302,9 +359,16 @@ step.copyText = {
 		$('#copyModalFooter').empty();
 		setTimeout( function() { step.util.closeModal("copyModal")}, sleepTime);
 	},
-
-	_buildChapterVerseTable: function(firstSelection) {
-		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
+	_shortenVerseName: function(previousVerseName, verseName) {
+		var verseSplit = verseName.split(/:/);
+		if ((verseSplit.length == 2) && (verseSplit[0] === previousVerseName.split(/:/)[0])) return verseSplit[1];
+		else {
+			verseSplit = verseName.split(/ /);
+			if ((verseSplit.length == 2) && (verseSplit[0] === previousVerseName.split(/ /)[0])) return verseSplit[1];
+		}
+		return verseName;
+	},
+	_getVerses: function(passageContainer) {
 		var versesInPanel = $(passageContainer).find(".versenumber");
 		var verses = [];
 		if (versesInPanel.length > 0) {
@@ -320,7 +384,11 @@ step.copyText = {
 				verses.push(tmp);
 			}
 		}
-
+		return verses;
+	},
+	_buildChapterVerseTable: function(firstSelection) {
+		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
+		var verses = step.copyText._getVerses(passageContainer);
 		var hasXRefs = false;
 		var hasNotes = false;
 		var notes = $(passageContainer).find('.note');
@@ -365,14 +433,8 @@ step.copyText = {
 		var previousVerseName = "";
 		for (var i = 0; i < verses.length; i++) {
 			chptrOrVrsNum++;
-			var verseName = verses[i];
-			var originalVerseName = verseName;
-			var verseSplit = verseName.split(/:/);
-			if ((verseSplit.length == 2) && (verseSplit[0] === previousVerseName.split(/:/)[0])) verseName = verseSplit[1];
-			else {
-				verseSplit = verseName.split(/ /);
-				if ((verseSplit.length == 2) && (verseSplit[0] === previousVerseName.split(/ /)[0])) verseName = verseSplit[1];
-			}
+			var originalVerseName = verses[i];
+			var verseName = step.copyText._shortenVerseName(previousVerseName, verses[i]);
 			previousVerseName = originalVerseName;
 			
 			if (firstSelection > -1) {

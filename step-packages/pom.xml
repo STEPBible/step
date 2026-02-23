@@ -20,9 +20,9 @@
         <sword.home>${sword.home}</sword.home>
         <jsword.home>${jsword.home}</jsword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-	    <modulesToInclude>ESV_th,kjv,chiun,chiuns,oshb,THOT,lxx_th,SBLG_th,NIV,abpen_sb,abpgk_sb,sparv1909,FreSeg21,cpdv</modulesToInclude>
-	    <dataFilesToInclude>ESV_th,kjv,chiun,chiuns,oshb,THOT,LXX_th,SBLG_th,NIV,abpen_sb,abpgk_sb,sparv1909,FreSeg21,cpdv</dataFilesToInclude>
-		<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,OSHB,THOT,LXX_th,SBLG_th,NIV,abpen_sb,abpgk_sb,SpaRV1909,FreSeg21,CPDV</indexesToInclude>
+	    <modulesToInclude>ESV_th,kjv,chiun,chiuns,oshb,THOT,lxx_th,SBLG_th,NIV,NIVUK,abpen_sb,abpgk_sb,sparv1909,FreSeg21,cpdv</modulesToInclude>
+	    <dataFilesToInclude>ESV_th,kjv,chiun,chiuns,oshb,THOT,LXX_th,SBLG_th,NIV,NIVUK,abpen_sb,abpgk_sb,sparv1909,FreSeg21,cpdv</dataFilesToInclude>
+		<indexesToInclude>ESV_th,KJV,ChiUn,ChiUns,OSHB,THOT,LXX_th,SBLG_th,NIV,NIVUK,abpen_sb,abpgk_sb,SpaRV1909,FreSeg21,CPDV</indexesToInclude>
     </properties>
 
     <build>

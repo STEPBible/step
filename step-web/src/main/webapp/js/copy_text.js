@@ -3,34 +3,29 @@ step.copyText = {
 	initVerseSelect: function() {
 		step.util.closeModal('searchSelectionModal');
 		step.util.closeModal('passageSelectionModal');
-		this._displayVerses();
 		var extraVers = step.util.activePassage().get("extraVersions");
-		if (extraVers !== "") { // notes and Xref for more than one version is confusing so don't offer the choice.
-			$("#includeNotes").hide();
-			$("#includeXRefs").hide();
-			if (step.util.getPassageContainer(step.util.activePassageId()).has(".interlinear").length == 0) {
-				var checkboxHTML = '<input type="checkbox" checked id="cpyver1" name="cpyver1">' +
-					'<label for="cpyver1">&nbsp;' +  step.util.activePassage().get("masterVersion") + '</label>';
-				var otherVers = extraVers.split(",");
-				for (var i = 0; i < otherVers.length; i++) {
-					var j = i + 2;
-					checkboxHTML += '&nbsp;<input type="checkbox" checked id="cpyver' + j + '" name="cpyver' + j + '">' +
-						'<label for="cpyver' + j + '">&nbsp;' +  otherVers[i] + '</label>';
-				}
-				$('#selectversionstocopy').html("<h4>Versions to copy:</h4>&nbsp;" + checkboxHTML);
+		this._displayVerses(extraVers !== "");
+		if ((extraVers !== "") &&
+			(step.util.getPassageContainer(step.util.activePassageId()).has(".interlinear").length == 0)) {
+			var checkboxHTML = '<input type="checkbox" checked id="cpyver1" name="cpyver1">' +
+				'<label for="cpyver1">&nbsp;' +  step.util.activePassage().get("masterVersion") + '</label>';
+			var otherVers = extraVers.split(",");
+			for (var i = 0; i < otherVers.length; i++) {
+				var j = i + 2;
+				checkboxHTML += '&nbsp;<input type="checkbox" checked id="cpyver' + j + '" name="cpyver' + j + '">' +
+					'<label for="cpyver' + j + '">&nbsp;' +  otherVers[i] + '</label>';
 			}
-			else
-				$('#selectversionstocopy').remove();
+			$('#selectversionstocopy').html("<h4>Versions to copy:</h4>&nbsp;" + checkboxHTML);
 		}
 		else
 			$('#selectversionstocopy').remove();
 	},
 
-	_displayVerses: function() {
+	_displayVerses: function(hasExtraVersions) {
 	    $('#bookchaptermodalbody').empty();
 		var html = this._buildHeaderAndSkeleton();
 		$('#bookchaptermodalbody').append(html);
-		$('#bookchaptermodalbody').append(this._buildChapterVerseTable(-1));
+		$('#bookchaptermodalbody').append(this._buildChapterVerseTable(-1, hasExtraVersions));
 	},
 
 
@@ -303,9 +298,10 @@ step.copyText = {
 		var timeStampForNewCookie = currentTimeInSeconds.toString();
 		var lastCopyRightsTimeStamp = $.cookie("step.copyRightsTimeStamps");
 		var lastCopyRightsVersions = $.cookie("step.copyRightsVersions");
+		var versionStringToCompare = versionsString + columnsToExclude.join();
 		if (!( (typeof lastCopyRightsTimeStamp === "string") && 
 			   (typeof lastCopyRightsVersions === "string") &&
-			   (lastCopyRightsVersions === versionsString) && 
+			   (lastCopyRightsVersions === versionStringToCompare) && 
 			   ((currentTimeInSeconds - parseInt(lastCopyRightsTimeStamp)) < 3600) )) {
 			for (var i = 0; i < versions.length; i++) {
 				if ((columnsToExclude.length > 0) && (columnsToExclude.includes(i)))
@@ -321,7 +317,7 @@ step.copyText = {
 				$.ajaxSetup({async: true});
 			}
 			$.cookie("step.copyRightsTimeStamps", timeStampForNewCookie);
-			$.cookie("step.copyRightsVersions", versionsString);
+			$.cookie("step.copyRightsVersions", versionStringToCompare);
 		}
 		else if (extraVersions === "") textToCopy += "\n(" + versionsString + ")";
 		var previousCopyTimeStamps = $.cookie("step.copyTimeStamps");
@@ -386,24 +382,25 @@ step.copyText = {
 		}
 		return verses;
 	},
-	_buildChapterVerseTable: function(firstSelection) {
+	_buildChapterVerseTable: function(firstSelection, hasExtraVersions) {
 		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
 		var verses = step.copyText._getVerses(passageContainer);
 		var hasXRefs = false;
 		var hasNotes = false;
-		var notes = $(passageContainer).find('.note');
-		for (var l = 0; ((l < notes.length) && (!hasXRefs || (!hasNotes))); l++) {
-			var aTag = $(notes[l]).find("a");
-			if ((aTag.length == 1) && (!hasXRefs)) {
-				$("#includeXRefs").show();
-				hasXRefs = true;
-			}
-			else if ((aTag.length > 1) && (!hasNotes)) {
-				$("#includeNotes").show();
-				hasNotes = true;
+		if (!hasExtraVersions) { // The notes and xrefs from different versions should not be mixed.
+			var notes = $(passageContainer).find('.note');
+			for (var l = 0; ((l < notes.length) && (!hasXRefs || (!hasNotes))); l++) {
+				var aTag = $(notes[l]).find("a");
+				if ((aTag.length == 1) && (!hasXRefs)) {
+					$("#includeXRefs").show();
+					hasXRefs = true;
+				}
+				else if ((aTag.length > 1) && (!hasNotes)) {
+					$("#includeNotes").show();
+					hasNotes = true;
+				}
 			}
 		}
-
 		var headerMsg = (firstSelection == -1) ? __s.select_the_first_verse_to_copy + "<br><br><br>" : 
 			__s.copy_will_start_from_verse + ": " + verses[firstSelection] + "<br>" + __s.select_last_verse_to_copy;
 		this.modalMode = 'verse';
@@ -443,7 +440,7 @@ step.copyText = {
 					'>' + verseName + 
 					'</a></td>'
 			}
-			else html += '<td><a href="javascript:step.copyText._buildChapterVerseTable(' + i + ');"' +
+			else html += '<td><a href="javascript:step.copyText._buildChapterVerseTable(' + i + ',' + hasExtraVersions + ');"' +
 					'>' + verseName + 
 					'</a></td>'
 			if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {

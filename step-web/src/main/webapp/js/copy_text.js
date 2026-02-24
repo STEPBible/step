@@ -4,15 +4,29 @@ step.copyText = {
 		step.util.closeModal('searchSelectionModal');
 		step.util.closeModal('passageSelectionModal');
 		var extraVers = step.util.activePassage().get("extraVersions");
-		this._displayVerses(extraVers !== "");
+		this._displayVerses(extraVers !== ""); // does it have extra versions, more than one Bible version
 		if ((extraVers !== "") &&
 			(step.util.getPassageContainer(step.util.activePassageId()).has(".interlinear").length == 0)) {
-			var checkboxHTML = '<input type="checkbox" checked id="cpyver1" name="cpyver1">' +
+			var lastCopyRightsVersions = $.cookie("step.copyRightsVersions");
+			var versionsToExclude = [];
+			if (typeof lastCopyRightsVersions === "string") {
+				var masterVersion = step.util.activePassage().get("masterVersion");
+				var versionsString = masterVersion + "," + extraVers;
+				var parts = lastCopyRightsVersions.split("@");
+				if (parts[0] === versionsString) {
+					if (parts.length == 2)
+						versionsToExclude = parts[1].split(",");
+				}
+			}
+			var checkedOrNot = (!versionsToExclude.includes('0')) ? "checked " : "";
+			var checkboxHTML = '<input type="checkbox" ' + checkedOrNot + 'id="cpyver1" name="cpyver1">' +
 				'<label for="cpyver1">&nbsp;' +  step.util.activePassage().get("masterVersion") + '</label>';
 			var otherVers = extraVers.split(",");
 			for (var i = 0; i < otherVers.length; i++) {
 				var j = i + 2;
-				checkboxHTML += '&nbsp;<input type="checkbox" checked id="cpyver' + j + '" name="cpyver' + j + '">' +
+				var k = i + 1;
+				var checkedOrNot = (!versionsToExclude.includes(k.toString())) ? "checked " : "";
+				checkboxHTML += '&nbsp;<input type="checkbox" ' + checkedOrNot + 'id="cpyver' + j + '" name="cpyver' + j + '">' +
 					'<label for="cpyver' + j + '">&nbsp;' +  otherVers[i] + '</label>';
 			}
 			$('#selectversionstocopy').html("<h4>Versions to copy:</h4>&nbsp;" + checkboxHTML);
@@ -167,7 +181,7 @@ step.copyText = {
 		var extraVersions = step.util.activePassage().get("extraVersions");
 		var options = step.util.activePassage().get("options");
 		var versions = versionsString.split(",");
-		var columnsToExclude = [];
+		var versionsToExclude = [];
 		var numOfSelected = 0;
 		if (extraVersions !== "") {
 			versionsString += "," + extraVersions;
@@ -178,7 +192,7 @@ step.copyText = {
 				else {
 					$(copyOfPassage).find('span[data-version="' + versions[n] + '"]').next().remove();
 					$(copyOfPassage).find('span[data-version="' + versions[n] + '"]').remove();
-					columnsToExclude.push(n);
+					versionsToExclude.push(n);
 				}
 			}
 			if (numOfSelected == 0) {
@@ -199,7 +213,7 @@ step.copyText = {
 					var cells = $(rows[k]).find("td.cell");
 					if (cells.length == versions.length) {
 						for (var l = 0; l < cells.length; l++) {
-							if (columnsToExclude.includes(l))
+							if (versionsToExclude.includes(l))
 								$(cells[l]).empty();
 							else if (numOfSelected > 1)
 								$(cells[l]).prepend("\n(" + versions[l] + ") ");
@@ -298,13 +312,13 @@ step.copyText = {
 		var timeStampForNewCookie = currentTimeInSeconds.toString();
 		var lastCopyRightsTimeStamp = $.cookie("step.copyRightsTimeStamps");
 		var lastCopyRightsVersions = $.cookie("step.copyRightsVersions");
-		var versionStringToCompare = versionsString + columnsToExclude.join();
+		var versionStringToCompare = versionsString + '@' + versionsToExclude.join();
 		if (!( (typeof lastCopyRightsTimeStamp === "string") && 
 			   (typeof lastCopyRightsVersions === "string") &&
 			   (lastCopyRightsVersions === versionStringToCompare) && 
 			   ((currentTimeInSeconds - parseInt(lastCopyRightsTimeStamp)) < 3600) )) {
 			for (var i = 0; i < versions.length; i++) {
-				if ((columnsToExclude.length > 0) && (columnsToExclude.includes(i)))
+				if ((versionsToExclude.length > 0) && (versionsToExclude.includes(i)))
 					continue;
 				currentVersion = versions[i];
 				if (currentVersion === "") continue;

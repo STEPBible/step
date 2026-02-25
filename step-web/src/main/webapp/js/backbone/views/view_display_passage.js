@@ -614,12 +614,29 @@ var PassageDisplayView = DisplayView.extend({
         },
         _makeSideNoteQtipHandler: function (item, xref, myPosition, atPosition, version, touch) {
             var self = this;
+            var clampSideNoteQtipWidth = function (api) {
+                var defaultWidth = 800;
+                var margin = 16;
+                var viewportWidth = $(window).width();
+                if (!viewportWidth) {
+                    return;
+                }
+                var maxAllowed = Math.max(0, viewportWidth - (2 * margin));
+                if (!maxAllowed) {
+                    return;
+                }
+                var desiredWidth = Math.min(defaultWidth, maxAllowed);
+                setTimeout(function () {
+                    api.set('style.width', desiredWidth);
+                    api.reposition();
+                }, 0);
+            };
             if (!step.util.checkFirstBibleHasPassage(version, [xref.split(" ")[0]], [], true, true)) version = "ESV";
             if (!$.data(item, "initialised")) {
                 require(["qtip", "drag"], function () {
                     item.qtip({
                         position: {my: "top " + myPosition, at: "top " + atPosition, viewport: $(window)},
-                        style: {tip: false, classes: 'draggable-tooltip xrefPopup', width: {min: 800, max: 800}},
+                        style: {tip: false, classes: 'draggable-tooltip xrefPopup', width: 800},
                         show: {event: 'click'}, hide: {event: 'click'},
                         content: {
                             text: function (event, api) {
@@ -642,6 +659,7 @@ var PassageDisplayView = DisplayView.extend({
                                     api.set('content.title.text', data.longName);
                                     api.set('content.text', text2Display);
                                     api.set('content.osisId', data.osisId)
+                                    clampSideNoteQtipWidth(api);
                                 }).error(function() {
                                     changeBaseURL();
                                 });
@@ -676,6 +694,7 @@ var PassageDisplayView = DisplayView.extend({
                                 });
 
                                 step.util.ui.addStrongHandlers(self.model.get("passageId"), tooltip);
+                                clampSideNoteQtipWidth(api);
                             }
                         }
                     });

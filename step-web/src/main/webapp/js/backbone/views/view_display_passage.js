@@ -614,6 +614,8 @@ var PassageDisplayView = DisplayView.extend({
         },
         _makeSideNoteQtipHandler: function (item, xref, myPosition, atPosition, version, touch) {
             var self = this;
+            var defaultMy = "top " + myPosition;
+            var defaultAt = "top " + atPosition;
             var clampSideNoteQtipWidth = function (api) {
                 var defaultWidth = 800;
                 var margin = 16;
@@ -628,7 +630,34 @@ var PassageDisplayView = DisplayView.extend({
                 var desiredWidth = Math.min(defaultWidth, maxAllowed);
                 setTimeout(function () {
                     api.set('style.width', desiredWidth);
+                    api.set('position.my', defaultMy);
+                    api.set('position.at', defaultAt);
                     api.reposition();
+                    var myVertical = defaultMy.split(" ")[0] || "top";
+                    var atVertical = defaultAt.split(" ")[0] || "top";
+                    if (desiredWidth < defaultWidth) {
+                        api.set('position.my', myVertical + " center");
+                        api.set('position.at', atVertical + " center");
+                        api.reposition();
+                        return;
+                    }
+                    var tooltip = api.elements.tooltip;
+                    if (!tooltip || !tooltip.is(":visible")) {
+                        return;
+                    }
+                    var tooltipOffset = tooltip.offset();
+                    if (!tooltipOffset) {
+                        return;
+                    }
+                    var tooltipWidth = tooltip.outerWidth(false);
+                    var leftEdge = tooltipOffset.left;
+                    var rightEdge = leftEdge + tooltipWidth;
+                    var viewportRight = viewportWidth - margin;
+                    if (leftEdge < margin || rightEdge > viewportRight) {
+                        api.set('position.my', myVertical + " center");
+                        api.set('position.at', atVertical + " center");
+                        api.reposition();
+                    }
                 }, 0);
             };
             if (!step.util.checkFirstBibleHasPassage(version, [xref.split(" ")[0]], [], true, true)) version = "ESV";

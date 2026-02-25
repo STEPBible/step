@@ -1,0 +1,29 @@
+- Goal: remove all local changes in `step-web/src/main/webapp/js/backbone/views/view_sidebar.js` relative to `master`, then update `step-web/src/main/webapp/js/backbone/views/view_display_passage.js` so side-note qtips center horizontally around the origin on small screens after resize, or earlier if either side overflows the viewport.
+-
+- Constraints and notes
+- - No code changes beyond restoring `view_sidebar.js` to match `master` and updating `_makeSideNoteQtipHandler` in `view_display_passage.js`.
+- - Avoid destructive commands unless needed; prefer restoring the file content from `master` without touching unrelated working tree changes.
+- - Keep changes ASCII-only; do not reformat unrelated lines.
+-
+- Step 1: Restore `view_sidebar.js` to match `master`
+- - Inspect the diff to confirm scope: `git diff master -- step-web/src/main/webapp/js/backbone/views/view_sidebar.js`.
+- - Replace the file contents with the version from `master` (pick one):
+-   - `git show master:step-web/src/main/webapp/js/backbone/views/view_sidebar.js > step-web/src/main/webapp/js/backbone/views/view_sidebar.js`
+-   - or `git restore --source=master -- step-web/src/main/webapp/js/backbone/views/view_sidebar.js` (if allowed).
+- - Recheck: `git diff master -- step-web/src/main/webapp/js/backbone/views/view_sidebar.js` should be empty.
+-
+- Step 2: Adjust `_makeSideNoteQtipHandler` in `view_display_passage.js`
+- - File: `step-web/src/main/webapp/js/backbone/views/view_display_passage.js`, function `_makeSideNoteQtipHandler`.
+- - Update the `clampSideNoteQtipWidth` logic so the tooltip centers when:
+-   - the calculated `desiredWidth` is less than the default width (viewport is narrow), OR
+-   - after applying width and default positions, either edge is outside the viewport margin.
+- - Implementation idea:
+-   - Keep `defaultMy`/`defaultAt` and initial `api.set('position.my/at', default...)`.
+-   - After `api.reposition()`, if `desiredWidth < defaultWidth` set `position.my/at` to `"top center"` (or use the existing vertical part + `center`) and call `api.reposition()`.
+-   - Otherwise compute `leftEdge/rightEdge` and fall back to the existing overflow check to switch to `"top center"` when needed.
+- - Ensure the change only affects `view_display_passage.js` and preserves current behavior on wide screens.
+-
+- Step 3: Manual verification
+- - Open a passage with side notes, open a qtip, then resize the window narrower than the tooltip default width.
+- - Confirm the tooltip remains horizontally centered on the origin and does not anchor its left edge to the origin.
+- - Also confirm wide-screen behavior stays aligned left/right as before.

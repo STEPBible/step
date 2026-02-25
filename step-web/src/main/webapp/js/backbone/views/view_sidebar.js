@@ -1264,28 +1264,11 @@ var SidebarView = Backbone.View.extend({
 
     _makeSideNoteQtipHandler: function (item, xref, version, touch) {
         var self = this;
-        var clampSideNoteQtipWidth = function (api) {
-            var defaultWidth = 800;
-            var margin = 16;
-            var viewportWidth = $(window).width();
-            if (!viewportWidth) {
-                return;
-            }
-            var maxAllowed = Math.max(0, viewportWidth - (2 * margin));
-            if (!maxAllowed) {
-                return;
-            }
-            var desiredWidth = Math.min(defaultWidth, maxAllowed);
-            setTimeout(function () {
-                api.set('style.width', desiredWidth);
-                api.reposition();
-            }, 0);
-        };
         if (!$.data(item, "initialised")) {
             require(["qtip", "drag"], function () {
                 item.qtip({
                     position: { my: "top right", at: "top left", viewport: $(window) },
-                    style: { tip: false, classes: 'draggable-tooltip xrefPopup', width: 800 },
+                    style: { tip: false, classes: 'draggable-tooltip xrefPopup', width: { min: 800, max: 800} },
                     show: { event: 'click' }, hide: { event: 'click' },
                     content: {
                         text: function (event, api) {
@@ -1306,7 +1289,6 @@ var SidebarView = Backbone.View.extend({
                                 api.set('content.title.text', data.longName);
                                 api.set('content.text', data.value.replace(/ strong=['"][GH]\d{1,5}[A-Za-z]?\s?['"]/g, "")); // Strip the strong tag
                                 api.set('content.osisId', data.osisId)
-                                clampSideNoteQtipWidth(api);
                             }).error(function() {
                                 changeBaseURL();
                             });
@@ -1334,7 +1316,6 @@ var SidebarView = Backbone.View.extend({
                                 containment: 'body',
                                 handle: selector
                             });
-                            clampSideNoteQtipWidth(api);
                         }
                     }
                 });

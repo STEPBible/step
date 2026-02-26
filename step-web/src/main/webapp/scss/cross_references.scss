@@ -11,6 +11,15 @@
   }
 }
 
+.qtip.sideNoteQtip {
+  max-width: calc(100vw - 32px);
+  width: 800px;
+}
+
+.qtip.xrefPopup.sideNoteQtip {
+  width: 800px;
+}
+
 .qtip.xrefHover {
   background-color: white;
   background-color: var(--clrBackground);
@@ -94,6 +103,10 @@
     float: right;
     margin-right: 5px;
   }
+}
+
+.qtip.sideNoteQtip .qtip-titlebar {
+  touch-action: none;
 }
 
 .qtip-default {

@@ -234,6 +234,7 @@ public final class JSwordUtils {
             if (numOfBooksInThisBible != numOfBooksInThisBible2) {
                 System.out.println("Something wrong " + currentBibleName + " " + numOfBooksInThisBible2 + " " + numOfBooksInThisBible);
             }
+            else System.out.println("Match: " + currentBibleName + " " + numOfBooksInThisBible);
         }
         catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);

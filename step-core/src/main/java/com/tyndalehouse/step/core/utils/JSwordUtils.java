@@ -229,6 +229,11 @@ public final class JSwordUtils {
                     numOfBooksInThisBible ++;
                 }
             }
+            Set<BibleBook> bibleBooksInThisVersion2 = ((SwordBook) b).getBibleBooks();
+            int numOfBooksInThisBible2 = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion2).size();
+            if (numOfBooksInThisBible != numOfBooksInThisBible2) {
+                System.out.println("Something wrong " + currentBibleName + " " + numOfBooksInThisBible2 + " " + numOfBooksInThisBible);
+            }
         }
         catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);

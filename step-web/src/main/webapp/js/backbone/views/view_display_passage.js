@@ -625,6 +625,45 @@ var PassageDisplayView = DisplayView.extend({
                 }
                 return (viewportWidth - (2 * margin)) < defaultWidth;
             };
+            var adjustSideNoteQtipOffscreen = function (api) {
+                if (isSmallViewport()) {
+                    return;
+                }
+                setTimeout(function () {
+                    if (isSmallViewport()) {
+                        return;
+                    }
+                    var tooltip = api.elements.tooltip;
+                    if (!tooltip || !tooltip.is(":visible")) {
+                        return;
+                    }
+                    var viewportWidth = $(window).width();
+                    if (!viewportWidth) {
+                        return;
+                    }
+                    var tooltipOffset = tooltip.offset();
+                    if (!tooltipOffset) {
+                        return;
+                    }
+                    var tooltipWidth = tooltip.outerWidth(false);
+                    var leftEdge = tooltipOffset.left;
+                    var rightEdge = leftEdge + tooltipWidth;
+                    var scrollLeft = $(window).scrollLeft();
+                    var viewportLeft = scrollLeft + margin;
+                    var viewportRight = scrollLeft + viewportWidth - margin;
+                    var adjustX = 0;
+                    if (leftEdge < viewportLeft) {
+                        adjustX = viewportLeft - leftEdge;
+                    } else if (rightEdge > viewportRight) {
+                        adjustX = viewportRight - rightEdge;
+                    }
+                    if (!adjustX) {
+                        return;
+                    }
+                    api.set('position.adjust.x', Math.round(adjustX));
+                    api.reposition();
+                }, 0);
+            };
             var clampSideNoteQtipWidth = function (api) {
                 var viewportWidth = $(window).width();
                 if (!viewportWidth) {
@@ -739,6 +778,8 @@ var PassageDisplayView = DisplayView.extend({
                                     api.set('content.osisId', data.osisId)
                                     if (isSmallViewport()) {
                                         clampSideNoteQtipWidth(api);
+                                    } else {
+                                        adjustSideNoteQtipOffscreen(api);
                                     }
                                 }).error(function() {
                                     changeBaseURL();
@@ -781,6 +822,8 @@ var PassageDisplayView = DisplayView.extend({
                                 if (smallViewport) {
                                     clampSideNoteQtipWidth(api);
                                     bindSideNoteResize(api);
+                                } else {
+                                    adjustSideNoteQtipOffscreen(api);
                                 }
                             },
                             hide: function (event, api) {

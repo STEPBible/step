@@ -618,14 +618,20 @@ var PassageDisplayView = DisplayView.extend({
             var defaultAt = "top " + atPosition;
             var defaultWidth = 800;
             var margin = 16;
-            var minDragWidth = 480;
+            var isSmallViewport = function () {
+                var viewportWidth = $(window).width();
+                if (!viewportWidth) {
+                    return false;
+                }
+                return (viewportWidth - (2 * margin)) < defaultWidth;
+            };
             var clampSideNoteQtipWidth = function (api) {
                 var viewportWidth = $(window).width();
                 if (!viewportWidth) {
                     return;
                 }
                 var maxAllowed = Math.max(0, viewportWidth - (2 * margin));
-                if (!maxAllowed) {
+                if (!maxAllowed || maxAllowed >= defaultWidth) {
                     return;
                 }
                 var desiredWidth = Math.min(defaultWidth, maxAllowed);
@@ -676,6 +682,9 @@ var PassageDisplayView = DisplayView.extend({
                 }, 0);
             };
             var bindSideNoteResize = function (api) {
+                if (!isSmallViewport()) {
+                    return;
+                }
                 var namespace = ".sideNoteQtip-" + api.id;
                 var handler = function () {
                     if (api.elements.tooltip && api.elements.tooltip.is(":visible")) {
@@ -693,9 +702,19 @@ var PassageDisplayView = DisplayView.extend({
             if (!step.util.checkFirstBibleHasPassage(version, [xref.split(" ")[0]], [], true, true)) version = "ESV";
             if (!$.data(item, "initialised")) {
                 require(["qtip", "drag"], function () {
+                    var smallViewport = isSmallViewport();
+                    var qtipPosition = {my: defaultMy, at: defaultAt, viewport: $(window)};
+                    var qtipStyle = {
+                        tip: false,
+                        classes: 'draggable-tooltip xrefPopup' + (smallViewport ? ' sideNoteQtip' : ''),
+                        width: smallViewport ? defaultWidth : {min: defaultWidth, max: defaultWidth}
+                    };
+                    if (smallViewport) {
+                        qtipPosition.effect = false;
+                    }
                     item.qtip({
-                        position: {my: "top " + myPosition, at: "top " + atPosition, viewport: $(window), effect: false},
-                        style: {tip: false, classes: 'draggable-tooltip xrefPopup sideNoteQtip', width: 800},
+                        position: qtipPosition,
+                        style: qtipStyle,
                         show: {event: 'click'}, hide: {event: 'click'},
                         content: {
                             text: function (event, api) {
@@ -718,7 +737,9 @@ var PassageDisplayView = DisplayView.extend({
                                     api.set('content.title.text', data.longName);
                                     api.set('content.text', text2Display);
                                     api.set('content.osisId', data.osisId)
-                                    clampSideNoteQtipWidth(api);
+                                    if (isSmallViewport()) {
+                                        clampSideNoteQtipWidth(api);
+                                    }
                                 }).error(function() {
                                     changeBaseURL();
                                 });
@@ -743,12 +764,12 @@ var PassageDisplayView = DisplayView.extend({
                             },
                             visible: function (event, api) {
                                 var tooltip = api.elements.tooltip;
-                                var selector = ".qtip-titlebar";
+                                var smallViewport = isSmallViewport();
+                                var selector = smallViewport ? ".qtip-titlebar" : (touch ? ".qtip-title" : ".qtip-titlebar");
                                 if (touch) {
                                     tooltip.find(".qtip-title").css("width", "90%");
                                 }
-                                var viewportWidth = $(window).width();
-                                var enableDrag = !touch || (viewportWidth && viewportWidth > minDragWidth);
+                                var enableDrag = !touch || !smallViewport;
                                 if (enableDrag) {
                                     new Draggabilly($(tooltip).get(0), {
                                         containment: 'body',
@@ -757,8 +778,10 @@ var PassageDisplayView = DisplayView.extend({
                                 }
 
                                 step.util.ui.addStrongHandlers(self.model.get("passageId"), tooltip);
-                                clampSideNoteQtipWidth(api);
-                                bindSideNoteResize(api);
+                                if (smallViewport) {
+                                    clampSideNoteQtipWidth(api);
+                                    bindSideNoteResize(api);
+                                }
                             },
                             hide: function (event, api) {
                                 unbindSideNoteResize(api);

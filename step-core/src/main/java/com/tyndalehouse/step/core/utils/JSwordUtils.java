@@ -209,7 +209,9 @@ public final class JSwordUtils {
         if ((bibleType != null) && (bibleType.equals("B") || bibleType.equals("N") || bibleType.equals("O") || bibleType.equals(" ")))
             return bibleType.charAt(0);
         int numOfBooksInThisBible = 0;
-        Set<BibleBook> bibleBooksInThisVersion = new LinkedHashSet<BibleBook>(); 
+        Set<BibleBook> bibleBooksInThisVersion = new LinkedHashSet<BibleBook>();
+        if (currentBibleName.equals("SPDSS"))
+            System.out.println("HI");
         try {
             String versificationName = ((SwordBook) b).getVersification().getName();
             if (versificationName.equals("MT") || versificationName.equals("Leningrad")) {
@@ -229,12 +231,6 @@ public final class JSwordUtils {
                     numOfBooksInThisBible ++;
                 }
             }
-            Set<BibleBook> bibleBooksInThisVersion2 = ((SwordBook) b).getBibleBooks();
-            int numOfBooksInThisBible2 = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion2).size();
-            if (numOfBooksInThisBible != numOfBooksInThisBible2) {
-                System.out.println("Something wrong " + currentBibleName + " " + numOfBooksInThisBible2 + " " + numOfBooksInThisBible);
-            }
-            else System.out.println("Match: " + currentBibleName + " " + numOfBooksInThisBible);
         }
         catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -242,14 +238,57 @@ public final class JSwordUtils {
             hasAllNTOTorBoth.put(currentBibleName, " ");
             return ' ';
         }
+        char result;
         if (numOfBooksInThisBible == 66)
-            return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOTNT, currentBibleName, 'B');
+            result = verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOTNT, currentBibleName, 'B');
         else if (numOfBooksInThisBible == 27)
-            return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allNT, currentBibleName, 'N');
+            result = verifyRegularBooksAreInBible(bibleBooksInThisVersion, allNT, currentBibleName, 'N');
         else if (numOfBooksInThisBible == 39)
-            return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOT, currentBibleName, 'O');
-        hasAllNTOTorBoth.put(currentBibleName, " ");
-        return ' ';
+            result = verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOT, currentBibleName, 'O');
+        else {
+            result = ' ';
+            hasAllNTOTorBoth.put(currentBibleName, " ");
+        }
+        Set<BibleBook> bibleBooksInThisVersion2 = ((SwordBook) b).getBibleBooks();
+        Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion2).iterator();
+        boolean hasIssue = false;
+        while (itr.hasNext()) {
+            BibleBook curBook = itr.next();
+            String name = curBook.getOSIS();
+            if (name.startsWith("Intro")) {
+                itr.remove();
+                continue;
+            }
+            if (!bibleBooksInThisVersion.contains(curBook)) {
+                if (!hasIssue) {
+                    System.out.print(currentBibleName + " has the following in metadata, but not in Bible: " + name);
+                    hasIssue = true;
+                }
+                else
+                    System.out.print(", " + name);
+            }
+            else bibleBooksInThisVersion.remove(curBook);
+
+        }
+        if (hasIssue)
+            System.out.println("");
+        if (bibleBooksInThisVersion.size() > 0) {
+            System.out.print(currentBibleName + " has the following in Bible, but not in metadata: ");
+            Iterator<BibleBook> itr2 = ((Set) bibleBooksInThisVersion).iterator();
+            hasIssue = false;
+            while (itr2.hasNext()) {
+                BibleBook curBook = itr2.next();
+                String name = curBook.getOSIS();
+                if (hasIssue)
+                    System.out.print(", ");
+                else
+                    hasIssue = true;
+                System.out.print(name);
+            }
+            if (hasIssue)
+                System.out.println("");
+        }
+        return result;
     }
 
     /**

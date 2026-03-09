@@ -1106,7 +1106,7 @@ var SidebarView = Backbone.View.extend({
                 var version = (strongNum.substring(0,1) === "G") ? "THGNT" : "OHB";
                 strongNum = step.util.fixStrongNumForVocabInfo(strongNum, true);
                 panel.append("<a href='https://www.stepbible.org/?q=version=" + version + URL_SEPARATOR + "reference=" + ref + 
-                    URL_SEPARATOR + "strong=" + strongNum + "&clickStrong' target='_blank'>" + morphCount + " different grammars</a>");
+                    URL_SEPARATOR + "strong=" + strongNum + "&clickvocab' target='_blank'>" + morphCount + " different grammars</a>");
             }
             else
                 panel.append(" - 1st of " + morphCount + "  different grammars");

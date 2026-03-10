@@ -401,6 +401,7 @@ var PassageDisplayView = DisplayView.extend({
 
         _doDuplicateNotice: function (passageId, passageHtml) {
             var notices = $(".versification-notice", passageHtml);
+            var shownMessages = {}; // Track which messages have already been shown
             for (var ii = 0; ii < notices.length; ii++) {
                 var notice = notices.eq(ii);
                 var noticeType = notice.attr("international");
@@ -409,7 +410,11 @@ var PassageDisplayView = DisplayView.extend({
                 if (notice.hasClass("duplicate")) {
                     notice.css("float", "left");
                 }
-                step.util.raiseInfo(noticeText, 'info', passageId);
+                // Only raise the info message once per unique text
+                if (!shownMessages[noticeText]) {
+                    step.util.raiseInfo(noticeText, 'info', passageId);
+                    shownMessages[noticeText] = true;
+                }
             }
 
         },

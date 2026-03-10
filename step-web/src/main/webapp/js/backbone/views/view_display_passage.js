@@ -614,12 +614,146 @@ var PassageDisplayView = DisplayView.extend({
         },
         _makeSideNoteQtipHandler: function (item, xref, myPosition, atPosition, version, touch) {
             var self = this;
+            var defaultMy = "top " + myPosition;
+            var defaultAt = "top " + atPosition;
+            var defaultWidth = 800;
+            var margin = 16;
+            var isSmallViewport = function () {
+                var viewportWidth = $(window).width();
+                if (!viewportWidth) {
+                    return false;
+                }
+                return (viewportWidth - (2 * margin)) < defaultWidth;
+            };
+            var adjustSideNoteQtipOffscreen = function (api) {
+                if (isSmallViewport()) {
+                    return;
+                }
+                setTimeout(function () {
+                    if (isSmallViewport()) {
+                        return;
+                    }
+                    var tooltip = api.elements.tooltip;
+                    if (!tooltip || !tooltip.is(":visible")) {
+                        return;
+                    }
+                    var viewportWidth = $(window).width();
+                    if (!viewportWidth) {
+                        return;
+                    }
+                    var tooltipOffset = tooltip.offset();
+                    if (!tooltipOffset) {
+                        return;
+                    }
+                    var tooltipWidth = tooltip.outerWidth(false);
+                    var leftEdge = tooltipOffset.left;
+                    var rightEdge = leftEdge + tooltipWidth;
+                    var scrollLeft = $(window).scrollLeft();
+                    var viewportLeft = scrollLeft + margin;
+                    var viewportRight = scrollLeft + viewportWidth - margin;
+                    var adjustX = 0;
+                    if (leftEdge < viewportLeft) {
+                        adjustX = viewportLeft - leftEdge;
+                    } else if (rightEdge > viewportRight) {
+                        adjustX = viewportRight - rightEdge;
+                    }
+                    if (!adjustX) {
+                        return;
+                    }
+                    api.set('position.adjust.x', Math.round(adjustX));
+                    api.reposition();
+                }, 0);
+            };
+            var clampSideNoteQtipWidth = function (api) {
+                var viewportWidth = $(window).width();
+                if (!viewportWidth) {
+                    return;
+                }
+                var maxAllowed = Math.max(0, viewportWidth - (2 * margin));
+                if (!maxAllowed || maxAllowed >= defaultWidth) {
+                    return;
+                }
+                var desiredWidth = Math.min(defaultWidth, maxAllowed);
+                setTimeout(function () {
+                    var tooltip = api.elements.tooltip;
+                    api.set('style.width', desiredWidth);
+                    api.set('position.my', defaultMy);
+                    api.set('position.at', defaultAt);
+                    api.set('position.adjust.x', 0);
+                    api.set('position.target', item);
+                    api.set('position.effect', false);
+                    api.reposition();
+
+                    if (!tooltip || !tooltip.is(":visible")) {
+                        return;
+                    }
+                    var myVertical = defaultMy.split(" ")[0] || "top";
+                    var atVertical = defaultAt.split(" ")[0] || "top";
+                    var useViewportCenter = desiredWidth < defaultWidth;
+                    if (!useViewportCenter) {
+                        var tooltipOffset = tooltip.offset();
+                        if (tooltipOffset) {
+                            var tooltipWidth = tooltip.outerWidth(false);
+                            var leftEdge = tooltipOffset.left;
+                            var rightEdge = leftEdge + tooltipWidth;
+                            var scrollLeft = $(window).scrollLeft();
+                            var viewportLeft = scrollLeft + margin;
+                            var viewportRight = scrollLeft + viewportWidth - margin;
+                            if (leftEdge < viewportLeft || rightEdge > viewportRight) {
+                                useViewportCenter = true;
+                            }
+                        }
+                    }
+                    if (useViewportCenter) {
+                        var targetOffset = item.offset();
+                        var targetWidth = item.outerWidth(false) || 0;
+                        var scrollLeft = $(window).scrollLeft();
+                        var viewportCenter = scrollLeft + (viewportWidth / 2);
+                        var targetCenter = viewportCenter;
+                        if (targetOffset) {
+                            targetCenter = targetOffset.left + (targetWidth / 2);
+                        }
+                        api.set('position.my', myVertical + " center");
+                        api.set('position.at', atVertical + " center");
+                        api.set('position.adjust.x', Math.round(viewportCenter - targetCenter));
+                        api.reposition();
+                    }
+                }, 0);
+            };
+            var bindSideNoteResize = function (api) {
+                if (!isSmallViewport()) {
+                    return;
+                }
+                var namespace = ".sideNoteQtip-" + api.id;
+                var handler = function () {
+                    if (api.elements.tooltip && api.elements.tooltip.is(":visible")) {
+                        clampSideNoteQtipWidth(api);
+                    }
+                };
+                $(window)
+                    .off("resize" + namespace + " orientationchange" + namespace)
+                    .on("resize" + namespace + " orientationchange" + namespace, handler);
+            };
+            var unbindSideNoteResize = function (api) {
+                var namespace = ".sideNoteQtip-" + api.id;
+                $(window).off("resize" + namespace + " orientationchange" + namespace);
+            };
             if (!step.util.checkFirstBibleHasPassage(version, [xref.split(" ")[0]], [], true, true)) version = "ESV";
             if (!$.data(item, "initialised")) {
                 require(["qtip", "drag"], function () {
+                    var smallViewport = isSmallViewport();
+                    var qtipPosition = {my: defaultMy, at: defaultAt, viewport: $(window)};
+                    var qtipStyle = {
+                        tip: false,
+                        classes: 'draggable-tooltip xrefPopup' + (smallViewport ? ' sideNoteQtip' : ''),
+                        width: smallViewport ? defaultWidth : {min: defaultWidth, max: defaultWidth}
+                    };
+                    if (smallViewport) {
+                        qtipPosition.effect = false;
+                    }
                     item.qtip({
-                        position: {my: "top " + myPosition, at: "top " + atPosition, viewport: $(window)},
-                        style: {tip: false, classes: 'draggable-tooltip xrefPopup', width: {min: 800, max: 800}},
+                        position: qtipPosition,
+                        style: qtipStyle,
                         show: {event: 'click'}, hide: {event: 'click'},
                         content: {
                             text: function (event, api) {
@@ -642,6 +776,11 @@ var PassageDisplayView = DisplayView.extend({
                                     api.set('content.title.text', data.longName);
                                     api.set('content.text', text2Display);
                                     api.set('content.osisId', data.osisId)
+                                    if (isSmallViewport()) {
+                                        clampSideNoteQtipWidth(api);
+                                    } else {
+                                        adjustSideNoteQtipOffscreen(api);
+                                    }
                                 }).error(function() {
                                     changeBaseURL();
                                 });
@@ -666,16 +805,32 @@ var PassageDisplayView = DisplayView.extend({
                             },
                             visible: function (event, api) {
                                 var tooltip = api.elements.tooltip;
-                                var selector = touch ? ".qtip-title" : ".qtip-titlebar";
+                                var smallViewport = isSmallViewport();
+                                var selector = smallViewport ? ".qtip-titlebar" : (touch ? ".qtip-title" : ".qtip-titlebar");
                                 if (touch) {
                                     tooltip.find(".qtip-title").css("width", "90%");
                                 }
-                                new Draggabilly($(tooltip).get(0), {
-                                    containment: 'body',
-                                    handle: selector
-                                });
+                                var enableDrag = !touch || !smallViewport;
+                                if (enableDrag) {
+                                    new Draggabilly($(tooltip).get(0), {
+                                        containment: 'body',
+                                        handle: selector
+                                    });
+                                }
 
                                 step.util.ui.addStrongHandlers(self.model.get("passageId"), tooltip);
+                                if (smallViewport) {
+                                    clampSideNoteQtipWidth(api);
+                                    bindSideNoteResize(api);
+                                } else {
+                                    adjustSideNoteQtipOffscreen(api);
+                                }
+                            },
+                            hide: function (event, api) {
+                                unbindSideNoteResize(api);
+                            },
+                            destroy: function (event, api) {
+                                unbindSideNoteResize(api);
                             }
                         }
                     });

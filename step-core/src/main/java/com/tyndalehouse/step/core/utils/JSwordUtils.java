@@ -191,21 +191,16 @@ public final class JSwordUtils {
 
     private static char verifyRegularBooksAreInBible(final Set bibleBooksInThisVersion, final HashSet allBooksInBible,
                                                      final String currentBibleName, final char returnValue) {
-        boolean allCommonBooksInBible = true;
         Iterator<BibleBook> itr = ((Set) bibleBooksInThisVersion).iterator();
         while (itr.hasNext()) {
             String name = itr.next().getOSIS();
             if (!allBooksInBible.contains(name)) {
-                allCommonBooksInBible = false;
-                break;
+                hasAllNTOTorBoth.put(currentBibleName, " ");
+                return ' ';
             }
         }
-        if (allCommonBooksInBible) {
-            hasAllNTOTorBoth.put(currentBibleName, String.valueOf(returnValue));
-            return returnValue;
-        }
-        hasAllNTOTorBoth.put(currentBibleName, " ");
-        return ' ';
+        hasAllNTOTorBoth.put(currentBibleName, String.valueOf(returnValue));
+        return returnValue;
     }
 
     private static char hasAllNTOTorBothInBible (final Book b, final JSwordVersificationService versificationService) {
@@ -214,26 +209,25 @@ public final class JSwordUtils {
         if ((bibleType != null) && (bibleType.equals("B") || bibleType.equals("N") || bibleType.equals("O") || bibleType.equals(" ")))
             return bibleType.charAt(0);
         int numOfBooksInThisBible = 0;
-        Set<BibleBook> bibleBooksInThisVersion = null;
+        Set<BibleBook> bibleBooksInThisVersion = new LinkedHashSet<BibleBook>(); 
         try {
-            bibleBooksInThisVersion = ((SwordBook) b).getBibleBooks();
-            numOfBooksInThisBible = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
-            if ((numOfBooksInThisBible != 27) && (numOfBooksInThisBible != 39) && (numOfBooksInThisBible != 66)) {
-                final Versification masterV11n = versificationService.getVersificationForVersion(currentBibleName);
-                final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
-                final Book bookForThisVersion = versificationService.getBookFromVersion(currentBibleName);
-                final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
-                bibleBooksInThisVersion = new LinkedHashSet<BibleBook>();
-                while (bookIterator.hasNext()) {
-                    final BibleBook book = bookIterator.next();
-                    final Key keyToBook = bookForThisVersion.getValidKey(book.getOSIS());
-                    keyToBook.retainAll(keysOfThisVersion);
-                    if (keyToBook.getCardinality() != 0) {
-                        if (!book.getOSIS().startsWith("Intro"))
-                            bibleBooksInThisVersion.add(book);
-                    }
+            String versificationName = ((SwordBook) b).getVersification().getName();
+            if (versificationName.equals("MT") || versificationName.equals("Leningrad")) {
+                hasAllNTOTorBoth.put(currentBibleName, " ");
+                return ' ';
+            }
+            final Versification masterV11n = versificationService.getVersificationForVersion(currentBibleName);
+            final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
+            final Book bookForThisVersion = versificationService.getBookFromVersion(currentBibleName);
+            final Key keysOfThisVersion = bookForThisVersion.getGlobalKeyList();
+            while (bookIterator.hasNext()) {
+                final BibleBook book = bookIterator.next();
+                final Key keyToBook = bookForThisVersion.getValidKey(book.getOSIS());
+                keyToBook.retainAll(keysOfThisVersion);
+                if ((!book.getOSIS().startsWith("Intro")) && (keyToBook.getCardinality() != 0)) {
+                    bibleBooksInThisVersion.add(book);
+                    numOfBooksInThisBible ++;
                 }
-                numOfBooksInThisBible = ((LinkedHashSet<BibleBook>) bibleBooksInThisVersion).size();
             }
         }
         catch (Exception ex) {
@@ -246,11 +240,8 @@ public final class JSwordUtils {
             return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOTNT, currentBibleName, 'B');
         else if (numOfBooksInThisBible == 27)
             return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allNT, currentBibleName, 'N');
-        else if (numOfBooksInThisBible == 39) {
-            String versificationName = ((SwordBook) b).getVersification().getName();
-            if (!versificationName.equals("MT") && !versificationName.equals("Leningrad"))
-                return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOT, currentBibleName, 'O');
-        }
+        else if (numOfBooksInThisBible == 39)
+            return verifyRegularBooksAreInBible(bibleBooksInThisVersion, allOT, currentBibleName, 'O');
         hasAllNTOTorBoth.put(currentBibleName, " ");
         return ' ';
     }

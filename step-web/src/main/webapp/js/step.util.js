@@ -2495,9 +2495,8 @@ step.util = {
 						'</span>'+
 					'</div>';
 		modalHTML +=
-					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
-					'<br>';
-
+					'<div id="selectversionstocopy" class="modal-body" style="padding-bottom:0"></div>' +
+					'<div id="bookchaptermodalbody" class="modal-body"></div>';
 		modalHTML +=
 					'<div class="footer" id="copyModalFooter">' +
 						'<div id="includeNotes" style="display:none">' +

@@ -777,7 +777,7 @@ var PassageDisplayView = DisplayView.extend({
                                 $.getSafe(BIBLE_GET_BIBLE_TEXT + chosenVersion + "/" + encodeURIComponent(xref), function (data) {
                                     var text2Display = data.value;
                                     if (data.value.length > 1100)
-                                    	text2Display = $(data.value).text().substring(0,900) + " ...";
+                                    	text2Display = $(data.value.replace(/<br\s*\/?>/gi, " ")).text().substring(0,900) + " ...";
                                     api.set('content.title.text', data.longName);
                                     api.set('content.text', text2Display);
                                     api.set('content.osisId', data.osisId)

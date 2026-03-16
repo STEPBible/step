@@ -100,7 +100,7 @@ export async function initDyslexia11y() {
                 const hasAnyEnglishlement = $('[lang="en"], :lang(en)').length > 5;
 
                 if (htmlLang.toLowerCase() !== 'en' && !hasAnyEnglishlement) {
-                    console.warn(`HTML lang "${htmlLang}" is not "en" and no element with lang="en" was found.`);
+                    logger.warn(`HTML lang "${htmlLang}" is not "en" and no element with lang="en" was found.`);
                     // Add an inline message to alert users.
                 } else {
                     logger.info(htmlLang === 'en'
@@ -153,7 +153,7 @@ async function enableDyslexiaFont() {
         applyDynamicFontRule(DYSLEXIC_FONT_NAME, false);
         setDyslexiaFontEnabled(true);
     } catch (error) {
-        console.error('Failed to enable dyslexia-friendly font:', error);
+        logger.error('Failed to enable dyslexia-friendly font:', error);
     }
 }
 

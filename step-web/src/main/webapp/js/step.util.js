@@ -909,6 +909,15 @@ step.util = {
 //    getMainLanguage: function (passageModel) {
 //        return (passageModel.get("languageCode") || ["en"])[0];
 //    },
+    restoreReaderMode: function (passageModel, element) {
+        var passageId = passageModel.get("passageId");
+        var passageModel = step.passages.findWhere({ passageId: passageId});
+        if (passageModel.get("isReaderMode")) {
+            element.each(function (e, el) {
+                el.style.setProperty("--clrStrongText", "var(--clrText)");
+            });
+        }
+    },
     restoreFontSize: function (passageModel, element) {
 		var fontArray = ["defaultfont", "hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
         var passageId = passageModel.get("passageId");
@@ -939,6 +948,22 @@ step.util = {
 				}
 			}
 		}
+    },
+    changeSpecificReaderMode: function(enabled, panelNumber) {
+		if (typeof panelNumber === "number") {
+			var passageModel = step.passages.findWhere({ passageId: panelNumber});
+			panelId = passageModel.attributes.id;
+			elements = $(".passageContentHolder", step.util.getPassageContainer(panelNumber));
+		}
+		else elements = $(".passageContentHolder", step.util.getPassageContainer(".passageOptionsGroup"));
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    if (enabled) {
+                        element.style.setProperty("--clrStrongText", "var(--clrText)")
+                    } else {
+                        element.style.removeProperty("--clrStrongText");
+                    }
+                }
     },
     changeSpecificFontSize: function (fontName, increment, panelNumber) {
 		var key = fontName;

@@ -117,6 +117,7 @@ var PassageDisplayView = DisplayView.extend({
                 this._doVerseNumbers(passageId, passageHtml, options, interlinearMode, version);
                 this._doHideEmptyNotesPane(passageHtml);
                 this._adjustTextAlignment(passageHtml);
+                step.util.restoreReaderMode(this.model, passageHtml);
                 step.util.restoreFontSize(this.model, passageHtml);
                 this._addStrongHandlers(passageId, passageHtml);
                 this._doDuplicateNotice(passageId, passageHtml);

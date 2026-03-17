@@ -18,6 +18,7 @@ var PassageMenuView = Backbone.View.extend({
     fontButtons: '<li><%= __s.font_sizes %><span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group">' +
         '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.font %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
+    readerMode: '<li><a href="javascript:void(0)" data-selected="true"><span>Reader Mode</span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isReaderMode ? "visible" : "hidden" %>"></span></a></li>',  // FIXME: Translate
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>"></span></a></li>',
     similarWord: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.similar_word %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSimilarWord ? "visible" : "hidden" %>"></span></a></li>',
     // enWithEsLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_es_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithEsLexicon ? "visible" : "hidden" %>"></span></a></li>',
@@ -434,6 +435,23 @@ var PassageMenuView = Backbone.View.extend({
         });
 
         //create menu options
+        var currentReaderModeSetting = self.model.get("isReaderMode");
+        if (currentReaderModeSetting == null) {
+            this.model.save({isReaderMode: false});
+            currentReaderModeSetting = false;
+        }
+        dropdown.append($(_.template(this.readerMode)({isReaderMode: currentReaderModeSetting})).click(function (e) {
+            //prevent the bubbling up
+            e.stopPropagation();
+
+            //set the setting
+            var readerMode = !self.model.get("isReaderMode");
+            self.model.save({isReaderMode: readerMode});
+            step.util.changeSpecificReaderMode(readerMode, self.model.get("passageId"));
+
+            //toggle the tick
+            self._setVisible(this, readerMode);
+        }));
         var currentQuickLexiconSetting = self.model.get("isQuickLexicon");
         if (currentQuickLexiconSetting == null) {
             this.model.save({isQuickLexicon: true});

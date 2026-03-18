@@ -389,7 +389,6 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.stepGloss)
                 .append(" ")
                 .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
-                .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span><span class="possiblePerson' + mainWord.strongNumber + '"></span>')
         );
     },
@@ -816,35 +815,6 @@ var SidebarView = Backbone.View.extend({
     _createWordPanel: function (panel, mainWord, currentUserLang, allVersions, isOTorNT, headerType, morphInfo) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
         var bibleVersion = this.model.get("version") || "ESV";
-        var text2add = ""
-        if (typeof mainWord.shortDefMounce === "string") { 
-            if ((typeof mainWord.mediumDef !== "string") ||
-                (mainWord.shortDefMounce.length < 3) ||
-                (mainWord.mediumDef.indexOf(mainWord.shortDefMounce) == -1) )
-                text2add = mainWord.shortDefMounce
-        }
-        if (typeof mainWord.shortDef === "string") { 
-            if ((typeof mainWord.mediumDef !== "string") ||
-                (mainWord.shortDef.length < 3) ||
-                (mainWord.mediumDef.indexOf(mainWord.shortDef) == -1) ) {
-                    if (text2add === "") {
-                        text2add = mainWord.shortDef
-                    } else {
-                        text2add += "<br>" + mainWord.shortDef
-                    }
-                }
-        }
-        if (mainWord.briefDef && typeof mainWord.briefDef === "string") {
-            if (text2add === "") {
-                text2add = mainWord.briefDef
-            } else {
-                text2add += "<br>" + mainWord.briefDef
-            }
-            // this._addLinkAndAppend(panel, mainWord.briefDef, currentWordLanguageCode, bibleVersion, true);
-        }
-        if (text2add !== "") {
-            this._addLinkAndAppend(panel, text2add, currentWordLanguageCode, bibleVersion, true);
-        }
 		var detailLex = [];
 		if (mainWord._stepDetailLexicalTag) {
 			detailLex = (typeof mainWord._stepDetailLexicalTag === "string") ? 
@@ -928,27 +898,46 @@ var SidebarView = Backbone.View.extend({
             });
         }
         if (displayEnglishLexicon) { // This might be false if Chinese lexicon is displayed and isEnWithZhLexicon is false append the meanings
-            if (mainWord.mediumDef) {
+            var meaningParts = [];
+            if (typeof mainWord.shortDefMounce === "string" && mainWord.shortDefMounce.trim().length > 0) {
+                meaningParts.push(mainWord.shortDefMounce.trim());
+            }
+            if (typeof mainWord.shortDef === "string" && mainWord.shortDef.trim().length > 0) {
+                var shortDefTrimmed = mainWord.shortDef.trim();
+                if (meaningParts.indexOf(shortDefTrimmed) === -1) {
+                    meaningParts.push(shortDefTrimmed);
+                }
+            }
+            var mediumDefToDisplay = "";
+            var addedLineBreaks = false;
+            if (typeof mainWord.mediumDef === "string" && mainWord.mediumDef.trim().length > 0) {
+                mediumDefToDisplay = mainWord.mediumDef;
+                if (firstLetterOfStrong === "H") {
+                    var stem = "";
+                    if ((typeof morphInfo === "object") && (typeof morphInfo.stem === "string")) {
+                        stem = "(" + morphInfo.stem.charAt(0).toUpperCase() + morphInfo.stem.substring(1) + ")";
+                    }
+                    mediumDefToDisplay = this._indentOTDefinition(mediumDefToDisplay, stem);
+                }
+                else if (firstLetterOfStrong === "G") {
+                    var results = this._prepIndentNTDef(mediumDefToDisplay);
+                    addedLineBreaks = results[0];
+                    mediumDefToDisplay = results[1];
+                }
+            }
+            if ((meaningParts.length > 0) || (mediumDefToDisplay !== "")) {
                 var message = "";
                 if (isOTorNT === "OT")
                     message = "based on abridged Brown-Driver-Briggs";
                 else if (isOTorNT === "NT")
                     message = "based on Teknia Greek";
                 panel.append($("<" + headerType + " style='margin-top:8px' title='" + message + "'>").append(__s.lexicon_meaning));
-                var addedLineBreaks = false;
-                if (firstLetterOfStrong === "H") {
-                    var stem = "";
-                    if ((typeof morphInfo === "object") && (typeof morphInfo.stem === "string")) {
-                        stem = "(" + morphInfo.stem.charAt(0).toUpperCase() + morphInfo.stem.substring(1) + ")";
-                    }
-                    mainWord.mediumDef = this._indentOTDefinition(mainWord.mediumDef, stem);
+                if (meaningParts.length > 0) {
+                    this._addLinkAndAppend(panel, meaningParts.join("<br>"), currentWordLanguageCode, bibleVersion, true);
                 }
-                else if (firstLetterOfStrong === "G") {
-                    var results = this._prepIndentNTDef(mainWord.mediumDef);
-                    addedLineBreaks = results[0];
-                    mainWord.mediumDef = results[1];
+                if (mediumDefToDisplay !== "") {
+                    this._addLinkAndAppend(panel, mediumDefToDisplay, currentWordLanguageCode, bibleVersion, addedLineBreaks);
                 }
-                this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion, addedLineBreaks);
             }
             //longer definitions
             if (mainWord.lsjDefs) {

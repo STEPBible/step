@@ -5302,18 +5302,16 @@ step.util = {
 			return;
 		var touchendX = touchEvent.changedTouches[0].screenX;
 		var touchendY = touchEvent.changedTouches[0].screenY;
-		var minDistance = 40;
-		var verticalTolerance = 35;
-		if (step.appleTouchDevice) { // Added these 4 lines for Apple touch devices
-			minDistance = 50;  // Increase the swipe left - right distance
-			verticalTolerance = 25;
-		}
+		var minDistance = 50;
+		var maxRatio = 0.4; // no more than 20px vertical for every 50px horizontal
 		var touchDiffY = Math.abs(touchendY - step.touchstartY);
 		var touchDiffX = touchendX - step.touchstartX;
+		var absDiffX = Math.abs(touchDiffX)
+		var distanceRatio = touchDiffY / absDiffX;
 		step.touchstartX = null;
 		step.touchstartY = null;
-		if (touchDiffY < verticalTolerance) {
-			if (Math.abs(touchDiffX) > minDistance) {
+		if (distanceRatio < maxRatio) {
+			if (absDiffX > minDistance) {
 				if (new Date().getTime() - step.touchstartTime > 400) return; // must be with 400 milliseconds
 				var activePassage = $(touchEvent.srcElement.closest(".passageContainer"));
 				if (touchDiffX < 0)

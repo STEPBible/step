@@ -3619,7 +3619,7 @@ class _ClassPresentationHandler
 		useLinks += ' &mdash; click on links in the information box.';
 	}
 
-	document.getElementById('explanationOfThereBeingOnlyASinglePerson').innerHTML = `The Bible does not record ${personName} as having any children, so we can&rsquo;t show you any descendants.  However, you can still see other related people${useLinks}`;
+	document.getElementById('explanationOfThereBeingOnlyASinglePerson').innerHTML = `The Bible does not record ${personName} as having any named children, so we can&rsquo;t show you any descendants.  However, you can still see other related people${useLinks}`;
 	explanationOfThereBeingOnlyASinglePerson.show();
     }
 

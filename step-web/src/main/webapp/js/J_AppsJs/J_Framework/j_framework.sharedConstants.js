@@ -49,6 +49,7 @@ export class JFrameworkSharedConstants
 	chapterSummariesData: 'html/json/J_AppsJson/J_Framework/J_ChapterSummaries/j_framework_chapterSummaries.tsv',
 	placesData: 'html/json/J_AppsJson/J_Framework/J_Places/j_framework_places.json',
 
+    chronologySplit3: 'html/J_AppsHtml/J_Chronology/j_chronologySplit3.html',
 	genealogySplit3: 'html/J_AppsHtml/J_Genealogy/j_peopleSplit3.html',
 	multimap: 'html/multimap.html',
     };

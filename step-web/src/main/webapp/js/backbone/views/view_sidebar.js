@@ -157,13 +157,10 @@ var SidebarView = Backbone.View.extend({
         this.$el.append(tabContent);
         return tabContent;
     },
-    _appendAltMorphologiesLink: function (panel, mainWord) {
-        if ((typeof mainWord !== "object") || (typeof mainWord.strongNumber !== "string") ||
-            (mainWord.strongNumber.charAt(0) !== "G") ||
-            (typeof mainWord.accentedUnicode !== "string") ||
-            (mainWord.accentedUnicode.trim() === ""))
+    _appendAltMorphologiesLink: function (panel) {
+        var greekWord = this.model.get("clickedSurfaceForm");
+        if (typeof greekWord !== "string" || greekWord === "")
             return;
-        var greekWord = mainWord.accentedUnicode.trim();
         var altMorphUrl = "https://www.perseus.tufts.edu/hopper/morph?l=" + encodeURIComponent(greekWord) + "&la=greek";
         panel.append("<br>");
         panel.append($("<a target='_blank' rel='noopener noreferrer'>")
@@ -285,7 +282,7 @@ var SidebarView = Backbone.View.extend({
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
                 if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
-                this._appendAltMorphologiesLink(panelBody, item);
+                this._appendAltMorphologiesLink(panelBody);
                 panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     'Report lexicon issues' +
                     '</a>'));
@@ -323,7 +320,7 @@ var SidebarView = Backbone.View.extend({
             this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
             if (data.morphInfos.length > 0)
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
-            this._appendAltMorphologiesLink(panelBody, data.vocabInfos[0]);
+            this._appendAltMorphologiesLink(panelBody);
             panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + data.vocabInfos[0].strongNumber
             + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                 'Report lexicon issues' +

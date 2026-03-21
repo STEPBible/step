@@ -404,6 +404,7 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.stepGloss)
                 .append(" ")
                 .append("<span class='side_gloss_" + strong + "'>" + userLangGloss + "</span> ")
+                .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
 				.append('<span class="possibleMap' + mainWord.strongNumber + '"></span><span class="possiblePerson' + mainWord.strongNumber + '"></span>')
         );
     },

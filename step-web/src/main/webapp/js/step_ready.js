@@ -370,6 +370,7 @@
 
             modelZero.save(window.tempModel, {silent: true});
             modelZero.save({
+                isReaderMode: likelyPreviousPassage ? likelyPreviousPassage.get("isReaderMode") : false,
                 isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true,
 				isSimilarWord: likelyPreviousPassage ? likelyPreviousPassage.get("isSimilarWord") : true,
 				// isEnWithEsLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isEnWithZhLexicon") : true,

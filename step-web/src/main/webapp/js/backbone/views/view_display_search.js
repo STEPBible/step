@@ -136,6 +136,7 @@ var SearchDisplayView = DisplayView.extend({
 
         var passageId = this.model.get("passageId");
         step.util.restoreFontSize(this.model, results.find(".passageContentHolder"));
+        step.util.restoreReaderMode(this.model, results.find(".passageContentHolder"));
 
         if (append) {
             //already appended?

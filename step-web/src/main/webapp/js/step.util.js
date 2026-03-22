@@ -1547,7 +1547,7 @@ step.util = {
 	                version = firstVersion;
 				allVersions = firstVersion + "," + step.passages.findWhere({ passageId: step.passage.getPassageId(s) }).get("extraVersions");
 				if (strong && strong.charAt(0) === "G" && step.keyedVersions[version] && step.keyedVersions[version].languageCode === "grc")
-					clickedSurfaceForm = s.text().trim();
+					clickedSurfaceForm = s.text().trim().replace(/^[^\u0370-\u03FF\u1F00-\u1FFF]+|[^\u0370-\u03FF\u1F00-\u1FFF]+$/g, "");
 				step.historyMorph = [];
 				step.historyStrong = [];
 			}
@@ -1607,7 +1607,7 @@ step.util = {
 						allVersions: allVersions,
 						variant: variant,
 						morphCount: morphCount,
-						clickedSurfaceForm: clickedSurfaceForm
+						clickedSurfaceForm: clickedSurfaceForm || ""
 					});
 				else
 					step.sidebar = null;

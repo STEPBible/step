@@ -195,7 +195,7 @@ step.copyText = {
 					versionsToExclude.push(n);
 				}
 			}
-			if (numOfSelected == 0) {
+			if ((numOfSelected == 0) && (interlinearClasses.length == 0)) { // error message only apply for non-interlinear mode
 				$('#bookchaptermodalbody').empty();
 				$('#bookchaptermodalbody').append("<h2>You must select at least one version to copy.");
 				$('#copyModalFooter').empty();

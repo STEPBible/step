@@ -11,7 +11,7 @@
 @mixin canonicalHeading {
   font-style: italic;
   font-weight: normal;
-  color: rgb(51, 51, 51);
+  color: color-mix(in srgb, var(--clrText), transparent 12.5%);
   font-size: $defaultFontSize;
 }
 

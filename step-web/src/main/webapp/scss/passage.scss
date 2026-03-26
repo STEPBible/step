@@ -197,7 +197,7 @@ td.primary {
 }
 
 .comparingVersionName {
-  color: #33339F;
+  color: var(--clrHighlight);
   text-align: center;
 }
 
@@ -222,12 +222,12 @@ td.primary {
 }
 
 .cmpStrike {
-  color: #33339F;
+  color: var(--clrHighlight);
   font-weight: bold;
 }
 
 .cmpUnderline {
-  color: #33339F;
+  color: var(--clrHighlight);
   font-weight: bold;
 }
 
@@ -253,7 +253,7 @@ td.primary {
 }
 
 a.smallHeaders {
-  color: #33339F;
+  color: var(--clrHighlight);
 }
 
 br.paragraph {
@@ -289,7 +289,7 @@ span.strongs, span.morphs, span.interVerseNumbers {
   font-size: 90% !important;
   text-align: center;
   font-style: normal;
-  color: #26539e;
+  color: var(--clrHighlight);
   border: none;
 }
 
@@ -313,7 +313,7 @@ sup.verseNumber {
 
 sup.variant.note {
   font-size: 65%;
-  color: #33339F;
+  color: var(--clrHighlight);
 }
 
 sup.note a {

@@ -1882,11 +1882,29 @@ step.util = {
 							if (text.length === 0) return;
 							var startInfo = step.util["getSelectionVerseInfo"](startEl);
 							var endInfo = step.util["getSelectionVerseInfo"](endEl);
+							var allVersions = [];
+							var addVersionIfNeeded = function (version) {
+								if (version && allVersions.indexOf(version) === -1)
+									allVersions.push(version);
+							};
+							var rangeCommonAncestor = range.commonAncestorContainer;
+							if (rangeCommonAncestor && rangeCommonAncestor.nodeType === 3)
+								rangeCommonAncestor = rangeCommonAncestor.parentElement;
+							if (rangeCommonAncestor) {
+								$(rangeCommonAncestor).find('.verse, .singleVerse, .interlinear, .commentaryVerse').each(function () {
+									if (range.intersectsNode && !range.intersectsNode(this)) return;
+									var verseInfo = step.util["getSelectionVerseInfo"](this);
+									addVersionIfNeeded(verseInfo.version);
+								});
+							}
+							addVersionIfNeeded(startInfo.version);
+							addVersionIfNeeded(endInfo.version);
 							step.lastPassageSelection = {
 								text: text.length > 150 ? text.substring(0, 150) + '...' : text,
 								startVerse: startInfo.verse,
 								endVerse: endInfo.verse,
 								version: startInfo.version || endInfo.version,
+								versions: allVersions,
 								timestamp: Date.now(),
 								deselectedAt: null
 							};
@@ -2576,7 +2594,12 @@ step.util = {
 			var now = Date.now();
 			var isRecent = (selInfo.deselectedAt === null && (now - selInfo.timestamp < 60000)) ||
 				(selInfo.deselectedAt !== null && (now - selInfo.deselectedAt < 5000));
-			if (isRecent && (selInfo.version || selInfo.startVerse || selInfo.text)) {
+			var versionsToDisplay = [];
+			if ($.isArray(selInfo.versions) && selInfo.versions.length > 0)
+				versionsToDisplay = selInfo.versions;
+			else if (selInfo.version)
+				versionsToDisplay = [selInfo.version];
+			if (isRecent && (versionsToDisplay.length > 0 || selInfo.startVerse || selInfo.text)) {
 				var formatOsis = function (osis) {
 					if (!osis) return '';
 					return osis.replace(/^([123A-Za-z]+)\.(\d)/, '$1 $2').replace(/\./g, ':');
@@ -2588,8 +2611,8 @@ step.util = {
 					verseDisplay += ' \u2013 ' + endDisplay;
 				selInfoHTML = '<div id="selectionInfoSection" style="border-top:1px solid grey;padding:10px 15px;font-size:13px">' +
 					'<strong>Your selection:</strong><br>';
-				if (selInfo.version)
-					selInfoHTML += '<span><b>Version:</b> ' + _.escape(selInfo.version) + '</span><br>';
+				if (versionsToDisplay.length > 0)
+					selInfoHTML += '<span><b>Version' + (versionsToDisplay.length > 1 ? 's' : '') + ':</b> ' + _.escape(versionsToDisplay.join(', ')) + '</span><br>';
 				if (verseDisplay)
 					selInfoHTML += '<span><b>Verse:</b> ' + _.escape(verseDisplay) + '</span><br>';
 				if (selInfo.text)

@@ -1,7 +1,7 @@
 var ExamplesView = Backbone.View.extend({
 	exampleTemplate: _.template(
 		'<div id="welcomeExamples" class="passageContainer examplesContainer">' +
-			'<a class="closeColumn" title="<%= __s.close %> />" ontouchstart="step.util.showOrHideTutorial(\'true\')">' +
+			'<a class="closeColumn" title="<%= __s.close %>" ontouchstart="step.util.showOrHideTutorial(\'true\')">' +
 				'<i class="glyphicon glyphicon-remove"></i>' +
 			'</a>' +
 			'<h3><%= __s.simple_intro_welcome %></h3>' +

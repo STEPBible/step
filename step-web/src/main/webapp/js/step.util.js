@@ -1814,6 +1814,86 @@ step.util = {
 					return [verse, version];
 				},
 
+				getSelectionVerseInfo: function (el) {
+					var $el = $(el);
+					var verse = '';
+					var version = '';
+
+					// Standard Bible: <div class="verse"> > <a class="verseLink">
+					verse = $($el.closest("div.verse").find('a.verseLink')[0]).attr('name');
+					// Interleaved comparison: <div class="verseGrouping">
+					if (!verse) verse = $el.closest(".verseGrouping").find(".heading .verseLink").attr("name");
+					// Interlinear: <span class="interlinear">
+					if (!verse) verse = $el.closest(".verse, .interlinear").find(".verseLink").attr("name");
+					// Commentary: <span class="commentaryVerse"> > <a name="...">
+					if (!verse) {
+						var commentaryVerse = $el.closest(".commentaryVerse");
+						if (commentaryVerse.length > 0)
+							verse = commentaryVerse.find('a[name]').first().attr('name');
+					}
+
+					if (!verse) verse = '';
+					// Handle space-separated OSIS IDs (e.g., "Gen.1.1 Gen.1.2")
+					if (verse.indexOf(' ') > -1) verse = verse.split(' ')[0];
+
+					// Version detection (same logic as getVerseNumberAndVersion)
+					version = $el.closest("div.verse").parent().find('span.smallResultKey').attr('data-version') ||
+						$el.closest(".singleVerse").find('span.smallResultKey').attr('data-version');
+					if (!version) {
+						var compareVersionHeader = $('th.comparingVersionName');
+						if (compareVersionHeader.length > 0) {
+							var index = $el.closest('td').index();
+							if (typeof index === 'number' && index > 0)
+								version = $(compareVersionHeader[index - 1]).text();
+						}
+					}
+					// Fallback: active passage's masterVersion
+					if (!version || typeof step.keyedVersions[version] !== "object") {
+						var passageContainer = $el.closest('.passageContainer');
+						if (passageContainer.length > 0) {
+							var passageId = passageContainer.attr('passage-id');
+							var model = step.passages.findWhere({ passageId: parseInt(passageId) });
+							if (model) version = model.get('masterVersion');
+						}
+					}
+					if (!version) version = '';
+					return { verse: verse, version: version };
+				},
+
+				initSelectionTracking: function () {
+					var debounceTimer;
+					step.lastPassageSelection = null;
+					document.addEventListener('selectionchange', function () {
+						clearTimeout(debounceTimer);
+						debounceTimer = setTimeout(function () {
+							var sel = window.getSelection();
+							if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+								if (step.lastPassageSelection && !step.lastPassageSelection.deselectedAt)
+									step.lastPassageSelection.deselectedAt = Date.now();
+								return;
+							}
+							var range = sel.getRangeAt(0);
+							var startNode = range.startContainer;
+							var endNode = range.endContainer;
+							var startEl = (startNode.nodeType === 3) ? startNode.parentElement : startNode;
+							var endEl = (endNode.nodeType === 3) ? endNode.parentElement : endNode;
+							if (!startEl || $(startEl).closest('.passageContentHolder').length === 0) return;
+							var text = sel.toString().trim();
+							if (text.length === 0) return;
+							var startInfo = step.util.getSelectionVerseInfo(startEl);
+							var endInfo = step.util.getSelectionVerseInfo(endEl);
+							step.lastPassageSelection = {
+								text: text.length > 150 ? text.substring(0, 150) + '...' : text,
+								startVerse: startInfo.verse,
+								endVerse: endInfo.verse,
+								version: startInfo.version || endInfo.version,
+								timestamp: Date.now(),
+								deselectedAt: null
+							};
+						}, 150);
+					});
+				},
+
 				getWordOrderSuffix: function (el, strongsSelectedByUser) {
 			var verseClass = $(el).closest('.verse');
 			if (verseClass.length == 0)
@@ -2489,6 +2569,35 @@ step.util = {
     var element = document.getElementById('copyModal');
     if (element) element.parentNode.removeChild(element);
     $("div.modal-backdrop.in").remove();
+		// Build selection info section if user had highlighted passage text
+		var selInfoHTML = '';
+		var selInfo = step.lastPassageSelection;
+		if (selInfo) {
+			var now = Date.now();
+			var isRecent = (selInfo.deselectedAt === null && (now - selInfo.timestamp < 60000)) ||
+				(selInfo.deselectedAt !== null && (now - selInfo.deselectedAt < 5000));
+			if (isRecent && (selInfo.version || selInfo.startVerse || selInfo.text)) {
+				var formatOsis = function (osis) {
+					if (!osis) return '';
+					return osis.replace(/^([123A-Za-z]+)\.(\d)/, '$1 $2').replace(/\./g, ':');
+				};
+				var startDisplay = formatOsis(selInfo.startVerse);
+				var endDisplay = formatOsis(selInfo.endVerse);
+				var verseDisplay = startDisplay;
+				if (endDisplay && endDisplay !== startDisplay)
+					verseDisplay += ' \u2013 ' + endDisplay;
+				selInfoHTML = '<div id="selectionInfoSection" style="border-top:1px solid grey;padding:10px 15px;font-size:13px">' +
+					'<strong>Your selection:</strong><br>';
+				if (selInfo.version)
+					selInfoHTML += '<span><b>Version:</b> ' + _.escape(selInfo.version) + '</span><br>';
+				if (verseDisplay)
+					selInfoHTML += '<span><b>Verse:</b> ' + _.escape(verseDisplay) + '</span><br>';
+				if (selInfo.text)
+					selInfoHTML += '<span dir="auto" style="font-style:italic;opacity:0.7">&ldquo;' +
+						_.escape(selInfo.text) + '&rdquo;</span>';
+				selInfoHTML += '</div>';
+			}
+		}
 		var modalHTML = '<div id="copyModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
 				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
@@ -2513,6 +2622,7 @@ step.util = {
 						'</div>' +
 						'<br>' +
 					'</div>' +
+					selInfoHTML +
 					'<script>' +
 						'$(document).ready(function () {' +
 							'step.copyText.initVerseSelect();' +

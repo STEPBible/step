@@ -1,0 +1,521 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Professor Grant Horner&apos;s Bible-Reading System</title>
+    <link rel="shortcut icon" href="/images/step-favicon.ico" />
+    <link href="/css/bootstrap.css" rel="stylesheet" media="screen" />
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen" />
+    <link href="/css/select2.css" rel="stylesheet" media="screen" />
+    <link href="/css/select2-bootstrap.css" rel="stylesheet" media="screen" />
+    <link href="/scss/step-template.css" rel="stylesheet" media="screen" />
+    <script src="/international/en..js" type="text/javascript"></script>
+    <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/libs/underscore-min.js" type="text/javascript"></script>
+    <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/libs/backbone.js" type="text/javascript"></script>
+    <script
+      src="/libs/backbone.localStorage.js"
+      type="text/javascript"
+    ></script>
+    <script src="/js/step_constants.js" type="text/javascript"></script>
+    <script src="/js/passage_selection.js" type="text/javascript"></script>
+    <script src="/js/search_selection.js" type="text/javascript"></script>
+    <script
+      src="/js/backbone/models/model_settings.js"
+      type="text/javascript"
+    ></script>
+
+    <style>
+      .clickable {
+        color: #17758f;
+        cursor: pointer;
+      }
+      :root {
+        --clrHighlight: #17758f;
+        --clrHighlightBg: #17758f;
+        --clrStrongText: #447888;
+        --clrLexiconFocusBG: #c8d8dc;
+        --clrRelatedWordBg: #b2e5f3;
+        --clrBackground: #ffffff;
+        --clrText: #5d5d5d;
+        --clr2ndHover: #d3d3d3;
+      }
+      body {
+        overflow-y: scroll;
+      }
+      #plan {
+        margin-bottom: 1em;
+      }
+      li {
+        line-height: 2em;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; background-color: white">
+    <div class="container">
+      <div id="header">
+        <h2 class="hTitle">Professor Grant Horner&apos;s Bible-Reading System</h2>
+        <blockquote style="font-size: 0.8em; word-break: break-all">
+          <em
+            >source:
+            <a
+              class="clickable"
+              target="_blank"
+              href="https://sohmer.net/media/professor_grant_horners_bible_reading_system.pdf"
+              rel="noopener noreferrer"
+              >https://sohmer.net/media/professor_grant_horners_bible_reading_system.pdf</a
+            ></em
+          >
+        </blockquote>
+        <div style="margin-top: 15px">
+          <div class="container-fluid">
+            <form role="form">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" />
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label for="lastDate">Last Date Completed</label>
+                  <input type="date" class="form-control" id="lastDate" />
+                </div>
+              </div>
+            </form>
+            <div style="margin-top: 1em; margin-bottom: 0.5em">
+              Current Day Count: <strong id="currentDayCount"></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="plan"></div>
+    </div>
+    <script>
+      window.bookChapterCounts = {
+        Gen: 50,
+        Exo: 40,
+        Lev: 27,
+        Num: 36,
+        Deu: 34,
+        Jos: 24,
+        Jdg: 21,
+        Rut: 4,
+        "1Sa": 31,
+        "2Sa": 24,
+        "1Ki": 22,
+        "2Ki": 25,
+        "1Ch": 29,
+        "2Ch": 36,
+        Ezr: 10,
+        Neh: 13,
+        Est: 10,
+        Job: 42,
+        Psa: 150,
+        Pro: 31,
+        Ecc: 12,
+        Son: 8,
+        Isa: 66,
+        Jer: 52,
+        Lam: 5,
+        Eze: 48,
+        Dan: 12,
+        Hos: 14,
+        Joe: 3,
+        Amo: 9,
+        Oba: 1,
+        Jon: 4,
+        Mic: 7,
+        Nah: 3,
+        Hab: 3,
+        Zep: 3,
+        Hag: 2,
+        Zec: 14,
+        Mal: 4,
+        Mat: 28,
+        Mar: 16,
+        Luk: 24,
+        Joh: 21,
+        Act: 28,
+        Rom: 16,
+        "1Co": 16,
+        "2Co": 13,
+        Gal: 6,
+        Eph: 6,
+        Phi: 4,
+        Col: 4,
+        "1Th": 5,
+        "2Th": 3,
+        "1Ti": 6,
+        "2Ti": 4,
+        Tit: 3,
+        Phm: 1,
+        Heb: 13,
+        Jam: 5,
+        "1Pe": 5,
+        "2Pe": 3,
+        "1Jo": 5,
+        "2Jo": 1,
+        "3Jo": 1,
+        Jud: 1,
+        Rev: 22,
+      };
+      window.readingLists = [
+        ["Mat", "Mar", "Luk", "Joh"], // list 1
+        ["Gen", "Exo", "Lev", "Num", "Deu"], // list 2
+        ["Rom", "1Co", "2Co", "Gal", "Eph", "Phi", "Col", "Heb"], // list 3
+        [
+          // list 4
+          "1Th",
+          "2Th",
+          "1Ti",
+          "2Ti",
+          "Tit",
+          "Phm",
+          "Jam",
+          "1Pe",
+          "2Pe",
+          "1Jo",
+          "2Jo",
+          "3Jo",
+          "Jud",
+          "Rev",
+        ],
+        ["Job", "Ecc", "Son"], // list 5
+        ["Psa"], // list 6
+        ["Pro"], // list 7
+        [
+          // list 8
+          "Jos",
+          "Jdg",
+          "Rut",
+          "1Sa",
+          "2Sa",
+          "1Ki",
+          "2Ki",
+          "1Ch",
+          "2Ch",
+          "Ezr",
+          "Neh",
+          "Est",
+        ],
+        [
+          // list 9
+          "Isa",
+          "Jer",
+          "Lam",
+          "Eze",
+          "Dan",
+          "Hos",
+          "Joe",
+          "Amo",
+          "Oba",
+          "Jon",
+          "Mic",
+          "Nah",
+          "Hab",
+          "Zep",
+          "Hag",
+          "Zec",
+          "Mal",
+        ],
+        ["Act"], // list 10
+      ];
+      window.msPerDay = 86400000;
+      (function () {
+        initValues();
+        var inIFrame = false;
+        try {
+          inIFrame = window.self !== window.top;
+        } catch (e) {
+          inIFrame = true;
+        }
+        var urlPart1 = window.location.origin;
+        if (window.innerWidth > 960) {
+          if (!inIFrame)
+            window.location =
+              urlPart1 +
+              "/html/split.html?" +
+              urlPart1 +
+              `/?q=reference=${getFirstReading()}` +
+              "&skipwelcome&secondURL=" +
+              window.location.origin +
+              window.location.pathname;
+        }
+        if (typeof jQuery == "undefined") {
+          loadFile(urlPart1 + "/css/bootstrap.css");
+          loadFile(urlPart1 + "/css/bootstrap-theme.min.css");
+          loadFile(urlPart1 + "/css/select2.css");
+          loadFile(urlPart1 + "/css/select2-bootstrap.css");
+          loadFile(urlPart1 + "/scss/step-template.css");
+          loadFile(urlPart1 + "/international/en.js");
+          loadFile(urlPart1 + "/libs/jquery-1.10.2.min.js");
+          loadFile(urlPart1 + "/libs/introjs.min.js");
+          loadFile(urlPart1 + "/libs/underscore-min.js");
+          loadFile(urlPart1 + "/libs/bootstrap.min.js");
+          loadFile(urlPart1 + "/libs/backbone.js");
+          loadFile(urlPart1 + "/libs/backbone.localStorage.js");
+          loadFile(urlPart1 + "/js/backbone/models/model_settings.js");
+          loadFile(urlPart1 + "/js/step_constants.js");
+          loadFile(urlPart1 + "/js/passage_selection.js");
+          loadFile(urlPart1 + "/js/search_selection.js");
+          // Poll for jQuery to come into existance
+          var checkReady = function (callback) {
+            if (window.jQuery) {
+              callback(jQuery);
+            } else {
+              window.setTimeout(function () {
+                checkReady(callback);
+              }, 200);
+            }
+          };
+          // Start polling...
+          checkReady(function ($) {
+            $(function () {
+              init();
+            });
+          });
+        } else {
+          init();
+        }
+      })();
+
+      function utcToLocal(d) {
+        return new Date(d.getTime() + window.today.getTimezoneOffset() * 60000);
+      }
+
+      function init() {
+        $.ajaxSetup({ async: true });
+        var settings = new SettingsModelList();
+        settings.fetch();
+        if (settings.length > 0) {
+          var sz = 15;
+          step.settings = settings.at(0);
+          sz = step.settings.get("defaultfont");
+          $("body").css("font-size", sz + "px");
+        }
+        $.ajaxSetup({ async: false });
+
+        $("form").submit((event) => event.preventDefault());
+        $("#startDate").change((event) => {
+          if (!event.target.value) {
+            window.startDate = null;
+            return;
+          }
+          window.startDate = utcToLocal(new Date(event.target.value));
+          saveToLocalStorage();
+          setLastMin();
+          setCurrentDayCount();
+          renderReadings();
+        });
+        $("#lastDate").change((event) => {
+          if (!event.target.value) {
+            window.lastDate = null;
+            return;
+          }
+          window.lastDate = utcToLocal(new Date(event.target.value));
+          saveToLocalStorage();
+          setCurrentDayCount();
+          renderReadings();
+        });
+        renderInputValues();
+        setLastMin();
+        setStartMax();
+        setCurrentDayCount();
+        renderReadings();
+      }
+
+      function reset() {
+        delete localStorage.hornerPlanStartDate;
+        delete localStorage.hornerPlanLastDate;
+        window.location.reload();
+      }
+
+      function initValues() {
+        var today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        window.today = today;
+        window.startDate = utcToLocal(
+          new Date(
+            localStorage.hornerPlanStartDate ||
+              new Date(today.toISOString().split("T")[0]),
+          ),
+        );
+        window.lastDate = utcToLocal(
+          new Date(
+            localStorage.hornerPlanLastDate ||
+              new Date(
+                new Date(today.toISOString().split("T")[0]).getTime() -
+                  window.msPerDay,
+              ),
+          ),
+        );
+        window.minDate = utcToLocal(
+          new Date(window.today.getTime() - 969 * 365 * window.msPerDay),
+        )
+          .toISOString()
+          .split("T")[0];
+        window.maxDate = utcToLocal(
+          new Date(window.today.getTime() + 969 * 365 * window.msPerDay),
+        )
+          .toISOString()
+          .split("T")[0];
+        window.currentDayCount = null;
+        setCurrentDayCount();
+        saveToLocalStorage();
+      }
+
+      function getFirstReading() {
+        const readings = getReadings();
+        const defaultReading = "Gen.1";
+        if (!readings.length) {
+          return defaultReading;
+        }
+        return readings[0] || defaultReading;
+      }
+
+      function renderInputValues() {
+        $("#startDate").val(window.startDate.toISOString().split("T")[0]);
+        $("#lastDate").val(window.lastDate.toISOString().split("T")[0]);
+      }
+
+      function setStartMax() {
+        $("#startDate").attr("min", window.minDate);
+        $("#startDate").attr("max", window.today.toISOString().split("T")[0]);
+      }
+
+      function setLastMin() {
+        $("#lastDate").attr("min", window.startDate.toISOString().split("T")[0]);
+        $("#lastDate").attr("max", window.maxDate);
+      }
+
+      function completeCurrentDay() {
+        window.lastDate = utcToLocal(
+          new Date(window.lastDate.getTime() + window.msPerDay),
+        );
+        saveToLocalStorage();
+        renderInputValues();
+        setCurrentDayCount();
+        renderReadings();
+      }
+
+      function setCurrentDayCount() {
+        if (!window.startDate || !window.lastDate) {
+          return;
+        }
+        var startDate = window.startDate;
+        var lastDate = window.lastDate;
+        var msPerDay = window.msPerDay;
+        var currentDayCount =
+          2 + Math.floor((lastDate.getTime() - startDate.getTime()) / msPerDay);
+        window.currentDayCount = currentDayCount;
+        try {
+          $("#currentDayCount").text(currentDayCount);
+        } catch (e) {}
+      }
+
+      function saveToLocalStorage() {
+        localStorage.hornerPlanStartDate = window.startDate
+          .toISOString()
+          .split("T")[0];
+        localStorage.hornerPlanLastDate = window.lastDate
+          .toISOString()
+          .split("T")[0];
+      }
+
+      function loadFile(path) {
+        if (path.endsWith(".js")) {
+          var fileref = document.createElement("script");
+          fileref.setAttribute("type", "text/javascript");
+          fileref.setAttribute("src", path);
+        } else if (path.endsWith(".css")) {
+          var fileref = document.createElement("link");
+          fileref.setAttribute("rel", "stylesheet");
+          fileref.setAttribute("type", "text/css");
+          fileref.setAttribute("href", path);
+        } else return;
+        fileref.async = false;
+        document.getElementsByTagName("head")[0].appendChild(fileref);
+      }
+
+      function getReadings() {
+        if (
+          !window.startDate ||
+          !window.lastDate ||
+          (window.currentDayCount === null && window.currentDayCount < 1)
+        ) {
+          return [];
+        }
+        const lists = [];
+        for (bookList of window.readingLists) {
+          var readingsInList = [];
+          for (const book of bookList) {
+            for (let c = 1; c <= window.bookChapterCounts[book]; c++) {
+              readingsInList.push(`${book}.${c}`);
+            }
+          }
+          let readingIndex = window.currentDayCount - 1;
+          while (readingIndex + 1 > readingsInList.length) {
+            readingIndex -= readingsInList.length;
+          }
+          var currentReadingInList = readingsInList[readingIndex];
+          lists.push(currentReadingInList);
+        }
+        return lists.filter((reading) => !!reading);
+      }
+
+      function renderReadings() {
+        const readings = getReadings();
+        if (!readings.length) {
+          $("#plan").html("");
+          return;
+        }
+        $("#plan").html(
+          `<ol>${readings.map((reading) => `<li><a class="clickable" href="javascript:;" onclick="displayPassages('${reading}')">${reading}</li></a>`).join("")}</ol>` +
+            `<button type="button" class="stepButton" onclick="completeCurrentDay()">Complete Day #${window.currentDayCount}</button>`,
+        );
+      }
+
+      function displayPassages(string) {
+        var inIFrame = false;
+        try {
+          inIFrame = window.self !== window.top;
+        } catch (e) {
+          inIFrame = true;
+        }
+
+        var urlPart1 = window.location.origin;
+
+        if (!inIFrame) {
+          var tabURL = urlPart1 + "/?skipwelcome&q=";
+          if (string !== "") {
+            string = string.replace(/ /g, ";");
+            if (
+              string.indexOf("strong=") > -1 ||
+              string.indexOf("srchJoin=") > -1 ||
+              string.indexOf("text=") > -1
+            ) {
+              tabURL += string;
+            } else {
+              tabURL += "reference=" + string;
+            }
+
+            window.open(tabURL, "_blank");
+          }
+        } else {
+          if (string !== "") {
+            string = string.replace(/ /g, ";");
+            window.top.postMessage(string, "*");
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

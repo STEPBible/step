@@ -474,7 +474,39 @@
         initCoreModelsAndRouter();
         initSearchDropdown();
         initReportDropdownPortal();
-        step.util["initSelectionTracking"]();
+        if (!step.selectionTrackingInitialized) {
+            step.selectionTrackingInitialized = true;
+            step.lastPassageSelection = null;
+            document.addEventListener('selectionchange', function () {
+                clearTimeout(step.selectionTrackingDebounceTimer);
+                step.selectionTrackingDebounceTimer = setTimeout(function () {
+                    var sel = window.getSelection();
+                    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+                        if (step.lastPassageSelection && !step.lastPassageSelection.deselectedAt)
+                            step.lastPassageSelection.deselectedAt = Date.now();
+                        return;
+                    }
+                    var range = sel.getRangeAt(0);
+                    var startNode = range.startContainer;
+                    var endNode = range.endContainer;
+                    var startEl = (startNode.nodeType === 3) ? startNode.parentElement : startNode;
+                    var endEl = (endNode.nodeType === 3) ? endNode.parentElement : endNode;
+                    if (!startEl || $(startEl).closest('.passageContentHolder').length === 0) return;
+                    var text = sel.toString().trim();
+                    if (text.length === 0) return;
+                    var startInfo = step.util.getSelectionVerseInfo(startEl);
+                    var endInfo = step.util.getSelectionVerseInfo(endEl);
+                    step.lastPassageSelection = {
+                        text: text.length > 150 ? text.substring(0, 150) + '...' : text,
+                        startVerse: startInfo.verse,
+                        endVerse: endInfo.verse,
+                        version: startInfo.version || endInfo.version,
+                        timestamp: Date.now(),
+                        deselectedAt: null
+                    };
+                }, 150);
+            });
+        }
 
         Backbone.history.start({pushState: true, silent: true});
 

@@ -1814,7 +1814,7 @@ step.util = {
 					return [verse, version];
 				},
 
-				getSelectionVerseInfo: function (el) {
+				"getSelectionVerseInfo": function (el) {
 					var $el = $(el);
 					var verse = '';
 					var version = '';
@@ -1860,7 +1860,7 @@ step.util = {
 					return { verse: verse, version: version };
 				},
 
-				initSelectionTracking: function () {
+				"initSelectionTracking": function () {
 					var debounceTimer;
 					step.lastPassageSelection = null;
 					document.addEventListener('selectionchange', function () {
@@ -1880,8 +1880,8 @@ step.util = {
 							if (!startEl || $(startEl).closest('.passageContentHolder').length === 0) return;
 							var text = sel.toString().trim();
 							if (text.length === 0) return;
-							var startInfo = step.util.getSelectionVerseInfo(startEl);
-							var endInfo = step.util.getSelectionVerseInfo(endEl);
+							var startInfo = step.util["getSelectionVerseInfo"](startEl);
+							var endInfo = step.util["getSelectionVerseInfo"](endEl);
 							step.lastPassageSelection = {
 								text: text.length > 150 ? text.substring(0, 150) + '...' : text,
 								startVerse: startInfo.verse,

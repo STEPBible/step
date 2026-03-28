@@ -477,6 +477,43 @@
         if (!step.selectionTrackingInitialized) {
             step.selectionTrackingInitialized = true;
             step.lastPassageSelection = null;
+            step.getSelectionVerseInfoInline = function (el) {
+                var $el = $(el);
+                var verse = '';
+                var version = '';
+
+                verse = $($el.closest("div.verse").find('a.verseLink')[0]).attr('name');
+                if (!verse) verse = $el.closest(".verseGrouping").find(".heading .verseLink").attr("name");
+                if (!verse) verse = $el.closest(".verse, .interlinear").find(".verseLink").attr("name");
+                if (!verse) {
+                    var commentaryVerse = $el.closest(".commentaryVerse");
+                    if (commentaryVerse.length > 0)
+                        verse = commentaryVerse.find('a[name]').first().attr('name');
+                }
+                if (!verse) verse = '';
+                if (verse.indexOf(' ') > -1) verse = verse.split(' ')[0];
+
+                version = $el.closest("div.verse").parent().find('span.smallResultKey').attr('data-version') ||
+                    $el.closest(".singleVerse").find('span.smallResultKey').attr('data-version');
+                if (!version) {
+                    var compareVersionHeader = $('th.comparingVersionName');
+                    if (compareVersionHeader.length > 0) {
+                        var index = $el.closest('td').index();
+                        if (typeof index === 'number' && index > 0)
+                            version = $(compareVersionHeader[index - 1]).text();
+                    }
+                }
+                if (!version || typeof step.keyedVersions[version] !== 'object') {
+                    var passageContainer = $el.closest('.passageContainer');
+                    if (passageContainer.length > 0) {
+                        var passageId = passageContainer.attr('passage-id');
+                        var model = step.passages.findWhere({ passageId: parseInt(passageId) });
+                        if (model) version = model.get('masterVersion');
+                    }
+                }
+                if (!version) version = '';
+                return { verse: verse, version: version };
+            };
             document.addEventListener('selectionchange', function () {
                 clearTimeout(step.selectionTrackingDebounceTimer);
                 step.selectionTrackingDebounceTimer = setTimeout(function () {
@@ -494,8 +531,8 @@
                     if (!startEl || $(startEl).closest('.passageContentHolder').length === 0) return;
                     var text = sel.toString().trim();
                     if (text.length === 0) return;
-                    var startInfo = step.util.getSelectionVerseInfo(startEl);
-                    var endInfo = step.util.getSelectionVerseInfo(endEl);
+                    var startInfo = step.getSelectionVerseInfoInline(startEl);
+                    var endInfo = step.getSelectionVerseInfoInline(endEl);
                     step.lastPassageSelection = {
                         text: text.length > 150 ? text.substring(0, 150) + '...' : text,
                         startVerse: startInfo.verse,

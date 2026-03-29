@@ -4,8 +4,10 @@ step.copyText = {
 		step.util.closeModal('searchSelectionModal');
 		step.util.closeModal('passageSelectionModal');
 		var extraVers = step.util.activePassage().get("extraVersions");
-		this._displayVerses(extraVers !== ""); // does it have extra versions, more than one Bible version
-		if ((extraVers !== "") &&
+		var hasExtraVersions = extraVers !== "";
+		this.selectionState = this._getSelectionState();
+		this._displayVerses(hasExtraVersions); // does it have extra versions, more than one Bible version
+		if (hasExtraVersions &&
 			(step.util.getPassageContainer(step.util.activePassageId()).has(".interlinear").length == 0)) {
 			var lastCopyRightsVersions = $.cookie("step.copyRightsVersions");
 			var versionsToExclude = [];
@@ -18,16 +20,22 @@ step.copyText = {
 						versionsToExclude = parts[1].split(",");
 				}
 			}
-			var checkedOrNot = (!versionsToExclude.includes('0')) ? "checked " : "";
-			var checkboxHTML = '<input type="checkbox" ' + checkedOrNot + 'id="cpyver1" name="cpyver1">' +
-				'<label for="cpyver1">&nbsp;' +  step.util.activePassage().get("masterVersion") + '</label>';
-			var otherVers = extraVers.split(",");
-			for (var i = 0; i < otherVers.length; i++) {
-				var j = i + 2;
-				var k = i + 1;
-				var checkedOrNot = (!versionsToExclude.includes(k.toString())) ? "checked " : "";
-				checkboxHTML += '&nbsp;<input type="checkbox" ' + checkedOrNot + 'id="cpyver' + j + '" name="cpyver' + j + '">' +
-					'<label for="cpyver' + j + '">&nbsp;' +  otherVers[i] + '</label>';
+			var versionsToPreselect = this.selectionState.hasSelection ? this.selectionState.versions : null;
+			var allVersions = [step.util.activePassage().get("masterVersion")].concat(extraVers.split(","));
+			if (versionsToPreselect) {
+				var matchingSelectionVersions = [];
+				for (var v = 0; v < versionsToPreselect.length; v++) {
+					if (allVersions.indexOf(versionsToPreselect[v]) > -1)
+						matchingSelectionVersions.push(versionsToPreselect[v]);
+				}
+				versionsToPreselect = matchingSelectionVersions.length > 0 ? matchingSelectionVersions : null;
+			}
+			var checkboxHTML = '';
+			for (var i = 0; i < allVersions.length; i++) {
+				var checkboxId = 'cpyver' + (i + 1);
+				var shouldCheck = versionsToPreselect ? (versionsToPreselect.indexOf(allVersions[i]) > -1) : !versionsToExclude.includes(i.toString());
+				checkboxHTML += '<input type="checkbox" ' + (shouldCheck ? 'checked ' : '') + 'id="' + checkboxId + '" name="' + checkboxId + '">' +
+					'<label for="' + checkboxId + '">&nbsp;' +  allVersions[i] + '</label>&nbsp;';
 			}
 			$('#selectversionstocopy').html("<h4>Versions to copy:</h4>&nbsp;" + checkboxHTML);
 		}
@@ -35,18 +43,72 @@ step.copyText = {
 			$('#selectversionstocopy').remove();
 	},
 
-	_displayVerses: function(hasExtraVersions) {
-	    $('#bookchaptermodalbody').empty();
-		var html = this._buildHeaderAndSkeleton();
-		$('#bookchaptermodalbody').append(html);
-		$('#bookchaptermodalbody').append(this._buildChapterVerseTable(-1, hasExtraVersions));
+	_getSelectionState: function() {
+		var selInfo = step.lastPassageSelection;
+		var result = {
+			hasSelection: false,
+			versions: [],
+			startVerse: '',
+			endVerse: '',
+			startVerseDisplay: '',
+			endVerseDisplay: '',
+			startIndex: -1,
+			endIndex: -1,
+			label: ''
+		};
+		if (!selInfo) return result;
+		var now = Date.now();
+		var isRecent = (selInfo.deselectedAt === null && (now - selInfo.timestamp < 60000)) ||
+			(selInfo.deselectedAt !== null && (now - selInfo.deselectedAt < 5000));
+		if (!isRecent) return result;
+		if ($.isArray(selInfo.versions) && selInfo.versions.length > 0)
+			result.versions = selInfo.versions.slice(0);
+		else if (selInfo.version)
+			result.versions = [selInfo.version];
+		result.startVerse = selInfo.startVerse || '';
+		result.endVerse = selInfo.endVerse || selInfo.startVerse || '';
+		result.startVerseDisplay = this._formatVerseDisplay(result.startVerse);
+		result.endVerseDisplay = this._formatVerseDisplay(result.endVerse);
+		result.hasSelection = (result.versions.length > 0 || result.startVerse !== '' || result.endVerse !== '');
+		if (result.hasSelection) {
+			result.label = result.startVerseDisplay || '';
+			if (result.endVerseDisplay && result.endVerseDisplay !== result.startVerseDisplay)
+				result.label += ' to ' + result.endVerseDisplay;
+			if (result.label === '') result.label = 'your current selection';
+		}
+		return result;
 	},
 
+	_formatVerseDisplay: function(osis) {
+		if (!osis) return '';
+		return osis.replace(/^([123A-Za-z]+)\.(\d)/, '$1 $2').replace(/\.(\d+)/g, ': $1');
+	},
 
-	_buildHeaderAndSkeleton: function() {
-		var html = '<div class="header" style="overflow-y:auto">' +
-			'<h4>' + __s.please_select_first_version_to_copy + '</h4>';
-		return html;
+	_normalizeVerseLabel: function(verseLabel) {
+		return (verseLabel || '').replace(/\s+/g, '').toLowerCase();
+	},
+
+	_findVerseIndex: function(verses, verseDisplay) {
+		var normalizedTarget = this._normalizeVerseLabel(verseDisplay);
+		for (var i = 0; i < verses.length; i++) {
+			if (this._normalizeVerseLabel(verses[i]) === normalizedTarget)
+				return i;
+		}
+		return -1;
+	},
+
+	_displayVerses: function(hasExtraVersions) {
+	    $('#bookchaptermodalbody').empty();
+		var verses = step.copyText._getVerses(step.util.getPassageContainer(step.util.activePassageId()));
+		if (this.selectionState && this.selectionState.hasSelection) {
+			this.selectionState.startIndex = this._findVerseIndex(verses, this.selectionState.startVerseDisplay);
+			this.selectionState.endIndex = this._findVerseIndex(verses, this.selectionState.endVerseDisplay);
+			if (this.selectionState.startIndex === -1 && this.selectionState.endIndex > -1)
+				this.selectionState.startIndex = this.selectionState.endIndex;
+			if (this.selectionState.endIndex === -1 && this.selectionState.startIndex > -1)
+				this.selectionState.endIndex = this.selectionState.startIndex;
+		}
+		$('#bookchaptermodalbody').append(this._buildChapterVerseTable(-1, hasExtraVersions));
 	},
 
 	goCopy: function(firstVerseIndex, lastVerseIndex) {
@@ -417,6 +479,16 @@ step.copyText = {
 		}
 		var headerMsg = (firstSelection == -1) ? __s.select_the_first_verse_to_copy + "<br><br><br>" : 
 			__s.copy_will_start_from_verse + ": " + verses[firstSelection] + "<br>" + __s.select_last_verse_to_copy;
+		var selectionShortcutHTML = '';
+		if ((firstSelection == -1) && this.selectionState && this.selectionState.hasSelection &&
+			this.selectionState.startIndex > -1 && this.selectionState.endIndex > -1) {
+			var selectionLabel = this.selectionState.label;
+			var firstVerse = Math.min(this.selectionState.startIndex, this.selectionState.endIndex);
+			var lastVerse = Math.max(this.selectionState.startIndex, this.selectionState.endIndex);
+			selectionShortcutHTML = '<div class="copySelectionShortcut" style="margin-top:8px">' +
+				'<button type="button" class="stepButton" onclick="step.copyText.goCopy(' + firstVerse + ',' + lastVerse + ')">OR select verses ' + _.escape(selectionLabel) + ', your current selection</button>' +
+				'</div>';
+		}
 		this.modalMode = 'verse';
 		var tableColumns = 10;
 		var widthPercent = 10;
@@ -429,7 +501,7 @@ step.copyText = {
 			}
 		}
 		var html = '<div class="header">' +
-            '<h4>' + headerMsg + '</h4>';
+            '<h4>' + headerMsg + '</h4>' + selectionShortcutHTML;
     	html +=
             '</div>' +
 			'<div style="overflow-y:auto">' +

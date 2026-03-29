@@ -1880,8 +1880,8 @@ step.util = {
 							if (!startEl || $(startEl).closest('.passageContentHolder').length === 0) return;
 							var text = sel.toString().trim();
 							if (text.length === 0) return;
-							var startInfo = step.util["getSelectionVerseInfo"](startEl);
-							var endInfo = step.util["getSelectionVerseInfo"](endEl);
+							var startInfo = step.util.ui["getSelectionVerseInfo"](startEl);
+							var endInfo = step.util.ui["getSelectionVerseInfo"](endEl);
 							var allVersions = [];
 							var addVersionIfNeeded = function (version) {
 								if (version && allVersions.indexOf(version) === -1)
@@ -1893,7 +1893,7 @@ step.util = {
 							if (rangeCommonAncestor) {
 								$(rangeCommonAncestor).find('.verse, .singleVerse, .interlinear, .commentaryVerse').each(function () {
 									if (range.intersectsNode && !range.intersectsNode(this)) return;
-									var verseInfo = step.util["getSelectionVerseInfo"](this);
+									var verseInfo = step.util.ui["getSelectionVerseInfo"](this);
 									addVersionIfNeeded(verseInfo.version);
 								});
 							}
@@ -2586,37 +2586,6 @@ step.util = {
     var element = document.getElementById('copyModal');
     if (element) element.parentNode.removeChild(element);
     $("div.modal-backdrop.in").remove();
-		// Build selection info section if user had highlighted passage text
-		var selInfoHTML = '';
-		var selInfo = step.lastPassageSelection;
-		if (selInfo) {
-			var now = Date.now();
-			var isRecent = (selInfo.deselectedAt === null && (now - selInfo.timestamp < 60000)) ||
-				(selInfo.deselectedAt !== null && (now - selInfo.deselectedAt < 5000));
-			var versionsToDisplay = [];
-			if ($.isArray(selInfo.versions) && selInfo.versions.length > 0)
-				versionsToDisplay = selInfo.versions;
-			else if (selInfo.version)
-				versionsToDisplay = [selInfo.version];
-			if (isRecent && (versionsToDisplay.length > 0 || selInfo.startVerse || selInfo.endVerse)) {
-				var formatOsis = function (osis) {
-					if (!osis) return '';
-					return osis.replace(/^([123A-Za-z]+)\.(\d)/, '$1 $2').replace(/\./g, ':');
-				};
-				var startDisplay = formatOsis(selInfo.startVerse);
-				var endDisplay = formatOsis(selInfo.endVerse);
-				var verseDisplay = startDisplay;
-				if (endDisplay && endDisplay !== startDisplay)
-					verseDisplay += ' \u2013 ' + endDisplay;
-				selInfoHTML = '<div id="selectionInfoSection" style="border-top:1px solid grey;padding:10px 15px;font-size:13px">' +
-					'<strong>Your selection:</strong><br>';
-				if (versionsToDisplay.length > 0)
-					selInfoHTML += '<span><b>Version' + (versionsToDisplay.length > 1 ? 's' : '') + ':</b> ' + _.escape(versionsToDisplay.join(', ')) + '</span><br>';
-				if (verseDisplay)
-					selInfoHTML += '<span><b>Verse:</b> ' + _.escape(verseDisplay) + '</span><br>';
-				selInfoHTML += '</div>';
-			}
-		}
 		var modalHTML = '<div id="copyModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
 				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
@@ -2641,7 +2610,6 @@ step.util = {
 						'</div>' +
 						'<br>' +
 					'</div>' +
-					selInfoHTML +
 					'<script>' +
 						'$(document).ready(function () {' +
 							'step.copyText.initVerseSelect();' +

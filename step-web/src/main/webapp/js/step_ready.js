@@ -533,11 +533,28 @@
                     if (text.length === 0) return;
                     var startInfo = step.getSelectionVerseInfoInline(startEl);
                     var endInfo = step.getSelectionVerseInfoInline(endEl);
+                    var allVersions = [];
+                    var addVersionIfNeeded = function (version) {
+                        if (version && allVersions.indexOf(version) === -1)
+                            allVersions.push(version);
+                    };
+                    var rangeCommonAncestor = range.commonAncestorContainer;
+                    if (rangeCommonAncestor && rangeCommonAncestor.nodeType === 3)
+                        rangeCommonAncestor = rangeCommonAncestor.parentElement;
+                    if (rangeCommonAncestor) {
+                        $(rangeCommonAncestor).find('.verse, .singleVerse, .interlinear, .commentaryVerse').each(function () {
+                            if (range.intersectsNode && !range.intersectsNode(this)) return;
+                            var verseInfo = step.getSelectionVerseInfoInline(this);
+                            addVersionIfNeeded(verseInfo.version);
+                        });
+                    }
+                    addVersionIfNeeded(startInfo.version);
+                    addVersionIfNeeded(endInfo.version);
                     step.lastPassageSelection = {
-                        text: text.length > 150 ? text.substring(0, 150) + '...' : text,
                         startVerse: startInfo.verse,
                         endVerse: endInfo.verse,
                         version: startInfo.version || endInfo.version,
+                        versions: allVersions,
                         timestamp: Date.now(),
                         deselectedAt: null
                     };

@@ -551,7 +551,6 @@
                     addVersionIfNeeded(startInfo.version);
                     addVersionIfNeeded(endInfo.version);
                     step.lastPassageSelection = {
-                        text: text.length > 150 ? text.substring(0, 150) + '...' : text,
                         startVerse: startInfo.verse,
                         endVerse: endInfo.verse,
                         version: startInfo.version || endInfo.version,

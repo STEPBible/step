@@ -1900,7 +1900,6 @@ step.util = {
 							addVersionIfNeeded(startInfo.version);
 							addVersionIfNeeded(endInfo.version);
 							step.lastPassageSelection = {
-								text: text.length > 150 ? text.substring(0, 150) + '...' : text,
 								startVerse: startInfo.verse,
 								endVerse: endInfo.verse,
 								version: startInfo.version || endInfo.version,
@@ -2599,7 +2598,7 @@ step.util = {
 				versionsToDisplay = selInfo.versions;
 			else if (selInfo.version)
 				versionsToDisplay = [selInfo.version];
-			if (isRecent && (versionsToDisplay.length > 0 || selInfo.startVerse || selInfo.text)) {
+			if (isRecent && (versionsToDisplay.length > 0 || selInfo.startVerse || selInfo.endVerse)) {
 				var formatOsis = function (osis) {
 					if (!osis) return '';
 					return osis.replace(/^([123A-Za-z]+)\.(\d)/, '$1 $2').replace(/\./g, ':');
@@ -2615,9 +2614,6 @@ step.util = {
 					selInfoHTML += '<span><b>Version' + (versionsToDisplay.length > 1 ? 's' : '') + ':</b> ' + _.escape(versionsToDisplay.join(', ')) + '</span><br>';
 				if (verseDisplay)
 					selInfoHTML += '<span><b>Verse:</b> ' + _.escape(verseDisplay) + '</span><br>';
-				if (selInfo.text)
-					selInfoHTML += '<span dir="auto" style="font-style:italic;opacity:0.7">&ldquo;' +
-						_.escape(selInfo.text) + '&rdquo;</span>';
 				selInfoHTML += '</div>';
 			}
 		}

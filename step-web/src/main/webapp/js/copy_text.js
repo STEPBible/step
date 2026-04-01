@@ -94,7 +94,121 @@ step.copyText = {
 			if (this._normalizeVerseLabel(verses[i]) === normalizedTarget)
 				return i;
 		}
+		// Verse grid may contain short labels like "1" while verseDisplay
+		// is fully qualified like "Gen 1: 1" — try matching just the verse number
+		var verseNumMatch = verseDisplay.match(/:?\s*(\d+)\s*$/);
+		if (verseNumMatch) {
+			var verseNum = verseNumMatch[1];
+			for (var i = 0; i < verses.length; i++) {
+				if (verses[i].trim() === verseNum)
+					return i;
+			}
+		}
 		return -1;
+	},
+
+	_getOsisIdsForRange: function(passageContainer, firstVerseIndex, lastVerseIndex) {
+		var verseLinks = $(passageContainer).find('.verseLink');
+		var firstOsis = '';
+		var lastOsis = '';
+		if (verseLinks.length > firstVerseIndex)
+			firstOsis = ($(verseLinks[firstVerseIndex]).attr('name') || '').split(' ')[0];
+		if (verseLinks.length > lastVerseIndex)
+			lastOsis = ($(verseLinks[lastVerseIndex]).attr('name') || '').split(' ')[0];
+		return { first: firstOsis, last: lastOsis };
+	},
+
+	_extractNotesFromClone: function(copyOfPassage, wantNotes, wantXrefs) {
+		var endNotes = "";
+		var endXrefs = "";
+		var notes = $(copyOfPassage).find('.note');
+		var noteCounter = 0;
+		for (var l = 0; l < notes.length; l++) {
+			var aTag = $(notes[l]).find("a");
+			if (wantNotes && aTag.length > 1) {
+				noteCounter++;
+				var noteID = "n" + noteCounter;
+				var refs = $(notes[l]).find(".inlineNote").text().replace(/▼/, "");
+				$("<span>(" + noteID + ") </span>").insertAfter(notes[l]);
+				if (refs) endNotes += "\n(" + noteID + ") " + refs;
+			}
+			if (wantXrefs && aTag.length == 1) {
+				var noteID = $(aTag).text();
+				var refs = "";
+				var margins = $(copyOfPassage).find('.margin');
+				for (var m = 0; m < margins.length; m++) {
+					if (noteID === $(margins[m]).find("strong").text()) {
+						var linkRefs = $(margins[m]).find(".linkRef");
+						for (var n = 0; n < linkRefs.length; n++) {
+							if (n > 0) refs += ", ";
+							refs += $(linkRefs[n]).text();
+						}
+						break;
+					}
+				}
+				if (refs !== "") {
+					$("<span>(" + noteID + ") </span>").insertAfter(notes[l]);
+					endXrefs += "\n(" + noteID + ") " + refs;
+				}
+			}
+		}
+		return { endNotes: endNotes, endXrefs: endXrefs };
+	},
+
+	_extractNotesFromHTML: function(html, firstOsis, lastOsis) {
+		var $html = $(html);
+		var endNotes = "";
+		var endXrefs = "";
+
+		// Build set of OSIS IDs within the copied range
+		var verseLinks = $html.find('.verseLink');
+		var inRange = false;
+		var osisIdsInRange = {};
+		for (var i = 0; i < verseLinks.length; i++) {
+			var name = ($(verseLinks[i]).attr('name') || '').split(' ')[0];
+			if (name === firstOsis) inRange = true;
+			if (inRange) osisIdsInRange[name] = true;
+			if (name === lastOsis) break;
+		}
+
+		var notes = $html.find('.note');
+		var noteCounter = 0;
+		for (var l = 0; l < notes.length; l++) {
+			var noteEl = $(notes[l]);
+			// Walk up to find the verse container, then its verseLink
+			var verseContainer = noteEl.closest('.verse, .verseGrouping, .interlinear, .commentaryVerse');
+			var verseLink = verseContainer.find('.verseLink').first();
+			var osisId = (verseLink.attr('name') || '').split(' ')[0];
+
+			// Skip notes outside the copied range
+			if (osisId && !osisIdsInRange[osisId]) continue;
+
+			var aTag = noteEl.find("a");
+			if (aTag.length > 1) {
+				// Footnote
+				noteCounter++;
+				var noteID = "n" + noteCounter;
+				var refs = noteEl.find(".inlineNote").text().replace(/▼/, "");
+				if (refs) endNotes += "\n(" + noteID + ") " + refs;
+			} else if (aTag.length == 1) {
+				// Cross-reference — extract from margins in this same HTML
+				var noteID = $(aTag).text();
+				var refs = "";
+				var margins = $html.find('.margin');
+				for (var m = 0; m < margins.length; m++) {
+					if (noteID === $(margins[m]).find("strong").text()) {
+						var linkRefs = $(margins[m]).find(".linkRef");
+						for (var n = 0; n < linkRefs.length; n++) {
+							if (n > 0) refs += ", ";
+							refs += $(linkRefs[n]).text();
+						}
+						break;
+					}
+				}
+				if (refs !== "") endXrefs += "\n(" + noteID + ") " + refs;
+			}
+		}
+		return { endNotes: endNotes, endXrefs: endXrefs };
 	},
 
 	_displayVerses: function(hasExtraVersions) {
@@ -155,44 +269,32 @@ step.copyText = {
 			}
 		}
 		var endNotes = "";
-		if ($("#selectnotes").prop("checked")) {
-			var notes = $(copyOfPassage).find('.note');
-			for (var l = 0; l < notes.length; l++) {
-				var aTag = $(notes[l]).find("a");
-				if (aTag.length > 1) {
-					noteID = "n" + (l + 1); // The notes number will start with 1, not zero.
-					refs = $(notes[l]).find(".inlineNote").text().replace(/▼/, "");
-					$("<span>(" + noteID + ") </span>").insertAfter(notes[l]);
-					endNotes += "\n(" + noteID + ") " + refs;
+		var endXrefs = "";
+		var wantNotes = $("#selectnotes").prop("checked");
+		var wantXrefs = $("#selectxref").prop("checked");
+		if (wantNotes || wantXrefs) {
+			var noteData;
+			if (step.copyText._notesInDOM) {
+				// Fast path: notes are already in the DOM clone
+				noteData = step.copyText._extractNotesFromClone(copyOfPassage, wantNotes, wantXrefs);
+			} else {
+				// Slow path: fetch passage with notes via API
+				var version = step.util.activePassage().get("masterVersion");
+				var reference = step.util.activePassage().get("reference");
+				var osisRange = step.copyText._getOsisIdsForRange(passageContainer, firstVerseIndex, lastVerseIndex);
+				var fetchedHTML = null;
+				$.ajaxSetup({async: false});
+				$.getJSON(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(reference) + "/NHV//", function(data) {
+					fetchedHTML = data.value;
+				});
+				$.ajaxSetup({async: true});
+				if (fetchedHTML && osisRange.first) {
+					noteData = step.copyText._extractNotesFromHTML(fetchedHTML, osisRange.first, osisRange.last);
 				}
 			}
-		}
-		var endXrefs = "";
-		if ($("#selectxref").prop("checked")) {
-			var notes = $(copyOfPassage).find('.note');
-			for (var l = 0; l < notes.length; l++) {
-				var aTag = $(notes[l]).find("a");
-				if (aTag.length == 1) {
-					var noteID = $(aTag).text();
-					var refs = "";
-					var margins = $(".margin");
-					if (margins.length > 0) {
-						for (var m = 0; m < margins.length; m++) {
-							if (noteID === $(margins[m]).find("strong").text()) {
-								var linkRefs = $(margins[m]).find(".linkRef");
-								for (var n = 0; n < linkRefs.length; n ++) {
-									if (n > 0) refs += ", ";
-									refs += $(linkRefs[n]).text();
-								}
-								continue;
-							}
-						}
-					}
-				}
-				if (refs !== "") {
-					$("<span>(" + noteID + ") </span>").insertAfter(notes[l]);
-					endXrefs += "\n(" + noteID + ") " + refs;
-				}
+			if (noteData) {
+				if (wantNotes) endNotes = noteData.endNotes;
+				if (wantXrefs) endXrefs = noteData.endXrefs;
 			}
 		}
 
@@ -461,20 +563,20 @@ step.copyText = {
 	_buildChapterVerseTable: function(firstSelection, hasExtraVersions) {
 		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
 		var verses = step.copyText._getVerses(passageContainer);
-		var hasXRefs = false;
-		var hasNotes = false;
 		if (!hasExtraVersions) { // The notes and xrefs from different versions should not be mixed.
-			var notes = $(passageContainer).find('.note');
-			for (var l = 0; ((l < notes.length) && (!hasXRefs || (!hasNotes))); l++) {
-				var aTag = $(notes[l]).find("a");
-				if ((aTag.length == 1) && (!hasXRefs)) {
-					$("#includeXRefs").show();
-					hasXRefs = true;
-				}
-				else if ((aTag.length > 1) && (!hasNotes)) {
-					$("#includeNotes").show();
-					hasNotes = true;
-				}
+			var version = step.util.activePassage().get("masterVersion");
+			var versionInfo = step.keyedVersions[version];
+			var isCommentary = versionInfo && versionInfo.category === "COMMENTARY";
+			if (!isCommentary) {
+				// Check if notes are already rendered in the DOM
+				var notesInDOM = false;
+				var notes = $(passageContainer).find('.note');
+				if (notes.length > 0) notesInDOM = true;
+				step.copyText._notesInDOM = notesInDOM;
+				// Always show checkboxes for non-commentary single-version passages;
+				// if notes are not in the DOM, we fetch them via API at copy time
+				$("#includeNotes").show();
+				$("#includeXRefs").show();
 			}
 		}
 		var headerMsg = (firstSelection == -1) ? __s.select_the_first_verse_to_copy + "<br><br><br>" : 

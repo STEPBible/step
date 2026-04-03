@@ -474,6 +474,10 @@
         initCoreModelsAndRouter();
         initSearchDropdown();
         initReportDropdownPortal();
+        if (!step.selectionTrackingInitialized) {
+            step.selectionTrackingInitialized = true;
+            step.util.ui.initSelectionTracking();
+        }
 
         Backbone.history.start({pushState: true, silent: true});
 

@@ -474,6 +474,10 @@
         initCoreModelsAndRouter();
         initSearchDropdown();
         initReportDropdownPortal();
+        if (!step.selectionTrackingInitialized) {
+            step.selectionTrackingInitialized = true;
+            step.util.ui.initSelectionTracking();
+        }
 
         Backbone.history.start({pushState: true, silent: true});
 
@@ -596,7 +600,7 @@
 		var ua = navigator.userAgent.toLowerCase();
 		if (ua.indexOf('firefox') > -1) $("#panel-icon").hide(); // Firefox has some issues with this.
         if ((typeof navigator.clipboard !== "object") || (typeof navigator.clipboard.writeText !== "function"))
-            $("#copy-icon").hide();
+            { $("#copy-icon").hide(); $(".panelCopyBtn").hide(); }
 		if ( ((step.appleTouchDevice) && (ua.search(/ cpu os [345678]_/) > -1)) || // older versions of iOS shows a light grey color.  Probably similiar issue as Internet Explorer
 			(false || !!document.documentMode) ) { // Internet Explorer use the wrong css based on the <a> tag, so change it to black
 			$("#panel-icon").css("color", "black");

@@ -1814,6 +1814,103 @@ step.util = {
 					return [verse, version];
 				},
 
+				"getSelectionVerseInfo": function (el) {
+					var $el = $(el);
+					var verse = '';
+					var version = '';
+
+					// Standard Bible: <div class="verse"> > <a class="verseLink">
+					verse = $($el.closest("div.verse").find('a.verseLink')[0]).attr('name');
+					// Interleaved comparison: <div class="verseGrouping">
+					if (!verse) verse = $el.closest(".verseGrouping").find(".heading .verseLink").attr("name");
+					// Interlinear: <span class="interlinear">
+					if (!verse) verse = $el.closest(".verse, .interlinear").find(".verseLink").attr("name");
+					// Commentary: <span class="commentaryVerse"> > <a name="...">
+					if (!verse) {
+						var commentaryVerse = $el.closest(".commentaryVerse");
+						if (commentaryVerse.length > 0)
+							verse = commentaryVerse.find('a[name]').first().attr('name');
+					}
+
+					if (!verse) verse = '';
+					// Handle space-separated OSIS IDs (e.g., "Gen.1.1 Gen.1.2")
+					if (verse.indexOf(' ') > -1) verse = verse.split(' ')[0];
+
+					// Version detection (same logic as getVerseNumberAndVersion)
+					version = $el.closest("div.verse").parent().find('span.smallResultKey').attr('data-version') ||
+						$el.closest(".singleVerse").find('span.smallResultKey').attr('data-version');
+					if (!version) {
+						var compareVersionHeader = $('th.comparingVersionName');
+						if (compareVersionHeader.length > 0) {
+							var index = $el.closest('td').index();
+							if (typeof index === 'number' && index > 0)
+								version = $(compareVersionHeader[index - 1]).text();
+						}
+					}
+					// Fallback: active passage's masterVersion
+					if (!version || typeof step.keyedVersions[version] !== "object") {
+						var passageContainer = $el.closest('.passageContainer');
+						if (passageContainer.length > 0) {
+							var passageId = passageContainer.attr('passage-id');
+							var model = step.passages.findWhere({ passageId: parseInt(passageId) });
+							if (model) version = model.get('masterVersion');
+						}
+					}
+					if (!version) version = '';
+					return { verse: verse, version: version };
+				},
+
+				"initSelectionTracking": function () {
+					var debounceTimer;
+					step.lastPassageSelection = null;
+					document.addEventListener('selectionchange', function () {
+						clearTimeout(debounceTimer);
+						debounceTimer = setTimeout(function () {
+							var sel = window.getSelection();
+							if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+								if (step.lastPassageSelection && !step.lastPassageSelection.deselectedAt)
+									step.lastPassageSelection.deselectedAt = Date.now();
+								return;
+							}
+							var range = sel.getRangeAt(0);
+							var startNode = range.startContainer;
+							var endNode = range.endContainer;
+							var startEl = (startNode.nodeType === 3) ? startNode.parentElement : startNode;
+							var endEl = (endNode.nodeType === 3) ? endNode.parentElement : endNode;
+							if (!startEl || $(startEl).closest('.passageContentHolder').length === 0) return;
+							var text = sel.toString().trim();
+							if (text.length === 0) return;
+							var startInfo = step.util.ui["getSelectionVerseInfo"](startEl);
+							var endInfo = step.util.ui["getSelectionVerseInfo"](endEl);
+							var allVersions = [];
+							var addVersionIfNeeded = function (version) {
+								if (version && allVersions.indexOf(version) === -1)
+									allVersions.push(version);
+							};
+							var rangeCommonAncestor = range.commonAncestorContainer;
+							if (rangeCommonAncestor && rangeCommonAncestor.nodeType === 3)
+								rangeCommonAncestor = rangeCommonAncestor.parentElement;
+							if (rangeCommonAncestor) {
+								$(rangeCommonAncestor).find('.verse, .singleVerse, .interlinear, .commentaryVerse').each(function () {
+									if (range.intersectsNode && !range.intersectsNode(this)) return;
+									var verseInfo = step.util.ui["getSelectionVerseInfo"](this);
+									addVersionIfNeeded(verseInfo.version);
+								});
+							}
+							addVersionIfNeeded(startInfo.version);
+							addVersionIfNeeded(endInfo.version);
+							step.lastPassageSelection = {
+								startVerse: startInfo.verse,
+								endVerse: endInfo.verse,
+								version: startInfo.version || endInfo.version,
+								versions: allVersions,
+								timestamp: Date.now(),
+								deselectedAt: null
+							};
+						}, 150);
+					});
+				},
+
 				getWordOrderSuffix: function (el, strongsSelectedByUser) {
 			var verseClass = $(el).closest('.verse');
 			if (verseClass.length == 0)

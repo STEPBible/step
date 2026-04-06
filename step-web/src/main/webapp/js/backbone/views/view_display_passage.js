@@ -51,7 +51,7 @@ var PassageDisplayView = DisplayView.extend({
                 ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
                 (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || 
                 (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf('NET2FULL') > -1) ||
-                (bibleVersions.indexOf('CUN') > -1) || (bibleVersions.indexOf('NIV_TAGGED'))))
+                (bibleVersions.indexOf('CUN') > -1) || (bibleVersions.indexOf('NIV_TAGGED') > -1)))
                 hasGreekMorph = true;
 
             if (availableOptions.indexOf('C') > -1) {

@@ -81,7 +81,8 @@ var SearchDisplayView = DisplayView.extend({
                 hasTOS = true;
             }
             if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
-                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || (bibleVersions.indexOf('CUN') > -1)  || (bibleVersions.indexOf('_MORPH') > -1)) hasNTMorph = true;
+                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) ||
+                (bibleVersions.indexOf('CUN') > -1)  || (bibleVersions.indexOf('NIV_TAGGED') > -1)) hasNTMorph = true;
             results = this.options.partRendered ? this.$el.find("> span") : this.renderSearch(append, this.$el.find(".searchResults"));
 
 			if (cv[C_colorCodeGrammarAvailableAndSelected]) {

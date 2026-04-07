@@ -147,7 +147,7 @@ public class SearchPageController extends HttpServlet {
     private void doRedirect(final HttpServletResponse response, final String oldReference, final String oldVersion) {
         try {
             response.setStatus(301);
-            response.setHeader("Location", String.format("http://%s/?q=%s", appManagerService.getAppDomain(), getUrlFragmentForPassage(oldVersion, oldReference)));
+            response.setHeader("Location", String.format("/?q=%s", getUrlFragmentForPassage(oldVersion, oldReference)));
             response.setHeader("Connection", "close");
         } catch (Exception ex) {
             LOGGER.error("Failed to operate redirect", ex);
@@ -157,7 +157,7 @@ public class SearchPageController extends HttpServlet {
     private void doRedirect(final HttpServletResponse response) {
         try {
             response.setStatus(302);
-            response.setHeader("Location", String.format("http://%s", appManagerService.getAppDomain()));
+            response.setHeader("Location", "/");
             response.setHeader("Connection", "close");
         } catch (Exception ex) {
             LOGGER.error("Failed to operate redirect", ex);

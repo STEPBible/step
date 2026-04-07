@@ -37,6 +37,23 @@ var PassageDisplayView = DisplayView.extend({
             var bibleVersions = version.toUpperCase() + "," + extraVersions.toUpperCase();
             var r = step.util.getTestamentAndPassagesOfTheReferences(reference.split(" "));
             var justLoadedTOS = false;
+            if (r[1]) { // r[1] is a boolean for reference OT
+                if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) ||
+                    (bibleVersions.indexOf('OHB') > -1) || (bibleVersions.indexOf('NASB2020') > -1) ||
+                    (bibleVersions.indexOf('NET2FULL') > -1) || (bibleVersions.indexOf("CUN") > -1)) {                   
+                    justLoadedTOS = step.util.loadTOS();
+                    hasTOS = true;
+                }
+                if (bibleVersions.indexOf('LXX') > -1)
+                    hasGreekMorph = true;
+            }
+            if ((r[0]) && // r[0] is a boolean for references with NT
+                ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
+                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || 
+                (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf('NET2FULL') > -1) ||
+                (bibleVersions.indexOf('CUN') > -1) || (bibleVersions.indexOf('NIV_TAGGED') > -1)))
+                hasGreekMorph = true;
+
             if (availableOptions.indexOf('C') > -1) {
                 $('#colorgrammar-icon').show();
                 if (options.indexOf("C") == -1) { // Color grammar not selected
@@ -46,22 +63,6 @@ var PassageDisplayView = DisplayView.extend({
                 $('#sideBargenderNumClrs').show();
                 $('#colorAdvancedConfig').show();
                 $('#noColorGrammar').hide();
-                if (r[1]) { // r[1] is a boolean for reference OT
-                    if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) ||
-                        (bibleVersions.indexOf('OHB') > -1) || (bibleVersions.indexOf('NASB2020') > -1) ||
-                        (bibleVersions.indexOf('NET2FULL') > -1) || (bibleVersions.indexOf("CUN") > -1)) {                   
-                        justLoadedTOS = step.util.loadTOS();
-                        hasTOS = true;
-                    }
-                    if (bibleVersions.indexOf('LXX') > -1)
-                        hasGreekMorph = true;
-                }
-                if ((r[0]) && // r[0] is a boolean for references with NT
-                    ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
-                    (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || 
-                    (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf('NET2FULL') > -1) ||
-                    (bibleVersions.indexOf('CUN') > -1)))
-                    hasGreekMorph = true;
             }
             else {
                 $('#colorgrammar-icon').hide();

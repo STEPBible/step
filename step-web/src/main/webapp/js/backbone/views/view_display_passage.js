@@ -35,25 +35,21 @@ var PassageDisplayView = DisplayView.extend({
             var version = this.model.get("masterVersion");
             var extraVersions = this.model.get("extraVersions");
             var bibleVersions = version.toUpperCase() + "," + extraVersions.toUpperCase();
-            var r = step.util.getTestamentAndPassagesOfTheReferences(reference.split(" "));
+            var [hasNT, hasOT] = step.util.getTestamentAndPassagesOfTheReferences(reference.split(" "));
             var justLoadedTOS = false;
-            if (r[1]) { // r[1] is a boolean for reference OT
-                if ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('THOT') > -1) ||
-                    (bibleVersions.indexOf('OHB') > -1) || (bibleVersions.indexOf('NASB2020') > -1) ||
-                    (bibleVersions.indexOf('NET2FULL') > -1) || (bibleVersions.indexOf("CUN") > -1)) {                   
+            var isGrammarInFirstVersion = this._biblesWithGrammar(version, hasNT, hasOT);
+            var isGrammarInSubsequentVersions = this._biblesWithGrammar(extraVersions, hasNT, hasOT);
+            if (hasOT) { 
+                if (isGrammarInFirstVersion || isGrammarInSubsequentVersions) {                   
                     justLoadedTOS = step.util.loadTOS();
                     hasTOS = true;
                 }
                 if (bibleVersions.indexOf('LXX') > -1)
                     hasGreekMorph = true;
             }
-            if ((r[0]) && // r[0] is a boolean for references with NT
-                ((bibleVersions.indexOf('ESV') > -1) || (bibleVersions.indexOf('KJV') > -1) ||
-                (bibleVersions.indexOf('SBLG') > -1) || (bibleVersions.indexOf('THGNT') > -1) || 
-                (bibleVersions.indexOf('NASB2020') > -1) || (bibleVersions.indexOf('NET2FULL') > -1) ||
-                (bibleVersions.indexOf('CUN') > -1) || (bibleVersions.indexOf('NIV_TAGGED') > -1)))
+            if (hasNT && (isGrammarInFirstVersion || isGrammarInSubsequentVersions))
                 hasGreekMorph = true;
-
+            $('#colorgrammar-icon').attr('title', 'Grammar');
             if (availableOptions.indexOf('C') > -1) {
                 $('#colorgrammar-icon').show();
                 if (options.indexOf("C") == -1) { // Color grammar not selected
@@ -65,7 +61,10 @@ var PassageDisplayView = DisplayView.extend({
                 $('#noColorGrammar').hide();
             }
             else {
-                $('#colorgrammar-icon').hide();
+                if (isGrammarInFirstVersion || isGrammarInSubsequentVersions)
+                    $('#colorgrammar-icon').show().attr('title', 'Color code grammar is available');
+                else
+                    $('#colorgrammar-icon').hide();
                 $('#sideBargenderNumClrs').hide();
                 $('#colorAdvancedConfig').hide();
                 $('#noColorGrammar').show();
@@ -235,7 +234,19 @@ var PassageDisplayView = DisplayView.extend({
                 }
             }
         },
-
+        _biblesWithGrammar: function(versions, isNT, isOT) {
+            var checkArrayBoth = ['ESV', 'NET2FULL', 'NASB2020', 'CUN'];
+            var checkArrayNT = ['NIV_TAGGED', 'KJV', 'THGNT', 'SBLG']; 
+            var checkArrayOT = ['THOT', 'OHB'];
+            var verArry = versions.split(",");
+            for (var i = 0; i < verArry.length; i++) {
+                if ((checkArrayBoth.includes(verArry[i])) ||
+                    (isNT && (checkArrayNT.includes(verArry[i]))) ||
+                    (isOT && (checkArrayOT.includes(verArry[i]))))
+                    return true;
+            }
+            return false;
+        },
         _addForeignLangToInterLinear: function () {
             var currentUserLang = step.userLanguageCode.toLowerCase();
             if (step.defaults.langWithTranslatedLex.indexOf(currentUserLang) > -1) {

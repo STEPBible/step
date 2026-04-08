@@ -1558,6 +1558,12 @@ step.util = {
             });
         },
         initSidebar: function (mode, data) { // Do not shorten name in pom.xml because it is called at start.jsp
+			if (mode === 'color') {
+				if ($('#colorgrammar-icon').attr('title') === 'Color code grammar is available') {
+					step.util.orderBibleButton('color');
+					return;
+				} 
+			}
 			$(".colorOffWarning").remove();
             require(["sidebar"], function (module) {
                 if (!data) {
@@ -4039,6 +4045,46 @@ step.util = {
         require(["menu_extras"], function () {
             new PickBibleView({model: step.settings, searchView: self});
         });
+    },
+	orderBibleButton: function (colorMode) {
+		if (colorMode !== 'color')
+			colorMode = "";
+        element = document.getElementById('orderVersionModal');
+        if (element) element.parentNode.removeChild(element);
+
+		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+		$('<div id="orderVersionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+				'<div class="modal-content stepModalFgBg">' +
+					'<style>' +
+						'#nestedVersion div, .nested-1 {' +
+							'margin-top: 5px;' +
+						'}' +
+						'.nested-1 {' +
+							'background-color: #e6e6e6;' +
+						'}' +
+					'</style>' +  
+					'<div class="modal-header">' +
+						step.util.modalCloseBtn(null, "userCloseVersionOrder") +
+					'</div>' +
+					'<div class="modal-body">' +
+						'<div id="sortVersionModal"></div>' +
+							'<div class="footer">' +
+								'<button id="updateVersionOrderButton" class="btn btn-default btn-xs closeModal stepButton pull-right" onclick=saveVersionOrder()><label>Update order</label></button>' +
+								'<br>' +
+							'</div>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+				'<script src="js/order_version.' + jsVersion + 'js"></script>' +
+				'<script src="libs/Sortable.min.js"></script>' +
+				'<script>' +
+					'$( document ).ready(function() {' +
+						'init_order_version("' + colorMode + '");' +
+					'});' +
+				'</script>' +
+			'</div>' +
+		'</div>').modal("show");;
     },
 	setClassicalUI: function (classicalUI) {
 		if (classicalUI) {

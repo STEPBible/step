@@ -56,10 +56,12 @@ var StepRouter = Backbone.Router.extend({
         else
             this.navigateSearch(searchParameters, skipQFilter, skipPage);
     },
-    navigateSearch: function (args, skipQFilter, skipPage) {
+    navigateSearch: function (args, skipQFilter, skipPage, requestedColor) {
         var activePassageId = step.util.activePassageId();
         var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
         var options = activePassageModel.get("selectedOptions") || "";
+        if ((requestedColor) && (options.indexOf('C') == -1))
+            options += 'C'; 
         var interlinearMode = activePassageModel.get("interlinearMode") || "";
         var pageNumber = activePassageModel.get("pageNumber");
         var context = activePassageModel.get("context");

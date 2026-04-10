@@ -1,7 +1,14 @@
 function init_order_version(mode) {
 
   var firstParagraph = (mode === 'color') ? 'To enable Color Code Grammar, update the display order by dragging a Bible with morphology (marked with a <span style="color:red;font-size=18px">*</span> character) to the top of the list of Bibles.' : __s.order_of_bible_displayed; 
-  var s = '<p class="col-12"dir="' + (step.state.isLtR() ? "ltr" : "rtl") + '">' + firstParagraph +
+  var s = 
+    '<svg style="display:none">' +
+      '<symbol id="dots6" style="fill:white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">' +
+        '<circle cx="3" cy="2" r="2"/><circle cx="8" cy="2" r="2"/>' +
+        '<circle cx="3" cy="7" r="2"/><circle cx="8" cy="7" r="2"/>' +
+        '<circle cx="3" cy="12" r="2"/><circle cx="8" cy="12" r="2"/>' +
+      '</symbol></svg>' +
+      '<p class="col-12"dir="' + (step.state.isLtR() ? "ltr" : "rtl") + '">' + firstParagraph +
     '<div id="nestedVersion" class="list-group col nested-sortable">';
   var intialsOfAllVersions = window.searchView._getCurrentInitials();
   beforeSort = [];
@@ -13,12 +20,9 @@ function init_order_version(mode) {
             ((step.keyedVersions[curVersion].hasMorphology && (mode === 'color')) ? '<span style="color:red;font-size:18px">*</span>' : '') +
             '<span> - ' + step.keyedVersions[curVersion].name + '</span>';
         }
-        s += '<div style="color:#FFFFFF;background-color:#3071A9;font-size:14px;padding:10px 5px 10px 15px;border-style:solid;" class="list-group-item nested-1">' + 
-        '<svg style="fill:white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" height="14px" width="12px" xml:space="preserve">' +
-        '<circle cx="3" cy="2" r="2"/><circle cx="8" cy="2" r="2"/>' +
-        '<circle cx="3" cy="7" r="2"/><circle cx="8" cy="7" r="2"/>' +
-        '<circle cx="3" cy="12" r="2"/><circle cx="8" cy="12" r="2"/></svg>' +
-        '&nbsp;&nbsp;' +
+        s += '<div style="color:#FFFFFF;background-color:#3071A9;font-size:14px;padding:10px 5px 10px 15px;border-style:solid;" class="list-group-item nested-1">' +
+          '<svg height="14px" width="12px" ><use href="#dots6" /></svg>' +
+          '&nbsp;&nbsp;' +
         curVersion +
           '<div class="list-group nested-sortable"></div></div>';
         beforeSort.push(curVersion);

@@ -41,16 +41,13 @@ var PassageDisplayView = DisplayView.extend({
             var justLoadedTOS = false;
             var isGrammarInFirstVersion = this._biblesWithGrammar(version, hasNT, hasOT);
             var isGrammarInSubsequentVersions = this._biblesWithGrammar(extraVersions, hasNT, hasOT);
-            if (hasOT) { 
-                if (isGrammarInFirstVersion || isGrammarInSubsequentVersions) {                   
+            if (isGrammarInFirstVersion || isGrammarInSubsequentVersions) {                   
+                if (hasOT) { 
                     justLoadedTOS = step.util.loadTOS();
                     hasTOS = true;
-                }
-                if (bibleVersions.indexOf('LXX') > -1)
+                if (hasNT || (bibleVersions.indexOf('LXX') > -1))
                     hasGreekMorph = true;
             }
-            if (hasNT && (isGrammarInFirstVersion || isGrammarInSubsequentVersions))
-                hasGreekMorph = true;
             $('#colorgrammar-icon').attr('title', 'Grammar');
             if (availableOptions.indexOf('C') > -1) {
                 $('#colorgrammar-icon').show();

@@ -45,6 +45,7 @@ var PassageDisplayView = DisplayView.extend({
                 if (hasOT) { 
                     justLoadedTOS = step.util.loadTOS();
                     hasTOS = true;
+                }
                 if (hasNT || (bibleVersions.indexOf('LXX') > -1))
                     hasGreekMorph = true;
             }

@@ -338,6 +338,17 @@
         step.passages.fetch();
         step.bookmarks = new HistoryModelList();
         step.bookmarks.fetch();
+        for (var i = step.bookmarks.length - 1; i > step.maxHistory - 20; i --) {
+            var oldBookMark = step.bookmarks.findWhere({id: step.bookmarks.localStorage.records[i] });
+            if (!oldBookMark.attributes.favourite)
+                oldBookMark.destroy();
+        }
+        for (_x in localStorage) { // Seems like the sidebar local storage does not need to be saved across a new browser session.
+            if (!localStorage.hasOwnProperty(_x))
+                continue;
+            if (_x.substring(0,7) === 'sidebar')
+                localStorage.removeItem(_x);
+        };
 
 
         //need to clean up passages... Ideally, by changing the values of passageIds to be 1,2,3,4,...

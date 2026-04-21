@@ -87,10 +87,10 @@ var ViewHistory = Backbone.View.extend({
         //count the number of bookmark items, and if too large, then get rid of them.
         var bookmarks = this.$el.find(".historyItem").not(":has([data-favourite='true'])");
         if (bookmarks.length > step.maxHistory) {
-            for (var i = bookmarks.length - 1; i > (step.maxHistory - 20); i --) {
+            for (var i = bookmarks.length - 1; (i > (step.maxHistory - 20)); i --) {
                 var lastBookmark = $(bookmarks[i]).data("item");
                 var bookmark = step.bookmarks.findWhere({ id: lastBookmark });
-                if(bookmark && !bookmark.attributes.favourite) //only delete if they are not marked as favourite
+                if(bookmark && (!bookmark.attributes.favourite)) //only delete if they are not marked as favourite
                     this.removeItem(bookmark);
             }
         }

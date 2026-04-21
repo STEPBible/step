@@ -238,7 +238,7 @@ var PassageDisplayView = DisplayView.extend({
             var checkArrayBoth = ['ESV', 'NET2FULL', 'NASB2020', 'CUN'];
             var checkArrayNT = ['NIV_TAGGED', 'KJV', 'THGNT', 'SBLG']; 
             var checkArrayOT = ['THOT', 'OHB'];
-            var verArry = versions.split(",");
+            var verArry = versions.toUpperCase().split(",");
             for (var i = 0; i < verArry.length; i++) {
                 if ((checkArrayBoth.includes(verArry[i])) ||
                     (isNT && (checkArrayNT.includes(verArry[i]))) ||

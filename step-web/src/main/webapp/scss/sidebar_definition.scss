@@ -3,7 +3,7 @@
 #lexicon {
   color: $text-color;
 
-  font-size: 14px;
+  font-size: var(--stepDefaultFontSize);
   font-family: $font-family-primary;
 
   h1,
@@ -13,17 +13,21 @@
     margin-bottom: 10px;
   }
 
+  > * {
+    font-size: 0.9333em;
+  }
+
   h1 {
     font-size: $chapter-title-size;
     margin-top: 0;
   }
 
   h2 {
-    font-size: 17px;
+    font-size: 1.1333em;
   }
 
   h3 {
-    font-size: 12px;
+    font-size: 0.8em;
     display: inline;
     &:after {
       content: ": ";

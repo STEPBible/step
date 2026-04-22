@@ -936,6 +936,8 @@ step.util = {
 					var fontInElements = element.find("." + fontArray[j]);
 					if (fontInElements.length > 0)
 						fontInElements.css("font-size", fontSize);
+					if ((fontArray[j] === "defaultfont") || ($(element).hasClass(fontArray[j])))
+						document.body.style.setProperty("--stepDefaultFontSize", fontSize + "px");
 				}
 			}
 		}
@@ -955,6 +957,7 @@ step.util = {
 
 		var fontArray = ["hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
 		currentFontSize = step.util.getFontSize(fontName, panelNumber, elements);
+		var newDefaultFontSize = undefined;
 		if (currentFontSize > 0) {
 			for (var i = 0; i < elements.length; i++) {
 				var fontNeedToRestoreSize = {};
@@ -977,6 +980,9 @@ step.util = {
 					}
 					if (fontName === "defaultfont") {
 						$(elements[i]).css("font-size", newFontSize);
+                                                if (typeof panelNumber !== "number") {
+                                                    document.body.style.setProperty("--stepDefaultFontSize", newFontSize + "px");
+                                                }
 						// restore font size of other fonts which are not defaultfont
 						// When the defaultfont size change, the other font size can be affected because 
 						// some font size (e.g. hbFont is 150%) of the default size.

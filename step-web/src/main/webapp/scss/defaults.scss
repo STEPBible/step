@@ -20,8 +20,19 @@ body {
   color: var(--clrText);
 }
 
-body, .dropdown-menu, #quickLexicon h1 {
+body, .dropdown-menu {
   font-size: $defaultFontSize;
+  --stepDefaultFontSize: $defaultFontSize;
+}
+
+#quickLexicon {
+  font-size: var(--stepDefaultFontSize);
+  > div {
+    font-size: 0.8em;
+  }
+  h1 {
+    font-size: 0.8em;
+  }
 }
 
 .dropdown-menu > li > a {

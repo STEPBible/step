@@ -340,7 +340,8 @@
         step.bookmarks.fetch();
         for (var i = step.bookmarks.length - 1; i > step.maxHistory - 20; i --) {
             var oldBookMark = step.bookmarks.findWhere({id: step.bookmarks.localStorage.records[i] });
-            if (!oldBookMark.attributes.favourite)
+            if ((typeof oldBookMark === "object") && (typeof oldBookMark.attributes === "object") &&
+                (typeof oldBookMark.attributes.favourite === "boolean") && (!oldBookMark.attributes.favourite))
                 oldBookMark.destroy();
         }
         for (_x in localStorage) { // Seems like the sidebar local storage does not need to be saved across a new browser session.

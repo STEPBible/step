@@ -345,19 +345,19 @@
                 oldBookMark.destroy();
         }
         var lsTotal = 0,
-            _x;
-        for (_x in localStorage) {
-            if (!localStorage.hasOwnProperty(_x)) {
+            curKey;
+        for (curKey in localStorage) {
+            if (!localStorage.hasOwnProperty(curKey))
                 continue;
-            }
-            lsTotal += ((localStorage[_x].length + _x.length) * 2);
+            lsTotal += ((localStorage[curKey].length + curKey.length) * 2);
         }
         if (lsTotal > 4000000) {
-            for (_x in localStorage) { // Seems like the sidebar and passage-search local storage do not need to be saved across a new browser session.
-                if (!localStorage.hasOwnProperty(_x))
+            console.log("Local storage size is greater than 4,000,000 bytes. Cleaning up sidebar* and passage-searches* local storage");
+            for (curKey in localStorage) { // Seems like the sidebar and passage-search local storage do not need to be saved across a new browser session.
+                if (!localStorage.hasOwnProperty(curKey))
                     continue;
-                if ((_x.substring(0,7) === 'sidebar') || (_x.substring(0,16) === 'passage-searches'))
-                    localStorage.removeItem(_x);
+                if ((curKey.substring(0,7) === 'sidebar') || (curKey.substring(0,16) === 'passage-searches'))
+                    localStorage.removeItem(curKey);
             }
         }
 

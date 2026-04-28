@@ -347,7 +347,7 @@
         for (_x in localStorage) { // Seems like the sidebar local storage does not need to be saved across a new browser session.
             if (!localStorage.hasOwnProperty(_x))
                 continue;
-            if (_x.substring(0,7) === 'sidebar')
+            if ((_x.substring(0,7) === 'sidebar') || (_x.substring(0,16) === 'passage-searches'))
                 localStorage.removeItem(_x);
         };
 

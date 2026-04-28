@@ -344,13 +344,22 @@
                 (typeof oldBookMark.attributes.favourite === "boolean") && (!oldBookMark.attributes.favourite))
                 oldBookMark.destroy();
         }
-        for (_x in localStorage) { // Seems like the sidebar local storage does not need to be saved across a new browser session.
-            if (!localStorage.hasOwnProperty(_x))
+        var lsTotal = 0,
+            _x;
+        for (_x in localStorage) {
+            if (!localStorage.hasOwnProperty(_x)) {
                 continue;
-            if ((_x.substring(0,7) === 'sidebar') || (_x.substring(0,16) === 'passage-searches'))
-                localStorage.removeItem(_x);
-        };
-
+            }
+            lsTotal += ((localStorage[_x].length + _x.length) * 2);
+        }
+        if (lsTotal > 4000000) {
+            for (_x in localStorage) { // Seems like the sidebar and passage-search local storage do not need to be saved across a new browser session.
+                if (!localStorage.hasOwnProperty(_x))
+                    continue;
+                if ((_x.substring(0,7) === 'sidebar') || (_x.substring(0,16) === 'passage-searches'))
+                    localStorage.removeItem(_x);
+            }
+        }
 
         //need to clean up passages... Ideally, by changing the values of passageIds to be 1,2,3,4,...
         //we reserve 0 for the first column

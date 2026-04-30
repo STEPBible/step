@@ -91,7 +91,7 @@ var SidebarView = Backbone.View.extend({
 				return;
 			}
             strong = step.util.fixStrongNumForVocabInfo(strong, false);
-            var callBackCreateDefParams = [ ref, allVersions, variant, morphCount ];
+            var callBackCreateDefParams = [ ref, allVersions, variant, morphCount, currentMorph ];
             var callBackLoadDefFromAPIParams = [ version, ref, strong, curMorphs, allVersions, variant, self.createDefinition, morphCount ]; 
             step.util.getVocabMorphInfoFromJson(strong, curMorphs, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
         }

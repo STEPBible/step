@@ -126,12 +126,12 @@ var SidebarView = Backbone.View.extend({
         var callBackCreateDef = parameters[6];
         var morphCount = parameters[7];
         $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-            callBackCreateDef(data, [ ref, allVersions, variant, morphCount ]);
+            callBackCreateDef(data, [ ref, allVersions, variant, morphCount, morph ]);
             //return false;
         }).error(function() {
             if (changeBaseURL())
                 $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-                    callBackCreateDef(data, [ ref, allVersions, variant, morphCount ]);
+                    callBackCreateDef(data, [ ref, allVersions, variant, morphCount, morph ]);
                 })
         });
         //return false;
@@ -202,9 +202,11 @@ var SidebarView = Backbone.View.extend({
         var allVersions = parameters[1];
         var variant = parameters[2];
         var morphCount = parameters[3];
+        var morphCode = parameters[4];
         var allMorphsForBackButton;
         var allStrongsForBackButton;
 
+        console.log("morphCode: " + morphCode);
         if (!Array.isArray(variant)) variant = [""]; // Initialize in case it is not.
         //get definition tab
 

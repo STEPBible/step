@@ -819,6 +819,11 @@ step.util = {
         new PassageMenuView({
             model: step.util.activePassage()
         });
+        if (typeof PassageCopyMenuView === "function") {
+            new PassageCopyMenuView({
+                model: step.util.activePassage()
+            });
+        }
 
         Backbone.Events.trigger("columnsChanged", {});
         return newPassageId;
@@ -1821,6 +1826,109 @@ step.util = {
 					return [verse, version];
 				},
 
+				"getSelectionVerseInfo": function (el) {
+					var $el = $(el);
+					var verse = '';
+					var version = '';
+
+					// Standard Bible: <div class="verse"> > <a class="verseLink">
+					verse = $($el.closest("div.verse").find('a.verseLink')[0]).attr('name');
+					// Interleaved comparison: <div class="verseGrouping">
+					if (!verse) verse = $el.closest(".verseGrouping").find(".heading .verseLink").attr("name");
+					// Interlinear: <span class="interlinear">
+					if (!verse) verse = $el.closest(".verse, .interlinear").find(".verseLink").attr("name");
+					// Commentary: <span class="commentaryVerse"> > <a name="...">
+					if (!verse) {
+						var commentaryVerse = $el.closest(".commentaryVerse");
+						if (commentaryVerse.length > 0)
+							verse = commentaryVerse.find('a[name]').first().attr('name');
+					}
+
+					if (!verse) verse = '';
+					// Handle space-separated OSIS IDs (e.g., "Gen.1.1 Gen.1.2")
+					if (verse.indexOf(' ') > -1) verse = verse.split(' ')[0];
+
+					// Version detection (same logic as getVerseNumberAndVersion)
+					version = $el.closest("div.verse").parent().find('span.smallResultKey').attr('data-version') ||
+						$el.closest(".singleVerse").find('span.smallResultKey').attr('data-version');
+					if (!version) {
+						var compareVersionHeader = $('th.comparingVersionName');
+						if (compareVersionHeader.length > 0) {
+							var index = $el.closest('td').index();
+							if (typeof index === 'number' && index > 0)
+								version = $(compareVersionHeader[index - 1]).text();
+						}
+					}
+					// Fallback: active passage's masterVersion
+					if (!version || typeof step.keyedVersions[version] !== "object") {
+						var passageContainer = $el.closest('.passageContainer');
+						if (passageContainer.length > 0) {
+							var passageId = passageContainer.attr('passage-id');
+							var model = step.passages.findWhere({ passageId: parseInt(passageId) });
+							if (model) version = model.get('masterVersion');
+						}
+					}
+					if (!version) version = '';
+					return { verse: verse, version: version };
+				},
+
+				"initSelectionTracking": function () {
+					var debounceTimer;
+					step.lastPassageSelection = null;
+					document.addEventListener('selectionchange', function () {
+						clearTimeout(debounceTimer);
+						debounceTimer = setTimeout(function () {
+							var sel = window.getSelection();
+							if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+								// Copy-dropdown gate: when a dropdown is open, clicks inside
+								// it collapse the native selection. Don't flip deselectedAt,
+								// or the 5s grace window will drop us out of selection mode.
+								if (step.copyDropdown && step.copyDropdown.shouldSuppressCollapseEvent && step.copyDropdown.shouldSuppressCollapseEvent())
+									return;
+								if (step.lastPassageSelection && !step.lastPassageSelection.deselectedAt)
+									step.lastPassageSelection.deselectedAt = Date.now();
+								return;
+							}
+							var range = sel.getRangeAt(0);
+							var startNode = range.startContainer;
+							var endNode = range.endContainer;
+							var startEl = (startNode.nodeType === 3) ? startNode.parentElement : startNode;
+							var endEl = (endNode.nodeType === 3) ? endNode.parentElement : endNode;
+							if (!startEl || $(startEl).closest('.passageContentHolder').length === 0) return;
+							var text = sel.toString().trim();
+							if (text.length === 0) return;
+							var startInfo = step.util.ui["getSelectionVerseInfo"](startEl);
+							var endInfo = step.util.ui["getSelectionVerseInfo"](endEl);
+							var allVersions = [];
+							var addVersionIfNeeded = function (version) {
+								if (version && allVersions.indexOf(version) === -1)
+									allVersions.push(version);
+							};
+							var rangeCommonAncestor = range.commonAncestorContainer;
+							if (rangeCommonAncestor && rangeCommonAncestor.nodeType === 3)
+								rangeCommonAncestor = rangeCommonAncestor.parentElement;
+							if (rangeCommonAncestor) {
+								$(rangeCommonAncestor).find('.verse, .singleVerse, .interlinear, .commentaryVerse').each(function () {
+									if (range.intersectsNode && !range.intersectsNode(this)) return;
+									var verseInfo = step.util.ui["getSelectionVerseInfo"](this);
+									addVersionIfNeeded(verseInfo.version);
+								});
+							}
+							addVersionIfNeeded(startInfo.version);
+							addVersionIfNeeded(endInfo.version);
+							step.lastPassageSelection = {
+								startVerse: startInfo.verse,
+								endVerse: endInfo.verse,
+								version: startInfo.version || endInfo.version,
+								versions: allVersions,
+								textLength: text.length,
+								timestamp: Date.now(),
+								deselectedAt: null
+							};
+						}, 150);
+					});
+				},
+
 				getWordOrderSuffix: function (el, strongsSelectedByUser) {
 			var verseClass = $(el).closest('.verse');
 			if (verseClass.length == 0)
@@ -2492,45 +2600,14 @@ step.util = {
 			step.util.blockBackgroundScrolling("passageSelectionModal");
   },
 
-  copyModal: function () { // Do not shorten name in pom.xml because it is called at start.jsp
-    var element = document.getElementById('copyModal');
-    if (element) element.parentNode.removeChild(element);
-    $("div.modal-backdrop.in").remove();
-		var modalHTML = '<div id="copyModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-			'<div class="modal-dialog">' +
-				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
-					'<div class="modal-header">' +
-						'<span class="pull-right">' +
-							step.util.modalCloseBtn("copyModal") +
-							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
-						'</span>'+
-					'</div>';
-		modalHTML +=
-					'<div id="selectversionstocopy" class="modal-body" style="padding-bottom:0"></div>' +
-					'<div id="bookchaptermodalbody" class="modal-body"></div>';
-		modalHTML +=
-					'<div class="footer" id="copyModalFooter">' +
-						'<div id="includeNotes" style="display:none">' +
-							'<span>&nbsp;&nbsp;<b>Include notes</b>&nbsp;</span>' +
-							'<input type="checkbox" id="selectnotes"/>' +
-						'</div>' +
-						'<div id="includeXRefs" style="display:none">' +
-							'<span>&nbsp;&nbsp;<b>Include cross references</b>&nbsp;</span>' +
-							'<input type="checkbox" id="selectxref"/>' +
-						'</div>' +
-						'<br>' +
-					'</div>' +
-					'<script>' +
-						'$(document).ready(function () {' +
-							'step.copyText.initVerseSelect();' +
-						'});' +
-					'</script>' +
-				'</div>' +
-			'</div>' +
-		'</div>';
-		$(_.template(modalHTML)()).modal("show");
-		step.util.blockBackgroundScrolling("copyModal");
-	},
+  copyModal: function () { // Do not shorten name in pom.xml — still called from start.jsp hrefs
+    // Legacy entry point (navbar #copy-icon). Forwards to the active panel's
+    // copy dropdown. Kept for backward compatibility with any bookmarked /
+    // external JS that invokes step.util.copyModal().
+    var activePanelId = step.util.activePassageId();
+    var $toggle = step.util.getPassageContainer(activePanelId).find(".copyDropdownToggle");
+    if ($toggle.length) $toggle[0].click(); // our view's click handler catches this
+  },
 
 	lexFeedbackModal: function (strongNum, ref, version) { 
     	var element = document.getElementById('lexFeedbackModal');
@@ -4213,7 +4290,7 @@ step.util = {
 			'left', 499, 'step.multiVersionCount');
 	},
 	closeModal: function (modalID) {
-		var modalsRequireUnfreezeOfScroll = " showLongAlertModal showBookOrChapterSummaryModal grammarClrModal passageSelectionModal searchSelectionModal copyModal videoModal fontSettings raiseSupport aboutModal bibleVersions ";
+		var modalsRequireUnfreezeOfScroll = " showLongAlertModal showBookOrChapterSummaryModal grammarClrModal passageSelectionModal searchSelectionModal videoModal fontSettings raiseSupport aboutModal bibleVersions ";
 		if ((modalsRequireUnfreezeOfScroll.indexOf( " " + modalID + " ") > -1) && step.touchDevice && !step.touchWideDevice)
 			$("body").css("overflow-y","auto"); // let the body (web page) scroll
 		if (modalID === "bibleVersions")

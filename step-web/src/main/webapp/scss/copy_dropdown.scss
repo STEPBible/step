@@ -1,0 +1,323 @@
+@import 'template_variables';
+
+.copyDropdown {
+  display: inline-block;
+
+  .copyDropdownToggle {
+    cursor: pointer;
+    color: $text-color;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+      background-color: $secondaryHoverColour;
+      color: black;
+    }
+  }
+
+  .copyMenu {
+    min-width: 280px;
+    max-width: 420px;
+    padding: 8px;
+    font-size: 14px;
+
+    .copyMenuHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+
+      h2 {
+        font-size: 14px;
+        margin: 0;
+      }
+
+      .copyCloseBtn {
+        background: transparent;
+        border: 0;
+        font-size: 18px;
+        line-height: 1;
+        padding: 2px 6px;
+        cursor: pointer;
+        color: inherit;
+
+        &:hover,
+        &:focus {
+          background-color: $secondaryHoverColour;
+          outline: none;
+        }
+
+        &[disabled] {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .copyStatusRow {
+      margin: 4px 0 8px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      background-color: var(--clr2ndHover);
+
+      &:empty {
+        display: none;
+      }
+
+      &.copyStatus--success {
+        background-color: #dff0d8;
+        color: #3c763d;
+      }
+
+      &.copyStatus--error,
+      &.copyStatus--clipboard-denied,
+      &.copyStatus--copy-error,
+      &.copyStatus--ajax-error,
+      &.copyStatus--stale-passage {
+        background-color: #f2dede;
+        color: #a94442;
+      }
+
+      &.copyStatus--cooldown,
+      &.copyStatus--rapid-warning {
+        background-color: #fcf8e3;
+        color: #8a6d3b;
+      }
+
+      &.copyStatus--unresolved,
+      &.copyStatus--no-versions {
+        background-color: #d9edf7;
+        color: #31708f;
+      }
+    }
+
+    .copySelectionRow {
+      margin: 4px 0 12px;
+
+      .copyPickDifferent {
+        background: transparent;
+        border: 0;
+        color: $text-color;
+        cursor: pointer;
+        padding: 6px 0 0;
+        font-size: 12px;
+        text-decoration: underline;
+
+        &:hover,
+        &:focus {
+          color: black;
+        }
+      }
+    }
+
+    .copyOptionsStrip {
+      margin: 6px 0;
+
+      .copyVersions {
+        border: 0;
+        margin: 0 0 6px;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 10px;
+
+        legend {
+          border: 0;
+          margin: 0 0 4px;
+          padding: 0;
+          font-size: 12px;
+          font-weight: 600;
+          width: 100%;
+        }
+
+        label {
+          font-weight: normal;
+          margin: 0;
+          white-space: nowrap;
+        }
+
+        input[type="checkbox"] {
+          margin-right: 4px;
+          vertical-align: middle;
+        }
+      }
+
+      .copyToggleRow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 14px;
+
+        label {
+          font-weight: normal;
+          margin: 0;
+          white-space: nowrap;
+
+          input[type="checkbox"] {
+            margin-right: 4px;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+
+    .copyMenuFooter {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .copyPrimaryBtn {
+      display: inline-block;
+      padding: 6px 12px;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+      background-color: var(--clrBackground);
+      color: $text-color;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+
+      &:hover:not([disabled]),
+      &:focus:not([disabled]) {
+        background-color: $secondaryHoverColour;
+        color: black;
+        outline: none;
+      }
+
+      &[disabled],
+      &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+    }
+
+    .copySelectionPrimary {
+      width: 100%;
+      text-align: center;
+    }
+
+    // Grid-mode footer buttons + selection-mode primary inherit the
+    // .copyPrimaryBtn boxed look (border, radius, padding, hover) — only
+    // the resting color is overridden to match the .argSelect panel-bar
+    // buttons (bible / reference / search). Hover (.copyPrimaryBtn:hover)
+    // flips to black, disabled (.copyPrimaryBtn[disabled]) fades via
+    // opacity. Same SCSS specificity (0,3,0); placed after .copyPrimaryBtn
+    // in source order.
+    .copySelectionPrimary,
+    .copyGridPrimary,
+    .copyBackToSelection {
+      color: $strong-color;
+      color: var(--clrStrongText);
+    }
+
+    .copyGridSection {
+      margin-top: 6px;
+
+      .copyGridChapterLabel {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 0;
+        position: sticky;
+        top: 0;
+        background-color: var(--clrBackground);
+        z-index: 1;
+      }
+
+      .copyGridScroller {
+        overflow-y: auto;
+        max-height: 380px;
+        border: 1px solid $border-color;
+        border-radius: 3px;
+      }
+
+      .copyGrid {
+        width: 100%;
+        border-collapse: collapse;
+
+        td {
+          padding: 0;
+          text-align: center;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+      }
+
+      .copyGridCell {
+        display: block;
+        width: 100%;
+        padding: 5px 2px;
+        cursor: pointer;
+        color: $text-color;
+        font-size: 13px;
+        touch-action: manipulation;
+        background: transparent;
+        border: 0;
+        border-radius: 2px;
+        text-align: center;
+        font-family: inherit;
+        line-height: 1.2;
+
+        &:hover,
+        &:focus {
+          background-color: $secondaryHoverColour;
+          color: black;
+          outline: none;
+        }
+
+        &[data-role="start"],
+        &[data-role="end"] {
+          background-color: #337ab7;
+          color: white;
+          font-weight: 600;
+        }
+
+        &[data-role="in-range"] {
+          background-color: #d9edf7;
+          color: #31708f;
+        }
+
+        &[aria-disabled="true"],
+        &.copyGridCell--gap {
+          opacity: 0.3;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    .copyMenu {
+      position: fixed;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      top: auto;
+      max-width: none;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copyMenu,
+    .copyGridCell {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+[dir='rtl'] .copyDropdown .copyMenu {
+  text-align: right;
+}
+
+@media print {
+  .copyDropdown {
+    display: none !important;
+  }
+}

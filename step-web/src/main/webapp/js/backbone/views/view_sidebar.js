@@ -206,7 +206,6 @@ var SidebarView = Backbone.View.extend({
         var allMorphsForBackButton;
         var allStrongsForBackButton;
 
-        console.log("morphCode: " + morphCode);
         if (!Array.isArray(variant)) variant = [""]; // Initialize in case it is not.
         //get definition tab
 
@@ -250,8 +249,8 @@ var SidebarView = Backbone.View.extend({
         // need to handle multiple morphInfo (array)
         if ((lastMorphCode != '') && (data.morphInfos.length == 0) && (lastMorphCode.indexOf('TOS:') == 0))
             data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
-        if (data.vocabInfos.length > 1) {
-            //multiple entries
+        if (data.vocabInfos.length > 1) { //multiple entries
+            var morphCodes = morphCode.split(" ");
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
             for (var i = data.vocabInfos.length - 1; i > -1 ; i--) {
                 var item = data.vocabInfos[i];
@@ -282,8 +281,13 @@ var SidebarView = Backbone.View.extend({
                 if (i < data.morphInfos.length)
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
-                if (i < data.morphInfos.length)
-                    this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
+                if (i < data.morphInfos.length) {
+                    var curMorph = "";
+                    if (i < morphCodes.length) {
+                        curMorph = morphCodes[i];
+                    }
+                    this._createMorphInfo(panelBody, data.morphInfos[i], headerType, strong, curMorph);
+                }
                 this._appendAltMorphologiesLink(panelBody);
                 panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     'Report lexicon issues' +
@@ -321,7 +325,7 @@ var SidebarView = Backbone.View.extend({
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0], morphCount, ref, data.vocabInfos[0].strongNumber);
             this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
             if (data.morphInfos.length > 0)
-                this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
+                this._createMorphInfo(panelBody, data.morphInfos[0], headerType, data.vocabInfos[0].strongNumber, morphCode);
             this._appendAltMorphologiesLink(panelBody);
             panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + data.vocabInfos[0].strongNumber
             + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
@@ -1130,7 +1134,7 @@ var SidebarView = Backbone.View.extend({
             panel.append(" ");
         }
     },
-    _createMorphInfo: function (panel, info, headerType) {
+    _createMorphInfo: function (panel, info, headerType, strong, morphCode) {
         if (typeof info === "undefined") {
             panel.append("<br />");
             return;
@@ -1168,6 +1172,27 @@ var SidebarView = Backbone.View.extend({
         if (info["description"] != undefined)
             panel.append($("<span class='GrammarInfo' style='font-weight:bold;display:none'>").append(__s.lexicon_eg + ": "))
                 .append($("<span class='GrammarInfo' style='display:none'>").append(this.replaceEmphasis(info["description"])));
+        if ((strong.substring(0, 1) === "G" ) && (morphCode !== "")) {
+            if (isNaN(strong.slice(-1))) {
+                console.log("found strong "+ strong);
+                strong = strong.slice(0, -1);
+            }
+            panel.append($("<span class='GrammarInfo' id='altMorph_" + strong + "_" + morphCode + "'>"));
+            $.getJSON('/html/json/J_AppsJson/AltMorph/' + strong + '.json', function(data) {
+                console.log('data: ' + data);
+                console.log('data2: ' + data[morphCode ]);
+                if (typeof data[morphCode] !== "string" || data[morphCode] === "")
+                    return;
+                var altMorphSpan = $('#altMorph_' + strong + "_" + morphCode);
+                if (altMorphSpan.text() !== "")
+                    return;
+                var altMorphUrl = "https://www.perseus.tufts.edu/hopper/morph?l=" + encodeURIComponent(data[morphCode]) + "&la=greek";
+                altMorphSpan.append("<br>");
+                altMorphSpan.append($("<a target='_blank' rel='noopener noreferrer'>")
+                        .attr("href", altMorphUrl)
+                        .text("Check Alternative Morphologies"));
+            });
+        }
     },
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {

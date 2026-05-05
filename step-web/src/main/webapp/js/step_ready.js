@@ -344,7 +344,7 @@
             var deletedCount = 0;
             for (var j = sortedIndex.length - 1; j > 0; j--) {
                 if ((sortedIndex[j] < 0) || (sortedIndex[j] >= step.bookmarks.length)) {
-                    console.log("The sorted history index is wrong!")
+                    console.log("The sorted history index is wrong: " + sortedIndex[j]);
                     continue; // index is wrong, skip it to avoid an exception
                 }
                 var histItem = step.bookmarks.models[sortedIndex[j]];
@@ -354,7 +354,7 @@
                     histItem.destroy();
                     deletedCount ++
                 }
-                if (deletedCount > 19)
+                if (deletedCount > 19) // Delete 20 at a time.
                     break;
             }
         }
@@ -559,7 +559,7 @@
                     var mostRecentPassage = "";
                     for (var i = 0; i < sortedIndex.length && mostRecentPassage === ""; i++) {
                         if ((sortedIndex[i] < 0) || (sortedIndex[i] >= history.length)) {
-                            console.log("The sorted history index is wrong!")
+                            console.log("The sorted history index is wrong: " + sortedIndex[i]);
                             continue; // index is wrong, skip it to avoid an exception
                         }
                         var histItem = history.at(sortedIndex[i]);

@@ -469,29 +469,29 @@
         var historyOfReferencesIndex = 0;
         for (var histIndex = 0; histIndex < history.length; histIndex ++) {
             var histItem = history.at(histIndex);
-            if ((typeof histItem === "object") &&
-                (typeof histItem.get === "function")) {
-                var histItemLastAccess = histItem.get("lastAccessed");
-                if (typeof histItemLastAccess !== "number")
-                    continue;
-                if (historyOfReferencesIndex == 0) { // insertion sort should be quite efficient because the history is usually sorted already.
-                    sortedHistoryTimeStamps[0] = histItemLastAccess;
-                    sortedHistoryIndexes[0] = histIndex;    
-                }
-                else { // part of the insertion sort
-                    var j = historyOfReferencesIndex - 1;
-                    while (j > -1 && sortedHistoryTimeStamps[j] < histItemLastAccess) {
-                        sortedHistoryTimeStamps[j + 1] = sortedHistoryTimeStamps[j];
-                        sortedHistoryIndexes[j + 1] = sortedHistoryIndexes[j];
-                        j = j - 1;
-                    }
-                    sortedHistoryTimeStamps[j + 1] = histItemLastAccess;
-                    sortedHistoryIndexes[j + 1] = histIndex;
-                }
-                historyOfReferencesIndex ++;
+            if ((typeof histItem !== "object") ||
+                (typeof histItem.get !== "function"))
+                continue;
+            var histItemLastAccess = histItem.get("lastAccessed");
+            if (typeof histItemLastAccess !== "number")
+                continue;
+            if (historyOfReferencesIndex == 0) { // 1st part of insertion sort should be quite efficient because the history is usually sorted already.
+                sortedHistoryTimeStamps[0] = histItemLastAccess;
+                sortedHistoryIndexes[0] = histIndex;    
             }
+            else { // 2nd part of the insertion sort
+                var j = historyOfReferencesIndex - 1;
+                while (j > -1 && sortedHistoryTimeStamps[j] < histItemLastAccess) {
+                    sortedHistoryTimeStamps[j + 1] = sortedHistoryTimeStamps[j];
+                    sortedHistoryIndexes[j + 1] = sortedHistoryIndexes[j];
+                    j = j - 1;
+                }
+                sortedHistoryTimeStamps[j + 1] = histItemLastAccess;
+                sortedHistoryIndexes[j + 1] = histIndex;
+            }
+            historyOfReferencesIndex ++;
         }
-        sortedHistoryIndexes.length = historyOfReferencesIndex;
+        sortedHistoryIndexes.length = historyOfReferencesIndex; // if size of array has changed, update size
         return sortedHistoryIndexes;
     }
     function checkForExampleURL() {
@@ -599,7 +599,7 @@
                                         var histItemDisplay = histItem.get("display") || "";
                                         if ((typeof histItemOptions === "string") && (typeof histItemDisplay === "string")) {
                                             step.router.doMasterSearch(version + URL_SEPARATOR + query, histItemOptions, histItemDisplay);
-                                            break; // break from for loop.  This line should not be necessary because doMasterSearch should not return.  Just in case it returns.
+                                            break; // break from for loop
                                         }
                                     }
                                 }

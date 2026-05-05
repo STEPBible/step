@@ -338,22 +338,35 @@
         step.passages.fetch();
         step.bookmarks = new HistoryModelList();
         step.bookmarks.fetch();
-        for (var i = step.bookmarks.length - 1; i > step.maxHistory - 20; i --) {
-            var oldBookMark = step.bookmarks.findWhere({id: step.bookmarks.localStorage.records[i] });
-            if ((typeof oldBookMark === "object") && (typeof oldBookMark.attributes === "object") &&
-                (typeof oldBookMark.attributes.favourite === "boolean") && (!oldBookMark.attributes.favourite))
-                oldBookMark.destroy();
+        if ((step.bookmarks.length > step.maxHistory - 20) &&
+            (typeof step.bookmarks.models === "object")) {
+            var sortedIndex = getSortedHistoryIndex(step.bookmarks);
+            var deletedCount = 0;
+            for (var j = sortedIndex.length - 1; j > 0; j--) {
+                if ((sortedIndex[j] < 0) || (sortedIndex[j] >= step.bookmarks.length)) {
+                    console.log("The sorted history index is wrong!")
+                    continue; // index is wrong, skip it to avoid an exception
+                }
+                var histItem = step.bookmarks.models[sortedIndex[j]];
+                if ((typeof histItem === "object") &&
+                    (typeof histItem.get === "function") &&
+                    (histItem.get("favourite") === false)) {
+                    histItem.destroy();
+                    deletedCount ++
+                }
+                if (deletedCount > 19)
+                    break;
+            }
         }
-        var lsTotal = 0,
-            curKey;
-        for (curKey in localStorage) {
+        var lsTotal = 0;
+        for (var curKey in localStorage) {
             if (!localStorage.hasOwnProperty(curKey))
                 continue;
             lsTotal += ((localStorage[curKey].length + curKey.length) * 2);
         }
         if (lsTotal > 4000000) {
             console.log("Local storage size is greater than 4,000,000 bytes. Cleaning up sidebar* and passage-searches* local storage");
-            for (curKey in localStorage) { // Seems like the sidebar and passage-search local storage do not need to be saved across a new browser session.
+            for (var curKey in localStorage) { // Seems like the sidebar and passage-search local storage do not need to be saved across a new browser session.
                 if (!localStorage.hasOwnProperty(curKey))
                     continue;
                 if ((curKey.substring(0,7) === 'sidebar') || (curKey.substring(0,16) === 'passage-searches'))
@@ -448,7 +461,39 @@
 		step.util.localStorageSetItem("step.showICCAnnounce", stepICCAnnounceCount);
         $("#stepDisclaimer").popover();
     }
-
+    function getSortedHistoryIndex (history) {
+        var sortedHistoryIndexes = Array(history.length).fill(-1);
+        if (history.length == 0)
+            return sortedHistoryIndexes;
+        var sortedHistoryTimeStamps = Array(history.length).fill(0);
+        var historyOfReferencesIndex = 0;
+        for (var histIndex = 0; histIndex < history.length; histIndex ++) {
+            var histItem = history.at(histIndex);
+            if ((typeof histItem === "object") &&
+                (typeof histItem.get === "function")) {
+                var histItemLastAccess = histItem.get("lastAccessed");
+                if (typeof histItemLastAccess !== "number")
+                    continue;
+                if (historyOfReferencesIndex == 0) { // insertion sort should be quite efficient because the history is usually sorted already.
+                    sortedHistoryTimeStamps[0] = histItemLastAccess;
+                    sortedHistoryIndexes[0] = histIndex;    
+                }
+                else { // part of the insertion sort
+                    var j = historyOfReferencesIndex - 1;
+                    while (j > -1 && sortedHistoryTimeStamps[j] < histItemLastAccess) {
+                        sortedHistoryTimeStamps[j + 1] = sortedHistoryTimeStamps[j];
+                        sortedHistoryIndexes[j + 1] = sortedHistoryIndexes[j];
+                        j = j - 1;
+                    }
+                    sortedHistoryTimeStamps[j + 1] = histItemLastAccess;
+                    sortedHistoryIndexes[j + 1] = histIndex;
+                }
+                historyOfReferencesIndex ++;
+            }
+        }
+        sortedHistoryIndexes.length = historyOfReferencesIndex;
+        return sortedHistoryIndexes;
+    }
     function checkForExampleURL() {
         var urlVars = $.getUrlVars();
         var debugParam = (urlVars.indexOf("debug") > -1) ? "&debug" : "";
@@ -510,10 +555,14 @@
                 var history = new HistoryModelList;
                 if (typeof history === "object") {
                     history.fetch();
-                    var histIndex = 0;
+                    var sortedIndex = getSortedHistoryIndex(history);
                     var mostRecentPassage = "";
-                    while (histIndex < history.length && mostRecentPassage === "") {
-                        var histItem = history.at(histIndex);
+                    for (var i = 0; i < sortedIndex.length && mostRecentPassage === ""; i++) {
+                        if ((sortedIndex[i] < 0) || (sortedIndex[i] >= history.length)) {
+                            console.log("The sorted history index is wrong!")
+                            continue; // index is wrong, skip it to avoid an exception
+                        }
+                        var histItem = history.at(sortedIndex[i]);
                         if (typeof histItem === "object") {
                             var histItemArgs = histItem.get("args");
                             if (typeof histItemArgs === "string") {
@@ -548,13 +597,14 @@
                                     if (version !== "" && query !== "") {
                                         var histItemOptions = histItem.get("options") || "";
                                         var histItemDisplay = histItem.get("display") || "";
-                                        if ((typeof histItemOptions === "string") && (typeof histItemDisplay === "string"))
+                                        if ((typeof histItemOptions === "string") && (typeof histItemDisplay === "string")) {
                                             step.router.doMasterSearch(version + URL_SEPARATOR + query, histItemOptions, histItemDisplay);
+                                            break; // break from for loop.  This line should not be necessary because doMasterSearch should not return.  Just in case it returns.
+                                        }
                                     }
                                 }
                             }
                         }
-                        ++histIndex;
                     }
                 }
             }

@@ -88,6 +88,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(OriginalWordSuggestionService.class).to(OriginalWordSuggestionServiceImpl.class);
         bind(SupportRequestService.class).to(SupportRequestServiceImpl.class);
         bind(JSwordRelatedVersesService.class).to(JSwordRelatedVersesServiceImpl.class);
+        bind(SemanticRelatedVersesService.class).to(SemanticRelatedVersesServiceImpl.class).asEagerSingleton();
                 
         bind(new TypeLiteral<List<String>>() {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);

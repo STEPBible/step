@@ -20,6 +20,7 @@ NAVE_SEARCH = "nave";
 NAVE_SEARCH_EXTENDED = "xnave";
 TOPIC_BY_REF = "topicref";
 RELATED_VERSES = "relatedrefs";
+RELATED_VERSES_SEMANTIC = "relatedrefsSemantic";
 EXACT_FORM = "exactForm";
 REF_VERSION = "ESV";
 VOCAB_SORT = "VOCABULARY";

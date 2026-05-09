@@ -31,6 +31,11 @@ public enum SearchType {
      * Finds all verses that are related to another verse
      */
     RELATED_VERSES("verse_related"),
+    /**
+     * Semantic related-verses lookup. Internal dispatch only — normalized to
+     * RELATED_VERSES on the wire by SearchServiceImpl#getBestSearchType.
+     */
+    RELATED_VERSES_SEMANTIC("verse_related"),
 
     /** A timeline description search */
     TIMELINE_DESCRIPTION("search_timeline"),

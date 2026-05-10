@@ -1165,7 +1165,7 @@ public class SearchServiceImpl implements SearchService {
         if (total == 0) return emptyRelatedVersesResult(sq);
 
         final SearchResult result = this.jswordSearch.getResultsFromTrimmedKeys(
-                sq, new String[]{version}, total, ordered, "");
+                sq, curr.getVersions(), total, ordered, "");
         result.setQuery(sq.getOriginalQuery());
         return result;
     }

@@ -1364,7 +1364,7 @@ step.util = {
                     source = __s.verse_related;
                     break;
                 case RELATED_VERSES_SEMANTIC:
-                    source = __s.verse_related_semantic;
+                    source = "Related verses (meaning)";
                     break;
                 case TOPIC_BY_REF:
                     source = __s.related_by_topic;
@@ -1456,7 +1456,7 @@ step.util = {
                         'title="' + source + util.safeEscapeQuote(entry.item.text) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.text) + '" ' +
-                        '>' + __s.semantic_related_prefix + " " +
+                        '>' + __s.related_prefix + " " +
                         entry.item.text + '</div>';
 
                     break;
@@ -2022,9 +2022,10 @@ step.util = {
 							step.util.delay(function () {
 									$.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference, step.userLanguageCode], function (data) {
 											var template = '<div class="relatedVersesChooser">' +
-														'<%= __s.display_verses_related_by %> ' +
-														'<a onclick="javascript:void(0)" class="relatedVerses"><%= __s.related_by_vocabulary %></a> | ' +
-														'<a onclick="javascript:void(0)" class="relatedVersesSemantic"><%= __s.related_by_semantics %></a>' +
+														'Display verses related by ' +
+														'<a onclick="javascript:void(0)" class="relatedVersesSemantic">meaning</a> | ' +
+														'<a onclick="javascript:void(0)" class="relatedVerses">vocabulary</a> | ' +
+														'<a onclick="javascript:void(0)" class="relatedSubjects">topics</a>' +
 														'</div>' +
 														'<div class="vocabTable">' +
 													'<div class="col-xs-8 col-sm-4 heading"><h1><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1></div>' +
@@ -2058,7 +2059,6 @@ step.util = {
 													'<% } %>' +
 													'</div>' +
 													'<div class="verseVocabLinks">' +
-													'<a onclick="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
 													'<a onclick="javascript:void(0)" class="seeTips">See Translation TIPS</a> ' +
 													'<% if(isSearch) { %><a onclick="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
 											var rows = [];
@@ -2237,6 +2237,10 @@ step.util = {
 											}
 											else
 												templatedTable.find(".seeTips").remove(); // No translation tips
+
+											if (templatedTable.filter(".verseVocabLinks").find("a").length === 0) {
+												templatedTable = templatedTable.not(".verseVocabLinks");
+											}
 
 											templatedTable.find(".verseInContext").click(function () {
 													element.trigger("click");

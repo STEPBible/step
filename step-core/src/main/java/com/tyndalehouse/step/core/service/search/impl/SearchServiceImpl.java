@@ -1133,41 +1133,17 @@ public class SearchServiceImpl implements SearchService {
                 this.semanticRelatedVersesService.getRelatedNrsvRefs(nrsvOsisRef);
         if (orderedNrsvRefs.isEmpty()) return emptyRelatedVersesResult(sq);
 
-        final List<String> capped = orderedNrsvRefs.size() > 50
-                ? orderedNrsvRefs.subList(0, 50) : orderedNrsvRefs;
-
-        final DefaultKeyList ordered = new DefaultKeyList();
-        final Set<String> seen = new HashSet<String>(capped.size() * 2);
-        for (String nrsvRef : capped) {
-            final Verse nrsvVerse;
-            try {
-                nrsvVerse = VerseFactory.fromString(nrsv, nrsvRef);
-            } catch (NoSuchVerseException e) {
-                continue;
-            }
-            if (nrsvVerse == null) continue;
-            final VerseKey mapped = VersificationsMapper.instance().mapVerse(nrsvVerse, userV11n);
-            final Iterator<Key> it = mapped.iterator();
-            if (!it.hasNext()) continue;
-            final Verse userVerse = (Verse) it.next();
-            if (seen.add(userVerse.getOsisID())) {
-                ordered.addAll(userVerse);
-            }
+        final Passage userPassage;
+        try {
+            final String joinedNrsvRefs = String.join(" ", orderedNrsvRefs);
+            final Passage nrsvPassage = PassageKeyFactory.instance().getKey(nrsv, joinedNrsvRefs);
+            userPassage = VersificationsMapper.instance().map(nrsvPassage, userV11n);
+        } catch (NoSuchKeyException e) {
+            return emptyRelatedVersesResult(sq);
         }
+        if (userPassage.getCardinality() == 0) return emptyRelatedVersesResult(sq);
 
-        final int total = ordered.getCardinality();
-        if (sq.getCountOnly()) {
-            final SearchResult countResult = new SearchResult();
-            countResult.setTotal(total);
-            countResult.setQuery(sq.getOriginalQuery());
-            return countResult;
-        }
-        if (total == 0) return emptyRelatedVersesResult(sq);
-
-        final SearchResult result = this.jswordSearch.getResultsFromTrimmedKeys(
-                sq, curr.getVersions(), total, ordered, "");
-        result.setQuery(sq.getOriginalQuery());
-        return result;
+        return this.buildCombinedVerseBasedResults(sq, userPassage, "");
     }
 
     private SearchResult emptyRelatedVersesResult(final SearchQuery sq) {

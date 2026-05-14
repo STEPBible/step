@@ -78,6 +78,7 @@ public class SearchServiceImpl implements SearchService {
     private VersionResolver versionResolver;
     private LexiconDefinitionService lexiconDefinitionService;
     private JSwordRelatedVersesService relatedVerseService;
+    private SemanticRelatedVersesService semanticRelatedVersesService;
 
     /**
      * @param jswordSearch              the search service
@@ -96,7 +97,8 @@ public class SearchServiceImpl implements SearchService {
                              final EntityManager entityManager,
                              final VersionResolver versionResolver,
                              final LexiconDefinitionService lexiconDefinitionService,
-                             final JSwordRelatedVersesService relatedVerseService) {
+                             final JSwordRelatedVersesService relatedVerseService,
+                             final SemanticRelatedVersesService semanticRelatedVersesService) {
         this.jswordSearch = jswordSearch;
         this.jswordMetadata = jswordMetadata;
         this.versificationService = versificationService;
@@ -106,6 +108,7 @@ public class SearchServiceImpl implements SearchService {
         this.versionResolver = versionResolver;
         this.lexiconDefinitionService = lexiconDefinitionService;
         this.relatedVerseService = relatedVerseService;
+        this.semanticRelatedVersesService = semanticRelatedVersesService;
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
@@ -330,6 +333,10 @@ public class SearchServiceImpl implements SearchService {
                 final TextSuggestion enhancedTokenInfo = new TextSuggestion();
                 enhancedTokenInfo.setText(st.getToken());
                 st.setEnhancedTokenInfo(enhancedTokenInfo);
+            } else if (SearchToken.RELATED_VERSES_SEMANTIC.equals(st.getTokenType())) {
+                final TextSuggestion enhancedTokenInfo = new TextSuggestion();
+                enhancedTokenInfo.setText(st.getToken());
+                st.setEnhancedTokenInfo(enhancedTokenInfo);
             }
             //nothing to do 
             // for subject searches or 
@@ -391,6 +398,8 @@ public class SearchServiceImpl implements SearchService {
                 addSearch(SearchType.SUBJECT_RELATED, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.RELATED_VERSES.equals(tokenType)) {
                 addSearch(SearchType.RELATED_VERSES, versions, references, st.getToken(), null, individualSearches);
+            } else if (SearchToken.RELATED_VERSES_SEMANTIC.equals(tokenType)) {
+                addSearch(SearchType.RELATED_VERSES_SEMANTIC, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.SYNTAX.equals(tokenType)) {
                 //add a number of searches from the query syntax given...
                 final IndividualSearch[] searches = new SearchQuery(st.getToken(), versions.toArray(new String[versions.size()]), null,
@@ -549,6 +558,10 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private SearchType getBestSearchType(final SearchQuery sq) {
+        return normalizeForFrontend(rawBestSearchType(sq));
+    }
+
+    private SearchType rawBestSearchType(final SearchQuery sq) {
         IndividualSearch[] searches = sq.getSearches();
         for (IndividualSearch s : searches) {
             //we never return subject searches if we can avoid it
@@ -563,6 +576,10 @@ public class SearchServiceImpl implements SearchService {
 
         //then we only have subject searches
         return searches.length == 1 ? searches[0].getType() : SearchType.TEXT;
+    }
+
+    private static SearchType normalizeForFrontend(SearchType t) {
+        return t == SearchType.RELATED_VERSES_SEMANTIC ? SearchType.RELATED_VERSES : t;
     }
 
     /**
@@ -1038,6 +1055,8 @@ public class SearchServiceImpl implements SearchService {
                 return runMeaningSearch(sq);
             case RELATED_VERSES:
                 return runRelatedVerses(sq);
+            case RELATED_VERSES_SEMANTIC:
+                return runSemanticRelatedVerses(sq);
             default:
                 throw new TranslatedException("search_unknown");
         }
@@ -1081,6 +1100,58 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult runRelatedVerses(final SearchQuery sq) {
         return this.buildCombinedVerseBasedResults(sq,
                 this.relatedVerseService.getRelatedVerses(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getQuery()), ""); // Options from user was not passed to this method
+    }
+
+    private SearchResult runSemanticRelatedVerses(final SearchQuery sq) {
+        final IndividualSearch curr = sq.getCurrentSearch();
+        final String version = curr.getVersions()[0];
+        final String userInputRef = curr.getQuery();
+
+        final Versification userV11n;
+        try {
+            userV11n = this.versificationService.getVersificationForVersion(version);
+        } catch (com.tyndalehouse.step.core.exceptions.StepInternalException e) {
+            return emptyRelatedVersesResult(sq);
+        }
+        final Versification nrsv = org.crosswire.jsword.versification.system.Versifications
+                .instance().getVersification(
+                        org.crosswire.jsword.versification.system.SystemNRSV.V11N_NAME);
+
+        final String nrsvOsisRef;
+        try {
+            final Verse userVerse = VerseFactory.fromString(userV11n, userInputRef);
+            if (userVerse == null) return emptyRelatedVersesResult(sq);
+            final VerseKey nrsvKey = VersificationsMapper.instance().mapVerse(userVerse, nrsv);
+            final Iterator<Key> it = nrsvKey.iterator();
+            if (!it.hasNext()) return emptyRelatedVersesResult(sq);
+            nrsvOsisRef = ((Verse) it.next()).getOsisID();
+        } catch (NoSuchVerseException e) {
+            return emptyRelatedVersesResult(sq);
+        }
+
+        final List<String> orderedNrsvRefs =
+                this.semanticRelatedVersesService.getRelatedNrsvRefs(nrsvOsisRef);
+        if (orderedNrsvRefs.isEmpty()) return emptyRelatedVersesResult(sq);
+
+        final Passage userPassage;
+        try {
+            final String joinedNrsvRefs = String.join(" ", orderedNrsvRefs);
+            final Passage nrsvPassage = PassageKeyFactory.instance().getKey(nrsv, joinedNrsvRefs);
+            userPassage = VersificationsMapper.instance().map(nrsvPassage, userV11n);
+        } catch (NoSuchKeyException e) {
+            return emptyRelatedVersesResult(sq);
+        }
+        if (userPassage.getCardinality() == 0) return emptyRelatedVersesResult(sq);
+
+        return this.buildCombinedVerseBasedResults(sq, userPassage, "");
+    }
+
+    private SearchResult emptyRelatedVersesResult(final SearchQuery sq) {
+        final SearchResult r = new SearchResult();
+        r.setResults(Collections.<SearchEntry>emptyList());
+        r.setTotal(0);
+        r.setQuery(sq.getOriginalQuery());
+        return r;
     }
 
     /**

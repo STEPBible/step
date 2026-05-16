@@ -168,6 +168,8 @@ var PassageCopyMenuView = Backbone.View.extend({
         $dd.removeClass("open");
         $dd.find(".copyDropdownToggle").attr("aria-expanded", "false");
         this._unbindOutsideClick();
+        this._clearInlineSuccess();
+        if (this._statusTimer) { clearTimeout(this._statusTimer); this._statusTimer = null; }
         step.copyDropdown.release(this.panelId);
     },
 
@@ -238,6 +240,7 @@ var PassageCopyMenuView = Backbone.View.extend({
                     '<div class="copySelectionRow" style="display:none"></div>' +
                     '<div class="copyGridSection" style="display:none"></div>' +
                     '<div class="copyOptionsStrip" style="display:none"></div>' +
+                    '<div class="copyBottomSuccess" role="status" aria-live="polite"></div>' +
                     '<footer class="copyMenuFooter" style="display:none">' +
                         '<button type="button" class="copyPrimaryBtn copyGridPrimary" disabled>' +
                             gridCopyLabel +
@@ -250,6 +253,7 @@ var PassageCopyMenuView = Backbone.View.extend({
 
     _update: function () {
         this._renderStatusRow("");
+        this.$el.find(".copyBottomSuccess").empty();
         var resolution = this._computeSelectionResolution();
         this._resolution = resolution;
 
@@ -406,7 +410,8 @@ var PassageCopyMenuView = Backbone.View.extend({
         var gridCopyLabel = _.escape(__s.copy_dropdown_copy || __s.copy_button_label || "Copy");
         var backLabel = _.escape(__s.copy_dropdown_back_to_selection || "Back to selection");
         var footerHtml = '<button type="button" class="copyPrimaryBtn copyGridPrimary" disabled>' +
-                         gridCopyLabel + '</button>';
+                         gridCopyLabel + '</button>' +
+                         '<div class="copyFooterSuccess" role="status" aria-live="polite"></div>';
         if (resolution.resolved) {
             footerHtml += '<button type="button" class="copyBackToSelection copyPrimaryBtn">' +
                           backLabel + '</button>';
@@ -806,14 +811,30 @@ var PassageCopyMenuView = Backbone.View.extend({
         }
     },
 
+    _renderSuccessInline: function (msg) {
+        // Defensively clear the top status row so a prior non-success message
+        // (e.g. clipboard-denied from an earlier attempt) doesn't co-exist with
+        // the inline green confirmation.
+        this._renderStatusRow("");
+        var $slot = (this._mode === "selection")
+            ? this.$el.find(".copyBottomSuccess")
+            : this.$el.find(".copyFooterSuccess");
+        $slot.text(msg);
+    },
+
+    _clearInlineSuccess: function () {
+        this.$el.find(".copyBottomSuccess").empty();
+        this.$el.find(".copyFooterSuccess").empty();
+    },
+
     _onCopySuccess: function () {
         var self = this;
         var msg = __s.copy_dropdown_status_success || __s.text_is_copied || "The text is copied.";
-        this._renderStatusRow(msg, "success");
+        this._renderSuccessInline(msg);
         this.$el.find(".copyPrimaryBtn").prop("disabled", true);
         if (this._statusTimer) clearTimeout(this._statusTimer);
         this._statusTimer = setTimeout(function () {
-            self._renderStatusRow("");
+            self._clearInlineSuccess();
             // Re-enable primary button if in selection mode; grid mode uses its range state
             if (self._mode === "selection") self.$el.find(".copyPrimaryBtn").prop("disabled", false);
             else self._updateGridVisuals();
@@ -822,6 +843,9 @@ var PassageCopyMenuView = Backbone.View.extend({
     },
 
     _onRapidWarning: function (versionsString, sleepMs) {
+        // Defense-in-depth: a stale inline green from a prior copy must not
+        // visibly coexist with the rapid-warning at the top.
+        this._clearInlineSuccess();
         step.copyDropdown.startCooldown(sleepMs || 5000, "rate");
         var secs = Math.ceil((sleepMs || 5000) / 1000);
         var template = __s.copy_dropdown_status_rapid_warning ||

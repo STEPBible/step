@@ -148,7 +148,13 @@ var PassageCopyMenuView = Backbone.View.extend({
         if ($dd.hasClass("open")) return;
 
         step.copyDropdown.claim(this.panelId, this);
-        if (!this.rendered) {
+        // PassageMenuView._initUI (view_menu_passage.js:342-343) removes any
+        // descendant matching `.dropdown-menu.pull-right.stepModalFgBg` from the
+        // shared `.passageOptionsGroup` on its first run, and our `.copyMenu`
+        // carries those exact classes (see _initUI below, line 233). Self-heal
+        // by re-injecting when the menu node is missing, rather than trusting
+        // `this.rendered`.
+        if (!this.rendered || $dd.find(".copyMenu").length === 0) {
             this._initUI();
             this.rendered = true;
         }

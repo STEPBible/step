@@ -132,20 +132,20 @@ public class SearchPageController extends HttpServlet {
                     }
                 }
             }
-            else {
-                String userAgent = request.getHeader("User-Agent");
-                if (userAgent != null) {
-                    userAgent = userAgent.toLowerCase();
-                    if ((userAgent.indexOf("bot") > -1) || (userAgent.indexOf("spider") > -1) ||
-                            (userAgent.indexOf("crawl") > -1) || (userAgent.indexOf("-ai") > -1)) {
-                        try {
-                            Thread.sleep(4000); // 4 seconds
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt(); // Restore the interrupted status
-                        }
-                    }
-                }
-            }
+            // else {
+            //     String userAgent = request.getHeader("User-Agent");
+            //     if (userAgent != null) {
+            //         userAgent = userAgent.toLowerCase();
+            //         if ((userAgent.indexOf("bot") > -1) || (userAgent.indexOf("spider") > -1) ||
+            //                 (userAgent.indexOf("crawl") > -1) || (userAgent.indexOf("-ai") > -1)) {
+            //             try {
+            //                 Thread.sleep(4000); // 4 seconds
+            //             } catch (InterruptedException e) {
+            //                 Thread.currentThread().interrupt(); // Restore the interrupted status
+            //             }
+            //         }
+            //     }
+            // }
             request.getRequestDispatcher("/start.jsp").include(request, response);
         }
     }

@@ -45,45 +45,51 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML>
 <HEAD>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8RH0MQG418"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+<%
+    if (!appManager.isLocal() && appManager.isWWWServer()) {
+%>
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-8RH0MQG418"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
 
-        gtag('config', 'G-8RH0MQG418');
+		gtag('config', 'G-8RH0MQG418');
 
-        // Delegated click handler to capture any element with data-button-name
-        document.addEventListener('click', function (e) {
-            var node = e.target;
-            if (node && node.nodeType === 3) {
-                node = node.parentElement;
-            }
-            var target = null;
-            while (node && node.nodeType === 1) {
-                if (node.getAttribute && node.getAttribute('data-button-name') !== null) {
-                    target = node;
-                    break;
-                }
-                node = node.parentElement;
-            }
-            if (!target) return;
-            var name = target.getAttribute('data-button-name');
-            var location = target.getAttribute('data-button-location') || '';
-            var text = target.textContent.trim();
-            // Send the custom event; parameters populate GA4 reports when registered
-            gtag('event', 'button_click', {
-                send_to: 'G-8RH0MQG418',
-                transport_type: 'xhr',
-                button_name: name,
-                button_location: location,
-                button_text: text
-                // Uncomment for debugging:
-                // ,debug_mode: true
-            });
-        }, true);
-    </script>
+		// Delegated click handler to capture any element with data-button-name
+		document.addEventListener('click', function (e) {
+			var node = e.target;
+			if (node && node.nodeType === 3) {
+				node = node.parentElement;
+			}
+			var target = null;
+			while (node && node.nodeType === 1) {
+				if (node.getAttribute && node.getAttribute('data-button-name') !== null) {
+					target = node;
+					break;
+				}
+				node = node.parentElement;
+			}
+			if (!target) return;
+			var name = target.getAttribute('data-button-name');
+			var location = target.getAttribute('data-button-location') || '';
+			var text = target.textContent.trim();
+			// Send the custom event; parameters populate GA4 reports when registered
+			gtag('event', 'button_click', {
+				send_to: 'G-8RH0MQG418',
+				transport_type: 'xhr',
+				button_name: name,
+				button_location: location,
+				button_text: text
+				// Uncomment for debugging:
+				// ,debug_mode: true
+			});
+		}, true);
+	</script>
+<%
+	}
+%>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="description" content="Forever free Bible Study Software for your Windows, Mac and Linux. Bible study tools include search and Greek, Hebrew lexicons." />
     <title>Free Bible study software for Windows, Mac and Linux</title>

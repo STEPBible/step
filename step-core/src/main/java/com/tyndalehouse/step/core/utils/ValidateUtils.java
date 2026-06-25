@@ -125,7 +125,7 @@ public final class ValidateUtils {
             else
                 return false;
         }
-        else if (key.equals("topicref") || key.equals("relatedrefs")) {
+        else if (key.equals("topicref") || key.equals("relatedrefs") || key.equals("relatedrefsSemantic")) {
             if (value.length() > 2000) {
                 System.out.println("XSS kill unexpected reference length: " + value);
                 return false;

@@ -10,12 +10,12 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Allows querying of app-specific properties, such as the installation properties
@@ -84,6 +84,34 @@ public class AppManagerImpl implements AppManagerService {
     public void setAndSaveAppVersion(String newVersion) {
         appProperties.setProperty(APP_VERSION, newVersion);
         saveProperties();
+    }
+
+    @Override
+    public boolean isWWWServer() {
+        String result = appProperties.getProperty("IS_WWW_SERVER");
+        if ((result != null) && (result.equals("true")))
+            return true;
+        return false;
+    }
+
+    @Override
+    public void setIsWWWServer() {
+        File myObj = new File("/etc/hosts");
+        // try-with-resources: Scanner will be closed automatically
+        try (Scanner myReader = new Scanner(myObj)) {
+            Pattern pattern = Pattern.compile("127\\.0\\.0\\.1\\s+www\\.stepbible\\.org", Pattern.CASE_INSENSITIVE);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                Matcher matcher = pattern.matcher(data);
+                if (matcher.find()) {
+                    appProperties.setProperty("IS_WWW_SERVER", "true");
+                    return;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Cannot read /etc/hosts file.  It is OK if this is not a server running for www.stepbible.org");
+            e.printStackTrace();
+        }
     }
 
     /**

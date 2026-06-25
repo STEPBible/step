@@ -61,4 +61,12 @@ div.versePopup.qtip-default.qtip {
     }
   }
 
+  .relatedVersesChooser {
+    display: block;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted #ccc;
+    color: $text-color;
+  }
+
 }

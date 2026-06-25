@@ -68,6 +68,7 @@ var MainSearchView = Backbone.View.extend({
                             break;
                         case TOPIC_BY_REF:
                         case RELATED_VERSES:
+                        case RELATED_VERSES_SEMANTIC:
                         default:
                             id += entry.item;
                             break;
@@ -591,6 +592,7 @@ var MainSearchView = Backbone.View.extend({
                     break;
                 case TOPIC_BY_REF:
                 case RELATED_VERSES:
+                case RELATED_VERSES_SEMANTIC:
                     searchArgs += URL_SEPARATOR + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 case SYNTAX:
@@ -977,6 +979,7 @@ var MainSearchView = Backbone.View.extend({
                 return {text: token, greek: enhancedInfo.greek};
             case TOPIC_BY_REF:
             case RELATED_VERSES:
+            case RELATED_VERSES_SEMANTIC:
                 return {text: token};
             case MEANINGS:
                 return {gloss: token};

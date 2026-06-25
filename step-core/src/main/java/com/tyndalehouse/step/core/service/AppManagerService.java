@@ -8,6 +8,8 @@ public interface AppManagerService {
      */
     String APP_VERSION = "app.version";
 
+    String IS_WWW_SERVER = "false";
+
     /**
      * @return the currently installed version of the application
      */
@@ -19,6 +21,10 @@ public interface AppManagerService {
      * @param newVersion the new version of STEP, set during an upgrade
      */
     void setAndSaveAppVersion(String newVersion);
+
+    boolean isWWWServer();
+
+    void setIsWWWServer();
 
     File getStepInstallFile();
 

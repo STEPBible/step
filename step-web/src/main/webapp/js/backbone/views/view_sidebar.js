@@ -206,6 +206,17 @@ var SidebarView = Backbone.View.extend({
         var allMorphsForBackButton;
         var allStrongsForBackButton;
 
+        var modelStrong = step.util.fixStrongNumForVocabInfo(this.model.get("strong"), true);
+        if (data && data.vocabInfos && Array.isArray(data.vocabInfos) && data.vocabInfos.length > 0 &&
+            (typeof modelStrong === "string")) {
+            for (var i = 0; i < data.vocabInfos.length; i++) {
+                if (modelStrong.indexOf(step.util.fixStrongNumForVocabInfo(data.vocabInfos[i].strongNumber, true)) === -1) {
+                    console.log("return due to different strong: " + modelStrong + " " + data.vocabInfos[i].strongNumber);
+                    return;
+                }
+            }
+        }
+      
         if (!Array.isArray(variant)) variant = [""]; // Initialize in case it is not.
         //get definition tab
 

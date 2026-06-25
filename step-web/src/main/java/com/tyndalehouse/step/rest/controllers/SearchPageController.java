@@ -132,6 +132,20 @@ public class SearchPageController extends HttpServlet {
                     }
                 }
             }
+            // else {
+            //     String userAgent = request.getHeader("User-Agent");
+            //     if (userAgent != null) {
+            //         userAgent = userAgent.toLowerCase();
+            //         if ((userAgent.indexOf("bot") > -1) || (userAgent.indexOf("spider") > -1) ||
+            //                 (userAgent.indexOf("crawl") > -1) || (userAgent.indexOf("-ai") > -1)) {
+            //             try {
+            //                 Thread.sleep(4000); // 4 seconds
+            //             } catch (InterruptedException e) {
+            //                 Thread.currentThread().interrupt(); // Restore the interrupted status
+            //             }
+            //         }
+            //     }
+            // }
             request.getRequestDispatcher("/start.jsp").include(request, response);
         }
     }
@@ -147,7 +161,7 @@ public class SearchPageController extends HttpServlet {
     private void doRedirect(final HttpServletResponse response, final String oldReference, final String oldVersion) {
         try {
             response.setStatus(301);
-            response.setHeader("Location", String.format("http://%s/?q=%s", appManagerService.getAppDomain(), getUrlFragmentForPassage(oldVersion, oldReference)));
+            response.setHeader("Location", String.format("/?q=%s", getUrlFragmentForPassage(oldVersion, oldReference)));
             response.setHeader("Connection", "close");
         } catch (Exception ex) {
             LOGGER.error("Failed to operate redirect", ex);
@@ -157,7 +171,7 @@ public class SearchPageController extends HttpServlet {
     private void doRedirect(final HttpServletResponse response) {
         try {
             response.setStatus(302);
-            response.setHeader("Location", String.format("http://%s", appManagerService.getAppDomain()));
+            response.setHeader("Location", "/");
             response.setHeader("Connection", "close");
         } catch (Exception ex) {
             LOGGER.error("Failed to operate redirect", ex);

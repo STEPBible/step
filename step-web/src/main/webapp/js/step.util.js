@@ -5657,6 +5657,16 @@ step.util = {
 	},
 	capitalizeFirstLetter: function(val) {
 		return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-	}
+	},
+	addAltMorphLink: function (strong, morphCode, greekWord) {
+        var altMorphSpan = $('#altMorph_' + strong + "_" + morphCode);
+        if (altMorphSpan.text() !== "")
+            return; // Already populated.
+        var altMorphUrl = "https://www.perseus.tufts.edu/hopper/morph?l=" + encodeURIComponent(greekWord) + "&la=greek";
+        altMorphSpan.append("<br>");
+        altMorphSpan.append($("<a target='_blank' rel='noopener noreferrer'>")
+            .attr("href", altMorphUrl)
+            .text("Check Alternative Morphologies"));
+    }
 }
 ;

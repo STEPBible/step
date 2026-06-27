@@ -1171,6 +1171,16 @@ var SidebarView = Backbone.View.extend({
         if (info["description"] != undefined)
             panel.append($("<span class='GrammarInfo' style='font-weight:bold;display:none'>").append(__s.lexicon_eg + ": "))
                 .append($("<span class='GrammarInfo' style='display:none'>").append(this.replaceEmphasis(info["description"])));
+        var modelStrong = this.model.get("strong").split(" ")[0];
+        var modelMorph = this.model.get("morph");
+        if (strong !== modelStrong || morphCode !== modelMorph) {
+            if (strong !== modelStrong && morphCode !== modelMorph)
+                console.log("Different strong and morph, model: " + modelStrong + " " + modelMorph + ", param: " + strong + " " + morphCode);
+            else if (strong !== modelStrong)
+                console.log("Different strong, model: " + modelStrong + ", param: " + strong);
+            else
+                console.log("Different morph, model: " + modelMorph + ", param: " + morphCode);
+        }
         if ((strong.substring(0, 1) === "G" ) && (morphCode !== "")) {
             if (isNaN(strong.slice(-1)))
                 strong = strong.slice(0, -1); // remove alpha character at the end of Strong number
@@ -1179,9 +1189,7 @@ var SidebarView = Backbone.View.extend({
             panel.append($("<span class='GrammarInfo' id='altMorph_" + strong + "_" + morphCode + "'>"));
             var greekWord = this.model.get("clickedSurfaceForm");
             if (typeof greekWord === "string" && greekWord !== "") {
-                var versionOfGreek = this.model.get("version");
-                if (typeof versionOfGreek !== "string")
-                    versionOfGreek = "";
+                var versionOfGreek = this.model.get("version") || "";
                 versionOfGreek = versionOfGreek.toLowerCase();
                 if ((versionOfGreek === "thgnt") || (versionOfGreek === "sblg") || (versionOfGreek === "byz")) {
                     greekWord = greekWord.replace(/^[\[(12>᾽]+/g, "")
@@ -1201,7 +1209,7 @@ var SidebarView = Backbone.View.extend({
                 var fileNum =  Math.trunc(strongNum / 500) * 500;
                 var fileName = "AltMorph" + fileNum + ".json";
                 $.getJSON('/html/json/AltMorph/' + fileName, function(data) {
-                    if (typeof data !== "object" || typeof data[greekWord] !== "object" || typeof data[strong][morphCode] !== "string" || data[strong][morphCode] === "")
+                    if (typeof data !== "object" || typeof data[strong] !== "object" || typeof data[strong][morphCode] !== "string" || data[strong][morphCode] === "")
                         return;
                     var greek = data[strong][morphCode].split(";")[0];
                     step.util.addAltMorphLink(strong, morphCode, greek);

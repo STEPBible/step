@@ -1180,12 +1180,12 @@ var SidebarView = Backbone.View.extend({
         var strong = this.model.get("strong").split(" ")[0];
         var morphCode = this.model.get("morph");
         if (strong.substring(0, 1) === "G" ) {
-            var greekWord = this.model.get("clickedSurfaceForm");
             if (isNaN(strong.slice(-1)))
                 strong = strong.slice(0, -1); // remove alpha character at the end of Strong number
             if (morphCode.substring(0,9) === "robinson:")
                 morphCode = morphCode.substring(9);
             panel.append($("<span class='GrammarInfo' id='altMorph_" + strong + "_" + morphCode + "'>"));
+            var greekWord = this.model.get("clickedSurfaceForm");
             if (typeof greekWord === "string" && greekWord !== "") {
                 var versionOfGreek = this.model.get("version") || "";
                 step.util.checkGreekAltMorph(strong, morphCode, greekWord, versionOfGreek);

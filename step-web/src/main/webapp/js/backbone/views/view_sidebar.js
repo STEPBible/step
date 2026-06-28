@@ -157,7 +157,7 @@ var SidebarView = Backbone.View.extend({
         this.$el.append(tabContent);
         return tabContent;
     },
-    _appendAltMorphologiesLink: function (panel) {
+    _appendLookupMorphologiesLink: function (panel) {
         var greekWord = this.model.get("clickedSurfaceForm");
         if (typeof greekWord !== "string" || greekWord === "")
             return;
@@ -165,7 +165,7 @@ var SidebarView = Backbone.View.extend({
         panel.append("<br>");
         panel.append($("<a target='_blank' rel='noopener noreferrer'>")
             .attr("href", altMorphUrl)
-            .text("Check Alt. Morphologies"));
+            .text("Lookup morphologies"));
     },
     createHistory: function () {
         if (!this.historyView) {
@@ -239,7 +239,7 @@ var SidebarView = Backbone.View.extend({
             this.lexicon.append("<h1>");
             headerType = "h2";
         }
-        if (data.vocabInfos.length == 0)
+        if ((typeof data.vocabInfos !== "object") || (data.vocabInfos.length == 0))
             return;
         var urlLang = $.getUrlVar("lang");
         if (urlLang == null) urlLang = "";
@@ -259,8 +259,7 @@ var SidebarView = Backbone.View.extend({
         // need to handle multiple morphInfo (array)
         if ((lastMorphCode != '') && (data.morphInfos.length == 0) && (lastMorphCode.indexOf('TOS:') == 0))
             data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
-        if (data.vocabInfos.length > 1) {
-            //multiple entries
+        if (data.vocabInfos.length > 1) { //multiple entries
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
             for (var i = data.vocabInfos.length - 1; i > -1 ; i--) {
                 var item = data.vocabInfos[i];
@@ -291,9 +290,10 @@ var SidebarView = Backbone.View.extend({
                 if (i < data.morphInfos.length)
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
-                if (i < data.morphInfos.length)
+                if (data.morphInfos.length == 0)
+                    this._appendLookupMorphologiesLink(panelBody);
+                else if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
-                this._appendAltMorphologiesLink(panelBody);
                 panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     'Report lexicon issues' +
                     '</a>'));
@@ -329,9 +329,10 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0)
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0], morphCount, ref, data.vocabInfos[0].strongNumber);
             this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
-            if (data.morphInfos.length > 0)
+            if (data.morphInfos.length == 0)
+                this._appendLookupMorphologiesLink(panelBody);
+            else
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
-            this._appendAltMorphologiesLink(panelBody);
             panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + data.vocabInfos[0].strongNumber
             + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                 'Report lexicon issues' +
@@ -470,7 +471,6 @@ var SidebarView = Backbone.View.extend({
         else
             this._addLinkToStrongWord(panel, textToAdd2, currentWordLangCode);
     },
-
     _addLinkToStrongWord: function(htmlObj, remainingText, currentWordLangCode) {
         var matchExpression = new RegExp(/[GH]\d{4,5}[a-zA-Z]?/g);
         var matchResult = remainingText.match(matchExpression);
@@ -1177,6 +1177,22 @@ var SidebarView = Backbone.View.extend({
         if (info["description"] != undefined)
             panel.append($("<span class='GrammarInfo' style='font-weight:bold;display:none'>").append(__s.lexicon_eg + ": "))
                 .append($("<span class='GrammarInfo' style='display:none'>").append(this.replaceEmphasis(info["description"])));
+        var strong = this.model.get("strong").split(" ")[0];
+        var morphCode = this.model.get("morph");
+        if (strong.substring(0, 1) === "G" ) {
+            if (isNaN(strong.slice(-1)))
+                strong = strong.slice(0, -1); // remove alpha character at the end of Strong number
+            if (morphCode.substring(0,9) === "robinson:")
+                morphCode = morphCode.substring(9);
+            panel.append($("<span class='GrammarInfo' id='altMorph_" + strong + "_" + morphCode + "'>"));
+            var greekWord = this.model.get("clickedSurfaceForm");
+            if (typeof greekWord === "string" && greekWord !== "") {
+                var versionOfGreek = this.model.get("version") || "";
+                step.util.checkGreekAltMorph(strong, morphCode, greekWord, versionOfGreek);
+            }
+            else
+                step.util.checkStrongAltMorph(strong, morphCode);
+        }
     },
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {

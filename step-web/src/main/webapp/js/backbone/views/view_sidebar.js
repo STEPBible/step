@@ -157,6 +157,16 @@ var SidebarView = Backbone.View.extend({
         this.$el.append(tabContent);
         return tabContent;
     },
+    _appendLookupMorphologiesLink: function (panel) {
+        var greekWord = this.model.get("clickedSurfaceForm");
+        if (typeof greekWord !== "string" || greekWord === "")
+            return;
+        var altMorphUrl = "https://www.perseus.tufts.edu/hopper/morph?l=" + encodeURIComponent(greekWord) + "&la=greek";
+        panel.append("<br>");
+        panel.append($("<a target='_blank' rel='noopener noreferrer'>")
+            .attr("href", altMorphUrl)
+            .text("Lookup morphologies"));
+    },
     createHistory: function () {
         if (!this.historyView) {
             this.historyView = new ViewHistory({
@@ -229,7 +239,7 @@ var SidebarView = Backbone.View.extend({
             this.lexicon.append("<h1>");
             headerType = "h2";
         }
-        if (data.vocabInfos.length == 0)
+        if ((typeof data.vocabInfos !== "object") || (data.vocabInfos.length == 0))
             return;
         var urlLang = $.getUrlVar("lang");
         if (urlLang == null) urlLang = "";
@@ -280,7 +290,9 @@ var SidebarView = Backbone.View.extend({
                 if (i < data.morphInfos.length)
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
-                if (i < data.morphInfos.length)
+                if (data.morphInfos.length == 0)
+                    this._appendLookupMorphologiesLink(panelBody);
+                else if (i < data.morphInfos.length)
                     this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
                 panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     'Report lexicon issues' +
@@ -317,7 +329,9 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0)
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0], morphCount, ref, data.vocabInfos[0].strongNumber);
             this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
-            if (data.morphInfos.length > 0)
+            if (data.morphInfos.length == 0)
+                this._appendLookupMorphologiesLink(panelBody);
+            else
                 this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + data.vocabInfos[0].strongNumber
             + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
@@ -457,7 +471,6 @@ var SidebarView = Backbone.View.extend({
         else
             this._addLinkToStrongWord(panel, textToAdd2, currentWordLangCode);
     },
-
     _addLinkToStrongWord: function(htmlObj, remainingText, currentWordLangCode) {
         var matchExpression = new RegExp(/[GH]\d{4,5}[a-zA-Z]?/g);
         var matchResult = remainingText.match(matchExpression);
@@ -1166,55 +1179,20 @@ var SidebarView = Backbone.View.extend({
                 .append($("<span class='GrammarInfo' style='display:none'>").append(this.replaceEmphasis(info["description"])));
         var strong = this.model.get("strong").split(" ")[0];
         var morphCode = this.model.get("morph");
-        if ((strong.substring(0, 1) === "G" ) && (morphCode !== "")) {
+        if (strong.substring(0, 1) === "G" ) {
+            var greekWord = this.model.get("clickedSurfaceForm");
             if (isNaN(strong.slice(-1)))
                 strong = strong.slice(0, -1); // remove alpha character at the end of Strong number
             if (morphCode.substring(0,9) === "robinson:")
                 morphCode = morphCode.substring(9);
             panel.append($("<span class='GrammarInfo' id='altMorph_" + strong + "_" + morphCode + "'>"));
-            var greekWord = this.model.get("clickedSurfaceForm");
             if (typeof greekWord === "string" && greekWord !== "") {
                 var versionOfGreek = this.model.get("version") || "";
-                versionOfGreek = versionOfGreek.toLowerCase();
-                if ((versionOfGreek !== "thgnt") && (versionOfGreek !== "sblg") && (versionOfGreek !== "byz"))
-                    versionOfGreek = "all";
-                greekWord = greekWord.replace(/^[\[(12>᾽]+/g, "")
-                    .replace(/[᾽´ι,—;·.\]\s)⸃⸅]+$/g, "").toLowerCase();
-                var firstLetter = this.translateGreekChar2Eng(greekWord);
-                $.getJSON('/html/json/AltMorph/' + versionOfGreek + '/NoAltMorphGreek' + firstLetter + '.json', function(data) {
-                    if (typeof data !== "object" || typeof data[greekWord] === "number")
-                        return;
-                    step.util.addAltMorphLink(strong, morphCode, greekWord);
-                });
+                step.util.checkGreekAltMorph(strong, morphCode, greekWord, versionOfGreek);
             }
-            else {
-                var strongNum = strong.substring(1);
-                var fileNum =  Math.trunc(strongNum / 500) * 500;
-                var fileName = "AltMorph" + fileNum + ".json";
-                $.getJSON('/html/json/AltMorph/' + fileName, function(data) {
-                    if (typeof data !== "object" || typeof data[strong] !== "object" || typeof data[strong][morphCode] !== "string" || data[strong][morphCode] === "")
-                        return;
-                    var greek = data[strong][morphCode].split(";")[0];
-                    step.util.addAltMorphLink(strong, morphCode, greek);
-                });
-            }
+            else
+                step.util.checkStrongAltMorph(strong, morphCode);
         }
-    },
-    translateGreekChar2Eng: function (str) {
-        greekMap = {'α': 'a', 'β': 'b', 'ξ': 'c', 'δ': 'd', 'ε': 'e', 'φ': 'f',
-                    'γ': 'g', 'η': 'h', 'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm',
-                    'ν': 'n', 'ο': 'o', 'π': 'p', 'θ': 'q', 'ρ': 'r', 'σ': 's',
-                    'τ': 't', 'υ': 'u', 'ω': 'w', 'Ω': 'w', 'χ': 'x', 'ψ': 'y',
-                    'ζ': 'z'};
-        // Replace each Greek character with its English equivalent
-        var decomposed = str.normalize('NFD');
-        // 2. \p{Mn}: Matches the non-spacing combining marks (U+0300–U+036F)
-        var regExPattern = "\\/\\\p{Mn}\\/gu"; // Need to put this in a variable because maven minifier does not recognize the "u" (unicode) option which was introduced in ES2015.
-        var firstChar = decomposed.replace(regExPattern, "").substring(0,1);
-        if (greekMap[firstChar])
-            return greekMap[firstChar];
-        console.log("unrecognized first char " + firstChar + " in " + str);
-        return firstChar;
     },
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {

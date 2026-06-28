@@ -5658,6 +5658,48 @@ step.util = {
 	capitalizeFirstLetter: function(val) {
 		return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 	},
+	checkStrongAltMorph: function(strong, morphCode, greekWord) {
+		var strongNum = strong.substring(1);
+		var fileNum =  Math.trunc(strongNum / 500) * 500;
+		var fileName = "AltMorph" + fileNum + ".json";
+		$.getJSON('/html/json/AltMorph/' + fileName, function(data) {
+			if (typeof data !== "object" || typeof data[strong] !== "object" || typeof data[strong][morphCode] !== "string" || data[strong][morphCode] === "")
+				return;
+			var greek = (typeof greekWord === "string") ? greekWord : data[strong][morphCode].split(";")[0];
+			step.util.addAltMorphLink(strong, morphCode, greek);
+		});
+	},
+	checkGreekAltMorph: function(strong, morphCode, greekWord, versionOfGreek) {
+		versionOfGreek = versionOfGreek.toLowerCase();
+		if ((versionOfGreek !== "thgnt") && (versionOfGreek !== "sblg") && (versionOfGreek !== "byz"))
+			versionOfGreek = "all";
+		greekWord = greekWord.replace(/^[\[(12>᾽]+/g, "").replace(/[᾽´ι,—;·.\]\s)⸃⸅]+$/g, "").toLowerCase();
+		var firstLetter = step.util.translateGreekChar2Eng(greekWord);
+		$.getJSON('/html/json/AltMorph/' + versionOfGreek + '/NoAltMorphGreek' + firstLetter + '.json', function(data) {
+			if (typeof data !== "object" || typeof data[greekWord] === "number")
+				return;
+			if (versionOfGreek !== "all")
+				step.util.addAltMorphLink(strong, morphCode, greekWord);
+			else
+				step.util.checkStrongAltMorph(strong, morphCode, greekWord);
+		});
+	},
+    translateGreekChar2Eng: function (str) {
+        greekMap = {'α': 'a', 'β': 'b', 'ξ': 'c', 'δ': 'd', 'ε': 'e', 'φ': 'f',
+                    'γ': 'g', 'η': 'h', 'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm',
+                    'ν': 'n', 'ο': 'o', 'π': 'p', 'θ': 'q', 'ρ': 'r', 'σ': 's',
+                    'τ': 't', 'υ': 'u', 'ω': 'w', 'Ω': 'w', 'χ': 'x', 'ψ': 'y',
+                    'ζ': 'z'};
+        // Replace each Greek character with its English equivalent
+        var decomposed = str.normalize('NFD');
+        // 2. \p{Mn}: Matches the non-spacing combining marks (U+0300–U+036F)
+        var regExPattern = "\\/\\\p{Mn}\\/gu"; // Need to put this in a variable because maven minifier does not recognize the "u" (unicode) option which was introduced in ES2015.
+        var firstChar = decomposed.replace(regExPattern, "").substring(0,1);
+        if (greekMap[firstChar])
+            return greekMap[firstChar];
+        console.log("unrecognized first char " + firstChar + " in " + str);
+        return firstChar;
+    },
 	addAltMorphLink: function (strong, morphCode, greekWord) {
         var altMorphSpan = $('#altMorph_' + strong + "_" + morphCode);
         if (altMorphSpan.text() !== "")
@@ -5666,7 +5708,7 @@ step.util = {
         altMorphSpan.append("<br>");
         altMorphSpan.append($("<a target='_blank' rel='noopener noreferrer'>")
             .attr("href", altMorphUrl)
-            .text("Check Alternative Morphologies"));
+            .text("Check Alt. Morphologies"));
     }
 }
 ;

@@ -91,7 +91,7 @@ var SidebarView = Backbone.View.extend({
 				return;
 			}
             strong = step.util.fixStrongNumForVocabInfo(strong, false);
-            var callBackCreateDefParams = [ ref, allVersions, variant, morphCount, currentMorph ];
+            var callBackCreateDefParams = [ ref, allVersions, variant, morphCount ];
             var callBackLoadDefFromAPIParams = [ version, ref, strong, curMorphs, allVersions, variant, self.createDefinition, morphCount ]; 
             step.util.getVocabMorphInfoFromJson(strong, curMorphs, version, self.createDefinition, callBackCreateDefParams, self.loadDefinitionFromRestAPI, callBackLoadDefFromAPIParams);
         }
@@ -126,12 +126,12 @@ var SidebarView = Backbone.View.extend({
         var callBackCreateDef = parameters[6];
         var morphCount = parameters[7];
         $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-            callBackCreateDef(data, [ ref, allVersions, variant, morphCount, morph ]);
+            callBackCreateDef(data, [ ref, allVersions, variant, morphCount ]);
             //return false;
         }).error(function() {
             if (changeBaseURL())
                 $.getSafe(MODULE_GET_INFO, [version, ref, strong, morph, step.userLanguageCode], function (data) {
-                    callBackCreateDef(data, [ ref, allVersions, variant, morphCount, morph ]);
+                    callBackCreateDef(data, [ ref, allVersions, variant, morphCount ]);
                 })
         });
         //return false;
@@ -192,7 +192,6 @@ var SidebarView = Backbone.View.extend({
         var allVersions = parameters[1];
         var variant = parameters[2];
         var morphCount = parameters[3];
-        var morphCode = parameters[4];
         var allMorphsForBackButton;
         var allStrongsForBackButton;
 
@@ -251,7 +250,6 @@ var SidebarView = Backbone.View.extend({
         if ((lastMorphCode != '') && (data.morphInfos.length == 0) && (lastMorphCode.indexOf('TOS:') == 0))
             data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
         if (data.vocabInfos.length > 1) { //multiple entries
-            var morphCodes = morphCode.split(" ");
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
             for (var i = data.vocabInfos.length - 1; i > -1 ; i--) {
                 var item = data.vocabInfos[i];
@@ -282,13 +280,8 @@ var SidebarView = Backbone.View.extend({
                 if (i < data.morphInfos.length)
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 this._createWordPanel(panelBody, item, currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[i]);
-                if (i < data.morphInfos.length) {
-                    var curMorph = "";
-                    if (i < morphCodes.length) {
-                        curMorph = morphCodes[i];
-                    }
-                    this._createMorphInfo(panelBody, data.morphInfos[i], headerType, strong, curMorph);
-                }
+                if (i < data.morphInfos.length)
+                    this._createMorphInfo(panelBody, data.morphInfos[i], headerType);
                 panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     'Report lexicon issues' +
                     '</a>'));
@@ -325,7 +318,7 @@ var SidebarView = Backbone.View.extend({
                 this._createBriefMorphInfo(panelBody, data.morphInfos[0], morphCount, ref, data.vocabInfos[0].strongNumber);
             this._createWordPanel(panelBody, data.vocabInfos[0], currentUserLang, allVersions, isOTorNT, headerType, data.morphInfos[0]);
             if (data.morphInfos.length > 0)
-                this._createMorphInfo(panelBody, data.morphInfos[0], headerType, data.vocabInfos[0].strongNumber, morphCode);
+                this._createMorphInfo(panelBody, data.morphInfos[0], headerType);
             panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + data.vocabInfos[0].strongNumber
             + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                 'Report lexicon issues' +
@@ -1133,7 +1126,7 @@ var SidebarView = Backbone.View.extend({
             panel.append(" ");
         }
     },
-    _createMorphInfo: function (panel, info, headerType, strong, morphCode) {
+    _createMorphInfo: function (panel, info, headerType) {
         if (typeof info === "undefined") {
             panel.append("<br />");
             return;
@@ -1171,16 +1164,8 @@ var SidebarView = Backbone.View.extend({
         if (info["description"] != undefined)
             panel.append($("<span class='GrammarInfo' style='font-weight:bold;display:none'>").append(__s.lexicon_eg + ": "))
                 .append($("<span class='GrammarInfo' style='display:none'>").append(this.replaceEmphasis(info["description"])));
-        var modelStrong = this.model.get("strong").split(" ")[0];
-        var modelMorph = this.model.get("morph");
-        if (strong !== modelStrong || morphCode !== modelMorph) {
-            if (strong !== modelStrong && morphCode !== modelMorph)
-                console.log("Different strong and morph, model: " + modelStrong + " " + modelMorph + ", param: " + strong + " " + morphCode);
-            else if (strong !== modelStrong)
-                console.log("Different strong, model: " + modelStrong + ", param: " + strong);
-            else
-                console.log("Different morph, model: " + modelMorph + ", param: " + morphCode);
-        }
+        var strong = this.model.get("strong").split(" ")[0];
+        var morphCode = this.model.get("morph");
         if ((strong.substring(0, 1) === "G" ) && (morphCode !== "")) {
             if (isNaN(strong.slice(-1)))
                 strong = strong.slice(0, -1); // remove alpha character at the end of Strong number

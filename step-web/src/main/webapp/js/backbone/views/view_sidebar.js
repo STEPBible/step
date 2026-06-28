@@ -1226,11 +1226,13 @@ var SidebarView = Backbone.View.extend({
         // Replace each Greek character with its English equivalent
         var decomposed = str.normalize('NFD');
         // 2. \p{Mn}: Matches the non-spacing combining marks (U+0300–U+036F)
-        var char = decomposed.replace(/\p{Mn}/gu, "").substring(0,1);
-        if (greekMap[char])
-            return greekMap[char];
-        console.log("unrecognized first char " + char + " in " + str);
-        return char;
+        var regExPattern = "\\/\\\p{Mn}\\/gu"; // Need to put this in a variable because maven minifier does not recognize the "u" (unicode) option which was introduced in ES2015.
+        var firstChar = decomposed.replace(regExPattern, "");
+        firstChar = firstChar.substring(0,1);
+        if (greekMap[firstChar])
+            return greekMap[firstChar];
+        console.log("unrecognized first char " + firstChar + " in " + str);
+        return firstChar;
     },
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {

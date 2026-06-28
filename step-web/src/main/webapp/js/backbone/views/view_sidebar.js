@@ -1176,21 +1176,16 @@ var SidebarView = Backbone.View.extend({
             if (typeof greekWord === "string" && greekWord !== "") {
                 var versionOfGreek = this.model.get("version") || "";
                 versionOfGreek = versionOfGreek.toLowerCase();
-                if ((versionOfGreek === "thgnt") || (versionOfGreek === "sblg") || (versionOfGreek === "byz")) {
-                    greekWord = greekWord.replace(/^[\[(12>᾽]+/g, "")
-                        .replace(/[᾽´ι,—;·.\]\s)⸃⸅]+$/g, "").toLowerCase();
-                    var firstLetter = this.translateGreekChar2Eng(greekWord);
-                    $.getJSON('/html/json/AltMorph/' + versionOfGreek + '/NoAltMorphGreek' + firstLetter + '.json', function(data) {
-                        if (typeof data !== "object" || typeof data[greekWord] === "number")
-                            return;
-                        step.util.addAltMorphLink(strong, morphCode, greekWord);
-                    });    
-                }
-                else {
-                    setTimeout( function() {
-                        step.util.addAltMorphLink(strong, morphCode, greekWord);
-                    }, 800);
-                }
+                if ((versionOfGreek !== "thgnt") && (versionOfGreek !== "sblg") && (versionOfGreek !== "byz"))
+                    versionOfGreek = "all";
+                greekWord = greekWord.replace(/^[\[(12>᾽]+/g, "")
+                    .replace(/[᾽´ι,—;·.\]\s)⸃⸅]+$/g, "").toLowerCase();
+                var firstLetter = this.translateGreekChar2Eng(greekWord);
+                $.getJSON('/html/json/AltMorph/' + versionOfGreek + '/NoAltMorphGreek' + firstLetter + '.json', function(data) {
+                    if (typeof data !== "object" || typeof data[greekWord] === "number")
+                        return;
+                    step.util.addAltMorphLink(strong, morphCode, greekWord);
+                });
             }
             else {
                 var strongNum = strong.substring(1);

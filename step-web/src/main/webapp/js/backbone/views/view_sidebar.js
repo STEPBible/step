@@ -1186,8 +1186,11 @@ var SidebarView = Backbone.View.extend({
                         step.util.addAltMorphLink(strong, morphCode, greekWord);
                     });    
                 }
-                else
-                    step.util.addAltMorphLink(strong, morphCode, greekWord);
+                else {
+                    setTimeout( function() {
+                        step.util.addAltMorphLink(strong, morphCode, greekWord);
+                    }, 800);
+                }
             }
             else {
                 var strongNum = strong.substring(1);

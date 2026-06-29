@@ -5671,14 +5671,12 @@ step.util = {
 	},
 	checkGreekAltMorph: function(strong, morphCode, greekWord, versionOfGreek) {
 		versionOfGreek = versionOfGreek.toLowerCase();
-		if ((versionOfGreek !== "thgnt") && (versionOfGreek !== "sblg") && (versionOfGreek !== "byz"))
-			versionOfGreek = "all";
 		greekWord = greekWord.replace(/^[\[(12>᾽]+/g, "").replace(/[᾽´ι,—;·.\]\s)⸃⸅]+$/g, "").toLowerCase();
 		var firstLetter = step.util.translateGreekChar2Eng(greekWord);
-		$.getJSON('/html/json/AltMorph/' + versionOfGreek + '/NoAltMorphGreek' + firstLetter + '.json', function(data) {
+		$.getJSON('/html/json/AltMorph/NoAltGreek/' + firstLetter + '.json', function(data) {
 			if (typeof data !== "object" || typeof data[greekWord] === "number")
 				return;
-			if (versionOfGreek !== "all")
+			if ((versionOfGreek === "byz") || (versionOfGreek === "sblg") || (versionOfGreek === "thgnt"))
 				step.util.addAltMorphLink(strong, morphCode, greekWord);
 			else
 				step.util.checkStrongAltMorph(strong, morphCode, greekWord);

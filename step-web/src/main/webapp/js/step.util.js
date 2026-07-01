@@ -5670,12 +5670,25 @@ step.util = {
 		});
 	},
 	checkGreekAltMorph: function(strong, morphCode, greekWord, versionOfGreek) {
-		versionOfGreek = versionOfGreek.toLowerCase();
 		greekWord = greekWord.replace(/^[\[(12>᾽]+/g, "").replace(/[᾽´ι,—;·.\]\s)⸃⸅]+$/g, "").toLowerCase();
 		var firstLetter = step.util.translateGreekChar2Eng(greekWord);
 		$.getJSON('/html/json/AltMorph/NoAltGreek/' + firstLetter + '.json', function(data) {
-			if (typeof data !== "object" || typeof data[greekWord] === "number")
+			if (typeof data !== "object" || !Array.isArray(data))
 				return;
+			var left = 0;
+			var right = data.length -1;
+			while (left <= right) {
+				// Bitwise right shift to find mid.  Same as divide by 2 with no remainder.
+				var mid = (left + right) >> 1; 
+				var currentElement = data[mid];
+				if (currentElement === greekWord)
+					return; // greekWord found, word has no morph
+				else if (currentElement < greekWord)
+					left = mid + 1; // Narrow search to the right half
+				else
+					right = mid - 1; // Narrow search to the left half
+			}
+			versionOfGreek = versionOfGreek.toLowerCase();
 			if ((versionOfGreek === "byz") || (versionOfGreek === "sblg") || (versionOfGreek === "thgnt"))
 				step.util.addAltMorphLink(strong, morphCode, greekWord);
 			else

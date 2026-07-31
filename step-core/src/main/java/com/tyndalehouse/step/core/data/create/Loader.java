@@ -121,6 +121,7 @@ public class Loader {
             loadData();
             this.complete = true;
             appManager.setAndSaveAppVersion(runningAppVersion);
+            appManager.setIsWWWServer();
 
         } catch (Exception ex) {
             //wrap it into an internal exception so that we get some logging.

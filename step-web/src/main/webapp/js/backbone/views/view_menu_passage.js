@@ -380,8 +380,6 @@ var PassageMenuView = Backbone.View.extend({
             if ($(this).attr('data-value') === "INTERLINEAR") {
                 if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
                     return;
-                if (window.location.host.indexOf("www") > -1)
-                    return; // Will turn on at the www server after the team review this.
                 step.util.showBibleOrderForInterlinear(new Date().getTime()); // time in milliseconds
             }
         });

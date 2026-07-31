@@ -20,45 +20,51 @@
 <fmt:setBundle basename="HtmlBundle" scope="request"/>
 <!DOCTYPE html">
 <html>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8RH0MQG418"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+<%
+    if (!appManager.isLocal() && appManager.isWWWServer()) {
+%>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8RH0MQG418"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-    gtag('config', 'G-8RH0MQG418');
+        gtag('config', 'G-8RH0MQG418');
 
-    // Delegated click handler to capture any element with data-button-name
-    document.addEventListener('click', function (e) {
-    var node = e.target;
-    if (node && node.nodeType === 3) {
-        node = node.parentElement;
-    }
-    var target = null;
-    while (node && node.nodeType === 1) {
-        if (node.getAttribute && node.getAttribute('data-button-name') !== null) {
-            target = node;
-            break;
+        // Delegated click handler to capture any element with data-button-name
+        document.addEventListener('click', function (e) {
+        var node = e.target;
+        if (node && node.nodeType === 3) {
+            node = node.parentElement;
         }
-        node = node.parentElement;
+        var target = null;
+        while (node && node.nodeType === 1) {
+            if (node.getAttribute && node.getAttribute('data-button-name') !== null) {
+                target = node;
+                break;
+            }
+            node = node.parentElement;
+        }
+        if (!target) return;
+        var name = target.getAttribute('data-button-name');
+        var location = target.getAttribute('data-button-location') || '';
+        var text = target.textContent.trim();
+        // Send the custom event; parameters populate GA4 reports when registered
+        gtag('event', 'button_click', {
+            send_to: 'G-8RH0MQG418',
+            transport_type: 'xhr',
+            button_name: name,
+            button_location: location,
+            button_text: text
+            // Uncomment for debugging:
+            // ,debug_mode: true
+        });
+        }, true);
+    </script>
+<%
     }
-    if (!target) return;
-    var name = target.getAttribute('data-button-name');
-    var location = target.getAttribute('data-button-location') || '';
-    var text = target.textContent.trim();
-    // Send the custom event; parameters populate GA4 reports when registered
-    gtag('event', 'button_click', {
-        send_to: 'G-8RH0MQG418',
-        transport_type: 'xhr',
-        button_name: name,
-        button_location: location,
-        button_text: text
-        // Uncomment for debugging:
-        // ,debug_mode: true
-    });
-    }, true);
-</script>
+%>
 <head>
     <%
         if (request.getParameter("translate") != null) {

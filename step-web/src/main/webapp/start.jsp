@@ -278,7 +278,7 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a data-button-name="copy" data-button-location="navbar" id="copy-icon" class="hidden-xs" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy" />">
+                            <a data-button-name="copy" data-button-location="navbar" id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy" />">
                                 <i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="copy" /></span>
                             </a>
                             <span data-button-name="resources" data-button-location="navbar" class="dropdown">

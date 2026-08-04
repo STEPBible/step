@@ -2626,11 +2626,6 @@ step.util = {
   },
 
   copyModal: function () { // Do not shorten name in pom.xml — still called from start.jsp hrefs
-    // Sole entry point for the copy menu (navbar #copy-icon). Opens the active
-    // panel's copy dropdown. The panel used to carry its own copy icon that we
-    // clicked from here; that icon has been removed, so go straight to the view.
-    // Also kept for backward compatibility with any bookmarked / external JS
-    // that invokes step.util.copyModal().
     var activePanelId = step.util.activePassageId();
     var view = step.copyDropdown && step.copyDropdown.views[activePanelId];
     if (view) view.toggle();

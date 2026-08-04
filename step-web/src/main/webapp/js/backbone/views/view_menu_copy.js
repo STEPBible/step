@@ -20,9 +20,6 @@ window.step = window.step || {};
 step.copyDropdown = step.copyDropdown || {
     openPanelId: null,
     openView: null,
-    // panelId -> view, for every live panel (not just the open one). The navbar
-    // copy button uses this to reach the active panel's menu now that the panel
-    // no longer carries its own .copyDropdownToggle icon to click.
     views: {},
     selectionSnapshot: null,
     listenerGated: false,
@@ -87,8 +84,6 @@ step.copyDropdown = step.copyDropdown || {
 // ------------------------------------------------------------------
 var PassageCopyMenuView = Backbone.View.extend({
     events: {
-        // Dormant: start.jsp no longer renders a .copyDropdownToggle inside the
-        // panel. Kept so re-adding the in-panel icon is a markup-only change.
         "click .copyDropdownToggle": "onToggleClick",
         "click .copyCloseBtn": "onCloseClick",
         "click .copyPrimaryBtn": "onPrimaryClick",
@@ -139,8 +134,6 @@ var PassageCopyMenuView = Backbone.View.extend({
     //   close() removes .open + fires our own close flow
     //   outside-click listener bound on document while open
 
-    // Entry point for anything outside this view (navbar #copy-icon via
-    // step.util.copyModal, and the dormant in-panel toggle below).
     toggle: function () {
         if (this._isOpen()) this.close();
         else this.open();

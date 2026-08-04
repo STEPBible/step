@@ -21,15 +21,52 @@
     padding: 8px;
     font-size: 14px;
 
+    // The header doubles as the drag handle (see view_menu_copy.js). The grab
+    // area is the whole bar; .copyCloseBtn opts back out in JS so it stays a
+    // button. touch-action:none keeps the browser from claiming the gesture as
+    // a pan/scroll, and user-select:none stops a drag from sweeping a text
+    // selection across the passage underneath it.
     .copyMenuHeader {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 6px;
       margin-bottom: 6px;
+
+      &.copyDragHandle {
+        cursor: move;
+        touch-action: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
       h2 {
         font-size: 14px;
         margin: 0;
+        flex: 1 1 auto;
+      }
+
+      .copyDragGrip {
+        flex: 0 0 auto;
+        background: transparent;
+        border: 0;
+        padding: 2px 4px;
+        line-height: 1;
+        font-size: 12px;
+        color: inherit;
+        opacity: 0.5;
+        cursor: move;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        &:focus {
+          opacity: 1;
+          outline: 1px dotted $text-color;
+        }
       }
 
       .copyCloseBtn {
@@ -40,6 +77,7 @@
         padding: 2px 6px;
         cursor: pointer;
         color: inherit;
+        touch-action: manipulation;
 
         &:hover,
         &:focus {
@@ -317,6 +355,34 @@
     }
   }
 
+  // ----- movable menu -----
+  //
+  // Specificity here is (0,3,0), one class more than both the `.copyDropdown
+  // .copyMenu` block above and the <=640px bottom-sheet block below, so this
+  // wins regardless of source order.
+  //
+  // position:fixed is the whole trick. The menu's default anchor is a 0x0
+  // span in the panel header, and #columnHolder (passage_columns.scss) sets
+  // overflow-y:hidden, which clips absolutely-positioned descendants — an
+  // absolute menu simply cannot be moved out of the panel. Nothing in the
+  // ancestor chain sets transform/filter/perspective/contain, so fixed
+  // resolves against the viewport and escapes that clip. z-index clears
+  // #stepnavbar (1030). left/top/width/max-height are written by JS.
+  .copyMenu.copyMenu--floating {
+    position: fixed;
+    margin: 0;
+    right: auto;
+    bottom: auto;
+    max-width: none;
+    overflow-y: auto;
+    z-index: 1035;
+  }
+
+  .copyMenu.copyMenu--dragging {
+    transition: none;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+  }
+
   @media (max-width: 640px) {
     .copyMenu {
       position: fixed;
@@ -327,6 +393,11 @@
       max-width: none;
       max-height: 70vh;
       overflow-y: auto;
+    }
+
+    // Bigger grab target for thumbs — the default header is ~22px tall.
+    .copyMenuHeader {
+      min-height: 34px;
     }
   }
 

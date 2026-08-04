@@ -26,6 +26,15 @@ step.copyDropdown = step.copyDropdown || {
     cooldown: { active: false, until: 0, reason: null, timer: null },
     inFlightCopyId: 0,
 
+    // Where the user last parked the menu, in viewport coordinates. Shared
+    // across panels and survives close/open, so "move it off the verse I'm
+    // reading" only has to be done once. Null means "use the default anchor
+    // for this viewport" — top right of the panel on desktop, the CSS bottom
+    // sheet on phones. Deliberately session-scoped rather than persisted: a
+    // position that made sense in one window size is usually wrong in the
+    // next session, and re-opening the browser is a natural place to reset.
+    dragPosition: null,
+
     active: function () { return this.openPanelId !== null; },
     shouldSuppressCollapseEvent: function () { return this.listenerGated; },
 
@@ -79,6 +88,14 @@ step.copyDropdown = step.copyDropdown || {
     }
 };
 
+// Gap kept between the menu and the panel/viewport edge, and how far a
+// pointer must travel before we treat a press on the handle as a drag rather
+// than a stray click.
+var COPY_DRAG_GUTTER = 6;
+var COPY_DRAG_THRESHOLD = 3;
+// How long after a drag ends we ignore the outside-click that terminates it.
+var COPY_DRAG_CLICK_GRACE_MS = 400;
+
 // ------------------------------------------------------------------
 // PassageCopyMenuView
 // ------------------------------------------------------------------
@@ -93,7 +110,14 @@ var PassageCopyMenuView = Backbone.View.extend({
         "change .copyVersionCheckbox": "onVersionToggle",
         "change .copyNotesToggle": "onNotesToggle",
         "change .copyXrefsToggle": "onXrefsToggle",
-        "click .copyMenu": "_stopInsideClicks"
+        "click .copyMenu": "_stopInsideClicks",
+        "keyup .copyMenu": "_stopMenuNavKeyup",
+        // Drag: delegated off .passageOptionsGroup (this.$el) so the bindings
+        // survive _initUI re-injecting the menu node.
+        "pointerdown .copyDragHandle": "onDragPointerDown",
+        "mousedown .copyDragHandle": "onDragMouseDown",
+        "touchstart .copyDragHandle": "onDragTouchStart",
+        "keydown .copyDragGrip": "onDragKeydown"
     },
 
     el: function () {
@@ -171,7 +195,12 @@ var PassageCopyMenuView = Backbone.View.extend({
         $dd.addClass("open");
         $dd.find(".copyDropdownToggle").attr("aria-expanded", "true");
         this._update();
+        // After _update, so the menu has its real size to measure and clamp
+        // against. Same task as addClass("open"), so nothing paints in between
+        // and the menu never flashes at the anchor position first.
+        this._positionOnOpen();
         this._bindOutsideClick();
+        this._bindViewportWatch();
     },
 
     close: function () {
@@ -180,6 +209,11 @@ var PassageCopyMenuView = Backbone.View.extend({
         $dd.removeClass("open");
         $dd.find(".copyDropdownToggle").attr("aria-expanded", "false");
         this._unbindOutsideClick();
+        this._unbindViewportWatch();
+        this._cancelDrag();
+        // Drop the inline pin but keep step.copyDropdown.dragPosition — the
+        // next open re-applies it.
+        this._clearFloating();
         this._clearInlineSuccess();
         if (this._statusTimer) { clearTimeout(this._statusTimer); this._statusTimer = null; }
         step.copyDropdown.release(this.panelId);
@@ -197,6 +231,13 @@ var PassageCopyMenuView = Backbone.View.extend({
             if (self.$el.find(".copyDropdown").has(ev.target).length === 0) {
                 // Click outside the dropdown — close, unless cooldown is active.
                 if (step.copyDropdown.cooldown.active) return;
+                // ...or unless this is the click that terminated a drag. When a
+                // drag lifts off outside the menu the browser fires click on the
+                // nearest common ancestor of mousedown/mouseup — usually
+                // .passageText, which is outside .copyMenu, so _stopInsideClicks
+                // never sees it and we would dismiss the menu the user just
+                // finished positioning.
+                if (self._dragEndedAt && (Date.now() - self._dragEndedAt) < COPY_DRAG_CLICK_GRACE_MS) return;
                 self.close();
             }
         };
@@ -227,10 +268,398 @@ var PassageCopyMenuView = Backbone.View.extend({
 
     _stopInsideClicks: function (ev) { ev.stopPropagation(); },
 
+    // step_ready.js binds the app's single-key shortcuts on document *keyup* —
+    // Left/Right are previous/next chapter, among others. Every keyboard
+    // handler in this menu works on keydown, so the stopPropagation() they do
+    // never protects them: pressing Right on a grid cell moved the verse
+    // cursor and then also flipped the panel to the next chapter, which
+    // re-rendered the passage and closed the menu. Swallow the matching keyup
+    // for events that originate inside the menu.
+    _stopMenuNavKeyup: function (ev) {
+        switch (ev.which) {
+            case 13: /* Enter */
+            case 27: /* Esc */
+            case 32: /* Space */
+            case 35: /* End */
+            case 36: /* Home */
+            case 37: /* Left */
+            case 38: /* Up */
+            case 39: /* Right */
+            case 40: /* Down */
+                ev.stopPropagation();
+                break;
+            default:
+                break;
+        }
+    },
+
+    // ------------------------------------------------------------------
+    // Movable menu
+    //
+    // By default the menu is a Bootstrap dropdown hanging off a 0x0 anchor
+    // span in the panel header, which drops it straight onto the passage text
+    // you are trying to read. Moving it requires position:fixed: #columnHolder
+    // sets overflow-y:hidden and clips absolutely-positioned descendants, so
+    // an absolute menu cannot leave the panel no matter what left/top say.
+    // Nothing in the ancestor chain sets transform/filter/perspective/contain,
+    // so fixed resolves against the viewport and escapes the clip; the
+    // matching z-index bump (copy_dropdown.scss) clears #stepnavbar's 1030.
+    // ------------------------------------------------------------------
+
+    _menuEl: function () { return this.$el.find(".copyMenu"); },
+
+    // Mirrors the <=640px bottom-sheet media query in copy_dropdown.scss.
+    // Keep the two in step.
+    _isBottomSheet: function () {
+        return !!(window.matchMedia && window.matchMedia("(max-width: 640px)").matches);
+    },
+
+    // Height is re-measured every time against the natural content, so the cap
+    // we applied last time has to come off first — otherwise repeated
+    // re-clamps measure their own constraint and ratchet the box shorter.
+    //
+    // Width is measured once, on the transition into floating, and then held.
+    // That is both nicer (the menu doesn't resize under your cursor mid-drag)
+    // and necessary: .copyMenu--floating sets right:auto and max-width:none,
+    // so a floating menu re-measured with width cleared would shrink-to-fit
+    // against the whole viewport instead of its 280-420px band.
+    _measureMenu: function ($menu) {
+        var isFloating = $menu.hasClass("copyMenu--floating");
+        $menu.css({ maxHeight: "" });
+        if (!isFloating) $menu.css({ width: "" });
+        var rect = $menu[0].getBoundingClientRect();
+        var vw = window.innerWidth || document.documentElement.clientWidth;
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        return {
+            // Held width still has to survive the window being made narrower.
+            w: Math.min(Math.round(rect.width), vw - (COPY_DRAG_GUTTER * 2)),
+            h: Math.min(Math.round(rect.height), vh - (COPY_DRAG_GUTTER * 2)),
+            left: rect.left,
+            top: rect.top
+        };
+    },
+
+    _clampFloating: function (pos, menuW, menuH) {
+        var vw = window.innerWidth || document.documentElement.clientWidth;
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        var maxLeft = Math.max(COPY_DRAG_GUTTER, vw - menuW - COPY_DRAG_GUTTER);
+        var maxTop = Math.max(COPY_DRAG_GUTTER, vh - menuH - COPY_DRAG_GUTTER);
+        return {
+            left: Math.round(Math.min(Math.max(pos.left, COPY_DRAG_GUTTER), maxLeft)),
+            top: Math.round(Math.min(Math.max(pos.top, COPY_DRAG_GUTTER), maxTop))
+        };
+    },
+
+    _pinMenu: function ($menu, pos, size) {
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        var at = this._clampFloating(pos, size.w, size.h);
+        $menu.addClass("copyMenu--floating").css({
+            left: at.left + "px",
+            top: at.top + "px",
+            width: size.w + "px",
+            maxHeight: Math.max(120, vh - at.top - COPY_DRAG_GUTTER) + "px"
+        });
+        return at;
+    },
+
+    // Measure + pin in one go. Returns the clamped position, or null if the
+    // menu has no box to measure yet.
+    _applyFloating: function (pos) {
+        var $menu = this._menuEl();
+        if (!$menu.length) return null;
+        var size = this._measureMenu($menu);
+        if (!size.w || !size.h) return null;
+        return this._pinMenu($menu, pos, size);
+    },
+
+    _clearFloating: function () {
+        this._menuEl()
+            .removeClass("copyMenu--floating copyMenu--dragging")
+            .css({ left: "", top: "", width: "", maxHeight: "" });
+    },
+
+    // Top right of the panel, tucked just under the options bar. this.$el is
+    // the .passageOptionsGroup, which spans the panel's full width, so its
+    // right edge is the panel's right edge.
+    _defaultFloatingPosition: function (menuW) {
+        var box = null;
+        if (this.$el.length && this.$el[0].getBoundingClientRect) box = this.$el[0].getBoundingClientRect();
+        if (!box || !box.width) {
+            var container = step.util.getPassageContainer(this.panelId);
+            if (container && container.length) box = container[0].getBoundingClientRect();
+        }
+        if (!box || !box.width) return null;
+        return { left: box.right - menuW - COPY_DRAG_GUTTER, top: box.bottom + COPY_DRAG_GUTTER };
+    },
+
+    _positionOnOpen: function () {
+        var $menu = this._menuEl();
+        if (!$menu.length) return;
+
+        var saved = step.copyDropdown.dragPosition;
+        if (saved) {
+            // Re-clamp on the way in: the window may have been resized, or the
+            // menu may have grown, since it was parked.
+            var at = this._applyFloating(saved);
+            if (at) step.copyDropdown.dragPosition = at;
+            return;
+        }
+
+        // Never moved. Phones keep the CSS bottom sheet; everything else opens
+        // at the top right of its own panel.
+        if (this._isBottomSheet()) { this._clearFloating(); return; }
+        this._clearFloating();
+        var menuW = Math.round($menu[0].getBoundingClientRect().width);
+        var def = menuW ? this._defaultFloatingPosition(menuW) : null;
+        if (def) this._applyFloating(def);
+    },
+
+    _reclampFloating: function () {
+        var $menu = this._menuEl();
+        if (!$menu.length || !$menu.hasClass("copyMenu--floating")) return;
+        var rect = $menu[0].getBoundingClientRect();
+        var at = this._applyFloating({ left: rect.left, top: rect.top });
+        // Only write back if the user has actually parked it somewhere; the
+        // default position stays a default so a second panel gets its own.
+        if (at && step.copyDropdown.dragPosition) step.copyDropdown.dragPosition = at;
+    },
+
+    _bindViewportWatch: function () {
+        var ns = ".copyDrag" + this.panelId;
+        $(window).on("resize" + ns + " orientationchange" + ns, this._onViewportChange);
+    },
+
+    _unbindViewportWatch: function () {
+        var ns = ".copyDrag" + this.panelId;
+        $(window).off("resize" + ns + " orientationchange" + ns);
+        if (this._viewportTimer) { clearTimeout(this._viewportTimer); this._viewportTimer = null; }
+    },
+
+    _onViewportChange: function () {
+        var self = this;
+        if (this._viewportTimer) clearTimeout(this._viewportTimer);
+        this._viewportTimer = setTimeout(function () {
+            self._viewportTimer = null;
+            if (self._isOpen()) self._positionOnOpen();
+        }, 100);
+    },
+
+    // ----- drag transport -----
+    //
+    // Pointer Events when available (one path for mouse, touch and pen), with
+    // a mouse+touch fallback for the older iOS/IE browsers this app still
+    // carries. The document-level move/end listeners go on natively rather
+    // than through jQuery: Chrome registers document-level touchmove as
+    // passive by default, which would make preventDefault() a silent no-op.
+
+    onDragPointerDown: function (ev) {
+        if (!window.PointerEvent) return;
+        this._dragStart(ev, ev.originalEvent);
+    },
+
+    onDragMouseDown: function (ev) {
+        if (window.PointerEvent) return;    // pointerdown already handled it
+        var oe = ev.originalEvent || ev;
+        if (oe.button !== undefined && oe.button !== 0) return;
+        this._dragStart(ev, oe);
+    },
+
+    onDragTouchStart: function (ev) {
+        if (window.PointerEvent) return;
+        var oe = ev.originalEvent;
+        if (!oe || !oe.changedTouches || !oe.changedTouches.length) return;
+        this._dragStart(ev, oe.changedTouches[0]);
+    },
+
+    _dragStart: function (ev, pointer) {
+        if (!pointer || this._drag) return;
+        // The close button lives inside the handle — let it stay a button.
+        if ($(ev.target).closest(".copyCloseBtn").length) return;
+        var $menu = this._menuEl();
+        if (!$menu.length) return;
+
+        // Pin wherever the menu currently is before we start moving it, so the
+        // grab point doesn't jump to the dropdown anchor on the first frame.
+        var rect = $menu[0].getBoundingClientRect();
+        var size = this._measureMenu($menu);
+        if (!size.w || !size.h) return;
+        var origin = this._pinMenu($menu, { left: rect.left, top: rect.top }, size);
+
+        // Stops the drag from sweeping a text selection across the passage.
+        ev.preventDefault();
+
+        this._drag = {
+            startX: pointer.clientX,
+            startY: pointer.clientY,
+            originLeft: origin.left,
+            originTop: origin.top,
+            size: size,
+            moved: false,
+            last: origin,
+            pointerId: (pointer.pointerId !== undefined) ? pointer.pointerId : null,
+            touchId: (pointer.identifier !== undefined) ? pointer.identifier : null
+        };
+        $menu.addClass("copyMenu--dragging");
+        this._bindDragTransport();
+    },
+
+    // Pick our pointer out of the event, ignoring any other finger.
+    _dragPointer: function (e) {
+        var d = this._drag;
+        if (!d) return null;
+        if (e.changedTouches && e.changedTouches.length) {
+            for (var i = 0; i < e.changedTouches.length; i++) {
+                if (d.touchId === null || e.changedTouches[i].identifier === d.touchId) return e.changedTouches[i];
+            }
+            return null;
+        }
+        if (d.pointerId !== null && e.pointerId !== undefined && e.pointerId !== d.pointerId) return null;
+        return e;
+    },
+
+    _dragMove: function (e) {
+        var d = this._drag;
+        if (!d) return;
+        var p = this._dragPointer(e);
+        if (!p) return;
+        if (e.cancelable) e.preventDefault();
+        var dx = p.clientX - d.startX;
+        var dy = p.clientY - d.startY;
+        if (!d.moved && (Math.abs(dx) > COPY_DRAG_THRESHOLD || Math.abs(dy) > COPY_DRAG_THRESHOLD)) d.moved = true;
+        d.last = this._pinMenu(this._menuEl(), { left: d.originLeft + dx, top: d.originTop + dy }, d.size);
+    },
+
+    _dragEnd: function (e) {
+        var d = this._drag;
+        if (!d) return;
+        if (e && this._dragPointer(e) === null) return;
+        this._drag = null;
+        this._unbindDragTransport();
+        this._menuEl().removeClass("copyMenu--dragging");
+
+        if (d.moved) {
+            step.copyDropdown.dragPosition = d.last;
+            this._dragEndedAt = Date.now();     // see _bindOutsideClick
+            this._swallowNextOutsideClick();
+            this._lastHandleTapAt = 0;
+            return;
+        }
+
+        // Press with no movement. Two in quick succession — double-click with a
+        // mouse, double-tap with a thumb — send the menu back to its default
+        // corner. Detected here rather than via a dblclick binding because
+        // preventDefault() on pointerdown suppresses the compatibility mouse
+        // events that dblclick is synthesised from.
+        var now = Date.now();
+        if (this._lastHandleTapAt && (now - this._lastHandleTapAt) < 400) {
+            this._lastHandleTapAt = 0;
+            this._resetPosition();
+        } else {
+            this._lastHandleTapAt = now;
+        }
+    },
+
+    _cancelDrag: function () {
+        this._releaseClickSwallow();
+        if (!this._drag) return;
+        this._drag = null;
+        this._unbindDragTransport();
+        this._menuEl().removeClass("copyMenu--dragging");
+    },
+
+    // A drag (or a reset) ends with the pointer somewhere over the page, and
+    // the browser still delivers a click there. Left alone that click acts on
+    // whatever is underneath — clicking a tagged word opens the lexicon, for
+    // instance. Eat exactly one click, and only if it lands outside the
+    // dropdown, so a real click on a grid cell right after a drag still works.
+    _swallowNextOutsideClick: function () {
+        var self = this;
+        if (this._clickSwallower) return;
+        var handler = function (ev) {
+            self._releaseClickSwallow();
+            if (self.$el.find(".copyDropdown").has(ev.target).length) return;
+            ev.stopPropagation();
+            ev.preventDefault();
+        };
+        this._clickSwallower = handler;
+        document.addEventListener("click", handler, true);   // capture: ahead of everything else
+        this._clickSwallowTimer = setTimeout(function () { self._releaseClickSwallow(); }, COPY_DRAG_CLICK_GRACE_MS);
+    },
+
+    _releaseClickSwallow: function () {
+        if (this._clickSwallowTimer) { clearTimeout(this._clickSwallowTimer); this._clickSwallowTimer = null; }
+        if (this._clickSwallower) {
+            document.removeEventListener("click", this._clickSwallower, true);
+            this._clickSwallower = null;
+        }
+    },
+
+    _bindDragTransport: function () {
+        var self = this;
+        var types = window.PointerEvent
+            ? { move: ["pointermove"], end: ["pointerup", "pointercancel"] }
+            : { move: ["mousemove", "touchmove"], end: ["mouseup", "touchend", "touchcancel"] };
+        var move = function (e) { self._dragMove(e); };
+        var end = function (e) { self._dragEnd(e); };
+        var i;
+        for (i = 0; i < types.move.length; i++) document.addEventListener(types.move[i], move, { passive: false });
+        for (i = 0; i < types.end.length; i++) document.addEventListener(types.end[i], end, { passive: false });
+        this._dragTransport = { move: move, end: end, types: types };
+    },
+
+    _unbindDragTransport: function () {
+        var t = this._dragTransport;
+        if (!t) return;
+        var i;
+        for (i = 0; i < t.types.move.length; i++) document.removeEventListener(t.types.move[i], t.move, { passive: false });
+        for (i = 0; i < t.types.end.length; i++) document.removeEventListener(t.types.end[i], t.end, { passive: false });
+        this._dragTransport = null;
+    },
+
+    // ----- keyboard + reset -----
+
+    onDragKeydown: function (ev) {
+        var nudge = ev.shiftKey ? 40 : 10;
+        var dx = 0, dy = 0;
+        switch (ev.which || ev.keyCode) {
+            case 37: dx = -nudge; break;    // left
+            case 39: dx = nudge; break;     // right
+            case 38: dy = -nudge; break;    // up
+            case 40: dy = nudge; break;     // down
+            case 36: ev.preventDefault(); ev.stopPropagation(); this._resetPosition(); return;   // Home
+            default: return;
+        }
+        ev.preventDefault();
+        ev.stopPropagation();
+        var $menu = this._menuEl();
+        if (!$menu.length) return;
+        var rect = $menu[0].getBoundingClientRect();
+        var at = this._applyFloating({ left: rect.left + dx, top: rect.top + dy });
+        if (at) step.copyDropdown.dragPosition = at;
+    },
+
+    // Double-click / double-tap the handle, or press Home on the grip, to send
+    // the menu back to its default corner.
+    _resetPosition: function () {
+        step.copyDropdown.dragPosition = null;
+        this._clearFloating();
+        this._positionOnOpen();
+        // The gesture that triggered this is still mid-flight: the menu has
+        // just jumped out from under the pointer, so the trailing click lands
+        // on whatever is now at those coordinates — outside the menu — where it
+        // would both dismiss the menu and act on the page underneath.
+        this._dragEndedAt = Date.now();
+        this._swallowNextOutsideClick();
+    },
+
     remove: function () {
         if (step.copyDropdown.views[this.panelId] === this) delete step.copyDropdown.views[this.panelId];
         if (step.copyDropdown.openPanelId === this.panelId) step.copyDropdown.release(this.panelId);
         if (this._statusTimer) { clearTimeout(this._statusTimer); this._statusTimer = null; }
+        // Document- and window-level listeners outlive this.$el, so they have
+        // to come off explicitly or a closed panel keeps dragging.
+        this._cancelDrag();
+        this._unbindViewportWatch();
         Backbone.View.prototype.remove.apply(this, arguments);
     },
 
@@ -242,10 +671,18 @@ var PassageCopyMenuView = Backbone.View.extend({
             var headerTxt = _.escape(__s.copy || "Copy");
             var closeLabel = _.escape(__s.close || "Close");
             var gridCopyLabel = _.escape(__s.copy || "Copy");
+            // No Crowdin key exists for this and we don't hand-edit the bundles,
+            // so the drag affordance carries an English literal like the other
+            // copy-menu strings.
+            var moveLabel = "Move this window (drag, or use the arrow keys)";
             var html =
                 '<div class="dropdown-menu pull-right stepModalFgBg copyMenu" role="dialog" aria-modal="false" ' +
                     'aria-labelledby="copyMenuTitle-' + this.panelId + '">' +
-                    '<header class="copyMenuHeader">' +
+                    '<header class="copyMenuHeader copyDragHandle">' +
+                        '<button type="button" class="copyDragGrip" aria-label="' + moveLabel + '" ' +
+                            'title="' + moveLabel + '">' +
+                            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>' +
+                        '</button>' +
                         '<h2 id="copyMenuTitle-' + this.panelId + '">' + headerTxt + '</h2>' +
                         '<button type="button" class="copyCloseBtn" aria-label="' + closeLabel + '">×</button>' +
                     '</header>' +
@@ -278,6 +715,9 @@ var PassageCopyMenuView = Backbone.View.extend({
         this._renderGridSection(resolution);
         this._renderOptionsStrip();
         this._applyCooldownState();
+        // Switching selection <-> grid changes the menu's height a lot; keep a
+        // pinned menu inside the viewport when it does.
+        this._reclampFloating();
     },
 
     _computeSelectionResolution: function () {

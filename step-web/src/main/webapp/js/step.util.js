@@ -2626,12 +2626,9 @@ step.util = {
   },
 
   copyModal: function () { // Do not shorten name in pom.xml — still called from start.jsp hrefs
-    // Legacy entry point (navbar #copy-icon). Forwards to the active panel's
-    // copy dropdown. Kept for backward compatibility with any bookmarked /
-    // external JS that invokes step.util.copyModal().
     var activePanelId = step.util.activePassageId();
-    var $toggle = step.util.getPassageContainer(activePanelId).find(".copyDropdownToggle");
-    if ($toggle.length) $toggle[0].click(); // our view's click handler catches this
+    var view = step.copyDropdown && step.copyDropdown.views[activePanelId];
+    if (view) view.toggle();
   },
 
 	lexFeedbackModal: function (strongNum, ref, version) { 

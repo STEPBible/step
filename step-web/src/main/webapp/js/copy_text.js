@@ -44,7 +44,7 @@ step.copyText = {
 		if (result.hasSelection) {
 			result.label = result.startVerseDisplay || '';
 			if (result.endVerseDisplay && result.endVerseDisplay !== result.startVerseDisplay) {
-				var sep = ' ' + (__s.selection_range_separator || 'to') + ' ';
+				var sep = ' to ';
 				result.label += sep + result.endVerseDisplay;
 			}
 			if (result.label === '') result.label = 'your current selection';

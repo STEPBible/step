@@ -239,9 +239,9 @@ var PassageCopyMenuView = Backbone.View.extend({
     _initUI: function () {
         var $dd = this.$el.find(".copyDropdown");
         if ($dd.find(".copyMenu").length === 0) {
-            var headerTxt = _.escape(__s.copy_dropdown_header || __s.copy_button_label || "Copy");
-            var closeLabel = _.escape(__s.copy_dropdown_close || "Close");
-            var gridCopyLabel = _.escape(__s.copy_dropdown_copy || __s.copy_button_label || "Copy");
+            var headerTxt = _.escape(__s.copy || "Copy");
+            var closeLabel = _.escape(__s.close || "Close");
+            var gridCopyLabel = _.escape(__s.copy || "Copy");
             var html =
                 '<div class="dropdown-menu pull-right stepModalFgBg copyMenu" role="dialog" aria-modal="false" ' +
                     'aria-labelledby="copyMenuTitle-' + this.panelId + '">' +
@@ -318,7 +318,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         result.endIndex = Math.max(startIdx, endIdx);
         result.label = startDisplay;
         if (endDisplay && endDisplay !== startDisplay) {
-            var sep = " " + (__s.selection_range_separator || "to") + " ";
+            var sep = " to ";
             result.label += sep + endDisplay;
         }
         return result;
@@ -330,16 +330,16 @@ var PassageCopyMenuView = Backbone.View.extend({
         if (!showSelection) {
             $row.hide().empty();
             if (resolution.unresolvable && this._mode === "selection") {
-                this._renderStatusRow(__s.copy_selection_not_resolved ||
-                    "We couldn't match your selection — please pick below.",
+                this._renderStatusRow(
+                    "We couldn't match your selection to a verse range — please pick below.",
                     "unresolved");
                 this._mode = "grid";
             }
             return;
         }
         var safeLabel = _.escape(resolution.label || "");
-        var btnLabel = (__s.copy_button_label || "Copy") + (safeLabel ? " " + safeLabel : "");
-        var pickText = _.escape(__s.copy_choose_different_range || "Pick a different range");
+        var btnLabel = (__s.copy || "Copy") + (safeLabel ? " " + safeLabel : "");
+        var pickText = "Pick a different range";
 
         var html =
             '<button type="button" class="copyPrimaryBtn copySelectionPrimary" ' +
@@ -366,7 +366,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         if (!verses.length) {
             $section.hide().empty();
             $footer.hide();
-            this._renderStatusRow(__s.copy_dropdown_status_stale_passage || "No verses to pick.", "stale-passage");
+            this._renderStatusRow("The passage changed. Re-open the copy menu.", "stale-passage");
             return;
         }
 
@@ -420,8 +420,8 @@ var PassageCopyMenuView = Backbone.View.extend({
         // Show footer primary button in grid mode. Render order = visual + tab
         // order: primary copy chip on the left, back-to-selection chip on the
         // right. Flex layout in copy_dropdown.scss handles spacing.
-        var gridCopyLabel = _.escape(__s.copy_dropdown_copy || __s.copy_button_label || "Copy");
-        var backLabel = _.escape(__s.copy_dropdown_back_to_selection || "Back to selection");
+        var gridCopyLabel = _.escape(__s.copy || "Copy");
+        var backLabel = "Back to selection";
         var footerHtml = '<button type="button" class="copyPrimaryBtn copyGridPrimary" disabled>' +
                          gridCopyLabel + '</button>' +
                          '<div class="copyFooterSuccess" role="status" aria-live="polite"></div>';
@@ -490,7 +490,7 @@ var PassageCopyMenuView = Backbone.View.extend({
             var checked = this._resolveCheckedVersions(allVersions);
             versionsHtml =
                 '<fieldset class="copyVersions">' +
-                    '<legend>' + _.escape(__s.copy_dropdown_versions_label || "Versions") + '</legend>';
+                    '<legend>Versions</legend>';
             for (var i = 0; i < allVersions.length; i++) {
                 var v = allVersions[i];
                 var id = "cpyver-" + this.panelId + "-" + (i + 1);
@@ -519,12 +519,12 @@ var PassageCopyMenuView = Backbone.View.extend({
                     '<label>' +
                         '<input type="checkbox" class="copyNotesToggle"' +
                             (wantNotes ? ' checked' : '') + '>' +
-                        _.escape(__s.copy_dropdown_include_notes || "Include notes") +
+                        'Include notes' +
                     '</label>' +
                     '<label>' +
                         '<input type="checkbox" class="copyXrefsToggle"' +
                             (wantXrefs ? ' checked' : '') + '>' +
-                        _.escape(__s.copy_dropdown_include_xrefs || "Include cross references") +
+                        'Include cross references' +
                     '</label>' +
                 '</div>';
         }
@@ -607,8 +607,7 @@ var PassageCopyMenuView = Backbone.View.extend({
             $primary.prop("disabled", true);
             $close.prop("disabled", true);
             var secs = Math.ceil(remaining / 1000);
-            var msg = (__s.copy_dropdown_status_cooldown ||
-                "Please wait %d seconds before copying again.").replace("%d", secs);
+            var msg = "Please wait %d seconds before copying again.".replace("%d", secs);
             this._renderStatusRow(msg, "cooldown");
         } else {
             $primary.prop("disabled", false);
@@ -645,7 +644,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         var $versionField = this.$el.find(".copyVersions");
         if ($versionField.length && this._collectCheckedVersionIndices().length === 0) {
             this._renderStatusRow(
-                __s.copy_dropdown_status_no_versions || "Select at least one version.",
+                "You must select at least one version to copy.",
                 "no-versions");
             return;
         }
@@ -796,19 +795,17 @@ var PassageCopyMenuView = Backbone.View.extend({
             showNoVersionsSelected: function () {
                 if (copyId !== step.copyDropdown.inFlightCopyId) return;
                 self._renderStatusRow(
-                    __s.copy_dropdown_status_no_versions ||
-                        "You must select at least one version to copy.",
+                    "You must select at least one version to copy.",
                     "no-versions");
             },
             showCopyError: function (err) {
                 if (copyId !== step.copyDropdown.inFlightCopyId) return;
-                self._renderStatusRow(__s.copy_dropdown_status_copy_error || "Copy failed.", "copy-error");
+                self._renderStatusRow("Copy failed. Please try again.", "copy-error");
             },
             showClipboardDenied: function () {
                 if (copyId !== step.copyDropdown.inFlightCopyId) return;
                 self._renderStatusRow(
-                    __s.copy_dropdown_status_clipboard_denied ||
-                        "Clipboard access was denied by the browser.",
+                    "Clipboard access was denied by the browser. Check permissions or use a secure (https) context.",
                     "clipboard-denied");
             }
         };
@@ -842,7 +839,7 @@ var PassageCopyMenuView = Backbone.View.extend({
 
     _onCopySuccess: function () {
         var self = this;
-        var msg = __s.copy_dropdown_status_success || __s.text_is_copied || "The text is copied.";
+        var msg = __s.text_is_copied || "The text is copied, ready to be pasted";
         this._renderSuccessInline(msg);
         this.$el.find(".copyPrimaryBtn").prop("disabled", true);
         if (this._statusTimer) clearTimeout(this._statusTimer);
@@ -861,7 +858,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         this._clearInlineSuccess();
         step.copyDropdown.startCooldown(sleepMs || 5000, "rate");
         var secs = Math.ceil((sleepMs || 5000) / 1000);
-        var template = __s.copy_dropdown_status_rapid_warning ||
+        var template =
             "You are copying at a rapid pace. Please review the copyright terms for: %s. Wait %d seconds.";
         var msg = template.replace("%s", versionsString).replace("%d", secs);
         this._renderStatusRow(msg, "rapid-warning");

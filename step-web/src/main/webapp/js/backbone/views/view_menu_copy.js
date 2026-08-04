@@ -20,6 +20,10 @@ window.step = window.step || {};
 step.copyDropdown = step.copyDropdown || {
     openPanelId: null,
     openView: null,
+    // panelId -> view, for every live panel (not just the open one). The navbar
+    // copy button uses this to reach the active panel's menu now that the panel
+    // no longer carries its own .copyDropdownToggle icon to click.
+    views: {},
     selectionSnapshot: null,
     listenerGated: false,
     cooldown: { active: false, until: 0, reason: null, timer: null },
@@ -83,6 +87,8 @@ step.copyDropdown = step.copyDropdown || {
 // ------------------------------------------------------------------
 var PassageCopyMenuView = Backbone.View.extend({
     events: {
+        // Dormant: start.jsp no longer renders a .copyDropdownToggle inside the
+        // panel. Kept so re-adding the in-panel icon is a markup-only change.
         "click .copyDropdownToggle": "onToggleClick",
         "click .copyCloseBtn": "onCloseClick",
         "click .copyPrimaryBtn": "onPrimaryClick",
@@ -103,6 +109,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         _.bindAll(this);
 
         this.panelId = this.model.get("passageId");
+        step.copyDropdown.views[this.panelId] = this;
         this.rendered = false;
         this._mode = "selection";       // 'selection' | 'grid'
         this._gridStart = null;          // verse index
@@ -132,11 +139,17 @@ var PassageCopyMenuView = Backbone.View.extend({
     //   close() removes .open + fires our own close flow
     //   outside-click listener bound on document while open
 
+    // Entry point for anything outside this view (navbar #copy-icon via
+    // step.util.copyModal, and the dormant in-panel toggle below).
+    toggle: function () {
+        if (this._isOpen()) this.close();
+        else this.open();
+    },
+
     onToggleClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        if (this._isOpen()) this.close();
-        else this.open();
+        this.toggle();
     },
 
     _isOpen: function () {
@@ -222,6 +235,7 @@ var PassageCopyMenuView = Backbone.View.extend({
     _stopInsideClicks: function (ev) { ev.stopPropagation(); },
 
     remove: function () {
+        if (step.copyDropdown.views[this.panelId] === this) delete step.copyDropdown.views[this.panelId];
         if (step.copyDropdown.openPanelId === this.panelId) step.copyDropdown.release(this.panelId);
         if (this._statusTimer) { clearTimeout(this._statusTimer); this._statusTimer = null; }
         Backbone.View.prototype.remove.apply(this, arguments);

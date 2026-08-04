@@ -452,14 +452,13 @@
                                         <i class="glyphicon glyphicon-resize-small" style="display:none"></i>
                                     </a>
                                 </span>
+                                <%-- The in-panel copy icon (.copyDropdownToggle) was removed: the copy
+                                     menu is now opened only from the navbar copy button, which routes
+                                     through step.util.copyModal() to the active panel's view. This span
+                                     stays as the positioning anchor and open/close state holder for
+                                     .copyMenu, which PassageCopyMenuView injects into it. --%>
                                 <span class="dropdown copyDropdown" style="background-color:var(--clrBackground)"
-                                      data-button-name="copy" data-button-location="panel">
-                                        <a class="copyDropdownToggle"
-                                           aria-haspopup="true" aria-expanded="false"
-                                           title="<fmt:message key="copy" />">
-                                            <i class="glyphicon glyphicon-copy"></i>
-                                        </a>
-                                </span>
+                                      data-button-name="copy" data-button-location="panel"></span>
                                 <span class="dropdown settingsDropdown" style="background-color:var(--clrBackground)">
                                         <a class="dropdown-toggle showSettings" data-toggle="dropdown"
                                            title="<fmt:message key="view" />">

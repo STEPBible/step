@@ -1068,25 +1068,23 @@ step.util = {
         return term.replace(/"/g, '\\\"');
     },
     swapMasterVersion: function (newMasterVersion, passageModel, silent) {
-        var replacePattern = new RegExp("version=" + newMasterVersion, "ig");
-        // check .get() to see if it can be used to replase | with @
-        var originalArgs = passageModel.get("args");
-        var newArgs = originalArgs.replace(replacePattern, "");
-        newArgs = "version=" + newMasterVersion + URL_SEPARATOR + newArgs;
-        newArgs = newArgs.replace(/@@/g, URL_SEPARATOR).replace(/@$/, "").replace(/\|\|/g, URL_SEPARATOR).replace(/\|$/, "");
-
-        //now get the versions in the right order and overwrite the stored master version and extraVersions
-        var versions = (newArgs || "").match(/version=[a-zA-Z0-9]+/ig) || [];
-        var allVersions = [];
-        for (var i = 0; i < versions.length; i++) {
-            var versionName = versions[i].substring("version=".length);
-            allVersions.push(versionName);
+        var originalArgs = passageModel.get("args").split("@");
+		var foundNewMasterVersion = false;
+        var otherVersions = [];
+		var newArgs = "version=" + newMasterVersion;
+		for (var i = 0; i < originalArgs.length; i++) {
+			if (originalArgs[i].substring(0,8) === "version=") {
+				var versionName = originalArgs[i].substring(8);
+				if (versionName === newMasterVersion) {
+					foundNewMasterVersion = true;
+					continue;
+				}
+				otherVersions.push(versionName);
+			}
+			newArgs += "@" + originalArgs[i];
         }
-
-        var masterVersion = allVersions[0];
-        var otherVersions = allVersions.slice(1);
-		if (!step.util.checkFirstBibleHasPassageBeforeSwap(newMasterVersion, passageModel, otherVersions)) return;
-        passageModel.save({ args: newArgs, masterVersion: masterVersion, otherVersions: otherVersions }, { silent: silent });
+		if ((!foundNewMasterVersion) || (otherVersions.length < 1) || (!step.util.checkFirstBibleHasPassageBeforeSwap(newMasterVersion, passageModel, otherVersions))) return;
+        passageModel.save({ args: newArgs, masterVersion: newMasterVersion, otherVersions: otherVersions }, { silent: silent });
 		step.util.incrementLocalStorage("step.interlinearTutorial");
     },
     ui: {

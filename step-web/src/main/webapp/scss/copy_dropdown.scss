@@ -1,0 +1,421 @@
+@import 'template_variables';
+
+.copyDropdown {
+  display: inline-block;
+
+  .copyDropdownToggle {
+    cursor: pointer;
+    color: $text-color;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+      background-color: $secondaryHoverColour;
+      color: black;
+    }
+  }
+
+  .copyMenu {
+    min-width: 280px;
+    max-width: 420px;
+    padding: 8px;
+    font-size: 14px;
+
+    // The header doubles as the drag handle (see view_menu_copy.js). The grab
+    // area is the whole bar; .copyCloseBtn opts back out in JS so it stays a
+    // button. touch-action:none keeps the browser from claiming the gesture as
+    // a pan/scroll, and user-select:none stops a drag from sweeping a text
+    // selection across the passage underneath it.
+    .copyMenuHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 6px;
+
+      &.copyDragHandle {
+        cursor: move;
+        touch-action: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      h2 {
+        font-size: 14px;
+        margin: 0;
+        flex: 1 1 auto;
+      }
+
+      .copyDragGrip {
+        flex: 0 0 auto;
+        background: transparent;
+        border: 0;
+        padding: 2px 4px;
+        line-height: 1;
+        font-size: 12px;
+        color: inherit;
+        opacity: 0.5;
+        cursor: move;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        &:focus {
+          opacity: 1;
+          outline: 1px dotted $text-color;
+        }
+      }
+
+      .copyCloseBtn {
+        background: transparent;
+        border: 0;
+        font-size: 18px;
+        line-height: 1;
+        padding: 2px 6px;
+        cursor: pointer;
+        color: inherit;
+        touch-action: manipulation;
+
+        &:hover,
+        &:focus {
+          background-color: $secondaryHoverColour;
+          outline: none;
+        }
+
+        &[disabled] {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .copyStatusRow {
+      margin: 4px 0 8px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      background-color: var(--clr2ndHover);
+
+      &:empty {
+        display: none;
+      }
+
+      &.copyStatus--success {
+        background-color: #dff0d8;
+        color: #3c763d;
+      }
+
+      &.copyStatus--error,
+      &.copyStatus--clipboard-denied,
+      &.copyStatus--copy-error,
+      &.copyStatus--ajax-error,
+      &.copyStatus--stale-passage {
+        background-color: #f2dede;
+        color: #a94442;
+      }
+
+      &.copyStatus--cooldown,
+      &.copyStatus--rapid-warning {
+        background-color: #fcf8e3;
+        color: #8a6d3b;
+      }
+
+      &.copyStatus--unresolved,
+      &.copyStatus--no-versions {
+        background-color: #d9edf7;
+        color: #31708f;
+      }
+    }
+
+    .copySelectionRow {
+      margin: 4px 0 12px;
+
+      .copyPickDifferent {
+        background: transparent;
+        border: 0;
+        color: $text-color;
+        cursor: pointer;
+        padding: 6px 0 0;
+        font-size: 12px;
+        text-decoration: underline;
+
+        &:hover,
+        &:focus {
+          color: black;
+        }
+      }
+    }
+
+    .copyOptionsStrip {
+      margin: 6px 0;
+
+      .copyVersions {
+        border: 0;
+        margin: 0 0 6px;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 10px;
+
+        legend {
+          border: 0;
+          margin: 0 0 4px;
+          padding: 0;
+          font-size: 12px;
+          font-weight: 600;
+          width: 100%;
+        }
+
+        label {
+          font-weight: normal;
+          margin: 0;
+          white-space: nowrap;
+        }
+
+        input[type="checkbox"] {
+          margin-right: 4px;
+          vertical-align: middle;
+        }
+      }
+
+      .copyToggleRow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 14px;
+
+        label {
+          font-weight: normal;
+          margin: 0;
+          white-space: nowrap;
+
+          input[type="checkbox"] {
+            margin-right: 4px;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+
+    .copyBottomSuccess {
+      margin-top: 6px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      background-color: #dff0d8;
+      color: #3c763d;
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    .copyMenuFooter {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+
+      .copyFooterSuccess {
+        flex: 1;
+        padding: 6px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+        background-color: #dff0d8;
+        color: #3c763d;
+        text-align: center;
+
+        &:empty {
+          display: none;
+        }
+      }
+    }
+
+    .copyPrimaryBtn {
+      display: inline-block;
+      padding: 6px 12px;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+      background-color: var(--clrBackground);
+      color: $text-color;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+
+      &:hover:not([disabled]),
+      &:focus:not([disabled]) {
+        background-color: $secondaryHoverColour;
+        color: black;
+        outline: none;
+      }
+
+      &[disabled],
+      &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+    }
+
+    .copySelectionPrimary {
+      width: 100%;
+      text-align: center;
+    }
+
+    // Grid-mode footer buttons + selection-mode primary inherit the
+    // .copyPrimaryBtn boxed look (border, radius, padding, hover) — only
+    // the resting color is overridden to match the .argSelect panel-bar
+    // buttons (bible / reference / search). Hover (.copyPrimaryBtn:hover)
+    // flips to black, disabled (.copyPrimaryBtn[disabled]) fades via
+    // opacity. Same SCSS specificity (0,3,0); placed after .copyPrimaryBtn
+    // in source order.
+    .copySelectionPrimary,
+    .copyGridPrimary,
+    .copyBackToSelection {
+      color: $strong-color;
+      color: var(--clrStrongText);
+    }
+
+    .copyGridSection {
+      margin-top: 6px;
+
+      .copyGridChapterLabel {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 0;
+        position: sticky;
+        top: 0;
+        background-color: var(--clrBackground);
+        z-index: 1;
+      }
+
+      .copyGridScroller {
+        overflow-y: auto;
+        max-height: 380px;
+        border: 1px solid $border-color;
+        border-radius: 3px;
+      }
+
+      .copyGrid {
+        width: 100%;
+        border-collapse: collapse;
+
+        td {
+          padding: 0;
+          text-align: center;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+      }
+
+      .copyGridCell {
+        display: block;
+        width: 100%;
+        padding: 5px 2px;
+        cursor: pointer;
+        color: $text-color;
+        font-size: 13px;
+        touch-action: manipulation;
+        background: transparent;
+        border: 0;
+        border-radius: 2px;
+        text-align: center;
+        font-family: inherit;
+        line-height: 1.2;
+
+        &:hover,
+        &:focus {
+          background-color: $secondaryHoverColour;
+          color: black;
+          outline: none;
+        }
+
+        &[data-role="start"],
+        &[data-role="end"] {
+          background-color: #337ab7;
+          color: white;
+          font-weight: 600;
+        }
+
+        &[data-role="in-range"] {
+          background-color: #d9edf7;
+          color: #31708f;
+        }
+
+        &[aria-disabled="true"],
+        &.copyGridCell--gap {
+          opacity: 0.3;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
+  // ----- movable menu -----
+  //
+  // Specificity here is (0,3,0), one class more than both the `.copyDropdown
+  // .copyMenu` block above and the <=640px bottom-sheet block below, so this
+  // wins regardless of source order.
+  //
+  // position:fixed is the whole trick. The menu's default anchor is a 0x0
+  // span in the panel header, and #columnHolder (passage_columns.scss) sets
+  // overflow-y:hidden, which clips absolutely-positioned descendants — an
+  // absolute menu simply cannot be moved out of the panel. Nothing in the
+  // ancestor chain sets transform/filter/perspective/contain, so fixed
+  // resolves against the viewport and escapes that clip. z-index clears
+  // #stepnavbar (1030). left/top/width/max-height are written by JS.
+  .copyMenu.copyMenu--floating {
+    position: fixed;
+    margin: 0;
+    right: auto;
+    bottom: auto;
+    max-width: none;
+    overflow-y: auto;
+    z-index: 1035;
+  }
+
+  .copyMenu.copyMenu--dragging {
+    transition: none;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+  }
+
+  @media (max-width: 640px) {
+    .copyMenu {
+      position: fixed;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      top: auto;
+      max-width: none;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    // Bigger grab target for thumbs — the default header is ~22px tall.
+    .copyMenuHeader {
+      min-height: 34px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copyMenu,
+    .copyGridCell {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+[dir='rtl'] .copyDropdown .copyMenu {
+  text-align: right;
+}
+
+@media print {
+  .copyDropdown {
+    display: none !important;
+  }
+}

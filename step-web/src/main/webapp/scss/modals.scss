@@ -350,5 +350,35 @@
   }
 }
 
+.copySelectionOnly {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px 8px;
+  text-align: center;
+  h4 { margin-bottom: 12px; }
+}
+.copySelectionRange {
+  font-size: 1.1em;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+.copySelectionPrimary {
+  min-height: 44px;
+  min-width: 180px;
+  padding: 10px 24px;
+  font-size: 1.05em;
+}
+.copySelectionEscape {
+  margin-top: 18px;
+  font-size: 0.9em;
+}
+.copySelectionFallback {
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: rgba(255, 200, 0, 0.15);
+  border-left: 3px solid #c90;
+  font-size: 0.95em;
+}
+
 @import 'bible_versions';
 @import 'advanced_search';

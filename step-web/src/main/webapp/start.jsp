@@ -241,6 +241,7 @@
     <link href="css/select2.css" rel="stylesheet" media="screen"/>
     <link href="css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
     <link href="scss/step-template.css" rel="stylesheet" media="screen"/>
+    <link href="scss/copy_dropdown.css" rel="stylesheet" media="screen"/>
    	<!-- Add IntroJs styles -->
 	<link href="css/introjs.min.css" rel="stylesheet">
     <%
@@ -451,6 +452,8 @@
                                         <i class="glyphicon glyphicon-resize-small" style="display:none"></i>
                                     </a>
                                 </span>
+                                <span class="dropdown copyDropdown" style="background-color:var(--clrBackground)"
+                                      data-button-name="copy" data-button-location="panel"></span>
                                 <span class="dropdown settingsDropdown" style="background-color:var(--clrBackground)">
                                         <a class="dropdown-toggle showSettings" data-toggle="dropdown"
                                            title="<fmt:message key="view" />">
@@ -733,6 +736,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <script src="js/backbone/models/model_history.js" type="text/javascript"></script>
 <script src="js/backbone/models/passage_model.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_menu_passage.js" type="text/javascript"></script>
+<script src="js/backbone/views/view_menu_copy.js" type="text/javascript"></script>
 <script src="js/backbone/models/model_settings.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_feedback.js" type="text/javascript"></script>
 <script src="js/backbone/views/view_examples.js" type="text/javascript"></script>

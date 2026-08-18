@@ -23,8 +23,10 @@ sub collectWordsUsedByAStrong {
 	#		return;
 	#}
 	my $secondStrongNum = $strongNum;
+    my $strongWithoutAugment = $strongNum;
 	if ($strongNum =~ m/^([GH]\d{1,5})[A-Za-z]/) {
 		$secondStrongNum = $1 . ',' . $secondStrongNum;
+        $strongWithoutAugment = $1;
 	}
 	my $page = 1;
 	my $numOfVerseFound = 0;
@@ -65,7 +67,7 @@ sub collectWordsUsedByAStrong {
 						if ($dataToScan =~ /$quoteChar/) {
 							my $strongNumsFound = $`;
 							$dataToScan = $';
-							if (index($strongNumsFound, $strongNum) > -1) {
+							if (index($strongNumsFound, $strongWithoutAugment) > -1) {
 								if ($dataToScan =~ />([^<]+)</) {
 									my $foundWords = lc $1;
 									$foundWords =~ s/“//g;
@@ -134,7 +136,7 @@ my %numOfPassagesForBasicStrong;
 my @allVersions = ("ESV", "KJV", "NASB2020", "BSB", "HCSB", "RV_th", "WEB_th",
     "ASV-TH", "ChiUn", "ChiUns", "NASB1995", "RWebster", "spaBES2018eb", "AraSVD");
 my @hebrewVersions = ("THOT", "OHB", "SP", "SPMT");
-my @greekVersions = ("SBLG", "THGNT", "TR", "Byz", "WHNU", "Elzevir", "Antoniades", "KhmKCB", "LXX_th");
+my @greekVersions = ("SBLG", "THGNT", "TR", "Byz", "WHNU", "Elzevir", "Antoniades", "KhmKCB", "NIV", "LXX_th");
 my @greekVersionsOTNT = ("ABEn", "ABGk");
 
 print "Strong,";

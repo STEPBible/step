@@ -260,7 +260,7 @@ step.util = {
 			}
 			if (bibleVersions.indexOf(bibleName) > -1) // Bibles selected by the users
 				msg[0] += newMsg;
-			else if ("ESV,NASB2020,SBLG_TH,LXX_TH,THOT".indexOf(bibleName) > -1) // Popular Bibles with good Strong tagging
+			else if ("ESV,NIV,NASB2020,SBLG_TH,LXX_TH,THOT".indexOf(bibleName) > -1) // Popular Bibles with good Strong tagging
 				msg[1] += newMsg;
 			else
 				msg[2] += newMsg;
@@ -5196,7 +5196,8 @@ step.util = {
 	},
 	normalizeVersionName: function(curVersion) {
 		curVersion = curVersion.toUpperCase();
-		if (curVersion === "KJVA") curVersion = "KJV";
+		if (curVersion === "NIVUK")	curVersion = "NIV";
+		else if (curVersion === "KJVA") curVersion = "KJV";
 		else if (curVersion === "ESV_TH") curVersion = "ESV";
 		else if (curVersion === "OHB") curVersion = "OSHB";
 		else if (curVersion === "SBLG") curVersion = "SBLG_TH";

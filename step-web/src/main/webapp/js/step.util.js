@@ -4211,17 +4211,37 @@ step.util = {
 			}).start();
 		}
 		else {
-			if (!step.util.showIntroJS(document.querySelector('#report-icon'),
-				'New Features!<br><ul style="padding-left:15px"><li>Chronology: An interactive timeline of people, places and events.<li>People in the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
-				'bottom', 0, 'step.genchron', true))
-				if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),
-					'Color code grammar is available with a new user interface.',
-					'left', 499, 'step.colorgrammar'))
-					if (!step.util.showIntroJS(document.querySelector('#copy-icon'),
-						__s.copy_intro, 'left', 499, 'step.copyIntro'))
-							step.util.showIntroJS(document.querySelector('#summbutton'),
-								"For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
-								'bottom', 499, 'step.commentaryIntro');
+			var foundNIV = false;
+			var foundNT = false;
+			var originalArgs = [];
+			var tmp = $.getUrlVar("q");
+			if (typeof tmp === "string")
+				originalArgs = tmp.split("@");
+			for (var i = 0; i < originalArgs.length; i++) {
+				if ((originalArgs[i] === "version=NIV") || (originalArgs[i] === "version=NIVUK"))
+					foundNIV = true;
+				else if (originalArgs[i].substring(0, 10) === "reference=") {
+					var osisIds = originalArgs[i].substring(10);
+					if (step.util.bookOrderInBible(osisIds) > 38)
+						foundNT = true;
+					else {
+						foundNT = false;
+						break; // A single OT reference will not show the Intro
+					}
+				}
+			}
+			if (!(foundNIV && foundNT && step.util.showIntroOfTaggedNIVNT()))
+				if (!step.util.showIntroJS(document.querySelector('#report-icon'),
+						'New Features!<br><ul style="padding-left:15px"><li>Chronology: An interactive timeline of people, places and events.<li>People in the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
+						'bottom', 0, 'step.genchron', true))
+					if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),
+						'Color code grammar is available with a new user interface.',
+						'left', 499, 'step.colorgrammar'))
+						if (!step.util.showIntroJS(document.querySelector('#copy-icon'),
+							__s.copy_intro, 'left', 499, 'step.copyIntro'))
+								step.util.showIntroJS(document.querySelector('#summbutton'),
+									"For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
+									'bottom', 499, 'step.commentaryIntro');
 		}
 	},
     showIntroOfMultiVersion: function () {
@@ -4248,9 +4268,10 @@ step.util = {
 			introJs().setOptions({
 				steps: introJsSteps
 			}).start();
+			step.util.localStorageSetItem("step.taggedNIV", 1);
+			return true;
 		}
-		step.util.localStorageSetItem("step.taggedNIV", 1);
-	
+		return false;
 	},
 	closeModal: function (modalID) {
 		var modalsRequireUnfreezeOfScroll = " showLongAlertModal showBookOrChapterSummaryModal grammarClrModal passageSelectionModal searchSelectionModal copyModal videoModal fontSettings raiseSupport aboutModal bibleVersions ";

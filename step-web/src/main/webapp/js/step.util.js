@@ -4232,6 +4232,26 @@ step.util = {
 			__s.introjs_multi_version,
 			'left', 499, 'step.multiVersionCount');
 	},
+	showIntroOfTaggedNIVNT: function () {
+		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
+		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+			return;
+		var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.taggedNIV");
+		var introCount = parseInt(introCountFromStorageOrCookie, 10);
+		if (isNaN(introCount)) introCount = 0;
+		if (introCount <= 1) {
+			var introJsSteps = [
+				{
+					intro: __s.introjs_taggedNIV
+				}
+			];
+			introJs().setOptions({
+				steps: introJsSteps
+			}).start();
+		}
+		step.util.localStorageSetItem("step.taggedNIV", 1);
+	
+	},
 	closeModal: function (modalID) {
 		var modalsRequireUnfreezeOfScroll = " showLongAlertModal showBookOrChapterSummaryModal grammarClrModal passageSelectionModal searchSelectionModal copyModal videoModal fontSettings raiseSupport aboutModal bibleVersions ";
 		if ((modalsRequireUnfreezeOfScroll.indexOf( " " + modalID + " ") > -1) && step.touchDevice && !step.touchWideDevice)

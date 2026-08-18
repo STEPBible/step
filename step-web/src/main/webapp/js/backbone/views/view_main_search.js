@@ -625,6 +625,10 @@ var MainSearchView = Backbone.View.extend({
         }
         step.router.navigateSearch(args);
         if (numOfBibleVersions > 1) step.util.showIntroOfMultiVersion();
+        else if (((newMasterVersion === "NIV") || (newMasterVersion === "NIVUK") || 
+            (otherVersions.indexOf("NIV") > -1) || (otherVersions.indexOf("NIVUK") > -1)) &&
+            (step.util.bookOrderInBible(osisIds[0]) > 38))
+            step.util.showIntroOfTaggedNIVNT();
     },
     getCurrentInput: function () {
         return this.masterSearch.select2("container").find(".select2-input").val();

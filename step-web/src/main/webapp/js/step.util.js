@@ -4211,20 +4211,17 @@ step.util = {
 			}).start();
 		}
 		else {
-			if (!step.util.showIntroJS(document.querySelector('.select-version.stepButtonTriangle'),
-				'New Bible Edition!<br>The NIV now has two versions: "USA" and "Anglicised".',
-			 	'bottom', 0, 'step.nivusa'))
-				if (!step.util.showIntroJS(document.querySelector('#report-icon'),
-					'New Features!<br><ul style="padding-left:15px"><li>Chronology: An interactive timeline of people, places and events.<li>People in the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
-				 	'bottom', 0, 'step.genchron', true))
-					if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),
-						'Color code grammar is available with a new user interface.',
-						'left', 499, 'step.colorgrammar'))
-						if (!step.util.showIntroJS(document.querySelector('#copy-icon'),
-							__s.copy_intro, 'left', 499, 'step.copyIntro'))
-								step.util.showIntroJS(document.querySelector('#summbutton'),
-									"For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
-									'bottom', 499, 'step.commentaryIntro');
+			if (!step.util.showIntroJS(document.querySelector('#report-icon'),
+				'New Features!<br><ul style="padding-left:15px"><li>Chronology: An interactive timeline of people, places and events.<li>People in the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
+				'bottom', 0, 'step.genchron', true))
+				if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),
+					'Color code grammar is available with a new user interface.',
+					'left', 499, 'step.colorgrammar'))
+					if (!step.util.showIntroJS(document.querySelector('#copy-icon'),
+						__s.copy_intro, 'left', 499, 'step.copyIntro'))
+							step.util.showIntroJS(document.querySelector('#summbutton'),
+								"For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
+								'bottom', 499, 'step.commentaryIntro');
 		}
 	},
     showIntroOfMultiVersion: function () {

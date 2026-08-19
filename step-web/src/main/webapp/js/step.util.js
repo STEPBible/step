@@ -3430,18 +3430,19 @@ step.util = {
             )()).modal("show");
 			step.util.blockBackgroundScrolling('showBookOrChapterSummaryModal');
 			step.util.buildBibleProjectVideo(step.userLanguageCode);
-		    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.showBibleProject");
+			if (document.querySelector('.introjs-overlay') != null) return;
+		    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.showBibleProject"); 
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
 			if (introCount < 1) {
 				var pos = (window.innerWidth > 499) ? "bottom" : "left";
 				var introJsSteps = [
-				{
-					element: document.querySelector('#bibleTab'),
-					intro: "Click on the \"Bible summary\" tab to see summary videos by the BibleProject!",
-					position: pos
-				}
-         	   ];
+					{
+						element: document.querySelector('#bibleTab'),
+						intro: "Click on the \"Bible summary\" tab to see summary videos by the BibleProject!",
+						position: pos
+					}
+				];
 				introJs().setOptions({
 					steps: introJsSteps
 				}).start();
@@ -4134,7 +4135,7 @@ step.util = {
 		}
 	},
 	showIntroJS: function(element, introMsg, position, width, localStorageName, skipTouchScreen, showNumOfTimes, sleepTime) {
-		if ((skipTouchScreen && step.touchDevice) || (window.innerWidth < width))
+		if ((skipTouchScreen && step.touchDevice) || (window.innerWidth < width) || (document.querySelector('.introjs-overlay') != null))
 			return false;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem(localStorageName);
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
@@ -4178,8 +4179,9 @@ step.util = {
 		}
 	},
 	showIntro: function (showAnyway) {
-		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
-		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+		if (!showAnyway && (($.getUrlVars().indexOf("skipwelcome") > -1) || step.state.isLocal())) return;
+		if (step.appleTouchDevice || // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+			(document.querySelector('.introjs-overlay') != null)) 
 			return;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
@@ -4210,68 +4212,44 @@ step.util = {
 				steps: introJsSteps, nextLabel: " > ", prevLabel: " < ", doneLabel: __s.done
 			}).start();
 		}
-		else {
-			var foundNIV = false;
-			var foundNT = false;
-			var originalArgs = [];
-			var tmp = $.getUrlVar("q");
-			if (typeof tmp === "string")
-				originalArgs = tmp.split("@");
-			for (var i = 0; i < originalArgs.length; i++) {
-				if ((originalArgs[i] === "version=NIV") || (originalArgs[i] === "version=NIVUK"))
-					foundNIV = true;
-				else if (originalArgs[i].substring(0, 10) === "reference=") {
-					var osisIds = originalArgs[i].substring(10);
-					if (step.util.bookOrderInBible(osisIds) > 38)
-						foundNT = true;
-					else {
-						foundNT = false;
-						break; // A single OT reference will not show the Intro
-					}
-				}
-			}
-			if (!(foundNIV && foundNT && step.util.showIntroOfTaggedNIVNT()))
-				if (!step.util.showIntroJS(document.querySelector('#report-icon'),
-						'New Features!<br><ul style="padding-left:15px"><li>Chronology: An interactive timeline of people, places and events.<li>People in the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
-						'bottom', 0, 'step.genchron', true))
-					if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),
-						'Color code grammar is available with a new user interface.',
-						'left', 499, 'step.colorgrammar'))
-						if (!step.util.showIntroJS(document.querySelector('#copy-icon'),
-							__s.copy_intro, 'left', 499, 'step.copyIntro'))
-								step.util.showIntroJS(document.querySelector('#summbutton'),
-									"For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
-									'bottom', 499, 'step.commentaryIntro');
-		}
+		else if (!step.util.showIntroJS(document.querySelector('#report-icon'),
+				'New Features!<br><ul style="padding-left:15px"><li>Chronology: An interactive timeline of people, places and events.<li>People in the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
+				'bottom', 0, 'step.genchron', true))
+			if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),
+					'Color code grammar is available with a new user interface.',
+					'left', 499, 'step.colorgrammar'))
+				if (!step.util.showIntroJS(document.querySelector('#copy-icon'),
+					__s.copy_intro, 'left', 499, 'step.copyIntro'))
+						step.util.showIntroJS(document.querySelector('#summbutton'),
+							"For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
+							'bottom', 499, 'step.commentaryIntro');
 	},
     showIntroOfMultiVersion: function () {
-		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
-		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+		if (($.getUrlVars().indexOf("skipwelcome") > -1) ||
+			(step.appleTouchDevice)) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
 			return;
 		step.util.showIntroJS(document.querySelector('.passageContainer.active').querySelector('.dropdown.settingsDropdown'),
 			__s.introjs_multi_version,
 			'left', 499, 'step.multiVersionCount');
 	},
 	showIntroOfTaggedNIVNT: function () {
-		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
-		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
-			return;
+		if (($.getUrlVars().indexOf("skipwelcome") > -1) || (document.querySelector('.introjs-overlay') != null) ||
+			(step.appleTouchDevice)) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+				return;
 		var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.taggedNIV");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
-		if (introCount <= 1) {
+		if (introCount < 1) {
 			var introJsSteps = [
 				{
 					intro: __s.introjs_taggedNIV
 				}
 			];
+			step.util.localStorageSetItem("step.taggedNIV", 1);
 			introJs().setOptions({
 				steps: introJsSteps
 			}).start();
-			step.util.localStorageSetItem("step.taggedNIV", 1);
-			return true;
 		}
-		return false;
 	},
 	closeModal: function (modalID) {
 		var modalsRequireUnfreezeOfScroll = " showLongAlertModal showBookOrChapterSummaryModal grammarClrModal passageSelectionModal searchSelectionModal copyModal videoModal fontSettings raiseSupport aboutModal bibleVersions ";

@@ -234,6 +234,8 @@ var PassageDisplayView = DisplayView.extend({
                     }
                 }
             }
+            if (!hasOT && hasNT && ((bibleVersions.indexOf("NIV") > -1) || (bibleVersions.indexOf("NIVUK") > -1)))
+                step.util.showIntroOfTaggedNIVNT();
         },
         _biblesWithGrammar: function(versions, isNT, isOT) {
             var checkArrayBoth = ['ESV', 'NET2FULL', 'NASB2020', 'CUN', 'CUNS'];

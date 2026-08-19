@@ -203,20 +203,19 @@ var PassageMenuView = Backbone.View.extend({
         // played, and hopefully the user knows what the arrows are for.
         // iPhone need the left and right buttons. Swipe right / left does not work on iPhones when the chapter
         // does not have clickable elements (e.g. strong words) and the chapter is long.
-		if (step.touchDevice && !step.appleTouchDevice) {
-            var swipeIntro = step.util.localStorageGetItem("swipeIntro");
-            if (swipeIntro != 1) {
-                var stepUsage = step.util.localStorageGetItem("step.usageCount");
-                if (stepUsage == null) stepUsage = 0;
-                else if (stepUsage > 0) {
-                    var introJsSteps = [{
-                        intro: __s.swipe_lr // do not specify an element because it will hide the buttons to select Bible, passage and to search
-                    }];
-                    introJs().setOptions({
-                        steps: introJsSteps
-                    }).start();
-                    step.util.localStorageSetItem("swipeIntro", 1);
-                }
+		if (!step.touchDevice || step.appleTouchDevice || (document.querySelector('.introjs-overlay') != null)) return;
+        var swipeIntro = step.util.localStorageGetItem("swipeIntro");
+        if (swipeIntro != 1) {
+            var stepUsage = step.util.localStorageGetItem("step.usageCount");
+            if (stepUsage == null) stepUsage = 0;
+            else if (stepUsage > 0) {
+                var introJsSteps = [{
+                    intro: __s.swipe_lr // do not specify an element because it will hide the buttons to select Bible, passage and to search
+                }];
+                introJs().setOptions({
+                    steps: introJsSteps
+                }).start();
+                step.util.localStorageSetItem("swipeIntro", 1);
             }
         }
     },

@@ -291,7 +291,7 @@ function setupMap() {
 	else {
 		if (typeof $('.nav-tabs a[href="#googlemap"]').tab === "function")
 			$('.nav-tabs a[href="#googlemap"]').tab('show');
-		$("#googlemap").append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
+		$("#googlemap").append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyATAs_GoSszTs4-lY5xhEy6RSGRqaR_H8A&callback=initMap&libraries=&v=weekly' async ><\/script>");
 	}
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -300,7 +300,7 @@ function setupMap() {
 			$("#palopenmapsiframe").attr('src',"https://palopenmaps.org/view/9999/@" + latArg + ',' + longArg);
 		else if (target === "#googlemap")
 			// Async script executes immediately and must be after any DOM elements used in callback.
-			$("#googlemap").empty().append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
+			$("#googlemap").empty().append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyATAs_GoSszTs4-lY5xhEy6RSGRqaR_H8A&callback=initMap&libraries=&v=weekly' async ><\/script>");
 	});
 }
 

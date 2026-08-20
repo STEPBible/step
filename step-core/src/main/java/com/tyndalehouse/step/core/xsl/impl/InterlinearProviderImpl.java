@@ -494,7 +494,17 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         // have one phrase anyway
         final List<Word> words = new ArrayList<Word>(2);
         boolean partial = false;
+        boolean hasStrongNotStartWithH9 = false;
         for (int ii = 0; ii < strongs.length; ii++) {
+            if (strongs[ii].startsWith("strong:H9") && strongs[ii].startsWith("H0413"))
+                continue;
+            hasStrongNotStartWithH9 = true;
+            break;
+        }
+
+        for (int ii = 0; ii < strongs.length; ii++) {
+            if (hasStrongNotStartWithH9 && (strongs[ii].startsWith("strong:H9") || strongs[ii].startsWith("H0413")))
+                continue;
             final String strongKey = getAnyKey(strongs[ii]);
             if (!isH00(strongKey) && !blacklisted(strongKey)) {
                 words.add(addTextualInfo(currentVerse, strongKey, word, untaggedContent));

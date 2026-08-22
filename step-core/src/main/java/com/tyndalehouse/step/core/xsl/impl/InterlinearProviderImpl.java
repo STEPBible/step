@@ -495,13 +495,14 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         final List<Word> words = new ArrayList<Word>(2);
         boolean partial = false;
         boolean hasStrongNotStartWithH9 = false;
-        for (int ii = 0; ii < strongs.length; ii++) {
-            if (strongs[ii].startsWith("strong:H9") && strongs[ii].equals("strong:H0413"))
-                continue;
-            hasStrongNotStartWithH9 = true;
-            break;
+        if (strongs.length > 1) {
+            for (int ii = 0; ii < strongs.length; ii++) {
+                if (strongs[ii].startsWith("strong:H9") && strongs[ii].equals("strong:H0413"))
+                    continue;
+                hasStrongNotStartWithH9 = true;
+                break;
+            }
         }
-
         for (int ii = 0; ii < strongs.length; ii++) {
             if (hasStrongNotStartWithH9 && (strongs[ii].startsWith("strong:H9") || strongs[ii].equals("strong:H0413")))
                 continue;

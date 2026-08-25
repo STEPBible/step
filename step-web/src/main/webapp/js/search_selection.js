@@ -1652,7 +1652,7 @@ step.searchSelect = {
 									if (data[i].suggestion.text.search(/^[HG]\d/i) == -1) { // Make sure it is not a STRONG number (e.g.: H0001)
 										text2Display = data[i].suggestion.text;
 										$('#userTextInput').attr('data-lastsearchword', text2Display);
-										str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
+										str2Search = text2Display.replace(/["\u201C\u201D]/g, '%22');
 										if (str2Search.indexOf("%22") == -1) {
 											var strings2Search = str2Search.split(" ");
 											if (strings2Search.length > 1) {
@@ -2586,7 +2586,7 @@ step.searchSelect = {
 			else {
 				var additionalCSS = "";
 				var aTagOnClick = ' onclick="javascript:step.searchSelect.goSearch(\'' + searchType +
-					'\',\'' + str2Search + '\',\'' + 
+					'\',\'' + str2Search.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + '\',\'' + 
 					text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') + '\')"';
 
 				var newSuggestion = $('<a style="padding:0px;' + additionalCSS + '"' + titleText +

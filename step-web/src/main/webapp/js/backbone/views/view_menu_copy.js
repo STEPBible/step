@@ -134,6 +134,24 @@ var PassageCopyMenuView = Backbone.View.extend({
         this._gridStart = null;          // verse index
         this._gridEnd = null;
 
+        // New panels are built by cloning the active column
+        // (step.util.createNewColumn), and the clone carries whatever that
+        // panel's .copyDropdown span held at that moment: an injected
+        // .copyMenu with the source panel's ids — and, if the dialog was open
+        // mid-clone, the .open class plus inline fixed-position styles, i.e. a
+        // visible duplicate no view can ever close. Reset the span to the
+        // pristine empty anchor; _initUI re-injects a fresh menu on first open.
+        var $dd = this.$el.find(".copyDropdown");
+        $dd.removeClass("open");
+        $dd.find(".copyMenu").remove();
+
+        // Opening a new panel also dismisses a dialog open in any other
+        // panel: the layout has just reflowed under it, and its host panel is
+        // no longer the active one.
+        if (step.copyDropdown.openView && step.copyDropdown.openView !== this) {
+            try { step.copyDropdown.openView.dismiss(); } catch (e) { /* ignore */ }
+        }
+
         // Navbar #copy-icon delegates to the active panel's dropdown.
         // Only bind the redirect once (panelId 0 is always present).
         if (this.panelId === 0) {

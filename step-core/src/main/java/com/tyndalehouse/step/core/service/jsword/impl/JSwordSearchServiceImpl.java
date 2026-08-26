@@ -101,8 +101,11 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
                 //then we only do the search if the bible is tagged
                 if (!this.metadataService.supportsStrongs(bible))
                     continue;
-                else if (bible.getInitials().equals("NIV_tagged") && currentSearch.getType().isHebrew()) // NIV OT does not have Strong tags so use ESV indexes
-                    continue;
+                else if (currentSearch.getType().isHebrew()) {
+                    String initials = bible.getInitials();
+                    if (initials.equals("NIV") || initials.equals("NIVUK")) // NIV OT does not have Strong tags so use ESV indexes
+                        continue;
+                }
             }
 
             doSearch(modifier, resultsPerVersion, currentSearch, bible);

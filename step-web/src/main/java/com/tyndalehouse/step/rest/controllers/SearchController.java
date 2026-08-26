@@ -112,6 +112,7 @@ public class SearchController {
             newSearchInput.setCharAt(searchInput.length() - 1, '"');
             searchInput = newSearchInput.toString();
         }
+        searchInput = searchInput.replaceAll("(?<=\\p{L})[‘’]", "'");
 
         boolean onlyReferences = false;
         if (StringUtils.isNotBlank(referencesOnly)) {

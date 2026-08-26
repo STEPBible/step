@@ -35,6 +35,7 @@ var PassageDisplayView = DisplayView.extend({
             var version = this.model.get("masterVersion");
             var extraVersions = this.model.get("extraVersions");
             var bibleVersions = version.toUpperCase() + "," + extraVersions.toUpperCase();
+            bibleVersions = bibleVersions.split(",");
             var r = step.util.getTestamentAndPassagesOfTheReferences(reference.split(" "));
             var hasNT = r[0];
             var hasOT = r[1];
@@ -233,10 +234,12 @@ var PassageDisplayView = DisplayView.extend({
                     }
                 }
             }
+            if (!hasOT && hasNT && ((bibleVersions.indexOf("NIV") > -1) || (bibleVersions.indexOf("NIVUK") > -1)))
+                step.util.showIntroOfTaggedNIVNT();
         },
         _biblesWithGrammar: function(versions, isNT, isOT) {
-            var checkArrayBoth = ['ESV', 'NET2FULL', 'NASB2020', 'CUN'];
-            var checkArrayNT = ['NIV_TAGGED', 'KJV', 'THGNT', 'SBLG']; 
+            var checkArrayBoth = ['ESV', 'NET2FULL', 'NASB2020', 'CUN', 'CUNS'];
+            var checkArrayNT = ['NIV', 'NIVUK', 'KJV', 'THGNT', 'SBLG']; 
             var checkArrayOT = ['THOT', 'OHB'];
             var verArry = versions.toUpperCase().split(",");
             for (var i = 0; i < verArry.length; i++) {

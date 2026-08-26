@@ -132,7 +132,7 @@ step.util = {
     outstandingRequests: 0,
     timersForSTEPApp: {},
 	versionsBoth: ["ESV", "KJV", "NASB2020", "BSB", "HCSB", "RV_TH", "WEB_TH", "ASV-TH", "CHIUN", "CHIUNS", "NASB1995", "RWEBSTER", "SPABES2018EB", "ARASVD"],
-	versionsGreekNT: ["SBLG_TH", "THGNT", "TR", "BYZ", "WHNU", "ELZEVIR", "ANTONIADES", "KHMKCB"],
+	versionsGreekNT: ["SBLG_TH", "THGNT", "TR", "BYZ", "WHNU", "ELZEVIR", "ANTONIADES", "KHMKCB", "NIV"],
 	versionsGreekOT: ["LXX_TH"],
 	versionsGreekBoth: ["ABEN", "ABGK"],
 	versionsHebrewOT: ["THOT", "OSHB", "SP", "SPMT"],
@@ -260,7 +260,7 @@ step.util = {
 			}
 			if (bibleVersions.indexOf(bibleName) > -1) // Bibles selected by the users
 				msg[0] += newMsg;
-			else if ("ESV,NASB2020,SBLG_TH,LXX_TH,THOT".indexOf(bibleName) > -1) // Popular Bibles with good Strong tagging
+			else if ("ESV,NIV,NASB2020,SBLG_TH,LXX_TH,THOT".indexOf(bibleName) > -1) // Popular Bibles with good Strong tagging
 				msg[1] += newMsg;
 			else
 				msg[2] += newMsg;
@@ -1073,25 +1073,23 @@ step.util = {
         return term.replace(/"/g, '\\\"');
     },
     swapMasterVersion: function (newMasterVersion, passageModel, silent) {
-        var replacePattern = new RegExp("version=" + newMasterVersion, "ig");
-        // check .get() to see if it can be used to replase | with @
-        var originalArgs = passageModel.get("args");
-        var newArgs = originalArgs.replace(replacePattern, "");
-        newArgs = "version=" + newMasterVersion + URL_SEPARATOR + newArgs;
-        newArgs = newArgs.replace(/@@/g, URL_SEPARATOR).replace(/@$/, "").replace(/\|\|/g, URL_SEPARATOR).replace(/\|$/, "");
-
-        //now get the versions in the right order and overwrite the stored master version and extraVersions
-        var versions = (newArgs || "").match(/version=[a-zA-Z0-9]+/ig) || [];
-        var allVersions = [];
-        for (var i = 0; i < versions.length; i++) {
-            var versionName = versions[i].substring("version=".length);
-            allVersions.push(versionName);
+        var originalArgs = passageModel.get("args").split("@");
+		var foundNewMasterVersion = false;
+        var otherVersions = [];
+		var newArgs = "version=" + newMasterVersion;
+		for (var i = 0; i < originalArgs.length; i++) {
+			if (originalArgs[i].substring(0,8) === "version=") {
+				var versionName = originalArgs[i].substring(8);
+				if (versionName === newMasterVersion) {
+					foundNewMasterVersion = true;
+					continue;
+				}
+				otherVersions.push(versionName);
+			}
+			newArgs += "@" + originalArgs[i];
         }
-
-        var masterVersion = allVersions[0];
-        var otherVersions = allVersions.slice(1);
-		if (!step.util.checkFirstBibleHasPassageBeforeSwap(newMasterVersion, passageModel, otherVersions)) return;
-        passageModel.save({ args: newArgs, masterVersion: masterVersion, otherVersions: otherVersions }, { silent: silent });
+		if ((!foundNewMasterVersion) || (otherVersions.length < 1) || (!step.util.checkFirstBibleHasPassageBeforeSwap(newMasterVersion, passageModel, otherVersions))) return;
+        passageModel.save({ args: newArgs, masterVersion: newMasterVersion, otherVersions: otherVersions }, { silent: silent });
 		step.util.incrementLocalStorage("step.interlinearTutorial");
     },
     ui: {
@@ -3506,18 +3504,19 @@ step.util = {
             )()).modal("show");
 			step.util.blockBackgroundScrolling('showBookOrChapterSummaryModal');
 			step.util.buildBibleProjectVideo(step.userLanguageCode);
-		    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.showBibleProject");
+			if (document.querySelector('.introjs-overlay') != null) return;
+		    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.showBibleProject"); 
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
 			if (introCount < 1) {
 				var pos = (window.innerWidth > 499) ? "bottom" : "left";
 				var introJsSteps = [
-				{
-					element: document.querySelector('#bibleTab'),
-					intro: "Click on the \"Bible summary\" tab to see summary videos by the BibleProject!",
-					position: pos
-				}
-         	   ];
+					{
+						element: document.querySelector('#bibleTab'),
+						intro: "Click on the \"Bible summary\" tab to see summary videos by the BibleProject!",
+						position: pos
+					}
+				];
 				introJs().setOptions({
 					steps: introJsSteps
 				}).start();
@@ -4210,7 +4209,7 @@ step.util = {
 		}
 	},
 	showIntroJS: function(element, introMsg, position, width, localStorageName, skipTouchScreen, showNumOfTimes, sleepTime) {
-		if ((skipTouchScreen && step.touchDevice) || (window.innerWidth < width))
+		if ((skipTouchScreen && step.touchDevice) || (window.innerWidth < width) || (document.querySelector('.introjs-overlay') != null))
 			return false;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem(localStorageName);
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
@@ -4254,8 +4253,9 @@ step.util = {
 		}
 	},
 	showIntro: function (showAnyway) {
-		if ((!showAnyway) && (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal()))) return;
-		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+		if (!showAnyway && (($.getUrlVars().indexOf("skipwelcome") > -1) || step.state.isLocal())) return;
+		if (step.appleTouchDevice || // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+			(document.querySelector('.introjs-overlay') != null)) 
 			return;
 	    var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.usageCount");
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
@@ -4286,30 +4286,44 @@ step.util = {
 				steps: introJsSteps, nextLabel: " > ", prevLabel: " < ", doneLabel: __s.done
 			}).start();
 		}
-		else {
-			if (!step.util.showIntroJS(document.querySelector('.select-version.stepButtonTriangle'),
-				'New Bible Edition!<br>The NIV now has two versions: "USA" and "Anglicised".',
-			 	'bottom', 0, 'step.nivusa'))
-				if (!step.util.showIntroJS(document.querySelector('#report-icon'),
-					'New Features!<br><ul style="padding-left:15px"><li>Chronology: An interactive timeline of people, places and events.<li>People in the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
-				 	'bottom', 0, 'step.genchron', true))
-					if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),
-						'Color code grammar is available with a new user interface.',
-						'left', 499, 'step.colorgrammar'))
-						if (!step.util.showIntroJS(document.querySelector('#copy-icon'),
-							__s.copy_intro, 'left', 499, 'step.copyIntro'))
-								step.util.showIntroJS(document.querySelector('#summbutton'),
-									"For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
-									'bottom', 499, 'step.commentaryIntro');
-		}
+		else if (!step.util.showIntroJS(document.querySelector('#report-icon'),
+				'New Features!<br><ul style="padding-left:15px"><li>Chronology: An interactive timeline of people, places and events.<li>People in the Bible: An interactive chart of the family trees of biblecal figures.</ul>.',
+				'bottom', 0, 'step.genchron', true))
+			if (!step.util.showIntroJS(document.querySelector('#colorgrammar-icon'),
+					'Color code grammar is available with a new user interface.',
+					'left', 499, 'step.colorgrammar'))
+				if (!step.util.showIntroJS(document.querySelector('#copy-icon'),
+					__s.copy_intro, 'left', 499, 'step.copyIntro'))
+						step.util.showIntroJS(document.querySelector('#summbutton'),
+							"For commentaries from ICC and The Gospel Coalition, click on Summary and then Commentaries",
+							'bottom', 499, 'step.commentaryIntro');
 	},
     showIntroOfMultiVersion: function () {
-		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
-		if (step.appleTouchDevice) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+		if (($.getUrlVars().indexOf("skipwelcome") > -1) ||
+			(step.appleTouchDevice)) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
 			return;
 		step.util.showIntroJS(document.querySelector('.passageContainer.active').querySelector('.dropdown.settingsDropdown'),
 			__s.introjs_multi_version,
 			'left', 499, 'step.multiVersionCount');
+	},
+	showIntroOfTaggedNIVNT: function () {
+		if (($.getUrlVars().indexOf("skipwelcome") > -1) || (document.querySelector('.introjs-overlay') != null) ||
+			(step.appleTouchDevice)) // Only for Android.  On iPad, introJS will cause the bible, reference and search buttons to be gone
+				return;
+		var introCountFromStorageOrCookie = step.util.localStorageGetItem("step.taggedNIV");
+		var introCount = parseInt(introCountFromStorageOrCookie, 10);
+		if (isNaN(introCount)) introCount = 0;
+		if (introCount < 1) {
+			var introJsSteps = [
+				{
+					intro: __s.introjs_taggedNIV
+				}
+			];
+			step.util.localStorageSetItem("step.taggedNIV", 1);
+			introJs().setOptions({
+				steps: introJsSteps
+			}).start();
+		}
 	},
 	closeModal: function (modalID) {
 		var modalsRequireUnfreezeOfScroll = " showLongAlertModal showBookOrChapterSummaryModal grammarClrModal passageSelectionModal searchSelectionModal videoModal fontSettings raiseSupport aboutModal bibleVersions ";
@@ -5272,7 +5286,8 @@ step.util = {
 	},
 	normalizeVersionName: function(curVersion) {
 		curVersion = curVersion.toUpperCase();
-		if (curVersion === "KJVA") curVersion = "KJV";
+		if (curVersion === "NIVUK")	curVersion = "NIV";
+		else if (curVersion === "KJVA") curVersion = "KJV";
 		else if (curVersion === "ESV_TH") curVersion = "ESV";
 		else if (curVersion === "OHB") curVersion = "OSHB";
 		else if (curVersion === "SBLG") curVersion = "SBLG_TH";

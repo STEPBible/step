@@ -1,16 +1,12 @@
 /*
- * PassageCopyMenuView
- *
- * Per-panel dropdown that mirrors the settings-cog pattern but drives the
- * copy-to-clipboard flow. Coexists with the classic #copyModal during the
- * feature-flag-gated rollout.
+ * PassageCopyMenuView — per-panel dropdown driving the copy-to-clipboard flow.
  *
  * Modes:
  *   selection — snapshot resolves to a range in the active panel; shows a
  *               single "Copy Gen 1:2 → Gen 1:4" primary button.
  *   grid      — no resolved snapshot, or user asked to pick a different
- *               range; shows a compact verse-number grid with click-start /
- *               click-end range selection.
+ *               range; shows a verse-number grid with click-start/click-end
+ *               range selection.
  */
 window.step = window.step || {};
 
@@ -26,13 +22,9 @@ step.copyDropdown = step.copyDropdown || {
     cooldown: { active: false, until: 0, reason: null, timer: null },
     inFlightCopyId: 0,
 
-    // Where the user last parked the menu, in viewport coordinates. Shared
-    // across panels and survives close/open, so "move it off the verse I'm
-    // reading" only has to be done once. Null means "use the default anchor
-    // for this viewport" — top right of the panel on desktop, the CSS bottom
-    // sheet on phones. Deliberately session-scoped rather than persisted: a
-    // position that made sense in one window size is usually wrong in the
-    // next session, and re-opening the browser is a natural place to reset.
+    // Where the user last parked the menu, in viewport coordinates; shared
+    // across panels, survives close/open. Null = default anchor. Deliberately
+    // session-scoped: a saved position rarely fits the next window size.
     dragPosition: null,
 
     active: function () { return this.openPanelId !== null; },
@@ -101,7 +93,6 @@ var COPY_DRAG_CLICK_GRACE_MS = 400;
 // ------------------------------------------------------------------
 var PassageCopyMenuView = Backbone.View.extend({
     events: {
-        "click .copyDropdownToggle": "onToggleClick",
         "click .copyCloseBtn": "onCloseClick",
         "click .copyPrimaryBtn": "onPrimaryClick",
         "click .copyPickDifferent": "onPickDifferent",
@@ -134,20 +125,16 @@ var PassageCopyMenuView = Backbone.View.extend({
         this._gridStart = null;          // verse index
         this._gridEnd = null;
 
-        // New panels are built by cloning the active column
-        // (step.util.createNewColumn), and the clone carries whatever that
-        // panel's .copyDropdown span held at that moment: an injected
-        // .copyMenu with the source panel's ids — and, if the dialog was open
-        // mid-clone, the .open class plus inline fixed-position styles, i.e. a
-        // visible duplicate no view can ever close. Reset the span to the
-        // pristine empty anchor; _initUI re-injects a fresh menu on first open.
+        // New panels are cloned from the active column (createNewColumn), so
+        // the clone can carry the source panel's injected .copyMenu, .open
+        // class and inline pin. Reset to the pristine empty anchor; _initUI
+        // re-injects a fresh menu on first open.
         var $dd = this.$el.find(".copyDropdown");
         $dd.removeClass("open");
         $dd.find(".copyMenu").remove();
 
-        // Opening a new panel also dismisses a dialog open in any other
-        // panel: the layout has just reflowed under it, and its host panel is
-        // no longer the active one.
+        // Opening a new panel dismisses a dialog open in any other panel —
+        // the layout just reflowed under it.
         if (step.copyDropdown.openView && step.copyDropdown.openView !== this) {
             try { step.copyDropdown.openView.dismiss(); } catch (e) { /* ignore */ }
         }
@@ -164,27 +151,18 @@ var PassageCopyMenuView = Backbone.View.extend({
 
         this.listenTo(this.model, "destroy-column", this.remove);
         this.listenTo(this.model, "sync-update", this._onPassageSync);
-        this.listenTo(this.model, "change:reference", this._forceClose);
+        this.listenTo(this.model, "change:reference", function () { this.dismiss(); });
     },
 
     // ----- lifecycle -----
-    // We own the open/close state directly — not via Bootstrap's data-api.
-    // Bootstrap's dropdown plugin double-binds click handlers when
-    // programmatic and declarative ("data-toggle=dropdown") usage mix, which
-    // caused open→immediate-close on the first user click. Our approach:
-    //   open()  adds .open class + fires our own open flow
-    //   close() removes .open + fires our own close flow
-    //   outside-click listener bound on document while open
+    // Open/close state is owned here, not by Bootstrap's data-api: mixing
+    // programmatic and declarative dropdown usage double-binds handlers and
+    // caused open→immediate-close. The .open class + a document outside-click
+    // listener (bound while open) are the whole mechanism.
 
     toggle: function () {
         if (this._isOpen()) this.close();
         else this.open();
-    },
-
-    onToggleClick: function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this.toggle();
     },
 
     _isOpen: function () {
@@ -211,7 +189,6 @@ var PassageCopyMenuView = Backbone.View.extend({
         this._gridEnd = null;
 
         $dd.addClass("open");
-        $dd.find(".copyDropdownToggle").attr("aria-expanded", "true");
         this._update();
         // After _update, so the menu has its real size to measure and clamp
         // against. Same task as addClass("open"), so nothing paints in between
@@ -225,7 +202,6 @@ var PassageCopyMenuView = Backbone.View.extend({
         var $dd = this.$el.find(".copyDropdown");
         if (!$dd.hasClass("open")) return;
         $dd.removeClass("open");
-        $dd.find(".copyDropdownToggle").attr("aria-expanded", "false");
         this._unbindOutsideClick();
         this._unbindViewportWatch();
         this._cancelDrag();
@@ -247,22 +223,17 @@ var PassageCopyMenuView = Backbone.View.extend({
         var self = this;
         this._outsideHandler = function (ev) {
             if (self.$el.find(".copyDropdown").has(ev.target).length === 0) {
-                // Click outside the dropdown — close, unless cooldown is active.
+                // Click outside the dropdown — close, unless cooldown is active
                 if (step.copyDropdown.cooldown.active) return;
-                // ...or unless this is the click that terminated a drag. When a
-                // drag lifts off outside the menu the browser fires click on the
-                // nearest common ancestor of mousedown/mouseup — usually
-                // .passageText, which is outside .copyMenu, so _stopInsideClicks
-                // never sees it and we would dismiss the menu the user just
-                // finished positioning.
+                // ...or unless this is the click that terminated a drag: it
+                // fires on the mousedown/mouseup common ancestor, outside
+                // .copyMenu, so _stopInsideClicks never sees it.
                 if (self._dragEndedAt && (Date.now() - self._dragEndedAt) < COPY_DRAG_CLICK_GRACE_MS) return;
                 self.close();
             }
         };
-        // Defer binding by one event-loop tick: otherwise the very click that
-        // triggered open() continues bubbling, reaches this handler, and
-        // closes the dropdown immediately (especially when opened via the
-        // navbar #copy-icon → copyModal() → $toggle.click() re-dispatch path).
+        // Defer binding by one tick: the click that triggered open() is still
+        // bubbling and would reach this handler and close the dropdown.
         var handler = this._outsideHandler;
         setTimeout(function () {
             if (self._outsideHandler === handler) {
@@ -278,21 +249,16 @@ var PassageCopyMenuView = Backbone.View.extend({
         }
     },
 
-    _forceClose: function () { this.dismiss(); },
-
     _onPassageSync: function () {
         if (step.copyDropdown.openPanelId === this.panelId) this.dismiss();
     },
 
     _stopInsideClicks: function (ev) { ev.stopPropagation(); },
 
-    // step_ready.js binds the app's single-key shortcuts on document *keyup* —
-    // Left/Right are previous/next chapter, among others. Every keyboard
-    // handler in this menu works on keydown, so the stopPropagation() they do
-    // never protects them: pressing Right on a grid cell moved the verse
-    // cursor and then also flipped the panel to the next chapter, which
-    // re-rendered the passage and closed the menu. Swallow the matching keyup
-    // for events that originate inside the menu.
+    // step_ready.js binds single-key shortcuts on document *keyup* (Left/Right
+    // = prev/next chapter), while this menu handles keydown — so swallow the
+    // matching keyup for events originating inside the menu, or grid-cell
+    // navigation also flips the chapter and closes the menu.
     _stopMenuNavKeyup: function (ev) {
         switch (ev.which) {
             case 13: /* Enter */
@@ -312,16 +278,10 @@ var PassageCopyMenuView = Backbone.View.extend({
     },
 
     // ------------------------------------------------------------------
-    // Movable menu
-    //
-    // By default the menu is a Bootstrap dropdown hanging off a 0x0 anchor
-    // span in the panel header, which drops it straight onto the passage text
-    // you are trying to read. Moving it requires position:fixed: #columnHolder
-    // sets overflow-y:hidden and clips absolutely-positioned descendants, so
-    // an absolute menu cannot leave the panel no matter what left/top say.
-    // Nothing in the ancestor chain sets transform/filter/perspective/contain,
-    // so fixed resolves against the viewport and escapes the clip; the
-    // matching z-index bump (copy_dropdown.scss) clears #stepnavbar's 1030.
+    // Movable menu. Moving requires position:fixed — #columnHolder's
+    // overflow-y:hidden clips absolutely-positioned descendants, and no
+    // ancestor sets transform/filter/etc., so fixed escapes the clip; the
+    // z-index bump (copy_dropdown.scss) clears #stepnavbar's 1030.
     // ------------------------------------------------------------------
 
     _menuEl: function () { return this.$el.find(".copyMenu"); },
@@ -688,10 +648,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         if ($dd.find(".copyMenu").length === 0) {
             var headerTxt = _.escape(__s.copy || "Copy");
             var closeLabel = _.escape(__s.close || "Close");
-            var gridCopyLabel = _.escape(__s.copy || "Copy");
-            // No Crowdin key exists for this and we don't hand-edit the bundles,
-            // so the drag affordance carries an English literal like the other
-            // copy-menu strings.
+            // No i18n key exists; English literal like the other menu strings.
             var moveLabel = "Move this window (drag, or use the arrow keys)";
             var html =
                 '<div class="dropdown-menu pull-right stepModalFgBg copyMenu" role="dialog" aria-modal="false" ' +
@@ -709,11 +666,8 @@ var PassageCopyMenuView = Backbone.View.extend({
                     '<div class="copyGridSection" style="display:none"></div>' +
                     '<div class="copyOptionsStrip" style="display:none"></div>' +
                     '<div class="copyBottomSuccess" role="status" aria-live="polite"></div>' +
-                    '<footer class="copyMenuFooter" style="display:none">' +
-                        '<button type="button" class="copyPrimaryBtn copyGridPrimary" disabled>' +
-                            gridCopyLabel +
-                        '</button>' +
-                    '</footer>' +
+                    // Footer content is rendered by _renderGridSection.
+                    '<footer class="copyMenuFooter" style="display:none"></footer>' +
                 '</div>';
             $dd.append(html);
         }
@@ -723,24 +677,26 @@ var PassageCopyMenuView = Backbone.View.extend({
         this._renderStatusRow("");
         this.$el.find(".copyBottomSuccess").empty();
         var resolution = this._computeSelectionResolution();
+        // Introspection surface for the e2e suites; app code never reads it.
         this._resolution = resolution;
 
         // Mode policy: if snapshot resolved and user hasn't asked to pick, use
         // selection mode. Otherwise grid.
         if (this._mode === "selection" && !resolution.resolved) {
             this._mode = "grid";
-            // Nothing usable is selected, so pre-select every displayed verse:
-            // the footer Copy then genuinely copies the chapter in one click
-            // instead of rendering an armed-looking button over an empty grid.
-            // Only here, on the selection→grid fallback — onPickDifferent enters
-            // _update with _mode already "grid" and must keep an empty grid.
-            // Not for unresolvable snapshots (a real selection we failed to
-            // match must not silently become a whole-chapter copy), and only
-            // for passage panels: on search/subject panels _getVerses
-            // enumerates every result hit across the whole Bible.
-            if (!resolution.unresolvable &&
-                    this._gridStart === null &&
+            if (resolution.unresolvable) {
+                // A real selection we failed to match must not silently
+                // become a whole-chapter copy — say why the grid is empty.
+                this._renderStatusRow(
+                    "We couldn't match your selection to a verse range — please pick below.",
+                    "unresolved");
+            } else if (this._gridStart === null &&
                     this.model.get("searchType") === "PASSAGE") {
+                // No usable selection: pre-select everything displayed so the
+                // footer Copy is genuinely one-click. Search panels are
+                // excluded (their "verses" are result hits), and
+                // onPickDifferent keeps an empty grid because it enters
+                // _update with _mode already "grid".
                 var allVerses = step.copyText._getVerses(step.util.getPassageContainer(this.panelId));
                 if (allVerses.length > 0) {
                     this._gridStart = 0;
@@ -759,7 +715,7 @@ var PassageCopyMenuView = Backbone.View.extend({
     },
 
     _computeSelectionResolution: function () {
-        var result = { resolved: false, startIndex: -1, endIndex: -1, label: "", versions: [], unresolvable: false };
+        var result = { resolved: false, startIndex: -1, endIndex: -1, label: "", unresolvable: false };
         var snap = step.copyDropdown.selectionSnapshot;
         if (!snap) return result;
 
@@ -767,9 +723,6 @@ var PassageCopyMenuView = Backbone.View.extend({
         var isRecent = (snap.deselectedAt === null && (now - snap.timestamp < 60000)) ||
                        (snap.deselectedAt !== null && (now - snap.deselectedAt < 5000));
         if (!isRecent) return result;
-
-        if ($.isArray(snap.versions) && snap.versions.length > 0) result.versions = snap.versions.slice(0);
-        else if (snap.version) result.versions = [snap.version];
 
         var startVerse = snap.startVerse || "";
         var endVerse = snap.endVerse || snap.startVerse || "";
@@ -807,12 +760,6 @@ var PassageCopyMenuView = Backbone.View.extend({
         var showSelection = resolution.resolved && this._mode === "selection";
         if (!showSelection) {
             $row.hide().empty();
-            if (resolution.unresolvable && this._mode === "selection") {
-                this._renderStatusRow(
-                    "We couldn't match your selection to a verse range — please pick below.",
-                    "unresolved");
-                this._mode = "grid";
-            }
             return;
         }
         var safeLabel = _.escape(resolution.label || "");
@@ -848,8 +795,7 @@ var PassageCopyMenuView = Backbone.View.extend({
             return;
         }
 
-        // Determine columns — 10 on desktop, 7 on small touch devices. Same
-        // heuristic as the classic modal (copy_text.js:_buildChapterVerseTable).
+        // 10 columns on desktop, 7 on small touch devices.
         var cols = 10;
         if (step.touchDevice) {
             var ua = navigator.userAgent.toLowerCase();
@@ -872,8 +818,7 @@ var PassageCopyMenuView = Backbone.View.extend({
             var label = step.copyText._shortenVerseName(previousVerseName, orig);
             previousVerseName = orig;
             html += '<td><button type="button" class="copyGridCell" role="gridcell" ' +
-                      'data-verse-index="' + i + '" ' +
-                      'data-osis="' + _.escape(orig) + '">' +
+                      'data-verse-index="' + i + '">' +
                       _.escape(label) +
                     '</button></td>';
         }
@@ -895,9 +840,8 @@ var PassageCopyMenuView = Backbone.View.extend({
             this._gridKeydownBound = true;
         }
 
-        // Show footer primary button in grid mode. Render order = visual + tab
-        // order: primary copy chip on the left, back-to-selection chip on the
-        // right. Flex layout in copy_dropdown.scss handles spacing.
+        // Footer: primary copy chip left, back-to-selection right (render
+        // order = tab order; flex spacing in copy_dropdown.scss).
         var gridCopyLabel = _.escape(__s.copy || "Copy");
         var backLabel = "Back to selection";
         var footerHtml = '<button type="button" class="copyPrimaryBtn copyGridPrimary" disabled>' +
@@ -1072,7 +1016,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         if (!text) { $row.empty().attr("role", "status"); return; }
         if (kind) $row.addClass("copyStatus--" + kind);
         $row.attr("role", (kind === "copy-error" || kind === "clipboard-denied" ||
-                           kind === "ajax-error" || kind === "stale-passage")
+                           kind === "stale-passage")
                            ? "alert" : "status");
         $row.text(text);
     },
@@ -1088,9 +1032,8 @@ var PassageCopyMenuView = Backbone.View.extend({
             var msg = "Please wait %d seconds before copying again.".replace("%d", secs);
             this._renderStatusRow(msg, "cooldown");
         } else {
-            // The grid primary's enablement belongs to _updateGridVisuals
-            // (disabled until a range is armed) — a blanket re-enable here
-            // would resurrect it as an armed-looking button that no-ops.
+            // _updateGridVisuals owns the grid primary: enabled only when a
+            // range is armed, so no blanket re-enable here.
             $primary.not(".copyGridPrimary").prop("disabled", false);
             $close.prop("disabled", false);
         }
@@ -1249,7 +1192,6 @@ var PassageCopyMenuView = Backbone.View.extend({
         var copyId = ++step.copyDropdown.inFlightCopyId;
         $btn.prop("disabled", true);
 
-        // Construct opts so goCopy doesn't need to read #selectnotes / #cpyverN
         var opts = {};
         if (this._anyVersionHasNotes()) {
             opts.wantNotes = !!this.model.get("copyIncludeNotes");

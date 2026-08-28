@@ -727,7 +727,27 @@ var PassageCopyMenuView = Backbone.View.extend({
 
         // Mode policy: if snapshot resolved and user hasn't asked to pick, use
         // selection mode. Otherwise grid.
-        if (this._mode === "selection" && !resolution.resolved) this._mode = "grid";
+        if (this._mode === "selection" && !resolution.resolved) {
+            this._mode = "grid";
+            // Nothing usable is selected, so pre-select every displayed verse:
+            // the footer Copy then genuinely copies the chapter in one click
+            // instead of rendering an armed-looking button over an empty grid.
+            // Only here, on the selection→grid fallback — onPickDifferent enters
+            // _update with _mode already "grid" and must keep an empty grid.
+            // Not for unresolvable snapshots (a real selection we failed to
+            // match must not silently become a whole-chapter copy), and only
+            // for passage panels: on search/subject panels _getVerses
+            // enumerates every result hit across the whole Bible.
+            if (!resolution.unresolvable &&
+                    this._gridStart === null &&
+                    this.model.get("searchType") === "PASSAGE") {
+                var allVerses = step.copyText._getVerses(step.util.getPassageContainer(this.panelId));
+                if (allVerses.length > 0) {
+                    this._gridStart = 0;
+                    this._gridEnd = allVerses.length - 1;
+                }
+            }
+        }
 
         this._renderSelectionRow(resolution);
         this._renderGridSection(resolution);
@@ -1068,7 +1088,10 @@ var PassageCopyMenuView = Backbone.View.extend({
             var msg = "Please wait %d seconds before copying again.".replace("%d", secs);
             this._renderStatusRow(msg, "cooldown");
         } else {
-            $primary.prop("disabled", false);
+            // The grid primary's enablement belongs to _updateGridVisuals
+            // (disabled until a range is armed) — a blanket re-enable here
+            // would resurrect it as an armed-looking button that no-ops.
+            $primary.not(".copyGridPrimary").prop("disabled", false);
             $close.prop("disabled", false);
         }
     },

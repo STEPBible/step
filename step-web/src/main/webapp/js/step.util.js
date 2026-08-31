@@ -1887,16 +1887,7 @@ step.util = {
 						clearTimeout(debounceTimer);
 						debounceTimer = setTimeout(function () {
 							var sel = window.getSelection();
-							if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
-								// Copy-dropdown gate: when a dropdown is open, clicks inside
-								// it collapse the native selection. Don't flip deselectedAt,
-								// or the 5s grace window will drop us out of selection mode.
-								if (step.copyDropdown && step.copyDropdown.shouldSuppressCollapseEvent && step.copyDropdown.shouldSuppressCollapseEvent())
-									return;
-								if (step.lastPassageSelection && !step.lastPassageSelection.deselectedAt)
-									step.lastPassageSelection.deselectedAt = Date.now();
-								return;
-							}
+							if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
 							var range = sel.getRangeAt(0);
 							var startNode = range.startContainer;
 							var endNode = range.endContainer;
@@ -1927,12 +1918,11 @@ step.util = {
 							step.lastPassageSelection = {
 								startVerse: startInfo.verse,
 								endVerse: endInfo.verse,
-								version: startInfo.version || endInfo.version,
 								versions: allVersions,
-								textLength: text.length,
-								timestamp: Date.now(),
-								deselectedAt: null
+								timestamp: Date.now()
 							};
+							if (step.copyDropdown && step.copyDropdown.notifySelectionChanged)
+								step.copyDropdown.notifySelectionChanged();
 						}, 150);
 					});
 				},

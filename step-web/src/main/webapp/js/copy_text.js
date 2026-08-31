@@ -14,30 +14,17 @@ step.copyText = {
 		};
 	},
 
-	_formatVerseDisplay: function(osis) {
-		if (!osis) return '';
-		return osis.replace(/^([123A-Za-z]+)\.(\d)/, '$1 $2').replace(/\.(\d+)/g, ': $1');
-	},
-
-	_normalizeVerseLabel: function(verseLabel) {
-		return (verseLabel || '').replace(/\s+/g, '').toLowerCase();
-	},
-
-	_findVerseIndex: function(verses, verseDisplay) {
-		var normalizedTarget = this._normalizeVerseLabel(verseDisplay);
+	// OSIS-exact index of a verse in the same enumeration _getVerses uses.
+	// Deliberately no label/number fallback: a selection made in a passage no
+	// longer displayed must miss cleanly, never resolve to a lookalike verse.
+	_findVerseIndexByOsis: function(passageContainer, osis) {
+		if (!osis) return -1;
+		var verses = $(passageContainer).find('.verseNumber');
+		if (verses.length == 0) verses = $(passageContainer).find('.verseLink');
 		for (var i = 0; i < verses.length; i++) {
-			if (this._normalizeVerseLabel(verses[i]) === normalizedTarget)
-				return i;
-		}
-		// Verse grid may contain short labels like "1" while verseDisplay
-		// is fully qualified like "Gen 1: 1" — try matching just the verse number
-		var verseNumMatch = verseDisplay.match(/:?\s*(\d+)\s*$/);
-		if (verseNumMatch) {
-			var verseNum = verseNumMatch[1];
-			for (var i = 0; i < verses.length; i++) {
-				if (verses[i].trim() === verseNum)
-					return i;
-			}
+			var container = $(verses[i]).closest('.verseGrouping, .verse, .interlinear');
+			var names = (container.find('.verseLink').first().attr('name') || '').split(' ');
+			if (names.indexOf(osis) > -1) return i;
 		}
 		return -1;
 	},

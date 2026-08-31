@@ -1,12 +1,11 @@
 /*
  * PassageCopyMenuView — per-panel dropdown driving the copy-to-clipboard flow.
  *
- * Modes:
- *   selection — snapshot resolves to a range in the active panel; shows a
- *               single "Copy Gen 1:2 → Gen 1:4" primary button.
- *   grid      — no resolved snapshot, or user asked to pick a different
- *               range; shows a verse-number grid with click-start/click-end
- *               range selection.
+ * Single mode: a verse-number grid with click-start/click-end range
+ * selection. Each open seeds the grid from the last passage highlight when it
+ * still matches the displayed text — else pre-selects the whole display — so
+ * the footer Copy is one click. A fresh highlight while the menu is open
+ * re-seeds the grid live.
  */
 window.step = window.step || {};
 
@@ -18,7 +17,6 @@ step.copyDropdown = step.copyDropdown || {
     openView: null,
     views: {},
     selectionSnapshot: null,
-    listenerGated: false,
     cooldown: { active: false, until: 0, reason: null, timer: null },
     inFlightCopyId: 0,
 
@@ -28,7 +26,6 @@ step.copyDropdown = step.copyDropdown || {
     dragPosition: null,
 
     active: function () { return this.openPanelId !== null; },
-    shouldSuppressCollapseEvent: function () { return this.listenerGated; },
 
     claim: function (panelId, view) {
         if (this.openPanelId !== null && this.openPanelId !== panelId && this.openView) {
@@ -36,16 +33,12 @@ step.copyDropdown = step.copyDropdown || {
         }
         this.openPanelId = panelId;
         this.openView = view;
-        this.listenerGated = true;
         if (step.lastPassageSelection) {
             this.selectionSnapshot = {
                 startVerse: step.lastPassageSelection.startVerse,
                 endVerse: step.lastPassageSelection.endVerse,
-                version: step.lastPassageSelection.version,
                 versions: (step.lastPassageSelection.versions || []).slice(0),
-                timestamp: step.lastPassageSelection.timestamp,
-                deselectedAt: step.lastPassageSelection.deselectedAt,
-                capturedAt: Date.now()
+                timestamp: step.lastPassageSelection.timestamp
             };
         } else {
             this.selectionSnapshot = null;
@@ -57,7 +50,14 @@ step.copyDropdown = step.copyDropdown || {
         this.openPanelId = null;
         this.openView = null;
         this.selectionSnapshot = null;
-        this.listenerGated = false;
+    },
+
+    // step.util.js initSelectionTracking calls this on every new passage
+    // highlight; while the menu is open a resolvable one re-seeds the grid.
+    notifySelectionChanged: function () {
+        if (!this.openView || this.cooldown.active) return;
+        this.claim(this.openPanelId, this.openView);   // re-snapshot
+        this.openView._onLiveSelectionChange();
     },
 
     startCooldown: function (ms, reason) {
@@ -95,8 +95,6 @@ var PassageCopyMenuView = Backbone.View.extend({
     events: {
         "click .copyCloseBtn": "onCloseClick",
         "click .copyPrimaryBtn": "onPrimaryClick",
-        "click .copyPickDifferent": "onPickDifferent",
-        "click .copyBackToSelection": "onBackToSelection",
         "click .copyGridCell": "onGridCellClick",
         "change .copyVersionCheckbox": "onVersionToggle",
         "change .copyNotesToggle": "onNotesToggle",
@@ -121,7 +119,6 @@ var PassageCopyMenuView = Backbone.View.extend({
         this.panelId = this.model.get("passageId");
         step.copyDropdown.views[this.panelId] = this;
         this.rendered = false;
-        this._mode = "selection";       // 'selection' | 'grid'
         this._gridStart = null;          // verse index
         this._gridEnd = null;
 
@@ -184,7 +181,6 @@ var PassageCopyMenuView = Backbone.View.extend({
             this._initUI();
             this.rendered = true;
         }
-        this._mode = "selection";
         this._gridStart = null;
         this._gridEnd = null;
 
@@ -194,6 +190,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         // against. Same task as addClass("open"), so nothing paints in between
         // and the menu never flashes at the anchor position first.
         this._positionOnOpen();
+        this._focusInitial();
         this._bindOutsideClick();
         this._bindViewportWatch();
     },
@@ -229,6 +226,10 @@ var PassageCopyMenuView = Backbone.View.extend({
                 // fires on the mousedown/mouseup common ancestor, outside
                 // .copyMenu, so _stopInsideClicks never sees it.
                 if (self._dragEndedAt && (Date.now() - self._dragEndedAt) < COPY_DRAG_CLICK_GRACE_MS) return;
+                // ...or the click that ended a text-selection drag: a live
+                // selection means "re-seed the grid", not "dismiss".
+                var sel = window.getSelection();
+                if (sel && !sel.isCollapsed) return;
                 self.close();
             }
         };
@@ -662,10 +663,8 @@ var PassageCopyMenuView = Backbone.View.extend({
                         '<button type="button" class="copyCloseBtn" aria-label="' + closeLabel + '">×</button>' +
                     '</header>' +
                     '<div class="copyStatusRow" aria-live="polite"></div>' +
-                    '<div class="copySelectionRow" style="display:none"></div>' +
                     '<div class="copyGridSection" style="display:none"></div>' +
                     '<div class="copyOptionsStrip" style="display:none"></div>' +
-                    '<div class="copyBottomSuccess" role="status" aria-live="polite"></div>' +
                     // Footer content is rendered by _renderGridSection.
                     '<footer class="copyMenuFooter" style="display:none"></footer>' +
                 '</div>';
@@ -673,119 +672,94 @@ var PassageCopyMenuView = Backbone.View.extend({
         }
     },
 
+    // Callers: open() (grid state just nulled) and, when the highlight
+    // resolves, _onLiveSelectionChange — so the seed below may overwrite the
+    // grid range, and the whole-display branch only ever runs with a null one.
     _update: function () {
         this._renderStatusRow("");
-        this.$el.find(".copyBottomSuccess").empty();
         var resolution = this._computeSelectionResolution();
         // Introspection surface for the e2e suites; app code never reads it.
         this._resolution = resolution;
 
-        // Mode policy: if snapshot resolved and user hasn't asked to pick, use
-        // selection mode. Otherwise grid.
-        if (this._mode === "selection" && !resolution.resolved) {
-            this._mode = "grid";
-            if (resolution.unresolvable) {
-                // A real selection we failed to match must not silently
-                // become a whole-chapter copy — say why the grid is empty.
-                this._renderStatusRow(
-                    "We couldn't match your selection to a verse range — please pick below.",
-                    "unresolved");
-            } else if (this._gridStart === null &&
-                    this.model.get("searchType") === "PASSAGE") {
-                // No usable selection: pre-select everything displayed so the
-                // footer Copy is genuinely one-click. Search panels are
-                // excluded (their "verses" are result hits), and
-                // onPickDifferent keeps an empty grid because it enters
-                // _update with _mode already "grid".
-                var allVerses = step.copyText._getVerses(step.util.getPassageContainer(this.panelId));
-                if (allVerses.length > 0) {
-                    this._gridStart = 0;
-                    this._gridEnd = allVerses.length - 1;
-                }
+        if (resolution.resolved) {
+            // Seed the grid from the highlight; adjust by clicking new endpoints.
+            this._gridStart = resolution.startIndex;
+            this._gridEnd = resolution.endIndex;
+        } else if (resolution.unresolvable) {
+            // A real selection we failed to match must not silently
+            // become a whole-chapter copy — say why the grid is empty.
+            this._renderStatusRow(
+                "We couldn't match your selection to a verse range — please pick below.",
+                "unresolved");
+        } else if (this.model.get("searchType") === "PASSAGE") {
+            // No usable selection: pre-select everything displayed so the
+            // footer Copy is genuinely one-click. Search panels are
+            // excluded (their "verses" are result hits).
+            var allVerses = step.copyText._getVerses(step.util.getPassageContainer(this.panelId));
+            if (allVerses.length > 0) {
+                this._gridStart = 0;
+                this._gridEnd = allVerses.length - 1;
             }
         }
 
-        this._renderSelectionRow(resolution);
-        this._renderGridSection(resolution);
+        this._renderGridSection();
+        // A seeded range should be visible without hunting; grid-cell clicks
+        // go through _updateGridVisuals and never re-scroll.
+        var startCell = this.$el.find('.copyGridCell[data-role="start"]')[0];
+        if (startCell && startCell.scrollIntoView) startCell.scrollIntoView({ block: "nearest" });
         this._renderOptionsStrip();
         this._applyCooldownState();
-        // Switching selection <-> grid changes the menu's height a lot; keep a
-        // pinned menu inside the viewport when it does.
+        // Re-seeding can change the menu's height; keep a pinned menu inside
+        // the viewport when it does.
         this._reclampFloating();
     },
 
+    // Keyboard entry point on open: the armed Copy when a range is seeded,
+    // else the first grid cell.
+    _focusInitial: function () {
+        var $primary = this.$el.find(".copyGridPrimary");
+        if ($primary.length && !$primary.prop("disabled")) $primary.focus();
+        else this.$el.find(".copyGridCell").first().focus();
+    },
+
+    // A fresh highlight while the menu is open re-seeds the grid; an
+    // unmatched one never disturbs the current range.
+    _onLiveSelectionChange: function () {
+        if (this._computeSelectionResolution().resolved) this._update();
+    },
+
     _computeSelectionResolution: function () {
-        var result = { resolved: false, startIndex: -1, endIndex: -1, label: "", unresolvable: false };
+        var result = { resolved: false, startIndex: -1, endIndex: -1, unresolvable: false };
         var snap = step.copyDropdown.selectionSnapshot;
         if (!snap) return result;
-
-        var now = Date.now();
-        var isRecent = (snap.deselectedAt === null && (now - snap.timestamp < 60000)) ||
-                       (snap.deselectedAt !== null && (now - snap.deselectedAt < 5000));
-        if (!isRecent) return result;
 
         var startVerse = snap.startVerse || "";
         var endVerse = snap.endVerse || snap.startVerse || "";
         if (!startVerse && !endVerse) return result;
 
-        var startDisplay = step.copyText._formatVerseDisplay(startVerse);
-        var endDisplay = step.copyText._formatVerseDisplay(endVerse);
-
         var passageContainer = step.util.getPassageContainer(this.panelId);
-        var verses = step.copyText._getVerses(passageContainer);
-        var startIdx = step.copyText._findVerseIndex(verses, startDisplay);
-        var endIdx = step.copyText._findVerseIndex(verses, endDisplay);
+        var startIdx = step.copyText._findVerseIndexByOsis(passageContainer, startVerse);
+        var endIdx = step.copyText._findVerseIndexByOsis(passageContainer, endVerse);
         if (startIdx === -1 && endIdx > -1) startIdx = endIdx;
         if (endIdx === -1 && startIdx > -1) endIdx = startIdx;
 
         if (startIdx === -1 || endIdx === -1) {
-            result.unresolvable = true;
-            result.label = startDisplay || endDisplay || "";
+            // Warn only about a fresh failed highlight; a stale one (e.g. made
+            // in a passage no longer displayed) silently falls back to the
+            // whole-display prefill.
+            result.unresolvable = (Date.now() - snap.timestamp < 60000);
             return result;
         }
 
         result.resolved = true;
         result.startIndex = Math.min(startIdx, endIdx);
         result.endIndex = Math.max(startIdx, endIdx);
-        result.label = startDisplay;
-        if (endDisplay && endDisplay !== startDisplay) {
-            var sep = " to ";
-            result.label += sep + endDisplay;
-        }
         return result;
     },
 
-    _renderSelectionRow: function (resolution) {
-        var $row = this.$el.find(".copySelectionRow");
-        var showSelection = resolution.resolved && this._mode === "selection";
-        if (!showSelection) {
-            $row.hide().empty();
-            return;
-        }
-        var safeLabel = _.escape(resolution.label || "");
-        var btnLabel = (__s.copy || "Copy") + (safeLabel ? " " + safeLabel : "");
-        var pickText = "Pick a different range";
-
-        var html =
-            '<button type="button" class="copyPrimaryBtn copySelectionPrimary" ' +
-                'data-button-name="copy_selection" ' +
-                'data-start-index="' + resolution.startIndex + '" ' +
-                'data-end-index="' + resolution.endIndex + '">' +
-                _.escape(btnLabel) +
-            '</button>' +
-            '<button type="button" class="copyPickDifferent">' + pickText + '</button>';
-        $row.html(html).show();
-    },
-
-    _renderGridSection: function (resolution) {
+    _renderGridSection: function () {
         var $section = this.$el.find(".copyGridSection");
         var $footer = this.$el.find(".copyMenuFooter");
-        if (this._mode !== "grid") {
-            $section.hide().empty();
-            $footer.hide();
-            return;
-        }
-
         var passageContainer = step.util.getPassageContainer(this.panelId);
         var verses = step.copyText._getVerses(passageContainer);
         if (!verses.length) {
@@ -840,19 +814,14 @@ var PassageCopyMenuView = Backbone.View.extend({
             this._gridKeydownBound = true;
         }
 
-        // Footer: primary copy chip left, back-to-selection right (render
-        // order = tab order; flex spacing in copy_dropdown.scss).
+        // Footer: primary copy chip left, inline success slot right (flex
+        // spacing in copy_dropdown.scss).
         var gridCopyLabel = _.escape(__s.copy || "Copy");
-        var backLabel = "Back to selection";
-        var footerHtml = '<button type="button" class="copyPrimaryBtn copyGridPrimary" disabled>' +
-                         gridCopyLabel + '</button>' +
-                         '<div class="copyFooterSuccess" role="status" aria-live="polite"></div>';
-        if (resolution.resolved) {
-            footerHtml += '<button type="button" class="copyBackToSelection copyPrimaryBtn">' +
-                          backLabel + '</button>';
-        }
-        $footer.html(footerHtml).show();
+        $footer.html('<button type="button" class="copyPrimaryBtn copyGridPrimary" disabled>' +
+                     gridCopyLabel + '</button>' +
+                     '<div class="copyFooterSuccess" role="status" aria-live="polite"></div>').show();
 
+        this._gridVerseNames = verses;
         this._updateGridVisuals();
     },
 
@@ -873,7 +842,7 @@ var PassageCopyMenuView = Backbone.View.extend({
             $(this).removeAttr("data-role").removeAttr("aria-selected");
         });
         if (this._gridStart === null) {
-            this.$el.find(".copyGridPrimary").prop("disabled", true).removeAttr("data-start-index data-end-index");
+            this.$el.find(".copyGridPrimary").prop("disabled", true).removeAttr("data-start-index data-end-index aria-label");
             return;
         }
         var startIdx = this._gridStart;
@@ -890,8 +859,14 @@ var PassageCopyMenuView = Backbone.View.extend({
         $primary.prop("disabled", !rangeReady);
         if (rangeReady) {
             $primary.attr("data-start-index", lo).attr("data-end-index", hi);
+            // Screen readers get the full verse names; the visible chip stays "Copy".
+            var names = this._gridVerseNames || [];
+            if (names[lo]) {
+                $primary.attr("aria-label", (__s.copy || "Copy") + " " + names[lo] +
+                    (hi !== lo && names[hi] ? " to " + names[hi] : ""));
+            }
         } else {
-            $primary.removeAttr("data-start-index").removeAttr("data-end-index");
+            $primary.removeAttr("data-start-index data-end-index aria-label");
         }
     },
 
@@ -1034,7 +1009,6 @@ var PassageCopyMenuView = Backbone.View.extend({
         } else {
             // _updateGridVisuals owns the grid primary: enabled only when a
             // range is armed, so no blanket re-enable here.
-            $primary.not(".copyGridPrimary").prop("disabled", false);
             $close.prop("disabled", false);
         }
     },
@@ -1042,7 +1016,6 @@ var PassageCopyMenuView = Backbone.View.extend({
     _onCooldownEnd: function () {
         if (step.copyDropdown.openPanelId !== this.panelId) return;
         this._renderStatusRow("");
-        this.$el.find(".copyPrimaryBtn").prop("disabled", false);
         this.$el.find(".copyCloseBtn").prop("disabled", false);
         this._updateGridVisuals(); // re-enable grid primary only if range ready
     },
@@ -1073,23 +1046,6 @@ var PassageCopyMenuView = Backbone.View.extend({
             return;
         }
         this._invokeGoCopy(startIndex, endIndex, $btn);
-    },
-
-    onPickDifferent: function (ev) {
-        ev.preventDefault(); ev.stopPropagation();
-        this._mode = "grid";
-        this._update();
-        // Focus first cell for keyboard users
-        var $first = this.$el.find(".copyGridCell").first();
-        if ($first.length) $first.focus();
-    },
-
-    onBackToSelection: function (ev) {
-        ev.preventDefault(); ev.stopPropagation();
-        this._mode = "selection";
-        this._gridStart = null;
-        this._gridEnd = null;
-        this._update();
     },
 
     onGridCellClick: function (ev) {
@@ -1249,14 +1205,10 @@ var PassageCopyMenuView = Backbone.View.extend({
         // (e.g. clipboard-denied from an earlier attempt) doesn't co-exist with
         // the inline green confirmation.
         this._renderStatusRow("");
-        var $slot = (this._mode === "selection")
-            ? this.$el.find(".copyBottomSuccess")
-            : this.$el.find(".copyFooterSuccess");
-        $slot.text(msg);
+        this.$el.find(".copyFooterSuccess").text(msg);
     },
 
     _clearInlineSuccess: function () {
-        this.$el.find(".copyBottomSuccess").empty();
         this.$el.find(".copyFooterSuccess").empty();
     },
 
@@ -1268,9 +1220,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         if (this._statusTimer) clearTimeout(this._statusTimer);
         this._statusTimer = setTimeout(function () {
             self._clearInlineSuccess();
-            // Re-enable primary button if in selection mode; grid mode uses its range state
-            if (self._mode === "selection") self.$el.find(".copyPrimaryBtn").prop("disabled", false);
-            else self._updateGridVisuals();
+            self._updateGridVisuals(); // re-enables the primary; the range is still armed
             self._statusTimer = null;
         }, 1500);
     },

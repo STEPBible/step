@@ -111,25 +111,6 @@
       }
     }
 
-    .copySelectionRow {
-      margin: 4px 0 12px;
-
-      .copyPickDifferent {
-        background: transparent;
-        border: 0;
-        color: $text-color;
-        cursor: pointer;
-        padding: 6px 0 0;
-        font-size: 12px;
-        text-decoration: underline;
-
-        &:hover,
-        &:focus {
-          color: black;
-        }
-      }
-    }
-
     .copyOptionsStrip {
       margin: 6px 0;
 
@@ -169,9 +150,6 @@
       }
     }
 
-    // Shared success-banner look for both render slots (selection mode uses
-    // .copyBottomSuccess, grid mode .copyFooterSuccess).
-    .copyBottomSuccess,
     .copyMenuFooter .copyFooterSuccess {
       padding: 6px 8px;
       border-radius: 4px;
@@ -182,10 +160,6 @@
       &:empty {
         display: none;
       }
-    }
-
-    .copyBottomSuccess {
-      margin-top: 6px;
     }
 
     .copyMenuFooter {
@@ -227,17 +201,10 @@
       }
     }
 
-    .copySelectionPrimary {
-      width: 100%;
-      text-align: center;
-    }
-
     // Inherit the .copyPrimaryBtn boxed look; only the resting color is
     // overridden to match the .argSelect panel-bar buttons. Same specificity,
     // later in source order.
-    .copySelectionPrimary,
-    .copyGridPrimary,
-    .copyBackToSelection {
+    .copyGridPrimary {
       color: $strong-color;
       color: var(--clrStrongText);
     }

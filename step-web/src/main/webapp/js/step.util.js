@@ -1918,9 +1918,7 @@ step.util = {
 							step.lastPassageSelection = {
 								startVerse: startInfo.verse,
 								endVerse: endInfo.verse,
-								version: startInfo.version || endInfo.version,
 								versions: allVersions,
-								textLength: text.length,
 								timestamp: Date.now()
 							};
 							if (step.copyDropdown && step.copyDropdown.notifySelectionChanged)

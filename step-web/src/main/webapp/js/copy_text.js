@@ -17,14 +17,17 @@ step.copyText = {
 	// OSIS-exact index of a verse in the same enumeration _getVerses uses.
 	// Deliberately no label/number fallback: a selection made in a passage no
 	// longer displayed must miss cleanly, never resolve to a lookalike verse.
+	// Every verseLink in the container is checked because column-comparison
+	// rows (tr.row) keep the OSIS on the per-version cells, not the heading.
 	_findVerseIndexByOsis: function(passageContainer, osis) {
 		if (!osis) return -1;
 		var verses = $(passageContainer).find('.verseNumber');
 		if (verses.length == 0) verses = $(passageContainer).find('.verseLink');
 		for (var i = 0; i < verses.length; i++) {
-			var container = $(verses[i]).closest('.verseGrouping, .verse, .interlinear');
-			var names = (container.find('.verseLink').first().attr('name') || '').split(' ');
-			if (names.indexOf(osis) > -1) return i;
+			var links = $(verses[i]).closest('.verseGrouping, .verse, .interlinear, tr.row').find('.verseLink');
+			for (var j = 0; j < links.length; j++) {
+				if ((links[j].getAttribute('name') || '').split(' ').indexOf(osis) > -1) return i;
+			}
 		}
 		return -1;
 	},

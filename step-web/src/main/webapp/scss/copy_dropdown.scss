@@ -176,13 +176,15 @@
       }
     }
 
-    .copyPrimaryBtn {
+    // Boxed look; the resting color matches the .argSelect panel-bar buttons.
+    .copyGridPrimary {
       display: inline-block;
       padding: 6px 12px;
       border: 1px solid $border-color;
       border-radius: 4px;
       background-color: var(--clrBackground);
-      color: $text-color;
+      color: $strong-color;
+      color: var(--clrStrongText);
       cursor: pointer;
       font-size: 13px;
       font-weight: 600;
@@ -199,14 +201,6 @@
         cursor: not-allowed;
         pointer-events: none;
       }
-    }
-
-    // Inherit the .copyPrimaryBtn boxed look; only the resting color is
-    // overridden to match the .argSelect panel-bar buttons. Same specificity,
-    // later in source order.
-    .copyGridPrimary {
-      color: $strong-color;
-      color: var(--clrStrongText);
     }
 
     .copyGridSection {

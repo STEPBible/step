@@ -3,18 +3,6 @@
 .copyDropdown {
   display: inline-block;
 
-  .copyDropdownToggle {
-    cursor: pointer;
-    color: $text-color;
-
-    &:hover,
-    &:focus {
-      text-decoration: none;
-      background-color: $secondaryHoverColour;
-      color: black;
-    }
-  }
-
   .copyMenu {
     min-width: 280px;
     max-width: 420px;
@@ -103,15 +91,8 @@
         display: none;
       }
 
-      &.copyStatus--success {
-        background-color: #dff0d8;
-        color: #3c763d;
-      }
-
-      &.copyStatus--error,
       &.copyStatus--clipboard-denied,
       &.copyStatus--copy-error,
-      &.copyStatus--ajax-error,
       &.copyStatus--stale-passage {
         background-color: #f2dede;
         color: #a94442;
@@ -152,6 +133,17 @@
     .copyOptionsStrip {
       margin: 6px 0;
 
+      label {
+        font-weight: normal;
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      input[type="checkbox"] {
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+
       .copyVersions {
         border: 0;
         margin: 0 0 6px;
@@ -168,39 +160,19 @@
           font-weight: 600;
           width: 100%;
         }
-
-        label {
-          font-weight: normal;
-          margin: 0;
-          white-space: nowrap;
-        }
-
-        input[type="checkbox"] {
-          margin-right: 4px;
-          vertical-align: middle;
-        }
       }
 
       .copyToggleRow {
         display: flex;
         flex-wrap: wrap;
         gap: 4px 14px;
-
-        label {
-          font-weight: normal;
-          margin: 0;
-          white-space: nowrap;
-
-          input[type="checkbox"] {
-            margin-right: 4px;
-            vertical-align: middle;
-          }
-        }
       }
     }
 
-    .copyBottomSuccess {
-      margin-top: 6px;
+    // Shared success-banner look for both render slots (selection mode uses
+    // .copyBottomSuccess, grid mode .copyFooterSuccess).
+    .copyBottomSuccess,
+    .copyMenuFooter .copyFooterSuccess {
       padding: 6px 8px;
       border-radius: 4px;
       font-size: 13px;
@@ -210,6 +182,10 @@
       &:empty {
         display: none;
       }
+    }
+
+    .copyBottomSuccess {
+      margin-top: 6px;
     }
 
     .copyMenuFooter {
@@ -222,16 +198,7 @@
 
       .copyFooterSuccess {
         flex: 1;
-        padding: 6px 8px;
-        border-radius: 4px;
-        font-size: 13px;
-        background-color: #dff0d8;
-        color: #3c763d;
         text-align: center;
-
-        &:empty {
-          display: none;
-        }
       }
     }
 
@@ -253,8 +220,7 @@
         outline: none;
       }
 
-      &[disabled],
-      &.disabled {
+      &[disabled] {
         opacity: 0.5;
         cursor: not-allowed;
         pointer-events: none;
@@ -266,13 +232,9 @@
       text-align: center;
     }
 
-    // Grid-mode footer buttons + selection-mode primary inherit the
-    // .copyPrimaryBtn boxed look (border, radius, padding, hover) — only
-    // the resting color is overridden to match the .argSelect panel-bar
-    // buttons (bible / reference / search). Hover (.copyPrimaryBtn:hover)
-    // flips to black, disabled (.copyPrimaryBtn[disabled]) fades via
-    // opacity. Same SCSS specificity (0,3,0); placed after .copyPrimaryBtn
-    // in source order.
+    // Inherit the .copyPrimaryBtn boxed look; only the resting color is
+    // overridden to match the .argSelect panel-bar buttons. Same specificity,
+    // later in source order.
     .copySelectionPrimary,
     .copyGridPrimary,
     .copyBackToSelection {
@@ -344,30 +306,15 @@
           background-color: #d9edf7;
           color: #31708f;
         }
-
-        &[aria-disabled="true"],
-        &.copyGridCell--gap {
-          opacity: 0.3;
-          cursor: not-allowed;
-          pointer-events: none;
-        }
       }
     }
   }
 
   // ----- movable menu -----
-  //
-  // Specificity here is (0,3,0), one class more than both the `.copyDropdown
-  // .copyMenu` block above and the <=640px bottom-sheet block below, so this
-  // wins regardless of source order.
-  //
-  // position:fixed is the whole trick. The menu's default anchor is a 0x0
-  // span in the panel header, and #columnHolder (passage_columns.scss) sets
-  // overflow-y:hidden, which clips absolutely-positioned descendants — an
-  // absolute menu simply cannot be moved out of the panel. Nothing in the
-  // ancestor chain sets transform/filter/perspective/contain, so fixed
-  // resolves against the viewport and escapes that clip. z-index clears
-  // #stepnavbar (1030). left/top/width/max-height are written by JS.
+  // Specificity (0,3,0) outranks the .copyMenu block above and the <=640px
+  // bottom sheet below regardless of source order. position:fixed escapes
+  // #columnHolder's overflow clip (no ancestor sets transform/filter/etc.);
+  // z-index clears #stepnavbar (1030). left/top/width/max-height come from JS.
   .copyMenu.copyMenu--floating {
     position: fixed;
     margin: 0;

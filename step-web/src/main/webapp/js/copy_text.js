@@ -14,44 +14,6 @@ step.copyText = {
 		};
 	},
 
-	_getSelectionState: function() {
-		var selInfo = step.lastPassageSelection;
-		var result = {
-			hasSelection: false,
-			versions: [],
-			startVerse: '',
-			endVerse: '',
-			startVerseDisplay: '',
-			endVerseDisplay: '',
-			startIndex: -1,
-			endIndex: -1,
-			label: ''
-		};
-		if (!selInfo) return result;
-		var now = Date.now();
-		var isRecent = (selInfo.deselectedAt === null && (now - selInfo.timestamp < 60000)) ||
-			(selInfo.deselectedAt !== null && (now - selInfo.deselectedAt < 5000));
-		if (!isRecent) return result;
-		if ($.isArray(selInfo.versions) && selInfo.versions.length > 0)
-			result.versions = selInfo.versions.slice(0);
-		else if (selInfo.version)
-			result.versions = [selInfo.version];
-		result.startVerse = selInfo.startVerse || '';
-		result.endVerse = selInfo.endVerse || selInfo.startVerse || '';
-		result.startVerseDisplay = this._formatVerseDisplay(result.startVerse);
-		result.endVerseDisplay = this._formatVerseDisplay(result.endVerse);
-		result.hasSelection = (result.versions.length > 0 || result.startVerse !== '' || result.endVerse !== '');
-		if (result.hasSelection) {
-			result.label = result.startVerseDisplay || '';
-			if (result.endVerseDisplay && result.endVerseDisplay !== result.startVerseDisplay) {
-				var sep = ' to ';
-				result.label += sep + result.endVerseDisplay;
-			}
-			if (result.label === '') result.label = 'your current selection';
-		}
-		return result;
-	},
-
 	_formatVerseDisplay: function(osis) {
 		if (!osis) return '';
 		return osis.replace(/^([123A-Za-z]+)\.(\d)/, '$1 $2').replace(/\.(\d+)/g, ': $1');
@@ -81,10 +43,10 @@ step.copyText = {
 	},
 
 	_getOsisIdsForRange: function(passageContainer, firstVerseIndex, lastVerseIndex) {
-		// Use versenumber/verselink elements (same as goCopy's clone trimming) to find
-		// the verse containers, then extract OSIS from the nearest verseLink
-		var verses = $(passageContainer).find('.versenumber');
-		if (verses.length == 0) verses = $(passageContainer).find('.verselink');
+		// Same verse enumeration as goCopy's clone trimming, then OSIS from
+		// the nearest verseLink.
+		var verses = $(passageContainer).find('.verseNumber');
+		if (verses.length == 0) verses = $(passageContainer).find('.verseLink');
 		var firstOsis = '';
 		var lastOsis = '';
 		if (verses.length > firstVerseIndex) {
@@ -240,7 +202,7 @@ step.copyText = {
 	},
 
 	_fetchNotesForVersions: function(versions, reference, firstOsis, lastOsis, wantNotes, wantXrefs) {
-		var result = { notesByVersion: {}, errors: [] };
+		var result = { notesByVersion: {} };
 		for (var i = 0; i < versions.length; i++) {
 			var version = versions[i];
 			var vInfo = step.keyedVersions[version];
@@ -254,32 +216,40 @@ step.copyText = {
 				$.ajaxSetup({async: true});
 			} catch (e) {
 				$.ajaxSetup({async: true});
-				result.errors.push(version);
 				continue;
 			}
 			if (fetchedHTML && firstOsis) {
 				var noteData = step.copyText._extractNotesFromHTML(fetchedHTML, firstOsis, lastOsis);
 				if ((wantNotes && noteData.endNotes) || (wantXrefs && noteData.endXrefs))
 					result.notesByVersion[version] = noteData;
-			} else if (!fetchedHTML) {
-				result.errors.push(version);
 			}
 		}
 		return result;
 	},
 
-	// Helper used by both the modal's DOM-driven path and the dropdown's
-	// options-driven path. Returns true iff the caller wants version N (0-based).
+	// Returns true iff the caller wants version N (0-based).
 	_isVersionChecked: function(opts, n) {
-		if (opts && $.isArray(opts.checkedVersionIndices))
-			return opts.checkedVersionIndices.indexOf(n) > -1;
-		return $('#cpyver' + (n + 1)).prop('checked');
+		return !!(opts && $.isArray(opts.checkedVersionIndices) &&
+			opts.checkedVersionIndices.indexOf(n) > -1);
+	},
+
+	// Removes the verse container holding a verseNumber/verseLink element
+	// (at most 6 levels up). Returns 1 if a container was removed, else 0.
+	_removeVerseAncestor: function(el) {
+		var parent = $(el).parent();
+		for (var count = 0; count < 6; count++) {
+			if (parent.hasClass("verse") || parent.hasClass("row") ||
+					parent.hasClass("verseGrouping") || parent.hasClass("interlinear")) {
+				parent.remove();
+				return 1;
+			}
+			parent = parent.parent();
+		}
+		return 0;
 	},
 
 	// goCopy(firstVerseIndex, lastVerseIndex, opts?)
-	//   opts.wantNotes (bool)          — overrides the #selectnotes checkbox
-	//   opts.wantXrefs (bool)          — overrides the #selectxref checkbox
-	//   opts.checkedVersionIndices (int[]) — overrides #cpyver1..N probes
+	//   opts: { wantNotes, wantXrefs, checkedVersionIndices }
 	goCopy: function(firstVerseIndex, lastVerseIndex, opts) {
 		opts = opts || {};
 		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
@@ -289,49 +259,21 @@ step.copyText = {
 			firstVerseIndex = lastVerseIndex;
 			lastVerseIndex = temp;
 		}
-		var verses = $(copyOfPassage).find('.versenumber');
-		if (verses.length == 0) verses = $(copyOfPassage).find('.verselink');
+		var verses = $(copyOfPassage).find('.verseNumber');
+		if (verses.length == 0) verses = $(copyOfPassage).find('.verseLink');
 		var versesRemoved = 0;
-		if (lastVerseIndex < verses.length - 1) {
-			for (var k = verses.length - 1; k > lastVerseIndex; k--) {
-				var found = false;
-				var count = 0; // The parent to delete should not be more than 6 level up.
-				var parent = $(verses[k]).parent();
-				while ((!found) && (count < 6)) {
-					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping")) || (parent.hasClass("interlinear"))) {
-						parent.remove();
-						found = true;
-						versesRemoved ++;
-					}
-					else parent = parent.parent();
-					count ++;
-				}
-			}
-		}
-		if (firstVerseIndex > 0) {
-			for (var k = firstVerseIndex - 1; k >= 0; k--) {
-				var found = false;
-				var count = 0;
-				var parent = $(verses[k]).parent();
-				while ((!found) && (count < 6)) {
-					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping"))|| (parent.hasClass("interlinear"))) {
-						parent.remove();
-						found = true;
-						versesRemoved ++;
-					}
-					else parent = parent.parent();
-					count ++;
-				}
-			}
-		}
+		for (var k = verses.length - 1; k > lastVerseIndex; k--)
+			versesRemoved += step.copyText._removeVerseAncestor(verses[k]);
+		for (var k = firstVerseIndex - 1; k >= 0; k--)
+			versesRemoved += step.copyText._removeVerseAncestor(verses[k]);
 		var masterVersion = step.util.activePassage().get("masterVersion");
 		var extraVersions = step.util.activePassage().get("extraVersions");
 		var hasExtraVersions = (extraVersions !== "");
 		var isInterlinear = $(passageContainer).has(".interlinear").length > 0;
 		var endNotes = "";
 		var endXrefs = "";
-		var wantNotes = (opts.wantNotes !== undefined) ? !!opts.wantNotes : $("#selectnotes").prop("checked");
-		var wantXrefs = (opts.wantXrefs !== undefined) ? !!opts.wantXrefs : $("#selectxref").prop("checked");
+		var wantNotes = !!opts.wantNotes;
+		var wantXrefs = !!opts.wantXrefs;
 		if (wantNotes || wantXrefs) {
 			var reference = step.util.activePassage().get("reference");
 			var osisRange = step.copyText._getOsisIdsForRange(passageContainer, firstVerseIndex, lastVerseIndex);
@@ -464,7 +406,7 @@ step.copyText = {
 			}
 			$(comparingTable).find("tr").not(".row").remove();
 		}
-		var versesInPanel = $(copyOfPassage).find(".versenumber");
+		var versesInPanel = $(copyOfPassage).find(".verseNumber");
 		var verses = [];
 		var previousVerseName = "";
 		if (versesInPanel.length > 0) {
@@ -561,7 +503,7 @@ step.copyText = {
 			for (var i = 0; i < versions.length; i++) {
 				if ((versionsToExclude.length > 0) && (versionsToExclude.includes(i)))
 					continue;
-				currentVersion = versions[i];
+				var currentVersion = versions[i];
 				if (currentVersion === "") continue;
 				$.ajaxSetup({async: false});
 				$.getJSON("/html/copyrights/" + currentVersion + ".json", function(copyRights) {
@@ -602,36 +544,20 @@ step.copyText = {
 		}
 		else if (previousTimes.length > 0) sleepTime = 600;
 
-		// Clipboard write — guarded so dropdown sink can surface clipboard errors.
+		// Clipboard write — guarded so the dropdown sink can surface errors.
+		// The async Clipboard API is a hard requirement: step_ready.js hides
+		// the whole copy UI when it is missing.
 		try {
-			var writeResult = navigator.clipboard && navigator.clipboard.writeText
-				? navigator.clipboard.writeText(textToCopy) : null;
-			if (writeResult && typeof writeResult.then === "function") {
-				writeResult["catch"](function () {
-					step.copyText._sink().showClipboardDenied();
-				});
-			} else if (!navigator.clipboard || !navigator.clipboard.writeText) {
-				// Insecure-context fallback: hidden textarea + execCommand
-				var ta = document.createElement("textarea");
-				ta.value = textToCopy;
-				ta.setAttribute("readonly", "");
-				ta.style.position = "absolute";
-				ta.style.left = "-9999px";
-				document.body.appendChild(ta);
-				var prevSel = document.getSelection();
-				var prevRanges = [];
-				if (prevSel && prevSel.rangeCount) {
-					for (var r = 0; r < prevSel.rangeCount; r++) prevRanges.push(prevSel.getRangeAt(r));
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				var writeResult = navigator.clipboard.writeText(textToCopy);
+				if (writeResult && typeof writeResult["catch"] === "function") {
+					writeResult["catch"](function () {
+						step.copyText._sink().showClipboardDenied();
+					});
 				}
-				ta.select();
-				try { document.execCommand("copy"); }
-				catch (e) { step.copyText._sink().showClipboardDenied(); }
-				document.body.removeChild(ta);
-				// Restore any previous ranges
-				if (prevSel) {
-					prevSel.removeAllRanges();
-					for (var r = 0; r < prevRanges.length; r++) prevSel.addRange(prevRanges[r]);
-				}
+			} else {
+				step.copyText._sink().showClipboardDenied();
+				return;
 			}
 		} catch (e) {
 			step.copyText._sink().showCopyError(e);
@@ -654,7 +580,7 @@ step.copyText = {
 		return verseName;
 	},
 	_getVerses: function(passageContainer) {
-		var versesInPanel = $(passageContainer).find(".versenumber");
+		var versesInPanel = $(passageContainer).find(".verseNumber");
 		var verses = [];
 		if (versesInPanel.length > 0) {
 			for (var i = 0; i < versesInPanel.length; i ++) {

@@ -534,7 +534,8 @@ step.passageSelect = {
         }
         
 		var bookNameToDisplay = this.bookDisplayNames[bookOsisID.split('.')[0]] || '';
-		var html = '<div class="header">' +
+		var html = ((bookNameToDisplay) ? '<span id="selectedBookName" class="stepFgBg" style="font-size:18px"><b>' + bookNameToDisplay + '</b></span>' : '') +
+			'<div class="header">' +
             '<h4>' + headerMsg + '</h4>';
         if ((isChapter) && 
 			 ((userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible)) &&
@@ -548,7 +549,6 @@ step.passageSelect = {
 					'</button>';
         html +=
             '</div>' +
-			((bookNameToDisplay) ? '<span id="selectedBookName" class="stepFgBg" style="font-size:18px"><b>' + bookNameToDisplay + '</b></span>' : '') +
 			'<div style="overflow-y:auto">' +
 			'<table>' +
 			'<colgroup>';

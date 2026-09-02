@@ -33,6 +33,7 @@ step.copyDropdown = step.copyDropdown || {
         this.openView = view;
         if (step.lastPassageSelection) {
             this.selectionSnapshot = {
+                passageId: step.lastPassageSelection.passageId,
                 startVerse: step.lastPassageSelection.startVerse,
                 endVerse: step.lastPassageSelection.endVerse,
                 versions: (step.lastPassageSelection.versions || []).slice(0),
@@ -641,6 +642,7 @@ var PassageCopyMenuView = Backbone.View.extend({
     remove: function () {
         if (step.copyDropdown.views[this.panelId] === this) delete step.copyDropdown.views[this.panelId];
         if (step.copyDropdown.openPanelId === this.panelId) step.copyDropdown.release(this.panelId);
+        if (step.lastPassageSelection && step.lastPassageSelection.passageId === this.panelId) step.lastPassageSelection = null;
         if (this._statusTimer) { clearTimeout(this._statusTimer); this._statusTimer = null; }
         // Document- and window-level listeners outlive this.$el, so they have
         // to come off explicitly or a closed panel keeps dragging.
@@ -759,10 +761,10 @@ var PassageCopyMenuView = Backbone.View.extend({
         if (endIdx === -1 && startIdx > -1) endIdx = startIdx;
 
         if (startIdx === -1 || endIdx === -1) {
-            // Warn only about a fresh failed highlight; a stale one (e.g. made
-            // in a passage no longer displayed) silently falls back to the
-            // whole-display prefill.
-            result.unresolvable = (Date.now() - snap.timestamp < 60000);
+            // Warn only about a fresh failed highlight from this panel; a stale
+            // or foreign one silently falls back to the whole-display prefill.
+            result.unresolvable = (Date.now() - snap.timestamp < 60000) &&
+                (snap.passageId === undefined || snap.passageId === this.panelId);
             return result;
         }
 
@@ -1241,6 +1243,7 @@ var PassageCopyMenuView = Backbone.View.extend({
         this._statusTimer = setTimeout(function () {
             self._clearInlineSuccess();
             self._updateGridVisuals(); // re-enables the primary; the range is still armed
+            if (document.activeElement === document.body) self._focusInitial();
             self._statusTimer = null;
         }, 1500);
     },

@@ -1883,7 +1883,8 @@ step.util = {
 				"initSelectionTracking": function () {
 					var debounceTimer;
 					step.lastPassageSelection = null;
-					document.addEventListener('selectionchange', function () {
+					document.addEventListener('selectionchange', function (e) {
+						if (e.target !== document) return; // text controls' own selectionchange bubbles here
 						clearTimeout(debounceTimer);
 						debounceTimer = setTimeout(function () {
 							var sel = window.getSelection();
@@ -1916,6 +1917,7 @@ step.util = {
 							addVersionIfNeeded(startInfo.version);
 							addVersionIfNeeded(endInfo.version);
 							step.lastPassageSelection = {
+								passageId: parseInt($(startEl).closest('.passageContainer').attr('passage-id')),
 								startVerse: startInfo.verse,
 								endVerse: endInfo.verse,
 								versions: allVersions,

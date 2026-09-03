@@ -823,6 +823,8 @@
   <body>
     <!-- Fixed layout -->
 
+    <!-- $$$Jamie 26-Aug-2026: Moved from below. --><div id='copyToClipboardConfirmation' class='fadingPopUp'>URL copied to clipboard</div>
+
     <!-- Used to make it possible to resolve calc values in Javascript.  See references to dummyRootResolver in j_chronology.js. -->
     <div id='dummyRootResolver' style='display:none' verticalSpaceForDatesMinimumToAvoidOverlap='margin-top' verticalSpacePerYearForAmDates='margin-right' verticalSpacePerYearForNonAmDates='margin-bottom'></div>
 
@@ -833,7 +835,7 @@
       <div id='HEADER' style='flex: 0 0 auto'>
 	<!-- <h2 style='color:var(--clrText)'>Chronology</h2> -->
 	<div id='info-box'>
-	  <div id='copyToClipboardConfirmation' class='fadingPopUp'>URL copied to clipboard</div>
+	  <!-- $$$Jamie 26-Aug-2026: Moved to just inside body. <div id='copyToClipboardConfirmation' class='fadingPopUp'>URL copied to clipboard</div> -->
 	  <div id='info-box-content' style='padding:10px;'></div>
 	</div>
 

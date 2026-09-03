@@ -1961,11 +1961,23 @@ class _ClassJChronologyPresentationHandler
 
 
   /**************************************************************************/
+  _DcBooks = ".tob.jdt.esg.wis.sir.bar.lje.s3y.sus.bel.1ma.2ma.3ma.4ma.1es.2es.man.ps2.oda.pss.jsa.jdb.tbs.sst.dnt.blt.lao.eza.5ez.6ez.";
+  //_DcBooks = ".tob.jdt.esthgr.wis.sir.bar.epjer.prazar.sus.bel.1macc.2macc.3macc.4macc.1esd.2esd.prman.addps.odes.psssol.josha.judgb.tobs.susth.danth.belth.eplao.4ezra.5ezra.6ezra.";
   setScriptureWindowContent (scriptures, forceScripturePaneVisible)
   {
-    if ('' === scriptures) return;
-    JFrameworkMultiframeCommunicationsSlave.sendSetUrlForce('scripture', window.location.origin + '/?skipwelcome&q=' + 'reference=' + scriptures + '&options=VHN&noredirect');
+    if ('' === scriptures)
+      JFrameworkMultiframeCommunicationsSlave.sendSetUrlForce('scripture', window.location.origin + '/html/J_AppsHtml/J_Chronology/j_noScripture.html');
+    else  
+    {
+      const containsDc = scriptures.split(";")
+        .map(s => s.trim().split(".")[0])
+        .some(portion => this._DcBooks.includes(portion.toLowerCase()));
 
+      const text = containsDc ? "CPDV" : "ESV";
+
+      JFrameworkMultiframeCommunicationsSlave.sendSetUrlForce('scripture', window.location.origin + '/?skipwelcome&q=' + 'version=' + text + '@reference=' + scriptures + '&options=VHN&noredirect');
+    }
+      
     if (forceScripturePaneVisible)
       JChronology.sendMessageTo('scripture', { forceTabVisible: 'scripture' }, 'chronology');
   }

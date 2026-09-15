@@ -6,6 +6,7 @@ step.passageSelect = {
 	modalMode: 'book',
 	lastOsisID: '',
 	lastNumOfChapters: '',
+	bookDisplayNames: {},
 	arrayOfTyplicalBooksChapters: [],
 	osisChapterJsword: [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
 		["Gen", 50, [31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,46,22,35,43,55,32,20,31,29,43,36,30,23,23,57,38,34,34,28,34,31,22,33,26]],
@@ -82,6 +83,7 @@ step.passageSelect = {
 		this.modalMode = 'book';
 		this.lastOsisID = '';
 		this.lastNumOfChapters = '';
+		this.bookDisplayNames = {};
 		this.arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
 		step.util.closeModal('searchSelectionModal');
 		var hideAppend = false;
@@ -269,6 +271,7 @@ step.passageSelect = {
 				longNameToDisplay = data[i].suggestion.fullName;
 				shortNameToDisplay = (this.userLang.toLowerCase().indexOf("en") == 0) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
 			}
+			this.bookDisplayNames[currentOsisID] = longNameToDisplay;
 			var newTestament = (nt.indexOf(currentOsisID) > -1);
 			if (!newTestament) oldTestament = (ot.indexOf(currentOsisID) > -1);
 			if ((newTestament) && (notSeenNT)) {
@@ -530,7 +533,9 @@ step.passageSelect = {
             $.ajaxSetup({async: true});
         }
         
-		var html = '<div class="header">' +
+		var bookNameToDisplay = this.bookDisplayNames[bookOsisID.split('.')[0]] || '';
+		var html = ((bookNameToDisplay) ? '<span id="selectedBookName" class="stepFgBg" style="font-size:18px"><b>' + bookNameToDisplay + '</b></span>' : '') +
+			'<div class="header">' +
             '<h4>' + headerMsg + '</h4>';
         if ((isChapter) && 
 			 ((userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible)) &&
@@ -617,9 +622,10 @@ step.passageSelect = {
 	},
 
 	goBackToPreviousPage: function() {
-		if (this.modalMode === 'verse') {
-			this._buildChptrVrsTbl(null, this.lastOsisID, this.lastNumOfChapters, true);
-			this.modalMode = "chapter";
+		if ((this.modalMode === 'verse') && (this.lastOsisID !== '')) {
+			// _buildChptrVrsTbl sets modalMode itself: 'chapter' normally, 'verse'
+			// when a single-chapter book's auto-jump lands back on the verse grid.
+			this._buildChptrVrsTbl(null, this.lastOsisID, this.lastNumOfChapters, true, this.version, this.userLang);
 		}
 		else {
 			$('#bookchaptermodalbody').empty();

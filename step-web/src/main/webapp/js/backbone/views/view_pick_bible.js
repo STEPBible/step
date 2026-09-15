@@ -45,7 +45,7 @@ var PickBibleView = Backbone.View.extend({
         '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="en"  checked="checked" /><%= __s.english %></label>' +
         '<% if (Object.keys(myOtherLanguages).length > 3) { %>' +
             '<% for (var key in myOtherLanguages) { %>' +
-				'<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="<%=key%>" title="<%= myOtherLanguages[key] %><%= key.toUpperCase() %></label>' +
+				'<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="<%=key%>" title="<%= myOtherLanguages[key] %>" /><%= key.toUpperCase() %></label>' +
             '<% } %>' +
         '<% } else { %>' +
             '<% for (var key in myOtherLanguages) { %>' +

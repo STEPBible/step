@@ -1,11 +1,11 @@
 /*
  * PassageCopyMenuView — per-panel dropdown driving the copy-to-clipboard flow.
  *
- * Single mode: a verse-number grid with click-start/click-end range
- * selection. Each open seeds the grid from the last passage highlight when it
- * still matches the displayed text — else pre-selects the whole display — so
- * the footer Copy is one click. A fresh highlight while the menu is open
- * re-seeds the grid live.
+ * Single mode: a verse-number grid where one click arms a verse and a second
+ * click on another cell widens it to a range. Each open seeds the grid from
+ * the last passage highlight when it still matches the displayed text — else
+ * pre-selects the whole display — so the footer Copy is one click. A fresh
+ * highlight while the menu is open re-seeds the grid live.
  */
 window.step = window.step || {};
 
@@ -865,27 +865,24 @@ var PassageCopyMenuView = Backbone.View.extend({
             return;
         }
         var startIdx = this._gridStart;
-        var endIdx = (this._gridEnd !== null) ? this._gridEnd : null;
-        var lo = (endIdx !== null) ? Math.min(startIdx, endIdx) : startIdx;
-        var hi = (endIdx !== null) ? Math.max(startIdx, endIdx) : startIdx;
+        // A start with no end yet is the one-verse range start..start, so a
+        // single click arms the chip; a click on another cell widens it.
+        var endIdx = (this._gridEnd !== null) ? this._gridEnd : startIdx;
+        var lo = Math.min(startIdx, endIdx);
+        var hi = Math.max(startIdx, endIdx);
         for (var i = lo; i <= hi; i++) {
             var role = (i === lo) ? "start" : (i === hi ? "end" : "in-range");
             var $cell = $cells.filter('[data-verse-index="' + i + '"]');
             $cell.attr("data-role", role).attr("aria-selected", "true");
         }
-        var rangeReady = (endIdx !== null);
         var $primary = this.$el.find(".copyGridPrimary");
-        $primary.prop("disabled", !rangeReady);
-        if (rangeReady) {
-            $primary.attr("data-start-index", lo).attr("data-end-index", hi);
-            // Screen readers get the full verse names; the visible chip stays "Copy".
-            var names = this._gridVerseNames || [];
-            if (names[lo]) {
-                $primary.attr("aria-label", (__s.copy || "Copy") + " " + names[lo] +
-                    (hi !== lo && names[hi] ? " to " + names[hi] : ""));
-            }
-        } else {
-            $primary.removeAttr("data-start-index data-end-index aria-label");
+        $primary.prop("disabled", false)
+            .attr("data-start-index", lo).attr("data-end-index", hi);
+        // Screen readers get the full verse names; the visible chip stays "Copy".
+        var names = this._gridVerseNames || [];
+        if (names[lo]) {
+            $primary.attr("aria-label", (__s.copy || "Copy") + " " + names[lo] +
+                (hi !== lo && names[hi] ? " to " + names[hi] : ""));
         }
     },
 

@@ -1908,11 +1908,18 @@ step.util = {
 							if (rangeCommonAncestor && rangeCommonAncestor.nodeType === 3)
 								rangeCommonAncestor = rangeCommonAncestor.parentElement;
 							if (rangeCommonAncestor) {
+								var lastVerseInRange = '';
 								$(rangeCommonAncestor).find('.verse, .singleVerse, .interlinear, .commentaryVerse').each(function () {
 									if (range.intersectsNode && !range.intersectsNode(this)) return;
 									var verseInfo = step.util.ui["getSelectionVerseInfo"](this);
 									addVersionIfNeeded(verseInfo.version);
+									// A boundary in the whitespace between verses (a drag that starts or
+									// ends on the leading edge of a verse number) belongs to no verse:
+									// fall back to the first/last verse the range actually covers.
+									if (!startInfo.verse) startInfo.verse = verseInfo.verse;
+									lastVerseInRange = verseInfo.verse || lastVerseInRange;
 								});
+								if (!endInfo.verse) endInfo.verse = lastVerseInRange;
 							}
 							addVersionIfNeeded(startInfo.version);
 							addVersionIfNeeded(endInfo.version);

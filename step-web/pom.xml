@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>26.9.4</version>
+		<version>26.9.5</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -201,6 +201,7 @@
 									<jsSourceFile>js/backbone/models/passage_model.js</jsSourceFile>
 									<jsSourceFile>js/backbone/models/model_settings.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_menu_passage.js</jsSourceFile>
+									<jsSourceFile>js/backbone/views/view_menu_copy.js</jsSourceFile>
 									<jsSourceFile>js/state/step.state.js</jsSourceFile>
 									<jsSourceFile>js/passage/step.passage.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_feedback.js</jsSourceFile>

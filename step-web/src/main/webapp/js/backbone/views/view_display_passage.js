@@ -830,13 +830,7 @@ var PassageDisplayView = DisplayView.extend({
                                 if (touch) {
                                     tooltip.find(".qtip-title").css("width", "90%");
                                 }
-                                var enableDrag = !touch || !smallViewport;
-                                if (enableDrag) {
-                                    new Draggabilly($(tooltip).get(0), {
-                                        containment: 'body',
-                                        handle: selector
-                                    });
-                                }
+                                new Draggabilly(tooltip[0], {containment: 'body', handle: selector});
 
                                 step.util.ui.addStrongHandlers(self.model.get("passageId"), tooltip);
                                 if (smallViewport) {
@@ -844,6 +838,14 @@ var PassageDisplayView = DisplayView.extend({
                                     bindSideNoteResize(api);
                                 } else {
                                     adjustSideNoteQtipOffscreen(api);
+                                }
+                            },
+                            move: function (event, api, position) {
+                                // The anchor lives in the xref hover, which any outside touch (e.g. a drag) hides: hold position, don't snap to (0, scrollY)
+                                var tooltip = api.elements.tooltip;
+                                if (!item.is(':visible')) {
+                                    position.top = parseFloat(tooltip.css('top'));
+                                    position.left = Math.max(0, Math.min(parseFloat(tooltip.css('left')), $(window).width() - tooltip.outerWidth() - margin));
                                 }
                             },
                             hide: function (event, api) {

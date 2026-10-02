@@ -830,7 +830,9 @@ var PassageDisplayView = DisplayView.extend({
                                 if (touch) {
                                     tooltip.find(".qtip-title").css("width", "90%");
                                 }
-                                new Draggabilly(tooltip[0], {containment: 'body', handle: selector});
+                                // Contain drags to the visible screen, not <body>: on phones <body> is only the first screen of the scrolling page
+                                if (!$("#xrefDragBounds").length) $("body").append('<div id="xrefDragBounds" style="position:fixed;top:0;right:0;bottom:0;left:0;visibility:hidden;pointer-events:none"></div>');
+                                new Draggabilly(tooltip[0], {containment: '#xrefDragBounds', handle: selector});
 
                                 step.util.ui.addStrongHandlers(self.model.get("passageId"), tooltip);
                                 if (smallViewport) {

@@ -830,13 +830,9 @@ var PassageDisplayView = DisplayView.extend({
                                 if (touch) {
                                     tooltip.find(".qtip-title").css("width", "90%");
                                 }
-                                var enableDrag = !touch || !smallViewport;
-                                if (enableDrag) {
-                                    new Draggabilly($(tooltip).get(0), {
-                                        containment: 'body',
-                                        handle: selector
-                                    });
-                                }
+                                // Contain drags to the visible screen, not <body>: on phones <body> is only the first screen of the scrolling page
+                                if (!$("#xrefDragBounds").length) $("body").append('<div id="xrefDragBounds" style="position:fixed;top:0;right:0;bottom:0;left:0;visibility:hidden;pointer-events:none"></div>');
+                                new Draggabilly(tooltip[0], {containment: '#xrefDragBounds', handle: selector});
 
                                 step.util.ui.addStrongHandlers(self.model.get("passageId"), tooltip);
                                 if (smallViewport) {
@@ -844,6 +840,14 @@ var PassageDisplayView = DisplayView.extend({
                                     bindSideNoteResize(api);
                                 } else {
                                     adjustSideNoteQtipOffscreen(api);
+                                }
+                            },
+                            move: function (event, api, position) {
+                                // The anchor lives in the xref hover, which any outside touch (e.g. a drag) hides: hold position, don't snap to (0, scrollY)
+                                var tooltip = api.elements.tooltip;
+                                if (!item.is(':visible')) {
+                                    position.top = parseFloat(tooltip.css('top'));
+                                    position.left = Math.max(0, Math.min(parseFloat(tooltip.css('left')), $(window).width() - tooltip.outerWidth() - margin));
                                 }
                             },
                             hide: function (event, api) {

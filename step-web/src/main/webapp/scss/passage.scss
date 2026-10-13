@@ -261,7 +261,7 @@ a.smallHeaders > .glyphicon-arrow-up {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  top: 0;
+  top: -.1em; // middle alone centres the box on the lowercase letters; this centres it on the capitals
   width: 1.3em;
   height: 1.3em;
   margin-right: .25em;

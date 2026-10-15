@@ -256,6 +256,24 @@ a.smallHeaders {
   color: var(--clrHighlight);
 }
 
+/* Outlined arrow on interlinear Bibles that can be moved to the top, sized to fit inside the label row */
+a.smallHeaders > .glyphicon-arrow-up {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  top: -.1em; // middle alone centres the box on the lowercase letters; this centres it on the capitals
+  width: 1.3em;
+  height: 1.3em;
+  margin-right: .25em;
+  border: 1px solid;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+a.smallHeaders > .glyphicon-arrow-up:before {
+  font-size: .75em;
+}
+
 br.paragraph {
   padding-top: 2px;
 }

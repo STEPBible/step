@@ -264,7 +264,7 @@ a.smallHeaders > .glyphicon-arrow-up {
   top: -.1em; // middle alone centres the box on the lowercase letters; this centres it on the capitals
   width: 1.3em;
   height: 1.3em;
-  margin-right: .25em;
+  margin-left: .25em;
   border: 1px solid;
   border-radius: 2px;
   vertical-align: middle;
@@ -272,6 +272,11 @@ a.smallHeaders > .glyphicon-arrow-up {
 
 a.smallHeaders > .glyphicon-arrow-up:before {
   font-size: .75em;
+}
+
+/* No hover or focus underline on a name with the arrow, so the arrow reads as the thing to click */
+a.smallHeaders:has(.glyphicon-arrow-up) {
+  text-decoration: none;
 }
 
 br.paragraph {

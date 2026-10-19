@@ -112,7 +112,7 @@ var PassageDisplayView = DisplayView.extend({
                 this._warnCommentaryLookupVersion(version, extraVersions);
                 this.doFonts(passageHtml, options, interlinearMode, languages);
                 this.doSwapInterlinearLink(passageHtml);
-                passageHtml.find("a.smallHeaders[data-version-disabled='false']").prepend('<i class="glyphicon glyphicon-arrow-up"></i>'); // interlinear Bibles that can be moved to the top
+                passageHtml.find("a.smallHeaders[data-version-disabled='false']").append('<i class="glyphicon glyphicon-arrow-up"></i>'); // interlinear Bibles that can be moved to the top
                 this._doInlineNotes(passageHtml, passageId);
                 this._doSideNotes(passageHtml, passageId, version);
                 this._doNonInlineNotes(passageHtml);

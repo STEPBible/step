@@ -268,15 +268,24 @@ a.smallHeaders > .glyphicon-arrow-up {
   border: 1px solid;
   border-radius: 2px;
   vertical-align: middle;
+  cursor: pointer;
 }
 
 a.smallHeaders > .glyphicon-arrow-up:before {
   font-size: .75em;
 }
 
-/* No hover or focus underline on a name with the arrow, so the arrow reads as the thing to click */
+/* No hover or focus underline and no hand on a name with the arrow, so the arrow reads as the thing to click */
 a.smallHeaders:has(.glyphicon-arrow-up) {
   text-decoration: none;
+  cursor: default;
+}
+
+/* Nor on the first Bible's row in a passage, where clicking it does nothing (in search results it opens the verse) */
+.passageContent > .passageContentHolder span.verseStart > a,
+.passageContent > .passageContentHolder span.verseStart > a .verseNumber {
+  text-decoration: none;
+  cursor: default;
 }
 
 br.paragraph {

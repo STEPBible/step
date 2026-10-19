@@ -274,6 +274,11 @@ a.smallHeaders > .glyphicon-arrow-up:before {
   font-size: .75em;
 }
 
+/* No hover or focus underline on a name with the arrow, so the arrow reads as the thing to click */
+a.smallHeaders:has(.glyphicon-arrow-up) {
+  text-decoration: none;
+}
+
 br.paragraph {
   padding-top: 2px;
 }

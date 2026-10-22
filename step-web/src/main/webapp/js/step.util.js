@@ -3751,6 +3751,7 @@ step.util = {
 								'clickoutFiresChange: false,' +
 								'change: function(color) {' +
 									'var currentClrPicker = $("#clrText").spectrum("get").toHexString();' +
+									'if (currentClrPicker == "#5d5d5d") currentClrPicker =  color.toHexString();' +
 									'setColor(currentClrPicker, "clrText");' +
 								'},' +
 								'show: function(color) {' +
@@ -3766,6 +3767,7 @@ step.util = {
 								'clickoutFiresChange: false,' +
 								'change: function(color) {' +
 									'var currentClrPicker = $("#clrBackground").spectrum("get").toHexString();' +
+									'if (currentClrPicker == "#ffffff") currentClrPicker = color.toHexString();' +
 									'setColor(currentClrPicker, "clrBackground");' +
 								'},' +
 								'show: function(color) {' +
@@ -3781,6 +3783,7 @@ step.util = {
 								'clickoutFiresChange: false,' +
 								'change: function(color) {' +
 									'var currentClrPicker = $("#clrStrongText").spectrum("get").toHexString();' +
+									'if (currentClrPicker == "#447888") currentClrPicker = color.toHexString();' +
 									'setColor(currentClrPicker, "clrStrongText");' +
 								'},' +
 								'show: function(color) {' +
@@ -3801,6 +3804,7 @@ step.util = {
 								'],' +
 								'change: function(color) {' +
 									'var currentClrPicker = $("#clrHighlight").spectrum("get").toHexString();' +
+									'if (currentClrPicker == "#17758f") currentClrPicker = color.toHexString();' +
 									'setColor(currentClrPicker, "clrHighlight");' +
 								'},' +
 								'show: function(color) {' +
@@ -3816,6 +3820,7 @@ step.util = {
 								'clickoutFiresChange: false,' +
 								'change: function(color) {' +
 									'var currentClrPicker = $("#clrHighlightBg").spectrum("get").toHexString();' +
+									'if (currentClrPicker == "#17758f") currentClrPicker = color.toHexString();' +
 									'setColor(currentClrPicker, "clrHighlightBg");' +
 								'},' +
 								'show: function(color) {' +
@@ -3831,6 +3836,7 @@ step.util = {
 								'clickoutFiresChange: false,' +
 								'change: function(color) {' +
 									'var currentClrPicker = $("#clr2ndHover").spectrum("get").toHexString();' +
+									'if (currentClrPicker == "#d3d3d3") currentClrPicker = color.toHexString();' +
 									'setColor(currentClrPicker, "clr2ndHover");' +
 								'},' +
 								'show: function(color) {' +
@@ -3846,12 +3852,13 @@ step.util = {
 								'clickoutFiresChange: false,' +
 								'change: function(color) {' +
 									'var currentClrPicker = $("#clrLexiconFocusBG").spectrum("get").toHexString();' +
+									'if (currentClrPicker == "#c8d8dc") currentClrPicker = color.toHexString();' +
 									'setColor(currentClrPicker, "clrLexiconFocusBG");' +
 								'},' +
 								'show: function(color) {' +
 									'var currentClrPicker = $("#clrLexiconFocusBG").spectrum("get").toHexString();' +
 									'var color = step.settings.get("clrLexiconFocusBG");' +
-									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#c8d8dc";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrLexiconFocusBG");' +
 								'}' +
 							'});' +
@@ -3861,12 +3868,13 @@ step.util = {
 								'clickoutFiresChange: false,' +
 								'change: function(color) {' +
 									'var currentClrPicker = $("#clrRelatedWordBg").spectrum("get").toHexString();' +
+									'if (currentClrPicker == "#b2e5f3") currentClrPicker =  color.toHexString();' +
 									'setColor(currentClrPicker, "clrRelatedWordBg");' +
 								'},' +
 								'show: function(color) {' +
 									'var currentClrPicker = $("#clrRelatedWordBg").spectrum("get").toHexString();' +
 									'var color = step.settings.get("clrRelatedWordBg");' +
-									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#b2e5f3";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrRelatedWordBg");' +
 								'}' +
 							'});' +
@@ -4071,7 +4079,7 @@ step.util = {
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
 								'<td>' + __s.text_with_no_highlight + '</td>' +
 								'<td class="pull-right">' +
-									'<input id="clrText" type="color" value="#5D5D5D"/>' +
+									'<input id="clrText" type="color" value="#5d5d5d"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
@@ -4083,19 +4091,19 @@ step.util = {
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
 								'<td>' + __s.highlighted_text + ' 1</td>' +
 								'<td class="pull-right">' +
-									'<input id="clrStrongText" type="color" value="#17758f"/>' +
+									'<input id="clrStrongText" type="color" value="#447888"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
 								'<td>' + __s.highlighted_text + ' 2</td>' +
 								'<td class="pull-right">' +
-									'<input id="clrHighlight" type="color" value="#447888"/>' +
+									'<input id="clrHighlight" type="color" value="#17758F"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr style="' + styleForColorExamples + '">' +
 								'<td>' + __s.highlighted_background + ' 1</td>' +
 								'<td class="pull-right">' +
-									'<input id="clrHighlightBg" type="color" value="#447888"/>' +
+									'<input id="clrHighlightBg" type="color" value="#17758F"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
@@ -4107,13 +4115,13 @@ step.util = {
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
 								'<td>' + __s.highlighted_for_lexicon + '</td>' +
 								'<td class="pull-right">' +
-									'<input id="clrLexiconFocusBG" type="color" value="#C8D8DC"/>' +
+									'<input id="clrLexiconFocusBG" type="color" value="#c8d8dc"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
 								'<td>' + __s.highlighted_for_related_text + '</td>' +
 								'<td class="pull-right">' +
-									'<input id="clrRelatedWordBg" type="color" value="#B2E5F3"/>' +
+									'<input id="clrRelatedWordBg" type="color" value="#b2e5f3"/>' +
 								'</td>' +
 							'</tr>';
 

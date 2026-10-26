@@ -167,6 +167,23 @@ var SidebarView = Backbone.View.extend({
             .attr("href", altMorphUrl)
             .text("Lookup morphologies"));
     },
+    _appendOtherTranslationsLink: function (panel, ref) {
+        if (typeof ref !== "string" || ref === "")
+            return;
+        var bgRef = ref.split(/[ ;,-]/)[0].replace(".", " ").replace(".", ":");
+        var bgLang = (step.userLanguageCode || "en").toLowerCase().split(/[_-]/)[0];
+        if (bgLang === "fil")
+            bgLang = "tl";
+        var bgLangs = ["ar", "bg", "bn", "cs", "cy", "da", "de", "en", "es", "fi", "fr", "gu", "he", "hi", "hr", "hu", "is", "it",
+            "ja", "ko", "la", "nl", "no", "pt", "ro", "ru", "sq", "sr", "sv", "ta", "te", "th", "tl", "uk", "ur", "vi", "zh"];
+        if (bgLangs.indexOf(bgLang) === -1)
+            bgLang = "en";
+        var bgUrl = "https://www.biblegateway.com/verse/" + bgLang + "/" + encodeURIComponent(bgRef);
+        panel.append("<br>");
+        panel.append($("<a target='_blank' rel='noopener noreferrer' title='Check other translations'>")
+            .attr("href", bgUrl)
+            .text("Check other translations"));
+    },
     createHistory: function () {
         if (!this.historyView) {
             this.historyView = new ViewHistory({
@@ -297,6 +314,7 @@ var SidebarView = Backbone.View.extend({
                 panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     'Report lexicon issues' +
                     '</a>'));
+                this._appendOtherTranslationsLink(panelBody, ref);
                 panelBodies.push(panelBody);
                 var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target=".' + panelId +
                     '"><a>' + panelTitle;
@@ -337,6 +355,7 @@ var SidebarView = Backbone.View.extend({
             + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                 'Report lexicon issues' +
             '</a>'));
+            this._appendOtherTranslationsLink(panelBody, ref);
             if ((step.touchDevice) && (!step.touchWideDevice))
 	            panelBodies.push(panelBody);
 	        else

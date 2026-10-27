@@ -7,7 +7,7 @@ if [ "$user" = "root" ]; then
 	chmod +x /opt/step/post-install.sh
 	rm -f /opt/step/step-install4j
 	mv /opt/step/step /opt/step/step-install4j
-	cp /opt/step/runStep.sh step
+	cp /opt/step/runStep.sh /opt/step/step
 	chmod +x /opt/step/step
 	chmod +x /opt/step/step-install4j
 

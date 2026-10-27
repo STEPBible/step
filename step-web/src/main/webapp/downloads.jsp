@@ -234,16 +234,22 @@
 		  <td class="td1">
 			<p class="h" id="download_step_header">Download STEPBible to your computer</p>
 			<p class="p">
-			  Run STEPBible from your computer when disconnected from the internet.  ESV,
-			  NIV and ancient language Bibles are included.  It works in 50
-			  languages and additional Bibles can be downloaded in 280 languages.
+				If you have constant Internet access, you do not need to download STEPBible. 
+				Using your web browser to access www.stepbible.org will provide the latest 
+				software and access to 700+ Bibles.
+			</p>
+			<p class="p">
+			  If you are periodically disconnected from the Internet, download and run 
+			  STEPBible from your computer.  ESV, NIV and ancient language Bibles are 
+			  included.  Additional Bibles can be manually downloaded in 280 languages.
 			  <br/><br/>
 			  Current version for download is: <%= downloadVersion %>
 			  <br/>
 			  <label class="label" for="step_os">Operating system:</label>
 			  <select name="step_os" id="step_os">
 				<option value="windows">Windows</option>
-				<option value="mac">Mac OS</option>
+				<option value="mac">Mac OS (package)</option>
+				<option value="mac_folder">Mac OS (folder - old Mac application package)</option>
 				<option value="linux_deb">Linux (.deb)</option>
 				<option value="linux_rpm">Linux (.rpm)</option>
 			  </select>
@@ -356,15 +362,22 @@
 			var os =  $( "#step_os option:selected" ).val();
 			var region = $('#region option:selected').val();
 			var fileExtension = "";
+			var fileSuffix = "";
 			if (os === "windows") fileExtension = "exe";
-			else if (os === "mac") fileExtension = "dmg";
+			else if (os === "mac") {
+				fileExtension = "dmg";
+				alert("We have changed the packaging of STEPBible from an application folder (older format) to a package.  If you have previously installed STEPBible on your Mac, you will need to uninstall the old STEPBible software before installing the new version.");
+			}
+			else if (os === "mac_folder") {
+				fileExtension = "dmg";
+				fileSuffix = "_mac_folder";
+			}
 			else if (os === "linux_deb") fileExtension = "deb";
 			else if (os === "linux_rpm") fileExtension = "rpm";
 			else console.log("Unknown os selected: " + os);
-			var fileName = "";
 			var version = "<%= downloadVersion %>";
 			if (version.length > 0) version = "_" + version;
-			fileName = "stepbible" + version;
+			var fileName = "stepbible" + fileSuffix + version;
 			var path = "";
 			if (region === "region_usa") path = "https://downloads.stepbible.com/file/Stepbible/";
 			else if (region === "region_europe") path = "https://downloads-eu.stepbible.com/file/STEPBible-download/";

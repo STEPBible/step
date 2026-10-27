@@ -170,18 +170,9 @@ var SidebarView = Backbone.View.extend({
     _appendOtherTranslationsLink: function (panel, ref) {
         if (typeof ref !== "string" || ref === "")
             return;
-        var bgRef = ref.split(/[ ;,-]/)[0].replace(".", " ").replace(".", ":");
-        var bgLang = (step.userLanguageCode || "en").toLowerCase().split(/[_-]/)[0];
-        if (bgLang === "fil")
-            bgLang = "tl";
-        var bgLangs = ["ar", "bg", "bn", "cs", "cy", "da", "de", "en", "es", "fi", "fr", "gu", "he", "hi", "hr", "hu", "is", "it",
-            "ja", "ko", "la", "nl", "no", "pt", "ro", "ru", "sq", "sr", "sv", "ta", "te", "th", "tl", "uk", "ur", "vi", "zh"];
-        if (bgLangs.indexOf(bgLang) === -1)
-            bgLang = "en";
-        var bgUrl = "https://www.biblegateway.com/verse/" + bgLang + "/" + encodeURIComponent(bgRef);
         panel.append("<br>");
         panel.append($("<a target='_blank' rel='noopener noreferrer' title='Check other translations'>")
-            .attr("href", bgUrl)
+            .attr("href", step.util.bibleGatewayUrl(ref))
             .text("Check other translations"));
     },
     createHistory: function () {

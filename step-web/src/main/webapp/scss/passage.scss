@@ -268,6 +268,7 @@ a.smallHeaders > .glyphicon-arrow-up {
   border: 1px solid;
   border-radius: 2px;
   vertical-align: middle;
+  color: var(--clrHighlight); // the link colour, which the name beside it no longer has
   cursor: pointer;
 }
 
@@ -275,8 +276,9 @@ a.smallHeaders > .glyphicon-arrow-up:before {
   font-size: .75em;
 }
 
-/* No hover or focus underline and no hand on a name with the arrow, so the arrow reads as the thing to click */
+/* A black name with no hover or focus underline and no hand beside the arrow, so the arrow reads as the thing to click */
 a.smallHeaders:has(.glyphicon-arrow-up) {
+  color: light-dark(black, var(--clrText)); // dark mode sets color-scheme: dark, where black would vanish
   text-decoration: none;
   cursor: default;
 }

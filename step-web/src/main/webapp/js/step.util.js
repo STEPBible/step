@@ -4249,9 +4249,10 @@ step.util = {
 		if (element != null) // Element is loaded.
 			step.util.showIntroJS(element,
 				"The first Bible determines the word order in interlinear mode.  " +
-				'<a class="videoGuide" href="javascript:step.util.showVideoModal(\'OHB_ESV_Gen1.gif\', 40)"><br>Video guide' +
-				'<span class="glyphicon glyphicon-play-circle" style="font-size:16px;font-family:Glyphicons Halflings"></span>' +
-				'</a> to change word order.',
+				'<br>Click arrow <span class="glyphicon glyphicon-arrow-up" style="font-family:Glyphicons Halflings;' + // drawn like the arrow beside each Bible (passage.scss)
+				'display:inline-flex;align-items:center;justify-content:center;width:1.3em;height:1.3em;' +
+				'border:1px solid;border-radius:2px;vertical-align:middle;font-size:.9em;color:var(--clrHighlight)"></span>' +
+				' to change word order.',
 				'right', 400, 'step.interlinearTutorial', false, 3, 100);
 		else if (new Date().getTime() - timeCalled < 10000) { // Only call itself within 10 seconds of initial call
 			setTimeout(function() { // Repeat every 450ms.

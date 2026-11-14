@@ -1042,7 +1042,37 @@
 
     <xsl:template match="w" mode="jesus">
         <!-- Output the content followed by all the lemmas and then all the morphs. -->
-        <xsl:apply-templates mode="jesus"/>
+        <!-- WARNING: the span below duplicates the lemma/morph/var logic of processW, which
+            jesus mode does not reuse. If processW changes, update this copy as well.
+        -->
+        <xsl:choose>
+            <xsl:when test="normalize-space(@lemma) != '' or normalize-space(@morph) != ''">
+                <span>
+                    <xsl:if test="$ColorCoding = 'true'">
+                        <xsl:attribute name="class">
+                            <xsl:value-of select="jsword:getColorClass($colorCodingProvider, @morph)"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:attribute name="strong">
+                        <xsl:value-of select="conversion:getStrongPaddedKey(@lemma)"/>
+                    </xsl:attribute>
+                    <xsl:if test="@morph">
+                        <xsl:attribute name="morph">
+                            <xsl:value-of select="@morph"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="@var">
+                        <xsl:attribute name="var">
+                            <xsl:value-of select="@var"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:apply-templates mode="jesus"/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="jesus"/>
+            </xsl:otherwise>
+        </xsl:choose>
         <!--
             except when followed by a text node or non-printing node.
             This is true whether the href is output or not.

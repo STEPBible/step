@@ -2165,6 +2165,7 @@ step.util = {
 													'</div>' +
 													'<div class="verseVocabLinks">' +
 													'<a onclick="javascript:void(0)" class="seeTips">See Translation TIPS</a> ' +
+													'<a onclick="javascript:void(0)" class="checkOtherTranslations">Check other translations</a> ' +
 													'<% if(isSearch) { %><a onclick="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
 											var rows = [];
 											// Check step.userLanguageCode and $.getURlvar
@@ -2342,6 +2343,10 @@ step.util = {
 											}
 											else
 												templatedTable.find(".seeTips").remove(); // No translation tips
+
+											templatedTable.find(".checkOtherTranslations").click(function () {
+												window.open(step.util.bibleGatewayUrl(reference), "_blank");
+											});
 
 											if (templatedTable.filter(".verseVocabLinks").find("a").length === 0) {
 												templatedTable = templatedTable.not(".verseVocabLinks");
@@ -2627,6 +2632,18 @@ step.util = {
     var view = step.copyDropdown && step.copyDropdown.views[activePanelId];
     if (view) view.toggle();
   },
+
+	bibleGatewayUrl: function (ref) {
+		var bgRef = ref.split(/[ ;,-]/)[0].replace(".", " ").replace(".", ":");
+		var bgLang = (step.userLanguageCode || "en").toLowerCase().split(/[_-]/)[0];
+		if (bgLang === "fil")
+			bgLang = "tl";
+		var bgLangs = ["ar", "bg", "bn", "cs", "cy", "da", "de", "en", "es", "fi", "fr", "gu", "he", "hi", "hr", "hu", "is", "it",
+			"ja", "ko", "la", "nl", "no", "pt", "ro", "ru", "sq", "sr", "sv", "ta", "te", "th", "tl", "uk", "ur", "vi", "zh"];
+		if (bgLangs.indexOf(bgLang) === -1)
+			bgLang = "en";
+		return "https://www.biblegateway.com/verse/" + bgLang + "/" + encodeURIComponent(bgRef);
+	},
 
 	lexFeedbackModal: function (strongNum, ref, version) { 
     	var element = document.getElementById('lexFeedbackModal');

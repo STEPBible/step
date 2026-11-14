@@ -167,6 +167,14 @@ var SidebarView = Backbone.View.extend({
             .attr("href", altMorphUrl)
             .text("Lookup morphologies"));
     },
+    _appendOtherTranslationsLink: function (panel, ref) {
+        if (typeof ref !== "string" || ref === "")
+            return;
+        panel.append("<br>");
+        panel.append($("<a target='_blank' rel='noopener noreferrer' title='Check other translations'>")
+            .attr("href", step.util.bibleGatewayUrl(ref))
+            .text("Check other translations"));
+    },
     createHistory: function () {
         if (!this.historyView) {
             this.historyView = new ViewHistory({
@@ -297,6 +305,7 @@ var SidebarView = Backbone.View.extend({
                 panelBody.append($('<br><a onclick="javascript:step.util.lexFeedbackModal(\'' + strong + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                     'Report lexicon issues' +
                     '</a>'));
+                this._appendOtherTranslationsLink(panelBody, ref);
                 panelBodies.push(panelBody);
                 var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target=".' + panelId +
                     '"><a>' + panelTitle;
@@ -337,6 +346,7 @@ var SidebarView = Backbone.View.extend({
             + '\',\'' + ref + '\',\'' + allVersions + '\')" title="Report lexicon issues">' +
                 'Report lexicon issues' +
             '</a>'));
+            this._appendOtherTranslationsLink(panelBody, ref);
             if ((step.touchDevice) && (!step.touchWideDevice))
 	            panelBodies.push(panelBody);
 	        else

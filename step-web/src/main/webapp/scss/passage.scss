@@ -349,6 +349,29 @@ span.jesus {
   color: #cc4848;
 }
 
+/* Words with Strong's numbers inside Jesus' words stay red, rather than taking the
+   [strong] link colour from highlights.scss. Focus/related-word states keep their own (black) text colours. */
+span.jesus [strong]:not(.lexiconFocus):not(.lexiconRelatedFocus):not(.relatedWordEmphasisHover) {
+  color: inherit;
+}
+
+/* On hover, STEP adds .primaryLightBg (white text on a teal background, both !important).
+   Inside Jesus' words use a red background of similar lightness (#c62828) so the white text stays readable. */
+span.jesus [strong].primaryLightBg {
+  background-color: #c62828 !important;
+}
+
+/* Focus and related-word highlights inside Jesus' words: red tints of the original light
+   backgrounds (#b2e5f3 related-word hover, #c8d8dc lexicon focus). Text stays black. */
+span.jesus [strong].relatedWordEmphasisHover {
+  background-color: #f3b4b4;
+}
+
+span.jesus [strong].lexiconFocus,
+span.jesus [strong].lexiconRelatedFocus {
+  background-color: #dbc7c7;
+}
+
 span.speech {
   color: blue;
 }

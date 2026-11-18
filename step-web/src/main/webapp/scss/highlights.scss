@@ -57,9 +57,8 @@
 }
 
 .highlightBorder {
-  border: #d3d3d3; // for IE
-  border: var(--clr2ndHover);
-  border-bottom-style: inset;
+  border-bottom: 2px solid #d3d3d3; // for IE
+  border-bottom: 2px solid var(--clr2ndHover);
 }
 
 // hebrew highlights

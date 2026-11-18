@@ -73,7 +73,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
         // some options are always there for Bibles:
         addBibleCategoryOptions(book, options);
-        addRedLetterOptions(book, options);
+        addRedLetterOptions(book, extraVersions, options);
         addStrongNumberOptions(book, options);
         addMorphologyOptions(book, options);
         addNotesOptions(book, options);
@@ -206,14 +206,24 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     }
 
     /**
-     * Adds options for red letter Bible
+     * Adds options for red letter Bible, if any of the versions has the words of Jesus marked
      *
-     * @param book    the book
-     * @param options the options to be added to
+     * @param book          the book
+     * @param extraVersions the secondary versions
+     * @param options       the options to be added to
      */
-    private void addRedLetterOptions(final Book book, final Set<LookupOption> options) {
+    private void addRedLetterOptions(final Book book, final List<String> extraVersions, final Set<LookupOption> options) {
         if (book.getBookMetaData().hasFeature(FeatureType.WORDS_OF_CHRIST)) {
             options.add(LookupOption.RED_LETTER);
+            return;
+        }
+
+        for (String version : extraVersions) {
+            Book extraBook = this.versificationService.getBookFromVersion(version);
+            if (extraBook != null && extraBook.getBookMetaData().hasFeature(FeatureType.WORDS_OF_CHRIST)) {
+                options.add(LookupOption.RED_LETTER);
+                return;
+            }
         }
     }
 

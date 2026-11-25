@@ -1,0 +1,96 @@
+This chapter discusses STEPBible's tools for churches and bloggers.
+<ul class="jUG-boldList">
+<li><a href="#webmaster:UG1"> Simple links to STEPBible</a></li>
+</ul>
+<ul class="jUG-boldList">
+<li><a href="#webmaster:UG2"> How to add STEPBible in a simple Frame</a></li>
+</ul>
+<ul class="jUG-boldList"> <ul>
+<li><a href="#webmaster:UG3">Please be aware that STEPBible is not to be used for commercial purposes, so please do not include advertising or donation buttons on the same page as a STEPBible frame.</a></li>
+</ul>
+</ul>
+<ul class="jUG-boldList">
+<li><a href="#webmaster:UG4"> Quick start HTML samples</a></li>
+</ul>
+<table class="jUG-layoutTable"><tbody>
+<tr><td><a id="UG1"></a><br/>
+You can integrate STEPBible tools into your website so users stay on your site while they study the text.<br/>
+<br/>
+You could, for example:
+<ul>
+<li>display a text (verse, series of verses, chapters, etc.) in your preferred version</li>
+<li>display a text or series of verses in many versions, such as ESV, NIV, etc, or in any of hundreds of languages eg: <i>John.3.16 &amp; Rom.3.23</i> in NIV English &amp; Spanish </li>
+<li>list all the places a Hebrew or Greek word is used, highlighted in a translation eg: all the places where one finds <i>agape and agapaw</i> <i>in John</i>, in the ESV </li>
+<li>compare two translations and the differences between them marked in blue eg: <i>Rom.5</i> according to the KJV and ESV</li>
+<li>Examine the Hebrew or Greek underlying your text with word-by-word interlinear eg: <i>Eph.6.18</i> in KJV with underlying Greek and grammar </li>
+</ul>
+<h2>
+Simple links to STEPBible</h2>
+
+<div>
+STEPBible uses the URL as an API. This means you can simply copy the address line in your browser and make a link from it. The link can be as simple as:<br/>
+<br/>
+&lt;a href="https://www.STEPBible.org/?q=reference=John.3.16-20"&gt;John 3.16-20&lt;/a&gt;</div><div>Notes: </div><div>* To suppress the "Welcome" message, add <b>&amp;skipwelcome</b> to the URL</div><div>* The first parameter is preceded by "?" and subsequent parameters by "&amp;"</div><div><div>* To share URLs in Facebook etc, replace the sub-parameter marker "|" with "%7C"</div></div><div>EG if the URL is: </div><div><a class="jUG-stepLink" href="/?q=reference=Matt.1|version=ESV&amp;options=NVHUG">https://www.stepbible.org/<b>?</b>q=reference=Matt.1<b>|</b>version=ESV<b>&amp;</b>options=NVHUG</a></div><div>this can be published or shared better as:</div><div><a class="jUG-stepLink" href="/?q=reference=Matt.1%7Cversion=ESV&amp;options=NVHUG&amp;skipwelcome">https://www.stepbible.org/?q=reference=Matt.1<b>%7C</b>version=ESV&amp;options=NVHUG<b>&amp;skipwelcome</b></a></div><div>
+For more complex links, visit this page: <a href="https://stepweb.atlassian.net/wiki/display/TYNSTEP/Integration+via+the+URL" rel="noopener" target="_blank">How the STEPBible URL works</a>. </div>
+</td></tr>
+
+</tbody></table>
+<table class="jUG-layoutTable"><tbody>
+<tr><td><a href="#webmaster:TheTop"><b>Top ⬆</b></a></td></tr>
+</tbody></table>
+<table class="jUG-layoutTable"><tbody>
+<tr><td><a id="UG2"></a>
+<h2>
+How to add STEPBible in a simple Frame</h2>
+
+<div class="jUG-center">
+<a class="jUG-imageLink jUG-floatRight" href="/images/J_AppsImages/J_UserGuide/4e5572fb1eba0b20.jpg" target="_blank"><b><img alt="" loading="lazy" src="/images/J_AppsImages/J_UserGuide/4e5572fb1eba0b20.jpg"/></b></a></div>
+STEPBible can fit on any web page of any size. By setting the size of the iframe, STEPBible will drop to a one or two column layout as appropriate.  To display only the left panel/column, use 765px maximum:<br/>
+<br/>
+&lt;iframe src="https://www.stepbible.org/" style="width:765px;" title="Iframe Example"&gt; &lt;/iframe&gt;<br/>
+<br/>
+Here is an example from Redeemer Church in Croydon.<br/><br/>You can learn more about frames <a href="http://www.w3schools.com/tags/tag_iframe.asp" rel="noopener" target="_blank">here</a> and try out code <a href="http://jsfiddle.net/6hx4py60/1/" rel="noopener" target="_blank">here</a>.<br/>
+<br/>
+Eg, try:<br/>
+<br/>
+&lt;iframe src="<a class="jUG-stepLink" href="/?q=version=ESV|reference=John.3.16-20">http://www.STEPBible.org/?q=version=ESV|reference=John.3.16-20</a>" width=800 height="600"&gt;&lt;/iframe&gt;<br/>
+<br/>
+Now try clicking on a word in the text. You have a fully functioning STEPBible in your website!<br/>
+<br/></td></tr>
+
+</tbody></table>
+<table class="jUG-layoutTable"><tbody>
+<tr><td><a href="#webmaster:TheTop"><b>Top ⬆</b></a></td></tr>
+</tbody></table>
+<table class="jUG-layoutTable"><tbody>
+<tr><td><a id="UG3"></a>
+<h4>
+PLEASE BE AWARE THAT STEPBIBLE IS NOT TO BE USED FOR COMMERCIAL PURPOSES, SO PLEASE DO NOT INCLUDE ADVERTISING OR DONATION BUTTONS ON THE SAME PAGE AS A STEPBIBLE FRAME.</h4>
+</td></tr>
+</tbody></table>
+<table class="jUG-layoutTable"><tbody>
+<tr><td><a href="#webmaster:TheTop"><b>Top ⬆</b></a></td></tr>
+</tbody></table>
+<table class="jUG-layoutTable"><tbody>
+<tr><td><a id="UG4"></a>
+<h2>
+Quick start HTML samples</h2>
+
+<div class="jUG-center">
+<a class="jUG-imageLink jUG-floatRight" href="/images/J_AppsImages/J_UserGuide/ab8a1109cb687011.png" target="_blank"><img alt="" loading="lazy" src="/images/J_AppsImages/J_UserGuide/ab8a1109cb687011.png"/></a></div>
+It is easy to experiment with Javascript and JQuery and build your own code at JS Fiddles.
+<div class="jUG-center">
+<a class="jUG-imageLink jUG-floatRight" href="/images/J_AppsImages/J_UserGuide/37c0c6a14a79f704.png" target="_blank"><img alt="" loading="lazy" src="/images/J_AppsImages/J_UserGuide/37c0c6a14a79f704.png"/></a></div>
+Here are some example ideas:
+<ul>
+<li><a href="http://jsfiddle.net/DavidIB/b8ffd3wr/" rel="noopener" target="_blank">Simple links into STEPBible</a></li>
+<li><a href="http://jsfiddle.net/6hx4py60/1/" rel="noopener" target="_blank">Use an iFrame with an optional toggle button to display it</a></li>
+</ul>
+These are hosted at <a href="http://jsfiddle.net/" rel="noopener" target="_blank">JSFiddle.net</a> where you can experiment with code and see what it does.<br/>
+<br/>
+Just change the code and click on Run. When you have what you want, copy it to your page.<br/><br/></td></tr>
+</tbody></table>
+
+<table class="jUG-layoutTable"><tbody>
+<tr><td><b>Top ⬆</b></td></tr>
+</tbody></table>

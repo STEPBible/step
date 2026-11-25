@@ -162,7 +162,25 @@ export class J_ClassSearchPanelHandler extends J_ClassPanelHandler
 class J_Class4PanelCoordinator
 {
     /**************************************************************************/
-    _debouncer = new J_UtilsDebouncer();
+    /* 18-Nov-2926: Added.
+
+       This records the details of the most recent request, in case anything
+       is interested.  In particular, I'm thinking of the thing which
+       generates the shareable link.  If we're doing things internally to
+       change what is being shown, we need to turn those into part of the
+       URL which it generates. */
+    
+    DataFromCurrentRequest = null;
+
+    
+    /**************************************************************************/
+    /* 18-Nov-2026: It turned out that debouncing was too aggressive -- if
+       you did something which opened a new web page, and then closed that
+       page, the debouncer knew where you were when you opened that page, and
+       would prevent you from reopening it. */
+       
+    //_debouncer = new J_UtilsDebouncer();
+    _debouncer = null;
     
     _appPanelHandler       = new J_ClassAppPanelHandler();
     _infoBoxPanelHandler   = new J_ClassInfoBoxPanelHandler();
@@ -223,7 +241,9 @@ class J_Class4PanelCoordinator
 
     processIncomingMasterItemChangeRequest (data, selectionSource, selectionSubsource = null)
     {
-	if (this._debouncer.isSameAsPrevious(data)) return;
+	if (this._debouncer && this._debouncer.isSameAsPrevious(data)) return; // 18-Nov-2026.
+
+	this.DataFromCurrentRequest = data; // 18-Nov-2026.
 	
 	if (this._methodToDetermineWhetherToUseNewUrlInsteadOfUpdatingCurrentScreen && this._methodToDetermineWhetherToUseNewUrlInsteadOfUpdatingCurrentScreen(data, selectionSource, selectionSubsource))
 	    return;

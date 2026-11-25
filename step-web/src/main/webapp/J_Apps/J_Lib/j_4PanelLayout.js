@@ -90,7 +90,7 @@ export class J_4PanelLayout extends HTMLElement
          application-specific tab on small screens.  (On small screens,
 	 three of the four tabs have standard names reflecting the fact that
 	 they always contain the search box, the scripture window, and the
-         info-box.  But the fourht will vary by application, so we need to
+         info-box.  But the fourth will vary by application, so we need to
 	 know what to call it.)
 
        - options is optional (!), and may contain:
@@ -109,9 +109,12 @@ export class J_4PanelLayout extends HTMLElement
            edgeDragging     Default true.  Lets the user drag the edges of a
                             resizable panel as well as its corner handle.  Set
                             it to false if you want the handles only.
+
+       - shareableLinkGenerator: Code used to generate a shareable link.  If
+         null, the link is simply the current URL.
     */
     
-    initialise (nameForApplicationSpecificTab, { resizablePanels = [], edgeDragging = true } = {})
+    initialise (nameForApplicationSpecificTab, { resizablePanels = [], edgeDragging = true } = {}, shareableLinkGenerator = null) // 18-Nov-2026 : Added shareableLinkGenerator.
     {
 	/**********************************************************************/
 	/* Pick up the application-specific content from the template in the main HTML
@@ -128,7 +131,7 @@ export class J_4PanelLayout extends HTMLElement
 
 	/**********************************************************************/
 	this._initialiseResizers(resizablePanels, edgeDragging);
-	this._initialiseInfoBox();
+	this._initialiseInfoBox(shareableLinkGenerator); // 18-Nov-2026: Added shareableLinkGenerator.
 	this._initialiseResponsiveLayout(nameForApplicationSpecificTab);
     }
 
@@ -197,17 +200,27 @@ export class J_4PanelLayout extends HTMLElement
 
 
     /**************************************************************************/
-    _initialiseInfoBox ()
+    /* 18-Nov-2026: Rewrote to accept a link generator. */
+    
+    _initialiseInfoBox (shareableLinkGenerator)
     {
-	function x ()
-	{
-	    const url = window.location.href;
-	    navigator.clipboard.writeText(url);
-	    document.querySelector("#info-box").showCopyConfirmationPopup();
-	}
+	let fn = null;
 
-	
-	document.querySelector("#info-box").setUrlToClipboardCopier(x);
+	if (null === shareableLinkGenerator)
+	    fn = () => {
+		const url = window.location.href;
+		navigator.clipboard.writeText(url);
+		document.querySelector("#info-box").showCopyConfirmationPopup();
+	    }
+
+	else
+	    fn = () => {
+		const url = shareableLinkGenerator();
+		navigator.clipboard.writeText(url);
+		document.querySelector("#info-box").showCopyConfirmationPopup();
+	    }
+		
+	document.querySelector("#info-box").setUrlToClipboardCopier(fn);
     }
 
     
@@ -286,3 +299,4 @@ export class J_4PanelLayout extends HTMLElement
     }
 }
 customElements.define("j-4panel-layout", J_4PanelLayout);
+
